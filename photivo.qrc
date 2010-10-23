@@ -1,0 +1,25 @@
+<RCC>
+  <qresource prefix="photivo" >
+    <file>Icons/wilber.png</file>
+    <file>Icons/reload.png</file>
+    <file>Icons/rectangle.png</file>
+    <file>Icons/viewmag_h.png</file>
+    <file>Icons/viewmag1.png</file>
+    <file>Icons/filesave.png</file>
+    <file>Icons/downarrow.png</file>
+    <file>Icons/rightarrow.png</file>
+    <file>Icons/activedownarrow.png</file>
+    <file>Icons/activerightarrow.png</file>
+    <file>Icons/folder_grey_open.png</file>
+    <file>Icons/play.png</file>
+    <file>Icons/arrow.png</file>
+    <file>Icons/arrow-stop.png</file>
+    <file>Icons/FullScreen.png</file>
+    <file>Icons/NormalScreen.png</file>
+    <file>Icons/style.png</file>
+    <file>Icons/configure.png</file>
+    <file>Icons/exec.png</file>
+    <file>Icons/info.png</file>
+    <file>photivo.png</file>
+  </qresource>
+</RCC>

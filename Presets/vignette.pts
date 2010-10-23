@@ -1,0 +1,9 @@
+; Testfile
+
+[General]
+
+Magic=photivoSettingsFile
+
+VignetteMode=1
+NextPhase=7
+

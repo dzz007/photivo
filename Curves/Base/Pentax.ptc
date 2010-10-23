@@ -1,0 +1,15 @@
+;
+; photivo Curve File
+;
+; This is an experimental base curve for Pentax cameras.
+; Values are from the draktable project.
+;
+Magic FLOSSCurveFile
+IntendedChannel 8
+CurveType 1
+0 0
+32 24
+120 166
+205 328
+604 790
+1000 1000

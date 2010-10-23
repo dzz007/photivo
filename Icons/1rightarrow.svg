@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   version="1.0"
+   x="0"
+   y="0"
+   width="60.0000000"
+   height="60.0000000"
+   id="svg1"
+   sodipodi:version="0.32"
+   inkscape:version="0.37"
+   sodipodi:docname="1rightarrow.svg"
+   sodipodi:docbase="/home/danny/flat/scalable/actions"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="9.82388222"
+     inkscape:cx="46.7307478"
+     inkscape:cy="25.5997648"
+     inkscape:window-width="1016"
+     inkscape:window-height="693"
+     inkscape:window-x="0"
+     inkscape:window-y="0" />
+  <defs
+     id="defs3" />
+  <path
+     style="font-size:12;fill:#b3b3b3;fill-opacity:1;fill-rule:evenodd;stroke:#333333;stroke-width:3.125;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;"
+     d="M 4.6873499 30.212826 C 4.7397333 44.317606 16.239717 55.701347 30.344494 55.648962 C 44.449275 55.596577 55.833133 44.127847 55.780747 30.023066 C 55.728362 15.918286 44.259515 4.5031785 30.154735 4.5555647 C 16.049955 4.6079497 4.6349645 16.108047 4.6873499 30.212826 z M 25.162631 48.761909 L 25.111912 35.105754 L 25.19571 24.011616 L 25.147545 11.042955 L 44.029667 29.754207 L 25.162631 48.761909 z "
+     id="path612"
+     sodipodi:stroke-cmyk="(0 0 0 0.8)" />
+
+  <metadata>
+    <rdf:RDF 
+     xmlns="http://web.resource.org/cc/"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <Work rdf:about="">
+        <dc:title>Part of the Flat Icon Collection (Wed Aug 25 23:29:46 2004)</dc:title>
+	<dc:descridlion></dc:descridlion>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>action</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+           <Agent rdf:about="">
+             <dc:title></dc:title>
+           </Agent>
+         </dc:publisher>
+         <dc:creator>
+           <Agent rdf:about="">
+             <dc:title>Danny Allen</dc:title>
+           </Agent>
+        </dc:creator>
+         <dc:rights>
+           <Agent rdf:about="">
+             <dc:title>Danny Allen</dc:title>
+           </Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <license rdf:resource="http://web.resource.org/cc/PublicDomain">
+	  <dc:date></dc:date>
+	</license>
+        <dc:language>en</dc:language>
+      </Work>
+
+      <License rdf:about="http://web.resource.org/cc/PublicDomain">
+         <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+         <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+         <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+      </License>
+
+
+    </rdf:RDF>
+  </metadata>
+</svg>
