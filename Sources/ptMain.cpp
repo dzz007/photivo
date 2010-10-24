@@ -5253,37 +5253,42 @@ void CB_EAWMasterInput(const QVariant Value) {
     Settings->SetValue("EAWLevel5",Value.toDouble()/6*2);
     Settings->SetValue("EAWLevel6",Value.toDouble()/6);
   }
-  Settings->SetValue("EAWMaster",0.0);
   Update(ptProcessorPhase_LabSN);
 }
 
 void CB_EAWLevel1Input(const QVariant Value) {
   Settings->SetValue("EAWLevel1",Value);
+  Settings->SetValue("EAWMaster",0.0);
   Update(ptProcessorPhase_LabSN);
 }
 
 void CB_EAWLevel2Input(const QVariant Value) {
   Settings->SetValue("EAWLevel2",Value);
+  Settings->SetValue("EAWMaster",0.0);
   Update(ptProcessorPhase_LabSN);
 }
 
 void CB_EAWLevel3Input(const QVariant Value) {
   Settings->SetValue("EAWLevel3",Value);
+  Settings->SetValue("EAWMaster",0.0);
   Update(ptProcessorPhase_LabSN);
 }
 
 void CB_EAWLevel4Input(const QVariant Value) {
   Settings->SetValue("EAWLevel4",Value);
+  Settings->SetValue("EAWMaster",0.0);
   Update(ptProcessorPhase_LabSN);
 }
 
 void CB_EAWLevel5Input(const QVariant Value) {
   Settings->SetValue("EAWLevel5",Value);
+  Settings->SetValue("EAWMaster",0.0);
   Update(ptProcessorPhase_LabSN);
 }
 
 void CB_EAWLevel6Input(const QVariant Value) {
   Settings->SetValue("EAWLevel6",Value);
+  Settings->SetValue("EAWMaster",0.0);
   Update(ptProcessorPhase_LabSN);
 }
 
