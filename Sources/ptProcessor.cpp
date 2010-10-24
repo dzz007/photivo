@@ -1464,6 +1464,26 @@ void ptProcessor::Run(short Phase,
         TRACEMAIN("Done B denoise at %d ms.",Timer.elapsed());
       }
 
+      // Gradient Sharpen
+
+      if (Settings->ToolIsActive("TabLABGradientSharpen")) {
+
+        m_ReportProgress(QObject::tr("Gradient Sharpen"));
+
+        //Postponed RGBToLab for performance.
+        if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
+          m_Image_AfterLabSN->RGBToLab();
+
+          TRACEMAIN("Done conversion to LAB at %d ms.",
+                    Timer.elapsed());
+        }
+
+        m_Image_AfterLabSN->GradientSharpen(Settings->GetInt("GradientSharpenPasses"),
+                                            Settings->GetDouble("GradientSharpenStrength"));
+
+        TRACEMAIN("Done Gradient Sharpen at %d ms.",Timer.elapsed());
+      }
+
       // Wiener Filter Sharpen
 
       if (Settings->ToolIsActive("TabLABWiener")) {

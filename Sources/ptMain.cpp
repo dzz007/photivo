@@ -5560,6 +5560,25 @@ void CB_WaveletDenoiseBSoftnessInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
+// Partim Gradient Sharpen
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_GradientSharpenPassesInput(const QVariant Value) {
+  Settings->SetValue("GradientSharpenPasses",Value);
+  Update(ptProcessorPhase_LabSN);
+}
+
+void CB_GradientSharpenStrengthInput(const QVariant Value) {
+  Settings->SetValue("GradientSharpenStrength",Value);
+  if (Settings->GetInt("GradientSharpenPasses")) {
+    Update(ptProcessorPhase_LabSN);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the LabSN Tab
 // Partim Wiener Filter Sharpen
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -7330,6 +7349,9 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WaveletDenoiseASoftnessInput)
   M_Dispatch(WaveletDenoiseBInput)
   M_Dispatch(WaveletDenoiseBSoftnessInput)
+
+  M_Dispatch(GradientSharpenPassesInput)
+  M_Dispatch(GradientSharpenStrengthInput)
 
   M_Dispatch(WienerFilterCheck)
   M_Dispatch(WienerFilterUseEdgeMaskCheck)

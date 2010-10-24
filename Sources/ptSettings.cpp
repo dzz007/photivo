@@ -1099,6 +1099,9 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Lab Levels";
       Info.IsActive = (Settings->GetDouble("BilateralASigmaR")!=0.0 ||
                       Settings->GetDouble("BilateralBSigmaR")!=0.0)?1:0;
+  } else if (GuiName == "TabLABGradientSharpen") {
+      Info.Name = "Lab Gradient Sharpen";
+      Info.IsActive = Settings->GetInt("GradientSharpenPasses");
   } else if (GuiName == "TabLABWiener") {
       Info.Name = "Lab Wiener filter";
       Info.IsActive = Settings->GetInt("WienerFilter");

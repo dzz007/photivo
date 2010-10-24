@@ -201,6 +201,10 @@ ptImage* Highpass(const double Radius,
                   const double HaloControl,
                   const double Denoise);
 
+// Gradient Sharpen
+ptImage* GradientSharpen(const short Passes,
+                         const double Strength);
+
 // Shadows Highlights
 ptImage* ShadowsHighlights(const ptCurve *Curve,
                            const double Radius,

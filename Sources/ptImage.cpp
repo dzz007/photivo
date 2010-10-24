@@ -2691,6 +2691,155 @@ ptImage* ptImage::Highpass(const double Radius,
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Gradient Sharpen
+//
+////////////////////////////////////////////////////////////////////////////////
+
+// To the extent possible under law, Manuel Llorens <manuelllorens@gmail.com>
+// has waived all copyright and related or neighboring rights to this work.
+// This work is published from: Spain.
+
+ptImage* ptImage::GradientSharpen(const short Passes,
+                                  const double Strength) {
+
+  assert (m_ColorSpace == ptSpace_Lab);
+
+  int32_t offset,c,i,j,p,width2;
+  float lumH,lumV,lumD1,lumD2,v,contrast,med,s;
+  float difL,difR,difT,difB,difLT,difRB,difLB,difRT,wH,wV,wD1,wD2,chmax[3];
+  float f1,f2,f3,f4;
+
+  uint16_t width = m_Width;
+  uint16_t height = m_Height;
+
+  width2=2*m_Width;
+
+  float (*L) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*L));
+  ptMemoryError(L,__FILE__,__LINE__);
+
+  chmax[0]=8.0;
+  chmax[1]=3.0;
+  chmax[2]=3.0;
+  c = 0;
+
+#pragma omp parallel for private(offset) schedule(static)
+  for(offset=0;offset<m_Width*m_Height;offset++)
+    L[offset]=ToFloatTable[m_Image[offset][c]];
+
+  //for(c=0;c<=channels;c++)
+    for(p=0;p<Passes;p++){
+      #pragma omp parallel for private(j,i,offset,wH,wV,wD1,wD2,s,lumH,lumV,lumD1,lumD2,v,contrast,f1,f2,f3,f4,difT,difB,difL,difR,difLT,difLB,difRT,difRB) schedule(static)
+      for(j=2;j<height-2;j++)
+        for(i=2,offset=j*width+i;i<width-2;i++,offset++){
+          // weight functions
+          wH=fabsf(L[offset+1]-L[offset-1]);
+          wV=fabsf(L[offset+width]-L[offset-width]);
+
+          s=1.0+fabs(wH-wV)/2.0;
+          wD1=fabsf(L[offset+width+1]-L[offset-width-1])/s;
+          wD2=fabsf(L[offset+width-1]-L[offset-width+1])/s;
+          s=wD1;
+          wD1/=wD2;
+          wD2/=wD1;
+
+          // initial values
+          lumH=lumV=lumD1=lumD2=v=ToFloatTable[m_Image[offset][c]];
+
+          // contrast detection
+          contrast=sqrtf(fabsf(L[offset+1]-L[offset-1])*fabsf(L[offset+1]-L[offset-1])+fabsf(L[offset+width]-L[offset-width])*fabsf(L[offset+width]-L[offset-width]))/chmax[c];
+          if(contrast>1.0) contrast=1.0;
+
+          // new possible values
+          if(((L[offset]<L[offset-1])&&(L[offset]>L[offset+1])) ||
+             ((L[offset]>L[offset-1])&&(L[offset]<L[offset+1]))){
+            f1=fabsf(L[offset-2]-L[offset-1]);
+            f2=fabsf(L[offset-1]-L[offset]);
+            f3=fabsf(L[offset-1]-L[offset-width])*fabsf(L[offset-1]-L[offset+width]);
+            f4=sqrtf(fabsf(L[offset-1]-L[offset-width2])*fabsf(L[offset-1]-L[offset+width2]));
+            difL=f1*f2*f2*f3*f3*f4;
+            f1=fabsf(L[offset+2]-L[offset+1]);
+            f2=fabsf(L[offset+1]-L[offset]);
+            f3=fabsf(L[offset+1]-L[offset-width])*fabsf(L[offset+1]-L[offset+width]);
+            f4=sqrtf(fabs(L[offset+1]-L[offset-width2])*fabsf(L[offset+1]-L[offset+width2]));
+            difR=f1*f2*f2*f3*f3*f4;
+            if((difR!=0)&&(difL!=0)){
+              lumH=(L[offset-1]*difR+L[offset+1]*difL)/(difL+difR);
+              lumH=v*(1-contrast)+lumH*contrast;
+            }
+          }
+
+          if(((L[offset]<L[offset-width])&&(L[offset]>L[offset+width])) ||
+             ((L[offset]>L[offset-width])&&(L[offset]<L[offset+width]))){
+            f1=fabsf(L[offset-width2]-L[offset-width]);
+            f2=fabsf(L[offset-width]-L[offset]);
+            f3=fabsf(L[offset-width]-L[offset-1])*fabsf(L[offset-width]-L[offset+1]);
+            f4=sqrtf(fabsf(L[offset-width]-L[offset-2])*fabsf(L[offset-width]-L[offset+2]));
+            difT=f1*f2*f2*f3*f3*f4;
+            f1=fabsf(L[offset+width2]-L[offset+width]);
+            f2=fabsf(L[offset+width]-L[offset]);
+            f3=fabsf(L[offset+width]-L[offset-1])*fabsf(L[offset+width]-L[offset+1]);
+            f4=sqrtf(fabsf(L[offset+width]-L[offset-2])*fabsf(L[offset+width]-L[offset+2]));
+            difB=f1*f2*f2*f3*f3*f4;
+            if((difB!=0)&&(difT!=0)){
+              lumV=(L[offset-width]*difB+L[offset+width]*difT)/(difT+difB);
+              lumV=v*(1-contrast)+lumV*contrast;
+            }
+          }
+
+          if(((L[offset]<L[offset-1-width])&&(L[offset]>L[offset+1+width])) ||
+             ((L[offset]>L[offset-1-width])&&(L[offset]<L[offset+1+width]))){
+            f1=fabsf(L[offset-2-width2]-L[offset-1-width]);
+            f2=fabsf(L[offset-1-width]-L[offset]);
+            f3=fabsf(L[offset-1-width]-L[offset-width+1])*fabsf(L[offset-1-width]-L[offset+width-1]);
+            f4=sqrtf(fabsf(L[offset-1-width]-L[offset-width2+2])*fabsf(L[offset-1-width]-L[offset+width2-2]));
+            difLT=f1*f2*f2*f3*f3*f4;
+            f1=fabsf(L[offset+2+width2]-L[offset+1+width]);
+            f2=fabsf(L[offset+1+width]-L[offset]);
+            f3=fabsf(L[offset+1+width]-L[offset-width+1])*fabsf(L[offset+1+width]-L[offset+width-1]);
+            f4=sqrtf(fabsf(L[offset+1+width]-L[offset-width2+2])*fabsf(L[offset+1+width]-L[offset+width2-2]));
+            difRB=f1*f2*f2*f3*f3*f4;
+            if((difLT!=0)&&(difRB!=0)){
+              lumD1=(L[offset-1-width]*difRB+L[offset+1+width]*difLT)/(difLT+difRB);
+              lumD1=v*(1-contrast)+lumD1*contrast;
+            }
+          }
+
+          if(((L[offset]<L[offset+1-width])&&(L[offset]>L[offset-1+width])) ||
+             ((L[offset]>L[offset+1-width])&&(L[offset]<L[offset-1+width]))){
+            f1=fabsf(L[offset-2+width2]-L[offset-1+width]);
+            f2=fabsf(L[offset-1+width]-L[offset]);
+            f3=fabsf(L[offset-1+width]-L[offset-width-1])*fabsf(L[offset-1+width]-L[offset+width+1]);
+            f4=sqrtf(fabsf(L[offset-1+width]-L[offset-width2-2])*fabsf(L[offset-1+width]-L[offset+width2+2]));
+            difLB=f1*f2*f2*f3*f3*f4;
+            f1=fabsf(L[offset+2-width2]-L[offset+1-width]);
+            f2=fabsf(L[offset+1-width]-L[offset])*fabsf(L[offset+1-width]-L[offset]);
+            f3=fabsf(L[offset+1-width]-L[offset+width+1])*fabsf(L[offset+1-width]-L[offset-width-1]);
+            f4=sqrtf(fabsf(L[offset+1-width]-L[offset+width2+2])*fabsf(L[offset+1-width]-L[offset-width2-2]));
+            difRT=f1*f2*f2*f3*f3*f4;
+            if((difLB!=0)&&(difRT!=0)){
+              lumD2=(L[offset+1-width]*difLB+L[offset-1+width]*difRT)/(difLB+difRT);
+              lumD2=v*(1-contrast)+lumD2*contrast;
+            }
+          }
+
+          s=Strength;
+
+          // avoid sharpening diagonals too much
+          if(((fabsf(wH/wV)<0.45)&&(fabsf(wH/wV)>0.05))||((fabsf(wV/wH)<0.45)&&(fabsf(wV/wH)>0.05)))
+            s=Strength/3.0;
+
+          // final mix
+          if((wH!=0)&&(wV!=0)&&(wD1!=0)&&(wD2!=0))
+            m_Image[offset][c]= CLIP((int32_t) ((v*(1-s)+(lumH*wH+lumV*wV+lumD1*wD1+lumD2*wD2)/(wH+wV+wD1+wD2)*s)*0xffff));
+        }
+    }
+
+  FREE(L);
+  return this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Refined Shadows and Highlights
 //
 ////////////////////////////////////////////////////////////////////////////////
