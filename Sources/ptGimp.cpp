@@ -207,7 +207,7 @@ void ptRun(const gchar*     Name,
                                       GIMP_RGB_IMAGE,
                                       100.0,
                                       GIMP_NORMAL_MODE);
-#ifdef WIN32
+#if GIMP_MINOR_VERSION<=6
     gimp_image_add_layer(GimpImage,GimpLayer,0);
 #else
     gimp_image_insert_layer(GimpImage,GimpLayer,NULL,0);

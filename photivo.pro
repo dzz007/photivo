@@ -38,7 +38,7 @@ TEMPLATE = subdirs
 SUBDIRS += photivoProject
 SUBDIRS += ptCreateAdobeProfilesProject
 SUBDIRS += ptCreateCurvesProject
-#SUBDIRS += ptGimpProject
+SUBDIRS += ptGimpProject
 SUBDIRS += ptClearProject
 
 ###############################################################################
