@@ -444,7 +444,7 @@ const short ptZoomMode_NonFit = 1;
 // Gui events : timeout filter
 // 1s after releasing input arrows, processing will be triggered.
 // Should be working also for sufficiently fast typing :)
-const short ptTimeout_Input = 500;
+const short ptTimeout_Input = 300;
 
 // Gui Elements
 const short ptGT_None            = 0;
