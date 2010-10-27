@@ -2953,6 +2953,11 @@ void CB_ToolBoxModeCheck(const QVariant State) {
   MainWindow->OnToolBoxesEnabledTriggered(Settings->GetInt("ToolBoxMode"));
 }
 
+void CB_TabStatusIndicatorCheck(const QVariant State) {
+  Settings->SetValue("TabStatusIndicator",State);
+  MainWindow->UpdateSettings();
+}
+
 void CB_PreviewTabModeCheck(const QVariant State) {
   Settings->SetValue("PreviewTabMode",State);
   if (Settings->GetInt("PreviewTabMode")) {
@@ -7078,6 +7083,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(RememberSettingLevelChoice)
   M_Dispatch(InputsAddPowerLawCheck)
   M_Dispatch(ToolBoxModeCheck)
+  M_Dispatch(TabStatusIndicatorCheck)
   M_Dispatch(PreviewTabModeCheck)
   M_Dispatch(BackgroundColorCheck)
 

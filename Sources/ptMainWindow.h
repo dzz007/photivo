@@ -77,6 +77,8 @@ QTimer* m_Event0Timer;
 
 // ToolBoxes
 QList<ptGroupBox *>*      m_ToolBoxes;
+QIcon                     m_StatusIcon;
+QList<QWidget *>          m_ActiveTabs;
 
 // Desktop
 QDesktopWidget* m_DesktopWidget;

@@ -415,6 +415,7 @@
 // Name, GuiType,InitLevel,InJobFile,Default,Label,Tip
 {"InputsAddPowerLaw"          ,ptGT_Check ,1,1,1,_("Nonlinear slider response")   ,_("Alter the slider behaviour")},
 {"ToolBoxMode"                ,ptGT_Check ,1,0,0,_("Enabled")         ,_("Show seperate toolboxes")},
+{"TabStatusIndicator"         ,ptGT_Check ,1,0,1,_("Enabled")         ,_("Show status LED on tabs")},
 {"PreviewTabMode"             ,ptGT_Check ,1,0,0,_("Tab mode")        ,_("Show the preview after the active tab")},
 {"BackgroundColor"            ,ptGT_Check ,1,0,0,_("Override default"),_("Override the default color")},
 {"Translation"                ,ptGT_Check ,1,0,0,_("Enabled")         ,_("Translate photivo")},

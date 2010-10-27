@@ -474,6 +474,16 @@ ptMainWindow::ptMainWindow(const QString Title)
   ProcessingTabBook->setCurrentIndex(0);
   ProcessingTabBook->blockSignals(0);
 
+  m_ActiveTabs.append(LensfunTab);
+  m_ActiveTabs.append(RGBTab);
+  m_ActiveTabs.append(LabCCTab);
+  m_ActiveTabs.append(LabSNTab);
+  m_ActiveTabs.append(LabEyeCandyTab);
+  m_ActiveTabs.append(EyeCandyTab);
+  m_ActiveTabs.append(OutTab);
+
+  m_StatusIcon = QIcon(QString::fromUtf8(":/photivo/Icons/circleactive.png"));
+
   // Profiles
   QFileInfo PathInfo(Settings->GetString("CameraColorProfile"));
   QString ShortFileName = PathInfo.fileName();
@@ -1242,26 +1252,22 @@ void ptMainWindow::UpdateSettings() {
     m_ToolBoxes->at(i)->SetActive(Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName()));
 
   // Status LED on tabs
-  QList <QWidget *> Tabs;
-  Tabs.append(LensfunTab);
-  Tabs.append(RGBTab);
-  Tabs.append(LabCCTab);
-  Tabs.append(LabSNTab);
-  Tabs.append(LabEyeCandyTab);
-  Tabs.append(EyeCandyTab);
-  Tabs.append(OutTab);
+  if(Settings->GetInt("TabStatusIndicator")) {
+    QList <ptGroupBox *> Temp;
+    for (int j=0; j<m_ActiveTabs.size();j++) {
+      Temp = m_ActiveTabs.at(j)->findChildren <ptGroupBox *> ();
+      int k=0;
+      for (int i=0; i<Temp.size();i++)
+        if(Settings->ToolIsActive(Temp.at(i)->objectName())) k=1;
 
-  QList <ptGroupBox *> Temp;
-  for (int j=0; j<Tabs.size();j++) {
-    Temp = Tabs.at(j)->findChildren <ptGroupBox *> ();
-    int k=0;
-    for (int i=0; i<Temp.size();i++)
-      if(Settings->ToolIsActive(Temp.at(i)->objectName())) k=1;
-
-    if (k>0)
-      ProcessingTabBook->setTabIcon(ProcessingTabBook->indexOf(Tabs.at(j)),QIcon(QString::fromUtf8(":/photivo/Icons/circleactive.png")));
-    else
-      ProcessingTabBook->setTabIcon(ProcessingTabBook->indexOf(Tabs.at(j)),QIcon());
+      if (k>0)
+        ProcessingTabBook->setTabIcon(ProcessingTabBook->indexOf(m_ActiveTabs.at(j)),m_StatusIcon);
+      else
+        ProcessingTabBook->setTabIcon(ProcessingTabBook->indexOf(m_ActiveTabs.at(j)),QIcon());
+    }
+  } else {
+    for (int j=0; j<m_ActiveTabs.size();j++)
+      ProcessingTabBook->setTabIcon(ProcessingTabBook->indexOf(m_ActiveTabs.at(j)),QIcon());
   }
 
 // Added later next to the other fields
