@@ -1241,6 +1241,28 @@ void ptMainWindow::UpdateSettings() {
   for (int i=0; i<m_ToolBoxes->size();i++)
     m_ToolBoxes->at(i)->SetActive(Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName()));
 
+  // Status LED on tabs
+  QList <QWidget *> Tabs;
+  Tabs.append(LensfunTab);
+  Tabs.append(RGBTab);
+  Tabs.append(LabCCTab);
+  Tabs.append(LabSNTab);
+  Tabs.append(LabEyeCandyTab);
+  Tabs.append(EyeCandyTab);
+  Tabs.append(OutTab);
+
+  QList <ptGroupBox *> Temp;
+  for (int j=0; j<Tabs.size();j++) {
+    Temp = Tabs.at(j)->findChildren <ptGroupBox *> ();
+    int k=0;
+    for (int i=0; i<Temp.size();i++)
+      if(Settings->ToolIsActive(Temp.at(i)->objectName())) k=1;
+
+    if (k>0)
+      ProcessingTabBook->setTabIcon(ProcessingTabBook->indexOf(Tabs.at(j)),QIcon(QString::fromUtf8(":/photivo/Icons/circleactive.png")));
+    else
+      ProcessingTabBook->setTabIcon(ProcessingTabBook->indexOf(Tabs.at(j)),QIcon());
+  }
 
 // Added later next to the other fields
   //~ // Zoom factor
@@ -1499,6 +1521,30 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("WhiteFraction",0);
     Settings->SetEnabled("WhiteLevel",0);
   }
+
+  // Color buttons
+  QPixmap Pix(80, 14);
+  QColor  Color;
+  Color.setRed(Settings->GetInt("Tone1ColorRed"));
+  Color.setGreen(Settings->GetInt("Tone1ColorGreen"));
+  Color.setBlue(Settings->GetInt("Tone1ColorBlue"));
+  Pix.fill(Color);
+  Tone1ColorButton->setIcon(Pix);
+  Color.setRed(Settings->GetInt("Tone2ColorRed"));
+  Color.setGreen(Settings->GetInt("Tone2ColorGreen"));
+  Color.setBlue(Settings->GetInt("Tone2ColorBlue"));
+  Pix.fill(Color);
+  Tone2ColorButton->setIcon(Pix);
+  Color.setRed(Settings->GetInt("GradualOverlay1ColorRed"));
+  Color.setGreen(Settings->GetInt("GradualOverlay1ColorGreen"));
+  Color.setBlue(Settings->GetInt("GradualOverlay1ColorBlue"));
+  Pix.fill(Color);
+  GradualOverlay1ColorButton->setIcon(Pix);
+  Color.setRed(Settings->GetInt("GradualOverlay2ColorRed"));
+  Color.setGreen(Settings->GetInt("GradualOverlay2ColorGreen"));
+  Color.setBlue(Settings->GetInt("GradualOverlay2ColorBlue"));
+  Pix.fill(Color);
+  GradualOverlay2ColorButton->setIcon(Pix);
 
   // sRGB gamma compensation
   Settings->SetEnabled("OutputGamma",Settings->GetInt("OutputGammaCompensation"));
