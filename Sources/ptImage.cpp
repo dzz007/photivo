@@ -2697,7 +2697,8 @@ ptImage* ptImage::Highpass(const double Radius,
 
 // To the extent possible under law, Manuel Llorens <manuelllorens@gmail.com>
 // has waived all copyright and related or neighboring rights to this work.
-// This work is published from: Spain.
+// This code is licensed under CC0 v1.0, see license information at
+// http://creativecommons.org/publicdomain/zero/1.0/
 
 ptImage* ptImage::GradientSharpen(const short Passes,
                                   const double Strength) {
@@ -2705,7 +2706,7 @@ ptImage* ptImage::GradientSharpen(const short Passes,
   assert (m_ColorSpace == ptSpace_Lab);
 
   int32_t offset,c,i,j,p,width2;
-  float lumH,lumV,lumD1,lumD2,v,contrast,med,s;
+  float lumH,lumV,lumD1,lumD2,v,contrast,s;
   float difL,difR,difT,difB,difLT,difRB,difLB,difRT,wH,wV,wD1,wD2,chmax[3];
   float f1,f2,f3,f4;
 
@@ -2837,6 +2838,79 @@ ptImage* ptImage::GradientSharpen(const short Passes,
   FREE(L);
   return this;
 }
+
+// To the extent possible under law, Manuel Llorens <manuelllorens@gmail.com>
+// has waived all copyright and related or neighboring rights to this work.
+// This code is licensed under CC0 v1.0, see license information at
+// http://creativecommons.org/publicdomain/zero/1.0/
+
+ptImage* ptImage::MLMicroContrast(const double Strength) {
+
+  assert (m_ColorSpace == ptSpace_Lab);
+
+  int32_t offset,offset2,c,i,j,col,row,n;
+  float v,s,contrast,temp;
+
+  uint16_t width = m_Width;
+  uint16_t height = m_Height;
+
+  float (*L) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*L));
+  ptMemoryError(L,__FILE__,__LINE__);
+
+  int signs[9];
+
+  c=0;
+#pragma omp parallel for private(offset) schedule(static)
+  for(offset=0;offset<m_Width*m_Height;offset++)
+    L[offset]=ToFloatTable[m_Image[offset][c]];
+
+#pragma omp parallel for private(j,i,offset,s,signs,v,n,row,col,offset2,contrast,temp) schedule(static)
+  for(j=1;j<height-1;j++)
+    for(i=1,offset=j*width+i;i<width-1;i++,offset++){
+      s=Strength;
+      v=L[offset];
+
+      n=0;
+      for(row=j-1;row<=j+1;row++)
+        for(col=i-1,offset2=row*width+col;col<=i+1;col++,offset2++){
+          signs[n]=0;
+          if(v<L[offset2]) signs[n]=-1;
+          if(v>L[offset2]) signs[n]=1;
+          n++;
+        }
+
+      contrast=sqrtf(fabsf(L[offset+1]-L[offset-1])*fabsf(L[offset+1]-L[offset-1])+fabsf(L[offset+width]-L[offset-width])*fabsf(L[offset+width]-L[offset-width]))/8.0;
+      if(contrast>1.0) contrast=1.0;
+      temp = ToFloatTable[m_Image[offset][c]];
+      temp +=(v-L[offset-width-1])*sqrtf(2)*s;
+      temp +=(v-L[offset-width])*s;
+      temp +=(v-L[offset-width+1])*sqrtf(2)*s;
+
+      temp +=(v-L[offset-1])*s;
+      temp +=(v-L[offset+1])*s;
+
+      temp +=(v-L[offset+width-1])*sqrtf(2)*s;
+      temp +=(v-L[offset+width])*s;
+      temp +=(v-L[offset+width+1])*sqrtf(2)*s;
+
+      temp = MAX(0,temp);
+
+      // Reduce halo looking artifacs
+      v=temp;
+      n=0;
+      for(row=j-1;row<=j+1;row++)
+        for(col=i-1,offset2=row*width+col;col<=i+1;col++,offset2++){
+          if(((v<L[offset2])&&(signs[n]>0))||((v>L[offset2])&&(signs[n]<0)))
+            temp=v*0.75+L[offset2]*0.25;
+          n++;
+        }
+      m_Image[offset][c]=CLIP((int32_t) ((temp*(1-contrast)+L[offset]*contrast)*0xffff));
+    }
+
+  FREE(L);
+  return this;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //

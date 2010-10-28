@@ -5581,6 +5581,11 @@ void CB_GradientSharpenStrengthInput(const QVariant Value) {
   }
 }
 
+void CB_MLMicroContrastStrengthInput(const QVariant Value) {
+  Settings->SetValue("MLMicroContrastStrength",Value);
+  Update(ptProcessorPhase_LabSN);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
@@ -7358,6 +7363,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(GradientSharpenPassesInput)
   M_Dispatch(GradientSharpenStrengthInput)
+  M_Dispatch(MLMicroContrastStrengthInput)
 
   M_Dispatch(WienerFilterCheck)
   M_Dispatch(WienerFilterUseEdgeMaskCheck)

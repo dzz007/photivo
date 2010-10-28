@@ -1101,7 +1101,8 @@ sToolInfo ToolInfo (const QString GuiName) {
                       Settings->GetDouble("BilateralBSigmaR")!=0.0)?1:0;
   } else if (GuiName == "TabLABGradientSharpen") {
       Info.Name = "Lab Gradient Sharpen";
-      Info.IsActive = Settings->GetInt("GradientSharpenPasses");
+      Info.IsActive = Settings->GetInt("GradientSharpenPasses") ||
+                      Settings->GetDouble("MLMicroContrastStrength")!=0.0;
   } else if (GuiName == "TabLABWiener") {
       Info.Name = "Lab Wiener filter";
       Info.IsActive = Settings->GetInt("WienerFilter");
