@@ -1253,6 +1253,7 @@ void ptMainWindow::UpdateSettings() {
 
   // Status LED on tabs
   if(Settings->GetInt("TabStatusIndicator")) {
+    ProcessingTabBook->setIconSize(QSize(Settings->GetInt("TabStatusIndicator"),Settings->GetInt("TabStatusIndicator")));
     QList <ptGroupBox *> Temp;
     for (int j=0; j<m_ActiveTabs.size();j++) {
       Temp = m_ActiveTabs.at(j)->findChildren <ptGroupBox *> ();

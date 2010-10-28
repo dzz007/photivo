@@ -2,7 +2,8 @@
 // Here comes the descridlion of the numerical input elements.
 // Attention : Default,Min,Max,Step should be consistent int or double. Double *always* in X.Y notation to indicate so.
 // Unique Name,GuiElement,InitLevel,InJobFile,HasDefault (causes button too !),Default,Min,Max,Step,NrDecimals,Label,ToolTip
-{"MemoryTest"                    ,ptGT_InputSlider     ,9,1,1 ,0    ,0    ,500   ,50   ,0 ,_("MB")                 ,_("MB to waste")},
+{"MemoryTest"                    ,ptGT_InputSlider     ,9,0,1 ,0    ,0    ,500   ,50   ,0 ,_("MB")                 ,_("MB to waste")},
+{"TabStatusIndicator"            ,ptGT_Input           ,1,0,1 ,8    ,0    ,16    ,1    ,0 ,_("Pixel")              ,_("Size of the LED")},
 {"Zoom"                          ,ptGT_InputSlider     ,9,0,0 ,100  ,5    ,400   ,10   ,0 ,_("Zoom")               ,_("Zoom factor")},
 {"ColorTemperature"              ,ptGT_InputSlider     ,2,1,1 ,6500 ,2000 ,15000 ,50   ,0 ,_("Temp")               ,_("Color Temperature")},
 {"GreenIntensity"                ,ptGT_Input           ,2,1,1 ,1.0  ,0.001,5.0   ,0.01 ,3 ,_("WB-G")               ,_("Green Intensity in balance")},
@@ -416,7 +417,6 @@
 // Name, GuiType,InitLevel,InJobFile,Default,Label,Tip
 {"InputsAddPowerLaw"          ,ptGT_Check ,1,1,1,_("Nonlinear slider response")   ,_("Alter the slider behaviour")},
 {"ToolBoxMode"                ,ptGT_Check ,1,0,0,_("Enabled")         ,_("Show seperate toolboxes")},
-{"TabStatusIndicator"         ,ptGT_Check ,1,0,1,_("Enabled")         ,_("Show status LED on tabs")},
 {"PreviewTabMode"             ,ptGT_Check ,1,0,0,_("Tab mode")        ,_("Show the preview after the active tab")},
 {"BackgroundColor"            ,ptGT_Check ,1,0,0,_("Override default"),_("Override the default color")},
 {"Translation"                ,ptGT_Check ,1,0,0,_("Enabled")         ,_("Translate photivo")},
