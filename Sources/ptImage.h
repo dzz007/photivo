@@ -205,7 +205,12 @@ ptImage* Highpass(const double Radius,
 ptImage* GradientSharpen(const short Passes,
                          const double Strength);
 
-ptImage* MLMicroContrast(const double Strength);
+ptImage* MLMicroContrast(const double Strength,
+                         const double Scaling,
+                         const double Weight);
+
+// Hotpixel
+ptImage* HotpixelReduction(const double Threshold);
 
 // Shadows Highlights
 ptImage* ShadowsHighlights(const ptCurve *Curve,

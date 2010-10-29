@@ -1481,7 +1481,11 @@ void ptProcessor::Run(short Phase,
         m_Image_AfterLabSN->GradientSharpen(Settings->GetInt("GradientSharpenPasses"),
                                             Settings->GetDouble("GradientSharpenStrength"));
 
-        m_Image_AfterLabSN->MLMicroContrast(Settings->GetDouble("MLMicroContrastStrength"));
+        m_Image_AfterLabSN->MLMicroContrast(Settings->GetDouble("MLMicroContrastStrength"),
+                                            Settings->GetDouble("MLMicroContrastScaling"),
+                                            Settings->GetDouble("MLMicroContrastWeight"));
+
+        m_Image_AfterLabSN->HotpixelReduction(Settings->GetDouble("LabHotpixel"));
 
         TRACEMAIN("Done Gradient Sharpen at %d ms.",Timer.elapsed());
       }

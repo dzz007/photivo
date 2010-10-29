@@ -2718,7 +2718,7 @@ ptImage* ptImage::GradientSharpen(const short Passes,
   float (*L) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*L));
   ptMemoryError(L,__FILE__,__LINE__);
 
-  chmax[0]=8.0;
+  chmax[0]=0.08;
   chmax[1]=3.0;
   chmax[2]=3.0;
   c = 0;
@@ -2844,12 +2844,15 @@ ptImage* ptImage::GradientSharpen(const short Passes,
 // This code is licensed under CC0 v1.0, see license information at
 // http://creativecommons.org/publicdomain/zero/1.0/
 
-ptImage* ptImage::MLMicroContrast(const double Strength) {
+ptImage* ptImage::MLMicroContrast(const double Strength,
+                                  const double Scaling,
+                                  const double Weight) {
 
   assert (m_ColorSpace == ptSpace_Lab);
 
   int32_t offset,offset2,c,i,j,col,row,n;
   float v,s,contrast,temp;
+  float CompWeight = 1.0f - Weight;
 
   uint16_t width = m_Width;
   uint16_t height = m_Height;
@@ -2858,6 +2861,8 @@ ptImage* ptImage::MLMicroContrast(const double Strength) {
   ptMemoryError(L,__FILE__,__LINE__);
 
   int signs[9];
+
+  float chmax = 8.0f/Scaling;
 
   c=0;
 #pragma omp parallel for private(offset) schedule(static)
@@ -2879,7 +2884,7 @@ ptImage* ptImage::MLMicroContrast(const double Strength) {
           n++;
         }
 
-      contrast=sqrtf(fabsf(L[offset+1]-L[offset-1])*fabsf(L[offset+1]-L[offset-1])+fabsf(L[offset+width]-L[offset-width])*fabsf(L[offset+width]-L[offset-width]))/8.0;
+      contrast=sqrtf(fabsf(L[offset+1]-L[offset-1])*fabsf(L[offset+1]-L[offset-1])+fabsf(L[offset+width]-L[offset-width])*fabsf(L[offset+width]-L[offset-width]))/chmax;
       if(contrast>1.0) contrast=1.0;
       temp = ToFloatTable[m_Image[offset][c]];
       temp +=(v-L[offset-width-1])*sqrtf(2)*s;
@@ -2901,7 +2906,7 @@ ptImage* ptImage::MLMicroContrast(const double Strength) {
       for(row=j-1;row<=j+1;row++)
         for(col=i-1,offset2=row*width+col;col<=i+1;col++,offset2++){
           if(((v<L[offset2])&&(signs[n]>0))||((v>L[offset2])&&(signs[n]<0)))
-            temp=v*0.75+L[offset2]*0.25;
+            temp=v*Weight+L[offset2]*CompWeight;
           n++;
         }
       m_Image[offset][c]=CLIP((int32_t) ((temp*(1-contrast)+L[offset]*contrast)*0xffff));
@@ -2911,6 +2916,58 @@ ptImage* ptImage::MLMicroContrast(const double Strength) {
   return this;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// Hotpixel
+//
+////////////////////////////////////////////////////////////////////////////////
+
+ptImage* ptImage::HotpixelReduction(const double Threshold) {
+  uint16_t Thres = (int32_t) ((1.0-Threshold)*0x2fff);
+  uint16_t Width = m_Width;
+  uint16_t Height = m_Height;
+
+#pragma omp parallel for schedule(static) default(shared)
+  for (uint16_t Row=0; Row<Height; Row++) {
+    for (uint16_t Col=0; Col<Width; Col++) {
+      uint16_t TempValue = 0;
+      for (int c=0; c<3; c++) {
+        // bright pixels
+        if (Row > 1) {
+          TempValue = MAX(m_Image[(Row-1)*Width+Col][c],TempValue);
+          if (Col > 1) TempValue = MAX(m_Image[(Row-1)*Width+Col-1][c],TempValue);
+          if (Col < Width-1) TempValue = MAX(m_Image[(Row-1)*Width+Col+1][c],TempValue);
+        }
+        if (Row < Height-1) {
+          TempValue = MAX(m_Image[(Row+1)*Width+Col][c],TempValue);
+          if (Col > 1) TempValue = MAX(m_Image[(Row+1)*Width+Col-1][c],TempValue);
+          if (Col < Width-1) TempValue = MAX(m_Image[(Row+1)*Width+Col+1][c],TempValue);
+        }
+        if (Col > 1) TempValue = MAX(m_Image[Row*Width+Col-1][c],TempValue);
+        if (Col < Width-1) TempValue = MAX(m_Image[Row*Width+Col+1][c],TempValue);
+        if (TempValue+Thres<m_Image[Row*Width+Col][c])
+          m_Image[Row*Width+Col][c] = TempValue;
+
+        // dark pixels
+        TempValue = 0xffff;
+        if (Row > 1) {
+          TempValue = MIN(m_Image[(Row-1)*Width+Col][c],TempValue);
+          if (Col > 1) TempValue = MIN(m_Image[(Row-1)*Width+Col-1][c],TempValue);
+          if (Col < Width-1) TempValue = MIN(m_Image[(Row-1)*Width+Col+1][c],TempValue);
+        }
+        if (Row < Height-1) {
+          TempValue = MIN(m_Image[(Row+1)*Width+Col][c],TempValue);
+          if (Col > 1) TempValue = MIN(m_Image[(Row+1)*Width+Col-1][c],TempValue);
+          if (Col < Width-1) TempValue = MIN(m_Image[(Row+1)*Width+Col+1][c],TempValue);
+        }
+        if (Col > 1) TempValue = MIN(m_Image[Row*Width+Col-1][c],TempValue);
+        if (Col < Width-1) TempValue = MIN(m_Image[Row*Width+Col+1][c],TempValue);
+        if (TempValue-Thres>m_Image[Row*Width+Col][c])
+          m_Image[Row*Width+Col][c] = TempValue;
+      }
+    }
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //

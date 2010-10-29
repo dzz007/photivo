@@ -5586,6 +5586,25 @@ void CB_MLMicroContrastStrengthInput(const QVariant Value) {
   Update(ptProcessorPhase_LabSN);
 }
 
+void CB_MLMicroContrastScalingInput(const QVariant Value) {
+  Settings->SetValue("MLMicroContrastScaling",Value);
+  if (Settings->GetDouble("MLMicroContrastStrength")) {
+    Update(ptProcessorPhase_LabSN);
+  }
+}
+
+void CB_MLMicroContrastWeightInput(const QVariant Value) {
+  Settings->SetValue("MLMicroContrastWeight",Value);
+  if (Settings->GetDouble("MLMicroContrastStrength")) {
+    Update(ptProcessorPhase_LabSN);
+  }
+}
+
+void CB_LabHotpixelInput(const QVariant Value) {
+  Settings->SetValue("LabHotpixel",Value);
+  Update(ptProcessorPhase_LabSN);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
@@ -7364,6 +7383,9 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GradientSharpenPassesInput)
   M_Dispatch(GradientSharpenStrengthInput)
   M_Dispatch(MLMicroContrastStrengthInput)
+  M_Dispatch(MLMicroContrastScalingInput)
+  M_Dispatch(MLMicroContrastWeightInput)
+  M_Dispatch(LabHotpixelInput)
 
   M_Dispatch(WienerFilterCheck)
   M_Dispatch(WienerFilterUseEdgeMaskCheck)

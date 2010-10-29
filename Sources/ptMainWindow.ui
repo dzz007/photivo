@@ -179,8 +179,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>277</height>
+                      <width>726</width>
+                      <height>684</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_19">
@@ -727,8 +727,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>108</width>
-                          <height>222</height>
+                          <width>708</width>
+                          <height>480</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -923,8 +923,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>246</height>
+                      <width>726</width>
+                      <height>684</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -1688,8 +1688,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>52</height>
+                          <width>708</width>
+                          <height>511</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -1749,8 +1749,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>587</height>
+                      <width>726</width>
+                      <height>684</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -2199,8 +2199,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>100</height>
+                          <width>708</width>
+                          <height>170</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -2856,8 +2856,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>556</height>
+                      <width>726</width>
+                      <height>684</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_43">
@@ -3565,8 +3565,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>100</height>
+                          <width>708</width>
+                          <height>201</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -3985,8 +3985,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>212</height>
+                          <width>708</width>
+                          <height>263</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -4320,7 +4320,48 @@
                              <widget class="QWidget" name="GradientSharpenStrengthWidget" native="true"/>
                             </item>
                             <item>
+                             <spacer name="verticalSpacer_113">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeType">
+                               <enum>QSizePolicy::Fixed</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>20</width>
+                                <height>10</height>
+                               </size>
+                              </property>
+                             </spacer>
+                            </item>
+                            <item>
                              <widget class="QWidget" name="MLMicroContrastStrengthWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="MLMicroContrastScalingWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="MLMicroContrastWeightWidget" native="true"/>
+                            </item>
+                            <item>
+                             <spacer name="verticalSpacer_114">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeType">
+                               <enum>QSizePolicy::Fixed</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>20</width>
+                                <height>10</height>
+                               </size>
+                              </property>
+                             </spacer>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="LabHotpixelWidget" native="true"/>
                             </item>
                            </layout>
                           </widget>
@@ -4791,8 +4832,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>432</height>
+                      <width>726</width>
+                      <height>684</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_169">
@@ -5845,8 +5886,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>174</height>
+                          <width>708</width>
+                          <height>325</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -7198,8 +7239,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>339</height>
+                      <width>726</width>
+                      <height>684</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="OutLayout">
@@ -7724,8 +7765,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>126</height>
+                          <width>708</width>
+                          <height>418</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -8176,8 +8217,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>777</width>
-                  <height>706</height>
+                  <width>167</width>
+                  <height>545</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_49">
@@ -8734,8 +8775,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>775</width>
-                  <height>704</height>
+                  <width>98</width>
+                  <height>432</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_143">
@@ -9101,8 +9142,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>757</width>
-                      <height>345</height>
+                      <width>98</width>
+                      <height>52</height>
                      </rect>
                     </property>
                     <attribute name="label">

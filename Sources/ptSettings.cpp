@@ -1102,7 +1102,8 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabLABGradientSharpen") {
       Info.Name = "Lab Gradient Sharpen";
       Info.IsActive = Settings->GetInt("GradientSharpenPasses") ||
-                      Settings->GetDouble("MLMicroContrastStrength")!=0.0;
+                      Settings->GetDouble("MLMicroContrastStrength")!=0.0 ||
+                      Settings->GetDouble("LabHotpixel")!=0.0;
   } else if (GuiName == "TabLABWiener") {
       Info.Name = "Lab Wiener filter";
       Info.IsActive = Settings->GetInt("WienerFilter");
