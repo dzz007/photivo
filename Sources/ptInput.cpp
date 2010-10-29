@@ -172,6 +172,8 @@ ptInput::ptInput(const QWidget* MainWindow,
           this,SLOT(OnSliderChanged(int)));
   //~ connect(m_Button,SIGNAL(clicked()),
           //~ this,SLOT(OnButtonClicked()));
+  connect(m_SpinBox,SIGNAL(editingFinished()),
+          this,SLOT(OnValueChangedTimerExpired()));
 
   // Set the default Value (and remember for later).
   m_DefaultValue = Default;
@@ -331,7 +333,9 @@ void ptInput::OnSpinBoxChanged(int Value) {
     (100.0*(Value - IntSpinBox->minimum()) /
        (IntSpinBox->maximum() - IntSpinBox->minimum()))  );
   m_Slider->blockSignals(false);
-  OnValueChanged(Value);
+  m_Value = Value;
+  if(!IntSpinBox->hasFocus())
+    OnValueChanged(Value);
 }
 
 void ptInput::OnSpinBoxChanged(double Value) {
@@ -341,7 +345,10 @@ void ptInput::OnSpinBoxChanged(double Value) {
     (0.5 + 100.0*(Value - DoubleSpinBox->minimum()) /
        (DoubleSpinBox->maximum() - DoubleSpinBox->minimum()))  );
   m_Slider->blockSignals(false);
-  OnValueChanged(Value);
+  m_Value = Value;
+  if(!DoubleSpinBox->hasFocus()) {
+    OnValueChanged(Value);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -380,6 +387,7 @@ void ptInput::OnSliderChanged(int Value) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptInput::OnButtonClicked() {
+  m_SpinBox->clearFocus();
   SetValue(m_DefaultValue,0 /* Generate signal */);
 }
 

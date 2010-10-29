@@ -5387,8 +5387,8 @@ void CB_GREYCLabGaussPrecisionInput(const QVariant Value) {
   }
 }
 
-void CB_GREYCLabptInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabpt",Value);
+void CB_GREYCLabdlInput(const QVariant Value) {
+  Settings->SetValue("GREYCLabdl",Value);
   if (Settings->GetInt("GREYCLab")==2) {
     Update(ptProcessorPhase_LabSN);
   }
@@ -7351,7 +7351,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GREYCLabAnisotropyInput)
   M_Dispatch(GREYCLabAlphaInput)
   M_Dispatch(GREYCLabSigmaInput)
-  M_Dispatch(GREYCLabptInput)
+  M_Dispatch(GREYCLabdlInput)
   M_Dispatch(GREYCLabdaInput)
   M_Dispatch(GREYCLabGaussPrecisionInput)
 

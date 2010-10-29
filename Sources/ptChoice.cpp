@@ -221,6 +221,7 @@ void ptChoice::OnValueChanged(int Value) {
 
 void ptChoice::OnValueChangedTimerExpired() {
   //printf("(%s,%d) emiting signal(%d)\n",__FILE__,__LINE__,m_Value.toInt());
+  m_ComboBox->clearFocus();
   emit(valueChanged(m_Value));
 }
 
