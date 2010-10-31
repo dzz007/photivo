@@ -793,6 +793,27 @@ void Update(short Phase,
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Update
+// Overloaded function, expects toolname and will call Update
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void Update(const QString GuiName) {
+  ptGroupBox* Box = MainWindow->findChild<ptGroupBox *>(GuiName);
+  QString Tab = Box->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
+  //QMessageBox::information(0,"Feedback","I was called from \n" + GuiName + "\nMy tab is\n" Tab);
+  if (Tab == "LensfunTab") Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+  else if (Tab == "RGBTab") Update(ptProcessorPhase_RGB);
+  else if (Tab == "LabCCTab") Update(ptProcessorPhase_LabCC);
+  else if (Tab == "LabSNTab") Update(ptProcessorPhase_LabSN);
+  else if (Tab == "LabEyeCandyTab") Update(ptProcessorPhase_LabEyeCandy);
+  else if (Tab == "EyeCandyTab") Update(ptProcessorPhase_EyeCandy);
+  else if (Tab == "OutTab") Update(ptProcessorPhase_Output);
+  else Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Block tools
 //
 ////////////////////////////////////////////////////////////////////////////////

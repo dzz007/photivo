@@ -32,10 +32,7 @@
 extern ptTheme* Theme;
 
 // Prototype
-void Update(short Phase,
-            short SubPhase      = -1,
-            short WithIdentify  = 1,
-            short ProcessorMode = ptProcessorMode_Preview);
+void Update(const QString GuiName);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -178,7 +175,7 @@ void ptGroupBox::SetBlocked() {
   Settings->SetValue("BlockedTools",Temp);
   // processor only needed after RAW since those tools are always visible
   if (Active || Settings->ToolIsActive(m_Name))
-    ::Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+    ::Update(m_Name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -194,7 +191,7 @@ void ptGroupBox::Hide() {
   Settings->SetValue("HiddenTools",Temp);
   hide();
   // processor only needed after RAW since those tools are always visible
-  if (Active) ::Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+  if (Active) ::Update(m_Name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

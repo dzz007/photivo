@@ -74,6 +74,8 @@ void Update(short Phase,
             short WithIdentify  = 1,
             short ProcessorMode = ptProcessorMode_Preview);
 
+void Update(const QString GuiName);
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1203,26 +1205,35 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       /*findChild<QWidget *>(QString("TabGenCorrections"))->
         setVisible(1-findChild<QWidget *>(QString("TabGenCorrections"))->isVisible()); */
     } else if (Event->key()==Qt::Key_H && Event->modifiers()==Qt::ControlModifier) {
-      // show hidden tools
+      // show hidden tools on current tab
       int Active = 0;
+      QString Tool= "";
       QStringList TempList = Settings->GetStringList("HiddenTools");
-      Settings->SetValue("HiddenTools", QStringList());
+      TempList.removeDuplicates();
       for (int i=0; i<m_ToolBoxes->size();i++) {
         if (TempList.contains(m_ToolBoxes->at(i)->objectName())) {
-          m_ToolBoxes->at(i)->show();
-          if (Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName()))
-            Active = 1;
+          QString Tab = m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
+          if (ProcessingTabBook->currentWidget()->objectName()==Tab) {
+            m_ToolBoxes->at(i)->show();
+            TempList.removeOne(m_ToolBoxes->at(i)->objectName());
+            Settings->SetValue("HiddenTools", TempList);
+            if (Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName())) {
+              Active = 1;
+              Tool = m_ToolBoxes->at(i)->objectName();
+            }
+          }
         }
       }
+      Settings->SetValue("HiddenTools", TempList);
       // run processor if needed
-      if (Active) Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-    } else if (Event->key()==Qt::Key_L && Event->modifiers()==Qt::NoModifier) {
+      if (Active) Update(Tool);
+    /*} else if (Event->key()==Qt::Key_L && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
       for (int i=0; i<m_ToolBoxes->size();i++) {
         Tools = Tools + m_ToolBoxes->at(i)->objectName() + " ";
         if (i%4==0) Tools = Tools + "\n";
       }
-      QMessageBox::warning(this,"Tools",Tools);
+      QMessageBox::warning(this,"Tools",Tools);*/ // plain list all tools
     } else if (Event->key()==Qt::Key_A && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
       for (int i=0; i<m_ToolBoxes->size();i++) {
