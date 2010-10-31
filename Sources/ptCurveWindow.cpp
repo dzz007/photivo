@@ -650,6 +650,16 @@ void ptCurveWindow::UpdateView(ptCurve* NewRelatedCurve) {
   // The detour QImage=>QPixmap is needed to enjoy
   // HW acceleration of QPixmap.
   if (!m_Image8) return;
+  if (isEnabled()==0) {
+    for (uint16_t j = 0; j < m_Image8->m_Width; j++) {
+      for (uint16_t i = 0; i < m_Image8->m_Height; i++) {
+        m_Image8->m_Image[i*m_Image8->m_Width+j][0] >>= 1;
+        m_Image8->m_Image[i*m_Image8->m_Width+j][1] >>= 1;
+        m_Image8->m_Image[i*m_Image8->m_Width+j][2] >>= 1;
+      }
+    }
+  }
+
   delete m_QPixmap;
   m_QPixmap = new QPixmap(
    QPixmap::fromImage(QImage((const uchar*) m_Image8->m_Image,
@@ -657,6 +667,18 @@ void ptCurveWindow::UpdateView(ptCurve* NewRelatedCurve) {
                              m_Image8->m_Height,
                              QImage::Format_RGB32)));
   repaint();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// changeEvent handler.
+// To react on enable/disable
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptCurveWindow::changeEvent(QEvent* Event) {
+  if (Event->type() == QEvent::EnabledChange)
+    UpdateView(m_RelatedCurve);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

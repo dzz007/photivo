@@ -47,26 +47,36 @@ ptGroupBox(const QString Title,
 QWidget*   m_Widget;
 
 void SetActive(const short IsActive);
+void UpdateView();
+void Update();
 
 private slots:
+void Hide();
+void SetBlocked();
 
 signals :
 
 protected:
 void mousePressEvent(QMouseEvent *event);
 void paintEvent(QPaintEvent *);
+void changeEvent(QEvent *);
 
 private:
 bool      m_Folded;
 int       m_IsActive;
+int       m_IsBlocked;
 QPixmap   RightArrow;
 QPixmap   DownArrow;
 QPixmap   ActiveRightArrow;
 QPixmap   ActiveDownArrow;
+QPixmap   BlockedRightArrow;
+QPixmap   BlockedDownArrow;
 QLabel*   m_Icon;
 QLabel*   m_Title;
 QString   m_Name;
 QLabel*   test;
+QAction*  m_AtnHide;
+QAction*  m_AtnBlock;
 };
 
 #endif

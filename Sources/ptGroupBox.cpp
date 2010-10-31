@@ -24,8 +24,18 @@
 
 #include "ptGroupBox.h"
 #include "ptSettings.h"
+#include "ptConstants.h"
+#include "ptTheme.h"
 
 #include <QMessageBox>
+
+extern ptTheme* Theme;
+
+// Prototype
+void Update(short Phase,
+            short SubPhase      = -1,
+            short WithIdentify  = 1,
+            short ProcessorMode = ptProcessorMode_Preview);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -45,6 +55,8 @@ ptGroupBox::ptGroupBox(const QString Title,
   DownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/downarrow.png"));
   ActiveRightArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/activerightarrow.png"));
   ActiveDownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/activedownarrow.png"));
+  BlockedRightArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/blockedrightarrow.png"));
+  BlockedDownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/blockeddownarrow.png"));
   setObjectName("Box");
   m_Widget = new QWidget();
   m_Widget->setContentsMargins(5,5,0,5);
@@ -78,19 +90,60 @@ ptGroupBox::ptGroupBox(const QString Title,
 
   m_Folded = Settings->m_IniSettings->value(m_Name,1).toBool();
   m_IsActive = Settings->ToolIsActive(m_Name);
-  if (m_Folded==1) {
-    m_Widget->setVisible(false);
-    m_Icon->clear();
-    m_Icon->setPixmap(m_IsActive?ActiveRightArrow:RightArrow);
-  } else {
-    m_Widget->setVisible(true);
-    m_Icon->clear();
-    m_Icon->setPixmap(m_IsActive?ActiveDownArrow:DownArrow);
-  }
+  m_IsBlocked = Settings->ToolIsBlocked(m_Name);
+
+  m_AtnHide = new QAction(QObject::tr("Hide"), this);
+  connect(m_AtnHide, SIGNAL(triggered()), this, SLOT(Hide()));
+
+  m_AtnBlock = new QAction(QObject::tr("Block"), this);
+  connect(m_AtnBlock, SIGNAL(triggered()), this, SLOT(SetBlocked()));
+  m_AtnBlock->setCheckable(true);
+  m_AtnBlock->setChecked(m_IsBlocked);
+
+  UpdateView();
+
   //~ if (i==1 && j==1) this->setVisible(false);
   //~ test = new QLabel();
   //~ test->setText("Hallo");
   //~ Layout->addWidget(test);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Update
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::Update() {
+  m_IsBlocked = Settings->ToolIsBlocked(m_Name);
+  UpdateView();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// UpdateView
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::UpdateView() {
+  if (m_Folded==1) {
+    m_Widget->setVisible(false);
+    m_Icon->clear();
+    if (m_IsBlocked) m_Icon->setPixmap(BlockedRightArrow);
+    else if (m_IsActive) m_Icon->setPixmap(ActiveRightArrow);
+    else m_Icon->setPixmap(RightArrow);
+  } else {
+    m_Widget->setVisible(true);
+    m_Icon->clear();
+    if (m_IsBlocked) m_Icon->setPixmap(BlockedDownArrow);
+    else if (m_IsActive) m_Icon->setPixmap(ActiveDownArrow);
+    else m_Icon->setPixmap(DownArrow);
+  }
+  if (m_IsBlocked) {
+    m_Widget->setEnabled(0);
+  } else {
+    m_Widget->setEnabled(1);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -102,13 +155,56 @@ ptGroupBox::ptGroupBox(const QString Title,
 void ptGroupBox::SetActive(const short IsActive) {
   m_IsActive = IsActive;
 
-  if (m_Folded==1) {
-    m_Icon->clear();
-    m_Icon->setPixmap(m_IsActive?ActiveRightArrow:RightArrow);
+  UpdateView();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Blocked
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::SetBlocked() {
+  m_IsBlocked = 1 - m_IsBlocked;
+  UpdateView();
+  int Active = Settings->ToolIsActive(m_Name);
+  QStringList Temp = Settings->GetStringList("BlockedTools");
+  Temp.removeDuplicates();
+  if (m_IsBlocked) {
+    if (!Temp.contains(m_Name)) Temp.append(m_Name);
   } else {
-    m_Icon->clear();
-    m_Icon->setPixmap(m_IsActive?ActiveDownArrow:DownArrow);
+    Temp.removeOne(m_Name);
   }
+  Settings->SetValue("BlockedTools",Temp);
+  // processor only needed after RAW since those tools are always visible
+  if (Active || Settings->ToolIsActive(m_Name))
+    ::Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Hide
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::Hide() {
+  int Active = Settings->ToolIsActive(m_Name);
+  QStringList Temp = Settings->GetStringList("HiddenTools");
+  if (!Temp.contains(m_Name)) Temp.append(m_Name);
+  Settings->SetValue("HiddenTools",Temp);
+  hide();
+  // processor only needed after RAW since those tools are always visible
+  if (Active) ::Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// changeEvent handler.
+// To react on enable/disable
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::changeEvent(QEvent *) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,27 +215,35 @@ void ptGroupBox::SetActive(const short IsActive) {
 
 void ptGroupBox::mousePressEvent(QMouseEvent *event) {
   if (event->y()<20 && event->x()<250) {
-    if (m_Folded==0) {
-      m_Widget->setVisible(false);
-      m_Icon->clear();
-      m_Icon->setPixmap(m_IsActive?ActiveRightArrow:RightArrow);
-      m_Folded = 1;
-    } else {
-      m_Widget->setVisible(true);
-      m_Icon->clear();
-      m_Icon->setPixmap(m_IsActive?ActiveDownArrow:DownArrow);
-      m_Folded = 0;
-    }
-    Settings->m_IniSettings->setValue(m_Name,m_Folded);
+    if (event->button()==Qt::LeftButton) {
+      m_Folded = 1 - m_Folded;
+      UpdateView();
+      Settings->m_IniSettings->setValue(m_Name,m_Folded);
+    } else if (event->button()==Qt::RightButton) {
+      if (!Settings->ToolAlwaysVisible(m_Name)) {
+        QMenu Menu(NULL);
+        m_AtnBlock->setChecked(m_IsBlocked);
+        Menu.setPalette(Theme->ptPalette);
+        Menu.setStyle(Theme->ptStyle);
+        Menu.addAction(m_AtnBlock);
+        Menu.addSeparator();
+        Menu.addAction(m_AtnHide);
+        Menu.exec(event->globalPos());
+      }
+    }/* else if (event->button()==Qt::RightButton &&
+              event->modifiers() == Qt::ControlModifier) {
+      if (!Settings->ToolAlwaysVisible(m_Name))
+        m_IsBlocked = 1 - m_IsBlocked;
+    }*/
   }
 }
 
  void ptGroupBox::paintEvent(QPaintEvent *)
  {
-     QStyleOption opt;
-     opt.init(this);
-     QPainter p(this);
-     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+   QStyleOption opt;
+   opt.init(this);
+   QPainter p(this);
+   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
  }
 
 ////////////////////////////////////////////////////////////////////////////////

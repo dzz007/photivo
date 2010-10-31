@@ -362,7 +362,7 @@
 {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatioH              ,_("Aspect height")},
 {"ChannelMixer"                ,ptGT_Choice       ,2,1,1 ,ptChannelMixerChoice_None   ,GuiOptions->ChannelMixer              ,_("ChannelMixer")},
 {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,_("Clip mode")},
-{"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Ufraw    ,GuiOptions->AutoExposureMode          ,_("Auto exposure mode")},
+{"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,_("Auto exposure mode")},
 {"LABTransform"                ,ptGT_Choice       ,2,1,1 ,ptLABTransform_L            ,GuiOptions->LABTransformMode          ,_("LAB Transform mode")},
 {"LMHLightRecovery1MaskType"   ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,_("Values for recovery")},
 {"LMHLightRecovery2MaskType"   ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,_("Values for recovery")},

@@ -928,6 +928,7 @@ void ptSettings::FromDcRaw(DcRaw* TheDcRaw) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Tool Info
+// IsActive contains, if the filter will be processed!
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -935,10 +936,11 @@ struct sToolInfo {
   QString               Name;
   int                   IsActive;
   int                   IsHidden;
+  int                   IsBlocked;
 };
 
 sToolInfo ToolInfo (const QString GuiName) {
-  sToolInfo Info = {"N.N.",0,0};
+  sToolInfo Info = {"N.N.",0,0,0};
   // Tab Geometry
   if (GuiName == "TabRotation") {
       Info.Name = "Rotation";
@@ -1260,8 +1262,42 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetInt("WienerFilter2")!=0?1:0;
   }
 
-  Info.IsHidden = Settings->m_IniSettings->value(GuiName+"IsHidden",0).toInt();
+  // tool blocked?
+  Info.IsBlocked = (Settings->GetStringList("BlockedTools")).contains(GuiName)?1:0;
+
+  // tool hidden?
+  Info.IsHidden = (Settings->GetStringList("HiddenTools")).contains(GuiName)?1:0;
   return Info;
+}
+
+int ptSettings::ToolAlwaysVisible(const QString GuiName) {
+  QStringList VisibleTools =
+  (QStringList()
+    // Settings tab
+    << "TabWorkColorSpace"
+    << "TabPreviewColorSpace"
+    << "TabGimpCommand"
+    << "TabRememberSettings"
+    << "TabInputControl"
+    << "TabToolBoxControl"
+    << "TabTabStatusIndicator"
+    << "TabPreviewControl"
+    << "TabTheming"
+    << "TabTranslation"
+    << "TabMemoryTest"
+    // Input tab
+    << "TabInput"
+    << "TabCameraColorSpace"
+    << "TabGenCorrections"
+    << "TabWhiteBalance"
+    << "TabDemosaicing"
+    << "TabHighlightRecovery"
+    // Output Tab
+    << "TabOutputColorSpace"
+    << "TabOutParameters"
+    << "TabOutput");
+  if (VisibleTools.contains(GuiName)) return 1;
+  return 0;
 }
 
 QString ptSettings::ToolGetName (const QString GuiName) {
@@ -1271,7 +1307,12 @@ QString ptSettings::ToolGetName (const QString GuiName) {
 
 int ptSettings::ToolIsActive (const QString GuiName) {
   sToolInfo Info = ToolInfo(GuiName);
-  return Info.IsHidden?0:Info.IsActive;
+  return (Info.IsHidden || Info.IsBlocked)?0:Info.IsActive;
+}
+
+int ptSettings::ToolIsBlocked (const QString GuiName) {
+  sToolInfo Info = ToolInfo(GuiName);
+  return Info.IsBlocked;
 }
 
 int ptSettings::ToolIsHidden (const QString GuiName) {

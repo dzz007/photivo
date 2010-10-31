@@ -64,6 +64,7 @@ void CalculateCurve();
 void ContextMenu(QMouseEvent* event);
 
 protected:
+void changeEvent(QEvent* Event);
 void resizeEvent(QResizeEvent*);
 void paintEvent(QPaintEvent*);
 void mousePressEvent(QMouseEvent *Event);

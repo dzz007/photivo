@@ -167,7 +167,9 @@ void  Show(const QString Key, const short Show);
 
 // Some accessors by GuiName
 QString ToolGetName (const QString GuiName);
+int ToolAlwaysVisible(const QString GuiName);
 int ToolIsActive (const QString GuiName);
+int ToolIsBlocked (const QString GuiName);
 int ToolIsHidden (const QString GuiName);
 
 // Methods specific for choice (combo) type of gui elements.

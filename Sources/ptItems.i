@@ -113,3 +113,5 @@
 {"SatCurveType"                         ,1         ,0                                                   ,1},
 {"TextureCurveType"                     ,1         ,0                                                   ,1},
 {"FullOutput"                           ,9         ,0                                                   ,0},
+{"HiddenTools"                          ,0         ,QStringList()                                       ,1},
+{"BlockedTools"                         ,0         ,QStringList()                                       ,1},

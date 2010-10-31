@@ -58,6 +58,9 @@ ptMainWindow(const QString         Title);
 // -1 on error.
 short GetCurrentTab();
 
+// Show or hide the toolboxes
+void UpdateToolBoxes();
+
 // Update some settings from the GuiSettings.
 // (after a dcraw calculation for instance).
 void UpdateSettings(void);

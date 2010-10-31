@@ -1897,6 +1897,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     if (!JobSettings.contains(Key)) continue;
     if (Key=="InputFileNameList") continue;
     if (Key=="OutputDirectory") continue;
+    if (Key=="HiddenTools") continue; // see below! BlockedTools are just set.
     QVariant Tmp = JobSettings.value(Key);
     // Correction needed as the values coming from the ini file are
     // often interpreted as strings even if they could be int or so.
@@ -1921,6 +1922,35 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     }
     Settings->SetValue(Key,Tmp);
   }
+
+  // Hidden tools:
+  // current hidden tools, stay hidden, unless they are needed for settings.
+  QStringList CurrentHiddenTools = Settings->GetStringList("HiddenTools");
+  QStringList ProposedHiddenTools = JobSettings.value("HiddenTools").toStringList();
+  CurrentHiddenTools.removeDuplicates();
+  ProposedHiddenTools.removeDuplicates();
+  Settings->SetValue("HiddenTools",ProposedHiddenTools);
+  //~ QApplication::sendEvent(MainWindow, &QKeyEvent(QEvent::KeyPress,Qt::Key_A,Qt::NoModifier));
+  QStringList BlockedTools = Settings->GetStringList("BlockedTools");
+  for (int i = 0; i < CurrentHiddenTools.size(); i++) {
+    if (ProposedHiddenTools.contains(CurrentHiddenTools.at(i))) {
+      ProposedHiddenTools.removeOne(CurrentHiddenTools.at(i));
+      continue;
+    }
+    if (Settings->ToolIsActive(CurrentHiddenTools.at(i))) {
+      CurrentHiddenTools.removeOne(CurrentHiddenTools.at(i));
+    }
+  }
+  Settings->SetValue("HiddenTools",CurrentHiddenTools);
+  // proposed hidden tools, get not hidden, but may disable active tools
+  for (int i = 0; i < ProposedHiddenTools.size(); i++) {
+    if (Settings->ToolIsActive(ProposedHiddenTools.at(i)))
+      BlockedTools.append(ProposedHiddenTools.at(i));
+  }
+  BlockedTools.removeDuplicates();
+  Settings->SetValue("BlockedTools",BlockedTools);
+  MainWindow->UpdateToolBoxes();
+
   // next processor stage
   if (JobSettings.contains("NextPhase"))
     NextPhase = JobSettings.value("NextPhase").toInt();
@@ -3982,6 +4012,7 @@ void CB_ExposureInput(const QVariant Value) {
 
 void CB_ExposureClipModeChoice(const QVariant Value) {
   Settings->SetValue("ExposureClipMode",Value);
+  // if (!Settings->ToolIsBlocked(MainWindow->ExposureWidget->parent()->parent()->parent()->objectName()))
   Update(ptProcessorPhase_RGB);
 }
 

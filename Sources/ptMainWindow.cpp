@@ -462,6 +462,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   DenoiseCurveCentralWidget->hide();
   DenoiseCurveControlWidget->hide();
 
+  UpdateToolBoxes();
+
   // Set us in the beginning of the tabbook and show mainwindow.
   // But we do not want to generate events for this during setup
   MainTabBook->blockSignals(1);
@@ -1189,10 +1191,31 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (Event->key()==Qt::Key_C && Event->modifiers()==Qt::NoModifier) {
       Settings->SetValue("ExposureIndicator",1-Settings->GetInt("ExposureIndicator"));
       Update(ptProcessorPhase_NULL);
-    // hide tools, needs GUI implementation
-    /*} else if (Event->key()==Qt::Key_H && Event->modifiers()==Qt::NoModifier) {
-      findChild<QWidget *>(QString("TabGenCorrections"))->
+    // hidden tools, needs GUI implementation
+    } else if (Event->key()==Qt::Key_H && Event->modifiers()==Qt::NoModifier) {
+      QString Tools = "";
+      for (int i=0; i<m_ToolBoxes->size();i++) {
+        if (Settings->ToolIsHidden(m_ToolBoxes->at(i)->objectName()))
+          Tools = Tools + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
+      }
+      if (Tools == "") Tools = "No tools hidden!";
+      QMessageBox::information(this,"Hidden tools",Tools);
+      /*findChild<QWidget *>(QString("TabGenCorrections"))->
         setVisible(1-findChild<QWidget *>(QString("TabGenCorrections"))->isVisible()); */
+    } else if (Event->key()==Qt::Key_H && Event->modifiers()==Qt::ControlModifier) {
+      // show hidden tools
+      int Active = 0;
+      QStringList TempList = Settings->GetStringList("HiddenTools");
+      Settings->SetValue("HiddenTools", QStringList());
+      for (int i=0; i<m_ToolBoxes->size();i++) {
+        if (TempList.contains(m_ToolBoxes->at(i)->objectName())) {
+          m_ToolBoxes->at(i)->show();
+          if (Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName()))
+            Active = 1;
+        }
+      }
+      // run processor if needed
+      if (Active) Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
     } else if (Event->key()==Qt::Key_L && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
       for (int i=0; i<m_ToolBoxes->size();i++) {
@@ -1208,7 +1231,32 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       }
       if (Tools == "") Tools = "No tools active!";
       QMessageBox::information(this,"Active tools",Tools);
+    } else if (Event->key()==Qt::Key_B && Event->modifiers()==Qt::NoModifier) {
+      QString Tools = "";
+      for (int i=0; i<m_ToolBoxes->size();i++) {
+        if (Settings->ToolIsBlocked(m_ToolBoxes->at(i)->objectName()))
+          Tools = Tools + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
+      }
+      if (Tools == "") Tools = "No tools blocked!";
+      QMessageBox::information(this,"Blocked tools",Tools);
     }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// UpdateToolBoxes
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::UpdateToolBoxes() {
+  for (int i=0; i<m_ToolBoxes->size();i++) {
+    if (Settings->ToolIsHidden(m_ToolBoxes->at(i)->objectName())) {
+      m_ToolBoxes->at(i)->hide();
+    } else {
+      m_ToolBoxes->at(i)->show();
+    }
+    m_ToolBoxes->at(i)->Update();
   }
 }
 

@@ -10,6 +10,8 @@
     <file>Icons/rightarrow.png</file>
     <file>Icons/activedownarrow.png</file>
     <file>Icons/activerightarrow.png</file>
+    <file>Icons/blockeddownarrow.png</file>
+    <file>Icons/blockedrightarrow.png</file>
     <file>Icons/folder_grey_open.png</file>
     <file>Icons/play.png</file>
     <file>Icons/arrow.png</file>
