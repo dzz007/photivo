@@ -163,6 +163,7 @@ void ptGroupBox::SetActive(const short IsActive) {
 
 void ptGroupBox::SetBlocked() {
   m_IsBlocked = 1 - m_IsBlocked;
+  m_Folded = m_IsBlocked;
   UpdateView();
   int Active = Settings->ToolIsActive(m_Name);
   QStringList Temp = Settings->GetStringList("BlockedTools");

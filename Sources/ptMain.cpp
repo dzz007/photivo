@@ -913,7 +913,7 @@ void BeforeGamma(ptImage* Image, const short FinalRun = 0, const short Resize = 
   }
 
   //GammaCompensation
-  if (Settings->ToolIsActive("TabOutputColorSpace")) {
+  if (Settings->ToolIsActive("TabGammaCompensation")) {
     ReportProgress(QObject::tr("Applying gamma compensation"));
     ptCurve* CompensationCurve = new ptCurve();
     CompensationCurve->SetCurveFromFunction(DeltaGammaTool,Settings->GetDouble("OutputGamma"),

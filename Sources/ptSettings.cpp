@@ -1243,7 +1243,7 @@ sToolInfo ToolInfo (const QString GuiName) {
   else if (GuiName == "TabBaseCurve") {
       Info.Name = "Output base curve";
       Info.IsActive = Settings->GetInt("BaseCurve")!=0?1:0;
-  } else if (GuiName == "TabOutputColorSpace") {
+  } else if (GuiName == "TabGammaCompensation") {
       Info.Name = "Output gamma compensation";
       Info.IsActive = Settings->GetInt("OutputGammaCompensation")!=0?1:0;
   } else if (GuiName == "TabWebResize") {
