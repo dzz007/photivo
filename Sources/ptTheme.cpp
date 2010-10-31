@@ -96,7 +96,7 @@ void ptTheme::MidGrey(short Color) {
   ptPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Text, ptText);
   ptPalette.setColor(QPalette::Button, ptBackGround); // Splitter
-  ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
+  // ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
   ptPalette.setColor(QPalette::BrightText, QColor(255,0,0)); //
 
   ptPalette.setColor(QPalette::Light, ptDark); // Splitter
@@ -141,7 +141,7 @@ void ptTheme::DarkGrey(short Color) {
   ptPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Text, ptText);
   ptPalette.setColor(QPalette::Button, ptBackGround); // Splitter
-  ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
+  // ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
   ptPalette.setColor(QPalette::BrightText, QColor(255,0,0)); //
 
   ptPalette.setColor(QPalette::Light, ptDark); // Splitter
