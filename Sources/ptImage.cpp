@@ -2846,13 +2846,19 @@ ptImage* ptImage::GradientSharpen(const short Passes,
 
 ptImage* ptImage::MLMicroContrast(const double Strength,
                                   const double Scaling,
-                                  const double Weight) {
+                                  const double Weight,
+                                  const ptCurve *Curve,
+                                  const short Type) {
 
   assert (m_ColorSpace == ptSpace_Lab);
 
   int32_t offset,offset2,c,i,j,col,row,n;
   float v,s,contrast,temp;
   float CompWeight = 1.0f - Weight;
+  const float WPH = 0x8080;
+
+  float ValueA = 0.0;
+  float ValueB = 0.0;
 
   uint16_t width = m_Width;
   uint16_t height = m_Height;
@@ -2865,24 +2871,51 @@ ptImage* ptImage::MLMicroContrast(const double Strength,
   float chmax = 8.0f/Scaling;
 
   c=0;
+
 #pragma omp parallel for private(offset) schedule(static)
   for(offset=0;offset<m_Width*m_Height;offset++)
     L[offset]=ToFloatTable[m_Image[offset][c]];
 
-#pragma omp parallel for private(j,i,offset,s,signs,v,n,row,col,offset2,contrast,temp) schedule(static)
+#pragma omp parallel for private(j,i,offset,s,signs,v,n,row,col,offset2,contrast,temp, ValueA, ValueB) schedule(static)
   for(j=1;j<height-1;j++)
     for(i=1,offset=j*width+i;i<width-1;i++,offset++){
-      s=Strength;
+      if (Curve == NULL) s=Strength;
+      else {
+        // set s according to the curve
+        if (Type == 0) { // by chroma
+          ValueA = (float)m_Image[offset][1]-WPH;
+          ValueB = (float)m_Image[offset][2]-WPH;
+          float Hue = 0;
+          if (ValueA == 0.0 && ValueB == 0.0) {
+            Hue = 0;   // value for grey pixel
+          } else {
+            Hue = atan2f(ValueB,ValueA);
+          }
+          while (Hue < 0) Hue += 2.*ptPI;
+
+          float Col = powf(ValueA * ValueA + ValueB * ValueB, 0.125);
+          Col /= 0x7; // normalizing to 0..2
+
+          float Factor = Curve->m_Curve[CLIP((int32_t)(Hue/ptPI*WPH))]/(float)0x3333 - 1.0;
+          //~ m = powf(3.0,fabs(Factor) * Col);
+          s = Strength * Factor * Col;
+        } else { //by luma
+          float Factor = Curve->m_Curve[m_Image[offset][0]]/(float)0x3333 - 1.0;
+          //~ m = powf(3.0,fabs(Factor));
+          s = Strength * Factor;
+        }
+      }
       v=L[offset];
 
       n=0;
-      for(row=j-1;row<=j+1;row++)
+      for(row=j-1;row<=j+1;row++) {
         for(col=i-1,offset2=row*width+col;col<=i+1;col++,offset2++){
           signs[n]=0;
           if(v<L[offset2]) signs[n]=-1;
           if(v>L[offset2]) signs[n]=1;
           n++;
         }
+      }
 
       contrast=sqrtf(fabsf(L[offset+1]-L[offset-1])*fabsf(L[offset+1]-L[offset-1])+fabsf(L[offset+width]-L[offset-width])*fabsf(L[offset+width]-L[offset-width]))/chmax;
       if(contrast>1.0) contrast=1.0;
@@ -2967,6 +3000,7 @@ ptImage* ptImage::HotpixelReduction(const double Threshold) {
       }
     }
   }
+  return this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

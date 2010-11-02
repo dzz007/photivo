@@ -144,7 +144,7 @@
                 <enum>QTabWidget::West</enum>
                </property>
                <property name="currentIndex">
-                <number>7</number>
+                <number>4</number>
                </property>
                <property name="iconSize">
                 <size>
@@ -179,8 +179,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>726</width>
-                      <height>684</height>
+                      <width>91</width>
+                      <height>277</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_19">
@@ -727,8 +727,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>708</width>
-                          <height>480</height>
+                          <width>108</width>
+                          <height>222</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -923,8 +923,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>726</width>
-                      <height>684</height>
+                      <width>91</width>
+                      <height>246</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -1688,8 +1688,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>708</width>
-                          <height>511</height>
+                          <width>73</width>
+                          <height>73</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -1749,8 +1749,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>726</width>
-                      <height>684</height>
+                      <width>91</width>
+                      <height>587</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -2199,8 +2199,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>708</width>
-                          <height>170</height>
+                          <width>60</width>
+                          <height>100</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -2856,8 +2856,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>726</width>
-                      <height>684</height>
+                      <width>91</width>
+                      <height>556</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_43">
@@ -3565,8 +3565,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>708</width>
-                          <height>201</height>
+                          <width>60</width>
+                          <height>100</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -3798,7 +3798,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>726</width>
+                      <width>779</width>
                       <height>684</height>
                      </rect>
                     </property>
@@ -4111,8 +4111,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>108</width>
-                          <height>156</height>
+                          <width>87</width>
+                          <height>100</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -4134,6 +4134,86 @@
                             <item>
                              <widget class="QWidget" name="PyrDenoiseLevelsWidget" native="true"/>
                             </item>
+                           </layout>
+                          </widget>
+                         </item>
+                         <item>
+                          <spacer name="verticalSpacer_107">
+                           <property name="orientation">
+                            <enum>Qt::Vertical</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>20</width>
+                             <height>188</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                        </layout>
+                       </widget>
+                       <widget class="QWidget" name="TabColorDenoise">
+                        <property name="geometry">
+                         <rect>
+                          <x>0</x>
+                          <y>0</y>
+                          <width>87</width>
+                          <height>100</height>
+                         </rect>
+                        </property>
+                        <attribute name="label">
+                         <string>Color Denoising</string>
+                        </attribute>
+                        <layout class="QVBoxLayout" name="verticalLayout_192">
+                         <item>
+                          <widget class="QWidget" name="widget_98" native="true">
+                           <layout class="QVBoxLayout" name="verticalLayout_191">
+                            <item>
+                             <widget class="QWidget" name="BilateralASigmaRWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="BilateralASigmaSWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="BilateralBSigmaRWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="BilateralBSigmaSWidget" native="true"/>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                         <item>
+                          <spacer name="verticalSpacer_82">
+                           <property name="orientation">
+                            <enum>Qt::Vertical</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>20</width>
+                             <height>177</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                        </layout>
+                       </widget>
+                       <widget class="QWidget" name="TabDetailCurve">
+                        <property name="geometry">
+                         <rect>
+                          <x>0</x>
+                          <y>0</y>
+                          <width>761</width>
+                          <height>232</height>
+                         </rect>
+                        </property>
+                        <attribute name="label">
+                         <string>Detail curve</string>
+                        </attribute>
+                        <layout class="QVBoxLayout" name="verticalLayout_220">
+                         <item>
+                          <widget class="QWidget" name="widget_131" native="true">
+                           <layout class="QVBoxLayout" name="verticalLayout_219">
                             <item>
                              <widget class="QFrame" name="DenoiseCurveCentralWidget">
                               <property name="sizePolicy">
@@ -4233,64 +4313,27 @@
                               </layout>
                              </widget>
                             </item>
+                            <item>
+                             <widget class="QWidget" name="DetailCurveScalingWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="DetailCurveWeightWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="DetailCurveHotpixelWidget" native="true"/>
+                            </item>
                            </layout>
                           </widget>
                          </item>
                          <item>
-                          <spacer name="verticalSpacer_107">
+                          <spacer name="verticalSpacer_116">
                            <property name="orientation">
                             <enum>Qt::Vertical</enum>
                            </property>
                            <property name="sizeHint" stdset="0">
                             <size>
                              <width>20</width>
-                             <height>188</height>
-                            </size>
-                           </property>
-                          </spacer>
-                         </item>
-                        </layout>
-                       </widget>
-                       <widget class="QWidget" name="TabColorDenoise">
-                        <property name="geometry">
-                         <rect>
-                          <x>0</x>
-                          <y>0</y>
-                          <width>87</width>
-                          <height>100</height>
-                         </rect>
-                        </property>
-                        <attribute name="label">
-                         <string>Color Denoising</string>
-                        </attribute>
-                        <layout class="QVBoxLayout" name="verticalLayout_192">
-                         <item>
-                          <widget class="QWidget" name="widget_98" native="true">
-                           <layout class="QVBoxLayout" name="verticalLayout_191">
-                            <item>
-                             <widget class="QWidget" name="BilateralASigmaRWidget" native="true"/>
-                            </item>
-                            <item>
-                             <widget class="QWidget" name="BilateralASigmaSWidget" native="true"/>
-                            </item>
-                            <item>
-                             <widget class="QWidget" name="BilateralBSigmaRWidget" native="true"/>
-                            </item>
-                            <item>
-                             <widget class="QWidget" name="BilateralBSigmaSWidget" native="true"/>
-                            </item>
-                           </layout>
-                          </widget>
-                         </item>
-                         <item>
-                          <spacer name="verticalSpacer_82">
-                           <property name="orientation">
-                            <enum>Qt::Vertical</enum>
-                           </property>
-                           <property name="sizeHint" stdset="0">
-                            <size>
-                             <width>20</width>
-                             <height>177</height>
+                             <height>101</height>
                             </size>
                            </property>
                           </spacer>
@@ -4302,8 +4345,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>708</width>
-                          <height>263</height>
+                          <width>761</width>
+                          <height>232</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -4832,8 +4875,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>726</width>
-                      <height>684</height>
+                      <width>91</width>
+                      <height>432</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_169">
@@ -5886,8 +5929,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>708</width>
-                          <height>325</height>
+                          <width>68</width>
+                          <height>174</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -5996,8 +6039,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>726</width>
-                      <height>684</height>
+                      <width>91</width>
+                      <height>494</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_181">
@@ -6807,8 +6850,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>708</width>
-                          <height>263</height>
+                          <width>94</width>
+                          <height>78</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -7239,8 +7282,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>726</width>
-                      <height>684</height>
+                      <width>91</width>
+                      <height>370</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="OutLayout">
@@ -7257,8 +7300,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>708</width>
-                          <height>387</height>
+                          <width>94</width>
+                          <height>78</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -7389,6 +7432,14 @@
                         </layout>
                        </widget>
                        <widget class="QWidget" name="TabGammaCompensation">
+                        <property name="geometry">
+                         <rect>
+                          <x>0</x>
+                          <y>0</y>
+                          <width>87</width>
+                          <height>84</height>
+                         </rect>
+                        </property>
                         <attribute name="label">
                          <string>sRGB gamma compensation</string>
                         </attribute>
@@ -7428,8 +7479,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>708</width>
-                          <height>387</height>
+                          <width>127</width>
+                          <height>87</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -7791,8 +7842,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>708</width>
-                          <height>418</height>
+                          <width>87</width>
+                          <height>126</height>
                          </rect>
                         </property>
                         <attribute name="label">

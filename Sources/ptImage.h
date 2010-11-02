@@ -207,7 +207,9 @@ ptImage* GradientSharpen(const short Passes,
 
 ptImage* MLMicroContrast(const double Strength,
                          const double Scaling,
-                         const double Weight);
+                         const double Weight,
+                         const ptCurve *Curve = NULL,
+                         const short Type = 0);
 
 // Hotpixel
 ptImage* HotpixelReduction(const double Threshold);

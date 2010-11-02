@@ -1464,6 +1464,32 @@ void ptProcessor::Run(short Phase,
         TRACEMAIN("Done B denoise at %d ms.",Timer.elapsed());
       }
 
+      // Detail / denoise curve
+
+      if (Settings->ToolIsActive("TabDetailCurve")) {
+
+        m_ReportProgress(QObject::tr("Detail curve"));
+
+        //Postponed RGBToLab for performance.
+        if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
+          m_Image_AfterLabSN->RGBToLab();
+
+          TRACEMAIN("Done conversion to LAB at %d ms.",
+                    Timer.elapsed());
+
+        }
+        m_Image_AfterLabSN->MLMicroContrast(0.15,
+                                            Settings->GetDouble("DetailCurveScaling"),
+                                            Settings->GetDouble("DetailCurveWeight"),
+                                            Curve[ptCurveChannel_Denoise],
+                                            Settings->GetInt("DenoiseCurveType"));
+
+        m_Image_AfterLabSN->HotpixelReduction(Settings->GetDouble("DetailCurveHotpixel"));
+
+        TRACEMAIN("Done detail curve at %d ms.",Timer.elapsed());
+      }
+
+
       // Gradient Sharpen
 
       if (Settings->ToolIsActive("TabLABGradientSharpen")) {

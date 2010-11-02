@@ -42,7 +42,8 @@
 ptCurve::ptCurve(const short Channel) {
   if (Channel == ptCurveChannel_Saturation ||
       Channel == ptCurveChannel_LByHue ||
-      Channel == ptCurveChannel_Texture)
+      Channel == ptCurveChannel_Texture ||
+      Channel == ptCurveChannel_Denoise)
     m_IntType = ptCurveIT_Linear;
   else
     m_IntType = ptCurveIT_Spline;
@@ -86,6 +87,15 @@ short ptCurve::SetNullCurve(const short Channel) {
     m_YAnchor[1]      = 0.25;
     m_XAnchor[2]      = 1.0;
     m_YAnchor[2]      = 0.25;
+  } else if (Channel == ptCurveChannel_Denoise) {
+    m_Type            = ptCurveType_Anchor;
+    m_NrAnchors       = 3;
+    m_XAnchor[0]      = 0.0;
+    m_YAnchor[0]      = 0.2;
+    m_XAnchor[1]      = 0.5;
+    m_YAnchor[1]      = 0.2;
+    m_XAnchor[2]      = 1.0;
+    m_YAnchor[2]      = 0.2;
   } else if (Channel == ptCurveChannel_a || Channel == ptCurveChannel_b) {
     m_Type            = ptCurveType_Anchor;
     m_NrAnchors       = 3;

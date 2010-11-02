@@ -1101,6 +1101,10 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Lab Levels";
       Info.IsActive = (Settings->GetDouble("BilateralASigmaR")!=0.0 ||
                       Settings->GetDouble("BilateralBSigmaR")!=0.0)?1:0;
+  } else if (GuiName == "TabDetailCurve") {
+      Info.Name = "Lab detail curve";
+      Info.IsActive = Settings->GetInt("CurveDenoise") ||
+                      Settings->GetDouble("DetailCurveHotpixel")!=0.0;
   } else if (GuiName == "TabLABGradientSharpen") {
       Info.Name = "Lab Gradient Sharpen";
       Info.IsActive = Settings->GetInt("GradientSharpenPasses") ||

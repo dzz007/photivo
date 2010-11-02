@@ -458,11 +458,10 @@ ptMainWindow::ptMainWindow(const QString Title)
     Settings->SetEnabled("SaveQuality",0);
 
   // hide some stuff instead of removing from the code
-  findChild<QWidget *>(QString("TabToolBoxControl"))->setVisible(0);
-  findChild<QWidget *>(QString("TabMemoryTest"))->setVisible(0);
-  findChild<QWidget *>(QString("TabLensfun"))->setVisible(0);
-  DenoiseCurveCentralWidget->hide();
-  DenoiseCurveControlWidget->hide();
+  findChild<ptGroupBox *>(QString("TabToolBoxControl"))->setVisible(0);
+  findChild<ptGroupBox *>(QString("TabMemoryTest"))->setVisible(0);
+  findChild<ptGroupBox *>(QString("TabLensfun"))->setVisible(0);
+  m_ToolBoxes->removeOne(findChild<ptGroupBox *>(QString("TabLensfun")));
 
   UpdateToolBoxes();
 

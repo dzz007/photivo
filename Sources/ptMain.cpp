@@ -1990,7 +1990,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     }
   }
 
-  if (Settings->GetInt("ChannelMixer")) {
+  if (Settings->GetInt("ChannelMixer")>1) {
     if (ChannelMixer->ReadChannelMixer(
          (Settings->GetStringList("ChannelMixerFileNames"))
            [Settings->GetInt("ChannelMixer")-ptChannelMixerChoice_File].
@@ -5617,6 +5617,32 @@ void CB_WaveletDenoiseBSoftnessInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
+// Partim Detail Curve
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_DetailCurveScalingInput(const QVariant Value) {
+  Settings->SetValue("DetailCurveScaling",Value);
+  if (Settings->GetInt("CurveDenoise")) {
+    Update(ptProcessorPhase_LabSN);
+  }
+}
+
+void CB_DetailCurveWeightInput(const QVariant Value) {
+  Settings->SetValue("DetailCurveWeight",Value);
+  if (Settings->GetInt("CurveDenoise")) {
+    Update(ptProcessorPhase_LabSN);
+  }
+}
+
+void CB_DetailCurveHotpixelInput(const QVariant Value) {
+  Settings->SetValue("DetailCurveHotpixel",Value);
+  Update(ptProcessorPhase_LabSN);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the LabSN Tab
 // Partim Gradient Sharpen
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -7431,6 +7457,10 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WaveletDenoiseASoftnessInput)
   M_Dispatch(WaveletDenoiseBInput)
   M_Dispatch(WaveletDenoiseBSoftnessInput)
+
+  M_Dispatch(DetailCurveScalingInput)
+  M_Dispatch(DetailCurveWeightInput)
+  M_Dispatch(DetailCurveHotpixelInput)
 
   M_Dispatch(GradientSharpenPassesInput)
   M_Dispatch(GradientSharpenStrengthInput)
