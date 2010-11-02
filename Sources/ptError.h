@@ -2,7 +2,7 @@
 //
 // photivo
 //
-// Copyright (C) 2008 Jos De Laender
+// Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 //
 // This file is part of photivo.
 //

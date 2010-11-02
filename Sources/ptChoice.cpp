@@ -2,7 +2,8 @@
 //
 // photivo
 //
-// Copyright (C) 2008 Jos De Laender
+// Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
+// Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
