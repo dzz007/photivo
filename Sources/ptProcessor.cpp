@@ -68,6 +68,8 @@ ptProcessor::ptProcessor(void (*ReportProgress)(const QString Message), void (*U
   // Exif Data and Buffer
   m_ExifBuffer       = NULL;
   m_ExifBufferLength = 0;
+
+  m_ScaleFactor = 0;
 }
 
 // Prototype for status report in Viewwindow
@@ -439,9 +441,7 @@ void ptProcessor::Run(short Phase,
       // Rotation
 
       if (Settings->ToolIsActive("TabRotation")) {
-
         m_ReportProgress(QObject::tr("Rotating"));
-    //~ ptIMRotateC(m_Image_AfterRGB, Settings->GetDouble("Rotate"));
 
         m_Image_AfterLensfun->Rotate(Settings->GetDouble("Rotate"));
 
@@ -497,6 +497,23 @@ void ptProcessor::Run(short Phase,
 
       TRACEKEYVALS("CropW","%d",Settings->GetInt("CropW"));
       TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
+
+      // set scale factor for size dependend filters
+      m_ScaleFactor = 1/powf(2.0, Settings->GetInt("Scaled"));
+
+      // Resize
+      if (Settings->ToolIsActive("TabResize")) {
+        m_ReportProgress(QObject::tr("Resize image"));
+
+        float WidthIn = m_Image_AfterLensfun->m_Width;
+
+        m_Image_AfterLensfun->ptGMResize(Settings->GetInt("ResizeScale"),
+                                         Settings->GetInt("ResizeFilter"));
+
+        m_ScaleFactor = (float) m_Image_AfterLensfun->m_Width/WidthIn/powf(2.0, Settings->GetInt("Scaled"));
+
+        TRACEMAIN("Done resize at %d ms.",Timer.elapsed());
+      }
 
       // Flip
 
@@ -804,12 +821,12 @@ void ptProcessor::Run(short Phase,
 
         m_ReportProgress(QObject::tr("RGB Texture contrast"));
 
-        m_Image_AfterRGB->TextureContrast(Settings->GetDouble("RGBTextureContrastThreshold")/pow(2,Settings->GetInt("Scaled")),
+        m_Image_AfterRGB->TextureContrast(Settings->GetDouble("RGBTextureContrastThreshold")*m_ScaleFactor,
           Settings->GetDouble("RGBTextureContrastSoftness"),
           Settings->GetDouble("RGBTextureContrastAmount"),
           Settings->GetDouble("RGBTextureContrastOpacity"),
           Settings->GetDouble("RGBTextureContrastEdgeControl"),
-          Settings->GetDouble("RGBTextureContrastMasking")/pow(2,Settings->GetInt("Scaled")));
+          Settings->GetDouble("RGBTextureContrastMasking")*m_ScaleFactor);
         TRACEMAIN("Done RGB texture contrast at %d ms.",Timer.elapsed());
       }
 
@@ -820,7 +837,7 @@ void ptProcessor::Run(short Phase,
         m_ReportProgress(QObject::tr("Microcontrast 1"));
 
         m_Image_AfterRGB->Microcontrast(
-          Settings->GetInt("Microcontrast1Radius")/pow(2,Settings->GetInt("Scaled")),
+          Settings->GetInt("Microcontrast1Radius")*m_ScaleFactor,
           Settings->GetDouble("Microcontrast1Amount"),
           Settings->GetDouble("Microcontrast1Opacity"),
           Settings->GetDouble("Microcontrast1HaloControl"),
@@ -835,7 +852,7 @@ void ptProcessor::Run(short Phase,
         m_ReportProgress(QObject::tr("Microcontrast 2"));
 
         m_Image_AfterRGB->Microcontrast(
-          Settings->GetInt("Microcontrast2Radius")/pow(2,Settings->GetInt("Scaled")),
+          Settings->GetInt("Microcontrast2Radius")*m_ScaleFactor,
           Settings->GetDouble("Microcontrast2Amount"),
           Settings->GetDouble("Microcontrast2Opacity"),
           Settings->GetDouble("Microcontrast2HaloControl"),
@@ -916,7 +933,7 @@ void ptProcessor::Run(short Phase,
         }
 
         m_Image_AfterLabCC->ShadowsHighlights(Curve[ptCurveChannel_ShadowsHighlights],
-                                              Settings->GetDouble("ShadowsHighlightsRadius")/pow(2,Settings->GetInt("Scaled")),
+                                              Settings->GetDouble("ShadowsHighlightsRadius")*m_ScaleFactor,
                                               Settings->GetDouble("ShadowsHighlightsCoarse"),
                                               Settings->GetDouble("ShadowsHighlightsFine"));
       }
@@ -1000,7 +1017,7 @@ void ptProcessor::Run(short Phase,
         }
         m_Image_AfterLabCC->ApplyTextureCurve(Curve[ptCurveChannel_Texture],
                                               Settings->GetInt("TextureCurveType"),
-                                              Settings->GetInt("Scaled"));
+                                              (int) (logf(m_ScaleFactor)/logf(0.5)));
         TRACEMAIN("Done texture curve at %d ms.",Timer.elapsed());
       }
 
@@ -1018,12 +1035,12 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
 
         }
-        m_Image_AfterLabCC->TextureContrast(Settings->GetDouble("TextureContrast1Threshold")/pow(2,Settings->GetInt("Scaled")),
+        m_Image_AfterLabCC->TextureContrast(Settings->GetDouble("TextureContrast1Threshold")*m_ScaleFactor,
           Settings->GetDouble("TextureContrast1Softness"),
           Settings->GetDouble("TextureContrast1Amount"),
           Settings->GetDouble("TextureContrast1Opacity"),
           Settings->GetDouble("TextureContrast1EdgeControl"),
-          Settings->GetDouble("TextureContrast1Masking")/pow(2,Settings->GetInt("Scaled")));
+          Settings->GetDouble("TextureContrast1Masking")*m_ScaleFactor);
         TRACEMAIN("Done texture contrast 1 at %d ms.",Timer.elapsed());
       }
 
@@ -1039,12 +1056,12 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
 
         }
-        m_Image_AfterLabCC->TextureContrast(Settings->GetDouble("TextureContrast2Threshold")/pow(2,Settings->GetInt("Scaled")),
+        m_Image_AfterLabCC->TextureContrast(Settings->GetDouble("TextureContrast2Threshold")*m_ScaleFactor,
           Settings->GetDouble("TextureContrast2Softness"),
           Settings->GetDouble("TextureContrast2Amount"),
           Settings->GetDouble("TextureContrast2Opacity"),
           Settings->GetDouble("TextureContrast2EdgeControl"),
-          Settings->GetDouble("TextureContrast2Masking")/pow(2,Settings->GetInt("Scaled")));
+          Settings->GetDouble("TextureContrast2Masking")*m_ScaleFactor);
         TRACEMAIN("Done texture contrast 2 at %d ms.",Timer.elapsed());
       }
 
@@ -1063,7 +1080,7 @@ void ptProcessor::Run(short Phase,
         }
 
         m_Image_AfterLabCC->Microcontrast(
-          Settings->GetInt("LabMicrocontrast1Radius")/pow(2,Settings->GetInt("Scaled")),
+          Settings->GetInt("LabMicrocontrast1Radius")*m_ScaleFactor,
           Settings->GetDouble("LabMicrocontrast1Amount"),
           Settings->GetDouble("LabMicrocontrast1Opacity"),
           Settings->GetDouble("LabMicrocontrast1HaloControl"),
@@ -1086,7 +1103,7 @@ void ptProcessor::Run(short Phase,
         }
 
         m_Image_AfterLabCC->Microcontrast(
-          Settings->GetInt("LabMicrocontrast2Radius")/pow(2,Settings->GetInt("Scaled")),
+          Settings->GetInt("LabMicrocontrast2Radius")*m_ScaleFactor,
           Settings->GetDouble("LabMicrocontrast2Amount"),
           Settings->GetDouble("LabMicrocontrast2Opacity"),
           Settings->GetDouble("LabMicrocontrast2HaloControl"),
@@ -1111,7 +1128,7 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_Image_AfterLabCC->Localcontrast(Settings->GetInt("LC1Radius")/pow(2,Settings->GetInt("Scaled")),
+        m_Image_AfterLabCC->Localcontrast(Settings->GetInt("LC1Radius")*m_ScaleFactor,
                     Settings->GetDouble("LC1Opacity"),
                     Settings->GetDouble("LC1m"),
                     Settings->GetDouble("LC1Feather"),1);
@@ -1129,7 +1146,7 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_Image_AfterLabCC->Localcontrast(Settings->GetInt("LC2Radius")/pow(2,Settings->GetInt("Scaled")),
+        m_Image_AfterLabCC->Localcontrast(Settings->GetInt("LC2Radius")*m_ScaleFactor,
                     Settings->GetDouble("LC2Opacity"),
                     Settings->GetDouble("LC2m"),
                     Settings->GetDouble("LC2Feather"),1);
@@ -1237,7 +1254,7 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_Image_AfterLabSN->EAWChannel(Settings->GetInt("Scaled"),
+        m_Image_AfterLabSN->EAWChannel((int)(logf(m_ScaleFactor)/logf(0.5)),
                                        Settings->GetDouble("EAWLevel1"),
                                        Settings->GetDouble("EAWLevel2"),
                                        Settings->GetDouble("EAWLevel3"),
@@ -1320,7 +1337,7 @@ void ptProcessor::Run(short Phase,
 
         m_Image_AfterLabSN->WaveletDenoise(
                                 1,
-                                Settings->GetDouble("WaveletDenoiseL")/(Settings->GetInt("Scaled")+1),
+                                Settings->GetDouble("WaveletDenoiseL")/((logf(m_ScaleFactor)/logf(0.5))+1.0),
             Settings->GetDouble("WaveletDenoiseLSoftness"),
             1,
             Settings->GetDouble("WaveletDenoiseLSharpness"),
@@ -1347,7 +1364,7 @@ void ptProcessor::Run(short Phase,
 
         m_Image_AfterLabSN->WaveletDenoise(
                                 2,
-                                Settings->GetDouble("WaveletDenoiseA")/(Settings->GetInt("Scaled")+1),
+                                Settings->GetDouble("WaveletDenoiseA")/((logf(m_ScaleFactor)/logf(0.5))+1.0),
         Settings->GetDouble("WaveletDenoiseASoftness"));
 
         TRACEMAIN("Done A wavelet denoise at %d ms.",Timer.elapsed());
@@ -1369,7 +1386,7 @@ void ptProcessor::Run(short Phase,
 
         m_Image_AfterLabSN->WaveletDenoise(
                                 4,
-                                Settings->GetDouble("WaveletDenoiseB")/(Settings->GetInt("Scaled")+1),
+                                Settings->GetDouble("WaveletDenoiseB")/((logf(m_ScaleFactor)/logf(0.5))+1.0),
             Settings->GetDouble("WaveletDenoiseBSoftness"));
 
         TRACEMAIN("Done B wavelet denoise at %d ms.",Timer.elapsed());
@@ -1388,10 +1405,10 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_Image_AfterLabSN->BilateralDenoise(Settings->GetDouble("BilateralLSigmaS")/pow(2,Settings->GetInt("Scaled")),
+        m_Image_AfterLabSN->BilateralDenoise(Settings->GetDouble("BilateralLSigmaS")*m_ScaleFactor,
                Settings->GetDouble("BilateralLSigmaR")/10.0,
                Settings->GetDouble("BilateralLOpacity"),
-               Settings->GetDouble("BilateralLUseMask")/pow(2,Settings->GetInt("Scaled")));
+               Settings->GetDouble("BilateralLUseMask")*m_ScaleFactor);
 
         TRACEMAIN("Done Luminance denoise at %d ms.",Timer.elapsed());
       }
@@ -1410,11 +1427,11 @@ void ptProcessor::Run(short Phase,
         }
 
         m_Image_AfterLabSN->dirpyrLab_denoise(
-            (int)(Settings->GetInt("PyrDenoiseLAmount")/pow(3,Settings->GetInt("Scaled"))),
+            (int)(Settings->GetInt("PyrDenoiseLAmount")/powf(3.0,(logf(m_ScaleFactor)/logf(0.5)))),
             Settings->GetInt("PyrDenoiseABAmount"),
             Settings->GetDouble("PyrDenoiseGamma")/3.0,
             Settings->GetInt("PyrDenoiseLevels"),
-            Settings->GetInt("Scaled"));
+            (int)(logf(m_ScaleFactor)/logf(0.5)));
 
         TRACEMAIN("Done Pyramid denoise at %d ms.",Timer.elapsed());
       }
@@ -1434,7 +1451,7 @@ void ptProcessor::Run(short Phase,
         }
 
         ptFastBilateralChannel(m_Image_AfterLabSN,
-             Settings->GetDouble("BilateralASigmaS")/pow(2,Settings->GetInt("Scaled")),
+             Settings->GetDouble("BilateralASigmaS")*m_ScaleFactor,
              Settings->GetDouble("BilateralASigmaR")/10.0,
              2,
              2);
@@ -1456,7 +1473,7 @@ void ptProcessor::Run(short Phase,
         }
 
         ptFastBilateralChannel(m_Image_AfterLabSN,
-             Settings->GetDouble("BilateralBSigmaS")/pow(2,Settings->GetInt("Scaled")),
+             Settings->GetDouble("BilateralBSigmaS")*m_ScaleFactor,
              Settings->GetDouble("BilateralBSigmaR")/10.0,
              2,
              4);
@@ -1579,11 +1596,11 @@ void ptProcessor::Run(short Phase,
         }
 
 //        m_Image_AfterLabSN->USM(1,
-//                              Settings->GetDouble("USMRadius")/pow(2,Settings->GetInt("Scaled")),
+//                              Settings->GetDouble("USMRadius")*m_ScaleFactor,
 //                              Settings->GetDouble("USMAmount"),
 //                              Settings->GetDouble("USMThreshold"));
 
-        m_Image_AfterLabSN->ptGMUnsharp(Settings->GetDouble("USMRadius")/pow(2,Settings->GetInt("Scaled")),
+        m_Image_AfterLabSN->ptGMUnsharp(Settings->GetDouble("USMRadius")*m_ScaleFactor,
                                         Settings->GetDouble("USMAmount"),
                                         Settings->GetDouble("USMThreshold"));
 
@@ -1606,10 +1623,10 @@ void ptProcessor::Run(short Phase,
 
         }
 
-        m_Image_AfterLabSN->Highpass(Settings->GetDouble("HighpassRadius")/pow(2,Settings->GetInt("Scaled")),
+        m_Image_AfterLabSN->Highpass(Settings->GetDouble("HighpassRadius")*m_ScaleFactor,
                                    Settings->GetDouble("HighpassAmount"),
                                    -0.3,
-                                   Settings->GetDouble("HighpassDenoise")/(Settings->GetInt("Scaled")+1));
+                                   Settings->GetDouble("HighpassDenoise")/((logf(m_ScaleFactor)/logf(0.5))+1.0));
 
         TRACEMAIN("Done Highpass at %d ms.",Timer.elapsed());
       }
@@ -1637,7 +1654,7 @@ void ptProcessor::Run(short Phase,
                                   Settings->GetInt("Grain1MaskType"),
                                   Settings->GetDouble("Grain1LowerLimit"),
                                   Settings->GetDouble("Grain1UpperLimit"),
-                                  pow(2,Settings->GetInt("Scaled")));
+                                  (int)(logf(m_ScaleFactor)/logf(0.5)));
         TRACEMAIN("Done film grain 1 at %d ms.",Timer.elapsed());
       }
 
@@ -1661,7 +1678,7 @@ void ptProcessor::Run(short Phase,
                                   Settings->GetInt("Grain2MaskType"),
                                   Settings->GetDouble("Grain2LowerLimit"),
                                   Settings->GetDouble("Grain2UpperLimit"),
-                                  pow(2,Settings->GetInt("Scaled")));
+                                  (int)(logf(m_ScaleFactor)/logf(0.5)));
         TRACEMAIN("Done film grain 2 at %d ms.",Timer.elapsed());
       }
 
@@ -1842,7 +1859,7 @@ void ptProcessor::Run(short Phase,
         }
 
         m_Image_AfterLabEyeCandy->Colorcontrast(
-          Settings->GetInt("ColorcontrastRadius")/pow(2,Settings->GetInt("Scaled")),
+          Settings->GetInt("ColorcontrastRadius")*m_ScaleFactor,
           Settings->GetDouble("ColorcontrastAmount"),
           Settings->GetDouble("ColorcontrastOpacity"),
           Settings->GetDouble("ColorcontrastHaloControl"));
@@ -2220,7 +2237,7 @@ void ptProcessor::Run(short Phase,
         m_ReportProgress(QObject::tr("Softglow"));
 
         m_Image_AfterEyeCandy->Softglow(Settings->GetInt("SoftglowMode"),
-          Settings->GetDouble("SoftglowRadius")/pow(2,Settings->GetInt("Scaled")),
+          Settings->GetDouble("SoftglowRadius")*m_ScaleFactor,
           Settings->GetDouble("SoftglowAmount"),
           7,
           Settings->GetDouble("SoftglowContrast"),

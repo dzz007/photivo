@@ -79,6 +79,9 @@ double m_AutoExposureValue;
 // There should be GuiSettings->m_WhiteFraction % pixels above 90%
 double CalculateAutoExposure(ptImage *Image);
 
+// Factor for size dependend filters
+float           m_ScaleFactor;
+
 };
 
 #endif

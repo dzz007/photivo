@@ -948,6 +948,9 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabCrop") {
       Info.Name = "Crop";
       Info.IsActive = Settings->GetInt("Crop");
+  } else if (GuiName == "TabResize") {
+      Info.Name = "Resize";
+      Info.IsActive = Settings->GetInt("Resize");
   } else if (GuiName == "TabFlip") {
       Info.Name = "Flip";
       Info.IsActive = Settings->GetInt("FlipMode");
@@ -1251,7 +1254,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Output gamma compensation";
       Info.IsActive = Settings->GetInt("OutputGammaCompensation")!=0?1:0;
   } else if (GuiName == "TabWebResize") {
-      Info.Name = "Output base curve";
+      Info.Name = "Output webreisze";
       Info.IsActive = (Settings->GetInt("WebResize")==2 ||
                        (Settings->GetInt("FullOutput") &&
                         Settings->GetInt("WebResize")==1))!=0?1:0;

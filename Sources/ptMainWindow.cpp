@@ -1574,6 +1574,11 @@ void ptMainWindow::UpdateSettings() {
   // Run mode
   RunButton->setEnabled(Settings->GetInt("RunMode"));
 
+  // PizeSize Widget
+  PipeSizeWidget->setEnabled(1-
+    (Settings->GetInt("AutomaticPipeSize") &&
+     Settings->GetInt("Resize")));
+
   // Show containers
   BottomContainer->setVisible(Settings->GetInt("ShowBottomContainer"));
   ControlFrame->setVisible(Settings->GetInt("ShowToolContainer"));

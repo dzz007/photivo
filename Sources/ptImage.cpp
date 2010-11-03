@@ -3653,7 +3653,7 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
                         const short MaskType,
                         const double LowerLimit,
                         const double UpperLimit,
-      const short ScaleFactor) { // 1, 2 or 4 depending on pipe size
+                        const short ScaleFactor) { // 1, 2 or 4 depending on pipe size
 
   ptImage *NoiseLayer = new ptImage;
   NoiseLayer->Set(this);  // allocation of free layer faster? TODO!

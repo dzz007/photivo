@@ -216,6 +216,7 @@ void Update(short Phase,
             short WithIdentify  = 1,
             short ProcessorMode = ptProcessorMode_Preview);
 void UpdateGUI();
+int CalculatePipeSize();
 
 int    photivoMain(int Argc, char *Argv[]);
 void   CleanupResources();
@@ -1202,13 +1203,13 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     ReportProgress(QObject::tr("Updating histogram"));
 
     if (Settings->GetInt("HistogramCrop")) {
-      short TmpScaled = Settings->GetInt("Scaled");
+      float TmpScaled = TheProcessor->m_ScaleFactor;
       Width = HistogramImage->m_Width;
       Height = HistogramImage->m_Height;
-      TempCropX = Settings->GetInt("HistogramCropX")>>TmpScaled;
-      TempCropY = Settings->GetInt("HistogramCropY")>>TmpScaled;
-      TempCropW = Settings->GetInt("HistogramCropW")>>TmpScaled;
-      TempCropH = Settings->GetInt("HistogramCropH")>>TmpScaled;
+      TempCropX = Settings->GetInt("HistogramCropX")*TmpScaled;
+      TempCropY = Settings->GetInt("HistogramCropY")*TmpScaled;
+      TempCropW = Settings->GetInt("HistogramCropW")*TmpScaled;
+      TempCropH = Settings->GetInt("HistogramCropH")*TmpScaled;
       if ((((TempCropX) + (TempCropW)) > Width) ||
           (((TempCropY) + (TempCropH)) >  Height)) {
         QMessageBox::information(MainWindow,
@@ -1313,13 +1314,13 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     cmsCloseProfile(OutputColorProfile);
 
     if (Settings->GetInt("HistogramCrop")) {
-      short TmpScaled = Settings->GetInt("Scaled");
+      float TmpScaled = TheProcessor->m_ScaleFactor;
       Width = HistogramImage->m_Width;
       Height = HistogramImage->m_Height;
-      TempCropX = Settings->GetInt("HistogramCropX")>>TmpScaled;
-      TempCropY = Settings->GetInt("HistogramCropY")>>TmpScaled;
-      TempCropW = Settings->GetInt("HistogramCropW")>>TmpScaled;
-      TempCropH = Settings->GetInt("HistogramCropH")>>TmpScaled;
+      TempCropX = Settings->GetInt("HistogramCropX")*TmpScaled;
+      TempCropY = Settings->GetInt("HistogramCropY")*TmpScaled;
+      TempCropW = Settings->GetInt("HistogramCropW")*TmpScaled;
+      TempCropH = Settings->GetInt("HistogramCropH")*TmpScaled;
       if ((((TempCropX) + (TempCropW)) >  Width) ||
           (((TempCropY) + (TempCropH)) >  Height)) {
         QMessageBox::information(MainWindow,
@@ -1381,13 +1382,13 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     }
 
     if (Settings->GetInt("HistogramCrop")) {
-      short TmpScaled = Settings->GetInt("Scaled");
+      float TmpScaled = TheProcessor->m_ScaleFactor;
       Width = HistogramImage->m_Width;
       Height = HistogramImage->m_Height;
-      TempCropX = Settings->GetInt("HistogramCropX")>>TmpScaled;
-      TempCropY = Settings->GetInt("HistogramCropY")>>TmpScaled;
-      TempCropW = Settings->GetInt("HistogramCropW")>>TmpScaled;
-      TempCropH = Settings->GetInt("HistogramCropH")>>TmpScaled;
+      TempCropX = Settings->GetInt("HistogramCropX")*TmpScaled;
+      TempCropY = Settings->GetInt("HistogramCropY")*TmpScaled;
+      TempCropW = Settings->GetInt("HistogramCropW")*TmpScaled;
+      TempCropH = Settings->GetInt("HistogramCropH")*TmpScaled;
       if ((((TempCropX) + (TempCropW)) >  Width) ||
           (((TempCropY) + (TempCropH)) >  Height)) {
         QMessageBox::information(MainWindow,
@@ -3081,8 +3082,14 @@ void CB_OpenSettingsFile(QString SettingsFileName) {
       CalculateMultipliersFromTemperature();
       NormalizeMultipliers(Settings->GetInt("MultiplierEnhance"));
     }
-    Update(ptProcessorPhase_Raw,ptProcessorPhase_Load);
+    if (Settings->GetInt("AutomaticPipeSize") && Settings->GetInt("Resize")) {
+      if (!CalculatePipeSize())
+        Update(ptProcessorPhase_Raw,ptProcessorPhase_Load);
+    } else {
+      Update(ptProcessorPhase_Raw,ptProcessorPhase_Load);
+    }
   } else {
+    //TODO: check Nextphase against automatic pipesize
     Update(NextPhase);
   }
 }
@@ -3728,6 +3735,93 @@ void CB_MakeCropButton() {
   TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
 
   Update(ptProcessorPhase_AfterRAW);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the Geometry Tab
+// Partim Resize
+//
+////////////////////////////////////////////////////////////////////////////////
+
+// returns 1 if pipe was updated
+int CalculatePipeSize() {
+  uint16_t InSize = 0;
+  if (Settings->GetInt("Crop")==0) {
+    InSize = MAX(Settings->GetInt("ImageW"),Settings->GetInt("ImageH"));
+  } else {
+    InSize = MAX(Settings->GetInt("CropW"),Settings->GetInt("CropH"));
+  }
+  int s = MAX(0,((int)floor(logf((float)InSize*0.9/(float)Settings->GetInt("ResizeScale"))/logf(2))));
+  if (s < Settings->GetInt("PipeSize")) {
+    if (Settings->GetInt("RunMode") != 1) {// not manual mode
+      ImageSaved = 1;
+      CB_PipeSizeChoice(s);
+      if (ImageSaved == 1) {
+        if (Settings->GetInt("PipeSize")==1) {
+          QMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill stay on half size instead!");
+          return 0;
+        } else {
+          QMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill run on half size instead!");
+          CB_PipeSizeChoice(1);
+        }
+      }
+    } else {
+      CB_PipeSizeChoice(s);
+    }
+    return 1;
+  }
+  return 0;
+}
+
+void CB_ResizeCheck(const QVariant Check) {
+  Settings->SetValue("Resize",Check);
+  if (Settings->GetInt("AutomaticPipeSize") && Settings->GetInt("Resize")) {
+    if (!CalculatePipeSize())
+      Update(ptProcessorPhase_AfterRAW);
+  } else {
+    Update(ptProcessorPhase_AfterRAW);
+  }
+  MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+}
+
+void CB_ResizeScaleInput(const QVariant Value) {
+  Settings->SetValue("ResizeScale",Value);
+  if (Settings->GetInt("Resize")) {
+    if (Settings->GetInt("AutomaticPipeSize")) {
+      if (!CalculatePipeSize())
+        Update(ptProcessorPhase_AfterRAW);
+    } else {
+      Update(ptProcessorPhase_AfterRAW);
+    }
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  }
+}
+
+void CB_ResizeFilterChoice(const QVariant Choice) {
+  Settings->SetValue("ResizeFilter",Choice);
+  if (Settings->GetInt("Resize")) {
+    if (Settings->GetInt("AutomaticPipeSize")) {
+      if (!CalculatePipeSize())
+        Update(ptProcessorPhase_AfterRAW);
+    } else {
+      Update(ptProcessorPhase_AfterRAW);
+    }
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  }
+}
+
+void CB_AutomaticPipeSizeCheck(const QVariant Check) {
+  Settings->SetValue("AutomaticPipeSize",Check);
+  if (Settings->GetInt("Resize")) {
+    if (Settings->GetInt("AutomaticPipeSize")) {
+      if (!CalculatePipeSize())
+        Update(ptProcessorPhase_AfterRAW);
+    } else {
+      Update(ptProcessorPhase_AfterRAW);
+    }
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -7244,6 +7338,12 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(CropRectangleModeChoice)
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)
+
+  M_Dispatch(ResizeCheck)
+  M_Dispatch(ResizeScaleInput)
+  M_Dispatch(ResizeFilterChoice)
+  M_Dispatch(AutomaticPipeSizeCheck)
+
   M_Dispatch(GeometryBlockCheck)
 
   M_Dispatch(LevelsBlackPointInput)
