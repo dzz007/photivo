@@ -1577,7 +1577,7 @@ void ptMainWindow::UpdateSettings() {
   // PizeSize Widget
   PipeSizeWidget->setEnabled(1-
     (Settings->GetInt("AutomaticPipeSize") &&
-     Settings->GetInt("Resize")));
+     Settings->ToolIsActive("TabResize")));
 
   // Show containers
   BottomContainer->setVisible(Settings->GetInt("ShowBottomContainer"));

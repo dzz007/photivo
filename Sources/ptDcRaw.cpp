@@ -7987,13 +7987,8 @@ short CLASS RunDcRaw_Phase1() {
   // the need for interpolation and much faster !
   m_Shrink = m_Filters && m_UserSetting_HalfSize;
 
-  //~ if (m_Shrink) {
-    //~ m_OutHeight = (m_Height + 1) / 2;
-    //~ m_OutWidth  = (m_Width + 1) / 2;
-  //~ } else {
-    m_OutHeight = m_Height;
-    m_OutWidth  = m_Width;
-  //~ }
+  m_OutHeight = m_Height;
+  m_OutWidth  = m_Width;
 
   TRACEKEYVALS("OutWidth","%d",m_OutWidth);
   TRACEKEYVALS("Width","%d",m_Width);
@@ -8060,6 +8055,8 @@ short CLASS RunDcRaw_Phase1() {
     m_ReportedHeight = (uint16_t) (m_Height / m_PixelAspect + 0.5);
   if (m_PixelAspect>1)
     m_ReportedWidth = (uint16_t) (m_Width * m_PixelAspect + 0.5);
+
+  // TODO Mike: m_ReportedH/W is never set back to m_H/W, CHECK!
 
   TRACEKEYVALS("m_Width","%d",m_Width);
   TRACEKEYVALS("m_Height","%d",m_Height);

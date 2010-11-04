@@ -2197,9 +2197,9 @@ void CB_MenuFileOpen(const short HaveFile) {
   DcRaw* TestDcRaw = new(DcRaw);
   Settings->ToDcRaw(TestDcRaw);
   int OpenError = 0;
-  if (TestDcRaw->Identify()){
-    uint16_t InputWidth = 0;
-    uint16_t InputHeight = 0;
+  uint16_t InputWidth = 0;
+  uint16_t InputHeight = 0;
+  if (TestDcRaw->Identify()){ // Bitmap
     try {
       Magick::Image image;
 
@@ -2213,6 +2213,8 @@ void CB_MenuFileOpen(const short HaveFile) {
     if (OpenError == 0) {
       Settings->SetValue("IsRAW",0);
       Settings->SetValue("ExposureNormalization",0.0);
+      delete TestDcRaw;
+
     }
   } else {
     Settings->SetValue("IsRAW",1);
@@ -2262,6 +2264,13 @@ void CB_MenuFileOpen(const short HaveFile) {
   delete TheDcRaw;
   delete TheProcessor;
   TheDcRaw = TestDcRaw;
+  if (Settings->GetInt("IsRAW")==0) {
+    Settings->SetValue("ImageW",InputWidth);
+    Settings->SetValue("ImageH",InputHeight);
+  } else {
+    Settings->SetValue("ImageW",TheDcRaw->m_Width);
+    Settings->SetValue("ImageH",TheDcRaw->m_Height);
+  }
   TheProcessor = new ptProcessor(ReportProgress, UpdateGUI);
   TheProcessor->m_DcRaw = TheDcRaw;
 
@@ -2270,7 +2279,12 @@ void CB_MenuFileOpen(const short HaveFile) {
     Settings->SetValue("CameraColor",ptCameraColor_Adobe_Profile);
   short OldRunMode = Settings->GetInt("RunMode");
   Settings->SetValue("RunMode",0);
-  Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+  if (Settings->GetInt("AutomaticPipeSize") && Settings->ToolIsActive("TabResize")) {
+    if (!CalculatePipeSize())
+      Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+  } else {
+    Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+  }
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   MainWindow->setWindowTitle((Settings->GetStringList("InputFileNameList"))[0]+ " - photivo");
   Settings->SetValue("RunMode",OldRunMode);
@@ -3082,7 +3096,7 @@ void CB_OpenSettingsFile(QString SettingsFileName) {
       CalculateMultipliersFromTemperature();
       NormalizeMultipliers(Settings->GetInt("MultiplierEnhance"));
     }
-    if (Settings->GetInt("AutomaticPipeSize") && Settings->GetInt("Resize")) {
+    if (Settings->GetInt("AutomaticPipeSize") && Settings->ToolIsActive("TabResize")) {
       if (!CalculatePipeSize())
         Update(ptProcessorPhase_Raw,ptProcessorPhase_Load);
     } else {
@@ -3747,6 +3761,7 @@ void CB_MakeCropButton() {
 // returns 1 if pipe was updated
 int CalculatePipeSize() {
   uint16_t InSize = 0;
+  if (Settings->GetInt("HaveImage")==0) return 0;
   if (Settings->GetInt("Crop")==0) {
     InSize = MAX(Settings->GetInt("ImageW"),Settings->GetInt("ImageH"));
   } else {
