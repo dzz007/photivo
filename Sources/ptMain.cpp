@@ -803,7 +803,7 @@ void Update(const QString GuiName) {
   ptGroupBox* Box = MainWindow->findChild<ptGroupBox *>(GuiName);
   QString Tab = Box->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
   //QMessageBox::information(0,"Feedback","I was called from \n" + GuiName + "\nMy tab is\n" Tab);
-  if (Tab == "LensfunTab") Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+  if (Tab == "GeometryTab") Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
   else if (Tab == "RGBTab") Update(ptProcessorPhase_RGB);
   else if (Tab == "LabCCTab") Update(ptProcessorPhase_LabCC);
   else if (Tab == "LabSNTab") Update(ptProcessorPhase_LabSN);
@@ -1109,7 +1109,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     }
     HistogramImage->Set(TheProcessor->m_Image_AfterEyeCandy);
   } else {
-    if (!Settings->GetInt("IsRAW")) ActiveTab = MAX(ptLensfunTab, ActiveTab);
+    if (!Settings->GetInt("IsRAW")) ActiveTab = MAX(ptGeometryTab, ActiveTab);
     switch (ActiveTab) {
       //~ case ptGenericTab:
         //~ if (!OnlyHistogram) PreviewImage->Set(TheProcessor->m_Image_AfterDcRaw);
@@ -1130,7 +1130,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
           HistogramImage->Set(TheProcessor->m_Image_AfterDcRaw);
         }
         break;
-      case ptLensfunTab:
+      case ptGeometryTab:
         if (!OnlyHistogram) PreviewImage->Set(TheProcessor->m_Image_AfterLensfun);
         HistogramImage->Set(TheProcessor->m_Image_AfterLensfun);
         break;

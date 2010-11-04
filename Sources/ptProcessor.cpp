@@ -529,7 +529,7 @@ void ptProcessor::Run(short Phase,
       // This will skip the rest of the pipe, to make geometry adjustments easier.
 
       if (Settings->ToolIsActive("TabBlock")){ // &&
-        //~ MainWindow->GetCurrentTab() == ptLensfunTab) {
+        //~ MainWindow->GetCurrentTab() == ptGeometryTab) {
         if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage(m_UpdateGUI);
         m_Image_AfterRGB->Set(m_Image_AfterLensfun);
         if (!m_Image_AfterLabCC) m_Image_AfterLabCC = new ptImage(m_UpdateGUI);

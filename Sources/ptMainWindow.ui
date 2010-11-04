@@ -902,7 +902,7 @@
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="LensfunTab">
+               <widget class="QWidget" name="GeometryTab">
                 <attribute name="title">
                  <string>Geometry</string>
                 </attribute>

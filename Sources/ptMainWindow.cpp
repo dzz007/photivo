@@ -477,7 +477,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   ProcessingTabBook->setCurrentIndex(0);
   ProcessingTabBook->blockSignals(0);
 
-  m_ActiveTabs.append(LensfunTab);
+  m_ActiveTabs.append(GeometryTab);
   m_ActiveTabs.append(RGBTab);
   m_ActiveTabs.append(LabCCTab);
   m_ActiveTabs.append(LabSNTab);
@@ -541,7 +541,7 @@ short ptMainWindow::GetCurrentTab() {
   // index, as I feel that this is more robust for change.
   //~ if (ProcessingTabBook->currentWidget() == GenericTab) return ptGenericTab;
   if (ProcessingTabBook->currentWidget()== CameraTab) return ptCameraTab;
-  else if (ProcessingTabBook->currentWidget()== LensfunTab) return ptLensfunTab;
+  else if (ProcessingTabBook->currentWidget()== GeometryTab) return ptGeometryTab;
   else if (ProcessingTabBook->currentWidget()== RGBTab) return ptRGBTab;
   else if (ProcessingTabBook->currentWidget()== LabCCTab) return ptLabCCTab;
   else if (ProcessingTabBook->currentWidget()== LabSNTab) return ptLabSNTab;
@@ -1195,9 +1195,12 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     // hidden tools, needs GUI implementation
     } else if (Event->key()==Qt::Key_H && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
+      QString Tab = "";
       for (int i=0; i<m_ToolBoxes->size();i++) {
-        if (Settings->ToolIsHidden(m_ToolBoxes->at(i)->objectName()))
-          Tools = Tools + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
+        if (Settings->ToolIsHidden(m_ToolBoxes->at(i)->objectName())) {
+          Tab = m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
+          Tools = Tools + Tab + ": " + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
+        }
       }
       if (Tools == "") Tools = "No tools hidden!";
       QMessageBox::information(this,"Hidden tools",Tools);
@@ -1235,17 +1238,23 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       QMessageBox::warning(this,"Tools",Tools);*/ // plain list all tools
     } else if (Event->key()==Qt::Key_A && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
+      QString Tab = "";
       for (int i=0; i<m_ToolBoxes->size();i++) {
-        if (Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName()))
-          Tools = Tools + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
+        if (Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName())) {
+          Tab = m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
+          Tools = Tools + Tab + ": " + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
+        }
       }
       if (Tools == "") Tools = "No tools active!";
       QMessageBox::information(this,"Active tools",Tools);
     } else if (Event->key()==Qt::Key_B && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
+      QString Tab = "";
       for (int i=0; i<m_ToolBoxes->size();i++) {
-        if (Settings->ToolIsBlocked(m_ToolBoxes->at(i)->objectName()))
-          Tools = Tools + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
+        if (Settings->ToolIsBlocked(m_ToolBoxes->at(i)->objectName())) {
+          Tab = m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
+          Tools = Tools + Tab + ": " + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
+        }
       }
       if (Tools == "") Tools = "No tools blocked!";
       QMessageBox::information(this,"Blocked tools",Tools);

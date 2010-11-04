@@ -395,7 +395,7 @@ const short ptOutputMode_Settingsfile = 3;
 
 const short ptGenericTab    = 0;
 const short ptCameraTab     = 1;
-const short ptLensfunTab    = 2;
+const short ptGeometryTab    = 2;
 const short ptRGBTab        = 3;
 const short ptLabCCTab      = 4;
 const short ptLabSNTab      = 5;
