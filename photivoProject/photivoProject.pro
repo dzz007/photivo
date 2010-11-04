@@ -61,15 +61,17 @@ QMAKE_LFLAGS_DEBUG += -rdynamic
 LIBS += -ljpeg -llcms2 -lexiv2 -lfftw3
 LIBS += $$system(pkg-config --libs-only-l glib-2.0)
 # LIBS += -lMagick++ -lMagickWand -lMagickCore
-LIBS += -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick
 LIBS += -llensfun
 LIBS += -lgomp -lpthread
 unix {
+  LIBS += $$system(GraphicsMagick++-config --libs)
+  LIBS += $$system(GraphicsMagickWand-config --libs)
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
   INCLUDEPATH += /usr/include/GraphicsMagick
 }
 win32 {
+  LIBS += -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick
   LIBS += -lwsock32 -lexpat -lregex -lgdi32 -liconv
   INCLUDEPATH += /mingw/include/GraphicsMagick
 #  CONFIG += console
