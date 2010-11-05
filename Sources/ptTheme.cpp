@@ -2,7 +2,8 @@
 //
 // photivo
 //
-// Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2010 Michael Munzert <mail@mm-log.com>,
+// Bernd Schöler <soda |at| sodanuckler |dot| com>
 //
 // This file is part of photivo.
 //
@@ -35,9 +36,14 @@
 ptTheme::ptTheme(QApplication* Application) {
   ptSystemStyle = (QStyle*)(Application->style()->metaObject()->newInstance());
   ptSystemPalette = Application->palette();
+#ifdef Q_OS_WIN32
+  ptThemeStyle = new QWindowsXPStyle;
+#else
   ptThemeStyle = new QCleanlooksStyle;
+#endif
   ptStyleSheet = "";
   ptPalette = QPalette();
+  ptMenuPalette = QPalette();
   ptHighLight = QColor(255,255,255);
   ptStyle = ptSystemStyle;
 }
@@ -51,6 +57,7 @@ ptTheme::ptTheme(QApplication* Application) {
 void ptTheme::Reset() {
   ptStyle = ptSystemStyle;
   ptPalette = ptSystemPalette;
+  ptMenuPalette = ptSystemPalette;
   ptStyleSheet = "";
 }
 
@@ -65,6 +72,7 @@ void ptTheme::Normal(short Color) {
   ptStyle = ptSystemStyle;
   JustTools();
   ptPalette = ptSystemPalette;
+  ptMenuPalette = ptSystemPalette;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,30 +94,51 @@ void ptTheme::MidGrey(short Color) {
   CSS();
 
   // set the palette
-  ptPalette.setColor(QPalette::Window, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::Window, QColor(255,0,0));
   ptPalette.setColor(QPalette::Background, ptBackGround);
-  ptPalette.setColor(QPalette::WindowText, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::WindowText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
   ptPalette.setColor(QPalette::Base, ptBackGround); // Menu
-  ptPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
-  ptPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
-  ptPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Text, ptText);
   ptPalette.setColor(QPalette::Button, ptBackGround); // Splitter
   // ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
-  ptPalette.setColor(QPalette::BrightText, QColor(255,0,0)); //
-
+  //ptPalette.setColor(QPalette::BrightText, QColor(255,0,0)); //
   ptPalette.setColor(QPalette::Light, ptDark); // Splitter
-  ptPalette.setColor(QPalette::Midlight, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::Midlight, QColor(255,0,0));
   ptPalette.setColor(QPalette::Dark, ptBright);
   ptPalette.setColor(QPalette::Mid, ptDark);
-  ptPalette.setColor(QPalette::Shadow, QColor(255,0,0));
-
+  //ptPalette.setColor(QPalette::Shadow, QColor(255,0,0));
   ptPalette.setColor(QPalette::Highlight, ptDark); // -menu
   ptPalette.setColor(QPalette::HighlightedText, ptText);
-  ptPalette.setColor(QPalette::Link, QColor(255,0,0));
-  ptPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
-  ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::Link, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
+
+  //ptMenuPalette.setColor(QPalette::Window, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Background, ptBackGround);
+  //ptMenuPalette.setColor(QPalette::WindowText, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
+  ptMenuPalette.setColor(QPalette::Base, ptBackGround); // Menu
+  //ptMenuPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
+  //ptMenuPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
+  //ptMenuPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Text, ptText);
+  ptMenuPalette.setColor(QPalette::Button, ptBackGround); // Splitter
+  ptMenuPalette.setColor(QPalette::ButtonText, ptText); // Menu
+  //ptMenuPalette.setColor(QPalette::BrightText, QColor(255,0,0)); //
+  ptMenuPalette.setColor(QPalette::Light, ptDark); // Splitter
+  //ptMenuPalette.setColor(QPalette::Midlight, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Dark, ptBright);
+  ptMenuPalette.setColor(QPalette::Mid, ptDark);
+  //ptMenuPalette.setColor(QPalette::Shadow, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Highlight, ptDark); // -menu
+  ptMenuPalette.setColor(QPalette::HighlightedText, ptText);
+  //ptMenuPalette.setColor(QPalette::Link, QColor(255,0,0));
+  //ptMenuPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
+  //ptMenuPalette.setColor(QPalette::NoRole, QColor(255,0,0));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -131,30 +160,51 @@ void ptTheme::DarkGrey(short Color) {
   CSS();
 
   // set the palette
-  ptPalette.setColor(QPalette::Window, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::Window, QColor(255,0,0));
   ptPalette.setColor(QPalette::Background, ptBackGround);
-  ptPalette.setColor(QPalette::WindowText, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::WindowText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
   ptPalette.setColor(QPalette::Base, ptBackGround); // Menu
-  ptPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
-  ptPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
-  ptPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Text, ptText);
   ptPalette.setColor(QPalette::Button, ptBackGround); // Splitter
-  // ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
-  ptPalette.setColor(QPalette::BrightText, QColor(255,0,0)); //
-
+  //ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
+  //ptPalette.setColor(QPalette::BrightText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Light, ptDark); // Splitter
-  ptPalette.setColor(QPalette::Midlight, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::Midlight, QColor(255,0,0));
   ptPalette.setColor(QPalette::Dark, ptDark);
   ptPalette.setColor(QPalette::Mid, ptDark);
-  ptPalette.setColor(QPalette::Shadow, QColor(255,0,0));
-
+  //ptPalette.setColor(QPalette::Shadow, QColor(255,0,0));
   ptPalette.setColor(QPalette::Highlight, ptDark); // -menu
   ptPalette.setColor(QPalette::HighlightedText, ptText);
-  ptPalette.setColor(QPalette::Link, QColor(255,0,0));
-  ptPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
-  ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::Link, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
+  
+  	//ptMenuPalette.setColor(QPalette::Window, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Background, ptBackGround);
+  	//ptMenuPalette.setColor(QPalette::WindowText, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
+  ptMenuPalette.setColor(QPalette::Base, ptBackGround); // Menu
+	  //ptMenuPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
+	  //ptMenuPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
+	  //ptMenuPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Text, ptText);
+  ptMenuPalette.setColor(QPalette::Button, ptBackGround); // Splitter
+  ptMenuPalette.setColor(QPalette::ButtonText, ptText); // Menu
+	  //ptMenuPalette.setColor(QPalette::BrightText, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Light, ptDark); // Splitter
+	  //ptMenuPalette.setColor(QPalette::Midlight, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Dark, ptDark);
+  ptMenuPalette.setColor(QPalette::Mid, ptDark);
+  	//ptMenuPalette.setColor(QPalette::Shadow, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Highlight, ptDark); // -menu
+  ptMenuPalette.setColor(QPalette::HighlightedText, ptText);
+	  //ptMenuPalette.setColor(QPalette::Link, QColor(255,0,0));
+	  //ptMenuPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
+	  //ptMenuPalette.setColor(QPalette::NoRole, QColor(255,0,0));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -295,8 +345,8 @@ Following stuff is also needed for normal.css
 
     "QComboBox QAbstractItemView {"
     "  border: 1px solid " + VeryBright + ";"
-    "  selection-background-color: #f00;"
-    "  selection-color: #f00;"
+    "  selection-background-color: " + Dark + ";"
+    "  selection-color: " + Text + ";"
 
     "  border-radius: 3px;"
     "}"
@@ -574,6 +624,11 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "  margin-left: 7px;"
     "}"
 
+/** Tooltips ****************************************/
+    "QToolTip {"
+    "  border: none;"   // needed to enable proper styling
+    "  color: " + Text + ";"
+    "}"
 
 /******************************************/
     "*#StatusFrame {  /* status text bottom left without border */"

@@ -955,10 +955,10 @@ void ptViewWindow::ContextMenu(QEvent* Event) {
   m_AtnExpIndicate->setChecked(Settings->GetInt("ExposureIndicator"));
 
   QMenu Menu(this);
-  Menu.setPalette(Theme->ptPalette);
+  Menu.setPalette(Theme->ptMenuPalette);
   Menu.setStyle(Theme->ptStyle);
   QMenu IndicateMenu(this);
-  IndicateMenu.setPalette(Theme->ptPalette);
+  IndicateMenu.setPalette(Theme->ptMenuPalette);
   IndicateMenu.setStyle(Theme->ptStyle);
   IndicateMenu.addAction(m_AtnExpIndicate);
   IndicateMenu.addSeparator();
@@ -970,7 +970,7 @@ void ptViewWindow::ContextMenu(QEvent* Event) {
   IndicateMenu.addAction(m_AtnExpIndB);
   IndicateMenu.setTitle(QObject::tr("Clipping"));
   QMenu ModeMenu(this);
-  ModeMenu.setPalette(Theme->ptPalette);
+  ModeMenu.setPalette(Theme->ptMenuPalette);
   ModeMenu.setStyle(Theme->ptStyle);
   ModeMenu.addAction(m_AtnModeRGB);
   ModeMenu.addAction(m_AtnModeStructure);

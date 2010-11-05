@@ -46,6 +46,7 @@ ptTheme(QApplication* Application);
 QStyle*     ptThemeStyle;
 QStyle*     ptStyle;
 QPalette    ptPalette;
+QPalette    ptMenuPalette;
 QString     ptStyleSheet;
 
 QPalette    ptSystemPalette;

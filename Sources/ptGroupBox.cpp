@@ -221,7 +221,7 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
       if (!Settings->ToolAlwaysVisible(m_Name)) {
         QMenu Menu(NULL);
         m_AtnBlock->setChecked(m_IsBlocked);
-        Menu.setPalette(Theme->ptPalette);
+        Menu.setPalette(Theme->ptMenuPalette);
         Menu.setStyle(Theme->ptStyle);
         Menu.addAction(m_AtnBlock);
         Menu.addSeparator();
