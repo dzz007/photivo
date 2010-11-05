@@ -2213,8 +2213,6 @@ void CB_MenuFileOpen(const short HaveFile) {
     if (OpenError == 0) {
       Settings->SetValue("IsRAW",0);
       Settings->SetValue("ExposureNormalization",0.0);
-      delete TestDcRaw;
-
     }
   } else {
     Settings->SetValue("IsRAW",1);
