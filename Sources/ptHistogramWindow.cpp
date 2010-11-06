@@ -97,7 +97,7 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
   m_AtnLnY->setChecked(Settings->GetInt("HistogramLogY"));
   connect(m_AtnLnY, SIGNAL(triggered()), this, SLOT(MenuLnY()));
 
-  m_AtnCrop = new QAction(QObject::tr("Crop"), this);
+  m_AtnCrop = new QAction(QObject::tr("Selection"), this);
   m_AtnCrop->setStatusTip(QObject::tr("Histogram only on a part of the image"));
   m_AtnCrop->setCheckable(true);
   if (Settings->GetInt("HistogramCrop"))

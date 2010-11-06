@@ -3666,7 +3666,6 @@ void CB_CropRectangleModeChoice(const QVariant Choice) {
 void CB_MakeCropButton() {
   uint16_t Width = 0;
   uint16_t Height = 0;
-  if (!Settings->GetInt("Crop")) Settings->SetValue("Crop",1);
   // First : make sure we have the view window.
   // And we reset the Image_AfterLensfun such that we can
   // again select on the whole. It might have been cropped before !
@@ -3724,18 +3723,23 @@ void CB_MakeCropButton() {
   short YScale = 1<<Settings->GetInt("PipeSize");
   short TmpScaled = Settings->GetInt("Scaled");
 
-  Settings->SetValue("CropX",ViewWindow->GetSelectionX()*XScale);
-  Settings->SetValue("CropY",ViewWindow->GetSelectionY()*YScale);
-  Settings->SetValue("CropW",ViewWindow->GetSelectionWidth()*XScale);
-  Settings->SetValue("CropH",ViewWindow->GetSelectionHeight()*YScale);
-  if ((((Settings->GetInt("CropX")>>TmpScaled) + (Settings->GetInt("CropW")>>TmpScaled)) >
+  if (((((ViewWindow->GetSelectionX()*XScale)>>TmpScaled) + ((ViewWindow->GetSelectionWidth()*XScale)>>TmpScaled)) >
           Width) ||
-      (((Settings->GetInt("CropY")>>TmpScaled) + (Settings->GetInt("CropH")>>TmpScaled)) >
+      ((((ViewWindow->GetSelectionY()*YScale)>>TmpScaled) + ((ViewWindow->GetSelectionHeight()*YScale)>>TmpScaled)) >
           Height)) {
     QMessageBox::information(MainWindow,
       QObject::tr("Crop outside the image"),
       QObject::tr("Crop rectangle too large.\nNo crop, try again."));
-    Settings->SetValue("Crop",0);
+    if(Settings->GetInt("RunMode")==1) {
+      // we're in manual mode!
+      Update(ptProcessorPhase_NULL);
+    }
+  } else {
+    Settings->SetValue("Crop",1);
+    Settings->SetValue("CropX",ViewWindow->GetSelectionX()*XScale);
+    Settings->SetValue("CropY",ViewWindow->GetSelectionY()*YScale);
+    Settings->SetValue("CropW",ViewWindow->GetSelectionWidth()*XScale);
+    Settings->SetValue("CropH",ViewWindow->GetSelectionHeight()*YScale);
   }
   TRACEKEYVALS("PreviewImageW","%d",PreviewImage->m_Width);
   TRACEKEYVALS("PreviewImageH","%d",PreviewImage->m_Height);
