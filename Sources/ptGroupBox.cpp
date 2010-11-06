@@ -63,6 +63,7 @@ ptGroupBox::ptGroupBox(const QString Title,
 
   m_Symbol = new QLabel();
   m_Symbol->setPixmap(QPixmap(QString::fromUtf8(":/photivo/Icons/attention.png")));
+  m_Symbol->setToolTip("Complex filter. Might be slow.");
 
   QString Temp = Title;
   Temp.replace("(*)","");
