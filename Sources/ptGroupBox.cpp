@@ -61,9 +61,16 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_Icon = new QLabel();
   m_Icon->setPixmap(DownArrow);
 
+  m_Symbol = new QLabel();
+  m_Symbol->setPixmap(QPixmap(QString::fromUtf8(":/photivo/Icons/attention.png")));
+
+  QString Temp = Title;
+  Temp.replace("(*)","");
+  Temp.trimmed();
+
   m_Title = new QLabel();
   m_Title->setObjectName("Title");
-  m_Title->setText("<b>"+Title+"</b>");
+  m_Title->setText("<b>"+Temp+"</b>");
   m_Title->setTextFormat(Qt::RichText);
   m_Title->setTextInteractionFlags(Qt::NoTextInteraction);
 
@@ -71,6 +78,9 @@ ptGroupBox::ptGroupBox(const QString Title,
 
   ButtonLayout->addWidget(m_Icon);
   ButtonLayout->addWidget(m_Title);
+  if (Temp!=Title) {
+    ButtonLayout->addWidget(m_Symbol);
+  }
   ButtonLayout->addStretch();
   ButtonLayout->setContentsMargins(0,0,0,0);
   ButtonLayout->setSpacing(4);

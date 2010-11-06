@@ -72,6 +72,7 @@ QPixmap   ActiveDownArrow;
 QPixmap   BlockedRightArrow;
 QPixmap   BlockedDownArrow;
 QLabel*   m_Icon;
+QLabel*   m_Symbol;
 QLabel*   m_Title;
 QString   m_Name;
 QLabel*   test;
