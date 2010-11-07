@@ -3686,24 +3686,24 @@ void CLASS ptScaleColors() {
     for (row=m_UserSetting_GreyBox[1]; row < bottom; row += 8)
       for (col=m_UserSetting_GreyBox[0]; col < right; col += 8) {
         // Apparently the image is scanned in 8*8 pixel blocks.
-  memset (sum, 0, sizeof sum);
-  for (y=row; y < row+8 && y < bottom; y++)
-    for (x=col; x < col+8 && x < right; x++)
-      for (c=0; c < 4; c++) {
-        if (m_Filters) {
-    c = FC(y,x);
-    val = BAYER(y,x);
-        } else
-    val = m_Image[y*m_Width+x][c];
-        if ((unsigned) val > m_WhiteLevel-25) goto skip_block;
-        if ((val -= m_BlackLevel) < 0) val = 0;
-/*        if ((val -= m_CBlackLevel[c]) < 0) val = 0; TODO Mike */
-        sum[c] += val;
-        sum[c+4]++;
-        if (m_Filters) break;
-      }
-  for (c=0; c < 8; c++) dsum[c] += sum[c];
-skip_block: ;
+        memset (sum, 0, sizeof sum);
+        for (y=row; y < row+8 && y < bottom; y++)
+          for (x=col; x < col+8 && x < right; x++)
+            for (c=0; c < 4; c++) {
+              if (m_Filters) {
+                c = FC(y,x);
+                val = BAYER(y,x);
+              } else
+                val = m_Image[y*m_Width+x][c];
+              if ((unsigned) val > m_WhiteLevel-25) goto skip_block;
+              if ((val -= m_BlackLevel) < 0) val = 0;
+      /*        if ((val -= m_CBlackLevel[c]) < 0) val = 0; TODO Mike */
+              sum[c] += val;
+              sum[c+4]++;
+              if (m_Filters) break;
+            }
+        for (c=0; c < 8; c++) dsum[c] += sum[c];
+      skip_block: ;
       }
     // How intenser the blocks , how smaller the multipliers.
     // In terms of ratio's it means they will be close to each other
@@ -3718,11 +3718,11 @@ skip_block: ;
     memset (sum, 0, sizeof sum);
     for (row=0; row < 8; row++)
       for (col=0; col < 8; col++) {
-  c = FC(row,col);
-  if ((val = white[row][col] - m_BlackLevel) > 0)
-/*   if ((val = white[row][col] - m_CBlackLevel[c]) > 0) TODO Mike */
-    sum[c] += val;
-  sum[c+4]++;
+        c = FC(row,col);
+        if ((val = white[row][col] - m_BlackLevel) > 0)
+      /*   if ((val = white[row][col] - m_CBlackLevel[c]) > 0) TODO Mike */
+          sum[c] += val;
+        sum[c+4]++;
       }
     if (sum[0] && sum[1] && sum[2] && sum[3]) {
       for (c=0; c < 4; c++) ASSIGN(m_PreMultipliers[c], (float) sum[c+4] / sum[c]);

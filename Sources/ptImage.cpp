@@ -208,7 +208,14 @@ ptImage* ptImage::lcmsRGBToRGB(const short To,
                                  Intent,
                                  cmsFLAGS_NOOPTIMIZE | cmsFLAGS_BLACKPOINTCOMPENSATION);
 
-  cmsDoTransform(Transform,m_Image,m_Image,m_Width*m_Height);
+  int32_t Size = m_Width*m_Height;
+  int32_t Step = 100000;
+#pragma omp parallel for schedule(static)
+  for (int32_t i = 0; i < Size; i+=Step) {
+    int32_t Length = (i+Step)<Size ? Step : Size - i;
+    uint16_t* Tile = &(m_Image[i][0]);
+    cmsDoTransform(Transform,Tile,Tile,Length);
+  }
   cmsDeleteTransform(Transform);
   cmsCloseProfile(OutProfile);
   cmsCloseProfile(InProfile);
@@ -387,7 +394,14 @@ ptImage* ptImage::lcmsRGBToXYZ(const int Intent) {
                                  Intent,
                                  cmsFLAGS_NOOPTIMIZE | cmsFLAGS_BLACKPOINTCOMPENSATION);
 
-  cmsDoTransform(Transform,m_Image,m_Image,m_Width*m_Height);
+  int32_t Size = m_Width*m_Height;
+  int32_t Step = 100000;
+#pragma omp parallel for schedule(static)
+  for (int32_t i = 0; i < Size; i+=Step) {
+    int32_t Length = (i+Step)<Size ? Step : Size - i;
+    uint16_t* Tile = &(m_Image[i][0]);
+    cmsDoTransform(Transform,Tile,Tile,Length);
+  }
   cmsDeleteTransform(Transform);
   cmsCloseProfile(OutProfile);
   cmsCloseProfile(InProfile);
@@ -492,7 +506,14 @@ ptImage* ptImage::lcmsXYZToRGB(const short To,
                                  Intent,
                                  cmsFLAGS_NOOPTIMIZE | cmsFLAGS_BLACKPOINTCOMPENSATION);
 
-  cmsDoTransform(Transform,m_Image,m_Image,m_Width*m_Height);
+  int32_t Size = m_Width*m_Height;
+  int32_t Step = 100000;
+#pragma omp parallel for schedule(static)
+  for (int32_t i = 0; i < Size; i+=Step) {
+    int32_t Length = (i+Step)<Size ? Step : Size - i;
+    uint16_t* Tile = &(m_Image[i][0]);
+    cmsDoTransform(Transform,Tile,Tile,Length);
+  }
   cmsDeleteTransform(Transform);
   cmsCloseProfile(OutProfile);
   cmsCloseProfile(InProfile);
@@ -635,7 +656,14 @@ ptImage* ptImage::lcmsRGBToLab(const int Intent) {
                                  Intent,
                                  cmsFLAGS_NOOPTIMIZE | cmsFLAGS_BLACKPOINTCOMPENSATION);
 
-  cmsDoTransform(Transform,m_Image,m_Image,m_Width*m_Height);
+  int32_t Size = m_Width*m_Height;
+  int32_t Step = 100000;
+#pragma omp parallel for schedule(static)
+  for (int32_t i = 0; i < Size; i+=Step) {
+    int32_t Length = (i+Step)<Size ? Step : Size - i;
+    uint16_t* Tile = &(m_Image[i][0]);
+    cmsDoTransform(Transform,Tile,Tile,Length);
+  }
   cmsDeleteTransform(Transform);
   cmsCloseProfile(OutProfile);
   cmsCloseProfile(InProfile);
@@ -798,7 +826,14 @@ ptImage* ptImage::lcmsLabToRGB(const short To,
                                  Intent,
                                  cmsFLAGS_NOOPTIMIZE | cmsFLAGS_BLACKPOINTCOMPENSATION);
 
-  cmsDoTransform(Transform,m_Image,m_Image,m_Width*m_Height);
+  int32_t Size = m_Width*m_Height;
+  int32_t Step = 100000;
+#pragma omp parallel for schedule(static)
+  for (int32_t i = 0; i < Size; i+=Step) {
+    int32_t Length = (i+Step)<Size ? Step : Size - i;
+    uint16_t* Tile = &(m_Image[i][0]);
+    cmsDoTransform(Transform,Tile,Tile,Length);
+  }
   cmsDeleteTransform(Transform);
   cmsCloseProfile(OutProfile);
   cmsCloseProfile(InProfile);
@@ -1057,10 +1092,15 @@ ptImage* ptImage::Set(const DcRaw*  DcRawObject,
                                                Intent,
                                                0);
 
-    cmsDoTransform(Transform,
-                   DcRawObject->m_Image,
-                   m_Image,
-                   m_Width*m_Height);
+    int32_t Size = m_Width*m_Height;
+    int32_t Step = 100000;
+#pragma omp parallel for schedule(static)
+    for (int32_t i = 0; i < Size; i+=Step) {
+      int32_t Length = (i+Step)<Size ? Step : Size - i;
+      uint16_t* Tile1 = &(DcRawObject->m_Image[i][0]);
+      uint16_t* Tile2 = &(m_Image[i][0]);
+      cmsDoTransform(Transform,Tile1,Tile2,Length);
+    }
     cmsDeleteTransform(Transform);
     for (; ProfileIdx>=0; ProfileIdx--) {
       cmsCloseProfile(Profiles[ProfileIdx]);
@@ -1155,7 +1195,7 @@ ptImage* ptImage::Set(const DcRaw*  DcRawObject,
   if (DcRawObject->m_Flip & 4) {
     SWAP(TargetWidth,TargetHeight);
   }
-#pragma omp parallel for
+#pragma omp parallel for schedule(static)
   for (uint16_t TargetRow=0; TargetRow<TargetHeight; TargetRow++) {
     for (uint16_t TargetCol=0; TargetCol<TargetWidth; TargetCol++) {
       uint16_t OriginRow = TargetRow;
@@ -1212,7 +1252,7 @@ ptImage* ptImage::Set(const uint16_t Width,
     return NULL;
   }
   FCLOSE(InputFile);
-#pragma omp parallel for
+#pragma omp parallel for schedule(static)
   for (uint32_t i=0; i<(uint32_t)Height*Width; i++) {
     for (short c=0; c<3; c++) {
       m_Image[i][c] = Buffer[i][c];
