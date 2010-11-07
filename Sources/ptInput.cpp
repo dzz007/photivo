@@ -418,6 +418,7 @@ void ptInput::OnValueChanged(double Value) {
 }
 
 void ptInput::OnValueChangedTimerExpired() {
+  m_SpinBox->clearFocus();
   if (m_Type == QVariant::Int)
     printf("(%s,%d) emiting signal(%d)\n",__FILE__,__LINE__,m_Value.toInt());
   if (m_Type == QVariant::Double)
