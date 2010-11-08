@@ -2256,7 +2256,10 @@ ptImage* ptImage::Reinhard05(const double Brightness,
                              const double Chromatic,
                              const double Light) {
 
-  const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
+  assert (m_ColorSpace != ptSpace_Lab);
+  // OpenMP is done for RGB
+  // const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
+  const short NrChannels = 3;
 
   const double DChromatic = 1 - Chromatic;
   const double DLight = 1 - Light;
@@ -2285,21 +2288,41 @@ ptImage* ptImage::Reinhard05(const double Brightness,
   float min_lum = 0.0;
   float world_lum = 0.0;
   float Cav[] = { 0.0f, 0.0f, 0.0f};
+  float Cav1,Cav2,Cav3;
   float Lav = 0.0f;
 
+#pragma omp parallel
+{
+  float thread_max = 0.0;
+  float thread_min = 0.0;
+#pragma omp for reduction(+:world_lum,Cav1,Cav2,Cav3,Lav)
   for (uint32_t i=0; i < m_Size; i++) {
     float lum = Y[i];
-    max_lum = (max_lum > lum) ? max_lum : lum;
-    min_lum = (min_lum < lum) ? min_lum : lum;
+    thread_max = (thread_max > lum) ? thread_max : lum;
+    thread_min = (thread_min < lum) ? thread_min : lum;
     world_lum += logf(2.3e-5+lum);
-    for (int c = 0; c < NrChannels; c++)
-      Cav[c] += m_Image[i][c];
+    //~ for (int c = 0; c < NrChannels; c++)
+      //~ Cav[c] += m_Image[i][c];
+    Cav1 += m_Image[i][0];
+    Cav2 += m_Image[i][1];
+    Cav3 += m_Image[i][2];
     Lav += lum;
   }
+#pragma omp critical
+  if (thread_max > max_lum) {
+    max_lum = thread_max;
+  }
+#pragma omp critical
+  if (thread_min < min_lum) {
+    min_lum = thread_min;
+  }
+}
+  Cav[0] = Cav1;
+  Cav[1] = Cav2;
+  Cav[2] = Cav3;
   world_lum /= (float)m_Size;
   for (int c = 0; c < NrChannels; c++)
     Cav[c] = Cav[c] / ((float)m_Size * (float)0xffff);
-
   Lav /= (float)m_Size;
 
   //--- tone map image
@@ -2316,6 +2339,11 @@ ptImage* ptImage::Reinhard05(const double Brightness,
   float max_col = 0.0f;
   float min_col = 1.0f;
 
+#pragma omp parallel
+{
+  float thread_max = 0.0f;
+  float thread_min = 1.0f;
+#pragma omp for
   for (uint32_t i=0; i < m_Size; i++) {
     float l = Y[i];
     float col;
@@ -2334,22 +2362,32 @@ ptImage* ptImage::Reinhard05(const double Brightness,
           col /= col + powf(f*Ia, m);
         }
 
-        max_col = (col>max_col) ? col : max_col;
-        min_col = (col<min_col) ? col : min_col;
+        thread_max = (col>thread_max) ? col : thread_max;
+        thread_min = (col<thread_min) ? col : thread_min;
 
         Temp[i][c]=col;
       }
     }
   }
+#pragma omp critical
+  if (thread_max > max_col) {
+    max_col = thread_max;
+  }
+#pragma omp critical
+  if (thread_min < min_col) {
+    min_col = thread_min;
+  }
+}
 
   //--- normalize intensities
+#pragma omp parallel for schedule(static)
   for (uint32_t i=0; i < m_Size; i++) {
     for (int c = 0; c < NrChannels; c++)
       m_Image[i][c] = CLIP((int32_t) ((Temp[i][c]-min_col)/(max_col-min_col)*0xffff));
   }
 
-  free (Temp);
-  free (Y);
+  FREE (Temp);
+  FREE (Y);
 
   return this;
 }
