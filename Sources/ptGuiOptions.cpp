@@ -45,7 +45,7 @@ const ptGuiOptionsItem ptGuiOptions::CameraColor[] = {
   {ptCameraColor_Flat,           QObject::tr("Flat Profile")},
   {ptCameraColor_Adobe_Matrix,   QObject::tr("Adobe Matrix")},
   {ptCameraColor_Adobe_Profile,  QObject::tr("Adobe Profile")},
-  {ptCameraColor_Embedded,       QObject::tr("Embedded Profile")  },
+  //{ptCameraColor_Embedded,       QObject::tr("Embedded Profile")  },
   {ptCameraColor_Profile,        QObject::tr("External Profile")  },
   {-1,NULL}};
 

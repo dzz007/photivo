@@ -46,7 +46,7 @@
 #define LIM(x,min,max) MAX(min,MIN(x,max))
 #define ULIM(x,y,z) ((y) < (z) ? LIM(x,y,z) : LIM(x,z,y))
 #define CLIP(x) LIM(x,0,0xffff)
-#define SWAP(a,b) { a ^= b; a ^= (b ^= a); }
+#define SWAP(a,b) { a=a+b; b=a-b; a=a-b; }
 #define SIGN(x) ((x) == 0 ? 0 : ((x) < 0 ? -1 : 1 ))
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -120,12 +120,12 @@ const char *name()
   return _("base curve");
 }
 
-int
-groups ()
+int 
+groups () 
 {
-  return IOP_GROUP_BASIC;
+	return IOP_GROUP_BASIC;
 }
-
+	
 
 void init_presets (dt_iop_module_t *self)
 {
@@ -347,7 +347,7 @@ dt_iop_basecurve_expose(GtkWidget *widget, GdkEventExpose *event, gpointer user_
     if(c->x_move == k) cairo_fill(cr);
     else               cairo_stroke(cr);
   }
-
+  
   // draw selected cursor
   cairo_set_line_width(cr, 1.);
   cairo_translate(cr, 0, height);
@@ -367,7 +367,7 @@ dt_iop_basecurve_expose(GtkWidget *widget, GdkEventExpose *event, gpointer user_
     cairo_restore(cr);
   }
 #endif
-
+ 
   if(c->mouse_y > 0 || c->dragging)
   {
     // draw min/max, if selected

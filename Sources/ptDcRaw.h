@@ -30,8 +30,8 @@
 #define DLDCDRAW_H
 
 // Adaptation of dcraw.c stuff.
-#define VERSION "8.99"    // Update along with dcraw syncing ...
-// 1.432
+#define VERSION "9.04"    // Update along with dcraw syncing ...
+// 1.438
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
@@ -438,9 +438,9 @@ unsigned  m_Tiff_Samples;
 unsigned  m_Tiff_bps;
 unsigned  m_Tiff_Compress;
 unsigned  m_BlackLevel;
-/* unsigned  m_CBlackLevel[4]; TODO Mike */
+unsigned  m_CBlackLevel[8]; //TODO Mike
 unsigned  m_BlackLevel_AfterPhase1;
-/* unsigned  m_CBlackLevel_AfterPhase1[4]; TODO Mike */
+unsigned  m_CBlackLevel_AfterPhase1[8]; //TODO Mike
 unsigned  m_WhiteLevel;
 unsigned  m_WhiteLevel_AfterPhase1;
 unsigned  m_MixGreen;
@@ -535,7 +535,8 @@ void  parse_rollei();
 void  parse_ciff(int offset,int length);
 void  ciff_block_1030();
 void  parse_external_jpeg();
-void  parse_tiff(int base);
+int   parse_tiff(int base);
+void  apply_tiff();
 void  parse_minolta(int base);
 void  parse_kodak_ifd(int base);
 void  linear_table(unsigned len);
@@ -654,7 +655,7 @@ void  canon_600_coeff();
 void  canon_600_auto_wb();
 int   canon_600_color(int ratio[2],int mar);
 void  canon_600_fixed_wb(int temp);
-void  canon_black (double dark[2],int nblack);
+/* void  canon_black (double dark[2],int nblack); */
 void  read_shorts(uint16_t *pixel,int count);
 double  getreal(int type);
 float  int_to_float(int i);
