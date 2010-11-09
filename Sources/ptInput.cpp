@@ -153,6 +153,7 @@ ptInput::ptInput(const QWidget* MainWindow,
 
   // A timer for time filtering signals going outside.
   m_TimeOut = TimeOut;
+  m_KeyTimeOut = 2000;
   m_Timer = new QTimer(this);
   m_Timer->setSingleShot(1);
 
@@ -173,11 +174,12 @@ ptInput::ptInput(const QWidget* MainWindow,
   //~ connect(m_Button,SIGNAL(clicked()),
           //~ this,SLOT(OnButtonClicked()));
   connect(m_SpinBox,SIGNAL(editingFinished()),
-          this,SLOT(OnValueChangedTimerExpired()));
+          this,SLOT(EditingFinished()));
 
   // Set the default Value (and remember for later).
   m_DefaultValue = Default;
   SetValue(Default,1 /* block signals */);
+  m_Emited = 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -334,8 +336,7 @@ void ptInput::OnSpinBoxChanged(int Value) {
        (IntSpinBox->maximum() - IntSpinBox->minimum()))  );
   m_Slider->blockSignals(false);
   m_Value = Value;
-  if(!IntSpinBox->hasFocus())
-    OnValueChanged(Value);
+  OnValueChanged(Value);
 }
 
 void ptInput::OnSpinBoxChanged(double Value) {
@@ -346,9 +347,7 @@ void ptInput::OnSpinBoxChanged(double Value) {
        (DoubleSpinBox->maximum() - DoubleSpinBox->minimum()))  );
   m_Slider->blockSignals(false);
   m_Value = Value;
-  if(!DoubleSpinBox->hasFocus()) {
-    OnValueChanged(Value);
-  }
+  OnValueChanged(Value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -399,31 +398,51 @@ void ptInput::OnButtonClicked() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void ptInput::EditingFinished() {
+  if (m_Emited == 0) {
+    OnValueChangedTimerExpired();
+  }
+}
+
+
 void ptInput::OnValueChanged(int Value) {
+  m_Emited = 0;
   m_Value = QVariant(Value);
   if (m_TimeOut) {
-    m_Timer->start(m_TimeOut);
+    if(!m_SpinBox->hasFocus()) {
+      m_Timer->start(m_TimeOut);
+    } else {
+      m_Timer->start(m_KeyTimeOut);
+    }
   } else {
     OnValueChangedTimerExpired();
   }
 }
 
 void ptInput::OnValueChanged(double Value) {
+  m_Emited = 0;
   m_Value = QVariant(Value);
   if (m_TimeOut) {
-    m_Timer->start(m_TimeOut);
+    if(!m_SpinBox->hasFocus()) {
+      m_Timer->start(m_TimeOut);
+    } else {
+      m_Timer->start(m_KeyTimeOut);
+    }
   } else {
     OnValueChangedTimerExpired();
   }
 }
 
 void ptInput::OnValueChangedTimerExpired() {
+  if (m_Emited == 0) {
+    if (m_Type == QVariant::Int)
+      printf("(%s,%d) emiting signal(%d)\n",__FILE__,__LINE__,m_Value.toInt());
+    if (m_Type == QVariant::Double)
+      printf("(%s,%d) emiting signal(%f)\n",__FILE__,__LINE__,m_Value.toDouble());
+    emit(valueChanged(m_Value));
+  }
+  m_Emited = 1;
   m_SpinBox->clearFocus();
-  if (m_Type == QVariant::Int)
-    printf("(%s,%d) emiting signal(%d)\n",__FILE__,__LINE__,m_Value.toInt());
-  if (m_Type == QVariant::Double)
-    printf("(%s,%d) emiting signal(%f)\n",__FILE__,__LINE__,m_Value.toDouble());
-  emit(valueChanged(m_Value));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

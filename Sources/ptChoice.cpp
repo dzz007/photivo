@@ -79,6 +79,7 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
     m_ComboBox->addItem(InitialOptions[i].Text,InitialOptions[i].Value);
   }
   m_ComboBox->installEventFilter(this);
+  m_ComboBox->setFocusPolicy(Qt::ClickFocus);
 
   //~ m_Button  = new QToolButton(Parent);
   //~ QIcon ButtonIcon;

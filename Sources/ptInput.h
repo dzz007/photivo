@@ -70,6 +70,7 @@ void OnButtonClicked();
 void OnValueChanged(int Value);
 void OnValueChanged(double Value);
 void OnValueChangedTimerExpired();
+void EditingFinished();
 
 signals :
 void valueChanged(QVariant Value);
@@ -82,6 +83,8 @@ QVariant m_Value;
 QVariant m_DefaultValue;
 int      m_TimeOut;
 short    m_HaveDefault;
+int      m_KeyTimeOut;
+int      m_Emited;
 
 QVariant::Type    m_Type; // All values (and determines spinbox f.i.)
 QAbstractSpinBox* m_SpinBox; // Common base for int and double.
