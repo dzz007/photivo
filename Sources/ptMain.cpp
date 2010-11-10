@@ -328,7 +328,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Persistent settings.
   QCoreApplication::setOrganizationName(CompanyName);
-  QCoreApplication::setOrganizationDomain("mm-log.com/photivo");
+  QCoreApplication::setOrganizationDomain("www.photivo.org");
   QCoreApplication::setApplicationName(ProgramName);
   // I strongly prefer ini files above register values as they
   // are readable and editeable (think of debug)
@@ -438,7 +438,7 @@ int photivoMain(int Argc, char *Argv[]) {
   }
 
   MainWindow =
-    new ptMainWindow(QObject::tr("photivo - digital light RAW converter"));
+    new ptMainWindow(QObject::tr("Photivo"));
 
   ViewWindow =
     new ptViewWindow(NULL,MainWindow->ViewFrameCentralWidget);
@@ -447,12 +447,15 @@ int photivoMain(int Argc, char *Argv[]) {
     new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
 
   // Theming
-
   CB_StyleChoice(Settings->GetInt("Style"));
 
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
 
   // Different curvewindows.
+  QStringList Temp = Settings->GetStringList("BlockedTools");
+  Settings->SetValue("BlockedTools",QStringList());
+  MainWindow->UpdateToolBoxes();
+
   QWidget* ParentWidget[] = {MainWindow->RGBCurveCentralWidget,
                              MainWindow->RCurveCentralWidget,
                              MainWindow->GCurveCentralWidget,
@@ -473,6 +476,8 @@ int photivoMain(int Argc, char *Argv[]) {
     CurveWindow[Channel] =
       new ptCurveWindow(Curve[Channel],Channel,ParentWidget[Channel]);
   }
+  Settings->SetValue("BlockedTools",Temp);
+  MainWindow->UpdateToolBoxes();
 
   // Calculate a nice position.
   // Persistent settings.
