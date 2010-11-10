@@ -33,6 +33,7 @@
 ptCheck::ptCheck(const QWidget* MainWindow,
                  const QString  ObjectName,
                  const QString  ParentName,
+                 const QVariant Default,
                  const QString  Label,
                  const QString  ToolTip)
   :QObject() {
@@ -68,6 +69,17 @@ ptCheck::ptCheck(const QWidget* MainWindow,
   connect(m_CheckBox,SIGNAL(stateChanged(int)),
           this,SLOT(OnValueChanged(int)));
 
+  m_DefaultValue = Default;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Reset
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptCheck::Reset() {
+  SetValue(m_DefaultValue,0 /* Generate signal */);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

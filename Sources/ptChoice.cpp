@@ -39,7 +39,7 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
                    const QVariant          Default,
                    const ptGuiOptionsItem* InitialOptions,
                    const QString           ToolTip,
-       const int               TimeOut)
+                   const int               TimeOut)
   :QObject() {
 
   if (Default.type() != QVariant::Int) {
@@ -181,6 +181,16 @@ void ptChoice::Show(const short Show) {
     m_ComboBox->hide();
     //~ m_Button->hide();
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Reset
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptChoice::Reset() {
+  SetValue(m_DefaultValue,0 /* Generate signal */);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

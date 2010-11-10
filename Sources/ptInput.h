@@ -61,6 +61,7 @@ void SetMaximum(const QVariant Value);
 void SetMinimum(const QVariant Value);
 void SetEnabled(const short Enabled);
 void Show(const short Show);
+void Reset();
 
 private slots:
 void OnSpinBoxChanged(int Value);

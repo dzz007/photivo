@@ -46,6 +46,12 @@ ptTheme::ptTheme(QApplication* Application) {
   ptMenuPalette = QPalette();
   ptHighLight = QColor(255,255,255);
   ptStyle = ptSystemStyle;
+
+  // Icons
+  ptIconCircleGreen = new QPixmap(QString::fromUtf8(":/photivo/Icons/circlegreen.png"));
+  ptIconCircleRed = new QPixmap(QString::fromUtf8(":/photivo/Icons/circlered.png"));
+  ptIconCrossRed = new QPixmap(QString::fromUtf8(":/photivo/Icons/crossred.png"));
+  ptIconReset =  new QPixmap(QString::fromUtf8(":/photivo/Icons/reload.png"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -182,29 +188,29 @@ void ptTheme::DarkGrey(short Color) {
   //ptPalette.setColor(QPalette::Link, QColor(255,0,0));
   //ptPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
   //ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
-  
-  	//ptMenuPalette.setColor(QPalette::Window, QColor(255,0,0));
+
+    //ptMenuPalette.setColor(QPalette::Window, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Background, ptBackGround);
-  	//ptMenuPalette.setColor(QPalette::WindowText, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::WindowText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
   ptMenuPalette.setColor(QPalette::Base, ptBackGround); // Menu
-	  //ptMenuPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
-	  //ptMenuPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
-	  //ptMenuPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Text, ptText);
   ptMenuPalette.setColor(QPalette::Button, ptBackGround); // Splitter
   ptMenuPalette.setColor(QPalette::ButtonText, ptText); // Menu
-	  //ptMenuPalette.setColor(QPalette::BrightText, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::BrightText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Light, ptDark); // Splitter
-	  //ptMenuPalette.setColor(QPalette::Midlight, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::Midlight, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Dark, ptDark);
   ptMenuPalette.setColor(QPalette::Mid, ptDark);
-  	//ptMenuPalette.setColor(QPalette::Shadow, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::Shadow, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Highlight, ptDark); // -menu
   ptMenuPalette.setColor(QPalette::HighlightedText, ptText);
-	  //ptMenuPalette.setColor(QPalette::Link, QColor(255,0,0));
-	  //ptMenuPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
-	  //ptMenuPalette.setColor(QPalette::NoRole, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::Link, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::NoRole, QColor(255,0,0));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

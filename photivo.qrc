@@ -23,6 +23,9 @@
     <file>Icons/exec.png</file>
     <file>Icons/info.png</file>
     <file>Icons/circleactive.png</file>
+    <file>Icons/circlegreen.png</file>
+    <file>Icons/circlered.png</file>
+    <file>Icons/crossred.png</file>
     <file>Icons/attention.png</file>
     <file>photivo.png</file>
   </qresource>

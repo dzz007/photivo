@@ -752,6 +752,7 @@ void Update(short Phase,
             short WithIdentify  /* = 1 */,
             short ProcessorMode /* = ptProcessorMode_Preview */) {
 
+  if (Settings->GetInt("BlockUpdate") == 1) return; // hard block
   if (Settings->GetInt("PipeIsRunning") == 1) {
     // record that we got here with the new settings
     // and make sure the pipe is run after the current
@@ -2442,6 +2443,7 @@ void CB_MenuFileExit(const short) {
     msgBox.setText("Do you want to save the current image?");
     msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Save);
+    msgBox.setParent(NULL);
     int ret = msgBox.exec();
     switch (ret) {
       case QMessageBox::Save:

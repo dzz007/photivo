@@ -9,12 +9,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
+   width="51.07143"
+   height="51.07143"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.0 r9654"
-   sodipodi:docname="Neues Dokument 1">
+   sodipodi:docname="circleactive.svg"
+   inkscape:export-filename="/home/michael/src/photivo/Icons/circlegreen.png"
+   inkscape:export-xdpi="66.831039"
+   inkscape:export-ydpi="66.831039">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -33,8 +36,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8"
-     inkscape:cx="569.78544"
-     inkscape:cy="704.93669"
+     inkscape:cx="43.356863"
+     inkscape:cy="-1.8490309"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -42,7 +45,11 @@
      inkscape:window-height="752"
      inkscape:window-x="642"
      inkscape:window-y="124"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="0"
+     fit-margin-top="4"
+     fit-margin-right="4"
+     fit-margin-bottom="4"
+     fit-margin-left="4" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -58,7 +65,8 @@
   <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-526.42858,-285.57647)">
     <path
        sodipodi:type="arc"
        style="fill:#008000;fill-opacity:1;stroke:#00ff00;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
@@ -67,7 +75,7 @@
        sodipodi:cy="311.11218"
        sodipodi:rx="20.535715"
        sodipodi:ry="20.535715"
-       d="m 572.50001,311.11218 a 20.535715,20.535715 0 1 1 -41.07143,0 20.535715,20.535715 0 1 1 41.07143,0 z"
+       d="m 572.50001,311.11218 c 0,11.34156 -9.19415,20.53572 -20.53572,20.53572 -11.34156,0 -20.53571,-9.19416 -20.53571,-20.53572 0,-11.34156 9.19415,-20.53571 20.53571,-20.53571 11.34157,0 20.53572,9.19415 20.53572,20.53571 z"
        inkscape:export-filename="/home/michael/src/photivo/Icons/circleactive.png"
        inkscape:export-xdpi="66.831039"
        inkscape:export-ydpi="66.831039" />

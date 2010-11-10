@@ -116,3 +116,4 @@
 {"FullOutput"                           ,9         ,0                                                   ,0},
 {"HiddenTools"                          ,0         ,QStringList()                                       ,1},
 {"BlockedTools"                         ,0         ,QStringList()                                       ,1},
+{"BlockUpdate"                          ,9         ,0                                                   ,0},

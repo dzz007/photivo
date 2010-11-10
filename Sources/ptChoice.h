@@ -58,6 +58,7 @@ void Clear(void);
 void Show(const short Show);
 QVariant GetItemData(const int Index) { return m_ComboBox->itemData(Index); };
 QString  CurrentText(void) { return m_ComboBox->currentText(); };
+void Reset();
 
 private slots:
 void OnValueChanged(int Value);

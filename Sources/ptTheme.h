@@ -52,6 +52,11 @@ QString     ptStyleSheet;
 QPalette    ptSystemPalette;
 QStyle*     ptSystemStyle;
 
+QPixmap*    ptIconCircleGreen;
+QPixmap*    ptIconCircleRed;
+QPixmap*    ptIconCrossRed;
+QPixmap*    ptIconReset;
+
 // Methods
 void Reset();
 void Normal(short Color);

@@ -102,13 +102,27 @@ ptGroupBox::ptGroupBox(const QString Title,
 
   m_AtnHide = new QAction(QObject::tr("Hide"), this);
   connect(m_AtnHide, SIGNAL(triggered()), this, SLOT(Hide()));
+  m_AtnHide->setIcon(QIcon(*Theme->ptIconCrossRed));
+  m_AtnHide->setIconVisibleInMenu(true);
 
   m_AtnBlock = new QAction(QObject::tr("Block"), this);
   connect(m_AtnBlock, SIGNAL(triggered()), this, SLOT(SetBlocked()));
-  m_AtnBlock->setCheckable(true);
-  m_AtnBlock->setChecked(m_IsBlocked);
+  m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleRed));
+  m_AtnBlock->setIconVisibleInMenu(true);
+
+  m_AtnReset = new QAction(QObject::tr("Reset"), this);
+  connect(m_AtnReset, SIGNAL(triggered()), this, SLOT(Reset()));
+  m_AtnReset->setIcon(QIcon(*Theme->ptIconReset));
+  m_AtnReset->setIconVisibleInMenu(true);
 
   UpdateView();
+
+  m_Timer = new QTimer(this);
+
+  connect(m_Timer,SIGNAL(timeout()),
+          this,SLOT(PipeUpdate()));
+
+  m_NeedPipeUpdate = 0;
 
   //~ if (i==1 && j==1) this->setVisible(false);
   //~ test = new QLabel();
@@ -164,6 +178,46 @@ void ptGroupBox::SetActive(const short IsActive) {
   m_IsActive = IsActive;
 
   UpdateView();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// PipeUpdate
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::PipeUpdate() {
+  Settings->SetValue("BlockUpdate",0);
+  if (m_NeedPipeUpdate == 1) {
+    m_NeedPipeUpdate = 0;
+    ::Update(m_Name);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Reset
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::Reset() {
+  m_NeedPipeUpdate = Settings->ToolIsActive(m_Name);
+
+  Settings->SetValue("BlockUpdate",1);
+  QList <ptInput *> Inputs = findChildren <ptInput *> ();
+  for (int i = 0; i < Inputs.size(); i++) {
+    (Inputs.at(i))->Reset();
+  }
+  QList <ptChoice *> Combos = findChildren <ptChoice *> ();
+  for (int i = 0; i < Combos.size(); i++) {
+    (Combos.at(i))->Reset();
+  }
+  QList <ptCheck *> Checks = findChildren <ptCheck *> ();
+  for (int i = 0; i < Checks.size(); i++) {
+    (Checks.at(i))->Reset();
+  }
+
+  m_Timer->start(ptTimeout_Input+100);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -230,11 +284,19 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
       Settings->m_IniSettings->setValue(m_Name,m_Folded);
     } else if (event->button()==Qt::RightButton) {
       if (!Settings->ToolAlwaysVisible(m_Name)) {
+        if (m_IsBlocked == 1) {
+          m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleGreen));
+          m_AtnBlock->setText(QObject::tr("Allow"));
+        } else {
+          m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleRed));
+          m_AtnBlock->setText(QObject::tr("Block"));
+        }
         QMenu Menu(NULL);
-        m_AtnBlock->setChecked(m_IsBlocked);
         Menu.setPalette(Theme->ptMenuPalette);
         Menu.setStyle(Theme->ptStyle);
         Menu.addAction(m_AtnBlock);
+        Menu.addSeparator();
+        Menu.addAction(m_AtnReset);
         Menu.addSeparator();
         Menu.addAction(m_AtnHide);
         Menu.exec(event->globalPos());

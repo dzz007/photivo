@@ -53,6 +53,8 @@ void Update();
 private slots:
 void Hide();
 void SetBlocked();
+void Reset();
+void PipeUpdate();
 
 signals :
 
@@ -78,6 +80,9 @@ QString   m_Name;
 QLabel*   test;
 QAction*  m_AtnHide;
 QAction*  m_AtnBlock;
+QAction*  m_AtnReset;
+QTimer*   m_Timer;
+int       m_NeedPipeUpdate;
 };
 
 #endif

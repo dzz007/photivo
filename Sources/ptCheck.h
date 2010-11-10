@@ -40,6 +40,7 @@ public :
 ptCheck(const QWidget* MainWindow,
         const QString  ObjectName,
         const QString  ParentName,
+        const QVariant Default,
         const QString  Label,
         const QString  ToolTip);
 // Destructor.
@@ -48,6 +49,7 @@ ptCheck(const QWidget* MainWindow,
 void SetValue(const QVariant Value, const short BlockSignal = 1);
 void SetEnabled(const short Enabled);
 void Show(const short Show);
+void Reset();
 
 protected:
 
@@ -58,6 +60,7 @@ signals :
 void valueChanged(QVariant Value);
 
 private:
+QVariant   m_DefaultValue;
 QVariant   m_Value;
 QCheckBox* m_CheckBox;
 };

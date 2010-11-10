@@ -219,6 +219,7 @@ ptMainWindow::ptMainWindow(const QString Title)
           new ptCheck(this,
                       ObjectName,
                       ParentName,
+                      Settings->GetDefaultValue(Key),
                       Settings->GetLabel(Key),
                       Settings->GetToolTip(Key));
         connect(Check,SIGNAL(valueChanged(QVariant)),
