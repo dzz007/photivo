@@ -23,7 +23,7 @@
 
 #include <stdlib.h>
 
-#include "QObject"
+#include <QtCore>
 
 #include "ptGuiOptions.h"
 #include "ptDefines.h"

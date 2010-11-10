@@ -459,7 +459,7 @@ void ptHistogramWindow::paintEvent(QPaintEvent*) {
     QString FileName = Settings->GetString("SplashDirectory") + "photivoLogo.png";
     m_QPixmap = new QPixmap(FileName);
     QPixmap* Scaled = new QPixmap(
-      m_QPixmap->scaled(width(),
+      m_QPixmap->scaled(width()-16,
                         height()-16,
                         Qt::KeepAspectRatio,
                         Qt::SmoothTransformation));
@@ -468,7 +468,7 @@ void ptHistogramWindow::paintEvent(QPaintEvent*) {
   }
 
   if (m_LogoActive) {
-    Painter.drawPixmap((width()-height()+16)/2,8,*m_QPixmap);
+    Painter.drawPixmap((width()-m_QPixmap->width())/2,8,*m_QPixmap);
     Painter.restore();
   } else {
     Painter.drawPixmap(0,0,*m_QPixmap);
