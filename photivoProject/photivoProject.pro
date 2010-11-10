@@ -64,11 +64,10 @@ LIBS += $$system(pkg-config --libs-only-l glib-2.0)
 LIBS += -llensfun
 LIBS += -lgomp -lpthread
 unix {
-  LIBS += $$system(GraphicsMagick++-config --libs)
-  LIBS += $$system(GraphicsMagickWand-config --libs)
+  CONFIG += link_pkgconfig
+  PKGCONFIG += GraphicsMagick++ GraphicsMagickWand
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
-  INCLUDEPATH += /usr/include/GraphicsMagick
 }
 win32 {
   LIBS += -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick
