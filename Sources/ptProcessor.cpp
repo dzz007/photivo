@@ -275,8 +275,8 @@ void ptProcessor::Run(short Phase,
           } else if (Settings->GetInt("CameraColor") == ptCameraColor_Flat) {
             QString InputFileName;
             InputFileName =
-              Settings->GetString("MainDirectory");
-            InputFileName += "Profiles/Camera/Flat/FlatProfile.icc";
+              Settings->GetString("CameraColorProfilesDirectory");
+            InputFileName += "/Flat/FlatProfile.icc";
             QFileInfo PathInfo(InputFileName);
             if (PathInfo.exists() &&
                 PathInfo.isFile() &&

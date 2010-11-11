@@ -1512,13 +1512,7 @@ void ptMainWindow::UpdateSettings() {
     m_CameraModel = Settings->GetString("CameraModel");
     // New white balances !
     // First clear the whole WhiteBalanceChoice
-    Settings->ClearOptions("WhiteBalance");
-    // Add the standard choices again.
-    for (short Idx=0 ; GuiOptions->WhiteBalance[Idx].Value != -1 ; Idx++) {
-      Settings->AddOrReplaceOption("WhiteBalance",
-                                   GuiOptions->WhiteBalance[Idx].Text,
-                                   GuiOptions->WhiteBalance[Idx].Value);
-    }
+    Settings->ClearOptions("WhiteBalance", 1);
 
     // Add the camera dependent custom ones.
     // First calculate which index our camera has int ptWhiteBalances.

@@ -178,7 +178,7 @@ int ToolIsHidden (const QString GuiName);
 void  AddOrReplaceOption(const QString  Key,
                          const QString  Text,
                          const QVariant Value);
-void  ClearOptions(const QString Key);
+void  ClearOptions(const QString Key, const short WithDefault = 0);
 int   GetNrOptions(const QString Key);
 // Value of the combobox at a certain index position.
 const QVariant    GetOptionsValue(const QString Key, const int Index);

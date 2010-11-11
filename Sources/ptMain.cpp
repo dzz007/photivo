@@ -355,10 +355,14 @@ int photivoMain(int Argc, char *Argv[]) {
   //Save settings directory for backup jobfile
   Settings->SetValue("SettingsDirectory", PathInfo.path());
 
+  // Set directory for needed files
+  // this has to be changed when we move to a different tree structure!
+  QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
+  Settings->SetValue("ShareDirectory",NewShareDirectory);
+
   // String corrections
   if (Settings->GetString("MainDirectory")!=QCoreApplication::applicationDirPath().append("/")) {
     QString OldMainDirectory = Settings->GetString("MainDirectory");
-    OldMainDirectory.chop(1);
     QStringList Locations;
     Locations << "SplashDirectory"
       << "CurvesDirectory"
@@ -376,7 +380,7 @@ int photivoMain(int Argc, char *Argv[]) {
       if (Settings->GetString(Locations.at(i)).left(LeftPart)==OldMainDirectory) {
         QString TmpStr = Settings->GetString(Locations.at(i));
         TmpStr.remove(OldMainDirectory);
-        TmpStr.prepend(QCoreApplication::applicationDirPath());
+        TmpStr.prepend(QCoreApplication::applicationDirPath().append("/"));
         Settings->SetValue(Locations.at(i),TmpStr);
       }
     }
@@ -395,9 +399,9 @@ int photivoMain(int Argc, char *Argv[]) {
   QTranslator appTranslator;
   QTranslator qtTranslator;
   if(Settings->GetInt("Translation")==1) {
-    appTranslator.load("photivo_" + QLocale::system().name(), Settings->GetString("MainDirectory")+"/Translations");
+    appTranslator.load("photivo_" + QLocale::system().name(), Settings->GetString("TranslationsDirectory"));
     TheApplication->installTranslator(&appTranslator);
-    qtTranslator.load("qt_" + QLocale::system().name(), Settings->GetString("MainDirectory")+"/Translations");
+    qtTranslator.load("qt_" + QLocale::system().name(), Settings->GetString("TranslationsDirectory"));
     TheApplication->installTranslator(&qtTranslator);
   }
   printf("Language '%s'; ",QLocale::system().name().toAscii().data());
@@ -651,7 +655,7 @@ void InitCurves() {
 
       // Small routine that lets Shortfilename point to the basename.
       QFileInfo PathInfo(CurveFileNames[Idx]);
-      QString ShortFileName = PathInfo.fileName();
+      QString ShortFileName = PathInfo.fileName().left(18);
       Settings->AddOrReplaceOption(CurveKeys[Channel],
                                    ShortFileName,
                                    ptCurveChoice_File+Idx);
@@ -714,7 +718,7 @@ void InitChannelMixers() {
 
     // Small routine that lets Shortfilename point to the basename.
     QFileInfo PathInfo(ChannelMixerFileNames[Idx]);
-    QString ShortFileName = PathInfo.fileName();
+    QString ShortFileName = PathInfo.fileName().left(18);
     Settings->AddOrReplaceOption("ChannelMixer",
                                  ShortFileName,
                                  ptChannelMixerChoice_File+Idx);
@@ -1450,6 +1454,88 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Update comboboxes of curves and channelmixer
+// Checks if files are available
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void UpdateComboboxes(const QString Key) {
+  QStringList ListCombos;
+  ListCombos << CurveKeys
+             << "ChannelMixer";
+  if (!ListCombos.contains(Key)) return;
+
+  // get current selection
+  int Index = Settings->GetInt(Key) - 2;
+  QStringList FileNames;
+  if (Key == "ChannelMixer") {
+    FileNames = Settings->GetStringList("ChannelMixerFileNames");
+  } else { // Curves
+    FileNames = Settings->GetStringList(CurveFileNamesKeys.at(CurveKeys.indexOf(Key)));
+  }
+
+  //save current selection
+  QString CurrentIndex;
+  if (Index > -1) CurrentIndex = FileNames.at(Index);
+
+  FileNames.removeDuplicates();
+
+  // check if files are available
+  if (Key == "ChannelMixer") {
+    ptChannelMixer Tmp;
+    for (int i = 0; i < FileNames.size(); i++) {
+      if (Tmp.ReadChannelMixer(FileNames.at(i).toAscii().data())) {
+        QMessageBox::warning(MainWindow,
+                             QObject::tr("Channelmixer read error"),
+                             QObject::tr("Cannot read channelmixer ")
+                               + " '" + FileNames.at(i) + "'");
+        FileNames.replace(i, "@DELETEME@");
+      }
+    }
+  } else {
+    ptCurve Tmp;
+    for (int i = 0; i < FileNames.size(); i++) {
+      if (Tmp.ReadCurve(FileNames.at(i).toAscii().data())) {
+        QMessageBox::warning(MainWindow,
+                             QObject::tr("Curve read error"),
+                             QObject::tr("Cannot read curve ")
+                               + " '" + FileNames.at(i) + "'");
+        FileNames.replace(i, "@DELETEME@");
+      }
+    }
+  }
+  FileNames.removeAll("@DELETEME@");
+
+  // check if current selection is still available
+  if (Index > -1) {
+    if (FileNames.contains(CurrentIndex)) {
+      Index = FileNames.indexOf(CurrentIndex);
+      Settings->SetValue(Key, Index + 2);
+    } else {
+      Settings->SetValue(Key, 0);
+    }
+  }
+
+  // Set combos in gui
+  Settings->ClearOptions(Key, 1);
+  for (int i = 0; i < FileNames.size(); i++) {
+    // Small routine that lets Shortfilename point to the basename.
+    QFileInfo PathInfo(FileNames[i]);
+    QString ShortFileName = PathInfo.fileName().left(18);
+
+    // Curves and Channelmixer have 2 default options -> index=2+i
+    Settings->AddOrReplaceOption(Key, ShortFileName, 2+i);
+  }
+  // write clean lists to settings
+  if (Key == "ChannelMixer") {
+    Settings->SetValue("ChannelMixerFileNames", FileNames);
+  } else { // Curves
+    Settings->SetValue(CurveFileNamesKeys.at(CurveKeys.indexOf(Key)), FileNames);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // RunJob (the non-interactive 'batch' run).
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1963,6 +2049,86 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
                FileName.toAscii().data());
     return ptError_FileFormat;
   }
+
+  // dlRaw -> Photivo
+  if (JobSettings.contains("dlRawJobFile")) {
+    JobSettings.remove("dlRawJobFile");
+    JobSettings.setValue("photivoJobFile","Magic");
+  }
+  if (JobSettings.contains("dlRawSettingsFile")) {
+    JobSettings.remove("dlRawSettingsFile");
+    JobSettings.setValue("photivoSettingsFile","Magic");
+  }
+
+  // String corrections if directory got moved
+  QStringList Locations;
+  Locations << CurveFileNamesKeys
+            << "ChannelMixerFileNames";
+
+  QStringList Directories;
+    Directories << "SplashDirectory"
+      << "TranslationsDirectory"
+      << "CurvesDirectory"
+      << "ChannelMixersDirectory"
+      << "PresetDirectory"
+      << "CameraColorProfilesDirectory"
+      << "PreviewColorProfilesDirectory"
+      << "OutputColorProfilesDirectory"
+      << "StandardAdobeProfilesDirectory"
+      << "LensfunDatabaseDirectory"
+      << "CameraColorProfile"
+      << "PreviewColorProfile"
+      << "OutputColorProfile";
+
+  int CorrectionNeeded = 0;
+  QString OldShareDirectory = QString();
+
+  if (JobSettings.contains("ShareDirectory")) {  // new style settings files
+    if (JobSettings.value("ShareDirectory").toString() != Settings->GetString("ShareDirectory")) {
+      OldShareDirectory = JobSettings.value("ShareDirectory").toString();
+      CorrectionNeeded = 1;
+      Directories << "ShareDirectory";
+    }
+  } else { // old style settings files
+    // Hack to adopt old settings files, asumes the
+    // LensfunsDatabase dir was the most stable directory
+    if (!JobSettings.contains("LensfunDatabaseDirectory")) {
+      QMessageBox::warning(0,"Error","Old settings file, corrections not possible.\nNot applied!");
+      return 0;
+    } else {
+      OldShareDirectory = JobSettings.value("LensfunDatabaseDirectory").toString();
+      OldShareDirectory.chop(QString("LensfunDatabase").length());
+      if (OldShareDirectory != Settings->GetString("ShareDirectory"))
+        CorrectionNeeded = 1;
+    }
+  }
+
+  if (CorrectionNeeded == 1) {
+    int LeftPart = OldShareDirectory.length();
+    // Strings
+    for (int i = 0; i < Directories.size(); i++) {
+      if (JobSettings.value(Directories.at(i)).toString().left(LeftPart)==OldShareDirectory) {
+        QString TmpStr = JobSettings.value(Directories.at(i)).toString();
+        TmpStr.remove(OldShareDirectory);
+        TmpStr.prepend(Settings->GetString("ShareDirectory"));
+        JobSettings.setValue(Directories.at(i),TmpStr);
+      }
+    }
+    // Stringlists
+    for (int i = 0; i < Locations.size(); i++) {
+      QStringList TempList = JobSettings.value(Locations.at(i)).toStringList();
+      for (int j = 0; j < TempList.size(); j++) {
+        if (TempList.at(j).left(LeftPart)==OldShareDirectory) {
+          QString TmpStr = TempList.at(j);
+          TmpStr.remove(OldShareDirectory);
+          TmpStr.prepend(Settings->GetString("ShareDirectory"));
+          TempList.replace(j,TmpStr);
+        }
+      }
+      JobSettings.setValue(Locations.at(i),TempList);
+    }
+  }
+
   // All Settings were already read (with 0 remembering)
   // so we can safely use that to have them now overwritten
   // with the jobfile settings.
@@ -1972,7 +2138,20 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     if (!Settings->GetInJobFile(Key)) continue;
     if (!JobSettings.contains(Key)) continue;
     if (Key=="InputFileNameList") continue;
+    if (Key=="SplashDirectory") continue;
+    if (Key=="TranslationsDirectory") continue;
+    if (Key=="CurvesDirectory") continue;
+    if (Key=="ChannelMixersDirectory") continue;
+    if (Key=="CameraColorProfilesDirectory") continue;
+    if (Key=="PreviewColorProfilesDirectory") continue;
+    if (Key=="OutputColorProfilesDirectory") continue;
+    if (Key=="StandardAdobeProfilesDirectory") continue;
+    if (Key=="LensfunDatabaseDirectory") continue;
+    if (Key=="PreviewColorProfile") continue;
+    if (Key=="OutputColorProfile") continue;
     if (Key=="OutputDirectory") continue;
+    if (Key=="PresetDirectory") continue;
+    if (Key=="ShareDirectory") continue;
     if (Key=="HiddenTools") continue; // see below! BlockedTools are just set.
     QVariant Tmp = JobSettings.value(Key);
     // Correction needed as the values coming from the ini file are
@@ -2045,6 +2224,36 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     }
   }
 
+  // Update display of comboboxes
+  // This also clears non-existing files
+  QStringList ListCombos;
+  ListCombos << CurveKeys << "ChannelMixer";
+  for (int i = 0; i < ListCombos.size(); i++ )
+    UpdateComboboxes(ListCombos.at(i));
+
+  // Load curves and channelmixer
+  QStringList CurveFileNames;
+  for (int Channel = 0; Channel < CurveKeys.size(); Channel++) {
+    CurveFileNames = Settings->GetStringList(CurveFileNamesKeys[Channel]);
+    // If we have a curve, go for reading it.
+    if (Settings->GetInt(CurveKeys[Channel]) >= ptCurveChoice_File) {
+      if (!Curve[Channel]) Curve[Channel] = new(ptCurve);
+      if (Curve[Channel]->
+          ReadCurve(CurveFileNames[Settings->GetInt(CurveKeys[Channel])-ptCurveChoice_File].
+                    toAscii().data())){
+        assert(0);
+      }
+    }
+
+    if (Settings->GetInt(CurveKeys[Channel]) == ptCurveChoice_None) {
+      Curve[Channel]->SetNullCurve(Channel);
+    }
+
+    // Update the View.
+    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+    CurveWindow[Channel]->UpdateView(Curve[Channel]);
+  }
+
   if (Settings->GetInt("ChannelMixer")>1) {
     if (ChannelMixer->ReadChannelMixer(
          (Settings->GetStringList("ChannelMixerFileNames"))
@@ -2054,6 +2263,14 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     }
   }
 
+  // clean up non-existing file in settings file
+  for (int i = 0; i < ListCombos.size(); i++) {
+    JobSettings.setValue(ListCombos.at(i), Settings->GetInt(ListCombos.at(i)));
+    JobSettings.setValue(Locations.at(i), Settings->GetStringList(Locations.at(i)));
+  }
+  JobSettings.setValue("CameraColorProfile", Settings->GetString("CameraColorProfile"));
+
+  JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) return 0;
   assert(JobSettings.status() == QSettings::NoError); // TODO JDLA
   return ptError_FileFormat;
@@ -2833,7 +3050,7 @@ void CB_OutputColorProfileResetButton() {
   //~ Settings->SetValue("OutputColorProfilesDirectory",
                      //~ (Settings->GetString("MainDirectory")+"/Profiles/Output").toAscii().data());
   Settings->SetValue("OutputColorProfile",
-                     (Settings->GetString("MainDirectory")+"/Profiles/Output/sRGB.icc").toAscii().data());
+                     (Settings->GetString("OutputColorProfilesDirectory")+"/sRGB.icc").toAscii().data());
   if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output) {
     if (Settings->GetInt("IndicateExposure")==1) {
       Update(ptProcessorPhase_NULL);
@@ -3195,7 +3412,7 @@ void CB_OpenPresetFileButton() {
   QString SettingsFileName =
     QFileDialog::getOpenFileName(NULL,
                                  QObject::tr("Open preset"),
-                                 Settings->GetString("MainDirectory")+"Presets",
+                                 Settings->GetString("PresetDirectory"),
                                  SettingsFilePattern);
   if (0 == SettingsFileName.size()) return;
   CB_OpenSettingsFile(SettingsFileName);
@@ -3976,7 +4193,7 @@ void CB_ChannelMixerOpenButton() {
 
   // Small routine that lets Shortfilename point to the basename.
   QFileInfo PathInfo(ChannelMixerFileNames[Index]);
-  QString ShortFileName = PathInfo.fileName();
+  QString ShortFileName = PathInfo.fileName().left(18);
 
   // TODO Protection against double loading ?
   Settings->AddOrReplaceOption("ChannelMixer",
@@ -4420,7 +4637,7 @@ void CB_CurveOpenButton(const int Channel) {
 
   // Small routine that lets Shortfilename point to the basename.
   QFileInfo PathInfo(CurveFileNames[Index]);
-  QString ShortFileName = PathInfo.fileName();
+  QString ShortFileName = PathInfo.fileName().left(18);
   Settings->AddOrReplaceOption(CurveKeys[Channel],
                                ShortFileName,
                                ptCurveChoice_File+Index);

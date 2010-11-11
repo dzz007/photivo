@@ -75,6 +75,7 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
   m_ComboBox->setToolTip(ToolTip);
   m_ComboBox->setFixedHeight(24);
   //~ m_ComboBox->setLayoutDirection(Qt::RightToLeft);
+  m_InitialOptions = InitialOptions;
   for (short i=0; InitialOptions && InitialOptions[i].Value !=-1; i++ ) {
     m_ComboBox->addItem(InitialOptions[i].Text,InitialOptions[i].Value);
   }
@@ -162,9 +163,16 @@ void ptChoice::AddOrReplaceItem(const QString Text,const QVariant Data) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptChoice::Clear(void) {
+void ptChoice::Clear(const short WithDefault) {
   m_ComboBox->clear();
   m_Value.clear();
+  if (WithDefault) {
+    // Add the standard choices again.
+    for (short i=0; m_InitialOptions && m_InitialOptions[i].Value !=-1; i++ ) {
+      m_ComboBox->addItem(m_InitialOptions[i].Text,m_InitialOptions[i].Value);
+    }
+    m_Value = m_DefaultValue;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

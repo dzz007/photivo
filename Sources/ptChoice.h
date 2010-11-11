@@ -3,6 +3,7 @@
 // photivo
 //
 // Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
+// Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
@@ -45,7 +46,7 @@ ptChoice(const QWidget*          MainWindow,
          const QVariant          Default,
          const ptGuiOptionsItem* InitialOptions,
          const QString           ToolTip,
-   const int     TimeOut);
+         const int     TimeOut);
 // Destructor.
 ~ptChoice();
 
@@ -54,7 +55,7 @@ void SetValue(const QVariant Value, const short BlockSignal = 1);
 void AddOrReplaceItem(const QString Text,const QVariant Data);
 int  Count(void) { return m_ComboBox->count(); };
 void SetEnabled(const short Enabled);
-void Clear(void);
+void Clear(const short WithDefault = 0);
 void Show(const short Show);
 QVariant GetItemData(const int Index) { return m_ComboBox->itemData(Index); };
 QString  CurrentText(void) { return m_ComboBox->currentText(); };
@@ -76,6 +77,7 @@ QVariant m_Value;
 QVariant m_DefaultValue;
 short    m_HaveDefault;
 int      m_TimeOut;
+const ptGuiOptionsItem* m_InitialOptions;
 
 QComboBox*   m_ComboBox;
 QToolButton* m_Button;

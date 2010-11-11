@@ -488,7 +488,7 @@ void ptSettings::AddOrReplaceOption(const QString  Key,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptSettings::ClearOptions(const QString  Key) {
+void ptSettings::ClearOptions(const QString  Key, const short WithDefault) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
@@ -501,7 +501,7 @@ void ptSettings::ClearOptions(const QString  Key) {
                Key.toAscii().data());
     assert (m_Hash[Key]->GuiChoice);
   }
-  m_Hash[Key]->GuiChoice->Clear();
+  m_Hash[Key]->GuiChoice->Clear(WithDefault);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
