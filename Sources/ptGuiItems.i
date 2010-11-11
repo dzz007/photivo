@@ -347,6 +347,7 @@
 {"WorkColor"                   ,ptGT_Choice       ,1,1,1 ,ptSpace_sRGB_D65            ,GuiOptions->WorkColor                 ,_("Working colorspace")},
 {"PreviewColorProfileIntent"   ,ptGT_Choice       ,1,0,1 ,INTENT_PERCEPTUAL           ,GuiOptions->PreviewColorProfileIntent ,_("Intent of the profile")},
 {"OutputColorProfileIntent"    ,ptGT_Choice       ,1,1,1 ,INTENT_PERCEPTUAL           ,GuiOptions->OutputColorProfileIntent  ,_("Intent of the profile")},
+{"SaveButtonMode"              ,ptGT_Choice       ,1,1,1 ,ptOutputMode_Pipe           ,GuiOptions->OutputMode                ,_("Output mode of save button")},
 {"Style"                       ,ptGT_Choice       ,1,0,0 ,ptStyle_DarkGrey            ,GuiOptions->Style                     ,_("Set the theme.")},
 {"StyleHighLight"              ,ptGT_Choice       ,1,0,0 ,ptStyleHighLight_Blue       ,GuiOptions->StyleHighLight            ,_("Set the highlight color of the theme.")},
 {"PipeSize"                    ,ptGT_Choice       ,2,0,1 ,ptPipeSize_Quarter          ,GuiOptions->PipeSize                  ,_("Size of image processed vs original.")},

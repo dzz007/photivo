@@ -217,6 +217,7 @@ void Update(short Phase,
             short ProcessorMode = ptProcessorMode_Preview);
 void UpdateGUI();
 int CalculatePipeSize();
+void SaveButtonToolTip(const short mode);
 
 int    photivoMain(int Argc, char *Argv[]);
 void   CleanupResources();
@@ -573,6 +574,7 @@ void CB_Event0() {
   // Init Curves : supposed to be in event loop indeed.
   // (f.i. for progress reporting)
   QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+  SaveButtonToolTip(Settings->GetInt("SaveButtonMode"));
 
   // uint16_t (0,0xffff) to float (0.0, 1.0)
 #pragma omp parallel for
@@ -1837,6 +1839,52 @@ void WriteOut() {
   ReportProgress(QObject::tr("Ready"));
 }
 
+void WritePipe() {
+
+  if (Settings->GetInt("HaveImage")==0) return;
+
+  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+  QFileInfo PathInfo(InputFileNameList[0]);
+  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.baseName();
+  if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
+  QString Pattern;
+
+  switch(Settings->GetInt("SaveFormat")) {
+    case ptSaveFormat_JPEG :
+      SuggestedFileName += ".jpg";
+      Pattern = QObject::tr("Jpg images (*.jpg *.jpeg);;All files (*.*)");
+      break;
+    case ptSaveFormat_PNG :
+      SuggestedFileName += ".png";
+      Pattern = QObject::tr("PNG images(*.png);;All files (*.*)");
+      break;
+    case ptSaveFormat_TIFF8 :
+    case ptSaveFormat_TIFF16 :
+      SuggestedFileName += ".tif";
+      Pattern = QObject::tr("Tiff images (*.tif *.tiff);;All files (*.*)");
+      break;
+    default :
+      SuggestedFileName += ".ppm";
+      Pattern = QObject::tr("Ppm images (*.ppm);;All files (*.*)");
+      break;
+  }
+
+  QString FileName;
+
+  FileName = QFileDialog::getSaveFileName(NULL,
+                                          QObject::tr("Save File"),
+                                          SuggestedFileName,
+                                          Pattern);
+
+  if (0 == FileName.size()) return; // Operation cancelled.
+
+  Settings->SetValue("OutputFileName",FileName);
+
+  // Write out (maybe after applying gamma).
+  Update(ptProcessorPhase_WriteOut);
+  ImageSaved = 1;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // WriteSettingsFile
@@ -3076,6 +3124,22 @@ void SetBackgroundColor(int SetIt) {
   }
 }
 
+void CB_SaveButtonModeChoice(const QVariant Choice) {
+  Settings->SetValue("SaveButtonMode",Choice);
+  SaveButtonToolTip(Settings->GetInt("SaveButtonMode"));
+}
+
+void SaveButtonToolTip(const short mode) {
+  if (mode==ptOutputMode_Full) {
+    MainWindow->WritePipeButton->setToolTip(QObject::tr("Save full size image"));
+  } else if (mode==ptOutputMode_Pipe) {
+    MainWindow->WritePipeButton->setToolTip(QObject::tr("Save current pipe"));
+  } else if (mode==ptOutputMode_Jobfile) {
+    MainWindow->WritePipeButton->setToolTip(QObject::tr("Save job file"));
+  } else if (mode==ptOutputMode_Settingsfile) {
+    MainWindow->WritePipeButton->setToolTip(QObject::tr("Save settings file"));
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -7206,62 +7270,24 @@ void CB_OutputModeChoice(const QVariant Value) {
   Settings->SetValue("OutputMode",Value);
 }
 
-void CB_WriteOutputButton() {
-  if (Settings->GetInt("OutputMode")==ptOutputMode_Full) {
+void SaveOutput(const short mode) {
+  if (mode==ptOutputMode_Full) {
     CB_MenuFileSaveOutput(1);
-  } else if (Settings->GetInt("OutputMode")==ptOutputMode_Pipe) {
-    CB_WritePipeButton();
-  } else if (Settings->GetInt("OutputMode")==ptOutputMode_Jobfile) {
+  } else if (mode==ptOutputMode_Pipe) {
+    WritePipe();
+  } else if (mode==ptOutputMode_Jobfile) {
     CB_MenuFileWriteJob(1);
-  } else if (Settings->GetInt("OutputMode")==ptOutputMode_Settingsfile) {
+  } else if (mode==ptOutputMode_Settingsfile) {
     CB_MenuFileWriteSettings();
   }
 }
 
+void CB_WriteOutputButton() {
+  SaveOutput(Settings->GetInt("OutputMode"));
+}
+
 void CB_WritePipeButton() {
-
-  if (Settings->GetInt("HaveImage")==0) return;
-
-  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
-  QFileInfo PathInfo(InputFileNameList[0]);
-  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.baseName();
-  if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
-  QString Pattern;
-
-  switch(Settings->GetInt("SaveFormat")) {
-    case ptSaveFormat_JPEG :
-      SuggestedFileName += ".jpg";
-      Pattern = QObject::tr("Jpg images (*.jpg *.jpeg);;All files (*.*)");
-      break;
-    case ptSaveFormat_PNG :
-      SuggestedFileName += ".png";
-      Pattern = QObject::tr("PNG images(*.png);;All files (*.*)");
-      break;
-    case ptSaveFormat_TIFF8 :
-    case ptSaveFormat_TIFF16 :
-      SuggestedFileName += ".tif";
-      Pattern = QObject::tr("Tiff images (*.tif *.tiff);;All files (*.*)");
-      break;
-    default :
-      SuggestedFileName += ".ppm";
-      Pattern = QObject::tr("Ppm images (*.ppm);;All files (*.*)");
-      break;
-  }
-
-  QString FileName;
-
-  FileName = QFileDialog::getSaveFileName(NULL,
-                                          QObject::tr("Save File"),
-                                          SuggestedFileName,
-                                          Pattern);
-
-  if (0 == FileName.size()) return; // Operation cancelled.
-
-  Settings->SetValue("OutputFileName",FileName);
-
-  // Write out (maybe after applying gamma).
-  Update(ptProcessorPhase_WriteOut);
-  ImageSaved = 1;
+  SaveOutput(Settings->GetInt("SaveButtonMode"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -7306,6 +7332,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(TabStatusIndicatorInput)
   M_Dispatch(PreviewTabModeCheck)
   M_Dispatch(BackgroundColorCheck)
+  M_Dispatch(SaveButtonModeChoice)
 
   M_Dispatch(PipeSizeChoice)
   M_Dispatch(RunModeCheck)

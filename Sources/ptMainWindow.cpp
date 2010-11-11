@@ -463,6 +463,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   findChild<ptGroupBox *>(QString("TabMemoryTest"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabLensfun"))->setVisible(0);
   m_ToolBoxes->removeOne(findChild<ptGroupBox *>(QString("TabLensfun")));
+  findChild<ptGroupBox *>(QString("TabOutput"))->setVisible(0);
+  m_ToolBoxes->removeOne(findChild<ptGroupBox *>(QString("TabOutput")));
 
   UpdateToolBoxes();
 
@@ -522,11 +524,84 @@ ptMainWindow::ptMainWindow(const QString Title)
           SIGNAL(timeout()),
           this,
           SLOT(Event0TimerExpired()));
+
+  Tabbar = ProcessingTabBook->findChild<QTabBar*>();
+  Tabbar->installEventFilter(this);
+  WritePipeButton->installEventFilter(this);
+
+  m_AtnSavePipe = new QAction(QObject::tr("Save current pipe"), this);
+  connect(m_AtnSavePipe, SIGNAL(triggered()), this, SLOT(SaveMenuPipe()));
+  m_AtnSaveFull = new QAction(QObject::tr("Save full size"), this);
+  connect(m_AtnSaveFull, SIGNAL(triggered()), this, SLOT(SaveMenuFull()));
+  m_AtnSaveSettings = new QAction(QObject::tr("Save settings file"), this);
+  connect(m_AtnSaveSettings, SIGNAL(triggered()), this, SLOT(SaveMenuSettings()));
+  m_AtnSaveJobfile = new QAction(QObject::tr("Save job file"), this);
+  connect(m_AtnSaveJobfile, SIGNAL(triggered()), this, SLOT(SaveMenuJobfile()));
 }
 
 void CB_Event0();
 void ptMainWindow::Event0TimerExpired() {
   ::CB_Event0();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Event filter
+//
+////////////////////////////////////////////////////////////////////////////////
+
+bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+  if (event->type() == QEvent::ContextMenu) {
+    if (obj == Tabbar) {
+      // compute the tab number
+      QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+      QPoint position = mouseEvent->pos();
+      int c = Tabbar->count();
+      int clickedItem = -1;
+
+      for (int i=0; i<c; i++) {
+        if ( Tabbar->tabRect(i).contains( position ) ) {
+          clickedItem = i;
+          break;
+        }
+      }
+      //QMessageBox::information(NULL,"Event","ContextMenu on "+QString::number(clickedItem));
+      return true;
+    } else if (obj == WritePipeButton) {
+      QMenu Menu(NULL);
+      Menu.addAction(m_AtnSavePipe);
+      Menu.addAction(m_AtnSaveFull);
+      Menu.addAction(m_AtnSaveSettings);
+      Menu.addAction(m_AtnSaveJobfile);
+      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+    }
+    return QObject::eventFilter(obj, event);
+  } else {
+    // pass the event on to the parent class
+    return QObject::eventFilter(obj, event);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Slots for context menu on save button
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void SaveOutput(const short mode);
+
+void ptMainWindow::SaveMenuPipe() {
+  SaveOutput(ptOutputMode_Pipe);
+}
+void ptMainWindow::SaveMenuFull() {
+  SaveOutput(ptOutputMode_Full);
+}
+void ptMainWindow::SaveMenuSettings() {
+  SaveOutput(ptOutputMode_Settingsfile);
+}
+void ptMainWindow::SaveMenuJobfile() {
+  SaveOutput(ptOutputMode_Jobfile);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

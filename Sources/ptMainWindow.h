@@ -94,13 +94,24 @@ protected:
 void closeEvent(QCloseEvent * Event);
 void resizeEvent(QResizeEvent * Event);
 void keyPressEvent(QKeyEvent * Event);
+bool eventFilter(QObject *obj, QEvent *event);
+
 private :
+QTabBar* Tabbar;
+QAction* m_AtnSavePipe;
+QAction* m_AtnSaveFull;
+QAction* m_AtnSaveSettings;
+QAction* m_AtnSaveJobfile;
 
 void AnalyzeToolBoxStructure();
 
 private slots:
 void ResizeTimerExpired();
 void Event0TimerExpired();
+void SaveMenuPipe();
+void SaveMenuFull();
+void SaveMenuSettings();
+void SaveMenuJobfile();
 
 // The generic catchall input change.
 //~ void OnTagsEditTextChanged();
