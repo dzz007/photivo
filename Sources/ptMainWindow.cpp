@@ -29,6 +29,7 @@
 #include "ptLensfun.h"
 #include "ptSettings.h"
 #include "ptConstants.h"
+#include "ptTheme.h"
 
 #include <iostream>
 #include <iomanip>
@@ -36,6 +37,8 @@
 #include <iostream>
 #include <QMessageBox>
 using namespace std;
+
+extern ptTheme* Theme;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -570,6 +573,8 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       return true;
     } else if (obj == WritePipeButton) {
       QMenu Menu(NULL);
+      Menu.setStyle(Theme->ptStyle);
+      Menu.setPalette(Theme->ptMenuPalette);
       Menu.addAction(m_AtnSavePipe);
       Menu.addAction(m_AtnSaveFull);
       Menu.addAction(m_AtnSaveSettings);
