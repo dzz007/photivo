@@ -201,6 +201,9 @@ void ptGroupBox::PipeUpdate() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptGroupBox::Reset() {
+  // immediate response
+  SetActive(0);
+
   m_NeedPipeUpdate = Settings->ToolIsActive(m_Name);
 
   Settings->SetValue("BlockUpdate",1);

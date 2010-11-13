@@ -4060,11 +4060,12 @@ int CalculatePipeSize() {
   int s = MAX(0,((int)floor(logf((float)InSize*0.9/(float)Settings->GetInt("ResizeScale"))/logf(2))));
   if (s < Settings->GetInt("PipeSize")) {
     if (Settings->GetInt("RunMode") != 1) {// not manual mode
-      ImageSaved = 1;
+      ImageSaved = 1; // bad hack to check what happens in the next step
       CB_PipeSizeChoice(s);
       if (ImageSaved == 1) {
         if (Settings->GetInt("PipeSize")==1) {
           QMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill stay on half size instead!");
+          ImageSaved = 0;
           return 0;
         } else {
           QMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill run on half size instead!");
