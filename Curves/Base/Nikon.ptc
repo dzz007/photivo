@@ -1,0 +1,15 @@
+;
+; photivo Curve File
+;
+; This is an experimental base curve for Nikon cameras.
+; Values are from the darktable project.
+;
+Magic FLOSSCurveFile
+IntendedChannel 8
+CurveType 1
+0 0
+36 36
+120 228
+459 759
+858 983
+1000 1000
