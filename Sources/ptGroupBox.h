@@ -73,6 +73,7 @@ QPixmap   ActiveRightArrow;
 QPixmap   ActiveDownArrow;
 QPixmap   BlockedRightArrow;
 QPixmap   BlockedDownArrow;
+QWidget*  m_Header;
 QLabel*   m_Icon;
 QLabel*   m_Symbol;
 QLabel*   m_Title;

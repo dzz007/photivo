@@ -790,9 +790,9 @@ void ptMainWindow::OnToolBoxesEnabledTriggered(const bool Enabled) {
           addWidget(ToolBoxStructure->GroupBoxes[j]);
       }
       ToolBoxStructure->ParentLayout->addStretch();
-      //~ ToolBoxStructure->ParentLayout->setSpacing(0);
-      //~ ToolBoxStructure->ParentLayout->setContentsMargins(0,0,0,0);
-      //~ ToolBoxStructure->ParentLayout->setMargin(0);
+      ToolBoxStructure->ParentLayout->setSpacing(0);
+      ToolBoxStructure->ParentLayout->setContentsMargins(0,0,0,0);
+      ToolBoxStructure->ParentLayout->setMargin(0);
       ToolBoxStructure->Parent->show();
     }
   }

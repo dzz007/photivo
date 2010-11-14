@@ -251,6 +251,10 @@ Global colour definitions. Not needed for normal.css
     "  color: " + Text + ";"
     "}"
 
+    "*#ToolHeader {"
+    "  background: " + Dark + ";"
+    "}"
+
 /************************************************************************************
 Following stuff is also needed for normal.css
 ************************************************************************************/

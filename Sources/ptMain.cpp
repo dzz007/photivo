@@ -596,6 +596,7 @@ void CB_Event0() {
   if (ImageFileToOpen.size()) {
     CB_MenuFileOpen(1);
   }
+  MainWindow->UpdateSettings();
   InStartup = 0;
   ViewWindow->setFocus();
 }
@@ -4263,7 +4264,6 @@ void CB_ChannelMixerChoice(const QVariant Choice) {
   }
 
   if (!InStartup) Update(ptProcessorPhase_RGB);
-  if (InStartup) MainWindow->UpdateSettings();
   if (!InStartup) UpdatePreviewImage();
 }
 
@@ -4866,7 +4866,6 @@ void CB_CurveChoice(const int Channel, const int Choice) {
       default :
         assert(0);
     }
-  if (InStartup) MainWindow->UpdateSettings();
 }
 
 void CB_CurveRGBChoice(const QVariant Choice) {

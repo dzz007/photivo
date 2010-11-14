@@ -56,7 +56,9 @@ ptGroupBox::ptGroupBox(const QString Title,
   BlockedDownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/blockeddownarrow.png"));
   setObjectName("Box");
   m_Widget = new QWidget();
-  m_Widget->setContentsMargins(5,5,0,5);
+  m_Widget->setContentsMargins(8,5,0,5);
+
+  m_Header = new QWidget();
 
   m_Icon = new QLabel();
   m_Icon->setPixmap(DownArrow);
@@ -75,7 +77,7 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_Title->setTextFormat(Qt::RichText);
   m_Title->setTextInteractionFlags(Qt::NoTextInteraction);
 
-  QHBoxLayout *ButtonLayout = new QHBoxLayout();
+  QHBoxLayout *ButtonLayout = new QHBoxLayout(m_Header);
 
   ButtonLayout->addWidget(m_Icon);
   ButtonLayout->addWidget(m_Title);
@@ -83,11 +85,11 @@ ptGroupBox::ptGroupBox(const QString Title,
     ButtonLayout->addWidget(m_Symbol);
   }
   ButtonLayout->addStretch();
-  ButtonLayout->setContentsMargins(0,0,0,0);
+  ButtonLayout->setContentsMargins(-3,0,0,0);
   ButtonLayout->setSpacing(4);
-  ButtonLayout->setMargin(0);
+  ButtonLayout->setMargin(3);
 
-  Layout->addLayout(ButtonLayout);
+  Layout->addWidget(m_Header);
   Layout->addWidget(m_Widget);
   Layout->setContentsMargins(0,0,0,0);
   Layout->setSpacing(0);
@@ -166,6 +168,18 @@ void ptGroupBox::UpdateView() {
   } else {
     m_Widget->setEnabled(1);
   }
+  if (m_Folded!=1) {
+    m_Header->setObjectName("ToolHeader");
+    m_Title->setObjectName("ToolHeader");
+    m_Symbol->setObjectName("ToolHeader");
+    m_Icon->setObjectName("ToolHeader");
+  } else {
+    m_Header->setObjectName("");
+    m_Title->setObjectName("");
+    m_Symbol->setObjectName("");
+    m_Icon->setObjectName("");
+  }
+  m_Header->setStyleSheet(Theme->ptStyleSheet);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
