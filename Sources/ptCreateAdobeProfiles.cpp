@@ -175,8 +175,8 @@ int main() {
                                      Gamma3);
   cmsMLUsetASCII(Description,  "en", "US", "Linear sRGB");
   cmsMLUsetASCII(Model,    "en", "US", "LCMS2 linear sRGB");
-  //~ cmsWriteTag(LinearProfile, cmsSigDeviceModelDescTag, Model);
-  //~ cmsWriteTag(LinearProfile, cmsSigProfileDescriptionTag, Description);
+  cmsWriteTag(LinearProfile, cmsSigDeviceModelDescTag, Model);
+  cmsWriteTag(LinearProfile, cmsSigProfileDescriptionTag, Description);
   cmsSaveProfileToFile(LinearProfile,
                        "Profiles/Output/sRGBlinear.icc");
 
@@ -185,8 +185,8 @@ int main() {
                                      Gamma3);
   cmsMLUsetASCII(Description,  "en", "US", "Linear Adobe RGB");
   cmsMLUsetASCII(Model,    "en", "US", "LCMS2 linear Adobe RGB");
-  //~ cmsWriteTag(LinearProfile, cmsSigDeviceModelDescTag, Model);
-  //~ cmsWriteTag(LinearProfile, cmsSigProfileDescriptionTag, Description);
+  cmsWriteTag(LinearProfile, cmsSigDeviceModelDescTag, Model);
+  cmsWriteTag(LinearProfile, cmsSigProfileDescriptionTag, Description);
   cmsSaveProfileToFile(LinearProfile,
                        "Profiles/Output/AdobeRGBlinear.icc");
 
@@ -198,8 +198,8 @@ int main() {
 
   cmsMLUsetASCII(Description,  "en", "US", "Linear WideGamut RGB");
   cmsMLUsetASCII(Model,    "en", "US", "LCMS2 linear WirdeGamut RGB");
-  //~ cmsWriteTag(LinearProfile, cmsSigDeviceModelDescTag, Model);
-  //~ cmsWriteTag(LinearProfile, cmsSigProfileDescriptionTag, Description);
+  cmsWriteTag(LinearProfile, cmsSigDeviceModelDescTag, Model);
+  cmsWriteTag(LinearProfile, cmsSigProfileDescriptionTag, Description);
   cmsSaveProfileToFile(LinearProfile,
                        "Profiles/Output/WideGamutRGBlinear.icc");
 
@@ -209,8 +209,8 @@ int main() {
 
   cmsMLUsetASCII(Description,  "en", "US", "Linear ProPhoto RGB");
   cmsMLUsetASCII(Model,    "en", "US", "LCMS2 linear ProPhoto RGB");
-  //~ cmsWriteTag(LinearProfile, cmsSigDeviceModelDescTag, Model);
-  //~ cmsWriteTag(LinearProfile, cmsSigProfileDescriptionTag, Description);
+  cmsWriteTag(LinearProfile, cmsSigDeviceModelDescTag, Model);
+  cmsWriteTag(LinearProfile, cmsSigProfileDescriptionTag, Description);
   cmsSaveProfileToFile(LinearProfile,
                        "Profiles/Output/ProPhotoRGBlinear.icc");
 
@@ -221,8 +221,8 @@ int main() {
   cmsHPROFILE sRGBProfile = cmsCreate_sRGBProfile();
   cmsMLUsetASCII(Description,  "en", "US", "sRGB");
   cmsMLUsetASCII(Model,    "en", "US", "LCMS2 sRGB");
-  //~ cmsWriteTag(LinearProfile, cmsSigDeviceModelDescTag, Model);
-  //~ cmsWriteTag(LinearProfile, cmsSigProfileDescriptionTag, Description);
+  cmsWriteTag(LinearProfile, cmsSigDeviceModelDescTag, Model);
+  cmsWriteTag(LinearProfile, cmsSigProfileDescriptionTag, Description);
   cmsSaveProfileToFile(sRGBProfile,
                        "Profiles/Output/sRGB.icc");
   cmsSaveProfileToFile(sRGBProfile,
@@ -374,7 +374,8 @@ static const int dt_profiled_colormatrix_cnt = sizeof(dt_profiled_colormatrices)
 
 void create_darktable_profiles() {
   dt_profiled_colormatrix_t *preset = NULL;
-  cmsMLU *Description, *Model, *Mfg;
+  cmsMLU *Description, *Model, *Mfg, *CopyRight;
+  CopyRight = cmsMLUalloc(NULL, 1);
   Description = cmsMLUalloc(NULL, 1);
   Model = cmsMLUalloc(NULL, 1);
   Mfg = cmsMLUalloc(NULL, 1);
@@ -403,14 +404,16 @@ void create_darktable_profiles() {
     cmsFreeToneCurve(Gamma);
 
     char name[512];
-    snprintf(name, 512, "Darktable profiled %s", preset->makermodel);
+    snprintf(name, 512, "Enhanced profile for %s. Data by darktable project.", preset->makermodel);
 
-    cmsMLUsetASCII(Description,  "en", "US", "(Photivo -> dt enhanced)");
-    cmsMLUsetASCII(Description,  "en", "US", name);
-    cmsMLUsetASCII(Model,    "en", "US", name);
-    //~ cmsWriteTag(hp, cmsSigDeviceMfgDescTag, Mfg);
-    //~ cmsWriteTag(hp, cmsSigDeviceModelDescTag, Model);
-    //~ cmsWriteTag(hp, cmsSigProfileDescriptionTag, Description);
+    cmsMLUsetASCII(CopyRight, "en", "US", "Profile: Copyright (c) 2010 Photivo, GNU General Public License version 3.\nData: Copyright (c) 2010 darktable, GNU General Public License version 3 or any later version.");
+    cmsMLUsetASCII(Mfg, "en", "US", "Photivo -> darktable enhanced profile.");
+    cmsMLUsetASCII(Description, "en", "US", name);
+    cmsMLUsetASCII(Model, "en", "US", name);
+    cmsWriteTag(hp, cmsSigCopyrightTag, CopyRight);
+    cmsWriteTag(hp, cmsSigDeviceMfgDescTag, Mfg);
+    cmsWriteTag(hp, cmsSigDeviceModelDescTag, Model);
+    cmsWriteTag(hp, cmsSigProfileDescriptionTag, Description);
 
     char OutputFileName[1024];
     snprintf(OutputFileName,1023,"Profiles/Camera/Enhanced/%s.icc",
