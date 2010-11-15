@@ -1984,6 +1984,7 @@ short WriteSettingsFile(const QString FileName) {
   QSettings JobSettings(FileName,QSettings::IniFormat);
   JobSettings.setValue("Magic","photivoSettingsFile");
   QStringList Keys = Settings->GetKeys();
+  Keys.sort();
   for (int i=0; i<Keys.size(); i++) {
     QString Key = Keys[i];
     if (!Settings->GetInJobFile(Key)) continue;
@@ -2020,6 +2021,7 @@ short WriteJobFile(const QString FileName) {
   QSettings JobSettings(FileName,QSettings::IniFormat);
   JobSettings.setValue("Magic","photivoJobFile");
   QStringList Keys = Settings->GetKeys();
+  Keys.sort();
   for (int i=0; i<Keys.size(); i++) {
     QString Key = Keys[i];
     if (!Settings->GetInJobFile(Key)) continue;
