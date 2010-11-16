@@ -76,6 +76,8 @@ ptInput::ptInput(const QWidget* MainWindow,
   m_HaveDefault = HasDefaultValue;
 
   setObjectName(ObjectName);
+  m_SettingsName = ObjectName;
+  m_SettingsName.chop(5);
 
   QWidget* Parent = MainWindow->findChild <QWidget*> (ParentName);
 

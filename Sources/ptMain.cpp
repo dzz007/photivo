@@ -136,8 +136,7 @@ const QString CurveFilePattern =
 const QString JobFilePattern =
   QObject::tr("photivo Job File (*.ptj);;All files (*.*)");
 
-const QString SettingsFilePattern =
-  QObject::tr("photivo Settings File (*.pts);;All files (*.*)");
+QString SettingsFilePattern;
 
 const QString ProfilePattern =
   QObject::tr("ICC Colour Profiles (*.icc *.icm);;All files (*.*)");
@@ -293,6 +292,9 @@ int photivoMain(int Argc, char *Argv[]) {
       }
     }
   }
+
+  // Initialize patterns
+  SettingsFilePattern = QObject::tr("photivo Settings File (*.pts);;All files (*.*)");
 
   // Some QStringLists to be initialized.
   CurveKeys << "CurveRGB"
@@ -656,7 +658,7 @@ void InitCurves() {
 
       // Small routine that lets Shortfilename point to the basename.
       QFileInfo PathInfo(CurveFileNames[Idx]);
-      QString ShortFileName = PathInfo.fileName().left(18);
+      QString ShortFileName = PathInfo.baseName().left(18);
       Settings->AddOrReplaceOption(CurveKeys[Channel],
                                    ShortFileName,
                                    ptCurveChoice_File+Idx);
@@ -719,7 +721,7 @@ void InitChannelMixers() {
 
     // Small routine that lets Shortfilename point to the basename.
     QFileInfo PathInfo(ChannelMixerFileNames[Idx]);
-    QString ShortFileName = PathInfo.fileName().left(18);
+    QString ShortFileName = PathInfo.baseName().left(18);
     Settings->AddOrReplaceOption("ChannelMixer",
                                  ShortFileName,
                                  ptChannelMixerChoice_File+Idx);
@@ -812,18 +814,26 @@ void Update(short Phase,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void Update(const QString GuiName) {
+int GetProcessorPhase(const QString GuiName) {
+  int Phase = 0;
   ptGroupBox* Box = MainWindow->findChild<ptGroupBox *>(GuiName);
   QString Tab = Box->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
   //QMessageBox::information(0,"Feedback","I was called from \n" + GuiName + "\nMy tab is\n" Tab);
-  if (Tab == "GeometryTab") Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-  else if (Tab == "RGBTab") Update(ptProcessorPhase_RGB);
-  else if (Tab == "LabCCTab") Update(ptProcessorPhase_LabCC);
-  else if (Tab == "LabSNTab") Update(ptProcessorPhase_LabSN);
-  else if (Tab == "LabEyeCandyTab") Update(ptProcessorPhase_LabEyeCandy);
-  else if (Tab == "EyeCandyTab") Update(ptProcessorPhase_EyeCandy);
-  else if (Tab == "OutTab") Update(ptProcessorPhase_Output);
-  else Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+  if (Tab == "GeometryTab") Phase = ptProcessorPhase_AfterRAW;
+  else if (Tab == "RGBTab") Phase = ptProcessorPhase_RGB;
+  else if (Tab == "LabCCTab") Phase = ptProcessorPhase_LabCC;
+  else if (Tab == "LabSNTab") Phase = ptProcessorPhase_LabSN;
+  else if (Tab == "LabEyeCandyTab") Phase = ptProcessorPhase_LabEyeCandy;
+  else if (Tab == "EyeCandyTab") Phase = ptProcessorPhase_EyeCandy;
+  else if (Tab == "OutTab") Phase = ptProcessorPhase_Output;
+  else Phase = ptProcessorPhase_Raw;
+  return Phase;
+}
+
+void Update(const QString GuiName) {
+  int Phase = GetProcessorPhase(GuiName);
+  if (Phase <= 2 ) Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+  else Update(Phase);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1522,7 +1532,7 @@ void UpdateComboboxes(const QString Key) {
   for (int i = 0; i < FileNames.size(); i++) {
     // Small routine that lets Shortfilename point to the basename.
     QFileInfo PathInfo(FileNames[i]);
-    QString ShortFileName = PathInfo.fileName().left(18);
+    QString ShortFileName = PathInfo.baseName().left(18);
 
     // Curves and Channelmixer have 2 default options -> index=2+i
     Settings->AddOrReplaceOption(Key, ShortFileName, 2+i);
@@ -2005,7 +2015,7 @@ short WriteSettingsFile(const QString FileName) {
   }
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) return 0;
-  assert(JobSettings.status() == QSettings::NoError); // TODO JDLA
+  assert(JobSettings.status() == QSettings::NoError); // TODO
   return ptError_FileOpen;
 }
 
@@ -2038,29 +2048,33 @@ short WriteJobFile(const QString FileName) {
 // ReadSettingsFile
 // We take advantage the ini file possibilities of Qt.
 //
+// Setting files contain information about everything needed to process
+// the image, they may need string corrections.
+// Job files contain additional information about the files to process.
+// Preset files contain just information about filters, no string
+// correction will be needed.
+//
 ////////////////////////////////////////////////////////////////////////////////
 
 short ReadSettingsFile(const QString FileName, short& NextPhase) {
-
-  QSettings JobSettings(FileName,QSettings::IniFormat);
-  if (!("photivoJobFile" == JobSettings.value("Magic") ||
-      "photivoSettingsFile" == JobSettings.value("Magic") ||
-      "dlRawJobFile" == JobSettings.value("Magic") ||
-      "dlRawSettingsFile" == JobSettings.value("Magic"))) {
+  QTemporaryFile SettingsFile;
+  SettingsFile.setAutoRemove(1);
+  SettingsFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.pts");
+  SettingsFile.open();
+  QString TempName = SettingsFile.fileTemplate();
+  QFile(FileName).copy(TempName);
+  QSettings JobSettings(TempName,QSettings::IniFormat);
+  if (!(JobSettings.value("Magic") == "photivoJobFile" ||
+        JobSettings.value("Magic") == "photivoSettingsFile" ||
+        JobSettings.value("Magic") == "dlRawJobFile" ||
+        JobSettings.value("Magic") == "dlRawSettingsFile" ||
+        JobSettings.value("Magic") == "photivoPresetFile")) {
     ptLogError(ptError_FileFormat,
                "'%s' has wrong format\n",
                FileName.toAscii().data());
+    QFile::remove(TempName);
+    SettingsFile.close();
     return ptError_FileFormat;
-  }
-
-  // dlRaw -> Photivo
-  if (JobSettings.contains("dlRawJobFile")) {
-    JobSettings.remove("dlRawJobFile");
-    JobSettings.setValue("photivoJobFile","Magic");
-  }
-  if (JobSettings.contains("dlRawSettingsFile")) {
-    JobSettings.remove("dlRawSettingsFile");
-    JobSettings.setValue("photivoSettingsFile","Magic");
   }
 
   // String corrections if directory got moved
@@ -2086,17 +2100,20 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   int CorrectionNeeded = 0;
   QString OldShareDirectory = QString();
 
-  if (JobSettings.contains("ShareDirectory")) {  // new style settings files
+  if (JobSettings.contains("ShareDirectory") &&
+      JobSettings.value("Magic") != "photivoPresetFile") {  // new style settings files
     if (JobSettings.value("ShareDirectory").toString() != Settings->GetString("ShareDirectory")) {
       OldShareDirectory = JobSettings.value("ShareDirectory").toString();
       CorrectionNeeded = 1;
       Directories << "ShareDirectory";
     }
-  } else { // old style settings files
+  } else if (JobSettings.value("Magic") != "photivoPresetFile") { // old style settings files
     // Hack to adopt old settings files, asumes the
     // LensfunsDatabase dir was the most stable directory
     if (!JobSettings.contains("LensfunDatabaseDirectory")) {
       QMessageBox::warning(0,"Error","Old settings file, corrections not possible.\nNot applied!");
+      QFile::remove(TempName);
+      SettingsFile.close();
       return 0;
     } else {
       OldShareDirectory = JobSettings.value("LensfunDatabaseDirectory").toString();
@@ -2266,16 +2283,24 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     }
   }
 
-  // clean up non-existing file in settings file
+  // clean up non-existing files in settings file
+  // currently, we completely preserve the settings file
+  /*
   for (int i = 0; i < ListCombos.size(); i++) {
     JobSettings.setValue(ListCombos.at(i), Settings->GetInt(ListCombos.at(i)));
     JobSettings.setValue(Locations.at(i), Settings->GetStringList(Locations.at(i)));
   }
-  JobSettings.setValue("CameraColorProfile", Settings->GetString("CameraColorProfile"));
+  JobSettings.setValue("CameraColorProfile", Settings->GetString("CameraColorProfile"));*/
 
   JobSettings.sync();
-  if (JobSettings.status() == QSettings::NoError) return 0;
-  assert(JobSettings.status() == QSettings::NoError); // TODO JDLA
+  if (JobSettings.status() == QSettings::NoError) {
+    QFile::remove(TempName);
+    SettingsFile.close();
+    return 0;
+  }
+  assert(JobSettings.status() == QSettings::NoError); // TODO
+  QFile::remove(TempName);
+  SettingsFile.close();
   return ptError_FileFormat;
 }
 
@@ -4197,7 +4222,7 @@ void CB_ChannelMixerOpenButton() {
 
   // Small routine that lets Shortfilename point to the basename.
   QFileInfo PathInfo(ChannelMixerFileNames[Index]);
-  QString ShortFileName = PathInfo.fileName().left(18);
+  QString ShortFileName = PathInfo.baseName().left(18);
 
   // TODO Protection against double loading ?
   Settings->AddOrReplaceOption("ChannelMixer",
@@ -4640,7 +4665,7 @@ void CB_CurveOpenButton(const int Channel) {
 
   // Small routine that lets Shortfilename point to the basename.
   QFileInfo PathInfo(CurveFileNames[Index]);
-  QString ShortFileName = PathInfo.fileName().left(18);
+  QString ShortFileName = PathInfo.baseName().left(18);
   Settings->AddOrReplaceOption(CurveKeys[Channel],
                                ShortFileName,
                                ptCurveChoice_File+Index);

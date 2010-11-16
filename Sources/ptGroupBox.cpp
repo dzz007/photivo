@@ -26,13 +26,18 @@
 #include "ptSettings.h"
 #include "ptConstants.h"
 #include "ptTheme.h"
+#include "ptCurveWindow.h"
 
 #include <QMessageBox>
 
 extern ptTheme* Theme;
+extern QStringList CurveKeys;
+extern QString SettingsFilePattern;
+extern ptCurve* Curve[14];
 
-// Prototype
+// Prototypes
 void Update(const QString GuiName);
+int GetProcessorPhase(const QString GuiName);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -116,6 +121,16 @@ ptGroupBox::ptGroupBox(const QString Title,
   connect(m_AtnReset, SIGNAL(triggered()), this, SLOT(Reset()));
   m_AtnReset->setIcon(QIcon(*Theme->ptIconReset));
   m_AtnReset->setIconVisibleInMenu(true);
+
+  m_AtnSavePreset = new QAction(QObject::tr("Save preset"), this);
+  connect(m_AtnSavePreset, SIGNAL(triggered()), this, SLOT(SaveSettings()));
+  m_AtnSavePreset->setIcon(QIcon(*Theme->ptIconDisk));
+  m_AtnSavePreset->setIconVisibleInMenu(true);
+
+  m_AtnAppendPreset = new QAction(QObject::tr("Append preset"), this);
+  connect(m_AtnAppendPreset, SIGNAL(triggered()), this, SLOT(AppendSettings()));
+  m_AtnAppendPreset->setIcon(QIcon(*Theme->ptIconDisk));
+  m_AtnAppendPreset->setIconVisibleInMenu(true);
 
   UpdateView();
 
@@ -239,6 +254,124 @@ void ptGroupBox::Reset() {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Save Settings
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::SaveSettings() {
+  WriteSettings(0);
+}
+
+void ptGroupBox::AppendSettings() {
+  WriteSettings(1);
+}
+
+void ptGroupBox::WriteSettings(const short Append) {
+  QStringList Keys;
+  QStringList Curves;
+  QList <ptInput *> Inputs = findChildren <ptInput *> ();
+  for (int i = 0; i < Inputs.size(); i++) {
+    Keys << (Inputs.at(i))->GetName();
+  }
+  QList <ptChoice *> Combos = findChildren <ptChoice *> ();
+  for (int i = 0; i < Combos.size(); i++) {
+    Keys << (Combos.at(i))->GetName();
+  }
+  QList <ptCheck *> Checks = findChildren <ptCheck *> ();
+  for (int i = 0; i < Checks.size(); i++) {
+    Keys << (Checks.at(i))->GetName();
+  }
+  QList <ptCurveWindow *> CurveWindows = findChildren <ptCurveWindow *> ();
+  for (int i = 0; i < CurveWindows.size(); i++) {
+    Curves << CurveKeys.at((CurveWindows.at(i))->m_Channel);
+  }
+  if (Curves.contains("CurveSaturation"))
+    Keys << "SatCurveMode" << "SatCurveType";
+  if (Curves.contains("CurveTexture"))
+    Keys << "TextureCurveType";
+  if (Curves.contains("CurveDenoise"))
+    Keys << "DenoiseCurveType";
+  if(m_Name == "TabRGBTone")
+    Keys << "Tone1ColorRed" << "Tone1ColorGreen" << "Tone1ColorBlue"
+         << "Tone2ColorRed" << "Tone2ColorGreen" << "Tone2ColorBlue";
+  if (m_Name == "TabGradualOverlay1")
+    Keys << "GradualOverlay1ColorRed" << "GradualOverlay1ColorGreen" << "GradualOverlay1ColorBlue";
+  if (m_Name == "TabGradualOverlay2")
+    Keys << "GradualOverlay2ColorRed" << "GradualOverlay2ColorGreen" << "GradualOverlay2ColorBlue";
+
+  for (int i = 0; i < Curves.size(); i++) {
+    if (Settings->GetInt(Curves.at(i)) > ptCurveChoice_Manual) {
+      QMessageBox::information(0,"Curve problem",
+        "Only manual curves are supported in presets.\nNo preset file will be written!");
+      return;
+    }
+  }
+
+  QString SuggestedFileName = Settings->GetString("PresetDirectory") + "/preset.pts";
+  QString FileName;
+
+  FileName = QFileDialog::getSaveFileName(NULL,
+                                          QObject::tr("Settings File"),
+                                          SuggestedFileName,
+                                          SettingsFilePattern);
+
+  if (FileName.size() == 0) return;
+
+  QSettings JobSettings(FileName,QSettings::IniFormat);
+  if (Append == 0 ||
+      !(JobSettings.value("Magic") == "photivoJobFile" ||
+        JobSettings.value("Magic") == "photivoSettingsFile" ||
+        JobSettings.value("Magic") == "dlRawJobFile" ||
+        JobSettings.value("Magic") == "dlRawSettingsFile" ||
+        JobSettings.value("Magic") == "photivoPresetFile")) JobSettings.clear();
+
+  if (JobSettings.value("Magic") == "photivoJobFile" ||
+      JobSettings.value("Magic") == "dlRawJobFile")
+    JobSettings.setValue("Magic","photivoJobFile");
+  else if (JobSettings.value("Magic") == "photivoSettingsFile" ||
+      JobSettings.value("Magic") == "dlRawSettingsFile")
+    JobSettings.setValue("Magic","photivoSettingsFile");
+  else
+    JobSettings.setValue("Magic","photivoPresetFile");
+
+
+  // e.g. a full settings file which should be altered should not get NextPhase
+  if (Append == 1 && JobSettings.contains("NextPhase")) {
+    JobSettings.setValue("NextPhase",
+      MIN(GetProcessorPhase(m_Name),JobSettings.value("NextPhase").toInt()));
+  }
+  if (Append == 0) {
+    JobSettings.setValue("NextPhase",GetProcessorPhase(m_Name));
+  }
+
+  for (int i=0; i<Keys.size(); i++) {
+    QString Key = Keys[i];
+    if (!Settings->GetInJobFile(Key)) continue;
+    if (Keys.at(i) == "ChannelMixer") {// set ChannelMixer to manual if needed
+      JobSettings.setValue("ChannelMixer",MIN((Settings->GetValue(Key)).toInt(),1));
+      continue;
+    }
+    JobSettings.setValue(Key,Settings->GetValue(Key));
+  }
+
+  // save the manual curves
+  for (int i = 0; i < Curves.size(); i++) {
+    if (Settings->GetInt(Curves.at(i))==ptCurveChoice_Manual) {
+      JobSettings.setValue(Curves.at(i) + "Counter",Curve[CurveKeys.indexOf(Curves.at(i))]->m_NrAnchors);
+      for (int j = 0; j < Curve[i]->m_NrAnchors; j++) {
+        JobSettings.setValue(Curves.at(i) + "X" + QString::number(j),Curve[CurveKeys.indexOf(Curves.at(i))]->m_XAnchor[j]);
+        JobSettings.setValue(Curves.at(i) + "Y" + QString::number(j),Curve[CurveKeys.indexOf(Curves.at(i))]->m_YAnchor[j]);
+      }
+      JobSettings.setValue(Curves.at(i) + "Type",Curve[CurveKeys.indexOf(Curves.at(i))]->m_IntType);
+    }
+  }
+  JobSettings.sync();
+  if (JobSettings.status() != QSettings::NoError)
+    QMessageBox::critical(0,"Error","Error while writing preset file!");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Blocked
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -314,6 +447,9 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
         Menu.addAction(m_AtnBlock);
         Menu.addSeparator();
         Menu.addAction(m_AtnReset);
+        Menu.addSeparator();
+        Menu.addAction(m_AtnSavePreset);
+        Menu.addAction(m_AtnAppendPreset);
         Menu.addSeparator();
         Menu.addAction(m_AtnHide);
         Menu.exec(event->globalPos());

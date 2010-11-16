@@ -55,6 +55,8 @@ void Hide();
 void SetBlocked();
 void Reset();
 void PipeUpdate();
+void SaveSettings();
+void AppendSettings();
 
 signals :
 
@@ -64,6 +66,7 @@ void paintEvent(QPaintEvent *);
 void changeEvent(QEvent *);
 
 private:
+void WriteSettings(const short Append);
 bool      m_Folded;
 int       m_IsActive;
 int       m_IsBlocked;
@@ -82,6 +85,8 @@ QLabel*   test;
 QAction*  m_AtnHide;
 QAction*  m_AtnBlock;
 QAction*  m_AtnReset;
+QAction*  m_AtnSavePreset;
+QAction*  m_AtnAppendPreset;
 QTimer*   m_Timer;
 int       m_NeedPipeUpdate;
 };

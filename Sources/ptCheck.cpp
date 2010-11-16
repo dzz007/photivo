@@ -3,6 +3,7 @@
 // photivo
 //
 // Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
+// Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
@@ -39,6 +40,8 @@ ptCheck::ptCheck(const QWidget* MainWindow,
   :QObject() {
 
   setObjectName(ObjectName);
+  m_SettingsName = ObjectName;
+  m_SettingsName.chop(5);
 
   QWidget* Parent = MainWindow->findChild <QWidget*> (ParentName);
 
