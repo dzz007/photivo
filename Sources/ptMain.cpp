@@ -905,7 +905,8 @@ void HistogramGetCrop() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ViewWindowStatusReport(short State) {
-  ViewWindow->StatusReport(State);
+  if (ViewWindow)
+    ViewWindow->StatusReport(State);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1604,14 +1605,23 @@ void RunJob(const QString JobFileName) {
     // Here we have the OutputFileName, but extension still to add.
 
     switch(Settings->GetInt("SaveFormat")) {
-      case ptSaveFormat_JPEG :
-        Settings->SetValue("OutputFileName",
-                           Settings->GetString("OutputFileName") + ".jpg");
-        break;
-      default :
-        Settings->SetValue("OutputFileName",
-                           Settings->GetString("OutputFileName") + ".ppm");
-        break;
+    case ptSaveFormat_JPEG :
+      Settings->SetValue("OutputFileName",
+      Settings->GetString("OutputFileName") + ".jpg");
+    break;
+    case ptSaveFormat_TIFF8 :
+    case ptSaveFormat_TIFF16 :
+      Settings->SetValue("OutputFileName",
+      Settings->GetString("OutputFileName") + ".tif");
+    break;
+    case ptSaveFormat_PNG :
+      Settings->SetValue("OutputFileName",
+      Settings->GetString("OutputFileName") + ".png");
+    break;
+    default :
+      Settings->SetValue("OutputFileName",
+      Settings->GetString("OutputFileName") + ".ppm");
+    break;
     }
 
     // Processing the job.
@@ -1798,7 +1808,8 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
       pos = exifData.erase(pos);
     }
 
-    PrepareTags(MainWindow->TagsEditWidget->toPlainText());
+    if (!JobMode)
+      PrepareTags(MainWindow->TagsEditWidget->toPlainText());
 
     // IPTC data
     Exiv2::IptcData iptcData;
@@ -1831,15 +1842,18 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
     //~ xmpData["Xmp.tiff.Software"] = ProgramName;
 
     // Title
-    QString TitleWorking = MainWindow->TitleEditWidget->text();
-    while (TitleWorking.contains("  "))
-      TitleWorking.replace("  "," ");
-    if (TitleWorking != "" && TitleWorking != " ") {
-    outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
-    iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
-    xmpData["Xmp.dc.descridlion"] = TitleWorking.toStdString();
-    xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
-    xmpData["Xmp.tiff.ImageDescridlion"] = TitleWorking.toStdString();
+    if (!JobMode)
+    {
+      QString TitleWorking = MainWindow->TitleEditWidget->text();
+      while (TitleWorking.contains("  "))
+        TitleWorking.replace("  "," ");
+      if (TitleWorking != "" && TitleWorking != " ") {
+      outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
+      iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
+      xmpData["Xmp.dc.descridlion"] = TitleWorking.toStdString();
+      xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
+      xmpData["Xmp.tiff.ImageDescridlion"] = TitleWorking.toStdString();
+       }
     }
 
     //~ QMessageBox::warning(MainWindow,"Exiv2 Error",QString::number(BufferLength));
@@ -1850,7 +1864,9 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
       Exiv2Image->writeMetadata();
     } catch (Exiv2::AnyError& Error) {
       std::cout << "Caught Exiv2 exception '" << Error << "'\n";
-      QMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!");
+
+      if (!JobMode)
+        QMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!");
     }
   }
 #endif

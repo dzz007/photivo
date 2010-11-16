@@ -162,7 +162,7 @@ void ptProcessor::Run(short Phase,
 
   if (!m_DcRaw) goto Exit;
 
-  // Status report
+  // Status report  
   ::ViewWindowStatusReport(2);
 
   switch(Phase) {
