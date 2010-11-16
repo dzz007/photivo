@@ -2,7 +2,7 @@
 
 [General]
 
-Magic=photivoSettingsFile
+Magic=photivoPresetFile
 
 VignetteMode=1
 NextPhase=7

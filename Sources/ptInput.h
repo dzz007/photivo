@@ -3,6 +3,7 @@
 // photivo
 //
 // Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
+// Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
@@ -62,6 +63,7 @@ void SetMinimum(const QVariant Value);
 void SetEnabled(const short Enabled);
 void Show(const short Show);
 void Reset();
+QString GetName() {return m_SettingsName;}
 
 private slots:
 void OnSpinBoxChanged(int Value);
@@ -93,6 +95,7 @@ QSlider*          m_Slider;
 QToolButton*      m_Button;
 QLabel*           m_Label;
 QTimer*           m_Timer;
+QString           m_SettingsName;
 };
 
 #endif

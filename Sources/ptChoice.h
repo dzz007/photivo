@@ -60,6 +60,7 @@ void Show(const short Show);
 QVariant GetItemData(const int Index) { return m_ComboBox->itemData(Index); };
 QString  CurrentText(void) { return m_ComboBox->currentText(); };
 void Reset();
+QString GetName() {return m_SettingsName;}
 
 private slots:
 void OnValueChanged(int Value);
@@ -82,6 +83,7 @@ const ptGuiOptionsItem* m_InitialOptions;
 QComboBox*   m_ComboBox;
 QToolButton* m_Button;
 QTimer*      m_Timer;
+QString      m_SettingsName;
 };
 
 #endif

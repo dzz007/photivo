@@ -56,6 +56,7 @@ QPixmap*    ptIconCircleGreen;
 QPixmap*    ptIconCircleRed;
 QPixmap*    ptIconCrossRed;
 QPixmap*    ptIconReset;
+QPixmap*    ptIconDisk;
 
 // Methods
 void Reset();
