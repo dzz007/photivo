@@ -2,7 +2,7 @@
 ; photivo Curve File
 ;
 ; This is an experimental base curve for Nikon cameras.
-; Values are from the darktable project.
+; Original values are from the darktable project.
 ;
 Magic FLOSSCurveFile
 IntendedChannel 8
