@@ -184,7 +184,7 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve (dark contrast).\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/DarkContrast.ptc",Header);
 
@@ -198,7 +198,7 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve (Fotogenetic - Point and shoot v4.1).\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/FotogenicV41.ptc",Header);
 
@@ -212,7 +212,7 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve (Fotogenetic - EV3 v4.2).\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/FotogenicV42.ptc",Header);
 
@@ -226,7 +226,7 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve for Canon cameras.\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/Canon.ptc",Header);
 
@@ -240,7 +240,7 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve for Kodak Easyshare cameras.\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/Kodak.ptc",Header);
 
@@ -254,9 +254,23 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve for Leica cameras.\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/Leica.ptc",Header);
+
+  // Minolta
+  Curve->ReadAnchors(
+    "ReferenceMaterial/SourceOfCurves/darktableAnchors/MinoltaBase.anchors");
+  Curve->m_Type = ptCurveType_Anchor;
+  Curve->m_IntendedChannel = ptCurveChannel_Base;
+  Header = (char*)
+    ";\n"
+    "; photivo Curve File\n"
+    ";\n"
+    "; This is an experimental base curve for Minolta cameras.\n"
+    "; Original values are from the darktable project.\n"
+    ";\n";
+  Curve->WriteCurve("Curves/Base/Minolta.ptc",Header);
 
   // Nikon
   Curve->ReadAnchors(
@@ -268,7 +282,7 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve for Nikon cameras.\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/Nikon.ptc",Header);
 
@@ -282,7 +296,7 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve for Olympus cameras.\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/Olympus.ptc",Header);
 
@@ -296,7 +310,7 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve for Panasonic cameras.\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/Panasonic.ptc",Header);
 
@@ -310,7 +324,7 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve for Pentax cameras.\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/Pentax.ptc",Header);
 
@@ -324,7 +338,7 @@ int main () {
     "; photivo Curve File\n"
     ";\n"
     "; This is an experimental base curve for Sony cameras.\n"
-    "; Values are from the darktable project.\n"
+    "; Original values are from the darktable project.\n"
     ";\n";
   Curve->WriteCurve("Curves/Base/Sony.ptc",Header);
 

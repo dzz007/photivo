@@ -1,15 +1,15 @@
 ;
 ; photivo Curve File
 ;
-; This is an experimental base curve (Fotogenetic - Point and shoot v4.1).
+; This is an experimental base curve for Minolta cameras.
 ; Original values are from the darktable project.
 ;
 Magic FLOSSCurveFile
 IntendedChannel 8
 CurveType 1
 0 0
-87 125
-175 250
-353 501
-612 749
-1000 876
+20 10
+112 167
+500 711
+899 956
+1000 1000
