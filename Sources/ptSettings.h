@@ -143,7 +143,7 @@ short GetInJobFile(const QString Key)
 // So ptSettings(0) would keep no setting at all. As InitLevelOfItem > 0.
 // If InitLevelOfItem = 9 then the item will never be initialized from
 // the .ini as InitLevel<9 (asserted).
-ptSettings(const short InitLevel);
+ptSettings(const short InitLevel, const QString Path);
 
 // Destructor
 ~ptSettings();

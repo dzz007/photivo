@@ -315,6 +315,8 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   Macro_ConnectSomeButton(GimpExecCommand);
 
+  Macro_ConnectSomeButton(StartupSettings);
+
   //
   // TAB : Camera
   //
@@ -464,6 +466,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   // hide some stuff instead of removing from the code
   findChild<ptGroupBox *>(QString("TabToolBoxControl"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabMemoryTest"))->setVisible(0);
+  findChild<ptGroupBox *>(QString("TabRememberSettings"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabLensfun"))->setVisible(0);
   m_ToolBoxes->removeOne(findChild<ptGroupBox *>(QString("TabLensfun")));
   findChild<ptGroupBox *>(QString("TabOutput"))->setVisible(0);
@@ -935,6 +938,10 @@ void ptMainWindow::OnGimpExecCommandButtonClicked() {
   ::CB_GimpExecCommandButton();
 }
 
+void CB_StartupSettingsButton();
+void ptMainWindow::OnStartupSettingsButtonClicked() {
+  ::CB_StartupSettingsButton();
+}
 //
 // Tab : Camera
 //
@@ -1478,6 +1485,12 @@ void ptMainWindow::UpdateSettings() {
   ShortFileName = PathInfo.fileName();
   GimpExecCommandText->setText(ShortFileName);
   // GimpExecCommand
+
+  // StartupSettings
+  PathInfo.setFile(Settings->GetString("StartupSettingsFile"));
+  ShortFileName = PathInfo.baseName();
+  StartupSettingsText->setText(ShortFileName);
+  // StartupSettings
 
   // New BlackPoint ?
   Settings->SetEnabled("BlackPoint",Settings->GetInt("ManualBlackPoint"));

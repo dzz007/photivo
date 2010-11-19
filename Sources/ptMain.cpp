@@ -216,10 +216,12 @@ void Update(short Phase,
             short ProcessorMode = ptProcessorMode_Preview);
 void UpdateGUI();
 int CalculatePipeSize();
+void CB_OpenSettingsFile(QString SettingsFileName);
 void SaveButtonToolTip(const short mode);
 
 int    photivoMain(int Argc, char *Argv[]);
 void   CleanupResources();
+void copyFolder(QString sourceFolder, QString destFolder);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -329,45 +331,42 @@ int photivoMain(int Argc, char *Argv[]) {
 
   CurveBackupKeys = CurveKeys;
 
-  // Persistent settings.
-  QCoreApplication::setOrganizationName(CompanyName);
-  QCoreApplication::setOrganizationDomain("www.photivo.org");
-  QCoreApplication::setApplicationName(ProgramName);
-  // I strongly prefer ini files above register values as they
-  // are readable and editeable (think of debug)
-  // We don't want something in a windows registry, do we ?
-  QSettings::setDefaultFormat(QSettings::IniFormat);
-  QSettings* UserSettings = new QSettings;
-  QString SettingsFileName = UserSettings->fileName();
-  QFileInfo PathInfo(SettingsFileName);
-  if (PathInfo.exists()) {
+  // User home folder
+  QString UserDirectory = QDir::homePath() + QDir::separator() + ".photivo" + QDir::separator();
+  QString SettingsFileName = UserDirectory + "photivo.ini";
+
+  QFileInfo SettingsFileInfo(SettingsFileName);
+  short NeedInitialization = 1;
+  if (SettingsFileInfo.exists() &&
+      SettingsFileInfo.isFile() &&
+      SettingsFileInfo.isReadable()) {
+    // photivo was initialized
+    NeedInitialization = 0;
     printf("Settingsfile '%s'\n",SettingsFileName.toAscii().data());
   }
 
-  short RememberSettingLevel =
-    UserSettings->value("RememberSettingLevel",2).toInt();
-
-  UserSettings->setValue("RememberSettingLevel",RememberSettingLevel);
-
-  delete UserSettings;
+  // Persistent settings.
+  // fixed the remember level to 2, since we have settings files now
+  short RememberSettingLevel = 2;
 
   // Load the Settings (are also partly used in JobMode)
-  Settings = new ptSettings(RememberSettingLevel);
+  Settings = new ptSettings(RememberSettingLevel, UserDirectory);
 
-  //Save settings directory for backup jobfile
-  Settings->SetValue("SettingsDirectory", PathInfo.path());
+  // Save directories
+  Settings->SetValue("UserDirectory", UserDirectory);
 
   // Set directory for needed files
   // this has to be changed when we move to a different tree structure!
   QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
   Settings->SetValue("ShareDirectory",NewShareDirectory);
 
+  Settings->SetValue("MainDirectory",QCoreApplication::applicationDirPath().append("/"));
+
   // String corrections
-  if (Settings->GetString("MainDirectory")!=QCoreApplication::applicationDirPath().append("/")) {
+/*  if (Settings->GetString("MainDirectory")!=QCoreApplication::applicationDirPath().append("/")) {
     QString OldMainDirectory = Settings->GetString("MainDirectory");
     QStringList Locations;
-    Locations << "SplashDirectory"
-      << "CurvesDirectory"
+    Locations << "CurvesDirectory"
       << "ChannelMixersDirectory"
       << "CameraColorProfilesDirectory"
       << "PreviewColorProfilesDirectory"
@@ -395,6 +394,50 @@ int photivoMain(int Argc, char *Argv[]) {
       FilesList.replaceInStrings(OldMainDirectory,QCoreApplication::applicationDirPath());
       Settings->SetValue(Files.at(i),FilesList);
     }
+  }*/
+
+  // Initialize the user folder if needed
+  if (NeedInitialization == 1) {
+    QFile::copy(Settings->GetString("ShareDirectory") + "photivo.png",
+      UserDirectory + QDir::separator() + "photivo.png");
+    QFile::copy(Settings->GetString("ShareDirectory") + "photivoLogo.png",
+      UserDirectory + QDir::separator() + "photivoLogo.png");
+    QFile::copy(Settings->GetString("ShareDirectory") + "photivoPreview.jpg",
+      UserDirectory + QDir::separator() + "photivoPreview.jpg");
+    QStringList SourceFolders;
+    SourceFolders << Settings->GetString("ShareDirectory") + "Translations"
+                  << Settings->GetString("ShareDirectory") + "Curves"
+                  << Settings->GetString("ShareDirectory") + "ChannelMixers"
+                  << Settings->GetString("ShareDirectory") + "Presets"
+                  << Settings->GetString("ShareDirectory") + "Profiles"
+                  << Settings->GetString("ShareDirectory") + "LensfunDatabase";
+    QStringList DestFolders;
+    DestFolders << UserDirectory + "Translations"
+                << UserDirectory + "Curves"
+                << UserDirectory + "ChannelMixers"
+                << UserDirectory + "Presets"
+                << UserDirectory + "Profiles"
+                << UserDirectory + "LensfunDatabase";
+
+    for (int i = 0; i < SourceFolders.size(); i++) {
+      copyFolder(SourceFolders.at(i), DestFolders.at(i));
+    }
+
+    // set paths once after initialization
+    Settings->SetValue("RawsDirectory", UserDirectory);
+    Settings->SetValue("OutputDirectory", UserDirectory);
+    Settings->SetValue("PresetDirectory", UserDirectory + "Presets");
+    Settings->SetValue("CurvesDirectory", UserDirectory + "Curves");
+    Settings->SetValue("ChannelMixersDirectory", UserDirectory + "ChannelMixers");
+    Settings->SetValue("TranslationsDirectory", UserDirectory + "Translations");
+    Settings->SetValue("CameraColorProfilesDirectory", UserDirectory + "Profiles/Camera");
+    Settings->SetValue("PreviewColorProfilesDirectory", UserDirectory + "Profiles/Preview");
+    Settings->SetValue("OutputColorProfilesDirectory", UserDirectory + "Profiles/Output");
+    Settings->SetValue("StandardAdobeProfilesDirectory", UserDirectory + "Profiles/Camera/Standard");
+    Settings->SetValue("LensfunDatabaseDirectory", UserDirectory + "LensfunDatabase");
+    Settings->SetValue("PreviewColorProfile", UserDirectory + "Profiles/Preview/sRGB.icc");
+    Settings->SetValue("OutputColorProfile", UserDirectory + "Profiles/Output/sRGB.icc");
+    Settings->SetValue("StartupSettingsFile", UserDirectory + "Presets/MakeFancy.pts");
   }
 
   // Load Translation
@@ -595,10 +638,17 @@ void CB_Event0() {
 
   InitCurves();
   InitChannelMixers();
+
+  // Load user settings
+  if (Settings->GetInt("StartupSettings")) {
+    CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+  }
+
   if (ImageFileToOpen.size()) {
     CB_MenuFileOpen(1);
   }
   MainWindow->UpdateSettings();
+
   InStartup = 0;
   ViewWindow->setFocus();
 }
@@ -736,6 +786,39 @@ void InitChannelMixers() {
   CB_ChannelMixerChoice(QVariant(Settings->GetInt("ChannelMixer")));
 
   ReportProgress(QObject::tr("Ready"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Copy folder
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void copyFolder(QString sourceFolder, QString destFolder)
+{
+  QDir sourceDir(sourceFolder);
+  if(!sourceDir.exists())
+    return;
+  QDir destDir(destFolder);
+  if(!destDir.exists())
+  {
+    destDir.mkdir(destFolder);
+  }
+  QStringList files = sourceDir.entryList(QDir::Files);
+  for(int i = 0; i< files.count(); i++)
+  {
+    QString srcName = sourceFolder + "/" + files[i];
+    QString destName = destFolder + "/" + files[i];
+    QFile::copy(srcName, destName);
+  }
+  files.clear();
+  files = sourceDir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
+  for(int i = 0; i< files.count(); i++)
+  {
+    QString srcName = sourceFolder + "/" + files[i];
+    QString destName = destFolder + "/" + files[i];
+    copyFolder(srcName, destName);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -905,8 +988,7 @@ void HistogramGetCrop() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ViewWindowStatusReport(short State) {
-  if (ViewWindow)
-    ViewWindow->StatusReport(State);
+  ViewWindow->StatusReport(State);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1095,8 +1177,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   // We 'fake' one to show the splash.
   if (!TheProcessor->m_Image_AfterLensfun) {
     if (!PreviewImage) PreviewImage = new (ptImage);
-    //~ QString FileName = Settings->GetString("SplashDirectory")+"photivoSplash.ppm";
-    QString FileName = Settings->GetString("SplashDirectory")+"photivoPreview.jpg";
+    QString FileName = Settings->GetString("UserDirectory") + "photivoPreview.jpg";
     printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
     //~ PreviewImage->ReadPpm(FileName.toAscii().data());
     PreviewImage->ptGMSimpleOpen(FileName.toAscii().data());
@@ -1460,7 +1541,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   ViewWindow->StatusReport(0);
   ReportProgress(QObject::tr("Ready"));
 
-  WriteSettingsFile(Settings->GetString("SettingsDirectory")+"/backup.pts");
+  WriteSettingsFile(Settings->GetString("UserDirectory")+"backup.pts");
 
 }
 
@@ -1563,7 +1644,7 @@ void RunJob(const QString JobFileName) {
   }
 
   // Settings creation.
-  Settings = new ptSettings(0);
+  Settings = new ptSettings(0, Settings->GetString("UserDirectory"));
   Settings->SetValue("JobMode",1);
   // Read the gui settings from a file.
   if (ReadJobFile(JobFileName)) {
@@ -1605,23 +1686,14 @@ void RunJob(const QString JobFileName) {
     // Here we have the OutputFileName, but extension still to add.
 
     switch(Settings->GetInt("SaveFormat")) {
-    case ptSaveFormat_JPEG :
-      Settings->SetValue("OutputFileName",
-      Settings->GetString("OutputFileName") + ".jpg");
-    break;
-    case ptSaveFormat_TIFF8 :
-    case ptSaveFormat_TIFF16 :
-      Settings->SetValue("OutputFileName",
-      Settings->GetString("OutputFileName") + ".tif");
-    break;
-    case ptSaveFormat_PNG :
-      Settings->SetValue("OutputFileName",
-      Settings->GetString("OutputFileName") + ".png");
-    break;
-    default :
-      Settings->SetValue("OutputFileName",
-      Settings->GetString("OutputFileName") + ".ppm");
-    break;
+      case ptSaveFormat_JPEG :
+        Settings->SetValue("OutputFileName",
+                           Settings->GetString("OutputFileName") + ".jpg");
+        break;
+      default :
+        Settings->SetValue("OutputFileName",
+                           Settings->GetString("OutputFileName") + ".ppm");
+        break;
     }
 
     // Processing the job.
@@ -1808,8 +1880,7 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
       pos = exifData.erase(pos);
     }
 
-    if (!JobMode)
-      PrepareTags(MainWindow->TagsEditWidget->toPlainText());
+    PrepareTags(MainWindow->TagsEditWidget->toPlainText());
 
     // IPTC data
     Exiv2::IptcData iptcData;
@@ -1842,18 +1913,15 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
     //~ xmpData["Xmp.tiff.Software"] = ProgramName;
 
     // Title
-    if (!JobMode)
-    {
-      QString TitleWorking = MainWindow->TitleEditWidget->text();
-      while (TitleWorking.contains("  "))
-        TitleWorking.replace("  "," ");
-      if (TitleWorking != "" && TitleWorking != " ") {
-      outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
-      iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
-      xmpData["Xmp.dc.descridlion"] = TitleWorking.toStdString();
-      xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
-      xmpData["Xmp.tiff.ImageDescridlion"] = TitleWorking.toStdString();
-       }
+    QString TitleWorking = MainWindow->TitleEditWidget->text();
+    while (TitleWorking.contains("  "))
+      TitleWorking.replace("  "," ");
+    if (TitleWorking != "" && TitleWorking != " ") {
+    outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
+    iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
+    xmpData["Xmp.dc.descridlion"] = TitleWorking.toStdString();
+    xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
+    xmpData["Xmp.tiff.ImageDescridlion"] = TitleWorking.toStdString();
     }
 
     //~ QMessageBox::warning(MainWindow,"Exiv2 Error",QString::number(BufferLength));
@@ -1864,9 +1932,7 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
       Exiv2Image->writeMetadata();
     } catch (Exiv2::AnyError& Error) {
       std::cout << "Caught Exiv2 exception '" << Error << "'\n";
-
-      if (!JobMode)
-        QMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!");
+      QMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!");
     }
   }
 #endif
@@ -2073,6 +2139,10 @@ short WriteJobFile(const QString FileName) {
 ////////////////////////////////////////////////////////////////////////////////
 
 short ReadSettingsFile(const QString FileName, short& NextPhase) {
+  QFileInfo Info(FileName);
+  if (!Info.exists()) return ptError_FileOpen;
+
+  // Temporary copy to leave the files untouched
   QTemporaryFile SettingsFile;
   SettingsFile.setAutoRemove(1);
   SettingsFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.pts");
@@ -2094,13 +2164,8 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   }
 
   // String corrections if directory got moved
-  QStringList Locations;
-  Locations << CurveFileNamesKeys
-            << "ChannelMixerFileNames";
-
   QStringList Directories;
-    Directories << "SplashDirectory"
-      << "TranslationsDirectory"
+    Directories << "TranslationsDirectory"
       << "CurvesDirectory"
       << "ChannelMixersDirectory"
       << "PresetDirectory"
@@ -2113,40 +2178,47 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
       << "PreviewColorProfile"
       << "OutputColorProfile";
 
-  int CorrectionNeeded = 0;
-  QString OldShareDirectory = QString();
+  QStringList Locations;
+  Locations << CurveFileNamesKeys
+            << "ChannelMixerFileNames";
 
-  if (JobSettings.contains("ShareDirectory") &&
+  QString OldString = QString();
+  QString NewString = Settings->GetString("UserDirectory");
+  int CorrectionNeeded = 0;
+
+  if (JobSettings.contains("UserDirectory") &&
+      JobSettings.value("Magic") != "photivoPresetFile") {
+    // simplest case: file from a different user directory
+    OldString = JobSettings.value("UserDirectory").toString();
+    if (OldString != NewString) CorrectionNeeded = 1;
+  } else if (JobSettings.contains("ShareDirectory") &&
       JobSettings.value("Magic") != "photivoPresetFile") {  // new style settings files
-    if (JobSettings.value("ShareDirectory").toString() != Settings->GetString("ShareDirectory")) {
-      OldShareDirectory = JobSettings.value("ShareDirectory").toString();
-      CorrectionNeeded = 1;
-      Directories << "ShareDirectory";
-    }
+    // intermediate settings, just for compatibility
+    OldString = JobSettings.value("ShareDirectory").toString();
+    if (OldString != NewString) CorrectionNeeded = 1;
   } else if (JobSettings.value("Magic") != "photivoPresetFile") { // old style settings files
-    // Hack to adopt old settings files, asumes the
-    // LensfunsDatabase dir was the most stable directory
+    // Adopt the old settings files, just for compatibility.
+    // Asumes the LensfunsDatabase dir was the most stable directory
     if (!JobSettings.contains("LensfunDatabaseDirectory")) {
       QMessageBox::warning(0,"Error","Old settings file, corrections not possible.\nNot applied!");
       QFile::remove(TempName);
       SettingsFile.close();
       return 0;
     } else {
-      OldShareDirectory = JobSettings.value("LensfunDatabaseDirectory").toString();
-      OldShareDirectory.chop(QString("LensfunDatabase").length());
-      if (OldShareDirectory != Settings->GetString("ShareDirectory"))
-        CorrectionNeeded = 1;
+      OldString = JobSettings.value("LensfunDatabaseDirectory").toString();
+      OldString.chop(QString("LensfunDatabase").length());
+      if (OldString != NewString) CorrectionNeeded = 1;
     }
   }
 
   if (CorrectionNeeded == 1) {
-    int LeftPart = OldShareDirectory.length();
+    int LeftPart = OldString.length();
     // Strings
     for (int i = 0; i < Directories.size(); i++) {
-      if (JobSettings.value(Directories.at(i)).toString().left(LeftPart)==OldShareDirectory) {
+      if (JobSettings.value(Directories.at(i)).toString().left(LeftPart)==OldString) {
         QString TmpStr = JobSettings.value(Directories.at(i)).toString();
-        TmpStr.remove(OldShareDirectory);
-        TmpStr.prepend(Settings->GetString("ShareDirectory"));
+        TmpStr.remove(OldString);
+        TmpStr.prepend(NewString);
         JobSettings.setValue(Directories.at(i),TmpStr);
       }
     }
@@ -2154,10 +2226,10 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     for (int i = 0; i < Locations.size(); i++) {
       QStringList TempList = JobSettings.value(Locations.at(i)).toStringList();
       for (int j = 0; j < TempList.size(); j++) {
-        if (TempList.at(j).left(LeftPart)==OldShareDirectory) {
+        if (TempList.at(j).left(LeftPart)==OldString) {
           QString TmpStr = TempList.at(j);
-          TmpStr.remove(OldShareDirectory);
-          TmpStr.prepend(Settings->GetString("ShareDirectory"));
+          TmpStr.remove(OldString);
+          TmpStr.prepend(NewString);
           TempList.replace(j,TmpStr);
         }
       }
@@ -2174,7 +2246,6 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     if (!Settings->GetInJobFile(Key)) continue;
     if (!JobSettings.contains(Key)) continue;
     if (Key=="InputFileNameList") continue;
-    if (Key=="SplashDirectory") continue;
     if (Key=="TranslationsDirectory") continue;
     if (Key=="CurvesDirectory") continue;
     if (Key=="ChannelMixersDirectory") continue;
@@ -2188,6 +2259,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     if (Key=="OutputDirectory") continue;
     if (Key=="PresetDirectory") continue;
     if (Key=="ShareDirectory") continue;
+    if (Key=="UserDirectory") continue;
     if (Key=="HiddenTools") continue; // see below! BlockedTools are just set.
     QVariant Tmp = JobSettings.value(Key);
     // Correction needed as the values coming from the ini file are
@@ -2573,9 +2645,18 @@ void CB_MenuFileOpen(const short HaveFile) {
          break;
     }
   }
-  // TODO mike: muss man hier den Processor löschen?
+
+  // TODO mike: need to delete the processor here?
   delete TheDcRaw;
   delete TheProcessor;
+  // Load user settings
+  if (Settings->GetInt("StartupSettings")==1 &&
+      Settings->GetInt("StartupSettingsReset")==1 &&
+      Settings->GetInt("HaveImage")==1) {
+    Settings->SetValue("HaveImage",0);
+    CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+  }
+
   TheDcRaw = TestDcRaw;
   if (Settings->GetInt("IsRAW")==0) {
     Settings->SetValue("ImageW",InputWidth);
@@ -2775,7 +2856,7 @@ void CB_MenuFileExit(const short) {
   printf("That's all folks ...\n");
 
   // Delete backup settingsfile
-  QFile::remove(Settings->GetString("SettingsDirectory")+"/backup.pts");
+  QFile::remove(Settings->GetString("UserDirectory")+"/backup.pts");
 
   // Disable manual curves when closing
   for (int i = 0; i < CurveKeys.size(); i++) {
@@ -2989,7 +3070,6 @@ void CB_CameraColorChoice(const QVariant Choice) {
 }
 
 void CB_CameraColorProfileButton() {
-
   QString ProfileFileName = QFileDialog::getOpenFileName(
                  NULL,
                  QObject::tr("Open Profile"),
@@ -3091,10 +3171,8 @@ void CB_OutputColorProfileButton() {
 }
 
 void CB_OutputColorProfileResetButton() {
-  //~ Settings->SetValue("OutputColorProfilesDirectory",
-                     //~ (Settings->GetString("MainDirectory")+"/Profiles/Output").toAscii().data());
   Settings->SetValue("OutputColorProfile",
-                     (Settings->GetString("OutputColorProfilesDirectory")+"/sRGB.icc").toAscii().data());
+                     (Settings->GetString("UserDirectory") + "Profiles/Output/sRGB.icc").toAscii().data());
   if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output) {
     if (Settings->GetInt("IndicateExposure")==1) {
       Update(ptProcessorPhase_NULL);
@@ -3155,7 +3233,7 @@ void CB_LoadStyleButton() {
 
   FileName = QFileDialog::getOpenFileName(NULL,
     QObject::tr("Open Image"),
-    Settings->GetString("MainDirectory"),
+    Settings->GetString("UserDirectory"),
     QObject::tr("CSS files (*.css *.qss);;All files(*.*)"));
 
   QFile *data;
@@ -3298,7 +3376,7 @@ void CB_GimpExecCommandButton() {
 
   QString GimpExecCommandString = QFileDialog::getOpenFileName(NULL,
     QObject::tr("Get gimp command"),
-    Settings->GetString("MainDirectory"),
+    Settings->GetString("UserDirectory"),
     "All files (*.*)");
 
   if (0 == GimpExecCommandString.size() ) {
@@ -3315,6 +3393,33 @@ void CB_GimpExecCommandButton() {
 
 void CB_RememberSettingLevelChoice(const QVariant Choice) {
   Settings->SetValue("RememberSettingLevel",Choice);
+  MainWindow->UpdateSettings();
+}
+
+void CB_StartupSettingsCheck(const QVariant State) {
+  Settings->SetValue("StartupSettings",State);
+}
+
+void CB_StartupSettingsResetCheck(const QVariant State) {
+  Settings->SetValue("StartupSettingsReset",State);
+}
+
+void CB_StartupSettingsButton() {
+  QString StartupSettingsString = QFileDialog::getOpenFileName(NULL,
+    QObject::tr("Get preset file"),
+    Settings->GetString("PresetDirectory"),
+    SettingsFilePattern);
+
+  if (0 == StartupSettingsString.size() ) {
+    // Canceled just return
+    return;
+  } else {
+    QFileInfo PathInfo(StartupSettingsString);
+    Settings->SetValue("PresetDirectory",PathInfo.absolutePath());
+    Settings->SetValue("StartupSettingsFile",PathInfo.absoluteFilePath());
+  }
+
+  // Reflect in gui.
   MainWindow->UpdateSettings();
 }
 
@@ -7585,6 +7690,9 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(TranslationCheck)
 
   M_Dispatch(MemoryTestInput)
+
+  M_Dispatch(StartupSettingsCheck)
+  M_Dispatch(StartupSettingsResetCheck)
 
   M_Dispatch(RememberSettingLevelChoice)
   M_Dispatch(InputsAddPowerLawCheck)

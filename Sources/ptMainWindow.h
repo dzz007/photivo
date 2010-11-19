@@ -146,6 +146,8 @@ void OnPreviewColorProfileButtonClicked();
 void OnOutputColorProfileButtonClicked();
 void OnGimpExecCommandButtonClicked();
 
+void OnStartupSettingsButtonClicked();
+
 void OnMakeCropButtonClicked();
 
 void OnChannelMixerOpenButtonClicked();
