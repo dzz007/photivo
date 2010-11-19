@@ -424,6 +424,8 @@
 
 #ifdef DLRAW_GUI_CHECK_ITEM
 // Name, GuiType,InitLevel,InJobFile,Default,Label,Tip
+{"StartupSettings"            ,ptGT_Check ,1,0,1,_("User settings")   ,_("Load user settings on startup")},
+{"StartupSettingsReset"       ,ptGT_Check ,1,0,0,_("Reset on new image") ,_("Reset to user settings when new image is opened")},
 {"InputsAddPowerLaw"          ,ptGT_Check ,1,1,1,_("Nonlinear slider response")   ,_("Alter the slider behaviour")},
 {"ToolBoxMode"                ,ptGT_Check ,1,0,0,_("Enabled")         ,_("Show seperate toolboxes")},
 {"PreviewTabMode"             ,ptGT_Check ,1,0,0,_("Tab mode")        ,_("Show the preview after the active tab")},

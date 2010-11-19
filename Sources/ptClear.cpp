@@ -30,24 +30,15 @@ int main(int Argc, char *Argv[]) {
   //QApplication TheApplication(Argc,Argv);
   TheApplication = new QApplication(Argc,Argv);
 
-  // Persistent settings.
-  QCoreApplication::setOrganizationName("photivo");
-  QCoreApplication::setOrganizationDomain("mm-log.com/photivo");
-  QCoreApplication::setApplicationName("ptClear");
-  // I strongly prefer ini files above register values as they
-  // are readable and editeable (think of debug)
-  // We don't want something in a windows registry, do we ?
-  QSettings::setDefaultFormat(QSettings::IniFormat);
-  QSettings* UserSettings = new QSettings;
-  QString SettingsFileName = UserSettings->fileName();
-  QFileInfo PathInfo(SettingsFileName);
-  delete UserSettings;
+  // User home folder
+  QString UserDirectory = QDir::homePath() + QDir::separator() + ".photivo" + QDir::separator();
+  QString SettingsFileName = UserDirectory + "photivo.ini";
 
   if (QMessageBox::warning(0,
         QObject::tr("Are you sure?"),
         QObject::tr("I'm going to clear all your settings for photivo.\nProceed?"),
         QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
-    if(QFile::remove(PathInfo.path() + "/photivo.ini"))
+    if(QFile::remove(SettingsFileName))
       QMessageBox::information(0,"Done","Settings are removed.");
     else
       QMessageBox::information(0,"Done","Nothing to remove.");

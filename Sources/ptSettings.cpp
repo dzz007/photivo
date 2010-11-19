@@ -82,7 +82,7 @@ const ptItem Items[] = {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-ptSettings::ptSettings(const short InitLevel) {
+ptSettings::ptSettings(const short InitLevel, const QString Path) {
 
    assert(InitLevel<9); // 9 reserved for never to be remembered.
 
@@ -156,14 +156,7 @@ ptSettings::ptSettings(const short InitLevel) {
   // files.
 
   // Persistent settings.
-  QCoreApplication::setOrganizationName(CompanyName);
-  QCoreApplication::setOrganizationDomain("mm-log.com/photivo");
-  QCoreApplication::setApplicationName(ProgramName);
-  // I strongly prefer ini files above register values as they
-  // are readable and editeable (think of debug)
-  // We don't want something in a windows registry, do we ?
-  QSettings::setDefaultFormat(QSettings::IniFormat);
-  m_IniSettings = new QSettings;
+  m_IniSettings = new QSettings(Path + "photivo.ini", QSettings::IniFormat);
 
   QStringList Keys = m_Hash.keys();
   for (int i=0; i<Keys.size(); i++) {
@@ -183,7 +176,7 @@ ptSettings::ptSettings(const short InitLevel) {
             Setting->Value = Setting->Value.toInt();
             break;
           case QVariant::Double:
-    case QMetaType::Float:
+          case QMetaType::Float:
             Setting->Value = Setting->Value.toDouble();
             break;
           case QVariant::StringList:

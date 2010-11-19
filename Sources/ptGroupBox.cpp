@@ -317,6 +317,9 @@ void ptGroupBox::WriteSettings(const short Append) {
 
   if (FileName.size() == 0) return;
 
+  QFileInfo PathInfo(FileName);
+  Settings->SetValue("PresetDirectory",PathInfo.absolutePath());
+
   QSettings JobSettings(FileName,QSettings::IniFormat);
   if (Append == 0 ||
       !(JobSettings.value("Magic") == "photivoJobFile" ||

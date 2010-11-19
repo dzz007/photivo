@@ -162,7 +162,7 @@ void ptProcessor::Run(short Phase,
 
   if (!m_DcRaw) goto Exit;
 
-  // Status report  
+  // Status report
   ::ViewWindowStatusReport(2);
 
   switch(Phase) {
@@ -272,6 +272,16 @@ void ptProcessor::Run(short Phase,
             }
           } else if (Settings->GetInt("CameraColor") == ptCameraColor_Profile) {
               CameraProfileName = Settings->GetString("CameraColorProfile");
+              QFileInfo PathInfo(CameraProfileName);
+              if (!(PathInfo.exists() &&
+                    PathInfo.isFile() &&
+                    PathInfo.isReadable())) {
+                QMessageBox::information(0,
+                          QObject::tr("Profile not found"),
+                          QObject::tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
+                TRACEMAIN("Not found profile at %d ms.",Timer.elapsed());
+                Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
+              }
           } else if (Settings->GetInt("CameraColor") == ptCameraColor_Flat) {
             QString InputFileName;
             InputFileName =

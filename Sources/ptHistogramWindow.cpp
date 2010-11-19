@@ -456,7 +456,7 @@ void ptHistogramWindow::paintEvent(QPaintEvent*) {
   QPainter Painter(this);
   Painter.save();
   if (!m_QPixmap) {
-    QString FileName = Settings->GetString("SplashDirectory") + "photivoLogo.png";
+    QString FileName = Settings->GetString("UserDirectory") + "photivoLogo.png";
     m_QPixmap = new QPixmap(FileName);
     QPixmap* Scaled = new QPixmap(
       m_QPixmap->scaled(width()-16,
