@@ -8278,6 +8278,7 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
     m_OutWidth  = (m_Width + 1) / 2;
     TempImage = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *TempImage);
     merror (TempImage, "main()");
+#pragma omp parallel for schedule(static)
     for (uint16_t row=0; row < m_Height; row++) {
       for (uint16_t col=0; col < m_Width; col++) {
         TempImage[((row) >> m_Shrink)*m_OutWidth + ((col) >> m_Shrink)][FC(row,col)] =
@@ -8337,28 +8338,41 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
   TRACEKEYVALS("Interpolation type","%d",m_UserSetting_Quality);
 
   // Additional photivo stuff. Other halvings on request.
-  for (short Loop=1; Loop<m_UserSetting_HalfSize; Loop++) {
-    for (uint16_t Row=0; Row < m_Height/2; Row++) {
-      for (uint16_t Col=0; Col < m_Width/2; Col++) {
-        uint32_t Target = Row*(m_Width/2)+Col;
-        uint32_t Pixel1 = Row*2*m_Width+Col*2;
-        uint32_t Pixel2 = ((Col*2) < (m_Width-1) )? Pixel1+1       : Pixel1;
-        uint32_t Pixel3 = ((Row*2) < (m_Height-1))? Pixel1+m_Width : Pixel1;
-        uint32_t Pixel4 = ((Col*2) < (m_Width-1) )? Pixel3+1       : Pixel3;
-        for (short c=0; c < m_Colors; c++) {
-          uint32_t  PixelValue = m_Image[Pixel1][c];
-          PixelValue += m_Image[Pixel2][c];
-          PixelValue += m_Image[Pixel3][c];
-          PixelValue += m_Image[Pixel4][c];
-          PixelValue >>= 2; // is averaging over the four.
-          m_Image[Target][c] = PixelValue;
+  if (m_UserSetting_HalfSize > 1) {
+
+    uint16_t NewHeight = m_Height >> (m_UserSetting_HalfSize-1);
+    uint16_t NewWidth = m_Width >> (m_UserSetting_HalfSize-1);
+
+    short Step = 1 << (m_UserSetting_HalfSize-1);
+    int Average = 2 * (m_UserSetting_HalfSize-1);
+
+    uint16_t (*NewImage)[4] =
+      (uint16_t (*)[4]) CALLOC(NewWidth*NewHeight,sizeof(*m_Image));
+    ptMemoryError(NewImage,__FILE__,__LINE__);
+
+#pragma omp parallel for schedule(static)
+    for (uint16_t Row=0; Row < NewHeight*Step; Row+=Step) {
+      for (uint16_t Col=0; Col < NewWidth*Step; Col+=Step) {
+        uint32_t  PixelValue[4] = {0,0,0,0};
+        for (uint8_t sRow=0; sRow < Step; sRow++) {
+          for (uint8_t sCol=0; sCol < Step; sCol++) {
+            int32_t index = (Row+sRow)*m_Width+Col+sCol;
+            for (short c=0; c < 4; c++) {
+              PixelValue[c] += m_Image[index][c];
+            }
+          }
+        }
+        for (short c=0; c < 4; c++) {
+          NewImage[Row/Step*NewWidth+Col/Step][c]
+            = PixelValue[c] >> Average;
         }
       }
     }
-    m_Height    >>= 1;
-    m_Width     >>= 1;
-    m_OutHeight >>= 1;
-    m_OutWidth  >>= 1;
+
+    FREE(m_Image);
+    m_Height = m_OutHeight = NewHeight;
+    m_Width = m_OutWidth = NewWidth;
+    m_Image = NewImage;
   }
 
   // Green mixing
