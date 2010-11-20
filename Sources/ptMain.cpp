@@ -332,7 +332,11 @@ int photivoMain(int Argc, char *Argv[]) {
   CurveBackupKeys = CurveKeys;
 
   // User home folder
-  QString UserDirectory = QDir::homePath() + QDir::separator() + ".photivo" + QDir::separator();
+  QString Folder = "/.photivo/";
+  QString UserDirectory = QDir::homePath() + Folder;
+  QDir home(QDir::homePath());
+  if (!home.exists(Folder))
+    home.mkdir(Folder);
   QString SettingsFileName = UserDirectory + "photivo.ini";
 
   QFileInfo SettingsFileInfo(SettingsFileName);
@@ -352,52 +356,19 @@ int photivoMain(int Argc, char *Argv[]) {
   // Load the Settings (are also partly used in JobMode)
   Settings = new ptSettings(RememberSettingLevel, UserDirectory);
 
-  // Save directories
-  Settings->SetValue("UserDirectory", UserDirectory);
-
   // Set directory for needed files
   // this has to be changed when we move to a different tree structure!
+  Settings->SetValue("UserDirectory", UserDirectory);
   QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
   Settings->SetValue("ShareDirectory",NewShareDirectory);
-
   Settings->SetValue("MainDirectory",QCoreApplication::applicationDirPath().append("/"));
 
-  // String corrections
-/*  if (Settings->GetString("MainDirectory")!=QCoreApplication::applicationDirPath().append("/")) {
-    QString OldMainDirectory = Settings->GetString("MainDirectory");
-    QStringList Locations;
-    Locations << "CurvesDirectory"
-      << "ChannelMixersDirectory"
-      << "CameraColorProfilesDirectory"
-      << "PreviewColorProfilesDirectory"
-      << "OutputColorProfilesDirectory"
-      << "StandardAdobeProfilesDirectory"
-      << "LensfunDatabaseDirectory"
-      << "PreviewColorProfile"
-      << "OutputColorProfile";
-    Settings->SetValue("MainDirectory",QCoreApplication::applicationDirPath().append("/"));
-    int LeftPart = OldMainDirectory.length();
-    for (int i = 0; i < Locations.size(); i++) {
-      if (Settings->GetString(Locations.at(i)).left(LeftPart)==OldMainDirectory) {
-        QString TmpStr = Settings->GetString(Locations.at(i));
-        TmpStr.remove(OldMainDirectory);
-        TmpStr.prepend(QCoreApplication::applicationDirPath().append("/"));
-        Settings->SetValue(Locations.at(i),TmpStr);
-      }
-    }
-    QStringList Files;
-    Files << CurveFileNamesKeys;
-
-    for (int i = 0; i < Files.size(); i++) {
-      QStringList FilesList;
-      FilesList = Settings->GetStringList(Files.at(i));
-      FilesList.replaceInStrings(OldMainDirectory,QCoreApplication::applicationDirPath());
-      Settings->SetValue(Files.at(i),FilesList);
-    }
-  }*/
+  printf("User directory: '%s'; \n",UserDirectory.toAscii().data());
+  printf("Share directory: '%s'; \n",Settings->GetString("ShareDirectory").toAscii().data());
 
   // Initialize the user folder if needed
   if (NeedInitialization == 1) {
+    printf("Initializing...\n");
     QFile::copy(Settings->GetString("ShareDirectory") + "photivo.png",
       UserDirectory + QDir::separator() + "photivo.png");
     QFile::copy(Settings->GetString("ShareDirectory") + "photivoLogo.png",
@@ -3230,6 +3201,7 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->StatusWidget->setStyleSheet(Theme->ptStyleSheet);
 
   MainWindow->UpdateToolBoxes();
+  SetBackgroundColor(Settings->GetInt("BackgroundColor"));
 }
 
 void CB_StyleHighLightChoice(const QVariant Choice) {
