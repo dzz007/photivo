@@ -568,7 +568,11 @@ int photivoMain(int Argc, char *Argv[]) {
   MainWindow->resize(MainWindowSize);
   MainWindow->move(MainWindowPos);
 
-  MainWindow->show();
+  if (Settings->m_IniSettings->value("IsMaximized",0).toBool()) {
+    MainWindow->showMaximized();
+  } else {
+    MainWindow->show();
+  }
 
   // Update the preview image will result in displaying the splash.
   Update(ptProcessorPhase_NULL);
@@ -2871,6 +2875,7 @@ void CB_MenuFileExit(const short) {
     setValue("ControlSplitter",MainWindow->ControlSplitter->saveState());
   Settings->m_IniSettings->setValue("MainWindowPos",MainWindow->pos());
   Settings->m_IniSettings->setValue("MainWindowSize",MainWindow->size());
+  Settings->m_IniSettings->setValue("IsMaximized", MainWindow->windowState() == Qt::WindowMaximized);
 
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
@@ -3203,6 +3208,8 @@ void CB_StyleChoice(const QVariant Choice) {
     Theme->Normal(Settings->GetInt("StyleHighLight"));
   } else if (Settings->GetInt("Style") == ptStyle_50Grey) {
     Theme->MidGrey(Settings->GetInt("StyleHighLight"));
+  } else if (Settings->GetInt("Style") == ptStyle_VeryDark) {
+    Theme->VeryDark(Settings->GetInt("StyleHighLight"));
   } else {
     Theme->DarkGrey(Settings->GetInt("StyleHighLight"));
   }
@@ -3221,6 +3228,8 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->BottomContainer->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->PipeControlWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->StatusWidget->setStyleSheet(Theme->ptStyleSheet);
+
+  MainWindow->UpdateToolBoxes();
 }
 
 void CB_StyleHighLightChoice(const QVariant Choice) {

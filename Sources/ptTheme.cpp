@@ -216,6 +216,72 @@ void ptTheme::DarkGrey(short Color) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Very dark (with tint of the hovers)
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptTheme::VeryDark(short Color) {
+  SetHighLightColor(Color);
+  ptText = QColor(200,200,200);
+  ptDark = QColor(51,51,51);
+  ptBackGround = QColor(30,30,30);
+  ptGradient = QColor(40,40,40);
+  ptBright = QColor(70,70,70);
+  ptVeryBright = QColor(150,150,150);
+
+  ptStyle = ptThemeStyle;
+  CSS();
+
+  // set the palette
+  //ptPalette.setColor(QPalette::Window, QColor(255,0,0));
+  ptPalette.setColor(QPalette::Background, ptBackGround);
+  //ptPalette.setColor(QPalette::WindowText, QColor(255,0,0));
+  ptPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
+  ptPalette.setColor(QPalette::Base, ptBackGround); // Menu
+  //ptPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
+  ptPalette.setColor(QPalette::Text, ptText);
+  ptPalette.setColor(QPalette::Button, ptBackGround); // Splitter
+  //ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
+  //ptPalette.setColor(QPalette::BrightText, QColor(255,0,0));
+  ptPalette.setColor(QPalette::Light, ptDark); // Splitter
+  //ptPalette.setColor(QPalette::Midlight, QColor(255,0,0));
+  ptPalette.setColor(QPalette::Dark, ptDark);
+  ptPalette.setColor(QPalette::Mid, ptDark);
+  //ptPalette.setColor(QPalette::Shadow, QColor(255,0,0));
+  ptPalette.setColor(QPalette::Highlight, ptDark); // -menu
+  ptPalette.setColor(QPalette::HighlightedText, ptText);
+  //ptPalette.setColor(QPalette::Link, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
+  //ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
+
+    //ptMenuPalette.setColor(QPalette::Window, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Background, ptBackGround);
+    //ptMenuPalette.setColor(QPalette::WindowText, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
+  ptMenuPalette.setColor(QPalette::Base, ptBackGround); // Menu
+    //ptMenuPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Text, ptText);
+  ptMenuPalette.setColor(QPalette::Button, ptBackGround); // Splitter
+  ptMenuPalette.setColor(QPalette::ButtonText, ptText); // Menu
+    //ptMenuPalette.setColor(QPalette::BrightText, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Light, ptDark); // Splitter
+    //ptMenuPalette.setColor(QPalette::Midlight, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Dark, ptDark);
+  ptMenuPalette.setColor(QPalette::Mid, ptDark);
+    //ptMenuPalette.setColor(QPalette::Shadow, QColor(255,0,0));
+  ptMenuPalette.setColor(QPalette::Highlight, ptDark); // -menu
+  ptMenuPalette.setColor(QPalette::HighlightedText, ptText);
+    //ptMenuPalette.setColor(QPalette::Link, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
+    //ptMenuPalette.setColor(QPalette::NoRole, QColor(255,0,0));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // CSS
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -596,7 +662,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QTabBar::tab:selected, QTabBar::tab:hover {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + Bright + ", stop: 1 " + Dark+ ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + Bright + ", stop: 1 " + Dark + ");"
     "}"
 
     "QTabBar::tab:selected {"
