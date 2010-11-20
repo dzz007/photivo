@@ -1463,20 +1463,20 @@ void ptMainWindow::UpdateSettings() {
   }
 
   QFileInfo PathInfo(Settings->GetString("CameraColorProfile"));
-  QString ShortFileName = PathInfo.fileName();
+  QString ShortFileName = PathInfo.baseName();
   CameraColorProfileText->setText(ShortFileName);
   // End CameraColorChoice.
 
 
   // Preview Color Profile.
   PathInfo.setFile(Settings->GetString("PreviewColorProfile"));
-  ShortFileName = PathInfo.fileName();
+  ShortFileName = PathInfo.baseName();
   PreviewColorProfileText->setText(ShortFileName);
   // End Preview Color Profile.
 
   // Preview Color Profile.
   PathInfo.setFile(Settings->GetString("OutputColorProfile"));
-  ShortFileName = PathInfo.fileName();
+  ShortFileName = PathInfo.baseName();
   OutputColorProfileText->setText(ShortFileName);
   // End Preview Color Profile.
 
@@ -1504,7 +1504,7 @@ void ptMainWindow::UpdateSettings() {
   if (Settings->GetInt("HaveBadPixels") == 2) {
     // Small routine that lets Shortfilename point to the basename.
     QFileInfo PathInfo(Settings->GetString("BadPixelsFileName"));
-    QString ShortFileName = PathInfo.fileName();
+    QString ShortFileName = PathInfo.baseName();
     Settings->AddOrReplaceOption("BadPixels",ShortFileName,QVariant(2));
   }
   Settings->SetValue("BadPixels",Settings->GetInt("HaveBadPixels"));
@@ -1514,7 +1514,7 @@ void ptMainWindow::UpdateSettings() {
   if (Settings->GetInt("HaveDarkFrame") == 2) {
     // Small routine that lets Shortfilename point to the basename.
     QFileInfo PathInfo(Settings->GetString("DarkFrameFileName"));
-    QString ShortFileName = PathInfo.fileName();
+    QString ShortFileName = PathInfo.baseName();
     Settings->AddOrReplaceOption("DarkFrame",ShortFileName,QVariant(2));
   }
   Settings->SetValue("DarkFrame",Settings->GetInt("HaveDarkFrame"));

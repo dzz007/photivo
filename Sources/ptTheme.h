@@ -63,6 +63,7 @@ void Reset();
 void Normal(short Color);
 void MidGrey(short Color);
 void DarkGrey(short Color);
+void VeryDark(short Color);
 void CSS();
 void JustTools();
 void SetHighLightColor(short Color);

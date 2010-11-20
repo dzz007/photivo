@@ -133,6 +133,7 @@ const short ptStyle_None            = 0;
 const short ptStyle_Normal          = 1;
 const short ptStyle_50Grey          = 2;
 const short ptStyle_DarkGrey        = 3;
+const short ptStyle_VeryDark        = 4;
 
 // Style highlight color
 const short ptStyleHighLight_White    = 0;

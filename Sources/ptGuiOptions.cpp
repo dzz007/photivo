@@ -89,6 +89,7 @@ const ptGuiOptionsItem ptGuiOptions::Style[] = {
   {ptStyle_Normal,     QObject::tr("Normal") },
   {ptStyle_50Grey,     QObject::tr("50% grey") },
   {ptStyle_DarkGrey,   QObject::tr("Dark grey") },
+  {ptStyle_VeryDark,   QObject::tr("Night") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::StyleHighLight[] = {
