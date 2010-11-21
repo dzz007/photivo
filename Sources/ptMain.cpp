@@ -4,7 +4,7 @@
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 // Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
-// Copyright (C) 2010 Bernd Sch�ler <soda |at| photivo |dot| org>
+// Copyright (C) 2010 Bernd Schoeler <soda |at| photivo |dot| org>
 //
 // This file is part of photivo.
 //

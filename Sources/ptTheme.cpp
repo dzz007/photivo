@@ -3,7 +3,7 @@
 // photivo
 //
 // Copyright (C) 2010 Michael Munzert <mail@mm-log.com>,
-// Bernd Schöler <soda |at| sodanuckler |dot| com>
+// Bernd Schoeler <soda |at| sodanuckler |dot| com>
 //
 // This file is part of photivo.
 //
@@ -21,7 +21,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-// Copyright for the original CSS is 2010 Bernd Schöler
+// Copyright for the original CSS is 2010 Bernd Schoeler
 
 #include "ptTheme.h"
 #include "ptSettings.h"
