@@ -30,8 +30,49 @@ int main(int Argc, char *Argv[]) {
   //QApplication TheApplication(Argc,Argv);
   TheApplication = new QApplication(Argc,Argv);
 
-  // User home folder
-  QString UserDirectory = QDir::homePath() + QDir::separator() + ".photivo" + QDir::separator();
+  // User home folder, where Photivo stores its ini and all Presets, Curves etc
+  // %appdata%\Photivo on Windows, ~/.photivo on Linux
+  #ifdef Q_OS_WIN32
+    // Get %appdata% via WinAPI call
+    #include "qt_windows.h"
+    #include "qlibrary.h"
+    #ifndef CSIDL_APPDATA
+      #define CSIDL_APPDATA 0x001a
+    #endif
+
+    QString AppDataFolder;
+    QLibrary library(QLatin1String("shell32"));
+    QT_WA(
+      {
+        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
+        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
+        if (SHGetSpecialFolderPath) {
+          TCHAR path[MAX_PATH];
+          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+          AppDataFolder = QString::fromUtf16((ushort*)path);
+        }
+      },
+      {
+        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
+        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
+        if (SHGetSpecialFolderPath) {
+          char path[MAX_PATH];
+          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+          AppDataFolder = QString::fromLocal8Bit(path);
+        }
+      }
+    );
+
+    // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
+    AppDataFolder.replace(QString("\\"), QString("/"));
+    // Keeping the leading "/" separate here is important or mkdir will fail.
+    QString Folder = "Photivo/";
+  #else
+    QString Folder = ".photivo/";
+    QString AppDataFolder = QDir::homePath();
+  #endif
+
+  QString UserDirectory = AppDataFolder + "/" + Folder;
   QString SettingsFileName = UserDirectory + "photivo.ini";
 
   if (QMessageBox::warning(0,
