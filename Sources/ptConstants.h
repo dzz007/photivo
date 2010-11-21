@@ -35,6 +35,8 @@
 const char ProgramName[] = "photivo";
 const char CompanyName[] = "photivo";
 
+const int PhotivoSettingsVersion = 1;
+
 // Mathematical constants.
 const double ptPI     = 3.14159265358979323846264338327950288419716939937510;
 const double ptSQ2PI  = 2.50662827463100024161235523934010416269302368164062;
