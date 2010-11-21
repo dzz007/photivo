@@ -49,6 +49,14 @@
 
 #include <Magick++.h>
 
+#ifdef Q_OS_WIN32
+  #include "qt_windows.h"
+  #include "qlibrary.h"
+  #ifndef CSIDL_APPDATA
+    #define CSIDL_APPDATA 0x001a
+  #endif
+#endif
+
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -336,12 +344,6 @@ int photivoMain(int Argc, char *Argv[]) {
   // %appdata%\Photivo on Windows, ~/.photivo on Linux
   #ifdef Q_OS_WIN32
     // Get %appdata% via WinAPI call
-    #include "qt_windows.h"
-    #include "qlibrary.h"
-    #ifndef CSIDL_APPDATA
-      #define CSIDL_APPDATA 0x001a
-    #endif
-
     QString AppDataFolder;
     QLibrary library(QLatin1String("shell32"));
     QT_WA(
@@ -408,7 +410,8 @@ int photivoMain(int Argc, char *Argv[]) {
   printf("Share directory: '%s'; \n",Settings->GetString("ShareDirectory").toAscii().data());
 
   // Initialize the user folder if needed
-  if (NeedInitialization == 1) {
+  if (NeedInitialization == 1 ||
+      Settings->m_IniSettings->value("SettingsVersion",0).toInt() < PhotivoSettingsVersion) {
     printf("Initializing...\n");
     QFile::copy(Settings->GetString("ShareDirectory") + "photivo.png",
       UserDirectory + QDir::separator() + "photivo.png");
@@ -2888,6 +2891,8 @@ void CB_MenuFileExit(const short) {
   Settings->m_IniSettings->setValue("MainWindowPos",MainWindow->pos());
   Settings->m_IniSettings->setValue("MainWindowSize",MainWindow->size());
   Settings->m_IniSettings->setValue("IsMaximized", MainWindow->windowState() == Qt::WindowMaximized);
+  // Store the version of the settings and files
+  Settings->m_IniSettings->setValue("SettingsVersion",PhotivoSettingsVersion);
 
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;

@@ -23,6 +23,15 @@
 #include <QtCore>
 #include <QtGui>
 
+#ifdef Q_OS_WIN32
+  // Get %appdata% via WinAPI call
+  #include "qt_windows.h"
+  #include "qlibrary.h"
+  #ifndef CSIDL_APPDATA
+    #define CSIDL_APPDATA 0x001a
+  #endif
+#endif
+
 QApplication* TheApplication;
 
 int main(int Argc, char *Argv[]) {
@@ -34,12 +43,6 @@ int main(int Argc, char *Argv[]) {
   // %appdata%\Photivo on Windows, ~/.photivo on Linux
   #ifdef Q_OS_WIN32
     // Get %appdata% via WinAPI call
-    #include "qt_windows.h"
-    #include "qlibrary.h"
-    #ifndef CSIDL_APPDATA
-      #define CSIDL_APPDATA 0x001a
-    #endif
-
     QString AppDataFolder;
     QLibrary library(QLatin1String("shell32"));
     QT_WA(
@@ -77,7 +80,7 @@ int main(int Argc, char *Argv[]) {
 
   if (QMessageBox::warning(0,
         QObject::tr("Are you sure?"),
-        QObject::tr("I'm going to clear all your settings for photivo.\nProceed?"),
+        QObject::tr("I'm going to clear all your settings for Photivo.\nProceed?"),
         QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
     if(QFile::remove(SettingsFileName))
       QMessageBox::information(0,"Done","Settings are removed.");
