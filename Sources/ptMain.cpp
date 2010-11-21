@@ -4,7 +4,7 @@
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 // Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
-// Copyright (C) 2010 Bernd Schöler <soda |at| photivo |dot| org>
+// Copyright (C) 2010 Bernd Schï¿½ler <soda |at| photivo |dot| org>
 //
 // This file is part of photivo.
 //
@@ -341,7 +341,7 @@ int photivoMain(int Argc, char *Argv[]) {
     #ifndef CSIDL_APPDATA
       #define CSIDL_APPDATA 0x001a
     #endif
-     
+
     QString AppDataFolder;
     QLibrary library(QLatin1String("shell32"));
     QT_WA(
@@ -364,20 +364,18 @@ int photivoMain(int Argc, char *Argv[]) {
         }
       }
     );
-    
+
     // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
     AppDataFolder.replace(QString("\\"), QString("/"));
     // Keeping the leading "/" separate here is important or mkdir will fail.
     QString Folder = "Photivo/";
-    QString UserDirectory = AppDataFolder + "/" + Folder;
-    QDir home(AppDataFolder);
-  
   #else
-    QString Folder = "/.photivo/";
-    QString UserDirectory = QDir::homePath() + Folder;
-    QDir home(QDir::homePath());
+    QString Folder = ".photivo/";
+    QString AppDataFolder = QDir::homePath();
   #endif
 
+  QString UserDirectory = AppDataFolder + "/" + Folder;
+  QDir home(AppDataFolder);
   if (!home.exists(Folder))
     home.mkdir(Folder);
   QString SettingsFileName = UserDirectory + "photivo.ini";
