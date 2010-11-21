@@ -4,6 +4,7 @@
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 // Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2010 Bernd Schöler <soda |at| photivo |dot| org>
 //
 // This file is part of photivo.
 //
@@ -331,10 +332,52 @@ int photivoMain(int Argc, char *Argv[]) {
 
   CurveBackupKeys = CurveKeys;
 
-  // User home folder
-  QString Folder = "/.photivo/";
-  QString UserDirectory = QDir::homePath() + Folder;
-  QDir home(QDir::homePath());
+  // User home folder, where Photivo stores its ini and all Presets, Curves etc
+  // %appdata%\Photivo on Windows, ~/.photivo on Linux
+  #ifdef Q_OS_WIN32
+    // Get %appdata% via WinAPI call
+    #include "qt_windows.h"
+    #include "qlibrary.h"
+    #ifndef CSIDL_APPDATA
+      #define CSIDL_APPDATA 0x001a
+    #endif
+     
+    QString AppDataFolder;
+    QLibrary library(QLatin1String("shell32"));
+    QT_WA(
+      {
+        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
+        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
+        if (SHGetSpecialFolderPath) {
+          TCHAR path[MAX_PATH];
+          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+          AppDataFolder = QString::fromUtf16((ushort*)path);
+        }
+      },
+      {
+        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
+        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
+        if (SHGetSpecialFolderPath) {
+          char path[MAX_PATH];
+          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+          AppDataFolder = QString::fromLocal8Bit(path);
+        }
+      }
+    );
+    
+    // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
+    AppDataFolder.replace(QString("\\"), QString("/"));
+    // Keeping the leading "/" separate here is important or mkdir will fail.
+    QString Folder = "Photivo/";
+    QString UserDirectory = AppDataFolder + "/" + Folder;
+    QDir home(AppDataFolder);
+  
+  #else
+    QString Folder = "/.photivo/";
+    QString UserDirectory = QDir::homePath() + Folder;
+    QDir home(QDir::homePath());
+  #endif
+
   if (!home.exists(Folder))
     home.mkdir(Folder);
   QString SettingsFileName = UserDirectory + "photivo.ini";
