@@ -456,6 +456,13 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
         Menu.addSeparator();
         Menu.addAction(m_AtnHide);
         Menu.exec(event->globalPos());
+      } else if (m_Name == "TabWhiteBalance") {
+        QMenu Menu(NULL);
+        Menu.setPalette(Theme->ptMenuPalette);
+        Menu.setStyle(Theme->ptStyle);
+        Menu.addAction(m_AtnSavePreset);
+        Menu.addAction(m_AtnAppendPreset);
+        Menu.exec(event->globalPos());
       }
     }/* else if (event->button()==Qt::RightButton &&
               event->modifiers() == Qt::ControlModifier) {

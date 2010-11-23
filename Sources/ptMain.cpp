@@ -953,7 +953,9 @@ int GetProcessorPhase(const QString GuiName) {
 
 void Update(const QString GuiName) {
   int Phase = GetProcessorPhase(GuiName);
-  if (Phase <= 2 ) Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+  // It is assumed that no tool before white balance will use this.
+  if (Phase < 2) Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
+  else if (Phase = 2) Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
   else Update(Phase);
 }
 
