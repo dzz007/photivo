@@ -84,12 +84,12 @@ ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
           this,
           SLOT(ResizeTimerExpired()));
 
-  m_AtnAdaptive = new QAction(QObject::tr("Adaptive"), this);
-  m_AtnAdaptive->setStatusTip(QObject::tr("Adaptive saturation"));
+  m_AtnAdaptive = new QAction(tr("Adaptive"), this);
+  m_AtnAdaptive->setStatusTip(tr("Adaptive saturation"));
   m_AtnAdaptive->setCheckable(true);
   connect(m_AtnAdaptive, SIGNAL(triggered()), this, SLOT(SetSatMode()));
-  m_AtnAbsolute = new QAction(QObject::tr("Absolute"), this);
-  m_AtnAbsolute->setStatusTip(QObject::tr("Absolute saturation"));
+  m_AtnAbsolute = new QAction(tr("Absolute"), this);
+  m_AtnAbsolute->setStatusTip(tr("Absolute saturation"));
   m_AtnAbsolute->setCheckable(true);
   connect(m_AtnAbsolute, SIGNAL(triggered()), this, SLOT(SetSatMode()));
 
@@ -99,12 +99,12 @@ ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
   m_AtnAdaptive->setChecked(Settings->GetInt("SatCurveMode")>0?true:false);
   m_AtnAbsolute->setChecked(Settings->GetInt("SatCurveMode")>0?false:true);
 
-  m_AtnByLuma = new QAction(QObject::tr("By luminance"), this);
-  m_AtnByLuma->setStatusTip(QObject::tr("Mask by luminance"));
+  m_AtnByLuma = new QAction(tr("By luminance"), this);
+  m_AtnByLuma->setStatusTip(tr("Mask by luminance"));
   m_AtnByLuma->setCheckable(true);
   connect(m_AtnByLuma, SIGNAL(triggered()), this, SLOT(SetType()));
-  m_AtnByChroma = new QAction(QObject::tr("By color"), this);
-  m_AtnByChroma->setStatusTip(QObject::tr("Mask by color"));
+  m_AtnByChroma = new QAction(tr("By color"), this);
+  m_AtnByChroma->setStatusTip(tr("Mask by color"));
   m_AtnByChroma->setCheckable(true);
   connect(m_AtnByChroma, SIGNAL(triggered()), this, SLOT(SetType()));
 
@@ -125,12 +125,12 @@ ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
     m_AtnByChroma->setChecked(false);
   }
 
-  m_AtnITLinear = new QAction(QObject::tr("Linear"), this);
-  m_AtnITLinear->setStatusTip(QObject::tr("Linear interpolation"));
+  m_AtnITLinear = new QAction(tr("Linear"), this);
+  m_AtnITLinear->setStatusTip(tr("Linear interpolation"));
   m_AtnITLinear->setCheckable(true);
   connect(m_AtnITLinear, SIGNAL(triggered()), this, SLOT(SetInterpolationType()));
-  m_AtnITSpline = new QAction(QObject::tr("Spline"), this);
-  m_AtnITSpline->setStatusTip(QObject::tr("Spline interpolation"));
+  m_AtnITSpline = new QAction(tr("Spline"), this);
+  m_AtnITSpline->setStatusTip(tr("Spline interpolation"));
   m_AtnITSpline->setCheckable(true);
   connect(m_AtnITSpline, SIGNAL(triggered()), this, SLOT(SetInterpolationType()));
 

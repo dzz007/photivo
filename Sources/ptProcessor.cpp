@@ -194,7 +194,7 @@ void ptProcessor::Run(short Phase,
       switch (SubPhase) {
         case ptProcessorPhase_Load :
 
-          m_ReportProgress(QObject::tr("Reading RAW file"));
+          m_ReportProgress(tr("Reading RAW file"));
 
           if (WithIdentify) m_DcRaw->Identify();
           m_DcRaw->RunDcRaw_Phase1();
@@ -209,7 +209,7 @@ void ptProcessor::Run(short Phase,
           TRACEKEYVALS("ImageW","%d",Settings->GetInt("ImageW"));
           TRACEKEYVALS("ImageH","%d",Settings->GetInt("ImageH"));
 
-          m_ReportProgress(QObject::tr("Reading exif info"));
+          m_ReportProgress(tr("Reading exif info"));
 
           if (ProcessorMode != ptProcessorMode_Thumb) {
             // Read Exif
@@ -220,7 +220,7 @@ void ptProcessor::Run(short Phase,
 
         case ptProcessorPhase_Demosaic :
 
-          m_ReportProgress(QObject::tr("Demosaicing"));
+          m_ReportProgress(tr("Demosaicing"));
 
           // Settings->GetInt("JobMode") causes NoCache
           m_DcRaw->RunDcRaw_Phase2(Settings->GetInt("JobMode"));
@@ -230,7 +230,7 @@ void ptProcessor::Run(short Phase,
 
         case ptProcessorPhase_Highlights :
 
-          m_ReportProgress(QObject::tr("Recovering highlights"));
+          m_ReportProgress(tr("Recovering highlights"));
 
           // Settings->GetInt("JobMode") causes NoCache
           m_DcRaw->RunDcRaw_Phase3(Settings->GetInt("JobMode"));
@@ -265,8 +265,8 @@ void ptProcessor::Run(short Phase,
               TRACEMAIN("Found profile at %d ms.",Timer.elapsed());
             } else {
               QMessageBox::information(0,
-                        QObject::tr("Profile not found"),
-                        QObject::tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
+                        tr("Profile not found"),
+                        tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
               TRACEMAIN("Not found profile at %d ms.",Timer.elapsed());
               Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
             }
@@ -277,8 +277,8 @@ void ptProcessor::Run(short Phase,
                     PathInfo.isFile() &&
                     PathInfo.isReadable())) {
                 QMessageBox::information(0,
-                          QObject::tr("Profile not found"),
-                          QObject::tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
+                          tr("Profile not found"),
+                          tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
                 TRACEMAIN("Not found profile at %d ms.",Timer.elapsed());
                 Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
               }
@@ -327,7 +327,7 @@ void ptProcessor::Run(short Phase,
           m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags = 0;
           if (Settings->GetInt("EnableLensfun") &&
               (Settings->GetInt("LensfunLensIndex") != -1)) {
-            m_ReportProgress(QObject::tr("Applying lens corrections"));
+            m_ReportProgress(tr("Applying lens corrections"));
             m_DcRaw->m_UserSetting_photivo_LensfunModifier = lfModifier::Create(
               LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
               LensfunData->m_Cameras[Settings->GetInt("LensfunCameraIndex")].
@@ -371,7 +371,7 @@ void ptProcessor::Run(short Phase,
 
           TRACEMAIN("Done lensfun corrections at %d ms.",Timer.elapsed());
 
-          m_ReportProgress(QObject::tr("RGB to RGB"));
+          m_ReportProgress(tr("RGB to RGB"));
 
          break;
 
@@ -382,7 +382,7 @@ void ptProcessor::Run(short Phase,
     case ptProcessorPhase_AfterRAW : // Mostly to deal with non RAW bitmaps
 
       if (Settings->GetInt("IsRAW")==0) {
-        m_ReportProgress(QObject::tr("Loading Bitmap"));
+        m_ReportProgress(tr("Loading Bitmap"));
 
         TRACEMAIN("Start opening bitmap at %d ms.",
                     Timer.elapsed());
@@ -417,7 +417,7 @@ void ptProcessor::Run(short Phase,
         TRACEKEYVALS("ImageW","%d",Settings->GetInt("ImageW"));
         TRACEKEYVALS("ImageH","%d",Settings->GetInt("ImageH"));
 
-        m_ReportProgress(QObject::tr("Reading exif info"));
+        m_ReportProgress(tr("Reading exif info"));
 
         if (ProcessorMode != ptProcessorMode_Thumb) {
           // Read Exif
@@ -451,7 +451,7 @@ void ptProcessor::Run(short Phase,
       // Rotation
 
       if (Settings->ToolIsActive("TabRotation")) {
-        m_ReportProgress(QObject::tr("Rotating"));
+        m_ReportProgress(tr("Rotating"));
 
         m_Image_AfterLensfun->Rotate(Settings->GetDouble("Rotate"));
 
@@ -476,8 +476,8 @@ void ptProcessor::Run(short Phase,
             ((Settings->GetInt("CropY") >> TmpScaled) + (Settings->GetInt("CropH") >> TmpScaled))
               > m_Image_AfterLensfun->m_Height) {
           QMessageBox::information(0,
-                                   QObject::tr("Crop outside the image"),
-                                   QObject::tr("Crop rectangle too large.\nNo crop, try again."));
+                                   tr("Crop outside the image"),
+                                   tr("Crop rectangle too large.\nNo crop, try again."));
           Settings->SetValue("CropX",0);
           Settings->SetValue("CropY",0);
           Settings->SetValue("CropW",0);
@@ -487,7 +487,7 @@ void ptProcessor::Run(short Phase,
           TRACEKEYVALS("CropW","%d",Settings->GetInt("CropW"));
           TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
 
-          m_ReportProgress(QObject::tr("Cropping"));
+          m_ReportProgress(tr("Cropping"));
 
           m_Image_AfterLensfun->Crop(Settings->GetInt("CropX") >> TmpScaled,
                                      Settings->GetInt("CropY") >> TmpScaled,
@@ -513,7 +513,7 @@ void ptProcessor::Run(short Phase,
 
       // Resize
       if (Settings->ToolIsActive("TabResize")) {
-        m_ReportProgress(QObject::tr("Resize image"));
+        m_ReportProgress(tr("Resize image"));
 
         float WidthIn = m_Image_AfterLensfun->m_Width;
 
@@ -528,7 +528,7 @@ void ptProcessor::Run(short Phase,
       // Flip
 
       if (Settings->ToolIsActive("TabFlip")) {
-        m_ReportProgress(QObject::tr("Flip image"));
+        m_ReportProgress(tr("Flip image"));
 
         m_Image_AfterLensfun->Flip(Settings->GetInt("FlipMode"));
 
@@ -553,14 +553,14 @@ void ptProcessor::Run(short Phase,
 
       // Calculate the autoexposure required value at this point.
       if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
-        m_ReportProgress(QObject::tr("Calculate auto exposure"));
+        m_ReportProgress(tr("Calculate auto exposure"));
         m_AutoExposureValue = CalculateAutoExposure(m_Image_AfterLensfun);
         Settings->SetValue("Exposure",m_AutoExposureValue);
       }
       if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw)
           Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
 
-      m_ReportProgress(QObject::tr("Next"));
+      m_ReportProgress(tr("Next"));
 
     case ptProcessorPhase_RGB : // Run everything in RGB.
 
@@ -575,7 +575,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabChannelMixer")) {
 
-        m_ReportProgress(QObject::tr("Channel Mixing"));
+        m_ReportProgress(tr("Channel Mixing"));
 
         m_Image_AfterRGB->MixChannels(ChannelMixer->m_Mixer);
       }
@@ -633,7 +633,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("Vibrance") &&
           Settings->ToolIsActive("TabColorIntensity")) {
 
-        m_ReportProgress(QObject::tr("Vibrance"));
+        m_ReportProgress(tr("Vibrance"));
         int Value = (Settings->GetInt("Vibrance"));
         double VibranceMixer[3][3];
 
@@ -655,7 +655,7 @@ void ptProcessor::Run(short Phase,
           Settings->GetInt("IntensityBlue")) &&
           Settings->ToolIsActive("TabColorIntensity")) {
 
-        m_ReportProgress(QObject::tr("IntensityRGB"));
+        m_ReportProgress(tr("IntensityRGB"));
         int ValueR=(Settings->GetInt("IntensityRed"));
         int ValueG=(Settings->GetInt("IntensityGreen"));
         int ValueB=(Settings->GetInt("IntensityBlue"));
@@ -676,7 +676,7 @@ void ptProcessor::Run(short Phase,
       // Brightness
 
       if (Settings->ToolIsActive("TabBrightness")) {
-        m_ReportProgress(QObject::tr("Brightness"));
+        m_ReportProgress(tr("Brightness"));
         ptCurve* CatchWhiteCurve = new ptCurve();
         CatchWhiteCurve->m_Type = ptCurveType_Anchor;
         CatchWhiteCurve->m_IntendedChannel = ptCurveChannel_RGB;
@@ -725,7 +725,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabExposure")) {
 
-        m_ReportProgress(QObject::tr("Correcting Exposure"));
+        m_ReportProgress(tr("Correcting Exposure"));
 
         // From EV to factor.
         ExposureFactor = pow(2,Settings->GetDouble("Exposure"));
@@ -749,7 +749,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabReinhard05")) {
 
-        m_ReportProgress(QObject::tr("Brighten"));
+        m_ReportProgress(tr("Brighten"));
 
         m_Image_AfterRGB->Reinhard05(Settings->GetDouble("Reinhard05Brightness"),
                                      Settings->GetDouble("Reinhard05Chroma"),
@@ -760,7 +760,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabGammaTool")) {
 
-        m_ReportProgress(QObject::tr("Applying RGB Gamma"));
+        m_ReportProgress(tr("Applying RGB Gamma"));
 
         if (!RGBGammaCurve) RGBGammaCurve = new ptCurve();
         RGBGammaCurve->SetCurveFromFunction(
@@ -774,7 +774,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabNormalization")) {
 
-        m_ReportProgress(QObject::tr("Normalization"));
+        m_ReportProgress(tr("Normalization"));
 
         m_Image_AfterRGB->ptGMNormalize(Settings->GetDouble("NormalizationOpacity"));
 //        ptIMContrastStretch(m_Image_AfterRGB,
@@ -787,7 +787,7 @@ void ptProcessor::Run(short Phase,
       // Color Enhancement
 
       if (Settings->ToolIsActive("TabColorEnhance")) {
-        m_ReportProgress(QObject::tr("Color enhance"));
+        m_ReportProgress(tr("Color enhance"));
 
         m_Image_AfterRGB->ColorEnhance(Settings->GetDouble("ColorEnhanceShadows"),
                                        Settings->GetDouble("ColorEnhanceHighlights"));
@@ -798,7 +798,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("LMHLightRecovery1MaskType") &&
           Settings->ToolIsActive("TabRGBRecovery")) {
 
-        m_ReportProgress(QObject::tr("Local Exposure"));
+        m_ReportProgress(tr("Local Exposure"));
 
         m_Image_AfterRGB->LMHLightRecovery(
           Settings->GetInt("LMHLightRecovery1MaskType"),
@@ -813,7 +813,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("LMHLightRecovery2MaskType") &&
           Settings->ToolIsActive("TabRGBRecovery")) {
 
-        m_ReportProgress(QObject::tr("Local Exposure"));
+        m_ReportProgress(tr("Local Exposure"));
 
         m_Image_AfterRGB->LMHLightRecovery(
           Settings->GetInt("LMHLightRecovery2MaskType"),
@@ -829,7 +829,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabRGBTextureContrast")) {
 
-        m_ReportProgress(QObject::tr("RGB Texture contrast"));
+        m_ReportProgress(tr("RGB Texture contrast"));
 
         m_Image_AfterRGB->TextureContrast(Settings->GetDouble("RGBTextureContrastThreshold")*m_ScaleFactor,
           Settings->GetDouble("RGBTextureContrastSoftness"),
@@ -844,7 +844,7 @@ void ptProcessor::Run(short Phase,
 
      if (Settings->ToolIsActive("TabRGBLocalContrast1")) {
 
-        m_ReportProgress(QObject::tr("Microcontrast 1"));
+        m_ReportProgress(tr("Microcontrast 1"));
 
         m_Image_AfterRGB->Microcontrast(
           Settings->GetInt("Microcontrast1Radius")*m_ScaleFactor,
@@ -859,7 +859,7 @@ void ptProcessor::Run(short Phase,
 
      if (Settings->ToolIsActive("TabRGBLocalContrast2")) {
 
-        m_ReportProgress(QObject::tr("Microcontrast 2"));
+        m_ReportProgress(tr("Microcontrast 2"));
 
         m_Image_AfterRGB->Microcontrast(
           Settings->GetInt("Microcontrast2Radius")*m_ScaleFactor,
@@ -876,7 +876,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabRGBContrast")) {
 
-        m_ReportProgress(QObject::tr("Applying RGB Contrast"));
+        m_ReportProgress(tr("Applying RGB Contrast"));
 
         m_Image_AfterRGB->SigmoidalContrast(Settings->GetDouble("RGBContrastAmount"),
                                             Settings->GetDouble("RGBContrastThreshold"));
@@ -885,7 +885,7 @@ void ptProcessor::Run(short Phase,
       // Levels
       if (Settings->ToolIsActive("TabRGBLevels")) {
 
-        m_ReportProgress(QObject::tr("Levels"));
+        m_ReportProgress(tr("Levels"));
 
         double BP = Settings->GetDouble("LevelsBlackPoint");
         double WP = Settings->GetDouble("LevelsWhitePoint");
@@ -899,7 +899,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabRGBCurve")) {
 
-        m_ReportProgress(QObject::tr("Applying RGB curve"));
+        m_ReportProgress(tr("Applying RGB curve"));
 
         m_Image_AfterRGB->ApplyCurve(Curve[ptCurveChannel_RGB],7);
 
@@ -907,9 +907,7 @@ void ptProcessor::Run(short Phase,
 
       }
 
-     case ptProcessorPhase_LabCC : // Run everything in LAB.
-
-      m_ReportProgress(QObject::tr("Phase Lab"));
+    case ptProcessorPhase_LabCC : // Run everything in LAB.
 
       if (Settings->GetInt("JobMode")) {
         m_Image_AfterLabCC = m_Image_AfterRGB; // Job mode -> no cache
@@ -923,7 +921,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABTransform")) {
 
-        m_ReportProgress(QObject::tr("Lab transform"));
+        m_ReportProgress(tr("Lab transform"));
 
         m_Image_AfterLabCC->LABTransform(Settings->GetInt("LABTransform"));
       }
@@ -932,7 +930,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABShadowsHighlights")) {
 
-        m_ReportProgress(QObject::tr("Shadows and Highlights"));
+        m_ReportProgress(tr("Shadows and Highlights"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -953,7 +951,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("LabLMHLightRecovery1MaskType") &&
           Settings->ToolIsActive("TabLABRecovery")) {
 
-        m_ReportProgress(QObject::tr("LabLocal Exposure"));
+        m_ReportProgress(tr("LabLocal Exposure"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -974,7 +972,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("LabLMHLightRecovery2MaskType") &&
           Settings->ToolIsActive("TabLABRecovery")) {
 
-        m_ReportProgress(QObject::tr("LabLocal Exposure"));
+        m_ReportProgress(tr("LabLocal Exposure"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -996,7 +994,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABDRC")) {
 
-        m_ReportProgress(QObject::tr("Dynamic Range Compression"));
+        m_ReportProgress(tr("Dynamic Range Compression"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1015,7 +1013,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABTextureCurve")) {
 
-        m_ReportProgress(QObject::tr("Texture curve"));
+        m_ReportProgress(tr("Texture curve"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1035,7 +1033,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABTexture1")) {
 
-        m_ReportProgress(QObject::tr("Texture contrast 1"));
+        m_ReportProgress(tr("Texture contrast 1"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1056,7 +1054,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABTexture2")) {
 
-        m_ReportProgress(QObject::tr("Texture contrast 2"));
+        m_ReportProgress(tr("Texture contrast 2"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1079,7 +1077,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABLocalContrast1")) {
 
-        m_ReportProgress(QObject::tr("LabMicrocontrast 1"));
+        m_ReportProgress(tr("LabMicrocontrast 1"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1102,7 +1100,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABLocalContrast2")) {
 
-        m_ReportProgress(QObject::tr("LabMicrocontrast 2"));
+        m_ReportProgress(tr("LabMicrocontrast 2"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1128,7 +1126,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABLCStretch1")) {
 
-        m_ReportProgress(QObject::tr("Local Contrast 1"));
+        m_ReportProgress(tr("Local Contrast 1"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1146,7 +1144,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABLCStretch2")) {
 
-        m_ReportProgress(QObject::tr("Local Contrast 2"));
+        m_ReportProgress(tr("Local Contrast 2"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1167,7 +1165,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABContrast")) {
 
-        m_ReportProgress(QObject::tr("Applying Lab contrast"));
+        m_ReportProgress(tr("Applying Lab contrast"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1186,7 +1184,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABSaturation")) {
 
-        m_ReportProgress(QObject::tr("Applying Lab saturation"));
+        m_ReportProgress(tr("Applying Lab saturation"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1203,7 +1201,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABColorBoost")) {
 
-        m_ReportProgress(QObject::tr("Applying Color Boost"));
+        m_ReportProgress(tr("Applying Color Boost"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1220,7 +1218,7 @@ void ptProcessor::Run(short Phase,
       // Levels
       if (Settings->ToolIsActive("TabLABLevels")) {
 
-        m_ReportProgress(QObject::tr("LabLevels"));
+        m_ReportProgress(tr("LabLevels"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
@@ -1240,9 +1238,7 @@ void ptProcessor::Run(short Phase,
       }
 
 
-     case ptProcessorPhase_LabSN : // Run everything in LABSN.
-
-      m_ReportProgress(QObject::tr("Phase Lab2"));
+    case ptProcessorPhase_LabSN : // Run everything in LABSN.
 
       if (Settings->GetInt("JobMode")) {
         m_Image_AfterLabSN = m_Image_AfterLabCC; // Job mode -> no cache
@@ -1254,7 +1250,7 @@ void ptProcessor::Run(short Phase,
       // Edge avoiding wavelet filter
       if (Settings->ToolIsActive("TabLABEAW")) {
 
-        m_ReportProgress(QObject::tr("Edge avoiding wavelets"));
+        m_ReportProgress(tr("Edge avoiding wavelets"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1280,7 +1276,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->ToolIsActive("TabLABGreyC") &&
           Settings->GetInt("GREYCLab")<=2) {
 
-        m_ReportProgress(QObject::tr("GreyCStoration on L"));
+        m_ReportProgress(tr("GreyCStoration on L"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1311,7 +1307,7 @@ void ptProcessor::Run(short Phase,
 
       } else if (Settings->ToolIsActive("TabLABGreyC") &&
                  Settings->GetInt("GREYCLab") == ptEnable_ShowMask) {
-         m_ReportProgress(QObject::tr("GreyCStoration on L"));
+         m_ReportProgress(tr("GreyCStoration on L"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1335,7 +1331,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetDouble("WaveletDenoiseL") &&
           Settings->ToolIsActive("TabWaveletDenoise")) {
 
-        m_ReportProgress(QObject::tr("Wavelet L denoising"));
+        m_ReportProgress(tr("Wavelet L denoising"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1361,7 +1357,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetDouble("WaveletDenoiseA") &&
           Settings->ToolIsActive("TabWaveletDenoise")) {
 
-        m_ReportProgress(QObject::tr("Wavelet A denoising"));
+        m_ReportProgress(tr("Wavelet A denoising"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1383,7 +1379,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetDouble("WaveletDenoiseB") &&
           Settings->ToolIsActive("TabWaveletDenoise")) {
 
-        m_ReportProgress(QObject::tr("Wavelet B denoising"));
+        m_ReportProgress(tr("Wavelet B denoising"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1405,7 +1401,7 @@ void ptProcessor::Run(short Phase,
       // Bilateral filter on L
       if (Settings->ToolIsActive("TabLuminanceDenoise")) {
 
-        m_ReportProgress(QObject::tr("Luminance denoising"));
+        m_ReportProgress(tr("Luminance denoising"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1426,7 +1422,7 @@ void ptProcessor::Run(short Phase,
       // Pyramid denoise filter
       if (Settings->ToolIsActive("TabPyramidDenoise")) {
 
-        m_ReportProgress(QObject::tr("Pyramid denoising"));
+        m_ReportProgress(tr("Pyramid denoising"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1450,7 +1446,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->ToolIsActive("TabColorDenoise") &&
           Settings->GetDouble("BilateralASigmaR")) {
 
-        m_ReportProgress(QObject::tr("Color A denoising"));
+        m_ReportProgress(tr("Color A denoising"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1472,7 +1468,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->ToolIsActive("TabColorDenoise") &&
           Settings->GetDouble("BilateralBSigmaR")) {
 
-        m_ReportProgress(QObject::tr("Color B denoising"));
+        m_ReportProgress(tr("Color B denoising"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1495,7 +1491,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabDetailCurve")) {
 
-        m_ReportProgress(QObject::tr("Detail curve"));
+        m_ReportProgress(tr("Detail curve"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1521,7 +1517,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABGradientSharpen")) {
 
-        m_ReportProgress(QObject::tr("Gradient Sharpen"));
+        m_ReportProgress(tr("Gradient Sharpen"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1547,7 +1543,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABWiener")) {
 
-        m_ReportProgress(QObject::tr("Wiener Filter"));
+        m_ReportProgress(tr("Wiener Filter"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1571,7 +1567,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabInverseDiffusion")) {
 
-        m_ReportProgress(QObject::tr("Inverse Diffusion Sharpen"));
+        m_ReportProgress(tr("Inverse Diffusion Sharpen"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1594,7 +1590,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLABUSM")) {
 
-        m_ReportProgress(QObject::tr("USM sharpening"));
+        m_ReportProgress(tr("USM sharpening"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1622,7 +1618,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->ToolIsActive("TabLABHighpass")) {
 
 
-        m_ReportProgress(QObject::tr("Highpass"));
+        m_ReportProgress(tr("Highpass"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1647,7 +1643,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->ToolIsActive("TabLABFilmGrain") &&
           Settings->GetInt("Grain1MaskType")) {
 
-        m_ReportProgress(QObject::tr("Film grain 1"));
+        m_ReportProgress(tr("Film grain 1"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1671,7 +1667,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->ToolIsActive("TabLABFilmGrain") &&
           Settings->GetInt("Grain2MaskType")) {
 
-        m_ReportProgress(QObject::tr("Film grain 2"));
+        m_ReportProgress(tr("Film grain 2"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
@@ -1703,7 +1699,7 @@ void ptProcessor::Run(short Phase,
           TRACEMAIN("Done conversion to LAB at %d ms.",
                     Timer.elapsed());
         }
-        m_ReportProgress(QObject::tr("View LAB"));
+        m_ReportProgress(tr("View LAB"));
 
         m_Image_AfterLabSN->ViewLAB(Settings->GetInt("ViewLAB"));
       }
@@ -1741,8 +1737,6 @@ void ptProcessor::Run(short Phase,
 
     case ptProcessorPhase_LabEyeCandy : // Run everything in LABSN.
 
-      m_ReportProgress(QObject::tr("Phase Lab3"));
-
       if (Settings->GetInt("JobMode")) {
         m_Image_AfterLabEyeCandy = m_Image_AfterLabSN; // Job mode -> no cache
       } else {
@@ -1753,7 +1747,7 @@ void ptProcessor::Run(short Phase,
       // LByHue Curve
 
       if (Settings->ToolIsActive("TabLbyHue")) {
-        m_ReportProgress(QObject::tr("Applying L by Hue curve"));
+        m_ReportProgress(tr("Applying L by Hue curve"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
@@ -1771,7 +1765,7 @@ void ptProcessor::Run(short Phase,
       // Saturation Curve
 
       if (Settings->ToolIsActive("TabSaturationCurve")) {
-        m_ReportProgress(QObject::tr("Applying saturation curve"));
+        m_ReportProgress(tr("Applying saturation curve"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
@@ -1792,7 +1786,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabLCurve")) {
 
-        m_ReportProgress(QObject::tr("Applying L curve"));
+        m_ReportProgress(tr("Applying L curve"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
@@ -1814,7 +1808,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("CurveLa") &&
           Settings->ToolIsActive("TabABCurves")) {
 
-        m_ReportProgress(QObject::tr("Applying a curve"));
+        m_ReportProgress(tr("Applying a curve"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
@@ -1836,7 +1830,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("CurveLb") &&
           Settings->ToolIsActive("TabABCurves")) {
 
-        m_ReportProgress(QObject::tr("Applying b curve"));
+        m_ReportProgress(tr("Applying b curve"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
@@ -1858,7 +1852,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabColorContrast")) {
 
-        m_ReportProgress(QObject::tr("Colorcontrast"));
+        m_ReportProgress(tr("Colorcontrast"));
 
         //Postponed RGBToLab for performance.
         if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
@@ -1887,7 +1881,7 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_ReportProgress(QObject::tr("LAB tone adjustments 1"));
+        m_ReportProgress(tr("LAB tone adjustments 1"));
 
         m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneAdjust1Amount"),
             Settings->GetDouble("LABToneAdjust1Hue"),
@@ -1909,7 +1903,7 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_ReportProgress(QObject::tr("LAB tone adjustments 2"));
+        m_ReportProgress(tr("LAB tone adjustments 2"));
 
         m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneAdjust2Amount"),
             Settings->GetDouble("LABToneAdjust2Hue"),
@@ -1933,7 +1927,7 @@ void ptProcessor::Run(short Phase,
           TRACEMAIN("Done conversion to LAB at %d ms.",
                     Timer.elapsed());
         }
-        m_ReportProgress(QObject::tr("Luminance and saturation adjustment"));
+        m_ReportProgress(tr("Luminance and saturation adjustment"));
 
         m_Image_AfterLabEyeCandy->LAdjust(Settings->GetDouble("LAdjustC1"),
             Settings->GetDouble("LAdjustC2"),
@@ -1967,7 +1961,7 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_ReportProgress(QObject::tr("LAB toning"));
+        m_ReportProgress(tr("LAB toning"));
 
         m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneAmount"),
             Settings->GetDouble("LABToneHue"),
@@ -1986,7 +1980,7 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_ReportProgress(QObject::tr("LAB shadows toning"));
+        m_ReportProgress(tr("LAB shadows toning"));
 
         m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneSAmount"),
             Settings->GetDouble("LABToneSHue"),
@@ -2006,7 +2000,7 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_ReportProgress(QObject::tr("LAB midtones toning"));
+        m_ReportProgress(tr("LAB midtones toning"));
 
         m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneMAmount"),
             Settings->GetDouble("LABToneMHue"),
@@ -2026,7 +2020,7 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_ReportProgress(QObject::tr("LAB highlights toning"));
+        m_ReportProgress(tr("LAB highlights toning"));
 
         m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneHAmount"),
             Settings->GetDouble("LABToneHHue"),
@@ -2046,7 +2040,7 @@ void ptProcessor::Run(short Phase,
                     Timer.elapsed());
         }
 
-        m_ReportProgress(QObject::tr("Lab Vignette"));
+        m_ReportProgress(tr("Lab Vignette"));
 
         m_Image_AfterLabEyeCandy->Vignette(Settings->GetInt("LabVignetteMode"),
           Settings->GetInt("LabVignette"),
@@ -2062,8 +2056,6 @@ void ptProcessor::Run(short Phase,
 
     case ptProcessorPhase_EyeCandy : // Run EyeCandy.
 
-      m_ReportProgress(QObject::tr("Phase EyeCandy"));
-
       if (Settings->GetInt("JobMode")) {
         m_Image_AfterEyeCandy = m_Image_AfterLabEyeCandy; // Job mode -> no cache
       } else {
@@ -2074,7 +2066,7 @@ void ptProcessor::Run(short Phase,
       // Has to be here to allow L histogram in Tabmode
       // Come back from Lab space if we ever were there ...
       if (m_Image_AfterEyeCandy->m_ColorSpace == ptSpace_Lab) {
-        m_ReportProgress(QObject::tr("Lab to RGB"));
+        m_ReportProgress(tr("Lab to RGB"));
         m_Image_AfterEyeCandy->LabToRGB(Settings->GetInt("WorkColor"));
         TRACEMAIN("Done conversion to RGB at %d ms.",Timer.elapsed());
       }
@@ -2083,7 +2075,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabBW")) {
 
-        m_ReportProgress(QObject::tr("Black and White"));
+        m_ReportProgress(tr("Black and White"));
 
         m_Image_AfterEyeCandy->BWStyler(Settings->GetInt("BWStylerFilmType"),
           Settings->GetInt("BWStylerColorFilterType"),
@@ -2097,7 +2089,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabSimpleTone")) {
 
-        m_ReportProgress(QObject::tr("Simple Toning"));
+        m_ReportProgress(tr("Simple Toning"));
 
         m_Image_AfterEyeCandy->SimpleTone(Settings->GetDouble("SimpleToneR"),
             Settings->GetDouble("SimpleToneG"),
@@ -2109,7 +2101,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("Tone1MaskType") &&
           Settings->ToolIsActive("TabRGBTone")) {
 
-        m_ReportProgress(QObject::tr("Toning"));
+        m_ReportProgress(tr("Toning"));
 
         m_Image_AfterEyeCandy->Tone(
           (uint16_t)(0xffff*
@@ -2133,7 +2125,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("Tone2MaskType") &&
           Settings->ToolIsActive("TabRGBTone")) {
 
-        m_ReportProgress(QObject::tr("Toning"));
+        m_ReportProgress(tr("Toning"));
 
         m_Image_AfterEyeCandy->Tone(
           (uint16_t)(0xffff*
@@ -2157,7 +2149,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabCrossProcessing")) {
 
-        m_ReportProgress(QObject::tr("Crossprocessing"));
+        m_ReportProgress(tr("Crossprocessing"));
 
         m_Image_AfterEyeCandy->Crossprocess(Settings->GetInt("CrossprocessingMode"),
                                             Settings->GetDouble("CrossprocessingColor1"),
@@ -2168,7 +2160,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabECContrast")) {
 
-        m_ReportProgress(QObject::tr("Applying RGB Contrast"));
+        m_ReportProgress(tr("Applying RGB Contrast"));
 
         m_Image_AfterEyeCandy->SigmoidalContrast(Settings->GetDouble("RGBContrast2Amount"),
                                                  Settings->GetDouble("RGBContrast2Threshold"));
@@ -2178,7 +2170,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabGradualOverlay1")) {
 
-        m_ReportProgress(QObject::tr("Gradual Overlay 1"));
+        m_ReportProgress(tr("Gradual Overlay 1"));
 
         m_Image_AfterEyeCandy->GradualOverlay(
           (uint16_t)(0xffff*
@@ -2201,7 +2193,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabGradualOverlay2")) {
 
-        m_ReportProgress(QObject::tr("Gradual Overlay 2"));
+        m_ReportProgress(tr("Gradual Overlay 2"));
 
         m_Image_AfterEyeCandy->GradualOverlay(
           (uint16_t)(0xffff*
@@ -2226,7 +2218,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabRGBVignette")) {
 
-        m_ReportProgress(QObject::tr("Vignette"));
+        m_ReportProgress(tr("Vignette"));
 
         m_Image_AfterEyeCandy->Vignette(Settings->GetInt("VignetteMode"),
           Settings->GetInt("Vignette"),
@@ -2244,7 +2236,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabSoftglow")) {
 
-        m_ReportProgress(QObject::tr("Softglow"));
+        m_ReportProgress(tr("Softglow"));
 
         m_Image_AfterEyeCandy->Softglow(Settings->GetInt("SoftglowMode"),
           Settings->GetDouble("SoftglowRadius")*m_ScaleFactor,
@@ -2259,7 +2251,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->ToolIsActive("TabECColorIntensity") &&
           Settings->GetInt("Vibrance2")) {
 
-        m_ReportProgress(QObject::tr("Vibrance 2"));
+        m_ReportProgress(tr("Vibrance 2"));
         int Value = (Settings->GetInt("Vibrance2"));
         double VibranceMixer[3][3];
 
@@ -2281,7 +2273,7 @@ void ptProcessor::Run(short Phase,
            Settings->GetInt("Intensity2Green") ||
            Settings->GetInt("Intensity2Blue"))) {
 
-        m_ReportProgress(QObject::tr("Intensity RGB 2"));
+        m_ReportProgress(tr("Intensity RGB 2"));
         int ValueR=(Settings->GetInt("Intensity2Red"));
         int ValueG=(Settings->GetInt("Intensity2Green"));
         int ValueB=(Settings->GetInt("Intensity2Blue"));
@@ -2302,7 +2294,7 @@ void ptProcessor::Run(short Phase,
       // Tone curves
       if (Settings->ToolIsActive("TabRToneCurve")) {
 
-        m_ReportProgress(QObject::tr("Applying R curve"));
+        m_ReportProgress(tr("Applying R curve"));
 
         m_Image_AfterEyeCandy->ApplyCurve(Curve[ptCurveChannel_R],1);
 
@@ -2312,7 +2304,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabGToneCurve")) {
 
-        m_ReportProgress(QObject::tr("Applying G curve"));
+        m_ReportProgress(tr("Applying G curve"));
 
         m_Image_AfterEyeCandy->ApplyCurve(Curve[ptCurveChannel_G],2);
 
@@ -2322,7 +2314,7 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabBToneCurve")) {
 
-        m_ReportProgress(QObject::tr("Applying B curve"));
+        m_ReportProgress(tr("Applying B curve"));
 
         m_Image_AfterEyeCandy->ApplyCurve(Curve[ptCurveChannel_B],4);
 
@@ -2345,7 +2337,7 @@ Exit:
       assert(0);
   }
 
-  m_ReportProgress(QObject::tr("Ready"));
+  m_ReportProgress(tr("Ready"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

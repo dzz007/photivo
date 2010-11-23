@@ -34,7 +34,7 @@
 #include "ptImage.h"
 
 class ptProcessor {
-
+Q_DECLARE_TR_FUNCTIONS(ptProcessor)
 public:
 
 // Cached image versions at different points.
