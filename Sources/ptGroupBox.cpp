@@ -107,27 +107,27 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_IsActive = Settings->ToolIsActive(m_Name);
   m_IsBlocked = Settings->ToolIsBlocked(m_Name);
 
-  m_AtnHide = new QAction(QObject::tr("Hide"), this);
+  m_AtnHide = new QAction(tr("Hide"), this);
   connect(m_AtnHide, SIGNAL(triggered()), this, SLOT(Hide()));
   m_AtnHide->setIcon(QIcon(*Theme->ptIconCrossRed));
   m_AtnHide->setIconVisibleInMenu(true);
 
-  m_AtnBlock = new QAction(QObject::tr("Block"), this);
+  m_AtnBlock = new QAction(tr("Block"), this);
   connect(m_AtnBlock, SIGNAL(triggered()), this, SLOT(SetBlocked()));
   m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleRed));
   m_AtnBlock->setIconVisibleInMenu(true);
 
-  m_AtnReset = new QAction(QObject::tr("Reset"), this);
+  m_AtnReset = new QAction(tr("Reset"), this);
   connect(m_AtnReset, SIGNAL(triggered()), this, SLOT(Reset()));
   m_AtnReset->setIcon(QIcon(*Theme->ptIconReset));
   m_AtnReset->setIconVisibleInMenu(true);
 
-  m_AtnSavePreset = new QAction(QObject::tr("Save preset"), this);
+  m_AtnSavePreset = new QAction(tr("Save preset"), this);
   connect(m_AtnSavePreset, SIGNAL(triggered()), this, SLOT(SaveSettings()));
   m_AtnSavePreset->setIcon(QIcon(*Theme->ptIconDisk));
   m_AtnSavePreset->setIconVisibleInMenu(true);
 
-  m_AtnAppendPreset = new QAction(QObject::tr("Append preset"), this);
+  m_AtnAppendPreset = new QAction(tr("Append preset"), this);
   connect(m_AtnAppendPreset, SIGNAL(triggered()), this, SLOT(AppendSettings()));
   m_AtnAppendPreset->setIcon(QIcon(*Theme->ptIconDisk));
   m_AtnAppendPreset->setIconVisibleInMenu(true);
@@ -311,7 +311,7 @@ void ptGroupBox::WriteSettings(const short Append) {
   QString FileName;
 
   FileName = QFileDialog::getSaveFileName(NULL,
-                                          QObject::tr("Settings File"),
+                                          tr("Settings File"),
                                           SuggestedFileName,
                                           SettingsFilePattern);
 
@@ -439,10 +439,10 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
       if (!Settings->ToolAlwaysVisible(m_Name)) {
         if (m_IsBlocked == 1) {
           m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleGreen));
-          m_AtnBlock->setText(QObject::tr("Allow"));
+          m_AtnBlock->setText(tr("Allow"));
         } else {
           m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleRed));
-          m_AtnBlock->setText(QObject::tr("Block"));
+          m_AtnBlock->setText(tr("Block"));
         }
         QMenu Menu(NULL);
         Menu.setPalette(Theme->ptMenuPalette);

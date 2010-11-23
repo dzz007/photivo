@@ -24,7 +24,6 @@
 #include <QtGui>
 
 #ifdef Q_OS_WIN32
-  // Get %appdata% via WinAPI call
   #include "qt_windows.h"
   #include "qlibrary.h"
   #ifndef CSIDL_APPDATA

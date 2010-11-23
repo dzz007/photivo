@@ -134,7 +134,7 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_NewSize = 0;
 
   // Create actions for context menu
-  m_AtnZoomFit = new QAction(QObject::tr("Zoom fit"), this);
+  m_AtnZoomFit = new QAction(tr("Zoom fit"), this);
   connect(m_AtnZoomFit, SIGNAL(triggered()), this, SLOT(MenuZoomFit()));
   QIcon ZoomFitIcon;
   ZoomFitIcon.addPixmap(QPixmap(
@@ -142,7 +142,7 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_AtnZoomFit->setIcon(ZoomFitIcon);
   m_AtnZoomFit->setIconVisibleInMenu(true);
 
-  m_AtnZoom100 = new QAction(QObject::tr("Zoom 100%"), this);
+  m_AtnZoom100 = new QAction(tr("Zoom 100%"), this);
   connect(m_AtnZoom100, SIGNAL(triggered()), this, SLOT(MenuZoom100()));
   QIcon Zoom100Icon;
   Zoom100Icon.addPixmap(QPixmap(
@@ -150,78 +150,78 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_AtnZoom100->setIcon(Zoom100Icon);
   m_AtnZoom100->setIconVisibleInMenu(true);
 
-  m_AtnExpIndicate = new QAction(QObject::tr("Indicate"), this);
-  m_AtnExpIndicate->setStatusTip(QObject::tr("Indicate clipping"));
+  m_AtnExpIndicate = new QAction(tr("Indicate"), this);
+  m_AtnExpIndicate->setStatusTip(tr("Indicate clipping"));
   m_AtnExpIndicate->setCheckable(true);
   m_AtnExpIndicate->setChecked(Settings->GetInt("ExposureIndicator"));
   connect(m_AtnExpIndicate, SIGNAL(triggered()), this, SLOT(MenuExpIndicate()));
 
-  m_AtnExpIndOver = new QAction(QObject::tr("Over exposure"), this);
+  m_AtnExpIndOver = new QAction(tr("Over exposure"), this);
   m_AtnExpIndOver->setCheckable(true);
   m_AtnExpIndOver->setChecked(Settings->GetInt("ExposureIndicatorOver"));
   connect(m_AtnExpIndOver, SIGNAL(triggered()), this, SLOT(MenuExpIndOver()));
 
-  m_AtnExpIndUnder = new QAction(QObject::tr("Under exposure"), this);
+  m_AtnExpIndUnder = new QAction(tr("Under exposure"), this);
   m_AtnExpIndUnder->setCheckable(true);
   m_AtnExpIndUnder->setChecked(Settings->GetInt("ExposureIndicatorUnder"));
   connect(m_AtnExpIndUnder, SIGNAL(triggered()), this, SLOT(MenuExpIndUnder()));
 
-  m_AtnExpIndR = new QAction(QObject::tr("R"), this);
+  m_AtnExpIndR = new QAction(tr("R"), this);
   m_AtnExpIndR->setCheckable(true);
   m_AtnExpIndR->setChecked(Settings->GetInt("ExposureIndicatorR"));
   connect(m_AtnExpIndR, SIGNAL(triggered()), this, SLOT(MenuExpIndR()));
 
-  m_AtnExpIndG = new QAction(QObject::tr("G"), this);
+  m_AtnExpIndG = new QAction(tr("G"), this);
   m_AtnExpIndG->setCheckable(true);
   m_AtnExpIndG->setChecked(Settings->GetInt("ExposureIndicatorG"));
   connect(m_AtnExpIndG, SIGNAL(triggered()), this, SLOT(MenuExpIndG()));
 
-  m_AtnExpIndB = new QAction(QObject::tr("B"), this);
+  m_AtnExpIndB = new QAction(tr("B"), this);
   m_AtnExpIndB->setCheckable(true);
   m_AtnExpIndB->setChecked(Settings->GetInt("ExposureIndicatorB"));
   connect(m_AtnExpIndB, SIGNAL(triggered()), this, SLOT(MenuExpIndB()));
 
-  m_AtnExpIndSensor = new QAction(QObject::tr("Sensor"), this);
+  m_AtnExpIndSensor = new QAction(tr("Sensor"), this);
   m_AtnExpIndSensor->setCheckable(true);
   m_AtnExpIndSensor->setChecked(Settings->GetInt("ExposureIndicatorSensor"));
   connect(m_AtnExpIndSensor, SIGNAL(triggered()), this, SLOT(MenuExpIndSensor()));
 
-  m_AtnShowBottom = new QAction(QObject::tr("Show zoom bar"), this);
+  m_AtnShowBottom = new QAction(tr("Show zoom bar"), this);
   m_AtnShowBottom->setCheckable(true);
   m_AtnShowBottom->setChecked(Settings->GetInt("ShowBottomContainer"));
   connect(m_AtnShowBottom, SIGNAL(triggered()), this, SLOT(MenuShowBottom()));
 
-  m_AtnShowTools = new QAction(QObject::tr("Show tools"), this);
+  m_AtnShowTools = new QAction(tr("Show tools"), this);
   m_AtnShowTools->setCheckable(true);
   m_AtnShowTools->setChecked(Settings->GetInt("ShowToolContainer"));
   connect(m_AtnShowTools, SIGNAL(triggered()), this, SLOT(MenuShowTools()));
 
-  m_AtnFullScreen = new QAction(QObject::tr("Full screen"), this);
+  m_AtnFullScreen = new QAction(tr("Full screen"), this);
   m_AtnFullScreen->setCheckable(true);
   m_AtnFullScreen->setChecked(0);
   connect(m_AtnFullScreen, SIGNAL(triggered()), this, SLOT(MenuFullScreen()));
 
-  m_AtnModeRGB = new QAction(QObject::tr("RGB"), this);
+  m_AtnModeRGB = new QAction(tr("RGB"), this);
   m_AtnModeRGB->setCheckable(true);
   connect(m_AtnModeRGB, SIGNAL(triggered()), this, SLOT(MenuMode()));
 
-  m_AtnModeL = new QAction(QObject::tr("L*"), this);
+  m_AtnModeL = new QAction(tr("L*"), this);
   m_AtnModeL->setCheckable(true);
   connect(m_AtnModeL, SIGNAL(triggered()), this, SLOT(MenuMode()));
 
-  m_AtnModeA = new QAction(QObject::tr("a*"), this);
+  m_AtnModeA = new QAction(tr("a*"), this);
   m_AtnModeA->setCheckable(true);
   connect(m_AtnModeA, SIGNAL(triggered()), this, SLOT(MenuMode()));
 
-  m_AtnModeB = new QAction(QObject::tr("b*"), this);
+  m_AtnModeB = new QAction(tr("b*"), this);
   m_AtnModeB->setCheckable(true);
   connect(m_AtnModeB, SIGNAL(triggered()), this, SLOT(MenuMode()));
 
-  m_AtnModeGradient = new QAction(QObject::tr("Gradient"), this);
+  m_AtnModeGradient = new QAction(tr("Gradient"), this);
   m_AtnModeGradient->setCheckable(true);
   connect(m_AtnModeGradient, SIGNAL(triggered()), this, SLOT(MenuMode()));
 
-  m_AtnModeStructure = new QAction(QObject::tr("Structure"), this);
+  m_AtnModeStructure = new QAction(tr("Structure"), this);
   m_AtnModeStructure->setCheckable(true);
   connect(m_AtnModeStructure, SIGNAL(triggered()), this, SLOT(MenuMode()));
 
@@ -836,8 +836,8 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
           } else {
             QMessageBox msgBox;
             msgBox.setIcon(QMessageBox::Question);
-            msgBox.setWindowTitle(QObject::tr("Settings file dropped!"));
-            msgBox.setText(QObject::tr("Do you really want to open\n")+DropName);
+            msgBox.setWindowTitle(tr("Settings file dropped!"));
+            msgBox.setText(tr("Do you really want to open\n")+DropName);
             msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
             msgBox.setDefaultButton(QMessageBox::Ok);
             if (msgBox.exec()==QMessageBox::Ok){
@@ -968,7 +968,7 @@ void ptViewWindow::ContextMenu(QEvent* Event) {
   IndicateMenu.addAction(m_AtnExpIndR);
   IndicateMenu.addAction(m_AtnExpIndG);
   IndicateMenu.addAction(m_AtnExpIndB);
-  IndicateMenu.setTitle(QObject::tr("Clipping"));
+  IndicateMenu.setTitle(tr("Clipping"));
   QMenu ModeMenu(this);
   ModeMenu.setPalette(Theme->ptMenuPalette);
   ModeMenu.setStyle(Theme->ptStyle);
@@ -978,7 +978,7 @@ void ptViewWindow::ContextMenu(QEvent* Event) {
   ModeMenu.addAction(m_AtnModeA);
   ModeMenu.addAction(m_AtnModeB);
   ModeMenu.addAction(m_AtnModeGradient);
-  ModeMenu.setTitle(QObject::tr("Mode"));
+  ModeMenu.setTitle(tr("Mode"));
   Menu.addAction(m_AtnZoomFit);
   Menu.addAction(m_AtnZoom100);
   Menu.addSeparator();

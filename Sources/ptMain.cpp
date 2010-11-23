@@ -40,8 +40,6 @@
 #include "ptRGBTemperature.h"
 #include "ptWhiteBalances.h"
 #include "ptChannelMixer.h"
-//~ #include "ptImageMagick.h"
-//~ #include "ptImageMagickC.h"
 #include "ptCurve.h"
 #include "ptFastBilateral.h"
 #include "ptTheme.h"
@@ -115,8 +113,10 @@ ptCurveWindow*     CurveWindow[14] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NU
 // Theming
 ptTheme* Theme = NULL;
 
+QTranslator appTranslator;
+
 // Gui options and settings.
-ptGuiOptions  *GuiOptions  = NULL;
+ptGuiOptions  *GuiOptions = NULL;
 ptSettings    *Settings = NULL;
 
 // Lensfun database.
@@ -135,66 +135,71 @@ int ImageSaved;
 float ToFloatTable[0x10000];
 
 // Filter patterns for the filechooser.
-
-const QString ChannelMixerFilePattern =
-  QObject::tr("photivo Channelmixer File (*.ptm);;All files (*.*)");
-
-const QString CurveFilePattern =
-  QObject::tr("photivo Curve File (*.ptc);;All files (*.*)");
-
-const QString JobFilePattern =
-  QObject::tr("photivo Job File (*.ptj);;All files (*.*)");
-
+QString ChannelMixerFilePattern;
+QString CurveFilePattern;
+QString JobFilePattern;
 QString SettingsFilePattern;
+QString ProfilePattern;
+QString RawPattern;
 
-const QString ProfilePattern =
-  QObject::tr("ICC Colour Profiles (*.icc *.icm);;All files (*.*)");
+void InitStrings() {
+  ChannelMixerFilePattern =
+    QCoreApplication::translate("Global Strings","photivo Channelmixer File (*.ptm);;All files (*.*)");
+  CurveFilePattern =
+    QCoreApplication::translate("Global Strings","photivo Curve File (*.ptc);;All files (*.*)");
+  JobFilePattern =
+    QCoreApplication::translate("Global Strings","photivo Job File (*.ptj);;All files (*.*)");
+  SettingsFilePattern =
+    QCoreApplication::translate("Global Strings","Photivo Settings File (*.pts);;All files (*.*)");
+  ProfilePattern =
+    QCoreApplication::translate("Global Strings","ICC Colour Profiles (*.icc *.icm);;All files (*.*)");
 
-// QFileDialog has no case insensitive option ...
-const QString RawPattern =
-  QObject::tr("Raw Files ("
-              "*.arw *.ARW *.Arw "
-              "*.bay *.BAY *.Bay "
-              "*.bmq *.BMQ *.Bmq "
-              "*.cr2 *.CR2 *.Cr2 "
-              "*.crw *.CRW *.Crw "
-              "*.cs1 *.CS1 *.Cs1 "
-              "*.dc2 *.DC2 *.Dc2 "
-              "*.dcr *.DCR *.Dcr "
-              "*.dng *.DNG *.Dng "
-              "*.erf *.ERF *.Erf "
-              "*.fff *.FFF *.Fff "
-              "*.hdr *.HDR *.Hdr "
-              "*.ia  *.IA *.Ia "
-              "*.k25 *.K25 "
-              "*.kc2 *.KC2 *.Kc2 "
-              "*.kdc *.KDC *.Kdc "
-              "*.mdc *.MDC *.Mdc "
-              "*.mef *.MEF *.Mef "
-              "*.mos *.MOS *.Mos "
-              "*.mrw *.MRW *.Mrw "
-              "*.nef *.NEF *.Nef "
-              "*.orf *.ORF *.Orf "
-              "*.pef *.PEF *.Pef "
-              "*.pxn *.PXN *.Pxn "
-              "*.qtk *.QTK *.Qtk "
-              "*.raf *.RAF *.Raf "
-              "*.raw *.RAW *.Raw "
-              "*.rdc *.RDC *.Rdc "
-              "*.rw2 *.RW2 *.Rw2 "
-              "*.sr2 *.SR2 *.Sr2 "
-              "*.srf *.SRF *.Srf "
-              "*.sti *.STI *.Sti "
-              "*.tif *.TIF *.Tif "
-              "*.x3f *.X3F *.X3f)"
-              ";;Bitmaps ("
-              "*.jpeg *.JPEG *.Jpeg "
-              "*.jpg *.JPG *.Jpg "
-              "*.tiff *.TIFF *.Tiff "
-              "*.tif *.TIF *.Tif "
-              "*.bmp *.BMP *.Bmp "
-              "*.ppm *.PPm *.Ppm "
-              ";;All files (*.*)");
+  // QFileDialog has no case insensitive option ...
+  RawPattern =
+    QCoreApplication::translate("Global Strings","Raw Files ("
+                                                 "*.arw *.ARW *.Arw "
+                                                 "*.bay *.BAY *.Bay "
+                                                 "*.bmq *.BMQ *.Bmq "
+                                                 "*.cr2 *.CR2 *.Cr2 "
+                                                 "*.crw *.CRW *.Crw "
+                                                 "*.cs1 *.CS1 *.Cs1 "
+                                                 "*.dc2 *.DC2 *.Dc2 "
+                                                 "*.dcr *.DCR *.Dcr "
+                                                 "*.dng *.DNG *.Dng "
+                                                 "*.erf *.ERF *.Erf "
+                                                 "*.fff *.FFF *.Fff "
+                                                 "*.hdr *.HDR *.Hdr "
+                                                 "*.ia  *.IA *.Ia "
+                                                 "*.k25 *.K25 "
+                                                 "*.kc2 *.KC2 *.Kc2 "
+                                                 "*.kdc *.KDC *.Kdc "
+                                                 "*.mdc *.MDC *.Mdc "
+                                                 "*.mef *.MEF *.Mef "
+                                                 "*.mos *.MOS *.Mos "
+                                                 "*.mrw *.MRW *.Mrw "
+                                                 "*.nef *.NEF *.Nef "
+                                                 "*.orf *.ORF *.Orf "
+                                                 "*.pef *.PEF *.Pef "
+                                                 "*.pxn *.PXN *.Pxn "
+                                                 "*.qtk *.QTK *.Qtk "
+                                                 "*.raf *.RAF *.Raf "
+                                                 "*.raw *.RAW *.Raw "
+                                                 "*.rdc *.RDC *.Rdc "
+                                                 "*.rw2 *.RW2 *.Rw2 "
+                                                 "*.sr2 *.SR2 *.Sr2 "
+                                                 "*.srf *.SRF *.Srf "
+                                                 "*.sti *.STI *.Sti "
+                                                 "*.tif *.TIF *.Tif "
+                                                 "*.x3f *.X3F *.X3f)"
+                                                 ";;Bitmaps ("
+                                                 "*.jpeg *.JPEG *.Jpeg "
+                                                 "*.jpg *.JPG *.Jpg "
+                                                 "*.tiff *.TIFF *.Tiff "
+                                                 "*.tif *.TIF *.Tif "
+                                                 "*.bmp *.BMP *.Bmp "
+                                                 "*.ppm *.PPm *.Ppm "
+                                                 ";;All files (*.*)");
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -246,7 +251,7 @@ void ReportProgress(const QString Message) {
   MainWindow->StatusLabel->repaint();
   // Workaround to keep the GUI responsive
   // during pipe processing...
-  QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+  // QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -303,9 +308,6 @@ int photivoMain(int Argc, char *Argv[]) {
       }
     }
   }
-
-  // Initialize patterns
-  SettingsFilePattern = QObject::tr("photivo Settings File (*.pts);;All files (*.*)");
 
   // Some QStringLists to be initialized.
   CurveKeys << "CurveRGB"
@@ -381,51 +383,49 @@ int photivoMain(int Argc, char *Argv[]) {
   if (!home.exists(Folder))
     home.mkdir(Folder);
   QString SettingsFileName = UserDirectory + "photivo.ini";
+  // this has to be changed when we move to a different tree structure!
+  QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
 
   QFileInfo SettingsFileInfo(SettingsFileName);
   short NeedInitialization = 1;
+  short FirstStart = 1;
   if (SettingsFileInfo.exists() &&
       SettingsFileInfo.isFile() &&
       SettingsFileInfo.isReadable()) {
     // photivo was initialized
     NeedInitialization = 0;
+    FirstStart = 0;
     printf("Settingsfile '%s'\n",SettingsFileName.toAscii().data());
   }
 
-  // Persistent settings.
-  // fixed the remember level to 2, since we have settings files now
-  short RememberSettingLevel = 2;
-
-  // Load the Settings (are also partly used in JobMode)
-  Settings = new ptSettings(RememberSettingLevel, UserDirectory);
-
-  // Set directory for needed files
-  // this has to be changed when we move to a different tree structure!
-  Settings->SetValue("UserDirectory", UserDirectory);
-  QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
-  Settings->SetValue("ShareDirectory",NewShareDirectory);
-  Settings->SetValue("MainDirectory",QCoreApplication::applicationDirPath().append("/"));
-
   printf("User directory: '%s'; \n",UserDirectory.toAscii().data());
-  printf("Share directory: '%s'; \n",Settings->GetString("ShareDirectory").toAscii().data());
+  printf("Share directory: '%s'; \n",NewShareDirectory.toAscii().data());
+
+  // We need to load the translation before the ptSettings
+  QSettings* TempSettings = new QSettings(SettingsFileName, QSettings::IniFormat);
+
+  if (TempSettings->value("SettingsVersion",0).toInt() < PhotivoSettingsVersion)
+    NeedInitialization = 1;
 
   // Initialize the user folder if needed
-  if (NeedInitialization == 1 ||
-      Settings->m_IniSettings->value("SettingsVersion",0).toInt() < PhotivoSettingsVersion) {
+  if (NeedInitialization == 1 || 1 /* TODO: for testing */) {
     printf("Initializing...\n");
-    QFile::copy(Settings->GetString("ShareDirectory") + "photivo.png",
-      UserDirectory + QDir::separator() + "photivo.png");
-    QFile::copy(Settings->GetString("ShareDirectory") + "photivoLogo.png",
-      UserDirectory + QDir::separator() + "photivoLogo.png");
-    QFile::copy(Settings->GetString("ShareDirectory") + "photivoPreview.jpg",
-      UserDirectory + QDir::separator() + "photivoPreview.jpg");
+    QFile::remove(UserDirectory + "photivo.png");
+    QFile::copy(NewShareDirectory + "photivo.png",
+      UserDirectory + "photivo.png");
+    QFile::remove(UserDirectory + "photivoLogo.png");
+    QFile::copy(NewShareDirectory + "photivoLogo.png",
+      UserDirectory + "photivoLogo.png");
+    QFile::remove(UserDirectory + "photivoPreview.jpg");
+    QFile::copy(NewShareDirectory + "photivoPreview.jpg",
+      UserDirectory + "photivoPreview.jpg");
     QStringList SourceFolders;
-    SourceFolders << Settings->GetString("ShareDirectory") + "Translations"
-                  << Settings->GetString("ShareDirectory") + "Curves"
-                  << Settings->GetString("ShareDirectory") + "ChannelMixers"
-                  << Settings->GetString("ShareDirectory") + "Presets"
-                  << Settings->GetString("ShareDirectory") + "Profiles"
-                  << Settings->GetString("ShareDirectory") + "LensfunDatabase";
+    SourceFolders << NewShareDirectory + "Translations"
+                  << NewShareDirectory + "Curves"
+                  << NewShareDirectory + "ChannelMixers"
+                  << NewShareDirectory + "Presets"
+                  << NewShareDirectory + "Profiles"
+                  << NewShareDirectory + "LensfunDatabase";
     QStringList DestFolders;
     DestFolders << UserDirectory + "Translations"
                 << UserDirectory + "Curves"
@@ -437,8 +437,35 @@ int photivoMain(int Argc, char *Argv[]) {
     for (int i = 0; i < SourceFolders.size(); i++) {
       copyFolder(SourceFolders.at(i), DestFolders.at(i));
     }
+  }
 
-    // set paths once after initialization
+  // Load Translation
+  QTranslator qtTranslator;
+  if(TempSettings->value("Translation",0).toInt() == 1) {
+    appTranslator.load("photivo_" + QLocale::system().name(), UserDirectory + "Translations");
+    TheApplication->installTranslator(&appTranslator);
+    qtTranslator.load("qt_" + QLocale::system().name(), UserDirectory + "Translations");
+    TheApplication->installTranslator(&qtTranslator);
+  }
+  printf("Language '%s'; ",QLocale::system().name().toAscii().data());
+  printf("Translation enabled: %d\n",TempSettings->value("Translation",0).toInt());
+
+  delete TempSettings;
+
+  // Persistent settings.
+  // fixed the remember level to 2, since we have settings files now
+  short RememberSettingLevel = 2;
+
+  // Load the Settings (are also partly used in JobMode)
+  Settings = new ptSettings(RememberSettingLevel, UserDirectory);
+
+  // Set directories for needed files
+  Settings->SetValue("UserDirectory", UserDirectory);
+  Settings->SetValue("ShareDirectory",NewShareDirectory);
+  Settings->SetValue("MainDirectory",QCoreApplication::applicationDirPath().append("/"));
+
+  // Set paths once with first start
+  if (FirstStart == 1) {
     Settings->SetValue("RawsDirectory", UserDirectory);
     Settings->SetValue("OutputDirectory", UserDirectory);
     Settings->SetValue("PresetDirectory", UserDirectory + "Presets");
@@ -455,17 +482,8 @@ int photivoMain(int Argc, char *Argv[]) {
     Settings->SetValue("StartupSettingsFile", UserDirectory + "Presets/MakeFancy.pts");
   }
 
-  // Load Translation
-  QTranslator appTranslator;
-  QTranslator qtTranslator;
-  if(Settings->GetInt("Translation")==1) {
-    appTranslator.load("photivo_" + QLocale::system().name(), Settings->GetString("TranslationsDirectory"));
-    TheApplication->installTranslator(&appTranslator);
-    qtTranslator.load("qt_" + QLocale::system().name(), Settings->GetString("TranslationsDirectory"));
-    TheApplication->installTranslator(&qtTranslator);
-  }
-  printf("Language '%s'; ",QLocale::system().name().toAscii().data());
-  printf("Translation enabled: %d\n",Settings->GetInt("Translation"));
+  // Initialize patterns (after translation)
+  InitStrings();
 
   // Load also the LensfunDatabase.
   LensfunData = new ptLensfun;
@@ -490,7 +508,7 @@ int photivoMain(int Argc, char *Argv[]) {
   // Start the theme class
   Theme = new ptTheme(TheApplication);
 
-  GuiOptions  = new ptGuiOptions();
+  GuiOptions = new ptGuiOptions();
 
   // Open and keep open the profile for previewing.
   PreviewColorProfile = cmsOpenProfileFromFile(
@@ -828,6 +846,7 @@ void copyFolder(QString sourceFolder, QString destFolder)
   {
     QString srcName = sourceFolder + "/" + files[i];
     QString destName = destFolder + "/" + files[i];
+    QFile::remove(destName);
     QFile::copy(srcName, destName);
   }
   files.clear();
@@ -849,7 +868,7 @@ void copyFolder(QString sourceFolder, QString destFolder)
 void UpdateGUI() {
   // As long as changing the settings during pipe run is not
   // safe enough we exclude inputs
-  QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+  // QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

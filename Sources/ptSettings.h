@@ -99,6 +99,8 @@ void ptSettingsItem() {
 
 class ptSettings {
 
+Q_DECLARE_TR_FUNCTIONS(ptSettings)
+
 private:
 // We have this private section on top for being able
 // referring to m_Hash already during declaration of class.

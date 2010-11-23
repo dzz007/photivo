@@ -334,7 +334,7 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   // 'None' on 0. Hence -1.
   Settings->AddOrReplaceOption("LensfunCamera",
-                               QObject::tr("None"),
+                               tr("None"),
                                QVariant(-1));
   for (short i=0; i<LensfunData->m_NrCameras; i++) {
     QString CameraName;
@@ -535,13 +535,13 @@ ptMainWindow::ptMainWindow(const QString Title)
   Tabbar->installEventFilter(this);
   WritePipeButton->installEventFilter(this);
 
-  m_AtnSavePipe = new QAction(QObject::tr("Save current pipe"), this);
+  m_AtnSavePipe = new QAction(tr("Save current pipe"), this);
   connect(m_AtnSavePipe, SIGNAL(triggered()), this, SLOT(SaveMenuPipe()));
-  m_AtnSaveFull = new QAction(QObject::tr("Save full size"), this);
+  m_AtnSaveFull = new QAction(tr("Save full size"), this);
   connect(m_AtnSaveFull, SIGNAL(triggered()), this, SLOT(SaveMenuFull()));
-  m_AtnSaveSettings = new QAction(QObject::tr("Save settings file"), this);
+  m_AtnSaveSettings = new QAction(tr("Save settings file"), this);
   connect(m_AtnSaveSettings, SIGNAL(triggered()), this, SLOT(SaveMenuSettings()));
-  m_AtnSaveJobfile = new QAction(QObject::tr("Save job file"), this);
+  m_AtnSaveJobfile = new QAction(tr("Save job file"), this);
   connect(m_AtnSaveJobfile, SIGNAL(triggered()), this, SLOT(SaveMenuJobfile()));
 }
 

@@ -26,6 +26,8 @@
 #include "ptChoice.h"
 #include "ptSettings.h"
 
+extern QTranslator appTranslator;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Constructor.
@@ -79,7 +81,9 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
   //~ m_ComboBox->setLayoutDirection(Qt::RightToLeft);
   m_InitialOptions = InitialOptions;
   for (short i=0; InitialOptions && InitialOptions[i].Value !=-1; i++ ) {
-    m_ComboBox->addItem(InitialOptions[i].Text,InitialOptions[i].Value);
+    QString Temp = appTranslator.translate("QObject",InitialOptions[i].Text.toAscii().data());
+    if (Temp == "") Temp = InitialOptions[i].Text;
+    m_ComboBox->addItem(Temp,InitialOptions[i].Value);
   }
   m_ComboBox->installEventFilter(this);
   m_ComboBox->setFocusPolicy(Qt::ClickFocus);
@@ -151,12 +155,16 @@ void ptChoice::SetValue(const QVariant Value,
 
 void ptChoice::AddOrReplaceItem(const QString Text,const QVariant Data) {
   for (int i=0; i<m_ComboBox->count(); i++) {
-   if (Data == m_ComboBox->itemData(i)) {
-     m_ComboBox->setItemText(i,Text);
-     return;
-   }
+    if (Data == m_ComboBox->itemData(i)) {
+      QString Temp = appTranslator.translate("QObject",Text.toAscii().data());
+      if (Temp == "") Temp = Text;
+      m_ComboBox->setItemText(i,Temp);
+      return;
+    }
   }
-  m_ComboBox->addItem(Text,Data);
+  QString Temp = appTranslator.translate("QObject",Text.toAscii().data());
+  if (Temp == "") Temp = Text;
+  m_ComboBox->addItem(Temp,Data);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +179,9 @@ void ptChoice::Clear(const short WithDefault) {
   if (WithDefault) {
     // Add the standard choices again.
     for (short i=0; m_InitialOptions && m_InitialOptions[i].Value !=-1; i++ ) {
-      m_ComboBox->addItem(m_InitialOptions[i].Text,m_InitialOptions[i].Value);
+      QString Temp = appTranslator.translate("QObject",m_InitialOptions[i].Text.toAscii().data());
+      if (Temp == "") Temp = m_InitialOptions[i].Text;
+      m_ComboBox->addItem(Temp,m_InitialOptions[i].Value);
     }
     m_Value = m_DefaultValue;
   }
