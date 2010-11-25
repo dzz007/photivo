@@ -48,6 +48,8 @@
 #define CLIP(x) LIM(x,0,0xffff)
 #define SWAP(a,b) { a=a+b; b=a-b; a=a-b; }
 #define SIGN(x) ((x) == 0 ? 0 : ((x) < 0 ? -1 : 1 ))
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
