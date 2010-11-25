@@ -41,21 +41,22 @@ OBJECTS_DIR = ../Objects
 MOC_DIR = ../Objects
 UI_HEADERS_DIR = ../Objects
 RCC_DIR = ../Objects
+PREFIX = $$system(more ./config)
 # Bit funky for the glib.
 QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I glib-2.0)
 QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I glib-2.0)
-QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP
+QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP -DPREFIX=$${PREFIX}
 QMAKE_CXXFLAGS_DEBUG += -ffast-math -O0 -g
 QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp
 QMAKE_CXXFLAGS_RELEASE += -ffast-math
-QMAKE_CXXFLAGS_RELEASE += -DDLRAW_HAVE_GIMP
+QMAKE_CXXFLAGS_RELEASE += -DDLRAW_HAVE_GIMP -DPREFIX=$${PREFIX}
 QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I glib-2.0)
 QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I glib-2.0)
-QMAKE_CFLAGS_DEBUG += -DDLRAW_HAVE_GIMP
+QMAKE_CFLAGS_DEBUG += -DDLRAW_HAVE_GIMP -DPREFIX=$${PREFIX}
 QMAKE_CFLAGS_DEBUG += -ffast-math -O0 -g
 QMAKE_CFLAGS_RELEASE += -O3 -fopenmp
 QMAKE_CFLAGS_RELEASE += -ffast-math
-QMAKE_CFLAGS_RELEASE += -DDLRAW_HAVE_GIMP
+QMAKE_CFLAGS_RELEASE += -DDLRAW_HAVE_GIMP -DPREFIX=$${PREFIX}
 QMAKE_LFLAGS_RELEASE += -fopenmp
 QMAKE_LFLAGS_DEBUG += -rdynamic
 LIBS += -ljpeg -llcms2 -lexiv2 -lfftw3
@@ -76,7 +77,6 @@ win32 {
   RC_FILE = photivo.rc
 #  CONFIG += console
 }
-
 
 # Input
 HEADERS += ../Sources/ptConstants.h

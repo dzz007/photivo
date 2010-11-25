@@ -251,7 +251,7 @@ void ReportProgress(const QString Message) {
   MainWindow->StatusLabel->repaint();
   // Workaround to keep the GUI responsive
   // during pipe processing...
-  // QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+  QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -384,7 +384,13 @@ int photivoMain(int Argc, char *Argv[]) {
     home.mkdir(Folder);
   QString SettingsFileName = UserDirectory + "photivo.ini";
   // this has to be changed when we move to a different tree structure!
-  QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
+  #ifdef __unix__
+    QString NewShareDirectory(TOSTRING(PREFIX));
+    if (NewShareDirectory.endsWith("/")) NewShareDirectory.chop(1);
+    NewShareDirectory.append("/share/photivo/");
+  #else
+    QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
+  #endif
 
   QFileInfo SettingsFileInfo(SettingsFileName);
   short NeedInitialization = 1;
@@ -955,7 +961,7 @@ void Update(const QString GuiName) {
   int Phase = GetProcessorPhase(GuiName);
   // It is assumed that no tool before white balance will use this.
   if (Phase < 2) Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
-  else if (Phase = 2) Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+  else if (Phase == 2) Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
   else Update(Phase);
 }
 
