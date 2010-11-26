@@ -291,20 +291,21 @@ int photivoMain(int Argc, char *Argv[]) {
     // Argc must be 3,5 ...
     if (Argc % 2 != 1) {
       fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
-      exit(EXIT_FAILURE);
-    }
-    short CurrentIndex = 1;
-    while (CurrentIndex < Argc) {
-      QString Switch = Argv[CurrentIndex++];
-      QString File   = Argv[CurrentIndex++];
-      if (Switch == "-j") {
-        JobMode     = 1;
-        JobFileName = File;
-      } else if (Switch == "-i") {
-        ImageFileToOpen = File;
-      } else {
-        fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
-        exit(EXIT_FAILURE);
+      // exit(EXIT_FAILURE);
+    } else {
+      short CurrentIndex = 1;
+      while (CurrentIndex < Argc) {
+        QString Switch = Argv[CurrentIndex++];
+        QString File   = Argv[CurrentIndex++];
+        if (Switch == "-j") {
+          JobMode     = 1;
+          JobFileName = File;
+        } else if (Switch == "-i") {
+          ImageFileToOpen = File;
+        } else {
+          fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
+          exit(EXIT_FAILURE);
+        }
       }
     }
   }

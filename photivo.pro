@@ -31,6 +31,18 @@
 #
 ######################################################################
 
+# Check for qmake version
+contains($$[QMAKE_VERSION],^2*) {
+  message("Cannot build Photivo with qmake version $$[QMAKE_VERSION].")
+  error("Use qmake from Qt4")
+}
+
+# Check for Qt version
+contains(QT_VERSION, ^4\\.[0-5]\\..*) {
+  message("Cannot build Photivo with Qt version $${QT_VERSION}.")
+  error("Use at least Qt 4.6.")
+}
+
 CONFIG += release silent
 #CONFIG += debug
 TEMPLATE = subdirs
@@ -59,6 +71,10 @@ unix {
   binaries.path = $${PREFIX}/bin
   binaries.files = photivo
   binaries.files += ptClear
+  shortcut.path = $${PREFIX}/share/applications
+  shortcut.files = ./ReferenceMaterial/photivo.desktop
+  icon.path = $${PREFIX}/share/pixmaps
+  icon.files = ./photivo.png
   curves.path = $${PREFIX}/share/photivo/Curves
   curves.files = ./Curves/*
   mixer.path = $${PREFIX}/share/photivo/ChannelMixers
@@ -76,6 +92,8 @@ unix {
   images.files += ./photivoLogo.png
   images.files += ./photivoPreview.jpg
   INSTALLS += binaries
+  INSTALLS += shortcut
+  INSTALLS += icon
   INSTALLS += curves
   INSTALLS += mixer
   INSTALLS += presets
