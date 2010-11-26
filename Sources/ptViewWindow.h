@@ -69,6 +69,7 @@ void Grid(const short Enabled, const short GridX, const short GridY);
 // Zoom functions. Fit returns the factor in %.
 short ZoomFit();
 void  Zoom(const short Factor); // Expressed in %
+void LightsOut();
 
 // Status report
 void StatusReport (short State);
@@ -130,6 +131,7 @@ short       m_GridX;
 short       m_GridY;
 short       m_DrawRectangle;
 short       m_RectangleMode;
+short       m_CropLightsOut;
 
 QAction*    m_AtnExpIndicate;
 QAction*    m_AtnExpIndR;

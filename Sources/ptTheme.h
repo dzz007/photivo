@@ -58,6 +58,8 @@ QPixmap*    ptIconCrossRed;
 QPixmap*    ptIconReset;
 QPixmap*    ptIconDisk;
 
+QColor      ptBackGround;
+
 // Methods
 void Reset();
 void Normal(short Color);
@@ -76,9 +78,7 @@ protected:
 
 private:
 
-
 QColor      ptHighLight;
-QColor      ptBackGround;
 QColor      ptGradient;
 QColor      ptText;
 QColor      ptDark;

@@ -47,7 +47,7 @@ ptImage* ptImage::ptGMRotate(const double Angle) {
 
   Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
 
-  image.backgroundColor("black");
+  image.backgroundColor(Magick::ColorRGB(0,0,0));
   image.rotate(Angle);
   uint16_t NewWidth = image.columns();
   uint16_t NewHeight = image.rows();
