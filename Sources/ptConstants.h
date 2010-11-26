@@ -108,6 +108,8 @@ const short ptOutputColor_Profile    = 21;/* Avoid collision with RGB or LAB */
 
 // Size of the pipe.
 
+const short ptPipeSize_Thirtyfour    = 5;
+const short ptPipeSize_Sixteen       = 4;
 const short ptPipeSize_Eighth        = 3;
 const short ptPipeSize_Quarter       = 2; // Relying on this values for shift.
 const short ptPipeSize_Half          = 1;

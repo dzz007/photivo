@@ -101,10 +101,12 @@ const ptGuiOptionsItem ptGuiOptions::StyleHighLight[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::PipeSize[] = {
-  {ptPipeSize_Eighth,  QObject::tr("1:8") },
-  {ptPipeSize_Quarter, QObject::tr("1:4") },
-  {ptPipeSize_Half,    QObject::tr("1:2") },
-  {ptPipeSize_Full,    QObject::tr("1:1") },
+  {ptPipeSize_Thirtyfour, QObject::tr("1:32") },
+  {ptPipeSize_Sixteen,    QObject::tr("1:16") },
+  {ptPipeSize_Eighth,     QObject::tr("1:8") },
+  {ptPipeSize_Quarter,    QObject::tr("1:4") },
+  {ptPipeSize_Half,       QObject::tr("1:2") },
+  {ptPipeSize_Full,       QObject::tr("1:1") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::RunMode[] = {
