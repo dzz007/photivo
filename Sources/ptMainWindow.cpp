@@ -22,6 +22,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ptMainWindow.h"
+#include "ptViewWindow.h"
 #include "ptWhiteBalances.h"
 #include "ptChannelMixer.h"
 #include "ptError.h"
@@ -39,6 +40,7 @@
 using namespace std;
 
 extern ptTheme* Theme;
+extern ptViewWindow* ViewWindow;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1196,6 +1198,11 @@ void CB_SpecialPreviewChoice(const QVariant Choice);
 void CB_MenuFileExit(const short);
 void ViewWindowStatusReport(short State);
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
+  if (ViewWindow->m_SelectionAllowed &&
+      Event->key()==Qt::Key_Alt) {
+    ViewWindow->LightsOut();
+    return;
+  }
   if (Event->key()==Qt::Key_Escape) { // back to used view
     if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_RGB)
         CB_SpecialPreviewChoice(ptSpecialPreview_RGB);

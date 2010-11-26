@@ -67,6 +67,7 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_GridY            = 0;
   m_DrawRectangle    = 0;
   m_RectangleMode    = 0;
+  m_CropLightsOut    = Settings->m_IniSettings->value("CropLightsOut",0).toInt();
   m_FixedAspectRatio = 0;
 
   //Avoiding tricky blacks at zoom fit.
@@ -309,6 +310,18 @@ uint16_t ptViewWindow::GetSelectionHeight() {
   uint16_t H = abs(m_StartDragY-m_EndDragY);
   H = (uint16_t)(H/m_ZoomFactor+0.5);
   return H;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// LightsOut
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::LightsOut() {
+  m_CropLightsOut = 1 - m_CropLightsOut;
+  Settings->m_IniSettings->setValue("CropLightsOut",m_CropLightsOut);
+  viewport()->repaint();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -584,6 +597,14 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
       int16_t RectX1 = MAX(m_StartDragX,m_EndDragX);
       int16_t RectY1 = MAX(m_StartDragY,m_EndDragY);
       QBrush Brush(QColor(20, 20, 20, 200));
+      if (m_CropLightsOut) {
+        if (Settings->GetInt("BackgroundColor"))
+          Brush.setColor(QColor(Settings->GetInt("BackgroundRed"),
+                                Settings->GetInt("BackgroundGreen"),
+                                Settings->GetInt("BackgroundBlue")));
+        else
+          Brush.setColor(Theme->ptBackGround);
+      }
       if (RectY0 > FrameY0) { // Top
         Painter.fillRect(FrameX0,FrameY0,
              FrameX1-FrameX0,MIN(FrameY1-FrameY0,RectY0-FrameY0),Brush);
@@ -605,6 +626,7 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
              FrameX1-MAX(RectX1+1,FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
       }
       QPen Pen(QColor(150, 150, 150),1);
+      if (m_CropLightsOut) Pen.setColor(QColor(0,0,0,0));
       Painter.setPen(Pen);
       Painter.drawRect(m_StartDragX, m_StartDragY,
                        m_EndDragX-m_StartDragX,m_EndDragY-m_StartDragY);
@@ -671,8 +693,6 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
              ((QMouseEvent*)Event)->modifiers() == Qt::ControlModifier) {
 
     // Drag selection.
-
-    m_DrawRectangle = 1;
 
     m_StartDragX += ((QMouseEvent*) Event)->x() - m_EndDragX;
     m_StartDragY += ((QMouseEvent*) Event)->y() - m_EndDragY;
