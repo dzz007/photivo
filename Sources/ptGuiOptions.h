@@ -51,6 +51,7 @@ static const ptGuiOptionsItem CameraColor[];
 static const ptGuiOptionsItem CameraColorProfileIntent[];
 static const ptGuiOptionsItem CameraColorGamma[];
 static const ptGuiOptionsItem WorkColor[];
+static const ptGuiOptionsItem CMQuality[];
 static const ptGuiOptionsItem PreviewColorProfileIntent[];
 static const ptGuiOptionsItem OutputColorProfileIntent[];
 static const ptGuiOptionsItem Style[];

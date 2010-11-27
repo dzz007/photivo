@@ -70,6 +70,11 @@ const ptGuiOptionsItem ptGuiOptions::WorkColor[] = {
   {ptSpace_ProPhotoRGB_D50,  QObject::tr("Kodak Pro PhotoRGB - D50")},
   {-1,NULL}};
 
+const ptGuiOptionsItem ptGuiOptions::CMQuality[] = {
+  {ptCMQuality_NoOptimize,       QObject::tr("No optimization")     },
+  {ptCMQuality_HighResPreCalc,   QObject::tr("High res pre calc")   },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::PreviewColorProfileIntent[] = {
   {INTENT_PERCEPTUAL,            QObject::tr("Perceptual")            },
   {INTENT_RELATIVE_COLORIMETRIC, QObject::tr("Relative Colorimetric") },

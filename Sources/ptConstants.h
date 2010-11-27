@@ -106,6 +106,9 @@ const short ptCameraColorGamma_Pure22   = 3;
 const short ptScreenColor_Profile    = 20;/* Avoid collision with RGB or LAB */
 const short ptOutputColor_Profile    = 21;/* Avoid collision with RGB or LAB */
 
+const short ptCMQuality_NoOptimize         = 0;
+const short ptCMQuality_HighResPreCalc     = 1;
+
 // Size of the pipe.
 
 const short ptPipeSize_Thirtyfour    = 5;

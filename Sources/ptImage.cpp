@@ -26,6 +26,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <QMessageBox>
+#include <QTime>
 
 #ifdef _OPENMP
   #include <omp.h>
@@ -67,6 +68,7 @@ extern cmsCIExyY       D65;
 extern cmsCIExyY       D50;
 
 extern cmsHPROFILE PreviewColorProfile;
+extern cmsHTRANSFORM ToPreviewTransform;
 
 // Lut
 extern float ToFloatTable[0x10000];
@@ -235,7 +237,8 @@ ptImage* ptImage::lcmsRGBToRGB(const short To,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
-                               const int   Intent){
+                               const int   Intent,
+                               const short Quality){
 
   // assert ((m_ColorSpace>0) && (m_ColorSpace<5));
   if (!((m_ColorSpace>0) && (m_ColorSpace<5))) {
@@ -278,15 +281,26 @@ ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
   cmsFreeToneCurve(Gamma);
 
   cmsHTRANSFORM Transform;
-  Transform = cmsCreateTransform(InProfile,
-                                 TYPE_RGB_16,
-                                 OutProfile,
-                                 TYPE_RGB_16,
-                                 Intent,
-                                 cmsFLAGS_NOOPTIMIZE | cmsFLAGS_BLACKPOINTCOMPENSATION);
+  if (Quality == ptCMQuality_HighResPreCalc) {
+    Transform =
+      cmsCreateTransform(InProfile,
+                         TYPE_RGB_16,
+                         PreviewColorProfile,
+                         TYPE_RGB_16,
+                         Intent,
+                         cmsFLAGS_HIGHRESPRECALC | cmsFLAGS_BLACKPOINTCOMPENSATION);
+  } else {
+    Transform =
+      cmsCreateTransform(InProfile,
+                         TYPE_RGB_16,
+                         PreviewColorProfile,
+                         TYPE_RGB_16,
+                         Intent,
+                         cmsFLAGS_NOOPTIMIZE | cmsFLAGS_BLACKPOINTCOMPENSATION);
+  }
 
   int32_t Size = m_Width*m_Height;
-  int32_t Step = 100000;
+  int32_t Step = 10000;
 #pragma omp parallel for schedule(static)
   for (int32_t i = 0; i < Size; i+=Step) {
     int32_t Length = (i+Step)<Size ? Step : Size - i;
@@ -296,6 +310,28 @@ ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
 
   cmsDeleteTransform(Transform);
   cmsCloseProfile(InProfile);
+
+  m_ColorSpace = ptSpace_Profiled;
+
+  return this;
+}
+
+ptImage* ptImage::lcmsRGBToPreviewRGB(){
+  // assert ((m_ColorSpace>0) && (m_ColorSpace<5));
+  if (!((m_ColorSpace>0) && (m_ColorSpace<5))) {
+    QMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
+    return this;
+  }
+  assert (3 == m_Colors);
+
+  int32_t Size = m_Width*m_Height;
+  int32_t Step = 10000;
+#pragma omp parallel for schedule(static)
+  for (int32_t i = 0; i < Size; i+=Step) {
+    int32_t Length = (i+Step)<Size ? Step : Size - i;
+    uint16_t* Image = &m_Image[i][0];
+    cmsDoTransform(ToPreviewTransform,Image,Image,Length);
+  }
 
   m_ColorSpace = ptSpace_Profiled;
 

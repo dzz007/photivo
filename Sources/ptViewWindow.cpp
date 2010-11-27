@@ -401,18 +401,16 @@ void ptViewWindow::UpdateView(const ptImage* NewRelatedImage) {
     m_QImage = new QImage(m_RelatedImage->m_Width,
                           m_RelatedImage->m_Height,
                           QImage::Format_RGB32);
-    for (uint16_t Row=0; Row<m_RelatedImage->m_Height; Row++) {
-      for (uint16_t Col=0; Col<m_RelatedImage->m_Width; Col++) {
-        uint32_t PixelInQFormat;
-        uint8_t* Pixel = (uint8_t*) &PixelInQFormat;
-        for (short c=0; c<3; c++) {
-          // Mind the R<->B swap !
-          Pixel[2-c] =
-            m_RelatedImage->m_Image[Row*m_RelatedImage->m_Width+Col][c]>>8;
-        }
-        Pixel[3] = 0xff;
-        m_QImage->setPixel(Col,Row,PixelInQFormat);
+    uint32_t Size = m_RelatedImage->m_Height * m_RelatedImage->m_Width;
+    uint32_t* ImagePtr = (QRgb*) m_QImage->scanLine(0);
+#pragma omp parallel for schedule(static)
+    for (uint32_t i = 0; i < Size; i++) {
+      uint8_t* Pixel = (uint8_t*) ImagePtr + (i<<2);
+      for (short c=0; c<3; c++) {
+        // Mind the R<->B swap !
+        Pixel[2-c] = m_RelatedImage->m_Image[i][c]>>8;
       }
+      Pixel[3] = 0xff;
     }
   }
 
@@ -475,7 +473,6 @@ void ptViewWindow::UpdateView(const ptImage* NewRelatedImage) {
 
   // Update view.
   viewport()->update();
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////

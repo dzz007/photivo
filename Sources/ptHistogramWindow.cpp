@@ -365,19 +365,20 @@ void ptHistogramWindow::CalculateHistogram() {
         }
       }
       // baselines. A grey colour.
-      m_Image8->m_Image[RowLimit*m_Image8->m_Width+i+HistogramMargin][0] = 0x80;
-      m_Image8->m_Image[RowLimit*m_Image8->m_Width+i+HistogramMargin][1] = 0x80;
-      m_Image8->m_Image[RowLimit*m_Image8->m_Width+i+HistogramMargin][2] = 0x80;
+      uint32_t Index = RowLimit*m_Image8->m_Width+i+HistogramMargin;
+      m_Image8->m_Image[Index][0] = 0x80;
+      m_Image8->m_Image[Index][1] = 0x80;
+      m_Image8->m_Image[Index][2] = 0x80;
       // Average line.
       r = HistoAverage/(double)(m_HistoMax);
       if (r>=0.99) r=0.99; // Safety.
       Row = RowLimit-(uint16_t)(r*WidgetHeight);
       // if (Row<0) Row = 0;
       if (Row >= WidgetHeight) Row=WidgetHeight-1;
-      m_Image8->m_Image[Row*m_Image8->m_Width+i+HistogramMargin][0] = 0xa0;
-      m_Image8->m_Image[Row*m_Image8->m_Width+i+HistogramMargin][1] = 0xa0;
-      m_Image8->m_Image[Row*m_Image8->m_Width+i+HistogramMargin][2] = 0xa0;
-
+      Index = Row*m_Image8->m_Width+i+HistogramMargin;
+      m_Image8->m_Image[Index][0] = 0xa0;
+      m_Image8->m_Image[Index][1] = 0xa0;
+      m_Image8->m_Image[Index][2] = 0xa0;
     }
   }
 
@@ -388,12 +389,13 @@ void ptHistogramWindow::CalculateHistogram() {
     uint16_t Col=i*Step+HistogramMargin;
     for (uint16_t Row=0; Row<WidgetHeight; Row++) {
       int value = (int) MIN(MAX(Row-15,0), 0x60);
-      if (!m_Image8->m_Image[Row*WidgetWidth+Col][0] &&
-          !m_Image8->m_Image[Row*WidgetWidth+Col][1] &&
-          !m_Image8->m_Image[Row*WidgetWidth+Col][2]) {
-        m_Image8->m_Image[Row*WidgetWidth+Col][0] = value;
-        m_Image8->m_Image[Row*WidgetWidth+Col][1] = value;
-        m_Image8->m_Image[Row*WidgetWidth+Col][2] = value;
+      uint32_t Index = Row*WidgetWidth+Col;
+      if (!m_Image8->m_Image[Index][0] &&
+          !m_Image8->m_Image[Index][1] &&
+          !m_Image8->m_Image[Index][2]) {
+        m_Image8->m_Image[Index][0] = value;
+        m_Image8->m_Image[Index][1] = value;
+        m_Image8->m_Image[Index][2] = value;
       }
     }
   }
