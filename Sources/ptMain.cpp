@@ -85,6 +85,8 @@ ptChannelMixer* ChannelMixer = NULL;
 cmsHPROFILE PreviewColorProfile = NULL;
 cmsCIExyY       D65;
 cmsCIExyY       D50;
+// precalculated color transform
+cmsHTRANSFORM ToPreviewTransform = NULL;
 
 //
 // The 'tee' towards the display.
@@ -214,6 +216,7 @@ void   UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
                           const short    OnlyHistogram = 0);
 void   InitCurves();
 void   InitChannelMixers();
+void   PreCalcTransforms();
 void   CB_ChannelMixerChoice(const QVariant Choice);
 void   CB_CurveChoice(const int Channel, const int Choice);
 void   CB_ZoomFitButton();
@@ -682,6 +685,7 @@ void CB_Event0() {
 
   InitCurves();
   InitChannelMixers();
+  PreCalcTransforms();
 
   // Load user settings
   if (Settings->GetInt("StartupSettings")) {
@@ -830,6 +834,66 @@ void InitChannelMixers() {
   CB_ChannelMixerChoice(QVariant(Settings->GetInt("ChannelMixer")));
 
   ReportProgress(QObject::tr("Ready"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Precalculation of color transforms
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void PreCalcTransforms() {
+  cmsToneCurve* Gamma = cmsBuildGamma(NULL, 1.0);
+  cmsToneCurve* Gamma3[3];
+  Gamma3[0] = Gamma3[1] = Gamma3[2] = Gamma;
+
+  cmsHPROFILE InProfile = 0;
+
+  cmsCIExyY DFromReference;
+
+  switch (Settings->GetInt("WorkColor")) {
+    case ptSpace_sRGB_D65 :
+    case ptSpace_AdobeRGB_D65 :
+      DFromReference = D65;
+      break;
+    case ptSpace_WideGamutRGB_D50 :
+    case ptSpace_ProPhotoRGB_D50 :
+      DFromReference = D50;
+      break;
+    default:
+      assert(0);
+  }
+
+  InProfile = cmsCreateRGBProfile(&DFromReference,
+                                  (cmsCIExyYTRIPLE*)&RGBPrimaries[Settings->GetInt("WorkColor")],
+                                  Gamma3);
+
+  if (!InProfile) {
+    ptLogError(ptError_Profile,"Could not open InProfile profile.");
+    return;
+  }
+
+  cmsFreeToneCurve(Gamma);
+
+  if (Settings->GetInt("CMQuality") == ptCMQuality_HighResPreCalc) {
+    ToPreviewTransform =
+      cmsCreateTransform(InProfile,
+                         TYPE_RGB_16,
+                         PreviewColorProfile,
+                         TYPE_RGB_16,
+                         Settings->GetInt("PreviewColorProfileIntent"),
+                         cmsFLAGS_HIGHRESPRECALC | cmsFLAGS_BLACKPOINTCOMPENSATION);
+  } else {
+    ToPreviewTransform =
+      cmsCreateTransform(InProfile,
+                         TYPE_RGB_16,
+                         PreviewColorProfile,
+                         TYPE_RGB_16,
+                         Settings->GetInt("PreviewColorProfileIntent"),
+                         cmsFLAGS_NOOPTIMIZE | cmsFLAGS_BLACKPOINTCOMPENSATION);
+  }
+
+  cmsCloseProfile(InProfile);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1446,7 +1510,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     ptImage* ReturnValue = HistogramImage->lcmsRGBToRGB(
       OutputColorProfile,
-      Settings->GetInt("OutputColorProfileIntent"));
+      Settings->GetInt("OutputColorProfileIntent"),
+      Settings->GetInt("CMQuality"));
     if (!ReturnValue) {
       ptLogError(ptError_lcms,"lcmsRGBToRGB(OutputColorProfile)");
       assert(ReturnValue);
@@ -1499,11 +1564,9 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   // Convert from working space to screen space.
   // Using lcms and a standard sRGB or custom profile.
 
-  ptImage* ReturnValue = PreviewImage->lcmsRGBToRGB(
-     PreviewColorProfile,
-     Settings->GetInt("PreviewColorProfileIntent"));
+  ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB();
   if (!ReturnValue) {
-    ptLogError(ptError_lcms,"lcmsRGBToRGB(PreviewColorProfile)");
+    ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
     assert(ReturnValue);
   }
 
@@ -1520,11 +1583,9 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     } else if (Settings->GetInt("HistogramCrop")) {
       BeforeGamma(HistogramImage,0,0);
 
-      ptImage* ReturnValue = HistogramImage->lcmsRGBToRGB(
-                         PreviewColorProfile,
-                         Settings->GetInt("PreviewColorProfileIntent"));
+      ptImage* ReturnValue = HistogramImage->lcmsRGBToPreviewRGB();
       if (!ReturnValue) {
-        ptLogError(ptError_lcms,"lcmsRGBToRGB(PreviewColorProfile)");
+        ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
         assert(ReturnValue);
       }
 
@@ -1588,8 +1649,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   ViewWindow->StatusReport(0);
   ReportProgress(QObject::tr("Ready"));
 
-  WriteSettingsFile(Settings->GetString("UserDirectory")+"backup.pts");
-
+  if (Settings->GetInt("WriteBackupSettings"))
+    WriteSettingsFile(Settings->GetString("UserDirectory")+"backup.pts");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2020,10 +2081,10 @@ void WriteOut() {
   }
 
   // Color space conversion
-  ptImage* ReturnValue =
-    OutImage->lcmsRGBToRGB(
+  ptImage* ReturnValue = OutImage->lcmsRGBToRGB(
     OutputColorProfile,
-    Settings->GetInt("OutputColorProfileIntent"));
+    Settings->GetInt("OutputColorProfileIntent"),
+    Settings->GetInt("CMQuality"));
   if (!ReturnValue) {
     ptLogError(ptError_lcms,"lcmsRGBToRGB(OutputColorProfile)");
     assert(ReturnValue);
@@ -2880,7 +2941,8 @@ void CB_MenuFileExit(const short) {
     msgBox.setText("Do you want to save the current image?");
     msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Save);
-    msgBox.setParent(NULL);
+    msgBox.move((MainWindow->pos()).x()+(MainWindow->size()).width()/2-msgBox.size().width()/4,
+                (MainWindow->pos()).y()+(MainWindow->size()).height()/2-msgBox.size().height()/4);
     int ret = msgBox.exec();
     switch (ret) {
       case QMessageBox::Save:
@@ -2903,7 +2965,8 @@ void CB_MenuFileExit(const short) {
   printf("That's all folks ...\n");
 
   // Delete backup settingsfile
-  QFile::remove(Settings->GetString("UserDirectory")+"/backup.pts");
+  if (Settings->GetInt("WriteBackupSettings"))
+    QFile::remove(Settings->GetString("UserDirectory")+"/backup.pts");
 
   // Disable manual curves when closing
   for (int i = 0; i < CurveKeys.size(); i++) {
@@ -2963,8 +3026,9 @@ void CB_ToGimpButton() {
 
   // Color space conversion
   ptImage* ReturnValue = ImageForGimp->lcmsRGBToRGB(
-            OutputColorProfile,
-       Settings->GetInt("OutputColorProfileIntent"));
+    OutputColorProfile,
+    Settings->GetInt("OutputColorProfileIntent"),
+    Settings->GetInt("CMQuality"));
   if (!ReturnValue) {
     ptLogError(ptError_lcms,"lcmsRGBToRGB(OutputColorProfile)");
     assert(ReturnValue);
@@ -3151,7 +3215,14 @@ void CB_CameraColorGammaChoice(const QVariant Choice) {
 
 void CB_WorkColorChoice(const QVariant Choice) {
   Settings->SetValue("WorkColor",Choice);
+  PreCalcTransforms();
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Highlights);
+}
+
+void CB_CMQualityChoice(const QVariant Choice) {
+  Settings->SetValue("CMQuality",Choice);
+  PreCalcTransforms();
+  Update(ptProcessorPhase_NULL);
 }
 
 void CB_PreviewColorProfileButton() {
@@ -3183,13 +3254,14 @@ void CB_PreviewColorProfileButton() {
          Settings->GetString("PreviewColorProfile").toAscii().data());
     assert(PreviewColorProfile);
   }
-
+  PreCalcTransforms();
   // And update the preview.
   Update(ptProcessorPhase_NULL);
 }
 
 void CB_PreviewColorProfileIntentChoice(const QVariant Choice) {
   Settings->SetValue("PreviewColorProfileIntent",Choice);
+  PreCalcTransforms();
   Update(ptProcessorPhase_NULL);
 }
 
@@ -3324,6 +3396,10 @@ void CB_LoadStyleButton() {
     MainWindow->StatusWidget->setStyleSheet(style);
   }
   delete data;
+}
+
+void CB_WriteBackupSettingsCheck(const QVariant Check) {
+  Settings->SetValue("WriteBackupSettings",Check);
 }
 
 void CB_TranslationCheck(const QVariant Check) {
@@ -7736,11 +7812,14 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(CameraColorGammaChoice)
 
   M_Dispatch(WorkColorChoice)
+  M_Dispatch(CMQualityChoice)
 
   M_Dispatch(PreviewColorProfileIntentChoice)
 
   M_Dispatch(StyleChoice)
   M_Dispatch(StyleHighLightChoice)
+
+  M_Dispatch(WriteBackupSettingsCheck)
 
   M_Dispatch(TranslationCheck)
 

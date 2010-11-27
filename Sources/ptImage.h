@@ -127,7 +127,10 @@ ptImage* lcmsRGBToRGB(const short To,
                       const short EvenIfEqual = 0,
                       const int   Intent = INTENT_PERCEPTUAL);
 ptImage* lcmsRGBToRGB(cmsHPROFILE OutProfile, //with ICC profile
-                      const int   Intent = INTENT_PERCEPTUAL);
+                      const int   Intent = INTENT_PERCEPTUAL,
+                      const short Quality = ptCMQuality_HighResPreCalc);
+ptImage* lcmsRGBToPreviewRGB();
+
 ptImage* RGBToXYZ();
 ptImage* lcmsRGBToXYZ(const int Intent = INTENT_PERCEPTUAL);
 ptImage* XYZToRGB(const short To);

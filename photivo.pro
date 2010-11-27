@@ -73,6 +73,8 @@ unix {
   binaries.files += ptClear
   shortcut.path = $${PREFIX}/share/applications
   shortcut.files = ./ReferenceMaterial/photivo.desktop
+  shortcut2.path = ~/.local/share/applications
+  shortcut2.files = ./ReferenceMaterial/photivo.desktop
   icon.path = $${PREFIX}/share/pixmaps
   icon.files = ./photivo.png
   curves.path = $${PREFIX}/share/photivo/Curves
@@ -93,6 +95,7 @@ unix {
   images.files += ./photivoPreview.jpg
   INSTALLS += binaries
   INSTALLS += shortcut
+  INSTALLS += shortcut2  
   INSTALLS += icon
   INSTALLS += curves
   INSTALLS += mixer
