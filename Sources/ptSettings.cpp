@@ -219,6 +219,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GREYCLabdl"                    ,ptGT_InputSlider     ,2,1,1 ,0.8  ,0.0  ,2.0   ,0.01 ,2 ,tr("Spacial precision")                 ,tr("dl")},
     {"GREYCLabda"                    ,ptGT_InputSlider     ,2,1,1 ,30   ,0    ,180    ,1    ,0 ,tr("Angular precision")                 ,tr("da")},
     {"GREYCLabGaussPrecision"        ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.0  ,5.0   ,0.1  ,1 ,tr("Value precision")              ,tr("Gauss")},
+    {"DefringeRadius"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,10.0  ,0.5  ,1 ,tr("Radius")             ,tr("Radius")},
+    {"DefringeThreshold"             ,ptGT_InputSlider     ,2,1,1 ,25   ,0    ,100   ,5    ,0 ,tr("Threshold")          ,tr("Threshold")},
+    {"DefringeShift"                 ,ptGT_InputSlider     ,1,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Tune masks")          ,tr("Fine tune the color masks")},
     {"PyrDenoiseLAmount"             ,ptGT_InputSlider     ,2,1,1 ,0      ,0   ,150   ,5    ,0 ,tr("L amount")        ,tr("Denoise amount on L")},
     {"PyrDenoiseABAmount"            ,ptGT_InputSlider     ,2,1,1 ,0      ,0   ,150   ,5    ,0 ,tr("Color amount")    ,tr("Denoise amount on AB")},
     {"PyrDenoiseGamma"               ,ptGT_InputSlider     ,2,1,1 ,2.0    ,1.0 ,4.0   ,0.1  ,1 ,tr("Gamma")           ,tr("Gamma")},
@@ -502,6 +505,12 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GeometryBlock"              ,ptGT_Check ,9,0,0,tr("Block pipe")      ,tr("Disable the pipe")},
     {"Reinhard05"                 ,ptGT_Check ,2,1,0,tr("Enable")          ,tr("Enable Reinhard 05")},
     {"GREYCLabFast"               ,ptGT_Check ,2,1,1,tr("Enable 'fast'")   ,tr("Enable GREYC 'fast'")},
+    {"DefringeColor1"             ,ptGT_Check ,1,1,1,tr("Red")             ,tr("Red")},
+    {"DefringeColor2"             ,ptGT_Check ,1,1,1,tr("Yellow")          ,tr("Yellow")},
+    {"DefringeColor3"             ,ptGT_Check ,1,1,1,tr("Green")           ,tr("Green")},
+    {"DefringeColor4"             ,ptGT_Check ,1,1,1,tr("Cyan")            ,tr("Cyan")},
+    {"DefringeColor5"             ,ptGT_Check ,1,1,1,tr("Blue")            ,tr("Blue")},
+    {"DefringeColor6"             ,ptGT_Check ,1,1,1,tr("Purple")          ,tr("Purple")},
     {"WienerFilter"               ,ptGT_Check ,2,1,0,tr("Enable")          ,tr("Enable wiener filter")},
     {"WienerFilterUseEdgeMask"    ,ptGT_Check ,2,1,1,tr("Only edges")      ,tr("Sharpen only edges")},
     {"InverseDiffusionUseEdgeMask",ptGT_Check ,2,1,1,tr("Only edges")      ,tr("Sharpen only edges")},
@@ -1636,6 +1645,9 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = ((Settings->GetInt("FullOutput") &&
                         Settings->GetInt("GREYCLab")) ||
                        Settings->GetInt("GREYCLab")>=2)!=0?1:0;
+  } else if (GuiName == "TabLABDefringe") {
+      Info.Name = "Lab Defringe";
+      Info.IsActive = Settings->GetDouble("DefringeRadius")!=0.0;
   } else if (GuiName == "TabWaveletDenoise") {
       Info.Name = "Lab Wavelet denoise";
       Info.IsActive = (Settings->GetDouble("WaveletDenoiseL")!=0.0 ||

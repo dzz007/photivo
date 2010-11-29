@@ -423,6 +423,20 @@ ptImage* ptImage::ptGMResize(uint16_t Size, const short Filter) {
   return this;
 }
 
+// Blur
+ptImage* ptImage::ptGMBlur(const double Radius) {
+
+  uint16_t Width  = m_Width;
+  uint16_t Height = m_Height;
+
+  Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
+
+  image.blur(0,Radius);
+
+  image.write(0,0,Width,Height,"RGB",ShortPixel,m_Image);
+  return this;
+}
+
 // Unsharp Mask
 ptImage* ptImage::ptGMUnsharp(const double Radius, const double Amount, const double Threshold) {
 

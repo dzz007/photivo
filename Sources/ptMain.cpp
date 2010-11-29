@@ -6134,6 +6134,66 @@ void CB_GREYCLabdaInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
+// Defringe
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_DefringeRadiusInput(const QVariant Value) {
+  Settings->SetValue("DefringeRadius",Value);
+  Update(ptProcessorPhase_LabSN);
+}
+
+void CB_DefringeThresholdInput(const QVariant Value) {
+  Settings->SetValue("DefringeThreshold",Value);
+  if (Settings->GetDouble("DefringeRadius"))
+    Update(ptProcessorPhase_LabSN);
+}
+
+void CB_DefringeShiftInput(const QVariant Value) {
+  Settings->SetValue("DefringeShift",Value);
+  if (Settings->GetDouble("DefringeRadius"))
+    Update(ptProcessorPhase_LabSN);
+}
+
+void CB_DefringeColor1Check(const QVariant Value) {
+  Settings->SetValue("DefringeColor1",Value);
+  if (Settings->GetDouble("DefringeRadius"))
+    Update(ptProcessorPhase_LabSN);
+}
+
+void CB_DefringeColor2Check(const QVariant Value) {
+  Settings->SetValue("DefringeColor2",Value);
+  if (Settings->GetDouble("DefringeRadius"))
+    Update(ptProcessorPhase_LabSN);
+}
+
+void CB_DefringeColor3Check(const QVariant Value) {
+  Settings->SetValue("DefringeColor3",Value);
+  if (Settings->GetDouble("DefringeRadius"))
+    Update(ptProcessorPhase_LabSN);
+}
+
+void CB_DefringeColor4Check(const QVariant Value) {
+  Settings->SetValue("DefringeColor4",Value);
+  if (Settings->GetDouble("DefringeRadius"))
+    Update(ptProcessorPhase_LabSN);
+}
+
+void CB_DefringeColor5Check(const QVariant Value) {
+  Settings->SetValue("DefringeColor5",Value);
+  if (Settings->GetDouble("DefringeRadius"))
+    Update(ptProcessorPhase_LabSN);
+}
+
+void CB_DefringeColor6Check(const QVariant Value) {
+  Settings->SetValue("DefringeColor6",Value);
+  if (Settings->GetDouble("DefringeRadius"))
+    Update(ptProcessorPhase_LabSN);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the LabSN Tab
 // Partim Pyramid Denoise
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -8085,6 +8145,16 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GREYCLabdlInput)
   M_Dispatch(GREYCLabdaInput)
   M_Dispatch(GREYCLabGaussPrecisionInput)
+
+  M_Dispatch(DefringeRadiusInput)
+  M_Dispatch(DefringeThresholdInput)
+  M_Dispatch(DefringeShiftInput)
+  M_Dispatch(DefringeColor1Check)
+  M_Dispatch(DefringeColor2Check)
+  M_Dispatch(DefringeColor3Check)
+  M_Dispatch(DefringeColor4Check)
+  M_Dispatch(DefringeColor5Check)
+  M_Dispatch(DefringeColor6Check)
 
   M_Dispatch(PyrDenoiseLAmountInput)
   M_Dispatch(PyrDenoiseABAmountInput)
