@@ -456,7 +456,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
         Menu.addSeparator();
         Menu.addAction(m_AtnHide);
         Menu.exec(event->globalPos());
-      } else if (m_Name == "TabWhiteBalance") {
+      } else if (m_Name == "TabWhiteBalance" ||
+                 m_Name == "TabDemosaicing") {
         QMenu Menu(NULL);
         Menu.setPalette(Theme->ptMenuPalette);
         Menu.setStyle(Theme->ptStyle);
