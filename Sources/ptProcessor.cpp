@@ -1326,6 +1326,32 @@ void ptProcessor::Run(short Phase,
                           Settings->GetInt("GREYCLabMaskType"));
       }
 
+      // Defringe
+
+      if (Settings->ToolIsActive("TabLABDefringe")) {
+
+        m_ReportProgress(tr("Defringe"));
+
+        //Postponed RGBToLab for performance.
+        if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
+          m_Image_AfterLabSN->RGBToLab();
+
+          TRACEMAIN("Done conversion to LAB at %d ms.",
+                    Timer.elapsed());
+        }
+
+        m_Image_AfterLabSN->DeFringe(Settings->GetDouble("DefringeRadius")*m_ScaleFactor,
+                                     Settings->GetInt("DefringeThreshold"),
+                                     (Settings->GetInt("DefringeColor1")<<0) +
+                                     (Settings->GetInt("DefringeColor2")<<1) +
+                                     (Settings->GetInt("DefringeColor3")<<2) +
+                                     (Settings->GetInt("DefringeColor4")<<3) +
+                                     (Settings->GetInt("DefringeColor5")<<4) +
+                                     (Settings->GetInt("DefringeColor6")<<5),
+                                     Settings->GetDouble("DefringeShift"));
+        TRACEMAIN("Done defringe at %d ms.",Timer.elapsed());
+      }
+
       // Wavelet denoise
 
       if (Settings->GetDouble("WaveletDenoiseL") &&

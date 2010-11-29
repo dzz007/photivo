@@ -160,6 +160,12 @@ ptImage* Flip(const short FlipMode);
 ptImage* Levels(const double BlackP,
                 const double WhiteP);
 
+// DeFringe
+ptImage* DeFringe(const double Radius,
+                  const short Threshold,
+                  const int Flags,
+                  const double Shift);
+
 // Reinhard 05
 ptImage* Reinhard05(const double Brightness,
                     const double Chromatic,
@@ -535,6 +541,8 @@ ptImage* ptGMWriteImage(const char* FileName,
                         const int Intent);
 
 ptImage* ptGMResize(uint16_t Size, const short Filter);
+
+ptImage* ptGMBlur(const double Radius);
 
 ptImage* ptGMUnsharp(const double Radius, const double Amount, const double Threshold);
 

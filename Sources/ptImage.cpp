@@ -26,6 +26,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <QMessageBox>
+#include <QString>
 #include <QTime>
 
 #ifdef _OPENMP
@@ -2280,6 +2281,109 @@ ptImage* ptImage::Levels(const double BlackPoint,
   }
   return this;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// DeFringe
+// Original implementation by Emil Martinec for RawTherapee
+//
+////////////////////////////////////////////////////////////////////////////////
+
+ptImage* ptImage::DeFringe(const double Radius,
+                           const short Threshold,
+                           const int Flags,
+                           const double Shift) {
+
+  assert (m_ColorSpace == ptSpace_Lab);
+
+  int Neighborhood = ceil(2*Radius)+1;
+
+  float (*ChromaDiff) = (float(*)) CALLOC(m_Width*m_Height,sizeof(*ChromaDiff));
+  ptMemoryError(ChromaDiff,__FILE__,__LINE__);
+
+  ptImage *SaveLayer = new ptImage;
+  SaveLayer->Set(this);
+
+  ptCimgBlur(this, 6, Radius);
+
+  uint32_t Size = m_Width * m_Height;
+
+  float Average = 0.0f;
+#pragma omp parallel for schedule(static) reduction (+:Average)
+  for (uint32_t i = 0; i < Size; i++) {
+    ChromaDiff[i] = SQR((float)m_Image[i][1]-(float)SaveLayer->m_Image[i][1])+SQR((float)m_Image[i][1]-(float)SaveLayer->m_Image[i][1]);
+    Average += ChromaDiff[i];
+  }
+  Average /= Size;
+
+  float NewThreshold = Threshold*Average/33.0f;
+  float HueShift = Shift * ptPI/6;
+  float Val1 = MAX(0,HueShift);
+  float Val2 = ptPI/3+HueShift;
+  float Val3 = 2*ptPI/3+HueShift;
+  float Val4 = 3*ptPI/3+HueShift;
+  float Val5 = 4*ptPI/3+HueShift;
+  float Val6 = 5*ptPI/3+HueShift;
+  float Val7 = 6*ptPI/3+HueShift;
+
+#pragma omp parallel for schedule(static)
+  for (uint16_t Row = 0; Row < m_Height; Row++) {
+    for (uint16_t Col = 0; Col < m_Width; Col++) {
+      short CorrectPixel = 0;
+      if (ChromaDiff[Row*m_Width+Col] > NewThreshold) {
+        // Calculate hue.
+        float ValueA = (float)SaveLayer->m_Image[Row*m_Width+Col][1]-0x8080;
+        float ValueB = (float)SaveLayer->m_Image[Row*m_Width+Col][2]-0x8080;
+        float Hue = 0;
+        if (ValueA == 0.0 && ValueB == 0.0) {
+          Hue = 0;   // value for grey pixel
+        } else {
+          Hue = atan2f(ValueB,ValueA);
+        }
+        while (Hue < 0) Hue += 2.*ptPI;
+        // Check if we want to treat that hue
+        if (Flags & 1) // red
+          if ((Hue >= Val1 && Hue < Val2) || Hue >= Val7) CorrectPixel = 1;
+        if (Flags & 2) // yellow
+          if (Hue >= Val2 && Hue < Val3) CorrectPixel = 1;
+        if (Flags & 4) // green
+          if (Hue >= Val3 && Hue < Val4) CorrectPixel = 1;
+        if (Flags & 8) // cyan
+          if (Hue >= Val4 && Hue < Val5) CorrectPixel = 1;
+        if (Flags & 16) // blue
+          if (Hue >= Val5 && Hue < Val6) CorrectPixel = 1;
+        if (Flags & 32) // purple
+          if ((Hue >= Val6 && Hue < Val7) || Hue < Val1) CorrectPixel = 1;
+      }
+      if (CorrectPixel == 1 ) {
+        float TotalA=0;
+        float TotalB=0;
+        float Total=0;
+        float Weight;
+        for (int i1 = MAX(0,Row-Neighborhood+1); i1 < MIN(m_Height,Row+Neighborhood); i1++)
+          for (int j1 = MAX(0,Col-Neighborhood+1); j1 < MIN(m_Width,Col+Neighborhood); j1++) {
+            // Neighborhood average of pixels weighted by chrominance
+            Weight = 1/(ChromaDiff[i1*m_Width+j1]+Average);
+            TotalA += Weight*SaveLayer->m_Image[i1*m_Width+j1][1];
+            TotalB += Weight*SaveLayer->m_Image[i1*m_Width+j1][2];
+            Total += Weight;
+          }
+        m_Image[Row*m_Width+Col][1] = CLIP((int32_t)(TotalA/Total));
+        m_Image[Row*m_Width+Col][2] = CLIP((int32_t)(TotalB/Total));
+      } else {
+        m_Image[Row*m_Width+Col][1] = SaveLayer->m_Image[Row*m_Width+Col][1];
+        m_Image[Row*m_Width+Col][2] = SaveLayer->m_Image[Row*m_Width+Col][2];
+      }
+    }
+  }
+
+  delete SaveLayer;
+  FREE(ChromaDiff);
+
+  return this;
+}
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -4622,7 +4726,8 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
     Overlay(BlurLayer->m_Image,Amount,NULL,ptOverlayMode_SoftLight);
     break;
   case ptSoftglowMode_Normal:
-    Overlay(BlurLayer->m_Image,Amount,NULL,ptOverlayMode_Normal);
+    if (Amount != 0)
+      Overlay(BlurLayer->m_Image,Amount,NULL,ptOverlayMode_Normal);
     break;
   case ptSoftglowMode_OrtonScreen:
     Overlay(BlurLayer->m_Image,Amount,NULL,ptOverlayMode_Screen);
