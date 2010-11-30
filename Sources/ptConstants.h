@@ -156,6 +156,12 @@ const short ptWhiteBalance_Auto      = 1;
 const short ptWhiteBalance_Spot      = 2;
 const short ptWhiteBalance_Manual    = 3;
 
+// CA correction
+
+const short ptCACorrect_Off          = 0;
+const short ptCACorrect_Auto         = 1;
+const short ptCACorrect_Manual       = 2;
+
 // Interpolations.
 
 const short ptInterpolation_Linear   = 0;

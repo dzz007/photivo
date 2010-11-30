@@ -174,6 +174,12 @@ const ptGuiOptionsItem ptGuiOptions::WhiteBalance[] = {
   {ptWhiteBalance_Manual,   QObject::tr("Manual")    },
   {-1,NULL}};
 
+const ptGuiOptionsItem ptGuiOptions::CACorrect[] = {
+  {ptCACorrect_Off,         QObject::tr("No CA correction")    },
+  {ptCACorrect_Auto,        QObject::tr("Automatic CA cor.")   },
+  {ptCACorrect_Manual,      QObject::tr("Manual CA cor.")      },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::Interpolation[] = {
   {ptInterpolation_Linear,   QObject::tr("Bilinear")     },
   {ptInterpolation_VNG,      QObject::tr("VNG")          },

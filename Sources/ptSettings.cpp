@@ -62,6 +62,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BMultiplier"                   ,ptGT_Input           ,2,1,0 ,1.0  ,0.001,10.0  ,0.01 ,3 ,tr("B")                  ,tr("Blue Multiplier in balance")},
     {"BlackPoint"                    ,ptGT_Input           ,2,1,0 ,0    ,0    ,0xffff,1    ,0 ,tr("BP")                 ,tr("Black point in raw")},
     {"WhitePoint"                    ,ptGT_Input           ,2,1,0 ,0    ,0    ,0xffff,10   ,0 ,tr("WP")                 ,tr("White point in raw")},
+    {"CaRed"                         ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.5  ,2 ,tr("CA red factor")      ,tr("CA red factor")},
+    {"CaBlue"                        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.5  ,2 ,tr("CA blue factor")     ,tr("CA blue factor")},
     {"GreenEquil"                    ,ptGT_InputSlider     ,2,1,1 ,0    ,0    ,100   ,1    ,0 ,tr("Green equilibration"),tr("Green equilibration")},
     {"CfaLineDenoise"                ,ptGT_InputSlider     ,2,1,1 ,0    ,0    ,50    ,1    ,0 ,tr("Line denoise")       ,tr("Raw line denoise threshold")},
     {"AdjustMaximumThreshold"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,0.50  ,0.01 ,2 ,tr("Adjust maximum")     ,tr("Threshold to prevent pink highlights")},
@@ -409,6 +411,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BadPixels"                   ,ptGT_Choice       ,1,1,0 ,0                           ,GuiOptions->BadPixels                 ,tr("Bad pixels file")},
     {"DarkFrame"                   ,ptGT_Choice       ,1,1,0 ,0                           ,GuiOptions->DarkFrame                 ,tr("Darkframe file")},
     {"WhiteBalance"                ,ptGT_Choice       ,2,1,1 ,ptWhiteBalance_Camera       ,GuiOptions->WhiteBalance              ,tr("WhiteBalance")},
+    {"CaCorrect"                   ,ptGT_Choice       ,2,1,1 ,ptCACorrect_Off             ,GuiOptions->CACorrect                 ,tr("CA correction")},
     {"Interpolation"               ,ptGT_Choice       ,2,1,1 ,ptInterpolation_DCB         ,GuiOptions->Interpolation             ,tr("Demosaicing algorithm")},
     {"BayerDenoise"                ,ptGT_Choice       ,2,1,1 ,ptBayerDenoise_None         ,GuiOptions->BayerDenoise              ,tr("Denosie on Bayer pattern")},
     {"CropRectangleMode"           ,ptGT_Choice       ,1,0,0 ,ptRectangleMode_GoldenRatio ,GuiOptions->CropRectangleMode         ,tr("Guide lines for crop")},
@@ -491,7 +494,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"MultiplierEnhance"          ,ptGT_Check ,1,1,0,tr("Intensify")       ,tr("Normalize lowest channel to 1")},
     {"ManualBlackPoint"           ,ptGT_Check ,2,1,0,tr("Manual BP")       ,tr("Manual black point setting enabled")},
     {"ManualWhitePoint"           ,ptGT_Check ,2,1,0,tr("Manual WP")       ,tr("Manual white point setting enabled")},
-    {"CaCorrect"                  ,ptGT_Check ,2,1,0,tr("CA correction")   ,tr("Automatic CA correction")},
     {"EeciRefine"                 ,ptGT_Check ,2,1,0,tr("Eeci refinement") ,tr("Eeci refinement")},
     {"EnableLensfun"              ,ptGT_Check ,9,0,0,tr("Enable automatic lensfun")   ,tr("Overall enabling or disabling lensfun")},
     {"LensfunTCAEnable"           ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable TCA correction")},
@@ -1219,6 +1221,8 @@ void ptSettings::ToDcRaw(DcRaw* TheDcRaw) {
 
   // CA auto correction
   TheDcRaw->m_UserSetting_CaCorrect = GetInt("CaCorrect");
+  TheDcRaw->m_UserSetting_CaRed = GetDouble("CaRed");
+  TheDcRaw->m_UserSetting_CaBlue = GetDouble("CaBlue");
 
   // CFA Line denoise
   TheDcRaw->m_UserSetting_CfaLineDn = GetInt("CfaLineDenoise");

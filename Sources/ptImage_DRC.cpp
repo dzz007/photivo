@@ -700,13 +700,13 @@ ptImage* ptImage::DRC(const double alpha,
       m_Image[i][0] = CLIP((int32_t)(In[i]*0xffff));
     } else { // Chromatic adaption, not really nice at the moment.
       Value = CLIP((int32_t)(In[i]*0xffff));
-      Factor = 2*sqrtf((float)Value/(float)m_Image[i][0]);
-      Factor = Factor>100?100:Factor;
+      if (m_Image[i][0] == 0) continue;
+      Factor = MIN(2*sqrtf((float)Value/(float)m_Image[i][0]),100);
       m_Image[i][0] = Value;
       if (1 || Factor < 1) {
-        m_Image[i][1] = CLIP((int32_t)((m_Image[i][1]*Factor + 0x7fff*(1.-Factor))*color
+        m_Image[i][1] = CLIP((int32_t)((m_Image[i][1]*Factor + 0x8080*(1.-Factor))*color
           + m_Image[i][1]*(1-color)));
-        m_Image[i][2] = CLIP((int32_t)((m_Image[i][2]*Factor + 0x7fff*(1.-Factor))*color
+        m_Image[i][2] = CLIP((int32_t)((m_Image[i][2]*Factor + 0x8080*(1.-Factor))*color
           + m_Image[i][2]*(1-color)));
       }
     }
