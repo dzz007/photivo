@@ -1469,6 +1469,9 @@ void ptMainWindow::UpdateSettings() {
     CameraColorProfileText->setEnabled(0);
   }
 
+  Settings->SetEnabled("CaRed",Settings->GetInt("CaCorrect")==ptCACorrect_Manual);
+  Settings->SetEnabled("CaBlue",Settings->GetInt("CaCorrect")==ptCACorrect_Manual);
+
   QFileInfo PathInfo(Settings->GetString("CameraColorProfile"));
   QString ShortFileName = PathInfo.baseName();
   CameraColorProfileText->setText(ShortFileName);

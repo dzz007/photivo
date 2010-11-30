@@ -77,6 +77,8 @@ m_UserSetting_BayerDenoise=0;
 m_UserSetting_CfaLineDn=0;
 m_UserSetting_GreenEquil=0;
 m_UserSetting_CaCorrect=0;
+m_UserSetting_CaRed=0;
+m_UserSetting_CaBlue=0;
 m_UserSetting_AutoWb=0;
 m_UserSetting_CameraWb=0;
 m_UserSetting_CameraMatrix=-1;
@@ -356,7 +358,8 @@ unsigned CLASS sget4 (uint8_t *s)
 unsigned CLASS get4()
 {
   uint8_t str[4] = { 0xff,0xff,0xff,0xff };
-  ptfread (str, 1, 4, m_InputFile);
+  // TODO Mike, removed check due to problems with Jpegs.
+  fread (str, 1, 4, m_InputFile);
   return sget4(str);
 }
 
@@ -8266,7 +8269,7 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
 
   if (m_UserSetting_CaCorrect !=0) {
     TRACEKEYVALS("CA correction","%s","");
-    CA_correct();
+    CA_correct(m_UserSetting_CaRed,m_UserSetting_CaBlue);
   }
 
   TRACEKEYVALS("Colors","%d",m_Colors);

@@ -62,6 +62,7 @@ static const ptGuiOptionsItem CropRectangleMode[];
 static const ptGuiOptionsItem ResizeFilter[];
 static const ptGuiOptionsItem IMResizeFilter[];
 static const ptGuiOptionsItem WhiteBalance[];
+static const ptGuiOptionsItem CACorrect[];
 static const ptGuiOptionsItem Interpolation[];
 static const ptGuiOptionsItem BayerDenoise[];
 static const ptGuiOptionsItem ClipMode[];

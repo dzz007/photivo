@@ -3903,9 +3903,21 @@ void CB_WhitePointInput(const QVariant Value) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CB_CaCorrectCheck(const QVariant State) {
-  Settings->SetValue("CaCorrect",State);
+void CB_CaCorrectChoice(const QVariant Choice) {
+  Settings->SetValue("CaCorrect",Choice);
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
+}
+
+void CB_CaRedInput(const QVariant Value) {
+  Settings->SetValue("CaRed",Value);
+  if (Settings->GetInt("CaCorrect")==ptCACorrect_Manual)
+    Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
+}
+
+void CB_CaBlueInput(const QVariant Value) {
+  Settings->SetValue("CaBlue",Value);
+  if (Settings->GetInt("CaCorrect")==ptCACorrect_Manual)
+    Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
 }
 
 void CB_GreenEquilInput(const QVariant Value) {
@@ -7914,7 +7926,9 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(BlackPointInput)
   M_Dispatch(ManualWhitePointCheck)
   M_Dispatch(WhitePointInput)
-  M_Dispatch(CaCorrectCheck)
+  M_Dispatch(CaCorrectChoice)
+  M_Dispatch(CaRedInput)
+  M_Dispatch(CaBlueInput)
   M_Dispatch(GreenEquilInput)
   M_Dispatch(CfaLineDenoiseInput)
   M_Dispatch(AdjustMaximumThresholdInput)

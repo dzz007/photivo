@@ -188,6 +188,8 @@ int         m_UserSetting_GreenEquil;
 
 // CA auto correction
 int         m_UserSetting_CaCorrect;
+float       m_UserSetting_CaRed;
+float       m_UserSetting_CaBlue;
 
 // CFA line denoise
 int         m_UserSetting_CfaLineDn;
@@ -717,7 +719,7 @@ void lmmse_interpolate(int gamma_apply);
 void amaze_demosaic();
 void cfa_linedn(float noise);
 void ddct8x8s(int isgn, float **a);
-void CA_correct();
+void CA_correct(double cared, double cablue);
 void green_equilibrate(float thresh);
 };
 
