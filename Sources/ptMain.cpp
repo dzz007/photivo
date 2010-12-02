@@ -5945,6 +5945,23 @@ void CB_LabLevelsWhitePointInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
+// Partim Impulse denoise
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_ImpulseDenoiseThresholdLInput(const QVariant Value) {
+  Settings->SetValue("ImpulseDenoiseThresholdL",Value);
+  Update(ptProcessorPhase_LabSN);
+}
+
+void CB_ImpulseDenoiseThresholdABInput(const QVariant Value) {
+  Settings->SetValue("ImpulseDenoiseThresholdAB",Value);
+  Update(ptProcessorPhase_LabSN);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the LabSN Tab
 // Partim Edge avoiding wavelets
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -8136,6 +8153,9 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(LabLevelsBlackPointInput)
   M_Dispatch(LabLevelsWhitePointInput)
+
+  M_Dispatch(ImpulseDenoiseThresholdLInput)
+  M_Dispatch(ImpulseDenoiseThresholdABInput)
 
   M_Dispatch(EAWMasterInput)
   M_Dispatch(EAWLevel1Input)

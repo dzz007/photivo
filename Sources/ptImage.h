@@ -166,6 +166,10 @@ ptImage* DeFringe(const double Radius,
                   const int Flags,
                   const double Shift);
 
+// Impulse noise reduction
+ptImage* DenoiseImpulse(const double ThresholdL,
+                        const double ThresholdAB);
+
 // Reinhard 05
 ptImage* Reinhard05(const double Brightness,
                     const double Chromatic,
