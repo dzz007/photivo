@@ -1247,6 +1247,25 @@ void ptProcessor::Run(short Phase,
         m_Image_AfterLabSN->Set(m_Image_AfterLabCC);
       }
 
+      // Impulse denoise
+      if (Settings->ToolIsActive("TabLABImpulseDenoise")) {
+
+        m_ReportProgress(tr("Impulse denoise"));
+
+        //Postponed RGBToLab for performance.
+        if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
+          m_Image_AfterLabSN->RGBToLab();
+
+          TRACEMAIN("Done conversion to LAB at %d ms.",
+                    Timer.elapsed());
+        }
+
+        m_Image_AfterLabSN->DenoiseImpulse(Settings->GetDouble("ImpulseDenoiseThresholdL"),
+                                           Settings->GetDouble("ImpulseDenoiseThresholdAB"));
+
+        TRACEMAIN("Done impulse denoise at %d ms.",Timer.elapsed());
+      }
+
       // Edge avoiding wavelet filter
       if (Settings->ToolIsActive("TabLABEAW")) {
 

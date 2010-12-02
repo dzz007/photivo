@@ -205,6 +205,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ColorBoostValueA"              ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0  ,0.1  ,1 ,tr("Value A")             ,tr("Amount of boosting A")},
     {"ColorBoostValueB"              ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0  ,0.1  ,1 ,tr("Value B")             ,tr("Amount of boosting B")},
     {"EAWMaster"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Master")              ,tr("Quick setup for the levels")},
+    {"ImpulseDenoiseThresholdL"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,5.0  ,0.2  ,1 ,tr("Threshold on L")      ,tr("Threshold on L")},
+    {"ImpulseDenoiseThresholdAB"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,5.0  ,0.2  ,1 ,tr("Threshold on color")  ,tr("Threshold on color")},
     {"EAWLevel1"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 1")             ,tr("Boosting of level 1")},
     {"EAWLevel2"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 2")             ,tr("Boosting of level 2")},
     {"EAWLevel3"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 3")             ,tr("Boosting of level 3")},
@@ -1636,7 +1638,11 @@ sToolInfo ToolInfo (const QString GuiName) {
                       (Settings->GetDouble("LabLevelsWhitePoint")-1.0)!=0.0)?1:0;
   }
   // Lab Sharpen and Noise
-  else if (GuiName == "TabLABEAW") {
+  else if (GuiName == "TabLABImpulseDenoise") {
+      Info.Name = "Lab Impulse denoise";
+      Info.IsActive = Settings->GetDouble("ImpulseDenoiseThresholdL")!=0.0 ||
+                      Settings->GetDouble("ImpulseDenoiseThresholdAB")!=0.0;
+  } else if (GuiName == "TabLABEAW") {
       Info.Name = "Lab EAW equalizer";
       Info.IsActive = (Settings->GetDouble("EAWLevel1") != 0.0 ||
                        Settings->GetDouble("EAWLevel2") != 0.0 ||

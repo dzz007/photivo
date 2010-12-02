@@ -2383,7 +2383,118 @@ ptImage* ptImage::DeFringe(const double Radius,
   return this;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// Impluse noise reduction
+// Original implementation by Emil Martinec for RawTherapee
+//
+////////////////////////////////////////////////////////////////////////////////
 
+ptImage* ptImage::DenoiseImpulse(const double ThresholdL,
+                                 const double ThresholdAB) {
+
+  assert (m_ColorSpace == ptSpace_Lab);
+
+  float hpfabs, hfnbrave;
+  float hpfabs1, hfnbrave1, hpfabs2, hfnbrave2;
+
+  ptImage *LowPass = new ptImage;
+  LowPass->Set(this);
+
+  short ChannelMask = 0;
+  if (ThresholdL != 0.0) ChannelMask += 1;
+  if (ThresholdAB != 0.0) ChannelMask += 6;
+  ptCimgBlur(LowPass, ChannelMask, 2.0f);
+
+  short (*Impulse)[3] = (short (*)[3]) CALLOC(m_Width*m_Height,sizeof(*Impulse));
+  ptMemoryError(Impulse,__FILE__,__LINE__);
+
+  static float eps = 1.0;
+  float wtdsum, dirwt, norm;
+
+  uint32_t Index = 0;
+  uint32_t Index1 = 0;
+
+  if (ThresholdL != 0.0) {
+#pragma omp parallel for schedule(static) private(hpfabs, hfnbrave, Index, Index1)
+    for (uint16_t Row = 0; Row < m_Height; Row++) {
+      for (uint16_t Col = 0; Col < m_Width; Col++) {
+        Index = Row*m_Width+Col;
+        hpfabs = fabs((int32_t)m_Image[Index][0] - (int32_t)LowPass->m_Image[Index][0]);
+        hfnbrave = 0;
+        //block average of high pass data
+        for (uint16_t i1 = MAX(0,Row-2); i1 <= MIN(Row+2,m_Height-1); i1++ ) {
+          for (uint16_t j1 = MAX(0,Col-2); j1 <= MIN(Col+2,m_Width-1); j1++ ) {
+            Index1 = i1*m_Width+j1;
+            hfnbrave += fabs((int32_t)m_Image[Index1][0] - (int32_t)LowPass->m_Image[Index1][0]);
+          }
+        }
+        hfnbrave = (hfnbrave - hpfabs) / 24.0f;
+        hpfabs > (hfnbrave*(5.5-ThresholdL)) ? Impulse[Index][0]=1 : Impulse[Index][0]=0;
+      }//now impulsive values have been identified
+    }
+  }
+
+  if (ThresholdAB != 0.0) {
+#pragma omp parallel for schedule(static) private(hpfabs1, hfnbrave1, hpfabs2, hfnbrave2, Index, Index1)
+    for (uint16_t Row = 0; Row < m_Height; Row++) {
+      for (uint16_t Col = 0; Col < m_Width; Col++) {
+        Index = Row*m_Width+Col;
+        hpfabs1 = fabs((int32_t)m_Image[Index][1] - (int32_t)LowPass->m_Image[Index][1]);
+        hpfabs2 = fabs((int32_t)m_Image[Index][2] - (int32_t)LowPass->m_Image[Index][2]);
+        hfnbrave1 = 0;
+        hfnbrave2 = 0;
+        //block average of high pass data
+        for (uint16_t i1 = MAX(0,Row-2); i1 <= MIN(Row+2,m_Height-1); i1++ ) {
+          for (uint16_t j1 = MAX(0,Col-2); j1 <= MIN(Col+2,m_Width-1); j1++ ) {
+            Index1 = i1*m_Width+j1;
+            hfnbrave1 += fabs((int32_t)m_Image[Index1][1] - (int32_t)LowPass->m_Image[Index1][1]);
+            hfnbrave2 += fabs((int32_t)m_Image[Index1][2] - (int32_t)LowPass->m_Image[Index1][2]);
+          }
+        }
+        hfnbrave1 = (hfnbrave1 - hpfabs1) / 24.0f;
+        hfnbrave2 = (hfnbrave2 - hpfabs2) / 24.0f;
+        hpfabs1 > (hfnbrave1*(5.5-ThresholdAB)) ? Impulse[Index][1]=1 : Impulse[Index][1]=0;
+        hpfabs2 > (hfnbrave2*(5.5-ThresholdAB)) ? Impulse[Index][2]=1 : Impulse[Index][2]=0;
+      }//now impulsive values have been identified
+    }
+  }
+
+  for (short Channel=0;Channel<3;Channel++) {
+    // Is it a channel we are supposed to handle ?
+    if  (! (ChannelMask & (1<<Channel))) continue;
+#pragma omp parallel for schedule(static) private(norm, wtdsum, dirwt, Index, Index1)
+    for (uint16_t Row = 0; Row < m_Height; Row++) {
+      for (uint16_t Col = 0; Col < m_Width; Col++) {
+        Index = Row*m_Width+Col;
+        if (!Impulse[Index][Channel]) continue;
+        norm=0.0;
+        wtdsum=0.0;
+        for (uint16_t i1 = MAX(0,Row-2); i1 <= MIN(Row+2,m_Height-1); i1++ ) {
+          for (uint16_t j1 = MAX(0,Col-2); j1 <= MIN(Col+2,m_Width-1); j1++ ) {
+            if (i1==Row && j1==Col) continue;
+            Index1 = i1*m_Width+j1;
+            if (Impulse[Index1][Channel]) continue;
+            float Temp = (float)m_Image[Index1][Channel]-(float)m_Image[Index][Channel];
+            dirwt = 1/(SQR(Temp)+eps);//use more sophisticated rangefn???
+            wtdsum += dirwt*m_Image[Index1][Channel];
+            norm += dirwt;
+          }
+        }
+        //wtdsum /= norm;
+        if (norm) {
+          m_Image[Index][Channel] = CLIP((int32_t) (wtdsum/norm));//low pass filter
+        }
+      }
+    }//now impulsive values have been corrected
+  }
+
+
+  FREE(Impulse);
+  delete LowPass;
+
+  return this;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
