@@ -131,6 +131,7 @@ void OnBackgroundColorButtonClicked();
 void OnOpenFileButtonClicked();
 void OnOpenSettingsFileButtonClicked();
 void OnOpenPresetFileButtonClicked();
+void OnSpotWBButtonClicked();
 
 void OnZoomFitButtonClicked();
 void OnZoomFullButtonClicked();

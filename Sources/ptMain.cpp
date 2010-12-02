@@ -3815,6 +3815,10 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
   }
 }
 
+void CB_SpotWBButton() {
+  CB_WhiteBalanceChoice(ptWhiteBalance_Spot);
+}
+
 void CB_ColorTemperatureInput(const QVariant Value) {
   Settings->SetValue("ColorTemperature",Value);
   Settings->SetValue("WhiteBalance",ptWhiteBalance_Manual);

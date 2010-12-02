@@ -326,6 +326,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(OpenFile);
   Macro_ConnectSomeButton(OpenSettingsFile);
   Macro_ConnectSomeButton(OpenPresetFile);
+  Macro_ConnectSomeButton(SpotWB);
 
   //
   // TAB : Lensfun
@@ -959,6 +960,11 @@ void ptMainWindow::OnOpenSettingsFileButtonClicked() {
 void CB_OpenPresetFileButton();
 void ptMainWindow::OnOpenPresetFileButtonClicked() {
   ::CB_OpenPresetFileButton();
+}
+
+void CB_SpotWBButton();
+void ptMainWindow::OnSpotWBButtonClicked() {
+  ::CB_SpotWBButton();
 }
 
 //
