@@ -286,7 +286,7 @@ ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
     Transform =
       cmsCreateTransform(InProfile,
                          TYPE_RGB_16,
-                         PreviewColorProfile,
+                         OutProfile,
                          TYPE_RGB_16,
                          Intent,
                          cmsFLAGS_HIGHRESPRECALC | cmsFLAGS_BLACKPOINTCOMPENSATION);
@@ -294,7 +294,7 @@ ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
     Transform =
       cmsCreateTransform(InProfile,
                          TYPE_RGB_16,
-                         PreviewColorProfile,
+                         OutProfile,
                          TYPE_RGB_16,
                          Intent,
                          cmsFLAGS_NOOPTIMIZE | cmsFLAGS_BLACKPOINTCOMPENSATION);
