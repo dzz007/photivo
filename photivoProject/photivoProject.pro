@@ -73,6 +73,7 @@ unix {
   QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX}
   QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX}
   QMAKE_CFLAGS_RELEASE += -DPREFIX=$${PREFIX}
+  QMAKE_POST_LINK=strip $(TARGET)
 }
 win32 {
   LIBS += -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick

@@ -68,6 +68,7 @@ RETURN = $$system(touch ./photivoProject/config && rm ./photivoProject/config &&
 
 # Install
 unix {
+  QMAKE_STRIP = echo
   binaries.path = $${PREFIX}/bin
   binaries.files = photivo
   binaries.files += ptClear
@@ -95,7 +96,7 @@ unix {
   images.files += ./photivoPreview.jpg
   INSTALLS += binaries
   INSTALLS += shortcut
-  INSTALLS += shortcut2  
+  INSTALLS += shortcut2
   INSTALLS += icon
   INSTALLS += curves
   INSTALLS += mixer
