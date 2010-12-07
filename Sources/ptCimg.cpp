@@ -698,3 +698,39 @@ void ptCimgEqualize(ptImage* Image, const double Opacity) {
     }
   }
 }
+
+void ptCimgRotate(ptImage* Image, const double Angle, const short Interpolation) {
+
+  uint16_t Width  = Image->m_Width;
+  uint16_t Height = Image->m_Height;
+
+  CImg <uint16_t> CImage(Width,Height,1,3,0);
+
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Image->m_Height; Row++) {
+    for (uint16_t Col=0; Col<Image->m_Width; Col++) {
+      for (short Channel=0; Channel<3; Channel++) {
+        CImage(Col,Row,Channel) = Image->m_Image[Row*Width+Col][Channel];
+      }
+    }
+  }
+
+  CImage.rotate(Angle, 0, Interpolation);
+
+  FREE(Image->m_Image);
+  Image->m_Width  = CImage.width();
+  Image->m_Height = CImage.height();
+  Width  = Image->m_Width;
+  Height = Image->m_Height;
+  Image->m_Image = (uint16_t (*)[3]) CALLOC(Image->m_Width*Image->m_Height,sizeof(*Image->m_Image));
+  ptMemoryError(Image->m_Image,__FILE__,__LINE__);
+
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Height; Row++) {
+    for (uint16_t Col=0; Col<Width; Col++) {
+      for (short Channel=0; Channel<3; Channel++) {
+        Image->m_Image[Row*Width+Col][Channel] = CImage(Col,Row,Channel);
+      }
+    }
+  }
+}

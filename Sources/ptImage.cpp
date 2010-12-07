@@ -5817,16 +5817,8 @@ ptImage* ptImage::Rotate(double  Angle) {
   }
 
   // Within -45..45 now !
-#ifdef WIN32
-  // ToDo: On windows the imagemagick rotation doesn't work right now,
-  // so we use the "old" method, although it is less sharp.
-  //~ Rotate45(Angle);
   if (Angle!=0)
-    ptGMRotate(Angle);
-#else
-  if (Angle!=0)
-    ptGMRotate(Angle);
-#endif
+    ptCimgRotate(this,Angle,2);
 
   return this;
 }

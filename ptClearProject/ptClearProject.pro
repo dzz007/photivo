@@ -58,6 +58,7 @@ QMAKE_LFLAGS_DEBUG += -rdynamic
 unix {
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
+  QMAKE_POST_LINK=strip $(TARGET)
 }
 win32 {
   LIBS += -lwsock32 -lexpat -lregex -lgdi32

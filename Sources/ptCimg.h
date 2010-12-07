@@ -96,6 +96,8 @@ void ptCimgEdgeDetection(ptImage* Image, const short ChannelMask);
 
 void ptCimgEqualize(ptImage* Image, const double Opacity);
 
+void ptCimgRotate(ptImage* Image, const double Angle, const short Interpolation);
+
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////

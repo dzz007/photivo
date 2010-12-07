@@ -69,6 +69,7 @@ LIBS += $$system(pkg-config --libs-only-l gtk+-2.0)
 unix {
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
+  QMAKE_POST_LINK=strip $(TARGET)
 }
 win32 {
   LIBS += -lwsock32 -lexpat -lregex -lgdi32 -lgimp
