@@ -3595,7 +3595,11 @@ void CB_BackgroundColorButton() {
   Color.setRed(Settings->GetInt("BackgroundRed"));
   Color.setGreen(Settings->GetInt("BackgroundGreen"));
   Color.setBlue(Settings->GetInt("BackgroundBlue"));
-  QColor TestColor = QColorDialog::getColor(Color,0);
+  QColorDialog Dialog(Color,NULL);
+  Dialog.setStyle(Theme->ptSystemStyle);
+  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.exec();
+  QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
     Color = TestColor;
     Settings->SetValue("BackgroundRed",Color.red());
@@ -7166,7 +7170,11 @@ void CB_Tone1ColorButton() {
   Color.setRed(Settings->GetInt("Tone1ColorRed"));
   Color.setGreen(Settings->GetInt("Tone1ColorGreen"));
   Color.setBlue(Settings->GetInt("Tone1ColorBlue"));
-  QColor TestColor = QColorDialog::getColor(Color,0);
+  QColorDialog Dialog(Color,NULL);
+  Dialog.setStyle(Theme->ptSystemStyle);
+  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.exec();
+  QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
     Color = TestColor;
     Settings->SetValue("Tone1ColorRed",Color.red());
@@ -7219,7 +7227,11 @@ void CB_Tone2ColorButton() {
   Color.setRed(Settings->GetInt("Tone2ColorRed"));
   Color.setGreen(Settings->GetInt("Tone2ColorGreen"));
   Color.setBlue(Settings->GetInt("Tone2ColorBlue"));
-  QColor TestColor = QColorDialog::getColor(Color,0);
+  QColorDialog Dialog(Color,NULL);
+  Dialog.setStyle(Theme->ptSystemStyle);
+  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.exec();
+  QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
     Color = TestColor;
     Settings->SetValue("Tone2ColorRed",Color.red());
@@ -7324,7 +7336,11 @@ void CB_GradualOverlay1ColorButton() {
   Color.setRed(Settings->GetInt("GradualOverlay1ColorRed"));
   Color.setGreen(Settings->GetInt("GradualOverlay1ColorGreen"));
   Color.setBlue(Settings->GetInt("GradualOverlay1ColorBlue"));
-  QColor TestColor = QColorDialog::getColor(Color,0);
+  QColorDialog Dialog(Color,NULL);
+  Dialog.setStyle(Theme->ptSystemStyle);
+  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.exec();
+  QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
     Color = TestColor;
     Settings->SetValue("GradualOverlay1ColorRed",Color.red());
@@ -7385,7 +7401,11 @@ void CB_GradualOverlay2ColorButton() {
   Color.setRed(Settings->GetInt("GradualOverlay2ColorRed"));
   Color.setGreen(Settings->GetInt("GradualOverlay2ColorGreen"));
   Color.setBlue(Settings->GetInt("GradualOverlay2ColorBlue"));
-  QColor TestColor = QColorDialog::getColor(Color,0);
+  QColorDialog Dialog(Color,NULL);
+  Dialog.setStyle(Theme->ptSystemStyle);
+  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.exec();
+  QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
     Color = TestColor;
     Settings->SetValue("GradualOverlay2ColorRed",Color.red());
