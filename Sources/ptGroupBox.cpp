@@ -307,6 +307,9 @@ void ptGroupBox::WriteSettings(const short Append) {
     }
   }
 
+  if (m_Name == "TabCrop" && Settings->GetInt("Crop")==1)
+    Keys << "CropX" << "CropY" << "CropW" << "CropH";
+
   QString SuggestedFileName = Settings->GetString("PresetDirectory") + "/preset.pts";
   QString FileName;
 

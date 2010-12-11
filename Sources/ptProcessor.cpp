@@ -498,15 +498,8 @@ void ptProcessor::Run(short Phase,
         }
       }
 
-      // Remember sizes after Crop, also valid if there
-      // was no Crop. Expressed in terms of the original
-      // non scaled image.
-
-      Settings->SetValue("CropW",m_Image_AfterLensfun->m_Width << TmpScaled);
-      Settings->SetValue("CropH",m_Image_AfterLensfun->m_Height<< TmpScaled);
-
-      TRACEKEYVALS("CropW","%d",Settings->GetInt("CropW"));
-      TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
+      TRACEKEYVALS("CropW","%d",m_Image_AfterLensfun->m_Width << TmpScaled);
+      TRACEKEYVALS("CropH","%d",m_Image_AfterLensfun->m_Height<< TmpScaled);
 
       // set scale factor for size dependend filters
       m_ScaleFactor = 1/powf(2.0, Settings->GetInt("Scaled"));
