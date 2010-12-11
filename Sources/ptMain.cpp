@@ -496,6 +496,7 @@ int photivoMain(int Argc, char *Argv[]) {
   InitStrings();
 
   // Load also the LensfunDatabase.
+  printf("Lensfun database: '%s'; \n",Settings->GetString("LensfunDatabaseDirectory").toAscii().data());
   LensfunData = new ptLensfun;
 
   // Instantiate the processor.
@@ -690,6 +691,11 @@ void CB_Event0() {
   // Load user settings
   if (Settings->GetInt("StartupSettings")) {
     CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+    // clean up
+    QStringList Temp;
+    Temp << "CropX" << "CropY" << "CropW" << "CropH";
+    Temp << "RotateW" << "RotateH";
+    for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i),0);
   }
 
   if (ImageFileToOpen.size()) {
@@ -2763,6 +2769,11 @@ void CB_MenuFileOpen(const short HaveFile) {
       Settings->GetInt("HaveImage")==1) {
     Settings->SetValue("HaveImage",0);
     CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+    // clean up
+    QStringList Temp;
+    Temp << "CropX" << "CropY" << "CropW" << "CropH";
+    Temp << "RotateW" << "RotateH";
+    for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i),0);
   }
 
   TheDcRaw = TestDcRaw;
@@ -4239,19 +4250,17 @@ void CB_AspectRatioHChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioH",Value);
 }
 
-void CB_CropCheck(const QVariant State) {
-  Settings->SetValue("Crop",State);
-  if (!State.toInt()) {
-    // Restoring if we come here from escaping a crop.
-    Update(ptProcessorPhase_AfterRAW);
-  }
-}
-
 void CB_CropRectangleModeChoice(const QVariant Choice) {
   Settings->SetValue("CropRectangleMode",Choice);
 }
 
 void CB_MakeCropButton() {
+  if (Settings->GetInt("HaveImage")==0) {
+    QMessageBox::information(MainWindow,
+      QObject::tr("No crop"),
+      QObject::tr("Open an image first."));
+    return;
+  }
   uint16_t Width = 0;
   uint16_t Height = 0;
   // First : make sure we have the view window.
@@ -4338,6 +4347,19 @@ void CB_MakeCropButton() {
   TRACEKEYVALS("CropW","%d",Settings->GetInt("CropW"));
   TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
 
+  Update(ptProcessorPhase_AfterRAW);
+}
+
+void CB_CropCheck(const QVariant State) {
+  Settings->SetValue("Crop",State);
+  if (State.toInt() != 0 &&
+      (Settings->GetInt("CropW") <= 20 || Settings->GetInt("CropH") <= 20)) {
+    QMessageBox::information(MainWindow,
+      QObject::tr("No crop"),
+      QObject::tr("Set a crop rectangle now."));
+    CB_MakeCropButton();
+    return;
+  }
   Update(ptProcessorPhase_AfterRAW);
 }
 
