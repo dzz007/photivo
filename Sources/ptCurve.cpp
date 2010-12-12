@@ -44,7 +44,7 @@ ptCurve::ptCurve(const short Channel) {
       Channel == ptCurveChannel_LByHue ||
       Channel == ptCurveChannel_Texture ||
       Channel == ptCurveChannel_Denoise)
-    m_IntType = ptCurveIT_Linear;
+    m_IntType = ptCurveIT_Cosine;
   else
     m_IntType = ptCurveIT_Spline;
 
@@ -169,6 +169,19 @@ short ptCurve::SetCurveFromAnchors() {
       }
     }
     FREE(ypp);
+  } else  if (m_IntType == ptCurveIT_Cosine) {
+    for(uint32_t i = 0; i < m_XAnchor[0] * 0xffff; i++)
+      m_Curve[i] = m_YAnchor[0] * 0xffff;
+    for(short l = 0; l < m_NrAnchors-1; l++) {
+      float Factor = m_YAnchor[l+1]-m_YAnchor[l];
+      float Scale = ptPI/(float)0xffff/(m_XAnchor[l+1]-m_XAnchor[l]);
+      for(uint32_t i = 0; i < m_XAnchor[l+1] * 0xffff - m_XAnchor[l] * 0xffff; i++) {
+        m_Curve[i+(int32_t)(m_XAnchor[l] * 0xffff)] =
+          (int32_t)((( (1-cosf(i*Scale))/2 ) * Factor + m_YAnchor[l])*0xffff);
+      }
+    }
+    for(uint32_t i = m_XAnchor[m_NrAnchors-1] * 0xffff; i < 0x10000; i++)
+      m_Curve[i] = m_YAnchor[m_NrAnchors-1] * 0xffff;
   } else { // Linear
     for(uint32_t i = 0; i < m_XAnchor[0] * 0xffff; i++)
       m_Curve[i] = m_YAnchor[0] * 0xffff;

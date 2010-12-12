@@ -103,6 +103,7 @@ QActionGroup*       m_TypeGroup;
 // Interpolation Type
 QAction*            m_AtnITLinear;
 QAction*            m_AtnITSpline;
+QAction*            m_AtnITCosine;
 QActionGroup*       m_ITGroup;
 };
 
