@@ -133,14 +133,21 @@ ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
   m_AtnITSpline->setStatusTip(tr("Spline interpolation"));
   m_AtnITSpline->setCheckable(true);
   connect(m_AtnITSpline, SIGNAL(triggered()), this, SLOT(SetInterpolationType()));
+  m_AtnITCosine = new QAction(tr("Cosine"), this);
+  m_AtnITCosine->setStatusTip(tr("Cosine interpolation"));
+  m_AtnITCosine->setCheckable(true);
+  connect(m_AtnITCosine, SIGNAL(triggered()), this, SLOT(SetInterpolationType()));
 
   m_ITGroup = new QActionGroup(this);
   m_ITGroup->addAction(m_AtnITLinear);
   m_ITGroup->addAction(m_AtnITSpline);
-  m_AtnITSpline->setChecked(
-    m_RelatedCurve->m_IntType==ptCurveIT_Spline?true:false);
+  m_ITGroup->addAction(m_AtnITCosine);
   m_AtnITLinear->setChecked(
     m_RelatedCurve->m_IntType==ptCurveIT_Linear?true:false);
+  m_AtnITSpline->setChecked(
+    m_RelatedCurve->m_IntType==ptCurveIT_Spline?true:false);
+  m_AtnITCosine->setChecked(
+    m_RelatedCurve->m_IntType==ptCurveIT_Cosine?true:false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -277,12 +284,15 @@ void ptCurveWindow::ContextMenu(QMouseEvent* event) {
   Menu.setPalette(Theme->ptMenuPalette);
   if ((TempSetting==ptCurveChoice_Manual ||
         TempSetting==ptCurveChoice_None)) {
-    m_AtnITSpline->setChecked(
-      m_RelatedCurve->m_IntType==ptCurveIT_Spline?true:false);
     m_AtnITLinear->setChecked(
       m_RelatedCurve->m_IntType==ptCurveIT_Linear?true:false);
+    m_AtnITSpline->setChecked(
+      m_RelatedCurve->m_IntType==ptCurveIT_Spline?true:false);
+    m_AtnITCosine->setChecked(
+      m_RelatedCurve->m_IntType==ptCurveIT_Cosine?true:false);
     Menu.addAction(m_AtnITLinear);
     Menu.addAction(m_AtnITSpline);
+    Menu.addAction(m_AtnITCosine);
   }
   if (m_Channel == ptCurveChannel_Saturation) {
     m_AtnAdaptive->setChecked(Settings->GetInt("SatCurveMode")>0?true:false);
@@ -364,6 +374,8 @@ void ptCurveWindow::SetInterpolationType() {
     Temp = ptCurveIT_Linear;
   if ((int)m_AtnITSpline->isChecked())
     Temp = ptCurveIT_Spline;
+  if ((int)m_AtnITCosine->isChecked())
+    Temp = ptCurveIT_Cosine;
   if (m_RelatedCurve->m_IntType==Temp) return;
 
   m_RelatedCurve->m_IntType = Temp;

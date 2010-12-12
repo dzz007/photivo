@@ -244,6 +244,7 @@ const short ptCurveChoice_File       = 2;
 
 const short ptCurveIT_Spline = 0;
 const short ptCurveIT_Linear = 1;
+const short ptCurveIT_Cosine = 2;
 
 // GREYCstoration
 
