@@ -2261,7 +2261,8 @@ ptImage* ptImage::DeFringe(const double Radius,
   float Average = 0.0f;
 #pragma omp parallel for schedule(static) reduction (+:Average)
   for (uint32_t i = 0; i < Size; i++) {
-    ChromaDiff[i] = SQR((float)m_Image[i][1]-(float)SaveLayer->m_Image[i][1])+SQR((float)m_Image[i][1]-(float)SaveLayer->m_Image[i][1]);
+    ChromaDiff[i] = SQR((float)m_Image[i][1]-(float)SaveLayer->m_Image[i][1]) +
+                    SQR((float)m_Image[i][2]-(float)SaveLayer->m_Image[i][2]);
     Average += ChromaDiff[i];
   }
   Average /= Size;
@@ -2280,10 +2281,11 @@ ptImage* ptImage::DeFringe(const double Radius,
   for (uint16_t Row = 0; Row < m_Height; Row++) {
     for (uint16_t Col = 0; Col < m_Width; Col++) {
       short CorrectPixel = 0;
-      if (ChromaDiff[Row*m_Width+Col] > NewThreshold) {
+      uint32_t Index = Row*m_Width+Col;
+      if (ChromaDiff[Index] > NewThreshold) {
         // Calculate hue.
-        float ValueA = (float)SaveLayer->m_Image[Row*m_Width+Col][1]-0x8080;
-        float ValueB = (float)SaveLayer->m_Image[Row*m_Width+Col][2]-0x8080;
+        float ValueA = (float)SaveLayer->m_Image[Index][1]-0x8080;
+        float ValueB = (float)SaveLayer->m_Image[Index][2]-0x8080;
         float Hue = 0;
         if (ValueA == 0.0 && ValueB == 0.0) {
           Hue = 0;   // value for grey pixel
@@ -2313,16 +2315,17 @@ ptImage* ptImage::DeFringe(const double Radius,
         for (int i1 = MAX(0,Row-Neighborhood+1); i1 < MIN(m_Height,Row+Neighborhood); i1++)
           for (int j1 = MAX(0,Col-Neighborhood+1); j1 < MIN(m_Width,Col+Neighborhood); j1++) {
             // Neighborhood average of pixels weighted by chrominance
-            Weight = 1/(ChromaDiff[i1*m_Width+j1]+Average);
-            TotalA += Weight*SaveLayer->m_Image[i1*m_Width+j1][1];
-            TotalB += Weight*SaveLayer->m_Image[i1*m_Width+j1][2];
+            uint32_t Index2 = i1*m_Width+j1;
+            Weight = 1/(ChromaDiff[Index2]+Average);
+            TotalA += Weight*SaveLayer->m_Image[Index2][1];
+            TotalB += Weight*SaveLayer->m_Image[Index2][2];
             Total += Weight;
           }
-        m_Image[Row*m_Width+Col][1] = CLIP((int32_t)(TotalA/Total));
-        m_Image[Row*m_Width+Col][2] = CLIP((int32_t)(TotalB/Total));
+        m_Image[Index][1] = CLIP((int32_t)(TotalA/Total));
+        m_Image[Index][2] = CLIP((int32_t)(TotalB/Total));
       } else {
-        m_Image[Row*m_Width+Col][1] = SaveLayer->m_Image[Row*m_Width+Col][1];
-        m_Image[Row*m_Width+Col][2] = SaveLayer->m_Image[Row*m_Width+Col][2];
+        m_Image[Index][1] = SaveLayer->m_Image[Index][1];
+        m_Image[Index][2] = SaveLayer->m_Image[Index][2];
       }
     }
   }
