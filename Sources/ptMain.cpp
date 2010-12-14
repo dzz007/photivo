@@ -289,6 +289,12 @@ int photivoMain(int Argc, char *Argv[]) {
   //QApplication TheApplication(Argc,Argv);
   TheApplication = new QApplication(Argc,Argv);
 
+  #ifdef Q_OS_MAC
+    QDir dir(QApplication::applicationDirPath());
+    QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
+  #endif
+
+
   if (Argc>1) {
     QString ErrorMessage = QObject::tr("Usage : photivo [-j JobFile] [-i Image]");
     // Argc must be 3,5 ...

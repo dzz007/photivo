@@ -1258,56 +1258,6 @@ ptImage* ptImage::Set(const DcRaw*  DcRawObject,
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Set from drop (dirty quick debug function : read a dump to file)
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptImage* ptImage::Set(const uint16_t Width,
-                      const uint16_t Height,
-                      const short    NrColors,
-                      const short    NrBytesPerColor,
-                      const char*    FileName) {
-
-  m_Width  = Width;
-  m_Height = Height;
-
-  // Free a maybe preexisting and allocate space.
-  FREE(m_Image);
-  m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
-
-  uint16_t (*Buffer)[NrColors] =
-    (uint16_t (*)[NrColors])CALLOC(Width*Height,NrBytesPerColor*NrColors);
-  FILE *InputFile = fopen(FileName,"rb");
-  if (!InputFile) {
-    ptLogError(ptError_FileOpen,FileName);
-    return NULL;
-  }
-  if ((size_t)(Width*Height) !=
-       fread(Buffer,NrBytesPerColor*NrColors,Width*Height,InputFile)) {
-    ptLogError(ptError_FileOpen,FileName);
-    return NULL;
-  }
-  FCLOSE(InputFile);
-#pragma omp parallel for schedule(static)
-  for (uint32_t i=0; i<(uint32_t)Height*Width; i++) {
-    for (short c=0; c<3; c++) {
-      m_Image[i][c] = Buffer[i][c];
-      //printf("DEBUG : Buffer[i][c] : %d\n",Buffer[i][c]);
-      if (NrBytesPerColor == 1) m_Image[i][c] = m_Image[i][c] << 1;
-    }
-  }
-
-  FREE(Buffer);
-
-  m_Colors = 3;
-  m_ColorSpace = ptSpace_sRGB_D65;
-
-  return this;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
 // Set, just allocation
 //
 ////////////////////////////////////////////////////////////////////////////////

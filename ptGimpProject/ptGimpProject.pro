@@ -40,22 +40,18 @@ OBJECTS_DIR = ../Objects_Gimp
 MOC_DIR = ../Objects_Gimp
 UI_HEADERS_DIR = ../Objects_Gimp
 RCC_DIR = ../Objects_Gimp
-# Bit funky for the glib. And gimp
-QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I glib-2.0)
+# Bit funky for the gimp.
 QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gimp-2.0)
 QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gtk+-2.0)
 QMAKE_CXXFLAGS_RELEASE += -DDLRAW_GIMP_PLUGIN
-QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I glib-2.0)
 QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I gimp-2.0)
 QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I gtk+-2.0)
 QMAKE_CXXFLAGS_DEBUG += -DDLRAW_GIMP_PLUGIN
 QMAKE_CXXFLAGS_RELEASE += -O3
 QMAKE_CXXFLAGS_RELEASE += -ffast-math
-QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I glib-2.0)
 QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gimp-2.0)
 QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gtk+-2.0)
 QMAKE_CFLAGS_RELEASE += -DDLRAW_GIMP_PLUGIN
-QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I glib-2.0)
 QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I gimp-2.0)
 QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I gtk+-2.0)
 QMAKE_CFLAGS_DEBUG += -DDLRAW_GIMP_PLUGIN
@@ -63,7 +59,6 @@ QMAKE_CFLAGS_RELEASE += -O3
 QMAKE_CFLAGS_RELEASE += -ffast-math
 QMAKE_LFLAGS_RELEASE +=
 QMAKE_LFLAGS_DEBUG += -rdynamic
-LIBS += $$system(pkg-config --libs-only-l glib-2.0)
 LIBS += $$system(pkg-config --libs-only-l gimp-2.0)
 LIBS += $$system(pkg-config --libs-only-l gtk+-2.0)
 unix {

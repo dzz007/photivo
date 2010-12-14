@@ -89,13 +89,6 @@ ptImage* Set(const uint16_t Width,
 // Copying is always deep (so including copying the image).
 ptImage* Set(const ptImage *Origin);
 
-// Initialize it from a dropped image (fwrite dropped).
-ptImage* Set(const uint16_t Width,
-             const uint16_t Height,
-             const short    NrColors,
-             const short    NrBytesPerColor,
-             const char*    FileName);
-
 // Resize such that the maximum dimension becomes Size.
 // Typically the resizing is done in place, but one
 // can request a new ptImage object to be created

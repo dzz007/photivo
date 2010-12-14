@@ -39,16 +39,11 @@ OBJECTS_DIR = ../Objects
 MOC_DIR = ../Objects
 UI_HEADERS_DIR = ../Objects
 RCC_DIR = ../Objects
-# Bit funky for the glib.
-QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I glib-2.0)
-QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I glib-2.0)
 QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP
 QMAKE_CXXFLAGS_DEBUG += -ffast-math -O0 -g
 QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp
 QMAKE_CXXFLAGS_RELEASE += -ffast-math
 QMAKE_CXXFLAGS_RELEASE += -DDLRAW_HAVE_GIMP
-QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I glib-2.0)
-QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I glib-2.0)
 QMAKE_CFLAGS_DEBUG += -DDLRAW_HAVE_GIMP
 QMAKE_CFLAGS_DEBUG += -ffast-math -O0 -g
 QMAKE_CFLAGS_RELEASE += -O3
