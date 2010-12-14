@@ -27,7 +27,7 @@
 #include "ptSettings.h"
 
 #include <cstdlib>
-#include <glib/gstdio.h>
+
 
 // Compare for sorting on make/model.
 int CameraCompare(const void* a, const void* b) {
@@ -51,35 +51,24 @@ int LensCompare(const void* a, const void* b) {
  (((const ptLensfunLens*)b)->Make);
 }
 
-// XXX JDLA Adapted for photivo
-// MIKE: moved here and adopted from lensfun/database.cpp
+// Adapted for photivo
 lfError ptLensfun::LoadDir(const char* Directory)
 {
-    // Adapted JDLA. Qt system will be used later on here.
-
-    GDir *dir = g_dir_open (Directory, 0, NULL);
-
-    if (!dir) {
+  QDir Dir(Directory);
+  if(!Dir.exists()) {
     ptLogError(ptError_FileOpen,"LensfunDatabase could not be opened.");
     exit(EXIT_FAILURE);
-    }
+  }
 
-    GPatternSpec *ps = g_pattern_spec_new ("*.xml");
-    if (ps) {
-      const gchar *fn;
-      while ((fn = g_dir_read_name (dir))) {
-        size_t sl = strlen (fn);
-        if (g_pattern_match (ps, sl, fn, NULL)) {
-          gchar *ffn = g_build_filename ("LensfunDatabase", fn, NULL);
-          /* Ignore errors */
-          m_Database->Load(ffn);
-          g_free (ffn);
-        }
-      }
-      g_pattern_spec_free (ps);
+  QStringList Files = Dir.entryList(QDir::Files);
+
+  for (int i = 0; i < Files.size(); i++) {
+    if (Files.at(i).endsWith(".xml")) {
+      m_Database->Load(Files.at(i).toAscii().data());
     }
-    g_dir_close (dir);
-    return LF_NO_ERROR;
+  }
+
+  return LF_NO_ERROR;
 }
 
 ptLensfun::ptLensfun() {

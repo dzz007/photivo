@@ -9456,7 +9456,7 @@
                          <widget class="QWidget" name="StartupSettingsResetWidget" native="true"/>
                         </item>
                         <item>
-                         <widget class="QWidget" name="widget" native="true">
+                         <widget class="QWidget" name="widget_1a1" native="true">
                           <layout class="QHBoxLayout" name="horizontalLayout_74">
                            <property name="spacing">
                             <number>6</number>

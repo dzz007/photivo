@@ -541,6 +541,10 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
 
   if (Event->type() == QEvent::Paint) {
 
+    if (m_QImageCut == NULL) {
+      return 0;
+    }
+
     // PaintEvent : Draw the pixmap and the 'overlay' rectangle if there.
 
     uint16_t VP_Width  = viewport()->size().width();

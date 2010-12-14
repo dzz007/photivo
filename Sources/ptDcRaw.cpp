@@ -34,10 +34,10 @@
 #include "ptConstants.h"
 
 // Macro fix for explicit fread returnvalue check.
-#define ptfread(ptr,size,n,stream)     \
-{                                      \
-size_t RV = fread(ptr,size,n,stream);  \
-assert(RV == (size_t) n);              \
+#define ptfread(ptr,size,n,stream)              \
+{                                               \
+size_t RV = fread(ptr,size,n,stream);           \
+if (RV != (size_t) n) assert(!ferror(stream));  \
 }
 #define ptfwrite(ptr,size,n,stream)    \
 {                                      \
@@ -359,7 +359,7 @@ unsigned CLASS get4()
 {
   uint8_t str[4] = { 0xff,0xff,0xff,0xff };
   // TODO Mike, removed check due to problems with Jpegs.
-  fread (str, 1, 4, m_InputFile);
+  ptfread (str, 1, 4, m_InputFile);
   return sget4(str);
 }
 
@@ -4618,7 +4618,7 @@ void CLASS parse_makernote (int base, int uptag)
       ASSIGN(m_CameraMultipliers[2], getreal(type));
     }
     if (tag == 0xd && type == 7 && get2() == 0xaaaa) {
-      fread (buf97, 1, sizeof buf97, m_InputFile);
+      ptfread (buf97, 1, sizeof buf97, m_InputFile);
       i = (uint8_t *) memmem ((char*)buf97, sizeof buf97,"\xbb\xbb",2) - buf97 + 10;
       if (i < 70 && buf97[i] < 3)
         m_Flip = "065"[buf97[i]]-'0';
@@ -5356,7 +5356,7 @@ guess_l_cfa_pc:
   break;
       case 50715:     /* BlackLevelDeltaH */
       case 50716:     /* BlackLevelDeltaV */
-  for (l_num=i=0; i < l_Length; i++)
+  for (l_num=i=0; (unsigned)i < l_Length; i++)
     l_num += getreal(l_Type);
   m_BlackLevel += l_num/l_Length + 0.5;
   break;
