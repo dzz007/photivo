@@ -888,16 +888,12 @@ ptImage* ptImage::lcmsLabToRGB(const short To,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage::ptImage(void (*UpdateGUI)()) {
+ptImage::ptImage() {
   m_Width              = 0;
   m_Height             = 0;
   m_Image              = NULL;
   m_Colors             = 0;
   m_ColorSpace         = ptSpace_sRGB_D65;
-
-  // Workaround to keep the GUI responsive.
-  // Call with m_UpdateGUI();
-  m_UpdateGUI = UpdateGUI;
 
   // Initialize the lookup table for the RGB->LAB function
   // if this would be the first time.
@@ -3753,64 +3749,62 @@ ptImage* ptImage::Localcontrast(const int Radius1, const double Opacity, const d
 
   uint16_t Width = m_Width;
   uint16_t Height = m_Height;
+  int32_t Size = Width*Height;
 
-  int MaxExponent=(int)floor(log((double)Radius1)/log(2.))+1;
-  uint16_t MaxRadius=(int)pow(2.,(double)(MaxExponent+1));
+  int MaxExponent=MAX((int)floor(log((float)Radius1)/log(2.))+1,1);
+  uint16_t MaxRadius=(int)pow(2.,(float)(MaxExponent+1));
   int Step = 0;
   int Blocksize = 0;
   int SquareStep = 0;
   int Shift = 0;
-  uint16_t x1 = 0;
-  uint16_t x2 = 0;
-  uint16_t y1 = 0;
-  uint16_t y2 = 0;
-  uint16_t pos1x = 0;
-  uint16_t pos1y = 0;
-  uint16_t pos2x = 0;
-  uint16_t pos2y = 0;
-  double value1 = 0;
-  double value2 = 0;
-  double ker = 0;
+  int32_t x1 = 0;
+  int32_t x2 = 0;
+  int32_t y1 = 0;
+  int32_t y2 = 0;
+  int32_t pos1x = 0;
+  int32_t pos1y = 0;
+  int32_t pos2x = 0;
+  int32_t pos2y = 0;
+  int32_t Index1 = 0;
+  int32_t Index2 = 0;
+  float value1 = 0;
+  float value2 = 0;
+  float ker = 0;
 
-  double **Kernel;
-  Kernel = (double **)CALLOC(MaxRadius,sizeof(double*));
-  for(int i = 0; i < MaxRadius; i++) Kernel[i] = (double*)CALLOC(MaxRadius,sizeof(double));
+  float **Kernel;
+  Kernel = (float **)CALLOC(MaxRadius,sizeof(float*));
+  for(int i = 0; i < MaxRadius; i++) Kernel[i] = (float*)CALLOC(MaxRadius,sizeof(float));
 
-  double r=0;
+  float r=0;
   for (uint16_t x=0; x<MaxRadius; x++) {
     for (uint16_t y=0; y<MaxRadius; y++) {
-      r=pow(double(x*x+y*y),0.5);
-      if (r<=Radius1) {
+      r = powf((float)x*(float)x+(float)y*(float)y,0.5);
+      if (r <= Radius1) {
         Kernel[x][y] = 1;
       } else {
         Kernel[x][y] = 0;
       }
     }
   }
-  int16_t (*MinVector)[2] = (int16_t (*)[2]) CALLOC(m_Width*m_Height,sizeof(*MinVector));
+  int16_t (*MinVector)[2] = (int16_t (*)[2]) CALLOC(Size,sizeof(*MinVector));
   ptMemoryError(MinVector,__FILE__,__LINE__);
-  int16_t (*MaxVector)[2] = (int16_t (*)[2]) CALLOC(m_Width*m_Height,sizeof(*MaxVector));
+  int16_t (*MaxVector)[2] = (int16_t (*)[2]) CALLOC(Size,sizeof(*MaxVector));
   ptMemoryError(MaxVector,__FILE__,__LINE__);
 
-#pragma omp parallel for schedule(static)
-  for (uint16_t Row=0; Row < Height; Row++) {
-    for (uint16_t Col=0; Col < Width; Col++) {
-      MinVector[Row*Width+Col][0] = 0;
-      MinVector[Row*Width+Col][1] = 0;
-      MaxVector[Row*Width+Col][0] = 0;
-      MaxVector[Row*Width+Col][1] = 0;
-    }
-  }
+  memset(MinVector,0,Size*sizeof(*MinVector));
+  memset(MaxVector,0,Size*sizeof(*MaxVector));
 
-  for (int runcounter=0; runcounter<2;runcounter++){
+  for (int runcounter=0; runcounter<1;runcounter++){
+    // runcounter loop should be superfluous now.
+    // clean up after some more testing.
     for (int k=1; k<=MaxExponent; k++) {
-      Step=(int) pow(2.,(double)(k));
-      SquareStep = (int) pow(2.,(double)(k-1));
+      Step=(int) powf(2.,(float)(k));
+      SquareStep = (int) powf(2.,(float)(k-1));
       Blocksize = SquareStep;
       Shift = Blocksize;
-m_UpdateGUI();
-      for (int32_t Row=-(runcounter&1)*Shift; Row < Height; Row=Row+Step) {
-        for (int32_t Col=-(runcounter&1)*Shift; Col < Width; Col=Col+Step) {
+#pragma omp parallel for private(x1, x2, y1, y2, pos1x, pos1y, pos2x, pos2y, value1, value2, ker) schedule(static)
+      for (int32_t Row=-(runcounter&1)*Shift; Row < Height; Row += Step) {
+        for (int32_t Col=-(runcounter&1)*Shift; Col < Width; Col += Step) {
           for (uint16_t incx=0; incx < Blocksize; incx++) {
             for (uint16_t incy=0; incy < Blocksize; incy++) {
               for (int fx=0; fx < 2; fx++) {
@@ -3821,29 +3815,31 @@ m_UpdateGUI();
                     for (int ly=0; ly < 2; ly++) {
                       x2 = MAX(MIN(Col+incx+lx*SquareStep,Width-1),0);
                       y2 = MAX(MIN(Row+incy+ly*SquareStep,Height-1),0);
+                      Index1 = y1*Width+x1;
+                      Index2 = y2*Width+x2;
                       // Calculate Min
-                      pos1x = MinVector[y1*Width+x1][0] + x1;
-                      pos1y = MinVector[y1*Width+x1][1] + y1;
-                      pos2x = MinVector[y2*Width+x2][0] + x2;
-                      pos2y = MinVector[y2*Width+x2][1] + y2;
-                      value1 = (double)m_Image[pos1y*Width+pos1x][0];
-                      ker = Kernel[(int)fabs(pos2x - x1)][(int)fabs(pos2y - y1)];
-                      value2 = (double)m_Image[pos2y*Width+pos2x][0];
+                      pos1x = MinVector[Index1][0] + x1;
+                      pos1y = MinVector[Index1][1] + y1;
+                      pos2x = MinVector[Index2][0] + x2;
+                      pos2y = MinVector[Index2][1] + y2;
+                      value1 = (float)m_Image[pos1y*Width+pos1x][0];
+                      value2 = (float)m_Image[pos2y*Width+pos2x][0];
+                      ker = Kernel[(int32_t)fabs(pos2x - x1)][(int32_t)fabs(pos2y - y1)];
                       if (ker && value2 <= value1) {
-                        MinVector[y1*Width+x1][0] = pos2x - x1;
-                        MinVector[y1*Width+x1][1] = pos2y - y1;
+                        MinVector[Index1][0] = pos2x - x1;
+                        MinVector[Index1][1] = pos2y - y1;
                       }
                       // Calculate Max
-                      pos1x = MaxVector[y1*Width+x1][0] + x1;
-                      pos1y = MaxVector[y1*Width+x1][1] + y1;
-                      pos2x = MaxVector[y2*Width+x2][0] + x2;
-                      pos2y = MaxVector[y2*Width+x2][1] + y2;
-                      value1 = (double)m_Image[pos1y*Width+pos1x][0];
-                      ker = Kernel[(int)fabs(pos2x - x1)][(int)fabs(pos2y - y1)];
-                      value2 = (double)m_Image[pos2y*Width+pos2x][0];
+                      pos1x = MaxVector[Index1][0] + x1;
+                      pos1y = MaxVector[Index1][1] + y1;
+                      pos2x = MaxVector[Index2][0] + x2;
+                      pos2y = MaxVector[Index2][1] + y2;
+                      value1 = (float)m_Image[pos1y*Width+pos1x][0];
+                      value2 = (float)m_Image[pos2y*Width+pos2x][0];
+                      ker = Kernel[(int32_t)fabs(pos2x - x1)][(int32_t)fabs(pos2y - y1)];
                       if (ker && value2 >= value1) {
-                        MaxVector[y1*Width+x1][0] = pos2x - x1;
-                        MaxVector[y1*Width+x1][1] = pos2y - y1;
+                        MaxVector[Index1][0] = pos2x - x1;
+                        MaxVector[Index1][1] = pos2y - y1;
                       }
                     }
                   }
@@ -3856,22 +3852,23 @@ m_UpdateGUI();
     }
   }
 
-  uint16_t (*MinLayer) = (uint16_t (*)) CALLOC(m_Width*m_Height,sizeof(*MinLayer));
+  uint16_t (*MinLayer) = (uint16_t (*)) CALLOC(Size,sizeof(*MinLayer));
   ptMemoryError(MinLayer,__FILE__,__LINE__);
-  uint16_t (*MaxLayer) = (uint16_t (*)) CALLOC(m_Width*m_Height,sizeof(*MaxLayer));
+  uint16_t (*MaxLayer) = (uint16_t (*)) CALLOC(Size,sizeof(*MaxLayer));
   ptMemoryError(MaxLayer,__FILE__,__LINE__);
 
 #pragma omp parallel for private(pos1x, pos1y, value1) schedule(static)
   for (uint16_t Row=0; Row < Height; Row++) {
     for (uint16_t Col=0; Col < Width; Col++) {
-      pos1x = MinVector[Row*Width+Col][0] + Col;
-      pos1y = MinVector[Row*Width+Col][1] + Row;
-      value1 = (double)m_Image[pos1y*Width+pos1x][0];
-      MinLayer[Row*Width+Col] = CLIP((int32_t) value1);
-      pos1x = MaxVector[Row*Width+Col][0] + Col;
-      pos1y = MaxVector[Row*Width+Col][1] + Row;
-      value1 = (double)m_Image[pos1y*Width+pos1x][0];
-      MaxLayer[Row*Width+Col] = CLIP((int32_t) value1);
+      int32_t Index = Row*Width+Col;
+      pos1x = MinVector[Index][0] + Col;
+      pos1y = MinVector[Index][1] + Row;
+      value1 = (float)m_Image[pos1y*Width+pos1x][0];
+      MinLayer[Index] = CLIP((int32_t) value1);
+      pos1x = MaxVector[Index][0] + Col;
+      pos1y = MaxVector[Index][1] + Row;
+      value1 = (float)m_Image[pos1y*Width+pos1x][0];
+      MaxLayer[Index] = CLIP((int32_t) value1);
     }
   }
 
@@ -3884,31 +3881,25 @@ m_UpdateGUI();
   float Mask = 0;
   if (Method == 1) {
 #pragma omp parallel for private(Z,N,Mask) schedule(static)
-    for (uint16_t Row=0; Row < Height; Row++) {
-      for (uint16_t Col=0; Col < Width; Col++) {
-      Z = m_Image[Row*Width+Col][0]-MinLayer[Row*Width+Col];
-      N = MaxLayer[Row*Width+Col]-MinLayer[Row*Width+Col];
+    for (int32_t i = 0; i < Size; i++) {
+      Z = m_Image[i][0] - MinLayer[i];
+      N = MaxLayer[i] - MinLayer[i];
       if (m>0) {
-        Mask=m*N/(float)0xffff+(1.-m);
+        Mask = m*N/(float)0xffff+(1.-m);
       } else {
-        Mask=-m*(1-(N/(float)0xffff))+(1.+m);
+        Mask = -m*(1-(N/(float)0xffff))+(1.+m);
       }
-      m_Image[Row*Width+Col][0]=CLIP((int32_t) ((Z/N*0xFFFF*Mask+(1-Mask)*m_Image[Row*Width+Col][0])*Opacity+(1.-Opacity)*m_Image[Row*Width+Col][0]));
-      }
+      m_Image[i][0]=CLIP((int32_t) ((Z/N*0xFFFF*Mask+(1-Mask)*m_Image[i][0])*Opacity+(1.-Opacity)*m_Image[i][0]));
     }
   } else if (Method == 2) {
 #pragma omp parallel for private(Z,N,Mask) schedule(static)
-    for (uint16_t Row=0; Row < Height; Row++) {
-      for (uint16_t Col=0; Col < Width; Col++) {
-      m_Image[Row*Width+Col][0]=MinLayer[Row*Width+Col];
-      }
+    for (int32_t i = 0; i < Size; i++) {
+      m_Image[i][0] = MinLayer[i];
     }
   } else {
 #pragma omp parallel for private(Z,N,Mask) schedule(static)
-    for (uint16_t Row=0; Row < Height; Row++) {
-      for (uint16_t Col=0; Col < Width; Col++) {
-      m_Image[Row*Width+Col][0]=MaxLayer[Row*Width+Col];
-      }
+    for (int32_t i = 0; i < Size; i++) {
+      m_Image[i][0] = MaxLayer[i];
     }
   }
 

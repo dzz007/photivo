@@ -44,11 +44,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptProcessor::ptProcessor(void (*ReportProgress)(const QString Message), void (*UpdateGUI)()) {
+ptProcessor::ptProcessor(void (*ReportProgress)(const QString Message)) {
 
   // We work with a callback to avoid dependency on ptMainWindow
   m_ReportProgress = ReportProgress;
-  m_UpdateGUI = UpdateGUI;
 
   // The DcRaw
   m_DcRaw          = NULL;
@@ -302,7 +301,7 @@ void ptProcessor::Run(short Phase,
 
           // We're at the end of the DcRaw part now and capture
           // the image that DcRaw made for us.
-          if (!m_Image_AfterDcRaw) m_Image_AfterDcRaw = new ptImage(m_UpdateGUI);
+          if (!m_Image_AfterDcRaw) m_Image_AfterDcRaw = new ptImage();
 
           // Transfer dcraw output to an image, maybe applying a profile
           // and a preprofile.
@@ -395,7 +394,7 @@ void ptProcessor::Run(short Phase,
         if (Settings->GetInt("JobMode")==1) // FinalRun!
           Settings->SetValue("Scaled",0);
 
-        if (!m_Image_AfterLensfun) m_Image_AfterLensfun = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterLensfun) m_Image_AfterLensfun = new ptImage();
 
         int Success = 0;
 
@@ -428,7 +427,7 @@ void ptProcessor::Run(short Phase,
       } else {
         // We're at the end of the DcRaw part now and capture
         // the image that DcRaw made for us.
-        if (!m_Image_AfterLensfun) m_Image_AfterLensfun = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterLensfun) m_Image_AfterLensfun = new ptImage();
 
         // Transfer dcraw output to an image, maybe applying a profile
         // and a preprofile.
@@ -533,13 +532,13 @@ void ptProcessor::Run(short Phase,
 
       if (Settings->ToolIsActive("TabBlock")){ // &&
         //~ MainWindow->GetCurrentTab() == ptGeometryTab) {
-        if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage();
         m_Image_AfterRGB->Set(m_Image_AfterLensfun);
-        if (!m_Image_AfterLabCC) m_Image_AfterLabCC = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterLabCC) m_Image_AfterLabCC = new ptImage();
         m_Image_AfterLabCC->Set(m_Image_AfterLensfun);
-        if (!m_Image_AfterLabSN) m_Image_AfterLabSN = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterLabSN) m_Image_AfterLabSN = new ptImage();
         m_Image_AfterLabSN->Set(m_Image_AfterLensfun);
-        if (!m_Image_AfterEyeCandy) m_Image_AfterEyeCandy = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterEyeCandy) m_Image_AfterEyeCandy = new ptImage();
         m_Image_AfterEyeCandy->Set(m_Image_AfterLensfun);
         goto Exit;
       }
@@ -560,7 +559,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("JobMode")) {
         m_Image_AfterRGB = m_Image_AfterLensfun; // Job mode -> no cache
       } else {
-        if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage();
         m_Image_AfterRGB->Set(m_Image_AfterLensfun);
       }
 
@@ -905,7 +904,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("JobMode")) {
         m_Image_AfterLabCC = m_Image_AfterRGB; // Job mode -> no cache
       } else {
-        if (!m_Image_AfterLabCC) m_Image_AfterLabCC = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterLabCC) m_Image_AfterLabCC = new ptImage();
         m_Image_AfterLabCC->Set(m_Image_AfterRGB);
       }
 
@@ -1236,7 +1235,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("JobMode")) {
         m_Image_AfterLabSN = m_Image_AfterLabCC; // Job mode -> no cache
       } else {
-        if (!m_Image_AfterLabSN) m_Image_AfterLabSN = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterLabSN) m_Image_AfterLabSN = new ptImage();
         m_Image_AfterLabSN->Set(m_Image_AfterLabCC);
       }
 
@@ -1778,7 +1777,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("JobMode")) {
         m_Image_AfterLabEyeCandy = m_Image_AfterLabSN; // Job mode -> no cache
       } else {
-        if (!m_Image_AfterLabEyeCandy) m_Image_AfterLabEyeCandy = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterLabEyeCandy) m_Image_AfterLabEyeCandy = new ptImage();
         m_Image_AfterLabEyeCandy->Set(m_Image_AfterLabSN);
       }
 
@@ -2097,7 +2096,7 @@ void ptProcessor::Run(short Phase,
       if (Settings->GetInt("JobMode")) {
         m_Image_AfterEyeCandy = m_Image_AfterLabEyeCandy; // Job mode -> no cache
       } else {
-        if (!m_Image_AfterEyeCandy) m_Image_AfterEyeCandy = new ptImage(m_UpdateGUI);
+        if (!m_Image_AfterEyeCandy) m_Image_AfterEyeCandy = new ptImage();
         m_Image_AfterEyeCandy->Set(m_Image_AfterLabEyeCandy);
       }
 

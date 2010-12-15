@@ -37,8 +37,6 @@ class ptCurve;
 class ptImage {
 public:
 
-void (*m_UpdateGUI)();
-
 // The image , assumed 3 channels and 0..0xffff values.
 // Representation for RGB
 // [0] = R
@@ -64,7 +62,7 @@ short m_Colors;
 short m_ColorSpace;
 
 // Constructor
-ptImage(void (*UpdateGUI)()=NULL);
+ptImage();
 
 // Destructor
 ~ptImage();
