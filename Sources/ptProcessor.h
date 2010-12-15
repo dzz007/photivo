@@ -48,10 +48,9 @@ ptImage*  m_Image_AfterEyeCandy;
 
 // Reporting back
 void (*m_ReportProgress)(const QString Message);
-void (*m_UpdateGUI)();
 
 // Constructor
-ptProcessor(void (*ReportProgress)(const QString Message),void (*UpdateGUI)()=NULL);
+ptProcessor(void (*ReportProgress)(const QString Message));
 // Destructor
 ~ptProcessor();
 

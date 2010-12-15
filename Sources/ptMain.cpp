@@ -231,7 +231,6 @@ void Update(short Phase,
             short SubPhase      = -1,
             short WithIdentify  = 1,
             short ProcessorMode = ptProcessorMode_Preview);
-void UpdateGUI();
 int CalculatePipeSize();
 void CB_OpenSettingsFile(QString SettingsFileName);
 void SaveButtonToolTip(const short mode);
@@ -506,7 +505,7 @@ int photivoMain(int Argc, char *Argv[]) {
   LensfunData = new ptLensfun;
 
   // Instantiate the processor.
-  TheProcessor = new ptProcessor(ReportProgress, UpdateGUI);
+  TheProcessor = new ptProcessor(ReportProgress);
 
   // ChannelMixer instance.
   ChannelMixer = new (ptChannelMixer); // Automatically a identity mixer
@@ -940,18 +939,6 @@ void copyFolder(QString sourceFolder, QString destFolder)
     QString destName = destFolder + "/" + files[i];
     copyFolder(srcName, destName);
   }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// UpdateGUI
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void UpdateGUI() {
-  // As long as changing the settings during pipe run is not
-  // safe enough we exclude inputs
-  // QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2790,7 +2777,7 @@ void CB_MenuFileOpen(const short HaveFile) {
     Settings->SetValue("ImageW",TheDcRaw->m_Width);
     Settings->SetValue("ImageH",TheDcRaw->m_Height);
   }
-  TheProcessor = new ptProcessor(ReportProgress, UpdateGUI);
+  TheProcessor = new ptProcessor(ReportProgress);
   TheProcessor->m_DcRaw = TheDcRaw;
 
   Settings->SetValue("HaveImage", 1);
@@ -2862,7 +2849,7 @@ void CB_MenuFileSaveOutput(const short) {
   delete TheDcRaw;
   delete TheProcessor;
   TheDcRaw = new(DcRaw);
-  TheProcessor = new ptProcessor(ReportProgress, UpdateGUI);
+  TheProcessor = new ptProcessor(ReportProgress);
   Settings->SetValue("JobMode",1); // Disable caching to save memory
   TheProcessor->m_DcRaw = TheDcRaw;
   Settings->ToDcRaw(TheDcRaw);
@@ -2877,7 +2864,7 @@ void CB_MenuFileSaveOutput(const short) {
   delete TheDcRaw;
   delete TheProcessor;
   TheDcRaw = new(DcRaw);
-  TheProcessor = new ptProcessor(ReportProgress, UpdateGUI);
+  TheProcessor = new ptProcessor(ReportProgress);
   Settings->SetValue("JobMode",0);
   TheProcessor->m_DcRaw = TheDcRaw;
   Settings->ToDcRaw(TheDcRaw);
