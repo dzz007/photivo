@@ -60,6 +60,7 @@ LIBS += -lgomp -lpthread
 unix {
   CONFIG += link_pkgconfig
   PKGCONFIG += GraphicsMagick++ GraphicsMagickWand
+  LIBS += $$system(GraphicsMagick++-config --libs)
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
   PREFIX = $$system(more ./config)

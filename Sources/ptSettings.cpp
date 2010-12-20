@@ -376,7 +376,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"OutputLinearity"               ,ptGT_InputSlider     ,1,1,1 ,0.06  ,0.0  ,1.0   ,0.01 ,3 ,tr("Linearity")          ,tr("Linearity")},
     {"RGBContrast3Amount"            ,ptGT_InputSlider     ,1,1,1 ,0.0  ,-20.0,20.0  ,0.5  ,1 ,tr("Contrast")           ,tr("Contrast")},
     {"RGBContrast3Threshold"         ,ptGT_InputSlider     ,1,1,1 ,0.50 ,0.05 ,0.95  ,0.05 ,2 ,tr("Threshold")          ,tr("Threshold")},
-    {"WebResizeScale"                ,ptGT_Input           ,1,1,1 ,1200  ,400 ,2000  ,100  ,0 ,tr("Size")         ,tr("Image size")},
+    {"WebResizeScale"                ,ptGT_Input           ,1,1,1 ,1200  ,200 ,2000  ,100  ,0 ,tr("Size")         ,tr("Image size")},
     {"WienerFilter2Amount"           ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0 ,0.05   ,2 ,tr("Amount")               ,tr("Amount")},
     {"WienerFilter2Gaussian"         ,ptGT_InputSlider     ,2,1,1 ,0.6    ,0.0 ,5.0 ,0.05   ,2 ,tr("Gaussian")             ,tr("Gaussian")},
     {"WienerFilter2Box"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,5.0 ,0.05   ,2 ,tr("Box")                  ,tr("Box")},
@@ -1847,7 +1847,7 @@ sToolInfo ToolInfo (const QString GuiName) {
   return Info;
 }
 
-int ptSettings::ToolAlwaysVisible(const QString GuiName) {
+int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
   QStringList VisibleTools =
   (QStringList()
     // Settings tab
@@ -1877,22 +1877,22 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) {
   return 0;
 }
 
-QString ptSettings::ToolGetName (const QString GuiName) {
+QString ptSettings::ToolGetName (const QString GuiName) const {
   sToolInfo Info = ToolInfo(GuiName);
   return Info.Name;
 }
 
-int ptSettings::ToolIsActive (const QString GuiName) {
+int ptSettings::ToolIsActive (const QString GuiName) const {
   sToolInfo Info = ToolInfo(GuiName);
   return (Info.IsHidden || Info.IsBlocked)?0:Info.IsActive;
 }
 
-int ptSettings::ToolIsBlocked (const QString GuiName) {
+int ptSettings::ToolIsBlocked (const QString GuiName) const {
   sToolInfo Info = ToolInfo(GuiName);
   return Info.IsBlocked;
 }
 
-int ptSettings::ToolIsHidden (const QString GuiName) {
+int ptSettings::ToolIsHidden (const QString GuiName) const {
   sToolInfo Info = ToolInfo(GuiName);
   return Info.IsHidden;
 }
