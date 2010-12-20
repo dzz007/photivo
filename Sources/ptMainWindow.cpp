@@ -1260,6 +1260,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       Update(ptProcessorPhase_ToGimp);
     } else if (Event->key()==Qt::Key_R && Event->modifiers()==Qt::ControlModifier) {
       resize(QSize(1200,900));
+      QRect DesktopRect = (QApplication::desktop())->screenGeometry(this);
+      move(QPoint(MAX((DesktopRect.width()-1200),0)/2,MAX((DesktopRect.height()-900)/2-20,0)));
     } else if (Event->key()==Qt::Key_X && Event->modifiers()==Qt::NoModifier) {
       ProcessingTabBook->setCurrentIndex(MIN(ProcessingTabBook->currentIndex()+1,ProcessingTabBook->count()));
     } else if (Event->key()==Qt::Key_Y && Event->modifiers()==Qt::NoModifier) {

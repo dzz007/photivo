@@ -358,7 +358,6 @@ unsigned CLASS sget4 (uint8_t *s)
 unsigned CLASS get4()
 {
   uint8_t str[4] = { 0xff,0xff,0xff,0xff };
-  // TODO Mike, removed check due to problems with Jpegs.
   ptfread (str, 1, 4, m_InputFile);
   return sget4(str);
 }
@@ -674,7 +673,7 @@ uint16_t * CLASS make_decoder_ref (const uint8_t **source)
 
   count = (*source += 16) - 17;
   for (max=16; max && !count[max]; max--) {} ;
-  huff = (uint16_t *) calloc (1 + (1 << max), sizeof *huff);
+  huff = (uint16_t *) CALLOC (1 + (1 << max), sizeof *huff);
   merror (huff, "make_decoder()");
   huff[0] = max;
   for (h=len=1; len <= max; len++)
@@ -1070,9 +1069,9 @@ void CLASS canon_sraw_load_raw()
     } else {
       rp[1] = (rp[1] << 2) + hue;
       rp[2] = (rp[2] << 2) + hue;
-      pix[0] = rp[0] + ((  200*rp[1] + 22929*rp[2]) >> 12);
-      pix[1] = rp[0] + ((-5640*rp[1] - 11751*rp[2]) >> 12);
-      pix[2] = rp[0] + ((29040*rp[1] -   101*rp[2]) >> 12);
+      pix[0] = rp[0] + ((  200*rp[1] + 22929*rp[2]) >> 14);
+      pix[1] = rp[0] + ((-5640*rp[1] - 11751*rp[2]) >> 14);
+      pix[2] = rp[0] + ((29040*rp[1] -   101*rp[2]) >> 14);
     }
     for (c=0;c<3;c++) rp[c] = CLIP(pix[c] * sraw_mul[c] >> 10);
   }
@@ -3777,7 +3776,7 @@ void CLASS ptScaleColors() {
     else
       ASSIGN(m_PreMultipliers[c],VALUE(m_PreMultipliers[c]) / dmin);
     ASSIGN(m_Multipliers[c],
-           VALUE(m_PreMultipliers[c])*0xffff/(m_WhiteLevel-m_BlackLevel));
+           VALUE(m_PreMultipliers[c])*0xffff/(m_WhiteLevel-m_CBlackLevel[c]));
   }
   if (m_UserSetting_MaxMultiplier==0)
     m_MinPreMulti = dmin/dmax; // And the maximum is per construction 1.0
@@ -3806,21 +3805,22 @@ void CLASS ptScaleColors() {
 
   TRACEKEYVALS("Scaling colors","%s","");
 
-  int32_t Size = m_OutHeight*m_OutWidth;
+  short Color = 0;
+  uint32_t Temp = 0;
+  uint16_t LUT[0x10000][4];
+#pragma omp parallel for schedule(static)
+  for (uint32_t i = 0; i < 0xffff; i++) {
+    for (short c = 0; c < 4; c++) {
+      LUT[i][c] = i>m_CBlackLevel[c]?
+                    MIN((uint32_t)((i - m_CBlackLevel[c])*VALUE(m_Multipliers[c])),0xffff):0;
+    }
+  }
 
-// All can be shared : m_* is read only with the exception of
-// m_Image on which there's no contention possible.
-#pragma omp parallel for schedule(static) default(shared)
-  for (int32_t Pos=0; Pos < Size; Pos++) {
-    for (short Color=0; Color<4; Color++) {
-      uint32_t Value = m_Image[Pos][Color];
-      if (Value > m_CBlackLevel[Color]) {
-        Value -= m_CBlackLevel[Color]; // was "[i & 3];" TODO Mike
-        Value = (uint32_t)(Value*VALUE(m_Multipliers[Color]));
-      } else {
-        Value = 0;
-      }
-      m_Image[Pos][Color] = MIN(0xFFFF,Value);
+  uint32_t Size = m_OutHeight*m_OutWidth;
+#pragma omp parallel for schedule(static) private(Color, Temp)
+  for (int32_t i = 0; i < Size; i++) {
+    for (short Color = 0; Color < 4; Color++) {
+      m_Image[i][Color] = LUT[m_Image[i][Color]][Color];
     }
   }
 }
@@ -3848,6 +3848,7 @@ void CLASS ptHighlight(const short  ClipMode,
 #endif
 
   TRACEKEYVALS("m_MinPreMulti","%f",m_MinPreMulti);
+  short ColorRGB[4]={0,1,2,1};
 #pragma omp parallel for schedule(static) default(shared)
   for (uint16_t Row = 0; Row < m_OutHeight; Row++) {
     for (uint16_t Column = 0; Column < m_OutWidth; Column++) {
@@ -3864,7 +3865,8 @@ void CLASS ptHighlight(const short  ClipMode,
       short Clipped = 0;
       for (short Color = 0; Color < m_Colors; Color++) {
         if (m_Image[Pos][Color] >=
-            (uint16_t)((m_WhiteLevel-m_BlackLevel)*VALUE(m_Multipliers[Color]))) {
+            (uint16_t)
+                ((m_WhiteLevel-m_CBlackLevel[ColorRGB[Color]])*VALUE(m_Multipliers[Color]))) {
           Clipped = 1;
         }
       }
@@ -4049,12 +4051,10 @@ void CLASS pre_interpolate()
     }
   }
   if (m_Filters && m_Colors == 3) {
-    if (m_MixGreen) {
+    if (m_MixGreen) { // 4 color demosaicer will follow
       m_Colors++;
-    }
-    else {
-      // Seems like making the G1 equal to G2
-      // (and adapting the filter from fi BG1G2R to BGGR)
+    } else {
+      // RG1BG2 -> RGB
 #pragma omp parallel for schedule(static) default(shared)
       for (row = FC(1,0) >> 1; row < m_Height; row+=2)
         for (col = FC(row,1) & 1; col < m_Width; col+=2)
@@ -8235,7 +8235,7 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
 
   // Copied from earlier to here also.
   // Enables Phase3 to reenter with a different FourColorRGB setting.
-  if (m_UserSetting_Quality == ptInterpolation_VNG4 || m_UserSetting_HalfSize) {
+  if (m_UserSetting_Quality == ptInterpolation_VNG4 && !m_UserSetting_HalfSize) {
     m_MixGreen = 1;
   } else {
     m_MixGreen = 0;
@@ -8276,7 +8276,7 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
 
   // not 1:1 pipe, use FC marco instead of interpolation
   uint16_t    (*TempImage)[4];
-  if (m_Shrink) {
+  if (m_Shrink) { // -> m_Filters == 0
     m_OutHeight = (m_Height + 1) / 2;
     m_OutWidth  = (m_Width + 1) / 2;
     TempImage = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *TempImage);
@@ -8292,6 +8292,7 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
     m_Image = TempImage;
   }
 
+  // RG1BG2 -> RGB (if not 4 colors needed later on)
   pre_interpolate();
 
   TRACEKEYVALS("Colors","%d",m_Colors);
@@ -8341,13 +8342,18 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
   TRACEKEYVALS("Interpolation type","%d",m_UserSetting_Quality);
 
   // Additional photivo stuff. Other halvings on request.
-  if (m_UserSetting_HalfSize > 1) {
+  if (m_UserSetting_HalfSize > 1 ||
+      // 3 channel RAWs
+      (m_Shrink == 0 && m_UserSetting_HalfSize == 1)) {
 
-    uint16_t NewHeight = m_Height >> (m_UserSetting_HalfSize-1);
-    uint16_t NewWidth = m_Width >> (m_UserSetting_HalfSize-1);
+    short Factor = m_UserSetting_HalfSize-1;
+    if (m_Shrink == 0) Factor+=1;
 
-    short Step = 1 << (m_UserSetting_HalfSize-1);
-    int Average = 2 * (m_UserSetting_HalfSize-1);
+    uint16_t NewHeight = m_Height >> Factor;
+    uint16_t NewWidth = m_Width >> Factor;
+
+    short Step = 1 << Factor;
+    int Average = 2 * Factor;
 
     uint16_t (*NewImage)[4] =
       (uint16_t (*)[4]) CALLOC(NewWidth*NewHeight,sizeof(*m_Image));
