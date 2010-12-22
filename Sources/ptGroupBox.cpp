@@ -285,6 +285,12 @@ void ptGroupBox::WriteSettings(const short Append) {
   for (int i = 0; i < CurveWindows.size(); i++) {
     Curves << CurveKeys.at((CurveWindows.at(i))->m_Channel);
   }
+
+  // Additional for Camera color profile
+  if (m_Name == "TabCameraColorSpace")
+    Keys << "CameraColorProfile";
+
+  // Additional for Curves
   if (Curves.contains("CurveSaturation"))
     Keys << "SatCurveMode" << "SatCurveType";
   if (Curves.contains("CurveTexture"))
@@ -307,6 +313,7 @@ void ptGroupBox::WriteSettings(const short Append) {
     }
   }
 
+  // Additional for Crop
   if (m_Name == "TabCrop" && Settings->GetInt("Crop")==1)
     Keys << "CropX" << "CropY" << "CropW" << "CropH";
 
@@ -459,7 +466,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
         Menu.addSeparator();
         Menu.addAction(m_AtnHide);
         Menu.exec(event->globalPos());
-      } else if (m_Name == "TabWhiteBalance" ||
+      } else if (m_Name == "TabCameraColorSpace" ||
+                 m_Name == "TabWhiteBalance" ||
                  m_Name == "TabDemosaicing" ||
                  m_Name == "TabHighlightRecovery") {
         QMenu Menu(NULL);

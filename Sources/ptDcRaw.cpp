@@ -8235,7 +8235,8 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
 
   // Copied from earlier to here also.
   // Enables Phase3 to reenter with a different FourColorRGB setting.
-  if (m_UserSetting_Quality == ptInterpolation_VNG4 && !m_UserSetting_HalfSize) {
+  if ((m_UserSetting_Quality == ptInterpolation_VNG4 || m_UserSetting_HalfSize)
+      && m_Filters != 0) { // m_Filters==0 <-> 3 channel RAWs
     m_MixGreen = 1;
   } else {
     m_MixGreen = 0;
