@@ -39,6 +39,7 @@ ptImage* ptImage::ptGMCWriteImage(const char* FileName,
                                   const short Format,
                                   const int Quality,
                                   const int Sampling,
+                                  const int Resolution,
                                   const char* ColorProfileFileName,
                                   const int Intent) {
 
@@ -130,6 +131,10 @@ ptImage* ptImage::ptGMCWriteImage(const char* FileName,
       (Format==ptSaveFormat_TIFF16)) {
     MagickSetImageCompression(mw, LZWCompression);
   }
+
+  // Resolution
+  MagickSetImageUnits(mw, PixelsPerInchResolution);
+  MagickSetImageResolution(mw, Resolution, Resolution);
 
   MagickWriteImage(mw, FileName);
   DestroyMagickWand(mw);

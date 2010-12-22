@@ -2102,6 +2102,7 @@ void WriteOut() {
       Settings->GetInt("SaveFormat"),
       Settings->GetInt("SaveQuality"),
       Settings->GetInt("SaveSampling"),
+      Settings->GetInt("SaveResolution"),
       Settings->GetString("OutputColorProfile").toAscii().data(),
       Settings->GetInt("OutputColorProfileIntent"));
 
@@ -7869,6 +7870,10 @@ void CB_SaveQualityInput(const QVariant Value) {
   Settings->SetValue("SaveQuality",Value);
 }
 
+void CB_SaveResolutionInput(const QVariant Value) {
+  Settings->SetValue("SaveResolution",Value);
+}
+
 void CB_IncludeExifCheck(const QVariant State) {
   Settings->SetValue("IncludeExif",State);
 }
@@ -8472,6 +8477,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(OutputColorProfileIntentChoice)
 
   M_Dispatch(SaveQualityInput)
+  M_Dispatch(SaveResolutionInput)
   M_Dispatch(SaveFormatChoice)
   M_Dispatch(SaveSamplingChoice)
   M_Dispatch(IncludeExifCheck)
