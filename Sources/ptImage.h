@@ -548,6 +548,7 @@ ptImage* ptGMCWriteImage(const char* FileName,
                          const short Format,
                          const int Quality,
                          const int Sampling,
+                         const int Resolution,
                          const char* ColorProfileFileName,
                          const int Intent);
 

@@ -390,7 +390,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     //{"GREYCda"                       ,ptGT_Input           ,2,1,1 ,30   ,0    ,90    ,1    ,0 ,tr("da")                 ,tr("da")},
     //{"GREYCSigma"                    ,ptGT_Input           ,2,1,1 ,1.1  ,0.0  ,5.0   ,0.1  ,1 ,tr("Sigma")              ,tr("Sigma")},
     //{"GREYCGaussPrecision"           ,ptGT_Input           ,2,1,1 ,2.0  ,0.0  ,5.0   ,0.1  ,1 ,tr("Gauss")              ,tr("Gauss")},
-    {"SaveQuality"                   ,ptGT_Input           ,2,1,1 ,97   ,25   ,100   ,1    ,0 ,tr("Quality")            ,tr("Quality")},
+    {"SaveQuality"                   ,ptGT_Input           ,1,1,1 ,97   ,25   ,100   ,1    ,0 ,tr("Quality")            ,tr("Quality")},
+    {"SaveResolution"                ,ptGT_Input           ,1,1,1 ,300  ,25   ,1200  ,100  ,0 ,tr("dpi")                ,tr("Resolution in dpi")},
     {"ImageRating"                   ,ptGT_Input           ,2,1,1 ,0    ,0    ,5     ,1    ,0 ,tr("Rating")             ,tr("Image rating")}
   };
 
