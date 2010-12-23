@@ -3928,6 +3928,8 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
                         const double UpperLimit,
                         const short ScaleFactor) { // 0, 1 or 2 depending on pipe size
 
+  assert (m_ColorSpace == ptSpace_Lab);
+
   ptImage *NoiseLayer = new ptImage;
   NoiseLayer->Set(this);  // allocation of free layer faster? TODO!
   float (*Mask);
@@ -3937,18 +3939,19 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
 
   ptCimgNoise(NoiseLayer, Sigma*10000, Noise, ScaledRadius);
 
-  const double WPH = 0x7fff;
+  const float WPH = 0x7fff;
 
-  if (4/ScaleFactor != 1) {
-    double m = 4/ScaleFactor;
-    double t = (1-m)*WPH;
-#pragma omp parallel for default(shared)
+  // adaption to get the same optical impression when rescaled
+  if (ScaleFactor != 2) {
+    float m = 4/powf(2.0,(float)ScaleFactor);
+    float t = (1-m)*WPH;
+#pragma omp parallel for schedule(static)
     for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
       NoiseLayer->m_Image[i][0] = CLIP((int32_t)(NoiseLayer->m_Image[i][0]*m+t));
     }
   }
 
-  Mask=GetMask(MaskType, LowerLimit, UpperLimit, 0.0);
+  Mask = GetMask(MaskType, LowerLimit, UpperLimit, 0.0);
   if (NoiseType < 3) {
     Overlay(NoiseLayer->m_Image,Opacity,Mask,ptOverlayMode_SoftLight);
   } else {

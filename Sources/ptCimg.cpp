@@ -452,22 +452,17 @@ void ptCimgNoise(ptImage* Image, const double Sigma, const short NoiseType, cons
   int Type = LIM(NoiseType,0,2);
 
   CImg <uint16_t> CImage(Width,Height,1,1,0);
-#pragma omp parallel for default(shared) schedule(static)
-  for (uint16_t Row=0; Row<Image->m_Height; Row++) {
-    for (uint16_t Col=0; Col<Image->m_Width; Col++) {
-      CImage(Col,Row) = 0x7FFF;
-    }
-  }
+  CImage.fill(0x7FFF);
 
   if (NoiseType == 1) Strength = Strength * 2;  // for the same visual impression
   CImage.noise(Strength,Type);
   CImage.blur(Radius,true);
-#pragma omp parallel for default(shared) schedule(static)
+  uint32_t Temp = 0;
+#pragma omp parallel for default(shared) schedule(static) private(Temp)
   for (uint16_t Row=0; Row<Image->m_Height; Row++) {
+    Temp = Row*Width;
     for (uint16_t Col=0; Col<Image->m_Width; Col++) {
-        Image->m_Image[Row*Width+Col][0] = CImage(Col,Row);
-        Image->m_Image[Row*Width+Col][1] = 0x8080;
-        Image->m_Image[Row*Width+Col][2] = 0x8080;
+        Image->m_Image[Temp+Col][0] = CImage(Col,Row);
     }
   }
 
