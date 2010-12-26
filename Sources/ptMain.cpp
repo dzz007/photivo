@@ -1316,72 +1316,39 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
   // Determine first what is the current image.
   if (ForcedImage) {
-    if (!OnlyHistogram) PreviewImage->Set(ForcedImage);
-    HistogramImage->Set(ForcedImage);
+    PreviewImage->Set(ForcedImage);
   } else if (Settings->GetInt("PreviewMode") == ptPreviewMode_End) {
-    if (!OnlyHistogram) {
-      PreviewImage->Set(TheProcessor->m_Image_AfterEyeCandy);
-    }
-    HistogramImage->Set(TheProcessor->m_Image_AfterEyeCandy);
+    PreviewImage->Set(TheProcessor->m_Image_AfterEyeCandy);
   } else {
     if (!Settings->GetInt("IsRAW")) ActiveTab = MAX(ptGeometryTab, ActiveTab);
     switch (ActiveTab) {
-      //~ case ptGenericTab:
-        //~ if (!OnlyHistogram) PreviewImage->Set(TheProcessor->m_Image_AfterDcRaw);
-        //~ HistogramImage = TheProcessor->m_Image_AfterDcRaw;
-        //~ break;
       case ptCameraTab:
         Settings->SetValue("ShowExposureIndicatorSensor",1);
-        if (!OnlyHistogram) {
-          if (Settings->GetInt("ExposureIndicatorSensor")) {
-            PreviewImage->Set(TheDcRaw,
-                              Settings->GetInt("WorkColor"));
-            HistogramImage->Set(PreviewImage);
-          } else {
-            PreviewImage->Set(TheProcessor->m_Image_AfterDcRaw);
-            HistogramImage->Set(TheProcessor->m_Image_AfterDcRaw);
-          }
+        if (Settings->GetInt("ExposureIndicatorSensor")) {
+          PreviewImage->Set(TheDcRaw,
+                             Settings->GetInt("WorkColor"));
         } else {
-          HistogramImage->Set(TheProcessor->m_Image_AfterDcRaw);
+          PreviewImage->Set(TheProcessor->m_Image_AfterDcRaw);
         }
         break;
       case ptGeometryTab:
-        if (!OnlyHistogram) PreviewImage->Set(TheProcessor->m_Image_AfterLensfun);
-        HistogramImage->Set(TheProcessor->m_Image_AfterLensfun);
+        PreviewImage->Set(TheProcessor->m_Image_AfterLensfun);
         break;
       case ptRGBTab:
-        if (!OnlyHistogram) PreviewImage->Set(TheProcessor->m_Image_AfterRGB);
-        HistogramImage->Set(TheProcessor->m_Image_AfterRGB);
+        PreviewImage->Set(TheProcessor->m_Image_AfterRGB);
         break;
       case ptLabCCTab:
-        if (!OnlyHistogram) {
-          PreviewImage->Set(TheProcessor->m_Image_AfterLabCC);
-          if (PreviewImage->m_ColorSpace == ptSpace_Lab)
-            PreviewImage->LabToRGB(Settings->GetInt("WorkColor"));
-        }
-        HistogramImage->Set(TheProcessor->m_Image_AfterLabCC); // Preview != Histogram in this case.
-
+        PreviewImage->Set(TheProcessor->m_Image_AfterLabCC);
         break;
       case ptLabSNTab:
-        if (!OnlyHistogram) {
-          PreviewImage->Set(TheProcessor->m_Image_AfterLabSN);
-          if (PreviewImage->m_ColorSpace == ptSpace_Lab)
-            PreviewImage->LabToRGB(Settings->GetInt("WorkColor"));
-        }
-        HistogramImage->Set(TheProcessor->m_Image_AfterLabSN);
-              break;
-            case ptLabEyeCandyTab:
-              if (!OnlyHistogram) {
-                PreviewImage->Set(TheProcessor->m_Image_AfterLabEyeCandy);
-                if (PreviewImage->m_ColorSpace == ptSpace_Lab)
-                  PreviewImage->LabToRGB(Settings->GetInt("WorkColor"));
-              }
-              HistogramImage->Set(TheProcessor->m_Image_AfterLabEyeCandy);
+        PreviewImage->Set(TheProcessor->m_Image_AfterLabSN);
+        break;
+      case ptLabEyeCandyTab:
+        PreviewImage->Set(TheProcessor->m_Image_AfterLabEyeCandy);
         break;
       case ptEyeCandyTab:
       case ptOutTab:
-        if (!OnlyHistogram) PreviewImage->Set(TheProcessor->m_Image_AfterEyeCandy);
-        HistogramImage->Set(TheProcessor->m_Image_AfterEyeCandy);
+        PreviewImage->Set(TheProcessor->m_Image_AfterEyeCandy);
         break;
       default:
         // Should not happen.
@@ -1389,23 +1356,26 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     }
   }
 
-  // If we are in a Tab preview mode and in the lab mode
-  // we do the conversion to Lab in case it would not have been
-  // done yet (due to suppressed for speed in absense of USM or L Curve).
-  // This way the histogram is an L Histogram at this point.
-  if ( (Settings->GetInt("PreviewMode") == ptPreviewMode_Tab) &&
-       (ActiveTab == ptLabCCTab) &&
-       (!OnlyHistogram) &&
-       (TheProcessor->m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) ) {
-    TheProcessor->m_Image_AfterLabCC->RGBToLab();
+  if (Settings->GetInt("HistogramMode")==ptHistogramMode_Linear) {
+    HistogramImage->Set(PreviewImage);
+    // If we are in a Tab preview mode and in the lab mode
+    // we do the conversion to Lab in case it would not have been
+    // done yet (due to suppressed for speed in absense of USM or L Curve).
+    // This way the histogram is an L Histogram at this point.
+    if ( (Settings->GetInt("PreviewMode") == ptPreviewMode_Tab) &&
+         (ActiveTab == ptLabCCTab || ActiveTab == ptLabSNTab || ActiveTab == ptLabEyeCandyTab) &&
+         (HistogramImage->m_ColorSpace != ptSpace_Lab) ) {
+      HistogramImage->RGBToLab();
+    }
+  } else if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output &&
+             !(Settings->GetInt("HistogramCrop") && !Settings->GetInt("WebResize"))) {
+    HistogramImage->Set(PreviewImage);
+  } else if (Settings->GetInt("HistogramCrop")) {
+    HistogramImage->Set(PreviewImage);
   }
 
-  if ( (Settings->GetInt("PreviewMode") == ptPreviewMode_Tab) &&
-       (ActiveTab == ptLabSNTab) &&
-       (!OnlyHistogram) &&
-       (TheProcessor->m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) ) {
-    TheProcessor->m_Image_AfterLabSN->RGBToLab();
-  }
+  if (PreviewImage->m_ColorSpace == ptSpace_Lab)
+    PreviewImage->LabToRGB(Settings->GetInt("WorkColor"));
 
   uint16_t Width = 0;
   uint16_t Height = 0;
@@ -1648,8 +1618,9 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   ViewWindow->StatusReport(0);
   ReportProgress(QObject::tr("Ready"));
 
-  if (Settings->GetInt("WriteBackupSettings"))
-    WriteSettingsFile(Settings->GetString("UserDirectory")+"backup.pts");
+  if (!OnlyHistogram)
+    if (Settings->GetInt("WriteBackupSettings"))
+      WriteSettingsFile(Settings->GetString("UserDirectory")+"backup.pts");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
