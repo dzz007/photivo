@@ -3805,8 +3805,6 @@ void CLASS ptScaleColors() {
 
   TRACEKEYVALS("Scaling colors","%s","");
 
-  short Color = 0;
-  uint32_t Temp = 0;
   uint16_t LUT[0x10000][4];
 #pragma omp parallel for schedule(static)
   for (uint32_t i = 0; i < 0xffff; i++) {
@@ -3817,8 +3815,8 @@ void CLASS ptScaleColors() {
   }
 
   uint32_t Size = m_OutHeight*m_OutWidth;
-#pragma omp parallel for schedule(static) private(Color, Temp)
-  for (int32_t i = 0; i < Size; i++) {
+#pragma omp parallel for schedule(static)
+  for (uint32_t i = 0; i < Size; i++) {
     for (short Color = 0; Color < 4; Color++) {
       m_Image[i][Color] = LUT[m_Image[i][Color]][Color];
     }
@@ -8822,7 +8820,6 @@ void CLASS ptHotpixelReductionBayer() {
 
 void CLASS ptMedianFilter() {
 
-  uint16_t (*Pixel)[4];
   int      Median[9];
   static const uint8_t opt[] =  /* Optimal 9-element median search */
   { 1,2, 4,5, 7,8, 0,1, 3,4, 6,7, 1,2, 4,5, 7,8,
@@ -8831,24 +8828,24 @@ void CLASS ptMedianFilter() {
   for (short Pass=1; Pass <= m_UserSetting_MedianPasses; Pass++) {
     for (short c=0; c < 3; c+=2) {
 #pragma omp parallel for schedule(static) default(shared)
-      for (Pixel=m_Image; Pixel<m_Image+m_Width*m_Height; Pixel++) {
-        Pixel[0][3] = Pixel[0][c];
+      for (int32_t i = 0; i< (int32_t)m_Width*m_Height; i++) {
+        m_Image[i][3] = m_Image[i][c];
       }
 #pragma omp parallel for schedule(static) default(shared) private(Median)
-      for (Pixel=m_Image+m_Width; Pixel<m_Image+m_Width*(m_Height-1); Pixel++) {
-        if ((Pixel-m_Image+1) % m_Width < 2) continue;
+      for (int32_t n=m_Width; n<m_Width*(m_Height-1); n++) {
+        if ((n+1) % m_Width < 2) continue;
         short k=0;
         for (int32_t i = -m_Width; i <= m_Width; i += m_Width) {
           for (int32_t j = i-1; j <= i+1; j++) {
-            Median[k++] = Pixel[j][3] - Pixel[j][1];
+            Median[k++] = m_Image[n+j][3] - m_Image[n+j][1];
           }
         }
-      for (unsigned short i=0; i < sizeof opt; i+=2) {
-        if (Median[opt[i]] > Median[opt[i+1]]) {
-          SWAP (Median[opt[i]] , Median[opt[i+1]]);
+        for (unsigned short i=0; i < sizeof opt; i+=2) {
+          if (Median[opt[i]] > Median[opt[i+1]]) {
+            SWAP (Median[opt[i]] , Median[opt[i+1]]);
+          }
         }
-      }
-      Pixel[0][c] = CLIP(Median[4] + Pixel[0][1]);
+        m_Image[n][c] = CLIP(Median[4] + m_Image[n][1]);
       }
     }
   }
