@@ -34,19 +34,20 @@ All cross boundary differentiation in this file happens under the assumption of 
 So for example a pixel at (-1, y) is equal to a pixel at (0, y) by definition.
 */
 #include <QMessageBox>
+
+#include <ctime>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <cfloat>
+
 #include "ptImage.h"
 #include "ptError.h"
 
 #ifdef _OPENMP
   #include <omp.h>
 #endif
-
-#include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <float.h>
 
 extern float ToFloatTable[0x10000];
 

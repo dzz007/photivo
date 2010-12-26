@@ -23,8 +23,6 @@
 #ifndef DLCHANNELMIXER_H
 #define DLCHANNELMIXER_H
 
-#include <stdarg.h>
-
 #include "ptDefines.h"
 #include "ptConstants.h"
 

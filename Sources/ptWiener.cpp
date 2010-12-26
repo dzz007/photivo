@@ -34,7 +34,7 @@
 #include "ptCimg.h"
 
 #include <fftw3.h>
-#include <math.h>
+#include <cmath>
 
 // First idea how to realize this filter I got from Filip Rooms
 // http://filiprooms.be/research/software/

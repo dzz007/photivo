@@ -20,15 +20,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <assert.h>
+#include <cassert>
+
+#include <QMessageBox>
 
 #include "ptGroupBox.h"
 #include "ptSettings.h"
 #include "ptConstants.h"
 #include "ptTheme.h"
 #include "ptCurveWindow.h"
-
-#include <QMessageBox>
 
 extern ptTheme* Theme;
 extern QStringList CurveKeys;

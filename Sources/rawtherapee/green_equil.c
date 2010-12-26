@@ -11,9 +11,9 @@
 //~ #include <ctype.h>
 //~ #include <errno.h>
 //~ #include <fcntl.h>
-#include <float.h>
+#include <cfloat>
 //~ #include <limits.h>
-#include <math.h>
+#include <cmath>
 //~ #include <setjmp.h>
 //~ #include <stdio.h>
 //~ #include <stdlib.h>

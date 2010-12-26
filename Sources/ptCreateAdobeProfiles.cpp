@@ -21,13 +21,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
-#include <ctype.h>
-#include <lcms2.h>
-#include <math.h>
-#include <assert.h>
-#include <lcms2_plugin.h>
+#include <cstdio>
+#include <cctype>
+#include <cmath>
+#include <cassert>
 
+#include <lcms2.h>
+#include <lcms2_plugin.h>
 
 #include "ptConstants.h"
 

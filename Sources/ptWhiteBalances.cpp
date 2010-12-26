@@ -25,8 +25,9 @@
 // Derived from wb_preset.c in ufraw with kind permission of Udi Fuchs.
 //
 
-#include <stdlib.h>
 #include <QObject>
+#include <cstdlib>
+
 #include "ptWhiteBalances.h"
 
 // This has been autoconverted from wb_presets.c in ufraw.

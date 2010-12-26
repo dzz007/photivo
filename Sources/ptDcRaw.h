@@ -37,18 +37,18 @@
 #endif
 
 #define _USE_MATH_DEFINES
-#include <ctype.h>
-#include <errno.h>
+#include <cctype>
+#include <cerrno>
+#include <cfloat>
+#include <climits>
+#include <cmath>
+#include <cassert>
+#include <csetjmp>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 #include <fcntl.h>
-#include <float.h>
-#include <limits.h>
-#include <math.h>
-#include <assert.h>
-#include <setjmp.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #include <sys/types.h>
 /*
    NO_JPEG disables decoding of compressed Kodak DC120 files.
