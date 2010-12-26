@@ -20,9 +20,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <assert.h>
-#include <math.h>
-#include <stdlib.h>
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
+
 #include "ptKernel.h"
 #include "ptError.h"
 

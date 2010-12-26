@@ -42,7 +42,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>*/
-#include <math.h>
+#include <cmath>
 
 
 //#include "shrtdct_float.c"

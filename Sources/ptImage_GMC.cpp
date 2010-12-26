@@ -20,6 +20,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <cstdlib>
+#include <cstdio>
+
 #include "ptImage.h"
 #include "ptError.h"
 #include <wand/magick_wand.h>
@@ -27,9 +30,6 @@
 #ifdef _OPENMP
   #include <omp.h>
 #endif
-
-#include <stdlib.h>
-#include <stdio.h>
 
 // Lut
 extern float ToFloatTable[0x10000];

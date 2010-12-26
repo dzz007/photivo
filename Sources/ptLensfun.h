@@ -26,8 +26,9 @@
 
 #include <QString>
 
+#include "ptDefines.h"
+
 #include "lensfun.h"
-#include <stdint.h>
 
 struct ptLensfunCamera {
   QString   Make;

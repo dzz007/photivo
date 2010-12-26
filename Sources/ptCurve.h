@@ -24,8 +24,6 @@
 #ifndef DLCURVE_H
 #define DLCURVE_H
 
-#include <stdarg.h>
-
 #include "ptDefines.h"
 #include "ptConstants.h"
 

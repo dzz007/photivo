@@ -23,9 +23,9 @@
 
 #include <QtCore>
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <math.h>
+#include <cstdarg>
+#include <cstdlib>
+#include <cmath>
 
 #include "ptCurve.h"
 #include "ptConstants.h"

@@ -1,12 +1,13 @@
 #include <QMessageBox>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <cfloat>
+
 #include "ptImage.h"
 #include "ptError.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <float.h>
 
 #ifdef _OPENMP
   #include <omp.h>

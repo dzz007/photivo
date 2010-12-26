@@ -23,7 +23,6 @@
 // This file is largely based on work
 // Copyright (C) 2010 Emil Martinec for the RawTherapee project.
 
-#include <QMessageBox>
 #include "ptImage.h"
 #include "ptConstants.h"
 #include "ptError.h"

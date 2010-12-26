@@ -24,7 +24,8 @@
 #ifndef DLGUIOPTIONS_H
 #define DLGUIOPTIONS_H
 
-#include "QtCore"
+#include <QtCore>
+
 #include "ptConstants.h"
 #include "lensfun.h"
 

@@ -29,8 +29,8 @@
   #include <omp.h>
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
 // Lut
 extern float ToFloatTable[0x10000];
