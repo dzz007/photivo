@@ -537,7 +537,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   Tabbar = ProcessingTabBook->findChild<QTabBar*>();
   Tabbar->installEventFilter(this);
   WritePipeButton->installEventFilter(this);
+  ToGimpButton->installEventFilter(this);
 
+  // context menu for save button
   m_AtnSavePipe = new QAction(tr("Save current pipe"), this);
   connect(m_AtnSavePipe, SIGNAL(triggered()), this, SLOT(SaveMenuPipe()));
   m_AtnSaveFull = new QAction(tr("Save full size"), this);
@@ -546,6 +548,12 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnSaveSettings, SIGNAL(triggered()), this, SLOT(SaveMenuSettings()));
   m_AtnSaveJobfile = new QAction(tr("Save job file"), this);
   connect(m_AtnSaveJobfile, SIGNAL(triggered()), this, SLOT(SaveMenuJobfile()));
+
+  // context menu for gimp button
+  m_AtnGimpSavePipe = new QAction(tr("Export current pipe"), this);
+  connect(m_AtnGimpSavePipe, SIGNAL(triggered()), this, SLOT(GimpSaveMenuPipe()));
+  m_AtnGimpSaveFull = new QAction(tr("Export full size"), this);
+  connect(m_AtnGimpSaveFull, SIGNAL(triggered()), this, SLOT(GimpSaveMenuFull()));
 }
 
 void CB_Event0();
@@ -586,6 +594,13 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.addAction(m_AtnSaveSettings);
       Menu.addAction(m_AtnSaveJobfile);
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+    } else if (obj == ToGimpButton) {
+      QMenu Menu(NULL);
+      Menu.setStyle(Theme->ptStyle);
+      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.addAction(m_AtnGimpSavePipe);
+      Menu.addAction(m_AtnGimpSaveFull);
+      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     }
     return QObject::eventFilter(obj, event);
   } else {
@@ -600,7 +615,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void SaveOutput(const short mode);
+extern void SaveOutput(const short mode);
 
 void ptMainWindow::SaveMenuPipe() {
   SaveOutput(ptOutputMode_Pipe);
@@ -613,6 +628,21 @@ void ptMainWindow::SaveMenuSettings() {
 }
 void ptMainWindow::SaveMenuJobfile() {
   SaveOutput(ptOutputMode_Jobfile);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Slots for context menu on gimp button
+//
+////////////////////////////////////////////////////////////////////////////////
+
+extern void Export(const short mode);
+
+void ptMainWindow::GimpSaveMenuPipe() {
+  Export(ptExportMode_GimpPipe);
+}
+void ptMainWindow::GimpSaveMenuFull() {
+  Export(ptExportMode_GimpFull);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -829,7 +859,7 @@ void ptMainWindow::OnToGimpButtonClicked() {
   ::CB_MenuFileExit(1);
 #endif
 #ifdef DLRAW_HAVE_GIMP
-  Update(ptProcessorPhase_ToGimp);
+  GimpSaveMenuPipe();
 #endif
 }
 

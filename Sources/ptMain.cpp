@@ -226,7 +226,7 @@ void   CB_WritePipeButton();
 short  WriteSettingsFile(const QString FileName);
 void   SetBackgroundColor(int SetIt);
 void   CB_StyleChoice(const QVariant Choice);
-void   CB_ToGimpButton();
+void GimpExport(const short PipeSize);
 void Update(short Phase,
             short SubPhase      = -1,
             short WithIdentify  = 1,
@@ -990,7 +990,7 @@ void Update(short Phase,
     WriteOut();
   } else if (Phase == ptProcessorPhase_ToGimp) {
     // export to gimp
-    CB_ToGimpButton();
+    GimpExport(1);
   } else {
     // should not happen!
     assert(0);
@@ -3004,14 +3004,36 @@ void CB_MenuFileExit(const short) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CB_ToGimpButton() {
+void GimpExport(const short PipeSize) {
 
   if (Settings->GetInt("HaveImage")==0) return;
 
   ReportProgress(QObject::tr("Writing tmp image for gimp"));
 
+  short OldRunMode = Settings->GetInt("RunMode");
+
   ptImage* ImageForGimp = new ptImage;
-  ImageForGimp->Set(TheProcessor->m_Image_AfterEyeCandy);
+
+  if (PipeSize == 1)
+    ImageForGimp->Set(TheProcessor->m_Image_AfterEyeCandy);
+  else {
+    Settings->SetValue("RunMode",0);
+
+    // Processing the job.
+    delete TheDcRaw;
+    delete TheProcessor;
+    TheDcRaw = new(DcRaw);
+    TheProcessor = new ptProcessor(ReportProgress);
+    Settings->SetValue("JobMode",1); // Disable caching to save memory
+    TheProcessor->m_DcRaw = TheDcRaw;
+    Settings->ToDcRaw(TheDcRaw);
+    // Run the graphical pipe in full format mode to recreate the image.
+    Settings->SetValue("FullOutput",1);
+    TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
+    Settings->SetValue("FullOutput",0);
+
+    ImageForGimp = TheProcessor->m_Image_AfterEyeCandy; // no cache
+  }
 
   BeforeGamma(ImageForGimp);
 
@@ -3122,8 +3144,21 @@ void CB_ToGimpButton() {
   QProcess* GimpProcess = new QProcess();
   GimpProcess->startDetached(GimpExeCommand,GimpArguments);
 
-  delete ImageForGimp;
-
+  // clean up
+  if (PipeSize == 1) {
+    delete ImageForGimp;
+  } else {
+    delete TheDcRaw;
+    delete TheProcessor;
+    TheDcRaw = new(DcRaw);
+    TheProcessor = new ptProcessor(ReportProgress);
+    Settings->SetValue("JobMode",0);
+    TheProcessor->m_DcRaw = TheDcRaw;
+    Settings->ToDcRaw(TheDcRaw);
+    Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+    Settings->SetValue("RunMode",OldRunMode);
+  }
   ReportProgress(QObject::tr("Ready"));
 }
 
@@ -7908,6 +7943,14 @@ void SaveOutput(const short mode) {
     CB_MenuFileWriteJob(1);
   } else if (mode==ptOutputMode_Settingsfile) {
     CB_MenuFileWriteSettings();
+  }
+}
+
+void Export(const short mode) {
+  if (mode==ptExportMode_GimpPipe) {
+    GimpExport(1);
+  } else if (mode==ptExportMode_GimpFull) {
+    GimpExport(0);
   }
 }
 
