@@ -2015,7 +2015,7 @@ ptImage* ptImage::Crop(const uint16_t X,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Overlay(const uint16_t (*OverlayImage)[3],
+ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
                           const double   Amount,
                           const float *Mask,
                           const short Mode /* SoftLight */,
@@ -2030,129 +2030,320 @@ ptImage* ptImage::Overlay(const uint16_t (*OverlayImage)[3],
   float Source = 0;
   float Blend = 0;
   float Temp = 0;
+  float CompAmount = 1.0 - Amount;
+  uint16_t (*SourceImage)[3];
+  uint16_t (*BlendImage)[3];
+  if (!Swap) {
+    SourceImage   = m_Image;
+    BlendImage    = OverlayImage;
+  } else {
+    BlendImage    = m_Image;
+    SourceImage   = OverlayImage;
+  }
 
-  for (short Ch=0; Ch<3; Ch++) {
-    // Is it a channel we are supposed to handle ?
-    if  (! (ChannelMask & (1<<Ch))) continue;
+  switch (Mode) {
+    case ptOverlayMode_None: // just for completeness
+      break;
+
+    case ptOverlayMode_SoftLight:
+      if (!Mask) {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
-    for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-      if (!Swap) {
-        Source   = m_Image[i][Ch];
-        Blend    = OverlayImage[i][Ch];
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            Multiply = CLIP((int32_t)(Source*Blend/WP));
+            Screen   = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
+            Overlay  = CLIP((int32_t)((((WP-Source)*Multiply+Source*Screen)/WP)));
+            m_Image[i][Ch] = CLIP((int32_t) (Overlay*Amount+Source*(CompAmount)));
+          }
+        }
       } else {
-        Blend    = m_Image[i][Ch];
-        Source   = OverlayImage[i][Ch];
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            Multiply = CLIP((int32_t)(Source*Blend/WP));
+            Screen   = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
+            Overlay  = CLIP((int32_t)((((WP-Source)*Multiply+Source*Screen)/WP)));
+            m_Image[i][Ch] = CLIP((int32_t)((Overlay*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+          }
+        }
       }
-      switch (Mode) {
-        case ptOverlayMode_None: // just for completeness
-          break;
+      break;
 
-        case ptOverlayMode_SoftLight:
-        Multiply = CLIP((int32_t)(Source*Blend/WP));
-        Screen   = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
-        Overlay  = CLIP((int32_t)((((WP-Source)*Multiply+Source*Screen)/WP)));
-        if (!Mask) {
-        m_Image[i][Ch] = CLIP((int32_t) (Overlay*Amount+Source*(1-Amount)));
-        } else {
-        m_Image[i][Ch] = CLIP((int32_t)((Overlay*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(1-Amount)));
+    case ptOverlayMode_Multiply:
+      if (!Mask) {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            Multiply = CLIP((int32_t)(Source*Blend/WP));
+            m_Image[i][Ch] = CLIP((int32_t) (Multiply*Amount+Source*(CompAmount)));
+          }
         }
-        break;
-
-        case ptOverlayMode_Multiply:
-        Multiply = CLIP((int32_t)(Source*Blend/WP));
-        if (!Mask) {
-        m_Image[i][Ch] = CLIP((int32_t) (Multiply*Amount+Source*(1-Amount)));
-        } else {
-        m_Image[i][Ch] = CLIP((int32_t)((Multiply*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(1-Amount)));
+      } else {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            Multiply = CLIP((int32_t)(Source*Blend/WP));
+            m_Image[i][Ch] = CLIP((int32_t)((Multiply*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+          }
         }
-        break;
-
-      case ptOverlayMode_Screen:
-        Screen = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
-        if (!Mask) {
-        m_Image[i][Ch] = CLIP((int32_t) (Screen*Amount+Source*(1-Amount)));
-        } else {
-        m_Image[i][Ch] = CLIP((int32_t)((Screen*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(1-Amount)));
-        }
-        break;
-
-      case ptOverlayMode_Normal:
-        if (!Mask) {
-        m_Image[i][Ch] = CLIP((int32_t) (Blend*Amount+Source*(1-Amount)));
-        } else {
-        m_Image[i][Ch] = CLIP((int32_t)((Blend*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(1-Amount)));
-        }
-        break;
-
-      case ptOverlayMode_Lighten:
-        if (!Mask) {
-        m_Image[i][Ch] = CLIP((int32_t) (MAX(Blend*Amount, Source)));
-        } else {
-        m_Image[i][Ch] = CLIP((int32_t)(MAX(Blend*Mask[i]+Source*(1-Mask[i])*Amount,Source)));
-        }
-        break;
-
-      case ptOverlayMode_Overlay:
-        if (Source <= WPH) {
-        Overlay = CLIP((int32_t)(Source*Blend/WP));
-        } else {
-        Overlay = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
-        }
-        if (!Mask) {
-        m_Image[i][Ch] = CLIP((int32_t) (Overlay*Amount+Source*(1-Amount)));
-        } else {
-        m_Image[i][Ch] = CLIP((int32_t)((Overlay*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(1-Amount)));
-        }
-        break;
-
-      case ptOverlayMode_GrainMerge:
-        if (!Mask) {
-        m_Image[i][Ch] = CLIP((int32_t) ((Blend+Source-WPH)*Amount+Source*(1-Amount)));
-        } else {
-        m_Image[i][Ch] = CLIP((int32_t)(((Blend+Source-WPH)*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(1-Amount)));
-        }
-        break;
-
-      case ptOverlayMode_ColorDodge: // a/(1-b)
-        if (Source == 0) Temp = 0;
-        else {
-          if (Blend == WP) Temp = WP;
-          else Temp = CLIP((int32_t)(Source / (1 - Blend/WP)));
-        }
-        if (!Mask) {
-          m_Image[i][Ch] = CLIP((int32_t) (Temp*Amount+Source*(1-Amount)));
-        } else {
-          m_Image[i][Ch] = CLIP((int32_t)((Temp*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(1-Amount)));
-        }
-        break;
-
-      case ptOverlayMode_ColorBurn: // 1-(1-a)/b
-        if (Source == WP) Temp = WP;
-        else {
-          if (Blend == 0) Temp = 0;
-          else Temp = WP - CLIP((int32_t)( (WP - Source) / (Blend/WP)));
-        }
-        if (!Mask) {
-        m_Image[i][Ch] = CLIP((int32_t) (Temp*Amount+Source*(1-Amount)));
-        } else {
-        m_Image[i][Ch] = CLIP((int32_t)((Temp*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(1-Amount)));
-        }
-        break;
-
-      case ptOverlayMode_ShowMask:
-        if (Mask) {
-        m_Image[i][0] = CLIP((int32_t) (Mask[i]*WP));
-        m_Image[i][1] = CLIP((int32_t) (Mask[i]*WP));
-        m_Image[i][2] = CLIP((int32_t) (Mask[i]*WP));
-        }
-        break;
-
-      case ptOverlayMode_Replace: // Replace, just for testing
-        m_Image[i][Ch] = CLIP((int32_t) Blend);
-        break;
-
       }
-    }
+      break;
+
+    case ptOverlayMode_Screen:
+      if (!Mask) {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            Screen = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
+            m_Image[i][Ch] = CLIP((int32_t) (Screen*Amount+Source*(CompAmount)));
+          }
+        }
+      } else {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            Screen = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
+            m_Image[i][Ch] = CLIP((int32_t)((Screen*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+          }
+        }
+      }
+      break;
+
+    case ptOverlayMode_Normal:
+      if (!Mask) {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            m_Image[i][Ch] = CLIP((int32_t) (Blend*Amount+Source*(CompAmount)));
+          }
+        }
+      } else {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            m_Image[i][Ch] = CLIP((int32_t)((Blend*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+          }
+        }
+      }
+      break;
+
+    case ptOverlayMode_Lighten:
+      if (!Mask) {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            m_Image[i][Ch] = CLIP((int32_t) (MAX(Blend*Amount, Source)));
+          }
+        }
+      } else {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            m_Image[i][Ch] = CLIP((int32_t)(MAX(Blend*Mask[i]+Source*(1-Mask[i])*Amount,Source)));
+          }
+        }
+      }
+      break;
+
+    case ptOverlayMode_Overlay:
+      if (!Mask) {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            if (Source <= WPH) {
+              Overlay = CLIP((int32_t)(Source*Blend/WP));
+            } else {
+              Overlay = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
+            }
+            m_Image[i][Ch] = CLIP((int32_t) (Overlay*Amount+Source*(CompAmount)));
+          }
+        }
+      } else {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            if (Source <= WPH) {
+              Overlay = CLIP((int32_t)(Source*Blend/WP));
+            } else {
+              Overlay = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
+            }
+            m_Image[i][Ch] = CLIP((int32_t)((Overlay*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+          }
+        }
+      }
+      break;
+
+    case ptOverlayMode_GrainMerge:
+      if (!Mask) {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            m_Image[i][Ch] = CLIP((int32_t) ((Blend+Source-WPH)*Amount+Source*(CompAmount)));
+          }
+        }
+      } else {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            m_Image[i][Ch] = CLIP((int32_t)(((Blend+Source-WPH)*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+          }
+        }
+      }
+      break;
+
+    case ptOverlayMode_ColorDodge: // a/(1-b)
+      if (!Mask) {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            if (Source == 0) Temp = 0;
+            else {
+              if (Blend == WP) Temp = WP;
+              else Temp = CLIP((int32_t)(Source / (1 - Blend/WP)));
+            }
+            m_Image[i][Ch] = CLIP((int32_t) (Temp*Amount+Source*(CompAmount)));
+          }
+        }
+      } else {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            if (Source == 0) Temp = 0;
+            else {
+              if (Blend == WP) Temp = WP;
+              else Temp = CLIP((int32_t)(Source / (1 - Blend/WP)));
+            }
+            m_Image[i][Ch] = CLIP((int32_t)((Temp*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+          }
+        }
+      }
+      break;
+
+    case ptOverlayMode_ColorBurn: // 1-(1-a)/b
+      if (!Mask) {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            if (Source == WP) Temp = WP;
+            else {
+              if (Blend == 0) Temp = 0;
+              else Temp = WP - CLIP((int32_t)( (WP - Source) / (Blend/WP)));
+            }
+            m_Image[i][Ch] = CLIP((int32_t) (Temp*Amount+Source*(CompAmount)));
+          }
+        }
+      } else {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            Source   = SourceImage[i][Ch];
+            Blend    = BlendImage[i][Ch];
+            if (Source == WP) Temp = WP;
+            else {
+              if (Blend == 0) Temp = 0;
+              else Temp = WP - CLIP((int32_t)( (WP - Source) / (Blend/WP)));
+            }
+            m_Image[i][Ch] = CLIP((int32_t)((Temp*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+          }
+        }
+      }
+      break;
+
+    case ptOverlayMode_ShowMask:
+      if (Mask) {
+        for (short Ch=0; Ch<3; Ch++) {
+          // Is it a channel we are supposed to handle ?
+          if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            m_Image[i][Ch] = CLIP((int32_t) (Mask[i]*WP));
+          }
+        }
+      }
+      break;
+
+    case ptOverlayMode_Replace: // Replace, just for testing
+      for (short Ch=0; Ch<3; Ch++) {
+        // Is it a channel we are supposed to handle ?
+        if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+        for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+          Blend    = BlendImage[i][Ch];
+          m_Image[i][Ch] = CLIP((int32_t) Blend);
+        }
+      }
+      break;
+
   }
   return this;
 }
@@ -4813,9 +5004,6 @@ float *ptImage::GetMask(const short MaskType,
                         const double FactorG,
                         const double FactorB) {
 
-  uint16_t (*Mask) = (uint16_t (*)) CALLOC(m_Width*m_Height,sizeof(*Mask));
-  ptMemoryError(Mask,__FILE__,__LINE__);
-
   float (*dMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*dMask));
   ptMemoryError(dMask,__FILE__,__LINE__);
 
@@ -4829,7 +5017,12 @@ float *ptImage::GetMask(const short MaskType,
 
   // Precalculated table for the mask.
   float MaskTable[0x10000];
-#pragma omp parallel for default(shared)
+  float FactorRTable[0x10000];
+  float FactorGTable[0x10000];
+  float FactorBTable[0x10000];
+#pragma omp parallel
+{ // begin OpenMP
+#pragma omp for schedule(static)
   for (int32_t i=0; i<0x10000; i++) {
     switch(MaskType) {
     case ptMaskType_All: // All values
@@ -4850,17 +5043,21 @@ float *ptImage::GetMask(const short MaskType,
     } else {
       MaskTable[i] = LIM(MaskTable[i]/(float)0xffff/Soft,0.0,1.0);
     }
+    FactorRTable[i] = i*FactorR;
+    FactorGTable[i] = i*FactorG;
+    FactorBTable[i] = i*FactorB;
   }
-#pragma omp parallel for default(shared)
+
+#pragma omp for schedule(static)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-  Mask[i] = CLIP((int32_t)
-          (m_Image[i][0]*FactorR + m_Image[i][1]*FactorG + m_Image[i][2]*FactorB));
-    dMask[i] = MaskTable[Mask[i]];
+    dMask[i] = MaskTable[CLIP((int32_t)
+                              (FactorRTable[m_Image[i][0]] +
+                               FactorGTable[m_Image[i][1]] +
+                               FactorBTable[m_Image[i][2]]))];
   }
+} // end OpenMP
 
-  FREE(Mask);
   return dMask;
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
