@@ -138,7 +138,7 @@ ptImage* lcmsLabToRGB(const short To,
 ptImage* MixChannels(const double MixFactors[3][3]);
 
 // Overlay
-ptImage* Overlay(const uint16_t (*OverlayImage)[3],
+ptImage* Overlay(uint16_t (*OverlayImage)[3],
                  const double   Amount,
                  const float *Mask = NULL,
                  const short Mode = ptOverlayMode_SoftLight,
