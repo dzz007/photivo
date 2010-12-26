@@ -406,6 +406,11 @@ const short ptOutputMode_Pipe = 1;
 const short ptOutputMode_Jobfile = 2;
 const short ptOutputMode_Settingsfile = 3;
 
+// Export modes
+
+const short ptExportMode_GimpFull = 0;
+const short ptExportMode_GimpPipe = 1;
+
 // Gui Tabs.
 
 const short ptGenericTab    = 0;

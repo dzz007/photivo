@@ -102,6 +102,8 @@ QAction* m_AtnSavePipe;
 QAction* m_AtnSaveFull;
 QAction* m_AtnSaveSettings;
 QAction* m_AtnSaveJobfile;
+QAction* m_AtnGimpSavePipe;
+QAction* m_AtnGimpSaveFull;
 
 void AnalyzeToolBoxStructure();
 
@@ -112,6 +114,8 @@ void SaveMenuPipe();
 void SaveMenuFull();
 void SaveMenuSettings();
 void SaveMenuJobfile();
+void GimpSaveMenuPipe();
+void GimpSaveMenuFull();
 
 // The generic catchall input change.
 //~ void OnTagsEditTextChanged();
