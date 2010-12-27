@@ -1,55 +1,52 @@
 // CFA pixel cleaning via directional average
-// by Emil Martinec
+// © Emil Martinec
 // 2/18/2010
 #define TS 256   // Tile size
 
-//~ #define CLASS
-/*#define ushort UshORt
- typedef unsigned char uchar;
- typedef unsigned short ushort;*/
-
-//~ #include <ctype.h>
-//~ #include <errno.h>
-//~ #include <fcntl.h>
-#include <cfloat>
-//~ #include <limits.h>
 #include <cmath>
-//~ #include <setjmp.h>
-//~ #include <stdio.h>
-//~ #include <stdlib.h>
-//~ #include <string.h>
-//~ #include <time.h>
-
+#include <cstdlib>
 
 #define SQR(x) ((x)*(x))
 
-
-//void CLASS green_equilibrate()//for dcraw implementation
+//void green_equilibrate()//for dcraw implementation
 void CLASS green_equilibrate(float thresh)
 {
   // local variables
   static const int border=8;
   static const int border2=16;
-  static const int v1=TS, v2=2*TS, v3=3*TS, /*v4=4*TS,*/ p1=-TS+1, p2=-2*TS+2, p3=-3*TS+3, m1=TS+1, m2=2*TS+2, m3=3*TS+3;
+  static const int v1=TS, v2=2*TS, /*v3=3*TS, v4=4*TS,*/ p1=-TS+1, p2=-2*TS+2, p3=-3*TS+3, m1=TS+1, m2=2*TS+2, m3=3*TS+3;
 
-  uint16_t height=m_Height, width=m_Width; //for RT only
-  uint16_t top, left;
+  int height=m_Height, width=m_Width; //for RT only
+  /*int top, left;*/
 
-  int verbose=1;
+  /*int verbose=1;*/
 
   static const float eps=1.0; //tolerance to avoid dividing by zero
   //static const float thresh=0.03; //threshold for performing green equilibration; max percentage difference of G1 vs G2
   // G1-G2 differences larger than this will be assumed to be Nyquist texture, and left untouched
   static const float diffthresh=0.25; //threshold for texture, not to be equilibrated
 
-  /*double dt;
-  clock_t t1, t2;
+#pragma omp parallel
+{
+  int top,left;
+      char          *buffer;      // TS*TS*16
+      float         (*cfa);       // TS*TS*4
+      float         (*checker);   // TS*TS*4
+      float         (*gvar);      // TS*TS*4
+      float         (*gdiffv);    // TS*TS*4
+      float         (*gdiffh);    // TS*TS*4
 
-  //clock_t t1_main,       t2_main       = 0;
+      /* assign working space */
+      buffer = (char *) malloc(5*sizeof(float)*TS*TS);
+      //merror(buffer,"green_equil()");
+      //memset(buffer,0,5*sizeof(float)*TS*TS);
 
-  // start
-  if (verbose) fprintf (stderr,_("Green equilibration ...\n"));
-  t1 = clock();*/
+      cfa       = (float (*))     buffer;
+      checker   = (float (*))     (buffer + sizeof(float)*TS*TS);
+      gvar      = (float (*))     (buffer + 2*sizeof(float)*TS*TS);
+      gdiffv    = (float (*))     (buffer + 3*sizeof(float)*TS*TS);
+      gdiffh    = (float (*))     (buffer + 4*sizeof(float)*TS*TS);
+
 
 
 
@@ -58,50 +55,26 @@ void CLASS green_equilibrate(float thresh)
 
   // Fill G interpolated values with border interpolation and input values
   // Main algorithm: Tile loop
-//#pragma omp parallel for shared(image,height,width) private(top,left) schedule(dynamic)
+#pragma omp for schedule(dynamic) nowait
 
   for (top=0; top < height-border; top += TS-border2)
     for (left=0; left < width-border; left += TS-border2) {
-      uint16_t bottom = MIN( top+TS,height);
-      uint16_t right  = MIN(left+TS, width);
-      uint16_t numrows = bottom - top;
-      uint16_t numcols = right - left;
+      int bottom = MIN( top+TS,height);
+      int right  = MIN(left+TS, width);
+      int numrows = bottom - top;
+      int numcols = right - left;
 
-      uint16_t row, col;
-      uint16_t rr, cc, c, indx;
-      int32_t vote1, vote2;
+      int row, col;
+      int rr, cc, c, indx;
+      int vote1, vote2;
 
-      float val1;
+      /*float val1;*/
 
       float gin, gse, gsw, gne, gnw, wtse, wtsw, wtne, wtnw;
       float gu, gd, gl, gr;
       float mcorr, pcorr;
       float ginterp;
       float diffvarh, diffvarv, hvwt;
-
-      char    *buffer;      // TS*TS*16
-      float         (*cfa);   // TS*TS*4
-      float         (*checker);     // TS*TS*4
-      float         (*gvar);      // TS*TS*4
-      float         (*gdiffv);      // TS*TS*4
-      float         (*gdiffh);      // TS*TS*4
-
-      /* assign working space */
-      buffer = (char *) malloc(5*sizeof(float)*TS*TS);
-      //merror(buffer,"green_equil()");
-      memset(buffer,0,5*sizeof(float)*TS*TS);
-
-      cfa         = (float (*))   buffer;
-      checker   = (float (*))     (buffer + sizeof(float)*TS*TS);
-      gvar    = (float (*))     (buffer + 2*sizeof(float)*TS*TS);
-      gdiffv    = (float (*))     (buffer + 3*sizeof(float)*TS*TS);
-      gdiffh    = (float (*))     (buffer + 4*sizeof(float)*TS*TS);
-
-      /*float cfa[TS*TS];
-      float checker[TS*TS];  //this memory allocation crashes RT
-      float gvar[TS*TS];
-
-      memset( (void *)&cfa[0], 0 ,sizeof(cfa) );*/
 
       // rgb from input CFA data
       /* rgb values should be floating point number between 0 and 1
@@ -110,7 +83,7 @@ void CLASS green_equilibrate(float thresh)
         for (row=rr+top, cc=0; cc < numcols; cc++) {
           col = cc+left;
           cfa[rr*TS+cc] = m_Image[row*width+col][FC(row,col)];//for dcraw implementation
-          //cfa[rr*TS+cc] = ri->data[row][col];
+          //cfa[rr*TS+cc] = rawData[row][col];
 
         }
 
@@ -190,10 +163,11 @@ void CLASS green_equilibrate(float thresh)
           col = cc + left;
           c = FC(row,col);
           m_Image[row*width + col][c] = CLIP((int32_t)(cfa[indx] + 0.5)); //for dcraw implementation
-          //ri->data[row][col] = CLIP((int)(cfa[indx] + 0.5));
+          //rawData[row][col] = CLIP((int)(cfa[indx] + 0.5));
         }
 
       // clean up
+      }
       free(buffer);
 
     }
