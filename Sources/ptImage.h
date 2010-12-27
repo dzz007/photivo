@@ -556,8 +556,7 @@ ptImage* ptGMCWriteImage(const char* FileName,
 ptImage* dirpyrLab_denoise(const int luma,
                            const int chroma,
                            const double gamma,
-                           const int levels,
-                           const int pipesize);
+                           const int levels);
 
 };
 

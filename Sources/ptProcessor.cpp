@@ -1473,8 +1473,8 @@ void ptProcessor::Run(short Phase,
             (int)(Settings->GetInt("PyrDenoiseLAmount")/powf(3.0,(logf(m_ScaleFactor)/logf(0.5)))),
             Settings->GetInt("PyrDenoiseABAmount"),
             Settings->GetDouble("PyrDenoiseGamma")/3.0,
-            Settings->GetInt("PyrDenoiseLevels"),
-            (int)(logf(m_ScaleFactor)/logf(0.5)));
+            Settings->GetInt("PyrDenoiseLevels")/*,
+            (int)(logf(m_ScaleFactor)/logf(0.5))*/);
 
         TRACEMAIN("Done Pyramid denoise at %d ms.",Timer.elapsed());
       }
