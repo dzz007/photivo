@@ -148,6 +148,17 @@ ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
     m_RelatedCurve->m_IntType==ptCurveIT_Spline?true:false);
   m_AtnITCosine->setChecked(
     m_RelatedCurve->m_IntType==ptCurveIT_Cosine?true:false);
+
+  // Cyclic curve
+  if (m_Channel == ptCurveChannel_Saturation ||
+      m_Channel == ptCurveChannel_Texture ||
+      m_Channel == ptCurveChannel_Denoise) {
+    m_CyclicCurve = (int)m_AtnByChroma->isChecked();
+  } else if (m_Channel == ptCurveChannel_LByHue) {
+    m_CyclicCurve = 1;
+  } else {
+    m_CyclicCurve = 0;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -348,7 +359,15 @@ void ptCurveWindow::SetType() {
       return;
     Settings->SetValue("DenoiseCurveType",(int)m_AtnByLuma->isChecked());
   }
-
+  if (m_Channel == ptCurveChannel_Saturation ||
+      m_Channel == ptCurveChannel_Texture ||
+      m_Channel == ptCurveChannel_Denoise) {
+    m_CyclicCurve = (int)m_AtnByChroma->isChecked();
+    if (m_CyclicCurve == 1) {
+      m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1] = m_RelatedCurve->m_YAnchor[0];
+      m_RelatedCurve->SetCurveFromAnchors();
+    }
+  }
   CalculateCurve();
   UpdateView();
 
@@ -425,9 +444,9 @@ void ptCurveWindow::CalculateCurve() {
 
   // Compute it. Take already the Y axis going down into account.
   for (uint16_t x=0; x<Width; x++) {
-    uint16_t CurveX = (uint16_t)( 0.5 + (double)x/(Width-1) * 0xffff );
+    uint16_t CurveX = (uint16_t)( 0.5 + (float)x/(Width-1) * 0xffff );
     LocalCurve[x] = Height-1- (uint16_t)
-     ( 0.5 + (double) m_RelatedCurve->m_Curve[CurveX]/0xffff * (Height-1));
+     ( 0.5 + (float) m_RelatedCurve->m_Curve[CurveX]/0xffff * (Height-1));
   }
 
   delete m_Image8;
@@ -589,19 +608,23 @@ void ptCurveWindow::CalculateCurve() {
   for (uint16_t Count = 0, Row = Height-1;
        Count <= 10;
        Count++, Row = Height-1-Count*(Height-1)/10) {
+    uint32_t Temp = Row*Width;
     for (uint16_t i=0;i<Width;i++) {
-      m_Image8->m_Image[Row*Width+i][0] = MColor.blue();
-      m_Image8->m_Image[Row*Width+i][1] = MColor.green();
-      m_Image8->m_Image[Row*Width+i][2] = MColor.red();
+      m_Image8->m_Image[Temp][0] = MColor.blue();
+      m_Image8->m_Image[Temp][1] = MColor.green();
+      m_Image8->m_Image[Temp][2] = MColor.red();
+      ++Temp;
     }
   }
   for (uint16_t Count = 0, Column = 0;
        Count <= 10;
        Count++, Column = Count*(Width-1)/10) {
+    uint32_t Temp = Column;
     for (uint16_t i=0;i<Height;i++) {
-      m_Image8->m_Image[i*Width+Column][0] = MColor.blue();
-      m_Image8->m_Image[i*Width+Column][1] = MColor.green();
-      m_Image8->m_Image[i*Width+Column][2] = MColor.red();
+      m_Image8->m_Image[Temp][0] = MColor.blue();
+      m_Image8->m_Image[Temp][1] = MColor.green();
+      m_Image8->m_Image[Temp][2] = MColor.red();
+      Temp += Width;
     }
   }
 
@@ -611,10 +634,12 @@ void ptCurveWindow::CalculateCurve() {
     int32_t NextRow  = LocalCurve[(i<(Width-1))?i+1:i];
     uint16_t kStart = MIN(Row,NextRow);
     uint16_t kEnd   = MAX(Row,NextRow);
+    uint32_t Temp = i+kStart*Width;
     for(uint16_t k=kStart;k<=kEnd;k++) {
-      m_Image8->m_Image[k*Width+i][0] = FGColor.blue();
-      m_Image8->m_Image[k*Width+i][1] = FGColor.green();
-      m_Image8->m_Image[k*Width+i][2] = FGColor.red();
+      m_Image8->m_Image[Temp][0] = FGColor.blue();
+      m_Image8->m_Image[Temp][1] = FGColor.green();
+      m_Image8->m_Image[Temp][2] = FGColor.red();
+      Temp += Width;
     }
   }
 
@@ -766,6 +791,11 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
             m_RelatedCurve->m_YAnchor[j]=m_RelatedCurve->m_YAnchor[j+1];
           }
           m_RelatedCurve->m_NrAnchors--;
+          if (i == 0 && m_CyclicCurve == 1) {
+            m_RelatedCurve->m_YAnchor[0] = m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1];
+          } else if (i == m_RelatedCurve->m_NrAnchors && m_CyclicCurve == 1)  {
+            m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1] = m_RelatedCurve->m_YAnchor[0];
+          }
           m_RelatedCurve->SetCurveFromAnchors();
           // Notify we have a manual curve now ...
           SetCurveState(ptCurveChoice_Manual);
@@ -875,8 +905,18 @@ void ptCurveWindow::mouseMoveEvent(QMouseEvent *Event) {
     Y = MAX(0.0, Y);  // Handle mouse out of range Y coordinate
     Y = MIN(1.0, Y);
 
-    m_RelatedCurve->m_XAnchor[m_MovingAnchor] = X;
-    m_RelatedCurve->m_YAnchor[m_MovingAnchor] = Y;
+    if (m_MovingAnchor == 0 && m_CyclicCurve == 1) {
+      m_RelatedCurve->m_XAnchor[0] = X;
+      m_RelatedCurve->m_YAnchor[0] = Y;
+      m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1] = Y;
+    } else if (m_MovingAnchor == m_RelatedCurve->m_NrAnchors-1 && m_CyclicCurve == 1)  {
+      m_RelatedCurve->m_XAnchor[m_RelatedCurve->m_NrAnchors-1] = X;
+      m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1] = Y;
+      m_RelatedCurve->m_YAnchor[0] = Y;
+    } else {
+      m_RelatedCurve->m_XAnchor[m_MovingAnchor] = X;
+      m_RelatedCurve->m_YAnchor[m_MovingAnchor] = Y;
+    }
     m_RelatedCurve->SetCurveFromAnchors();
 
     // Notify we have a manual curve now ...

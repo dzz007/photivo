@@ -93,6 +93,7 @@ int32_t             m_OverlayAnchorY;
 short               m_MovingAnchor;
 short               m_BlockEvents;
 short               m_RecalcNeeded;
+short               m_CyclicCurve;
 // Saturaton Curve modes
 QAction*            m_AtnAbsolute;
 QAction*            m_AtnAdaptive;
