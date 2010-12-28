@@ -104,6 +104,10 @@ QAction* m_AtnSaveSettings;
 QAction* m_AtnSaveJobfile;
 QAction* m_AtnGimpSavePipe;
 QAction* m_AtnGimpSaveFull;
+QAction* m_AtnMenuFullReset;
+QAction* m_AtnMenuUserReset;
+QAction* m_AtnMenuOpenPreset;
+QAction* m_AtnMenuOpenSettings;
 
 void AnalyzeToolBoxStructure();
 
@@ -116,6 +120,10 @@ void SaveMenuSettings();
 void SaveMenuJobfile();
 void GimpSaveMenuPipe();
 void GimpSaveMenuFull();
+void MenuFullReset();
+void MenuUserReset();
+void MenuOpenPreset();
+void MenuOpenSettings();
 
 // The generic catchall input change.
 //~ void OnTagsEditTextChanged();
@@ -129,6 +137,7 @@ void OnToGimpButtonClicked();
 void OnPreviewModeButtonClicked();
 
 void OnRunButtonClicked();
+void OnResetButtonClicked();
 
 void OnBackgroundColorButtonClicked();
 

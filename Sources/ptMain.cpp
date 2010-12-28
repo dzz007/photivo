@@ -223,6 +223,8 @@ void   CB_ZoomFitButton();
 void   CB_MenuFileOpen(const short HaveFile);
 void   CB_MenuFileExit(const short);
 void   CB_WritePipeButton();
+void   CB_OpenPresetFileButton();
+void   CB_OpenSettingsFileButton();
 short  WriteSettingsFile(const QString FileName);
 void   SetBackgroundColor(int SetIt);
 void   CB_StyleChoice(const QVariant Choice);
@@ -3527,6 +3529,38 @@ void CB_RunButton() {
   MainWindow->UpdateSettings();
 }
 
+void ResetButtonHandler(const short mode) {
+  if (mode == ptResetMode_Full) { // full reset
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setWindowTitle(QObject::tr("Reset?"));
+    msgBox.setText(QObject::tr("Reset to neutral values?\n"));
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    if (msgBox.exec()==QMessageBox::Ok) {
+      CB_OpenSettingsFile(Settings->GetString("PresetDirectory") + "/neutral (absolute).pts");
+    }
+  } else if (mode == ptResetMode_User) { // reset to startup settings
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setWindowTitle(QObject::tr("Reset?"));
+    msgBox.setText(QObject::tr("Reset to start up settings?\n"));
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    if (msgBox.exec()==QMessageBox::Ok) {
+      CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+    }
+  } else if (mode == ptResetMode_OpenPreset) { // open preset file
+    CB_OpenPresetFileButton();
+  } else { // open settings file
+    CB_OpenSettingsFileButton();
+  }
+}
+
+void CB_ResetButton() {
+  ResetButtonHandler(Settings->GetInt("ResetButtonMode"));
+}
+
 void CB_SpecialPreviewChoice(const QVariant Choice) {
   Settings->SetValue("SpecialPreview",Choice);
   Update(ptProcessorPhase_NULL);
@@ -3657,6 +3691,10 @@ void SetBackgroundColor(int SetIt) {
 void CB_SaveButtonModeChoice(const QVariant Choice) {
   Settings->SetValue("SaveButtonMode",Choice);
   SaveButtonToolTip(Settings->GetInt("SaveButtonMode"));
+}
+
+void CB_ResetButtonModeChoice(const QVariant Value) {
+  Settings->SetValue("ResetButtonMode",Value);
 }
 
 void SaveButtonToolTip(const short mode) {
@@ -8009,6 +8047,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(PreviewTabModeCheck)
   M_Dispatch(BackgroundColorCheck)
   M_Dispatch(SaveButtonModeChoice)
+  M_Dispatch(ResetButtonModeChoice)
 
   M_Dispatch(PipeSizeChoice)
   M_Dispatch(RunModeCheck)

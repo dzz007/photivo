@@ -411,6 +411,13 @@ const short ptOutputMode_Settingsfile = 3;
 const short ptExportMode_GimpFull = 0;
 const short ptExportMode_GimpPipe = 1;
 
+// Reset modes
+
+const short ptResetMode_Full = 0;
+const short ptResetMode_User = 1;
+const short ptResetMode_OpenPreset = 2;
+const short ptResetMode_OpenSettings = 3;
+
 // Gui Tabs.
 
 const short ptGenericTab    = 0;

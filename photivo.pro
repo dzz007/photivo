@@ -44,7 +44,7 @@ contains(QT_VERSION, ^4\\.[0-5]\\..*) {
 }
 
 CONFIG += release silent
-#CONFIG += debug
+#CONFIG += debug silent
 TEMPLATE = subdirs
 
 isEmpty(PREFIX) {

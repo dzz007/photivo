@@ -4758,7 +4758,7 @@ ptImage* ptImage::GradualOverlay(const uint16_t R,
   }
 #pragma omp parallel
 { // begin OpenMP
-#pragma omp for schedule(static) private(dist, Value, coordinate)
+#pragma omp for schedule(static) firstprivate(dist, Value, coordinate)
   for (uint16_t Row=0; Row<m_Height; Row++) {
     for (uint16_t Col=0; Col<m_Width; Col++) {
       if (fabs(Angle) == 0.0)

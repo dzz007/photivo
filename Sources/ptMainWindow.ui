@@ -140,7 +140,7 @@
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>2</number>
            </property>
            <widget class="QWidget" name="TabProcessing">
             <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -156,7 +156,7 @@
                 <enum>QTabWidget::West</enum>
                </property>
                <property name="currentIndex">
-                <number>7</number>
+                <number>0</number>
                </property>
                <property name="iconSize">
                 <size>
@@ -191,7 +191,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>747</width>
+                      <width>784</width>
                       <height>684</height>
                      </rect>
                     </property>
@@ -199,15 +199,15 @@
                      <item>
                       <widget class="QToolBox" name="toolBox_2">
                        <property name="currentIndex">
-                        <number>5</number>
+                        <number>3</number>
                        </property>
                        <widget class="QWidget" name="TabInput">
                         <property name="geometry">
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>185</width>
-                          <height>126</height>
+                          <width>766</width>
+                          <height>480</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -396,8 +396,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>91</width>
-                          <height>119</height>
+                          <width>766</width>
+                          <height>480</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -498,8 +498,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>87</width>
-                          <height>62</height>
+                          <width>766</width>
+                          <height>480</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -563,8 +563,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>124</width>
-                          <height>186</height>
+                          <width>766</width>
+                          <height>480</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -787,8 +787,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>108</width>
-                          <height>270</height>
+                          <width>766</width>
+                          <height>480</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -935,7 +935,7 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>729</width>
+                          <width>766</width>
                           <height>480</height>
                          </rect>
                         </property>
@@ -1005,7 +1005,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>747</width>
+                      <width>784</width>
                       <height>684</height>
                      </rect>
                     </property>
@@ -1841,7 +1841,7 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>729</width>
+                          <width>766</width>
                           <height>480</height>
                          </rect>
                         </property>
@@ -1902,7 +1902,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>747</width>
+                      <width>784</width>
                       <height>684</height>
                      </rect>
                     </property>
@@ -2352,7 +2352,7 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>729</width>
+                          <width>766</width>
                           <height>170</height>
                          </rect>
                         </property>
@@ -3009,7 +3009,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>747</width>
+                      <width>784</width>
                       <height>684</height>
                      </rect>
                     </property>
@@ -3024,7 +3024,7 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>729</width>
+                          <width>766</width>
                           <height>201</height>
                          </rect>
                         </property>
@@ -3951,7 +3951,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>747</width>
+                      <width>784</width>
                       <height>684</height>
                      </rect>
                     </property>
@@ -3966,12 +3966,12 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>729</width>
+                          <width>766</width>
                           <height>170</height>
                          </rect>
                         </property>
                         <attribute name="label">
-                         <string>Impluse noise reduction</string>
+                         <string>Impulse noise reduction</string>
                         </attribute>
                         <layout class="QVBoxLayout" name="verticalLayout_232">
                          <item>
@@ -5160,7 +5160,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>747</width>
+                      <width>784</width>
                       <height>684</height>
                      </rect>
                     </property>
@@ -6096,7 +6096,7 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>729</width>
+                          <width>766</width>
                           <height>325</height>
                          </rect>
                         </property>
@@ -6328,7 +6328,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>747</width>
+                      <width>784</width>
                       <height>684</height>
                      </rect>
                     </property>
@@ -7139,7 +7139,7 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>729</width>
+                          <width>766</width>
                           <height>263</height>
                          </rect>
                         </property>
@@ -7571,7 +7571,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>747</width>
+                      <width>784</width>
                       <height>684</height>
                      </rect>
                     </property>
@@ -8208,7 +8208,7 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>729</width>
+                          <width>766</width>
                           <height>387</height>
                          </rect>
                         </property>
@@ -8294,9 +8294,7 @@
                              </widget>
                             </item>
                             <item>
-                             <widget class="QWidget" name="IncludeExifWidget" native="true">
-                              <zorder>SaveResolutionWidget</zorder>
-                             </widget>
+                             <widget class="QWidget" name="IncludeExifWidget" native="true"/>
                             </item>
                             <item>
                              <widget class="QWidget" name="EraseExifThumbnailWidget" native="true"/>
@@ -8512,8 +8510,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>729</width>
-                          <height>387</height>
+                          <width>87</width>
+                          <height>52</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -8616,8 +8614,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>167</width>
-                  <height>545</height>
+                  <width>826</width>
+                  <height>706</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_49">
@@ -9183,8 +9181,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>91</width>
-                  <height>525</height>
+                  <width>826</width>
+                  <height>706</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_143">
@@ -9200,7 +9198,7 @@
                     <enum>QFrame::NoFrame</enum>
                    </property>
                    <property name="currentIndex">
-                    <number>11</number>
+                    <number>10</number>
                    </property>
                    <property name="tabSpacing">
                     <number>6</number>
@@ -9210,8 +9208,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>87</width>
-                      <height>68</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9250,8 +9248,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>91</width>
-                      <height>87</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9349,8 +9347,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>91</width>
-                      <height>71</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9442,8 +9440,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>87</width>
-                      <height>52</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9479,8 +9477,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>99</width>
-                      <height>101</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9592,8 +9590,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>87</width>
-                      <height>52</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9629,8 +9627,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>87</width>
-                      <height>52</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9666,8 +9664,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>87</width>
-                      <height>52</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9703,8 +9701,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>87</width>
-                      <height>52</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9740,8 +9738,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>144</width>
-                      <height>97</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9881,19 +9879,102 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>87</width>
-                      <height>52</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
-                     <string>Save button mode</string>
+                     <string>Button modes</string>
                     </attribute>
                     <layout class="QVBoxLayout" name="verticalLayout_224">
                      <item>
                       <widget class="QWidget" name="widget_134" native="true">
                        <layout class="QVBoxLayout" name="verticalLayout_223">
                         <item>
-                         <widget class="QWidget" name="SaveButtonModeWidget" native="true"/>
+                         <widget class="QWidget" name="widget_142" native="true">
+                          <layout class="QHBoxLayout" name="horizontalLayout_77">
+                           <property name="margin">
+                            <number>0</number>
+                           </property>
+                           <item>
+                            <widget class="QLabel" name="label_34">
+                             <property name="sizePolicy">
+                              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                               <horstretch>0</horstretch>
+                               <verstretch>0</verstretch>
+                              </sizepolicy>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>110</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>110</width>
+                               <height>16777215</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <weight>75</weight>
+                               <bold>true</bold>
+                              </font>
+                             </property>
+                             <property name="text">
+                              <string>Save button:</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QWidget" name="SaveButtonModeWidget" native="true"/>
+                           </item>
+                          </layout>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QWidget" name="widget_143" native="true">
+                          <layout class="QHBoxLayout" name="horizontalLayout_78">
+                           <property name="margin">
+                            <number>0</number>
+                           </property>
+                           <item>
+                            <widget class="QLabel" name="label_35">
+                             <property name="sizePolicy">
+                              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                               <horstretch>0</horstretch>
+                               <verstretch>0</verstretch>
+                              </sizepolicy>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>110</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>110</width>
+                               <height>16777215</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <weight>75</weight>
+                               <bold>true</bold>
+                              </font>
+                             </property>
+                             <property name="text">
+                              <string>Reset button:</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QWidget" name="ResetButtonModeWidget" native="true"/>
+                           </item>
+                          </layout>
+                         </widget>
                         </item>
                        </layout>
                       </widget>
@@ -9906,7 +9987,7 @@
                        <property name="sizeHint" stdset="0">
                         <size>
                          <width>20</width>
-                         <height>259</height>
+                         <height>10</height>
                         </size>
                        </property>
                       </spacer>
@@ -9918,8 +9999,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>73</width>
-                      <height>73</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9955,8 +10036,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>87</width>
-                      <height>52</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -9992,8 +10073,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>87</width>
-                      <height>52</height>
+                      <width>808</width>
+                      <height>254</height>
                      </rect>
                     </property>
                     <attribute name="label">
@@ -10160,12 +10241,32 @@
             </spacer>
            </item>
            <item>
+            <widget class="QToolButton" name="ResetButton">
+             <property name="toolTip">
+              <string>Reset</string>
+             </property>
+             <property name="text">
+              <string>Reset</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../photivo.qrc">
+               <normaloff>:/photivo/Icons/reload.png</normaloff>:/photivo/Icons/reload.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>16</width>
+               <height>16</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QToolButton" name="WritePipeButton">
              <property name="toolTip">
               <string>Write output to a file</string>
              </property>
              <property name="text">
-              <string>WP</string>
+              <string>Save</string>
              </property>
              <property name="icon">
               <iconset resource="../photivo.qrc">
@@ -10185,7 +10286,7 @@
               <string>Send to Gimp</string>
              </property>
              <property name="text">
-              <string>Fit</string>
+              <string>Export</string>
              </property>
              <property name="icon">
               <iconset resource="../photivo.qrc">
