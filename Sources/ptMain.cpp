@@ -4331,6 +4331,15 @@ void CB_MakeCropButton() {
       // we're in manual mode!
       Update(ptProcessorPhase_NULL);
     }
+  } else if (ViewWindow->GetSelectionWidth()*XScale < 4 ||
+             ViewWindow->GetSelectionHeight()*YScale) {
+    QMessageBox::information(MainWindow,
+      QObject::tr("Crop too small"),
+      QObject::tr("Crop rectangle too small.\nNo crop, try again."));
+    if(Settings->GetInt("RunMode")==1) {
+      // we're in manual mode!
+      Update(ptProcessorPhase_NULL);
+    }
   } else {
     Settings->SetValue("Crop",1);
     Settings->SetValue("CropX",ViewWindow->GetSelectionX()*XScale);
