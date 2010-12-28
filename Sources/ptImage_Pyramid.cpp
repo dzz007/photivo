@@ -50,15 +50,15 @@ using namespace cimg_library;
 #define RTCLIPC(a) ((a)>-32000?((a)<32000?(a):32000):-32000)
 #define RTCLIP(a) (RTCLIPTO(a,0,65535))
 
-#define DIRWT_L(t,i,j) (rangefn_L[(int32_t)(data_fine->m_Image[t][0]-data_fine->m_Image[i*width+j][0]+0x10000)] )
+#define DIRWT_L(t,i,j) (rangefn_L[RTCLIPTO((int32_t)(data_fine->m_Image[t][0]-data_fine->m_Image[i*width+j][0]+0x10000),0,0x1ffff)] )
 
-#define DIRWT_AB(t,i,j) (rangefn_ab[(int32_t)(data_fine->m_Image[t][1]-data_fine->m_Image[i*width+j][1]+0x10000)] * \
-rangefn_ab[(int32_t)(data_fine->m_Image[t][0]-data_fine->m_Image[i*width+j][0]+0x10000)] * \
-rangefn_ab[(int32_t)(data_fine->m_Image[t][2]-data_fine->m_Image[i*width+j][2]+0x10000)] )
+#define DIRWT_AB(t,i,j) (rangefn_ab[RTCLIPTO((int32_t)(data_fine->m_Image[t][1]-data_fine->m_Image[i*width+j][1]+0x10000),0,0x1ffff)] * \
+rangefn_ab[RTCLIPTO((int32_t)(data_fine->m_Image[t][0]-data_fine->m_Image[i*width+j][0]+0x10000),0,0x1ffff)] * \
+rangefn_ab[RTCLIPTO((int32_t)(data_fine->m_Image[t][2]-data_fine->m_Image[i*width+j][2]+0x10000),0,0x1ffff)] )
 
 #define NRWT_L(a) (nrwt_l[a] )
 
-#define NRWT_AB (nrwt_ab[(int32_t)((hipass[1]+0x10000))] * nrwt_ab[(int32_t)((hipass[2]+0x10000))])
+#define NRWT_AB (nrwt_ab[RTCLIPTO((int32_t)((hipass[1]+0x10000)),0,0x1ffff)] * nrwt_ab[RTCLIPTO((int32_t)((hipass[2]+0x10000)),0,0x1ffff)])
 
 
 #define PIX_SORT(a,b) { if ((a)>(b)) {temp=(a);(a)=(b);(b)=temp;} }
@@ -246,7 +246,7 @@ void idirpyr(ptImage* data_coarse, ptImage* data_fine, int level, float * nrwt_l
 
           hipass[0] = median*(data_fine->m_Image[Temp][0]-data_coarse->m_Image[Temp][0]);
           //hipass[0] = nrfactorL[i][j]*(data_fine->L[i][j]-data_coarse->L[i][j]);
-          data_fine->m_Image[Temp][0] = RTCLIP(hipass[0]+data_coarse->m_Image[Temp][0]);
+          data_fine->m_Image[Temp][0] = CLIP((int32_t)(hipass[0]+data_coarse->m_Image[Temp][0]));
         }
 
         //chroma
@@ -420,7 +420,7 @@ void idirpyr(ptImage* data_coarse, ptImage* data_fine, int level, float * nrwt_l
 
           hipass[0] = median*(data_fine->m_Image[Temp][0]-smooth->m_Image[Temp][0]);
           //hipass[0] = nrfactorL[i][j]*(data_fine->L[i][j]-data_coarse->L[i][j]);
-          data_fine->m_Image[Temp][0] = RTCLIP(hipass[0]+smooth->m_Image[Temp][0]);
+          data_fine->m_Image[Temp][0] = CLIP((int32_t)(hipass[0]+smooth->m_Image[Temp][0]));
         }
 
         //chroma
