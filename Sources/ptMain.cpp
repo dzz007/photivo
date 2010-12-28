@@ -1697,12 +1697,16 @@ void UpdateComboboxes(const QString Key) {
     // Curves and Channelmixer have 2 default options -> index=2+i
     Settings->AddOrReplaceOption(Key, ShortFileName, 2+i);
   }
+
   // write clean lists to settings
   if (Key == "ChannelMixer") {
     Settings->SetValue("ChannelMixerFileNames", FileNames);
   } else { // Curves
     Settings->SetValue(CurveFileNamesKeys.at(CurveKeys.indexOf(Key)), FileNames);
   }
+
+  // update gui display
+  Settings->SetValue(Key,Settings->GetInt(Key));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
