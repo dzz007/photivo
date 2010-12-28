@@ -1947,6 +1947,19 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
     != exifData.end() )
       exifData.erase(pos);
 
+    if (Settings->GetInt("EraseExifThumbnail")) {
+#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
+      Exiv2::ExifThumb Thumb(exifData);
+      Thumb.erase();
+#else
+      exifData.eraseThumbnail();
+#endif
+    }
+
+    std::string JpegExtensions[] = {"jpg", "JPG", "Jpg", "jpeg", "Jpeg", "JPEG"};
+    short deleteDNGdata = 0;
+    for (int i=0; i<6; i++) if (!FileType.compare(JpegExtensions[i])) deleteDNGdata = 1;
+
     Exiv2::Image::AutoPtr Exiv2Image = Exiv2::ImageFactory::open(FileName);
     assert(Exiv2Image.get() != 0);
 
@@ -1954,7 +1967,9 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
     Exiv2::ExifData &outExifData = Exiv2Image->exifData();
     pos = exifData.begin();
     while ( !exifData.empty() ) {
-      outExifData.add(*pos);
+      if (deleteDNGdata == 0 || (*pos).key() != "Exif.Image.DNGPrivateData") {
+        outExifData.add(*pos);
+      }
       pos = exifData.erase(pos);
     }
 
@@ -1995,14 +2010,13 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
     while (TitleWorking.contains("  "))
       TitleWorking.replace("  "," ");
     if (TitleWorking != "" && TitleWorking != " ") {
-    outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
-    iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
-    xmpData["Xmp.dc.descridlion"] = TitleWorking.toStdString();
-    xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
-    xmpData["Xmp.tiff.ImageDescridlion"] = TitleWorking.toStdString();
+      outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
+      iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
+      xmpData["Xmp.dc.descridlion"] = TitleWorking.toStdString();
+      xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
+      xmpData["Xmp.tiff.ImageDescridlion"] = TitleWorking.toStdString();
     }
 
-    //~ QMessageBox::warning(MainWindow,"Exiv2 Error",QString::number(BufferLength));
     try {
       Exiv2Image->setExifData(outExifData);
       Exiv2Image->setIptcData(iptcData);
