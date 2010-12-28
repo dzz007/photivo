@@ -95,6 +95,7 @@ static const ptGuiOptionsItem EnableGreyC[];
 static const ptGuiOptionsItem SaveFormat[];
 static const ptGuiOptionsItem SaveSampling[];
 static const ptGuiOptionsItem OutputMode[];
+static const ptGuiOptionsItem ResetMode[];
 static const ptGuiOptionsItem BadPixels[];
 static const ptGuiOptionsItem DarkFrame[];
 };

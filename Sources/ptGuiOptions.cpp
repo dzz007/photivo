@@ -442,6 +442,13 @@ const ptGuiOptionsItem ptGuiOptions::OutputMode[] = {
   {ptOutputMode_Settingsfile, QObject::tr("Only settings") },
   {-1,NULL}};
 
+const ptGuiOptionsItem ptGuiOptions::ResetMode[] = {
+  {ptResetMode_Full,         QObject::tr("Neutral reset")    },
+  {ptResetMode_User,         QObject::tr("User reset")    },
+  {ptResetMode_OpenPreset,   QObject::tr("Open preset")    },
+  {ptResetMode_OpenSettings, QObject::tr("Open settings") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::DarkFrame[] = {
   {0, QObject::tr("None")   },
   {1, QObject::tr("Load one")   },

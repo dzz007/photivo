@@ -305,6 +305,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   BgPix.fill(BgColor);
   BackgroundColorButton->setIcon(BgPix);
 
+  Macro_ConnectSomeButton(Reset);
+
   //
   // TAB : Generic
   //
@@ -538,6 +540,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   Tabbar->installEventFilter(this);
   WritePipeButton->installEventFilter(this);
   ToGimpButton->installEventFilter(this);
+  ResetButton->installEventFilter(this);
 
   // context menu for save button
   m_AtnSavePipe = new QAction(tr("Save current pipe"), this);
@@ -554,6 +557,16 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnGimpSavePipe, SIGNAL(triggered()), this, SLOT(GimpSaveMenuPipe()));
   m_AtnGimpSaveFull = new QAction(tr("Export full size"), this);
   connect(m_AtnGimpSaveFull, SIGNAL(triggered()), this, SLOT(GimpSaveMenuFull()));
+
+  // context menu for reset button
+  m_AtnMenuFullReset = new QAction(tr("Neutral reset"), this);
+  connect(m_AtnMenuFullReset, SIGNAL(triggered()), this, SLOT(MenuFullReset()));
+  m_AtnMenuUserReset = new QAction(tr("User reset"), this);
+  connect(m_AtnMenuUserReset, SIGNAL(triggered()), this, SLOT(MenuUserReset()));
+  m_AtnMenuOpenPreset = new QAction(tr("Open preset"), this);
+  connect(m_AtnMenuOpenPreset, SIGNAL(triggered()), this, SLOT(MenuOpenPreset()));
+  m_AtnMenuOpenSettings = new QAction(tr("Open settings"), this);
+  connect(m_AtnMenuOpenSettings, SIGNAL(triggered()), this, SLOT(MenuOpenSettings()));
 }
 
 void CB_Event0();
@@ -601,6 +614,16 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.addAction(m_AtnGimpSavePipe);
       Menu.addAction(m_AtnGimpSaveFull);
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+    } else if (obj == ResetButton) {
+      QMenu Menu(NULL);
+      Menu.setStyle(Theme->ptStyle);
+      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.addAction(m_AtnMenuUserReset);
+      Menu.addAction(m_AtnMenuFullReset);
+      Menu.addSeparator();
+      Menu.addAction(m_AtnMenuOpenPreset);
+      Menu.addAction(m_AtnMenuOpenSettings);
+      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     }
     return QObject::eventFilter(obj, event);
   } else {
@@ -643,6 +666,30 @@ void ptMainWindow::GimpSaveMenuPipe() {
 }
 void ptMainWindow::GimpSaveMenuFull() {
   Export(ptExportMode_GimpFull);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Slots for context menu on reset button
+//
+////////////////////////////////////////////////////////////////////////////////
+
+extern void ResetButtonHandler(const short mode);
+
+void ptMainWindow::MenuFullReset() {
+  ResetButtonHandler(ptResetMode_Full);
+}
+
+void ptMainWindow::MenuUserReset() {
+  ResetButtonHandler(ptResetMode_User);
+}
+
+void ptMainWindow::MenuOpenPreset() {
+  ResetButtonHandler(ptResetMode_OpenPreset);
+}
+
+void ptMainWindow::MenuOpenSettings() {
+  ResetButtonHandler(ptResetMode_OpenSettings);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -882,6 +929,11 @@ void ptMainWindow::OnPreviewModeButtonClicked() {
 void CB_RunButton();
 void ptMainWindow::OnRunButtonClicked() {
   ::CB_RunButton();
+}
+
+void CB_ResetButton();
+void ptMainWindow::OnResetButtonClicked() {
+  ::CB_ResetButton();
 }
 
 //
