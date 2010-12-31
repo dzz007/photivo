@@ -68,7 +68,8 @@ void Grid(const short Enabled, const short GridX, const short GridY);
 
 // Zoom functions. Fit returns the factor in %.
 short ZoomFit();
-void  Zoom(const short Factor); // Expressed in %
+short ZoomFitFactor(const uint16_t Width, const uint16_t Height);
+void  Zoom(const short Factor, const short Update = 1); // Expressed in %
 void LightsOut();
 
 // Status report
