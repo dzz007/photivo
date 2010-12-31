@@ -783,7 +783,8 @@ void ptMainWindow::AnalyzeToolBoxStructure() {
           ToolBoxStructure->ToolBox->widget(j)->objectName());
       // Names for the groupboxes!
       GroupBox->setObjectName(ToolBoxStructure->ToolBox->widget(j)->objectName());
-      if (ToolBoxStructure->ToolBox != SettingsToolBox)
+      if (ToolBoxStructure->ToolBox != SettingsToolBox &&
+          ToolBoxStructure->ToolBox != InfoToolBox)
         m_ToolBoxes->append(GroupBox);
 
       QVBoxLayout* GroupBoxLayout = new QVBoxLayout(GroupBox->m_Widget);
@@ -986,8 +987,10 @@ void ptMainWindow::OnTabSettingsButtonClicked() {
 void ptMainWindow::OnTabInfoButtonClicked() {
   if (MainTabBook->currentWidget() == TabInfo)
     MainTabBook->setCurrentWidget(TabProcessing);
-  else
+  else {
+    UpdateSettings();
     MainTabBook->setCurrentWidget(TabInfo);
+  }
 }
 
 //
@@ -1910,6 +1913,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
 
   Exiv2::ExifData::iterator Pos;
   QString TheInfo;
+  QString TempString = "";
 
   Pos = ExifData.findKey(Exiv2::ExifKey("Exif.Image.Make"));
   if (Pos != ExifData.end() ) {
@@ -1917,7 +1921,8 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
     str << *Pos;
     TheInfo.append(QString(str.str().c_str()));
   }
-  InfoMakeLabel->setText(TheInfo);
+  while (TheInfo.endsWith(" ")) TheInfo.chop(1);
+  TempString = TheInfo +": ";
   TheInfo="";
 
   Pos = ExifData.findKey(Exiv2::ExifKey("Exif.Image.Model"));
@@ -1926,7 +1931,8 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
     str << *Pos;
     TheInfo.append(QString(str.str().c_str()));
   }
-  InfoModelLabel->setText(TheInfo);
+  TempString = TempString + TheInfo;
+  InfoCameraLabel->setText(TempString);
   TheInfo="";
 
   // Idea from UFRaw
@@ -2005,7 +2011,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
       TheInfo.append(QString(str.str().c_str()));
     }
   }
-  InfoExposureLabel->setText(TheInfo);
+  TempString = TheInfo + tr(" at ");
   TheInfo="";
 
   Pos = ExifData.findKey(Exiv2::ExifKey("Exif.Photo.FNumber"));
@@ -2021,7 +2027,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
       TheInfo.append(QString(str.str().c_str()));
     }
   }
-  InfoFNumberLabel->setText(TheInfo);
+  TempString = TempString + TheInfo + tr(" with ISO ");
   TheInfo="";
 
   Pos = ExifData.findKey(Exiv2::ExifKey("Exif.Photo.ISOSpeedRatings"));
@@ -2030,7 +2036,9 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
     str << *Pos;
     TheInfo.append(QString(str.str().c_str()));
   }
-  InfoISOLabel->setText(TheInfo);
+  if (TheInfo == "" || TheInfo == " ") TheInfo = "NN";
+  TempString = TempString + TheInfo;
+  InfoExposureLabel->setText(TempString);
   TheInfo="";
 
   Pos = ExifData.findKey(Exiv2::ExifKey("Exif.Photo.FocalLength"));
@@ -2039,7 +2047,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
     str << *Pos;
     TheInfo.append(QString(str.str().c_str()));
   }
-  InfoFocalLengthLabel->setText(TheInfo);
+  TempString = TheInfo;
   TheInfo="";
 
   Pos = ExifData.findKey(Exiv2::ExifKey("Exif.Photo.FocalLengthIn35mmFilm"));
@@ -2048,7 +2056,10 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
     str << *Pos;
     TheInfo.append(QString(str.str().c_str()));
   }
-  InfoFocalLength35Label->setText(TheInfo);
+  if (TheInfo != "" && TheInfo != " " && TheInfo != TempString ) {
+    TempString = TempString + tr(" (35mm equiv.: ") + TheInfo + ")";
+  }
+  InfoFocalLengthLabel->setText(TempString);
   TheInfo="";
 
   Pos = ExifData.findKey(Exiv2::ExifKey("Exif.Photo.Flash"));

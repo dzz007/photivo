@@ -1864,6 +1864,10 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     << "TabTheming"
     << "TabTranslation"
     << "TabMemoryTest"
+    // Info tab
+    << "TabInfoPhotivo"
+    << "TabInfoExif"
+    << "TabInfoSizes"
     // Input tab
     << "TabInput"
     << "TabCameraColorSpace"
