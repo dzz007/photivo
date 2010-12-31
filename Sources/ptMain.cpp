@@ -2283,6 +2283,18 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     return ptError_FileFormat;
   }
 
+  // Color space transformations precalc
+  short NeedRecalcTransforms = 0;
+  if (JobSettings.contains("CMQuality")) {
+    if (JobSettings.value("CMQuality").toInt() != Settings->GetInt("CMQuality")) {
+      NeedRecalcTransforms = 1;
+    }
+  } else if (JobSettings.contains("WorkColor")) {
+    if (JobSettings.value("WorkColor").toInt() != Settings->GetInt("WorkColor")) {
+      NeedRecalcTransforms = 1;
+    }
+  }
+
   // String corrections if directory got moved
   QStringList Directories;
     Directories << "TranslationsDirectory"
@@ -2490,6 +2502,9 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
       assert(0);
     }
   }
+
+  // Color space transformations precalc
+  if (NeedRecalcTransforms == 1) PreCalcTransforms();
 
   // clean up non-existing files in settings file
   // currently, we completely preserve the settings file
