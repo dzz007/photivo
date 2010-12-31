@@ -1304,6 +1304,27 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     return;
   }
 
+  // Fast display of an image, e.g. for cropping
+  // -> no histogram
+  // -> only exposure for better display
+  // -> transfer to preview color space
+  if (ForcedImage) {
+    PreviewImage->Set(ForcedImage);
+    float Factor = powf(2,Settings->GetDouble("ExposureNormalization"));
+    PreviewImage->Expose(Factor,ptExposureClipMode_Ratio);
+
+    // Convert from working space to screen space.
+    // Using lcms and a standard sRGB or custom profile.
+    ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB();
+    if (!ReturnValue) {
+      ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
+      assert(ReturnValue);
+    }
+    ViewWindow->UpdateView(PreviewImage);
+    ReportProgress(QObject::tr("Ready"));
+    return;
+  }
+
   ViewWindow->StatusReport(1);
   ReportProgress(QObject::tr("Updating preview image"));
 
@@ -3826,6 +3847,10 @@ void CB_DarkFrameChoice(const QVariant Choice) {
 
 void CB_WhiteBalanceChoice(const QVariant Choice) {
   Settings->SetValue("WhiteBalance",Choice);
+  uint16_t Width = 0;
+  uint16_t Height = 0;
+  short OldZoom = 0;
+  short OldZoomMode = 0;
   switch (Choice.toInt()) {
     case ptWhiteBalance_Camera :
     case ptWhiteBalance_Auto :
@@ -3837,10 +3862,12 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       // First : make sure we have Image_AfterDcRaw in the view window.
       // Anything else might have undergone geometric transformations that are
       // impossible to calculate reverse to a spot in dcraw.
+      Width = TheProcessor->m_Image_AfterDcRaw->m_Width;
+      Height = TheProcessor->m_Image_AfterDcRaw->m_Height;
+      OldZoom = Settings->GetInt("Zoom");
+      OldZoomMode = Settings->GetInt("ZoomMode");
+      ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
       UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw);
-      if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
-        CB_ZoomFitButton();
-      }
       // Allow to be selected in the view window. And deactivate main.
       ViewWindow->AllowSelection(1);
       BlockTools(1);
@@ -3866,7 +3893,8 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
                    Settings->GetInt("VisualSelectionWidth"));
       TRACEKEYVALS("Selection H","%d",
                    Settings->GetInt("VisualSelectionHeight"));
-
+      ViewWindow->Zoom(OldZoom,0);
+      Settings->SetValue("ZoomMode",OldZoomMode);
       break;
     default :
       // Here we have presets selected from ptWhiteBalances.
@@ -3880,10 +3908,6 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
                          ptWhiteBalances[Choice.toInt()].m_Multipliers[2]);
   }
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
-  if (Choice.toInt() == ptWhiteBalance_Spot &&
-      Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
-    CB_ZoomFitButton();
-  }
 }
 
 void CB_SpotWBButton() {
@@ -4354,10 +4378,10 @@ void CB_MakeCropButton() {
   // We *urge* Image_AfterRGB to be used now for the preview
   // Rather than end-of-the pipe or so and having to recalculate.
   // Recalculate happens later on anyway, so no out of sync issue.
+  short OldZoom = Settings->GetInt("Zoom");
+  short OldZoomMode = Settings->GetInt("ZoomMode");
+  ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
   UpdatePreviewImage(TheProcessor->m_Image_AfterLensfun); // Calculate in any case.
-  if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
-    CB_ZoomFitButton();
-  }
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->AllowSelection(1,
                              Settings->GetInt("AspectRatioH") &&
@@ -4385,15 +4409,19 @@ void CB_MakeCropButton() {
       QObject::tr("Crop rectangle too large.\nNo crop, try again."));
     if(Settings->GetInt("RunMode")==1) {
       // we're in manual mode!
+      ViewWindow->Zoom(OldZoom,0);
+      Settings->SetValue("ZoomMode",OldZoomMode);
       Update(ptProcessorPhase_NULL);
     }
   } else if (ViewWindow->GetSelectionWidth()*XScale < 4 ||
-             ViewWindow->GetSelectionHeight()*YScale) {
+             ViewWindow->GetSelectionHeight()*YScale < 4) {
     QMessageBox::information(MainWindow,
       QObject::tr("Crop too small"),
       QObject::tr("Crop rectangle too small.\nNo crop, try again."));
     if(Settings->GetInt("RunMode")==1) {
       // we're in manual mode!
+      ViewWindow->Zoom(OldZoom,0);
+      Settings->SetValue("ZoomMode",OldZoomMode);
       Update(ptProcessorPhase_NULL);
     }
   } else {
@@ -4412,6 +4440,8 @@ void CB_MakeCropButton() {
   TRACEKEYVALS("CropW","%d",Settings->GetInt("CropW"));
   TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
 
+  ViewWindow->Zoom(OldZoom,0);
+  Settings->SetValue("ZoomMode",OldZoomMode);
   Update(ptProcessorPhase_AfterRAW);
 }
 

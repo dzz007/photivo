@@ -346,33 +346,37 @@ void ptViewWindow::Grid(const short Enabled, const short GridX, const short Grid
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+short ptViewWindow::ZoomFitFactor(const uint16_t Width, const uint16_t Height) {
+  float Factor1 =(float)
+    (viewport()->size().width())/Width;
+  float Factor2 =(float)
+    (viewport()->size().height())/Height;
+  m_ZoomFactor = MIN(Factor1,Factor2);
+  return (short)(m_ZoomFactor*100.0f+0.5f);
+}
+
 short ptViewWindow::ZoomFit() {
   // Startup condition.
   if (!m_RelatedImage) return 100;
   // Normal condition.
-  double Factor1 =(double)
-    (viewport()->size().width())/m_RelatedImage->m_Width;
-  double Factor2 =(double)
-    (viewport()->size().height())/m_RelatedImage->m_Height;
-  m_ZoomFactor = MIN(Factor1,Factor2);
   m_SizeReport->setVisible(0);
-  //~ m_SizeReportTimer->start(m_SizeReportTimeOut);
-  //~ m_SizeReport->setText("<h1>Fit</h1>");
-  //~ m_SizeReport->update();
-  //~ m_SizeReport->setVisible(1);
   UpdateView();
-  return (short)(m_ZoomFactor*100+0.5);
+  return ZoomFitFactor(m_RelatedImage->m_Width,m_RelatedImage->m_Height);
 }
 
-void ptViewWindow::Zoom(const short Factor) {
+void ptViewWindow::Zoom(const short Factor, const short Update) {
   m_ZoomFactor = Factor/100.0;
-  m_SizeReportTimer->start(m_SizeReportTimeOut);
-  m_SizeReportText = QString::number(Factor);
-  m_SizeReport->setGeometry(width()-170,20,150,70);
-  m_SizeReport->setText("<h1>"+m_SizeReportText+"%</h1>");
-  m_SizeReport->update();
-  m_SizeReport->setVisible(1);
-  UpdateView();
+  Settings->SetValue("Zoom",Factor); // for convenience
+  Settings->SetValue("ZoomMode",ptZoomMode_NonFit);
+  if (Update == 1) {
+    m_SizeReportTimer->start(m_SizeReportTimeOut);
+    m_SizeReportText = QString::number(Factor);
+    m_SizeReport->setGeometry(width()-170,20,150,70);
+    m_SizeReport->setText("<h1>"+m_SizeReportText+"%</h1>");
+    m_SizeReport->update();
+    m_SizeReport->setVisible(1);
+    UpdateView();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -387,12 +391,7 @@ void ptViewWindow::UpdateView(const ptImage* NewRelatedImage) {
   if (!m_RelatedImage) return;
 
   if (Settings->GetInt("ZoomMode")==ptZoomMode_Fit) {
-    double Factor1 =(double)
-      (viewport()->size().width())/m_RelatedImage->m_Width;
-    double Factor2 =(double)
-      (viewport()->size().height())/m_RelatedImage->m_Height;
-    m_ZoomFactor = MIN(Factor1,Factor2);
-    Settings->SetValue("Zoom",(int)(m_ZoomFactor*100+0.5));
+    Settings->SetValue("Zoom",ZoomFitFactor(m_RelatedImage->m_Width,m_RelatedImage->m_Height));
   }
 
   // Convert the ptImage to a QImage. Mind R<->B and 16->8

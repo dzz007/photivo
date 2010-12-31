@@ -1365,7 +1365,7 @@ ptImage* ptImage::Expose(const double Exposure,
   assert (Exposure < (2<<15));
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
 
-#pragma omp parallel for
+#pragma omp parallel for schedule(static)
   for (uint32_t i=0; i< (uint32_t)m_Height*m_Width; i++) {
     uint32_t Pixel[3];
     uint32_t Highest = 0;
@@ -1386,7 +1386,7 @@ ptImage* ptImage::Expose(const double Exposure,
       } else if (ExposureClipMode == ptExposureClipMode_Ratio) {
         for (short Color=0; Color<NrChannels; Color++) {
           m_Image[i][Color] = MIN(0XFFFF,
-                               (uint32_t)(Pixel[Color]*(double)0xFFFF/Highest));
+                               (uint32_t)(Pixel[Color]*(float)0xFFFF/Highest));
         }
       } else {
         assert(0);
@@ -2473,7 +2473,7 @@ ptImage* ptImage::DeFringe(const double Radius,
   float Val6 = 5*ptPI/3+HueShift;
   float Val7 = 6*ptPI/3+HueShift;
 
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(dynamic)
   for (uint16_t Row = 0; Row < m_Height; Row++) {
     for (uint16_t Col = 0; Col < m_Width; Col++) {
       short CorrectPixel = 0;
