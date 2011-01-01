@@ -351,48 +351,62 @@ int photivoMain(int Argc, char *Argv[]) {
                      << "CurveFileNamesShadowsHighlights"
                      << "CurveFileNamesDenoise";
 
-  CurveBackupKeys = CurveKeys;
-
+  CurveBackupKeys = CurveKeys;  
+  
   // User home folder, where Photivo stores its ini and all Presets, Curves etc
-  // %appdata%\Photivo on Windows, ~/.photivo on Linux
+  // %appdata%\Photivo on Windows, ~/.photivo on Linux or the program folder for the 
+  // portable Windows version.
+  short IsPortableProfile = 0;
+  QString AppDataFolder = "";
+  QString Folder = "";
   #ifdef Q_OS_WIN32
-    // Get %appdata% via WinAPI call
-    QString AppDataFolder;
-    QLibrary library(QLatin1String("shell32"));
-    QT_WA(
-      {
-        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
-        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
-        if (SHGetSpecialFolderPath) {
-          TCHAR path[MAX_PATH];
-          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-          AppDataFolder = QString::fromUtf16((ushort*)path);
+    IsPortableProfile = QFile::exists("use-portable-profile");
+    if (IsPortableProfile != 0) {
+      printf("Photivo running in portable mode.\n");
+      AppDataFolder = QCoreApplication::applicationDirPath();
+      Folder = "";
+    } else {
+      // Get %appdata% via WinAPI call
+      QLibrary library(QLatin1String("shell32"));
+      QT_WA(
+        {
+          typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
+          GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
+          if (SHGetSpecialFolderPath) {
+            TCHAR path[MAX_PATH];
+            SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+            AppDataFolder = QString::fromUtf16((ushort*)path);
+          }
+        },
+        {
+          typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
+          GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
+          if (SHGetSpecialFolderPath) {
+            char path[MAX_PATH];
+            SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+            AppDataFolder = QString::fromLocal8Bit(path);
+          }
         }
-      },
-      {
-        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
-        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
-        if (SHGetSpecialFolderPath) {
-          char path[MAX_PATH];
-          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-          AppDataFolder = QString::fromLocal8Bit(path);
-        }
-      }
-    );
-
-    // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
-    AppDataFolder.replace(QString("\\"), QString("/"));
-    // Keeping the leading "/" separate here is important or mkdir will fail.
-    QString Folder = "Photivo/";
+      );
+  
+      // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
+      AppDataFolder.replace(QString("\\"), QString("/"));
+      // Keeping the leading "/" separate here is important or mkdir will fail.
+      Folder = "Photivo/";
+    }
   #else
-    QString Folder = ".photivo/";
-    QString AppDataFolder = QDir::homePath();
+    Folder = ".photivo/";
+    AppDataFolder = QDir::homePath();
   #endif
 
   QString UserDirectory = AppDataFolder + "/" + Folder;
-  QDir home(AppDataFolder);
-  if (!home.exists(Folder))
-    home.mkdir(Folder);
+  
+  if (IsPortableProfile == 0) {
+    QDir home(AppDataFolder);
+    if (!home.exists(Folder))
+      home.mkdir(Folder);
+  }
+  
   QString SettingsFileName = UserDirectory + "photivo.ini";
   // this has to be changed when we move to a different tree structure!
   #ifdef __unix__
@@ -412,7 +426,9 @@ int photivoMain(int Argc, char *Argv[]) {
     // photivo was initialized
     NeedInitialization = 0;
     FirstStart = 0;
-    printf("Settingsfile '%s'\n",SettingsFileName.toAscii().data());
+    printf("Existing settingsfile '%s'\n",SettingsFileName.toAscii().data());
+  } else {
+    printf("New settingsfile '%s'\n",SettingsFileName.toAscii().data());
   }
 
   printf("User directory: '%s'; \n",UserDirectory.toAscii().data());
@@ -425,8 +441,10 @@ int photivoMain(int Argc, char *Argv[]) {
     NeedInitialization = 1;
 
   // Initialize the user folder if needed
-  if (NeedInitialization == 1 || 1 /* TODO: for testing */) {
-    printf("Initializing...\n");
+  /* TODO: for testing. Enable the other line below once profile versions are final. */
+  if (IsPortableProfile == 0) {
+  //if (NeedInitialization == 1 && IsPortableProfile == 0) {
+    printf("Initializing/Updating user profile...\n");
     QFile::remove(UserDirectory + "photivo.png");
     QFile::copy(NewShareDirectory + "photivo.png",
       UserDirectory + "photivo.png");
