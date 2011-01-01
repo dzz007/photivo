@@ -3,7 +3,7 @@
 // photivo
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-// Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2009,2011 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
@@ -611,7 +611,7 @@ const ptWhiteBalance ptWhiteBalances[] = {
 { "Canon",
   "EOS 5D Mark II",
   QObject::tr("Shade"),
-  { 2.55957,  1, 1.397461, 0 } },
+  { 2.559570, 1, 1.397461, 0 } },
 { "Canon",
   "EOS 5D Mark II",
   QObject::tr("Cloudy"),
@@ -627,7 +627,7 @@ const ptWhiteBalance ptWhiteBalances[] = {
 { "Canon",
   "EOS 5D Mark II",
   QObject::tr("Flash"),
-  { 2.40918,  1, 1.507813, 0 } },
+  { 2.409180, 1, 1.507813, 0 } },
 
 // Canon , EOS 7D
 { "Canon",
@@ -792,6 +792,32 @@ const ptWhiteBalance ptWhiteBalances[] = {
   "EOS 50D",
   QObject::tr("6500K"),
   { 2.311523, 1, 1.239258, 0 } },
+
+// Canon , EOS 60D
+{ "Canon",
+  "EOS 60D",
+  QObject::tr("Daylight"),
+  { 2.1514, 1, 1.5420, 0 } },
+{ "Canon",
+  "EOS 60D",
+  QObject::tr("Shade"),
+  { 2.5039, 1, 1.3057, 0 } },
+{ "Canon",
+  "EOS 60D",
+  QObject::tr("Cloudy"),
+  { 2.3223, 1, 1.4160, 0 } },
+{ "Canon",
+  "EOS 60D",
+  QObject::tr("Tungsten"),
+  { 1.5215, 1, 2.3486, 0 } },
+{ "Canon",
+  "EOS 60D",
+  QObject::tr("Fluorescent"),
+  { 1.9248, 1, 2.1836, 0 } },
+{ "Canon",
+  "EOS 60D",
+  QObject::tr("Flash"),
+  { 2.1514, 1, 1.5420, 0 } },
 
 // Canon , EOS 300D DIGITAL
 { "Canon",
@@ -6171,6 +6197,40 @@ const ptWhiteBalance ptWhiteBalances[] = {
   QObject::tr("DaylightFluorescent"),
   { 2.070312, 1, 1.312500, 0 } },
 
+// OLYMPUS , E-P2
+{ "OLYMPUS",
+  "E-P2",
+  QObject::tr("Daylight"),
+  { 1.828125, 1, 1.382813, 0 } },
+{ "OLYMPUS",
+  "E-P2",
+  QObject::tr("Shade"),
+  { 2.171875, 1, 1.070313, 0 } },
+{ "OLYMPUS",
+  "E-P2",
+  QObject::tr("Cloudy"),
+  { 2.000000, 1, 1.250000, 0 } },
+{ "OLYMPUS",
+  "E-P2",
+  QObject::tr("Incandescent"),
+  { 1.070313, 1, 2.656250, 0 } },
+{ "OLYMPUS",
+  "E-P2",
+  QObject::tr("WhiteFluorescent"),
+  { 1.781250, 1, 2.015625, 0 } },
+{ "OLYMPUS",
+  "E-P2",
+  QObject::tr("NeutralFluorescent"),
+  { 1.742188, 1, 1.796875, 0 } },
+{ "OLYMPUS",
+  "E-P2",
+  QObject::tr("DaylightFluorescent"),
+  { 2.132813, 1, 1.367188, 0 } },
+{ "OLYMPUS",
+  "E-P2",
+  QObject::tr("Flash"),
+  { 2.007813, 1, 1.242188, 0 } },
+
 // OLYMPUS , E-PL1
 { "OLYMPUS",
   "E-PL1",
@@ -6628,6 +6688,28 @@ const ptWhiteBalance ptWhiteBalances[] = {
   "DMC-G1",
   QObject::tr("Flash"),
   { 1.528517, 1, 1.277567, 0 } },
+
+// Panasonic , DMC-GF1
+{ "Panasonic",
+  "DMC-GF1",
+  QObject::tr("Daylight"),
+  { 2.007605, 1, 1.418251, 0 } },
+{ "Panasonic",
+  "DMC-GF1",
+  QObject::tr("Cloudy"),
+  { 2.174905, 1, 1.296578, 0 } },
+{ "Panasonic",
+  "DMC-GF1",
+  QObject::tr("Shade"),
+  { 2.395437, 1, 1.193916, 0 } },
+{ "Panasonic",
+  "DMC-GF1",
+  QObject::tr("Incandescent"),
+  { 1.365019, 1, 2.117871, 0 } },
+{ "Panasonic",
+  "DMC-GF1",
+  QObject::tr("Flash"),
+  { 2.353612, 1, 1.231939, 0 } },
 
 // Panasonic , DMC-L1
 { "Panasonic",
@@ -7607,6 +7689,32 @@ const ptWhiteBalance ptWhiteBalances[] = {
   QObject::tr("Flash"),
   { 2.277344, 1, 1.312500, 0 } },
 
+// SONY , DSLR-A850
+{ "SONY",
+  "DSLR-A850",
+  QObject::tr("Daylight"),
+  { 2.683594, 1, 1.359375, 0 } },
+{ "SONY",
+  "DSLR-A850",
+  QObject::tr("Shade"),
+  { 3.164062, 1, 1.121094, 0 } },
+{ "SONY",
+  "DSLR-A850",
+  QObject::tr("Cloudy"),
+  { 2.898438, 1, 1.250000, 0 } },
+{ "SONY",
+  "DSLR-A850",
+  QObject::tr("Tungsten"),
+  { 1.617188, 1, 2.421875, 0 } },
+{ "SONY",
+  "DSLR-A850",
+  QObject::tr("Fluorescent"),
+  { 2.324219, 1, 1.882813, 0 } },
+{ "SONY",
+  "DSLR-A850",
+  QObject::tr("Flash"),
+  { 3.015625, 1, 1.191406, 0 } },
+
 // SONY , DSLR-A900
 { "SONY",
   "DSLR-A900",
@@ -7632,6 +7740,32 @@ const ptWhiteBalance ptWhiteBalances[] = {
   "DSLR-A900",
   QObject::tr("Flash"),
   { 2.910156, 1, 1.183594, 0 } },
+
+// SONY , NEX-5
+{ "SONY",
+  "NEX-5",
+  QObject::tr("Daylight"),
+  { 2.3125, 1, 1.4453, 0 } },
+{ "SONY",
+  "NEX-5",
+  QObject::tr("Shade"),
+  { 2.6992, 1, 1.1914, 0 } },
+{ "SONY",
+  "NEX-5",
+  QObject::tr("Cloudy"),
+  { 2.4766, 1, 1.3281, 0 } },
+{ "SONY",
+  "NEX-5",
+  QObject::tr("Incandescent"),
+  { 1.4609, 1, 2.5703, 0 } },
+{ "SONY",
+  "NEX-5",
+  QObject::tr("Fluorescent"),
+  { 2.0352, 1, 2.0625, 0 } },
+{ "SONY",
+  "NEX-5",
+  QObject::tr("Flash"),
+  { 2.8281, 1, 1.2109, 0 } },
 
 // Terminator
 { "","","", {0.0,0.0,0.0} }
