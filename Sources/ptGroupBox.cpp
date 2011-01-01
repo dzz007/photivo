@@ -70,7 +70,13 @@ ptGroupBox::ptGroupBox(const QString Title,
 
   m_Symbol = new QLabel();
   m_Symbol->setPixmap(QPixmap(QString::fromUtf8(":/photivo/Icons/attention.png")));
-  m_Symbol->setToolTip("Complex filter. Might be slow.");
+  m_Symbol->setToolTip(tr("Complex filter. Might be slow."));
+
+  m_HelpIcon = new QLabel();
+  m_HelpIcon->setPixmap(*Theme->ptIconQuestion);
+  m_HelpIcon->setToolTip(tr("Open help page in web browser."));
+  m_HelpIcon->setVisible(0);
+  m_HelpUri = "";
 
   QString Temp = Title;
   Temp.replace("(*)","");
@@ -86,6 +92,7 @@ ptGroupBox::ptGroupBox(const QString Title,
 
   ButtonLayout->addWidget(m_Icon);
   ButtonLayout->addWidget(m_Title);
+  ButtonLayout->addWidget(m_HelpIcon);
   if (Temp!=Title) {
     ButtonLayout->addWidget(m_Symbol);
   }
@@ -187,11 +194,13 @@ void ptGroupBox::UpdateView() {
     m_Header->setObjectName("ToolHeader");
     m_Title->setObjectName("ToolHeader");
     m_Symbol->setObjectName("ToolHeader");
+    m_HelpIcon->setObjectName("ToolHeader");
     m_Icon->setObjectName("ToolHeader");
   } else {
     m_Header->setObjectName("");
     m_Title->setObjectName("");
     m_Symbol->setObjectName("");
+    m_HelpIcon->setObjectName("");
     m_Icon->setObjectName("");
   }
   m_Header->setStyleSheet(Theme->ptStyleSheet);
@@ -425,6 +434,17 @@ void ptGroupBox::Hide() {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Set help
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::SetHelpUri(const QString Uri) {
+  m_HelpUri = Uri;
+  m_HelpIcon->setVisible(true);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // changeEvent handler.
 // To react on enable/disable
 //
@@ -440,7 +460,12 @@ void ptGroupBox::changeEvent(QEvent *) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptGroupBox::mousePressEvent(QMouseEvent *event) {
-  if (event->y()<20 && event->x()<250) {
+  QPoint Position = event->pos()-m_HelpIcon->pos();
+  if (Position.x() > 0 && Position.x() < 14 &&
+      Position.y() > 0 && Position.y() < 14 &&
+      event->button()==Qt::LeftButton) {
+    QDesktopServices::openUrl(m_HelpUri);
+  } else if (event->y()<20 && event->x()<250) {
     if (event->button()==Qt::LeftButton) {
       m_Folded = 1 - m_Folded;
       UpdateView();
