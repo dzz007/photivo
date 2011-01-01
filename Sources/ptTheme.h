@@ -57,6 +57,7 @@ QPixmap*    ptIconCircleRed;
 QPixmap*    ptIconCrossRed;
 QPixmap*    ptIconReset;
 QPixmap*    ptIconDisk;
+QPixmap*    ptIconQuestion;
 
 QColor      ptBackGround;
 

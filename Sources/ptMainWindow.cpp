@@ -518,29 +518,17 @@ ptMainWindow::ptMainWindow(const QString Title)
   ShortFileName = PathInfo.fileName();
   GimpExecCommandText->setText(ShortFileName);
 
-  // Timer to delay on resize operations.
-  // (avoiding excessive calculations and loops in the ZoomFit approach.)
-  m_ResizeTimer = new QTimer(this);
-  m_ResizeTimer->setSingleShot(1);
-  connect(m_ResizeTimer,
-          SIGNAL(timeout()),
-          this,
-          SLOT(ResizeTimerExpired()));
-  // This qualifies for an ugly hack :)
-  // Need an event at t=0 at toplevel.
-  m_Event0Timer = new QTimer(this);
-  m_Event0Timer->setSingleShot(1);
-  m_Event0Timer->start(0);
-  connect(m_Event0Timer,
-          SIGNAL(timeout()),
-          this,
-          SLOT(Event0TimerExpired()));
-
   Tabbar = ProcessingTabBook->findChild<QTabBar*>();
   Tabbar->installEventFilter(this);
   WritePipeButton->installEventFilter(this);
   ToGimpButton->installEventFilter(this);
   ResetButton->installEventFilter(this);
+
+  // Set help pages
+  findChild <ptGroupBox*>("TabCrop")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#crop");
+  findChild <ptGroupBox*>("TabWhiteBalance")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
 
   // context menu for save button
   m_AtnSavePipe = new QAction(tr("Save current pipe"), this);
@@ -567,6 +555,24 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnMenuOpenPreset, SIGNAL(triggered()), this, SLOT(MenuOpenPreset()));
   m_AtnMenuOpenSettings = new QAction(tr("Open settings"), this);
   connect(m_AtnMenuOpenSettings, SIGNAL(triggered()), this, SLOT(MenuOpenSettings()));
+
+  // Timer to delay on resize operations.
+  // (avoiding excessive calculations and loops in the ZoomFit approach.)
+  m_ResizeTimer = new QTimer(this);
+  m_ResizeTimer->setSingleShot(1);
+  connect(m_ResizeTimer,
+          SIGNAL(timeout()),
+          this,
+          SLOT(ResizeTimerExpired()));
+  // This qualifies for an ugly hack :)
+  // Need an event at t=0 at toplevel.
+  m_Event0Timer = new QTimer(this);
+  m_Event0Timer->setSingleShot(1);
+  m_Event0Timer->start(0);
+  connect(m_Event0Timer,
+          SIGNAL(timeout()),
+          this,
+          SLOT(Event0TimerExpired()));
 }
 
 void CB_Event0();
@@ -1317,6 +1323,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     CB_InputChanged("ZoomInput",200);
   } else if (Event->key()==Qt::Key_4 && Event->modifiers()==Qt::NoModifier) {
     CB_ZoomFitButton();
+  } else if (Event->key()==Qt::Key_F1) {
+    QDesktopServices::openUrl(QString("http://photivo.org/photivo/manual"));
   }
   // most shortcuts should only work when we are not in special state like cropping
   if (Settings->GetInt("BlockTools")==0) {

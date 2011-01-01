@@ -47,6 +47,7 @@ ptGroupBox(const QString Title,
 QWidget*   m_Widget;
 
 void SetActive(const short IsActive);
+void SetHelpUri(const QString Uri);
 void UpdateView();
 void Update();
 
@@ -80,7 +81,9 @@ QWidget*  m_Header;
 QLabel*   m_Icon;
 QLabel*   m_Symbol;
 QLabel*   m_Title;
+QLabel*   m_HelpIcon;
 QString   m_Name;
+QString   m_HelpUri;
 QLabel*   test;
 QAction*  m_AtnHide;
 QAction*  m_AtnBlock;

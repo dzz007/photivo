@@ -53,6 +53,7 @@ ptTheme::ptTheme(QApplication* Application) {
   ptIconCrossRed = new QPixmap(QString::fromUtf8(":/photivo/Icons/crossred.png"));
   ptIconReset =  new QPixmap(QString::fromUtf8(":/photivo/Icons/reload.png"));
   ptIconDisk =  new QPixmap(QString::fromUtf8(":/photivo/Icons/filesave.png"));
+  ptIconQuestion =  new QPixmap(QString::fromUtf8(":/photivo/Icons/question.png"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
