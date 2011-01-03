@@ -32,7 +32,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const char ProgramName[] = "photivo";
+const char ProgramName[] = "Photivo";
 const char CompanyName[] = "photivo";
 
 const int PhotivoSettingsVersion = 1;

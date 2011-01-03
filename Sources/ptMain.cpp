@@ -2045,10 +2045,10 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
     }
 
     // Program name
-    //~ iptcData["Iptc.Application2.Program"] = ProgramName;
-    //~ iptcData["Iptc.Application2.ProgramVersion"] = "ipte";
-    //~ xmpData["Xmp.xmp.CreatorTool"] = ProgramName;
-    //~ xmpData["Xmp.tiff.Software"] = ProgramName;
+    iptcData["Iptc.Application2.Program"] = ProgramName;
+    iptcData["Iptc.Application2.ProgramVersion"] = "idle";
+    xmpData["Xmp.xmp.CreatorTool"] = ProgramName;
+    xmpData["Xmp.tiff.Software"] = ProgramName;
 
     // Title
     QString TitleWorking = MainWindow->TitleEditWidget->text();
