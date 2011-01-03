@@ -2412,21 +2412,20 @@ void ptProcessor::ReadExifBuffer() {
       return;
     }
 
-//~ #if EXIV2_TEST_VERSION(0,14,0)
+#if EXIV2_TEST_VERSION(0,14,0)
     // Processing software: photivo
-    // less intrusive than having photivo in the camera model like gimp
-    //~ m_ExifData["Exif.Image.ProcessingSoftware"] = ProgramName;
-    //~ m_ExifData["Exif.Image.Software"] = ProgramName;
+    m_ExifData["Exif.Image.ProcessingSoftware"] = ProgramName;
+    m_ExifData["Exif.Image.Software"] = ProgramName;
     // Since gimp kills the software tags, append it to model
-    //~ Exiv2::Exifdatum& tag = m_ExifData["Exif.Image.Model"];
-    //~ std::string model = tag.toString();
-    //~ std::string space = " ";
-    //~ int Counter = model.find_last_not_of(space);
-    //~ model.erase(Counter+1, model.length()-1-Counter);
-    //~ std::string photivoInfo = " (photivo)";
-    //~ model.append(photivoInfo);
-    //~ tag.setValue(model);
-//~ #endif
+    /* Exiv2::Exifdatum& tag = m_ExifData["Exif.Image.Model"];
+    std::string model = tag.toString();
+    std::string space = " ";
+    int Counter = model.find_last_not_of(space);
+    model.erase(Counter+1, model.length()-1-Counter);
+    std::string photivoInfo = " (photivo)";
+    model.append(photivoInfo);
+    tag.setValue(model); */
+#endif
 
     if (Settings->GetInt("ImageRating"))
       m_ExifData["Exif.Image.Rating"] = Settings->GetInt("ImageRating");
