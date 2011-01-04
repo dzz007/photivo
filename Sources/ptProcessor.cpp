@@ -410,11 +410,10 @@ void ptProcessor::Run(short Phase,
           return;
         }
 
-        Settings->SetValue("ImageW",m_Image_AfterLensfun->m_Width);
-        Settings->SetValue("ImageH",m_Image_AfterLensfun->m_Height);
-
-        TRACEKEYVALS("ImageW","%d",Settings->GetInt("ImageW"));
-        TRACEKEYVALS("ImageH","%d",Settings->GetInt("ImageH"));
+        // The full image width and height is already set.
+        // This is the current size:
+        TRACEKEYVALS("ImageW","%d",m_Image_AfterLensfun->m_Width);
+        TRACEKEYVALS("ImageH","%d",m_Image_AfterLensfun->m_Height);
 
         m_ReportProgress(tr("Reading exif info"));
 
