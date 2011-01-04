@@ -131,7 +131,8 @@ QSize  MainWindowSize;
 // Run mode
 short NextPhase;
 short NextSubPhase;
-int ImageSaved;
+short ImageSaved;
+short ImageCleanUp;
 
 // uint16_t (0,0xffff) to float (0.0, 1.0)
 float ToFloatTable[0x10000];
@@ -295,9 +296,10 @@ int photivoMain(int Argc, char *Argv[]) {
     QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
   #endif
 
+  ImageCleanUp = 0;
 
   if (Argc>1) {
-    QString ErrorMessage = QObject::tr("Usage : photivo [-j JobFile] [-i Image]");
+    QString ErrorMessage = QObject::tr("Usage : photivo [-j JobFile] [-i Image] [-g Image (with cleanup)]");
     // Argc must be 3,5 ...
     if (Argc % 2 != 1) {
       fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
@@ -312,6 +314,9 @@ int photivoMain(int Argc, char *Argv[]) {
           JobFileName = File;
         } else if (Switch == "-i") {
           ImageFileToOpen = File;
+        } else if (Switch == "-g") { // we got an image from gimp
+          ImageFileToOpen = File;
+          ImageCleanUp = 1;
         } else {
           fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
           exit(EXIT_FAILURE);
@@ -351,10 +356,10 @@ int photivoMain(int Argc, char *Argv[]) {
                      << "CurveFileNamesShadowsHighlights"
                      << "CurveFileNamesDenoise";
 
-  CurveBackupKeys = CurveKeys;  
-  
+  CurveBackupKeys = CurveKeys;
+
   // User home folder, where Photivo stores its ini and all Presets, Curves etc
-  // %appdata%\Photivo on Windows, ~/.photivo on Linux or the program folder for the 
+  // %appdata%\Photivo on Windows, ~/.photivo on Linux or the program folder for the
   // portable Windows version.
   short IsPortableProfile = 0;
   QString AppDataFolder = "";
@@ -388,7 +393,7 @@ int photivoMain(int Argc, char *Argv[]) {
           }
         }
       );
-  
+
       // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
       AppDataFolder.replace(QString("\\"), QString("/"));
       // Keeping the leading "/" separate here is important or mkdir will fail.
@@ -400,13 +405,13 @@ int photivoMain(int Argc, char *Argv[]) {
   #endif
 
   QString UserDirectory = AppDataFolder + "/" + Folder;
-  
+
   if (IsPortableProfile == 0) {
     QDir home(AppDataFolder);
     if (!home.exists(Folder))
       home.mkdir(Folder);
   }
-  
+
   QString SettingsFileName = UserDirectory + "photivo.ini";
   // this has to be changed when we move to a different tree structure!
   #ifdef __unix__
@@ -715,7 +720,11 @@ void CB_Event0() {
 
   // Load user settings
   if (Settings->GetInt("StartupSettings")) {
-    CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+    if (ImageCleanUp == 0) {
+      CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+    } else { // we got an image from gimp -> neutral display
+      CB_OpenSettingsFile(Settings->GetString("PresetDirectory") + "/neutral (absolute).pts");
+    }
     // clean up
     QStringList Temp;
     Temp << "CropX" << "CropY" << "CropW" << "CropH";
@@ -2779,14 +2788,22 @@ void CB_MenuFileOpen(const short HaveFile) {
     int ret = msgBox.exec();
     switch (ret) {
       case QMessageBox::Save:
-         // Save was clicked
-         Settings->SetValue("InputFileNameList",OldInputFileNameList);
-         CB_WritePipeButton();
-         Settings->SetValue("InputFileNameList",InputFileNameList);
-         break;
+        // Save was clicked
+        Settings->SetValue("InputFileNameList",OldInputFileNameList);
+        CB_WritePipeButton();
+        Settings->SetValue("InputFileNameList",InputFileNameList);
+        if (ImageCleanUp == 1) {
+          // clean up the input file if we got just a temp file
+          QFile::remove(OldInputFileNameList.at(0));
+        }
+        return;
       case QMessageBox::Discard:
-         // Don't Save was clicked
-         break;
+        // Don't Save was clicked
+        if (ImageCleanUp == 1) {
+          // clean up the input file if we got just a temp file
+          QFile::remove(OldInputFileNameList.at(0));
+        }
+        break;
       case QMessageBox::Cancel:
          // Cancel was clicked
         Settings->SetValue("InputFileNameList",OldInputFileNameList);
@@ -3010,6 +3027,11 @@ void CB_MenuFileExit(const short) {
          // should never be reached
          break;
     }
+  }
+  // clean up the input file if we got just a temp file
+  if (Settings->GetInt("HaveImage")==1 && ImageCleanUp == 1) {
+    QString OldInputFileName = Settings->GetStringList("InputFileNameList")[0];
+    QFile::remove(OldInputFileName);
   }
   // TODO Do we need some blabla before exiting ?
   printf("That's all folks ...\n");
@@ -3510,7 +3532,9 @@ void CB_PipeSizeChoice(const QVariant Choice) {
 
   short PreviousPipeSize = Settings->GetInt("PipeSize");
 
-  if (Choice == ptPipeSize_Full) {
+  if (Choice == ptPipeSize_Full &&
+      (Settings->GetInt("ImageH") > 2000 ||
+       Settings->GetInt("ImageW") > 2000)) {
     if (QMessageBox::question(MainWindow,
       QObject::tr("Are you sure?"),
       QObject::tr("Setting to 1:1 pipe will increase the used ressources.\nAre you sure?"),
