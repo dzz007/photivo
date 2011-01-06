@@ -380,7 +380,7 @@ void ptGroupBox::WriteSettings(const short Append) {
   for (int i = 0; i < Curves.size(); i++) {
     if (Settings->GetInt(Curves.at(i))==ptCurveChoice_Manual) {
       JobSettings.setValue(Curves.at(i) + "Counter",Curve[CurveKeys.indexOf(Curves.at(i))]->m_NrAnchors);
-      for (int j = 0; j < Curve[i]->m_NrAnchors; j++) {
+      for (int j = 0; j < Curve[CurveKeys.indexOf(Curves.at(i))]->m_NrAnchors; j++) {
         JobSettings.setValue(Curves.at(i) + "X" + QString::number(j),Curve[CurveKeys.indexOf(Curves.at(i))]->m_XAnchor[j]);
         JobSettings.setValue(Curves.at(i) + "Y" + QString::number(j),Curve[CurveKeys.indexOf(Curves.at(i))]->m_YAnchor[j]);
       }
