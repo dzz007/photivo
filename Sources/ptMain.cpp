@@ -3,7 +3,7 @@
 // photivo
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-// Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 // Copyright (C) 2010 Bernd Schoeler <soda |at| photivo |dot| org>
 //
 // This file is part of photivo.
@@ -1066,7 +1066,6 @@ void Update(const QString GuiName) {
 
 void BlockTools(const short state) {
   if (state == 1) { //block, disable tools
-    ViewWindow->StatusReport(3);
     MainWindow->ControlFrame->setEnabled(0);
     Settings->SetValue("BlockTools",1);
   } else { //enable tools
@@ -1087,6 +1086,7 @@ void HistogramGetCrop() {
   if (Settings->GetInt("HistogramCrop")) {
       // Allow to be selected in the view window. And deactivate main.
       ViewWindow->AllowSelection(1);
+      ViewWindow->StatusReport("Selection");
       BlockTools(1);
       while (ViewWindow->SelectionOngoing()) QApplication::processEvents();
       // Selection is done at this point. Disallow it further and activate main.
@@ -3933,6 +3933,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw);
       // Allow to be selected in the view window. And deactivate main.
       ViewWindow->AllowSelection(1);
+      ViewWindow->StatusReport("Spot WB");
       BlockTools(1);
       while (ViewWindow->SelectionOngoing()) QApplication::processEvents();
       // Selection is done at this point. Disallow it further and activate main.
@@ -4452,6 +4453,7 @@ void CB_MakeCropButton() {
                              (double) Settings->GetInt("AspectRatioH") /
                              (double) Settings->GetInt("AspectRatioW"),
                              Settings->GetInt("CropRectangleMode"));
+  ViewWindow->StatusReport("Crop");
   BlockTools(1);
   while (ViewWindow->SelectionOngoing()) QApplication::processEvents();
   // Selection is done at this point. Disallow it further and activate main.

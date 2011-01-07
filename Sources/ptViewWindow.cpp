@@ -3,7 +3,7 @@
 // photivo
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-// Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
@@ -930,6 +930,19 @@ void ptViewWindow::StatusReport(short State) {
     m_StatusReportTimer->stop();
     m_StatusReport->setVisible(0);
   }
+}
+
+void ptViewWindow::StatusReport(const QString Text) {
+  m_StatusReportTimer->stop();
+  QString StatusReportStyleSheet;
+  StatusReportStyleSheet = "QLabel {border: 8px solid rgb(75,150,255);"
+  "border-radius: 25px; padding: 8px; color: rgb(75,150,255);"
+  "background: rgb(190,220,255);}";
+  m_StatusReport->setStyleSheet(StatusReportStyleSheet);
+  m_StatusReport->setText("<h1> "+ Text + " </h1>");
+  m_StatusReport->setGeometry(20,20,90+15*Text.length(),70);
+  m_StatusReport->update();
+  m_StatusReport->setVisible(1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
