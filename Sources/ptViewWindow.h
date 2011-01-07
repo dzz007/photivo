@@ -3,7 +3,7 @@
 // photivo
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-// Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
@@ -51,7 +51,7 @@ void UpdateView(const ptImage* NewRelatedImage = NULL);
 void AllowSelection(const short  Allow,
                     const short  FixedAspectRatio = 0,
                     const double HOverW = 2.0/3,
-        const short  RectangleMode = ptRectangleMode_None);
+                    const short  RectangleMode = ptRectangleMode_None);
 
 // Returns 1 if selection process is ongoing.
 short SelectionOngoing();
@@ -70,10 +70,11 @@ void Grid(const short Enabled, const short GridX, const short GridY);
 short ZoomFit();
 short ZoomFitFactor(const uint16_t Width, const uint16_t Height);
 void  Zoom(const short Factor, const short Update = 1); // Expressed in %
-void LightsOut();
+void  LightsOut();
 
 // Status report
-void StatusReport (short State);
+void StatusReport(const short State);
+void StatusReport(const QString Text);
 
 const ptImage*       m_RelatedImage;
 
