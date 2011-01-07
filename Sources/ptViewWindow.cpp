@@ -319,7 +319,7 @@ uint16_t ptViewWindow::GetSelectionHeight() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::LightsOut() {
-  m_CropLightsOut = 1 - m_CropLightsOut;
+  m_CropLightsOut = (m_CropLightsOut+1)%3;
   Settings->m_IniSettings->setValue("CropLightsOut",m_CropLightsOut);
   viewport()->repaint();
 }
@@ -597,7 +597,7 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
       int16_t RectX1 = MAX(m_StartDragX,m_EndDragX);
       int16_t RectY1 = MAX(m_StartDragY,m_EndDragY);
       QBrush Brush(QColor(20, 20, 20, 200));
-      if (m_CropLightsOut) {
+      if (m_CropLightsOut == 2) {
         if (Settings->GetInt("BackgroundColor"))
           Brush.setColor(QColor(Settings->GetInt("BackgroundRed"),
                                 Settings->GetInt("BackgroundGreen"),
@@ -605,28 +605,30 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
         else
           Brush.setColor(Theme->ptBackGround);
       }
-      if (RectY0 > FrameY0) { // Top
-        Painter.fillRect(FrameX0,FrameY0,
-             FrameX1-FrameX0,MIN(FrameY1-FrameY0,RectY0-FrameY0),Brush);
-      }
-      if (RectY1 < FrameY1) { // Bottom
-        Painter.fillRect(FrameX0,MAX(RectY1+1,FrameY0),
-             FrameX1-FrameX0,FrameY1-MAX(RectY1+1,FrameY0),Brush);
-      }
-      if ((RectX0 > FrameX0) &&
-          !((RectY0 < FrameY0) && (RectY1 < FrameY0)) &&
-          !((RectY0 > FrameY1) && (RectY1 > FrameY1))) { // Left
-        Painter.fillRect(FrameX0,MAX(FrameY0,RectY0),
-             MIN(FrameX1-FrameX0,RectX0-FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
-      }
-      if ((RectX1 < FrameX1) &&
-          !((RectY0 < FrameY0) && (RectY1 < FrameY0)) &&
-          !((RectY0 > FrameY1) && (RectY1 > FrameY1))) { // Right
-        Painter.fillRect(MAX(RectX1+1,FrameX0),MAX(FrameY0,RectY0),
-             FrameX1-MAX(RectX1+1,FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
+      if (m_CropLightsOut != 0) {
+        if (RectY0 > FrameY0) { // Top
+          Painter.fillRect(FrameX0,FrameY0,
+               FrameX1-FrameX0,MIN(FrameY1-FrameY0,RectY0-FrameY0),Brush);
+        }
+        if (RectY1 < FrameY1) { // Bottom
+          Painter.fillRect(FrameX0,MAX(RectY1+1,FrameY0),
+               FrameX1-FrameX0,FrameY1-MAX(RectY1+1,FrameY0),Brush);
+        }
+        if ((RectX0 > FrameX0) &&
+            !((RectY0 < FrameY0) && (RectY1 < FrameY0)) &&
+            !((RectY0 > FrameY1) && (RectY1 > FrameY1))) { // Left
+          Painter.fillRect(FrameX0,MAX(FrameY0,RectY0),
+               MIN(FrameX1-FrameX0,RectX0-FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
+        }
+        if ((RectX1 < FrameX1) &&
+            !((RectY0 < FrameY0) && (RectY1 < FrameY0)) &&
+            !((RectY0 > FrameY1) && (RectY1 > FrameY1))) { // Right
+          Painter.fillRect(MAX(RectX1+1,FrameX0),MAX(FrameY0,RectY0),
+               FrameX1-MAX(RectX1+1,FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
+        }
       }
       QPen Pen(QColor(150, 150, 150),1);
-      if (m_CropLightsOut) Pen.setColor(QColor(0,0,0,0));
+      if (m_CropLightsOut == 2) Pen.setColor(QColor(0,0,0,0));
       Painter.setPen(Pen);
       Painter.drawRect(m_StartDragX, m_StartDragY,
                        m_EndDragX-m_StartDragX,m_EndDragY-m_StartDragY);
