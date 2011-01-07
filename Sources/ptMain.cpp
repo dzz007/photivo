@@ -1338,7 +1338,10 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   if (ForcedImage) {
     PreviewImage->Set(ForcedImage);
     float Factor = powf(2,Settings->GetDouble("ExposureNormalization"));
-    PreviewImage->Expose(Factor,ptExposureClipMode_Ratio);
+    if (Settings->GetInt("PreviewMode") == ptPreviewMode_End) {
+      PreviewImage->Expose(Factor,ptExposureClipMode_Ratio);
+    }
+    BeforeGamma(PreviewImage,0,0);
 
     // Convert from working space to screen space.
     // Using lcms and a standard sRGB or custom profile.
@@ -1347,6 +1350,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
       assert(ReturnValue);
     }
+    AfterAll(PreviewImage,0,0);
+
     ViewWindow->UpdateView(PreviewImage);
     ReportProgress(QObject::tr("Ready"));
     return;
