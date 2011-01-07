@@ -3909,6 +3909,7 @@ void CB_DarkFrameChoice(const QVariant Choice) {
 
 void CB_WhiteBalanceChoice(const QVariant Choice) {
   Settings->SetValue("WhiteBalance",Choice);
+  if (Settings->GetInt("HaveImage") == 0 || Settings->GetInt("IsRAW") == 0) return;
   uint16_t Width = 0;
   uint16_t Height = 0;
   short OldZoom = 0;
