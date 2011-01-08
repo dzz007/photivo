@@ -2,7 +2,7 @@
 //
 // photivo
 //
-// Copyright (C) 2010 Michael Munzert <mail@mm-log.com> (mike)
+// Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com> (mike)
 //
 // This file is part of photivo.
 //
@@ -50,6 +50,7 @@ void SetActive(const short IsActive);
 void SetHelpUri(const QString Uri);
 void UpdateView();
 void Update();
+void SetEnabled(const short Enabled);
 
 private slots:
 void Hide();
@@ -69,8 +70,9 @@ void changeEvent(QEvent *);
 private:
 void WriteSettings(const short Append);
 bool      m_Folded;
-int       m_IsActive;
-int       m_IsBlocked;
+short     m_IsActive;
+short     m_IsBlocked;
+short     m_IsEnabled;
 QPixmap   RightArrow;
 QPixmap   DownArrow;
 QPixmap   ActiveRightArrow;

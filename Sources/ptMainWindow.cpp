@@ -3,7 +3,7 @@
 // photivo
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-// Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
@@ -253,7 +253,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   // menu removed ;-)
 
   // Leftover after menu was removed
-
+  // m_ToolBoxes is set in here
   OnToolBoxesEnabledTriggered(Settings->GetInt("ToolBoxMode"));
 
   //
@@ -1472,6 +1472,18 @@ void ptMainWindow::UpdateToolBoxes() {
       m_ToolBoxes->at(i)->show();
     }
     m_ToolBoxes->at(i)->Update();
+  }
+
+  // disable Raw tools when we have a bitmap
+  QList<ptGroupBox *> m_RawTools;
+  m_RawTools << findChild <ptGroupBox*>("TabCameraColorSpace")
+             << findChild <ptGroupBox*>("TabGenCorrections")
+             << findChild <ptGroupBox*>("TabWhiteBalance")
+             << findChild <ptGroupBox*>("TabDemosaicing")
+             << findChild <ptGroupBox*>("TabHighlightRecovery");
+  short Temp = Settings->GetInt("IsRAW");
+  for (int i = 0; i < m_RawTools.size(); i++) {
+    m_RawTools.at(i)->SetEnabled(Temp);
   }
 }
 
