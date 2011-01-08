@@ -2,7 +2,7 @@
 //
 // photivo
 //
-// Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
@@ -113,6 +113,7 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_Folded = Settings->m_IniSettings->value(m_Name,1).toBool();
   m_IsActive = Settings->ToolIsActive(m_Name);
   m_IsBlocked = Settings->ToolIsBlocked(m_Name);
+  m_IsEnabled = 1;
 
   m_AtnHide = new QAction(tr("Hide"), this);
   connect(m_AtnHide, SIGNAL(triggered()), this, SLOT(Hide()));
@@ -185,7 +186,7 @@ void ptGroupBox::UpdateView() {
     else if (m_IsActive) m_Icon->setPixmap(ActiveDownArrow);
     else m_Icon->setPixmap(DownArrow);
   }
-  if (m_IsBlocked) {
+  if (m_IsBlocked == 1 || m_IsEnabled == 0) {
     m_Widget->setEnabled(0);
   } else {
     m_Widget->setEnabled(1);
@@ -390,6 +391,21 @@ void ptGroupBox::WriteSettings(const short Append) {
   JobSettings.sync();
   if (JobSettings.status() != QSettings::NoError)
     QMessageBox::critical(0,"Error","Error while writing preset file!");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Enabled
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::SetEnabled(const short Enabled) {
+  if (Enabled == 0) {
+    m_IsEnabled = 0;
+  } else {
+    m_IsEnabled = 1;
+  }
+  UpdateView();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

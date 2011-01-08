@@ -915,17 +915,6 @@ void ptViewWindow::StatusReport(short State) {
     m_StatusReport->setGeometry(20,20,220,70);
     m_StatusReport->update();
     m_StatusReport->setVisible(1);
-  } else if (State == 3) { // Crop
-    m_StatusReportTimer->stop();
-    QString StatusReportStyleSheet;
-    StatusReportStyleSheet = "QLabel {border: 8px solid rgb(75,150,255);"
-    "border-radius: 25px; padding: 8px; color: rgb(75,150,255);"
-    "background: rgb(190,220,255);}";
-    m_StatusReport->setStyleSheet(StatusReportStyleSheet);
-    m_StatusReport->setText("<h1> Crop </h1>");
-    m_StatusReport->setGeometry(20,20,150,70);
-    m_StatusReport->update();
-    m_StatusReport->setVisible(1);
   } else { // should not happen, clean up
     m_StatusReportTimer->stop();
     m_StatusReport->setVisible(0);

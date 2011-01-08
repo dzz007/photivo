@@ -2845,6 +2845,10 @@ void CB_MenuFileOpen(const short HaveFile) {
     Settings->SetValue("ImageW",TheDcRaw->m_Width);
     Settings->SetValue("ImageH",TheDcRaw->m_Height);
   }
+
+  // reflect RAW or bitmap in GUI
+  MainWindow->UpdateToolBoxes();
+
   TheProcessor = new ptProcessor(ReportProgress);
   TheProcessor->m_DcRaw = TheDcRaw;
 
