@@ -4732,7 +4732,7 @@ ptImage* ptImage::GradualOverlay(const uint16_t R,
   float UL = Length*UpperLevel;
   float Black = 0.0;
   float White = 1.0;
-  float Denom = 1.0/(UL-LL);
+  float Denom = 1.0/MAX((UL-LL),0.0001f);
 
   float coordinate = 0;
   float Value = 0;
@@ -4780,7 +4780,7 @@ ptImage* ptImage::GradualOverlay(const uint16_t R,
 
       if (dist <= LL)
         GradualMask[Row*m_Width+Col] = Black;
-      else if (dist > UL)
+      else if (dist >= UL)
         GradualMask[Row*m_Width+Col] = White;
       else {
         coordinate = 1.0 - (UL-dist)*Denom;
@@ -4837,7 +4837,7 @@ ptImage* ptImage::Vignette(const short VignetteMode,
   float (*VignetteMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*VignetteMask));
   ptMemoryError(VignetteMask,__FILE__,__LINE__);
   float dist = 0;
-  float Denom = 1/(OR-IR);
+  float Denom = 1/MAX((OR-IR),0.0001f);
   float Factor1 = 1/powf(2,Roundness);
   float Factor2 = 1/powf(2,-Roundness);
 
@@ -4846,9 +4846,9 @@ ptImage* ptImage::Vignette(const short VignetteMode,
     for (uint16_t Col=0; Col<m_Width; Col++) {
       dist = powf(powf(fabsf(Col-CX)*Factor1,Exponent)
                   + powf(fabsf(Row-CY)*Factor2,Exponent),InversExponent);
-      if (dist < IR)
+      if (dist <= IR)
         VignetteMask[Row*m_Width+Col] = Black;
-      else if (dist > OR)
+      else if (dist >= OR)
         VignetteMask[Row*m_Width+Col] = White;
       else {
         coordinate = 1.0-(OR-dist)*Denom;
