@@ -723,7 +723,7 @@ void CB_Event0() {
     if (ImageCleanUp == 0) {
       CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
     } else { // we got an image from gimp -> neutral display
-      CB_OpenSettingsFile(Settings->GetString("PresetDirectory") + "/neutral (absolute).pts");
+      CB_OpenSettingsFile(Settings->GetString("PresetDirectory") + "/Neutral_absolute.pts");
     }
     // clean up
     QStringList Temp;
@@ -3625,7 +3625,7 @@ void ResetButtonHandler(const short mode) {
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Ok);
     if (msgBox.exec()==QMessageBox::Ok) {
-      CB_OpenSettingsFile(Settings->GetString("PresetDirectory") + "/neutral (absolute).pts");
+      CB_OpenSettingsFile(Settings->GetString("PresetDirectory") + "/Neutral_absolute.pts");
     }
   } else if (mode == ptResetMode_User) { // reset to startup settings
     QMessageBox msgBox;
