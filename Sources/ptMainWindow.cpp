@@ -30,6 +30,7 @@
 #include "ptLensfun.h"
 #include "ptSettings.h"
 #include "ptConstants.h"
+#include "ptDefines.h"
 #include "ptTheme.h"
 
 #include <iostream>
@@ -517,6 +518,12 @@ ptMainWindow::ptMainWindow(const QString Title)
   PathInfo.setFile(Settings->GetString("GimpExecCommand"));
   ShortFileName = PathInfo.fileName();
   GimpExecCommandText->setText(ShortFileName);
+
+  QString Temp("Rev: ");
+  Temp.append(TOSTRING(APPVERSION));
+  Temp.replace("_"," ");
+
+  AppVersionLabel->setText(Temp);
 
   Tabbar = ProcessingTabBook->findChild<QTabBar*>();
   Tabbar->installEventFilter(this);

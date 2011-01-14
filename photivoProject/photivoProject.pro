@@ -57,6 +57,11 @@ LIBS += -ljpeg -llcms2 -lexiv2 -lfftw3
 # LIBS += -lMagick++ -lMagickWand -lMagickCore
 LIBS += -llensfun
 LIBS += -lgomp -lpthread
+APPVERSION = $$system(hg identify ../ | cut -c -13)
+QMAKE_CXXFLAGS_DEBUG += -DAPPVERSION=$${APPVERSION}
+QMAKE_CXXFLAGS_RELEASE += -DAPPVERSION=$${APPVERSION}
+QMAKE_CFLAGS_DEBUG += -DAPPVERSION=$${APPVERSION}
+QMAKE_CFLAGS_RELEASE += -DAPPVERSION=$${APPVERSION}
 unix {
   CONFIG += link_pkgconfig
   PKGCONFIG += GraphicsMagick++ GraphicsMagickWand
