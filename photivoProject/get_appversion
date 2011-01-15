@@ -1,0 +1,36 @@
+#!/bin/sh
+################################################################################
+##
+## photivo
+##
+## Copyright (C) 2008 Jos De Laender
+## Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
+## Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
+##
+## This file is part of photivo.
+##
+## photivo is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License version 3
+## as published by the Free Software Foundation.
+##
+## photivo is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with photivo.  If not, see <http:##www.gnu.org#licenses#>.
+##
+################################################################################
+#
+######################################################################
+#
+# This is a helper shell script for qmake to read the Mercurial
+# revision ID and date that appears in Photivo's info tab.
+#
+######################################################################
+#
+HgRev=`hg identify | cut -c -12`
+ptAppVer=`hg log --rev $HgRev --style ./hg-appversion.style`
+ptChanged=`hg identify | cut -c 13`
+echo $ptAppVer$ptChanged | tr -d " "
