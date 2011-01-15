@@ -3,7 +3,7 @@
 // photivo
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>)
-// Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
@@ -144,7 +144,11 @@ void ptProcessor::Run(short Phase,
     // have to recalculate again everything.
     // (Only important when further processing on same image,
     // but doesn't hurt with a new image as that starts anyway here.
-    Phase    = ptProcessorPhase_Raw;
+    if (Settings->GetInt("IsRAW") == 1) {
+      Phase    = ptProcessorPhase_Raw;
+    } else {
+      Phase    = ptProcessorPhase_AfterRAW;
+    }
     SubPhase = ptProcessorPhase_Load;
     WithIdentify = 1;
   };

@@ -212,6 +212,7 @@ void InitStrings() {
 
 void   RunJob(const QString FileName);
 short  ReadJobFile(const QString FileName);
+short  ReadSettingsFile(const QString FileName, short& NextPhase);
 void   WriteOut();
 void   UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
                           const short    OnlyHistogram = 0);
@@ -226,7 +227,7 @@ void   CB_MenuFileExit(const short);
 void   CB_WritePipeButton();
 void   CB_OpenPresetFileButton();
 void   CB_OpenSettingsFileButton();
-short  WriteSettingsFile(const QString FileName);
+short  WriteSettingsFile(const QString FileName, const short IsJobFile = 0);
 void   SetBackgroundColor(int SetIt);
 void   CB_StyleChoice(const QVariant Choice);
 void GimpExport(const short PipeSize);
@@ -539,6 +540,9 @@ int photivoMain(int Argc, char *Argv[]) {
   // (And thus have to run a batch job)
 
   if (JobMode) {
+    for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
+      Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
+    }
     RunJob(JobFileName);
     exit(EXIT_SUCCESS);
   }
@@ -701,7 +705,8 @@ void CB_Event0() {
   // Init Curves : supposed to be in event loop indeed.
   // (f.i. for progress reporting)
   QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-  SaveButtonToolTip(Settings->GetInt("SaveButtonMode"));
+  if (Settings->GetInt("JobMode") == 0)
+    SaveButtonToolTip(Settings->GetInt("SaveButtonMode"));
 
   // uint16_t (0,0xffff) to float (0.0, 1.0)
 #pragma omp parallel for
@@ -718,27 +723,29 @@ void CB_Event0() {
   InitChannelMixers();
   PreCalcTransforms();
 
-  // Load user settings
-  if (Settings->GetInt("StartupSettings")) {
-    if (ImageCleanUp == 0) {
-      CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
-    } else { // we got an image from gimp -> neutral display
-      CB_OpenSettingsFile(Settings->GetString("PresetDirectory") + "/Neutral_absolute.pts");
+  if (Settings->GetInt("JobMode") == 0) { // not job mode!
+    // Load user settings
+    if (Settings->GetInt("StartupSettings")) {
+      if (ImageCleanUp == 0) {
+        CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+      } else { // we got an image from gimp -> neutral display
+        CB_OpenSettingsFile(Settings->GetString("PresetDirectory") + "/Neutral_absolute.pts");
+      }
+      // clean up
+      QStringList Temp;
+      Temp << "CropX" << "CropY" << "CropW" << "CropH";
+      Temp << "RotateW" << "RotateH";
+      for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i),0);
     }
-    // clean up
-    QStringList Temp;
-    Temp << "CropX" << "CropY" << "CropW" << "CropH";
-    Temp << "RotateW" << "RotateH";
-    for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i),0);
-  }
 
-  if (ImageFileToOpen.size()) {
-    CB_MenuFileOpen(1);
+    if (ImageFileToOpen.size()) {
+      CB_MenuFileOpen(1);
+    }
+    MainWindow->UpdateSettings();
+    ViewWindow->setFocus();
   }
-  MainWindow->UpdateSettings();
 
   InStartup = 0;
-  ViewWindow->setFocus();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -778,9 +785,11 @@ void InitCurves() {
                            + " '"
                            + CurveFileNames[Idx]
                            + "'" ;
-        QMessageBox::warning(MainWindow,
-                         QObject::tr("Curve read error"),
-                         ErrorMessage);
+        if (Settings->GetInt("JobMode") == 0) {
+          QMessageBox::warning(MainWindow,
+                           QObject::tr("Curve read error"),
+                           ErrorMessage);
+        }
 
         // Remove this invalid and continue.
         // Some househoding due to removal.
@@ -840,9 +849,11 @@ void InitChannelMixers() {
                            + " '"
                            + ChannelMixerFileNames[Idx]
                            + "'" ;
-      QMessageBox::warning(MainWindow,
-                         QObject::tr("Channelmixer read error"),
-                         ErrorMessage);
+      if (Settings->GetInt("JobMode") == 0) {
+        QMessageBox::warning(MainWindow,
+                           QObject::tr("Channelmixer read error"),
+                           ErrorMessage);
+      }
 
       // Remove this invalid and continue.
       // Some househoding due to removal.
@@ -1127,6 +1138,7 @@ void HistogramGetCrop() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ViewWindowStatusReport(short State) {
+  if (!ViewWindow) return;
   ViewWindow->StatusReport(State);
 }
 
@@ -1711,10 +1723,12 @@ void UpdateComboboxes(const QString Key) {
     ptChannelMixer Tmp;
     for (int i = 0; i < FileNames.size(); i++) {
       if (Tmp.ReadChannelMixer(FileNames.at(i).toAscii().data())) {
-        QMessageBox::warning(MainWindow,
-                             QObject::tr("Channelmixer read error"),
-                             QObject::tr("Cannot read channelmixer ")
-                               + " '" + FileNames.at(i) + "'");
+        if (Settings->GetInt("JobMode") == 0) {
+          QMessageBox::warning(MainWindow,
+                               QObject::tr("Channelmixer read error"),
+                               QObject::tr("Cannot read channelmixer ")
+                                 + " '" + FileNames.at(i) + "'");
+        }
         FileNames.replace(i, "@DELETEME@");
       }
     }
@@ -1722,10 +1736,12 @@ void UpdateComboboxes(const QString Key) {
     ptCurve Tmp;
     for (int i = 0; i < FileNames.size(); i++) {
       if (Tmp.ReadCurve(FileNames.at(i).toAscii().data())) {
-        QMessageBox::warning(MainWindow,
-                             QObject::tr("Curve read error"),
-                             QObject::tr("Cannot read curve ")
-                               + " '" + FileNames.at(i) + "'");
+        if (Settings->GetInt("JobMode") == 0) {
+          QMessageBox::warning(MainWindow,
+                               QObject::tr("Curve read error"),
+                               QObject::tr("Cannot read curve ")
+                                 + " '" + FileNames.at(i) + "'");
+        }
         FileNames.replace(i, "@DELETEME@");
       }
     }
@@ -1771,78 +1787,114 @@ void UpdateComboboxes(const QString Key) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void RunJob(const QString JobFileName) {
-  QStringList CurveFileNames[CurveFileNamesKeys.size()];
-
-  QStringList Files;
-  Files << CurveFileNamesKeys;
-
-  for (int i = 0; i < Files.size(); i++) {
-    CurveFileNames[i] = Settings->GetStringList(Files.at(i));
-  }
-
-  // Settings creation.
-  Settings = new ptSettings(0, Settings->GetString("UserDirectory"));
   Settings->SetValue("JobMode",1);
-  // Read the gui settings from a file.
-  if (ReadJobFile(JobFileName)) {
-    assert(0);
-  };
-  // Read also curves if needed.
-  for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
-    short TmpCurve = Settings->GetInt(CurveKeys[Channel]);
-    if (!TmpCurve) continue;
-    Curve[Channel] = new (ptCurve); // Automatically a null curve.
-    if (Curve[Channel]->ReadCurve(
-       CurveFileNames[Channel][TmpCurve-ptCurveChoice_File].toAscii().data())) {
-      assert(0);
-    }
-  }
+  // Init
+  CB_Event0();
 
-  if (Settings->GetInt("ChannelMixer")) {
-    if (ChannelMixer->ReadChannelMixer(
-         (Settings->GetStringList("ChannelMixerFileNames"))
-           [Settings->GetInt("ChannelMixer")-ptChannelMixerChoice_File].
-             toAscii().data())) {
-      assert(0);
-    }
+  // Read the gui settings from a file.
+  short NextPhase = 1;
+  short ReturnValue = ReadSettingsFile(JobFileName, NextPhase);
+  if (ReturnValue) {
+    printf("\nNo valid job file!\n\n");
+    return;
   }
 
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
   assert(InputFileNameList.size());
+
   do {
+    // Test if we can handle the file
+    DcRaw* TestDcRaw = new(DcRaw);
+    Settings->ToDcRaw(TestDcRaw);
+    int OpenError = 0;
+    uint16_t InputWidth = 0;
+    uint16_t InputHeight = 0;
+    if (TestDcRaw->Identify()) { // Bitmap
+      try {
+        Magick::Image image;
 
-    QFileInfo PathInfo(InputFileNameList[0]);
-    if (!Settings->GetString("OutputDirectory").isEmpty()) {
-      Settings->SetValue("OutputFileName",
-        Settings->GetString("OutputDirectory") + "/" + PathInfo.baseName());
+        image.ping(InputFileNameList[0].toAscii().data());
+
+        InputWidth = image.columns();
+        InputHeight = image.rows();
+      } catch (Magick::Exception &Error) {
+        OpenError = 1;
+      }
+      if (OpenError == 0) {
+        Settings->SetValue("IsRAW",0);
+        Settings->SetValue("ExposureNormalization",0.0);
+      }
     } else {
-      Settings->SetValue("OutputFileName",
-        PathInfo.dir().path() + "/" + PathInfo.baseName());
+      Settings->SetValue("IsRAW",1);
     }
-
-    // Here we have the OutputFileName, but extension still to add.
-
-    switch(Settings->GetInt("SaveFormat")) {
-      case ptSaveFormat_JPEG :
+    if (OpenError == 1) {
+      // We don't have a RAW or a bitmap!
+      QString ErrorMessage = QObject::tr("Cannot decode")
+                           + " '"
+                           + InputFileNameList[0]
+                           + "'" ;
+      printf("%s\n",ErrorMessage.toAscii().data());
+      delete TestDcRaw;
+    } else { // process
+      QFileInfo PathInfo(InputFileNameList[0]);
+      if (!Settings->GetString("OutputDirectory").isEmpty()) {
         Settings->SetValue("OutputFileName",
-                           Settings->GetString("OutputFileName") + ".jpg");
-        break;
-      default :
+          Settings->GetString("OutputDirectory") + "/" + PathInfo.baseName());
+      } else {
         Settings->SetValue("OutputFileName",
-                           Settings->GetString("OutputFileName") + ".ppm");
-        break;
+          PathInfo.dir().path() + "/" + PathInfo.baseName());
+      }
+      if (!Settings->GetInt("IsRAW")) {
+        Settings->SetValue("OutputFileName",
+                           Settings->GetString("OutputFileName") + "-new");
+      }
+
+      // Here we have the OutputFileName, but extension still to add.
+      switch(Settings->GetInt("SaveFormat")) {
+        case ptSaveFormat_JPEG :
+          Settings->SetValue("OutputFileName",
+                             Settings->GetString("OutputFileName") + ".jpg");
+          break;
+        case ptSaveFormat_PNG :
+          Settings->SetValue("OutputFileName",
+                             Settings->GetString("OutputFileName") + ".png");
+          break;
+        case ptSaveFormat_TIFF8 :
+        case ptSaveFormat_TIFF16 :
+          Settings->SetValue("OutputFileName",
+                             Settings->GetString("OutputFileName") + ".tif");
+          break;
+        default :
+          Settings->SetValue("OutputFileName",
+                             Settings->GetString("OutputFileName") + ".ppm");
+          break;
+      }
+
+      // Processing the job.
+      delete TheDcRaw;
+
+      TheDcRaw = TestDcRaw;
+      if (Settings->GetInt("IsRAW")==0) {
+        Settings->SetValue("ImageW",InputWidth);
+        Settings->SetValue("ImageH",InputHeight);
+      } else {
+        Settings->SetValue("ImageW",TheDcRaw->m_Width);
+        Settings->SetValue("ImageH",TheDcRaw->m_Height);
+      }
+
+      TheProcessor->m_DcRaw = TheDcRaw;
+
+      Settings->SetValue("RunMode",0);
+      Settings->SetValue("FullOutput",1);
+      if (Settings->GetInt("IsRAW") == 1) {
+        TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,0,1);
+      } else {
+        TheProcessor->Run(ptProcessorPhase_AfterRAW,ptProcessorPhase_Load,0,1);
+      }
+      Settings->SetValue("FullOutput",0);
+      // And write result.
+      Update(ptProcessorPhase_WriteOut);
     }
-
-    // Processing the job.
-    delete TheDcRaw;
-    TheDcRaw = new(DcRaw);
-    TheProcessor->m_DcRaw = TheDcRaw;
-    Settings->ToDcRaw(TheDcRaw);
-    Settings->SetValue("FullOutput",1);
-    TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
-    Settings->SetValue("FullOutput",0);
-    // And write result.
-    Update(ptProcessorPhase_WriteOut);
 
     // Loop over the inputfiles by shifting the next one to index 0
     if (InputFileNameList.size()) {
@@ -2032,7 +2084,8 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
       pos = exifData.erase(pos);
     }
 
-    PrepareTags(MainWindow->TagsEditWidget->toPlainText());
+    if (Settings->GetInt("JobMode") == 0)
+      PrepareTags(MainWindow->TagsEditWidget->toPlainText());
 
     // IPTC data
     Exiv2::IptcData iptcData;
@@ -2065,7 +2118,9 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
     xmpData["Xmp.tiff.Software"] = ProgramName;
 
     // Title
-    QString TitleWorking = MainWindow->TitleEditWidget->text();
+    if (Settings->GetInt("JobMode") == 0)
+      Settings->SetValue("ImageTitle",MainWindow->TitleEditWidget->text());
+    QString TitleWorking = Settings->GetString("ImageTitle");
     while (TitleWorking.contains("  "))
       TitleWorking.replace("  "," ");
     if (TitleWorking != "" && TitleWorking != " ") {
@@ -2083,7 +2138,8 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
       Exiv2Image->writeMetadata();
     } catch (Exiv2::AnyError& Error) {
       std::cout << "Caught Exiv2 exception '" << Error << "'\n";
-      QMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!");
+      if (Settings->GetInt("JobMode") == 0)
+        QMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!");
     }
   }
 #endif
@@ -2100,7 +2156,7 @@ void WriteOut() {
 
   ptImage* OutImage = NULL;
 
-  if (Settings->GetInt("JobMode")) {
+  if (Settings->GetInt("JobMode") == 1) {
     OutImage = TheProcessor->m_Image_AfterEyeCandy; // Job mode -> no cache
   } else {
     if (!OutImage) OutImage = new(ptImage);
@@ -2159,13 +2215,15 @@ void WriteOut() {
         TheProcessor->m_ExifBufferLength);
     }
 
-  if (!Settings->GetInt("JobMode")) delete OutImage;
+  if (Settings->GetInt("JobMode") == 0) delete OutImage;
 
-  ReportProgress(QObject::tr("Writing output (settings)"));
+  if (Settings->GetInt("JobMode") == 0) {
+    ReportProgress(QObject::tr("Writing output (settings)"));
 
-  QFileInfo PathInfo(Settings->GetString("OutputFileName"));
-  QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".pts";
-  WriteSettingsFile(SettingsFileName);
+    QFileInfo PathInfo(Settings->GetString("OutputFileName"));
+    QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".pts";
+    WriteSettingsFile(SettingsFileName);
+  }
 
   ReportProgress(QObject::tr("Ready"));
 }
@@ -2223,7 +2281,7 @@ void WritePipe() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-short WriteSettingsFile(const QString FileName) {
+short WriteSettingsFile(const QString FileName, const short IsJobFile /* = 0 */) {
 
   QSettings JobSettings(FileName,QSettings::IniFormat);
   JobSettings.setValue("Magic","photivoSettingsFile");
@@ -2232,8 +2290,8 @@ short WriteSettingsFile(const QString FileName) {
   for (int i=0; i<Keys.size(); i++) {
     QString Key = Keys[i];
     if (!Settings->GetInJobFile(Key)) continue;
-    if (Key=="InputFileNameList") continue;
-    if (Key=="OutputDirectory") continue;
+    if (IsJobFile == 0 && Key=="InputFileNameList") continue;
+    if (IsJobFile == 0 && Key=="OutputDirectory") continue;
     JobSettings.setValue(Key,Settings->GetValue(Key));
   }
   // save the manual curves
@@ -2250,30 +2308,6 @@ short WriteSettingsFile(const QString FileName) {
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) return 0;
   assert(JobSettings.status() == QSettings::NoError); // TODO
-  return ptError_FileOpen;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// WriteJobFile
-// We take advantage the ini file possibilities of Qt.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-short WriteJobFile(const QString FileName) {
-
-  QSettings JobSettings(FileName,QSettings::IniFormat);
-  JobSettings.setValue("Magic","photivoJobFile");
-  QStringList Keys = Settings->GetKeys();
-  Keys.sort();
-  for (int i=0; i<Keys.size(); i++) {
-    QString Key = Keys[i];
-    if (!Settings->GetInJobFile(Key)) continue;
-    JobSettings.setValue(Key,Settings->GetValue(Key));
-  }
-  JobSettings.sync();
-  if (JobSettings.status() == QSettings::NoError) return 0;
-  assert(JobSettings.status() == QSettings::NoError); // TODO JDLA
   return ptError_FileOpen;
 }
 
@@ -2298,8 +2332,9 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   QTemporaryFile SettingsFile;
   SettingsFile.setAutoRemove(1);
   SettingsFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.pts");
-  SettingsFile.open();
   QString TempName = SettingsFile.fileTemplate();
+  if (QFile(TempName).exists()) QFile(TempName).remove();
+  SettingsFile.open();
   QFile(FileName).copy(TempName);
   QSettings JobSettings(TempName,QSettings::IniFormat);
   if (!(JobSettings.value("Magic") == "photivoJobFile" ||
@@ -2409,7 +2444,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     QString Key = Keys[i];
     if (!Settings->GetInJobFile(Key)) continue;
     if (!JobSettings.contains(Key)) continue;
-    if (Key=="InputFileNameList") continue;
+    if (Key=="InputFileNameList" && Settings->GetInt("JobMode") == 0) continue;
     if (Key=="TranslationsDirectory") continue;
     if (Key=="CurvesDirectory") continue;
     if (Key=="ChannelMixersDirectory") continue;
@@ -2420,7 +2455,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     if (Key=="LensfunDatabaseDirectory") continue;
     if (Key=="PreviewColorProfile") continue;
     if (Key=="OutputColorProfile") continue;
-    if (Key=="OutputDirectory") continue;
+    if (Key=="OutputDirectory" && Settings->GetInt("JobMode") == 0) continue;
     if (Key=="PresetDirectory") continue;
     if (Key=="ShareDirectory") continue;
     if (Key=="UserDirectory") continue;
@@ -2476,7 +2511,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   }
   BlockedTools.removeDuplicates();
   Settings->SetValue("BlockedTools",BlockedTools);
-  MainWindow->UpdateToolBoxes();
+  if (Settings->GetInt("JobMode") == 0) MainWindow->UpdateToolBoxes();
 
   // next processor stage
   if (JobSettings.contains("NextPhase"))
@@ -2492,7 +2527,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
       }
       Curve[i]->m_IntType = JobSettings.value(CurveKeys.at(i) + "Type").toInt();
       Curve[i]->SetCurveFromAnchors();
-      CurveWindow[i]->UpdateView(Curve[i]);
+      if (Settings->GetInt("JobMode") == 0) CurveWindow[i]->UpdateView(Curve[i]);
     }
   }
 
@@ -2523,7 +2558,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
 
     // Update the View.
     QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-    CurveWindow[Channel]->UpdateView(Curve[Channel]);
+    if (Settings->GetInt("JobMode") == 0) CurveWindow[Channel]->UpdateView(Curve[Channel]);
   }
 
   if (Settings->GetInt("ChannelMixer")>1) {
@@ -2556,59 +2591,6 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   assert(JobSettings.status() == QSettings::NoError); // TODO
   QFile::remove(TempName);
   SettingsFile.close();
-  return ptError_FileFormat;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// ReadJobFile
-// We take advantage the ini file possibilities of Qt.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-short ReadJobFile(const QString FileName) {
-
-  QSettings JobSettings(FileName,QSettings::IniFormat);
-  if (!("photivoJobFile" == JobSettings.value("Magic") ||
-      "dlRawJobFile" == JobSettings.value("Magic"))) {
-    ptLogError(ptError_FileFormat,
-               "'%s' has wrong format\n",
-               FileName.toAscii().data());
-    return ptError_FileFormat;
-  }
-  // All Settings were already read (with 0 remembering)
-  // so we can safely use that to have them now overwritten
-  // with the jobfile settings.
-  QStringList Keys = Settings->GetKeys();
-  for (int i=0; i<Keys.size(); i++) {
-    QString Key = Keys[i];
-    if (!Settings->GetInJobFile(Key)) continue;
-    QVariant Tmp = JobSettings.value(Key);
-    // Correction needed as the values coming from the ini file are
-    // often interpreted as strings even if they could be int or so.
-    const QVariant::Type TargetType = (Settings->GetValue(Key)).type();
-    if (Tmp.type() != TargetType) {
-      switch (TargetType) {
-        case QVariant::Int:
-        case QVariant::UInt:
-          Tmp = Tmp.toInt();
-          break;
-        case QVariant::Double:
-        case QMetaType::Float:
-          Tmp = Tmp.toDouble();
-          break;
-        case QVariant::StringList:
-          Tmp = Tmp.toStringList();
-          break;
-        default:
-          ptLogError(ptError_Argument,"Unexpected type %d",TargetType);
-          assert(0);
-      }
-    }
-    Settings->SetValue(Key,Tmp);
-  }
-  if (JobSettings.status() == QSettings::NoError) return 0;
-  assert(JobSettings.status() == QSettings::NoError); // TODO JDLA
   return ptError_FileFormat;
 }
 
@@ -2927,7 +2909,11 @@ void CB_MenuFileSaveOutput(const short) {
   Settings->ToDcRaw(TheDcRaw);
   // Run the graphical pipe in full format mode to recreate the image.
   Settings->SetValue("FullOutput",1);
-  TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
+  if (Settings->GetInt("IsRAW") == 1) {
+    TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
+  } else {
+    TheProcessor->Run(ptProcessorPhase_AfterRAW,ptProcessorPhase_Load,1,1);
+  }
   Settings->SetValue("FullOutput",0);
 
   // Write out (maybe after applying gamma).
@@ -2976,7 +2962,7 @@ void CB_MenuFileWriteJob(const short) {
   // And finally a dialog to obtain the output job file.
 
   QFileInfo PathInfo(InputFileNames[0]);
-  QString SuggestedJobFileName = PathInfo.baseName() + ".ptj";
+  QString SuggestedJobFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".ptj";
 
   QString JobFileName =
     QFileDialog::getSaveFileName(NULL,
@@ -2988,7 +2974,7 @@ void CB_MenuFileWriteJob(const short) {
   // Operation cancelled.
   if (JobFileName.size() == 0) return;
 
-  WriteJobFile(JobFileName);
+  WriteSettingsFile(JobFileName, 1);
 }
 
 void CB_MenuFileWriteSettings() {
@@ -5317,7 +5303,8 @@ void CB_CurveChoice(const int Channel, const int Choice) {
 
   // Update the View.
   QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-  CurveWindow[Channel]->UpdateView(Curve[Channel]);
+  if (Settings->GetInt("JobMode") == 0)
+    CurveWindow[Channel]->UpdateView(Curve[Channel]);
 
   // Run the graphical pipe according to a changed curve.
   if (!InStartup)
@@ -7285,6 +7272,8 @@ void CB_BWStylerFilmTypeChoice(const QVariant Choice) {
   Settings->SetValue("BWStylerFilmType",Choice);
   if (Settings->GetDouble("BWStylerOpacity")) {
     Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
   }
 }
 
