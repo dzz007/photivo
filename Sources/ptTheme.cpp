@@ -121,8 +121,8 @@ void ptTheme::MidGrey(short Color) {
   //ptPalette.setColor(QPalette::Shadow, QColor(255,0,0));
   ptPalette.setColor(QPalette::Highlight, ptDark); // -menu
   ptPalette.setColor(QPalette::HighlightedText, ptText);
-  //ptPalette.setColor(QPalette::Link, QColor(255,0,0));
-  //ptPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
+  ptPalette.setColor(QPalette::Link, ptHighLight);
+  ptPalette.setColor(QPalette::LinkVisited, ptHighLight);
   //ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
 
   //ptMenuPalette.setColor(QPalette::Window, QColor(255,0,0));
@@ -187,8 +187,8 @@ void ptTheme::DarkGrey(short Color) {
   //ptPalette.setColor(QPalette::Shadow, QColor(255,0,0));
   ptPalette.setColor(QPalette::Highlight, ptDark); // -menu
   ptPalette.setColor(QPalette::HighlightedText, ptText);
-  //ptPalette.setColor(QPalette::Link, QColor(255,0,0));
-  //ptPalette.setColor(QPalette::LinkVisited, QColor(255,0,0));
+  ptPalette.setColor(QPalette::Link, ptHighLight);
+  ptPalette.setColor(QPalette::LinkVisited, ptHighLight);
   //ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
 
     //ptMenuPalette.setColor(QPalette::Window, QColor(255,0,0));
