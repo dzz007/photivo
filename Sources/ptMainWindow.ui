@@ -8706,7 +8706,7 @@
                               <string>Photivo photo processor</string>
                              </property>
                              <property name="alignment">
-                              <set>Qt::AlignCenter</set>
+                              <set>Qt::AlignLeft</set>
                              </property>
                             </widget>
                            </item>
@@ -8716,7 +8716,7 @@
                               <string>Rev:</string>
                              </property>
                              <property name="alignment">
-                              <set>Qt::AlignCenter</set>
+                              <set>Qt::AlignLeft</set>
                              </property>
                             </widget>
                            </item>
@@ -8726,7 +8726,7 @@
                               <string>&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;</string>
                              </property>
                              <property name="alignment">
-                              <set>Qt::AlignCenter</set>
+                              <set>Qt::AlignLeft</set>
                              </property>
                              <property name="openExternalLinks">
                               <bool>true</bool>

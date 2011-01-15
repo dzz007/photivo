@@ -51,6 +51,15 @@ isEmpty(PREFIX) {
   PREFIX = $$[QT_INSTALL_PREFIX]
 }
 
+# Folder where all created object and binary files are put
+# If user defined, no dot use spaces in the name!
+isEmpty(BUILDDIR) {
+  BUILDDIR = build
+}
+!exists( $${BUILDDIR} ) {
+  RETURN = $$system(mkdir $${BUILDDIR})
+}
+
 # Hack to clean old makefiles
 unix {
   RETURN = $$system(touch ./photivoProject/Makefile && rm ./photivoProject/Makefile)
@@ -64,14 +73,15 @@ SUBDIRS += ptCreateCurvesProject
 SUBDIRS += ptGimpProject
 SUBDIRS += ptClearProject
 
-RETURN = $$system(touch ./photivoProject/config && rm ./photivoProject/config && echo $${PREFIX} >> ./photivoProject/config)
+RETURN = $$system(touch ./photivoProject/install_prefix && rm ./photivoProject/install_prefix && echo $${PREFIX} >> ./photivoProject/install_prefix)
+RETURN = $$system(touch ./builddir && rm ./builddir && echo $${BUILDDIR} >> ./builddir)
 
 # Install
 unix {
   QMAKE_STRIP = echo
   binaries.path = $${PREFIX}/bin
-  binaries.files = photivo
-  binaries.files += ptClear
+  binaries.files = ./$${BUILDDIR}/photivo
+  binaries.files += ./$${BUILDDIR}/ptClear
   shortcut.path = $${PREFIX}/share/applications
   shortcut.files = ./ReferenceMaterial/photivo.desktop
   shortcut2.path = ~/.local/share/applications

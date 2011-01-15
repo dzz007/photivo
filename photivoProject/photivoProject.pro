@@ -36,11 +36,12 @@ CONFIG += release silent
 TEMPLATE = app
 TARGET = photivo
 DEPENDPATH += .
-DESTDIR = ..
-OBJECTS_DIR = ../Objects
-MOC_DIR = ../Objects
-UI_HEADERS_DIR = ../Objects
-RCC_DIR = ../Objects
+BUILDDIR = $$system(cat ../builddir)
+DESTDIR = ../$${BUILDDIR}
+OBJECTS_DIR = ../$${BUILDDIR}/Objects
+MOC_DIR = ../$${BUILDDIR}/Objects
+UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
+RCC_DIR = ../$${BUILDDIR}/Objects
 QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP
 QMAKE_CXXFLAGS_DEBUG += -ffast-math -O0 -g
 QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp
@@ -57,18 +58,21 @@ LIBS += -ljpeg -llcms2 -lexiv2 -lfftw3
 # LIBS += -lMagick++ -lMagickWand -lMagickCore
 LIBS += -llensfun
 LIBS += -lgomp -lpthread
-APPVERSION = $$system(hg identify ../ | cut -c -13)
+
+APPVERSION = $$system(sh ./get_appversion)
+!build_pass:message("Photivo $${APPVERSION}")
 QMAKE_CXXFLAGS_DEBUG += -DAPPVERSION=$${APPVERSION}
 QMAKE_CXXFLAGS_RELEASE += -DAPPVERSION=$${APPVERSION}
 QMAKE_CFLAGS_DEBUG += -DAPPVERSION=$${APPVERSION}
 QMAKE_CFLAGS_RELEASE += -DAPPVERSION=$${APPVERSION}
+
 unix {
   CONFIG += link_pkgconfig
   PKGCONFIG += GraphicsMagick++ GraphicsMagickWand
   LIBS += $$system(GraphicsMagick++-config --libs)
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
-  PREFIX = $$system(more ./config)
+  PREFIX = $$system(more ./install_prefix)
   QMAKE_CXXFLAGS_DEBUG += -DPREFIX=$${PREFIX}
   QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX}
   QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX}

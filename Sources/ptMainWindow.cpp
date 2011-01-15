@@ -519,10 +519,13 @@ ptMainWindow::ptMainWindow(const QString Title)
   ShortFileName = PathInfo.fileName();
   GimpExecCommandText->setText(ShortFileName);
 
-  QString Temp("Rev: ");
-  Temp.append(TOSTRING(APPVERSION));
+  // Photivo version string on info tab.
+  // Character replacements are hacks to avoid problems with make and stringify
+  // and certain special characters.
+  QString Temp(TOSTRING(APPVERSION));
   Temp.replace("_"," ");
-
+  Temp.replace("!","(");
+  Temp.replace("@",")");
   AppVersionLabel->setText(Temp);
 
   Tabbar = ProcessingTabBook->findChild<QTabBar*>();
