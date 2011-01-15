@@ -35,11 +35,19 @@ TEMPLATE = app
 TARGET = ptCreateAdobeProfiles
 DEPENDPATH += .
 INCLUDEPATH += .
-BUILDDIR = $$system(cat ../builddir)
-DESTDIR = ../$${BUILDDIR}
-OBJECTS_DIR = ../$${BUILDDIR}/Objects
-MOC_DIR = ../$${BUILDDIR}/Objects
-UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
+win32 {
+  BUILDDIR = $$system(cat ../builddir)
+  DESTDIR = ../$${BUILDDIR}
+  OBJECTS_DIR = ../$${BUILDDIR}/Objects
+  MOC_DIR = ../$${BUILDDIR}/Objects
+  UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
+}
+unix {
+  DESTDIR = ..
+  OBJECTS_DIR = ../Objects
+  MOC_DIR = ../Objects
+  UI_HEADERS_DIR = ../Objects
+}
 QMAKE_CXXFLAGS_RELEASE += -O3
 QMAKE_CXXFLAGS_RELEASE += -ffast-math
 QMAKE_CFLAGS_RELEASE += -O3

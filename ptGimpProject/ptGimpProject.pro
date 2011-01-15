@@ -35,12 +35,21 @@ CONFIG += release silent
 TEMPLATE = app
 TARGET = ptGimp
 DEPENDPATH += .
-BUILDDIR = $$system(cat ../builddir)
-DESTDIR = ../$${BUILDDIR}
-OBJECTS_DIR = ../$${BUILDDIR}/Objects_Gimp
-MOC_DIR = ../$${BUILDDIR}/Objects_Gimp
-UI_HEADERS_DIR = ../$${BUILDDIR}/Objects_Gimp
-RCC_DIR = ../$${BUILDDIR}/Objects_Gimp
+win32 {
+  BUILDDIR = $$system(cat ../builddir)
+  DESTDIR = ../$${BUILDDIR}
+  OBJECTS_DIR = ../$${BUILDDIR}/Objects_Gimp
+  MOC_DIR = ../$${BUILDDIR}/Objects_Gimp
+  UI_HEADERS_DIR = ../$${BUILDDIR}/Objects_Gimp
+  RCC_DIR = ../$${BUILDDIR}/Objects_Gimp
+}
+unix {
+  DESTDIR = ..
+  OBJECTS_DIR = ../Objects_Gimp
+  MOC_DIR = ../Objects_Gimp
+  UI_HEADERS_DIR = ../Objects_Gimp
+  RCC_DIR = ../Objects_Gimp
+}
 # Bit funky for the gimp.
 QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gimp-2.0)
 QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gtk+-2.0)
