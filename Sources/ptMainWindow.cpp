@@ -2124,8 +2124,8 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
   TheInfo="";
 
   // dcraw Data
-  InfoDcrawMakeLabel->setText(Settings->GetString("CameraMake"));
-  InfoDcrawModelLabel->setText(Settings->GetString("CameraModel"));
+  TheInfo = Settings->GetString("CameraMake") + ": " + Settings->GetString("CameraModel");
+  InfoDcrawLabel->setText(TheInfo);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
