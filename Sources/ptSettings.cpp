@@ -1416,6 +1416,10 @@ void ptSettings::FromDcRaw(DcRaw* TheDcRaw) {
   SetValue("CameraMake",TheDcRaw->m_CameraMake);
   SetValue("CameraModel",TheDcRaw->m_CameraModel);
 
+  // Reset spot white balance
+  if (GetInt("WhiteBalance") == ptWhiteBalance_Spot)
+    SetValue("WhiteBalance", ptWhiteBalance_Manual);
+
   // Multipliers.
   SetValue("RMultiplier",VALUE(TheDcRaw->m_PreMultipliers[0]));
   SetValue("GMultiplier",VALUE(TheDcRaw->m_PreMultipliers[1]));
