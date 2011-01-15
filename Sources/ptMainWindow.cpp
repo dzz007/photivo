@@ -536,6 +536,8 @@ ptMainWindow::ptMainWindow(const QString Title)
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#crop");
   findChild <ptGroupBox*>("TabWhiteBalance")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
+  findChild <ptGroupBox*>("TabBW")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#black_and_white");
 
   // context menu for save button
   m_AtnSavePipe = new QAction(tr("Save current pipe"), this);
@@ -1817,6 +1819,17 @@ void ptMainWindow::UpdateSettings() {
   } else {
     Settings->SetEnabled("WhiteFraction",0);
     Settings->SetEnabled("WhiteLevel",0);
+  }
+
+  // Black and White
+  if (Settings->GetInt("BWStylerFilmType") == ptFilmType_ChannelMixer) {
+    Settings->SetEnabled("BWStylerMultR", 1);
+    Settings->SetEnabled("BWStylerMultG", 1);
+    Settings->SetEnabled("BWStylerMultB", 1);
+  } else {
+    Settings->SetEnabled("BWStylerMultR", 0);
+    Settings->SetEnabled("BWStylerMultG", 0);
+    Settings->SetEnabled("BWStylerMultB", 0);
   }
 
   // Color buttons

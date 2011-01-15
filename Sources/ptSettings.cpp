@@ -3,7 +3,7 @@
 // photivo
 //
 // Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
-// Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com>
 //
 // This file is part of photivo.
 //
@@ -624,6 +624,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradualOverlay2ColorBlue"             ,2         ,0                                                   ,1},
     {"DigikamTagsList"                      ,9         ,QStringList()                                       ,1},
     {"TagsList"                             ,9         ,QStringList()                                       ,1},
+    {"ImageTitle"                           ,9         ,""                                                  ,1},
     {"BackgroundRed"                        ,1         ,0                                                   ,0},
     {"BackgroundGreen"                      ,1         ,0                                                   ,0},
     {"BackgroundBlue"                       ,1         ,0                                                   ,0},
@@ -1029,6 +1030,8 @@ void  ptSettings::Show(const QString Key, const short Show) {
 void ptSettings::AddOrReplaceOption(const QString  Key,
                                     const QString  Text,
                                     const QVariant Value) {
+  // In job mode there are no gui elements and we have to return.
+  if (GetInt("JobMode")) return;
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
@@ -1052,6 +1055,8 @@ void ptSettings::AddOrReplaceOption(const QString  Key,
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptSettings::ClearOptions(const QString  Key, const short WithDefault) {
+  // In job mode there are no gui elements and we have to return.
+  if (GetInt("JobMode")) return;
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
