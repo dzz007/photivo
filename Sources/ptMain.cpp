@@ -2217,7 +2217,9 @@ void WriteOut() {
 
   if (Settings->GetInt("JobMode") == 0) delete OutImage;
 
-  if (Settings->GetInt("JobMode") == 0) {
+  if (JobMode == 0) {
+    // This variable carries only JobMode, the "JobMode" settings
+    // is also used for full image output.
     ReportProgress(QObject::tr("Writing output (settings)"));
 
     QFileInfo PathInfo(Settings->GetString("OutputFileName"));
