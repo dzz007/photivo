@@ -65,6 +65,9 @@ void UpdateToolBoxes();
 // (after a dcraw calculation for instance).
 void UpdateSettings(void);
 
+// Update the file info GUI element on info tab
+void UpdateFilenameInfo(const QStringList FileNameList);
+
 // Update the exif info gui element.
 void UpdateExifInfo(Exiv2::ExifData ExifData);
 

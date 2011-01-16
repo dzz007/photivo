@@ -1942,6 +1942,21 @@ void ptMainWindow::UpdateSettings() {
   }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::UpdateFilenameInfo(const QStringList FileNameList) {
+  QFileInfo fn(FileNameList[0]);
+  if (FileNameList.length() > 0 ) {
+    FileNameLabel->setText(fn.fileName());
+    FilePathLabel->setText(fn.canonicalPath());
+  } else {
+    FileNameLabel->setText("");
+    FilePathLabel->setText("");
+  }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // UpdateExifInfo()
