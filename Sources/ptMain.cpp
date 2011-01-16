@@ -2848,7 +2848,8 @@ void CB_MenuFileOpen(const short HaveFile) {
     Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
   }
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-  MainWindow->setWindowTitle((Settings->GetStringList("InputFileNameList"))[0]+ " - photivo");
+  MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
+  MainWindow->setWindowTitle((Settings->GetStringList("InputFileNameList"))[0]+ " - Photivo");
   Settings->SetValue("RunMode",OldRunMode);
 
   // Let the toplevel window adapt to the new photo.

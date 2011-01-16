@@ -1875,6 +1875,7 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     << "TabMemoryTest"
     // Info tab
     << "TabInfoPhotivo"
+    << "TabInfoFile"
     << "TabInfoExif"
     << "TabInfoSizes"
     // Input tab

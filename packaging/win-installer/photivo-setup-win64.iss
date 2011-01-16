@@ -2,7 +2,7 @@
 ;;
 ;; photivo
 ;;
-;; Copyright (C) 2010 Bernd Schöler
+;; Copyright (C) 2010 Bernd Schoeler <brother.john@photivo.org>
 ;;
 ;; This file is part of photivo.
 ;;
@@ -24,16 +24,16 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppID={9B7CEA17-E1CC-43E1-A2F6-F36A34051539}
+AppID={{9B7CEA17-E1CC-43E1-A2F6-F36A34051539}
 AppName=Photivo
 AppVersion=DD MMM 20YY (???)
 AppPublisherURL=http://photivo.org/
 AppSupportURL=http://photivo.org/
-AppUpdatesURL=http://photivo.org/
+AppUpdatesURL=http://code.google.com/p/photivo/downloads/list
 DefaultDirName={pf}\Photivo
 DefaultGroupName=Photivo
 AllowNoIcons=yes
-InfoBeforeFile=C:\Compiler\Changelog.txt
+InfoBeforeFile=..\..\_bin-win64\Changelog.txt
 OutputBaseFilename=photivo-setup--win64
 Compression=lzma/Max
 SolidCompression=false
@@ -42,6 +42,7 @@ ArchitecturesAllowed=x64
 ChangesAssociations=false
 ShowLanguageDialog=no
 LanguageDetectionMethod=none
+DisableWelcomePage=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -51,7 +52,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "C:\Compiler\Photivo\build64\_bin\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\_bin-win64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\Photivo"; Filename: "{app}\photivo.exe"
