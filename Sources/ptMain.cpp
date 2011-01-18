@@ -4335,6 +4335,85 @@ void CB_LensfunScaleInput(const QVariant Value) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void CB_RotateLeftButton() {
+  double Value = Settings->GetDouble("Rotate");
+  Value -= 90.0;
+  if (Value < -180.0) Value += 360.0;
+  Settings->SetValue("Rotate",Value);
+  Update(ptProcessorPhase_AfterRAW);
+}
+
+void CB_RotateRightButton() {
+  double Value = Settings->GetDouble("Rotate");
+  Value += 90.0;
+  if (Value > 180.0) Value -= 360.0;
+  Settings->SetValue("Rotate",Value);
+  Update(ptProcessorPhase_AfterRAW);
+}
+
+void CB_RotateAngleButton() {
+  if (Settings->GetInt("HaveImage")==0) {
+    QMessageBox::information(MainWindow,
+      QObject::tr("No selection"),
+      QObject::tr("Open an image first."));
+    return;
+  }
+  uint16_t Width = 0;
+  uint16_t Height = 0;
+  // First : make sure we have the view window.
+  // And we reset the Image_AfterLensfun such that we can
+  // again select on the whole. It might have been cropped before !
+  if (Settings->GetInt("IsRAW")) {
+    TheProcessor->m_Image_AfterLensfun->Set(
+            TheProcessor->m_DcRaw,
+            Settings->GetInt("WorkColor"),
+            (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
+              NULL : Settings->GetString("CameraColorProfile").toAscii().data(),
+            Settings->GetInt("CameraColorProfileIntent"),
+            Settings->GetInt("CameraColorGamma"));
+  } else {
+    int Success = 0;
+    TheProcessor->m_Image_AfterLensfun->ptGMOpenImage(
+      (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
+      Settings->GetInt("WorkColor"),
+      Settings->GetInt("PreviewColorProfileIntent"),
+      Settings->GetInt("Scaled"),
+      Success);
+    if (Success == 0) {
+      QMessageBox::critical(0,"File not found","File not found!");
+      return;
+    }
+  }
+
+  Width = TheProcessor->m_Image_AfterLensfun->m_Width;
+  Height = TheProcessor->m_Image_AfterLensfun->m_Height;
+  // We *urge* Image_AfterLensfun to be used now for the preview
+  // Rather than end-of-the pipe or so and having to recalculate.
+  // Recalculate happens later on anyway, so no out of sync issue.
+  short OldZoom = Settings->GetInt("Zoom");
+  short OldZoomMode = Settings->GetInt("ZoomMode");
+  ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
+  UpdatePreviewImage(TheProcessor->m_Image_AfterLensfun); // Calculate in any case.
+  // Allow to be selected in the view window. And deactivate main.
+  ViewWindow->StatusReport(QObject::tr("Get angle"));
+  ReportProgress(QObject::tr("Get angle"));
+  ViewWindow->AllowSelection(1,0,0,ptRectangleMode_Line);
+  BlockTools(1);
+  while (ViewWindow->SelectionOngoing()) QApplication::processEvents();
+  // Selection is done at this point. Disallow it further and activate main.
+  ViewWindow->AllowSelection(0);
+  BlockTools(0);
+
+  double Angle = ViewWindow->GetSelectionAngle();
+  if (Angle < -45.0) Angle += 180.0;
+  if (fabs(fabs(Angle)-90.0)<45.0) Angle -= 90.0;
+  Settings->SetValue("Rotate",Angle);
+
+  ViewWindow->Zoom(OldZoom,0);
+  Settings->SetValue("ZoomMode",OldZoomMode);
+  Update(ptProcessorPhase_AfterRAW);
+}
+
 void CB_RotateInput(const QVariant Value) {
   Settings->SetValue("Rotate",Value);
   Update(ptProcessorPhase_AfterRAW);
@@ -4403,7 +4482,6 @@ void CB_MakeCropButton() {
   // First : make sure we have the view window.
   // And we reset the Image_AfterLensfun such that we can
   // again select on the whole. It might have been cropped before !
-  //~ TheProcessor->m_Image_AfterRGB->Set(TheProcessor->m_Image_AfterLensfun);
   if (Settings->GetInt("IsRAW")) {
     TheProcessor->m_Image_AfterLensfun->Set(
             TheProcessor->m_DcRaw,
@@ -4425,14 +4503,15 @@ void CB_MakeCropButton() {
       return;
     }
   }
+  ViewWindow->StatusReport(QObject::tr("Prepare"));
+  ReportProgress(QObject::tr("Prepare for cropping"));
   // Redo also the rotation step if needed.
   if (Settings->GetDouble("Rotate")) {
-    //~ ptIMRotate(TheProcessor->m_Image_AfterRGB, Settings->GetDouble("Rotate"));
     TheProcessor->m_Image_AfterLensfun->Rotate(Settings->GetDouble("Rotate"));
   }
   Width = TheProcessor->m_Image_AfterLensfun->m_Width;
   Height = TheProcessor->m_Image_AfterLensfun->m_Height;
-  // We *urge* Image_AfterRGB to be used now for the preview
+  // We *urge* Image_AfterLensfun to be used now for the preview
   // Rather than end-of-the pipe or so and having to recalculate.
   // Recalculate happens later on anyway, so no out of sync issue.
   short OldZoom = Settings->GetInt("Zoom");
@@ -4440,13 +4519,14 @@ void CB_MakeCropButton() {
   ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
   UpdatePreviewImage(TheProcessor->m_Image_AfterLensfun); // Calculate in any case.
   // Allow to be selected in the view window. And deactivate main.
+  ViewWindow->StatusReport(QObject::tr("Crop"));
+  ReportProgress(QObject::tr("Crop"));
   ViewWindow->AllowSelection(1,
                              Settings->GetInt("AspectRatioH") &&
                              Settings->GetInt("AspectRatioW"),
                              (double) Settings->GetInt("AspectRatioH") /
                              (double) Settings->GetInt("AspectRatioW"),
                              Settings->GetInt("CropRectangleMode"));
-  ViewWindow->StatusReport("Crop");
   BlockTools(1);
   while (ViewWindow->SelectionOngoing()) QApplication::processEvents();
   // Selection is done at this point. Disallow it further and activate main.
