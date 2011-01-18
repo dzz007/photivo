@@ -2849,7 +2849,11 @@ void CB_MenuFileOpen(const short HaveFile) {
   }
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
-  MainWindow->setWindowTitle((Settings->GetStringList("InputFileNameList"))[0]+ " - Photivo");
+  #ifdef Q_OS_WIN32
+    MainWindow->setWindowTitle(QString((Settings->GetStringList("InputFileNameList"))[0]).replace(QString("/"), QString("\\")) + " - Photivo");    
+  #else
+    MainWindow->setWindowTitle((Settings->GetStringList("InputFileNameList"))[0]+ " - Photivo");
+  #endif
   Settings->SetValue("RunMode",OldRunMode);
 
   // Let the toplevel window adapt to the new photo.

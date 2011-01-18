@@ -1997,7 +1997,11 @@ void ptMainWindow::UpdateFilenameInfo(const QStringList FileNameList) {
   QFileInfo fn(FileNameList[0]);
   if (FileNameList.length() > 0 ) {
     FileNameLabel->setText(fn.fileName());
-    FilePathLabel->setText(fn.canonicalPath());
+    #ifdef Q_OS_WIN32
+      FilePathLabel->setText(fn.canonicalPath().replace(QString("/"), QString("\\")));
+    #else
+      FilePathLabel->setText(fn.canonicalPath());
+    #endif
   } else {
     FileNameLabel->setText("");
     FilePathLabel->setText("");
