@@ -89,6 +89,7 @@ short    m_HaveDefault;
 int      m_KeyTimeOut;
 int      m_Emited;
 
+QWidget*          m_Parent;
 QVariant::Type    m_Type; // All values (and determines spinbox f.i.)
 QAbstractSpinBox* m_SpinBox; // Common base for int and double.
 QSlider*          m_Slider;

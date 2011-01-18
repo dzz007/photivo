@@ -59,22 +59,22 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
   m_SettingsName = ObjectName;
   m_SettingsName.chop(6);
 
-  QWidget* Parent = MainWindow->findChild <QWidget*> (ParentName);
+  m_Parent = MainWindow->findChild <QWidget*> (ParentName);
 
-  if (!Parent) {
+  if (!m_Parent) {
     fprintf(stderr,"(%s,%d) Could not find '%s'. Aborting\n",
            __FILE__,__LINE__,ParentName.toAscii().data());
-    assert(Parent);
+    assert(m_Parent);
   }
-  setParent(Parent);
+  setParent(m_Parent);
 
-  QHBoxLayout *Layout = new QHBoxLayout(Parent);
+  QHBoxLayout *Layout = new QHBoxLayout(m_Parent);
 
   //~ Layout->setContentsMargins(2,2,2,2);
   //~ Layout->setMargin(2);
-  Parent->setLayout(Layout);
+  m_Parent->setLayout(Layout);
 
-  m_ComboBox = new QComboBox(Parent);
+  m_ComboBox = new QComboBox(m_Parent);
   m_ComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
   m_ComboBox->setToolTip(ToolTip);
   m_ComboBox->setFixedHeight(24);
@@ -88,7 +88,7 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
   m_ComboBox->installEventFilter(this);
   m_ComboBox->setFocusPolicy(Qt::ClickFocus);
 
-  //~ m_Button  = new QToolButton(Parent);
+  //~ m_Button  = new QToolButton(m_Parent);
   //~ QIcon ButtonIcon;
   //~ ButtonIcon.addPixmap(QPixmap(
     //~ QString::fromUtf8(":/photivo/Icons/reload.png")),
@@ -268,6 +268,10 @@ bool ptChoice::eventFilter(QObject *obj, QEvent *event)
   if (event->type() == QEvent::ContextMenu) {
     if (m_HaveDefault)
       OnButtonClicked();
+    return true;
+  } else if (event->type() == QEvent::Wheel
+             && ((QMouseEvent*)event)->modifiers()==Qt::AltModifier) {
+    QApplication::sendEvent(m_Parent, event);
     return true;
   } else {
     // pass the event on to the parent class
