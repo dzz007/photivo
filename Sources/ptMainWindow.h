@@ -97,6 +97,7 @@ protected:
 void closeEvent(QCloseEvent * Event);
 void resizeEvent(QResizeEvent * Event);
 void keyPressEvent(QKeyEvent * Event);
+void wheelEvent(QWheelEvent * Event);
 bool eventFilter(QObject *obj, QEvent *event);
 
 private :
