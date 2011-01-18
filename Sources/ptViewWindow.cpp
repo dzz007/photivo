@@ -822,7 +822,8 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
 
   } else if (Event->type() == QEvent::ContextMenu) {
     ContextMenu(Event);
-  } else if (Event->type() == QEvent::Wheel) {
+  } else if (Event->type() == QEvent::Wheel &&
+             ((QMouseEvent*)Event)->modifiers()==Qt::NoModifier) {
     m_SizeReportTimer->start(m_SizeReportTimeOut);
 
     QList<int> Scales;

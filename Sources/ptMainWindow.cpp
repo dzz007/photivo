@@ -1454,7 +1454,7 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       QMessageBox::information(this,"Hidden tools",Tools);
       /*findChild<QWidget *>(QString("TabGenCorrections"))->
         setVisible(1-findChild<QWidget *>(QString("TabGenCorrections"))->isVisible()); */
-    } else if (Event->key()==Qt::Key_H && Event->modifiers()==Qt::ControlModifier) {
+    } else if (Event->key()==Qt::Key_U && Event->modifiers()==Qt::NoModifier) {
       // show hidden tools on current tab
       int Active = 0;
       QString Tool= "";
@@ -1507,6 +1507,14 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       if (Tools == "") Tools = "No tools blocked!";
       QMessageBox::information(this,"Blocked tools",Tools);
     }
+  }
+}
+
+void ptMainWindow::wheelEvent(QWheelEvent * Event) {
+  if (Event->delta() < 0 && ((QMouseEvent*)Event)->modifiers()==Qt::AltModifier) {
+    ProcessingTabBook->setCurrentIndex(MIN(ProcessingTabBook->currentIndex()+1,ProcessingTabBook->count()));
+  } else if (Event->delta() > 0 && ((QMouseEvent*)Event)->modifiers()==Qt::AltModifier) {
+    ProcessingTabBook->setCurrentIndex(MAX(ProcessingTabBook->currentIndex()-1,0));
   }
 }
 
