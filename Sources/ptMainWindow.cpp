@@ -361,6 +361,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : RGB
   //
 
+  Macro_ConnectSomeButton(RotateLeft);
+  Macro_ConnectSomeButton(RotateRight);
+  Macro_ConnectSomeButton(RotateAngle);
   Macro_ConnectSomeButton(MakeCrop);
 
   Macro_ConnectSomeButton(ChannelMixerOpen);
@@ -1071,13 +1074,34 @@ void ptMainWindow::OnSpotWBButtonClicked() {
 }
 
 //
-// Tab : RGB
+// Tab : Geometry
 //
+
+
+void CB_RotateLeftButton();
+void ptMainWindow::OnRotateLeftButtonClicked() {
+  ::CB_RotateLeftButton();
+}
+
+void CB_RotateRightButton();
+void ptMainWindow::OnRotateRightButtonClicked() {
+  ::CB_RotateRightButton();
+}
+
+void CB_RotateAngleButton();
+void ptMainWindow::OnRotateAngleButtonClicked() {
+  ::CB_RotateAngleButton();
+}
 
 void CB_MakeCropButton();
 void ptMainWindow::OnMakeCropButtonClicked() {
   ::CB_MakeCropButton();
 }
+
+//
+// Tab : RGB
+//
+
 
 void CB_ChannelMixerOpenButton();
 void ptMainWindow::OnChannelMixerOpenButtonClicked() {
@@ -1367,6 +1391,22 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       resize(QSize(1200,900));
       QRect DesktopRect = (QApplication::desktop())->screenGeometry(this);
       move(QPoint(MAX((DesktopRect.width()-1200),0)/2,MAX((DesktopRect.height()-900)/2-20,0)));
+    } else if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(0);
+    } else if (Event->key()==Qt::Key_2 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(1);
+    } else if (Event->key()==Qt::Key_3 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(2);
+    } else if (Event->key()==Qt::Key_4 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(3);
+    } else if (Event->key()==Qt::Key_5 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(4);
+    } else if (Event->key()==Qt::Key_6 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(5);
+    } else if (Event->key()==Qt::Key_7 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(6);
+    } else if (Event->key()==Qt::Key_8 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(7);
     } else if (Event->key()==Qt::Key_X && Event->modifiers()==Qt::NoModifier) {
       ProcessingTabBook->setCurrentIndex(MIN(ProcessingTabBook->currentIndex()+1,ProcessingTabBook->count()));
     } else if (Event->key()==Qt::Key_Y && Event->modifiers()==Qt::NoModifier) {

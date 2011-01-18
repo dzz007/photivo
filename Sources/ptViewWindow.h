@@ -62,6 +62,7 @@ uint16_t GetSelectionX();
 uint16_t GetSelectionY();
 uint16_t GetSelectionWidth();
 uint16_t GetSelectionHeight();
+double   GetSelectionAngle();
 
 // Grid
 void Grid(const short Enabled, const short GridX, const short GridY);
@@ -80,6 +81,7 @@ const ptImage*       m_RelatedImage;
 
 short                m_SelectionAllowed;
 short                m_SelectionOngoing;
+short                m_DrawLine;
 int16_t              m_StartDragX;
 int16_t              m_StartDragY;
 int16_t              m_EndDragX;

@@ -198,6 +198,8 @@ const short ptRectangleMode_None        = 0;
 const short ptRectangleMode_RuleThirds  = 1;
 const short ptRectangleMode_GoldenRatio = 2;
 const short ptRectangleMode_Diagonal    = 3;
+// Escape for line
+const short ptRectangleMode_Line        = 9;
 
 // Channel Mixer
 

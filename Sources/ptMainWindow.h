@@ -165,6 +165,10 @@ void OnGimpExecCommandButtonClicked();
 
 void OnStartupSettingsButtonClicked();
 
+void OnRotateLeftButtonClicked();
+void OnRotateRightButtonClicked();
+void OnRotateAngleButtonClicked();
+
 void OnMakeCropButtonClicked();
 
 void OnChannelMixerOpenButtonClicked();

@@ -62,6 +62,7 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_StartDragY       = 0;
   m_SelectionAllowed = 0;
   m_SelectionOngoing = 0;
+  m_DrawLine         = 0;
   m_Grid             = 0;
   m_GridX            = 0;
   m_GridY            = 0;
@@ -278,6 +279,11 @@ void ptViewWindow::AllowSelection(const short  Allow,
   m_FixedAspectRatio = FixedAspectRatio;
   m_HOverW           = HOverW;
   m_RectangleMode    = RectangleMode;
+  if (RectangleMode == ptRectangleMode_Line) {
+    m_DrawLine = 1;
+  } else {
+    m_DrawLine = 0;
+  }
 }
 
 short ptViewWindow::SelectionOngoing() {
@@ -310,6 +316,12 @@ uint16_t ptViewWindow::GetSelectionHeight() {
   uint16_t H = abs(m_StartDragY-m_EndDragY);
   H = (uint16_t)(H/m_ZoomFactor+0.5);
   return H;
+}
+
+double ptViewWindow::GetSelectionAngle() {
+  if (m_StartDragX-m_EndDragX == 0) return 90.0;
+  double m = -(double)(m_StartDragY-m_EndDragY) / (m_StartDragX-m_EndDragX);
+  return atan(m) * 180.0 / ptPI;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -587,7 +599,7 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
                m_YOffsetInVP+i*YStep);
         }
     }
-    if (m_DrawRectangle) {
+    if (m_DrawRectangle && !m_DrawLine) {
       int16_t FrameX0 = m_XOffsetInVP;
       int16_t FrameY0 = m_YOffsetInVP;
       int16_t FrameX1 = m_XOffsetInVP + m_QImageCut->width();
@@ -657,7 +669,13 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
              m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
              m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
       }
+    } else if (m_DrawRectangle && m_DrawLine) {
+      QPen Pen(QColor(255, 0, 0),1);
+      Painter.setPen(Pen);
+      Painter.drawLine(m_StartDragX, m_StartDragY,
+                       m_EndDragX, m_EndDragY);
     }
+
     Painter.restore();
 
   } else if (Event->type() == QEvent::Resize) {

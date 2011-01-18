@@ -29,6 +29,9 @@
     <file>Icons/crossred.png</file>
     <file>Icons/attention.png</file>
     <file>Icons/target.png</file>
+    <file>Icons/rotateleft.png</file>
+    <file>Icons/rotateright.png</file>
+    <file>Icons/angle.png</file>
     <file>photivo.png</file>
   </qresource>
 </RCC>
