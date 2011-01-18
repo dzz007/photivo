@@ -80,6 +80,7 @@ short    m_HaveDefault;
 int      m_TimeOut;
 const ptGuiOptionsItem* m_InitialOptions;
 
+QWidget*     m_Parent;
 QComboBox*   m_ComboBox;
 QToolButton* m_Button;
 QTimer*      m_Timer;

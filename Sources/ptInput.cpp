@@ -78,28 +78,28 @@ ptInput::ptInput(const QWidget* MainWindow,
   m_SettingsName = ObjectName;
   m_SettingsName.chop(5);
 
-  QWidget* Parent = MainWindow->findChild <QWidget*> (ParentName);
+  m_Parent = MainWindow->findChild <QWidget*> (ParentName);
 
-  if (!Parent) {
+  if (!m_Parent) {
     fprintf(stderr,"(%s,%d) Could not find '%s'. Aborting\n",
            __FILE__,__LINE__,ParentName.toAscii().data());
-    assert(Parent);
+    assert(m_Parent);
   }
-  setParent(Parent);
+  setParent(m_Parent);
 
-  QHBoxLayout *Layout = new QHBoxLayout(Parent);
+  QHBoxLayout *Layout = new QHBoxLayout(m_Parent);
   //~ Layout->setContentsMargins(2,2,2,2);
   //~ Layout->setMargin(2);
-  Parent->setLayout(Layout);
+  m_Parent->setLayout(Layout);
 
   if (m_Type == QVariant::Int) {
-    m_SpinBox = new QSpinBox(Parent);
+    m_SpinBox = new QSpinBox(m_Parent);
     QSpinBox* IntSpinBox = qobject_cast <QSpinBox *> (m_SpinBox);
     IntSpinBox->setMinimum(Minimum.toInt());
     IntSpinBox->setMaximum(Maximum.toInt());
     IntSpinBox->setSingleStep(Step.toInt());
   } else if (m_Type == QVariant::Double) {
-    m_SpinBox = new QDoubleSpinBox(Parent);
+    m_SpinBox = new QDoubleSpinBox(m_Parent);
     QDoubleSpinBox* DoubleSpinBox = qobject_cast <QDoubleSpinBox *> (m_SpinBox);
     DoubleSpinBox->setMinimum(Minimum.toDouble());
     DoubleSpinBox->setMaximum(Maximum.toDouble());
@@ -115,7 +115,7 @@ ptInput::ptInput(const QWidget* MainWindow,
   m_SpinBox->installEventFilter(this);
   m_SpinBox->setFocusPolicy(Qt::ClickFocus);
 
-  m_Slider = new QSlider(Qt::Horizontal,Parent);
+  m_Slider = new QSlider(Qt::Horizontal,m_Parent);
   m_Slider->setMinimumWidth(100);
   m_Slider->setMaximumWidth(100);
   m_Slider->setMinimum(0);
@@ -137,7 +137,7 @@ ptInput::ptInput(const QWidget* MainWindow,
   //~ m_Button->setToolTip(QObject::tr("Reset to defaults"));
   //~ if (!m_HaveDefault) m_Button->hide();
 
-  m_Label = new QLabel(Parent);
+  m_Label = new QLabel(m_Parent);
   m_Label->setText(LabelText);
   m_Label->setToolTip(ToolTip);
   m_Label->setTextInteractionFlags(Qt::NoTextInteraction);
@@ -472,6 +472,10 @@ bool ptInput::eventFilter(QObject *obj, QEvent *event)
   } else if (0 && ((QMouseEvent*) event)->button()==Qt::RightButton) {
     if (m_HaveDefault)
       OnButtonClicked();
+    return true;
+  } else if (event->type() == QEvent::Wheel
+             && ((QMouseEvent*)event)->modifiers()==Qt::AltModifier) {
+    QApplication::sendEvent(m_Parent, event);
     return true;
   } else {
     // pass the event on to the parent class
