@@ -284,6 +284,12 @@ int main(int Argc, char *Argv[]) {
 QApplication* TheApplication;
 
 int photivoMain(int Argc, char *Argv[]) {
+  QString VerTemp(TOSTRING(APPVERSION));
+  VerTemp.replace("_"," ");
+  VerTemp.replace("!","(");
+  VerTemp.replace("@",")");
+  printf("Photivo version %s\n", VerTemp.toAscii().data());
+  
   Magick::InitializeMagick(*Argv);
 
   // TextCodec
@@ -2768,40 +2774,47 @@ void CB_MenuFileOpen(const short HaveFile) {
     return;
   }
   if (Settings->GetInt("HaveImage")==1) {
-    QMessageBox msgBox;
-    msgBox.setIcon(QMessageBox::Question);
-    msgBox.setWindowTitle("Open new image");
-    msgBox.setText("Do you want to save the current image?");
-    msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-    msgBox.setDefaultButton(QMessageBox::Save);
-    int ret = msgBox.exec();
-    switch (ret) {
-      case QMessageBox::Save:
-        // Save was clicked
-        Settings->SetValue("InputFileNameList",OldInputFileNameList);
-        CB_WritePipeButton();
-        Settings->SetValue("InputFileNameList",InputFileNameList);
-        if (ImageCleanUp == 1) {
-          // clean up the input file if we got just a temp file
-          QFile::remove(OldInputFileNameList.at(0));
-        }
-        return;
-      case QMessageBox::Discard:
-        // Don't Save was clicked
-        if (ImageCleanUp == 1) {
-          // clean up the input file if we got just a temp file
-          QFile::remove(OldInputFileNameList.at(0));
-        }
-        break;
-      case QMessageBox::Cancel:
-         // Cancel was clicked
-        Settings->SetValue("InputFileNameList",OldInputFileNameList);
-        delete TestDcRaw;
-        return;
-        break;
-      default:
-         // should never be reached
-         break;
+    if ( Settings->GetInt("SaveConfirmation") == 0 ) {
+      if (ImageCleanUp == 1) {
+        // clean up the input file if we got just a temp file
+        QFile::remove(OldInputFileNameList.at(0));
+      }
+    } else {
+      QMessageBox msgBox;
+      msgBox.setIcon(QMessageBox::Question);
+      msgBox.setWindowTitle("Open new image");
+      msgBox.setText("Do you want to save the current image?");
+      msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+      msgBox.setDefaultButton(QMessageBox::Save);
+      int ret = msgBox.exec();
+      switch (ret) {
+        case QMessageBox::Save:
+          // Save was clicked
+          Settings->SetValue("InputFileNameList",OldInputFileNameList);
+          CB_WritePipeButton();
+          Settings->SetValue("InputFileNameList",InputFileNameList);
+          if (ImageCleanUp == 1) {
+            // clean up the input file if we got just a temp file
+            QFile::remove(OldInputFileNameList.at(0));
+          }
+          return;
+        case QMessageBox::Discard:
+          // Don't Save was clicked
+          if (ImageCleanUp == 1) {
+            // clean up the input file if we got just a temp file
+            QFile::remove(OldInputFileNameList.at(0));
+          }
+          break;
+        case QMessageBox::Cancel:
+           // Cancel was clicked
+          Settings->SetValue("InputFileNameList",OldInputFileNameList);
+          delete TestDcRaw;
+          return;
+          break;
+        default:
+           // should never be reached
+           break;
+      }
     }
   }
 
@@ -3003,10 +3016,10 @@ void CB_MenuFileWriteSettings() {
 
 
 void CB_MenuFileExit(const short) {
-  if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0) {
+  if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0 && Settings->GetInt("SaveConfirmation")==1) {
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Question);
-    msgBox.setWindowTitle("Close photivo");
+    msgBox.setWindowTitle("Close Photivo");
     msgBox.setText("Do you want to save the current image?");
     msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Save);
@@ -3275,8 +3288,8 @@ void CB_CameraColorChoice(const QVariant Choice) {
   if (Choice.toInt() == ptCameraColor_Profile) {
     if (!Settings->GetString("CameraColorProfile").size()) {
       QMessageBox::warning(MainWindow,
-                           QObject::tr("Please load first a profile"),
-                           QObject::tr("Please load first a profile"));
+                           QObject::tr("Please load a profile first"),
+                           QObject::tr("Please load a profile first"));
       Settings->SetValue("CameraColor",PreviousChoice);
     }
   }
@@ -3507,13 +3520,27 @@ void CB_LoadStyleButton() {
   delete data;
 }
 
+
+void CB_SaveConfirmationCheck(const QVariant Check) {
+  Settings->SetValue("SaveConfirmation",Check);
+}
+
+void CB_ResetSettingsConfirmationCheck(const QVariant Check) {
+  Settings->SetValue("ResetSettingsConfirmation",Check);
+}
+
+void CB_FullPipeConfirmationCheck(const QVariant Check) {
+  Settings->SetValue("FullPipeConfirmation",Check);
+}
+
+
 void CB_WriteBackupSettingsCheck(const QVariant Check) {
   Settings->SetValue("WriteBackupSettings",Check);
 }
 
 void CB_TranslationCheck(const QVariant Check) {
   Settings->SetValue("Translation",Check);
-  QMessageBox::information(0,QObject::tr("Please restart"),QObject::tr("Please restart photivo to switch\n the language settings."));
+  QMessageBox::information(0,QObject::tr("Please restart"),QObject::tr("Please restart Photivo to switch\n the language settings."));
 }
 
 void CB_MemoryTestInput(const QVariant Value) {
@@ -3535,11 +3562,12 @@ void CB_PipeSizeChoice(const QVariant Choice) {
   short PreviousPipeSize = Settings->GetInt("PipeSize");
 
   if (Choice == ptPipeSize_Full &&
+      Settings->GetInt("FullPipeConfirmation")==1 &&
       (Settings->GetInt("ImageH") > 2000 ||
        Settings->GetInt("ImageW") > 2000)) {
     if (QMessageBox::question(MainWindow,
-      QObject::tr("Are you sure?"),
-      QObject::tr("Setting to 1:1 pipe will increase the used ressources.\nAre you sure?"),
+      QObject::tr("Really switch to 1:1 pipe?"),
+      QObject::tr("Switching to 1:1 pipe will increase memory usage and processing time greatly.\nAre you sure?"),
         QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Cancel){;
       Settings->SetValue("PipeSize",PreviousPipeSize);
       return;
@@ -3610,24 +3638,35 @@ void CB_RunButton() {
 }
 
 void ResetButtonHandler(const short mode) {
+  int DoOpen = 1;
   if (mode == ptResetMode_Full) { // full reset
-    QMessageBox msgBox;
-    msgBox.setIcon(QMessageBox::Question);
-    msgBox.setWindowTitle(QObject::tr("Reset?"));
-    msgBox.setText(QObject::tr("Reset to neutral values?\n"));
-    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-    msgBox.setDefaultButton(QMessageBox::Ok);
-    if (msgBox.exec()==QMessageBox::Ok) {
+    if ( Settings->GetInt("ResetSettingsConfirmation")==1 ) {
+      QMessageBox msgBox;
+      msgBox.setIcon(QMessageBox::Question);
+      msgBox.setWindowTitle(QObject::tr("Reset?"));
+      msgBox.setText(QObject::tr("Reset to neutral values?\n"));
+      msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+      msgBox.setDefaultButton(QMessageBox::Ok);
+      if ( msgBox.exec()==QMessageBox::Cancel ) {
+        DoOpen = 0;
+      }
+    }
+    if ( DoOpen==1 ) {
       CB_OpenSettingsFile(Settings->GetString("PresetDirectory") + "/Neutral_absolute.pts");
     }
   } else if (mode == ptResetMode_User) { // reset to startup settings
-    QMessageBox msgBox;
-    msgBox.setIcon(QMessageBox::Question);
-    msgBox.setWindowTitle(QObject::tr("Reset?"));
-    msgBox.setText(QObject::tr("Reset to start up settings?\n"));
-    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-    msgBox.setDefaultButton(QMessageBox::Ok);
-    if (msgBox.exec()==QMessageBox::Ok) {
+    if ( Settings->GetInt("ResetSettingsConfirmation")==1 ) {
+      QMessageBox msgBox;
+      msgBox.setIcon(QMessageBox::Question);
+      msgBox.setWindowTitle(QObject::tr("Reset?"));
+      msgBox.setText(QObject::tr("Reset to start up settings?\n"));
+      msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+      msgBox.setDefaultButton(QMessageBox::Ok);
+      if ( msgBox.exec()==QMessageBox::Cancel ) {
+        DoOpen = 0;
+      }
+    }
+    if ( DoOpen==1 ) {
       CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
     }
   } else if (mode == ptResetMode_OpenPreset) { // open preset file
@@ -3649,7 +3688,7 @@ void CB_SpecialPreviewChoice(const QVariant Choice) {
 void CB_GimpExecCommandButton() {
 
   QString GimpExecCommandString = QFileDialog::getOpenFileName(NULL,
-    QObject::tr("Get gimp command"),
+    QObject::tr("Get Gimp command"),
     Settings->GetString("UserDirectory"),
     "All files (*.*)");
 
@@ -8205,6 +8244,10 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(StyleChoice)
   M_Dispatch(StyleHighLightChoice)
+  
+  M_Dispatch(SaveConfirmationCheck)
+  M_Dispatch(ResetSettingsConfirmationCheck)
+  M_Dispatch(FullPipeConfirmationCheck)
 
   M_Dispatch(WriteBackupSettingsCheck)
 
