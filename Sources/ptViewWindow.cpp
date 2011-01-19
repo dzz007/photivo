@@ -875,14 +875,21 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
             ImageFileToOpen = DropName;
             CB_MenuFileOpen(1);
           } else {
-            QMessageBox msgBox;
-            msgBox.setIcon(QMessageBox::Question);
-            msgBox.setWindowTitle(tr("Settings file dropped!"));
-            msgBox.setText(tr("Do you really want to open\n")+DropName);
-            msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-            msgBox.setDefaultButton(QMessageBox::Ok);
-            if (msgBox.exec()==QMessageBox::Ok){
+            if ( Settings->GetInt("ResetSettingsConfirmation") == 0 ) {
               CB_OpenSettingsFile(DropName);
+            } else {
+              #ifdef Q_OS_WIN32
+                DropName = DropName.replace(QString("/"), QString("\\"));
+              #endif
+              QMessageBox msgBox;
+              msgBox.setIcon(QMessageBox::Question);
+              msgBox.setWindowTitle(tr("Settings file dropped!"));
+              msgBox.setText(tr("Do you really want to open\n")+DropName);
+              msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+              msgBox.setDefaultButton(QMessageBox::Ok);
+              if (msgBox.exec()==QMessageBox::Ok){
+                CB_OpenSettingsFile(DropName);
+              }
             }
           }
         }

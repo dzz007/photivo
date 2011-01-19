@@ -527,7 +527,10 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WienerFilter2"              ,ptGT_Check ,2,1,0,tr("Enable")          ,tr("Enable wiener filter")},
     {"WienerFilter2UseEdgeMask"   ,ptGT_Check ,2,1,1,tr("Only edges")      ,tr("Sharpen only edges")},
     {"IncludeExif"                ,ptGT_Check ,2,1,1,tr("Include metadata"),tr("Include metadata (only in jpeg and tiff)")},
-    {"EraseExifThumbnail"         ,ptGT_Check ,2,1,1,tr("Erase thumbnail"),tr("Erase the exif thumbnail (only in jpeg and tiff)")}
+    {"EraseExifThumbnail"         ,ptGT_Check ,2,1,1,tr("Erase thumbnail") ,tr("Erase the exif thumbnail (only in jpeg and tiff)")},
+    {"SaveConfirmation"           ,ptGT_Check ,1,0,1,tr("Save image")      ,tr("Confirm any action that would discard an unsaved image")},
+    {"ResetSettingsConfirmation"  ,ptGT_Check, 1,0,1,tr("Reset settings")  ,tr("Confirm resetting settings or dropping a settings file onto an image")},
+    {"FullPipeConfirmation"       ,ptGT_Check ,1,0,1,tr("Switch to 1:1 pipe"), tr("Confirm switch to the full sized pipe")}
   };
 
   // Load in the non gui elements
@@ -654,7 +657,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FullOutput"                           ,9         ,0                                                   ,0},
     {"HiddenTools"                          ,0         ,QStringList()                                       ,1},
     {"BlockedTools"                         ,0         ,QStringList()                                       ,1},
-    {"BlockUpdate"                          ,9         ,0                                                   ,0}
+    {"BlockUpdate"                          ,9         ,0                                                   ,0},
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.
