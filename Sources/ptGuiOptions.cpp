@@ -289,6 +289,8 @@ const ptGuiOptionsItem ptGuiOptions::MaskType[] = {
   {ptMaskType_All,               QObject::tr("All values") },
   {ptMaskType_Screen,            QObject::tr("Midtones - Screen") },
   {ptMaskType_Multiply,          QObject::tr("Midtones - Multiply") },
+  {ptOverlayMode_GammaBright,    QObject::tr("Midtones - Gamma bright") },
+  {ptOverlayMode_GammaDark,      QObject::tr("Midtones - Gamma dark") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::GrainMaskType[] = {
@@ -304,6 +306,8 @@ const ptGuiOptionsItem ptGuiOptions::OverlayMode[] = {
   {ptOverlayMode_SoftLight,         QObject::tr("SoftLight") },
   {ptOverlayMode_Multiply,          QObject::tr("Multiply") },
   {ptOverlayMode_Screen,            QObject::tr("Screen") },
+  {ptOverlayMode_GammaDark,         QObject::tr("Gamma dark") },
+  {ptOverlayMode_GammaBright,       QObject::tr("Gamma bright") },
 //  {ptOverlayMode_Overlay,           QObject::tr("Overlay") },
   {ptOverlayMode_ShowMask,          QObject::tr("Show Mask") },
   {-1,NULL}};
