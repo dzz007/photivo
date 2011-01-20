@@ -356,18 +356,20 @@ const short ptCrossprocessMode_BM   = 6;
 
 // OverlayMode
 
-const short ptOverlayMode_None       = 0;
-const short ptOverlayMode_SoftLight  = 1;
-const short ptOverlayMode_Multiply   = 2;
-const short ptOverlayMode_Screen     = 3;
-const short ptOverlayMode_Normal     = 4;
-const short ptOverlayMode_Lighten    = 5;
-const short ptOverlayMode_Overlay    = 6;
-const short ptOverlayMode_GrainMerge = 7;
-const short ptOverlayMode_ShowMask   = 8;
-const short ptOverlayMode_Replace    = 9;
-const short ptOverlayMode_ColorDodge = 10;
-const short ptOverlayMode_ColorBurn  = 11;
+const short ptOverlayMode_None         = 0;
+const short ptOverlayMode_SoftLight    = 1;
+const short ptOverlayMode_Multiply     = 2;
+const short ptOverlayMode_Screen       = 3;
+const short ptOverlayMode_Normal       = 4;
+const short ptOverlayMode_Lighten      = 5;
+const short ptOverlayMode_Overlay      = 6;
+const short ptOverlayMode_GrainMerge   = 7;
+const short ptOverlayMode_ShowMask     = 8;
+const short ptOverlayMode_Replace      = 9;
+const short ptOverlayMode_ColorDodge   = 10;
+const short ptOverlayMode_ColorBurn    = 11;
+const short ptOverlayMode_GammaDark    = 12;
+const short ptOverlayMode_GammaBright  = 13;
 
 // VignetteMode
 
