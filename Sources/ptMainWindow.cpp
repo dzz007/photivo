@@ -1407,9 +1407,9 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       ProcessingTabBook->setCurrentIndex(6);
     } else if (Event->key()==Qt::Key_8 && Event->modifiers()==Qt::AltModifier) {
       ProcessingTabBook->setCurrentIndex(7);
-    } else if (Event->key()==Qt::Key_X && Event->modifiers()==Qt::NoModifier) {
+    } else if (Event->key()==Qt::Key_Period && Event->modifiers()==Qt::NoModifier) {
       ProcessingTabBook->setCurrentIndex(MIN(ProcessingTabBook->currentIndex()+1,ProcessingTabBook->count()));
-    } else if (Event->key()==Qt::Key_Y && Event->modifiers()==Qt::NoModifier) {
+    } else if (Event->key()==Qt::Key_Comma && Event->modifiers()==Qt::NoModifier) {
       ProcessingTabBook->setCurrentIndex(MAX(ProcessingTabBook->currentIndex()-1,0));
     } else if (Event->key()==Qt::Key_T && Event->modifiers()==Qt::NoModifier) {
       CB_PreviewModeButton(1-Settings->GetInt("PreviewTabMode"));
