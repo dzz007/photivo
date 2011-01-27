@@ -3844,7 +3844,7 @@ void CB_OpenSettingsFile(QString SettingsFileName) {
   short NextPhase = 1;
   short ReturnValue = ReadSettingsFile(SettingsFileName, NextPhase);
   if (ReturnValue) {
-    QMessageBox::critical(0,"Error","No valid settings file!");
+    QMessageBox::critical(0,"Error","No valid settings file!\n" + SettingsFileName);
     return;
   }
   if (NextPhase == 1) {
