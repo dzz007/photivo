@@ -289,7 +289,7 @@ int photivoMain(int Argc, char *Argv[]) {
   VerTemp.replace("!","(");
   VerTemp.replace("@",")");
   printf("Photivo version %s\n", VerTemp.toAscii().data());
-  
+
   Magick::InitializeMagick(*Argv);
 
   // TextCodec
@@ -2864,7 +2864,7 @@ void CB_MenuFileOpen(const short HaveFile) {
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
   #ifdef Q_OS_WIN32
-    MainWindow->setWindowTitle(QString((Settings->GetStringList("InputFileNameList"))[0]).replace(QString("/"), QString("\\")) + " - Photivo");    
+    MainWindow->setWindowTitle(QString((Settings->GetStringList("InputFileNameList"))[0]).replace(QString("/"), QString("\\")) + " - Photivo");
   #else
     MainWindow->setWindowTitle((Settings->GetStringList("InputFileNameList"))[0]+ " - Photivo");
   #endif
@@ -3112,7 +3112,11 @@ void GimpExport(const short PipeSize) {
     Settings->ToDcRaw(TheDcRaw);
     // Run the graphical pipe in full format mode to recreate the image.
     Settings->SetValue("FullOutput",1);
-    TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
+    if (Settings->GetInt("IsRAW") == 1) {
+      TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
+    } else {
+      TheProcessor->Run(ptProcessorPhase_AfterRAW,ptProcessorPhase_Load,1,1);
+    }
     Settings->SetValue("FullOutput",0);
 
     ImageForGimp = TheProcessor->m_Image_AfterEyeCandy; // no cache
@@ -8246,7 +8250,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(StyleChoice)
   M_Dispatch(StyleHighLightChoice)
-  
+
   M_Dispatch(SaveConfirmationCheck)
   M_Dispatch(ResetSettingsConfirmationCheck)
   M_Dispatch(FullPipeConfirmationCheck)
