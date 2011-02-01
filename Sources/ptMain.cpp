@@ -306,11 +306,11 @@ int photivoMain(int Argc, char *Argv[]) {
   ImageCleanUp = 0;
 
   if (Argc>1) {
-    QString ErrorMessage = QObject::tr("Usage : photivo [-j JobFile] [-i Image] [-g Image (with cleanup)]");
+    QString ErrorMessage = QObject::tr("Usage : photivo  [-i Image] [-j JobFile] [-g Image (with cleanup, not for regular use!)]");
     // Argc must be 3,5 ...
     if (Argc % 2 != 1) {
       fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
-      // exit(EXIT_FAILURE);
+      exit(EXIT_FAILURE);
     } else {
       short CurrentIndex = 1;
       while (CurrentIndex < Argc) {
@@ -1500,6 +1500,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     if (Settings->GetInt("ExposureIndicatorR")) ExposureChannelMask |= 1;
     if (Settings->GetInt("ExposureIndicatorG")) ExposureChannelMask |= 2;
     if (Settings->GetInt("ExposureIndicatorB")) ExposureChannelMask |= 4;
+
     if (ActiveTab == ptCameraTab && Settings->GetInt("ExposureIndicatorSensor")){
       OverExposureLevel[0] = CLIP((int32_t)
         ((TheDcRaw->m_WhiteLevel_AfterPhase1-TheDcRaw->m_BlackLevel_AfterPhase1)
@@ -8239,6 +8240,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(WorkColorChoice)
   M_Dispatch(CMQualityChoice)
+
 
   M_Dispatch(PreviewColorProfileIntentChoice)
 
