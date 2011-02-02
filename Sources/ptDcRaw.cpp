@@ -1632,12 +1632,13 @@ void CLASS phase_one_load_raw()
   merror (pixel, "phase_one_load_raw()");
   for (row=0; row < m_Height; row++) {
     read_shorts (pixel, m_RawWidth);
-    for (col=0; col < m_RawWidth; col+=2) {
-      a = pixel[col+0] ^ akey;
-      b = pixel[col+1] ^ bkey;
-      pixel[col+0] = (a & mask) | (b & ~mask);
-      pixel[col+1] = (b & mask) | (a & ~mask);
-    }
+    if (ph1.format)
+      for (col=0; col < m_RawWidth; col+=2) {
+        a = pixel[col+0] ^ akey;
+        b = pixel[col+1] ^ bkey;
+        pixel[col+0] = (a & mask) | (b & ~mask);
+        pixel[col+1] = (b & mask) | (a & ~mask);
+      }
     for (col=0; col < m_Width; col++)
       BAYER(row,col) = pixel[col+m_LeftMargin];
   }
@@ -1824,6 +1825,7 @@ void CLASS imacon_full_load_raw()
 void CLASS packed_load_raw()
 {
   int vbits=0, bwide, pwide, rbits, bite, half, irow, row, col, val, i;
+  int zero=0;
   uint64_t bitbuf=0;
 
   if (m_RawWidth * 8U >= m_Width * m_Tiff_bps)  /* Is m_RawWidth in bytes? */
@@ -1856,8 +1858,10 @@ void CLASS packed_load_raw()
       i = (col ^ (bite == 24)) - m_LeftMargin;
       if ((unsigned) i < m_Width)
   BAYER(row,i) = val;
-      else if (m_Load_Flags & 32)
+      else if (m_Load_Flags & 32) {
   m_BlackLevel += val;
+  zero += !val;
+      }
       if (m_Load_Flags & 1 && (col % 10) == 9 &&
   fgetc(m_InputFile) && col < m_Width+m_LeftMargin) derror();
     }
@@ -1865,8 +1869,9 @@ void CLASS packed_load_raw()
   }
   if (m_Load_Flags & 32 && pwide > m_Width)
     m_BlackLevel /= (pwide - m_Width) * m_Height;
+  if (zero*4 > (pwide - m_Width) * m_Height)
+    m_BlackLevel = 0;
 }
-
 
 void CLASS unpacked_load_raw()
 {
@@ -4578,8 +4583,11 @@ void CLASS parse_makernote (int base, int uptag)
   else if (!strcmp (buf,"AOC") ||
      !strcmp (buf,"QVC"))
     fseek (m_InputFile, -4, SEEK_CUR);
-  else fseek (m_InputFile, -10, SEEK_CUR);
-
+  else {
+    fseek (m_InputFile, -10, SEEK_CUR);
+    if (!strncmp(m_CameraMake,"SAMSUNG",7))
+      base = ftell(m_InputFile);
+  }
   entries = get2();
   if (entries > 1000) return;
   while (entries--) {
@@ -4627,9 +4635,18 @@ void CLASS parse_makernote (int base, int uptag)
       fseek (m_InputFile, get4()+base, SEEK_SET);
       parse_tiff_ifd (base);
     }
-    if (tag == 0x14 && len == 2560 && type == 7) {
-      fseek (m_InputFile, 1248, SEEK_CUR);
-      goto get2_256;
+    if (tag == 0x14 && type == 7) {
+      if (len == 2560) {
+        fseek (m_InputFile, 1248, SEEK_CUR);
+        goto get2_256;
+      }
+      ptfread (buf, 1, 10, m_InputFile);
+      if (!strncmp(buf,"NRW ",4)) {
+        fseek (m_InputFile, strcmp(buf+4,"0100") ? 46:1546, SEEK_CUR);
+        ASSIGN(m_CameraMultipliers[0], get4() << 2);
+        ASSIGN(m_CameraMultipliers[1], get4() + get4());
+        ASSIGN(m_CameraMultipliers[2], get4() << 2);
+      }
     }
     if (tag == 0x15 && type == 2 && m_IsRaw)
       ptfread (m_CameraModel, 64, 1, m_InputFile);
@@ -4778,6 +4795,10 @@ get2_rggb:
       fseek (m_InputFile, 22, SEEK_CUR);
       for (c=0; c < 4; c++) sraw_mul[c ^ (c >> 1)] = get2();
     }
+    if (tag == 0xa021)
+      for (c=0; c<4; c++) ASSIGN(m_CameraMultipliers[c ^ (c >> 1)], get4());
+    if (tag == 0xa028)
+      for (c=0; c<4; c++) ASSIGN(m_CameraMultipliers[c ^ (c >> 1)], m_CameraMultipliers[c ^ (c >> 1)] - get4());
 next:
     fseek (m_InputFile, save, SEEK_SET);
   }
@@ -4806,6 +4827,7 @@ void CLASS get_timestamp (int reversed)
     return;
   t.tm_year -= 1900;
   t.tm_mon -= 1;
+  t.tm_isdst = -1;
   if (mktime(&t) > 0)
     m_TimeStamp = mktime(&t);
 }
@@ -7236,6 +7258,7 @@ konica_400z:
   } else if (!strcmp(m_CameraModel,"NX10")) {
     m_Height -= m_TopMargin = 4;
     m_Width -= 2 * (m_LeftMargin = 8);
+    m_Load_Flags = 32;
   } else if (!strcmp(m_CameraModel,"EX1")) {
     m_ByteOrder = 0x4949;
     m_Height = 2760;
@@ -7730,11 +7753,10 @@ c603:
     m_Width  = 3279;
     m_RawWidth = 4928;
     m_WhiteLevel = 0xfff;
-  } else if (!strcmp(m_CameraModel,"EX-Z1050")) {
+  } else if (l_FileSize == 15499264) { /* EX-Z1050 or EX-Z1080 */
     m_Height = 2752;
     m_Width  = 3672;
     m_RawWidth = 5632;
-    m_WhiteLevel = 0xffc;
   } else if (!strcmp(m_CameraModel,"EX-P505")) {
     m_Height = 1928;
     m_Width  = 2568;
@@ -7773,7 +7795,7 @@ dng_skip:
   }
 #endif
   if (!m_ColorDescriptor[0])
-    strcpy (m_ColorDescriptor, m_Colors == 3 ? "RGB":"GMCY");
+    strcpy (m_ColorDescriptor, m_Colors == 3 ? "RGBG":"GMCY");
   if (!m_RawHeight) m_RawHeight = m_Height;
   if (!m_RawWidth ) m_RawWidth  = m_Width;
   if (m_Filters && m_Colors == 3)
@@ -7959,7 +7981,7 @@ void CLASS tiff_head (struct tiff_hdr *th)
   strncpy (th->make, m_CameraMake, 64);
   strncpy (th->model, m_CameraModel, 64);
   strcpy (th->soft, "dcraw v"VERSION);
-  t = gmtime (&m_TimeStamp);
+  t = localtime (&m_TimeStamp);
   sprintf (th->date, "%04d:%02d:%02d %02d:%02d:%02d",
       t->tm_year+1900,t->tm_mon+1,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec);
   strncpy (th->artist, m_Artist, 64);

@@ -310,7 +310,8 @@ int photivoMain(int Argc, char *Argv[]) {
     // Argc must be 3,5 ...
     if (Argc % 2 != 1) {
       fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
-      exit(EXIT_FAILURE);
+      if(!(Argc == 2 && QString(Argv[1])=="-i"))
+        exit(EXIT_FAILURE);
     } else {
       short CurrentIndex = 1;
       while (CurrentIndex < Argc) {
