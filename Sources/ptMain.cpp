@@ -144,6 +144,7 @@ QString JobFilePattern;
 QString SettingsFilePattern;
 QString ProfilePattern;
 QString RawPattern;
+QString BitmapPattern;
 
 void InitStrings() {
   ChannelMixerFilePattern =
@@ -195,6 +196,16 @@ void InitStrings() {
                                                  "*.tif *.TIF *.Tif "
                                                  "*.x3f *.X3F *.X3f)"
                                                  ";;Bitmaps ("
+                                                 "*.jpeg *.JPEG *.Jpeg "
+                                                 "*.jpg *.JPG *.Jpg "
+                                                 "*.tiff *.TIFF *.Tiff "
+                                                 "*.tif *.TIF *.Tif "
+                                                 "*.bmp *.BMP *.Bmp "
+                                                 "*.ppm *.PPm *.Ppm "
+                                                 ";;All files (*.*)");
+
+  BitmapPattern =
+    QCoreApplication::translate("Global Strings","Bitmaps ("
                                                  "*.jpeg *.JPEG *.Jpeg "
                                                  "*.jpg *.JPG *.Jpg "
                                                  "*.tiff *.TIFF *.Tiff "
@@ -2388,7 +2399,8 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
       << "LensfunDatabaseDirectory"
       << "CameraColorProfile"
       << "PreviewColorProfile"
-      << "OutputColorProfile";
+      << "OutputColorProfile"
+      << "TextureOverlayFile";
 
   QStringList Locations;
   Locations << CurveFileNamesKeys
@@ -7641,6 +7653,136 @@ void CB_RGBContrast2ThresholdInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the EyeCandy Tab
+// Partim Texture Overlay
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_TextureOverlayModeChoice(const QVariant Choice) {
+  Settings->SetValue("TextureOverlayMode",Choice);
+  Update(ptProcessorPhase_EyeCandy);
+}
+
+void CB_TextureOverlayMaskChoice(const QVariant Choice) {
+  Settings->SetValue("TextureOverlayMask",Choice);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayButton() {
+  QString Directory = "";
+  if (Settings->GetString("TextureOverlayFile")!="") {
+    QFileInfo PathInfo(Settings->GetString("TextureOverlayFile"));
+    Directory = PathInfo.absolutePath();
+  } else {
+    Directory = Settings->GetString("UserDirectory");
+  }
+
+  QString TextureOverlayString = QFileDialog::getOpenFileName(NULL,
+    QObject::tr("Get texture bitmap file"),
+    Directory,
+    BitmapPattern);
+
+  if (0 == TextureOverlayString.size() ) {
+    // Canceled just return
+    return;
+  } else {
+    QFileInfo PathInfo(TextureOverlayString);
+    Settings->SetValue("TextureOverlayFile",PathInfo.absoluteFilePath());
+  }
+
+  // Reflect in gui.
+  if (Settings->GetInt("TextureOverlayMode")) {
+    // free old one
+    if (TheProcessor->m_Image_TextureOverlay)
+      delete TheProcessor->m_Image_TextureOverlay;
+
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlayClearButton() {
+  if (TheProcessor->m_Image_TextureOverlay) {
+    delete TheProcessor->m_Image_TextureOverlay;
+    TheProcessor->m_Image_TextureOverlay = NULL;
+  }
+  Settings->SetValue("TextureOverlayFile","");
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Settings->SetValue("TextureOverlayMode",0);
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlayOpacityInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayOpacity",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlaySaturationInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlaySaturation",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayExponentInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayExponent",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayInnerRadiusInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("TextureOverlayOuterRadius")));
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayOuterRadiusInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("TextureOverlayInnerRadius")));
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayRoundnessInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayRoundness",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayCenterXInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayCenterX",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayCenterYInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayCenterY",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlaySoftnessInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlaySoftness",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the EyeCandy Tab
 // Partim Gradual Overlay
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -8725,6 +8867,18 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(RGBContrast2AmountInput)
   M_Dispatch(RGBContrast2ThresholdInput)
+
+  M_Dispatch(TextureOverlayModeChoice)
+  M_Dispatch(TextureOverlayMaskChoice)
+  M_Dispatch(TextureOverlayOpacityInput)
+  M_Dispatch(TextureOverlaySaturationInput)
+  M_Dispatch(TextureOverlayExponentInput)
+  M_Dispatch(TextureOverlayInnerRadiusInput)
+  M_Dispatch(TextureOverlayOuterRadiusInput)
+  M_Dispatch(TextureOverlayRoundnessInput)
+  M_Dispatch(TextureOverlayCenterXInput)
+  M_Dispatch(TextureOverlayCenterYInput)
+  M_Dispatch(TextureOverlaySoftnessInput)
 
   M_Dispatch(GradualOverlay1Choice)
   M_Dispatch(GradualOverlay1AmountInput)

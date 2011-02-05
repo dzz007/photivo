@@ -329,6 +329,10 @@ void ptGroupBox::WriteSettings(const short Append) {
   if (m_Name == "TabCrop" && Settings->GetInt("Crop")==1)
     Keys << "CropX" << "CropY" << "CropW" << "CropH";
 
+  // Additional for texture overlay
+  if (m_Name == "TabTextureOverlay")
+    Keys << "TextureOverlayFile";
+
   QString SuggestedFileName = Settings->GetString("PresetDirectory") + "/preset.pts";
   QString FileName;
 

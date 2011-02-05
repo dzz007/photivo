@@ -87,6 +87,9 @@ ptImage* ptImage::ptGMOpenImage(const char* FileName,
                                 const short Intent,
                                 const short ScaleFactor,
                                 int& Success) {
+  Success = 0;
+
+  if (!QFile::exists(QString(FileName))) return this;
 
   Magick::Image image;
   try {
@@ -124,41 +127,47 @@ ptImage* ptImage::ptGMOpenImage(const char* FileName,
   image.write(0,0,NewWidth,NewHeight,"RGB",FloatPixel,ImageBuffer);
   m_Width = NewWidth;
 
-  NewHeight >>= ScaleFactor;
-  NewWidth >>= ScaleFactor;
+  float (*NewImage)[3] = NULL;
 
-  short Step = 1 << ScaleFactor;
-  int Average = pow(2,2 * ScaleFactor);
+  if (ScaleFactor != 0) {
+    NewHeight >>= ScaleFactor;
+    NewWidth >>= ScaleFactor;
 
-  float (*NewImage)[3] =
-    (float (*)[3]) CALLOC(NewWidth*NewHeight,sizeof(*NewImage));
-  ptMemoryError(NewImage,__FILE__,__LINE__);
+    short Step = 1 << ScaleFactor;
+    int Average = pow(2,2 * ScaleFactor);
+
+    NewImage = (float (*)[3]) CALLOC(NewWidth*NewHeight,sizeof(*NewImage));
+    ptMemoryError(NewImage,__FILE__,__LINE__);
 
 #pragma omp parallel for schedule(static)
-  for (uint16_t Row=0; Row < NewHeight*Step; Row+=Step) {
-    for (uint16_t Col=0; Col < NewWidth*Step; Col+=Step) {
-      float  PixelValue[3] = {0.0,0.0,0.0};
-      for (uint8_t sRow=0; sRow < Step; sRow++) {
-        for (uint8_t sCol=0; sCol < Step; sCol++) {
-          int32_t index = (Row+sRow)*m_Width+Col+sCol;
-          for (short c=0; c < 3; c++) {
-            PixelValue[c] += ImageBuffer[index][c];
+    for (uint16_t Row=0; Row < NewHeight*Step; Row+=Step) {
+      for (uint16_t Col=0; Col < NewWidth*Step; Col+=Step) {
+        float  PixelValue[3] = {0.0,0.0,0.0};
+        for (uint8_t sRow=0; sRow < Step; sRow++) {
+          for (uint8_t sCol=0; sCol < Step; sCol++) {
+            int32_t index = (Row+sRow)*m_Width+Col+sCol;
+            for (short c=0; c < 3; c++) {
+              PixelValue[c] += ImageBuffer[index][c];
+            }
           }
         }
-      }
-      for (short c=0; c < 3; c++) {
-        NewImage[Row/Step*NewWidth+Col/Step][c]
-          = PixelValue[c] / Average;
+        for (short c=0; c < 3; c++) {
+          NewImage[Row/Step*NewWidth+Col/Step][c]
+            = PixelValue[c] / Average;
+        }
       }
     }
+    FREE(ImageBuffer);
+  } else {
+    NewImage = ImageBuffer;
   }
-  FREE(ImageBuffer);
 
-  FREE(m_Image);
   m_Width  = NewWidth;
   m_Height = NewHeight;
   m_Colors = 3;
   m_ColorSpace = ColorSpace;
+
+  FREE(m_Image);
   m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
   ptMemoryError(m_Image,__FILE__,__LINE__);
 
@@ -410,6 +419,80 @@ ptImage* ptImage::ptGMResize(uint16_t Size, const short Filter) {
   // if (Width <= Height)  {
     // TempString.prepend("x");
   // }
+
+  image.zoom(TempString.toStdString());
+  image.modifyImage();
+
+  m_Width  = image.columns();
+  m_Height = image.rows();
+  m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
+  ptMemoryError(m_Image,__FILE__,__LINE__);
+
+  image.write(0,0,image.columns(),image.rows(),"RGB",ShortPixel,m_Image);
+  return this;
+}
+
+ptImage* ptImage::ptGMResize(uint16_t NewWidth, uint16_t NewHeight, const short Filter) {
+
+  uint16_t Width  = m_Width;
+  uint16_t Height = m_Height;
+
+  if (Width == NewWidth && Height == NewHeight) return this;
+
+  Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
+  FREE(m_Image);
+
+  switch (Filter) {
+    case ptIMFilter_Point:
+      image.filterType(PointFilter);
+      break;
+    case ptIMFilter_Box:
+      image.filterType(BoxFilter);
+      break;
+    case ptIMFilter_Triangle:
+      image.filterType(TriangleFilter);
+      break;
+    case ptIMFilter_Hermite:
+      image.filterType(HermiteFilter);
+      break;
+    case ptIMFilter_Hanning:
+      image.filterType(HanningFilter);
+      break;
+    case ptIMFilter_Hamming:
+      image.filterType(HammingFilter);
+      break;
+    case ptIMFilter_Blackman:
+      image.filterType(BlackmanFilter);
+      break;
+    case ptIMFilter_Gaussian:
+      image.filterType(GaussianFilter);
+      break;
+    case ptIMFilter_Quadratic:
+      image.filterType(QuadraticFilter);
+      break;
+    case ptIMFilter_Cubic:
+      image.filterType(CubicFilter);
+      break;
+    case ptIMFilter_Catrom:
+      image.filterType(CatromFilter);
+      break;
+    case ptIMFilter_Mitchell:
+      image.filterType(MitchellFilter);
+      break;
+    case ptIMFilter_Lanczos:
+      image.filterType(LanczosFilter);
+      break;
+    //~ case ptIMFilter_Bessel:
+      //~ image.filterType(BesselFilter);
+      //~ break;
+    //~ case ptIMFilter_Sinc:
+      //~ image.filterType(SincFilter);
+      //~ break;
+    default:
+      assert(0);
+  }
+
+  QString TempString = QString::number(NewWidth) + "x" + QString::number(NewHeight) + "!";
 
   image.zoom(TempString.toStdString());
   image.modifyImage();

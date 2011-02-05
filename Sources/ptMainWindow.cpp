@@ -416,6 +416,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(Tone1Color);
   Macro_ConnectSomeButton(Tone2Color);
 
+  Macro_ConnectSomeButton(TextureOverlay);
+  Macro_ConnectSomeButton(TextureOverlayClear);
+
   Macro_ConnectSomeButton(GradualOverlay1Color);
   Macro_ConnectSomeButton(GradualOverlay2Color);
 
@@ -1277,6 +1280,17 @@ void ptMainWindow::OnTone2ColorButtonClicked() {
 }
 
 
+void CB_TextureOverlayButton();
+void ptMainWindow::OnTextureOverlayButtonClicked() {
+  ::CB_TextureOverlayButton();
+}
+
+void CB_TextureOverlayClearButton();
+void ptMainWindow::OnTextureOverlayClearButtonClicked() {
+  ::CB_TextureOverlayClearButton();
+}
+
+
 void CB_GradualOverlay1ColorButton();
 void ptMainWindow::OnGradualOverlay1ColorButtonClicked() {
   ::CB_GradualOverlay1ColorButton();
@@ -1894,6 +1908,11 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("BWStylerMultG", 0);
     Settings->SetEnabled("BWStylerMultB", 0);
   }
+
+  // Texture Overlay
+  PathInfo.setFile(Settings->GetString("TextureOverlayFile"));
+  ShortFileName = PathInfo.baseName();
+  TextureOverlayText->setText(ShortFileName);
 
   // Color buttons
   QPixmap Pix(80, 14);
