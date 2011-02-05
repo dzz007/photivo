@@ -61,6 +61,8 @@ ptProcessor::ptProcessor(void (*ReportProgress)(const QString Message)) {
   m_Image_AfterLabEyeCandy = NULL;
   m_Image_AfterEyeCandy    = NULL;
 
+  m_Image_TextureOverlay   = NULL;
+
   //
   m_AutoExposureValue = 0.0;
 
@@ -2225,6 +2227,85 @@ void ptProcessor::Run(short Phase,
                                                  Settings->GetDouble("RGBContrast2Threshold"));
       }
 
+      // Texture Overlay
+
+      if (Settings->ToolIsActive("TabTextureOverlay")) {
+
+        m_ReportProgress(tr("Texture Overlay"));
+
+        if (!m_Image_TextureOverlay) m_Image_TextureOverlay = new ptImage();
+
+        if (!m_Image_TextureOverlay->m_Image) {
+          // No image in cache!
+          int Success = 0;
+
+          m_Image_TextureOverlay->ptGMOpenImage(
+            (Settings->GetString("TextureOverlayFile")).toAscii().data(),
+            Settings->GetInt("WorkColor"),
+            Settings->GetInt("PreviewColorProfileIntent"),
+            0,
+            Success);
+
+          if (Success == 0) {
+            QMessageBox::critical(0,"File not found","Please open a valid image for texture overlay.");
+            Settings->SetValue("TextureOverlayMode",0);
+          }
+        }
+
+        // Only proceed if we have an image!
+        if (m_Image_TextureOverlay->m_Image != NULL) {
+          // work on a temporary copy
+          ptImage *TempImage = new ptImage();
+          TempImage->Set(m_Image_TextureOverlay);
+
+          // Resize, original sized image in cache
+          TempImage->ptGMResize(m_Image_AfterEyeCandy->m_Width,
+                                m_Image_AfterEyeCandy->m_Height,
+                                ptIMFilter_Catrom);
+
+          double Value = ((Settings->GetDouble("TextureOverlaySaturation")-1.0)*100);
+          double VibranceMixer[3][3];
+
+          VibranceMixer[0][0] = 1.0+(Value/150.0);
+          VibranceMixer[0][1] = -(Value/300.0);
+          VibranceMixer[0][2] = VibranceMixer[0][1];
+          VibranceMixer[1][0] = VibranceMixer[0][1];
+          VibranceMixer[1][1] = VibranceMixer[0][0];
+          VibranceMixer[1][2] = VibranceMixer[0][1];
+          VibranceMixer[2][0] = VibranceMixer[0][1];
+          VibranceMixer[2][1] = VibranceMixer[0][1];
+          VibranceMixer[2][2] = VibranceMixer[0][0];
+
+          TempImage->MixChannels(VibranceMixer);
+
+
+
+          if (Settings->GetInt("TextureOverlayMask")) {
+            float *VignetteMask;
+            VignetteMask = TempImage->GetVignetteMask(Settings->GetInt("TextureOverlayMask")-1,
+                                                      Settings->GetInt("TextureOverlayExponent"),
+                                                      Settings->GetDouble("TextureOverlayInnerRadius"),
+                                                      Settings->GetDouble("TextureOverlayOuterRadius"),
+                                                      Settings->GetDouble("TextureOverlayRoundness"),
+                                                      Settings->GetDouble("TextureOverlayCenterX"),
+                                                      Settings->GetDouble("TextureOverlayCenterY"),
+                                                      Settings->GetDouble("TextureOverlaySoftness"));
+
+            m_Image_AfterEyeCandy->Overlay(TempImage->m_Image,
+                                           Settings->GetDouble("TextureOverlayOpacity"),
+                                           VignetteMask,
+                                           Settings->GetInt("TextureOverlayMode"));
+            FREE(VignetteMask);
+          } else {
+            m_Image_AfterEyeCandy->Overlay(TempImage->m_Image,
+                                           Settings->GetDouble("TextureOverlayOpacity"),
+                                           NULL,
+                                           Settings->GetInt("TextureOverlayMode"));
+          }
+          delete TempImage;
+        }
+      }
+
       // Gradual Overlay
 
       if (Settings->ToolIsActive("TabGradualOverlay1")) {
@@ -2595,19 +2676,24 @@ ptProcessor::~ptProcessor() {
               << m_Image_AfterRGB
               << m_Image_AfterLabCC
               << m_Image_AfterLabSN
-        << m_Image_AfterLabEyeCandy
-              << m_Image_AfterEyeCandy;
+              << m_Image_AfterLabEyeCandy
+              << m_Image_AfterEyeCandy
+              << m_Image_TextureOverlay;
   while(PointerList.size()) {
-    ptImage* CurrentPointer = PointerList[0];
-    delete CurrentPointer;
-    // Remove all elements equal to CurrentPointer.
-    short Index=0;
-    while (Index<PointerList.size()) {
-      if (CurrentPointer == PointerList[Index]) {
-        PointerList.removeAt(Index);
-      } else {
-        Index++;
+    if (PointerList[0] != NULL) {
+      ptImage* CurrentPointer = PointerList[0];
+      delete CurrentPointer;
+      // Remove all elements equal to CurrentPointer.
+      short Index=0;
+      while (Index<PointerList.size()) {
+        if (CurrentPointer == PointerList[Index]) {
+          PointerList.removeAt(Index);
+        } else {
+          Index++;
+        }
       }
+    } else {
+      PointerList.removeAt(0);
     }
   }
   if (m_ExifBuffer) FREE(m_ExifBuffer);

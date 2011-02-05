@@ -46,6 +46,9 @@ ptImage*  m_Image_AfterLabSN;
 ptImage*  m_Image_AfterLabEyeCandy;
 ptImage*  m_Image_AfterEyeCandy;
 
+// Sidecar image for texture overlay
+ptImage*  m_Image_TextureOverlay;
+
 // Reporting back
 void (*m_ReportProgress)(const QString Message);
 

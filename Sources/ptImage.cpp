@@ -2931,13 +2931,13 @@ ptImage* ptImage::ColorBoost(const double ValueA,
 
   double t1 = (1-ValueA)*WPH;
   double t2 = (1-ValueB)*WPH;
-  if (ValueA!=1) {
+  if (ValueA!=1.0) {
 #pragma omp parallel for
     for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
       m_Image[i][1] = CLIP((int32_t)(m_Image[i][1]*ValueA+t1));
     }
   }
-  if (ValueB!=1) {
+  if (ValueB!=1.0) {
 #pragma omp parallel for
     for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
       m_Image[i][2] = CLIP((int32_t)(m_Image[i][2]*ValueB+t2));
@@ -4941,52 +4941,25 @@ ptImage* ptImage::GradualOverlay(const uint16_t R,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::Vignette(const short VignetteMode,
-               const short Exponent,
-               const double Amount,
-               const double InnerRadius,
-               const double OuterRadius,
-               const double Roundness,
-               const double CenterX,
-               const double CenterY,
-               const double Softness) {
+                           const short Exponent,
+                           const double Amount,
+                           const double InnerRadius,
+                           const double OuterRadius,
+                           const double Roundness,
+                           const double CenterX,
+                           const double CenterY,
+                           const double Softness) {
 
-  float Radius = MIN(m_Width, m_Height)/2;
-  float OR = Radius*OuterRadius;
-  float IR = Radius*InnerRadius;
-  float Black = 0;
-  float White = 1.0;
+  float *VignetteMask;
 
-  float CX = (1+CenterX)*m_Width/2;
-  float CY = (1-CenterY)*m_Height/2;
-
-  float InversExponent = 1.0/ Exponent;
-  float coordinate = 0;
-  float Value = 0;
-  float (*VignetteMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*VignetteMask));
-  ptMemoryError(VignetteMask,__FILE__,__LINE__);
-  float dist = 0;
-  float Denom = 1/MAX((OR-IR),0.0001f);
-  float Factor1 = 1/powf(2,Roundness);
-  float Factor2 = 1/powf(2,-Roundness);
-
-#pragma omp parallel for schedule(static) default(shared) firstprivate(dist, Value, coordinate)
-  for (uint16_t Row=0; Row<m_Height; Row++) {
-    for (uint16_t Col=0; Col<m_Width; Col++) {
-      dist = powf(powf(fabsf(Col-CX)*Factor1,Exponent)
-                  + powf(fabsf(Row-CY)*Factor2,Exponent),InversExponent);
-      if (dist <= IR)
-        VignetteMask[Row*m_Width+Col] = Black;
-      else if (dist >= OR)
-        VignetteMask[Row*m_Width+Col] = White;
-      else {
-        coordinate = 1.0-(OR-dist)*Denom;
-        Value = (1.0-powf(cosf(coordinate*ptPI/2.0),50.0*Softness))
-                * powf(coordinate,0.07*Softness);
-        //~ Value = pow(cos(coordinate*ptPI/2),2);
-        VignetteMask[Row*m_Width+Col] = LIM(Value*White,0.0,1.0);
-      }
-    }
-  }
+  VignetteMask = GetVignetteMask(0,
+                                 Exponent,
+                                 InnerRadius,
+                                 OuterRadius,
+                                 Roundness,
+                                 CenterX,
+                                 CenterY,
+                                 Softness);
 
   switch (VignetteMode) {
     case ptVignetteMode_Soft:
@@ -5199,6 +5172,63 @@ float *ptImage::GetMask(const short MaskType,
 } // end OpenMP
 
   return dMask;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// GetVignetteMask
+//
+////////////////////////////////////////////////////////////////////////////////
+
+float *ptImage::GetVignetteMask(const short Inverted,
+                                const short Exponent,
+                                const double InnerRadius,
+                                const double OuterRadius,
+                                const double Roundness,
+                                const double CenterX,
+                                const double CenterY,
+                                const double Softness) {
+
+  float Radius = MIN(m_Width, m_Height)/2;
+  float OR = Radius*OuterRadius;
+  float IR = Radius*InnerRadius;
+  float Black = Inverted?1.0:0.0;
+  float White = Inverted?0.0:1.0;
+  float ColorDiff = White - Black;
+
+  float CX = (1+CenterX)*m_Width/2;
+  float CY = (1-CenterY)*m_Height/2;
+
+  float InversExponent = 1.0/ Exponent;
+  float coordinate = 0;
+  float Value = 0;
+  float (*VignetteMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*VignetteMask));
+  ptMemoryError(VignetteMask,__FILE__,__LINE__);
+  float dist = 0;
+  float Denom = 1/MAX((OR-IR),0.0001f);
+  float Factor1 = 1/powf(2,Roundness);
+  float Factor2 = 1/powf(2,-Roundness);
+
+  #pragma omp parallel for schedule(static) default(shared) firstprivate(dist, Value, coordinate)
+  for (uint16_t Row=0; Row<m_Height; Row++) {
+    for (uint16_t Col=0; Col<m_Width; Col++) {
+      dist = powf(powf(fabsf((float)Col-CX)*Factor1,Exponent)
+                  + powf(fabsf((float)Row-CY)*Factor2,Exponent),InversExponent);
+      if (dist <= IR)
+        VignetteMask[Row*m_Width+Col] = Black;
+      else if (dist >= OR)
+        VignetteMask[Row*m_Width+Col] = White;
+      else {
+        coordinate = 1.0-(OR-dist)*Denom;
+        Value = (1.0-powf(cosf(coordinate*ptPI/2.0),50.0*Softness))
+                * powf(coordinate,0.07*Softness);
+        //~ Value = pow(cos(coordinate*ptPI/2),2);
+        VignetteMask[Row*m_Width+Col] = LIM(Value*ColorDiff+Black,0.0,1.0);
+      }
+    }
+  }
+
+  return VignetteMask;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

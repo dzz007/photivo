@@ -372,6 +372,12 @@ const short ptOverlayMode_ColorBurn    = 11;
 const short ptOverlayMode_GammaDark    = 12;
 const short ptOverlayMode_GammaBright  = 13;
 
+// OverlayMaskMode
+
+const short ptOverlayMaskMode_FullImage   = 0;
+const short ptOverlayMaskMode_Vignette    = 1;
+const short ptOverlayMaskMode_InvVignette = 2;
+
 // VignetteMode
 
 const short ptVignetteMode_None  = 0;
