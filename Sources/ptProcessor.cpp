@@ -1822,6 +1822,25 @@ void ptProcessor::Run(short Phase,
         TRACEMAIN("Done saturation Curve at %d ms.",Timer.elapsed());
       }
 
+      // Hue Curve
+
+      if (Settings->ToolIsActive("TabHueCurve")) {
+        m_ReportProgress(tr("Applying hue curve"));
+
+        //Postponed RGBToLab for performance.
+        if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
+          m_Image_AfterLabEyeCandy->RGBToLab();
+
+          TRACEMAIN("Done conversion to LAB at %d ms.",
+                    Timer.elapsed());
+        }
+
+        m_Image_AfterLabEyeCandy->ApplyHueCurve(Curve[ptCurveChannel_Hue],
+                                                Settings->GetInt("HueCurveType"));
+
+        TRACEMAIN("Done hue Curve at %d ms.",Timer.elapsed());
+      }
+
       // L Curve
 
       if (Settings->ToolIsActive("TabLCurve")) {

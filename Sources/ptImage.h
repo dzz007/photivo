@@ -427,6 +427,9 @@ ptImage* ApplyCurve(const ptCurve *Curve,
 
 ptImage* ApplyLByHueCurve(const ptCurve *Curve);
 
+ptImage* ApplyHueCurve(const ptCurve *Curve,
+                       const short Type);
+
 ptImage* ApplySaturationCurve(const ptCurve *Curve,
                               const short Mode,
                               const short Type);

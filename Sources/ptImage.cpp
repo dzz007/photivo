@@ -1506,6 +1506,69 @@ ptImage* ptImage::ApplyLByHueCurve(const ptCurve *Curve) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Apply Hue Curve
+//
+////////////////////////////////////////////////////////////////////////////////
+
+ptImage* ptImage::ApplyHueCurve(const ptCurve *Curve,
+                                const short Type) {
+
+  assert (m_ColorSpace == ptSpace_Lab);
+  // neutral value for a* and b* channel
+  const float WPH = 0x8080;
+  const float ScalePi = ptPI / 0x7fff;
+  const float InvScalePi = 0x7fff / ptPI;
+
+  float ValueA = 0.0;
+  float ValueB = 0.0;
+  float Col = 0.0;
+  float Hue = 0.0;
+
+  if (Type == 0) { // by chroma
+#pragma omp parallel for schedule(static) private(ValueA, ValueB, Col, Hue)
+      for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
+
+        ValueA = (float)m_Image[i][1]-WPH;
+        ValueB = (float)m_Image[i][2]-WPH;
+
+        if (ValueA == 0.0 && ValueB == 0.0) {
+          Hue = 0;   // value for grey pixel
+        } else {
+          Hue = atan2f(ValueB,ValueA);
+        }
+        while (Hue < 0) Hue += 2.*ptPI;
+        Col = powf(ValueA * ValueA + ValueB * ValueB, 0.5);
+
+        Hue += ((float)Curve->m_Curve[CLIP((int32_t)(Hue*InvScalePi))]-(float)0x7fff)*ScalePi;
+
+        m_Image[i][1] = CLIP((int32_t)(cosf(Hue)*Col)+WPH);
+        m_Image[i][2] = CLIP((int32_t)(sinf(Hue)*Col)+WPH);
+      }
+  } else { // by luma
+#pragma omp parallel for schedule(static) private(ValueA, ValueB, Col, Hue)
+    for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
+
+      ValueA = (float)m_Image[i][1]-WPH;
+      ValueB = (float)m_Image[i][2]-WPH;
+
+      if (ValueA == 0.0 && ValueB == 0.0) {
+        Hue = 0;   // value for grey pixel
+      } else {
+        Hue = atan2f(ValueB,ValueA);
+      }
+      Col = powf(ValueA * ValueA + ValueB * ValueB, 0.5);
+
+      Hue += ((float)Curve->m_Curve[m_Image[i][0]]-(float)0x7fff)*ScalePi;
+
+      m_Image[i][1] = CLIP((int32_t)(cosf(Hue)*Col)+WPH);
+      m_Image[i][2] = CLIP((int32_t)(sinf(Hue)*Col)+WPH);
+    }
+  }
+  return this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Apply Saturation Curve
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1520,11 +1583,12 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
   assert (m_ColorSpace == ptSpace_Lab);
   // neutral value for a* and b* channel
   const float WPH = 0x8080;
+  const float InvScalePi = 0x7fff / ptPI;
 
   float ValueA = 0.0;
   float ValueB = 0.0;
 
-  if (Type == 0) { // by luma
+  if (Type == 0) { // by chroma
 #pragma omp parallel for schedule(static) private(ValueA, ValueB)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by hue
@@ -1538,7 +1602,7 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
       }
       while (Hue < 0) Hue += 2.*ptPI;
 
-      float Factor = Curve->m_Curve[CLIP((int32_t)(Hue/ptPI*WPH))]/(float)0x7fff;
+      float Factor = Curve->m_Curve[CLIP((int32_t)(Hue*InvScalePi))]/(float)0x7fff;
       if (Factor == 1.0) continue;
       Factor *= Factor;
       float m = 0;
@@ -1558,7 +1622,7 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
       m_Image[i][1] = CLIP((int32_t)(m_Image[i][1] * m + WPH * (1. - m)));
       m_Image[i][2] = CLIP((int32_t)(m_Image[i][2] * m + WPH * (1. - m)));
     }
-  } else { // by chroma
+  } else { // by luma
 #pragma omp parallel for schedule(static) private(ValueA, ValueB)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by luminance

@@ -191,6 +191,8 @@ void OnCurvebOpenButtonClicked();
 void OnCurvebSaveButtonClicked();
 void OnCurveLByHueOpenButtonClicked();
 void OnCurveLByHueSaveButtonClicked();
+void OnCurveHueOpenButtonClicked();
+void OnCurveHueSaveButtonClicked();
 void OnCurveTextureOpenButtonClicked();
 void OnCurveTextureSaveButtonClicked();
 void OnCurveShadowsHighlightsOpenButtonClicked();

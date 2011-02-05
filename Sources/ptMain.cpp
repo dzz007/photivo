@@ -74,8 +74,8 @@ ptCurve*  RGBContrastCurve  = NULL;
 ptCurve*  ExposureCurve     = NULL;
 ptCurve*  ContrastCurve     = NULL;
 // RGB,R,G,B,L,a,b,Base
-ptCurve*  Curve[14]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-ptCurve*  BackupCurve[14]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  Curve[15]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  BackupCurve[15]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 // I don't manage to init statically following ones. Done in InitCurves.
 QStringList CurveKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
@@ -110,7 +110,7 @@ ptImage*  HistogramImage   = NULL;
 ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
-ptCurveWindow*     CurveWindow[14] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurveWindow*     CurveWindow[15] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 // Theming
 ptTheme* Theme = NULL;
@@ -347,7 +347,8 @@ int photivoMain(int Argc, char *Argv[]) {
             << "CurveLByHue"
             << "CurveTexture"
             << "CurveShadowsHighlights"
-            << "CurveDenoise";
+            << "CurveDenoise"
+            << "CurveHue";
 
   CurveFileNamesKeys << "CurveFileNamesRGB"
                      << "CurveFileNamesR"
@@ -362,7 +363,8 @@ int photivoMain(int Argc, char *Argv[]) {
                      << "CurveFileNamesLByHue"
                      << "CurveFileNamesTexture"
                      << "CurveFileNamesShadowsHighlights"
-                     << "CurveFileNamesDenoise";
+                     << "CurveFileNamesDenoise"
+                     << "CurveFileNamesHue";
 
   CurveBackupKeys = CurveKeys;
 
@@ -604,7 +606,8 @@ int photivoMain(int Argc, char *Argv[]) {
                              MainWindow->LByHueCurveCentralWidget,
                              MainWindow->TextureCurveCentralWidget,
                              MainWindow->ShadowsHighlightsCurveCentralWidget,
-                             MainWindow->DenoiseCurveCentralWidget};
+                             MainWindow->DenoiseCurveCentralWidget,
+                             MainWindow->HueCurveCentralWidget};
 
   for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
     Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
@@ -1087,7 +1090,7 @@ void BlockTools(const short state) {
     MainWindow->ControlFrame->setEnabled(0);
     Settings->SetValue("BlockTools",1);
   } else { //enable tools
-    ViewWindow->StatusReport(NULL);
+    ViewWindow->StatusReport(0);
     MainWindow->ControlFrame->setEnabled(1);
     Settings->SetValue("BlockTools",0);
   }
@@ -2475,21 +2478,17 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     // often interpreted as strings even if they could be int or so.
     const QVariant::Type TargetType = (Settings->GetValue(Key)).type();
     if (Tmp.type() != TargetType) {
-      switch (TargetType) {
-        case QVariant::Int:
-        case QVariant::UInt:
-          Tmp = Tmp.toInt();
-          break;
-        case QVariant::Double:
-        case QMetaType::Float:
-          Tmp = Tmp.toDouble();
-          break;
-        case QVariant::StringList:
-          Tmp = Tmp.toStringList();
-          break;
-        default:
-          ptLogError(ptError_Argument,"Unexpected type %d",TargetType);
-          assert(0);
+      if (TargetType == QVariant::Int ||
+        TargetType == QVariant::UInt) {
+        Tmp = Tmp.toInt();
+      } else if (TargetType == QVariant::Double ||
+                 (QMetaType::Type) TargetType == QMetaType::Float) {
+        Tmp = Tmp.toDouble();
+      } else if (TargetType == QVariant::StringList) {
+        Tmp = Tmp.toStringList();
+      } else {
+        ptLogError(ptError_Argument,"Unexpected type %d",TargetType);
+        assert(0);
       }
     }
     Settings->SetValue(Key,Tmp);
@@ -5214,9 +5213,9 @@ void CB_CurveOpenButton(const int Channel) {
     return;
   }
   if (Curve[Channel]->m_IntendedChannel != Channel) {
-    const QString IntendedChannel[14] = {"RGB","R","G","B","L","a","b",
+    const QString IntendedChannel[15] = {"RGB","R","G","B","L","a","b",
       "Saturation","Base","After gamma","L by hue","Texture",
-      "Shadows / Highlights","Denoise"};
+      "Shadows / Highlights","Denoise","Hue"};
     QString Message = QObject::tr("This curve is meant for channel ") +
                         IntendedChannel[Curve[Channel]->m_IntendedChannel] +
                         QObject::tr(". Continue anyway ?");
@@ -5281,6 +5280,10 @@ void CB_CurvebOpenButton() {
 
 void CB_CurveLByHueOpenButton() {
   CB_CurveOpenButton(ptCurveChannel_LByHue);
+}
+
+void CB_CurveHueOpenButton() {
+  CB_CurveOpenButton(ptCurveChannel_Hue);
 }
 
 void CB_CurveTextureOpenButton() {
@@ -5371,6 +5374,10 @@ void CB_CurveLByHueSaveButton() {
   CB_CurveSaveButton(ptCurveChannel_LByHue);
 }
 
+void CB_CurveHueSaveButton() {
+  CB_CurveSaveButton(ptCurveChannel_Hue);
+}
+
 void CB_CurveTextureSaveButton() {
   CB_CurveSaveButton(ptCurveChannel_Texture);
 }
@@ -5452,6 +5459,7 @@ void CB_CurveChoice(const int Channel, const int Choice) {
         Update(ptProcessorPhase_LabSN);
         break;
       case ptCurveChannel_LByHue :
+      case ptCurveChannel_Hue :
       case ptCurveChannel_Saturation :
       case ptCurveChannel_L :
       case ptCurveChannel_a :
@@ -5504,6 +5512,10 @@ void CB_CurveLByHueChoice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_LByHue,Choice.toInt());
 }
 
+void CB_CurveHueChoice(const QVariant Choice) {
+  CB_CurveChoice(ptCurveChannel_Hue,Choice.toInt());
+}
+
 void CB_CurveTextureChoice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_Texture,Choice.toInt());
 }
@@ -5542,6 +5554,7 @@ void CB_CurveWindowRecalc(const short Channel) {
       Update(ptProcessorPhase_LabSN);
       break;
     case ptCurveChannel_LByHue :
+    case ptCurveChannel_Hue :
     case ptCurveChannel_Saturation :
     case ptCurveChannel_L :
     case ptCurveChannel_a :
@@ -8434,6 +8447,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(CurveLaChoice)
   M_Dispatch(CurveLbChoice)
   M_Dispatch(CurveLByHueChoice)
+  M_Dispatch(CurveHueChoice)
   M_Dispatch(CurveTextureChoice)
   M_Dispatch(CurveShadowsHighlightsChoice)
   M_Dispatch(CurveDenoiseChoice)
