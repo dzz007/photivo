@@ -457,6 +457,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveLa"                     ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("a curve")},
     {"CurveLb"                     ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("b curve")},
     {"CurveLByHue"                 ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("L by hue curve")},
+    {"CurveHue"                    ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Hue curve")},
     {"CurveTexture"                ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Texture curve")},
     {"CurveSaturation"             ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Saturation curve")},
     {"BaseCurve"                   ,ptGT_Choice       ,1,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Base curve")},
@@ -604,6 +605,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveFileNamesLa"                     ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesLb"                     ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesLByHue"                 ,0         ,QStringList()                                       ,1},
+    {"CurveFileNamesHue"                    ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesTexture"                ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesSaturation"             ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesBase"                   ,0         ,QStringList()                                       ,1},
@@ -654,6 +656,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"SatCurveType"                         ,1         ,0                                                   ,1},
     {"TextureCurveType"                     ,1         ,0                                                   ,1},
     {"DenoiseCurveType"                     ,1         ,0                                                   ,1},
+    {"HueCurveType"                         ,1         ,0                                                   ,1},
     {"FullOutput"                           ,9         ,0                                                   ,0},
     {"HiddenTools"                          ,0         ,QStringList()                                       ,1},
     {"BlockedTools"                         ,0         ,QStringList()                                       ,1},
@@ -744,21 +747,17 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
       // often interpreted as strings even if they could be int or so.
       const QVariant::Type TargetType = Setting->DefaultValue.type();
       if (Setting->Value.type() != TargetType) {
-        switch (TargetType) {
-          case QVariant::Int:
-          case QVariant::UInt:
-            Setting->Value = Setting->Value.toInt();
-            break;
-          case QVariant::Double:
-          case QMetaType::Float:
-            Setting->Value = Setting->Value.toDouble();
-            break;
-          case QVariant::StringList:
-            Setting->Value = Setting->Value.toStringList();
-            break;
-          default:
-            ptLogError(ptError_Argument,"Unexpected type %d",TargetType);
-            assert(0);
+        if (TargetType == QVariant::Int ||
+          TargetType == QVariant::UInt) {
+          Setting->Value = Setting->Value.toInt();
+        } else if (TargetType == QVariant::Double ||
+                   (QMetaType::Type) TargetType == QMetaType::Float) {
+          Setting->Value = Setting->Value.toDouble();
+        } else if (TargetType == QVariant::StringList) {
+          Setting->Value = Setting->Value.toStringList();
+        } else {
+          ptLogError(ptError_Argument,"Unexpected type %d",TargetType);
+          assert(0);
         }
       }
       // Seen above this shouldn't happen, but better safe then sorry.
@@ -1728,6 +1727,9 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabSaturationCurve") {
       Info.Name = "Lab saturation curve";
       Info.IsActive = Settings->GetInt("CurveSaturation")!=0?1:0;
+  } else if (GuiName == "TabHueCurve") {
+      Info.Name = "Lab hue curve";
+      Info.IsActive = Settings->GetInt("CurveHue")!=0?1:0;
   } else if (GuiName == "TabLCurve") {
       Info.Name = "Lab luminance curve";
       Info.IsActive = Settings->GetInt("CurveL")!=0?1:0;

@@ -398,6 +398,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(CurvebSave);
   Macro_ConnectSomeButton(CurveLByHueOpen);
   Macro_ConnectSomeButton(CurveLByHueSave);
+  Macro_ConnectSomeButton(CurveHueOpen);
+  Macro_ConnectSomeButton(CurveHueSave);
   Macro_ConnectSomeButton(CurveTextureOpen);
   Macro_ConnectSomeButton(CurveTextureSave);
   Macro_ConnectSomeButton(CurveSaturationOpen);
@@ -1190,6 +1192,16 @@ void ptMainWindow::OnCurveLByHueOpenButtonClicked() {
 void CB_CurveLByHueSaveButton();
 void ptMainWindow::OnCurveLByHueSaveButtonClicked() {
   ::CB_CurveLByHueSaveButton();
+}
+
+void CB_CurveHueOpenButton();
+void ptMainWindow::OnCurveHueOpenButtonClicked() {
+  ::CB_CurveHueOpenButton();
+}
+
+void CB_CurveHueSaveButton();
+void ptMainWindow::OnCurveHueSaveButtonClicked() {
+  ::CB_CurveHueSaveButton();
 }
 
 void CB_CurveTextureOpenButton();
