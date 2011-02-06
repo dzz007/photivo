@@ -47,7 +47,8 @@ extern ptTheme* Theme;
 ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
                                  QWidget* Parent)
 
-  : QAbstractScrollArea(Parent) {
+  : QAbstractScrollArea(Parent)
+{
 
   m_RelatedImage = RelatedImage; // don't delete that at cleanup !
   m_ZoomFactor   = 1.0;
@@ -67,8 +68,9 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_GridX            = 0;
   m_GridY            = 0;
   m_DrawRectangle    = 0;
-  m_RectangleMode    = 0;
+  m_CropGuidelines   = 0;
   m_CropLightsOut    = Settings->m_IniSettings->value("CropLightsOut",0).toInt();
+  m_CropAllowed      = 0;
   m_FixedAspectRatio = 0;
 
   //Avoiding tricky blacks at zoom fit.
@@ -273,13 +275,14 @@ ptViewWindow::~ptViewWindow() {
 void ptViewWindow::AllowSelection(const short  Allow,
                                   const short  FixedAspectRatio,
                                   const double HOverW,
-                                  const short  RectangleMode) {
+                                  const short  CropGuidelines)
+{
   m_SelectionAllowed = Allow;
   m_SelectionOngoing = Allow;
   m_FixedAspectRatio = FixedAspectRatio;
   m_HOverW           = HOverW;
-  m_RectangleMode    = RectangleMode;
-  if (RectangleMode == ptRectangleMode_Line) {
+  m_CropGuidelines   = CropGuidelines;
+  if (CropGuidelines == ptCropGuidelines_Line) {
     m_DrawLine = 1;
   } else {
     m_DrawLine = 0;
@@ -289,6 +292,31 @@ void ptViewWindow::AllowSelection(const short  Allow,
 short ptViewWindow::SelectionOngoing() {
   return m_SelectionOngoing;
 }
+
+
+void AllowCrop(const short Allow,
+               const int AspectRatioW = 0,
+               const int AspectRatioH = 0,
+               const short CropGuidelines = ptCropGuidelines_None)
+{
+  m_CropAllowed = Allow;
+  m_FixedAspectRatio = (AspectRatioW==0) || (AspectRatioH==0);
+  if (m_FixedAspectRatio) {
+    m_CropARW = AspectRatioW;
+    m_CropARH = AspectRatioH;
+  }
+  m_CropGuidelines = CropGuidelines;
+  if (CropGuidelines == ptCropGuidelines_Line) {
+    m_DrawLine = 1;
+  } else {
+    m_DrawLine = 0;
+  }
+}
+
+short ptViewWindow::CropOngoing() {
+  return m_CropAllowed;
+}
+
 
 uint16_t ptViewWindow::GetSelectionX() {
   uint16_t X = MIN(m_StartDragX,m_EndDragX);
@@ -644,17 +672,17 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
       Painter.setPen(Pen);
       Painter.drawRect(m_StartDragX, m_StartDragY,
                        m_EndDragX-m_StartDragX,m_EndDragY-m_StartDragY);
-      if (m_RectangleMode == ptRectangleMode_RuleThirds) {
+      if (m_CropGuidelines == ptCropGuidelines_RuleThirds) {
         Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)/3), m_StartDragY,
              (int)((m_EndDragX-m_StartDragX)/3),m_EndDragY-m_StartDragY);
         Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)/3),
              m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)/3));
-      } else if (m_RectangleMode == ptRectangleMode_GoldenRatio) {
+      } else if (m_CropGuidelines == ptCropGuidelines_GoldenRatio) {
         Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)*5/13), m_StartDragY,
              (int)((m_EndDragX-m_StartDragX)*3/13),m_EndDragY-m_StartDragY);
         Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)*5/13),
              m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)*3/13));
-      } else if (m_RectangleMode == ptRectangleMode_Diagonal) {
+      } else if (m_CropGuidelines == ptCropGuidelines_Diagonals) {
         int Length = MIN(ABS(m_EndDragX-m_StartDragX),ABS(m_EndDragY-m_StartDragY));
         Painter.drawLine(m_StartDragX, m_StartDragY,
              m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),

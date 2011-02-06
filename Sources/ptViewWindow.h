@@ -45,24 +45,44 @@ ptViewWindow(const ptImage*       RelatedImage,
 void UpdateView(const ptImage* NewRelatedImage = NULL);
 
 
+/* CROPPING
+   Photivo has two cropping modes used for different purposes.
+   - Old-style cropping (constantly pressing mouse button): Managed by AllowSelection and
+     SelectionOngoing. Used for spot WB and histogram "crop".
+     TODO: Remove all the fixed AR stuff that is not needed here
+   - New-style cropping (similar to Gimp): Managed by AllowCrop and CropOngoing.
+     Used for image cropping.
+*/
 // Allow to select in the image. (push/drag/release events).
 // Argument is 0 or 1.
 // If FixedAspectRatio, then the selection box has the HOverW ratio.
 void AllowSelection(const short  Allow,
                     const short  FixedAspectRatio = 0,
                     const double HOverW = 2.0/3,
-                    const short  RectangleMode = ptRectangleMode_None);
+                    const short  CropGuidelines = ptCropGuidelines_None);
 
 // Returns 1 if selection process is ongoing.
 short SelectionOngoing();
 
-// Results of selection.
+// New-style cropping. Only for actual image crop, NOT for histogram or spot WB "crop".
+// Allow is 0 (end crop) or 1 (start crop or change crop parameters)
+// Any of the AR parameters being 0 means: no AR restriction
+void AllowCrop(const short Allow,
+               const int AspectRatioW = 0,
+               const int AspectRatioH = 0,
+               const short CropGuidelines = ptCropGuidelines_None);
+
+// Returns 1 if crop process is ongoing.
+short ptViewWindow::CropOngoing();
+
+    // Results of selection.
 // Expressed in terms of the RelatedImage.
 uint16_t GetSelectionX();
 uint16_t GetSelectionY();
 uint16_t GetSelectionWidth();
 uint16_t GetSelectionHeight();
 double   GetSelectionAngle();
+
 
 // Grid
 void Grid(const short Enabled, const short GridX, const short GridY);
@@ -86,8 +106,6 @@ int16_t              m_StartDragX;
 int16_t              m_StartDragY;
 int16_t              m_EndDragX;
 int16_t              m_EndDragY;
-short                m_FixedAspectRatio;
-double               m_HOverW;
 uint16_t             m_StartX; // Offset of the shown part into the image.
 uint16_t             m_StartY;
 uint16_t             m_XOffsetInVP; // For images smaller than viewport
@@ -134,8 +152,14 @@ short       m_Grid;
 short       m_GridX;
 short       m_GridY;
 short       m_DrawRectangle;
-short       m_RectangleMode;
+short       m_CropGuidelines;
 short       m_CropLightsOut;
+
+short       m_CropAllowed;
+short       m_FixedAspectRatio;
+double      m_HOverW;
+int         m_CropARW;
+int         m_CropARH;
 
 QAction*    m_AtnExpIndicate;
 QAction*    m_AtnExpIndR;
