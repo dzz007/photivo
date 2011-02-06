@@ -1913,6 +1913,23 @@ void ptMainWindow::UpdateSettings() {
   PathInfo.setFile(Settings->GetString("TextureOverlayFile"));
   ShortFileName = PathInfo.baseName();
   TextureOverlayText->setText(ShortFileName);
+  if (Settings->GetInt("TextureOverlayMask") > 0) {
+    Settings->SetEnabled("TextureOverlayExponent",1);
+    Settings->SetEnabled("TextureOverlayInnerRadius",1);
+    Settings->SetEnabled("TextureOverlayOuterRadius",1);
+    Settings->SetEnabled("TextureOverlayRoundness",1);
+    Settings->SetEnabled("TextureOverlayCenterX",1);
+    Settings->SetEnabled("TextureOverlayCenterY",1);
+    Settings->SetEnabled("TextureOverlaySoftness",1);
+  } else {
+    Settings->SetEnabled("TextureOverlayExponent",0);
+    Settings->SetEnabled("TextureOverlayInnerRadius",0);
+    Settings->SetEnabled("TextureOverlayOuterRadius",0);
+    Settings->SetEnabled("TextureOverlayRoundness",0);
+    Settings->SetEnabled("TextureOverlayCenterX",0);
+    Settings->SetEnabled("TextureOverlayCenterY",0);
+    Settings->SetEnabled("TextureOverlaySoftness",0);
+  }
 
   // Color buttons
   QPixmap Pix(80, 14);

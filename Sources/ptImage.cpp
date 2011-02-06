@@ -1302,6 +1302,64 @@ ptImage* ptImage::Set(const ptImage *Origin) { // Always deep
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Set scaled
+//
+////////////////////////////////////////////////////////////////////////////////
+
+ptImage* ptImage::SetScaled(const ptImage *Origin,
+                            const short ScaleFactor) {
+
+  assert(NULL != Origin);
+
+  m_Width              = Origin->m_Width;
+  m_Height             = Origin->m_Height;
+  m_Colors             = Origin->m_Colors;
+  m_ColorSpace         = Origin->m_ColorSpace;
+
+  // And a deep copying of the image.
+  // Free a maybe preexisting.
+  FREE(m_Image);
+
+  if (ScaleFactor == 0) {
+    // Allocate new.
+    m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
+    ptMemoryError(m_Image,__FILE__,__LINE__);
+    memcpy(m_Image,Origin->m_Image,m_Width*m_Height*sizeof(*m_Image));
+  } else {
+    m_Width >>= ScaleFactor;
+    m_Height >>= ScaleFactor;
+
+    short Step = 1 << ScaleFactor;
+    float InvAverage = 1.0/powf(2.0,2.0 * ScaleFactor);
+
+    // Allocate new.
+    m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
+    ptMemoryError(m_Image,__FILE__,__LINE__);
+
+#pragma omp parallel for schedule(static)
+    for (uint16_t Row=0; Row < m_Height; Row++) {
+      for (uint16_t Col=0; Col < m_Width; Col++) {
+        float PixelValue[3] = {0.0,0.0,0.0};
+        for (uint8_t sRow=0; sRow < Step; sRow++) {
+          for (uint8_t sCol=0; sCol < Step; sCol++) {
+            int32_t index = (Row*Step+sRow)*Origin->m_Width+Col*Step+sCol;
+            for (short c=0; c < 3; c++) {
+              PixelValue[c] += Origin->m_Image[index][c];
+            }
+          }
+        }
+        for (short c=0; c < 3; c++) {
+          m_Image[Row*m_Width+Col][c]
+            = (int32_t) (PixelValue[c] * InvAverage);
+        }
+      }
+    }
+  }
+  return this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // IndicateOverExposure
 //
 ////////////////////////////////////////////////////////////////////////////////

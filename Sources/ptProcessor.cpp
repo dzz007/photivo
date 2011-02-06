@@ -54,7 +54,7 @@ ptProcessor::ptProcessor(void (*ReportProgress)(const QString Message)) {
 
   // Cached version at different points.
   m_Image_AfterDcRaw       = NULL;
-  m_Image_AfterLensfun     = NULL;
+  m_Image_AfterGeometry     = NULL;
   m_Image_AfterRGB         = NULL;
   m_Image_AfterLabCC       = NULL;
   m_Image_AfterLabSN       = NULL;
@@ -146,11 +146,7 @@ void ptProcessor::Run(short Phase,
     // have to recalculate again everything.
     // (Only important when further processing on same image,
     // but doesn't hurt with a new image as that starts anyway here.
-    if (Settings->GetInt("IsRAW") == 1) {
-      Phase    = ptProcessorPhase_Raw;
-    } else {
-      Phase    = ptProcessorPhase_AfterRAW;
-    }
+    Phase    = ptProcessorPhase_Raw;
     SubPhase = ptProcessorPhase_Load;
     WithIdentify = 1;
   };
@@ -169,6 +165,14 @@ void ptProcessor::Run(short Phase,
 
   // Status report
   ::ViewWindowStatusReport(2);
+
+  // correction for bitmaps
+  if (!Settings->GetInt("IsRAW")) {
+    if (Phase == ptProcessorPhase_Raw &&
+        SubPhase > ptProcessorPhase_Load) {
+      Phase = ptProcessorPhase_Geometry;
+    }
+  }
 
   switch(Phase) {
     case ptProcessorPhase_Raw :
@@ -194,232 +198,27 @@ void ptProcessor::Run(short Phase,
       // 0 for full, 1 for half, 2 for quarter (useable in >> operators)
       Settings->SetValue("Scaled",m_DcRaw->m_UserSetting_HalfSize);
 
-      TRACEMAIN("Starting DcRaw at %d ms.",Timer.elapsed());
-
-      switch (SubPhase) {
-        case ptProcessorPhase_Load :
-
-          m_ReportProgress(tr("Reading RAW file"));
-
-          if (WithIdentify) m_DcRaw->Identify();
-          m_DcRaw->RunDcRaw_Phase1();
-
-          // Do not forget !
-          // Not in DcRawToSettings as at this point it is
-          // not yet influenced by HalfSize. Later it is and
-          // it would be wrongly overwritten then.
-          Settings->SetValue("ImageW",m_DcRaw->m_ReportedWidth);
-          Settings->SetValue("ImageH",m_DcRaw->m_ReportedHeight);
-
-          TRACEKEYVALS("ImageW","%d",Settings->GetInt("ImageW"));
-          TRACEKEYVALS("ImageH","%d",Settings->GetInt("ImageH"));
-
-          m_ReportProgress(tr("Reading exif info"));
-
-          if (ProcessorMode != ptProcessorMode_Thumb) {
-            // Read Exif
-            ReadExifBuffer();
-          }
-          TRACEMAIN("Opened RAW at %d ms.",
-                    Timer.elapsed());
-
-        case ptProcessorPhase_Demosaic :
-
-          m_ReportProgress(tr("Demosaicing"));
-
-          // Settings->GetInt("JobMode") causes NoCache
-          m_DcRaw->RunDcRaw_Phase2(Settings->GetInt("JobMode"));
-
-          TRACEMAIN("Done Color Scaling and Interpolation at %d ms.",
-                    Timer.elapsed());
-
-        case ptProcessorPhase_Highlights :
-
-          m_ReportProgress(tr("Recovering highlights"));
-
-          // Settings->GetInt("JobMode") causes NoCache
-          m_DcRaw->RunDcRaw_Phase3(Settings->GetInt("JobMode"));
-
-          TRACEMAIN("Done Highlights at %d ms.",Timer.elapsed());
-
-          // Already here we want the output profile.
-          // It will be applied, not in the pipe but on a
-          // tee for preview reasons.
-          // Find the output profile if we are in that mode.
-          if (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Profile) {
-            QString Identification = m_DcRaw->m_CameraAdobeIdentification;
-            for (int i=0;i<Identification.size();i++) {
-              if (Identification[i].isSpace()) Identification[i]='_';
-              // Some contain '*' which is problem under Windows.
-              if (Identification[i] == '*') Identification[i]='_';
-            }
-            QString InputFileName;
-            InputFileName =
-              Settings->GetString("StandardAdobeProfilesDirectory");
-            InputFileName += "/";
-            InputFileName += Identification;
-            InputFileName += ".icc";
-            QFileInfo PathInfo(InputFileName);
-            if (PathInfo.exists() &&
-                PathInfo.isFile() &&
-                PathInfo.isReadable()) {
-              CameraProfileName = PathInfo.absoluteFilePath();
-              Settings->SetValue("CameraColorProfile",CameraProfileName);
-              TRACEKEYVALS("Found adobe profile","%s",
-                           CameraProfileName.toAscii().data());
-              TRACEMAIN("Found profile at %d ms.",Timer.elapsed());
-            } else {
-              QMessageBox::information(0,
-                        tr("Profile not found"),
-                        tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
-              TRACEMAIN("Not found profile at %d ms.",Timer.elapsed());
-              Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
-            }
-          } else if (Settings->GetInt("CameraColor") == ptCameraColor_Profile) {
-              CameraProfileName = Settings->GetString("CameraColorProfile");
-              QFileInfo PathInfo(CameraProfileName);
-              if (!(PathInfo.exists() &&
-                    PathInfo.isFile() &&
-                    PathInfo.isReadable())) {
-                QMessageBox::information(0,
-                          tr("Profile not found"),
-                          tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
-                TRACEMAIN("Not found profile at %d ms.",Timer.elapsed());
-                Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
-              }
-          } else if (Settings->GetInt("CameraColor") == ptCameraColor_Flat) {
-            QString InputFileName;
-            InputFileName =
-              Settings->GetString("CameraColorProfilesDirectory");
-            InputFileName += "/Flat/FlatProfile.icc";
-            QFileInfo PathInfo(InputFileName);
-            if (PathInfo.exists() &&
-                PathInfo.isFile() &&
-                PathInfo.isReadable()) {
-              CameraProfileName = PathInfo.absoluteFilePath();
-              Settings->SetValue("CameraColorProfile",CameraProfileName);
-              TRACEMAIN("Found profile at %d ms.",Timer.elapsed());
-            } else {
-              TRACEMAIN("Not found profile at %d ms.",Timer.elapsed());
-              Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
-            }
-          }
-
-          // We're at the end of the DcRaw part now and capture
-          // the image that DcRaw made for us.
-          if (!m_Image_AfterDcRaw) m_Image_AfterDcRaw = new ptImage();
-
-          // Transfer dcraw output to an image, maybe applying a profile
-          // and a preprofile.
-
-          m_Image_AfterDcRaw->Set(
-            m_DcRaw,
-            Settings->GetInt("WorkColor"),
-            (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
-              NULL : CameraProfileName.toAscii().data(),
-            Settings->GetInt("CameraColorProfileIntent"),
-            Settings->GetInt("CameraColorGamma"));
-
-          Settings->FromDcRaw(m_DcRaw);
-          if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw)
-            Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
-
-          TRACEMAIN("Done m_Image_AfterDcRaw transfer to GUI at %d ms.",
-                     Timer.elapsed());
-
-        case ptProcessorPhase_Lensfun :
-
-          m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags = 0;
-          if (Settings->GetInt("EnableLensfun") &&
-              (Settings->GetInt("LensfunLensIndex") != -1)) {
-            m_ReportProgress(tr("Applying lens corrections"));
-            m_DcRaw->m_UserSetting_photivo_LensfunModifier = lfModifier::Create(
-              LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
-              LensfunData->m_Cameras[Settings->GetInt("LensfunCameraIndex")].
-                Camera->CropFactor,
-              m_DcRaw->m_OutWidth,
-              m_DcRaw->m_OutHeight);
-            if (Settings->GetInt("LensfunGeometryEnable")) {
-              m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-                LF_MODIFY_GEOMETRY;
-              m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-                LF_MODIFY_SCALE;
-            }
-            if (Settings->GetInt("LensfunTCAEnable")) {
-              m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-                LF_MODIFY_TCA;
-            }
-            if (Settings->GetInt("LensfunVignettingEnable")) {
-              m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-                LF_MODIFY_VIGNETTING;
-            }
-            if (Settings->GetInt("LensfunDistortionEnable")) {
-              m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-                LF_MODIFY_DISTORTION;
-            }
-            // TODO Aperture value or f number ? => review for lensfun.
-            m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags =
-              m_DcRaw->m_UserSetting_photivo_LensfunModifier->Initialize(
-               LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
-               LF_PF_U16,
-               Settings->GetInt("LensfunFocalLength"),
-               Settings->GetDouble("LensfunF"),
-               Settings->GetDouble("LensfunDistance"),
-               Settings->GetDouble("LensfunScale"),
-               (lfLensType) Settings->GetInt("LensfunGeometry"),
-               m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags,
-               0);
-          }
-
-          // Settings->GetInt("JobMode") causes NoCache
-          m_DcRaw->RunDcRaw_Phase4(Settings->GetInt("JobMode"));
-
-          TRACEMAIN("Done lensfun corrections at %d ms.",Timer.elapsed());
-
-          m_ReportProgress(tr("RGB to RGB"));
-
-         break;
-
-        default : // Should not happen.
-          assert(0);
-      }
-
-    case ptProcessorPhase_AfterRAW : // Mostly to deal with non RAW bitmaps
-
       if (Settings->GetInt("IsRAW")==0) {
         m_ReportProgress(tr("Loading Bitmap"));
 
         TRACEMAIN("Start opening bitmap at %d ms.",
                     Timer.elapsed());
 
-        // This will be equivalent to m_PipeSize EXCEPT if overwritten
-        // by the FinalRun setting that will be always in full size.
-        // 0 for full, 1 for half, 2 for quarter (useable in >> operators)
-        Settings->SetValue("Scaled",Settings->GetInt("PipeSize"));
-
-        if (Settings->GetInt("JobMode")==1) // FinalRun!
-          Settings->SetValue("Scaled",0);
-
-        if (!m_Image_AfterLensfun) m_Image_AfterLensfun = new ptImage();
+        if (!m_Image_AfterDcRaw) m_Image_AfterDcRaw = new ptImage();
 
         int Success = 0;
 
-        m_Image_AfterLensfun->ptGMOpenImage(
+        m_Image_AfterDcRaw->ptGMOpenImage(
           (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
           Settings->GetInt("WorkColor"),
           Settings->GetInt("PreviewColorProfileIntent"),
-          Settings->GetInt("Scaled"),
+          0,
           Success);
 
         if (Success == 0) {
           QMessageBox::critical(0,"File not found","File not found!");
           return;
         }
-
-        // The full image width and height is already set.
-        // This is the current size:
-        TRACEKEYVALS("ImageW","%d",m_Image_AfterLensfun->m_Width);
-        TRACEKEYVALS("ImageH","%d",m_Image_AfterLensfun->m_Height);
 
         m_ReportProgress(tr("Reading exif info"));
 
@@ -429,35 +228,240 @@ void ptProcessor::Run(short Phase,
         }
         TRACEMAIN("Opened bitmap at %d ms.", Timer.elapsed());
 
+      } else { // we have a RAW image!
+
+        TRACEMAIN("Starting DcRaw at %d ms.",Timer.elapsed());
+        switch (SubPhase) {
+          case ptProcessorPhase_Load :
+
+            m_ReportProgress(tr("Reading RAW file"));
+
+            if (WithIdentify) m_DcRaw->Identify();
+            m_DcRaw->RunDcRaw_Phase1();
+
+            // Do not forget !
+            // Not in DcRawToSettings as at this point it is
+            // not yet influenced by HalfSize. Later it is and
+            // it would be wrongly overwritten then.
+            Settings->SetValue("ImageW",m_DcRaw->m_ReportedWidth);
+            Settings->SetValue("ImageH",m_DcRaw->m_ReportedHeight);
+
+            TRACEKEYVALS("ImageW","%d",Settings->GetInt("ImageW"));
+            TRACEKEYVALS("ImageH","%d",Settings->GetInt("ImageH"));
+
+            m_ReportProgress(tr("Reading exif info"));
+
+            if (ProcessorMode != ptProcessorMode_Thumb) {
+              // Read Exif
+              ReadExifBuffer();
+            }
+            TRACEMAIN("Opened RAW at %d ms.",
+                      Timer.elapsed());
+
+          case ptProcessorPhase_Demosaic :
+
+            m_ReportProgress(tr("Demosaicing"));
+
+            // Settings->GetInt("JobMode") causes NoCache
+            m_DcRaw->RunDcRaw_Phase2(Settings->GetInt("JobMode"));
+
+            TRACEMAIN("Done Color Scaling and Interpolation at %d ms.",
+                      Timer.elapsed());
+
+          case ptProcessorPhase_Highlights :
+
+            m_ReportProgress(tr("Recovering highlights"));
+
+            // Settings->GetInt("JobMode") causes NoCache
+            m_DcRaw->RunDcRaw_Phase3(Settings->GetInt("JobMode"));
+
+            TRACEMAIN("Done Highlights at %d ms.",Timer.elapsed());
+
+            // Already here we want the output profile.
+            // It will be applied, not in the pipe but on a
+            // tee for preview reasons.
+            // Find the output profile if we are in that mode.
+            if (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Profile) {
+              QString Identification = m_DcRaw->m_CameraAdobeIdentification;
+              for (int i=0;i<Identification.size();i++) {
+                if (Identification[i].isSpace()) Identification[i]='_';
+                // Some contain '*' which is problem under Windows.
+                if (Identification[i] == '*') Identification[i]='_';
+              }
+              QString InputFileName;
+              InputFileName =
+                Settings->GetString("StandardAdobeProfilesDirectory");
+              InputFileName += "/";
+              InputFileName += Identification;
+              InputFileName += ".icc";
+              QFileInfo PathInfo(InputFileName);
+              if (PathInfo.exists() &&
+                  PathInfo.isFile() &&
+                  PathInfo.isReadable()) {
+                CameraProfileName = PathInfo.absoluteFilePath();
+                Settings->SetValue("CameraColorProfile",CameraProfileName);
+                TRACEKEYVALS("Found adobe profile","%s",
+                             CameraProfileName.toAscii().data());
+                TRACEMAIN("Found profile at %d ms.",Timer.elapsed());
+              } else {
+                QMessageBox::information(0,
+                          tr("Profile not found"),
+                          tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
+                TRACEMAIN("Not found profile at %d ms.",Timer.elapsed());
+                Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
+              }
+            } else if (Settings->GetInt("CameraColor") == ptCameraColor_Profile) {
+                CameraProfileName = Settings->GetString("CameraColorProfile");
+                QFileInfo PathInfo(CameraProfileName);
+                if (!(PathInfo.exists() &&
+                      PathInfo.isFile() &&
+                      PathInfo.isReadable())) {
+                  QMessageBox::information(0,
+                            tr("Profile not found"),
+                            tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
+                  TRACEMAIN("Not found profile at %d ms.",Timer.elapsed());
+                  Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
+                }
+            } else if (Settings->GetInt("CameraColor") == ptCameraColor_Flat) {
+              QString InputFileName;
+              InputFileName =
+                Settings->GetString("CameraColorProfilesDirectory");
+              InputFileName += "/Flat/FlatProfile.icc";
+              QFileInfo PathInfo(InputFileName);
+              if (PathInfo.exists() &&
+                  PathInfo.isFile() &&
+                  PathInfo.isReadable()) {
+                CameraProfileName = PathInfo.absoluteFilePath();
+                Settings->SetValue("CameraColorProfile",CameraProfileName);
+                TRACEMAIN("Found profile at %d ms.",Timer.elapsed());
+              } else {
+                TRACEMAIN("Not found profile at %d ms.",Timer.elapsed());
+                Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
+              }
+            }
+
+            // We're at the end of the DcRaw part now and capture
+            // the image that DcRaw made for us.
+            if (!m_Image_AfterDcRaw) m_Image_AfterDcRaw = new ptImage();
+
+            // Transfer dcraw output to an image, maybe applying a profile
+            // and a preprofile.
+
+            m_Image_AfterDcRaw->Set(
+              m_DcRaw,
+              Settings->GetInt("WorkColor"),
+              (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
+                NULL : CameraProfileName.toAscii().data(),
+              Settings->GetInt("CameraColorProfileIntent"),
+              Settings->GetInt("CameraColorGamma"));
+
+            Settings->FromDcRaw(m_DcRaw);
+            if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw)
+              Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
+
+            TRACEMAIN("Done m_Image_AfterDcRaw transfer to GUI at %d ms.",
+                       Timer.elapsed());
+
+          case ptProcessorPhase_Lensfun :
+
+            m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags = 0;
+            if (Settings->GetInt("EnableLensfun") &&
+                (Settings->GetInt("LensfunLensIndex") != -1)) {
+              m_ReportProgress(tr("Applying lens corrections"));
+              m_DcRaw->m_UserSetting_photivo_LensfunModifier = lfModifier::Create(
+                LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
+                LensfunData->m_Cameras[Settings->GetInt("LensfunCameraIndex")].
+                  Camera->CropFactor,
+                m_DcRaw->m_OutWidth,
+                m_DcRaw->m_OutHeight);
+              if (Settings->GetInt("LensfunGeometryEnable")) {
+                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
+                  LF_MODIFY_GEOMETRY;
+                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
+                  LF_MODIFY_SCALE;
+              }
+              if (Settings->GetInt("LensfunTCAEnable")) {
+                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
+                  LF_MODIFY_TCA;
+              }
+              if (Settings->GetInt("LensfunVignettingEnable")) {
+                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
+                  LF_MODIFY_VIGNETTING;
+              }
+              if (Settings->GetInt("LensfunDistortionEnable")) {
+                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
+                  LF_MODIFY_DISTORTION;
+              }
+              // TODO Aperture value or f number ? => review for lensfun.
+              m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags =
+                m_DcRaw->m_UserSetting_photivo_LensfunModifier->Initialize(
+                 LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
+                 LF_PF_U16,
+                 Settings->GetInt("LensfunFocalLength"),
+                 Settings->GetDouble("LensfunF"),
+                 Settings->GetDouble("LensfunDistance"),
+                 Settings->GetDouble("LensfunScale"),
+                 (lfLensType) Settings->GetInt("LensfunGeometry"),
+                 m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags,
+                 0);
+            }
+
+            // Settings->GetInt("JobMode") causes NoCache
+            m_DcRaw->RunDcRaw_Phase4(Settings->GetInt("JobMode"));
+
+            TRACEMAIN("Done lensfun corrections at %d ms.",Timer.elapsed());
+
+            m_ReportProgress(tr("RGB to RGB"));
+
+           break;
+
+          default : // Should not happen.
+            assert(0);
+        }
+      }
+
+    case ptProcessorPhase_Geometry :
+
+      if (Settings->GetInt("IsRAW")==0) {
+        m_ReportProgress(tr("Transfer Bitmap"));
+
+        // This will be equivalent to m_PipeSize EXCEPT if overwritten
+        // by the FinalRun setting that will be always in full size.
+        // 0 for full, 1 for half, 2 for quarter (useable in >> operators)
+        Settings->SetValue("Scaled",Settings->GetInt("PipeSize"));
+
+        if (Settings->GetInt("JobMode")==1) // FinalRun!
+          Settings->SetValue("Scaled",0);
+
+        if (!m_Image_AfterGeometry) m_Image_AfterGeometry = new ptImage();
+
+        m_Image_AfterGeometry->SetScaled(m_Image_AfterDcRaw,
+                                        Settings->GetInt("Scaled"));
+
+        // The full image width and height is already set.
+        // This is the current size:
+        TRACEKEYVALS("ImageW","%d",m_Image_AfterGeometry->m_Width);
+        TRACEKEYVALS("ImageH","%d",m_Image_AfterGeometry->m_Height);
+
+        TRACEMAIN("Done bitmap transfer at %d ms.", Timer.elapsed());
+
       } else {
-        // We're at the end of the DcRaw part now and capture
-        // the image that DcRaw made for us.
-        if (!m_Image_AfterLensfun) m_Image_AfterLensfun = new ptImage();
-
-        // Transfer dcraw output to an image, maybe applying a profile
-        // and a preprofile.
-
-        m_Image_AfterLensfun->Set(
-          m_DcRaw,
-          Settings->GetInt("WorkColor"),
-          (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
-            NULL : CameraProfileName.toAscii().data(),
-          Settings->GetInt("CameraColorProfileIntent"),
-          Settings->GetInt("CameraColorGamma"));
-
-        TRACEMAIN("Done m_Image_Afterlensfun transfer to GUI at %d ms.",
-            Timer.elapsed());
+        if (Settings->GetInt("JobMode")) {
+          m_Image_AfterGeometry = m_Image_AfterDcRaw; // Job mode -> no cache
+        } else {
+          if (!m_Image_AfterGeometry) m_Image_AfterGeometry = new ptImage();
+          m_Image_AfterGeometry->Set(m_Image_AfterDcRaw);
+        }
       }
 
       // Often used.
       TmpScaled = Settings->GetInt("Scaled");
 
       // Rotation
-
       if (Settings->ToolIsActive("TabRotation")) {
         m_ReportProgress(tr("Rotating"));
 
-        m_Image_AfterLensfun->Rotate(Settings->GetDouble("Rotate"));
+        m_Image_AfterGeometry->Rotate(Settings->GetDouble("Rotate"));
 
         TRACEMAIN("Done rotation at %d ms.",Timer.elapsed());
       }
@@ -465,20 +469,19 @@ void ptProcessor::Run(short Phase,
       // Remember sizes after Rotation, also valid if there
       // was no rotation. Expressed in terms of the original
       // non scaled image.
-      Settings->SetValue("RotateW",m_Image_AfterLensfun->m_Width << TmpScaled);
-      Settings->SetValue("RotateH",m_Image_AfterLensfun->m_Height<< TmpScaled);
+      Settings->SetValue("RotateW",m_Image_AfterGeometry->m_Width << TmpScaled);
+      Settings->SetValue("RotateH",m_Image_AfterGeometry->m_Height<< TmpScaled);
 
       TRACEKEYVALS("RotateW","%d",Settings->GetInt("RotateW"));
       TRACEKEYVALS("RotateH","%d",Settings->GetInt("RotateH"));
 
       // Crop
-
       if (Settings->ToolIsActive("TabCrop")) {
 
         if (((Settings->GetInt("CropX") >> TmpScaled) + (Settings->GetInt("CropW") >> TmpScaled))
-              > m_Image_AfterLensfun->m_Width ||
+              > m_Image_AfterGeometry->m_Width ||
             ((Settings->GetInt("CropY") >> TmpScaled) + (Settings->GetInt("CropH") >> TmpScaled))
-              > m_Image_AfterLensfun->m_Height) {
+              > m_Image_AfterGeometry->m_Height) {
           QMessageBox::information(0,
                                    tr("Crop outside the image"),
                                    tr("Crop rectangle too large.\nNo crop, try again."));
@@ -493,7 +496,7 @@ void ptProcessor::Run(short Phase,
 
           m_ReportProgress(tr("Cropping"));
 
-          m_Image_AfterLensfun->Crop(Settings->GetInt("CropX") >> TmpScaled,
+          m_Image_AfterGeometry->Crop(Settings->GetInt("CropX") >> TmpScaled,
                                      Settings->GetInt("CropY") >> TmpScaled,
                                      Settings->GetInt("CropW") >> TmpScaled,
                                      Settings->GetInt("CropH") >> TmpScaled);
@@ -502,8 +505,8 @@ void ptProcessor::Run(short Phase,
         }
       }
 
-      TRACEKEYVALS("CropW","%d",m_Image_AfterLensfun->m_Width << TmpScaled);
-      TRACEKEYVALS("CropH","%d",m_Image_AfterLensfun->m_Height<< TmpScaled);
+      TRACEKEYVALS("CropW","%d",m_Image_AfterGeometry->m_Width << TmpScaled);
+      TRACEKEYVALS("CropH","%d",m_Image_AfterGeometry->m_Height<< TmpScaled);
 
       // set scale factor for size dependend filters
       m_ScaleFactor = 1/powf(2.0, Settings->GetInt("Scaled"));
@@ -512,22 +515,21 @@ void ptProcessor::Run(short Phase,
       if (Settings->ToolIsActive("TabResize")) {
         m_ReportProgress(tr("Resize image"));
 
-        float WidthIn = m_Image_AfterLensfun->m_Width;
+        float WidthIn = m_Image_AfterGeometry->m_Width;
 
-        m_Image_AfterLensfun->ptGMResize(Settings->GetInt("ResizeScale"),
+        m_Image_AfterGeometry->ptGMResize(Settings->GetInt("ResizeScale"),
                                          Settings->GetInt("ResizeFilter"));
 
-        m_ScaleFactor = (float) m_Image_AfterLensfun->m_Width/WidthIn/powf(2.0, Settings->GetInt("Scaled"));
+        m_ScaleFactor = (float) m_Image_AfterGeometry->m_Width/WidthIn/powf(2.0, Settings->GetInt("Scaled"));
 
         TRACEMAIN("Done resize at %d ms.",Timer.elapsed());
       }
 
       // Flip
-
       if (Settings->ToolIsActive("TabFlip")) {
         m_ReportProgress(tr("Flip image"));
 
-        m_Image_AfterLensfun->Flip(Settings->GetInt("FlipMode"));
+        m_Image_AfterGeometry->Flip(Settings->GetInt("FlipMode"));
 
         TRACEMAIN("Done flip at %d ms.",Timer.elapsed());
       }
@@ -538,20 +540,20 @@ void ptProcessor::Run(short Phase,
       if (Settings->ToolIsActive("TabBlock")){ // &&
         //~ MainWindow->GetCurrentTab() == ptGeometryTab) {
         if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage();
-        m_Image_AfterRGB->Set(m_Image_AfterLensfun);
+        m_Image_AfterRGB->Set(m_Image_AfterGeometry);
         if (!m_Image_AfterLabCC) m_Image_AfterLabCC = new ptImage();
-        m_Image_AfterLabCC->Set(m_Image_AfterLensfun);
+        m_Image_AfterLabCC->Set(m_Image_AfterGeometry);
         if (!m_Image_AfterLabSN) m_Image_AfterLabSN = new ptImage();
-        m_Image_AfterLabSN->Set(m_Image_AfterLensfun);
+        m_Image_AfterLabSN->Set(m_Image_AfterGeometry);
         if (!m_Image_AfterEyeCandy) m_Image_AfterEyeCandy = new ptImage();
-        m_Image_AfterEyeCandy->Set(m_Image_AfterLensfun);
+        m_Image_AfterEyeCandy->Set(m_Image_AfterGeometry);
         goto Exit;
       }
 
       // Calculate the autoexposure required value at this point.
       if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
         m_ReportProgress(tr("Calculate auto exposure"));
-        m_AutoExposureValue = CalculateAutoExposure(m_Image_AfterLensfun);
+        m_AutoExposureValue = CalculateAutoExposure(m_Image_AfterGeometry);
         Settings->SetValue("Exposure",m_AutoExposureValue);
       }
       if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw)
@@ -562,10 +564,10 @@ void ptProcessor::Run(short Phase,
     case ptProcessorPhase_RGB : // Run everything in RGB.
 
       if (Settings->GetInt("JobMode")) {
-        m_Image_AfterRGB = m_Image_AfterLensfun; // Job mode -> no cache
+        m_Image_AfterRGB = m_Image_AfterGeometry; // Job mode -> no cache
       } else {
         if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage();
-        m_Image_AfterRGB->Set(m_Image_AfterLensfun);
+        m_Image_AfterRGB->Set(m_Image_AfterGeometry);
       }
 
       // Channel mixing.
@@ -2672,7 +2674,7 @@ ptProcessor::~ptProcessor() {
   // Tricky delete stuff as some pointer might be shared.
   QList <ptImage*> PointerList;
   PointerList << m_Image_AfterDcRaw
-              << m_Image_AfterLensfun
+              << m_Image_AfterGeometry
               << m_Image_AfterRGB
               << m_Image_AfterLabCC
               << m_Image_AfterLabSN

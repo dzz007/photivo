@@ -8084,18 +8084,11 @@ short CLASS RunDcRaw_Phase1() {
     m_Width  += m_Width  & 1;
   }
 
-  // If m_UserSetting_HalfSize then the BAYER(row,col) macro
-  // will map 2X2 pixels of the Bayer array, directly onto one
-  // pixel of the image (and the correct color channel) foregoing
-  // the need for interpolation and much faster !
-  m_Shrink = m_Filters && m_UserSetting_HalfSize;
-
   m_OutHeight = m_Height;
   m_OutWidth  = m_Width;
 
   TRACEKEYVALS("OutWidth","%d",m_OutWidth);
   TRACEKEYVALS("Width","%d",m_Width);
-  TRACEKEYVALS("Shrink","%d",m_Shrink);
 
   // Also some reshuffling for second entry problem.
   // not sure how c_matrix comes into play here ...
@@ -8242,6 +8235,14 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
   m_BlackLevel += i;
   if (m_UserSetting_BlackPoint >= 0) m_BlackLevel = m_UserSetting_BlackPoint;
   if (m_UserSetting_Saturation > 0)  m_WhiteLevel = m_UserSetting_Saturation;
+
+  // If m_UserSetting_HalfSize then the BAYER(row,col) macro
+  // will map 2X2 pixels of the Bayer array, directly onto one
+  // pixel of the image (and the correct color channel) foregoing
+  // the need for interpolation and much faster !
+  m_Shrink = m_Filters && m_UserSetting_HalfSize;
+
+  TRACEKEYVALS("Shrink","%d",m_Shrink);
 
   TRACEKEYVALS("BlackLevel","%d",m_BlackLevel);
   TRACEKEYVALS("WhiteLevel","%d",m_WhiteLevel);
