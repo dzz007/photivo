@@ -33,7 +33,8 @@ class ptViewWindow : public QAbstractScrollArea {
 
 Q_OBJECT
 
-public :
+////////////////////////////// PUBLIC MEMBERS //////////////////////////////
+public:
 
 // Constructor.
 ptViewWindow(const ptImage*       RelatedImage,
@@ -73,7 +74,7 @@ void AllowCrop(const short Allow,
                const short CropGuidelines = ptCropGuidelines_None);
 
 // Returns 1 if crop process is ongoing.
-short ptViewWindow::CropOngoing();
+short CropOngoing();
 
     // Results of selection.
 // Expressed in terms of the RelatedImage.
@@ -118,7 +119,12 @@ QImage*              m_QImage;
 QImage*              m_QImageZoomed;
 QImage*              m_QImageCut;
 
+QAction*    m_AtnFullScreen;
+
+
+////////////////////////////// PROTECTED MEMBERS //////////////////////////////
 protected:
+
 // overloaded virtual ones.
 void paintEvent(QPaintEvent* Event);
 void resizeEvent(QResizeEvent* Event);
@@ -129,8 +135,10 @@ void contextMenuEvent(QContextMenuEvent* Event);
 void wheelEvent(QWheelEvent* Event);
 void dragEnterEvent(QDragEnterEvent* Event);
 void dropEvent(QDropEvent* Event);
-void  scrollContentsBy(int dx, int dy);
+void scrollContentsBy(int dx, int dy);
 
+
+////////////////////////////// PRIVATE SLOTS //////////////////////////////
 private slots:
 void MenuExpIndicate();
 void MenuExpIndOver();
@@ -149,6 +157,8 @@ void SizeReportTimerExpired();
 void StatusReportTimerExpired();
 void ResizeTimerExpired();
 
+
+////////////////////////////// PRIVATE MEMBERS //////////////////////////////
 private:
 void        RecalculateCut();
 void        ContextMenu(QEvent* Event);
@@ -168,6 +178,7 @@ short       m_FixedAspectRatio;
 double      m_HOverW;
 int         m_CropARW;
 int         m_CropARH;
+short       m_CropRectDragging;
 
 QAction*    m_AtnExpIndicate;
 QAction*    m_AtnExpIndR;
@@ -199,8 +210,6 @@ int         m_ResizeTimeOut;
 QTimer*     m_ResizeTimer;
 int         m_NewSize;
 
-public:
-QAction*    m_AtnFullScreen;
 };
 
 #endif
