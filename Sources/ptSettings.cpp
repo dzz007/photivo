@@ -282,14 +282,14 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LABToneAdjust1Saturation"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0   ,4.0   ,0.1 ,2  ,tr("Saturation")        ,tr("Saturation")},
     {"LABToneAdjust1Amount"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05,2  ,tr("Amount")            ,tr("Amount")},
     {"LABToneAdjust1Hue"             ,ptGT_InputSliderHue  ,2,1,1 ,60.0 ,0.0  ,360.0  ,10.0,0  ,tr("Hue")               ,tr("Hue")},
-    {"LABToneAdjust1LowerLimit"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"LABToneAdjust1UpperLimit"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
+    {"LABToneAdjust1LowerLimit"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3  ,tr("Lower Limit")        ,tr("Lower Limit")},
+    {"LABToneAdjust1UpperLimit"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3  ,tr("Upper Limit")        ,tr("Upper Limit")},
     {"LABToneAdjust1Softness"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
     {"LABToneAdjust2Saturation"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0   ,4.0   ,0.1 ,2  ,tr("Saturation")        ,tr("Saturation")},
     {"LABToneAdjust2Amount"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05,2  ,tr("Amount")            ,tr("Amount")},
     {"LABToneAdjust2Hue"             ,ptGT_InputSliderHue  ,2,1,1 ,60.0 ,0.0  ,360.0  ,10.0,0  ,tr("Hue")               ,tr("Hue")},
-    {"LABToneAdjust2LowerLimit"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"LABToneAdjust2UpperLimit"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
+    {"LABToneAdjust2LowerLimit"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3  ,tr("Lower Limit")        ,tr("Lower Limit")},
+    {"LABToneAdjust2UpperLimit"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3  ,tr("Upper Limit")        ,tr("Upper Limit")},
     {"LABToneAdjust2Softness"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
     {"LAdjustC1"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-3.0  ,3.0   ,0.05,2  ,tr("Red")               ,tr("Red")},
     {"LAdjustC2"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-3.0  ,3.0   ,0.05,2  ,tr("Orange")            ,tr("Orange")},
@@ -321,19 +321,19 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LABToneHHue"                   ,ptGT_InputSliderHue  ,2,1,1 ,60.0 ,0.0  ,360.0  ,10.0,0  ,tr("Hue")               ,tr("Hue")},
     {"LabVignette"                   ,ptGT_Input           ,2,1,1 ,2    ,1    ,6     ,1    ,0  ,tr("Shape")             ,tr("Shape of the vignette")},
     {"LabVignetteAmount"             ,ptGT_InputSlider     ,2,1,1 ,0.3  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Amount")            ,tr("Amount")},
-    {"LabVignetteInnerRadius"        ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2 ,tr("Inner Radius")        ,tr("Inner Radius")},
-    {"LabVignetteOuterRadius"        ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2 ,tr("Outer Radius")        ,tr("Outer Radius")},
-    {"LabVignetteRoundness"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.05  ,2 ,tr("Roundness")        ,tr("Roundness")},
-    {"LabVignetteCenterX"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center X")        ,tr("Center X")},
-    {"LabVignetteCenterY"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center Y")        ,tr("Center Y")},
-    {"LabVignetteSoftness"           ,ptGT_InputSlider     ,2,1,1 ,0.06  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
+    {"LabVignetteInnerRadius"        ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2  ,tr("Inner Radius")      ,tr("Inner Radius")},
+    {"LabVignetteOuterRadius"        ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2  ,tr("Outer Radius")      ,tr("Outer Radius")},
+    {"LabVignetteRoundness"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.05  ,2,tr("Roundness")         ,tr("Roundness")},
+    {"LabVignetteCenterX"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center X")          ,tr("Center X")},
+    {"LabVignetteCenterY"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center Y")          ,tr("Center Y")},
+    {"LabVignetteSoftness"           ,ptGT_InputSlider     ,2,1,1 ,0.06  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")          ,tr("Softness")},
     {"BWStylerOpacity"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1  ,1 ,tr("Opacity")            ,tr("Opacity")},
     {"BWStylerMultR"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Red")                ,tr("Red multiplicity")},
     {"BWStylerMultG"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Green")              ,tr("Green multiplicity")},
     {"BWStylerMultB"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Blue")               ,tr("Blue multiplicity")},
-    {"SimpleToneR"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Red")                  ,tr("Red toning")},
-    {"SimpleToneG"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Green")                  ,tr("Green toning")},
-    {"SimpleToneB"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Blue")                  ,tr("Blue toning")},
+    {"SimpleToneR"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Red")                ,tr("Red toning")},
+    {"SimpleToneG"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Green")              ,tr("Green toning")},
+    {"SimpleToneB"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Blue")               ,tr("Blue toning")},
     {"Tone1Amount"                   ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount of toning")},
     {"Tone1LowerLimit"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"Tone1UpperLimit"               ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Upper Limit")        ,tr("Upper Limit")},
@@ -343,11 +343,20 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Tone2UpperLimit"               ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Upper Limit")        ,tr("Upper Limit")},
     {"Tone2Softness"                 ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
     {"CrossprocessingColor1"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Main color")         ,tr("Intensity of the main color")},
-    {"CrossprocessingColor2"         ,ptGT_InputSlider     ,2,1,1 ,0.4  ,0.0  ,1.0   ,0.1  ,2 ,tr("Second color")         ,tr("Intensity of the second color")},
+    {"CrossprocessingColor2"         ,ptGT_InputSlider     ,2,1,1 ,0.4  ,0.0  ,1.0   ,0.1  ,2 ,tr("Second color")       ,tr("Intensity of the second color")},
     {"RGBContrast2Amount"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-20.0,20.0  ,0.5  ,1 ,tr("Contrast")           ,tr("Contrast")},
     {"RGBContrast2Threshold"         ,ptGT_InputSlider     ,2,1,1 ,0.30 ,0.05 ,0.95  ,0.05 ,2 ,tr("Threshold")          ,tr("Threshold")},
-    {"GradualOverlay1Amount"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")        ,tr("Amount")},
-    {"GradualOverlay1Angle"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-180.0,180.0  ,5.0  ,0 ,tr("Angle")        ,tr("Angle")},
+    {"TextureOverlayOpacity"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity")},
+    {"TextureOverlaySaturation"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.1  ,2 ,tr("Saturation")         ,tr("Saturation")},
+    {"TextureOverlayExponent"        ,ptGT_Input           ,2,1,1 ,2    ,1    ,6     ,1    ,0 ,tr("Shape")              ,tr("Shape of the mask")},
+    {"TextureOverlayInnerRadius"     ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2 ,tr("Inner Radius")       ,tr("Inner Radius")},
+    {"TextureOverlayOuterRadius"     ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2 ,tr("Outer Radius")       ,tr("Outer Radius")},
+    {"TextureOverlayRoundness"       ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Roundness")          ,tr("Roundness")},
+    {"TextureOverlayCenterX"         ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center X")           ,tr("Center X")},
+    {"TextureOverlayCenterY"         ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center Y")           ,tr("Center Y")},
+    {"TextureOverlaySoftness"        ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0 ,1.0   ,0.1  ,2 ,tr("Softness")           ,tr("Softness")},
+    {"GradualOverlay1Amount"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount")},
+    {"GradualOverlay1Angle"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-180.0,180.0  ,5.0  ,0 ,tr("Angle")            ,tr("Angle")},
     {"GradualOverlay1LowerLevel"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,3.0   ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
     {"GradualOverlay1UpperLevel"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0   ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
     {"GradualOverlay1Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
@@ -457,6 +466,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveLa"                     ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("a curve")},
     {"CurveLb"                     ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("b curve")},
     {"CurveLByHue"                 ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("L by hue curve")},
+    {"CurveHue"                    ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Hue curve")},
     {"CurveTexture"                ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Texture curve")},
     {"CurveSaturation"             ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Saturation curve")},
     {"BaseCurve"                   ,ptGT_Choice       ,1,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Base curve")},
@@ -472,6 +482,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Tone1MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
     {"Tone2MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
     {"CrossprocessingMode"         ,ptGT_Choice       ,2,1,1 ,ptCrossprocessMode_None     ,GuiOptions->CrossprocessMode          ,tr("Colors for cross processing")},
+    {"TextureOverlayMode"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
+    {"TextureOverlayMask"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
     {"GradualOverlay1"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"GradualOverlay2"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"VignetteMode"                ,ptGT_Choice       ,2,1,1 ,ptVignetteMode_None         ,GuiOptions->VignetteMode              ,tr("Mode for Vignette")},
@@ -604,6 +616,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveFileNamesLa"                     ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesLb"                     ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesLByHue"                 ,0         ,QStringList()                                       ,1},
+    {"CurveFileNamesHue"                    ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesTexture"                ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesSaturation"             ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesBase"                   ,0         ,QStringList()                                       ,1},
@@ -625,6 +638,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradualOverlay2ColorRed"              ,2         ,255                                                 ,1},
     {"GradualOverlay2ColorGreen"            ,2         ,200                                                 ,1},
     {"GradualOverlay2ColorBlue"             ,2         ,0                                                   ,1},
+    {"TextureOverlayFile"                   ,2         ,""                                                  ,1},
     {"DigikamTagsList"                      ,9         ,QStringList()                                       ,1},
     {"TagsList"                             ,9         ,QStringList()                                       ,1},
     {"ImageTitle"                           ,9         ,""                                                  ,1},
@@ -654,6 +668,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"SatCurveType"                         ,1         ,0                                                   ,1},
     {"TextureCurveType"                     ,1         ,0                                                   ,1},
     {"DenoiseCurveType"                     ,1         ,0                                                   ,1},
+    {"HueCurveType"                         ,1         ,0                                                   ,1},
     {"FullOutput"                           ,9         ,0                                                   ,0},
     {"HiddenTools"                          ,0         ,QStringList()                                       ,1},
     {"BlockedTools"                         ,0         ,QStringList()                                       ,1},
@@ -744,21 +759,17 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
       // often interpreted as strings even if they could be int or so.
       const QVariant::Type TargetType = Setting->DefaultValue.type();
       if (Setting->Value.type() != TargetType) {
-        switch (TargetType) {
-          case QVariant::Int:
-          case QVariant::UInt:
-            Setting->Value = Setting->Value.toInt();
-            break;
-          case QVariant::Double:
-          case QMetaType::Float:
-            Setting->Value = Setting->Value.toDouble();
-            break;
-          case QVariant::StringList:
-            Setting->Value = Setting->Value.toStringList();
-            break;
-          default:
-            ptLogError(ptError_Argument,"Unexpected type %d",TargetType);
-            assert(0);
+        if (TargetType == QVariant::Int ||
+          TargetType == QVariant::UInt) {
+          Setting->Value = Setting->Value.toInt();
+        } else if (TargetType == QVariant::Double ||
+                   (QMetaType::Type) TargetType == QMetaType::Float) {
+          Setting->Value = Setting->Value.toDouble();
+        } else if (TargetType == QVariant::StringList) {
+          Setting->Value = Setting->Value.toStringList();
+        } else {
+          ptLogError(ptError_Argument,"Unexpected type %d",TargetType);
+          assert(0);
         }
       }
       // Seen above this shouldn't happen, but better safe then sorry.
@@ -1728,6 +1739,9 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabSaturationCurve") {
       Info.Name = "Lab saturation curve";
       Info.IsActive = Settings->GetInt("CurveSaturation")!=0?1:0;
+  } else if (GuiName == "TabHueCurve") {
+      Info.Name = "Lab hue curve";
+      Info.IsActive = Settings->GetInt("CurveHue")!=0?1:0;
   } else if (GuiName == "TabLCurve") {
       Info.Name = "Lab luminance curve";
       Info.IsActive = Settings->GetInt("CurveL")!=0?1:0;
@@ -1798,6 +1812,10 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabECContrast") {
       Info.Name = "Eyecandy contrast";
       Info.IsActive = Settings->GetDouble("RGBContrast2Amount")!=0.0?1:0;
+  } else if (GuiName == "TabTextureOverlay") {
+    Info.Name = "Texture Overlay";
+    Info.IsActive = (Settings->GetInt("TextureOverlayMode") &&
+                     Settings->GetDouble("TextureOverlayOpacity")!=0.0)!=0?1:0;
   } else if (GuiName == "TabGradualOverlay1") {
       Info.Name = "Gradual Overlay 1";
       Info.IsActive = (Settings->GetInt("GradualOverlay1") &&

@@ -191,6 +191,8 @@ void OnCurvebOpenButtonClicked();
 void OnCurvebSaveButtonClicked();
 void OnCurveLByHueOpenButtonClicked();
 void OnCurveLByHueSaveButtonClicked();
+void OnCurveHueOpenButtonClicked();
+void OnCurveHueSaveButtonClicked();
 void OnCurveTextureOpenButtonClicked();
 void OnCurveTextureSaveButtonClicked();
 void OnCurveShadowsHighlightsOpenButtonClicked();
@@ -206,6 +208,9 @@ void OnBaseCurve2SaveButtonClicked();
 
 void OnTone1ColorButtonClicked();
 void OnTone2ColorButtonClicked();
+
+void OnTextureOverlayButtonClicked();
+void OnTextureOverlayClearButtonClicked();
 
 void OnGradualOverlay1ColorButtonClicked();
 void OnGradualOverlay2ColorButtonClicked();

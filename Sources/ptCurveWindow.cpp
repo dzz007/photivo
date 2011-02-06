@@ -120,6 +120,9 @@ ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
   } else if (m_Channel == ptCurveChannel_Denoise) {
     m_AtnByLuma->setChecked(Settings->GetInt("DenoiseCurveType")>0?true:false);
     m_AtnByChroma->setChecked(Settings->GetInt("DenoiseCurveType")>0?false:true);
+  } else if (m_Channel == ptCurveChannel_Hue) {
+    m_AtnByLuma->setChecked(Settings->GetInt("HueCurveType")>0?true:false);
+    m_AtnByChroma->setChecked(Settings->GetInt("HueCurveType")>0?false:true);
   } else {
     m_AtnByLuma->setChecked(true);
     m_AtnByChroma->setChecked(false);
@@ -152,7 +155,8 @@ ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
   // Cyclic curve
   if (m_Channel == ptCurveChannel_Saturation ||
       m_Channel == ptCurveChannel_Texture ||
-      m_Channel == ptCurveChannel_Denoise) {
+      m_Channel == ptCurveChannel_Denoise ||
+      m_Channel == ptCurveChannel_Hue) {
     m_CyclicCurve = (int)m_AtnByChroma->isChecked();
   } else if (m_Channel == ptCurveChannel_LByHue) {
     m_CyclicCurve = 1;
@@ -216,6 +220,8 @@ void ptCurveWindow::SetCurveState(const short state) {
       Settings->SetValue("CurveLb",state); break;
     case ptCurveChannel_LByHue :
       Settings->SetValue("CurveLByHue",state); break;
+    case ptCurveChannel_Hue :
+      Settings->SetValue("CurveHue",state); break;
     case ptCurveChannel_Texture :
       Settings->SetValue("CurveTexture",state); break;
     case ptCurveChannel_Saturation :
@@ -258,6 +264,8 @@ short ptCurveWindow::GetCurveState() {
       State = Settings->GetInt("CurveLb"); break;
     case ptCurveChannel_LByHue :
       State = Settings->GetInt("CurveLByHue"); break;
+    case ptCurveChannel_Hue :
+      State = Settings->GetInt("CurveHue"); break;
     case ptCurveChannel_Texture :
       State = Settings->GetInt("CurveTexture"); break;
     case ptCurveChannel_Saturation :
@@ -317,7 +325,8 @@ void ptCurveWindow::ContextMenu(QMouseEvent* event) {
     Menu.addAction(m_AtnByLuma);
     Menu.addAction(m_AtnByChroma);
   } else if (m_Channel == ptCurveChannel_Texture ||
-             m_Channel == ptCurveChannel_Denoise) {
+             m_Channel == ptCurveChannel_Denoise ||
+             m_Channel == ptCurveChannel_Hue) {
     if ((TempSetting==ptCurveChoice_Manual ||
         TempSetting==ptCurveChoice_None))
       Menu.addSeparator();
@@ -358,10 +367,15 @@ void ptCurveWindow::SetType() {
     if (Settings->GetInt("DenoiseCurveType") == (int)m_AtnByLuma->isChecked())
       return;
     Settings->SetValue("DenoiseCurveType",(int)m_AtnByLuma->isChecked());
+  } else if (m_Channel == ptCurveChannel_Hue) {
+    if (Settings->GetInt("HueCurveType") == (int)m_AtnByLuma->isChecked())
+      return;
+    Settings->SetValue("HueCurveType",(int)m_AtnByLuma->isChecked());
   }
   if (m_Channel == ptCurveChannel_Saturation ||
       m_Channel == ptCurveChannel_Texture ||
-      m_Channel == ptCurveChannel_Denoise) {
+      m_Channel == ptCurveChannel_Denoise ||
+      m_Channel == ptCurveChannel_Hue) {
     m_CyclicCurve = (int)m_AtnByChroma->isChecked();
     if (m_CyclicCurve == 1) {
       m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1] = m_RelatedCurve->m_YAnchor[0];
@@ -377,6 +391,8 @@ void ptCurveWindow::SetType() {
       m_Channel == ptCurveChannel_Texture) return;
   if (Settings->GetInt("CurveDenoise")==ptCurveChoice_None &&
       m_Channel == ptCurveChannel_Denoise) return;
+  if (Settings->GetInt("CurveHue")==ptCurveChoice_None &&
+      m_Channel == ptCurveChannel_Hue) return;
   if (m_BlockEvents) return;
 
   m_BlockEvents  = 1;
@@ -432,6 +448,9 @@ void ptCurveWindow::CalculateCurve() {
   } else if (m_Channel == ptCurveChannel_Denoise) {
     m_AtnByLuma->setChecked(Settings->GetInt("DenoiseCurveType")>0?true:false);
     m_AtnByChroma->setChecked(Settings->GetInt("DenoiseCurveType")>0?false:true);
+  } else if (m_Channel == ptCurveChannel_Hue) {
+    m_AtnByLuma->setChecked(Settings->GetInt("HueCurveType")>0?true:false);
+    m_AtnByChroma->setChecked(Settings->GetInt("HueCurveType")>0?false:true);
   }
 
   int Width  = width();
@@ -498,7 +517,8 @@ void ptCurveWindow::CalculateCurve() {
       }
     }
   } else if (m_Channel == ptCurveChannel_Texture ||
-             m_Channel == ptCurveChannel_Denoise) {
+             m_Channel == ptCurveChannel_Denoise ||
+             m_Channel == ptCurveChannel_Hue) {
     if ((int)m_AtnByLuma->isChecked() == 1) {
       for (uint16_t i=0;i<Width;i++) {
         int Value = (int)(i/(float)Width*255);
@@ -849,6 +869,7 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
           break;
         }
       }
+      if ((int)m_AtnITCosine->isChecked()) m_RecalcNeeded = 1;
     }
     m_RelatedCurve->m_NrAnchors++;
     m_RelatedCurve->SetCurveFromAnchors();

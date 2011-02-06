@@ -56,7 +56,7 @@ const short ptProcessorPhase_Load          = 1; // Same constant, subphase !
 const short ptProcessorPhase_Demosaic      = 2; // Same constant, subphase !
 const short ptProcessorPhase_Highlights    = 3; // Same constant, subphase !
 const short ptProcessorPhase_Lensfun       = 4; // Same constant, subphase !
-const short ptProcessorPhase_AfterRAW      = 2;
+const short ptProcessorPhase_Geometry      = 2;
 const short ptProcessorPhase_RGB           = 3;
 const short ptProcessorPhase_LabCC         = 4;
 const short ptProcessorPhase_LabSN         = 5;
@@ -234,6 +234,7 @@ const short ptCurveChannel_LByHue            = 10;
 const short ptCurveChannel_Texture           = 11;
 const short ptCurveChannel_ShadowsHighlights = 12;
 const short ptCurveChannel_Denoise           = 13;
+const short ptCurveChannel_Hue               = 14;
 
 const short ptCurveType_Full         = 0;
 const short ptCurveType_Anchor       = 1;
@@ -370,6 +371,12 @@ const short ptOverlayMode_ColorDodge   = 10;
 const short ptOverlayMode_ColorBurn    = 11;
 const short ptOverlayMode_GammaDark    = 12;
 const short ptOverlayMode_GammaBright  = 13;
+
+// OverlayMaskMode
+
+const short ptOverlayMaskMode_FullImage   = 0;
+const short ptOverlayMaskMode_Vignette    = 1;
+const short ptOverlayMaskMode_InvVignette = 2;
 
 // VignetteMode
 

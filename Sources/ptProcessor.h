@@ -39,12 +39,15 @@ public:
 
 // Cached image versions at different points.
 ptImage*  m_Image_AfterDcRaw;
-ptImage*  m_Image_AfterLensfun;
+ptImage*  m_Image_AfterGeometry;
 ptImage*  m_Image_AfterRGB;
 ptImage*  m_Image_AfterLabCC;
 ptImage*  m_Image_AfterLabSN;
 ptImage*  m_Image_AfterLabEyeCandy;
 ptImage*  m_Image_AfterEyeCandy;
+
+// Sidecar image for texture overlay
+ptImage*  m_Image_TextureOverlay;
 
 // Reporting back
 void (*m_ReportProgress)(const QString Message);

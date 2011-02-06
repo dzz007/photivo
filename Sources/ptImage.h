@@ -87,6 +87,10 @@ ptImage* Set(const uint16_t Width,
 // Copying is always deep (so including copying the image).
 ptImage* Set(const ptImage *Origin);
 
+// Copy from another image and scale to pipe size.
+ptImage* SetScaled(const ptImage *Origin,
+                   const short ScaleFactor);
+
 // Resize such that the maximum dimension becomes Size.
 // Typically the resizing is done in place, but one
 // can request a new ptImage object to be created
@@ -371,6 +375,16 @@ float *GetMask(const short  MaskType,
                const double FactorG = 0.59,
                const double FactorB = 0.11);
 
+// GetVignetteMask
+float *GetVignetteMask(const short Inverted,
+                       const short Exponent,
+                       const double InnerRadius,
+                       const double OuterRadius,
+                       const double Roundness,
+                       const double CenterX,
+                       const double CenterY,
+                       const double Softness);
+
 // Blur the image. Probably not used standalone, but
 // it is part of the USM algorithm.
 //   ChannelMask : has a '1' on the bitposition of the channel that needs
@@ -426,6 +440,9 @@ ptImage* ApplyCurve(const ptCurve *Curve,
                     const uint8_t ChannelMask);
 
 ptImage* ApplyLByHueCurve(const ptCurve *Curve);
+
+ptImage* ApplyHueCurve(const ptCurve *Curve,
+                       const short Type);
 
 ptImage* ApplySaturationCurve(const ptCurve *Curve,
                               const short Mode,
@@ -536,6 +553,7 @@ ptImage* ptGMWriteImage(const char* FileName,
                         const int Intent);
 
 ptImage* ptGMResize(uint16_t Size, const short Filter);
+ptImage* ptGMResize(uint16_t NewWidth, uint16_t NewHeight, const short Filter);
 
 ptImage* ptGMBlur(const double Radius);
 

@@ -74,8 +74,8 @@ ptCurve*  RGBContrastCurve  = NULL;
 ptCurve*  ExposureCurve     = NULL;
 ptCurve*  ContrastCurve     = NULL;
 // RGB,R,G,B,L,a,b,Base
-ptCurve*  Curve[14]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-ptCurve*  BackupCurve[14]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  Curve[15]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  BackupCurve[15]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 // I don't manage to init statically following ones. Done in InitCurves.
 QStringList CurveKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
@@ -110,7 +110,7 @@ ptImage*  HistogramImage   = NULL;
 ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
-ptCurveWindow*     CurveWindow[14] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurveWindow*     CurveWindow[15] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 // Theming
 ptTheme* Theme = NULL;
@@ -144,6 +144,7 @@ QString JobFilePattern;
 QString SettingsFilePattern;
 QString ProfilePattern;
 QString RawPattern;
+QString BitmapPattern;
 
 void InitStrings() {
   ChannelMixerFilePattern =
@@ -202,6 +203,16 @@ void InitStrings() {
                                                  "*.bmp *.BMP *.Bmp "
                                                  "*.ppm *.PPm *.Ppm "
                                                  ";;All files (*.*)");
+
+  BitmapPattern =
+    QCoreApplication::translate("Global Strings","Bitmaps ("
+                                                 "*.jpeg *.JPEG *.Jpeg "
+                                                 "*.jpg *.JPG *.Jpg "
+                                                 "*.tiff *.TIFF *.Tiff "
+                                                 "*.tif *.TIF *.Tif "
+                                                 "*.bmp *.BMP *.Bmp "
+                                                 "*.ppm *.PPm *.Ppm "
+                                                 ";;All files (*.*)");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -230,7 +241,7 @@ void   CB_OpenSettingsFileButton();
 short  WriteSettingsFile(const QString FileName, const short IsJobFile = 0);
 void   SetBackgroundColor(int SetIt);
 void   CB_StyleChoice(const QVariant Choice);
-void GimpExport(const short PipeSize);
+void GimpExport(const short UsePipe);
 void Update(short Phase,
             short SubPhase      = -1,
             short WithIdentify  = 1,
@@ -347,7 +358,8 @@ int photivoMain(int Argc, char *Argv[]) {
             << "CurveLByHue"
             << "CurveTexture"
             << "CurveShadowsHighlights"
-            << "CurveDenoise";
+            << "CurveDenoise"
+            << "CurveHue";
 
   CurveFileNamesKeys << "CurveFileNamesRGB"
                      << "CurveFileNamesR"
@@ -362,7 +374,8 @@ int photivoMain(int Argc, char *Argv[]) {
                      << "CurveFileNamesLByHue"
                      << "CurveFileNamesTexture"
                      << "CurveFileNamesShadowsHighlights"
-                     << "CurveFileNamesDenoise";
+                     << "CurveFileNamesDenoise"
+                     << "CurveFileNamesHue";
 
   CurveBackupKeys = CurveKeys;
 
@@ -604,7 +617,8 @@ int photivoMain(int Argc, char *Argv[]) {
                              MainWindow->LByHueCurveCentralWidget,
                              MainWindow->TextureCurveCentralWidget,
                              MainWindow->ShadowsHighlightsCurveCentralWidget,
-                             MainWindow->DenoiseCurveCentralWidget};
+                             MainWindow->DenoiseCurveCentralWidget,
+                             MainWindow->HueCurveCentralWidget};
 
   for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
     Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
@@ -1011,7 +1025,6 @@ void Update(short Phase,
     // main processing
     if (Phase < NextPhase) NextPhase = Phase;
     if (SubPhase > 0 && SubPhase < NextSubPhase) NextSubPhase = SubPhase;
-    if (!Settings->GetInt("IsRAW")) NextPhase = MAX(NextPhase, ptProcessorPhase_AfterRAW);
     if (Settings->GetInt("RunMode") == 1) {
       // we're in manual mode!
       MainWindow->UpdateSettings();
@@ -1020,7 +1033,7 @@ void Update(short Phase,
       ImageSaved = 0;
       MainWindow->UpdateSettings();
       if(Settings->GetInt("HaveImage")==1) {
-        TheProcessor->Run(NextPhase,NextSubPhase,WithIdentify, ProcessorMode);
+        TheProcessor->Run(NextPhase, NextSubPhase, WithIdentify, ProcessorMode);
         UpdatePreviewImage();
       }
       NextPhase = ptProcessorPhase_Output;
@@ -1057,7 +1070,7 @@ int GetProcessorPhase(const QString GuiName) {
   ptGroupBox* Box = MainWindow->findChild<ptGroupBox *>(GuiName);
   QString Tab = Box->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
   //QMessageBox::information(0,"Feedback","I was called from \n" + GuiName + "\nMy tab is\n" Tab);
-  if (Tab == "GeometryTab") Phase = ptProcessorPhase_AfterRAW;
+  if (Tab == "GeometryTab") Phase = ptProcessorPhase_Geometry;
   else if (Tab == "RGBTab") Phase = ptProcessorPhase_RGB;
   else if (Tab == "LabCCTab") Phase = ptProcessorPhase_LabCC;
   else if (Tab == "LabSNTab") Phase = ptProcessorPhase_LabSN;
@@ -1087,7 +1100,7 @@ void BlockTools(const short state) {
     MainWindow->ControlFrame->setEnabled(0);
     Settings->SetValue("BlockTools",1);
   } else { //enable tools
-    ViewWindow->StatusReport(NULL);
+    ViewWindow->StatusReport(0);
     MainWindow->ControlFrame->setEnabled(1);
     Settings->SetValue("BlockTools",0);
   }
@@ -1336,7 +1349,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   // If we don't have yet an Image_AfterDcRaw we are probably in
   // startup condition and no preview.
   // We 'fake' one to show the splash.
-  if (!TheProcessor->m_Image_AfterLensfun) {
+  if (!TheProcessor->m_Image_AfterGeometry) {
     if (!PreviewImage) PreviewImage = new (ptImage);
     QString FileName = Settings->GetString("UserDirectory") + "photivoPreview.jpg";
     printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
@@ -1409,7 +1422,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
         }
         break;
       case ptGeometryTab:
-        PreviewImage->Set(TheProcessor->m_Image_AfterLensfun);
+        PreviewImage->Set(TheProcessor->m_Image_AfterGeometry);
         break;
       case ptRGBTab:
         PreviewImage->Set(TheProcessor->m_Image_AfterRGB);
@@ -1883,7 +1896,8 @@ void RunJob(const QString JobFileName) {
 
       // Processing the job.
       delete TheDcRaw;
-
+      delete TheProcessor;
+      TheProcessor = new ptProcessor(ReportProgress);
       TheDcRaw = TestDcRaw;
       if (Settings->GetInt("IsRAW")==0) {
         Settings->SetValue("ImageW",InputWidth);
@@ -1897,11 +1911,7 @@ void RunJob(const QString JobFileName) {
 
       Settings->SetValue("RunMode",0);
       Settings->SetValue("FullOutput",1);
-      if (Settings->GetInt("IsRAW") == 1) {
-        TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,0,1);
-      } else {
-        TheProcessor->Run(ptProcessorPhase_AfterRAW,ptProcessorPhase_Load,0,1);
-      }
+      TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,0,1);
       Settings->SetValue("FullOutput",0);
       // And write result.
       Update(ptProcessorPhase_WriteOut);
@@ -2388,7 +2398,8 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
       << "LensfunDatabaseDirectory"
       << "CameraColorProfile"
       << "PreviewColorProfile"
-      << "OutputColorProfile";
+      << "OutputColorProfile"
+      << "TextureOverlayFile";
 
   QStringList Locations;
   Locations << CurveFileNamesKeys
@@ -2478,21 +2489,17 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     // often interpreted as strings even if they could be int or so.
     const QVariant::Type TargetType = (Settings->GetValue(Key)).type();
     if (Tmp.type() != TargetType) {
-      switch (TargetType) {
-        case QVariant::Int:
-        case QVariant::UInt:
-          Tmp = Tmp.toInt();
-          break;
-        case QVariant::Double:
-        case QMetaType::Float:
-          Tmp = Tmp.toDouble();
-          break;
-        case QVariant::StringList:
-          Tmp = Tmp.toStringList();
-          break;
-        default:
-          ptLogError(ptError_Argument,"Unexpected type %d",TargetType);
-          assert(0);
+      if (TargetType == QVariant::Int ||
+        TargetType == QVariant::UInt) {
+        Tmp = Tmp.toInt();
+      } else if (TargetType == QVariant::Double ||
+                 (QMetaType::Type) TargetType == QMetaType::Float) {
+        Tmp = Tmp.toDouble();
+      } else if (TargetType == QVariant::StringList) {
+        Tmp = Tmp.toStringList();
+      } else {
+        ptLogError(ptError_Argument,"Unexpected type %d",TargetType);
+        assert(0);
       }
     }
     Settings->SetValue(Key,Tmp);
@@ -2934,11 +2941,7 @@ void CB_MenuFileSaveOutput(const short) {
   Settings->ToDcRaw(TheDcRaw);
   // Run the graphical pipe in full format mode to recreate the image.
   Settings->SetValue("FullOutput",1);
-  if (Settings->GetInt("IsRAW") == 1) {
-    TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
-  } else {
-    TheProcessor->Run(ptProcessorPhase_AfterRAW,ptProcessorPhase_Load,1,1);
-  }
+  TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
   Settings->SetValue("FullOutput",0);
 
   // Write out (maybe after applying gamma).
@@ -3091,7 +3094,7 @@ void CB_MenuFileExit(const short) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void GimpExport(const short PipeSize) {
+void GimpExport(const short UsePipe) {
 
   if (Settings->GetInt("HaveImage")==0) return;
 
@@ -3101,7 +3104,7 @@ void GimpExport(const short PipeSize) {
 
   ptImage* ImageForGimp = new ptImage;
 
-  if (PipeSize == 1)
+  if (UsePipe == 1)
     ImageForGimp->Set(TheProcessor->m_Image_AfterEyeCandy);
   else {
     Settings->SetValue("RunMode",0);
@@ -3116,11 +3119,7 @@ void GimpExport(const short PipeSize) {
     Settings->ToDcRaw(TheDcRaw);
     // Run the graphical pipe in full format mode to recreate the image.
     Settings->SetValue("FullOutput",1);
-    if (Settings->GetInt("IsRAW") == 1) {
-      TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
-    } else {
-      TheProcessor->Run(ptProcessorPhase_AfterRAW,ptProcessorPhase_Load,1,1);
-    }
+    TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
     Settings->SetValue("FullOutput",0);
 
     ImageForGimp = TheProcessor->m_Image_AfterEyeCandy; // no cache
@@ -3236,7 +3235,7 @@ void GimpExport(const short PipeSize) {
   GimpProcess->startDetached(GimpExeCommand,GimpArguments);
 
   // clean up
-  if (PipeSize == 1) {
+  if (UsePipe == 1) {
     delete ImageForGimp;
   } else {
     delete TheDcRaw;
@@ -3609,7 +3608,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
                        Settings->GetInt("VisualSelectionHeight")>>Expansion);
   }
 
-  Update(ptProcessorPhase_Raw,ptProcessorPhase_Load);
+  Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
     CB_ZoomFitButton();
@@ -4396,7 +4395,7 @@ void CB_RotateLeftButton() {
   Value -= 90.0;
   if (Value < -180.0) Value += 360.0;
   Settings->SetValue("Rotate",Value);
-  Update(ptProcessorPhase_AfterRAW);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_RotateRightButton() {
@@ -4404,7 +4403,7 @@ void CB_RotateRightButton() {
   Value += 90.0;
   if (Value > 180.0) Value -= 360.0;
   Settings->SetValue("Rotate",Value);
-  Update(ptProcessorPhase_AfterRAW);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_RotateAngleButton() {
@@ -4420,7 +4419,7 @@ void CB_RotateAngleButton() {
   // And we reset the Image_AfterLensfun such that we can
   // again select on the whole. It might have been cropped before !
   if (Settings->GetInt("IsRAW")) {
-    TheProcessor->m_Image_AfterLensfun->Set(
+    TheProcessor->m_Image_AfterGeometry->Set(
             TheProcessor->m_DcRaw,
             Settings->GetInt("WorkColor"),
             (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
@@ -4429,7 +4428,7 @@ void CB_RotateAngleButton() {
             Settings->GetInt("CameraColorGamma"));
   } else {
     int Success = 0;
-    TheProcessor->m_Image_AfterLensfun->ptGMOpenImage(
+    TheProcessor->m_Image_AfterGeometry->ptGMOpenImage(
       (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
       Settings->GetInt("WorkColor"),
       Settings->GetInt("PreviewColorProfileIntent"),
@@ -4441,15 +4440,15 @@ void CB_RotateAngleButton() {
     }
   }
 
-  Width = TheProcessor->m_Image_AfterLensfun->m_Width;
-  Height = TheProcessor->m_Image_AfterLensfun->m_Height;
+  Width = TheProcessor->m_Image_AfterGeometry->m_Width;
+  Height = TheProcessor->m_Image_AfterGeometry->m_Height;
   // We *urge* Image_AfterLensfun to be used now for the preview
   // Rather than end-of-the pipe or so and having to recalculate.
   // Recalculate happens later on anyway, so no out of sync issue.
   short OldZoom = Settings->GetInt("Zoom");
   short OldZoomMode = Settings->GetInt("ZoomMode");
   ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
-  UpdatePreviewImage(TheProcessor->m_Image_AfterLensfun); // Calculate in any case.
+  UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->StatusReport(QObject::tr("Get angle"));
   ReportProgress(QObject::tr("Get angle"));
@@ -4467,12 +4466,12 @@ void CB_RotateAngleButton() {
 
   ViewWindow->Zoom(OldZoom,0);
   Settings->SetValue("ZoomMode",OldZoomMode);
-  Update(ptProcessorPhase_AfterRAW);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_RotateInput(const QVariant Value) {
   Settings->SetValue("Rotate",Value);
-  Update(ptProcessorPhase_AfterRAW);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_GridCheck(const QVariant State) {
@@ -4499,12 +4498,12 @@ void CB_GridYInput(const QVariant Value) {
 
 void CB_FlipModeChoice(const QVariant Value) {
   Settings->SetValue("FlipMode",Value);
-  Update(ptProcessorPhase_AfterRAW);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_GeometryBlockCheck(const QVariant State) {
   Settings->SetValue("GeometryBlock",State);
-  Update(ptProcessorPhase_AfterRAW);
+  Update(ptProcessorPhase_Geometry);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4541,7 +4540,7 @@ void CB_MakeCropButton() {
   // And we reset the Image_AfterLensfun such that we can
   // again select on the whole. It might have been cropped before !
   if (Settings->GetInt("IsRAW")) {
-    TheProcessor->m_Image_AfterLensfun->Set(
+    TheProcessor->m_Image_AfterGeometry->Set(
             TheProcessor->m_DcRaw,
             Settings->GetInt("WorkColor"),
             (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
@@ -4550,7 +4549,7 @@ void CB_MakeCropButton() {
             Settings->GetInt("CameraColorGamma"));
   } else {
     int Success = 0;
-    TheProcessor->m_Image_AfterLensfun->ptGMOpenImage(
+    TheProcessor->m_Image_AfterGeometry->ptGMOpenImage(
         (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
         Settings->GetInt("WorkColor"),
         Settings->GetInt("PreviewColorProfileIntent"),
@@ -4567,10 +4566,10 @@ void CB_MakeCropButton() {
 
   // Redo also the rotation step if needed.
   if (Settings->GetDouble("Rotate")) {
-    TheProcessor->m_Image_AfterLensfun->Rotate(Settings->GetDouble("Rotate"));
+    TheProcessor->m_Image_AfterGeometry->Rotate(Settings->GetDouble("Rotate"));
   }
-  Width = TheProcessor->m_Image_AfterLensfun->m_Width;
-  Height = TheProcessor->m_Image_AfterLensfun->m_Height;
+  Width = TheProcessor->m_Image_AfterGeometry->m_Width;
+  Height = TheProcessor->m_Image_AfterGeometry->m_Height;
 
   // We *urge* Image_AfterLensfun to be used now for the preview
   // Rather than end-of-the pipe or so and having to recalculate.
@@ -4578,7 +4577,7 @@ void CB_MakeCropButton() {
   short OldZoom = Settings->GetInt("Zoom");
   short OldZoomMode = Settings->GetInt("ZoomMode");
   ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
-  UpdatePreviewImage(TheProcessor->m_Image_AfterLensfun); // Calculate in any case.
+  UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->StatusReport(QObject::tr("Crop"));
@@ -4645,7 +4644,7 @@ void CB_FinalizeCropButton() {
 
   ViewWindow->Zoom(OldZoom,0);
   Settings->SetValue("ZoomMode",OldZoomMode);
-  Update(ptProcessorPhase_AfterRAW);
+  Update(ptProcessorPhase_Geometry);
 }
 
 
@@ -4659,7 +4658,7 @@ void CB_CropCheck(const QVariant State) {
     CB_MakeCropButton();
     return;
   }
-  Update(ptProcessorPhase_AfterRAW);
+  Update(ptProcessorPhase_Geometry);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4705,9 +4704,9 @@ void CB_ResizeCheck(const QVariant Check) {
   Settings->SetValue("Resize",Check);
   if (Settings->GetInt("AutomaticPipeSize") && Settings->GetInt("Resize")) {
     if (!CalculatePipeSize())
-      Update(ptProcessorPhase_AfterRAW);
+      Update(ptProcessorPhase_Geometry);
   } else {
-    Update(ptProcessorPhase_AfterRAW);
+    Update(ptProcessorPhase_Geometry);
   }
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
 }
@@ -4717,9 +4716,9 @@ void CB_ResizeScaleInput(const QVariant Value) {
   if (Settings->GetInt("Resize")) {
     if (Settings->GetInt("AutomaticPipeSize")) {
       if (!CalculatePipeSize())
-        Update(ptProcessorPhase_AfterRAW);
+        Update(ptProcessorPhase_Geometry);
     } else {
-      Update(ptProcessorPhase_AfterRAW);
+      Update(ptProcessorPhase_Geometry);
     }
     MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   }
@@ -4730,9 +4729,9 @@ void CB_ResizeFilterChoice(const QVariant Choice) {
   if (Settings->GetInt("Resize")) {
     if (Settings->GetInt("AutomaticPipeSize")) {
       if (!CalculatePipeSize())
-        Update(ptProcessorPhase_AfterRAW);
+        Update(ptProcessorPhase_Geometry);
     } else {
-      Update(ptProcessorPhase_AfterRAW);
+      Update(ptProcessorPhase_Geometry);
     }
     MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   }
@@ -4743,9 +4742,9 @@ void CB_AutomaticPipeSizeCheck(const QVariant Check) {
   if (Settings->GetInt("Resize")) {
     if (Settings->GetInt("AutomaticPipeSize")) {
       if (!CalculatePipeSize())
-        Update(ptProcessorPhase_AfterRAW);
+        Update(ptProcessorPhase_Geometry);
     } else {
-      Update(ptProcessorPhase_AfterRAW);
+      Update(ptProcessorPhase_Geometry);
     }
     MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   }
@@ -5014,7 +5013,7 @@ void CB_AutoExposureChoice(const QVariant Value) {
   Settings->SetValue("AutoExposure",Value);
   MainWindow->UpdateSettings();
   if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
-    TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterLensfun);
+    TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterGeometry);
     Settings->SetValue("Exposure",TheProcessor->m_AutoExposureValue);
     Update(ptProcessorPhase_RGB);
   } else if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw) {
@@ -5029,7 +5028,7 @@ void CB_AutoExposureChoice(const QVariant Value) {
 void CB_WhiteFractionInput(const QVariant Value) {
   Settings->SetValue("WhiteFraction",Value);
   if (Settings->GetInt("AutoExposure")) {
-    TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterLensfun);
+    TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterGeometry);
     Settings->SetValue("Exposure",TheProcessor->m_AutoExposureValue);
     Update(ptProcessorPhase_RGB);
   }
@@ -5038,7 +5037,7 @@ void CB_WhiteFractionInput(const QVariant Value) {
 void CB_WhiteLevelInput(const QVariant Value) {
   Settings->SetValue("WhiteLevel",Value);
   if (Settings->GetInt("AutoExposure")) {
-    TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterLensfun);
+    TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterGeometry);
     Settings->SetValue("Exposure",TheProcessor->m_AutoExposureValue);
     Update(ptProcessorPhase_RGB);
   }
@@ -5231,9 +5230,9 @@ void CB_CurveOpenButton(const int Channel) {
     return;
   }
   if (Curve[Channel]->m_IntendedChannel != Channel) {
-    const QString IntendedChannel[14] = {"RGB","R","G","B","L","a","b",
+    const QString IntendedChannel[15] = {"RGB","R","G","B","L","a","b",
       "Saturation","Base","After gamma","L by hue","Texture",
-      "Shadows / Highlights","Denoise"};
+      "Shadows / Highlights","Denoise","Hue"};
     QString Message = QObject::tr("This curve is meant for channel ") +
                         IntendedChannel[Curve[Channel]->m_IntendedChannel] +
                         QObject::tr(". Continue anyway ?");
@@ -5298,6 +5297,10 @@ void CB_CurvebOpenButton() {
 
 void CB_CurveLByHueOpenButton() {
   CB_CurveOpenButton(ptCurveChannel_LByHue);
+}
+
+void CB_CurveHueOpenButton() {
+  CB_CurveOpenButton(ptCurveChannel_Hue);
 }
 
 void CB_CurveTextureOpenButton() {
@@ -5388,6 +5391,10 @@ void CB_CurveLByHueSaveButton() {
   CB_CurveSaveButton(ptCurveChannel_LByHue);
 }
 
+void CB_CurveHueSaveButton() {
+  CB_CurveSaveButton(ptCurveChannel_Hue);
+}
+
 void CB_CurveTextureSaveButton() {
   CB_CurveSaveButton(ptCurveChannel_Texture);
 }
@@ -5469,6 +5476,7 @@ void CB_CurveChoice(const int Channel, const int Choice) {
         Update(ptProcessorPhase_LabSN);
         break;
       case ptCurveChannel_LByHue :
+      case ptCurveChannel_Hue :
       case ptCurveChannel_Saturation :
       case ptCurveChannel_L :
       case ptCurveChannel_a :
@@ -5521,6 +5529,10 @@ void CB_CurveLByHueChoice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_LByHue,Choice.toInt());
 }
 
+void CB_CurveHueChoice(const QVariant Choice) {
+  CB_CurveChoice(ptCurveChannel_Hue,Choice.toInt());
+}
+
 void CB_CurveTextureChoice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_Texture,Choice.toInt());
 }
@@ -5559,6 +5571,7 @@ void CB_CurveWindowRecalc(const short Channel) {
       Update(ptProcessorPhase_LabSN);
       break;
     case ptCurveChannel_LByHue :
+    case ptCurveChannel_Hue :
     case ptCurveChannel_Saturation :
     case ptCurveChannel_L :
     case ptCurveChannel_a :
@@ -7645,6 +7658,138 @@ void CB_RGBContrast2ThresholdInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the EyeCandy Tab
+// Partim Texture Overlay
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_TextureOverlayModeChoice(const QVariant Choice) {
+  Settings->SetValue("TextureOverlayMode",Choice);
+  Update(ptProcessorPhase_EyeCandy);
+}
+
+void CB_TextureOverlayMaskChoice(const QVariant Choice) {
+  Settings->SetValue("TextureOverlayMask",Choice);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlayButton() {
+  QString Directory = "";
+  if (Settings->GetString("TextureOverlayFile")!="") {
+    QFileInfo PathInfo(Settings->GetString("TextureOverlayFile"));
+    Directory = PathInfo.absolutePath();
+  } else {
+    Directory = Settings->GetString("UserDirectory");
+  }
+
+  QString TextureOverlayString = QFileDialog::getOpenFileName(NULL,
+    QObject::tr("Get texture bitmap file"),
+    Directory,
+    BitmapPattern);
+
+  if (0 == TextureOverlayString.size() ) {
+    // Canceled just return
+    return;
+  } else {
+    QFileInfo PathInfo(TextureOverlayString);
+    Settings->SetValue("TextureOverlayFile",PathInfo.absoluteFilePath());
+  }
+
+  // Reflect in gui.
+  if (Settings->GetInt("TextureOverlayMode")) {
+    // free old one
+    if (TheProcessor->m_Image_TextureOverlay)
+      delete TheProcessor->m_Image_TextureOverlay;
+
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlayClearButton() {
+  if (TheProcessor->m_Image_TextureOverlay) {
+    delete TheProcessor->m_Image_TextureOverlay;
+    TheProcessor->m_Image_TextureOverlay = NULL;
+  }
+  Settings->SetValue("TextureOverlayFile","");
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Settings->SetValue("TextureOverlayMode",0);
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlayOpacityInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayOpacity",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlaySaturationInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlaySaturation",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayExponentInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayExponent",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayInnerRadiusInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("TextureOverlayOuterRadius")));
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayOuterRadiusInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("TextureOverlayInnerRadius")));
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayRoundnessInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayRoundness",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayCenterXInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayCenterX",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlayCenterYInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlayCenterY",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlaySoftnessInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlaySoftness",Value);
+  if (Settings->GetInt("TextureOverlayMode")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the EyeCandy Tab
 // Partim Gradual Overlay
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -8451,6 +8596,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(CurveLaChoice)
   M_Dispatch(CurveLbChoice)
   M_Dispatch(CurveLByHueChoice)
+  M_Dispatch(CurveHueChoice)
   M_Dispatch(CurveTextureChoice)
   M_Dispatch(CurveShadowsHighlightsChoice)
   M_Dispatch(CurveDenoiseChoice)
@@ -8728,6 +8874,18 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(RGBContrast2AmountInput)
   M_Dispatch(RGBContrast2ThresholdInput)
+
+  M_Dispatch(TextureOverlayModeChoice)
+  M_Dispatch(TextureOverlayMaskChoice)
+  M_Dispatch(TextureOverlayOpacityInput)
+  M_Dispatch(TextureOverlaySaturationInput)
+  M_Dispatch(TextureOverlayExponentInput)
+  M_Dispatch(TextureOverlayInnerRadiusInput)
+  M_Dispatch(TextureOverlayOuterRadiusInput)
+  M_Dispatch(TextureOverlayRoundnessInput)
+  M_Dispatch(TextureOverlayCenterXInput)
+  M_Dispatch(TextureOverlayCenterYInput)
+  M_Dispatch(TextureOverlaySoftnessInput)
 
   M_Dispatch(GradualOverlay1Choice)
   M_Dispatch(GradualOverlay1AmountInput)
