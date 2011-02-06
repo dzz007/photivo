@@ -1096,13 +1096,17 @@ void Update(const QString GuiName) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void BlockTools(const short state) {
-  if (state == 1) { //block, disable tools
-    MainWindow->ControlFrame->setEnabled(0);
-    Settings->SetValue("BlockTools",1);
-  } else { //enable tools
+  // enable tools
+  if (state == 0) {
     ViewWindow->StatusReport(0);
     MainWindow->ControlFrame->setEnabled(1);
     Settings->SetValue("BlockTools",0);
+
+  // block everything
+  } else {
+    MainWindow->ControlFrame->setEnabled(0);
+    // TODO: keep crop stuff active when cropping
+    Settings->SetValue("BlockTools",1);
   }
 }
 
@@ -4571,7 +4575,7 @@ void CB_MakeCropButton() {
   Width = TheProcessor->m_Image_AfterGeometry->m_Width;
   Height = TheProcessor->m_Image_AfterGeometry->m_Height;
 
-  // We *urge* Image_AfterLensfun to be used now for the preview
+  // We *urge* Image_AfterGeometry to be used now for the preview
   // Rather than end-of-the pipe or so and having to recalculate.
   // Recalculate happens later on anyway, so no out of sync issue.
   short OldZoom = Settings->GetInt("Zoom");
@@ -4582,6 +4586,7 @@ void CB_MakeCropButton() {
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->StatusReport(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
+  MainWindow->MakeCropButton->setText(QObject::tr("Finalize crop area"));
   BlockTools(1);
   ViewWindow->AllowCrop(1,
                         Settings->GetInt("AspectRatioW"),
@@ -4592,11 +4597,13 @@ void CB_MakeCropButton() {
 
 // After-crop processing and cleanup.
 void CB_FinalizeCropButton() {
-// TODO: This definitely needs heavy work.
   // Selection is done at this point. Disallow it further and activate main.
   ViewWindow->AllowCrop(0);
   BlockTools(0);
+  MainWindow->MakeCropButton->setText(QObject::tr("Select crop area"));
 
+  // TODO: This definitely needs heavy work.
+/*
   // Account for the pipesize factor.
   short XScale = 1<<Settings->GetInt("PipeSize");
   short YScale = 1<<Settings->GetInt("PipeSize");
@@ -4645,6 +4652,7 @@ void CB_FinalizeCropButton() {
   ViewWindow->Zoom(OldZoom,0);
   Settings->SetValue("ZoomMode",OldZoomMode);
   Update(ptProcessorPhase_Geometry);
+  */
 }
 
 

@@ -72,6 +72,7 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_CropLightsOut    = Settings->m_IniSettings->value("CropLightsOut",0).toInt();
   m_CropAllowed      = 0;
   m_FixedAspectRatio = 0;
+  m_CropRectDragging = 0;
 
   //Avoiding tricky blacks at zoom fit.
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -294,10 +295,10 @@ short ptViewWindow::SelectionOngoing() {
 }
 
 
-void AllowCrop(const short Allow,
-               const int AspectRatioW = 0,
-               const int AspectRatioH = 0,
-               const short CropGuidelines = ptCropGuidelines_None)
+void ptViewWindow::AllowCrop(const short Allow,
+               const int AspectRatioW,
+               const int AspectRatioH,
+               const short CropGuidelines)
 {
   m_CropAllowed = Allow;
   m_FixedAspectRatio = (AspectRatioW==0) || (AspectRatioH==0);
@@ -582,7 +583,7 @@ void CB_OpenSettingsFile(QString SettingsFileName);
 
 void ptViewWindow::paintEvent(QPaintEvent* Event) {
   if (m_QImageCut == NULL) {
-    return 0;
+    return;
   }
 
   // PaintEvent : Draw the pixmap and the 'overlay' rectangle if there.
@@ -732,20 +733,26 @@ void ptViewWindow::resizeEvent(QResizeEvent* Event) {
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
-  if (m_SelectionAllowed) {
+  // Start dragging crop rectangle. No immediate repaint needed.
+  // Visible change doesn’t occur till mouse is moved.
+  if (m_CropAllowed) {
+    m_CropRectDragging = 1;
+    m_CropRectMoving = 1;
+    // TODO: Look at mouse position to determine if move or drag
+
+  // Start selection. Needs immediate repaint because we start defining a completely
+  // new selection rectangle.
+  } else if (m_SelectionAllowed) {
     m_DrawRectangle = 0;
-
-    m_StartDragX = ((QMouseEvent*) Event)->x();
-    m_StartDragY = ((QMouseEvent*) Event)->y();
-
+    m_StartDragX = Event->x();
+    m_StartDragY = Event->y();
     viewport()->repaint();
 
   } else {
     // A mouse button press, without selection being allowed, is going
     // to be interpreted as a move.
-
-    m_StartDragX = ((QMouseEvent*) Event)->x();
-    m_StartDragY = ((QMouseEvent*) Event)->y();
+    m_StartDragX = Event->x();
+    m_StartDragY = Event->y();
   }
 }
 
@@ -753,13 +760,13 @@ void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
-  if (m_SelectionAllowed) && ((QMouseEvent*)Event)->modifiers() == Qt::ControlModifier) {
+  if ((m_SelectionAllowed) && ((QMouseEvent*)Event)->modifiers() == Qt::ControlModifier) {
     // Drag selection.
 
-    m_StartDragX += ((QMouseEvent*) Event)->x() - m_EndDragX;
-    m_StartDragY += ((QMouseEvent*) Event)->y() - m_EndDragY;
-    m_EndDragX = ((QMouseEvent*) Event)->x();
-    m_EndDragY = ((QMouseEvent*) Event)->y();
+    m_StartDragX += Event->x() - m_EndDragX;
+    m_StartDragY += Event->y() - m_EndDragY;
+    m_EndDragX = Event->x();
+    m_EndDragY = Event->y();
 
     viewport()->repaint();
 
@@ -769,8 +776,8 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
     uint16_t Y;
 
     if (m_FixedAspectRatio) {
-      if (((QMouseEvent*) Event)->x()>m_StartDragX) {
-        if (((QMouseEvent*) Event)->y()>m_StartDragY) {
+      if (Event->x()>m_StartDragX) {
+        if (Event->y()>m_StartDragY) {
           Y = m_StartDragY +
               (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
         } else {
@@ -778,7 +785,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
               (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
         }
       } else {
-        if (((QMouseEvent*) Event)->y()>m_StartDragY) {
+        if (Event->y()>m_StartDragY) {
           Y = m_StartDragY -
               (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
         } else {
@@ -787,12 +794,12 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
         }
       }
     } else {
-      Y = ((QMouseEvent*) Event)->y();
+      Y = Event->y();
     }
 
     m_DrawRectangle = 1;
 
-    m_EndDragX = ((QMouseEvent*) Event)->x();
+    m_EndDragX = Event->x();
     m_EndDragY = Y;
 
     viewport()->repaint();
@@ -800,8 +807,8 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
   } else if (!m_SelectionAllowed) {
     // On the move with the image.
     //
-    m_EndDragX = ((QMouseEvent*) Event)->x();
-    m_EndDragY = ((QMouseEvent*) Event)->y();
+    m_EndDragX = Event->x();
+    m_EndDragY = Event->y();
 
     int32_t CurrentStartX = horizontalScrollBar()->value();
     int32_t CurrentStartY = verticalScrollBar()->value();
@@ -820,37 +827,41 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mouseReleaseEvent(QMouseEvent* Event) {
-  if (m_SelectionAllowed) {
+  // end dragging of crop rectangle
+  if (m_CropAllowed) {
+    m_CropRectDragging = 0;
+    viewport()->repaint();
 
-    // End selection.
 
+  // end selection
+  } else if (m_SelectionAllowed) {
     m_DrawRectangle = 0;
 
     uint16_t Y;
 
     if (m_FixedAspectRatio) {
-      if (((QMouseEvent*) Event)->x()>m_StartDragX) {
-        if (((QMouseEvent*) Event)->y()>m_StartDragY) {
+      if (Event->x()>m_StartDragX) {
+        if (Event->y()>m_StartDragY) {
           Y = m_StartDragY +
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
+              (int) (m_HOverW*(Event->x()-m_StartDragX));
         } else {
           Y = m_StartDragY -
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
+              (int) (m_HOverW*(Event->x()-m_StartDragX));
         }
       } else {
-        if (((QMouseEvent*) Event)->y()>m_StartDragY) {
+        if (Event->y()>m_StartDragY) {
           Y = m_StartDragY -
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
+              (int) (m_HOverW*(Event->x()-m_StartDragX));
         } else {
           Y = m_StartDragY +
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
+              (int) (m_HOverW*(Event->x()-m_StartDragX));
         }
       }
     } else {
-      Y = ((QMouseEvent*) Event)->y();
+      Y = Event->y();
     }
 
-    m_EndDragX = ((QMouseEvent*) Event)->x();
+    m_EndDragX = Event->x();
     m_EndDragY = Y;
 
     m_SelectionOngoing = 0;
@@ -879,7 +890,7 @@ void ptViewWindow::wheelEvent(QWheelEvent* Event) {
     Settings->SetValue("ZoomMode",ptZoomMode_NonFit);
     int TempZoom = m_NewSize?m_NewSize:Settings->GetInt("Zoom");
     int Choice = 0;
-    if (((QWheelEvent*)Event)->delta() < 0) {
+    if (Event->delta() < 0) {
       for (int i=0; i<Scales.size(); i++) {
         if (Scales.at(i) < TempZoom) Choice = i;
       }
@@ -904,9 +915,8 @@ void ptViewWindow::wheelEvent(QWheelEvent* Event) {
 
 void ptViewWindow::dragEnterEvent(QDragEnterEvent* Event) {
   // accept just text/uri-list mime format
-  if (((QDragEnterEvent*)Event)->mimeData()->hasFormat("text/uri-list"))
-  {
-      ((QDragEnterEvent*)Event)->acceptProposedAction();
+  if (Event->mimeData()->hasFormat("text/uri-list")) {
+    Event->acceptProposedAction();
   }
 }
 
@@ -918,9 +928,9 @@ void ptViewWindow::dropEvent(QDropEvent* Event) {
   QString DropName;
   QFileInfo DropInfo;
 
-  if (((QDropEvent*)Event)->mimeData()->hasUrls())
+  if (Event->mimeData()->hasUrls())
   {
-    UrlList = ((QDropEvent*)Event)->mimeData()->urls(); // returns list of QUrls
+    UrlList = Event->mimeData()->urls(); // returns list of QUrls
 
     // if just text was dropped, urlList is empty (size == 0)
     if ( UrlList.size() > 0) // if at least one QUrl is present in list
@@ -953,7 +963,7 @@ void ptViewWindow::dropEvent(QDropEvent* Event) {
       }
     }
   }
-  ((QDropEvent*)Event)->acceptProposedAction();
+  Event->acceptProposedAction();
 }
 
 
