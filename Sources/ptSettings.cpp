@@ -418,7 +418,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CaCorrect"                   ,ptGT_Choice       ,2,1,1 ,ptCACorrect_Off             ,GuiOptions->CACorrect                 ,tr("CA correction")},
     {"Interpolation"               ,ptGT_Choice       ,2,1,1 ,ptInterpolation_DCB         ,GuiOptions->Interpolation             ,tr("Demosaicing algorithm")},
     {"BayerDenoise"                ,ptGT_Choice       ,2,1,1 ,ptBayerDenoise_None         ,GuiOptions->BayerDenoise              ,tr("Denosie on Bayer pattern")},
-    {"CropRectangleMode"           ,ptGT_Choice       ,1,0,0 ,ptRectangleMode_GoldenRatio ,GuiOptions->CropRectangleMode         ,tr("Guide lines for crop")},
+    {"CropGuidelines"              ,ptGT_Choice       ,1,0,0 ,ptCropGuidelines_GoldenRatio,GuiOptions->CropGuidelines            ,tr("Guide lines for crop")},
     {"ClipMode"                    ,ptGT_Choice       ,1,1,1 ,ptClipMode_Blend            ,GuiOptions->ClipMode                  ,tr("How to handle clipping")},
     {"LensfunCamera"               ,ptGT_Choice       ,9,0,0 ,0                           ,NULL                                  ,tr("Camera for lensfun")},
     {"LensfunLens"                 ,ptGT_Choice       ,9,0,0 ,0                           ,NULL                                  ,tr("Lens for lensfun")},

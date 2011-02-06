@@ -194,12 +194,12 @@ const short ptClipMode_Rebuild       = 5;
 
 // Crop rectangle modes
 
-const short ptRectangleMode_None        = 0;
-const short ptRectangleMode_RuleThirds  = 1;
-const short ptRectangleMode_GoldenRatio = 2;
-const short ptRectangleMode_Diagonal    = 3;
+const short ptCropGuidelines_None        = 0;
+const short ptCropGuidelines_RuleThirds  = 1;
+const short ptCropGuidelines_GoldenRatio = 2;
+const short ptCropGuidelines_Diagonals   = 3;
 // Escape for line
-const short ptRectangleMode_Line        = 9;
+const short ptCropGuidelines_Line        = 9;
 
 // Channel Mixer
 
