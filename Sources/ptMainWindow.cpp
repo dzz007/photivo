@@ -398,6 +398,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(CurvebSave);
   Macro_ConnectSomeButton(CurveLByHueOpen);
   Macro_ConnectSomeButton(CurveLByHueSave);
+  Macro_ConnectSomeButton(CurveHueOpen);
+  Macro_ConnectSomeButton(CurveHueSave);
   Macro_ConnectSomeButton(CurveTextureOpen);
   Macro_ConnectSomeButton(CurveTextureSave);
   Macro_ConnectSomeButton(CurveSaturationOpen);
@@ -413,6 +415,9 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   Macro_ConnectSomeButton(Tone1Color);
   Macro_ConnectSomeButton(Tone2Color);
+
+  Macro_ConnectSomeButton(TextureOverlay);
+  Macro_ConnectSomeButton(TextureOverlayClear);
 
   Macro_ConnectSomeButton(GradualOverlay1Color);
   Macro_ConnectSomeButton(GradualOverlay2Color);
@@ -1192,6 +1197,16 @@ void ptMainWindow::OnCurveLByHueSaveButtonClicked() {
   ::CB_CurveLByHueSaveButton();
 }
 
+void CB_CurveHueOpenButton();
+void ptMainWindow::OnCurveHueOpenButtonClicked() {
+  ::CB_CurveHueOpenButton();
+}
+
+void CB_CurveHueSaveButton();
+void ptMainWindow::OnCurveHueSaveButtonClicked() {
+  ::CB_CurveHueSaveButton();
+}
+
 void CB_CurveTextureOpenButton();
 void ptMainWindow::OnCurveTextureOpenButtonClicked() {
   ::CB_CurveTextureOpenButton();
@@ -1262,6 +1277,17 @@ void ptMainWindow::OnTone1ColorButtonClicked() {
 void CB_Tone2ColorButton();
 void ptMainWindow::OnTone2ColorButtonClicked() {
   ::CB_Tone2ColorButton();
+}
+
+
+void CB_TextureOverlayButton();
+void ptMainWindow::OnTextureOverlayButtonClicked() {
+  ::CB_TextureOverlayButton();
+}
+
+void CB_TextureOverlayClearButton();
+void ptMainWindow::OnTextureOverlayClearButtonClicked() {
+  ::CB_TextureOverlayClearButton();
 }
 
 
@@ -1881,6 +1907,28 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("BWStylerMultR", 0);
     Settings->SetEnabled("BWStylerMultG", 0);
     Settings->SetEnabled("BWStylerMultB", 0);
+  }
+
+  // Texture Overlay
+  PathInfo.setFile(Settings->GetString("TextureOverlayFile"));
+  ShortFileName = PathInfo.baseName();
+  TextureOverlayText->setText(ShortFileName);
+  if (Settings->GetInt("TextureOverlayMask") > 0) {
+    Settings->SetEnabled("TextureOverlayExponent",1);
+    Settings->SetEnabled("TextureOverlayInnerRadius",1);
+    Settings->SetEnabled("TextureOverlayOuterRadius",1);
+    Settings->SetEnabled("TextureOverlayRoundness",1);
+    Settings->SetEnabled("TextureOverlayCenterX",1);
+    Settings->SetEnabled("TextureOverlayCenterY",1);
+    Settings->SetEnabled("TextureOverlaySoftness",1);
+  } else {
+    Settings->SetEnabled("TextureOverlayExponent",0);
+    Settings->SetEnabled("TextureOverlayInnerRadius",0);
+    Settings->SetEnabled("TextureOverlayOuterRadius",0);
+    Settings->SetEnabled("TextureOverlayRoundness",0);
+    Settings->SetEnabled("TextureOverlayCenterX",0);
+    Settings->SetEnabled("TextureOverlayCenterY",0);
+    Settings->SetEnabled("TextureOverlaySoftness",0);
   }
 
   // Color buttons

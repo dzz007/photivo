@@ -156,7 +156,7 @@
                 <enum>QTabWidget::West</enum>
                </property>
                <property name="currentIndex">
-                <number>1</number>
+                <number>6</number>
                </property>
                <property name="iconSize">
                 <size>
@@ -191,8 +191,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>249</height>
+                      <width>781</width>
+                      <height>686</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_19">
@@ -206,8 +206,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>155</width>
-                          <height>120</height>
+                          <width>763</width>
+                          <height>506</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -2000,8 +2000,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>519</height>
+                      <width>781</width>
+                      <height>686</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -2450,8 +2450,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>100</height>
+                          <width>763</width>
+                          <height>236</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -3107,8 +3107,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>492</height>
+                      <width>781</width>
+                      <height>686</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_43">
@@ -3122,8 +3122,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>52</height>
+                          <width>763</width>
+                          <height>263</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -4049,8 +4049,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>519</height>
+                      <width>781</width>
+                      <height>686</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_40">
@@ -4064,8 +4064,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>68</height>
+                          <width>763</width>
+                          <height>236</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -5258,23 +5258,23 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>384</height>
+                      <width>781</width>
+                      <height>686</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_169">
                      <item>
                       <widget class="QToolBox" name="toolBox_6">
                        <property name="currentIndex">
-                        <number>9</number>
+                        <number>2</number>
                        </property>
                        <widget class="QWidget" name="TabLbyHue">
                         <property name="geometry">
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>76</height>
+                          <width>763</width>
+                          <height>344</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -5546,13 +5546,144 @@
                          </item>
                         </layout>
                        </widget>
+                       <widget class="QWidget" name="TabHueCurve">
+                        <attribute name="label">
+                         <string>Hue curve</string>
+                        </attribute>
+                        <layout class="QVBoxLayout" name="verticalLayout_244">
+                         <item>
+                          <widget class="QWidget" name="HueCurve" native="true">
+                           <layout class="QVBoxLayout" name="verticalLayout_243">
+                            <property name="margin">
+                             <number>2</number>
+                            </property>
+                            <item>
+                             <widget class="QFrame" name="HueCurveCentralWidget">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
+                              <property name="minimumSize">
+                               <size>
+                                <width>20</width>
+                                <height>20</height>
+                               </size>
+                              </property>
+                              <property name="autoFillBackground">
+                               <bool>true</bool>
+                              </property>
+                              <property name="frameShape">
+                               <enum>QFrame::StyledPanel</enum>
+                              </property>
+                              <property name="frameShadow">
+                               <enum>QFrame::Sunken</enum>
+                              </property>
+                             </widget>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="widget_154" native="true">
+                              <layout class="QHBoxLayout" name="horizontalLayout_82">
+                               <property name="sizeConstraint">
+                                <enum>QLayout::SetFixedSize</enum>
+                               </property>
+                               <property name="margin">
+                                <number>0</number>
+                               </property>
+                               <item>
+                                <widget class="QWidget" name="CurveHueWidget" native="true"/>
+                               </item>
+                               <item>
+                                <widget class="QToolButton" name="CurveHueOpenButton">
+                                 <property name="toolTip">
+                                  <string>Open</string>
+                                 </property>
+                                 <property name="text">
+                                  <string>Open</string>
+                                 </property>
+                                 <property name="icon">
+                                  <iconset resource="../photivo.qrc">
+                                   <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                 </property>
+                                 <property name="iconSize">
+                                  <size>
+                                   <width>16</width>
+                                   <height>16</height>
+                                  </size>
+                                 </property>
+                                 <property name="toolButtonStyle">
+                                  <enum>Qt::ToolButtonIconOnly</enum>
+                                 </property>
+                                </widget>
+                               </item>
+                               <item>
+                                <widget class="QToolButton" name="CurveHueSaveButton">
+                                 <property name="toolTip">
+                                  <string>Save</string>
+                                 </property>
+                                 <property name="text">
+                                  <string>Save</string>
+                                 </property>
+                                 <property name="icon">
+                                  <iconset resource="../photivo.qrc">
+                                   <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                 </property>
+                                 <property name="iconSize">
+                                  <size>
+                                   <width>16</width>
+                                   <height>16</height>
+                                  </size>
+                                 </property>
+                                 <property name="toolButtonStyle">
+                                  <enum>Qt::ToolButtonIconOnly</enum>
+                                 </property>
+                                </widget>
+                               </item>
+                               <item>
+                                <spacer name="HueCurveTabHorizontalSpacer">
+                                 <property name="orientation">
+                                  <enum>Qt::Horizontal</enum>
+                                 </property>
+                                 <property name="sizeType">
+                                  <enum>QSizePolicy::Expanding</enum>
+                                 </property>
+                                 <property name="sizeHint" stdset="0">
+                                  <size>
+                                   <width>5</width>
+                                   <height>20</height>
+                                  </size>
+                                 </property>
+                                </spacer>
+                               </item>
+                              </layout>
+                             </widget>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                         <item>
+                          <spacer name="verticalSpacer_125">
+                           <property name="orientation">
+                            <enum>Qt::Vertical</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>20</width>
+                             <height>157</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                        </layout>
+                       </widget>
                        <widget class="QWidget" name="TabLCurve">
                         <property name="geometry">
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>76</height>
+                          <width>763</width>
+                          <height>371</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -6194,8 +6325,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>304</height>
+                          <width>763</width>
+                          <height>371</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -6426,23 +6557,23 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>438</height>
+                      <width>781</width>
+                      <height>686</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_181">
                      <item>
                       <widget class="QToolBox" name="ToolBoxEyeCandy">
                        <property name="currentIndex">
-                        <number>0</number>
+                        <number>5</number>
                        </property>
                        <widget class="QWidget" name="TabBW">
                         <property name="geometry">
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>126</height>
+                          <width>763</width>
+                          <height>317</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -6825,13 +6956,172 @@
                          </item>
                         </layout>
                        </widget>
+                       <widget class="QWidget" name="TabTextureOverlay">
+                        <attribute name="label">
+                         <string>Texture overlay</string>
+                        </attribute>
+                        <layout class="QVBoxLayout" name="verticalLayout_246">
+                         <item>
+                          <widget class="QWidget" name="widget_151" native="true">
+                           <layout class="QVBoxLayout" name="verticalLayout_245">
+                            <item>
+                             <widget class="QWidget" name="widgeta10_2" native="true">
+                              <layout class="QHBoxLayout" name="horizontalLayout_31">
+                               <property name="sizeConstraint">
+                                <enum>QLayout::SetFixedSize</enum>
+                               </property>
+                               <property name="margin">
+                                <number>0</number>
+                               </property>
+                               <item>
+                                <widget class="QWidget" name="TextureOverlayModeWidget" native="true"/>
+                               </item>
+                               <item>
+                                <widget class="QWidget" name="TextureOverlayMaskWidget" native="true"/>
+                               </item>
+                               <item>
+                                <spacer name="horizontalSpacer_57">
+                                 <property name="orientation">
+                                  <enum>Qt::Horizontal</enum>
+                                 </property>
+                                 <property name="sizeHint" stdset="0">
+                                  <size>
+                                   <width>10</width>
+                                   <height>20</height>
+                                  </size>
+                                 </property>
+                                </spacer>
+                               </item>
+                              </layout>
+                             </widget>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="widget_155" native="true">
+                              <layout class="QHBoxLayout" name="horizontalLayout_86">
+                               <property name="margin">
+                                <number>0</number>
+                               </property>
+                               <item>
+                                <widget class="QToolButton" name="TextureOverlayClearButton">
+                                 <property name="toolTip">
+                                  <string>Clear image</string>
+                                 </property>
+                                 <property name="text">
+                                  <string>Clear</string>
+                                 </property>
+                                 <property name="icon">
+                                  <iconset resource="../photivo.qrc">
+                                   <normaloff>:/photivo/Icons/reload.png</normaloff>:/photivo/Icons/reload.png</iconset>
+                                 </property>
+                                 <property name="iconSize">
+                                  <size>
+                                   <width>14</width>
+                                   <height>14</height>
+                                  </size>
+                                 </property>
+                                </widget>
+                               </item>
+                               <item>
+                                <widget class="QLineEdit" name="TextureOverlayText">
+                                 <property name="maximumSize">
+                                  <size>
+                                   <width>250</width>
+                                   <height>16777215</height>
+                                  </size>
+                                 </property>
+                                 <property name="readOnly">
+                                  <bool>true</bool>
+                                 </property>
+                                </widget>
+                               </item>
+                               <item>
+                                <widget class="QToolButton" name="TextureOverlayButton">
+                                 <property name="toolTip">
+                                  <string>Load image</string>
+                                 </property>
+                                 <property name="text">
+                                  <string>Load</string>
+                                 </property>
+                                 <property name="icon">
+                                  <iconset resource="../photivo.qrc">
+                                   <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                 </property>
+                                 <property name="iconSize">
+                                  <size>
+                                   <width>14</width>
+                                   <height>14</height>
+                                  </size>
+                                 </property>
+                                </widget>
+                               </item>
+                               <item>
+                                <spacer name="horizontalSpacer_62">
+                                 <property name="orientation">
+                                  <enum>Qt::Horizontal</enum>
+                                 </property>
+                                 <property name="sizeHint" stdset="0">
+                                  <size>
+                                   <width>10</width>
+                                   <height>20</height>
+                                  </size>
+                                 </property>
+                                </spacer>
+                               </item>
+                              </layout>
+                             </widget>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="TextureOverlayOpacityWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="TextureOverlaySaturationWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="TextureOverlayExponentWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="TextureOverlayInnerRadiusWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="TextureOverlayOuterRadiusWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="TextureOverlayRoundnessWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="TextureOverlayCenterXWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="TextureOverlayCenterYWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="TextureOverlaySoftnessWidget" native="true"/>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                         <item>
+                          <spacer name="verticalSpacer_126">
+                           <property name="orientation">
+                            <enum>Qt::Vertical</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>20</width>
+                             <height>55</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                        </layout>
+                       </widget>
                        <widget class="QWidget" name="TabGradualOverlay1">
                         <property name="geometry">
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>152</width>
-                          <height>147</height>
+                          <width>763</width>
+                          <height>290</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -7040,8 +7330,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>174</height>
+                          <width>763</width>
+                          <height>290</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -7669,8 +7959,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
-                      <height>330</height>
+                      <width>781</width>
+                      <height>686</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="OutLayout">
@@ -7680,7 +7970,7 @@
                         <enum>Qt::DefaultContextMenu</enum>
                        </property>
                        <property name="currentIndex">
-                        <number>7</number>
+                        <number>2</number>
                        </property>
                        <widget class="QWidget" name="TabBaseCurve">
                         <property name="geometry">
@@ -7866,8 +8156,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>150</width>
-                          <height>82</height>
+                          <width>763</width>
+                          <height>425</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -8306,8 +8596,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>266</width>
-                          <height>218</height>
+                          <width>763</width>
+                          <height>425</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -9473,7 +9763,7 @@
                     <enum>QFrame::NoFrame</enum>
                    </property>
                    <property name="currentIndex">
-                    <number>11</number>
+                    <number>4</number>
                    </property>
                    <property name="tabSpacing">
                     <number>6</number>
@@ -9483,7 +9773,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
+                      <width>83</width>
                       <height>68</height>
                      </rect>
                     </property>
@@ -9715,7 +10005,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
+                      <width>83</width>
                       <height>52</height>
                      </rect>
                     </property>
@@ -10317,7 +10607,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
+                      <width>83</width>
                       <height>52</height>
                      </rect>
                     </property>
@@ -10354,7 +10644,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
+                      <width>83</width>
                       <height>52</height>
                      </rect>
                     </property>
@@ -10391,7 +10681,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>98</width>
+                      <width>83</width>
                       <height>52</height>
                      </rect>
                     </property>

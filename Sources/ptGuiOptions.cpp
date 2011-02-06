@@ -308,8 +308,16 @@ const ptGuiOptionsItem ptGuiOptions::OverlayMode[] = {
   {ptOverlayMode_Screen,            QObject::tr("Screen") },
   {ptOverlayMode_GammaDark,         QObject::tr("Gamma dark") },
   {ptOverlayMode_GammaBright,       QObject::tr("Gamma bright") },
+  {ptOverlayMode_Normal,            QObject::tr("Normal") },
+  {ptOverlayMode_Replace,           QObject::tr("Replace") },
 //  {ptOverlayMode_Overlay,           QObject::tr("Overlay") },
   {ptOverlayMode_ShowMask,          QObject::tr("Show Mask") },
+  {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::OverlayMaskMode[] = {
+  {ptOverlayMaskMode_FullImage,     QObject::tr("Full image") },
+  {ptOverlayMaskMode_Vignette,      QObject::tr("Vignette") },
+  {ptOverlayMaskMode_InvVignette,   QObject::tr("Inv vignette") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::CrossprocessMode[] = {
