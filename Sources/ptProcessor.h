@@ -39,7 +39,7 @@ public:
 
 // Cached image versions at different points.
 ptImage*  m_Image_AfterDcRaw;
-ptImage*  m_Image_AfterLensfun;
+ptImage*  m_Image_AfterGeometry;
 ptImage*  m_Image_AfterRGB;
 ptImage*  m_Image_AfterLabCC;
 ptImage*  m_Image_AfterLabSN;

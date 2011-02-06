@@ -87,6 +87,10 @@ ptImage* Set(const uint16_t Width,
 // Copying is always deep (so including copying the image).
 ptImage* Set(const ptImage *Origin);
 
+// Copy from another image and scale to pipe size.
+ptImage* SetScaled(const ptImage *Origin,
+                   const short ScaleFactor);
+
 // Resize such that the maximum dimension becomes Size.
 // Typically the resizing is done in place, but one
 // can request a new ptImage object to be created
