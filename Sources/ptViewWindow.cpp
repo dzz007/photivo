@@ -427,8 +427,12 @@ void ptViewWindow::Zoom(const short Factor, const short Update) {
 
 void ptViewWindow::UpdateView(const ptImage* NewRelatedImage) {
 
-  if (NewRelatedImage) m_RelatedImage = NewRelatedImage;
-  if (!m_RelatedImage) return;
+  if (NewRelatedImage) {
+    m_RelatedImage = NewRelatedImage;
+  }
+  if (!m_RelatedImage) {
+    return;
+  }
 
   if (Settings->GetInt("ZoomMode")==ptZoomMode_Fit) {
     Settings->SetValue("Zoom",ZoomFitFactor(m_RelatedImage->m_Width,m_RelatedImage->m_Height));
@@ -576,159 +580,159 @@ void ptViewWindow::scrollContentsBy(int,int) {
 void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 
-bool ptViewWindow::viewportEvent(QEvent* Event) {
+void ptViewWindow::paintEvent(QPaintEvent* Event) {
+  if (m_QImageCut == NULL) {
+    return 0;
+  }
 
-  if (Event->type() == QEvent::Paint) {
+  // PaintEvent : Draw the pixmap and the 'overlay' rectangle if there.
 
-    if (m_QImageCut == NULL) {
-      return 0;
-    }
+  uint16_t VP_Width  = viewport()->size().width();
+  uint16_t VP_Height = viewport()->size().height();
 
-    // PaintEvent : Draw the pixmap and the 'overlay' rectangle if there.
+  m_XOffsetInVP = 0;
+  if (VP_Width > m_QImageCut->width()) {
+    m_XOffsetInVP = (VP_Width - m_QImageCut->width())/2;
+  }
 
-    uint16_t VP_Width  = viewport()->size().width();
-    uint16_t VP_Height = viewport()->size().height();
+  m_YOffsetInVP = 0;
+  if (VP_Height > m_QImageCut->height()) {
+    m_YOffsetInVP = (VP_Height - m_QImageCut->height())/2;
+  }
 
-    m_XOffsetInVP = 0;
-    if (VP_Width > m_QImageCut->width()) {
-      m_XOffsetInVP = (VP_Width - m_QImageCut->width())/2;
-    }
-
-    m_YOffsetInVP = 0;
-    if (VP_Height > m_QImageCut->height()) {
-      m_YOffsetInVP = (VP_Height - m_QImageCut->height())/2;
-    }
-
-    QPainter Painter(viewport());
-    Painter.save();
-    Painter.fillRect(0,0,VP_Width,VP_Height,palette().color(QPalette::Window));
-    if (m_QImageCut) {
-      Painter.drawImage(m_XOffsetInVP,m_YOffsetInVP,*m_QImageCut);
-    }
-    if (m_Grid) { // Grid
-      QPen Pen(QColor(150, 150, 150),1);
-      Painter.setPen(Pen);
-      uint16_t XNrLines = m_GridX;
-      uint16_t XStep = (int) ((double)m_QImageCut->width() / (double) (XNrLines+1));
-      uint16_t YNrLines = m_GridY;
-      uint16_t YStep = (int) ((double)m_QImageCut->height() / (double) (YNrLines+1));
-      if (XNrLines)
-        for (int i = 1; i <= XNrLines; i++) { //vertical lines
-          Painter.drawLine(m_XOffsetInVP+i*XStep,
-               m_YOffsetInVP,
-               m_XOffsetInVP+i*XStep,
-               m_YOffsetInVP+m_QImageCut->height()-1);
-        }
-      if (YNrLines)
-        for (int i = 1; i <= YNrLines; i++) { //horizontal lines
-          Painter.drawLine(m_XOffsetInVP,
-               m_YOffsetInVP+i*YStep,
-               m_XOffsetInVP+m_QImageCut->width()-1,
-               m_YOffsetInVP+i*YStep);
-        }
-    }
-    if (m_DrawRectangle && !m_DrawLine) {
-      int16_t FrameX0 = m_XOffsetInVP;
-      int16_t FrameY0 = m_YOffsetInVP;
-      int16_t FrameX1 = m_XOffsetInVP + m_QImageCut->width();
-      int16_t FrameY1 = m_YOffsetInVP + m_QImageCut->height();
-      int16_t RectX0 = MIN(m_StartDragX,m_EndDragX);
-      int16_t RectY0 = MIN(m_StartDragY,m_EndDragY);
-      int16_t RectX1 = MAX(m_StartDragX,m_EndDragX);
-      int16_t RectY1 = MAX(m_StartDragY,m_EndDragY);
-      QBrush Brush(QColor(20, 20, 20, 200));
-      if (m_CropLightsOut == 2) {
-        if (Settings->GetInt("BackgroundColor"))
-          Brush.setColor(QColor(Settings->GetInt("BackgroundRed"),
-                                Settings->GetInt("BackgroundGreen"),
-                                Settings->GetInt("BackgroundBlue")));
-        else
-          Brush.setColor(Theme->ptBackGround);
+  QPainter Painter(viewport());
+  Painter.save();
+  Painter.fillRect(0,0,VP_Width,VP_Height,palette().color(QPalette::Window));
+  if (m_QImageCut) {
+    Painter.drawImage(m_XOffsetInVP,m_YOffsetInVP,*m_QImageCut);
+  }
+  if (m_Grid) { // Grid
+    QPen Pen(QColor(150, 150, 150),1);
+    Painter.setPen(Pen);
+    uint16_t XNrLines = m_GridX;
+    uint16_t XStep = (int) ((double)m_QImageCut->width() / (double) (XNrLines+1));
+    uint16_t YNrLines = m_GridY;
+    uint16_t YStep = (int) ((double)m_QImageCut->height() / (double) (YNrLines+1));
+    if (XNrLines)
+      for (int i = 1; i <= XNrLines; i++) { //vertical lines
+        Painter.drawLine(m_XOffsetInVP+i*XStep,
+             m_YOffsetInVP,
+             m_XOffsetInVP+i*XStep,
+             m_YOffsetInVP+m_QImageCut->height()-1);
       }
-      if (m_CropLightsOut != 0) {
-        if (RectY0 > FrameY0) { // Top
-          Painter.fillRect(FrameX0,FrameY0,
-               FrameX1-FrameX0,MIN(FrameY1-FrameY0,RectY0-FrameY0),Brush);
-        }
-        if (RectY1 < FrameY1) { // Bottom
-          Painter.fillRect(FrameX0,MAX(RectY1+1,FrameY0),
-               FrameX1-FrameX0,FrameY1-MAX(RectY1+1,FrameY0),Brush);
-        }
-        if ((RectX0 > FrameX0) &&
-            !((RectY0 < FrameY0) && (RectY1 < FrameY0)) &&
-            !((RectY0 > FrameY1) && (RectY1 > FrameY1))) { // Left
-          Painter.fillRect(FrameX0,MAX(FrameY0,RectY0),
-               MIN(FrameX1-FrameX0,RectX0-FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
-        }
-        if ((RectX1 < FrameX1) &&
-            !((RectY0 < FrameY0) && (RectY1 < FrameY0)) &&
-            !((RectY0 > FrameY1) && (RectY1 > FrameY1))) { // Right
-          Painter.fillRect(MAX(RectX1+1,FrameX0),MAX(FrameY0,RectY0),
-               FrameX1-MAX(RectX1+1,FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
-        }
+    if (YNrLines)
+      for (int i = 1; i <= YNrLines; i++) { //horizontal lines
+        Painter.drawLine(m_XOffsetInVP,
+             m_YOffsetInVP+i*YStep,
+             m_XOffsetInVP+m_QImageCut->width()-1,
+             m_YOffsetInVP+i*YStep);
       }
-      QPen Pen(QColor(150, 150, 150),1);
-      if (m_CropLightsOut == 2) Pen.setColor(QColor(0,0,0,0));
-      Painter.setPen(Pen);
-      Painter.drawRect(m_StartDragX, m_StartDragY,
-                       m_EndDragX-m_StartDragX,m_EndDragY-m_StartDragY);
-      if (m_CropGuidelines == ptCropGuidelines_RuleThirds) {
-        Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)/3), m_StartDragY,
-             (int)((m_EndDragX-m_StartDragX)/3),m_EndDragY-m_StartDragY);
-        Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)/3),
-             m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)/3));
-      } else if (m_CropGuidelines == ptCropGuidelines_GoldenRatio) {
-        Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)*5/13), m_StartDragY,
-             (int)((m_EndDragX-m_StartDragX)*3/13),m_EndDragY-m_StartDragY);
-        Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)*5/13),
-             m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)*3/13));
-      } else if (m_CropGuidelines == ptCropGuidelines_Diagonals) {
-        int Length = MIN(ABS(m_EndDragX-m_StartDragX),ABS(m_EndDragY-m_StartDragY));
-        Painter.drawLine(m_StartDragX, m_StartDragY,
-             m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),
-             m_StartDragY+Length*SIGN(m_EndDragY-m_StartDragY));
-        Painter.drawLine(m_StartDragX, m_EndDragY,
-             m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),
-                   m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
-        Painter.drawLine(m_EndDragX, m_StartDragY,
-             m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
-             m_StartDragY+Length*SIGN(m_EndDragY-m_StartDragY));
-        Painter.drawLine(m_EndDragX, m_EndDragY,
-             m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
-             m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
+  }
+  if (m_DrawRectangle && !m_DrawLine) {
+    int16_t FrameX0 = m_XOffsetInVP;
+    int16_t FrameY0 = m_YOffsetInVP;
+    int16_t FrameX1 = m_XOffsetInVP + m_QImageCut->width();
+    int16_t FrameY1 = m_YOffsetInVP + m_QImageCut->height();
+    int16_t RectX0 = MIN(m_StartDragX,m_EndDragX);
+    int16_t RectY0 = MIN(m_StartDragY,m_EndDragY);
+    int16_t RectX1 = MAX(m_StartDragX,m_EndDragX);
+    int16_t RectY1 = MAX(m_StartDragY,m_EndDragY);
+    QBrush Brush(QColor(20, 20, 20, 200));
+    if (m_CropLightsOut == 2) {
+      if (Settings->GetInt("BackgroundColor"))
+        Brush.setColor(QColor(Settings->GetInt("BackgroundRed"),
+                              Settings->GetInt("BackgroundGreen"),
+                              Settings->GetInt("BackgroundBlue")));
+      else
+        Brush.setColor(Theme->ptBackGround);
+    }
+    if (m_CropLightsOut != 0) {
+      if (RectY0 > FrameY0) { // Top
+        Painter.fillRect(FrameX0,FrameY0,
+             FrameX1-FrameX0,MIN(FrameY1-FrameY0,RectY0-FrameY0),Brush);
       }
-    } else if (m_DrawRectangle && m_DrawLine) {
-      QPen Pen(QColor(255, 0, 0),1);
-      Painter.setPen(Pen);
+      if (RectY1 < FrameY1) { // Bottom
+        Painter.fillRect(FrameX0,MAX(RectY1+1,FrameY0),
+             FrameX1-FrameX0,FrameY1-MAX(RectY1+1,FrameY0),Brush);
+      }
+      if ((RectX0 > FrameX0) &&
+          !((RectY0 < FrameY0) && (RectY1 < FrameY0)) &&
+          !((RectY0 > FrameY1) && (RectY1 > FrameY1))) { // Left
+        Painter.fillRect(FrameX0,MAX(FrameY0,RectY0),
+             MIN(FrameX1-FrameX0,RectX0-FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
+      }
+      if ((RectX1 < FrameX1) &&
+          !((RectY0 < FrameY0) && (RectY1 < FrameY0)) &&
+          !((RectY0 > FrameY1) && (RectY1 > FrameY1))) { // Right
+        Painter.fillRect(MAX(RectX1+1,FrameX0),MAX(FrameY0,RectY0),
+             FrameX1-MAX(RectX1+1,FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
+      }
+    }
+    QPen Pen(QColor(150, 150, 150),1);
+    if (m_CropLightsOut == 2) Pen.setColor(QColor(0,0,0,0));
+    Painter.setPen(Pen);
+    Painter.drawRect(m_StartDragX, m_StartDragY,
+                     m_EndDragX-m_StartDragX,m_EndDragY-m_StartDragY);
+    if (m_CropGuidelines == ptCropGuidelines_RuleThirds) {
+      Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)/3), m_StartDragY,
+           (int)((m_EndDragX-m_StartDragX)/3),m_EndDragY-m_StartDragY);
+      Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)/3),
+           m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)/3));
+    } else if (m_CropGuidelines == ptCropGuidelines_GoldenRatio) {
+      Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)*5/13), m_StartDragY,
+           (int)((m_EndDragX-m_StartDragX)*3/13),m_EndDragY-m_StartDragY);
+      Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)*5/13),
+           m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)*3/13));
+    } else if (m_CropGuidelines == ptCropGuidelines_Diagonals) {
+      int Length = MIN(ABS(m_EndDragX-m_StartDragX),ABS(m_EndDragY-m_StartDragY));
       Painter.drawLine(m_StartDragX, m_StartDragY,
-                       m_EndDragX, m_EndDragY);
+           m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),
+           m_StartDragY+Length*SIGN(m_EndDragY-m_StartDragY));
+      Painter.drawLine(m_StartDragX, m_EndDragY,
+           m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),
+                 m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
+      Painter.drawLine(m_EndDragX, m_StartDragY,
+           m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
+           m_StartDragY+Length*SIGN(m_EndDragY-m_StartDragY));
+      Painter.drawLine(m_EndDragX, m_EndDragY,
+           m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
+           m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
     }
+  } else if (m_DrawRectangle && m_DrawLine) {
+    QPen Pen(QColor(255, 0, 0),1);
+    Painter.setPen(Pen);
+    Painter.drawLine(m_StartDragX, m_StartDragY,
+                     m_EndDragX, m_EndDragY);
+  }
 
-    Painter.restore();
-
-  } else if (Event->type() == QEvent::Resize) {
-
-   // ResizeEvent : Make a new cut on the appropriate place.
-
-    uint16_t VP_Width  = viewport()->size().width();
-    uint16_t VP_Height = viewport()->size().height();
-
-    // Adapt scrollbars to new viewport size
-    verticalScrollBar()->setPageStep(VP_Height);
-    verticalScrollBar()->setRange(0,m_ZoomHeight-VP_Height);
-    horizontalScrollBar()->setPageStep(VP_Width);
-    horizontalScrollBar()->setRange(0,m_ZoomWidth-VP_Width);
-
-    // Recalculat the cut.
-    RecalculateCut();
-    if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit)
-      ::CB_ZoomFitButton();
+  Painter.restore();
+}
 
 
-  } else if (Event->type() == QEvent::MouseButtonPress && m_SelectionAllowed) {
+////////////////////////////////////////////////////////////////////////
 
-    // Start selection.
+// ResizeEvent : Make a new cut on the appropriate place.
+void ptViewWindow::resizeEvent(QResizeEvent* Event) {
+  uint16_t VP_Width  = viewport()->size().width();
+  uint16_t VP_Height = viewport()->size().height();
 
+  // Adapt scrollbars to new viewport size
+  verticalScrollBar()->setPageStep(VP_Height);
+  verticalScrollBar()->setRange(0,m_ZoomHeight-VP_Height);
+  horizontalScrollBar()->setPageStep(VP_Width);
+  horizontalScrollBar()->setRange(0,m_ZoomWidth-VP_Width);
+
+  // Recalculat the cut.
+  RecalculateCut();
+  if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit)
+    ::CB_ZoomFitButton();
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
+  if (m_SelectionAllowed) {
     m_DrawRectangle = 0;
 
     m_StartDragX = ((QMouseEvent*) Event)->x();
@@ -736,10 +740,20 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
 
     viewport()->repaint();
 
-  } else if (Event->type() == QEvent::MouseMove &&
-             m_SelectionAllowed &&
-             ((QMouseEvent*)Event)->modifiers() == Qt::ControlModifier) {
+  } else {
+    // A mouse button press, without selection being allowed, is going
+    // to be interpreted as a move.
 
+    m_StartDragX = ((QMouseEvent*) Event)->x();
+    m_StartDragY = ((QMouseEvent*) Event)->y();
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
+  if (m_SelectionAllowed) && ((QMouseEvent*)Event)->modifiers() == Qt::ControlModifier) {
     // Drag selection.
 
     m_StartDragX += ((QMouseEvent*) Event)->x() - m_EndDragX;
@@ -749,8 +763,7 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
 
     viewport()->repaint();
 
-  } else if (Event->type() == QEvent::MouseMove && m_SelectionAllowed) {
-
+  } else if (m_SelectionAllowed) {
     // Drag selection.
 
     uint16_t Y;
@@ -784,7 +797,30 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
 
     viewport()->repaint();
 
-  } else if (Event->type() == QEvent::MouseButtonRelease && m_SelectionAllowed){
+  } else if (!m_SelectionAllowed) {
+    // On the move with the image.
+    //
+    m_EndDragX = ((QMouseEvent*) Event)->x();
+    m_EndDragY = ((QMouseEvent*) Event)->y();
+
+    int32_t CurrentStartX = horizontalScrollBar()->value();
+    int32_t CurrentStartY = verticalScrollBar()->value();
+
+    horizontalScrollBar()->setValue(CurrentStartX-m_EndDragX+m_StartDragX);
+    verticalScrollBar()->setValue(CurrentStartY-m_EndDragY+m_StartDragY);
+
+    m_StartDragX = m_EndDragX;
+    m_StartDragY = m_EndDragY;
+
+    viewport()->repaint();
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::mouseReleaseEvent(QMouseEvent* Event) {
+  if (m_SelectionAllowed) {
 
     // End selection.
 
@@ -820,38 +856,21 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
     m_SelectionOngoing = 0;
 
     viewport()->repaint();
-
-  } else if (Event->type() == QEvent::MouseButtonPress && !m_SelectionAllowed) {
-
-    // A mouse button press, without selection being allowed, is going
-    // to be interpreted as a move.
-
-    m_StartDragX = ((QMouseEvent*) Event)->x();
-    m_StartDragY = ((QMouseEvent*) Event)->y();
+  }
+}
 
 
-  } else if (Event->type() == QEvent::MouseMove && !m_SelectionAllowed) {
+////////////////////////////////////////////////////////////////////////
 
-    // On the move with the image.
-    //
-    m_EndDragX = ((QMouseEvent*) Event)->x();
-    m_EndDragY = ((QMouseEvent*) Event)->y();
+void ptViewWindow::contextMenuEvent(QContextMenuEvent* Event) {
+  ContextMenu(Event);
+}
 
-    int32_t CurrentStartX = horizontalScrollBar()->value();
-    int32_t CurrentStartY = verticalScrollBar()->value();
 
-    horizontalScrollBar()->setValue(CurrentStartX-m_EndDragX+m_StartDragX);
-    verticalScrollBar()->setValue(CurrentStartY-m_EndDragY+m_StartDragY);
+////////////////////////////////////////////////////////////////////////
 
-    m_StartDragX = m_EndDragX;
-    m_StartDragY = m_EndDragY;
-
-    viewport()->repaint();
-
-  } else if (Event->type() == QEvent::ContextMenu) {
-    ContextMenu(Event);
-  } else if (Event->type() == QEvent::Wheel &&
-             ((QMouseEvent*)Event)->modifiers()==Qt::NoModifier) {
+void ptViewWindow::wheelEvent(QWheelEvent* Event) {
+  if (((QMouseEvent*)Event)->modifiers()==Qt::NoModifier) {
     m_SizeReportTimer->start(m_SizeReportTimeOut);
 
     QList<int> Scales;
@@ -877,57 +896,66 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
     m_SizeReport->setText("<h1>"+m_SizeReportText+"%</h1>");
     m_SizeReport->update();
     m_SizeReport->setVisible(1);
-  } else if (Event->type() == QEvent::DragEnter) {
-    // accept just text/uri-list mime format
-    if (((QDragEnterEvent*)Event)->mimeData()->hasFormat("text/uri-list"))
-    {
-        ((QDragEnterEvent*)Event)->acceptProposedAction();
-    }
-  } else if (Event->type() == QEvent::Drop) {
-    QList<QUrl> UrlList;
-    QString DropName;
-    QFileInfo DropInfo;
+  }
+}
 
-    if (((QDropEvent*)Event)->mimeData()->hasUrls())
-    {
-      UrlList = ((QDropEvent*)Event)->mimeData()->urls(); // returns list of QUrls
 
-      // if just text was dropped, urlList is empty (size == 0)
-      if ( UrlList.size() > 0) // if at least one QUrl is present in list
-      {
-        DropName = UrlList[0].toLocalFile(); // convert first QUrl to local path
-        DropInfo.setFile( DropName ); // information about file
-        if ( DropInfo.isFile() ) { // if is file
-          if (DropInfo.completeSuffix()!="pts" && DropInfo.completeSuffix()!="ptj" &&
-              DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj") {
-            ImageFileToOpen = DropName;
-            CB_MenuFileOpen(1);
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::dragEnterEvent(QDragEnterEvent* Event) {
+  // accept just text/uri-list mime format
+  if (((QDragEnterEvent*)Event)->mimeData()->hasFormat("text/uri-list"))
+  {
+      ((QDragEnterEvent*)Event)->acceptProposedAction();
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::dropEvent(QDropEvent* Event) {
+  QList<QUrl> UrlList;
+  QString DropName;
+  QFileInfo DropInfo;
+
+  if (((QDropEvent*)Event)->mimeData()->hasUrls())
+  {
+    UrlList = ((QDropEvent*)Event)->mimeData()->urls(); // returns list of QUrls
+
+    // if just text was dropped, urlList is empty (size == 0)
+    if ( UrlList.size() > 0) // if at least one QUrl is present in list
+    {
+      DropName = UrlList[0].toLocalFile(); // convert first QUrl to local path
+      DropInfo.setFile( DropName ); // information about file
+      if ( DropInfo.isFile() ) { // if is file
+        if (DropInfo.completeSuffix()!="pts" && DropInfo.completeSuffix()!="ptj" &&
+            DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj") {
+          ImageFileToOpen = DropName;
+          CB_MenuFileOpen(1);
+        } else {
+          if ( Settings->GetInt("ResetSettingsConfirmation") == 0 ) {
+            CB_OpenSettingsFile(DropName);
           } else {
-            if ( Settings->GetInt("ResetSettingsConfirmation") == 0 ) {
+            #ifdef Q_OS_WIN32
+              DropName = DropName.replace(QString("/"), QString("\\"));
+            #endif
+            QMessageBox msgBox;
+            msgBox.setIcon(QMessageBox::Question);
+            msgBox.setWindowTitle(tr("Settings file dropped!"));
+            msgBox.setText(tr("Do you really want to open\n")+DropName);
+            msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+            msgBox.setDefaultButton(QMessageBox::Ok);
+            if (msgBox.exec()==QMessageBox::Ok){
               CB_OpenSettingsFile(DropName);
-            } else {
-              #ifdef Q_OS_WIN32
-                DropName = DropName.replace(QString("/"), QString("\\"));
-              #endif
-              QMessageBox msgBox;
-              msgBox.setIcon(QMessageBox::Question);
-              msgBox.setWindowTitle(tr("Settings file dropped!"));
-              msgBox.setText(tr("Do you really want to open\n")+DropName);
-              msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-              msgBox.setDefaultButton(QMessageBox::Ok);
-              if (msgBox.exec()==QMessageBox::Ok){
-                CB_OpenSettingsFile(DropName);
-              }
             }
           }
         }
       }
     }
-    ((QDropEvent*)Event)->acceptProposedAction();
   }
-
-  return 0;
+  ((QDropEvent*)Event)->acceptProposedAction();
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //

@@ -120,8 +120,16 @@ QImage*              m_QImageCut;
 
 protected:
 // overloaded virtual ones.
-bool  viewportEvent(QEvent*);
-void  scrollContentsBy ( int dx, int dy );
+void paintEvent(QPaintEvent* Event);
+void resizeEvent(QResizeEvent* Event);
+void mousePressEvent(QMouseEvent* Event);
+void mouseMoveEvent(QMouseEvent* Event);
+void mouseReleaseEvent(QMouseEvent* Event);
+void contextMenuEvent(QContextMenuEvent* Event);
+void wheelEvent(QWheelEvent* Event);
+void dragEnterEvent(QDragEnterEvent* Event);
+void dropEvent(QDropEvent* Event);
+void  scrollContentsBy(int dx, int dy);
 
 private slots:
 void MenuExpIndicate();
