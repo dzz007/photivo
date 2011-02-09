@@ -59,7 +59,7 @@ static const ptGuiOptionsItem Style[];
 static const ptGuiOptionsItem StyleHighLight[];
 static const ptGuiOptionsItem PipeSize[];
 static const ptGuiOptionsItem RunMode[];
-static const ptGuiOptionsItem CropRectangleMode[];
+static const ptGuiOptionsItem CropGuidelines[];
 static const ptGuiOptionsItem ResizeFilter[];
 static const ptGuiOptionsItem IMResizeFilter[];
 static const ptGuiOptionsItem WhiteBalance[];

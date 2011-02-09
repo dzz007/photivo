@@ -4,6 +4,7 @@
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 // Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
+// Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
 //
 // This file is part of photivo.
 //
@@ -25,9 +26,11 @@
 #include "ptSettings.h"
 #include "ptConstants.h"
 #include "ptTheme.h"
+#include "ptEnums.h"
 
 #include <QPen>
 #include <QMessageBox>
+#include <QRect>
 
 // A prototype we need
 void UpdateSettings();
@@ -35,7 +38,6 @@ void CB_InputChanged(const QString,const QVariant);
 void CB_ZoomFitButton();
 
 extern QString ImageFileToOpen;
-
 extern ptTheme* Theme;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +49,8 @@ extern ptTheme* Theme;
 ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
                                  QWidget* Parent)
 
-  : QAbstractScrollArea(Parent) {
+  : QAbstractScrollArea(Parent)
+{
 
   m_RelatedImage = RelatedImage; // don't delete that at cleanup !
   m_ZoomFactor   = 1.0;
@@ -62,14 +65,22 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_StartDragY       = 0;
   m_SelectionAllowed = 0;
   m_SelectionOngoing = 0;
-  m_DrawLine         = 0;
-  m_Grid             = 0;
+  m_DrawRotateLine         = 0;
+  m_HasGrid             = 0;
   m_GridX            = 0;
   m_GridY            = 0;
   m_DrawRectangle    = 0;
-  m_RectangleMode    = 0;
+  m_CropGuidelines   = 0;
   m_CropLightsOut    = Settings->m_IniSettings->value("CropLightsOut",0).toInt();
+  m_CropAllowed      = 0;
   m_FixedAspectRatio = 0;
+  m_CropRectDragging = 0;
+  m_CropRectIsFullImage = 0;
+
+  m_Action           = ptVaNone;
+  m_Frame            = new QRect();
+  m_Rect             = new QRect();
+
 
   //Avoiding tricky blacks at zoom fit.
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -260,35 +271,92 @@ ptViewWindow::~ptViewWindow() {
   delete m_QImage;
   delete m_QImageZoomed;
   delete m_QImageCut;
+  delete m_Frame;
+  delete m_Rect;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Methods for setting and/or determining if a selection is ongoing.
-// The few calculations are for ofsetting against what is in the
+// The few calculations are for offsetting against what is in the
 // viewport versus what is in the image + zoomfactor.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+
+ptViewportAction ptViewWindow::GetAction() {
+  return m_Action;
+}
+
+void ptViewWindow::StopAction() {
+  m_Action = ptVaNone;
+}
+
+void ptViewWindow::StartCrop(const int AspectRatioW,
+                             const int AspectRatioH,
+                             const short CropGuidelines,
+                             QRect InitialRect)
+{
+  m_RectARW = AspectRatioW;
+  m_RectARH = AspectRatioH;
+  m_CropGuidelines = CropGuidelines;
+}
+
+void ptViewWindow::StartLine() {
+
+}
+
+void ptViewWindow::StartSelection() {
+
+}
+
 void ptViewWindow::AllowSelection(const short  Allow,
                                   const short  FixedAspectRatio,
                                   const double HOverW,
-                                  const short  RectangleMode) {
+                                  const short  CropGuidelines)
+{
   m_SelectionAllowed = Allow;
   m_SelectionOngoing = Allow;
   m_FixedAspectRatio = FixedAspectRatio;
   m_HOverW           = HOverW;
-  m_RectangleMode    = RectangleMode;
-  if (RectangleMode == ptRectangleMode_Line) {
-    m_DrawLine = 1;
+  m_CropGuidelines   = CropGuidelines;
+  if (CropGuidelines == ptCropGuidelines_Line) {
+    m_DrawRotateLine = 1;
   } else {
-    m_DrawLine = 0;
+    m_DrawRotateLine = 0;
   }
 }
 
 short ptViewWindow::SelectionOngoing() {
   return m_SelectionOngoing;
 }
+
+void ptViewWindow::AllowCrop(const short Allow,
+               const int AspectRatioW,
+               const int AspectRatioH,
+               const short CropGuidelines)
+{
+  m_CropAllowed = Allow;
+
+  m_FixedAspectRatio = 1;
+  m_CropARW = AspectRatioW;
+  m_CropARH = AspectRatioH;
+
+  m_CropGuidelines = CropGuidelines;
+  if (CropGuidelines == ptCropGuidelines_Line) {
+    m_DrawRotateLine = 1;
+  } else {
+    m_DrawRotateLine = 0;
+  }
+
+  RectX0 = -1;  // initial crop rectangle is complete image
+  viewport()->repaint();
+}
+
+short ptViewWindow::CropOngoing() {
+  return m_CropAllowed;
+}
+
 
 uint16_t ptViewWindow::GetSelectionX() {
   uint16_t X = MIN(m_StartDragX,m_EndDragX);
@@ -344,11 +412,11 @@ void ptViewWindow::LightsOut() {
 
 void ptViewWindow::Grid(const short Enabled, const short GridX, const short GridY) {
   if (Enabled) {
-    m_Grid = 1;
+    m_HasGrid = 1;
     m_GridX = GridX;
     m_GridY = GridY;
   } else {
-    m_Grid = 0;
+    m_HasGrid = 0;
   }
 }
 
@@ -399,8 +467,12 @@ void ptViewWindow::Zoom(const short Factor, const short Update) {
 
 void ptViewWindow::UpdateView(const ptImage* NewRelatedImage) {
 
-  if (NewRelatedImage) m_RelatedImage = NewRelatedImage;
-  if (!m_RelatedImage) return;
+  if (NewRelatedImage) {
+    m_RelatedImage = NewRelatedImage;
+  }
+  if (!m_RelatedImage) {
+    return;
+  }
 
   if (Settings->GetInt("ZoomMode")==ptZoomMode_Fit) {
     Settings->SetValue("Zoom",ZoomFitFactor(m_RelatedImage->m_Width,m_RelatedImage->m_Height));
@@ -496,23 +568,6 @@ void ptViewWindow::UpdateView(const ptImage* NewRelatedImage) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::RecalculateCut() {
-
-  if (!m_QImageZoomed) return;
-
-  // Following are coordinates in a zoomed image.
-  m_StartX = horizontalScrollBar()->value();
-  uint16_t Width  = MIN(horizontalScrollBar()->pageStep(),
-                        m_QImageZoomed->width());
-  m_StartY = verticalScrollBar()->value();
-  uint16_t Height = MIN(verticalScrollBar()->pageStep(),
-                        m_QImageZoomed->height());
-
-  // Make a new cut out of our zoomed image
-  delete m_QImageCut;
-  m_QImageCut = new QImage(m_QImageZoomed->copy(m_StartX,
-                                                m_StartY,
-                                                Width,
-                                                Height));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -548,188 +603,241 @@ void ptViewWindow::scrollContentsBy(int,int) {
 void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 
-bool ptViewWindow::viewportEvent(QEvent* Event) {
+void ptViewWindow::paintEvent(QPaintEvent* Event) {
+  if (m_QImageCut == NULL) {
+    return;
+  }
 
-  if (Event->type() == QEvent::Paint) {
+  uint16_t VPWidth  = viewport()->size().width();
+  uint16_t VPHeight = viewport()->size().height();
 
-    if (m_QImageCut == NULL) {
-      return 0;
+  // Calc position of the image frame in viewport
+  // Size of the frame has already been set in RecalculateCut
+  if (VPHeight > m_QImageCut->height()) {
+    m_Frame->setTop((VP_Height - m_QImageCut->height()) / 2);
+  } else {
+    m_Frame->setTop(0);
+  }
+  if (VPWidth > m_QImageCut->width()) {
+    m_Frame->setLeft((VPWidth - m_QImageCut->width()) / 2);
+  } else {
+    m_Frame->setLeft(0);
+  }
+
+
+  // Fill viewport with background colour and draw image
+  QPainter Painter(viewport());
+  Painter.save();
+  Painter.fillRect(0, 0, VPWidth, VPHeight, palette().color(QPalette::Window));
+  if (m_QImageCut) {
+    Painter.drawImage(m_Frame->left(), m_Frame->top(), *m_QImageCut);
+  }
+
+
+  // Grid overlay
+  if (m_HasGrid) {
+    QPen Pen(QColor(150, 150, 150),1);
+    Painter.setPen(Pen);
+    uint16_t XNrLines = m_GridX;
+    uint16_t XStep = (int) ((double)m_QImageCut->width() / (double) (XNrLines+1));
+    uint16_t YNrLines = m_GridY;
+    uint16_t YStep = (int) ((double)m_QImageCut->height() / (double) (YNrLines+1));
+    if (XNrLines) {
+      for (int i = 1; i <= XNrLines; i++) { //vertical lines
+        Painter.drawLine(m_XOffsetInVP+i*XStep,
+             m_YOffsetInVP,
+             m_XOffsetInVP+i*XStep,
+             m_YOffsetInVP+m_QImageCut->height()-1);
+      }
     }
-
-    // PaintEvent : Draw the pixmap and the 'overlay' rectangle if there.
-
-    uint16_t VP_Width  = viewport()->size().width();
-    uint16_t VP_Height = viewport()->size().height();
-
-    m_XOffsetInVP = 0;
-    if (VP_Width > m_QImageCut->width()) {
-      m_XOffsetInVP = (VP_Width - m_QImageCut->width())/2;
+    if (YNrLines) {
+      for (int i = 1; i <= YNrLines; i++) { //horizontal lines
+        Painter.drawLine(m_XOffsetInVP,
+             m_YOffsetInVP+i*YStep,
+             m_XOffsetInVP+m_QImageCut->width()-1,
+             m_YOffsetInVP+i*YStep);
+      }
     }
+  }
 
-    m_YOffsetInVP = 0;
-    if (VP_Height > m_QImageCut->height()) {
-      m_YOffsetInVP = (VP_Height - m_QImageCut->height())/2;
-    }
 
-    QPainter Painter(viewport());
-    Painter.save();
-    Painter.fillRect(0,0,VP_Width,VP_Height,palette().color(QPalette::Window));
-    if (m_QImageCut) {
-      Painter.drawImage(m_XOffsetInVP,m_YOffsetInVP,*m_QImageCut);
-    }
-    if (m_Grid) { // Grid
-      QPen Pen(QColor(150, 150, 150),1);
-      Painter.setPen(Pen);
-      uint16_t XNrLines = m_GridX;
-      uint16_t XStep = (int) ((double)m_QImageCut->width() / (double) (XNrLines+1));
-      uint16_t YNrLines = m_GridY;
-      uint16_t YStep = (int) ((double)m_QImageCut->height() / (double) (YNrLines+1));
-      if (XNrLines)
-        for (int i = 1; i <= XNrLines; i++) { //vertical lines
-          Painter.drawLine(m_XOffsetInVP+i*XStep,
-               m_YOffsetInVP,
-               m_XOffsetInVP+i*XStep,
-               m_YOffsetInVP+m_QImageCut->height()-1);
-        }
-      if (YNrLines)
-        for (int i = 1; i <= YNrLines; i++) { //horizontal lines
-          Painter.drawLine(m_XOffsetInVP,
-               m_YOffsetInVP+i*YStep,
-               m_XOffsetInVP+m_QImageCut->width()-1,
-               m_YOffsetInVP+i*YStep);
-        }
-    }
-    if (m_DrawRectangle && !m_DrawLine) {
-      int16_t FrameX0 = m_XOffsetInVP;
-      int16_t FrameY0 = m_YOffsetInVP;
-      int16_t FrameX1 = m_XOffsetInVP + m_QImageCut->width();
-      int16_t FrameY1 = m_YOffsetInVP + m_QImageCut->height();
-      int16_t RectX0 = MIN(m_StartDragX,m_EndDragX);
-      int16_t RectY0 = MIN(m_StartDragY,m_EndDragY);
-      int16_t RectX1 = MAX(m_StartDragX,m_EndDragX);
-      int16_t RectY1 = MAX(m_StartDragY,m_EndDragY);
-      QBrush Brush(QColor(20, 20, 20, 200));
-      if (m_CropLightsOut == 2) {
-        if (Settings->GetInt("BackgroundColor"))
-          Brush.setColor(QColor(Settings->GetInt("BackgroundRed"),
+  switch (m_Action) {
+    // Draw rectangle for crop/selection tools
+    case ptVaSelectRect:
+    case ptVaCrop:
+      // Lights out: paint area outside the crop rectangle for
+      // lights dimmed and lights off modes
+      QBrush LightsOutBrush(QColor(20, 20, 20, 200));
+      if (m_CropLightsOut == 2) {   // lights off
+        if (Settings->GetInt("BackgroundColor")) {
+          LightsOutBrush.setColor(QColor(Settings->GetInt("BackgroundRed"),
                                 Settings->GetInt("BackgroundGreen"),
                                 Settings->GetInt("BackgroundBlue")));
-        else
-          Brush.setColor(Theme->ptBackGround);
-      }
-      if (m_CropLightsOut != 0) {
-        if (RectY0 > FrameY0) { // Top
-          Painter.fillRect(FrameX0,FrameY0,
-               FrameX1-FrameX0,MIN(FrameY1-FrameY0,RectY0-FrameY0),Brush);
-        }
-        if (RectY1 < FrameY1) { // Bottom
-          Painter.fillRect(FrameX0,MAX(RectY1+1,FrameY0),
-               FrameX1-FrameX0,FrameY1-MAX(RectY1+1,FrameY0),Brush);
-        }
-        if ((RectX0 > FrameX0) &&
-            !((RectY0 < FrameY0) && (RectY1 < FrameY0)) &&
-            !((RectY0 > FrameY1) && (RectY1 > FrameY1))) { // Left
-          Painter.fillRect(FrameX0,MAX(FrameY0,RectY0),
-               MIN(FrameX1-FrameX0,RectX0-FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
-        }
-        if ((RectX1 < FrameX1) &&
-            !((RectY0 < FrameY0) && (RectY1 < FrameY0)) &&
-            !((RectY0 > FrameY1) && (RectY1 > FrameY1))) { // Right
-          Painter.fillRect(MAX(RectX1+1,FrameX0),MAX(FrameY0,RectY0),
-               FrameX1-MAX(RectX1+1,FrameX0),MIN(FrameY1,RectY1)-MAX(FrameY0,RectY0)+1,Brush);
+        } else {
+          LightsOutBrush.setColor(Theme->ptBackGround);
         }
       }
-      QPen Pen(QColor(150, 150, 150),1);
-      if (m_CropLightsOut == 2) Pen.setColor(QColor(0,0,0,0));
-      Painter.setPen(Pen);
-      Painter.drawRect(m_StartDragX, m_StartDragY,
-                       m_EndDragX-m_StartDragX,m_EndDragY-m_StartDragY);
-      if (m_RectangleMode == ptRectangleMode_RuleThirds) {
-        Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)/3), m_StartDragY,
-             (int)((m_EndDragX-m_StartDragX)/3),m_EndDragY-m_StartDragY);
-        Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)/3),
-             m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)/3));
-      } else if (m_RectangleMode == ptRectangleMode_GoldenRatio) {
-        Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)*5/13), m_StartDragY,
-             (int)((m_EndDragX-m_StartDragX)*3/13),m_EndDragY-m_StartDragY);
-        Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)*5/13),
-             m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)*3/13));
-      } else if (m_RectangleMode == ptRectangleMode_Diagonal) {
-        int Length = MIN(ABS(m_EndDragX-m_StartDragX),ABS(m_EndDragY-m_StartDragY));
-        Painter.drawLine(m_StartDragX, m_StartDragY,
-             m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),
-             m_StartDragY+Length*SIGN(m_EndDragY-m_StartDragY));
-        Painter.drawLine(m_StartDragX, m_EndDragY,
-             m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),
-                   m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
-        Painter.drawLine(m_EndDragX, m_StartDragY,
-             m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
-             m_StartDragY+Length*SIGN(m_EndDragY-m_StartDragY));
-        Painter.drawLine(m_EndDragX, m_EndDragY,
-             m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
-             m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
+
+      // Paint outside areas for lights dimmed/black.
+      // Up to four rectangles are drawn according to the following figure.
+      // tttttttttttttttttt
+      // lll   crop     rrr
+      // lll rectangle  rrr
+      // bbbbbbbbbbbbbbbbbb
+      if (m_CropLightsOut > 0) {
+        if (m_Rect->top() > m_Frame->top()) { // Top
+          Painter.fillRect(m_Frame->left(), m_Frame->top(),
+                           m_Frame->width(), m_Rect->top(),
+                           LightsOutBrush);
+        }
+        if (m_Rect->bottom() < m_Frame->bottom()) { // Bottom
+          Painter.fillPath(m_Frame->left(), m_Rect->bottom() + 1,
+                           m_Frame->width(), m_Frame->bottom() - m_Rect->bottom(),
+                           LightsOutBrush);
+        }
+        if (m_Rect->left() > m_Frame->left()) {   // left
+          Painter.fillRect(m_Frame->left(), m_Rect->top(),
+                           m_Rect->left(), m_Rect->height()
+                           LightsOutBrush);
+        }
+        if (m_Rect->right() < m_Frame->right()) {   // right
+          Painter.fillRect(m_Rect->right() + 1, m_Rect->top(),
+                           m_Frame->right() - m_Rect->right(), m_Rect->height()
+                           LightsOutBrush);
+        }
       }
-    } else if (m_DrawRectangle && m_DrawLine) {
+
+
+      // Draw outline/guidelines for crop rectangle (not for "lights off")
+      if (m_CropLightsOut != 2) {
+        QPen Pen(QColor(150, 150, 150),1);
+        Painter.setPen(Pen);
+        Painter.drawRect(m_StartDragX, m_StartDragY,
+                         m_EndDragX-m_StartDragX,m_EndDragY-m_StartDragY);
+        switch (m_CropGuidelines) {
+          case ptCropGuidelines_RuleThirds:
+            Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)/3), m_StartDragY,
+                 (int)((m_EndDragX-m_StartDragX)/3),m_EndDragY-m_StartDragY);
+            Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)/3),
+                 m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)/3));
+            break;
+
+          case ptCropGuidelines_GoldenRatio:
+            Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)*5/13), m_StartDragY,
+                 (int)((m_EndDragX-m_StartDragX)*3/13),m_EndDragY-m_StartDragY);
+            Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)*5/13),
+                 m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)*3/13));
+            break;
+
+          case ptCropGuidelines_Diagonals:
+            int Length = MIN(ABS(m_EndDragX-m_StartDragX),ABS(m_EndDragY-m_StartDragY));
+            Painter.drawLine(m_StartDragX, m_StartDragY,
+                 m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),
+                 m_StartDragY+Length*SIGN(m_EndDragY-m_StartDragY));
+            Painter.drawLine(m_StartDragX, m_EndDragY,
+                 m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),
+                       m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
+            Painter.drawLine(m_EndDragX, m_StartDragY,
+                 m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
+                 m_StartDragY+Length*SIGN(m_EndDragY-m_StartDragY));
+            Painter.drawLine(m_EndDragX, m_EndDragY,
+                 m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
+                 m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
+            break;
+        }
+      }
+
+      break;
+
+
+    // draw angle line for the rotate tool
+    case ptVaDrawLine:
       QPen Pen(QColor(255, 0, 0),1);
       Painter.setPen(Pen);
       Painter.drawLine(m_StartDragX, m_StartDragY,
                        m_EndDragX, m_EndDragY);
-    }
+  }
 
-    Painter.restore();
-
-  } else if (Event->type() == QEvent::Resize) {
-
-   // ResizeEvent : Make a new cut on the appropriate place.
-
-    uint16_t VP_Width  = viewport()->size().width();
-    uint16_t VP_Height = viewport()->size().height();
-
-    // Adapt scrollbars to new viewport size
-    verticalScrollBar()->setPageStep(VP_Height);
-    verticalScrollBar()->setRange(0,m_ZoomHeight-VP_Height);
-    horizontalScrollBar()->setPageStep(VP_Width);
-    horizontalScrollBar()->setRange(0,m_ZoomWidth-VP_Width);
-
-    // Recalculat the cut.
-    RecalculateCut();
-    if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit)
-      ::CB_ZoomFitButton();
+  Painter.restore();
+}
 
 
-  } else if (Event->type() == QEvent::MouseButtonPress && m_SelectionAllowed) {
+////////////////////////////////////////////////////////////////////////
+//
+// resizeEvent
+//
+////////////////////////////////////////////////////////////////////////
 
-    // Start selection.
+// ResizeEvent : Make a new cut on the appropriate place.
+void ptViewWindow::resizeEvent(QResizeEvent* Event) {
+  uint16_t VP_Width  = viewport()->size().width();
+  uint16_t VP_Height = viewport()->size().height();
 
-    m_DrawRectangle = 0;
+  // Adapt scrollbars to new viewport size
+  verticalScrollBar()->setPageStep(VP_Height);
+  verticalScrollBar()->setRange(0,m_ZoomHeight-VP_Height);
+  horizontalScrollBar()->setPageStep(VP_Width);
+  horizontalScrollBar()->setRange(0,m_ZoomWidth-VP_Width);
 
-    m_StartDragX = ((QMouseEvent*) Event)->x();
-    m_StartDragY = ((QMouseEvent*) Event)->y();
+  // Recalculat the cut.
+  RecalculateCut();
+  if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit)
+    ::CB_ZoomFitButton();
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
+  // Start dragging crop rectangle. No immediate repaint needed.
+  // Visible change doesn’t occur till mouse is moved.
+  if (m_CropAllowed) {
+    m_CropRectChange = 1;    // TODO: Look at mouse position to determine if move or drag
+
+  // Start selection. Needs immediate repaint because we start defining a completely
+  // new selection rectangle.
+  } else if (m_SelectionAllowed) {
+    m_DrawRectangle = 0;    // remove previous rectangle
+    m_StartDragX = Event->x();
+    m_StartDragY = Event->y();
+    viewport()->repaint();
+
+  } else {
+    // A mouse button press, without selection being allowed, is going
+    // to be interpreted as a move.
+    m_StartDragX = Event->x();
+    m_StartDragY = Event->y();
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
+  if (m_CropAllowed && (m_CropRectChange == 1)) {
+    // crop rectangle size changes with fixed AR
+
+  } else if (m_CropAllowed && (m_CropRectChange == 2)) {
+    // crop rectangle move
+
+  } else if ((m_SelectionAllowed) && Event->modifiers() == Qt::ControlModifier) {
+    // move selection.
+
+    m_StartDragX += Event->x() - m_EndDragX;
+    m_StartDragY += Event->y() - m_EndDragY;
+    m_EndDragX = Event->x();
+    m_EndDragY = Event->y();
 
     viewport()->repaint();
 
-  } else if (Event->type() == QEvent::MouseMove &&
-             m_SelectionAllowed &&
-             ((QMouseEvent*)Event)->modifiers() == Qt::ControlModifier) {
-
-    // Drag selection.
-
-    m_StartDragX += ((QMouseEvent*) Event)->x() - m_EndDragX;
-    m_StartDragY += ((QMouseEvent*) Event)->y() - m_EndDragY;
-    m_EndDragX = ((QMouseEvent*) Event)->x();
-    m_EndDragY = ((QMouseEvent*) Event)->y();
-
-    viewport()->repaint();
-
-  } else if (Event->type() == QEvent::MouseMove && m_SelectionAllowed) {
-
-    // Drag selection.
+  } else if (m_SelectionAllowed) {
+    // change selection size
 
     uint16_t Y;
 
     if (m_FixedAspectRatio) {
-      if (((QMouseEvent*) Event)->x()>m_StartDragX) {
-        if (((QMouseEvent*) Event)->y()>m_StartDragY) {
+      if (Event->x()>m_StartDragX) {
+        if (Event->y()>m_StartDragY) {
           Y = m_StartDragY +
               (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
         } else {
@@ -737,7 +845,7 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
               (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
         }
       } else {
-        if (((QMouseEvent*) Event)->y()>m_StartDragY) {
+        if (Event->y()>m_StartDragY) {
           Y = m_StartDragY -
               (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
         } else {
@@ -746,68 +854,21 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
         }
       }
     } else {
-      Y = ((QMouseEvent*) Event)->y();
+      Y = Event->y();
     }
 
     m_DrawRectangle = 1;
 
-    m_EndDragX = ((QMouseEvent*) Event)->x();
+    m_EndDragX = Event->x();
     m_EndDragY = Y;
 
     viewport()->repaint();
 
-  } else if (Event->type() == QEvent::MouseButtonRelease && m_SelectionAllowed){
-
-    // End selection.
-
-    m_DrawRectangle = 0;
-
-    uint16_t Y;
-
-    if (m_FixedAspectRatio) {
-      if (((QMouseEvent*) Event)->x()>m_StartDragX) {
-        if (((QMouseEvent*) Event)->y()>m_StartDragY) {
-          Y = m_StartDragY +
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
-        } else {
-          Y = m_StartDragY -
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
-        }
-      } else {
-        if (((QMouseEvent*) Event)->y()>m_StartDragY) {
-          Y = m_StartDragY -
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
-        } else {
-          Y = m_StartDragY +
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
-        }
-      }
-    } else {
-      Y = ((QMouseEvent*) Event)->y();
-    }
-
-    m_EndDragX = ((QMouseEvent*) Event)->x();
-    m_EndDragY = Y;
-
-    m_SelectionOngoing = 0;
-
-    viewport()->repaint();
-
-  } else if (Event->type() == QEvent::MouseButtonPress && !m_SelectionAllowed) {
-
-    // A mouse button press, without selection being allowed, is going
-    // to be interpreted as a move.
-
-    m_StartDragX = ((QMouseEvent*) Event)->x();
-    m_StartDragY = ((QMouseEvent*) Event)->y();
-
-
-  } else if (Event->type() == QEvent::MouseMove && !m_SelectionAllowed) {
-
+  } else if (!m_SelectionAllowed) {
     // On the move with the image.
     //
-    m_EndDragX = ((QMouseEvent*) Event)->x();
-    m_EndDragY = ((QMouseEvent*) Event)->y();
+    m_EndDragX = Event->x();
+    m_EndDragY = Event->y();
 
     int32_t CurrentStartX = horizontalScrollBar()->value();
     int32_t CurrentStartY = verticalScrollBar()->value();
@@ -819,11 +880,68 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
     m_StartDragY = m_EndDragY;
 
     viewport()->repaint();
+  }
+}
 
-  } else if (Event->type() == QEvent::ContextMenu) {
-    ContextMenu(Event);
-  } else if (Event->type() == QEvent::Wheel &&
-             ((QMouseEvent*)Event)->modifiers()==Qt::NoModifier) {
+
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::mouseReleaseEvent(QMouseEvent* Event) {
+  // end dragging of crop rectangle
+  if (m_CropAllowed) {
+    m_CropRectDragging = 0;
+    viewport()->repaint();
+
+
+  // end selection
+  } else if (m_SelectionAllowed) {
+    m_DrawRectangle = 0;
+
+    uint16_t Y;
+
+    if (m_FixedAspectRatio) {
+      if (Event->x()>m_StartDragX) {
+        if (Event->y()>m_StartDragY) {
+          Y = m_StartDragY +
+              (int) (m_HOverW*(Event->x()-m_StartDragX));
+        } else {
+          Y = m_StartDragY -
+              (int) (m_HOverW*(Event->x()-m_StartDragX));
+        }
+      } else {
+        if (Event->y()>m_StartDragY) {
+          Y = m_StartDragY -
+              (int) (m_HOverW*(Event->x()-m_StartDragX));
+        } else {
+          Y = m_StartDragY +
+              (int) (m_HOverW*(Event->x()-m_StartDragX));
+        }
+      }
+    } else {
+      Y = Event->y();
+    }
+
+    m_EndDragX = Event->x();
+    m_EndDragY = Y;
+
+    m_SelectionOngoing = 0;
+
+    viewport()->repaint();
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::contextMenuEvent(QContextMenuEvent* Event) {
+  ContextMenu(Event);
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::wheelEvent(QWheelEvent* Event) {
+  if (((QMouseEvent*)Event)->modifiers()==Qt::NoModifier) {
     m_SizeReportTimer->start(m_SizeReportTimeOut);
 
     QList<int> Scales;
@@ -832,7 +950,7 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
     Settings->SetValue("ZoomMode",ptZoomMode_NonFit);
     int TempZoom = m_NewSize?m_NewSize:Settings->GetInt("Zoom");
     int Choice = 0;
-    if (((QWheelEvent*)Event)->delta() < 0) {
+    if (Event->delta() < 0) {
       for (int i=0; i<Scales.size(); i++) {
         if (Scales.at(i) < TempZoom) Choice = i;
       }
@@ -849,57 +967,65 @@ bool ptViewWindow::viewportEvent(QEvent* Event) {
     m_SizeReport->setText("<h1>"+m_SizeReportText+"%</h1>");
     m_SizeReport->update();
     m_SizeReport->setVisible(1);
-  } else if (Event->type() == QEvent::DragEnter) {
-    // accept just text/uri-list mime format
-    if (((QDragEnterEvent*)Event)->mimeData()->hasFormat("text/uri-list"))
-    {
-        ((QDragEnterEvent*)Event)->acceptProposedAction();
-    }
-  } else if (Event->type() == QEvent::Drop) {
-    QList<QUrl> UrlList;
-    QString DropName;
-    QFileInfo DropInfo;
+  }
+}
 
-    if (((QDropEvent*)Event)->mimeData()->hasUrls())
-    {
-      UrlList = ((QDropEvent*)Event)->mimeData()->urls(); // returns list of QUrls
 
-      // if just text was dropped, urlList is empty (size == 0)
-      if ( UrlList.size() > 0) // if at least one QUrl is present in list
-      {
-        DropName = UrlList[0].toLocalFile(); // convert first QUrl to local path
-        DropInfo.setFile( DropName ); // information about file
-        if ( DropInfo.isFile() ) { // if is file
-          if (DropInfo.completeSuffix()!="pts" && DropInfo.completeSuffix()!="ptj" &&
-              DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj") {
-            ImageFileToOpen = DropName;
-            CB_MenuFileOpen(1);
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::dragEnterEvent(QDragEnterEvent* Event) {
+  // accept just text/uri-list mime format
+  if (Event->mimeData()->hasFormat("text/uri-list")) {
+    Event->acceptProposedAction();
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::dropEvent(QDropEvent* Event) {
+  QList<QUrl> UrlList;
+  QString DropName;
+  QFileInfo DropInfo;
+
+  if (Event->mimeData()->hasUrls())
+  {
+    UrlList = Event->mimeData()->urls(); // returns list of QUrls
+
+    // if just text was dropped, urlList is empty (size == 0)
+    if ( UrlList.size() > 0) // if at least one QUrl is present in list
+    {
+      DropName = UrlList[0].toLocalFile(); // convert first QUrl to local path
+      DropInfo.setFile( DropName ); // information about file
+      if ( DropInfo.isFile() ) { // if is file
+        if (DropInfo.completeSuffix()!="pts" && DropInfo.completeSuffix()!="ptj" &&
+            DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj") {
+          ImageFileToOpen = DropName;
+          CB_MenuFileOpen(1);
+        } else {
+          if ( Settings->GetInt("ResetSettingsConfirmation") == 0 ) {
+            CB_OpenSettingsFile(DropName);
           } else {
-            if ( Settings->GetInt("ResetSettingsConfirmation") == 0 ) {
+            #ifdef Q_OS_WIN32
+              DropName = DropName.replace(QString("/"), QString("\\"));
+            #endif
+            QMessageBox msgBox;
+            msgBox.setIcon(QMessageBox::Question);
+            msgBox.setWindowTitle(tr("Settings file dropped!"));
+            msgBox.setText(tr("Do you really want to open\n")+DropName);
+            msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+            msgBox.setDefaultButton(QMessageBox::Ok);
+            if (msgBox.exec()==QMessageBox::Ok){
               CB_OpenSettingsFile(DropName);
-            } else {
-              #ifdef Q_OS_WIN32
-                DropName = DropName.replace(QString("/"), QString("\\"));
-              #endif
-              QMessageBox msgBox;
-              msgBox.setIcon(QMessageBox::Question);
-              msgBox.setWindowTitle(tr("Settings file dropped!"));
-              msgBox.setText(tr("Do you really want to open\n")+DropName);
-              msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-              msgBox.setDefaultButton(QMessageBox::Ok);
-              if (msgBox.exec()==QMessageBox::Ok){
-                CB_OpenSettingsFile(DropName);
-              }
             }
           }
         }
       }
     }
-    ((QDropEvent*)Event)->acceptProposedAction();
   }
-
-  return 0;
+  Event->acceptProposedAction();
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //

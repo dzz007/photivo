@@ -33,7 +33,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 const char ProgramName[] = "Photivo";
-const char CompanyName[] = "photivo";
+const char CompanyName[] = "Photivo";
 
 const int PhotivoSettingsVersion = 1;
 
@@ -194,12 +194,23 @@ const short ptClipMode_Rebuild       = 5;
 
 // Crop rectangle modes
 
-const short ptRectangleMode_None        = 0;
-const short ptRectangleMode_RuleThirds  = 1;
-const short ptRectangleMode_GoldenRatio = 2;
-const short ptRectangleMode_Diagonal    = 3;
+const short ptCropGuidelines_None        = 0;
+const short ptCropGuidelines_RuleThirds  = 1;
+const short ptCropGuidelines_GoldenRatio = 2;
+const short ptCropGuidelines_Diagonals   = 3;
 // Escape for line
-const short ptRectangleMode_Line        = 9;
+const short ptCropGuidelines_RotateLine        = 9;
+
+// Crop: Position of the mouse when button pressed for dragging
+
+const short ptDragAnchor_Top          =0;
+const short ptDragAnchor_Right        =1;
+const short ptDragAnchor_Bottom       =2;
+const short ptDragAnchor_Left         =3;
+const short ptDragAnchor_TopLeft      =4;
+const short ptDragAnchor_TopRight     =5;
+const short ptDragAnchor_BottomRight  =6;
+const short ptDragAnchor_BottomLeft   =7;
 
 // Channel Mixer
 
