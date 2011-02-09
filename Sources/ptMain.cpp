@@ -4525,12 +4525,12 @@ void CB_AspectRatioHChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioH",Value);
 }
 
-void CB_CropCropGuidelinesChoice(const QVariant Choice) {
+void CB_CropGuidelinesChoice(const QVariant Choice) {
   Settings->SetValue("CropGuidelines",Choice);
 }
 
 // Prepare and start image crop
-void CB_MakeCropButton() {
+void StartCrop() {
   if (Settings->GetInt("HaveImage")==0) {
     QMessageBox::information(MainWindow,
       QObject::tr("No crop possible"),
@@ -4596,7 +4596,7 @@ void CB_MakeCropButton() {
 
 
 // After-crop processing and cleanup.
-void CB_FinalizeCropButton() {
+void StopCrop() {
   // Selection is done at this point. Disallow it further and activate main.
   ViewWindow->AllowCrop(0);
   BlockTools(0);
@@ -4655,6 +4655,13 @@ void CB_FinalizeCropButton() {
   */
 }
 
+void CB_MakeCropButton() {
+  if (ViewWindow->CropOngoing()) {
+    StopCrop();
+  } else {
+    StartCrop();
+  }
+}
 
 void CB_CropCheck(const QVariant State) {
   Settings->SetValue("Crop",State);
@@ -8498,7 +8505,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GridYInput)
   M_Dispatch(FlipModeChoice)
   M_Dispatch(CropCheck)
-  M_Dispatch(CropCropGuidelinesChoice)
+  M_Dispatch(CropGuidelinesChoice)
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)
 
