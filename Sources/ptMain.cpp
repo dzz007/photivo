@@ -7716,9 +7716,10 @@ void CB_TextureOverlayButton() {
   // Reflect in gui.
   if (Settings->GetInt("TextureOverlayMode")) {
     // free old one
-    if (TheProcessor->m_Image_TextureOverlay)
+    if (TheProcessor->m_Image_TextureOverlay) {
       delete TheProcessor->m_Image_TextureOverlay;
-
+      TheProcessor->m_Image_TextureOverlay = NULL;
+    }
     Update(ptProcessorPhase_EyeCandy);
   } else {
     MainWindow->UpdateSettings();
