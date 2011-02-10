@@ -27,6 +27,7 @@
 
 #include <QtGui>
 #include <QRect>
+#include <QLine>
 
 #include "ptImage.h"
 #include "ptEnums.h"
@@ -186,6 +187,8 @@ private:
   ptViewportAction m_Action;
   QRect*      m_Rect;     // crop/selection rectangle
   QRect*      m_Frame;    // (visible part of the) image in the viewport
+  QLine*      m_DragLine;
+  short       m_NowDragging;
 
   QAction*    m_AtnExpIndicate;
   QAction*    m_AtnExpIndR;
