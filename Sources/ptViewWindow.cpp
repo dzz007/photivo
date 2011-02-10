@@ -28,9 +28,11 @@
 #include "ptTheme.h"
 #include "ptEnums.h"
 
+
 #include <QPen>
 #include <QMessageBox>
 #include <QRect>
+#include <QLine>
 
 // A prototype we need
 void UpdateSettings();
@@ -77,9 +79,11 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_CropRectDragging = 0;
   m_CropRectIsFullImage = 0;
 
-  m_Action           = ptVaNone;
-  m_Frame            = new QRect();
-  m_Rect             = new QRect();
+  m_Action          = ptVaNone;
+  m_Frame           = new QRect();
+  m_Rect            = new QRect();
+  m_DragLine        = new QDragLine();
+  m_NowDragging    = 0;
 
 
   //Avoiding tricky blacks at zoom fit.
@@ -273,6 +277,7 @@ ptViewWindow::~ptViewWindow() {
   delete m_QImageCut;
   delete m_Frame;
   delete m_Rect;
+  delete m_DragLine;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -588,15 +593,13 @@ void ptViewWindow::scrollContentsBy(int,int) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// viewportEvent()
+// paintEvent
 //
 // Overloaded virtual from QAbstractScrollArea.
-// Handles all events into the viewport :
-//      - Paint : Draw the pixmap and maybe the 'overlay' rectangle
-//            used during selection.
-//      - Resize: Basically recalculate the cut and update.
-//      - mousePress/Move/Release for doing a selection.
-//                (and only if m_SelectionAllowed)
+// Handles all painting into the viewport:
+// - window background (theme or user defined colour
+// - (visible part of the) image
+// - overlays: crop rect incl. guidelines, lights out, grid, rotate line
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -613,6 +616,7 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
 
   // Calc position of the image frame in viewport
   // Size of the frame has already been set in RecalculateCut
+  // TODO: Necessary here or better done in Resizeevent? m_Frame *should* stay the same for any given paint event.
   if (VPHeight > m_QImageCut->height()) {
     m_Frame->setTop((VP_Height - m_QImageCut->height()) / 2);
   } else {
@@ -697,12 +701,12 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
         }
         if (m_Rect->left() > m_Frame->left()) {   // left
           Painter.fillRect(m_Frame->left(), m_Rect->top(),
-                           m_Rect->left(), m_Rect->height()
+                           m_Rect->left(), m_Rect->height(),
                            LightsOutBrush);
         }
         if (m_Rect->right() < m_Frame->right()) {   // right
           Painter.fillRect(m_Rect->right() + 1, m_Rect->top(),
-                           m_Frame->right() - m_Rect->right(), m_Rect->height()
+                           m_Frame->right() - m_Rect->right(), m_Rect->height(),
                            LightsOutBrush);
         }
       }
@@ -712,37 +716,38 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
       if (m_CropLightsOut != 2) {
         QPen Pen(QColor(150, 150, 150),1);
         Painter.setPen(Pen);
-        Painter.drawRect(m_StartDragX, m_StartDragY,
-                         m_EndDragX-m_StartDragX,m_EndDragY-m_StartDragY);
+        Painter.drawRect(m_Rect);
+
         switch (m_CropGuidelines) {
           case ptCropGuidelines_RuleThirds:
-            Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)/3), m_StartDragY,
-                 (int)((m_EndDragX-m_StartDragX)/3),m_EndDragY-m_StartDragY);
-            Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)/3),
-                 m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)/3));
+            int HeightThird = (int)(m_Rect->top() + m_Rect->height() / 3);
+            int WidthThird = (int)(m_Rect->width() / 3);
+            Painter.drawRect(m_Rect->left() + WidthThird, m_Rect->top(),
+                             WidthThird, m_Rect->height());
+            Painter.drawRect(m_Rect->left(), m_Rect->top() + HeightThird,
+                             m_Rect->width(), HeightThird);
             break;
 
           case ptCropGuidelines_GoldenRatio:
-            Painter.drawRect(m_StartDragX+(int)((m_EndDragX-m_StartDragX)*5/13), m_StartDragY,
-                 (int)((m_EndDragX-m_StartDragX)*3/13),m_EndDragY-m_StartDragY);
-            Painter.drawRect(m_StartDragX, m_StartDragY+(int)((m_EndDragY-m_StartDragY)*5/13),
-                 m_EndDragX-m_StartDragX,(int)((m_EndDragY-m_StartDragY)*3/13));
+            int ShortWidth = (int)(m_Rect->width() * 5/13);
+            int ShortHeight = (int)(m_Rect->height() * 5/13);
+            Painter.drawRect(m_Rect->left() + ShortWidth, m_Rect->top(),
+                             m_Rect->width() - (2 * ShortWidth), m_Rect->height());
+
+            Painter.drawRect(m_Rect->left(), m_Rect->top() + ShortHeight,
+                             m_Rect->width(), m_Rect->height() - (2 * ShortHeight));
             break;
 
           case ptCropGuidelines_Diagonals:
-            int Length = MIN(ABS(m_EndDragX-m_StartDragX),ABS(m_EndDragY-m_StartDragY));
-            Painter.drawLine(m_StartDragX, m_StartDragY,
-                 m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),
-                 m_StartDragY+Length*SIGN(m_EndDragY-m_StartDragY));
-            Painter.drawLine(m_StartDragX, m_EndDragY,
-                 m_StartDragX+Length*SIGN(m_EndDragX-m_StartDragX),
-                       m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
-            Painter.drawLine(m_EndDragX, m_StartDragY,
-                 m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
-                 m_StartDragY+Length*SIGN(m_EndDragY-m_StartDragY));
-            Painter.drawLine(m_EndDragX, m_EndDragY,
-                 m_EndDragX-Length*SIGN(m_EndDragX-m_StartDragX),
-                 m_EndDragY-Length*SIGN(m_EndDragY-m_StartDragY));
+            int length = m_Rect->width() > m_Rect->height() ? m_Rect->height() : m_Rect->width();
+            Painter.drawLine(m_Rect->left(), m_Rect->top(),
+                             m_Rect->left() + length, m_Rect->top() + length);
+            Painter.drawLine(m_Rect->right(), m_Rect->bottom(),
+                             m_Rect->right() - length, m_Rect->bottom() - length);
+            Painter.drawLine(m_Rect->left(), m_Rect->bottom(),
+                             m_Rect->left() + length, m_Rect->bottom() - length);
+            Painter.drawLine(m_Rect->right(), m_Rect->top(),
+                             m_Rect->right() - length, m_Rect->top() + length);
             break;
         }
       }
@@ -754,8 +759,7 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
     case ptVaDrawLine:
       QPen Pen(QColor(255, 0, 0),1);
       Painter.setPen(Pen);
-      Painter.drawLine(m_StartDragX, m_StartDragY,
-                       m_EndDragX, m_EndDragY);
+      Painter.drawLine(m_DragLine);
   }
 
   Painter.restore();
@@ -787,26 +791,62 @@ void ptViewWindow::resizeEvent(QResizeEvent* Event) {
 
 
 ////////////////////////////////////////////////////////////////////////
+//
+// mousePressEvent
+//
+////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
-  // Start dragging crop rectangle. No immediate repaint needed.
-  // Visible change doesn’t occur till mouse is moved.
-  if (m_CropAllowed) {
-    m_CropRectChange = 1;    // TODO: Look at mouse position to determine if move or drag
+  switch (m_Action) {
+    // Start modifying a crop rectangle.
+    // Depending on mouse position determine move or type of resize
+    case ptVaCrop:
+    if (INRANGE(Event->x(), m_Rect->left(), m_Rect->right()) &&
+        INRANGE(Event->y(), m_Rect->top(), m_Rect->bottom()))
+    {
+      m_NowDragging = 1;
+      m_DragLine->x1() = Event->x();
+      m_DragLine->y1() = Event->y();
+      m_DragLine->x2() = Event->x();
+      m_DragLine->y2() = Event->y();
+    }
+    break;
 
-  // Start selection. Needs immediate repaint because we start defining a completely
-  // new selection rectangle.
-  } else if (m_SelectionAllowed) {
-    m_DrawRectangle = 0;    // remove previous rectangle
-    m_StartDragX = Event->x();
-    m_StartDragY = Event->y();
-    viewport()->repaint();
+    // Start a simple selection rectangle
+    case ptVaSelectRect:
+      if (INRANGE(Event->x(), m_Rect->left(), m_Rect->right()) &&
+          INRANGE(Event->y(), m_Rect->top(), m_Rect->bottom()))
+      {
+        m_NowDragging = 1;
+        m_DragLine->x1() = Event->x();
+        m_DragLine->y1() = Event->y();
+        m_DragLine->x2() = Event->x();
+        m_DragLine->y2() = Event->y();
+      }
+      break;
 
-  } else {
+    // Start of a rotate line. May be started outside the actual image display frame
+    case ptVaDrawLine:
+      m_NowDragging = 1;
+      m_DragLine->x1() = Event->x();
+      m_DragLine->y1() = Event->y();
+      m_DragLine->x2() = Event->x();
+      m_DragLine->y2() = Event->y();
+      break;
+
     // A mouse button press, without selection being allowed, is going
     // to be interpreted as a move.
-    m_StartDragX = Event->x();
-    m_StartDragY = Event->y();
+    case ptVaNone:
+      if (INRANGE(Event->x(), m_Rect->left(), m_Rect->right()) &&
+          INRANGE(Event->y(), m_Rect->top(), m_Rect->bottom()))
+      {
+        m_NowDragging = 1;
+        m_DragLine->x1() = Event->x();
+        m_DragLine->y1() = Event->y();
+        m_DragLine->x2() = Event->x();
+        m_DragLine->y2() = Event->y();
+      }
+      break;
   }
 }
 

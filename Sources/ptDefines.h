@@ -50,6 +50,7 @@
 #define SIGN(x) ((x) == 0 ? 0 : ((x) < 0 ? -1 : 1 ))
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
+#define INRANGE(x,low,high) (x >= low && x <= high ? 1 : 0)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
