@@ -2,7 +2,7 @@
 ;;
 ;; photivo
 ;;
-;; Copyright (C) 2010 Bernd Schoeler <brother.john@photivo.org>
+;; Copyright (C) 2010 Bernd Schoeler <brjohn@brother-john.net>
 ;;
 ;; This file is part of photivo.
 ;;
