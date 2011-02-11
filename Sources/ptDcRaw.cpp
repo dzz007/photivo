@@ -1,31 +1,31 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-// photivo
-//
-// Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-// Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
-//
-// This file is part of photivo.
-//
-// photivo is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License version 3
-// as published by the Free Software Foundation.
-//
-// photivo is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with photivo.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
-//
-// This is basically the translation into a more or less C++ object of
-// dcraw.c -- Dave Coffin's raw photo decoder
-// Copyright 1997-2008 by Dave Coffin, dcoffin a cybercom o net
-//
-////////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
+**
+** Photivo
+**
+** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
+** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+**
+** This file is part of Photivo.
+**
+** Photivo is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License version 3
+** as published by the Free Software Foundation.
+**
+** Photivo is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Photivo.  If not, see <http:**www.gnu.org/licenses/>.
+**
+*******************************************************************************/
+/*
+** This is basically the translation into a more or less C++ object of
+** dcraw.c -- Dave Coffin's raw photo decoder
+** Copyright 1997-2008 by Dave Coffin, dcoffin a cybercom o net
+**
+*******************************************************************************/
 
 #include "ptDcRaw.h"
 
