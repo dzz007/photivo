@@ -4,7 +4,7 @@
 //
 // Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 // Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
-// Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
+** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
 //
 // This file is part of photivo.
 //
@@ -161,7 +161,8 @@ protected:
 ///////////////////////////////////////////////////////////////////////////
 
 private:
-  void        RecalculateCut();
+  void        RecalcCut();
+  void        RecalcRect();
   void        ContextMenu(QEvent* Event);
 
   uint16_t    m_ZoomWidth;
@@ -188,7 +189,10 @@ private:
   QRect*      m_Rect;     // crop/selection rectangle
   QRect*      m_Frame;    // (visible part of the) image in the viewport
   QLine*      m_DragLine;
-  short       m_NowDragging;
+  short       m_DeltaToEdgeX;
+  short       m_DeltaToEdgeY;
+  short       m_NowDragging;  
+  ptDragGrip  m_DragGrip;
 
   QAction*    m_AtnExpIndicate;
   QAction*    m_AtnExpIndR;
