@@ -6,7 +6,7 @@ Passes an image to Photivo
 
 Author:
 Michael Munzert (mike photivo org)
-Bernd Schoeler (brotherjohn photivo org)
+Bernd Schoeler (brother.john photivo org)
 
 Version:
 2011.01.29 Brother John: Ask user for photivo.exe and store in gimprc

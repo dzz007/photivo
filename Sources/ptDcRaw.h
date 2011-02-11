@@ -1,30 +1,32 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-// photivo
-//
-// Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-// Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
-//
-// This file is part of photivo.
-//
-// photivo is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License version 3
-// as published by the Free Software Foundation.
-//
-// photivo is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with photivo.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-// This is the adaptation of dcraw.c into something that is more or less
-// a C++ object.
-// It is not implied that this now works correctly with different compilers,
-// environments and settings. Lots of testing still needed.
+/*******************************************************************************
+**
+** Photivo
+**
+** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
+** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+**
+** This file is part of Photivo.
+**
+** Photivo is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License version 3
+** as published by the Free Software Foundation.
+**
+** Photivo is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Photivo.  If not, see <http:**www.gnu.org/licenses/>.
+**
+*******************************************************************************/
+/*
+** This is the adaptation of dcraw.c into something that is more or less
+** a C++ object.
+** It is not implied that this now works correctly with different compilers,
+** environments and settings. Lots of testing still needed.
+**
+*******************************************************************************/
 
 #ifndef DLDCDRAW_H
 #define DLDCDRAW_H

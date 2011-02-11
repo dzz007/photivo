@@ -1,31 +1,33 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-// photivo
-//
-// Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
-//
-// This file is largely based on the digiKam project.
-// http://www.digikam.org
-// Copyright (C) 2005-2007 by Gilles Caulier
-//   <caulier dot gilles at gmail dot com>
-// Original implementation from Refocus Gimp plug-in
-// Copyright (C) 1999-2003 Ernst Lippe
-//
-// This file is part of photivo.
-//
-// photivo is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License version 3
-// as published by the Free Software Foundation.
-//
-// photivo is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with photivo.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
+**
+** Photivo
+**
+** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
+**
+** This file is part of Photivo.
+**
+** Photivo is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License version 3
+** as published by the Free Software Foundation.
+**
+** Photivo is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Photivo.  If not, see <http:**www.gnu.org/licenses/>.
+**
+********************************************************************************
+**
+** This file is largely based on the digiKam project.
+** http://www.digikam.org
+** Copyright (C) 2005-2007 by Gilles Caulier
+**   <caulier dot gilles at gmail dot com>
+** Original implementation from Refocus Gimp plug-in
+** Copyright (C) 1999-2003 Ernst Lippe
+**
+*******************************************************************************/
 
 // Uncomment this line to debug matrix computation.
 //#define RF_DEBUG 1
