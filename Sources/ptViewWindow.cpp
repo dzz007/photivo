@@ -93,6 +93,11 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_NowDragging     = 0;
   m_DragGrip        = dgNone;
 
+  m_Cursor = {NULL,
+              Qt::SizeVerCursor, Qt::SizeHorCursor, Qt::SizeVerCursor, Qt::SizeHorCursor,
+              Qt::SizeFDiagCursor, Qt::SizeBDiagCursor, Qt::SizeBDiagCursor, Qt::SizeFDiagCursor,
+              Qt::SizeAllCursor
+  };
 
   //Avoiding tricky blacks at zoom fit.
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -573,7 +578,7 @@ void ptViewWindow::UpdateView(const ptImage* NewRelatedImage) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// RecalculateCut()
+// RecalcCut()
 //
 // Recalculates m_QImageCut when the selection
 // has been changed, i.e. for scrollbar movements or a resizing.
@@ -835,122 +840,163 @@ void ptViewWindow::resizeEvent(QResizeEvent* Event) {
 
 ////////////////////////////////////////////////////////////////////////
 //
+// MouseDragPos
+//
+// Returns the area of the crop rectangle the mouse cursor hovers over.
+// The mouse position inside the crop rectangle determines which action is performed
+// on drag. There are nine areas: 55511111111666
+//                                444        222
+//                                77733333333888
+// - Dragging the corners changes both adjacent edges.
+// - Dragging the edges changes only that edge. Dragging in the middle area moves
+//   the rectangle without changing its size.
+// - Dragging beyond actual image borders is not possible.
+// - Edge areas are usually 8 pixels thick. On hovering mouse cursor changes shape
+//   to indicate the move/resize mode.
+// - For rectangle edges of 20 pixels or shorter only the corner modes apply, one for
+//   each half of the edge. This avoids too tiny interaction areas.
+//
+////////////////////////////////////////////////////////////////////////
+
+ptDragGrip ptViewWindow::MouseDragPos(QMouseEvent* Event) {
+  ptDragGrip HoverOver = dgNone;
+
+  // Determine edge area thickness
+  if (m_Rect->height() <= TinyRectThreshold) {
+    int TBthick = (int)(m_Rect->height() / 2);
+  } else {
+    int TBthick = DefaultGripThickness;
+  }
+  if (m_Rect->width() <= TinyRectThreshold) {
+    int LRthick = (int)(m_Rect->width() / 2);
+  } else {
+    int LRthick = DefaultGripThickness;
+  }
+
+  // Determine in which area the mouse is
+  if (m_Rect->bottom() - Event->y() <= TBthick) {
+    HoverOver = dgBottom;
+  } else if (Event->y() - m_Rect->top() <= TBthick) {
+    HoverOver = dgTop;
+  } else {
+    HoverOver = dgCenter;
+  }
+
+  if (m_Rect->right() - Event->y() <= LRthick) {
+    if (HoverOver == dgBottom) {
+      HoverOver = dgBottomRight;
+    } else if (HoverOver == dgTop) {
+      HoverOver = dgTopRight;
+    } else {
+      HoverOver = dgRight;
+    }
+
+  } else if (Event->x() - m_Rect->left() <= LRthick) {
+    if (HoverOver == dgBottom) {
+      HoverOver = dgBottomLeft;
+    } else if (HoverOver == dgTop) {
+      HoverOver = dgTopLeft;
+    } else {
+      HoverOver = dgLeft;
+    }
+  }
+
+  return HoverOver;
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
 // mousePressEvent
 //
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
-  switch (m_Action) {
-    case vaNone:        // scroll the image
-    case vaSelectRect:  // Start a simple selection rectangle
-      if (INRANGE(Event->x(), m_Rect->left(), m_Rect->right()) &&
-          INRANGE(Event->y(), m_Rect->top(), m_Rect->bottom()))
-      {
-        m_NowDragging = 1;
-        m_DragLine->setPoints(Event->pos(), Event->pos());
-        m_DeltaToEdgeX = 0;
-        m_DeltaToEdgeY = 0;
-      }
-      break;
-
-
-    // Start/modify a crop rectangle.
-    case vaCrop:
-      if (INRANGE(Event->x(), m_Rect->left(), m_Rect->right()) &&
-          INRANGE(Event->y(), m_Rect->top(), m_Rect->bottom()))
-      {
-        m_NowDragging = 1;
-
-        // Start new rect when none is present or clicked outside current one
-        if (!m_Rect->isValid() || !m_Rect->contains(Event->pos())) {
-          m_Rect->setWidth(0);    // width and height == 0 means rect is not valid
-          m_Rect->setHeight(0);
+  // left click actions
+  if (Event->button() == Qt::LeftButton) {
+    switch (m_Action) {
+      case vaNone:        // scroll the image
+      case vaSelectRect:  // Start a simple selection rectangle
+        if (INRANGE(Event->x(), m_Rect->left(), m_Rect->right()) &&
+            INRANGE(Event->y(), m_Rect->top(), m_Rect->bottom()))
+        {
+          m_NowDragging = 1;
           m_DragLine->setPoints(Event->pos(), Event->pos());
           m_DeltaToEdgeX = 0;
-          m_DeltaToEdgeY = 0;          
+          m_DeltaToEdgeY = 0;
+        }
+        break;
 
 
-        /*The mouse position inside the crop rectangle determines which action is performed
-          on drag. There are nine areas: 55511111111666
-                                         444        222
-                                         77733333333888
-          - Dragging the corners changes both adjacent edges.
-          - Dragging the edges changes only that edge. Dragging in the middle area moves
-            the rectangle without changing its size.
-          - Dragging beyond actual image borders is not possible.
-          - Edge areas are usually 8 pixels thick. On hovering mouse cursor changes shape
-            to indicate the move/resize mode.
-          - For rectangle edges of 20 pixels or shorter only the corner modes apply, one for
-            each half of the edge. This avoids too tiny interaction areas.
-        */
-        } else {
-          // Determine edge area thickness
-          if (m_Rect->height() <= TinyRectThreshold) {
-            int TBthick = (int)(m_Rect->height() / 2);
-          } else {
-            int TBthick = DefaultGripThickness;
-          }
-          if (m_Rect->width() <= TinyRectThreshold) {
-            int LRthick = (int)(m_Rect->width() / 2);
-          } else {
-            int LRthick = DefaultGripThickness;
-          }
+      // Start/modify a crop rectangle.
+      case vaCrop:
+        if (INRANGE(Event->x(), m_Rect->left(), m_Rect->right()) &&
+            INRANGE(Event->y(), m_Rect->top(), m_Rect->bottom()))
+        {
+          m_NowDragging = 1;
 
-          // Determine in which area the mouse is
-          // m_DragLine defines opposite corners of the crop rectangle
-          if (m_Rect->bottom() - Event->y() <= TBthick) {
-            m_DragGrip = dgBottom;
-            m_DragLine->setPoints(m_Rect->topLeft(), Event->pos());
-            m_DeltaToEdgeX = m_Rect->right() - Event->x();
-            m_DeltaToEdgeY = m_Rect->bottom() - Event->y();
-
-          } else if (Event->y() - m_Rect->top() <= TBthick) {
-            m_DragGrip = dgTop;
-            m_DragLine->setPoints(m_Rect->bottomRight(), Event->pos());
-            m_DeltaToEdgeX = m_Rect->left() - Event->x();
-            m_DeltaToEdgeY = m_Rect->top() - Event->y();
-
-          } else {
-            m_DragGrip = dgCenter;
+          // Start new rect when none is present or clicked outside current one
+          if (!m_Rect->isValid() || !m_Rect->contains(Event->pos())) {
+            m_Rect->setWidth(0);    // width and height == 0 means rect is not valid
+            m_Rect->setHeight(0);
             m_DragLine->setPoints(Event->pos(), Event->pos());
             m_DeltaToEdgeX = 0;
             m_DeltaToEdgeY = 0;
-          }
 
-          if (m_Rect->right() - Event->y() <= LRthick) {
-            if (m_DragGrip == dgBottom) {
-              m_DragGrip = dgBottomRight;
-            } else if (m_DragGrip == dgTop) {
-              m_DragGrip = dgTopRight;
-            } else {
-              m_DragGrip = dgRight;
-              m_DragLine->setPoints(m_Rect->topLeft(), Event->pos());
-              m_DeltaToEdgeX = m_Rect->right() - Event->x();
-              m_DeltaToEdgeY = m_Rect->bottom() - Event->y();
-            }
+          // crop rectangle mode: resize or move
+          } else {
+            m_DragGrip = MouseDragPos(Event);
 
-          } else if (Event->x() - m_Rect->left() <= LRthick) {
-            if (m_DragGrip == dgBottom) {
-              m_DragGrip = dgBottomLeft;
-            } else if (m_DragGrip == dgTop) {
-              m_DragGrip = dgTopLeft;
-            } else {
-              m_DragGrip = dgLeft;
-              m_DragLine->setPoints(m_Rect->bottomRight(), Event->pos());
-              m_DeltaToEdgeX = m_Rect->left() - Event->x();
-              m_DeltaToEdgeY = m_Rect->top() - Event->y();
+            switch (m_DragGrip) {
+              // top left fixed, bottom right moving
+              case dgBottom:
+              case dgBottomRight:
+              case dgRight:
+                m_DragLine->setPoints(m_Rect->topLeft(), Event->pos());
+                m_DeltaToEdgeX = m_Rect->right() - Event->x();
+                m_DeltaToEdgeY = m_Rect->bottom() - Event->y();
+                break;
+
+              // bottom right fixed, top left moving
+              case dgTop:
+              case dgTopLeft:
+              case dgLeft:
+                m_DragLine->setPoints(m_Rect->bottomRight(), Event->pos());
+                m_DeltaToEdgeX = m_Rect->left() - Event->x();
+                m_DeltaToEdgeY = m_Rect->top() - Event->y();
+                break;
+
+              // bottom left fixed, top right moving
+              case dgTopRight:
+                m_DragLine->setLine(m_Rect->left(), m_Rect->bottom(), Event->x(), Event->y());
+                m_DeltaToEdgeX = m_Rect->left() - Event->x();
+                m_DeltaToEdgeY = m_Rect->top() - Event->y();
+                break;
+
+              // top right fixed, bottom left moving
+              case dgBottomLeft:
+                m_DragLine->setLine(m_Rect->right(), m_Rect->top(), Event->x(), Event->y());
+                m_DeltaToEdgeX = m_Rect->left() - Event->x();
+                m_DeltaToEdgeY = m_Rect->bottom() - Event->y();
+
+              // move whole rectangle, no resize
+              case dgCenter:
+                m_DragLine->setPoints(Event->pos(), Event->pos());
+                m_DeltaToEdgeX = 0;
+                m_DeltaToEdgeY = 0;
+                break;
             }
           }
         }
-      }
-      break;
+        break;
 
 
-    // Start a rotate line. May be started outside the actual image display frame
-    case vaDrawLine:
-      m_NowDragging = 1;
-      m_DragLine->setPoints(Event->pos(), Event->pos());
-      break;
+      // Start a rotate line. May be started outside the actual image display frame
+      case vaDrawLine:
+        m_NowDragging = 1;
+        m_DragLine->setPoints(Event->pos(), Event->pos());
+        break;
+    }
   }
 }
 
@@ -962,6 +1008,7 @@ void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
+  // dragging rectangle or image
   if (m_NowDragging) {
     switch (m_Action) {
       case vaCrop:
@@ -969,28 +1016,43 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
         m_DragLine->setP2(Event->pos());
         RecalcRect();
         viewport()->repaint();
+        break;
 
       case vaDrawLine:
         m_DragLine->setP2(Event->pos());
         viewport()->repaint();
+        break;
 
       case vaNone:
-        m_DragLine->setP2(Event->pos());
+        m_DragLine->setP2(Event->pos());    
+        int CurrentStartX = horizontalScrollBar()->value();
+        int CurrentStartY = verticalScrollBar()->value();
+
+        horizontalScrollBar()->setValue(CurrentStartX - m_DragLine->x2() + m_DragLine->x1());
+        verticalScrollBar()->setValue(CurrentStartY - m_DragLine->y2() + m_DragLine->y1());
+
+        m_DragLine->setP1(m_DragLine->p2());
+        viewport()->repaint();
+        break;
     }
 
+  // no dragging: mouse cursor might change when in image crop mode
   } else {
-    if (m_Action == vaCrop)
+    if (m_Action == vaCrop) {
+      ptDragGrip CursorMode = MouseDragPos(Event);
+      if ((CursorMode == dgNone) && (this->cursor() != Qt::ArrowCursor)) {
+        this->unsetCursor();
+      } else {
+        if (this->cursor() != m_Cursor[CursorMode]) {
+          this->setCursor(m_Cursor[CursorMode]);
+        }
+      }
+    }
   }
 
 
 
-
-
-
-
-
-
-
+/*
   if (m_CropAllowed && (m_CropRectChange == 1)) {
     // crop rectangle size changes with fixed AR
 
@@ -1058,63 +1120,41 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
 
     viewport()->repaint();
   }
+  */
 }
 
 
 ////////////////////////////////////////////////////////////////////////
+//
+// mouseReleaseEvent
+//
+////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mouseReleaseEvent(QMouseEvent* Event) {
-  // end dragging of crop rectangle
-  if (m_CropAllowed) {
-    m_CropRectDragging = 0;
-    viewport()->repaint();
+  // left click actions
+  if (Event->button() == Qt::LeftButton) {
+    if (m_NowDragging) {
+      m_NowDragging = 0;
 
+      switch (m_Action) {
+        case vaNone:    // Scroll image: Nothing to do here.
+        case vaCrop:    // Crop: Also nothing to do.
+          break;
 
-  // end selection
-  } else if (m_SelectionAllowed) {
-    m_DrawRectangle = 0;
-
-    uint16_t Y;
-
-    if (m_FixedAspectRatio) {
-      if (Event->x()>m_StartDragX) {
-        if (Event->y()>m_StartDragY) {
-          Y = m_StartDragY +
-              (int) (m_HOverW*(Event->x()-m_StartDragX));
-        } else {
-          Y = m_StartDragY -
-              (int) (m_HOverW*(Event->x()-m_StartDragX));
-        }
-      } else {
-        if (Event->y()>m_StartDragY) {
-          Y = m_StartDragY -
-              (int) (m_HOverW*(Event->x()-m_StartDragX));
-        } else {
-          Y = m_StartDragY +
-              (int) (m_HOverW*(Event->x()-m_StartDragX));
-        }
+        case vaSelectRect:  // Selection: finalize rectangle and exit selection mode
+        case vaDrawLine:    // Rotation line: finalize line and exit
+          FinalizeAction();
+          break;
       }
-    } else {
-      Y = Event->y();
     }
-
-    m_EndDragX = Event->x();
-    m_EndDragY = Y;
-
-    m_SelectionOngoing = 0;
-
-    viewport()->repaint();
   }
 }
 
 
 ////////////////////////////////////////////////////////////////////////
-
-void ptViewWindow::contextMenuEvent(QContextMenuEvent* Event) {
-  ContextMenu(Event);
-}
-
-
+//
+// wheelEvent
+//
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::wheelEvent(QWheelEvent* Event) {
@@ -1149,6 +1189,10 @@ void ptViewWindow::wheelEvent(QWheelEvent* Event) {
 
 
 ////////////////////////////////////////////////////////////////////////
+//
+// dragEnterEvent
+//
+////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::dragEnterEvent(QDragEnterEvent* Event) {
   // accept just text/uri-list mime format
@@ -1158,6 +1202,10 @@ void ptViewWindow::dragEnterEvent(QDragEnterEvent* Event) {
 }
 
 
+////////////////////////////////////////////////////////////////////////
+//
+// dropEvent
+//
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::dropEvent(QDropEvent* Event) {
@@ -1201,6 +1249,17 @@ void ptViewWindow::dropEvent(QDropEvent* Event) {
     }
   }
   Event->acceptProposedAction();
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+// contextMenuEvent
+//
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::contextMenuEvent(QContextMenuEvent* Event) {
+  ContextMenu(Event);
 }
 
 
@@ -1441,5 +1500,3 @@ void ptViewWindow::MenuMode() {
 
   Update(ptProcessorPhase_NULL);
 }
-
-////////////////////////////////////////////////////////////////////////////////
