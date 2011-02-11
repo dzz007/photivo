@@ -163,6 +163,7 @@ protected:
 private:
   void        RecalcCut();
   void        RecalcRect();
+  ptDragGrip  MouseDragPos(QMouseEvent* Event);
   void        ContextMenu(QEvent* Event);
 
   uint16_t    m_ZoomWidth;
@@ -193,6 +194,7 @@ private:
   short       m_DeltaToEdgeY;
   short       m_NowDragging;  
   ptDragGrip  m_DragGrip;
+  QCursor     m_Cursor[];
 
   QAction*    m_AtnExpIndicate;
   QAction*    m_AtnExpIndR;
