@@ -42,10 +42,10 @@ void CB_ZoomFitButton();
 extern QString ImageFileToOpen;
 extern ptTheme* Theme;
 
-// Constants for
-// Keep them as "int" for compatibility with QLine etc.
-const int DefaultGripThickness = 8;
+// Constants
+const int EdgeThickness = 8;
 const int TinyRectThreshold = 20;
+const double MaxARError = 0.001;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -309,11 +309,15 @@ void ptViewWindow::StartCrop(const int x, const int y, const int width, const in
                   (uint16_t)(y * m_ZoomFactor + 0.5),
                   (uint16_t)(width * m_ZoomFactor + 0.5),
                   (uint16_t)(height * m_ZoomFactor + 0.5));
-  m_FixedAspectRatio = FixedAspectRatio;
-  m_AspectRatioW = AspectRatioW;
-  m_AspectRatioH = AspectRatioH;
-  m_CropGuidelines = CropGuidelines;
 
+  m_FixedAspectRatio = FixedAspectRatio;
+  if (m_FixedAspectRatio) {
+    m_AspectRatioW = AspectRatioW;
+    m_AspectRatioH = AspectRatioH;
+    m_AspectRatio = AspectRatioW / AspectRatioH;
+  }
+
+  m_CropGuidelines = CropGuidelines;
   m_MovingEdge = meNone;
   m_DragDelta->setLine(0,0,0,0);
   m_Action = vaCrop;
@@ -328,6 +332,8 @@ QRect ptViewWindow::StopCrop() {
 void ptViewWindow::StartSelection() {
   m_RealSizeRect->setCoords(0,0,0,0);
   m_Rect->setCoords(0,0,0,0);
+  m_FixedAspectRatio = 0;
+  m_CropGuidelines = ptCropGuidelines_None;
   m_MovingEdge = meNone;
   m_Action = vaSelectRect;
 }
@@ -391,9 +397,6 @@ uint16_t ptViewWindow::GetSelectionHeight() {
 }
 
 double ptViewWindow::GetSelectedAngle() {
-//  if (m_StartDragX-m_EndDragX == 0) return 90.0;
-//  double m = -(double)(m_StartDragY-m_EndDragY) / (m_StartDragX-m_EndDragX);
-//  return atan(m) * 180.0 / ptPI;
   if (m_DragDelta->x1() == m_DragDelta->x2()) {
     return 90.0;
   }
@@ -596,6 +599,153 @@ void ptViewWindow::RecalcCut() {
 }
 
 
+////////////////////////////////////////////////////////////////////////
+//
+// RecalcRect
+// Calc new corner point, change moving edge/corner when rect is
+// dragged into another "quadrant", restrict aspect ratio and update
+// m_Rect rectangle.
+//
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::RecalcRect() {
+  int dx = m_DragDelta->dx();
+  int dy = m_DragDelta->dy();
+  QRect NewPos;
+  switch (m_MovingEdge) {
+    case meTopLeft:
+      NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
+      NewPos.setY(CLAMP(m_Rect->top() + dy, m_Frame->top(), m_Frame->bottom()));
+      if ((NewPos.x() > m_Rect->right()) && (NewPos.y() <= m_Rect->bottom())) {
+        m_MovingEdge = meTopRight;
+      } else if ((NewPos.x() > m_Rect->right()) && (NewPos.y() >= m_Rect->bottom())) {
+        m_MovingEdge = meBottomRight;
+      } else if ((NewPos.x() <= m_Rect->right()) && (NewPos.y() > m_Rect->bottom())) {
+        m_MovingEdge = meBottomLeft;
+      }
+      m_Rect->setCoords(MIN(NewPos.x(), m_Rect->right()),
+                        MIN(NewPos.y(), m_Rect->bottom()),
+                        MAX(NewPos.x(), m_Rect->right()),
+                        MAX(NewPos.y(), m_Rect->bottom()));
+      break;
+
+
+    case meTop:
+      dx = 0;
+      NewPos.setY(CLAMP(m_Rect->top() + dy, m_Frame->top(), m_Frame->bottom()));
+      if (NewPos.y() > m_Rect->bottom()) {
+        m_MovingEdge = meBottom;
+      }
+      m_Rect->setCoords(m_Rect->left(), MIN(NewPos.y(), m_Rect->bottom()),
+                        m_Rect->right(), MAX(NewPos.y(), m_Rect->bottom()));
+      if (m_FixedAspectRatio) {
+        CorrectAspectRatio();
+      }
+      break;
+
+    case meTopRight:
+      NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
+      NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+      if ((NewPos.x() < m_Rect->left()) && (NewPos.y() <= m_Rect->bottom())) {
+        m_MovingEdge = meTopLeft;
+      } else if ((NewPos.x() < m_Rect->left()) && (NewPos.y() > m_Rect->bottom())) {
+        m_MovingEdge = meBottomLeft;
+      } else if ((NewPos.x() >= m_Rect->left()) && (NewPos.y() > m_Rect->bottom())) {
+        m_MovingEdge = meBottomRight;
+      }
+      m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()),
+                        MIN(NewPos.y(), m_Rect->bottom()),
+                        MAX(NewPos.x(), m_Rect->left()),
+                        MAX(NewPos.y(), m_Rect->bottom()));
+      break;
+
+    case meRight:
+      dy = 0;
+      NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
+      if ((NewPos.x() < m_Rect->left())) {
+        m_MovingEdge = meLeft;
+      }
+      m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()), m_Rect->top(),
+                        MAX(NewPos.x(), m_Rect->left()), m_Rect->bottom());
+      break;
+
+    case meBottomRight:
+      NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
+      NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+      if ((NewPos.x() < m_Rect->left()) && (NewPos.y() >= m_Rect->top())) {
+        m_MovingEdge = meBottomLeft;
+      } else if ((NewPos.x < m_Rect->left()) && (NewPos.y() < m_Rect->top())) {
+        m_MovingEdge = meTopLeft;
+      } else if ((NewPos.x() >= m_Rect->left()) && (NewPos.y() < m_Rect->top())) {
+        m_MovingEdge = meTopRight;
+      }
+      m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()),
+                        MIN(NewPos.y(), m_Rect->top()),
+                        MAX(NewPos.x(), m_Rect->left()),
+                        MAX(NewPos.y(), m_Rect->top()));
+      break;
+
+    case meBottom:
+      dx = 0;
+      NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+      if (NewPos.y() < m_Rect->top()) {
+        m_MovingEdge = meTop;
+      }
+      m_Rect->setCoords(m_Rect->left(), MIN(NewPos.y(), m_Rect->top()),
+                        m_Rect->right(), MAX(NewPos.y(), m_Rect->top()));
+      break;
+
+    case meBottomLeft:
+      NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
+      NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+      if ((NewPos.x() > m_Rect->right()) && (NewPos.y() >= m_Rect->top())) {
+        m_MovingEdge = meBottomRight;
+      } else if ((NewPos.x() > m_Rect->right()) && (NewPos.y() < m_Rect->top())) {
+        m_MovingEdge = meTopRight;
+      } else if ((NewPos.x() <= m_Rect->right()) && (NewPos.y() < m_Rect->top())) {
+        m_MovingEdge = meTopLeft;
+      }
+      m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()),
+                        MIN(NewPos.y(), m_Rect->top()),
+                        MAX(NewPos.x(), m_Rect->left()),
+                        MAX(NewPos.y(), m_Rect->top()));
+      break;
+
+    case meLeft:
+      dy = 0;
+      NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
+      if (NewPos.x() > m_Rect->right()) {
+        m_MovingEdge = meRight;
+      }
+      m_Rect->setCoords(MIN(NewPos.x(), m_Rect->right()), m_Rect->top(),
+                        MAX(NewPos.x(), m_Rect->right()), m_Rect->bottom());
+      break;
+  }
+
+  // Correct AR
+  if (m_FixedAspectRatio && (ABS(dx) >= ABS(dy))) {
+    // dominant change horizontally: we’ll adjust height    
+    m_Rect->setHeight(qRound(m_Rect->width() / m_AspectRatio));
+    if (m_Rect->bottom() > m_Frame->bottom()) {
+      m_Rect->moveBottom(m_Frame->bottom());
+    }
+    if (m_Rect->height() > m_Frame->height()) {
+      m_Rect->setWidth(qRound(m_Frame->height() * m_AspectRatio));
+      m_Rect->setHeight(m_Frame->height());
+    }
+
+  } else if (m_FixedAspectRatio && (ABS(dx) < ABS(dy))) {
+    // dominant change is vertically: we’ll adjust width
+    m_Rect->setWidth(qRound(m_Rect->height() * m_AspectRatio));
+    if (m_Rect->right() > m_Frame->right()) {
+      m_Rect->moveRight(m_Frame->right());
+    }
+    if (m_Rect->width() > m_Frame)
+
+  }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // scrollContentsBy()
@@ -611,6 +761,7 @@ void ptViewWindow::scrollContentsBy(int,int) {
   // And update the view.
   viewport()->repaint();
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -840,12 +991,12 @@ ptMovingEdge ptViewWindow::MouseDragPos(QMouseEvent* Event) {
   if (m_Rect->height() <= TinyRectThreshold) {
     int TBthick = (int)(m_Rect->height() / 2);
   } else {
-    int TBthick = DefaultGripThickness;
+    int TBthick = EdgeThickness;
   }
   if (m_Rect->width() <= TinyRectThreshold) {
     int LRthick = (int)(m_Rect->width() / 2);
   } else {
-    int LRthick = DefaultGripThickness;
+    int LRthick = EdgeThickness;
   }
 
   // Determine in which area the mouse is
@@ -942,11 +1093,9 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
                            m_Frame->top(),
                            m_Frame->bottom() - m_Rect->height() + 1) );
         } else {
+          // initialize movement direction when rectangle was just started
           int dx = m_DragDelta->dx();
           int dy = m_DragDelta->dy();
-          QPoint NewPos = QPoint();
-
-          // initialize movement direction when rectangle was just started
           if (m_MovingEdge == meNone) {
             if ((dx >= 0) && (dy >= 0)) {
               m_MovingEdge = meBottomRight;
@@ -957,113 +1106,11 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
             } else if ((dx > 0) && (dy > 0)) {
               m_MovingEdge = meTopRight;
             }
-
-          } else {
-            // Calc new corner point, change moving edge/corner when rect is dragged
-            // into another "quadrant" and update m_Rect rectangle.
-            switch (m_MovingEdge) {
-              case meTopLeft:
-                NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
-                NewPos.setY(CLAMP(m_Rect->top() + dy, m_Frame->top(), m_Frame->bottom()));
-                if ((NewPos.x() > m_Rect->right()) && (NewPos.y() <= m_Rect->bottom())) {
-                  m_MovingEdge = meTopRight;
-                } else if ((NewPos.x() > m_Rect->right()) && (NewPos.y() >= m_Rect->bottom())) {
-                  m_MovingEdge = meBottomRight;
-                } else if ((NewPos.x() <= m_Rect->right()) && (NewPos.y() > m_Rect->bottom())) {
-                  m_MovingEdge = meBottomLeft;
-                }
-                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->right()),
-                                  MIN(NewPos.y(), m_Rect->bottom()),
-                                  MAX(NewPos.x(), m_Rect->right()),
-                                  MAX(NewPos.y(), m_Rect->bottom()));
-                break;
-
-              case meTop:
-                NewPos.setY(CLAMP(m_Rect->top() + dy, m_Frame->top(), m_Frame->bottom()));
-                if (NewPos.y() > m_Rect->bottom()) {
-                  m_MovingEdge = meBottom;
-                }
-                m_Rect->setCoords(m_Rect->left(), MIN(NewPos.y(), m_Rect->bottom()),
-                                  m_Rect->right(), MAX(NewPos.y(), m_Rect->bottom()));
-                break;
-
-              case meTopRight:
-                NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
-                NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
-                if ((NewPos.x() < m_Rect->left()) && (NewPos.y() <= m_Rect->bottom())) {
-                  m_MovingEdge = meTopLeft;
-                } else if ((NewPos.x() < m_Rect->left()) && (NewPos.y() > m_Rect->bottom())) {
-                  m_MovingEdge = meBottomLeft;
-                } else if ((NewPos.x() >= m_Rect->left()) && (NewPos.y() > m_Rect->bottom())) {
-                  m_MovingEdge = meBottomRight;
-                }
-                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()),
-                                  MIN(NewPos.y(), m_Rect->bottom()),
-                                  MAX(NewPos.x(), m_Rect->left()),
-                                  MAX(NewPos.y(), m_Rect->bottom()));
-                break;
-
-              case meRight:
-                NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
-                if ((NewPos.x() < m_Rect->left())) {
-                  m_MovingEdge = meLeft;
-                }
-                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()), m_Rect->top(),
-                                  MAX(NewPos.x(), m_Rect->left()), m_Rect->bottom());
-                break;
-
-              case meBottomRight:
-                NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
-                NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
-                if ((NewPos.x() < m_Rect->left()) && (NewPos.y() >= m_Rect->top())) {
-                  m_MovingEdge = meBottomLeft;
-                } else if ((NewPos.x < m_Rect->left()) && (NewPos.y() < m_Rect->top())) {
-                  m_MovingEdge = meTopLeft;
-                } else if ((NewPos.x() >= m_Rect->left()) && (NewPos.y() < m_Rect->top())) {
-                  m_MovingEdge = meTopRight;
-                }
-                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()),
-                                  MIN(NewPos.y(), m_Rect->top()),
-                                  MAX(NewPos.x(), m_Rect->left()),
-                                  MAX(NewPos.y(), m_Rect->top()));
-                break;
-
-              case meBottom:
-                NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
-                if (NewPos.y() < m_Rect->top()) {
-                  m_MovingEdge = meTop;
-                }
-                m_Rect->setCoords(m_Rect->left(), MIN(NewPos.y(), m_Rect->top()),
-                                  m_Rect->right(), MAX(NewPos.y(), m_Rect->top()));
-                break;
-
-              case meBottomLeft:
-                NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
-                NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
-                if ((NewPos.x() > m_Rect->right()) && (NewPos.y() >= m_Rect->top())) {
-                  m_MovingEdge = meBottomRight;
-                } else if ((NewPos.x() > m_Rect->right()) && (NewPos.y() < m_Rect->top())) {
-                  m_MovingEdge = meTopRight;
-                } else if ((NewPos.x() <= m_Rect->right()) && (NewPos.y() < m_Rect->top())) {
-                  m_MovingEdge = meTopLeft;
-                }
-                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()),
-                                  MIN(NewPos.y(), m_Rect->top()),
-                                  MAX(NewPos.x(), m_Rect->left()),
-                                  MAX(NewPos.y(), m_Rect->top()));
-                break;
-
-              case meLeft:
-                NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
-                if (NewPos.x() > m_Rect->right()) {
-                  m_MovingEdge = meRight;
-                }
-                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->right()), m_Rect->top(),
-                                  MAX(NewPos.x(), m_Rect->right()), m_Rect->bottom());
-                break;
-            }
           }
+
+          RecalcRect();
         }
+        m_DragDelta->setP1(m_DragDelta->p2());
         break;
 
 
@@ -1072,6 +1119,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
         int CurrentStartY = verticalScrollBar()->value();
         horizontalScrollBar()->setValue(CurrentStartX - m_DragDelta->x2() + m_DragDelta->x1());
         verticalScrollBar()->setValue(CurrentStartY - m_DragDelta->y2() + m_DragDelta->y1());
+        m_DragDelta->setP1(m_DragDelta->p2());
         break;
 
 
@@ -1079,7 +1127,6 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
         break;
     }
 
-    m_DragDelta->setP1(m_DragDelta->p2());
     viewport()->repaint();
 
 

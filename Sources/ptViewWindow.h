@@ -140,6 +140,7 @@ protected:
 
 private:
   void          RecalcCut();
+  void          RecalcRect();
   ptMovingEdge  MouseDragPos(QMouseEvent* Event);
   void          ContextMenu(QEvent* Event);
   void          FinalizeAction();
@@ -167,6 +168,7 @@ private:
   short       m_FixedAspectRatio;
   uint16_t    m_AspectRatioW;
   uint16_t    m_AspectRatioH;
+  double      m_AspectRatio;
 
   QAction*      m_AtnExpIndicate;
   QAction*      m_AtnExpIndR;
