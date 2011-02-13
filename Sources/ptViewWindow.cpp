@@ -70,41 +70,39 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   // With respect to event hanpting.
   m_StartDragX       = 0;
   m_StartDragY       = 0;
-  m_SelectionAllowed = 0;
-  m_SelectionOngoing = 0;
-  m_DrawRotateLine   = 0;
   m_HasGrid          = 0;
   m_GridX            = 0;
   m_GridY            = 0;
-  m_DrawRectangle    = 0;
   m_CropGuidelines   = 0;
   m_CropLightsOut    = Settings->m_IniSettings->value("CropLightsOut",0).toInt();
-  m_CropAllowed      = 0;
-  m_FixedAspectRatio = 0;
-  m_CropRectDragging = 0;
-  m_CropRectIsFullImage = 0;
 
   m_Action          = vaNone;
   m_Frame           = new QRect(0,0,0,0);
   m_Rect            = new QRect(0,0,0,0);
-  m_DragLine        = new QLine(0,0,0,0);
-  m_DeltaToEdgeX    = 0;          // delta between mouse pos and rect edge
-  m_DeltaToEdgeY    = 0;          //
+  m_RealSizeRect    = new QRect(0,0,0,0);
+  m_DragDelta       = new QLine(0,0,0,0);
+  m_DeltaToEdgeX    = 0;
+  m_DeltaToEdgeY    = 0;
   m_NowDragging     = 0;
-  m_DragGrip        = dgNone;
+  m_MovingEdge        = meNone;
 
-  m_Cursor = {NULL,
-              Qt::SizeVerCursor, Qt::SizeHorCursor, Qt::SizeVerCursor, Qt::SizeHorCursor,
-              Qt::SizeFDiagCursor, Qt::SizeBDiagCursor, Qt::SizeBDiagCursor, Qt::SizeFDiagCursor,
-              Qt::SizeAllCursor
-  };
+  m_Cursor[meNone]        = NULL;
+  m_Cursor[meTop]         = Qt::SizeVerCursor;
+  m_Cursor[meRight]       = Qt::SizeHorCursor;
+  m_Cursor[meBottom]      = Qt::SizeVerCursor;
+  m_Cursor[meLeft]        = Qt::SizeHorCursor;
+  m_Cursor[meTopLeft]     = Qt::SizeFDiagCursor;
+  m_Cursor[meTopRight]    = Qt::SizeBDiagCursor;
+  m_Cursor[meBottomLeft]  = Qt::SizeBDiagCursor;
+  m_Cursor[meBottomRight] = Qt::SizeFDiagCursor;
+  m_Cursor[meCenter]      = Qt::SizeAllCursor;
 
   //Avoiding tricky blacks at zoom fit.
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-  //Drag and drop
-  setAcceptDrops(true);
+  setAcceptDrops(true);     // Drag and drop
+  setMouseTracking(true);   // Move events without pressed button. Needed for cursor change.
 
   QVBoxLayout *Layout = new QVBoxLayout;
   Layout->setContentsMargins(0,0,0,0);
@@ -290,92 +288,80 @@ ptViewWindow::~ptViewWindow() {
   delete m_QImageCut;
   delete m_Frame;
   delete m_Rect;
-  delete m_DragLine;
+  delete m_RealSizeRect;
+  delete m_DragDelta;
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Methods for setting and/or determining if a selection is ongoing.
-// The few calculations are for offsetting against what is in the
-// viewport versus what is in the image + zoomfactor.
+// Start & stop user interaction
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
-ptViewportAction ptViewWindow::GetAction() {
-  return m_Action;
-}
-
-void ptViewWindow::StopAction() {
-  m_Action = vaNone;
-}
-
-void ptViewWindow::StartCrop(const int AspectRatioW,
-                             const int AspectRatioH,
-                             const short CropGuidelines,
-                             QRect InitialRect)
+void ptViewWindow::StartCrop(const int x, const int y, const int width, const int height,
+                             const short FixedAspectRatio,
+                             const uint16_t AspectRatioW, const uint16_t AspectRatioH,
+                             const short CropGuidelines)
 {
-  m_RectARW = AspectRatioW;
-  m_RectARH = AspectRatioH;
-  m_CropGuidelines = CropGuidelines;
-}
-
-void ptViewWindow::StartLine() {
-
-}
-
-void ptViewWindow::StartSelection() {
-
-}
-
-void ptViewWindow::AllowSelection(const short  Allow,
-                                  const short  FixedAspectRatio,
-                                  const double HOverW,
-                                  const short  CropGuidelines)
-{
-  m_SelectionAllowed = Allow;
-  m_SelectionOngoing = Allow;
+  m_RealSizeRect->setRect(x, y, width, height);
+  m_Rect->setRect((uint16_t)(x * m_ZoomFactor + 0.5),
+                  (uint16_t)(y * m_ZoomFactor + 0.5),
+                  (uint16_t)(width * m_ZoomFactor + 0.5),
+                  (uint16_t)(height * m_ZoomFactor + 0.5));
   m_FixedAspectRatio = FixedAspectRatio;
-  m_HOverW           = HOverW;
-  m_CropGuidelines   = CropGuidelines;
-  if (CropGuidelines == ptCropGuidelines_Line) {
-    m_DrawRotateLine = 1;
-  } else {
-    m_DrawRotateLine = 0;
-  }
-}
-
-short ptViewWindow::SelectionOngoing() {
-  return m_SelectionOngoing;
-}
-
-void ptViewWindow::AllowCrop(const short Allow,
-               const int AspectRatioW,
-               const int AspectRatioH,
-               const short CropGuidelines)
-{
-  m_CropAllowed = Allow;
-
-  m_FixedAspectRatio = 1;
-  m_CropARW = AspectRatioW;
-  m_CropARH = AspectRatioH;
-
+  m_AspectRatioW = AspectRatioW;
+  m_AspectRatioH = AspectRatioH;
   m_CropGuidelines = CropGuidelines;
-  if (CropGuidelines == ptCropGuidelines_Line) {
-    m_DrawRotateLine = 1;
-  } else {
-    m_DrawRotateLine = 0;
-  }
 
-  RectX0 = -1;  // initial crop rectangle is complete image
+  m_MovingEdge = meNone;
+  m_DragDelta->setLine(0,0,0,0);
+  m_Action = vaCrop;
   viewport()->repaint();
 }
 
-short ptViewWindow::CropOngoing() {
-  return m_CropAllowed;
+QRect ptViewWindow::StopCrop() {
+  FinalizeAction();
+  return m_RealSizeRect;
+}
+
+void ptViewWindow::StartSelection() {
+  m_RealSizeRect->setCoords(0,0,0,0);
+  m_Rect->setCoords(0,0,0,0);
+  m_MovingEdge = meNone;
+  m_Action = vaSelectRect;
+}
+
+void ptViewWindow::StartLine() {
+  m_Action = vaDrawLine;
+}
+
+void ptViewWindow::FinalizeAction() {
+  switch (m_Action) {
+    case vaSelectRect:
+    case vaCrop:
+      m_RealSizeRect->setRect((int)(m_Rect->left() / m_ZoomFactor + 0.5),
+                              (int)(m_Rect->top() / m_ZoomFactor + 0.5),
+                              (int)(m_Rect->width() / m_ZoomFactor + 0.5),
+                              (int)(m_Rect-height() / m_ZoomFactor + 0.5));
+  }
+
+  m_Action = vaNone;
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// Getter methods to return status/result of user interaction
+//
+////////////////////////////////////////////////////////////////////////////////
+
+ptViewportAction ptViewWindow::OngoingAction() {
+  return m_Action;
+}
+
+//TODOBJ: combine these into something like:
+//QRect ptViewWindow::GetSelectedRect()
 uint16_t ptViewWindow::GetSelectionX() {
   uint16_t X = MIN(m_StartDragX,m_EndDragX);
   X -= m_XOffsetInVP;
@@ -404,9 +390,14 @@ uint16_t ptViewWindow::GetSelectionHeight() {
   return H;
 }
 
-double ptViewWindow::GetSelectionAngle() {
-  if (m_StartDragX-m_EndDragX == 0) return 90.0;
-  double m = -(double)(m_StartDragY-m_EndDragY) / (m_StartDragX-m_EndDragX);
+double ptViewWindow::GetSelectedAngle() {
+//  if (m_StartDragX-m_EndDragX == 0) return 90.0;
+//  double m = -(double)(m_StartDragY-m_EndDragY) / (m_StartDragX-m_EndDragX);
+//  return atan(m) * 180.0 / ptPI;
+  if (m_DragDelta->x1() == m_DragDelta->x2()) {
+    return 90.0;
+  }
+  double m = -(double)(m_DragDelta->y1() - m_DragDelta->y2()) / (m_DragDelta->x1() - m_DragDelta->x2());
   return atan(m) * 180.0 / ptPI;
 }
 
@@ -604,24 +595,6 @@ void ptViewWindow::RecalcCut() {
                                                 Height));
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// RecalcRect
-//
-// Adjust crop rectangle size/position on interaction
-// Assumes that m_DragLine contains topleft and bottomright of rectangle
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptViewWindow::RecalcRect() {
-  m_Rect->setCoords(
-        CLAMPTORANGE(MIN(m_DragLine->x1(), m_Dragline->x2()), m_Frame->left(), m_Frame->right()),
-        CLAMPTORANGE(MIN(m_DragLine->y1(), m_Dragline->y2()), m_Frame->top(), m_Frame->bottom()),
-        CLAMPTORANGE(MAX(m_DragLine->x1(), m_Dragline->x2()), m_Frame->left(), m_Frame->right()),
-        CLAMPTORANGE(MAX(m_DragLine->y1(), m_Dragline->y2()), m_Frame->top(), m_Frame->bottom())
-  );
-  // TODO: Restrict AR
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -664,7 +637,7 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
 
   // Calc position of the image frame in viewport
   // Size of the frame has already been set in RecalculateCut
-  // TODO: Necessary here or better done in Resizeevent? m_Frame *should* stay the same for any given paint event.
+  // TODOBJ: Necessary here or better done in Resizeevent? m_Frame *should* stay the same for any given paint event.
   if (VPHeight > m_QImageCut->height()) {
     m_Frame->setTop((VP_Height - m_QImageCut->height()) / 2);
   } else {
@@ -807,7 +780,7 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
     case vaDrawLine:
       QPen Pen(QColor(255, 0, 0),1);
       Painter.setPen(Pen);
-      Painter.drawLine(m_DragLine);
+      Painter.drawLine(m_DragDelta);
   }
 
   Painter.restore();
@@ -842,7 +815,7 @@ void ptViewWindow::resizeEvent(QResizeEvent* Event) {
 //
 // MouseDragPos
 //
-// Returns the area of the crop rectangle the mouse cursor hovers over.
+// Returns the area of the crop/selection rectangle the mouse cursor hovers over.
 // The mouse position inside the crop rectangle determines which action is performed
 // on drag. There are nine areas: 55511111111666
 //                                444        222
@@ -855,11 +828,13 @@ void ptViewWindow::resizeEvent(QResizeEvent* Event) {
 //   to indicate the move/resize mode.
 // - For rectangle edges of 20 pixels or shorter only the corner modes apply, one for
 //   each half of the edge. This avoids too tiny interaction areas.
+// - Because of the press/drag/release nature of the simple selection, only the
+//   corner areas are relevant there.
 //
 ////////////////////////////////////////////////////////////////////////
 
-ptDragGrip ptViewWindow::MouseDragPos(QMouseEvent* Event) {
-  ptDragGrip HoverOver = dgNone;
+ptMovingEdge ptViewWindow::MouseDragPos(QMouseEvent* Event) {
+  ptMovingEdge HoverOver = meNone;
 
   // Determine edge area thickness
   if (m_Rect->height() <= TinyRectThreshold) {
@@ -875,29 +850,29 @@ ptDragGrip ptViewWindow::MouseDragPos(QMouseEvent* Event) {
 
   // Determine in which area the mouse is
   if (m_Rect->bottom() - Event->y() <= TBthick) {
-    HoverOver = dgBottom;
+    HoverOver = meBottom;
   } else if (Event->y() - m_Rect->top() <= TBthick) {
-    HoverOver = dgTop;
+    HoverOver = meTop;
   } else {
-    HoverOver = dgCenter;
+    HoverOver = meCenter;
   }
 
   if (m_Rect->right() - Event->y() <= LRthick) {
-    if (HoverOver == dgBottom) {
-      HoverOver = dgBottomRight;
-    } else if (HoverOver == dgTop) {
-      HoverOver = dgTopRight;
+    if (HoverOver == meBottom) {
+      HoverOver = meBottomRight;
+    } else if (HoverOver == meTop) {
+      HoverOver = meTopRight;
     } else {
-      HoverOver = dgRight;
+      HoverOver = meRight;
     }
 
   } else if (Event->x() - m_Rect->left() <= LRthick) {
-    if (HoverOver == dgBottom) {
-      HoverOver = dgBottomLeft;
-    } else if (HoverOver == dgTop) {
-      HoverOver = dgTopLeft;
+    if (HoverOver == meBottom) {
+      HoverOver = meBottomLeft;
+    } else if (HoverOver == meTop) {
+      HoverOver = meTopLeft;
     } else {
-      HoverOver = dgLeft;
+      HoverOver = meLeft;
     }
   }
 
@@ -917,84 +892,26 @@ void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
     switch (m_Action) {
       case vaNone:        // scroll the image
       case vaSelectRect:  // Start a simple selection rectangle
+      case vaCrop:        // Start/modify a crop rectangle.
         if (INRANGE(Event->x(), m_Rect->left(), m_Rect->right()) &&
             INRANGE(Event->y(), m_Rect->top(), m_Rect->bottom()))
         {
           m_NowDragging = 1;
-          m_DragLine->setPoints(Event->pos(), Event->pos());
-          m_DeltaToEdgeX = 0;
-          m_DeltaToEdgeY = 0;
-        }
-        break;
+          m_DragDelta->setPoints(Event->pos(), Event->pos());
 
-
-      // Start/modify a crop rectangle.
-      case vaCrop:
-        if (INRANGE(Event->x(), m_Rect->left(), m_Rect->right()) &&
-            INRANGE(Event->y(), m_Rect->top(), m_Rect->bottom()))
-        {
-          m_NowDragging = 1;
-
-          // Start new rect when none is present or clicked outside current one
+          // Start new rect when none is present or clicked outside current one.
+          // Always the case for vaSelectRect. Has no meaning for vaNone.
           if (!m_Rect->isValid() || !m_Rect->contains(Event->pos())) {
-            m_Rect->setWidth(0);    // width and height == 0 means rect is not valid
-            m_Rect->setHeight(0);
-            m_DragLine->setPoints(Event->pos(), Event->pos());
-            m_DeltaToEdgeX = 0;
-            m_DeltaToEdgeY = 0;
-
-          // crop rectangle mode: resize or move
-          } else {
-            m_DragGrip = MouseDragPos(Event);
-
-            switch (m_DragGrip) {
-              // top left fixed, bottom right moving
-              case dgBottom:
-              case dgBottomRight:
-              case dgRight:
-                m_DragLine->setPoints(m_Rect->topLeft(), Event->pos());
-                m_DeltaToEdgeX = m_Rect->right() - Event->x();
-                m_DeltaToEdgeY = m_Rect->bottom() - Event->y();
-                break;
-
-              // bottom right fixed, top left moving
-              case dgTop:
-              case dgTopLeft:
-              case dgLeft:
-                m_DragLine->setPoints(m_Rect->bottomRight(), Event->pos());
-                m_DeltaToEdgeX = m_Rect->left() - Event->x();
-                m_DeltaToEdgeY = m_Rect->top() - Event->y();
-                break;
-
-              // bottom left fixed, top right moving
-              case dgTopRight:
-                m_DragLine->setLine(m_Rect->left(), m_Rect->bottom(), Event->x(), Event->y());
-                m_DeltaToEdgeX = m_Rect->left() - Event->x();
-                m_DeltaToEdgeY = m_Rect->top() - Event->y();
-                break;
-
-              // top right fixed, bottom left moving
-              case dgBottomLeft:
-                m_DragLine->setLine(m_Rect->right(), m_Rect->top(), Event->x(), Event->y());
-                m_DeltaToEdgeX = m_Rect->left() - Event->x();
-                m_DeltaToEdgeY = m_Rect->bottom() - Event->y();
-
-              // move whole rectangle, no resize
-              case dgCenter:
-                m_DragLine->setPoints(Event->pos(), Event->pos());
-                m_DeltaToEdgeX = 0;
-                m_DeltaToEdgeY = 0;
-                break;
-            }
+            m_Rect->setRect(Event->x(), Event->y(), 0, 0);
+            m_MovingEdge = meNone;
           }
         }
         break;
 
-
-      // Start a rotate line. May be started outside the actual image display frame
+      // Start a rotation line. May be started outside the actual image display frame
       case vaDrawLine:
         m_NowDragging = 1;
-        m_DragLine->setPoints(Event->pos(), Event->pos());
+        m_DragDelta->setPoints(Event->pos(), Event->pos());
         break;
     }
   }
@@ -1010,117 +927,175 @@ void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
 void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
   // dragging rectangle or image
   if (m_NowDragging) {
+    m_DragDelta->setP2(Event->pos());
+
     switch (m_Action) {
-      case vaCrop:
       case vaSelectRect:
-        m_DragLine->setP2(Event->pos());
-        RecalcRect();
-        viewport()->repaint();
+      case vaCrop:
+        // Move current rectangle. The CLAMPs make sure it stops at image boundaries.
+        if ((m_MovingEdge == meCenter) || (Event->modifiers() == Qt::ControlModifier)) {
+          m_Rect->moveTo(
+              CLAMP(m_Rect->x1 + m_DragDelta->dx(),
+                           m_Frame->left(),
+                           m_Frame->right() - m_Rect->width() + 1),
+              CLAMP(m_Rect->y1 + m_DragDelta->dy(),
+                           m_Frame->top(),
+                           m_Frame->bottom() - m_Rect->height() + 1) );
+        } else {
+          int dx = m_DragDelta->dx();
+          int dy = m_DragDelta->dy();
+          QPoint NewPos = QPoint();
+
+          // initialize movement direction when rectangle was just started
+          if (m_MovingEdge == meNone) {
+            if ((dx >= 0) && (dy >= 0)) {
+              m_MovingEdge = meBottomRight;
+            } else if ((dx < 0) && (dy <= 0)) {
+              m_MovingEdge = meBottomLeft;
+            } else if ((dx > 0) && (dy < 0)) {
+              m_MovingEdge = meTopLeft;
+            } else if ((dx > 0) && (dy > 0)) {
+              m_MovingEdge = meTopRight;
+            }
+
+          } else {
+            // Calc new corner point, change moving edge/corner when rect is dragged
+            // into another "quadrant" and update m_Rect rectangle.
+            switch (m_MovingEdge) {
+              case meTopLeft:
+                NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
+                NewPos.setY(CLAMP(m_Rect->top() + dy, m_Frame->top(), m_Frame->bottom()));
+                if ((NewPos.x() > m_Rect->right()) && (NewPos.y() <= m_Rect->bottom())) {
+                  m_MovingEdge = meTopRight;
+                } else if ((NewPos.x() > m_Rect->right()) && (NewPos.y() >= m_Rect->bottom())) {
+                  m_MovingEdge = meBottomRight;
+                } else if ((NewPos.x() <= m_Rect->right()) && (NewPos.y() > m_Rect->bottom())) {
+                  m_MovingEdge = meBottomLeft;
+                }
+                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->right()),
+                                  MIN(NewPos.y(), m_Rect->bottom()),
+                                  MAX(NewPos.x(), m_Rect->right()),
+                                  MAX(NewPos.y(), m_Rect->bottom()));
+                break;
+
+              case meTop:
+                NewPos.setY(CLAMP(m_Rect->top() + dy, m_Frame->top(), m_Frame->bottom()));
+                if (NewPos.y() > m_Rect->bottom()) {
+                  m_MovingEdge = meBottom;
+                }
+                m_Rect->setCoords(m_Rect->left(), MIN(NewPos.y(), m_Rect->bottom()),
+                                  m_Rect->right(), MAX(NewPos.y(), m_Rect->bottom()));
+                break;
+
+              case meTopRight:
+                NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
+                NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+                if ((NewPos.x() < m_Rect->left()) && (NewPos.y() <= m_Rect->bottom())) {
+                  m_MovingEdge = meTopLeft;
+                } else if ((NewPos.x() < m_Rect->left()) && (NewPos.y() > m_Rect->bottom())) {
+                  m_MovingEdge = meBottomLeft;
+                } else if ((NewPos.x() >= m_Rect->left()) && (NewPos.y() > m_Rect->bottom())) {
+                  m_MovingEdge = meBottomRight;
+                }
+                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()),
+                                  MIN(NewPos.y(), m_Rect->bottom()),
+                                  MAX(NewPos.x(), m_Rect->left()),
+                                  MAX(NewPos.y(), m_Rect->bottom()));
+                break;
+
+              case meRight:
+                NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
+                if ((NewPos.x() < m_Rect->left())) {
+                  m_MovingEdge = meLeft;
+                }
+                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()), m_Rect->top(),
+                                  MAX(NewPos.x(), m_Rect->left()), m_Rect->bottom());
+                break;
+
+              case meBottomRight:
+                NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
+                NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+                if ((NewPos.x() < m_Rect->left()) && (NewPos.y() >= m_Rect->top())) {
+                  m_MovingEdge = meBottomLeft;
+                } else if ((NewPos.x < m_Rect->left()) && (NewPos.y() < m_Rect->top())) {
+                  m_MovingEdge = meTopLeft;
+                } else if ((NewPos.x() >= m_Rect->left()) && (NewPos.y() < m_Rect->top())) {
+                  m_MovingEdge = meTopRight;
+                }
+                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()),
+                                  MIN(NewPos.y(), m_Rect->top()),
+                                  MAX(NewPos.x(), m_Rect->left()),
+                                  MAX(NewPos.y(), m_Rect->top()));
+                break;
+
+              case meBottom:
+                NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+                if (NewPos.y() < m_Rect->top()) {
+                  m_MovingEdge = meTop;
+                }
+                m_Rect->setCoords(m_Rect->left(), MIN(NewPos.y(), m_Rect->top()),
+                                  m_Rect->right(), MAX(NewPos.y(), m_Rect->top()));
+                break;
+
+              case meBottomLeft:
+                NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
+                NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+                if ((NewPos.x() > m_Rect->right()) && (NewPos.y() >= m_Rect->top())) {
+                  m_MovingEdge = meBottomRight;
+                } else if ((NewPos.x() > m_Rect->right()) && (NewPos.y() < m_Rect->top())) {
+                  m_MovingEdge = meTopRight;
+                } else if ((NewPos.x() <= m_Rect->right()) && (NewPos.y() < m_Rect->top())) {
+                  m_MovingEdge = meTopLeft;
+                }
+                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()),
+                                  MIN(NewPos.y(), m_Rect->top()),
+                                  MAX(NewPos.x(), m_Rect->left()),
+                                  MAX(NewPos.y(), m_Rect->top()));
+                break;
+
+              case meLeft:
+                NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
+                if (NewPos.x() > m_Rect->right()) {
+                  m_MovingEdge = meRight;
+                }
+                m_Rect->setCoords(MIN(NewPos.x(), m_Rect->right()), m_Rect->top(),
+                                  MAX(NewPos.x(), m_Rect->right()), m_Rect->bottom());
+                break;
+            }
+          }
+        }
         break;
 
-      case vaDrawLine:
-        m_DragLine->setP2(Event->pos());
-        viewport()->repaint();
-        break;
 
       case vaNone:
-        m_DragLine->setP2(Event->pos());    
         int CurrentStartX = horizontalScrollBar()->value();
         int CurrentStartY = verticalScrollBar()->value();
+        horizontalScrollBar()->setValue(CurrentStartX - m_DragDelta->x2() + m_DragDelta->x1());
+        verticalScrollBar()->setValue(CurrentStartY - m_DragDelta->y2() + m_DragDelta->y1());
+        break;
 
-        horizontalScrollBar()->setValue(CurrentStartX - m_DragLine->x2() + m_DragLine->x1());
-        verticalScrollBar()->setValue(CurrentStartY - m_DragLine->y2() + m_DragLine->y1());
 
-        m_DragLine->setP1(m_DragLine->p2());
-        viewport()->repaint();
+      case vaDrawLine:
         break;
     }
 
-  // no dragging: mouse cursor might change when in image crop mode
+    m_DragDelta->setP1(m_DragDelta->p2());
+    viewport()->repaint();
+
+
   } else {
+    // no dragging: mouse cursor might change when in image crop mode
     if (m_Action == vaCrop) {
-      ptDragGrip CursorMode = MouseDragPos(Event);
-      if ((CursorMode == dgNone) && (this->cursor() != Qt::ArrowCursor)) {
+      m_MovingEdge = MouseDragPos(Event);
+      if ((m_MovingEdge == meNone) && (this->cursor() != Qt::ArrowCursor)) {
         this->unsetCursor();
       } else {
-        if (this->cursor() != m_Cursor[CursorMode]) {
-          this->setCursor(m_Cursor[CursorMode]);
+        if (this->cursor() != m_Cursor[m_MovingEdge]) {
+          this->setCursor(m_Cursor[m_MovingEdge]);
         }
       }
     }
   }
-
-
-
-/*
-  if (m_CropAllowed && (m_CropRectChange == 1)) {
-    // crop rectangle size changes with fixed AR
-
-  } else if (m_CropAllowed && (m_CropRectChange == 2)) {
-    // crop rectangle move
-
-  } else if ((m_SelectionAllowed) && Event->modifiers() == Qt::ControlModifier) {
-    // move selection.
-
-    m_StartDragX += Event->x() - m_EndDragX;
-    m_StartDragY += Event->y() - m_EndDragY;
-    m_EndDragX = Event->x();
-    m_EndDragY = Event->y();
-
-    viewport()->repaint();
-
-  } else if (m_SelectionAllowed) {
-    // change selection size
-
-    uint16_t Y;
-
-    if (m_FixedAspectRatio) {
-      if (Event->x()>m_StartDragX) {
-        if (Event->y()>m_StartDragY) {
-          Y = m_StartDragY +
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
-        } else {
-          Y = m_StartDragY -
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
-        }
-      } else {
-        if (Event->y()>m_StartDragY) {
-          Y = m_StartDragY -
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
-        } else {
-          Y = m_StartDragY +
-              (int) (m_HOverW*(((QMouseEvent*)Event)->x()-m_StartDragX));
-        }
-      }
-    } else {
-      Y = Event->y();
-    }
-
-    m_DrawRectangle = 1;
-
-    m_EndDragX = Event->x();
-    m_EndDragY = Y;
-
-    viewport()->repaint();
-
-  } else if (!m_SelectionAllowed) {
-    // On the move with the image.
-    //
-    m_EndDragX = Event->x();
-    m_EndDragY = Event->y();
-
-    int32_t CurrentStartX = horizontalScrollBar()->value();
-    int32_t CurrentStartY = verticalScrollBar()->value();
-
-    horizontalScrollBar()->setValue(CurrentStartX-m_EndDragX+m_StartDragX);
-    verticalScrollBar()->setValue(CurrentStartY-m_EndDragY+m_StartDragY);
-
-    m_StartDragX = m_EndDragX;
-    m_StartDragY = m_EndDragY;
-
-    viewport()->repaint();
-  }
-  */
 }
 
 

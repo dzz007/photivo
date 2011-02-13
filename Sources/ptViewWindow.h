@@ -51,56 +51,34 @@ public:
   // NewRelatedImage to associate anonter ptImage with this window.
   void UpdateView(const ptImage* NewRelatedImage = NULL);
 
-/* CROPPING
-   Photivo has two cropping modes used for different purposes.
-   - Old-style cropping (constantly pressing mouse button): Managed by AllowSelection and
-     SelectionOngoing. Used for spot WB and histogram "crop".
-     TODO: Remove all the fixed AR stuff that is not needed here
-   - New-style cropping (similar to Gimp): Managed by AllowCrop and CropOngoing.
-     Used for image cropping.
-*/
-// Allow to select in the image. (push/drag/release events).
-// Argument is 0 or 1.
-// If FixedAspectRatio, then the selection box has the HOverW ratio.
+  /*user interaction:
+    - Selection: mouse push/drag/release to draw a selection rectangle.
+      Used for spot WB and histogram "crop".
+    - Cropping: usage similar to Gimp’s crop tool. Used for image cropping.
+    - Line drawing: mouse push/drag/release to draw a line. Used for image rotation angle.
+  */
+  void StartCrop(const int x,
+                 const int y,
+                 const int width,
+                 const int height,
+                 const short FixedAspectRatio,
+                 const uint16_t AspectRatioW,
+                 const uint16_t AspectRatioH,
+                 const short CropGuidelines);
 
-  ptViewportAction GetAction();
-  void StopAction();
-  void StartCrop(const int AspectRatioW,
-                 const int AspectRatioH,
-                 const short CropGuidelines = ptCropGuidelines_None,
-                 QRect InitialRect = NULL);
-
-  void AllowSelection(const short  Allow,
-                      const short  FixedAspectRatio = 0,
-                      const double HOverW = 2.0/3,
-                      const short  CropGuidelines = ptCropGuidelines_None);
-
-  void StartLine();
+  QRect StopCrop();
   void StartSelection();
+  void StartLine();
+  ptViewportAction OngoingAction();
 
-  // Returns 1 if selection process is ongoing.
-  short SelectionOngoing();
-
-  // New-style cropping. Only for actual image crop, NOT for histogram or spot WB "crop".
-  // Allow is 0 (end crop) or 1 (start crop or change crop parameters)
-  // Any of the AR parameters being 0 means: no AR restriction
-  void AllowCrop(const short Allow,
-                 const int AspectRatioW = 0,
-                 const int AspectRatioH = 0,
-                 const short CropGuidelines = ptCropGuidelines_None);
-
-  // Returns 1 if crop process is ongoing.
-  short CropOngoing();
-
-      // Results of selection.
+  // Results of selection.
   // Expressed in terms of the RelatedImage.
   uint16_t GetSelectionX();
   uint16_t GetSelectionY();
   uint16_t GetSelectionWidth();
   uint16_t GetSelectionHeight();
-  double   GetSelectionAngle();
+  double   GetSelectedAngle();
 
-  // Grid
   void Grid(const short Enabled, const short GridX, const short GridY);
 
   // Zoom functions. Fit returns the factor in %.
@@ -115,7 +93,7 @@ public:
 
   const ptImage*       m_RelatedImage;
 
-  int16_t              m_StartDragX;
+  int16_t              m_StartDragX;  //TODOBJ: should all probably be private or deleted
   int16_t              m_StartDragY;
   int16_t              m_EndDragX;
   int16_t              m_EndDragY;
@@ -161,10 +139,10 @@ protected:
 ///////////////////////////////////////////////////////////////////////////
 
 private:
-  void        RecalcCut();
-  void        RecalcRect();
-  ptDragGrip  MouseDragPos(QMouseEvent* Event);
-  void        ContextMenu(QEvent* Event);
+  void          RecalcCut();
+  ptMovingEdge  MouseDragPos(QMouseEvent* Event);
+  void          ContextMenu(QEvent* Event);
+  void          FinalizeAction();
 
   uint16_t    m_ZoomWidth;
   uint16_t    m_ZoomHeight;
@@ -172,48 +150,42 @@ private:
   short       m_HasGrid;
   short       m_GridX;
   short       m_GridY;
-  short       m_DrawRectangle;    // draw crop rectangle
-  short       m_DrawRotateLine;
   short       m_CropGuidelines;
   short       m_CropLightsOut;
-  short       m_SelectionAllowed;   // TODO: BJ: Aren’t those two basically the same?
-  short       m_SelectionOngoing;   // Do we really need both?
   double      m_HOverW;
-  short       m_CropAllowed;        // On/off status of interactive crop mode
-  short       m_FixedAspectRatio;
-  uint16_t    m_CropARW;
-  uint16_t    m_CropARH;
-  short       m_CropRectChange;   // off (0), user is resizing (1) or moving (2) crop rectangle
-  short       m_CropRectIsFullImage;
 
-  ptViewportAction m_Action;
-  QRect*      m_Rect;     // crop/selection rectangle
-  QRect*      m_Frame;    // (visible part of the) image in the viewport
-  QLine*      m_DragLine;
-  short       m_DeltaToEdgeX;
-  short       m_DeltaToEdgeY;
+  ptViewportAction  m_Action;
+  QRect*      m_Rect;           // crop/selection rectangle in viewport scale
+  QRect*      m_RealSizeRect;
+  QRect*      m_Frame;          // (visible part of the) image in the viewport
+  QLine*      m_DragDelta;
+  short       m_DeltaToEdgeX;   // delta between mouse pos and rect edge
+  short       m_DeltaToEdgeY;   // "
   short       m_NowDragging;  
-  ptDragGrip  m_DragGrip;
+  ptMovingEdge  m_MovingEdge;
   QCursor     m_Cursor[];
+  short       m_FixedAspectRatio;
+  uint16_t    m_AspectRatioW;
+  uint16_t    m_AspectRatioH;
 
-  QAction*    m_AtnExpIndicate;
-  QAction*    m_AtnExpIndR;
-  QAction*    m_AtnExpIndG;
-  QAction*    m_AtnExpIndB;
-  QAction*    m_AtnExpIndOver;
-  QAction*    m_AtnExpIndUnder;
-  QAction*    m_AtnExpIndSensor;
-  QAction*    m_AtnShowBottom;
-  QAction*    m_AtnShowTools;
-  QAction*    m_AtnZoomFit;
-  QAction*    m_AtnZoom100;
-  QAction*    m_AtnModeRGB;
-  QAction*    m_AtnModeL;
-  QAction*    m_AtnModeA;
-  QAction*    m_AtnModeB;
-  QAction*    m_AtnModeGradient;
-  QAction*    m_AtnModeStructure;
-  QActionGroup*   m_ModeGroup;
+  QAction*      m_AtnExpIndicate;
+  QAction*      m_AtnExpIndR;
+  QAction*      m_AtnExpIndG;
+  QAction*      m_AtnExpIndB;
+  QAction*      m_AtnExpIndOver;
+  QAction*      m_AtnExpIndUnder;
+  QAction*      m_AtnExpIndSensor;
+  QAction*      m_AtnShowBottom;
+  QAction*      m_AtnShowTools;
+  QAction*      m_AtnZoomFit;
+  QAction*      m_AtnZoom100;
+  QAction*      m_AtnModeRGB;
+  QAction*      m_AtnModeL;
+  QAction*      m_AtnModeA;
+  QAction*      m_AtnModeB;
+  QAction*      m_AtnModeGradient;
+  QAction*      m_AtnModeStructure;
+  QActionGroup* m_ModeGroup;
 
   QLabel*     m_SizeReport;
   QString     m_SizeReportText;
