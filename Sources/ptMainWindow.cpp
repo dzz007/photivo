@@ -1357,7 +1357,7 @@ void CB_SpecialPreviewChoice(const QVariant Choice);
 void CB_MenuFileExit(const short);
 void ViewWindowStatusReport(short State);
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
-  if ((ViewWindow->SelectionOngoing() || ViewWindow->CropOngoing()) &&
+  if ((ViewWindow->OngoingAction() == vaCrop) || (ViewWindow->OngoingAction() == vaSelectRect) &&
       Event->key()==Qt::Key_Alt)
   {
     ViewWindow->LightsOut();
@@ -2258,11 +2258,4 @@ ptMainWindow::~ptMainWindow() {
   while (ToolBoxStructureList.size()) {
     ToolBoxStructureList.removeAt(0);
   }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void ptMainWindow::on_CurveHueOpenButton_clicked()
-{
-
 }

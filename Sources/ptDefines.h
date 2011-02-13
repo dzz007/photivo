@@ -51,7 +51,7 @@
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 #define INRANGE(x,low,high) ((x) >= (low) && (x) <= (high) ? 1 : 0)
-#define CLAMPTORANGE(x,low,high) ((x) < (low) ? (low) : (x) > (high) ? (high) : (x))
+#define CLAMP(x,low,high) ((x) < (low) ? (low) : (x) > (high) ? (high) : (x))
 
 ////////////////////////////////////////////////////////////////////////////////
 //

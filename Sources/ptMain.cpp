@@ -4,7 +4,7 @@
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009,2011 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2010 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2010-2011 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -4464,7 +4464,7 @@ void CB_RotateAngleButton() {
   ViewWindow->AllowSelection(0);
   BlockTools(0);
 
-  double Angle = ViewWindow->GetSelectionAngle();
+  double Angle = ViewWindow->GetSelectedAngle();
   if (Angle < -45.0) Angle += 180.0;
   if (fabs(fabs(Angle)-90.0)<45.0) Angle -= 90.0;
   Settings->SetValue("Rotate",Angle);
@@ -4587,11 +4587,12 @@ void StartCrop() {
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->StatusReport(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
-  MainWindow->MakeCropButton->setText(QObject::tr("Finalize crop area"));
+  //MainWindow->MakeCropButton->setText(QObject::tr("Finalize crop area"));
   BlockTools(1);
-  ViewWindow->AllowCrop(1,
-                        Settings->GetInt("AspectRatioW"),
-                        Settings->GetInt("AspectRatioH"),
+  ViewWindow->StartCrop(Settings->GetInt("CropX"), Settings->GetInt("CropY"),
+                        Settings->GetInt("CropW"), Settings->GetInt("CropH"),
+                        (Settings->GetInt("FixedAspectRatio") != 0),
+                        Settings->GetInt("AspectRatioW"), Settings->GetInt("AspectRatioH"),
                         Settings->GetInt("CropGuidelines"));
 }
 
@@ -4599,34 +4600,19 @@ void StartCrop() {
 // After-crop processing and cleanup.
 void StopCrop() {
   // Selection is done at this point. Disallow it further and activate main.
-  ViewWindow->AllowCrop(0);
+  QRect CropRect = ViewWindow->StopCrop();
   BlockTools(0);
-  MainWindow->MakeCropButton->setText(QObject::tr("Select crop area"));
+  //MainWindow->MakeCropButton->setText(QObject::tr("Select crop area"));
 
-  // TODO: This definitely needs heavy work.
-/*
   // Account for the pipesize factor.
-  short XScale = 1<<Settings->GetInt("PipeSize");
+  short XScale = 1<<Settings->GetInt("PipeSize");   // TODOBJ: what does << mean here???
   short YScale = 1<<Settings->GetInt("PipeSize");
   short TmpScaled = Settings->GetInt("Scaled");
 
-  if (((((ViewWindow->GetSelectionX()*XScale)>>TmpScaled) + ((ViewWindow->GetSelectionWidth()*XScale)>>TmpScaled)) > Width) ||
-     ((((ViewWindow->GetSelectionY()*YScale)>>TmpScaled) + ((ViewWindow->GetSelectionHeight()*YScale)>>TmpScaled)) > Height))
-  {
-    QMessageBox::information(MainWindow,
-          QObject::tr("Crop outside the image"),
-          QObject::tr("Crop rectangle too large.\nNo crop, try again."));
-
-    if(Settings->GetInt("RunMode")==1) {
-      // we're in manual mode!
-      ViewWindow->Zoom(OldZoom,0);
-      Settings->SetValue("ZoomMode",OldZoomMode);
-      Update(ptProcessorPhase_NULL);
-    }
-  } else if (ViewWindow->GetSelectionWidth()*XScale < 4 || ViewWindow->GetSelectionHeight()*YScale < 4) {
+  if ((CropRect.width() * XScale < 4) || (CropRect.height() * YScale < 4)) {
     QMessageBox::information(MainWindow,
         QObject::tr("Crop too small"),
-        QObject::tr("Crop rectangle too small.\nNo crop, try again."));
+        QObject::tr("Crop rectangle needs to be at leas 4x4 pixel.\nNo crop, try again."));
     if(Settings->GetInt("RunMode")==1) {
       // we're in manual mode!
       ViewWindow->Zoom(OldZoom,0);
@@ -4653,11 +4639,10 @@ void StopCrop() {
   ViewWindow->Zoom(OldZoom,0);
   Settings->SetValue("ZoomMode",OldZoomMode);
   Update(ptProcessorPhase_Geometry);
-  */
 }
 
 void CB_MakeCropButton() {
-  if (ViewWindow->CropOngoing()) {
+  if (ViewWindow->OngoingAction() == vaCrop) {
     StopCrop();
   } else {
     StartCrop();

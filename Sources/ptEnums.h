@@ -24,17 +24,17 @@
 #define PTENUM_H
 
 // Crop: Position of the mouse when button pressed for dragging
-enum ptDragGrip {
-  dgNone,
-  dgTop,
-  dgRight,
-  dgBottom,
-  dgLeft,
-  dgTopLeft,
-  dgTopRight,
-  dgBottomLeft,
-  dgBottomRight,
-  dgCenter      // move crop rect instead of resize
+enum ptMovingEdge {
+  meNone,
+  meTop,
+  meRight,
+  meBottom,
+  meLeft,
+  meTopLeft,
+  meTopRight,
+  meBottomLeft,
+  meBottomRight,
+  meCenter      // move crop rect instead of resize
 };
 
 // User interaction in the view window
