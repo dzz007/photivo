@@ -1120,32 +1120,31 @@ void BlockTools(const short state) {
 void HistogramGetCrop() {
   // Get the crop for the histogram
   if (Settings->GetInt("HistogramCrop")) {
-      // Allow to be selected in the view window. And deactivate main.
-      ViewWindow->AllowSelection(1);
-      ViewWindow->StatusReport("Selection");
+      // Allow to be selected in the view window. And deactivate main.        
       BlockTools(1);
-      while (ViewWindow->SelectionOngoing()) {
+      ViewWindow->StatusReport("Selection");
+      ViewWindow->StartSelection();
+      while (ViewWindow->OngoingAction() == vaSelectRect) {
           QApplication::processEvents();
       }
 
       // Selection is done at this point. Disallow it further and activate main.
-      ViewWindow->AllowSelection(0);
       BlockTools(0);
+      QRect SelectionRect = ViewWindow->GetRectangle();
+
       short XScale = 1<<Settings->GetInt("PipeSize");
       short YScale = 1<<Settings->GetInt("PipeSize");
-      Settings->SetValue("HistogramCropX",
-                         ViewWindow->GetSelectionX()*XScale);
-      Settings->SetValue("HistogramCropY",
-                         ViewWindow->GetSelectionY()*YScale);
-      Settings->SetValue("HistogramCropW",
-                         ViewWindow->GetSelectionWidth()*XScale);
-      Settings->SetValue("HistogramCropH",
-                         ViewWindow->GetSelectionHeight()*YScale);
+
+      Settings->SetValue("HistogramCropX", SelectionRect.left() * XScale);
+      Settings->SetValue("HistogramCropY", SelectionRect.top() * YScale);
+      Settings->SetValue("HistogramCropW", SelectionRect.width() * XScale);
+      Settings->SetValue("HistogramCropH", SelectionRect.height() * YScale);
+
       // Check if the chosen area is large enough
       if (Settings->GetInt("HistogramCropW") < 50 || Settings->GetInt("HistogramCropH") < 50) {
         QMessageBox::information(0,
-          QObject::tr("Crop too small"),
-          QObject::tr("Crop rectangle too small.\nNo crop, try again."));
+          QObject::tr("Selection too small"),
+          QObject::tr("Selection rectangle needs to be at least 50x50 pixel in size.\nNo crop, try again."));
         Settings->SetValue("HistogramCropX",0);
         Settings->SetValue("HistogramCropY",0);
         Settings->SetValue("HistogramCropW",0);
@@ -3963,6 +3962,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
   uint16_t Height = 0;
   short OldZoom = 0;
   short OldZoomMode = 0;
+
   switch (Choice.toInt()) {
     case ptWhiteBalance_Camera :
     case ptWhiteBalance_Auto :
@@ -3970,6 +3970,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       // In fact all of above just translates to settings into
       // DcRaw handled via GuiSettingsToDcRaw. Nothing more to do.
       break;
+
     case ptWhiteBalance_Spot:
       // First : make sure we have Image_AfterDcRaw in the view window.
       // Anything else might have undergone geometric transformations that are
@@ -3981,26 +3982,22 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
       UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw);
 
-      // Allow to be selected in the view window. And deactivate main.
-      ViewWindow->AllowSelection(1);
-      ViewWindow->StatusReport("Spot WB");
+      // Allow to be selected in the view window. And deactivate main.      
       BlockTools(1);
-      while (ViewWindow->SelectionOngoing()) {
+      ViewWindow->StatusReport("Spot WB");
+      ViewWindow->StartSelection();
+      while (ViewWindow->OngoingAction() == vaSelectRect) {
         QApplication::processEvents();
       }
 
       // Selection is done at this point. Disallow it further and activate main.
-      ViewWindow->AllowSelection(0);
       BlockTools(0);
+      QRect SelectionRect = ViewWindow->GetRectangle();
 
-      Settings->SetValue("VisualSelectionX",
-                         ViewWindow->GetSelectionX());
-      Settings->SetValue("VisualSelectionY",
-                         ViewWindow->GetSelectionY());
-      Settings->SetValue("VisualSelectionWidth",
-                         ViewWindow->GetSelectionWidth());
-      Settings->SetValue("VisualSelectionHeight",
-                         ViewWindow->GetSelectionHeight());
+      Settings->SetValue("VisualSelectionX", SelectionRect.left());
+      Settings->SetValue("VisualSelectionY", SelectionRect.top());
+      Settings->SetValue("VisualSelectionWidth", SelectionRect.width());
+      Settings->SetValue("VisualSelectionHeight", SelectionRect.height());
 
       TRACEKEYVALS("Selection X","%d",
                    Settings->GetInt("VisualSelectionX"));
@@ -4454,17 +4451,20 @@ void CB_RotateAngleButton() {
   short OldZoomMode = Settings->GetInt("ZoomMode");
   ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
+
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->StatusReport(QObject::tr("Get angle"));
   ReportProgress(QObject::tr("Get angle"));
-  ViewWindow->AllowSelection(1,0,0,ptCropGuidelines_Line);
-  BlockTools(1);
-  while (ViewWindow->SelectionOngoing()) QApplication::processEvents();
-  // Selection is done at this point. Disallow it further and activate main.
-  ViewWindow->AllowSelection(0);
-  BlockTools(0);
 
-  double Angle = ViewWindow->GetSelectedAngle();
+  BlockTools(1);
+  ViewWindow->StartLine();
+  while (ViewWindow->OngoingAction() == vaDrawLine) {
+    QApplication::processEvents();
+  }
+
+  // Selection is done at this point. Disallow it further and activate main.
+  BlockTools(0);
+  double Angle = ViewWindow->GetRotationAngle();
   if (Angle < -45.0) Angle += 180.0;
   if (fabs(fabs(Angle)-90.0)<45.0) Angle -= 90.0;
   Settings->SetValue("Rotate",Angle);
@@ -4530,8 +4530,9 @@ void CB_CropGuidelinesChoice(const QVariant Choice) {
   Settings->SetValue("CropGuidelines",Choice);
 }
 
-// Prepare and start image crop
-void StartCrop() {
+
+// Prepare and start image crop interaction
+void CB_MakeCropButton() {
   if (Settings->GetInt("HaveImage")==0) {
     QMessageBox::information(MainWindow,
       QObject::tr("No crop possible"),
@@ -4587,7 +4588,6 @@ void StartCrop() {
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->StatusReport(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
-  //MainWindow->MakeCropButton->setText(QObject::tr("Finalize crop area"));
   BlockTools(1);
   ViewWindow->StartCrop(Settings->GetInt("CropX"), Settings->GetInt("CropY"),
                         Settings->GetInt("CropW"), Settings->GetInt("CropH"),
@@ -4597,70 +4597,77 @@ void StartCrop() {
 }
 
 
+void CB_ConfirmCropButton() {
+  StopCrop(1);    // user confirmed crop
+}
+
+void CB_CancelCropButton() {
+  StopCrop(0);    // user cancelled crop
+}
+
 // After-crop processing and cleanup.
-void StopCrop() {
-  // Selection is done at this point. Disallow it further and activate main.
+void StopCrop(short CropConfirmed) {
   QRect CropRect = ViewWindow->StopCrop();
   BlockTools(0);
-  //MainWindow->MakeCropButton->setText(QObject::tr("Select crop area"));
 
-  // Account for the pipesize factor.
-  short XScale = 1<<Settings->GetInt("PipeSize");   // TODOBJ: what does << mean here???
-  short YScale = 1<<Settings->GetInt("PipeSize");
-  short TmpScaled = Settings->GetInt("Scaled");
+  if (CropConfirmed) {
+    // Account for the pipesize factor.
+    int XScale = 1<<Settings->GetInt("PipeSize");
+    int YScale = 1<<Settings->GetInt("PipeSize");
 
-  if ((CropRect.width() * XScale < 4) || (CropRect.height() * YScale < 4)) {
-    QMessageBox::information(MainWindow,
-        QObject::tr("Crop too small"),
-        QObject::tr("Crop rectangle needs to be at leas 4x4 pixel.\nNo crop, try again."));
-    if(Settings->GetInt("RunMode")==1) {
-      // we're in manual mode!
-      ViewWindow->Zoom(OldZoom,0);
-      Settings->SetValue("ZoomMode",OldZoomMode);
-      Update(ptProcessorPhase_NULL);
+    if ((CropRect.width() * XScale < 4) || (CropRect.height() * YScale < 4)) {
+      QMessageBox::information(MainWindow,
+          QObject::tr("Crop too small"),
+          QObject::tr("Crop rectangle needs to be at leas 4x4 pixels in size.\nNo crop, try again."));
+      if(Settings->GetInt("RunMode")==1) {
+        // we're in manual mode!
+        ViewWindow->Zoom(OldZoom,0);
+        Settings->SetValue("ZoomMode",OldZoomMode);
+        Update(ptProcessorPhase_NULL);
+      }
+    } else {
+      Settings->SetValue("Crop",1);
+      Settings->SetValue("CropX",CropRect.left() * XScale);
+      Settings->SetValue("CropY",CropRect.top() * YScale);
+      Settings->SetValue("CropW",CropRect.width() * XScale);
+      Settings->SetValue("CropH",CropRect.height() * YScale);
+      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Checked);
     }
-  } else {
-    Settings->SetValue("Crop",1);
-    Settings->SetValue("CropX",ViewWindow->GetSelectionX()*XScale);
-    Settings->SetValue("CropY",ViewWindow->GetSelectionY()*YScale);
-    Settings->SetValue("CropW",ViewWindow->GetSelectionWidth()*XScale);
-    Settings->SetValue("CropH",ViewWindow->GetSelectionHeight()*YScale);
-  }
 
-  TRACEKEYVALS("PreviewImageW","%d",PreviewImage->m_Width);
-  TRACEKEYVALS("PreviewImageH","%d",PreviewImage->m_Height);
-  TRACEKEYVALS("XScale","%d",XScale);
-  TRACEKEYVALS("YScale","%d",YScale);
-  TRACEKEYVALS("CropX","%d",Settings->GetInt("CropX"));
-  TRACEKEYVALS("CropY","%d",Settings->GetInt("CropY"));
-  TRACEKEYVALS("CropW","%d",Settings->GetInt("CropW"));
-  TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
+    TRACEKEYVALS("PreviewImageW","%d",PreviewImage->m_Width);
+    TRACEKEYVALS("PreviewImageH","%d",PreviewImage->m_Height);
+    TRACEKEYVALS("XScale","%d",XScale);
+    TRACEKEYVALS("YScale","%d",YScale);
+    TRACEKEYVALS("CropX","%d",Settings->GetInt("CropX"));
+    TRACEKEYVALS("CropY","%d",Settings->GetInt("CropY"));
+    TRACEKEYVALS("CropW","%d",Settings->GetInt("CropW"));
+    TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
+  }
 
   ViewWindow->Zoom(OldZoom,0);
   Settings->SetValue("ZoomMode",OldZoomMode);
   Update(ptProcessorPhase_Geometry);
 }
 
-void CB_MakeCropButton() {
-  if (ViewWindow->OngoingAction() == vaCrop) {
-    StopCrop();
-  } else {
-    StartCrop();
-  }
-}
 
+// En/disable an existing crop in the pipe
 void CB_CropCheck(const QVariant State) {
   Settings->SetValue("Crop",State);
+
   if (State.toInt() != 0 &&
-      (Settings->GetInt("CropW") <= 20 || Settings->GetInt("CropH") <= 20)) {
+      (Settings->GetInt("CropW") <= 4 || Settings->GetInt("CropH") <= 4))
+  {
     QMessageBox::information(MainWindow,
-      QObject::tr("No crop"),
-      QObject::tr("Set a crop rectangle now."));
+        QObject::tr("No previous crop found"),
+        QObject::tr("Set a crop rectangle now."));
+
     CB_MakeCropButton();
     return;
   }
+
   Update(ptProcessorPhase_Geometry);
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //

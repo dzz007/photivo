@@ -45,7 +45,7 @@ extern ptTheme* Theme;
 // Constants
 const int EdgeThickness = 8;
 const int TinyRectThreshold = 20;
-const double MaxARError = 0.001;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -350,6 +350,9 @@ void ptViewWindow::FinalizeAction() {
                               (int)(m_Rect->top() / m_ZoomFactor + 0.5),
                               (int)(m_Rect->width() / m_ZoomFactor + 0.5),
                               (int)(m_Rect-height() / m_ZoomFactor + 0.5));
+      break;
+
+    default:
   }
 
   m_Action = vaNone;
@@ -366,42 +369,16 @@ ptViewportAction ptViewWindow::OngoingAction() {
   return m_Action;
 }
 
-//TODOBJ: combine these into something like:
-//QRect ptViewWindow::GetSelectedRect()
-uint16_t ptViewWindow::GetSelectionX() {
-  uint16_t X = MIN(m_StartDragX,m_EndDragX);
-  X -= m_XOffsetInVP;
-  X += m_StartX;
-  X = (uint16_t)(X/m_ZoomFactor+0.5);
-  return X;
-}
-
-uint16_t ptViewWindow::GetSelectionY() {
-  uint16_t Y = MIN(m_StartDragY,m_EndDragY);
-  Y -= m_YOffsetInVP;
-  Y += m_StartY;
-  Y = (uint16_t)(Y/m_ZoomFactor+0.5);
-  return Y;
-}
-
-uint16_t ptViewWindow::GetSelectionWidth() {
-  uint16_t W = abs(m_StartDragX-m_EndDragX);
-  W = (uint16_t)(W/m_ZoomFactor+0.5);
-  return W;
-}
-
-uint16_t ptViewWindow::GetSelectionHeight() {
-  uint16_t H = abs(m_StartDragY-m_EndDragY);
-  H = (uint16_t)(H/m_ZoomFactor+0.5);
-  return H;
-}
-
-double ptViewWindow::GetSelectedAngle() {
+double ptViewWindow::GetRotationAngle() {
   if (m_DragDelta->x1() == m_DragDelta->x2()) {
     return 90.0;
   }
   double m = -(double)(m_DragDelta->y1() - m_DragDelta->y2()) / (m_DragDelta->x1() - m_DragDelta->x2());
   return atan(m) * 180.0 / ptPI;
+}
+
+QRect ptViewWindow::GetRectangle() {
+  return m_RealSizeRect;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -720,6 +697,10 @@ void ptViewWindow::RecalcRect() {
       m_Rect->setCoords(MIN(NewPos.x(), m_Rect->right()), m_Rect->top(),
                         MAX(NewPos.x(), m_Rect->right()), m_Rect->bottom());
       break;
+
+    default:
+      Assert(0);
+      break;
   }
 
   // Correct AR
@@ -740,8 +721,10 @@ void ptViewWindow::RecalcRect() {
     if (m_Rect->right() > m_Frame->right()) {
       m_Rect->moveRight(m_Frame->right());
     }
-    if (m_Rect->width() > m_Frame)
-
+    if (m_Rect->width() > m_Frame->width()) {
+      m_Rect->setHeight(qRound(m_Frame->width() / m_AspectRatio));
+      m_Rect->setWidth(m_Frame->width());
+    }
   }
 }
 
@@ -921,6 +904,8 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
             Painter.drawLine(m_Rect->right(), m_Rect->top(),
                              m_Rect->right() - length, m_Rect->top() + length);
             break;
+
+          default:
         }
       }
 
@@ -932,6 +917,8 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
       QPen Pen(QColor(255, 0, 0),1);
       Painter.setPen(Pen);
       Painter.drawLine(m_DragDelta);
+
+    default:
   }
 
   Painter.restore();

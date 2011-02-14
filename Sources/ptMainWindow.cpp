@@ -1103,6 +1103,17 @@ void ptMainWindow::OnMakeCropButtonClicked() {
   ::CB_MakeCropButton();
 }
 
+void CB_ConfirmCropButton();
+void ptMainWindow::OnConfirmCropButtonClicked() {
+  ::CB_ConfirmCropButton();
+}
+
+void CB_CancelCropButton();
+void ptMainWindow::OnCancelCropButtonClicked() {
+  ::CB_CancelCropButton();
+}
+
+
 //
 // Tab : RGB
 //
