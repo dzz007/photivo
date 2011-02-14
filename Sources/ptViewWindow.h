@@ -66,18 +66,12 @@ public:
                  const uint16_t AspectRatioH,
                  const short CropGuidelines);
 
-  QRect StopCrop();
-  void StartSelection();
-  void StartLine();
-  ptViewportAction OngoingAction();
-
-  // Results of selection.
-  // Expressed in terms of the RelatedImage.
-  uint16_t GetSelectionX();
-  uint16_t GetSelectionY();
-  uint16_t GetSelectionWidth();
-  uint16_t GetSelectionHeight();
-  double   GetSelectedAngle();
+  QRect   StopCrop();   // QRect scale is 100% zoom and current pipe size
+  void    StartSelection();
+  void    StartLine();
+  ptViewportAction  OngoingAction();
+  double  GetRotationAngle();
+  QRect   GetRectangle();
 
   void Grid(const short Enabled, const short GridX, const short GridY);
 
@@ -201,29 +195,29 @@ private:
   int         m_NewSize;
 
 
-  ///////////////////////////////////////////////////////////////////////////
-  //
-  // PRIVATE SLOTS
-  //
-  ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+//
+// PRIVATE SLOTS
+//
+///////////////////////////////////////////////////////////////////////////
 
-  private slots:
-    void MenuExpIndicate();
-    void MenuExpIndOver();
-    void MenuExpIndUnder();
-    void MenuExpIndR();
-    void MenuExpIndG();
-    void MenuExpIndB();
-    void MenuExpIndSensor();
-    void MenuShowBottom();
-    void MenuShowTools();
-    void MenuFullScreen();
-    void MenuZoomFit();
-    void MenuZoom100();
-    void MenuMode();
-    void SizeReportTimerExpired();
-    void StatusReportTimerExpired();
-    void ResizeTimerExpired();
+private slots:
+  void MenuExpIndicate();
+  void MenuExpIndOver();
+  void MenuExpIndUnder();
+  void MenuExpIndR();
+  void MenuExpIndG();
+  void MenuExpIndB();
+  void MenuExpIndSensor();
+  void MenuShowBottom();
+  void MenuShowTools();
+  void MenuFullScreen();
+  void MenuZoomFit();
+  void MenuZoom100();
+  void MenuMode();
+  void SizeReportTimerExpired();
+  void StatusReportTimerExpired();
+  void ResizeTimerExpired();
 };
 
 #endif
