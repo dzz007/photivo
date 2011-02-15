@@ -434,6 +434,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LensfunGeometry"             ,ptGT_Choice       ,9,0,1 ,LF_RECTILINEAR              ,GuiOptions->LensfunGeometry           ,tr("Target geometry for lensfun")},
     {"ResizeFilter"                ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Mitchell         ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
+    {"AspectRatioMode"             ,ptGT_Choice       ,1,0,0 ,ptAspectRatio_Original      ,GuiOptions->AspectRatioMode           ,tr("If and how to enforce a certain aspect ratio when cropping")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatioW              ,tr("Aspect width")},
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatioH              ,tr("Aspect height")},
     {"ChannelMixer"                ,ptGT_Choice       ,2,1,1 ,ptChannelMixerChoice_None   ,GuiOptions->ChannelMixer              ,tr("ChannelMixer")},

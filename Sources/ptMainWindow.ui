@@ -1020,8 +1020,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>168</width>
-                          <height>467</height>
+                          <width>872</width>
+                          <height>506</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -1456,8 +1456,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>165</width>
-                          <height>96</height>
+                          <width>872</width>
+                          <height>506</height>
                          </rect>
                         </property>
                         <attribute name="label">
@@ -1800,7 +1800,7 @@
                                 </spacer>
                                </item>
                                <item>
-                                <widget class="QLabel" name="label_4">
+                                <widget class="QLabel" name="AspectRatioWLabel">
                                  <property name="text">
                                   <string>W</string>
                                  </property>
@@ -1826,7 +1826,7 @@
                                 </spacer>
                                </item>
                                <item>
-                                <widget class="QLabel" name="label_2">
+                                <widget class="QLabel" name="AspectRatioHLabel">
                                  <property name="sizePolicy">
                                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                                    <horstretch>0</horstretch>
@@ -1912,16 +1912,6 @@
                           </widget>
                          </item>
                          <item>
-                          <widget class="QCheckBox" name="checkBox">
-                           <property name="text">
-                            <string>CheckBox</string>
-                           </property>
-                           <property name="tristate">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
                           <spacer name="verticalSpacer_15">
                            <property name="orientation">
                             <enum>Qt::Vertical</enum>
@@ -1941,8 +1931,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>98</width>
-                          <height>94</height>
+                          <width>872</width>
+                          <height>506</height>
                          </rect>
                         </property>
                         <attribute name="label">

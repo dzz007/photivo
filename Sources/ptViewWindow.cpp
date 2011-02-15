@@ -68,15 +68,16 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_QImageZoomed     = NULL;
   m_QImageCut        = NULL;
   // With respect to event hanpting.
-  m_StartDragX       = 0;
-  m_StartDragY       = 0;
   m_HasGrid          = 0;
   m_GridX            = 0;
   m_GridY            = 0;
   m_CropGuidelines   = 0;
   m_CropLightsOut    = Settings->m_IniSettings->value("CropLightsOut",0).toInt();
+  m_AspectRatio      = 0.0;
+  m_AspectRatioW     = 0;
+  m_AspectRatioH     = 0;
 
-  m_Action          = vaNone;
+  m_InteractionMode          = vaNone;
   m_Frame           = new QRect(0,0,0,0);
   m_Rect            = new QRect(0,0,0,0);
   m_RealSizeRect    = new QRect(0,0,0,0);
@@ -310,17 +311,11 @@ void ptViewWindow::StartCrop(const int x, const int y, const int width, const in
                   (uint16_t)(width * m_ZoomFactor + 0.5),
                   (uint16_t)(height * m_ZoomFactor + 0.5));
 
-  m_FixedAspectRatio = FixedAspectRatio;
-  if (m_FixedAspectRatio) {
-    m_AspectRatioW = AspectRatioW;
-    m_AspectRatioH = AspectRatioH;
-    m_AspectRatio = AspectRatioW / AspectRatioH;
-  }
-
+  setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH);
   m_CropGuidelines = CropGuidelines;
   m_MovingEdge = meNone;
   m_DragDelta->setLine(0,0,0,0);
-  m_Action = vaCrop;
+  m_InteractionMode = vaCrop;
   viewport()->repaint();
 }
 
@@ -335,15 +330,15 @@ void ptViewWindow::StartSelection() {
   m_FixedAspectRatio = 0;
   m_CropGuidelines = ptCropGuidelines_None;
   m_MovingEdge = meNone;
-  m_Action = vaSelectRect;
+  m_InteractionMode = vaSelectRect;
 }
 
 void ptViewWindow::StartLine() {
-  m_Action = vaDrawLine;
+  m_InteractionMode = vaDrawLine;
 }
 
 void ptViewWindow::FinalizeAction() {
-  switch (m_Action) {
+  switch (m_InteractionMode) {
     case vaSelectRect:
     case vaCrop:
       m_RealSizeRect->setRect((int)(m_Rect->left() / m_ZoomFactor + 0.5),
@@ -355,7 +350,7 @@ void ptViewWindow::FinalizeAction() {
     default:
   }
 
-  m_Action = vaNone;
+  m_InteractionMode = vaNone;
 }
 
 
@@ -366,7 +361,7 @@ void ptViewWindow::FinalizeAction() {
 ////////////////////////////////////////////////////////////////////////////////
 
 ptViewportAction ptViewWindow::OngoingAction() {
-  return m_Action;
+  return m_InteractionMode;
 }
 
 double ptViewWindow::GetRotationAngle() {
@@ -380,6 +375,35 @@ double ptViewWindow::GetRotationAngle() {
 QRect ptViewWindow::GetRectangle() {
   return m_RealSizeRect;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Setter methods for interaction with main window UI widgets
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::setCropGuidelines(const short CropGuidelines) {
+  if (m_InteractionMode == vaCrop) {
+    m_CropGuidelines = CropGuidelines;
+    viewport()->repaint();
+  }
+}
+
+
+void ptViewWindow::setAspectRatio(const short FixedAspectRatio,
+                                  uint16_t AspectRatioW, uint16_t AspectRatioH)
+{
+  m_FixedAspectRatio = FixedAspectRatio;
+  if (m_FixedAspectRatio) {
+    Assert((AspectRatioW != 0) && (AspectRatioH != 0));
+    m_AspectRatioW = AspectRatioW;
+    m_AspectRatioH = AspectRatioH;
+    m_AspectRatio = AspectRatioW / AspectRatioH;
+  }
+}
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -820,7 +844,7 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
   }
 
 
-  switch (m_Action) {
+  switch (m_InteractionMode) {
     // Draw rectangle for crop/selection tools
     case vaSelectRect:
     case vaCrop:
@@ -1027,7 +1051,7 @@ ptMovingEdge ptViewWindow::MouseDragPos(QMouseEvent* Event) {
 void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
   // left click actions
   if (Event->button() == Qt::LeftButton) {
-    switch (m_Action) {
+    switch (m_InteractionMode) {
       case vaNone:        // scroll the image
       case vaSelectRect:  // Start a simple selection rectangle
       case vaCrop:        // Start/modify a crop rectangle.
@@ -1067,7 +1091,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
   if (m_NowDragging) {
     m_DragDelta->setP2(Event->pos());
 
-    switch (m_Action) {
+    switch (m_InteractionMode) {
       case vaSelectRect:
       case vaCrop:
         // Move current rectangle. The CLAMPs make sure it stops at image boundaries.
@@ -1119,7 +1143,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
 
   } else {
     // no dragging: mouse cursor might change when in image crop mode
-    if (m_Action == vaCrop) {
+    if (m_InteractionMode == vaCrop) {
       m_MovingEdge = MouseDragPos(Event);
       if ((m_MovingEdge == meNone) && (this->cursor() != Qt::ArrowCursor)) {
         this->unsetCursor();
@@ -1145,7 +1169,7 @@ void ptViewWindow::mouseReleaseEvent(QMouseEvent* Event) {
     if (m_NowDragging) {
       m_NowDragging = 0;
 
-      switch (m_Action) {
+      switch (m_InteractionMode) {
         case vaNone:    // Scroll image: Nothing to do here.
         case vaCrop:    // Crop: Also nothing to do.
           break;

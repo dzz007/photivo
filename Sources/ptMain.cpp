@@ -228,6 +228,7 @@ short  ReadSettingsFile(const QString FileName, short& NextPhase);
 void   WriteOut();
 void   UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
                           const short    OnlyHistogram = 0);
+void   UpdateCropToolUI();
 void   InitCurves();
 void   InitChannelMixers();
 void   PreCalcTransforms();
@@ -1144,7 +1145,7 @@ void HistogramGetCrop() {
       if (Settings->GetInt("HistogramCropW") < 50 || Settings->GetInt("HistogramCropH") < 50) {
         QMessageBox::information(0,
           QObject::tr("Selection too small"),
-          QObject::tr("Selection rectangle needs to be at least 50x50 pixel in size.\nNo crop, try again."));
+          QObject::tr("Selection rectangle needs to be at least 50x50 pixels in size.\nNo crop, try again."));
         Settings->SetValue("HistogramCropX",0);
         Settings->SetValue("HistogramCropY",0);
         Settings->SetValue("HistogramCropW",0);
@@ -4518,6 +4519,33 @@ void CB_GeometryBlockCheck(const QVariant State) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// Set enabled and visible status for the crop tool widgets
+void UpdateCropToolUI() {
+  if (ViewWindow->OngoingAction() == vaCrop) {
+    QCheckBox(MainWindow->CropWidget).setEnabled(false);
+    MainWindow->MakeCropButton->setVisible(false);
+    MainWindow->ConfirmCropButton->setVisible(true);
+    MainWindow->CancelCropButton->setVisible(true);
+  } else {
+    QCheckBox(MainWindow->CropWidget).setEnabled(true);
+    MainWindow->MakeCropButton->setVisible(true);
+    MainWindow->ConfirmCropButton->setVisible(false);
+    MainWindow->CancelCropButton->setVisible(false);
+  }
+
+  if (Settings->GetInt("AspectRatioMode") == ptAspectRatio_Manual) {
+    MainWindow->AspectRatioWLabel->setEnabled(true);
+    MainWindow->AspectRatioHLabel->setEnabled(true);
+    QComboBox(MainWindow->AspectRatioWWidget).setEnabled(true);
+    QComboBox(MainWindow->AspectRatioHWidget).setEnabled(true);
+  } else {
+    MainWindow->AspectRatioWLabel->setEnabled(false);
+    MainWindow->AspectRatioHLabel->setEnabled(false);
+    QComboBox(MainWindow->AspectRatioWWidget).setEnabled(false);
+    QComboBox(MainWindow->AspectRatioHWidget).setEnabled(false);
+  }
+}
+
 void CB_AspectRatioWChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioW",Value);
 }
@@ -4526,8 +4554,14 @@ void CB_AspectRatioHChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioH",Value);
 }
 
+void CB_AspectRatioModeChoice(const QVariant Choice) {
+  Settings->SetValue("AspectRatioMode", Choice);
+  UpdateCropToolUI();
+}
+
 void CB_CropGuidelinesChoice(const QVariant Choice) {
   Settings->SetValue("CropGuidelines",Choice);
+  ViewWindow->setCropGuidelines(Choice);
 }
 
 
@@ -4618,7 +4652,7 @@ void StopCrop(short CropConfirmed) {
     if ((CropRect.width() * XScale < 4) || (CropRect.height() * YScale < 4)) {
       QMessageBox::information(MainWindow,
           QObject::tr("Crop too small"),
-          QObject::tr("Crop rectangle needs to be at leas 4x4 pixels in size.\nNo crop, try again."));
+          QObject::tr("Crop rectangle needs to be at least 4x4 pixels in size.\nNo crop, try again."));
       if(Settings->GetInt("RunMode")==1) {
         // we're in manual mode!
         ViewWindow->Zoom(OldZoom,0);
@@ -8500,6 +8534,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FlipModeChoice)
   M_Dispatch(CropCheck)
   M_Dispatch(CropGuidelinesChoice)
+  M_Dispatch(AspectRatioMode)
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)
 
