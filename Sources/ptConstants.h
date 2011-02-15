@@ -192,7 +192,13 @@ const short ptClipMode_HSV           = 3;
 const short ptClipMode_Blend         = 4;
 const short ptClipMode_Rebuild       = 5;
 
-// Crop rectangle guidelines modes
+// Aspect Ratio modes
+
+const short ptAspectRatio_Free      = 0;
+const short ptAspectRatio_Original  = 1;
+const short ptAspectRatio_Manual    = 2;
+
+// Crop/Selection rectangle guidelines modes
 
 const short ptCropGuidelines_None        = 0;
 const short ptCropGuidelines_RuleThirds  = 1;

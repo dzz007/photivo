@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -118,6 +119,12 @@ const ptGuiOptionsItem ptGuiOptions::RunMode[] = {
   {ptRunMode_None, QObject::tr("Halt") },
   {ptRunMode_Once, QObject::tr("Run once") },
   {ptRunMode_Auto, QObject::tr("Run always") },
+  {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::AspectRatioMode[] = {
+  {ptAspectRatio_Free,      QObject::tr("Free") },
+  {ptAspectRatio_Original,  QObject::tr("Fixed (original image)") },
+  {ptAspectRatio_Manual,    QObject::tr("Fixed (manual)") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::CropGuidelines[] = {

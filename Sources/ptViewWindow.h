@@ -72,6 +72,11 @@ public:
   ptViewportAction  OngoingAction();
   double  GetRotationAngle();
   QRect   GetRectangle();
+  void    setCropGuidelines(const short CropGuidelines);
+  void    setAspectRatio(const short FixedAspectRatio,
+                         uint16_t AspectRatioW,
+                         uint16_t AspectRatioH);
+
 
   void Grid(const short Enabled, const short GridX, const short GridY);
 
@@ -86,16 +91,6 @@ public:
   void StatusReport(const QString Text);
 
   const ptImage*       m_RelatedImage;
-
-  int16_t              m_StartDragX;  //TODOBJ: should all probably be private or deleted
-  int16_t              m_StartDragY;
-  int16_t              m_EndDragX;
-  int16_t              m_EndDragY;
-  uint16_t             m_StartX; // Offset of the shown part into the image.
-  uint16_t             m_StartY;
-  uint16_t             m_XOffsetInVP; // For images smaller than viewport
-  uint16_t             m_YOffsetInVP;
-  double               m_ZoomFactor;
 
   // Order reflects also order into the pipe :
   // The original->Zoom->Cut (to visible) ->pixmap for acceleration.
@@ -147,9 +142,12 @@ private:
   short       m_GridY;
   short       m_CropGuidelines;
   short       m_CropLightsOut;
-  double      m_HOverW;
-
-  ptViewportAction  m_Action;
+  uint16_t    m_StartX; // Offset of the shown part into the image.
+  uint16_t    m_StartY;
+  uint16_t    m_XOffsetInVP; // For images smaller than viewport
+  uint16_t    m_YOffsetInVP;
+  double      m_ZoomFactor;
+  ptViewportAction  m_InteractionMode;
   QRect*      m_Rect;           // crop/selection rectangle in viewport scale
   QRect*      m_RealSizeRect;
   QRect*      m_Frame;          // (visible part of the) image in the viewport
