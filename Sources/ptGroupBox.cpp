@@ -110,9 +110,9 @@ ptGroupBox::ptGroupBox(const QString Title,
 
   m_Name = Name;
 
-  m_Folded = Settings->m_IniSettings->value(m_Name,1).toBool();
+  m_Folded = Settings->m_IniSettings->value(m_Name,1).toInt();
   m_IsActive = Settings->ToolIsActive(m_Name);
-  m_IsBlocked = Settings->ToolIsBlocked(m_Name);
+  m_IsBlocked = Settings->ToolIsBlocked(m_Name)?1:0;
   m_IsEnabled = 1;
 
   m_AtnHide = new QAction(tr("Hide"), this);
@@ -162,7 +162,7 @@ ptGroupBox::ptGroupBox(const QString Title,
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptGroupBox::Update() {
-  m_IsBlocked = Settings->ToolIsBlocked(m_Name);
+  m_IsBlocked = Settings->ToolIsBlocked(m_Name)?1:0;
   UpdateView();
 }
 
