@@ -89,6 +89,10 @@ cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
 
+short CropOldZoom;
+short CropOldZoomMode;
+
+
 //
 // The 'tee' towards the display.
 // Visualization :
@@ -3972,7 +3976,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       // DcRaw handled via GuiSettingsToDcRaw. Nothing more to do.
       break;
 
-    case ptWhiteBalance_Spot:
+    case ptWhiteBalance_Spot: {
       // First : make sure we have Image_AfterDcRaw in the view window.
       // Anything else might have undergone geometric transformations that are
       // impossible to calculate reverse to a spot in dcraw.
@@ -4011,6 +4015,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       ViewWindow->Zoom(OldZoom,0);
       Settings->SetValue("ZoomMode",OldZoomMode);
       break;
+    }
     default :
       // Here we have presets selected from ptWhiteBalances.
       // GuiSettings->m_WhiteBalance should point
@@ -4561,7 +4566,7 @@ void CB_AspectRatioModeChoice(const QVariant Choice) {
 
 void CB_CropGuidelinesChoice(const QVariant Choice) {
   Settings->SetValue("CropGuidelines",Choice);
-  ViewWindow->setCropGuidelines(Choice);
+  ViewWindow->setCropGuidelines(Choice.toInt());
 }
 
 
@@ -4614,8 +4619,8 @@ void CB_MakeCropButton() {
   // We *urge* Image_AfterGeometry to be used now for the preview
   // Rather than end-of-the pipe or so and having to recalculate.
   // Recalculate happens later on anyway, so no out of sync issue.
-  short OldZoom = Settings->GetInt("Zoom");
-  short OldZoomMode = Settings->GetInt("ZoomMode");
+  CropOldZoom = Settings->GetInt("Zoom");
+  CropOldZoomMode = Settings->GetInt("ZoomMode");
   ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
@@ -4630,14 +4635,6 @@ void CB_MakeCropButton() {
                         Settings->GetInt("CropGuidelines"));
 }
 
-
-void CB_ConfirmCropButton() {
-  StopCrop(1);    // user confirmed crop
-}
-
-void CB_CancelCropButton() {
-  StopCrop(0);    // user cancelled crop
-}
 
 // After-crop processing and cleanup.
 void StopCrop(short CropConfirmed) {
@@ -4655,8 +4652,8 @@ void StopCrop(short CropConfirmed) {
           QObject::tr("Crop rectangle needs to be at least 4x4 pixels in size.\nNo crop, try again."));
       if(Settings->GetInt("RunMode")==1) {
         // we're in manual mode!
-        ViewWindow->Zoom(OldZoom,0);
-        Settings->SetValue("ZoomMode",OldZoomMode);
+        ViewWindow->Zoom(CropOldZoom,0);
+        Settings->SetValue("ZoomMode",CropOldZoomMode);
         Update(ptProcessorPhase_NULL);
       }
     } else {
@@ -4678,9 +4675,17 @@ void StopCrop(short CropConfirmed) {
     TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
   }
 
-  ViewWindow->Zoom(OldZoom,0);
-  Settings->SetValue("ZoomMode",OldZoomMode);
+  ViewWindow->Zoom(CropOldZoom,0);
+  Settings->SetValue("ZoomMode",CropOldZoomMode);
   Update(ptProcessorPhase_Geometry);
+}
+
+void CB_ConfirmCropButton() {
+  StopCrop(1);    // user confirmed crop
+}
+
+void CB_CancelCropButton() {
+  StopCrop(0);    // user cancelled crop
 }
 
 
@@ -8534,7 +8539,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FlipModeChoice)
   M_Dispatch(CropCheck)
   M_Dispatch(CropGuidelinesChoice)
-  M_Dispatch(AspectRatioMode)
+  M_Dispatch(AspectRatioModeChoice)
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)
 

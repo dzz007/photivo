@@ -155,8 +155,8 @@ private:
   short       m_DeltaToEdgeX;   // delta between mouse pos and rect edge
   short       m_DeltaToEdgeY;   // "
   short       m_NowDragging;  
-  ptMovingEdge  m_MovingEdge;
-  QCursor     m_Cursor[];
+  ptMovingEdge     m_MovingEdge;
+  Qt::CursorShape  m_Cursor[];
   short       m_FixedAspectRatio;
   uint16_t    m_AspectRatioW;
   uint16_t    m_AspectRatioH;

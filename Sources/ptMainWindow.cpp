@@ -1368,7 +1368,7 @@ void CB_SpecialPreviewChoice(const QVariant Choice);
 void CB_MenuFileExit(const short);
 void ViewWindowStatusReport(short State);
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
-  if ((ViewWindow->OngoingAction() == vaCrop) || (ViewWindow->OngoingAction() == vaSelectRect) &&
+  if (((ViewWindow->OngoingAction() == vaCrop) || (ViewWindow->OngoingAction() == vaSelectRect)) &&
       Event->key()==Qt::Key_Alt)
   {
     ViewWindow->LightsOut();

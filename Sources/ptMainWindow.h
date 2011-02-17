@@ -172,7 +172,7 @@ void OnRotateAngleButtonClicked();
 
 void OnMakeCropButtonClicked();
 void OnConfirmCropButtonClicked();
-void OnCanceCropButtonClicked();
+void OnCancelCropButtonClicked();
 
 void OnChannelMixerOpenButtonClicked();
 void OnChannelMixerSaveButtonClicked();
