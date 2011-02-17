@@ -69,7 +69,7 @@ void changeEvent(QEvent *);
 
 private:
 void WriteSettings(const short Append);
-bool      m_Folded;
+short     m_Folded;
 short     m_IsActive;
 short     m_IsBlocked;
 short     m_IsEnabled;
@@ -93,7 +93,7 @@ QAction*  m_AtnReset;
 QAction*  m_AtnSavePreset;
 QAction*  m_AtnAppendPreset;
 QTimer*   m_Timer;
-int       m_NeedPipeUpdate;
+short     m_NeedPipeUpdate;
 };
 
 #endif
