@@ -173,6 +173,12 @@ void ptGroupBox::Update() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptGroupBox::UpdateView() {
+  if (m_IsBlocked == 1 || m_IsEnabled == 0) {
+    m_Widget->setEnabled(0);
+  } else {
+    m_Widget->setEnabled(1);
+  }
+
   if (m_Folded==1) {
     m_Widget->setVisible(false);
     m_Icon->clear();
@@ -186,11 +192,7 @@ void ptGroupBox::UpdateView() {
     else if (m_IsActive) m_Icon->setPixmap(ActiveDownArrow);
     else m_Icon->setPixmap(DownArrow);
   }
-  if (m_IsBlocked == 1 || m_IsEnabled == 0) {
-    m_Widget->setEnabled(0);
-  } else {
-    m_Widget->setEnabled(1);
-  }
+
   if (m_Folded!=1) {
     m_Header->setObjectName("ToolHeader");
     m_Title->setObjectName("ToolHeader");
