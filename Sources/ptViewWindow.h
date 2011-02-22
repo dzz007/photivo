@@ -30,8 +30,43 @@
 #include <QLine>
 
 #include "ptImage.h"
-#include "ptEnums.h"
 
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Custom types used in ViewWindow
+//
+///////////////////////////////////////////////////////////////////////////
+
+// Crop: Position of the mouse when button pressed for dragging
+enum ptMovingEdge {
+  meNone = 0,
+  meTop = 1,
+  meRight = 2,
+  meBottom = 3,
+  meLeft = 4,
+  meTopLeft = 5,
+  meTopRight = 6,
+  meBottomLeft = 7,
+  meBottomRight = 8,
+  meCenter = 9      // move crop rect instead of resize
+};
+
+// User interaction in the view window
+enum ptViewportAction {
+  vaNone = 0,
+  vaCrop = 1,
+  vaSelectRect = 2,
+  vaDrawLine = 3
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// class ptViewWindow
+//
+///////////////////////////////////////////////////////////////////////////
 
 class ptViewWindow : public QAbstractScrollArea {
 
@@ -62,8 +97,8 @@ public:
                  const int width,
                  const int height,
                  const short FixedAspectRatio,
-                 const uint16_t AspectRatioW,
-                 const uint16_t AspectRatioH,
+                 const uint AspectRatioW,
+                 const uint AspectRatioH,
                  const short CropGuidelines);
 
   QRect   StopCrop();   // QRect scale is 100% zoom and current pipe size
@@ -74,17 +109,16 @@ public:
   QRect   GetRectangle();
   void    setCropGuidelines(const short CropGuidelines);
   void    setAspectRatio(const short FixedAspectRatio,
-                         uint16_t AspectRatioW,
-                         uint16_t AspectRatioH);
-
-
-  void Grid(const short Enabled, const short GridX, const short GridY);
+                         uint AspectRatioW,
+                         uint AspectRatioH,
+                         const short ImmediateUpdate = 1);
+  void    Grid(const short Enabled, const short GridX, const short GridY);
 
   // Zoom functions. Fit returns the factor in %.
   short ZoomFit();
   short ZoomFitFactor(const uint16_t Width, const uint16_t Height);
   void  Zoom(const short Factor, const short Update = 1); // Expressed in %
-  void  LightsOut();
+  void  ToggleLightsOut();
 
   // Status report
   void StatusReport(const short State);
@@ -128,6 +162,11 @@ protected:
 ///////////////////////////////////////////////////////////////////////////
 
 private:
+  // Constants
+  const int EdgeThickness;
+  const int TinyRectThreshold;
+
+
   void          RecalcCut();
   void          RecalcRect();
   ptMovingEdge  MouseDragPos(QMouseEvent* Event);
@@ -142,21 +181,16 @@ private:
   short       m_GridY;
   short       m_CropGuidelines;
   short       m_CropLightsOut;
-  uint16_t    m_StartX; // Offset of the shown part into the image.
-  uint16_t    m_StartY;
-  uint16_t    m_XOffsetInVP; // For images smaller than viewport
-  uint16_t    m_YOffsetInVP;
+//  uint16_t    m_StartX; // Offset of the shown part into the image.
+//  uint16_t    m_StartY;
   double      m_ZoomFactor;
   ptViewportAction  m_InteractionMode;
   QRect*      m_Rect;           // crop/selection rectangle in viewport scale
   QRect*      m_RealSizeRect;
   QRect*      m_Frame;          // (visible part of the) image in the viewport
   QLine*      m_DragDelta;
-  short       m_DeltaToEdgeX;   // delta between mouse pos and rect edge
-  short       m_DeltaToEdgeY;   // "
   short       m_NowDragging;  
   ptMovingEdge     m_MovingEdge;
-  Qt::CursorShape  m_Cursor[];
   short       m_FixedAspectRatio;
   uint16_t    m_AspectRatioW;
   uint16_t    m_AspectRatioH;

@@ -153,19 +153,19 @@ QString BitmapPattern;
 
 void InitStrings() {
   ChannelMixerFilePattern =
-    QCoreApplication::translate("Global Strings","photivo Channelmixer File (*.ptm);;All files (*.*)");
+    QCoreApplication::translate("Global Strings","Photivo channelmixer file (*.ptm);;All files (*.*)");
   CurveFilePattern =
-    QCoreApplication::translate("Global Strings","photivo Curve File (*.ptc);;All files (*.*)");
+    QCoreApplication::translate("Global Strings","Photivo curve file (*.ptc);;All files (*.*)");
   JobFilePattern =
-    QCoreApplication::translate("Global Strings","photivo Job File (*.ptj);;All files (*.*)");
+    QCoreApplication::translate("Global Strings","Photivo job file (*.ptj);;All files (*.*)");
   SettingsFilePattern =
-    QCoreApplication::translate("Global Strings","Photivo Settings File (*.pts);;All files (*.*)");
+    QCoreApplication::translate("Global Strings","Photivo settings file (*.pts);;All files (*.*)");
   ProfilePattern =
-    QCoreApplication::translate("Global Strings","ICC Colour Profiles (*.icc *.icm);;All files (*.*)");
+    QCoreApplication::translate("Global Strings","ICC colour profiles (*.icc *.icm);;All files (*.*)");
 
   // QFileDialog has no case insensitive option ...
   RawPattern =
-    QCoreApplication::translate("Global Strings","Raw Files ("
+    QCoreApplication::translate("Global Strings","Raw files ("
                                                  "*.arw *.ARW *.Arw "
                                                  "*.bay *.BAY *.Bay "
                                                  "*.bmq *.BMQ *.Bmq "
@@ -323,7 +323,7 @@ int photivoMain(int Argc, char *Argv[]) {
   ImageCleanUp = 0;
 
   if (Argc>1) {
-    QString ErrorMessage = QObject::tr("Usage : photivo  [-i Image] [-j JobFile] [-g Image (with cleanup, not for regular use!)]");
+    QString ErrorMessage = QObject::tr("Usage : Photivo  [-i Image] [-j JobFile] [-g Image (with cleanup, not for regular use!)]");
     // Argc must be 3,5 ...
     if (Argc % 2 != 1) {
       fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
@@ -714,7 +714,8 @@ void CleanupResources() {
   delete TheProcessor;
   delete ChannelMixer;
   delete GuiOptions;
-  delete MainWindow; // Cleans up HistogramWindow and ViewWindow also !
+  delete MainWindow;  // Cleans up HistogramWindow and ViewWindow also !
+  ViewWindow = NULL;  // needs to be NULL to properly construct MainWindow
   for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
     delete Curve[Channel];
   }
@@ -1090,30 +1091,89 @@ int GetProcessorPhase(const QString GuiName) {
 void Update(const QString GuiName) {
   int Phase = GetProcessorPhase(GuiName);
   // It is assumed that no tool before white balance will use this.
-  if (Phase < 2) Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
-  else if (Phase == 2) Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-  else Update(Phase);
+  if (Phase < 2) {
+    Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
+  } else if (Phase == 2) {
+    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
+  } else {
+    Update(Phase);
+  }
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Block tools
+// 0: enable tools, 1: disable everything, 2: disable but keep crop tools enabled
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 void BlockTools(const short state) {
-  // enable tools
+  int i;
+
+  // enable all
   if (state == 0) {
-    ViewWindow->StatusReport(0);
-    MainWindow->ControlFrame->setEnabled(1);
-    Settings->SetValue("BlockTools",0);
+    if (Settings->GetInt("BlockTools") == 1) {
+      MainWindow->ControlFrame->setEnabled(true);
+
+    } else if (Settings->GetInt("BlockTools") == 2) {
+      MainWindow->HistogramFrameCentralWidget->setEnabled(true);
+      MainWindow->PipeControlWidget->setEnabled(true);
+      MainWindow->StatusWidget->setEnabled(true);
+
+      for (i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
+        if (MainWindow->ProcessingTabBook->widget(i) != MainWindow->GeometryTab) {
+          MainWindow->ProcessingTabBook->setTabEnabled(i, true);
+        }
+      }
+
+      //TODO BJ: Right now I have no clue how to en/disable those custom widgets...
+//      for (i = 0; i < MainWindow->GeometryToolbox->count(); i++) {
+//        if (MainWindow->GeometryToolbox->widget(i) != MainWindow->TabCrop) {
+//          MainWindow->GeometryToolbox->setItemEnabled(i, true);
+//        }
+//      }
+//      MainWindow->TabLensfun->SetEnabled(true);
+//      MainWindow->TabRotation->SetEnabled(true);
+//      MainWindow->TabResize->SetEnabled(true);
+//      MainWindow->TabFlip->SetEnabled(true);
+//      MainWindow->TabBlock->SetEnabled(true);
+    }
+
 
   // block everything
-  } else {
-    MainWindow->ControlFrame->setEnabled(0);
-    // TODO: keep crop stuff active when cropping
-    Settings->SetValue("BlockTools",1);
+  } else if (state == 1) {
+    assert(Settings->GetInt("BlockTools") == 0);
+    MainWindow->ControlFrame->setEnabled(false);
+
+
+  // block everything except crop tool
+  } else if (state == 2) {
+    assert(Settings->GetInt("BlockTools") == 0);
+    MainWindow->HistogramFrameCentralWidget->setEnabled(false);
+    MainWindow->PipeControlWidget->setEnabled(false);
+    MainWindow->StatusWidget->setEnabled(false);
+
+    for (i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
+      if (MainWindow->ProcessingTabBook->widget(i) != MainWindow->GeometryTab) {
+        MainWindow->ProcessingTabBook->setTabEnabled(i, false);
+      }
+    }
+
+    //TODO BJ: Right now I have no clue how to en/disable those custom widgets...
+//    for (i = 0; i < MainWindow->GeometryToolbox->count(); i++) {
+//      if (MainWindow->GeometryToolbox->widget(i) != MainWindow->TabCrop) {
+//        MainWindow->GeometryToolbox->setItemEnabled(i, false);
+//      }
+//    }
+//    ptGroupBox(MainWindow->TabLensfun).SetEnabled(false);
+//    ptGroupBox(MainWindow->TabRotation).SetEnabled(false);
+//    ptGroupBox(MainWindow->TabResize).SetEnabled(false);
+//    ptGroupBox(MainWindow->TabFlip).SetEnabled(false);
+//    ptGroupBox(MainWindow->TabBlock).SetEnabled(false);
   }
+
+  Settings->SetValue("BlockTools", state);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4524,44 +4584,32 @@ void CB_GeometryBlockCheck(const QVariant State) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-// Set enabled and visible status for the crop tool widgets
-void UpdateCropToolUI() {
+void CB_FixedAspectRatioCheck(const QVariant Check) {
+  Settings->SetValue("FixedAspectRatio", Check);
+  MainWindow->UpdateCropToolUI();
   if (ViewWindow->OngoingAction() == vaCrop) {
-    QCheckBox(MainWindow->CropWidget).setEnabled(false);
-    MainWindow->MakeCropButton->setVisible(false);
-    MainWindow->ConfirmCropButton->setVisible(true);
-    MainWindow->CancelCropButton->setVisible(true);
-  } else {
-    QCheckBox(MainWindow->CropWidget).setEnabled(true);
-    MainWindow->MakeCropButton->setVisible(true);
-    MainWindow->ConfirmCropButton->setVisible(false);
-    MainWindow->CancelCropButton->setVisible(false);
-  }
-
-  if (Settings->GetInt("AspectRatioMode") == ptAspectRatio_Manual) {
-    MainWindow->AspectRatioWLabel->setEnabled(true);
-    MainWindow->AspectRatioHLabel->setEnabled(true);
-    QComboBox(MainWindow->AspectRatioWWidget).setEnabled(true);
-    QComboBox(MainWindow->AspectRatioHWidget).setEnabled(true);
-  } else {
-    MainWindow->AspectRatioWLabel->setEnabled(false);
-    MainWindow->AspectRatioHLabel->setEnabled(false);
-    QComboBox(MainWindow->AspectRatioWWidget).setEnabled(false);
-    QComboBox(MainWindow->AspectRatioHWidget).setEnabled(false);
+    ViewWindow->setAspectRatio((Settings->GetInt("FixedAspectRatio") != 0),
+                               Settings->GetInt("AspectRatioW"),
+                               Settings->GetInt("AspectRatioH"));
   }
 }
 
 void CB_AspectRatioWChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioW",Value);
+  if (ViewWindow->OngoingAction() == vaCrop) {
+    ViewWindow->setAspectRatio((Settings->GetInt("FixedAspectRatio") != 0),
+                               Settings->GetInt("AspectRatioW"),
+                               Settings->GetInt("AspectRatioH"));
+  }
 }
 
 void CB_AspectRatioHChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioH",Value);
-}
-
-void CB_AspectRatioModeChoice(const QVariant Choice) {
-  Settings->SetValue("AspectRatioMode", Choice);
-  UpdateCropToolUI();
+  if (ViewWindow->OngoingAction() == vaCrop) {
+    ViewWindow->setAspectRatio((Settings->GetInt("FixedAspectRatio") != 0),
+                               Settings->GetInt("AspectRatioW"),
+                               Settings->GetInt("AspectRatioH"));
+  }
 }
 
 void CB_CropGuidelinesChoice(const QVariant Choice) {
@@ -4627,12 +4675,16 @@ void CB_MakeCropButton() {
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->StatusReport(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
-  BlockTools(1);
-  ViewWindow->StartCrop(Settings->GetInt("CropX"), Settings->GetInt("CropY"),
-                        Settings->GetInt("CropW"), Settings->GetInt("CropH"),
+  BlockTools(2);
+  ViewWindow->StartCrop(Settings->GetInt("CropX")>>Settings->GetInt("Scaled"),
+                        Settings->GetInt("CropY")>>Settings->GetInt("Scaled"),
+                        Settings->GetInt("CropW")>>Settings->GetInt("Scaled"),
+                        Settings->GetInt("CropH")>>Settings->GetInt("Scaled"),
                         (Settings->GetInt("FixedAspectRatio") != 0),
-                        Settings->GetInt("AspectRatioW"), Settings->GetInt("AspectRatioH"),
+                        Settings->GetInt("AspectRatioW"),
+                        Settings->GetInt("AspectRatioH"),
                         Settings->GetInt("CropGuidelines"));
+  MainWindow->UpdateCropToolUI();
 }
 
 
@@ -4678,6 +4730,7 @@ void StopCrop(short CropConfirmed) {
   ViewWindow->Zoom(CropOldZoom,0);
   Settings->SetValue("ZoomMode",CropOldZoomMode);
   Update(ptProcessorPhase_Geometry);
+  MainWindow->UpdateCropToolUI();
 }
 
 void CB_ConfirmCropButton() {
@@ -8539,7 +8592,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FlipModeChoice)
   M_Dispatch(CropCheck)
   M_Dispatch(CropGuidelinesChoice)
-  M_Dispatch(AspectRatioModeChoice)
+  M_Dispatch(FixedAspectRatioCheck)
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)
 

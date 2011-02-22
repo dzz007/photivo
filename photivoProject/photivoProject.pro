@@ -98,7 +98,6 @@ win32 {
 
 # Input
 HEADERS += ../Sources/ptConstants.h
-HEADERS += ../Sources/ptEnums.h
 HEADERS += ../Sources/ptCurve.h
 HEADERS += ../Sources/ptChannelMixer.h
 HEADERS += ../Sources/ptDcRaw.h

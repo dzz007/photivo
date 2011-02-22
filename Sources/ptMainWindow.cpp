@@ -365,6 +365,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(RotateRight);
   Macro_ConnectSomeButton(RotateAngle);
   Macro_ConnectSomeButton(MakeCrop);
+  Macro_ConnectSomeButton(ConfirmCrop);
+  Macro_ConnectSomeButton(CancelCrop);
 
   Macro_ConnectSomeButton(ChannelMixerOpen);
   Macro_ConnectSomeButton(ChannelMixerSave);
@@ -376,6 +378,7 @@ ptMainWindow::ptMainWindow(const QString Title)
     Settings->SetEnabled("WhiteFraction",0);
     Settings->SetEnabled("WhiteLevel",0);
   }
+
 
   Macro_ConnectSomeButton(CurveRGBOpen);
   Macro_ConnectSomeButton(CurveRGBSave);
@@ -593,6 +596,8 @@ ptMainWindow::ptMainWindow(const QString Title)
           SIGNAL(timeout()),
           this,
           SLOT(Event0TimerExpired()));
+
+  UpdateCropToolUI();
 }
 
 void CB_Event0();
@@ -741,7 +746,8 @@ short ptMainWindow::GetCurrentTab() {
   else {
      ptLogError(ptError_Argument,"Unforeseen tab.");
      assert(0);
-  }
+     return 0;
+  }  
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1367,43 +1373,58 @@ void CB_WritePipeButton();
 void CB_SpecialPreviewChoice(const QVariant Choice);
 void CB_MenuFileExit(const short);
 void ViewWindowStatusReport(short State);
+
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
+  // Handle ViewWindow: LightsOut, confirm/cancel crop
   if (((ViewWindow->OngoingAction() == vaCrop) || (ViewWindow->OngoingAction() == vaSelectRect)) &&
       Event->key()==Qt::Key_Alt)
   {
-    ViewWindow->LightsOut();
+    ViewWindow->ToggleLightsOut();
     return;
+  }  
+  if (ViewWindow->OngoingAction() == vaCrop) {
+    if ((Event->key() == Qt::Key_Return) || (Event->key() == Qt::Key_Enter)) {
+      CB_ConfirmCropButton();
+      return;
+    } else if (Event->key() == Qt::Key_Escape) {
+      CB_CancelCropButton();
+      return;
+    }
   }
+
+
   if (Event->key()==Qt::Key_Escape) { // back to used view
-    if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_RGB)
+    if (Settings->GetInt("SpecialPreview") != ptSpecialPreview_RGB) {
         CB_SpecialPreviewChoice(ptSpecialPreview_RGB);
-    else {
-      if (Settings->GetInt("ShowToolContainer")==0) {
-        Settings->SetValue("ShowToolContainer",1);
+    } else {
+      if (Settings->GetInt("ShowToolContainer") == 0) {
+        Settings->SetValue("ShowToolContainer", 1);
         UpdateSettings();
-      } else
+      } else {
         ::CB_FullScreenButton(0);
       }
-  } else if (Event->key()==Qt::Key_F11) { // toggle full screen
-    if (isFullScreen()==true)
-      ::CB_FullScreenButton(0);
-    else
-      ::CB_FullScreenButton(1);
-  } else if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::NoModifier) {
-    CB_InputChanged("ZoomInput",50);
-  } else if (Event->key()==Qt::Key_2 && Event->modifiers()==Qt::NoModifier) {
-    CB_InputChanged("ZoomInput",100);
-  } else if (Event->key()==Qt::Key_3 && Event->modifiers()==Qt::NoModifier) {
-    CB_InputChanged("ZoomInput",200);
-  } else if (Event->key()==Qt::Key_4 && Event->modifiers()==Qt::NoModifier) {
-    CB_ZoomFitButton();
-  } else if (Event->key()==Qt::Key_F1) {
-    QDesktopServices::openUrl(QString("http://photivo.org/photivo/manual"));
+    }
   }
+
   // most shortcuts should only work when we are not in special state like cropping
   if (Settings->GetInt("BlockTools")==0) {
-    if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::NoModifier) {
-        MainTabBook->setCurrentWidget(TabProcessing);
+    if (Event->key()==Qt::Key_F11) { // toggle full screen
+      if (isFullScreen()==true)
+        ::CB_FullScreenButton(0);
+      else
+        ::CB_FullScreenButton(1);
+    } else if (Event->key()==Qt::Key_F1) {
+      QDesktopServices::openUrl(QString("http://photivo.org/photivo/manual"));
+    } if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::NoModifier) {
+      CB_InputChanged("ZoomInput",50);
+    } else if (Event->key()==Qt::Key_2 && Event->modifiers()==Qt::NoModifier) {
+      CB_InputChanged("ZoomInput",100);
+    } else if (Event->key()==Qt::Key_3 && Event->modifiers()==Qt::NoModifier) {
+      CB_InputChanged("ZoomInput",200);
+    } else if (Event->key()==Qt::Key_4 && Event->modifiers()==Qt::NoModifier) {
+      CB_ZoomFitButton();
+    } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::NoModifier) {
+      MainTabBook->setCurrentWidget(TabProcessing);
     } else if (Event->key()==Qt::Key_S && Event->modifiers()==Qt::NoModifier) {
         MainTabBook->setCurrentWidget(TabSetting);
     } else if (Event->key()==Qt::Key_I && Event->modifiers()==Qt::NoModifier) {
@@ -2254,6 +2275,39 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
   TheInfo = Settings->GetString("CameraMake") + ": " + Settings->GetString("CameraModel");
   InfoDcrawLabel->setText(TheInfo);
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// UpdateCropToolUI
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::UpdateCropToolUI() {
+  bool OnOff = false;
+  if (ViewWindow != NULL) {   // when called from MainWindow constructor, ViewWindow doesn’t yet exist
+    if (ViewWindow->OngoingAction() == vaCrop) {
+      OnOff = true;
+    }
+  }
+  QCheckBox(CropWidget).setEnabled(!OnOff);
+  MakeCropButton->setVisible(!OnOff);
+  ConfirmCropButton->setVisible(OnOff);
+  CancelCropButton->setVisible(OnOff);
+
+  if (Settings->GetInt("FixedAspectRatio") != 0) {
+    AspectRatioWLabel->setEnabled(true);
+    AspectRatioHLabel->setEnabled(true);
+    AspectRatioWWidget->setEnabled(true);
+    AspectRatioHWidget->setEnabled(true);
+  } else {
+    AspectRatioWLabel->setEnabled(false);
+    AspectRatioHLabel->setEnabled(false);
+    AspectRatioWWidget->setEnabled(false);
+    AspectRatioHWidget->setEnabled(false);
+  }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
