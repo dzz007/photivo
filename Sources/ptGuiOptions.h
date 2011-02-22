@@ -68,7 +68,6 @@ public:
   static const ptGuiOptionsItem BayerDenoise[];
   static const ptGuiOptionsItem ClipMode[];
   static const ptGuiOptionsItem LensfunGeometry[];
-  static const ptGuiOptionsItem AspectRatioMode[];
   static const ptGuiOptionsItem AspectRatioW[];
   static const ptGuiOptionsItem AspectRatioH[];
   static const ptGuiOptionsItem ExposureClipMode[];

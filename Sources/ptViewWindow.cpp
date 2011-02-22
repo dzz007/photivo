@@ -26,7 +26,6 @@
 #include "ptSettings.h"
 #include "ptConstants.h"
 #include "ptTheme.h"
-#include "ptEnums.h"
 
 #include <cassert>
 #include <QPen>
@@ -42,11 +41,6 @@ void CB_ZoomFitButton();
 extern QString ImageFileToOpen;
 extern ptTheme* Theme;
 
-// Constants
-const int EdgeThickness = 8;
-const int TinyRectThreshold = 20;
-
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // ptViewWindow constructor.
@@ -56,9 +50,8 @@ const int TinyRectThreshold = 20;
 ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
                                  QWidget* Parent)
 
-  : QAbstractScrollArea(Parent)
+  : QAbstractScrollArea(Parent), EdgeThickness(20), TinyRectThreshold(40)
 {
-
   m_RelatedImage = RelatedImage; // don't delete that at cleanup !
   m_ZoomFactor   = 1.0;
   m_PreviousZoomFactor   = -1.0;
@@ -77,26 +70,13 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_AspectRatioW     = 0;
   m_AspectRatioH     = 0;
 
-  m_InteractionMode          = vaNone;
+  m_InteractionMode = vaNone;
   m_Frame           = new QRect(0,0,0,0);
   m_Rect            = new QRect(0,0,0,0);
   m_RealSizeRect    = new QRect(0,0,0,0);
   m_DragDelta       = new QLine(0,0,0,0);
-  m_DeltaToEdgeX    = 0;
-  m_DeltaToEdgeY    = 0;
   m_NowDragging     = 0;
-  m_MovingEdge        = meNone;
-
-  m_Cursor[meNone]        = Qt::BlankCursor;    // never used!
-  m_Cursor[meTop]         = Qt::SizeVerCursor;
-  m_Cursor[meRight]       = Qt::SizeHorCursor;
-  m_Cursor[meBottom]      = Qt::SizeVerCursor;
-  m_Cursor[meLeft]        = Qt::SizeHorCursor;
-  m_Cursor[meTopLeft]     = Qt::SizeFDiagCursor;
-  m_Cursor[meTopRight]    = Qt::SizeBDiagCursor;
-  m_Cursor[meBottomLeft]  = Qt::SizeBDiagCursor;
-  m_Cursor[meBottomRight] = Qt::SizeFDiagCursor;
-  m_Cursor[meCenter]      = Qt::SizeAllCursor;
+  m_MovingEdge      = meNone;
 
   //Avoiding tricky blacks at zoom fit.
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -302,16 +282,31 @@ ptViewWindow::~ptViewWindow() {
 
 void ptViewWindow::StartCrop(const int x, const int y, const int width, const int height,
                              const short FixedAspectRatio,
-                             const uint16_t AspectRatioW, const uint16_t AspectRatioH,
+                             const uint AspectRatioW, const uint AspectRatioH,
                              const short CropGuidelines)
 {
-  m_RealSizeRect->setRect(x, y, width, height);
-  m_Rect->setRect((uint16_t)(x * m_ZoomFactor + 0.5),
-                  (uint16_t)(y * m_ZoomFactor + 0.5),
-                  (uint16_t)(width * m_ZoomFactor + 0.5),
-                  (uint16_t)(height * m_ZoomFactor + 0.5));
+  assert(m_RelatedImage != NULL);
 
-  setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH);
+  // Catch invalid inital rect
+  if ((width <= 0) || (height <= 0)) {
+    m_RealSizeRect->setRect(0, 0, m_RelatedImage->m_Width, m_RelatedImage->m_Height);
+  } else {
+    m_RealSizeRect->setRect(x, y, width, height);
+  }
+
+  // transform to viewport scale and coordinates
+  int ScaledX = (int)(m_Frame->left() + (m_RealSizeRect->left() * m_ZoomFactor + 0.5));
+  int ScaledY = (int)(m_Frame->top() + (m_RealSizeRect->top() * m_ZoomFactor + 0.5));
+  int ScaledW = (int)(m_RealSizeRect->width() * m_ZoomFactor + 0.5);
+  int ScaledH = (int)(m_RealSizeRect->height() * m_ZoomFactor + 0.5);
+
+  // Setup m_Rect and catch invalid values with the qBounds.
+  m_Rect->setRect(qBound(m_Frame->left(), ScaledX, m_Frame->right()),
+                  qBound(m_Frame->top(), ScaledY, m_Frame->bottom()),
+                  qBound(0, ScaledW, m_Frame->width()),
+                  qBound(0, ScaledH, m_Frame->height()) );
+
+  setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH, 0);
   m_CropGuidelines = CropGuidelines;
   m_MovingEdge = meNone;
   m_DragDelta->setLine(0,0,0,0);
@@ -341,8 +336,8 @@ void ptViewWindow::FinalizeAction() {
   switch (m_InteractionMode) {
     case vaSelectRect:
     case vaCrop:
-      m_RealSizeRect->setRect((int)(m_Rect->left() / m_ZoomFactor + 0.5),
-                              (int)(m_Rect->top() / m_ZoomFactor + 0.5),
+      m_RealSizeRect->setRect((int)((m_Rect->left() - m_Frame->left()) / m_ZoomFactor + 0.5),
+                              (int)((m_Rect->top() - m_Frame->top()) / m_ZoomFactor + 0.5),
                               (int)(m_Rect->width() / m_ZoomFactor + 0.5),
                               (int)(m_Rect->height() / m_ZoomFactor + 0.5));
       break;
@@ -352,6 +347,8 @@ void ptViewWindow::FinalizeAction() {
   }
 
   m_InteractionMode = vaNone;
+  m_Rect->setCoords(0,0,0,0);
+  this->setCursor(Qt::ArrowCursor);
 }
 
 
@@ -374,6 +371,10 @@ double ptViewWindow::GetRotationAngle() {
 }
 
 QRect ptViewWindow::GetRectangle() {
+  m_RealSizeRect->setRect((int)((m_Rect->left() - m_Frame->left()) / m_ZoomFactor + 0.5),
+                          (int)((m_Rect->top() - m_Frame->top()) / m_ZoomFactor + 0.5),
+                          (int)(m_Rect->width() / m_ZoomFactor + 0.5),
+                          (int)(m_Rect->height() / m_ZoomFactor + 0.5) );
   return QRect(m_RealSizeRect->topLeft(), m_RealSizeRect->bottomRight());
 }
 
@@ -392,18 +393,23 @@ void ptViewWindow::setCropGuidelines(const short CropGuidelines) {
 }
 
 
-void ptViewWindow::setAspectRatio(const short FixedAspectRatio,
-                                  uint16_t AspectRatioW, uint16_t AspectRatioH)
+void ptViewWindow::setAspectRatio(const short FixedAspectRatio, uint AspectRatioW,
+                                  uint AspectRatioH, const short ImmediateUpdate)
 {
   m_FixedAspectRatio = FixedAspectRatio;
   if (m_FixedAspectRatio) {
     assert((AspectRatioW != 0) && (AspectRatioH != 0));
     m_AspectRatioW = AspectRatioW;
     m_AspectRatioH = AspectRatioH;
-    m_AspectRatio = AspectRatioW / AspectRatioH;
+    m_AspectRatio = (double) AspectRatioW / (double) AspectRatioH;
+
+    if (ImmediateUpdate) {
+      m_MovingEdge = meNone;
+      RecalcRect();
+      viewport()->repaint();
+    }
   }
 }
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -412,11 +418,12 @@ void ptViewWindow::setAspectRatio(const short FixedAspectRatio,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptViewWindow::LightsOut() {
+void ptViewWindow::ToggleLightsOut() {
   m_CropLightsOut = (m_CropLightsOut+1)%3;
   Settings->m_IniSettings->setValue("CropLightsOut",m_CropLightsOut);
   viewport()->repaint();
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -433,6 +440,7 @@ void ptViewWindow::Grid(const short Enabled, const short GridX, const short Grid
     m_HasGrid = 0;
   }
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -582,22 +590,34 @@ void ptViewWindow::UpdateView(const ptImage* NewRelatedImage) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::RecalcCut() {
-  if (!m_QImageZoomed) return;
+  if (!m_QImageZoomed) {
+    return;
+  }
 
+  // TODOBJ: not sure yet, but the new version should be sufficient ’cause members m_StartX
+  // and m_StartY are not used anywhere else. --> Test, then delete comment. Also delete
+  // from .h!
   // Following are coordinates in a zoomed image.
-  m_StartX = horizontalScrollBar()->value();
-  uint16_t Width  = MIN(horizontalScrollBar()->pageStep(),
-                        m_QImageZoomed->width());
-  m_StartY = verticalScrollBar()->value();
-  uint16_t Height = MIN(verticalScrollBar()->pageStep(),
-                        m_QImageZoomed->height());
+//  m_StartX = horizontalScrollBar()->value();
+//  uint16_t Width  = MIN(horizontalScrollBar()->pageStep(),
+//                        m_QImageZoomed->width());
+//  m_StartY = verticalScrollBar()->value();
+//  uint16_t Height = MIN(verticalScrollBar()->pageStep(),
+//                        m_QImageZoomed->height());
 
-  // Make a new cut out of our zoomed image
+//  // Make a new cut out of our zoomed image
+//  delete m_QImageCut;
+//  m_QImageCut = new QImage(m_QImageZoomed->copy(m_StartX,
+//                                                m_StartY,
+//                                                Width,
+//                                                Height));
   delete m_QImageCut;
-  m_QImageCut = new QImage(m_QImageZoomed->copy(m_StartX,
-                                                m_StartY,
-                                                Width,
-                                                Height));
+  m_QImageCut = new QImage(m_QImageZoomed->copy(
+      horizontalScrollBar()->value(),
+      verticalScrollBar()->value(),
+      MIN(horizontalScrollBar()->pageStep(), m_QImageZoomed->width()),
+      MIN(verticalScrollBar()->pageStep(), m_QImageZoomed->height())
+      ));
 }
 
 
@@ -616,8 +636,8 @@ void ptViewWindow::RecalcRect() {
   QRect NewPos;
   switch (m_MovingEdge) {
     case meTopLeft:
-      NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
-      NewPos.setY(CLAMP(m_Rect->top() + dy, m_Frame->top(), m_Frame->bottom()));
+      NewPos.setX(qBound(m_Frame->left(), m_Rect->left() + dx, m_Frame->right()));
+      NewPos.setY(qBound(m_Frame->top(), m_Rect->top() + dy, m_Frame->bottom()));
       if ((NewPos.x() > m_Rect->right()) && (NewPos.y() <= m_Rect->bottom())) {
         m_MovingEdge = meTopRight;
       } else if ((NewPos.x() > m_Rect->right()) && (NewPos.y() >= m_Rect->bottom())) {
@@ -634,7 +654,7 @@ void ptViewWindow::RecalcRect() {
 
     case meTop:
       dx = 0;
-      NewPos.setY(CLAMP(m_Rect->top() + dy, m_Frame->top(), m_Frame->bottom()));
+      NewPos.setY(qBound(m_Frame->top(), m_Rect->top() + dy, m_Frame->bottom()));
       if (NewPos.y() > m_Rect->bottom()) {
         m_MovingEdge = meBottom;
       }
@@ -643,8 +663,8 @@ void ptViewWindow::RecalcRect() {
       break;
 
     case meTopRight:
-      NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
-      NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+      NewPos.setX(qBound(m_Frame->left(), m_Rect->right() + dx, m_Frame->right()));
+      NewPos.setY(qBound(m_Frame->top(), m_Rect->top() + dy, m_Frame->bottom()));
       if ((NewPos.x() < m_Rect->left()) && (NewPos.y() <= m_Rect->bottom())) {
         m_MovingEdge = meTopLeft;
       } else if ((NewPos.x() < m_Rect->left()) && (NewPos.y() > m_Rect->bottom())) {
@@ -660,7 +680,7 @@ void ptViewWindow::RecalcRect() {
 
     case meRight:
       dy = 0;
-      NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
+      NewPos.setX(qBound(m_Frame->left(), m_Rect->right() + dx, m_Frame->right()));
       if ((NewPos.x() < m_Rect->left())) {
         m_MovingEdge = meLeft;
       }
@@ -669,8 +689,8 @@ void ptViewWindow::RecalcRect() {
       break;
 
     case meBottomRight:
-      NewPos.setX(CLAMP(m_Rect->right() + dx, m_Frame->left(), m_Frame->right()));
-      NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+      NewPos.setX(qBound(m_Frame->left(), m_Rect->right() + dx, m_Frame->right()));
+      NewPos.setY(qBound(m_Frame->top(), m_Rect->bottom() + dy, m_Frame->bottom()));
       if ((NewPos.x() < m_Rect->left()) && (NewPos.y() >= m_Rect->top())) {
         m_MovingEdge = meBottomLeft;
       } else if ((NewPos.x() < m_Rect->left()) && (NewPos.y() < m_Rect->top())) {
@@ -686,7 +706,7 @@ void ptViewWindow::RecalcRect() {
 
     case meBottom:
       dx = 0;
-      NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+      NewPos.setY(qBound(m_Frame->top(), m_Rect->bottom() + dy, m_Frame->bottom()));
       if (NewPos.y() < m_Rect->top()) {
         m_MovingEdge = meTop;
       }
@@ -695,8 +715,8 @@ void ptViewWindow::RecalcRect() {
       break;
 
     case meBottomLeft:
-      NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
-      NewPos.setY(CLAMP(m_Rect->bottom() + dy, m_Frame->top(), m_Frame->bottom()));
+      NewPos.setX(qBound(m_Frame->left(), m_Rect->left() + dx, m_Frame->right()));
+      NewPos.setY(qBound(m_Frame->top(), m_Rect->bottom() + dy, m_Frame->bottom()));
       if ((NewPos.x() > m_Rect->right()) && (NewPos.y() >= m_Rect->top())) {
         m_MovingEdge = meBottomRight;
       } else if ((NewPos.x() > m_Rect->right()) && (NewPos.y() < m_Rect->top())) {
@@ -704,20 +724,24 @@ void ptViewWindow::RecalcRect() {
       } else if ((NewPos.x() <= m_Rect->right()) && (NewPos.y() < m_Rect->top())) {
         m_MovingEdge = meTopLeft;
       }
-      m_Rect->setCoords(MIN(NewPos.x(), m_Rect->left()),
+      m_Rect->setCoords(MIN(NewPos.x(), m_Rect->right()),
                         MIN(NewPos.y(), m_Rect->top()),
-                        MAX(NewPos.x(), m_Rect->left()),
+                        MAX(NewPos.x(), m_Rect->right()),
                         MAX(NewPos.y(), m_Rect->top()));
       break;
 
     case meLeft:
       dy = 0;
-      NewPos.setX(CLAMP(m_Rect->left() + dx, m_Frame->left(), m_Frame->right()));
+      NewPos.setX(qBound(m_Frame->left(), m_Rect->left() + dx, m_Frame->right()));
       if (NewPos.x() > m_Rect->right()) {
         m_MovingEdge = meRight;
       }
       m_Rect->setCoords(MIN(NewPos.x(), m_Rect->right()), m_Rect->top(),
                         MAX(NewPos.x(), m_Rect->right()), m_Rect->bottom());
+      break;
+
+
+    case meNone:
       break;
 
     default:
@@ -788,12 +812,12 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
     return;
   }
 
-  uint16_t VPWidth  = viewport()->size().width();
-  uint16_t VPHeight = viewport()->size().height();
+  int VPWidth  = viewport()->size().width();
+  int VPHeight = viewport()->size().height();
 
   // Calc position of the image frame in viewport
-  // Size of the frame has already been set in RecalculateCut
-  // TODOBJ: Necessary here or better done in Resizeevent? m_Frame *should* stay the same for any given paint event.
+  m_Frame->setWidth(m_QImageCut->width());
+  m_Frame->setHeight(m_QImageCut->height());
   if (VPHeight > m_QImageCut->height()) {
     m_Frame->setTop((VPHeight - m_QImageCut->height()) / 2);
   } else {
@@ -804,7 +828,9 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
   } else {
     m_Frame->setLeft(0);
   }
-
+printf("Frame: %d %d %d %d | ", m_Frame->left(), m_Frame->top(), m_Frame->width(), m_Frame->height());
+printf("Rect: %d %d %d %d | ", m_Rect->left(), m_Rect->top(), m_Rect->width(), m_Rect->height());
+printf("AR %d x %d y %d fr %.3f\n", m_FixedAspectRatio, m_AspectRatioW, m_AspectRatioH, m_AspectRatio);
 
   // Fill viewport with background colour and draw image
   QPainter Painter(viewport());
@@ -825,18 +851,18 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
     uint16_t YStep = (int) ((double)m_QImageCut->height() / (double) (YNrLines+1));
     if (XNrLines) {
       for (int i = 1; i <= XNrLines; i++) { //vertical lines
-        Painter.drawLine(m_XOffsetInVP+i*XStep,
-             m_YOffsetInVP,
-             m_XOffsetInVP+i*XStep,
-             m_YOffsetInVP+m_QImageCut->height()-1);
+        Painter.drawLine(m_Frame->left()+i*XStep,
+             m_Frame->top(),
+             m_Frame->left()+i*XStep,
+             m_Frame->top()+m_QImageCut->height()-1);
       }
     }
     if (YNrLines) {
       for (int i = 1; i <= YNrLines; i++) { //horizontal lines
-        Painter.drawLine(m_XOffsetInVP,
-             m_YOffsetInVP+i*YStep,
-             m_XOffsetInVP+m_QImageCut->width()-1,
-             m_YOffsetInVP+i*YStep);
+        Painter.drawLine(m_Frame->left(),
+             m_Frame->top()+i*YStep,
+             m_Frame->left()+m_QImageCut->width()-1,
+             m_Frame->top()+i*YStep);
       }
     }
   }
@@ -868,7 +894,7 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
       if (m_CropLightsOut > 0) {
         if (m_Rect->top() > m_Frame->top()) { // Top
           Painter.fillRect(m_Frame->left(), m_Frame->top(),
-                           m_Frame->width(), m_Rect->top(),
+                           m_Frame->width(), m_Rect->top() - m_Frame->top(),
                            LightsOutBrush);
         }
         if (m_Rect->bottom() < m_Frame->bottom()) { // Bottom
@@ -878,7 +904,7 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
         }
         if (m_Rect->left() > m_Frame->left()) {   // left
           Painter.fillRect(m_Frame->left(), m_Rect->top(),
-                           m_Rect->left(), m_Rect->height(),
+                           m_Rect->left() - m_Frame->left(), m_Rect->height(),
                            LightsOutBrush);
         }
         if (m_Rect->right() < m_Frame->right()) {   // right
@@ -897,7 +923,7 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
 
         switch (m_CropGuidelines) {
           case ptCropGuidelines_RuleThirds: {
-            int HeightThird = (int)(m_Rect->top() + m_Rect->height() / 3);
+            int HeightThird = (int)(m_Rect->height() / 3);
             int WidthThird = (int)(m_Rect->width() / 3);
             Painter.drawRect(m_Rect->left() + WidthThird, m_Rect->top(),
                              WidthThird, m_Rect->height());
@@ -922,11 +948,11 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
             Painter.drawLine(m_Rect->left(), m_Rect->top(),
                              m_Rect->left() + length, m_Rect->top() + length);
             Painter.drawLine(m_Rect->right(), m_Rect->bottom(),
-                             m_Rect->right() - length, m_Rect->bottom() - length);
+                             m_Rect->right() - length + 1, m_Rect->bottom() - length + 1);
             Painter.drawLine(m_Rect->left(), m_Rect->bottom(),
-                             m_Rect->left() + length, m_Rect->bottom() - length);
+                             m_Rect->left() + length, m_Rect->bottom() - length + 1);
             Painter.drawLine(m_Rect->right(), m_Rect->top(),
-                             m_Rect->right() - length, m_Rect->top() + length);
+                             m_Rect->right() - length + 1, m_Rect->top() + length);
             break;
           }
 
@@ -991,16 +1017,21 @@ void ptViewWindow::resizeEvent(QResizeEvent* Event) {
 // - Dragging the edges changes only that edge. Dragging in the middle area moves
 //   the rectangle without changing its size.
 // - Dragging beyond actual image borders is not possible.
-// - Edge areas are usually 8 pixels thick. On hovering mouse cursor changes shape
-//   to indicate the move/resize mode.
-// - For rectangle edges of 20 pixels or shorter only the corner modes apply, one for
-//   each half of the edge. This avoids too tiny interaction areas.
+// - Edge areas are usually EdgeThickness pixels thick. On hovering mouse cursor
+//   changes shape to indicate the move/resize mode.
+// - For rectangle edges of TinyRectThreshold pixels or shorter only the corner modes
+//   apply, one for each half of the edge. This avoids too tiny interaction areas.
 // - Because of the press/drag/release nature of the simple selection, only the
 //   corner areas are relevant there.
 //
 ////////////////////////////////////////////////////////////////////////
 
 ptMovingEdge ptViewWindow::MouseDragPos(QMouseEvent* Event) {
+  // Catch mouse outside current crop rect
+  if (!m_Rect->contains(Event->pos())) {
+    return meNone;
+  }
+
   ptMovingEdge HoverOver = meNone;
   int TBthick = 0;
   int LRthick = 0;
@@ -1026,7 +1057,7 @@ ptMovingEdge ptViewWindow::MouseDragPos(QMouseEvent* Event) {
     HoverOver = meCenter;
   }
 
-  if (m_Rect->right() - Event->y() <= LRthick) {
+  if (m_Rect->right() - Event->x() <= LRthick) {
     if (HoverOver == meBottom) {
       HoverOver = meBottomRight;
     } else if (HoverOver == meTop) {
@@ -1059,21 +1090,27 @@ void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
   // left click actions
   if (Event->button() == Qt::LeftButton) {
     switch (m_InteractionMode) {
-      case vaNone:        // scroll the image
       case vaSelectRect:  // Start a simple selection rectangle
       case vaCrop:        // Start/modify a crop rectangle.
-        if (INRANGE(Event->x(), m_Rect->left(), m_Rect->right()) &&
-            INRANGE(Event->y(), m_Rect->top(), m_Rect->bottom()))
-        {
+        if (m_Frame->contains(Event->pos())) {
           m_NowDragging = 1;
           m_DragDelta->setPoints(Event->pos(), Event->pos());
 
           // Start new rect when none is present or clicked outside current one.
-          // Always the case for vaSelectRect. Has no meaning for vaNone.
-          if (!m_Rect->isValid() || !m_Rect->contains(Event->pos())) {
+          // Always the case for vaSelectRect.
+          if (!m_Rect->contains(Event->pos())) {
             m_Rect->setRect(Event->x(), Event->y(), 0, 0);
             m_MovingEdge = meNone;
+            viewport()->repaint();
           }
+        }
+        break;
+
+      // scroll the image
+      case vaNone:
+        if (m_Frame->contains(Event->pos())) {
+          m_NowDragging = 1;
+          m_DragDelta->setPoints(Event->pos(), Event->pos());
         }
         break;
 
@@ -1101,15 +1138,16 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
     switch (m_InteractionMode) {
       case vaSelectRect:
       case vaCrop:
-        // Move current rectangle. The CLAMPs make sure it stops at image boundaries.
+        // Move current rectangle. The qBounds make sure it stops at image boundaries.
         if ((m_MovingEdge == meCenter) || (Event->modifiers() == Qt::ControlModifier)) {
           m_Rect->moveTo(
-              CLAMP(m_Rect->left() + m_DragDelta->dx(),
-                           m_Frame->left(),
-                           m_Frame->right() - m_Rect->width() + 1),
-              CLAMP(m_Rect->top() + m_DragDelta->dy(),
-                           m_Frame->top(),
-                           m_Frame->bottom() - m_Rect->height() + 1) );
+              qBound(m_Frame->left(),
+                     m_Rect->left() + m_DragDelta->dx(),
+                     m_Frame->right() - m_Rect->width()),
+              qBound(m_Frame->top(),
+                     m_Rect->top() + m_DragDelta->dy(),
+                     m_Frame->bottom() - m_Rect->height())
+          );
         } else {
           // initialize movement direction when rectangle was just started
           int dx = m_DragDelta->dx();
@@ -1153,12 +1191,31 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
     // no dragging: mouse cursor might change when in image crop mode
     if (m_InteractionMode == vaCrop) {
       m_MovingEdge = MouseDragPos(Event);
-      if ((m_MovingEdge == meNone) && (this->cursor().shape() != Qt::ArrowCursor)) {
-        this->unsetCursor();
-      } else {
-        if (this->cursor().shape() != m_Cursor[m_MovingEdge]) {
-          this->setCursor(m_Cursor[m_MovingEdge]);
-        }
+      switch (m_MovingEdge) {
+      case meNone:
+        this->setCursor(Qt::ArrowCursor);
+        break;
+      case meTop:
+      case meBottom:
+        this->setCursor(Qt::SizeVerCursor);
+        break;
+      case meLeft:
+      case meRight:
+        this->setCursor(Qt::SizeHorCursor);
+        break;
+      case meTopLeft:
+      case meBottomRight:
+        this->setCursor(Qt::SizeFDiagCursor);
+        break;
+      case meTopRight:
+      case meBottomLeft:
+        this->setCursor(Qt::SizeBDiagCursor);
+        break;
+      case meCenter:
+        this->setCursor(Qt::SizeAllCursor);
+        break;
+      default:
+        assert(0);
       }
     }
   }
@@ -1300,7 +1357,9 @@ void ptViewWindow::dropEvent(QDropEvent* Event) {
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::contextMenuEvent(QContextMenuEvent* Event) {
-  ContextMenu(Event);
+  if (m_InteractionMode == vaNone) {    // avoid c-menu interfering with crop etc.
+    ContextMenu(Event);
+  }
 }
 
 

@@ -121,12 +121,6 @@ const ptGuiOptionsItem ptGuiOptions::RunMode[] = {
   {ptRunMode_Auto, QObject::tr("Run always") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::AspectRatioMode[] = {
-  {ptAspectRatio_Free,      QObject::tr("Free") },
-  {ptAspectRatio_Original,  QObject::tr("Fixed (original image)") },
-  {ptAspectRatio_Manual,    QObject::tr("Fixed (manual)") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::CropGuidelines[] = {
   {ptCropGuidelines_None,         QObject::tr("No guide lines") },
   {ptCropGuidelines_RuleThirds,   QObject::tr("Rule of thirds") },
