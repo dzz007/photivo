@@ -306,12 +306,16 @@ void ptViewWindow::StartCrop(const int x, const int y, const int width, const in
                   qBound(0, ScaledW, m_Frame->width()),
                   qBound(0, ScaledH, m_Frame->height()) );
 
-  setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH, 0);
   m_CropGuidelines = CropGuidelines;
   m_MovingEdge = meNone;
   m_DragDelta->setLine(0,0,0,0);
   m_InteractionMode = vaCrop;
-  viewport()->repaint();
+
+  if (FixedAspectRatio) {
+    setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH);
+  } else {
+    viewport()->repaint();
+  }
 }
 
 QRect ptViewWindow::StopCrop() {
@@ -1255,8 +1259,8 @@ void ptViewWindow::mouseReleaseEvent(QMouseEvent* Event) {
 //
 ////////////////////////////////////////////////////////////////////////
 
-void ptViewWindow::wheelEvent(QWheelEvent* Event) {
-  if (((QMouseEvent*)Event)->modifiers()==Qt::NoModifier) {
+void ptViewWindow::wheelEvent(QWheelEvent* Event) {  
+  if ((m_InteractionMode == vaNone) && (((QMouseEvent*)Event)->modifiers() == Qt::NoModifier)) {
     m_SizeReportTimer->start(m_SizeReportTimeOut);
 
     QList<int> Scales;
@@ -1410,13 +1414,13 @@ void ptViewWindow::StatusReport(short State) {
 }
 
 void ptViewWindow::StatusReport(const QString Text) {
-  m_StatusReportTimer->stop();
   QString StatusReportStyleSheet;
   StatusReportStyleSheet = "QLabel {border: 8px solid rgb(75,150,255);"
   "border-radius: 25px; padding: 8px; color: rgb(75,150,255);"
   "background: rgb(190,220,255);}";
   m_StatusReport->setStyleSheet(StatusReportStyleSheet);
   m_StatusReport->setText("<h1> "+ Text + " </h1>");
+  m_StatusReportTimer->start(m_StatusReportTimeOut);
   m_StatusReport->setGeometry(20,20,90+15*Text.length(),70);
   m_StatusReport->update();
   m_StatusReport->setVisible(1);

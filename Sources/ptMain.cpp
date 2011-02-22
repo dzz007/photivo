@@ -1127,17 +1127,15 @@ void BlockTools(const short state) {
         }
       }
 
-      //TODO BJ: Right now I have no clue how to en/disable those custom widgets...
-//      for (i = 0; i < MainWindow->GeometryToolbox->count(); i++) {
-//        if (MainWindow->GeometryToolbox->widget(i) != MainWindow->TabCrop) {
-//          MainWindow->GeometryToolbox->setItemEnabled(i, true);
-//        }
-//      }
-//      MainWindow->TabLensfun->SetEnabled(true);
-//      MainWindow->TabRotation->SetEnabled(true);
-//      MainWindow->TabResize->SetEnabled(true);
-//      MainWindow->TabFlip->SetEnabled(true);
-//      MainWindow->TabBlock->SetEnabled(true);
+      QList<ptGroupBox *> GeometryTools;
+      GeometryTools << MainWindow->findChild <ptGroupBox*>("TabLensfun")
+                    << MainWindow->findChild <ptGroupBox*>("TabRotation")
+                    << MainWindow->findChild <ptGroupBox*>("TabResize")
+                    << MainWindow->findChild <ptGroupBox*>("TabFlip")
+                    << MainWindow->findChild <ptGroupBox*>("TabBlock");
+      for (int i = 0; i < GeometryTools.size(); i++) {
+        GeometryTools.at(i)->SetEnabled(true);
+      }
     }
 
 
@@ -1160,17 +1158,15 @@ void BlockTools(const short state) {
       }
     }
 
-    //TODO BJ: Right now I have no clue how to en/disable those custom widgets...
-//    for (i = 0; i < MainWindow->GeometryToolbox->count(); i++) {
-//      if (MainWindow->GeometryToolbox->widget(i) != MainWindow->TabCrop) {
-//        MainWindow->GeometryToolbox->setItemEnabled(i, false);
-//      }
-//    }
-//    ptGroupBox(MainWindow->TabLensfun).SetEnabled(false);
-//    ptGroupBox(MainWindow->TabRotation).SetEnabled(false);
-//    ptGroupBox(MainWindow->TabResize).SetEnabled(false);
-//    ptGroupBox(MainWindow->TabFlip).SetEnabled(false);
-//    ptGroupBox(MainWindow->TabBlock).SetEnabled(false);
+    QList<ptGroupBox *> GeometryTools;
+    GeometryTools << MainWindow->findChild <ptGroupBox*>("TabLensfun")
+                  << MainWindow->findChild <ptGroupBox*>("TabRotation")
+                  << MainWindow->findChild <ptGroupBox*>("TabResize")
+                  << MainWindow->findChild <ptGroupBox*>("TabFlip")
+                  << MainWindow->findChild <ptGroupBox*>("TabBlock");
+    for (int i = 0; i < GeometryTools.size(); i++) {
+      GeometryTools.at(i)->SetEnabled(false);
+    }
   }
 
   Settings->SetValue("BlockTools", state);
