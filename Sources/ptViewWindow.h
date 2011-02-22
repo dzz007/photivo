@@ -192,8 +192,8 @@ private:
   short       m_NowDragging;  
   ptMovingEdge     m_MovingEdge;
   short       m_FixedAspectRatio;
-  uint16_t    m_AspectRatioW;
-  uint16_t    m_AspectRatioH;
+  uint        m_AspectRatioW;
+  uint        m_AspectRatioH;
   double      m_AspectRatio;
 
   QAction*      m_AtnExpIndicate;

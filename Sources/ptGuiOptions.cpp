@@ -375,7 +375,6 @@ const ptGuiOptionsItem ptGuiOptions::AspectRatioW[] = {
   {3,    "3"     },
   {2,    "2"     },
   {1,    "1"     },
-  {0,    QObject::tr("Free")  },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::AspectRatioH[] = {
@@ -391,7 +390,6 @@ const ptGuiOptionsItem ptGuiOptions::AspectRatioH[] = {
   {3,    "3"     },
   {2,    "2"     },
   {1,    "1"     },
-  {0,    QObject::tr("Free")  },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::ExposureClipMode[] = {
