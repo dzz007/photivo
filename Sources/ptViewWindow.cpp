@@ -409,7 +409,7 @@ void ptViewWindow::setAspectRatio(const short FixedAspectRatio, uint AspectRatio
 
     if (ImmediateUpdate) {
       m_MovingEdge = meNone;
-      RecalcRect();
+      EnforceRectAspectRatio();
       viewport()->repaint();
     }
   }
@@ -629,8 +629,7 @@ void ptViewWindow::RecalcCut() {
 //
 // RecalcRect
 // Calc new corner point, change moving edge/corner when rect is
-// dragged into another "quadrant", restrict aspect ratio and update
-// m_Rect rectangle.
+// dragged into another "quadrant", and update rectangle.
 //
 ////////////////////////////////////////////////////////////////////////
 
@@ -640,8 +639,11 @@ void ptViewWindow::RecalcRect() {
   QRect NewPos;
   switch (m_MovingEdge) {
     case meTopLeft:
+      // Calc preliminary new position of moved corner point. Don’t allow it to move
+      // becond the actual image (m_Frame).
       NewPos.setX(qBound(m_Frame->left(), m_Rect->left() + dx, m_Frame->right()));
       NewPos.setY(qBound(m_Frame->top(), m_Rect->top() + dy, m_Frame->bottom()));
+      // Determine if moving corner changed
       if ((NewPos.x() > m_Rect->right()) && (NewPos.y() <= m_Rect->bottom())) {
         m_MovingEdge = meTopRight;
       } else if ((NewPos.x() > m_Rect->right()) && (NewPos.y() >= m_Rect->bottom())) {
@@ -649,6 +651,7 @@ void ptViewWindow::RecalcRect() {
       } else if ((NewPos.x() <= m_Rect->right()) && (NewPos.y() > m_Rect->bottom())) {
         m_MovingEdge = meBottomLeft;
       }
+      // Update crop rect
       m_Rect->setCoords(MIN(NewPos.x(), m_Rect->right()),
                         MIN(NewPos.y(), m_Rect->bottom()),
                         MAX(NewPos.x(), m_Rect->right()),
@@ -753,7 +756,123 @@ void ptViewWindow::RecalcRect() {
       break;
   }
 
-  // Correct AR
+  if (m_FixedAspectRatio) {
+    EnforceRectAspectRatio();
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+// EnforceRectAspectRatio
+//
+// Make sure rectangle has the proper AR. Wenn adjusted the opposite
+// corner/edge to the one that was moved remains fixed.
+// When there was no movement (e.g. changed AR values in MainWindow)
+// the center of the rectangle remains fixed.
+//
+//
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::EnforceRectAspectRatio() {
+  int NewWidth = qRound(m_Rect->height() * m_AspectRatio);
+  int NewHeight = qRound(m_Rect->width() / m_AspectRatio);
+
+  switch (m_MovingEdge){
+    case meTopLeft:
+      m_Rect->setTop(m_Rect->top() + m_Rect->height() - NewHeight);
+      if (m_Rect->top() < m_Frame->top()) {
+        m_Rect->setTop(m_Frame->top());
+        m_Rect->setLeft(m_Rect->right() - qRound(m_Rect->height() * m_AspectRatio));
+      }
+      break;
+
+    case meTop:
+      m_Rect->setWidth(NewWidth);
+      if (m_Rect->right() > m_Frame->right()) {
+        m_Rect->setRight(m_Frame->right());
+        m_Rect->setTop(m_Rect->bottom() - qRound(m_Rect->width() / m_AspectRatio));
+      }
+      break;
+
+    case meTopRight:
+      m_Rect->setTop(m_Rect->top() + m_Rect->height() - NewHeight);
+      if (m_Rect->top() < m_Frame->top()) {
+        m_Rect->setTop(m_Frame->top());
+        m_Rect->setRight(m_Rect->left() + qRound(m_Rect->height() * m_AspectRatio));
+      }
+      break;
+
+    case meRight:
+      m_Rect->setHeight(NewHeight);
+      if (m_Rect->bottom() > m_Frame->bottom()) {
+        m_Rect->setBottom(m_Frame->bottom());
+        m_Rect->setRight(m_Rect->left() + qRound(m_Rect->height() * m_AspectRatio));
+      }
+      break;
+
+    case meBottomRight:
+      m_Rect->setBottom(m_Rect->bottom() + NewHeight - m_Rect->height());
+      if (m_Rect->bottom() > m_Frame->bottom()) {
+        m_Rect->setBottom(m_Frame->bottom());
+        m_Rect->setRight(m_Rect->left() + qRound(m_Rect->height() * m_AspectRatio));
+      }
+      break;
+
+    case meBottom:
+      m_Rect->setWidth(NewWidth);
+      if (m_Rect->right() > m_Frame->right()) {
+        m_Rect->setRight(m_Frame->right());
+        m_Rect->setBottom(m_Rect->top() + qRound(m_Rect->width() / m_AspectRatio));
+      }
+      break;
+
+    case meBottomLeft:
+      m_Rect->setBottom(m_Rect->bottom() + NewHeight - m_Rect->height());
+      if (m_Rect->bottom() > m_Frame->bottom()) {
+        m_Rect->setBottom(m_Frame->bottom());
+        m_Rect->setLeft(m_Rect->right() - qRound(m_Rect->height() * m_AspectRatio));
+      }
+      break;
+
+    case meLeft:
+      m_Rect->setHeight(NewHeight);
+      if (m_Rect->bottom() > m_Frame->bottom()) {
+        m_Rect->setBottom(m_Frame->bottom());
+        m_Rect->setLeft(m_Rect->right() - qRound(m_Rect->height() * m_AspectRatio));
+      }
+      break;
+
+    case meNone:
+      if (ABS(((double)m_Rect->width() / (double)m_Rect->height()) - m_AspectRatio) < 0.001) {
+        m_Rect->setWidth(NewWidth);
+        m_Rect->setHeight(qRound(m_Rect->width() / m_AspectRatio));
+      }
+
+      if (m_Rect->left() < m_Frame->left()) {
+        m_Rect->setLeft(m_Frame->left());
+        m_Rect->setBottom(m_Rect->top() + qRound(m_Rect->width() / m_AspectRatio));
+      }
+      if (m_Rect->right() > m_Frame->right()) {
+        m_Rect->setRight(m_Frame->right());
+        m_Rect->setTop(m_Rect->bottom() - qRound(m_Rect->width() / m_AspectRatio));
+      }
+      if (m_Rect->top() < m_Frame->top()) {
+        m_Rect->setTop(m_Frame->top());
+        m_Rect->setLeft(m_Rect->right() - qRound(m_Rect->height() * m_AspectRatio));
+      }
+      if (m_Rect->bottom() > m_Frame->bottom()) {
+        m_Rect->setBottom(m_Frame->bottom());
+        m_Rect->setLeft(m_Rect->right() - qRound(m_Rect->height() * m_AspectRatio));
+      }
+      break;
+
+    default:
+      assert(0);
+  }
+
+
+/*  // Correct AR
   if (m_FixedAspectRatio && (ABS(dx) >= ABS(dy))) {
     // dominant change horizontally: we’ll adjust height    
     m_Rect->setHeight(qRound(m_Rect->width() / m_AspectRatio));
@@ -776,6 +895,7 @@ void ptViewWindow::RecalcRect() {
       m_Rect->setWidth(m_Frame->width());
     }
   }
+  */
 }
 
 
