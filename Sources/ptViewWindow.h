@@ -162,17 +162,19 @@ protected:
 ///////////////////////////////////////////////////////////////////////////
 
 private:
-  // Constants
+  // constants
   const int EdgeThickness;
   const int TinyRectThreshold;
 
-
+  // methods
   void          RecalcCut();
   void          RecalcRect();
+  void          EnforceRectAspectRatio();
   ptMovingEdge  MouseDragPos(QMouseEvent* Event);
   void          ContextMenu(QEvent* Event);
   void          FinalizeAction();
 
+  //variables
   uint16_t    m_ZoomWidth;
   uint16_t    m_ZoomHeight;
   double      m_PreviousZoomFactor;
