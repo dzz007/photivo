@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -120,11 +121,11 @@ const ptGuiOptionsItem ptGuiOptions::RunMode[] = {
   {ptRunMode_Auto, QObject::tr("Run always") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::CropRectangleMode[] = {
-  {ptRectangleMode_None,         QObject::tr("No guide lines") },
-  {ptRectangleMode_RuleThirds,   QObject::tr("Rule of thirds") },
-  {ptRectangleMode_GoldenRatio,  QObject::tr("Golden ratio") },
-  {ptRectangleMode_Diagonal,     QObject::tr("Diagonal") },
+const ptGuiOptionsItem ptGuiOptions::CropGuidelines[] = {
+  {ptCropGuidelines_None,         QObject::tr("No guide lines") },
+  {ptCropGuidelines_RuleThirds,   QObject::tr("Rule of thirds") },
+  {ptCropGuidelines_GoldenRatio,  QObject::tr("Golden ratio") },
+  {ptCropGuidelines_Diagonals,    QObject::tr("Diagonals") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::ResizeFilter[] = {
@@ -374,7 +375,6 @@ const ptGuiOptionsItem ptGuiOptions::AspectRatioW[] = {
   {3,    "3"     },
   {2,    "2"     },
   {1,    "1"     },
-  {0,    QObject::tr("Free")  },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::AspectRatioH[] = {
@@ -390,7 +390,6 @@ const ptGuiOptionsItem ptGuiOptions::AspectRatioH[] = {
   {3,    "3"     },
   {2,    "2"     },
   {1,    "1"     },
-  {0,    QObject::tr("Free")  },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::ExposureClipMode[] = {

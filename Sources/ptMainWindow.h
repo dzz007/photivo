@@ -71,6 +71,9 @@ void UpdateFilenameInfo(const QStringList FileNameList);
 // Update the exif info gui element.
 void UpdateExifInfo(Exiv2::ExifData ExifData);
 
+// Set visible/enabled states for crop tool widgets
+void UpdateCropToolUI();
+
 // Make and model are remembered because in
 // case of change the choice of white balances must be redone.
 QString              m_CameraMake;
@@ -171,6 +174,8 @@ void OnRotateRightButtonClicked();
 void OnRotateAngleButtonClicked();
 
 void OnMakeCropButtonClicked();
+void OnConfirmCropButtonClicked();
+void OnCancelCropButtonClicked();
 
 void OnChannelMixerOpenButtonClicked();
 void OnChannelMixerSaveButtonClicked();

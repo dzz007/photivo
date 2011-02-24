@@ -24,6 +24,7 @@
 ** Derived from wb_preset.c in ufraw with kind permission of Udi Fuchs.
 **
 *******************************************************************************/
+// White balance presets for a wide variety of camera models.
 
 #include <QObject>
 #include <cstdlib>

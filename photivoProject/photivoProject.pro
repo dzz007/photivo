@@ -93,7 +93,7 @@ win32 {
   LIBS += -lwsock32 -lexpat -lregex -lgdi32 -liconv
   INCLUDEPATH += /mingw/include/GraphicsMagick
   RC_FILE = photivo.rc
-#  CONFIG += console
+  CONFIG += console
 }
 
 # Input

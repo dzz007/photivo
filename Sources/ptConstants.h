@@ -33,7 +33,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 const char ProgramName[] = "Photivo";
-const char CompanyName[] = "photivo";
+const char CompanyName[] = "http://photivo.org/";
 
 const int PhotivoSettingsVersion = 1;
 
@@ -192,14 +192,18 @@ const short ptClipMode_HSV           = 3;
 const short ptClipMode_Blend         = 4;
 const short ptClipMode_Rebuild       = 5;
 
-// Crop rectangle modes
+// Aspect Ratio modes
 
-const short ptRectangleMode_None        = 0;
-const short ptRectangleMode_RuleThirds  = 1;
-const short ptRectangleMode_GoldenRatio = 2;
-const short ptRectangleMode_Diagonal    = 3;
-// Escape for line
-const short ptRectangleMode_Line        = 9;
+const short ptAspectRatio_Free      = 0;
+const short ptAspectRatio_Original  = 1;
+const short ptAspectRatio_Manual    = 2;
+
+// Crop/Selection rectangle guidelines modes
+
+const short ptCropGuidelines_None        = 0;
+const short ptCropGuidelines_RuleThirds  = 1;
+const short ptCropGuidelines_GoldenRatio = 2;
+const short ptCropGuidelines_Diagonals   = 3;
 
 // Channel Mixer
 
