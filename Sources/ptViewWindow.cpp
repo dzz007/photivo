@@ -952,9 +952,9 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
   } else {
     m_Frame->setLeft(0);
   }
-printf("Frame: %d %d %d %d | ", m_Frame->left(), m_Frame->top(), m_Frame->width(), m_Frame->height());
-printf("Rect: %d %d %d %d | ", m_Rect->left(), m_Rect->top(), m_Rect->width(), m_Rect->height());
-printf("AR %d x %d y %d fr %.3f\n", m_FixedAspectRatio, m_AspectRatioW, m_AspectRatioH, m_AspectRatio);
+//printf("Frame: %d %d %d %d | ", m_Frame->left(), m_Frame->top(), m_Frame->width(), m_Frame->height());
+//printf("Rect: %d %d %d %d | ", m_Rect->left(), m_Rect->top(), m_Rect->width(), m_Rect->height());
+//printf("AR %d x %d y %d fr %.3f\n", m_FixedAspectRatio, m_AspectRatioW, m_AspectRatioH, m_AspectRatio);
 
   // Fill viewport with background colour and draw image
   QPainter Painter(viewport());

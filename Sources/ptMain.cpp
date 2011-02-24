@@ -4698,6 +4698,12 @@ void StopCrop(short CropConfirmed) {
       QMessageBox::information(MainWindow,
           QObject::tr("Crop too small"),
           QObject::tr("Crop rectangle needs to be at least 4x4 pixels in size.\nNo crop, try again."));
+
+      if ((Settings->GetInt("CropW") < 4) || (Settings->GetInt("CropH") < 4)) {
+        Settings->SetValue("Crop", 0);
+        QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Unchecked);
+      }
+
       if(Settings->GetInt("RunMode")==1) {
         // we're in manual mode!
         ViewWindow->Zoom(CropOldZoom,0);
@@ -4721,6 +4727,14 @@ void StopCrop(short CropConfirmed) {
     TRACEKEYVALS("CropY","%d",Settings->GetInt("CropY"));
     TRACEKEYVALS("CropW","%d",Settings->GetInt("CropW"));
     TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
+
+
+  // Crop aborted, disable crop checkbox when no previous crop present
+  } else {
+    if ((Settings->GetInt("CropW") < 4) || (Settings->GetInt("CropH") < 4)) {
+      Settings->SetValue("Crop", 0);
+      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Unchecked);
+    }
   }
 
   ViewWindow->Zoom(CropOldZoom,0);
