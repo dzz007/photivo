@@ -153,6 +153,7 @@ SOURCES += ../Sources/ptImage_EAW.cpp
 SOURCES += ../Sources/ptImage_GM.cpp
 SOURCES += ../Sources/ptImage_GMC.cpp
 SOURCES += ../Sources/ptImage_Pyramid.cpp
+SOURCES += ../Sources/ptImage_Cimg.cpp
 SOURCES += ../Sources/ptImage8.cpp
 SOURCES += ../Sources/ptResizeFilters.cpp
 SOURCES += ../Sources/ptKernel.cpp
