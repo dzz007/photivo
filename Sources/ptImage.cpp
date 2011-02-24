@@ -2632,7 +2632,7 @@ ptImage* ptImage::DeFringe(const double Radius,
   ptImage *SaveLayer = new ptImage;
   SaveLayer->Set(this);
 
-  ptCimgBlur(this, 6, Radius);
+  ptCIBlur(Radius, 6);
 
   uint32_t Size = m_Width * m_Height;
 
@@ -2735,7 +2735,7 @@ ptImage* ptImage::DenoiseImpulse(const double ThresholdL,
   short ChannelMask = 0;
   if (ThresholdL != 0.0) ChannelMask += 1;
   if (ThresholdAB != 0.0) ChannelMask += 6;
-  ptCimgBlur(LowPass, ChannelMask, 2.0f);
+  LowPass->ptCIBlur(2.0f, ChannelMask);
 
   short (*Impulse)[3] = (short (*)[3]) CALLOC(m_Width*m_Height,sizeof(*Impulse));
   ptMemoryError(Impulse,__FILE__,__LINE__);
@@ -3295,7 +3295,7 @@ ptImage* ptImage::Highpass(const double Radius,
   ptImage *HighpassLayer = new ptImage;
   HighpassLayer->Set(this);
 
-  ptCimgBlur(HighpassLayer, ChannelMask, Radius);
+  HighpassLayer->ptCIBlur(Radius, ChannelMask);
 
   const double t = (1.0 - Amount)/2;
   const double mHC = Amount*(1.0-fabs(HaloControl)); // m with HaloControl
@@ -3798,7 +3798,7 @@ ptImage* ptImage::Microcontrast(const double Radius,
   ptImage *MicrocontrastLayer = new ptImage;
   MicrocontrastLayer->Set(this);
 
-  ptCimgBlur(MicrocontrastLayer, ChannelMask, Radius);
+  MicrocontrastLayer->ptCIBlur(Radius, ChannelMask);
 
   const double t = (1.0 - Amount)/2;
   const double mHC = Amount*(1.0-fabs(HaloControl)); // m with HaloControl
@@ -3875,7 +3875,7 @@ ptImage* ptImage::Colorcontrast(const double Radius,
   ptImage *MicrocontrastLayer = new ptImage;
   MicrocontrastLayer->Set(this);
 
-  ptCimgBlur(MicrocontrastLayer, ChannelMask, Radius);
+  MicrocontrastLayer->ptCIBlur(Radius, ChannelMask);
 
   const double t = (1.0 - Amount)/2;
   const double mHC = Amount*(1.0-fabs(HaloControl)); // m with HaloControl
@@ -4001,7 +4001,7 @@ ptImage* ptImage::BilateralDenoise(const double Threshold,
     Curve->SetCurveFromAnchors();
     MaskLayer->ApplyCurve(Curve,1);
 
-    ptCimgBlur(MaskLayer, 1, UseMask);
+    MaskLayer->ptCIBlur(UseMask, 1);
 
     Curve->m_XAnchor[0]=0.0;
     Curve->m_YAnchor[0]=0.0;
@@ -4087,7 +4087,7 @@ ptImage* ptImage::TextureContrast(const double Threshold,
     Curve->SetCurveFromAnchors();
     MaskLayer->ApplyCurve(Curve,1);
 
-    ptCimgBlur(MaskLayer, 1, Masking);
+    MaskLayer->ptCIBlur(Masking, 1);
 
     Curve->m_XAnchor[0]=0.0;
     Curve->m_YAnchor[0]=0.0;
@@ -5112,7 +5112,7 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
 
   // Blur
   if (Radius != 0)
-    ptCimgBlur(BlurLayer, ChannelMask, Radius);
+    BlurLayer->ptCIBlur(Radius, ChannelMask);
   // Contrast
   if (Contrast != 0) {
     ptCurve* MyContrastCurve = new ptCurve();
@@ -5392,8 +5392,8 @@ ptImage* ptImage::USM(const uint8_t ChannelMask,
   ptMemoryError(OriginalImage,__FILE__,__LINE__);
   memcpy(OriginalImage,m_Image,m_Width*m_Height*sizeof(*m_Image));
 
-  // Blur the original. (this)
-  ptCimgBlur(this, ChannelMask,Radius);
+  // Blur the original.
+  ptCIBlur(Radius, ChannelMask);
 
   // Combine the original and the blurred one.
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -6170,28 +6170,12 @@ ptImage* ptImage::Rotate45(double Angle) {
 //
 // Rotate - Always in place !
 // Dimensions are adapted to fit the rotation.
-// (3 shear algorithm for quality)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::Rotate(double  Angle) {
-
-  while (Angle >= 360.0) Angle -= 360.0;
-  while (Angle < 0.0)    Angle += 360.0;
-  if ((Angle > 45.0) && (Angle <= 135.0)) {
-    Rotate90();
-    Angle -= 90.0;
-  } else if ((Angle > 135.0) && (Angle <= 225.0)) {
-    Rotate180();
-    Angle -= 180.0;
-  } else if ((Angle > 225.0) && (Angle <= 315.0)) {
-    Rotate270();
-    Angle -= 270.0;
-  }
-
-  // Within -45..45 now !
   if (Angle!=0)
-    ptCimgRotate(this,Angle,2);
+    ptCIRotate(Angle);
 
   return this;
 }
