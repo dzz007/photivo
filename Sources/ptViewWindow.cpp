@@ -66,6 +66,7 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_GridY            = 0;
   m_CropGuidelines   = 0;
   m_CropLightsOut    = Settings->m_IniSettings->value("CropLightsOut",0).toInt();
+  m_FixedAspectRatio = 0;
   m_AspectRatio      = 0.0;
   m_AspectRatioW     = 0;
   m_AspectRatioH     = 0;
@@ -314,6 +315,7 @@ void ptViewWindow::StartCrop(const int x, const int y, const int width, const in
   if (FixedAspectRatio) {
     setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH);
   } else {
+    m_FixedAspectRatio = 0;
     viewport()->repaint();
   }
 }
@@ -952,6 +954,7 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
   } else {
     m_Frame->setLeft(0);
   }
+// TODOBJ: Remove printfs before final version!
 //printf("Frame: %d %d %d %d | ", m_Frame->left(), m_Frame->top(), m_Frame->width(), m_Frame->height());
 //printf("Rect: %d %d %d %d | ", m_Rect->left(), m_Rect->top(), m_Rect->width(), m_Rect->height());
 //printf("AR %d x %d y %d fr %.3f\n", m_FixedAspectRatio, m_AspectRatioW, m_AspectRatioH, m_AspectRatio);

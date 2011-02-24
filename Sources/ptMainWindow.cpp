@@ -2290,7 +2290,7 @@ void ptMainWindow::UpdateCropToolUI() {
       OnOff = true;
     }
   }
-  QCheckBox(CropWidget).setEnabled(!OnOff);
+  CropWidget->setEnabled(!OnOff);
   MakeCropButton->setVisible(!OnOff);
   ConfirmCropButton->setVisible(OnOff);
   CancelCropButton->setVisible(OnOff);

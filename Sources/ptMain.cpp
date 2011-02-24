@@ -4584,7 +4584,7 @@ void CB_FixedAspectRatioCheck(const QVariant Check) {
   Settings->SetValue("FixedAspectRatio", Check);
   MainWindow->UpdateCropToolUI();
   if (ViewWindow->OngoingAction() == vaCrop) {
-    ViewWindow->setAspectRatio((Settings->GetInt("FixedAspectRatio") != 0),
+    ViewWindow->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
                                Settings->GetInt("AspectRatioW"),
                                Settings->GetInt("AspectRatioH"));
   }
@@ -4593,7 +4593,7 @@ void CB_FixedAspectRatioCheck(const QVariant Check) {
 void CB_AspectRatioWChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioW",Value);
   if (ViewWindow->OngoingAction() == vaCrop) {
-    ViewWindow->setAspectRatio((Settings->GetInt("FixedAspectRatio") != 0),
+    ViewWindow->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
                                Settings->GetInt("AspectRatioW"),
                                Settings->GetInt("AspectRatioH"));
   }
@@ -4602,7 +4602,7 @@ void CB_AspectRatioWChoice(const QVariant Value) {
 void CB_AspectRatioHChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioH",Value);
   if (ViewWindow->OngoingAction() == vaCrop) {
-    ViewWindow->setAspectRatio((Settings->GetInt("FixedAspectRatio") != 0),
+    ViewWindow->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
                                Settings->GetInt("AspectRatioW"),
                                Settings->GetInt("AspectRatioH"));
   }
@@ -4676,7 +4676,7 @@ void CB_MakeCropButton() {
                         Settings->GetInt("CropY")>>Settings->GetInt("Scaled"),
                         Settings->GetInt("CropW")>>Settings->GetInt("Scaled"),
                         Settings->GetInt("CropH")>>Settings->GetInt("Scaled"),
-                        (Settings->GetInt("FixedAspectRatio") != 0),
+                        Settings->GetInt("FixedAspectRatio"),
                         Settings->GetInt("AspectRatioW"),
                         Settings->GetInt("AspectRatioH"),
                         Settings->GetInt("CropGuidelines"));
