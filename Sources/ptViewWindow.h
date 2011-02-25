@@ -183,8 +183,6 @@ private:
   short       m_GridY;
   short       m_CropGuidelines;
   short       m_CropLightsOut;
-//  uint16_t    m_StartX; // Offset of the shown part into the image.
-//  uint16_t    m_StartY;
   double      m_ZoomFactor;
   ptViewportAction  m_InteractionMode;
   QRect*      m_Rect;           // crop/selection rectangle in viewport scale
