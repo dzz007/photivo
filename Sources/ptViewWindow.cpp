@@ -600,23 +600,6 @@ void ptViewWindow::RecalcCut() {
     return;
   }
 
-  // TODOBJ: not sure yet, but the new version should be sufficient ’cause members m_StartX
-  // and m_StartY are not used anywhere else. --> Test, then delete comment. Also delete
-  // from .h!
-  // Following are coordinates in a zoomed image.
-//  m_StartX = horizontalScrollBar()->value();
-//  uint16_t Width  = MIN(horizontalScrollBar()->pageStep(),
-//                        m_QImageZoomed->width());
-//  m_StartY = verticalScrollBar()->value();
-//  uint16_t Height = MIN(verticalScrollBar()->pageStep(),
-//                        m_QImageZoomed->height());
-
-//  // Make a new cut out of our zoomed image
-//  delete m_QImageCut;
-//  m_QImageCut = new QImage(m_QImageZoomed->copy(m_StartX,
-//                                                m_StartY,
-//                                                Width,
-//                                                Height));
   delete m_QImageCut;
   m_QImageCut = new QImage(m_QImageZoomed->copy(
       horizontalScrollBar()->value(),
@@ -872,32 +855,6 @@ void ptViewWindow::EnforceRectAspectRatio() {
     default:
       assert(0);
   }
-
-
-/*  // Correct AR
-  if (m_FixedAspectRatio && (ABS(dx) >= ABS(dy))) {
-    // dominant change horizontally: we’ll adjust height    
-    m_Rect->setHeight(qRound(m_Rect->width() / m_AspectRatio));
-    if (m_Rect->bottom() > m_Frame->bottom()) {
-      m_Rect->moveBottom(m_Frame->bottom());
-    }
-    if (m_Rect->height() > m_Frame->height()) {
-      m_Rect->setWidth(qRound(m_Frame->height() * m_AspectRatio));
-      m_Rect->setHeight(m_Frame->height());
-    }
-
-  } else if (m_FixedAspectRatio && (ABS(dx) < ABS(dy))) {
-    // dominant change is vertically: we’ll adjust width
-    m_Rect->setWidth(qRound(m_Rect->height() * m_AspectRatio));
-    if (m_Rect->right() > m_Frame->right()) {
-      m_Rect->moveRight(m_Frame->right());
-    }
-    if (m_Rect->width() > m_Frame->width()) {
-      m_Rect->setHeight(qRound(m_Frame->width() / m_AspectRatio));
-      m_Rect->setWidth(m_Frame->width());
-    }
-  }
-  */
 }
 
 
@@ -1115,19 +1072,60 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
 
 // ResizeEvent : Make a new cut on the appropriate place.
 void ptViewWindow::resizeEvent(QResizeEvent* Event) {
-  uint16_t VP_Width  = viewport()->size().width();
-  uint16_t VP_Height = viewport()->size().height();
+  int VPWidth  = viewport()->size().width();
+  int VPHeight = viewport()->size().height();
 
   // Adapt scrollbars to new viewport size
-  verticalScrollBar()->setPageStep(VP_Height);
-  verticalScrollBar()->setRange(0,m_ZoomHeight-VP_Height);
-  horizontalScrollBar()->setPageStep(VP_Width);
-  horizontalScrollBar()->setRange(0,m_ZoomWidth-VP_Width);
+  verticalScrollBar()->setPageStep(VPHeight);
+  verticalScrollBar()->setRange(0,m_ZoomHeight-VPHeight);
+  horizontalScrollBar()->setPageStep(VPWidth);
+  horizontalScrollBar()->setRange(0,m_ZoomWidth-VPWidth);
 
   // Recalculat the cut.
   RecalcCut();
-  if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit)
+
+  if ((Settings->GetInt("ZoomMode") == ptZoomMode_Fit) || (m_InteractionMode == vaCrop)) {
+    m_RealSizeRect->setRect((int)((m_Rect->left() - m_Frame->left()) / m_ZoomFactor + 0.5),
+                            (int)((m_Rect->top() - m_Frame->top()) / m_ZoomFactor + 0.5),
+                            (int)(m_Rect->width() / m_ZoomFactor + 0.5),
+                            (int)(m_Rect->height() / m_ZoomFactor + 0.5));
+
     ::CB_ZoomFitButton();
+
+    if (m_QImageCut == NULL) {
+      return;
+    }
+    VPWidth  = viewport()->size().width();
+    VPHeight = viewport()->size().height();
+
+    // Calc position of the image frame in viewport
+    m_Frame->setWidth(m_QImageCut->width());
+    m_Frame->setHeight(m_QImageCut->height());
+    if (VPHeight > m_QImageCut->height()) {
+      m_Frame->setTop((VPHeight - m_QImageCut->height()) / 2);
+    } else {
+      m_Frame->setTop(0);
+    }
+    if (VPWidth > m_QImageCut->width()) {
+      m_Frame->setLeft((VPWidth - m_QImageCut->width()) / 2);
+    } else {
+      m_Frame->setLeft(0);
+    }
+
+    // transform to viewport scale and coordinates
+    int ScaledX = (int)(m_Frame->left() + (m_RealSizeRect->left() * m_ZoomFactor + 0.5));
+    int ScaledY = (int)(m_Frame->top() + (m_RealSizeRect->top() * m_ZoomFactor + 0.5));
+    int ScaledW = (int)(m_RealSizeRect->width() * m_ZoomFactor + 0.5);
+    int ScaledH = (int)(m_RealSizeRect->height() * m_ZoomFactor + 0.5);
+
+    // Setup m_Rect and catch invalid values with the qBounds.
+    m_Rect->setRect(qBound(m_Frame->left(), ScaledX, m_Frame->right()),
+                    qBound(m_Frame->top(), ScaledY, m_Frame->bottom()),
+                    qBound(0, ScaledW, m_Frame->width()),
+                    qBound(0, ScaledH, m_Frame->height()) );
+
+    viewport()->repaint();
+  }
 }
 
 
