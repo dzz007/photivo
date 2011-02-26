@@ -169,32 +169,32 @@ private:
   // methods
   void          RecalcCut();
   void          RecalcRect();
-  void          EnforceRectAspectRatio();
+  void          EnforceRectAspectRatio();   // force fixed AR for a crop rectangle
   ptMovingEdge  MouseDragPos(QMouseEvent* Event);
   void          ContextMenu(QEvent* Event);
   void          FinalizeAction();
 
   //variables
-  uint16_t    m_ZoomWidth;
-  uint16_t    m_ZoomHeight;
-  double      m_PreviousZoomFactor;
-  short       m_HasGrid;
-  short       m_GridX;
-  short       m_GridY;
+  ptViewportAction  m_InteractionMode;
+  QRect*      m_Rect;           // crop/selection rectangle in viewport scale
+  QRect*      m_RealSizeRect;   // rectangle in current pipe size scale
+  QRect*      m_Frame;          // (visible part of the) image in the viewport
+  QLine*      m_DragDelta;      // direction and distance of mouse drag
+  short       m_NowDragging;    // flag, if mouse drag is ongoing
+  ptMovingEdge     m_MovingEdge;
+  short       m_FixedAspectRatio;   // 0: fixed AR, 1: no AR restriction
+  uint        m_AspectRatioW;
+  uint        m_AspectRatioH;
+  double      m_AspectRatio;        //  m_AspectRatioW / m_AspectRatioH
   short       m_CropGuidelines;
   short       m_CropLightsOut;
   double      m_ZoomFactor;
-  ptViewportAction  m_InteractionMode;
-  QRect*      m_Rect;           // crop/selection rectangle in viewport scale
-  QRect*      m_RealSizeRect;
-  QRect*      m_Frame;          // (visible part of the) image in the viewport
-  QLine*      m_DragDelta;
-  short       m_NowDragging;  
-  ptMovingEdge     m_MovingEdge;
-  short       m_FixedAspectRatio;
-  uint        m_AspectRatioW;
-  uint        m_AspectRatioH;
-  double      m_AspectRatio;
+  double      m_PreviousZoomFactor;
+  uint16_t    m_ZoomWidth;
+  uint16_t    m_ZoomHeight;
+  short       m_HasGrid;
+  short       m_GridX;
+  short       m_GridY;
 
   QAction*      m_AtnExpIndicate;
   QAction*      m_AtnExpIndR;
