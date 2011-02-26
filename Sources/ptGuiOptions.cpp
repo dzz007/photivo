@@ -122,10 +122,11 @@ const ptGuiOptionsItem ptGuiOptions::RunMode[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::CropGuidelines[] = {
-  {ptCropGuidelines_None,         QObject::tr("No guide lines") },
+  {ptCropGuidelines_None,         QObject::tr("No guidelines") },
   {ptCropGuidelines_RuleThirds,   QObject::tr("Rule of thirds") },
   {ptCropGuidelines_GoldenRatio,  QObject::tr("Golden ratio") },
   {ptCropGuidelines_Diagonals,    QObject::tr("Diagonals") },
+  {ptCropGuidelines_Centerlines,  QObject::tr("Center lines") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::ResizeFilter[] = {
