@@ -22,6 +22,7 @@
 **
 *******************************************************************************/
 
+#include "qmath.h"
 #include "ptViewWindow.h"
 #include "ptSettings.h"
 #include "ptConstants.h"
@@ -776,7 +777,7 @@ void ptViewWindow::EnforceRectAspectRatio() {
     case meTop:
       EdgeCenter = m_Rect->left() + qRound(m_Rect->width() / 2);
       m_Rect->setWidth(NewWidth);
-      m_Rect->setLeft(EdgeCenter - qRound(NewWidth / 2));
+      m_Rect->moveLeft(EdgeCenter - qRound(NewWidth / 2));
       if (m_Rect->right() > m_Frame->right()) {
         m_Rect->setRight(m_Frame->right());
         m_Rect->setTop(m_Rect->bottom() - qRound(m_Rect->width() / m_AspectRatio));
@@ -797,7 +798,7 @@ void ptViewWindow::EnforceRectAspectRatio() {
     case meRight:
       EdgeCenter = m_Rect->top() + qRound(m_Rect->height() / 2);
       m_Rect->setHeight(NewHeight);
-      m_Rect->setTop(EdgeCenter - qRound(NewHeight / 2));
+      m_Rect->moveTop(EdgeCenter - qRound(NewHeight / 2));
       if (m_Rect->bottom() > m_Frame->bottom()) {
         m_Rect->setBottom(m_Frame->bottom());
         // The +1 in the next line is necessary, probably because of rounding
@@ -820,7 +821,7 @@ void ptViewWindow::EnforceRectAspectRatio() {
     case meBottom:
       EdgeCenter = m_Rect->left() + qRound(m_Rect->width() / 2);
       m_Rect->setWidth(NewWidth);
-      m_Rect->setLeft(EdgeCenter - qRound(NewWidth / 2));
+      m_Rect->moveLeft(EdgeCenter - qRound(NewWidth / 2));
       if (m_Rect->right() > m_Frame->right()) {
         m_Rect->setRight(m_Frame->right());
         m_Rect->setBottom(m_Rect->top() + qRound(m_Rect->width() / m_AspectRatio));
@@ -841,7 +842,7 @@ void ptViewWindow::EnforceRectAspectRatio() {
     case meLeft:
       EdgeCenter = m_Rect->top() + qRound(m_Rect->height() / 2);
       m_Rect->setHeight(NewHeight);
-      m_Rect->setTop(EdgeCenter - qRound(NewHeight / 2));
+      m_Rect->moveTop(EdgeCenter - qRound(NewHeight / 2));
       if (m_Rect->bottom() > m_Frame->bottom()) {
         m_Rect->setBottom(m_Frame->bottom());
         // The +1 in the next line is necessary, probably because of rounding
@@ -915,7 +916,7 @@ void ptViewWindow::scrollContentsBy(int,int) {
 void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 
-void ptViewWindow::paintEvent(QPaintEvent* Event) {
+void ptViewWindow::paintEvent(QPaintEvent*) {
   if (m_QImageCut == NULL) {
     return;
   }
@@ -1061,6 +1062,13 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
             break;
           }
 
+          case ptCropGuidelines_Centerlines: {
+            Painter.drawLine(m_Rect->center().x(), m_Rect->top(),
+                             m_Rect->center().x(), m_Rect->bottom());
+            Painter.drawLine(m_Rect->left(), m_Rect->center().y(),
+                             m_Rect->right(), m_Rect->center().y());
+          }
+
           default:
             break;
         }
@@ -1092,7 +1100,7 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
 ////////////////////////////////////////////////////////////////////////
 
 // ResizeEvent : Make a new cut on the appropriate place.
-void ptViewWindow::resizeEvent(QResizeEvent* Event) {
+void ptViewWindow::resizeEvent(QResizeEvent*) {
   int VPWidth  = viewport()->size().width();
   int VPHeight = viewport()->size().height();
 

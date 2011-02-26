@@ -204,6 +204,7 @@ const short ptCropGuidelines_None        = 0;
 const short ptCropGuidelines_RuleThirds  = 1;
 const short ptCropGuidelines_GoldenRatio = 2;
 const short ptCropGuidelines_Diagonals   = 3;
+const short ptCropGuidelines_Centerlines = 4;
 
 // Channel Mixer
 
