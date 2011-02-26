@@ -576,6 +576,16 @@ ptImage* dirpyrLab_denoise(const int luma,
                            const double gamma,
                            const int levels);
 
+// ptImage_Cimg.cpp
+ptImage* ptCIBlur(const double Sigma, const short ChannelMask = 7);
+ptImage* ptCIDeriche(const float sigma,
+                     const int order = 0,
+                     const char axis = 'x',
+                     const bool cond = true,
+                     const short ChannelMask = 7);
+
+ptImage* ptCIRotate(const float Angle);
+
 };
 
 #endif
