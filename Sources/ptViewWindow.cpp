@@ -762,6 +762,7 @@ void ptViewWindow::RecalcRect() {
 void ptViewWindow::EnforceRectAspectRatio() {
   int NewWidth = qRound(m_Rect->height() * m_AspectRatio);
   int NewHeight = qRound(m_Rect->width() / m_AspectRatio);
+  int EdgeCenter = 0;
 
   switch (m_MovingEdge){
     case meTopLeft:
@@ -773,9 +774,14 @@ void ptViewWindow::EnforceRectAspectRatio() {
       break;
 
     case meTop:
+      EdgeCenter = m_Rect->left() + qRound(m_Rect->width() / 2);
       m_Rect->setWidth(NewWidth);
+      m_Rect->setLeft(EdgeCenter - qRound(NewWidth / 2));
       if (m_Rect->right() > m_Frame->right()) {
         m_Rect->setRight(m_Frame->right());
+        m_Rect->setTop(m_Rect->bottom() - qRound(m_Rect->width() / m_AspectRatio));
+      } else if (m_Rect->left() < m_Frame->left()) {
+        m_Rect->setLeft(m_Frame->left());
         m_Rect->setTop(m_Rect->bottom() - qRound(m_Rect->width() / m_AspectRatio));
       }
       break;
@@ -789,9 +795,16 @@ void ptViewWindow::EnforceRectAspectRatio() {
       break;
 
     case meRight:
+      EdgeCenter = m_Rect->top() + qRound(m_Rect->height() / 2);
       m_Rect->setHeight(NewHeight);
+      m_Rect->setTop(EdgeCenter - qRound(NewHeight / 2));
       if (m_Rect->bottom() > m_Frame->bottom()) {
         m_Rect->setBottom(m_Frame->bottom());
+        // The +1 in the next line is necessary, probably because of rounding
+        m_Rect->setRight(m_Rect->left() + qRound(m_Rect->height() * m_AspectRatio + 1));
+      } else if (m_Rect->top() < m_Frame->top()) {
+        m_Rect->setTop(m_Frame->top());
+        // no +1 needed here
         m_Rect->setRight(m_Rect->left() + qRound(m_Rect->height() * m_AspectRatio));
       }
       break;
@@ -805,9 +818,14 @@ void ptViewWindow::EnforceRectAspectRatio() {
       break;
 
     case meBottom:
+      EdgeCenter = m_Rect->left() + qRound(m_Rect->width() / 2);
       m_Rect->setWidth(NewWidth);
+      m_Rect->setLeft(EdgeCenter - qRound(NewWidth / 2));
       if (m_Rect->right() > m_Frame->right()) {
         m_Rect->setRight(m_Frame->right());
+        m_Rect->setBottom(m_Rect->top() + qRound(m_Rect->width() / m_AspectRatio));
+      } else if (m_Rect->left() < m_Frame->left()) {
+        m_Rect->setLeft(m_Frame->left());
         m_Rect->setBottom(m_Rect->top() + qRound(m_Rect->width() / m_AspectRatio));
       }
       break;
@@ -821,9 +839,16 @@ void ptViewWindow::EnforceRectAspectRatio() {
       break;
 
     case meLeft:
+      EdgeCenter = m_Rect->top() + qRound(m_Rect->height() / 2);
       m_Rect->setHeight(NewHeight);
+      m_Rect->setTop(EdgeCenter - qRound(NewHeight / 2));
       if (m_Rect->bottom() > m_Frame->bottom()) {
         m_Rect->setBottom(m_Frame->bottom());
+        // The +1 in the next line is necessary, probably because of rounding
+        m_Rect->setLeft(m_Rect->right() - qRound(m_Rect->height() * m_AspectRatio + 1));
+      } else if (m_Rect->top() < m_Frame->top()) {
+        m_Rect->setTop(m_Frame->top());
+        // no +1 needed here
         m_Rect->setLeft(m_Rect->right() - qRound(m_Rect->height() * m_AspectRatio));
       }
       break;
@@ -911,10 +936,6 @@ void ptViewWindow::paintEvent(QPaintEvent* Event) {
   } else {
     m_Frame->setLeft(0);
   }
-// TODOBJ: Remove printfs before final version!
-//printf("Frame: %d %d %d %d | ", m_Frame->left(), m_Frame->top(), m_Frame->width(), m_Frame->height());
-//printf("Rect: %d %d %d %d | ", m_Rect->left(), m_Rect->top(), m_Rect->width(), m_Rect->height());
-//printf("AR %d x %d y %d fr %.3f\n", m_FixedAspectRatio, m_AspectRatioW, m_AspectRatioH, m_AspectRatio);
 
   // Fill viewport with background colour and draw image
   QPainter Painter(viewport());
