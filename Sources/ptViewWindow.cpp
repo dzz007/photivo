@@ -72,7 +72,7 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_AspectRatioH     = 0;
 
   m_InteractionMode = vaNone;
-  m_ImageFrame           = new QRect(0,0,0,0);
+  m_ImageFrame      = new QRect(0,0,0,0);
   m_ViewSizeRect    = new QRect(0,0,0,0);
   m_PipeSizeRect    = new QRect(0,0,0,0);
   m_DragDelta       = new QLine(0,0,0,0);
@@ -750,6 +750,9 @@ void ptViewWindow::UpdateViewportRects() {
     return;
   }
 
+  m_ViewSizeRect->moveTo(m_ViewSizeRect->left() - m_ImageFrame->left(),
+                         m_ViewSizeRect->top() - m_ImageFrame->top() );
+
   // Calc position/size of the image frame in viewport
   int VPWidth  = viewport()->size().width();
   int VPHeight = viewport()->size().height();
@@ -768,20 +771,97 @@ void ptViewWindow::UpdateViewportRects() {
   m_ImageFrame->setWidth(m_QImageCut->width());
   m_ImageFrame->setHeight(m_QImageCut->height());
 
+
   if (m_PipeSizeRect->isNull()) {
     m_ViewSizeRect->setRect(0,0,0,0);
+
   } else {
-    // transform rectangle to viewport scale and coordinates
-    int ScaledX = m_ImageFrame->left() + (int)(m_PipeSizeRect->left() * m_ZoomFactor);
-    int ScaledY = m_ImageFrame->top() + (int)(m_PipeSizeRect->top() * m_ZoomFactor);
+    // Make sure opposite edge/corner stays where it is. Without doing this explicitely
+    // egde/corner tends to jump back and forth one pixel.
+    int ScaledX1 = (int)(m_PipeSizeRect->left() * m_ZoomFactor);
+    int ScaledY1 = (int)(m_PipeSizeRect->top() * m_ZoomFactor);
     int ScaledW = (int)(m_PipeSizeRect->width() * m_ZoomFactor);
     int ScaledH = (int)(m_PipeSizeRect->height() * m_ZoomFactor);
+    int x1;
+    int y1;
+    int x2;
+    int y2;
 
-    // Setup m_Rect and catch invalid values with the qBounds.
-    m_ViewSizeRect->setRect(qBound(m_ImageFrame->left(), ScaledX, m_ImageFrame->right()),
-                    qBound(m_ImageFrame->top(), ScaledY, m_ImageFrame->bottom()),
-                    qBound(0, ScaledW, m_ImageFrame->width()),
-                    qBound(0, ScaledH, m_ImageFrame->height()) );
+    switch (m_MovingEdge) {
+    case meTopLeft:
+      x2 = m_ViewSizeRect->right();
+      y2 = m_ViewSizeRect->bottom();
+      x1 = x2 - ScaledW;
+      y1 = y2 - ScaledH;
+      break;
+
+    case meTop:
+      y2 = m_ViewSizeRect->bottom();
+      y1 = y2 - ScaledH;
+      x1 = ScaledX1;
+      x2 = x1 + ScaledW;
+      break;
+
+    case meTopRight:
+      x1 = m_ViewSizeRect->left();
+      y2 = m_ViewSizeRect->bottom();
+      x2 = x1 + ScaledW;
+      y1 = y2 - ScaledH;
+      break;
+
+    case meRight:
+      x1 = m_ViewSizeRect->left();
+      x2 = x1 + ScaledW;
+      y1 = ScaledY1;
+      y2 = y1 + ScaledH;
+      break;
+
+    case meBottomRight:
+      x1 = m_ViewSizeRect->left();
+      y1 = m_ViewSizeRect->top();
+      x2 = x1 + ScaledW;
+      y2 = y1 + ScaledH;
+      break;
+
+    case meBottom:
+      y1 = m_ViewSizeRect->top();
+      y2 = y1 + ScaledH;
+      x1 = ScaledX1;
+      x2 = x1 + ScaledW;
+      break;
+
+    case meBottomLeft:
+      x2 = m_ViewSizeRect->right();
+      y1 = m_ViewSizeRect->top();
+      x1 = x2 - ScaledW;
+      y2 = y1 + ScaledH;
+      break;
+
+    case meLeft:
+      x2 = m_ViewSizeRect->right();
+      x1 = x2 - ScaledW;
+      y1 = ScaledY1;
+      y2 = y1 + ScaledH;
+      break;
+
+    default:
+      x1 = ScaledX1;
+      y1 = ScaledY1;
+      x2 = x1 + ScaledW;
+      y2 = y1 + ScaledH;
+    }
+
+    x1 += m_ImageFrame->left();
+    x2 += m_ImageFrame->left();
+    y1 += m_ImageFrame->top();
+    y2 += m_ImageFrame->top();
+
+    m_ViewSizeRect->setCoords(
+        qBound(m_ImageFrame->left(), x1, m_ImageFrame->right()),
+        qBound(m_ImageFrame->top(),  y1, m_ImageFrame->bottom()),
+        qBound(m_ImageFrame->left(), x2, m_ImageFrame->right()),
+        qBound(m_ImageFrame->top(),  y2, m_ImageFrame->bottom())
+    );
   }
 }
 
@@ -804,7 +884,7 @@ void ptViewWindow::EnforceRectAspectRatio() {
   int NewWidth = qRound(m_PipeSizeRect->height() * m_AspectRatio);
   int NewHeight = qRound(m_PipeSizeRect->width() / m_AspectRatio);
   int EdgeCenter = 0;
-
+printf("irb %d %d\n", ImageRight, ImageBottom);
   switch (m_MovingEdge){
     case meTopLeft:
       m_PipeSizeRect->setTop(m_PipeSizeRect->top() + m_PipeSizeRect->height() - NewHeight);
@@ -921,6 +1001,7 @@ void ptViewWindow::EnforceRectAspectRatio() {
     default:
       assert(0);
   }
+  printf("pr: %d %d %d %d\n", m_PipeSizeRect->left(), m_PipeSizeRect->top(), m_PipeSizeRect->width(), m_PipeSizeRect->height());
 }
 
 
