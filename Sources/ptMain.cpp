@@ -4543,14 +4543,14 @@ void CB_RotateInput(const QVariant Value) {
 
 void CB_GridCheck(const QVariant State) {
   Settings->SetValue("Grid",State);
-  ViewWindow->Grid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
+  ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
   Update(ptProcessorPhase_NULL);
 }
 
 void CB_GridXInput(const QVariant Value) {
   Settings->SetValue("GridX",Value);
   if (Settings->GetInt("Grid")) {
-    ViewWindow->Grid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
+    ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
     Update(ptProcessorPhase_NULL);
   }
 }
@@ -4558,7 +4558,7 @@ void CB_GridXInput(const QVariant Value) {
 void CB_GridYInput(const QVariant Value) {
   Settings->SetValue("GridY",Value);
   if (Settings->GetInt("Grid")) {
-    ViewWindow->Grid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
+    ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
     Update(ptProcessorPhase_NULL);
   }
 }
