@@ -112,7 +112,7 @@ public:
                          uint AspectRatioW,
                          uint AspectRatioH,
                          const short ImmediateUpdate = 1);
-  void    Grid(const short Enabled, const short GridX, const short GridY);
+  void    setGrid(const short Enabled, const short GridX, const short GridY);
 
   // Zoom functions. Fit returns the factor in %.
   short ZoomFit();
@@ -123,14 +123,6 @@ public:
   // Status report
   void StatusReport(const short State);
   void StatusReport(const QString Text);
-
-  const ptImage*       m_RelatedImage;
-
-  // Order reflects also order into the pipe :
-  // The original->Zoom->Cut (to visible) ->pixmap for acceleration.
-  QImage*              m_QImage;
-  QImage*              m_QImageZoomed;
-  QImage*              m_QImageCut;
 
   QAction*    m_AtnFullScreen;
 
@@ -173,15 +165,30 @@ private:
   ptMovingEdge  MouseDragPos(QMouseEvent* Event);
   void          ContextMenu(QEvent* Event);
   void          FinalizeAction();
+  void          UpdateViewportRects();
 
   //variables
-  ptViewportAction  m_InteractionMode;
-  QRect*      m_Rect;           // crop/selection rectangle in viewport scale
-  QRect*      m_RealSizeRect;   // rectangle in current pipe size scale
-  QRect*      m_Frame;          // (visible part of the) image in the viewport
-  QLine*      m_DragDelta;      // direction and distance of mouse drag
+  const ptImage*   m_RelatedImage;    // 16bit pipe sized image //TODO BJ: Really needed as a member?
+  QImage*          m_QImage;          // 8bit pipe sized image (directly converted from m_RelatedImage)
+  QImage*          m_QImageZoomed;    // m_QImage scaled to current zoom factor
+  QImage*          m_QImageCut;       // visible part of the zoomed image
+
+  /* Crop/selection rectangles:
+     m_PipeSizeRect: Master rect defining current values in image pipe size. No viewport
+          offsets involed, i.e. coordinate system always starts topleft at (0,0).
+     m_ViewSizeRect: Current rectrangle in viewport scale including any offsets if the
+          visible part of the image is smaller than the viewport.
+     m_ImageFrame: Defines position and size of the visible part of the image in the
+          viewport. Width/height are always the same as m_QImageCut.
+  */
+  QRect*      m_ViewSizeRect;
+  QRect*      m_PipeSizeRect;
+  QRect*      m_ImageFrame;
+
+  QLine*      m_DragDelta;      // direction and distance of mouse drag (viewport scale)
   short       m_NowDragging;    // flag, if mouse drag is ongoing
-  ptMovingEdge     m_MovingEdge;
+  ptMovingEdge      m_MovingEdge;
+  ptViewportAction  m_InteractionMode;
   short       m_FixedAspectRatio;   // 0: fixed AR, 1: no AR restriction
   uint        m_AspectRatioW;
   uint        m_AspectRatioH;
