@@ -773,97 +773,100 @@ void ptViewWindow::UpdateViewportRects() {
   m_ImageFrame->setHeight(m_QImageCut->height());
 
 
-  if (m_PipeSizeRect->isNull()) {
-    m_ViewSizeRect->setRect(0,0,0,0);
+  // Make sure opposite edge/corner stays where it is. Without doing this explicitely
+  // egde/corner tends to jump back and forth one pixel.
+  int ScaledX1 = (int)(m_PipeSizeRect->left() * m_ZoomFactor);
+  int ScaledY1 = (int)(m_PipeSizeRect->top() * m_ZoomFactor);
+  int ScaledW = (int)(m_PipeSizeRect->width() * m_ZoomFactor);
+  int ScaledH = (int)(m_PipeSizeRect->height() * m_ZoomFactor);
+  int x1;
+  int y1;
+  int x2;
+  int y2;
 
+  if ((m_PipeSizeRect->width() == 0) || (m_PipeSizeRect->height() == 0)) {
+    x1 = ScaledX1;
+    x2 = x1;
+    y1 = ScaledY1;
+    y2 = y1;
   } else {
-    // Make sure opposite edge/corner stays where it is. Without doing this explicitely
-    // egde/corner tends to jump back and forth one pixel.
-    int ScaledX1 = (int)(m_PipeSizeRect->left() * m_ZoomFactor);
-    int ScaledY1 = (int)(m_PipeSizeRect->top() * m_ZoomFactor);
-    int ScaledW = (int)(m_PipeSizeRect->width() * m_ZoomFactor);
-    int ScaledH = (int)(m_PipeSizeRect->height() * m_ZoomFactor);
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-
     switch (m_MovingEdge) {
-    case meTopLeft:
-      x2 = m_ViewSizeRect->right();
-      y2 = m_ViewSizeRect->bottom();
-      x1 = x2 - ScaledW;
-      y1 = y2 - ScaledH;
-      break;
+      case meTopLeft:
+        x2 = m_ViewSizeRect->right();
+        y2 = m_ViewSizeRect->bottom();
+        x1 = x2 - ScaledW;
+        y1 = y2 - ScaledH;
+        break;
 
-    case meTop:
-      y2 = m_ViewSizeRect->bottom();
-      y1 = y2 - ScaledH;
-      x1 = ScaledX1;
-      x2 = x1 + ScaledW;
-      break;
+      case meTop:
+        y2 = m_ViewSizeRect->bottom();
+        y1 = y2 - ScaledH;
+        x1 = ScaledX1;
+        x2 = x1 + ScaledW;
+        break;
 
-    case meTopRight:
-      x1 = m_ViewSizeRect->left();
-      y2 = m_ViewSizeRect->bottom();
-      x2 = x1 + ScaledW;
-      y1 = y2 - ScaledH;
-      break;
+      case meTopRight:
+        x1 = m_ViewSizeRect->left();
+        y2 = m_ViewSizeRect->bottom();
+        x2 = x1 + ScaledW;
+        y1 = y2 - ScaledH;
+        break;
 
-    case meRight:
-      x1 = m_ViewSizeRect->left();
-      x2 = x1 + ScaledW;
-      y1 = ScaledY1;
-      y2 = y1 + ScaledH;
-      break;
+      case meRight:
+        x1 = m_ViewSizeRect->left();
+        x2 = x1 + ScaledW;
+        y1 = ScaledY1;
+        y2 = y1 + ScaledH;
+        break;
 
-    case meBottomRight:
-      x1 = m_ViewSizeRect->left();
-      y1 = m_ViewSizeRect->top();
-      x2 = x1 + ScaledW;
-      y2 = y1 + ScaledH;
-      break;
+      case meBottomRight:
+        x1 = m_ViewSizeRect->left();
+        y1 = m_ViewSizeRect->top();
+        x2 = x1 + ScaledW;
+        y2 = y1 + ScaledH;
+        break;
 
-    case meBottom:
-      y1 = m_ViewSizeRect->top();
-      y2 = y1 + ScaledH;
-      x1 = ScaledX1;
-      x2 = x1 + ScaledW;
-      break;
+      case meBottom:
+        y1 = m_ViewSizeRect->top();
+        y2 = y1 + ScaledH;
+        x1 = ScaledX1;
+        x2 = x1 + ScaledW;
+        break;
 
-    case meBottomLeft:
-      x2 = m_ViewSizeRect->right();
-      y1 = m_ViewSizeRect->top();
-      x1 = x2 - ScaledW;
-      y2 = y1 + ScaledH;
-      break;
+      case meBottomLeft:
+        x2 = m_ViewSizeRect->right();
+        y1 = m_ViewSizeRect->top();
+        x1 = x2 - ScaledW;
+        y2 = y1 + ScaledH;
+        break;
 
-    case meLeft:
-      x2 = m_ViewSizeRect->right();
-      x1 = x2 - ScaledW;
-      y1 = ScaledY1;
-      y2 = y1 + ScaledH;
-      break;
+      case meLeft:
+        x2 = m_ViewSizeRect->right();
+        x1 = x2 - ScaledW;
+        y1 = ScaledY1;
+        y2 = y1 + ScaledH;
+        break;
 
-    default:
-      x1 = ScaledX1;
-      y1 = ScaledY1;
-      x2 = x1 + ScaledW;
-      y2 = y1 + ScaledH;
+      default:
+        x1 = ScaledX1;
+        y1 = ScaledY1;
+        x2 = x1 + ScaledW;
+        y2 = y1 + ScaledH;
+        break;
     }
-
-    x1 += m_ImageFrame->left();
-    x2 += m_ImageFrame->left();
-    y1 += m_ImageFrame->top();
-    y2 += m_ImageFrame->top();
-
-    m_ViewSizeRect->setCoords(
-        qBound(m_ImageFrame->left(), x1, m_ImageFrame->right()),
-        qBound(m_ImageFrame->top(),  y1, m_ImageFrame->bottom()),
-        qBound(m_ImageFrame->left(), x2, m_ImageFrame->right()),
-        qBound(m_ImageFrame->top(),  y2, m_ImageFrame->bottom())
-    );
   }
+
+  x1 += m_ImageFrame->left();
+  x2 += m_ImageFrame->left();
+  y1 += m_ImageFrame->top();
+  y2 += m_ImageFrame->top();
+
+  m_ViewSizeRect->setCoords(
+      qBound(m_ImageFrame->left(), x1, m_ImageFrame->right()),
+      qBound(m_ImageFrame->top(),  y1, m_ImageFrame->bottom()),
+      qBound(m_ImageFrame->left(), x2, m_ImageFrame->right()),
+      qBound(m_ImageFrame->top(),  y2, m_ImageFrame->bottom())
+  );
 }
 
 
@@ -1319,8 +1322,8 @@ void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
           if (!m_ViewSizeRect->contains(Event->pos())) {
             m_ViewSizeRect->setRect(Event->x(), Event->y(), 0, 0);
             m_PipeSizeRect->setRect(
-                  (int)((Event->x() - m_ImageFrame->left()) / m_ZoomFactor + 0.5),
-                  (int)((Event->y() - m_ImageFrame->top()) / m_ZoomFactor + 0.5),
+                  (int)((Event->x() - m_ImageFrame->left()) / m_ZoomFactor),
+                  (int)((Event->y() - m_ImageFrame->top()) / m_ZoomFactor),
                   0, 0);
             m_MovingEdge = meNone;
             viewport()->repaint();
@@ -1364,6 +1367,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
       case vaCrop:
         // Move current rectangle. The qBounds make sure it stops at image boundaries.
         if ((m_MovingEdge == meCenter) || (Event->modifiers() == Qt::ControlModifier)) {
+          m_MovingEdge = meCenter;
           m_PipeSizeRect->moveTo(
               qBound(0, m_PipeSizeRect->left() + dx, m_QImage->width() - m_PipeSizeRect->width()),
               qBound(0, m_PipeSizeRect->top() + dy, m_QImage->height() - m_PipeSizeRect->height())
