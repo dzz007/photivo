@@ -32,6 +32,7 @@
 #include <QMessageBox>
 #include <QRect>
 #include <QLine>
+#include <QPoint>
 
 // A prototype we need
 void UpdateSettings();
@@ -974,11 +975,11 @@ void ptViewWindow::EnforceRectAspectRatio() {
       }
       break;
 
-    case meNone:
-      if (ABS(((double)m_PipeSizeRect->width() / (double)m_PipeSizeRect->height()) - m_AspectRatio) < 0.001) {
-        m_PipeSizeRect->setWidth(NewWidth);
-        m_PipeSizeRect->setHeight(qRound(m_PipeSizeRect->width() / m_AspectRatio));
-      }
+    case meNone: {
+      QPoint center = QPoint(m_PipeSizeRect->center().x(), m_PipeSizeRect->center().y());
+      m_PipeSizeRect->setWidth(NewWidth);
+      m_PipeSizeRect->setHeight(qRound(m_PipeSizeRect->width() / m_AspectRatio));
+      m_PipeSizeRect->moveCenter(center);
 
       if (m_PipeSizeRect->left() < 0) {
         m_PipeSizeRect->setLeft(0);
@@ -997,6 +998,7 @@ void ptViewWindow::EnforceRectAspectRatio() {
         m_PipeSizeRect->setLeft(m_PipeSizeRect->right() - qRound(m_PipeSizeRect->height() * m_AspectRatio));
       }
       break;
+    }
 
     default:
       assert(0);
