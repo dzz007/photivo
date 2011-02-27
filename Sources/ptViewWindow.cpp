@@ -884,7 +884,7 @@ void ptViewWindow::EnforceRectAspectRatio() {
   int NewWidth = qRound(m_PipeSizeRect->height() * m_AspectRatio);
   int NewHeight = qRound(m_PipeSizeRect->width() / m_AspectRatio);
   int EdgeCenter = 0;
-printf("irb %d %d\n", ImageRight, ImageBottom);
+
   switch (m_MovingEdge){
     case meTopLeft:
       m_PipeSizeRect->setTop(m_PipeSizeRect->top() + m_PipeSizeRect->height() - NewHeight);
@@ -901,7 +901,8 @@ printf("irb %d %d\n", ImageRight, ImageBottom);
       if (m_PipeSizeRect->right() > ImageRight) {
         m_PipeSizeRect->setRight(ImageRight);
         m_PipeSizeRect->setTop(m_PipeSizeRect->bottom() - qRound(m_PipeSizeRect->width() / m_AspectRatio));
-      } else if (m_PipeSizeRect->left() < 0) {
+      }
+      if (m_PipeSizeRect->left() < 0) {
         m_PipeSizeRect->setLeft(0);
         m_PipeSizeRect->setTop(m_PipeSizeRect->bottom() - qRound(m_PipeSizeRect->width() / m_AspectRatio));
       }
@@ -921,11 +922,10 @@ printf("irb %d %d\n", ImageRight, ImageBottom);
       m_PipeSizeRect->moveTop(EdgeCenter - qRound(NewHeight / 2));
       if (m_PipeSizeRect->bottom() > ImageBottom) {
         m_PipeSizeRect->setBottom(ImageBottom);
-        // The +1 in the next line is necessary, probably because of rounding
-        m_PipeSizeRect->setRight(m_PipeSizeRect->left() + qRound(m_PipeSizeRect->height() * m_AspectRatio + 1));
-      } else if (m_PipeSizeRect->top() < 0) {
+        m_PipeSizeRect->setRight(m_PipeSizeRect->left() + qRound(m_PipeSizeRect->height() * m_AspectRatio));
+      }
+      if (m_PipeSizeRect->top() < 0) {
         m_PipeSizeRect->setTop(0);
-        // no +1 needed here
         m_PipeSizeRect->setRight(m_PipeSizeRect->left() + qRound(m_PipeSizeRect->height() * m_AspectRatio));
       }
       break;
@@ -945,7 +945,8 @@ printf("irb %d %d\n", ImageRight, ImageBottom);
       if (m_PipeSizeRect->right() > ImageRight) {
         m_PipeSizeRect->setRight(ImageRight);
         m_PipeSizeRect->setBottom(m_PipeSizeRect->top() + qRound(m_PipeSizeRect->width() / m_AspectRatio));
-      } else if (m_PipeSizeRect->left() < 0) {
+      }
+      if (m_PipeSizeRect->left() < 0) {
         m_PipeSizeRect->setLeft(0);
         m_PipeSizeRect->setBottom(m_PipeSizeRect->top() + qRound(m_PipeSizeRect->width() / m_AspectRatio));
       }
@@ -965,11 +966,10 @@ printf("irb %d %d\n", ImageRight, ImageBottom);
       m_PipeSizeRect->moveTop(EdgeCenter - qRound(NewHeight / 2));
       if (m_PipeSizeRect->bottom() > ImageBottom) {
         m_PipeSizeRect->setBottom(ImageBottom);
-        // The +1 in the next line is necessary, probably because of rounding
-        m_PipeSizeRect->setLeft(m_PipeSizeRect->right() - qRound(m_PipeSizeRect->height() * m_AspectRatio + 1));
-      } else if (m_PipeSizeRect->top() < 0) {
+        m_PipeSizeRect->setLeft(m_PipeSizeRect->right() - qRound(m_PipeSizeRect->height() * m_AspectRatio));
+      }
+      if (m_PipeSizeRect->top() < 0) {
         m_PipeSizeRect->setTop(0);
-        // no +1 needed here
         m_PipeSizeRect->setLeft(m_PipeSizeRect->right() - qRound(m_PipeSizeRect->height() * m_AspectRatio));
       }
       break;
@@ -1001,7 +1001,6 @@ printf("irb %d %d\n", ImageRight, ImageBottom);
     default:
       assert(0);
   }
-  printf("pr: %d %d %d %d\n", m_PipeSizeRect->left(), m_PipeSizeRect->top(), m_PipeSizeRect->width(), m_PipeSizeRect->height());
 }
 
 
@@ -1510,6 +1509,10 @@ void ptViewWindow::wheelEvent(QWheelEvent* Event) {
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::dragEnterEvent(QDragEnterEvent* Event) {
+  if (m_InteractionMode != vaNone) {
+    return;
+  }
+
   // accept just text/uri-list mime format
   if (Event->mimeData()->hasFormat("text/uri-list")) {
     Event->acceptProposedAction();
@@ -1524,6 +1527,10 @@ void ptViewWindow::dragEnterEvent(QDragEnterEvent* Event) {
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::dropEvent(QDropEvent* Event) {
+  if (m_InteractionMode != vaNone) {
+    return;
+  }
+
   QList<QUrl> UrlList;
   QString DropName;
   QFileInfo DropInfo;
