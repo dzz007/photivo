@@ -79,6 +79,7 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_DragDelta       = new QLine(0,0,0,0);
   m_NowDragging     = 0;
   m_MovingEdge      = meNone;
+  m_PrevMovingEdge  = meNone;
 
   //Avoiding tricky blacks at zoom fit.
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -303,6 +304,7 @@ void ptViewWindow::StartCrop(const int x, const int y, const int width, const in
 
   m_CropGuidelines = CropGuidelines;
   m_MovingEdge = meNone;
+  m_PrevMovingEdge = meNone;
   m_DragDelta->setLine(0,0,0,0);
   m_InteractionMode = vaCrop;
 
@@ -326,6 +328,7 @@ void ptViewWindow::StartSelection() {
   m_FixedAspectRatio = 0;
   m_CropGuidelines = ptCropGuidelines_None;
   m_MovingEdge = meNone;
+  m_PrevMovingEdge = meNone;
   m_InteractionMode = vaSelectRect;
 }
 
@@ -614,6 +617,7 @@ void ptViewWindow::RecalcRect() {
       NewPos.setX(qBound(0, m_PipeSizeRect->left() + dxFloor, ImageRight));
       NewPos.setY(qBound(0, m_PipeSizeRect->top() + dyFloor, ImageBottom));
       // Determine if moving corner changed
+      m_PrevMovingEdge = m_MovingEdge;
       if ((NewPos.x() > m_PipeSizeRect->right()) && (NewPos.y() <= m_PipeSizeRect->bottom())) {
         m_MovingEdge = meTopRight;
       } else if ((NewPos.x() > m_PipeSizeRect->right()) && (NewPos.y() >= m_PipeSizeRect->bottom())) {
@@ -632,6 +636,7 @@ void ptViewWindow::RecalcRect() {
     case meTop:
       dx = 0;
       NewPos.setY(qBound(0, m_PipeSizeRect->top() + dyFloor, ImageBottom));
+      m_PrevMovingEdge = m_MovingEdge;
       if (NewPos.y() > m_PipeSizeRect->bottom()) {
         m_MovingEdge = meBottom;
       }
@@ -644,6 +649,7 @@ void ptViewWindow::RecalcRect() {
     case meTopRight:
       NewPos.setX(qBound(0, m_PipeSizeRect->right() + dxCeil, ImageRight));
       NewPos.setY(qBound(0, m_PipeSizeRect->top() + dyFloor, ImageBottom));
+      m_PrevMovingEdge = m_MovingEdge;
       if ((NewPos.x() < m_PipeSizeRect->left()) && (NewPos.y() <= m_PipeSizeRect->bottom())) {
         m_MovingEdge = meTopLeft;
       } else if ((NewPos.x() < m_PipeSizeRect->left()) && (NewPos.y() > m_PipeSizeRect->bottom())) {
@@ -659,6 +665,7 @@ void ptViewWindow::RecalcRect() {
 
     case meRight:
       dy = 0;
+      m_PrevMovingEdge = m_MovingEdge;
       NewPos.setX(qBound(0, m_PipeSizeRect->right() + dxCeil, ImageRight));
       if ((NewPos.x() < m_PipeSizeRect->left())) {
         m_MovingEdge = meLeft;
@@ -672,6 +679,7 @@ void ptViewWindow::RecalcRect() {
     case meBottomRight:
       NewPos.setX(qBound(0, m_PipeSizeRect->right() + dxCeil, ImageRight));
       NewPos.setY(qBound(0, m_PipeSizeRect->bottom() + dyCeil, ImageBottom));
+      m_PrevMovingEdge = m_MovingEdge;
       if ((NewPos.x() < m_PipeSizeRect->left()) && (NewPos.y() >= m_PipeSizeRect->top())) {
         m_MovingEdge = meBottomLeft;
       } else if ((NewPos.x() < m_PipeSizeRect->left()) && (NewPos.y() < m_PipeSizeRect->top())) {
@@ -688,6 +696,7 @@ void ptViewWindow::RecalcRect() {
     case meBottom:
       dx = 0;
       NewPos.setY(qBound(0, m_PipeSizeRect->bottom() + dy, ImageBottom));
+      m_PrevMovingEdge = m_MovingEdge;
       if (NewPos.y() < m_PipeSizeRect->top()) {
         m_MovingEdge = meTop;
       }
@@ -700,6 +709,7 @@ void ptViewWindow::RecalcRect() {
     case meBottomLeft:
       NewPos.setX(qBound(0, m_PipeSizeRect->left() + dx, ImageRight));
       NewPos.setY(qBound(0, m_PipeSizeRect->bottom() + dy, ImageBottom));
+      m_PrevMovingEdge = m_MovingEdge;
       if ((NewPos.x() > m_PipeSizeRect->right()) && (NewPos.y() >= m_PipeSizeRect->top())) {
         m_MovingEdge = meBottomRight;
       } else if ((NewPos.x() > m_PipeSizeRect->right()) && (NewPos.y() < m_PipeSizeRect->top())) {
@@ -716,6 +726,7 @@ void ptViewWindow::RecalcRect() {
     case meLeft:
       dy = 0;
       NewPos.setX(qBound(0, m_PipeSizeRect->left() + dx, ImageRight));
+      m_PrevMovingEdge = m_MovingEdge;
       if (NewPos.x() > m_PipeSizeRect->right()) {
         m_MovingEdge = meRight;
       }
@@ -737,6 +748,8 @@ void ptViewWindow::RecalcRect() {
   if (m_FixedAspectRatio) {
     EnforceRectAspectRatio();
   }
+
+//  UpdateViewportRects();
 }
 
 
@@ -748,6 +761,13 @@ void ptViewWindow::RecalcRect() {
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::UpdateViewportRects() {
+
+//printf("Piperect: %d %d %d %d\n",
+//    m_PipeSizeRect->left(), m_PipeSizeRect->top(), m_PipeSizeRect->width(), m_PipeSizeRect->height() );
+//printf("update before: V %d %d %d %d | F %d %d %d %d\n",
+//       m_ViewSizeRect->left(), m_ViewSizeRect->top(), m_ViewSizeRect->width(), m_ViewSizeRect->height(),
+//       m_ImageFrame->left(), m_ImageFrame->top(), m_ImageFrame->width(), m_ImageFrame->height() );
+
   if (m_QImageCut == NULL) {
     return;
   }
@@ -776,20 +796,57 @@ void ptViewWindow::UpdateViewportRects() {
 
   // Make sure opposite edge/corner stays where it is. Without doing this explicitely
   // egde/corner tends to jump back and forth one pixel.
-  int ScaledX1 = (int)(m_PipeSizeRect->left() * m_ZoomFactor);
-  int ScaledY1 = (int)(m_PipeSizeRect->top() * m_ZoomFactor);
+  int ScaledX1 = m_ImageFrame->left() + (int)(m_PipeSizeRect->left() * m_ZoomFactor);
+  int ScaledY1 = m_ImageFrame->top() + (int)(m_PipeSizeRect->top() * m_ZoomFactor);
   int ScaledW = (int)(m_PipeSizeRect->width() * m_ZoomFactor);
   int ScaledH = (int)(m_PipeSizeRect->height() * m_ZoomFactor);
-  int x1;
-  int y1;
-  int x2;
-  int y2;
+//  int x1;
+//  int y1;
+//  int x2;
+//  int y2;
 
   if ((m_PipeSizeRect->left() == -1) && (m_PipeSizeRect->top() == -1)) {
     m_ViewSizeRect->setRect(-1,-1,0,0);
 
   } else {
-    switch (m_MovingEdge) {
+    int OldRight = m_ViewSizeRect->right() + m_ImageFrame->left();
+    int OldBottom = m_ViewSizeRect->bottom() + m_ImageFrame->top();
+    m_ViewSizeRect->setRect(ScaledX1, ScaledY1, ScaledW, ScaledH);
+
+    if (m_MovingEdge == m_PrevMovingEdge) {
+//      int DeltaLeft = m_ViewSizeRect->left() - m_ImageFrame->left();
+//      int DeltaTop = m_ViewSizeRect->top() - m_ImageFrame->top();
+
+      switch (m_MovingEdge) {
+        case meTopLeft:
+          m_ViewSizeRect->moveRight(OldRight);
+          m_ViewSizeRect->moveBottom(OldBottom);
+          if (m_ViewSizeRect->left() < m_ImageFrame->left())
+            m_ViewSizeRect->moveLeft(m_ImageFrame->left());
+          if (m_ViewSizeRect->top() < m_ImageFrame->top())
+            m_ViewSizeRect->moveTop(m_ImageFrame->top());
+          break;
+
+        case meTop:
+        case meTopRight:
+          m_ViewSizeRect->moveBottom(OldBottom);
+          if (m_ViewSizeRect->top() < m_ImageFrame->top())
+            m_ViewSizeRect->moveTop(m_ImageFrame->top());
+          break;
+
+        case meBottomLeft:
+        case meLeft:
+          m_ViewSizeRect->moveRight(OldRight);
+          if (m_ViewSizeRect->left() < m_ImageFrame->left())
+            m_ViewSizeRect->moveLeft(m_ImageFrame->left());
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    /*switch (m_MovingEdge) {
       case meTopLeft:
         x2 = m_ViewSizeRect->right();
         y2 = m_ViewSizeRect->bottom();
@@ -799,6 +856,8 @@ void ptViewWindow::UpdateViewportRects() {
 
       case meTop:
         y2 = m_ViewSizeRect->bottom();
+        //y2 = m_ViewSizeRect->top() + m_ViewSizeRect->height();
+    //printf("meTop: bottom: %d, y2: %d\n", m_ViewSizeRect->bottom(), y2);
         y1 = y2 - ScaledH;
         x1 = ScaledX1;
         x2 = x1 + ScaledW;
@@ -854,18 +913,29 @@ void ptViewWindow::UpdateViewportRects() {
         break;
     }
 
-    x1 += m_ImageFrame->left();
-    x2 += m_ImageFrame->left();
-    y1 += m_ImageFrame->top();
-    y2 += m_ImageFrame->top();
+//    x1 += m_ImageFrame->left();
+//    x2 += m_ImageFrame->left();
+//    y1 += m_ImageFrame->top();
+//    y2 += m_ImageFrame->top();
 
-    m_ViewSizeRect->setCoords(
-        qBound(m_ImageFrame->left(), x1, m_ImageFrame->right()),
-        qBound(m_ImageFrame->top(),  y1, m_ImageFrame->bottom()),
-        qBound(m_ImageFrame->left(), x2, m_ImageFrame->right()),
-        qBound(m_ImageFrame->top(),  y2, m_ImageFrame->bottom())
-    );
+    x1 = qBound(m_ImageFrame->left(), x1 + m_ImageFrame->left(), m_ImageFrame->right());
+    y1 = qBound(m_ImageFrame->top(),  y1 + m_ImageFrame->top(), m_ImageFrame->bottom());
+    x2 = qBound(m_ImageFrame->left(), x2 + m_ImageFrame->left(), m_ImageFrame->right());
+    y2 = qBound(m_ImageFrame->top(),  y2 + m_ImageFrame->top(), m_ImageFrame->bottom());
+
+    m_ViewSizeRect->setRect(x1, y1, x2-x1+1, y2-y1+1);
+
+//    m_ViewSizeRect->setCoords(
+//        qBound(m_ImageFrame->left(), x1, m_ImageFrame->right()),
+//        qBound(m_ImageFrame->top(),  y1, m_ImageFrame->bottom()),
+//        qBound(m_ImageFrame->left(), x2, m_ImageFrame->right()),
+//        qBound(m_ImageFrame->top(),  y2, m_ImageFrame->bottom())
+//    );*/
   }
+
+//  printf("update after: V %d %d %d %d | F %d %d %d %d\n",
+//         m_ViewSizeRect->left(), m_ViewSizeRect->top(), m_ViewSizeRect->width(), m_ViewSizeRect->height(),
+//         m_ImageFrame->left(), m_ImageFrame->top(), m_ImageFrame->width(), m_ImageFrame->height() );
 }
 
 
@@ -1041,12 +1111,9 @@ void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 
 void ptViewWindow::paintEvent(QPaintEvent*) {
-//printf("before: P %d %d %d %d | V %d %d %d %d\n", m_PipeSizeRect->left(), m_PipeSizeRect->top(), m_PipeSizeRect->width(), m_PipeSizeRect->height(),
-//       m_ViewSizeRect->left(), m_ViewSizeRect->top(), m_ViewSizeRect->width(), m_ViewSizeRect->height());
   UpdateViewportRects();
+  //RecalcRect();
   short PaintRect = ((m_PipeSizeRect->left() > -1) && (m_PipeSizeRect->top() > -1));
-//printf("after: P %d %d %d %d | V %d %d %d %d\n", m_PipeSizeRect->left(), m_PipeSizeRect->top(), m_PipeSizeRect->width(), m_PipeSizeRect->height(),
-//       m_ViewSizeRect->left(), m_ViewSizeRect->top(), m_ViewSizeRect->width(), m_ViewSizeRect->height());
 
   // Fill viewport with background colour and draw image
   QPainter Painter(viewport());
@@ -1460,6 +1527,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
 void ptViewWindow::leaveEvent(QEvent*) {
   // Unset moving crop rectangle edge to make window resizing work properly
   // when in crop mode.
+  m_PrevMovingEdge = meNone;
   m_MovingEdge = meNone;
 }
 

@@ -189,6 +189,7 @@ private:
   QLine*      m_DragDelta;      // direction and distance of mouse drag (viewport scale)
   short       m_NowDragging;    // flag, if mouse drag is ongoing
   ptMovingEdge      m_MovingEdge;
+  ptMovingEdge      m_PrevMovingEdge;
   ptViewportAction  m_InteractionMode;
   short       m_FixedAspectRatio;   // 0: fixed AR, 1: no AR restriction
   uint        m_AspectRatioW;
