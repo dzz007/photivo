@@ -320,8 +320,9 @@ QRect ptViewWindow::StopCrop() {
 }
 
 void ptViewWindow::StartSelection() {
-  m_PipeSizeRect->setCoords(0,0,0,0);
-  UpdateViewportRects();
+  // (-1,-1) means rect is not set.
+  m_PipeSizeRect->setRect(-1,-1,0,0);
+  m_ViewSizeRect->setRect(-1,-1,0,0);
   m_FixedAspectRatio = 0;
   m_CropGuidelines = ptCropGuidelines_None;
   m_MovingEdge = meNone;
@@ -334,7 +335,7 @@ void ptViewWindow::StartLine() {
 
 void ptViewWindow::FinalizeAction() {
   m_InteractionMode = vaNone;
-  m_ViewSizeRect->setCoords(0,0,0,0);
+  m_ViewSizeRect->setCoords(-1,-1,0,0);
   this->setCursor(Qt::ArrowCursor);
 }
 
@@ -784,11 +785,9 @@ void ptViewWindow::UpdateViewportRects() {
   int x2;
   int y2;
 
-  if ((m_PipeSizeRect->width() == 0) || (m_PipeSizeRect->height() == 0)) {
-    x1 = ScaledX1;
-    x2 = x1;
-    y1 = ScaledY1;
-    y2 = y1;
+  if ((m_PipeSizeRect->left() == -1) && (m_PipeSizeRect->top() == -1)) {
+    m_ViewSizeRect->setRect(-1,-1,0,0);
+
   } else {
     switch (m_MovingEdge) {
       case meTopLeft:
@@ -854,19 +853,19 @@ void ptViewWindow::UpdateViewportRects() {
         y2 = y1 + ScaledH;
         break;
     }
+
+    x1 += m_ImageFrame->left();
+    x2 += m_ImageFrame->left();
+    y1 += m_ImageFrame->top();
+    y2 += m_ImageFrame->top();
+
+    m_ViewSizeRect->setCoords(
+        qBound(m_ImageFrame->left(), x1, m_ImageFrame->right()),
+        qBound(m_ImageFrame->top(),  y1, m_ImageFrame->bottom()),
+        qBound(m_ImageFrame->left(), x2, m_ImageFrame->right()),
+        qBound(m_ImageFrame->top(),  y2, m_ImageFrame->bottom())
+    );
   }
-
-  x1 += m_ImageFrame->left();
-  x2 += m_ImageFrame->left();
-  y1 += m_ImageFrame->top();
-  y2 += m_ImageFrame->top();
-
-  m_ViewSizeRect->setCoords(
-      qBound(m_ImageFrame->left(), x1, m_ImageFrame->right()),
-      qBound(m_ImageFrame->top(),  y1, m_ImageFrame->bottom()),
-      qBound(m_ImageFrame->left(), x2, m_ImageFrame->right()),
-      qBound(m_ImageFrame->top(),  y2, m_ImageFrame->bottom())
-  );
 }
 
 
@@ -1042,7 +1041,12 @@ void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 
 void ptViewWindow::paintEvent(QPaintEvent*) {
+//printf("before: P %d %d %d %d | V %d %d %d %d\n", m_PipeSizeRect->left(), m_PipeSizeRect->top(), m_PipeSizeRect->width(), m_PipeSizeRect->height(),
+//       m_ViewSizeRect->left(), m_ViewSizeRect->top(), m_ViewSizeRect->width(), m_ViewSizeRect->height());
   UpdateViewportRects();
+  short PaintRect = ((m_PipeSizeRect->left() > -1) && (m_PipeSizeRect->top() > -1));
+//printf("after: P %d %d %d %d | V %d %d %d %d\n", m_PipeSizeRect->left(), m_PipeSizeRect->top(), m_PipeSizeRect->width(), m_PipeSizeRect->height(),
+//       m_ViewSizeRect->left(), m_ViewSizeRect->top(), m_ViewSizeRect->width(), m_ViewSizeRect->height());
 
   // Fill viewport with background colour and draw image
   QPainter Painter(viewport());
@@ -1104,7 +1108,7 @@ void ptViewWindow::paintEvent(QPaintEvent*) {
       // lll   crop     rrr
       // lll rectangle  rrr
       // bbbbbbbbbbbbbbbbbb
-      if (m_CropLightsOut > 0) {
+      if ((m_CropLightsOut > 0) && PaintRect) {
         if (m_ViewSizeRect->top() > m_ImageFrame->top()) { // Top
           Painter.fillRect(m_ImageFrame->left(), m_ImageFrame->top(),
                            m_ImageFrame->width(), m_ViewSizeRect->top() - m_ImageFrame->top(),
@@ -1129,7 +1133,7 @@ void ptViewWindow::paintEvent(QPaintEvent*) {
 
 
       // Draw outline/guidelines for crop rectangle (not for "lights off")
-      if (m_CropLightsOut != 2) {
+      if ((m_CropLightsOut != 2) && PaintRect) {
         QPen Pen(QColor(150, 150, 150),1);
         Painter.setPen(Pen);
         Painter.drawRect(*m_ViewSizeRect);
@@ -1441,6 +1445,22 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
       }
     }
   }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+// leaveEvent
+//
+// Triggered when mouse leaves the ViewWindow. mouseMoveEvent doesn’t
+// catch this, so we need this function to do all necessary cleanup.
+//
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::leaveEvent(QEvent*) {
+  // Unset moving crop rectangle edge to make window resizing work properly
+  // when in crop mode.
+  m_MovingEdge = meNone;
 }
 
 
