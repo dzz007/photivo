@@ -145,6 +145,7 @@ protected:
   void dragEnterEvent(QDragEnterEvent* Event);
   void dropEvent(QDropEvent* Event);
   void scrollContentsBy(int dx, int dy);
+  void leaveEvent(QEvent*);
 
 
 ///////////////////////////////////////////////////////////////////////////

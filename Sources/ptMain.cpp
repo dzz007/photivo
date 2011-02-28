@@ -3089,6 +3089,10 @@ void CB_MenuFileWriteSettings() {
 
 
 void CB_MenuFileExit(const short) {
+  if (ViewWindow->OngoingAction() != vaNone) {
+    return;
+  }
+
   if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0 && Settings->GetInt("SaveConfirmation")==1) {
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Question);
@@ -4041,6 +4045,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       OldZoom = Settings->GetInt("Zoom");
       OldZoomMode = Settings->GetInt("ZoomMode");
       ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
+      Settings->SetValue("ZoomMode",ptZoomMode_Fit);
       UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw);
 
       // Allow to be selected in the view window. And deactivate main.      
@@ -4072,6 +4077,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       Settings->SetValue("ZoomMode",OldZoomMode);
       break;
     }
+
     default :
       // Here we have presets selected from ptWhiteBalances.
       // GuiSettings->m_WhiteBalance should point
