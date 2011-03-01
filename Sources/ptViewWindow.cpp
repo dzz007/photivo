@@ -800,10 +800,6 @@ void ptViewWindow::UpdateViewportRects() {
   int ScaledY1 = m_ImageFrame->top() + (int)(m_PipeSizeRect->top() * m_ZoomFactor);
   int ScaledW = (int)(m_PipeSizeRect->width() * m_ZoomFactor);
   int ScaledH = (int)(m_PipeSizeRect->height() * m_ZoomFactor);
-//  int x1;
-//  int y1;
-//  int x2;
-//  int y2;
 
   if ((m_PipeSizeRect->left() == -1) && (m_PipeSizeRect->top() == -1)) {
     m_ViewSizeRect->setRect(-1,-1,0,0);
@@ -814,9 +810,6 @@ void ptViewWindow::UpdateViewportRects() {
     m_ViewSizeRect->setRect(ScaledX1, ScaledY1, ScaledW, ScaledH);
 
     if (m_MovingEdge == m_PrevMovingEdge) {
-//      int DeltaLeft = m_ViewSizeRect->left() - m_ImageFrame->left();
-//      int DeltaTop = m_ViewSizeRect->top() - m_ImageFrame->top();
-
       switch (m_MovingEdge) {
         case meTopLeft:
           m_ViewSizeRect->moveRight(OldRight);
@@ -845,97 +838,7 @@ void ptViewWindow::UpdateViewportRects() {
           break;
       }
     }
-
-    /*switch (m_MovingEdge) {
-      case meTopLeft:
-        x2 = m_ViewSizeRect->right();
-        y2 = m_ViewSizeRect->bottom();
-        x1 = x2 - ScaledW;
-        y1 = y2 - ScaledH;
-        break;
-
-      case meTop:
-        y2 = m_ViewSizeRect->bottom();
-        //y2 = m_ViewSizeRect->top() + m_ViewSizeRect->height();
-    //printf("meTop: bottom: %d, y2: %d\n", m_ViewSizeRect->bottom(), y2);
-        y1 = y2 - ScaledH;
-        x1 = ScaledX1;
-        x2 = x1 + ScaledW;
-        break;
-
-      case meTopRight:
-        x1 = m_ViewSizeRect->left();
-        y2 = m_ViewSizeRect->bottom();
-        x2 = x1 + ScaledW;
-        y1 = y2 - ScaledH;
-        break;
-
-      case meRight:
-        x1 = m_ViewSizeRect->left();
-        x2 = x1 + ScaledW;
-        y1 = ScaledY1;
-        y2 = y1 + ScaledH;
-        break;
-
-      case meBottomRight:
-        x1 = m_ViewSizeRect->left();
-        y1 = m_ViewSizeRect->top();
-        x2 = x1 + ScaledW;
-        y2 = y1 + ScaledH;
-        break;
-
-      case meBottom:
-        y1 = m_ViewSizeRect->top();
-        y2 = y1 + ScaledH;
-        x1 = ScaledX1;
-        x2 = x1 + ScaledW;
-        break;
-
-      case meBottomLeft:
-        x2 = m_ViewSizeRect->right();
-        y1 = m_ViewSizeRect->top();
-        x1 = x2 - ScaledW;
-        y2 = y1 + ScaledH;
-        break;
-
-      case meLeft:
-        x2 = m_ViewSizeRect->right();
-        x1 = x2 - ScaledW;
-        y1 = ScaledY1;
-        y2 = y1 + ScaledH;
-        break;
-
-      default:
-        x1 = ScaledX1;
-        y1 = ScaledY1;
-        x2 = x1 + ScaledW;
-        y2 = y1 + ScaledH;
-        break;
-    }
-
-//    x1 += m_ImageFrame->left();
-//    x2 += m_ImageFrame->left();
-//    y1 += m_ImageFrame->top();
-//    y2 += m_ImageFrame->top();
-
-    x1 = qBound(m_ImageFrame->left(), x1 + m_ImageFrame->left(), m_ImageFrame->right());
-    y1 = qBound(m_ImageFrame->top(),  y1 + m_ImageFrame->top(), m_ImageFrame->bottom());
-    x2 = qBound(m_ImageFrame->left(), x2 + m_ImageFrame->left(), m_ImageFrame->right());
-    y2 = qBound(m_ImageFrame->top(),  y2 + m_ImageFrame->top(), m_ImageFrame->bottom());
-
-    m_ViewSizeRect->setRect(x1, y1, x2-x1+1, y2-y1+1);
-
-//    m_ViewSizeRect->setCoords(
-//        qBound(m_ImageFrame->left(), x1, m_ImageFrame->right()),
-//        qBound(m_ImageFrame->top(),  y1, m_ImageFrame->bottom()),
-//        qBound(m_ImageFrame->left(), x2, m_ImageFrame->right()),
-//        qBound(m_ImageFrame->top(),  y2, m_ImageFrame->bottom())
-//    );*/
   }
-
-//  printf("update after: V %d %d %d %d | F %d %d %d %d\n",
-//         m_ViewSizeRect->left(), m_ViewSizeRect->top(), m_ViewSizeRect->width(), m_ViewSizeRect->height(),
-//         m_ImageFrame->left(), m_ImageFrame->top(), m_ImageFrame->width(), m_ImageFrame->height() );
 }
 
 
@@ -1054,20 +957,19 @@ void ptViewWindow::EnforceRectAspectRatio() {
       m_PipeSizeRect->moveCenter(center);
 
       if (m_PipeSizeRect->left() < 0) {
-        m_PipeSizeRect->setLeft(0);
-        m_PipeSizeRect->setBottom(m_PipeSizeRect->top() + qRound(m_PipeSizeRect->width() / m_AspectRatio));
-      }
-      if (m_PipeSizeRect->right() > ImageRight) {
-        m_PipeSizeRect->setRight(ImageRight);
-        m_PipeSizeRect->setTop(m_PipeSizeRect->bottom() - qRound(m_PipeSizeRect->width() / m_AspectRatio));
+        m_PipeSizeRect->moveLeft(0);
       }
       if (m_PipeSizeRect->top() < 0) {
-        m_PipeSizeRect->setTop(0);
-        m_PipeSizeRect->setLeft(m_PipeSizeRect->right() - qRound(m_PipeSizeRect->height() * m_AspectRatio));
+        m_PipeSizeRect->moveTop(0);
       }
-      if (m_PipeSizeRect->bottom() > ImageBottom) {
-        m_PipeSizeRect->setBottom(ImageBottom);
-        m_PipeSizeRect->setLeft(m_PipeSizeRect->right() - qRound(m_PipeSizeRect->height() * m_AspectRatio));
+      if (m_PipeSizeRect->right() >= m_QImage->width()) {
+        m_PipeSizeRect->setRight(m_QImage->width() - 1);
+        m_PipeSizeRect->setHeight(qRound(m_PipeSizeRect->width() / m_AspectRatio));
+      }
+      if (m_PipeSizeRect->bottom() >= m_QImage->height()) {
+        double ShrinkFactor = (m_QImage->height() - m_PipeSizeRect->top()) / m_QImage->height();
+        m_PipeSizeRect->setBottom(m_QImage->height() - 1);
+        m_PipeSizeRect->setWidth((int)(m_PipeSizeRect->width() * ShrinkFactor));
       }
       break;
     }
@@ -1112,7 +1014,6 @@ void CB_OpenSettingsFile(QString SettingsFileName);
 
 void ptViewWindow::paintEvent(QPaintEvent*) {
   UpdateViewportRects();
-  //RecalcRect();
   short PaintRect = ((m_PipeSizeRect->left() > -1) && (m_PipeSizeRect->top() > -1));
 
   // Fill viewport with background colour and draw image
@@ -1429,16 +1330,20 @@ void ptViewWindow::mousePressEvent(QMouseEvent* Event) {
 void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
   // dragging rectangle or image
   if (m_NowDragging) {
-    m_DragDelta->setP2(Event->pos());                         // viewport scale!
-    int dx = (int)(m_DragDelta->dx() / m_ZoomFactor);   // pipe size scale!
-    int dy = (int)(m_DragDelta->dy() / m_ZoomFactor);
+    m_DragDelta->setP2(Event->pos());               // viewport scale!
+
+    // Transform delta to pipe size scale. To avoid choppy behaviour we need to ensure the
+    // final change/move of the viewport scale rect is at least 1px --> we add 0.5 towards
+    // +inf or -inf depending on the sign of dx/dy.
+    int dx = (int)(m_DragDelta->dx() / m_ZoomFactor + 0.5 * SIGN(m_DragDelta->dx()));
+    int dy = (int)(m_DragDelta->dy() / m_ZoomFactor + 0.5 * SIGN(m_DragDelta->dy()));
 
     switch (m_InteractionMode) {
       case vaSelectRect:
       case vaCrop:
         // Move current rectangle. The qBounds make sure it stops at image boundaries.
-        if ((m_MovingEdge == meCenter) || (Event->modifiers() == Qt::ControlModifier)) {
-          m_MovingEdge = meCenter;
+        if ((m_MovingEdge == meCenter) /*|| (Event->modifiers() == Qt::ControlModifier)*/) {
+          //m_MovingEdge = meCenter;
           m_PipeSizeRect->moveTo(
               qBound(0, m_PipeSizeRect->left() + dx, m_QImage->width() - m_PipeSizeRect->width()),
               qBound(0, m_PipeSizeRect->top() + dy, m_QImage->height() - m_PipeSizeRect->height())
@@ -1555,6 +1460,39 @@ void ptViewWindow::mouseReleaseEvent(QMouseEvent* Event) {
           break;
       }
     }
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+// keyPressEvent, keyReleaseEvent
+//
+// Handle Ctrl to move the crop rectangle.
+// All other key events are forwarded to MainWindow.
+//
+////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::keyPressEvent(QKeyEvent* Event) {
+  if ((Event->key() == Qt::Key_Control) &&
+      ((m_InteractionMode == vaCrop) || (m_InteractionMode == vaSelectRect)))
+  {
+    m_PrevMovingEdge = m_MovingEdge;
+    m_MovingEdge = meCenter;
+
+  } else {
+    this->parent()->event(Event);
+  }
+}
+
+void ptViewWindow::keyReleaseEvent(QKeyEvent* Event) {
+  if ((Event->key() == Qt::Key_Control) &&
+      ((m_InteractionMode == vaCrop) || (m_InteractionMode == vaSelectRect)))
+  {
+    m_MovingEdge = m_PrevMovingEdge;
+
+  } else {
+    this->parent()->event(Event);
   }
 }
 
