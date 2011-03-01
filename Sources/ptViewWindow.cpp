@@ -761,13 +761,6 @@ void ptViewWindow::RecalcRect() {
 ////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::UpdateViewportRects() {
-
-//printf("Piperect: %d %d %d %d\n",
-//    m_PipeSizeRect->left(), m_PipeSizeRect->top(), m_PipeSizeRect->width(), m_PipeSizeRect->height() );
-//printf("update before: V %d %d %d %d | F %d %d %d %d\n",
-//       m_ViewSizeRect->left(), m_ViewSizeRect->top(), m_ViewSizeRect->width(), m_ViewSizeRect->height(),
-//       m_ImageFrame->left(), m_ImageFrame->top(), m_ImageFrame->width(), m_ImageFrame->height() );
-
   if (m_QImageCut == NULL) {
     return;
   }

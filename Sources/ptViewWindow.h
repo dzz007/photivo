@@ -171,7 +171,7 @@ private:
   void          UpdateViewportRects();
 
   //variables
-  const ptImage*   m_RelatedImage;    // 16bit pipe sized image //TODO BJ: Really needed as a member?
+  const ptImage*   m_RelatedImage;    // 16bit pipe sized image //TODO: Really needed as a member?
   QImage*          m_QImage;          // 8bit pipe sized image (directly converted from m_RelatedImage)
   QImage*          m_QImageZoomed;    // m_QImage scaled to current zoom factor
   QImage*          m_QImageCut;       // visible part of the zoomed image
