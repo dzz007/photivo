@@ -3090,6 +3090,9 @@ void CB_MenuFileWriteSettings() {
 
 void CB_MenuFileExit(const short) {
   if (ViewWindow->OngoingAction() != vaNone) {
+    QMessageBox::warning(MainWindow,
+                     QObject::tr("Cannot exit"),
+                     QObject::tr("Please finish your crop before closing Photivo."));
     return;
   }
 
