@@ -146,6 +146,8 @@ protected:
   void dropEvent(QDropEvent* Event);
   void scrollContentsBy(int dx, int dy);
   void leaveEvent(QEvent*);
+  void keyPressEvent(QKeyEvent* Event);
+  void keyReleaseEvent(QKeyEvent* Event);
 
 
 ///////////////////////////////////////////////////////////////////////////
