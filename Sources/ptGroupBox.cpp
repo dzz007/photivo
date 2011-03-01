@@ -29,11 +29,13 @@
 #include "ptConstants.h"
 #include "ptTheme.h"
 #include "ptCurveWindow.h"
+#include "ptViewWindow.h"
 
 extern ptTheme* Theme;
 extern QStringList CurveKeys;
 extern QString SettingsFilePattern;
 extern ptCurve* Curve[15];
+extern ptViewWindow* ViewWindow;
 
 // Prototypes
 void Update(const QString GuiName);
@@ -494,7 +496,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
       m_Folded = 1 - m_Folded;
       UpdateView();
       Settings->m_IniSettings->setValue(m_Name,m_Folded);
-    } else if (event->button()==Qt::RightButton) {
+    } else if (event->button()==Qt::RightButton &&
+               ViewWindow->OngoingAction() != vaCrop) {
       if (!Settings->ToolAlwaysVisible(m_Name)) {
         if (m_IsBlocked == 1) {
           m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleGreen));
