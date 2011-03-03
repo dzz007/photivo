@@ -459,11 +459,16 @@ void ptProcessor::Run(short Phase,
 
       // Rotation
       if (Settings->ToolIsActive("TabRotation")) {
-        m_ReportProgress(tr("Rotating"));
+        m_ReportProgress(tr("Perspective transform"));
 
-        m_Image_AfterGeometry->Rotate(Settings->GetDouble("Rotate"));
+        m_Image_AfterGeometry->ptCIPerspective(Settings->GetDouble("Rotate"),
+                                               Settings->GetDouble("PerspectiveFocalLength"),
+                                               Settings->GetDouble("PerspectiveTilt"),
+                                               Settings->GetDouble("PerspectiveTurn"),
+                                               Settings->GetDouble("PerspectiveScaleX"),
+                                               Settings->GetDouble("PerspectiveScaleY"));
 
-        TRACEMAIN("Done rotation at %d ms.",Timer.elapsed());
+        TRACEMAIN("Done perspective at %d ms.",Timer.elapsed());
       }
 
       // Remember sizes after Rotation, also valid if there
