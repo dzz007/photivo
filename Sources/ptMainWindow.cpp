@@ -484,8 +484,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   findChild<ptGroupBox *>(QString("TabToolBoxControl"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabMemoryTest"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabRememberSettings"))->setVisible(0);
-  findChild<ptGroupBox *>(QString("TabLensfun"))->setVisible(0);
-  m_ToolBoxes->removeOne(findChild<ptGroupBox *>(QString("TabLensfun")));
+  //findChild<ptGroupBox *>(QString("TabLensfun"))->setVisible(0);
+  //m_ToolBoxes->removeOne(findChild<ptGroupBox *>(QString("TabLensfun")));
   findChild<ptGroupBox *>(QString("TabOutput"))->setVisible(0);
   m_ToolBoxes->removeOne(findChild<ptGroupBox *>(QString("TabOutput")));
 
