@@ -1181,7 +1181,7 @@ void BlockTools(const short state) {
 void HistogramGetCrop() {
   // Get the crop for the histogram
   if (Settings->GetInt("HistogramCrop")) {
-      // Allow to be selected in the view window. And deactivate main.        
+      // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
       ViewWindow->StatusReport("Selection");
       ViewWindow->StartSelection();
@@ -2939,6 +2939,7 @@ void CB_MenuFileOpen(const short HaveFile) {
   }
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
+  Settings->SetValue("PerspectiveFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
   #ifdef Q_OS_WIN32
     MainWindow->setWindowTitle(QString((Settings->GetStringList("InputFileNameList"))[0]).replace(QString("/"), QString("\\")) + " - Photivo");
   #else
@@ -4051,7 +4052,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       Settings->SetValue("ZoomMode",ptZoomMode_Fit);
       UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw);
 
-      // Allow to be selected in the view window. And deactivate main.      
+      // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
       ViewWindow->StatusReport("Spot WB");
       ViewWindow->StartSelection();
@@ -4550,6 +4551,31 @@ void CB_RotateInput(const QVariant Value) {
   Update(ptProcessorPhase_Geometry);
 }
 
+void CB_PerspectiveFocalLengthInput(const QVariant Value) {
+  Settings->SetValue("PerspectiveFocalLength",Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_PerspectiveTiltInput(const QVariant Value) {
+  Settings->SetValue("PerspectiveTilt",Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_PerspectiveTurnInput(const QVariant Value) {
+  Settings->SetValue("PerspectiveTurn",Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_PerspectiveScaleXInput(const QVariant Value) {
+  Settings->SetValue("PerspectiveScaleX",Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_PerspectiveScaleYInput(const QVariant Value) {
+  Settings->SetValue("PerspectiveScaleY",Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
 void CB_GridCheck(const QVariant State) {
   Settings->SetValue("Grid",State);
   ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
@@ -4663,8 +4689,13 @@ void CB_MakeCropButton() {
   ReportProgress(QObject::tr("Prepare for cropping"));
 
   // Redo also the rotation step if needed.
-  if (Settings->GetDouble("Rotate")) {
-    TheProcessor->m_Image_AfterGeometry->Rotate(Settings->GetDouble("Rotate"));
+  if (Settings->ToolIsActive("TabRotation")) {
+    TheProcessor->m_Image_AfterGeometry->ptCIPerspective(Settings->GetDouble("Rotate"),
+                                                         Settings->GetDouble("PerspectiveFocalLength"),
+                                                         Settings->GetDouble("PerspectiveTilt"),
+                                                         Settings->GetDouble("PerspectiveTurn"),
+                                                         Settings->GetDouble("PerspectiveScaleX"),
+                                                         Settings->GetDouble("PerspectiveScaleY"));
   }
   Width = TheProcessor->m_Image_AfterGeometry->m_Width;
   Height = TheProcessor->m_Image_AfterGeometry->m_Height;
@@ -8605,6 +8636,11 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LensfunScaleInput)
 
   M_Dispatch(RotateInput)
+  M_Dispatch(PerspectiveFocalLengthInput)
+  M_Dispatch(PerspectiveTiltInput)
+  M_Dispatch(PerspectiveTurnInput)
+  M_Dispatch(PerspectiveScaleXInput)
+  M_Dispatch(PerspectiveScaleYInput)
   M_Dispatch(GridCheck)
   M_Dispatch(GridXInput)
   M_Dispatch(GridYInput)
