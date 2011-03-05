@@ -138,6 +138,7 @@ protected:
   void paintEvent(QPaintEvent*);
   void resizeEvent(QResizeEvent*);
   void mousePressEvent(QMouseEvent* Event);
+  void mouseDoubleClickEvent(QMouseEvent* Event);
   void mouseMoveEvent(QMouseEvent* Event);
   void mouseReleaseEvent(QMouseEvent* Event);
   void contextMenuEvent(QContextMenuEvent* Event);
