@@ -115,6 +115,8 @@ QAction* m_AtnMenuFullReset;
 QAction* m_AtnMenuUserReset;
 QAction* m_AtnMenuOpenPreset;
 QAction* m_AtnMenuOpenSettings;
+short    m_ContextMenuOnTab;
+QAction* m_AtnShowTools;
 
 void AnalyzeToolBoxStructure();
 
@@ -131,6 +133,7 @@ void MenuFullReset();
 void MenuUserReset();
 void MenuOpenPreset();
 void MenuOpenSettings();
+void ShowToolsOnTab();
 
 // The generic catchall input change.
 //~ void OnTagsEditTextChanged();

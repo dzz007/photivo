@@ -51,6 +51,7 @@ ptTheme::ptTheme(QApplication* Application) {
   ptIconCircleGreen = new QPixmap(QString::fromUtf8(":/photivo/Icons/circlegreen.png"));
   ptIconCircleRed = new QPixmap(QString::fromUtf8(":/photivo/Icons/circlered.png"));
   ptIconCrossRed = new QPixmap(QString::fromUtf8(":/photivo/Icons/crossred.png"));
+  ptIconCheckGreen = new QPixmap(QString::fromUtf8(":/photivo/Icons/checkgreen.png"));
   ptIconReset =  new QPixmap(QString::fromUtf8(":/photivo/Icons/reload.png"));
   ptIconDisk =  new QPixmap(QString::fromUtf8(":/photivo/Icons/filesave.png"));
   ptIconQuestion =  new QPixmap(QString::fromUtf8(":/photivo/Icons/question.png"));

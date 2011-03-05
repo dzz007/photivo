@@ -545,6 +545,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   ToGimpButton->installEventFilter(this);
   ResetButton->installEventFilter(this);
 
+  m_ContextMenuOnTab = -1;
+
   // Set help pages
   findChild <ptGroupBox*>("TabCrop")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#crop");
@@ -578,6 +580,12 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnMenuOpenPreset, SIGNAL(triggered()), this, SLOT(MenuOpenPreset()));
   m_AtnMenuOpenSettings = new QAction(tr("Open settings"), this);
   connect(m_AtnMenuOpenSettings, SIGNAL(triggered()), this, SLOT(MenuOpenSettings()));
+
+  // context menu to show tools
+  m_AtnShowTools = new QAction(tr("Show hidden tools"), this);
+  connect(m_AtnShowTools, SIGNAL(triggered()), this, SLOT(ShowToolsOnTab()));
+  m_AtnShowTools->setIcon(QIcon(*Theme->ptIconCheckGreen));
+  m_AtnShowTools->setIconVisibleInMenu(true);
 
   // Timer to delay on resize operations.
   // (avoiding excessive calculations and loops in the ZoomFit approach.)
@@ -627,8 +635,23 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
           break;
         }
       }
-      //QMessageBox::information(NULL,"Event","ContextMenu on "+QString::number(clickedItem));
-      return true;
+      // tools on this tab hidden?
+      short HaveHiddenTools = 0;
+      QStringList TempList = Settings->GetStringList("HiddenTools");
+      for (int i=0; i<m_ToolBoxes->size();i++) {
+        if (TempList.contains(m_ToolBoxes->at(i)->objectName())) {
+          short Tab = ProcessingTabBook->indexOf(m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget());
+          if (Tab == clickedItem) HaveHiddenTools = 1;
+        }
+      }
+      if (clickedItem !=0 && HaveHiddenTools == 1) { // no hidden tools on camera tab
+        m_ContextMenuOnTab = clickedItem;
+        QMenu Menu(NULL);
+        Menu.setStyle(Theme->ptStyle);
+        Menu.setPalette(Theme->ptMenuPalette);
+        Menu.addAction(m_AtnShowTools);
+        Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+      }
     } else if (obj == WritePipeButton) {
       QMenu Menu(NULL);
       Menu.setStyle(Theme->ptStyle);
@@ -725,6 +748,37 @@ void ptMainWindow::MenuOpenSettings() {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Slots for context menu on tabs
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::ShowToolsOnTab() {
+  // show hidden tools on tab m_ContextMenuOnTab
+  int Active = 0;
+  QString Tool= "";
+  QStringList TempList = Settings->GetStringList("HiddenTools");
+  TempList.removeDuplicates();
+  for (int i=0; i<m_ToolBoxes->size();i++) {
+    if (TempList.contains(m_ToolBoxes->at(i)->objectName())) {
+      short Tab = ProcessingTabBook->indexOf(m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget());
+      if (m_ContextMenuOnTab==Tab) {
+        m_ToolBoxes->at(i)->show();
+        TempList.removeOne(m_ToolBoxes->at(i)->objectName());
+        Settings->SetValue("HiddenTools", TempList);
+        if (Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName())) {
+          Active = 1;
+          Tool = m_ToolBoxes->at(i)->objectName();
+        }
+      }
+    }
+  }
+  Settings->SetValue("HiddenTools", TempList);
+  // run processor if needed
+  if (Active) Update(Tool);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // GetCurrentTab
 //
 // Determine the current tab selected.
@@ -747,7 +801,7 @@ short ptMainWindow::GetCurrentTab() {
      ptLogError(ptError_Argument,"Unforeseen tab.");
      assert(0);
      return 0;
-  }  
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1381,7 +1435,7 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
   {
     ViewWindow->ToggleLightsOut();
     return;
-  }  
+  }
   if (ViewWindow->OngoingAction() == vaCrop) {
     if ((Event->key() == Qt::Key_Return) || (Event->key() == Qt::Key_Enter)) {
       CB_ConfirmCropButton();
@@ -1515,27 +1569,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         setVisible(1-findChild<QWidget *>(QString("TabGenCorrections"))->isVisible()); */
     } else if (Event->key()==Qt::Key_U && Event->modifiers()==Qt::NoModifier) {
       // show hidden tools on current tab
-      int Active = 0;
-      QString Tool= "";
-      QStringList TempList = Settings->GetStringList("HiddenTools");
-      TempList.removeDuplicates();
-      for (int i=0; i<m_ToolBoxes->size();i++) {
-        if (TempList.contains(m_ToolBoxes->at(i)->objectName())) {
-          QString Tab = m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
-          if (ProcessingTabBook->currentWidget()->objectName()==Tab) {
-            m_ToolBoxes->at(i)->show();
-            TempList.removeOne(m_ToolBoxes->at(i)->objectName());
-            Settings->SetValue("HiddenTools", TempList);
-            if (Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName())) {
-              Active = 1;
-              Tool = m_ToolBoxes->at(i)->objectName();
-            }
-          }
-        }
-      }
-      Settings->SetValue("HiddenTools", TempList);
-      // run processor if needed
-      if (Active) Update(Tool);
+      m_ContextMenuOnTab = ProcessingTabBook->currentIndex();
+      ShowToolsOnTab();
     /*} else if (Event->key()==Qt::Key_L && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
       for (int i=0; i<m_ToolBoxes->size();i++) {
