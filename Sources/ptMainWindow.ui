@@ -1461,7 +1461,7 @@
                          </rect>
                         </property>
                         <attribute name="label">
-                         <string>Rotation</string>
+                         <string>Rotation and perspective</string>
                         </attribute>
                         <layout class="QVBoxLayout" name="verticalLayout_68">
                          <item>
@@ -1567,6 +1567,53 @@
                             </item>
                             <item>
                              <widget class="QWidget" name="RotateWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="PerspectiveScaleXWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="PerspectiveScaleYWidget" native="true"/>
+                            </item>
+                            <item>
+                             <spacer name="verticalSpacer_127">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeType">
+                               <enum>QSizePolicy::Fixed</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>20</width>
+                                <height>10</height>
+                               </size>
+                              </property>
+                             </spacer>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="PerspectiveFocalLengthWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="PerspectiveTiltWidget" native="true"/>
+                            </item>
+                            <item>
+                             <widget class="QWidget" name="PerspectiveTurnWidget" native="true"/>
+                            </item>
+                            <item>
+                             <spacer name="verticalSpacer_128">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeType">
+                               <enum>QSizePolicy::Fixed</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>20</width>
+                                <height>10</height>
+                               </size>
+                              </property>
+                             </spacer>
                             </item>
                             <item>
                              <widget class="QWidget" name="widget_96" native="true">

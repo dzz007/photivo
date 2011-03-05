@@ -499,7 +499,6 @@ short WriteAsJpeg(const char*    FileName,
                   const unsigned ExifBufferLen = 0);
 
 // Rotate by shear members.
-ptImage* Rotate(double Angle);
 ptImage* Rotate45(double Angle);
 ptImage* Rotate90();
 ptImage* Rotate180();
@@ -584,7 +583,12 @@ ptImage* ptCIDeriche(const float sigma,
                      const bool cond = true,
                      const short ChannelMask = 7);
 
-ptImage* ptCIRotate(const float Angle);
+ptImage* ptCIPerspective(const float RotateAngle,
+                         const float FocalLength,
+                         const float TiltAngle,
+                         const float TurnAngle,
+                         const float ScaleX,
+                         const float ScaleY);
 
 };
 

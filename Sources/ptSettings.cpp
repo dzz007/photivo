@@ -78,6 +78,11 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LensfunDistance"               ,ptGT_InputSlider     ,9,0,0 ,1.0  ,0.1  ,100.0 ,0.1  ,1 ,tr("Distance")           ,tr("Subject distance")},
     {"LensfunScale"                  ,ptGT_InputSlider     ,9,0,1 ,1.0  ,0.1  ,10.0  ,0.1  ,1 ,tr("Scale")              ,tr("Scale")},
     {"Rotate"                        ,ptGT_InputSlider     ,9,1,1 ,0.0  ,-180.0,180.0 ,0.1 ,2 ,tr("Rotate")             ,tr("Rotate")},
+    {"PerspectiveFocalLength"        ,ptGT_Input           ,9,1,1 ,50.0 ,4.0  ,600.0 ,1.0  ,0 ,tr("Focal length (35mm equiv.)")  ,tr("Focal length (35mm equiv.)")},
+    {"PerspectiveTilt"               ,ptGT_InputSlider     ,9,1,1 ,0.0  ,-45.0,45.0  ,0.1  ,2 ,tr("Tilt")               ,tr("Tilt")},
+    {"PerspectiveTurn"               ,ptGT_InputSlider     ,9,1,1 ,0.0  ,-45.0,45.0  ,0.1  ,2 ,tr("Turn")               ,tr("Turn")},
+    {"PerspectiveScaleX"             ,ptGT_InputSlider     ,9,1,1 ,1.0  ,0.2  ,5.0   ,0.05 ,2 ,tr("Scale horizontal")   ,tr("Scale horizontal")},
+    {"PerspectiveScaleY"             ,ptGT_InputSlider     ,9,1,1 ,1.0  ,0.2  ,5.0   ,0.05 ,2 ,tr("Scale vertical")     ,tr("Scale vertical")},
     {"GridX"                         ,ptGT_Input           ,1,0,0 ,5    ,0    ,20    ,1    ,0 ,tr("X")                  ,tr("Vertical lines")},
     {"GridY"                         ,ptGT_Input           ,1,0,0 ,5    ,0    ,20    ,1    ,0 ,tr("Y")                  ,tr("Horizontal lines")},
     {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Size")               ,tr("Image size")},
@@ -674,6 +679,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"HiddenTools"                          ,0         ,QStringList()                                       ,1},
     {"BlockedTools"                         ,0         ,QStringList()                                       ,1},
     {"BlockUpdate"                          ,9         ,0                                                   ,0},
+    {"FocalLengthIn35mmFilm"                ,0         ,0.0                                                 ,0},
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.
@@ -1533,7 +1539,11 @@ sToolInfo ToolInfo (const QString GuiName) {
   // Tab Geometry
   if (GuiName == "TabRotation") {
       Info.Name = "Rotation";
-      Info.IsActive = Settings->GetDouble("Rotate")!=0.0?1:0;
+      Info.IsActive = (Settings->GetDouble("Rotate")!=0.0f ||
+                       Settings->GetDouble("PerspectiveTilt")!=0.0f ||
+                       Settings->GetDouble("PerspectiveTurn")!=0.0f ||
+                       Settings->GetDouble("PerspectiveScaleX")!=1.0f ||
+                       Settings->GetDouble("PerspectiveScaleY")!=1.0f)?1:0;
   } else if (GuiName == "TabCrop") {
       Info.Name = "Crop";
       Info.IsActive = Settings->GetInt("Crop");
