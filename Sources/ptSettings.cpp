@@ -520,7 +520,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LensfunTCAEnable"           ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable TCA correction")},
     {"LensfunVignettingEnable"    ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable vignetting correction")},
     {"LensfunDistortionEnable"    ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable distortion correction")},
-    {"LensfunGeometryEnable"      ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable geometry correction")},
+    {"LensfunGeometryEnable"      ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable geometry correction")},    // TODO BJ: remove completely
     {"Grid"                       ,ptGT_Check ,9,1,0,tr("Grid")            ,tr("Enable the overlay grid")},
     {"Crop"                       ,ptGT_Check ,9,1,0,tr("Crop")            ,tr("Enable to make a crop")},
     {"FixedAspectRatio"           ,ptGT_Check ,1,0,0,tr("Aspect Ratio")    ,tr("Crop with a fixed aspect ratio")},
