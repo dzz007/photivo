@@ -374,7 +374,7 @@ void ptProcessor::Run(short Phase,
                   Camera->CropFactor,
                 m_DcRaw->m_OutWidth,
                 m_DcRaw->m_OutHeight);
-              if (Settings->GetInt("LensfunGeometryEnable")) {
+              if (Settings->GetInt("LensfunGeometryEnable")) {    // TODO BJ: remove completely
                 m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
                   LF_MODIFY_GEOMETRY;
                 m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=

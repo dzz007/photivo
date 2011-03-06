@@ -353,7 +353,7 @@ ptMainWindow::ptMainWindow(const QString Title)
                                  QVariant(i));
   }
 
-  Settings->SetEnabled("LensfunTCAEnable",0);
+  Settings->SetEnabled("LensfunTCAEnable",0);     // TODO BJ: remove completely
   Settings->SetEnabled("LensfunVignettingEnable",0);
   Settings->SetEnabled("LensfunDistortionEnable",0);
 
