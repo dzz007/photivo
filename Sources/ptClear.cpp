@@ -3,6 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011 Bernd Schöler <brother.john@photivo.org>
 **
 ** This file is part of Photivo.
 **
@@ -22,7 +23,8 @@
 
 #include <QtCore>
 #include <QtGui>
-
+#include <QDateTime>
+ 
 #ifdef Q_OS_WIN32
   #include "qt_windows.h"
   #include "qlibrary.h"
@@ -76,18 +78,41 @@ int main(int Argc, char *Argv[]) {
 
   QString UserDirectory = AppDataFolder + "/" + Folder;
   QString SettingsFileName = UserDirectory + "photivo.ini";
+  
+  
+  if (!QFile::exists(SettingsFileName)) {
+    QMessageBox::information(
+        0, 
+        QObject::tr("Photivo - Clear settings"),
+        QObject::tr("No settings file present.\nPhotivo is already at its factory defaults.")
+    );
+  
+  
+  } else if (
+      QMessageBox::warning(0,
+        QObject::tr("Photivo - Clear settings"),
+        QObject::tr("I am about to clear all your settings for Photivo.\nProceed?"),
+        QMessageBox::Yes, QMessageBox::No)
+      == QMessageBox::Yes)
+  {
+    QString Msg = "";
+    QString BakFileName = 
+        UserDirectory + "photivo-" + 
+        QDateTime::currentDateTime().toString("yyyyMMdd-hhmmss") + ".bak.ini";
+    
+    if (QFile::rename(SettingsFileName, BakFileName)) {
+      Msg = QObject::tr("Settings successfully deleted.\n\nOld settings were backed up to\n") + BakFileName;
+    
+    } else if (QFile::remove(SettingsFileName)) {
+      Msg = QObject::tr("Settings successfully deleted.");
+    
+    } else {
+      Msg = QObject::tr("Could not delete settings file\n") + SettingsFileName +
+          QObject::tr("\n\nYou might want to try to remove it manually.");
+    }  
 
-  if (QMessageBox::warning(0,
-        QObject::tr("Are you sure?"),
-        QObject::tr("I'm going to clear all your settings for Photivo.\nProceed?"),
-        QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
-    if(QFile::remove(SettingsFileName))
-      QMessageBox::information(0,"Done","Settings are removed.");
-    else
-      QMessageBox::information(0,"Done","Nothing to remove.");
+    QMessageBox::information(0, QObject::tr("Photivo - Clear settings"), Msg);  
   }
-
+  
   return 0;
 }
-
-
