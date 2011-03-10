@@ -244,7 +244,6 @@ ptMainWindow::ptMainWindow(const QString Title)
     // to set the value. As the setting now has the gui element
     // attached, it will be updated.
     Settings->SetValue(Key,Settings->GetValue(Key));
-    m_ToolBoxes = NULL;
   }
 
   //
@@ -254,7 +253,12 @@ ptMainWindow::ptMainWindow(const QString Title)
   // menu removed ;-)
 
   // Leftover after menu was removed
-  // m_ToolBoxes is set in here
+
+  m_GroupBox = NULL;
+  m_GroupBoxesOrdered = NULL;
+  m_TabLayouts = NULL;
+  m_MovedTools = new QList<ptGroupBox*>;
+  // m_GroupBox is set in here
   OnToolBoxesEnabledTriggered(Settings->GetInt("ToolBoxMode"));
 
   //
@@ -484,12 +488,20 @@ ptMainWindow::ptMainWindow(const QString Title)
   findChild<ptGroupBox *>(QString("TabToolBoxControl"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabMemoryTest"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabRememberSettings"))->setVisible(0);
-  findChild<ptGroupBox *>(QString("TabLensfun"))->setVisible(0);
-  m_ToolBoxes->removeOne(findChild<ptGroupBox *>(QString("TabLensfun")));
-  findChild<ptGroupBox *>(QString("TabOutput"))->setVisible(0);
-  m_ToolBoxes->removeOne(findChild<ptGroupBox *>(QString("TabOutput")));
+  m_GroupBox->value("TabLensfun")->setVisible(0);
+  m_GroupBox->remove("TabLensfun");
+  m_GroupBox->value("TabOutput")->setVisible(0);
+  m_GroupBox->remove("TabOutput");
 
   UpdateToolBoxes();
+
+  // Set help pages
+  m_GroupBox->value("TabCrop")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#crop");
+  m_GroupBox->value("TabWhiteBalance")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
+  m_GroupBox->value("TabBW")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#black_and_white");
 
   // Set us in the beginning of the tabbook and show mainwindow.
   // But we do not want to generate events for this during setup
@@ -546,14 +558,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   ResetButton->installEventFilter(this);
 
   m_ContextMenuOnTab = -1;
-
-  // Set help pages
-  findChild <ptGroupBox*>("TabCrop")->
-    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#crop");
-  findChild <ptGroupBox*>("TabWhiteBalance")->
-    SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
-  findChild <ptGroupBox*>("TabBW")->
-    SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#black_and_white");
 
   // context menu for save button
   m_AtnSavePipe = new QAction(tr("Save current pipe"), this);
@@ -638,9 +642,9 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       // tools on this tab hidden?
       short HaveHiddenTools = 0;
       QStringList TempList = Settings->GetStringList("HiddenTools");
-      for (int i=0; i<m_ToolBoxes->size();i++) {
-        if (TempList.contains(m_ToolBoxes->at(i)->objectName())) {
-          short Tab = ProcessingTabBook->indexOf(m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget());
+      foreach (ptGroupBox* GroupBox, *m_GroupBox) {
+        if (TempList.contains(GroupBox->objectName())) {
+          short Tab = GroupBox->GetTabNumber();
           if (Tab == clickedItem) HaveHiddenTools = 1;
         }
       }
@@ -754,27 +758,27 @@ void ptMainWindow::MenuOpenSettings() {
 
 void ptMainWindow::ShowToolsOnTab() {
   // show hidden tools on tab m_ContextMenuOnTab
-  int Active = 0;
-  QString Tool= "";
+  QString ActiveTool= "";
+  QString TempString = "";
   QStringList TempList = Settings->GetStringList("HiddenTools");
   TempList.removeDuplicates();
-  for (int i=0; i<m_ToolBoxes->size();i++) {
-    if (TempList.contains(m_ToolBoxes->at(i)->objectName())) {
-      short Tab = ProcessingTabBook->indexOf(m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget());
+  foreach (ptGroupBox* GroupBox, *m_GroupBox) {
+    TempString = GroupBox->objectName();
+    if (TempList.contains(TempString)) {
+      short Tab = GroupBox->GetTabNumber();
       if (m_ContextMenuOnTab==Tab) {
-        m_ToolBoxes->at(i)->show();
-        TempList.removeOne(m_ToolBoxes->at(i)->objectName());
+        GroupBox->show();
+        TempList.removeOne(TempString);
         Settings->SetValue("HiddenTools", TempList);
-        if (Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName())) {
-          Active = 1;
-          Tool = m_ToolBoxes->at(i)->objectName();
+        if (Settings->ToolIsActive(TempString)) {
+          ActiveTool = TempString;
         }
       }
     }
   }
   Settings->SetValue("HiddenTools", TempList);
   // run processor if needed
-  if (Active) Update(Tool);
+  if (ActiveTool != "") Update(ActiveTool);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -843,12 +847,24 @@ struct sToolBoxStructure {
 QList <sToolBoxStructure*> ToolBoxStructureList;
 
 void ptMainWindow::AnalyzeToolBoxStructure() {
-  // String list for the tool boxes
-  if (m_ToolBoxes) delete m_ToolBoxes;
-  m_ToolBoxes = new QList<ptGroupBox *>;
+  // QMap for all processing group boxes (without settings and info!)
+  // QMap Name -> ptGroupBox*
+  if (m_GroupBox) delete m_GroupBox;
+  m_GroupBox = new QMap<QString, ptGroupBox*>;
+  if (m_GroupBoxesOrdered) delete m_GroupBoxesOrdered;
+  m_GroupBoxesOrdered = new QList<QString>;
+  if (m_TabLayouts) delete m_TabLayouts;
+  m_TabLayouts = new QList<QVBoxLayout*>;
 
   // Procedure
-  QList <QToolBox *> ToolBoxes = findChildren <QToolBox *> ();
+  QList <QToolBox *> ToolBoxes;
+  short NumberOfTabs = ProcessingTabBook->count();
+  for (short i=0; i<NumberOfTabs; i++) {
+    ToolBoxes.append(ProcessingTabBook->widget(i)->findChildren <QToolBox *> ());
+  }
+  ToolBoxes.append(SettingsToolBox);
+  ToolBoxes.append(InfoToolBox);
+
   for (short i=0; i<ToolBoxes.size(); i++) {
     sToolBoxStructure* ToolBoxStructure = new sToolBoxStructure;
     ToolBoxStructureList.append(ToolBoxStructure);
@@ -858,6 +874,10 @@ void ptMainWindow::AnalyzeToolBoxStructure() {
     ToolBoxStructure->ParentLayout =
       qobject_cast <QVBoxLayout*>(ToolBoxStructure->Parent->layout());
     assert (ToolBoxStructure->ParentLayout);
+    if (ToolBoxStructure->ToolBox != SettingsToolBox &&
+        ToolBoxStructure->ToolBox != InfoToolBox) {
+      m_TabLayouts->append(ToolBoxStructure->ParentLayout);
+    }
     for (short j=0; j<ToolBoxes[i]->count(); j++) {
       QWidget* Page = ToolBoxes[i]->widget(j);
       QVBoxLayout* PageLayout = qobject_cast <QVBoxLayout*>(Page->layout());
@@ -865,17 +885,22 @@ void ptMainWindow::AnalyzeToolBoxStructure() {
       ToolBoxStructure->PageLayouts.append(PageLayout);
       // Alternative groupboxes. The layout of which still needs to be created.
       ptGroupBox* GroupBox =
-        new ptGroupBox(ToolBoxStructure->ToolBox->itemText(j),this,
-          ToolBoxStructure->ToolBox->widget(j)->objectName());
-      // Names for the groupboxes!
-      GroupBox->setObjectName(ToolBoxStructure->ToolBox->widget(j)->objectName());
+        new ptGroupBox(ToolBoxStructure->ToolBox->itemText(j),
+                       this,
+                       ToolBoxStructure->ToolBox->widget(j)->objectName(),
+                       i<NumberOfTabs?ProcessingTabBook->widget(i)->objectName():"",
+                       i,
+                       j);
+
       if (ToolBoxStructure->ToolBox != SettingsToolBox &&
-          ToolBoxStructure->ToolBox != InfoToolBox)
-        m_ToolBoxes->append(GroupBox);
+          ToolBoxStructure->ToolBox != InfoToolBox) {
+        m_GroupBox->insert(ToolBoxStructure->ToolBox->widget(j)->objectName(),
+                           GroupBox);
+        m_GroupBoxesOrdered->append(ToolBoxStructure->ToolBox->widget(j)->objectName());
+      }
 
       QVBoxLayout* GroupBoxLayout = new QVBoxLayout(GroupBox->m_Widget);
       GroupBoxLayout->setSpacing(0);
-      //~ GroupBoxLayout->setContentsMargins(0,0,0,0);
       GroupBoxLayout->setMargin(0);
       ToolBoxStructure->GroupBoxes.append(GroupBox);
       ToolBoxStructure->GroupBoxLayouts.append(GroupBoxLayout);
@@ -945,16 +970,6 @@ void ptMainWindow::OnToolBoxesEnabledTriggered(const bool Enabled) {
         ToolBoxStructure->GroupBoxLayouts[j]->
           addWidget(ToolBoxStructure->Widgets[j]);
         ToolBoxStructure->Widgets[j]->layout()->setSpacing(4);
-        ToolBoxStructure->Widgets[j]->setObjectName("GroupContainer");
-        //~ ToolBoxStructure->GroupBoxLayouts[j]->setContentsMargins(0,0,0,0);
-//~ QList <QToolBox *> ToolBoxes = findChildren <QToolBox *> ()
-      QList <QWidget *> TempList = ToolBoxStructure->Widgets[j]->findChildren <QWidget *> ();
-        for (short k=0; k<TempList.size(); k++) {
-          if (TempList[k]->layout()) TempList[k]->setObjectName("GroupBoxTools");
-        }
-//~ ToolBoxStructure->GroupBoxLayouts[j]->setSpacing(0);
-//~ ToolBoxStructure->GroupBoxLayouts[j]->setMargin(0);
-//~ ToolBoxStructure->GroupBoxLayouts[j]->addStretch();
         ToolBoxStructure->GroupBoxes[j]->setParent(ToolBoxStructure->Parent);
         ToolBoxStructure->ParentLayout->
           addWidget(ToolBoxStructure->GroupBoxes[j]);
@@ -1060,10 +1075,14 @@ void ptMainWindow::OnLoadStyleButtonClicked() {
 }
 
 void ptMainWindow::OnTabProcessingButtonClicked() {
+  // clean up first!
+  if (m_MovedTools->size()>0) CleanUpMovedTools();
   MainTabBook->setCurrentWidget(TabProcessing);
 }
 
 void ptMainWindow::OnTabSettingsButtonClicked() {
+  // clean up first!
+  if (m_MovedTools->size()>0) CleanUpMovedTools();
   if (MainTabBook->currentWidget() == TabSetting)
     MainTabBook->setCurrentWidget(TabProcessing);
   else
@@ -1071,6 +1090,8 @@ void ptMainWindow::OnTabSettingsButtonClicked() {
 }
 
 void ptMainWindow::OnTabInfoButtonClicked() {
+  // clean up first!
+  if (m_MovedTools->size()>0) CleanUpMovedTools();
   if (MainTabBook->currentWidget() == TabInfo)
     MainTabBook->setCurrentWidget(TabProcessing);
   else {
@@ -1478,11 +1499,11 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (Event->key()==Qt::Key_4 && Event->modifiers()==Qt::NoModifier) {
       CB_ZoomFitButton();
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::NoModifier) {
-      MainTabBook->setCurrentWidget(TabProcessing);
+      OnTabProcessingButtonClicked();
     } else if (Event->key()==Qt::Key_S && Event->modifiers()==Qt::NoModifier) {
-        MainTabBook->setCurrentWidget(TabSetting);
+      OnTabSettingsButtonClicked();
     } else if (Event->key()==Qt::Key_I && Event->modifiers()==Qt::NoModifier) {
-        MainTabBook->setCurrentWidget(TabInfo);
+      OnTabInfoButtonClicked();
     } else if (Event->key()==Qt::Key_M && Event->modifiers()==Qt::NoModifier) {
       ::CB_RunModeCheck(1-Settings->GetInt("RunMode"));
     } else if (Event->key()==Qt::Key_Space) {
@@ -1557,10 +1578,10 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (Event->key()==Qt::Key_H && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
       QString Tab = "";
-      for (int i=0; i<m_ToolBoxes->size();i++) {
-        if (Settings->ToolIsHidden(m_ToolBoxes->at(i)->objectName())) {
-          Tab = m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
-          Tools = Tools + Tab + ": " + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
+      foreach (ptGroupBox* GroupBox, *m_GroupBox) {
+        if (Settings->ToolIsHidden(GroupBox->objectName())) {
+          Tab = GroupBox->GetTabName();
+          Tools = Tools + Tab + ": " + Settings->ToolGetName(GroupBox->objectName()) + "\n";
         }
       }
       if (Tools == "") Tools = "No tools hidden!";
@@ -1571,35 +1592,19 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       // show hidden tools on current tab
       m_ContextMenuOnTab = ProcessingTabBook->currentIndex();
       ShowToolsOnTab();
-    /*} else if (Event->key()==Qt::Key_L && Event->modifiers()==Qt::NoModifier) {
-      QString Tools = "";
-      for (int i=0; i<m_ToolBoxes->size();i++) {
-        Tools = Tools + m_ToolBoxes->at(i)->objectName() + " ";
-        if (i%4==0) Tools = Tools + "\n";
-      }
-      QMessageBox::warning(this,"Tools",Tools);*/ // plain list all tools
     } else if (Event->key()==Qt::Key_A && Event->modifiers()==Qt::NoModifier) {
-      QString Tools = "";
-      QString Tab = "";
-      for (int i=0; i<m_ToolBoxes->size();i++) {
-        if (Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName())) {
-          Tab = m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
-          Tools = Tools + Tab + ": " + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
-        }
-      }
-      if (Tools == "") Tools = "No tools active!";
-      QMessageBox::information(this,"Active tools",Tools);
+      ShowActiveTools();
     } else if (Event->key()==Qt::Key_B && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
       QString Tab = "";
-      for (int i=0; i<m_ToolBoxes->size();i++) {
-        if (Settings->ToolIsBlocked(m_ToolBoxes->at(i)->objectName())) {
-          Tab = m_ToolBoxes->at(i)->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
-          Tools = Tools + Tab + ": " + Settings->ToolGetName(m_ToolBoxes->at(i)->objectName()) + "\n";
+      foreach (ptGroupBox* GroupBox, *m_GroupBox) {
+        if (Settings->ToolIsBlocked(GroupBox->objectName())) {
+          Tab = GroupBox->GetTabName();
+          Tools = Tools + Tab + ": " + Settings->ToolGetName(GroupBox->objectName()) + "\n";
         }
       }
-      if (Tools == "") Tools = "No tools blocked!";
-      QMessageBox::information(this,"Blocked tools",Tools);
+      if (Tools == "") Tools = tr("No tools blocked!");
+      QMessageBox::information(this,tr("Blocked tools"),Tools);
     }
   }
 }
@@ -1614,27 +1619,71 @@ void ptMainWindow::wheelEvent(QWheelEvent * Event) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Moved tools
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::ShowActiveTools() {
+  // clean up first!
+  if (m_MovedTools->size()>0) CleanUpMovedTools();
+
+  for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
+    if (Settings->ToolIsActive(m_GroupBoxesOrdered->at(i))) {
+      m_MovedTools->append(m_GroupBox->value(m_GroupBoxesOrdered->at(i)));
+    }
+  }
+  if (m_MovedTools->size() == 0) {
+    QMessageBox::information(this,tr("Active tools"),tr("No tools active!"));
+    return;
+  }
+
+  ToolContainerLabel->setText(tr("Active tools:"));
+
+  while (ToolContainer->layout()->count()!=0) {
+    ToolContainer->layout()->takeAt(0);
+  }
+
+  for (short i=0; i<m_MovedTools->size(); i++) {
+    ToolContainer->layout()->addWidget(m_MovedTools->at(i));
+  }
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->addStretch();
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setSpacing(0);
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setContentsMargins(0,0,0,0);
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setMargin(0);
+  MainTabBook->setCurrentWidget(TabMovedTools);
+}
+
+void ptMainWindow::CleanUpMovedTools() {
+  for (short i=0; i<m_MovedTools->size(); i++) {
+    m_TabLayouts->at(m_MovedTools->at(i)->GetTabNumber())->
+      insertWidget(m_MovedTools->at(i)->GetIndexInTab(),m_MovedTools->at(i));
+  }
+  m_MovedTools->clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // UpdateToolBoxes
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::UpdateToolBoxes() {
-  for (int i=0; i<m_ToolBoxes->size();i++) {
-    if (Settings->ToolIsHidden(m_ToolBoxes->at(i)->objectName())) {
-      m_ToolBoxes->at(i)->hide();
+  foreach (ptGroupBox* GroupBox, *m_GroupBox) {
+    if (Settings->ToolIsHidden(GroupBox->objectName())) {
+      GroupBox->hide();
     } else {
-      m_ToolBoxes->at(i)->show();
+      GroupBox->show();
     }
-    m_ToolBoxes->at(i)->Update();
+    GroupBox->Update();
   }
 
   // disable Raw tools when we have a bitmap
   QList<ptGroupBox *> m_RawTools;
-  m_RawTools << findChild <ptGroupBox*>("TabCameraColorSpace")
-             << findChild <ptGroupBox*>("TabGenCorrections")
-             << findChild <ptGroupBox*>("TabWhiteBalance")
-             << findChild <ptGroupBox*>("TabDemosaicing")
-             << findChild <ptGroupBox*>("TabHighlightRecovery");
+  m_RawTools << m_GroupBox->value("TabCameraColorSpace")
+             << m_GroupBox->value("TabGenCorrections")
+             << m_GroupBox->value("TabWhiteBalance")
+             << m_GroupBox->value("TabDemosaicing")
+             << m_GroupBox->value("TabHighlightRecovery");
   short Temp = Settings->GetInt("IsRAW");
   for (int i = 0; i < m_RawTools.size(); i++) {
     m_RawTools.at(i)->SetEnabled(Temp);
@@ -1677,8 +1726,9 @@ void ptMainWindow::UpdateSettings() {
   #endif
 
   // State of Groupboxes
-  for (int i=0; i<m_ToolBoxes->size();i++)
-    m_ToolBoxes->at(i)->SetActive(Settings->ToolIsActive(m_ToolBoxes->at(i)->objectName()));
+  foreach (ptGroupBox* GroupBox, *m_GroupBox) {
+    GroupBox->SetActive(Settings->ToolIsActive(GroupBox->objectName()));
+  }
 
   // Status LED on tabs
   if(Settings->GetInt("TabStatusIndicator")) {
