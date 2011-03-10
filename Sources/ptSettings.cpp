@@ -1875,7 +1875,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Output after gamma curve";
       Info.IsActive = Settings->GetInt("BaseCurve2")!=0?1:0;
   } else if (GuiName == "TabOutContrast") {
-      Info.Name = "Output sigmiodal contrast";
+      Info.Name = "Output sigmoidal contrast";
       Info.IsActive = Settings->GetDouble("RGBContrast3Amount")!=0.0?1:0;
   } else if (GuiName == "TabOutWiener") {
       Info.Name = "Output wiener filter";

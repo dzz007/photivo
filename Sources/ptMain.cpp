@@ -1074,8 +1074,7 @@ void Update(short Phase,
 
 int GetProcessorPhase(const QString GuiName) {
   int Phase = 0;
-  ptGroupBox* Box = MainWindow->findChild<ptGroupBox *>(GuiName);
-  QString Tab = Box->parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName();
+  QString Tab = MainWindow->m_GroupBox->value(GuiName)->GetTabName();
   //QMessageBox::information(0,"Feedback","I was called from \n" + GuiName + "\nMy tab is\n" Tab);
   if (Tab == "GeometryTab") Phase = ptProcessorPhase_Geometry;
   else if (Tab == "RGBTab") Phase = ptProcessorPhase_RGB;
@@ -1093,8 +1092,6 @@ void Update(const QString GuiName) {
   // It is assumed that no tool before white balance will use this.
   if (Phase < 2) {
     Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
-  } else if (Phase == 2) {
-    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
   } else {
     Update(Phase);
   }
@@ -1128,11 +1125,11 @@ void BlockTools(const short state) {
       }
 
       QList<ptGroupBox *> GeometryTools;
-      GeometryTools << MainWindow->findChild <ptGroupBox*>("TabLensfun")
-                    << MainWindow->findChild <ptGroupBox*>("TabRotation")
-                    << MainWindow->findChild <ptGroupBox*>("TabResize")
-                    << MainWindow->findChild <ptGroupBox*>("TabFlip")
-                    << MainWindow->findChild <ptGroupBox*>("TabBlock");
+      GeometryTools << MainWindow->m_GroupBox->value("TabLensfun")
+                    << MainWindow->m_GroupBox->value("TabRotation")
+                    << MainWindow->m_GroupBox->value("TabResize")
+                    << MainWindow->m_GroupBox->value("TabFlip")
+                    << MainWindow->m_GroupBox->value("TabBlock");
       for (int i = 0; i < GeometryTools.size(); i++) {
         GeometryTools.at(i)->SetEnabled(true);
       }
@@ -1159,11 +1156,11 @@ void BlockTools(const short state) {
     }
 
     QList<ptGroupBox *> GeometryTools;
-    GeometryTools << MainWindow->findChild <ptGroupBox*>("TabLensfun")
-                  << MainWindow->findChild <ptGroupBox*>("TabRotation")
-                  << MainWindow->findChild <ptGroupBox*>("TabResize")
-                  << MainWindow->findChild <ptGroupBox*>("TabFlip")
-                  << MainWindow->findChild <ptGroupBox*>("TabBlock");
+    GeometryTools << MainWindow->m_GroupBox->value("TabLensfun")
+                  << MainWindow->m_GroupBox->value("TabRotation")
+                  << MainWindow->m_GroupBox->value("TabResize")
+                  << MainWindow->m_GroupBox->value("TabFlip")
+                  << MainWindow->m_GroupBox->value("TabBlock");
     for (int i = 0; i < GeometryTools.size(); i++) {
       GeometryTools.at(i)->SetEnabled(false);
     }

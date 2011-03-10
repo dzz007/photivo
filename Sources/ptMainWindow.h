@@ -74,6 +74,10 @@ void UpdateExifInfo(Exiv2::ExifData ExifData);
 // Set visible/enabled states for crop tool widgets
 void UpdateCropToolUI();
 
+// Moved tools
+void ShowActiveTools();
+void CleanUpMovedTools();
+
 // Make and model are remembered because in
 // case of change the choice of white balances must be redone.
 QString              m_CameraMake;
@@ -85,9 +89,12 @@ QTimer* m_ResizeTimer;
 QTimer* m_Event0Timer;
 
 // ToolBoxes
-QList<ptGroupBox *>*      m_ToolBoxes;
-QIcon                     m_StatusIcon;
-QList<QWidget *>          m_ActiveTabs;
+QMap<QString, ptGroupBox*>* m_GroupBox;
+QList<QString>*             m_GroupBoxesOrdered;
+QList<QVBoxLayout*>*        m_TabLayouts;
+QList<ptGroupBox*>*         m_MovedTools;
+QIcon                       m_StatusIcon;
+QList<QWidget*>             m_ActiveTabs;
 
 // Desktop
 QDesktopWidget* m_DesktopWidget;

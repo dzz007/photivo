@@ -39,7 +39,10 @@ public :
 
 ptGroupBox(const QString Title,
      QWidget* Parent,
-     const QString Name);
+     const QString Name,
+     const QString TabName,
+     const short TabNumber,
+     const short IndexInTab);
 
 // Destructor.
 ~ptGroupBox();
@@ -51,6 +54,10 @@ void SetHelpUri(const QString Uri);
 void UpdateView();
 void Update();
 void SetEnabled(const short Enabled);
+QString GetTitle();
+QString GetTabName();
+short GetTabNumber();
+short GetIndexInTab();
 
 private slots:
 void Hide();
@@ -82,9 +89,13 @@ QPixmap   BlockedDownArrow;
 QWidget*  m_Header;
 QLabel*   m_Icon;
 QLabel*   m_Symbol;
-QLabel*   m_Title;
+QLabel*   m_TitleLabel;
 QLabel*   m_HelpIcon;
+QString   m_Title;
 QString   m_Name;
+QString   m_TabName;
+short     m_TabNumber;
+short     m_IndexInTab;
 QString   m_HelpUri;
 QLabel*   test;
 QAction*  m_AtnHide;
