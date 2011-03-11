@@ -490,8 +490,10 @@ ptMainWindow::ptMainWindow(const QString Title)
   findChild<ptGroupBox *>(QString("TabRememberSettings"))->setVisible(0);
   m_GroupBox->value("TabLensfun")->setVisible(0);
   m_GroupBox->remove("TabLensfun");
+  m_GroupBoxesOrdered->removeOne("TabLensfun");
   m_GroupBox->value("TabOutput")->setVisible(0);
   m_GroupBox->remove("TabOutput");
+  m_GroupBoxesOrdered->removeOne("TabOutput");
 
   UpdateToolBoxes();
 
@@ -502,18 +504,6 @@ ptMainWindow::ptMainWindow(const QString Title)
     SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
   m_GroupBox->value("TabBW")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#black_and_white");
-
-  // Set us in the beginning of the tabbook and show mainwindow.
-  // But we do not want to generate events for this during setup
-  MainTabBook->blockSignals(1);
-  MainTabBook->setCurrentIndex(0);
-  MainTabBook->blockSignals(0);
-
-  MainTabBook->setCurrentWidget(TabProcessing);
-
-  ProcessingTabBook->blockSignals(1);
-  ProcessingTabBook->setCurrentIndex(0);
-  ProcessingTabBook->blockSignals(0);
 
   m_ActiveTabs.append(GeometryTab);
   m_ActiveTabs.append(RGBTab);
@@ -590,6 +580,27 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnShowTools, SIGNAL(triggered()), this, SLOT(ShowToolsOnTab()));
   m_AtnShowTools->setIcon(QIcon(*Theme->ptIconCheckGreen));
   m_AtnShowTools->setIconVisibleInMenu(true);
+
+  // Search bar
+  Macro_ConnectSomeButton(SearchReset);
+  Macro_ConnectSomeButton(SearchActiveTools);
+  connect(SearchInputWidget, SIGNAL(textEdited(QString)), this, SLOT(StartSearchTimer(QString)));
+  SearchWidget->setVisible(Settings->GetInt("SearchBarEnable"));
+  m_SearchInputTimer = new QTimer(this);
+  m_SearchInputTimer->setSingleShot(1);
+  connect(m_SearchInputTimer, SIGNAL(timeout()), this, SLOT(Search()));
+
+  // Set us in the beginning of the tabbook and show mainwindow.
+  // But we do not want to generate events for this during setup
+  MainTabBook->blockSignals(1);
+  MainTabBook->setCurrentIndex(0);
+  MainTabBook->blockSignals(0);
+
+  MainTabBook->setCurrentWidget(TabProcessing);
+
+  ProcessingTabBook->blockSignals(1);
+  ProcessingTabBook->setCurrentIndex(0);
+  ProcessingTabBook->blockSignals(0);
 
   // Timer to delay on resize operations.
   // (avoiding excessive calculations and loops in the ZoomFit approach.)
@@ -1077,12 +1088,14 @@ void ptMainWindow::OnLoadStyleButtonClicked() {
 void ptMainWindow::OnTabProcessingButtonClicked() {
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
+  SearchInputWidget->setText("");
   MainTabBook->setCurrentWidget(TabProcessing);
 }
 
 void ptMainWindow::OnTabSettingsButtonClicked() {
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
+  SearchInputWidget->setText("");
   if (MainTabBook->currentWidget() == TabSetting)
     MainTabBook->setCurrentWidget(TabProcessing);
   else
@@ -1092,6 +1105,7 @@ void ptMainWindow::OnTabSettingsButtonClicked() {
 void ptMainWindow::OnTabInfoButtonClicked() {
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
+  SearchInputWidget->setText("");
   if (MainTabBook->currentWidget() == TabInfo)
     MainTabBook->setCurrentWidget(TabProcessing);
   else {
@@ -1619,13 +1633,63 @@ void ptMainWindow::wheelEvent(QWheelEvent * Event) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Moved tools
+// Search and moved tools
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::OnSearchResetButtonClicked() {
+  OnTabProcessingButtonClicked();
+}
+
+void ptMainWindow::OnSearchActiveToolsButtonClicked() {
+  ShowActiveTools();
+}
+
+void ptMainWindow::StartSearchTimer(QString) {
+  m_SearchInputTimer->start(50);
+}
+
+void ptMainWindow::Search() {
+  const QString SearchString = SearchInputWidget->text();
+
+  if (SearchString == "") {
+    OnTabProcessingButtonClicked();
+    return;
+  }
+
+  // clean up first!
+  if (m_MovedTools->size()>0) CleanUpMovedTools();
+
+  for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
+    if ((m_GroupBox->value(m_GroupBoxesOrdered->at(i))->GetTitle()).toLower().contains(SearchString.toLower())) {
+      m_MovedTools->append(m_GroupBox->value(m_GroupBoxesOrdered->at(i)));
+    }
+  }
+
+  ToolContainerLabel->setText(tr("Search results:"));
+
+  if (m_MovedTools->size() == 0) {
+    return;
+  }
+
+  while (ToolContainer->layout()->count()!=0) {
+    ToolContainer->layout()->takeAt(0);
+  }
+
+  for (short i=0; i<m_MovedTools->size(); i++) {
+    ToolContainer->layout()->addWidget(m_MovedTools->at(i));
+  }
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->addStretch();
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setSpacing(0);
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setContentsMargins(0,0,0,0);
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setMargin(0);
+  MainTabBook->setCurrentWidget(TabMovedTools);
+}
 
 void ptMainWindow::ShowActiveTools() {
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
+  SearchInputWidget->setText("");
 
   for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
     if (Settings->ToolIsActive(m_GroupBoxesOrdered->at(i))) {

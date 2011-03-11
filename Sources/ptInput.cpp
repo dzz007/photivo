@@ -466,7 +466,7 @@ void ptInput::OnValueChangedTimerExpired() {
 bool ptInput::eventFilter(QObject *obj, QEvent *event)
 {
   if (event->type() == QEvent::ContextMenu) {
-    if (m_HaveDefault)
+    if (m_HaveDefault && m_SpinBox->isEnabled())
       OnButtonClicked();
     return true;
   } else if (0 && ((QMouseEvent*) event)->button()==Qt::RightButton) {

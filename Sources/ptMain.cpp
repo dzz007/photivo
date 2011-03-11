@@ -1118,20 +1118,28 @@ void BlockTools(const short state) {
       MainWindow->PipeControlWidget->setEnabled(true);
       MainWindow->StatusWidget->setEnabled(true);
 
-      for (i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
-        if (MainWindow->ProcessingTabBook->widget(i) != MainWindow->GeometryTab) {
-          MainWindow->ProcessingTabBook->setTabEnabled(i, true);
+      if (MainWindow->m_MovedTools->size()>0) {
+        // UI doesn't display tabs
+        for (int i = 0; i < MainWindow->m_MovedTools->size(); i++) {
+          MainWindow->m_MovedTools->at(i)->setEnabled(true);
         }
-      }
 
-      QList<ptGroupBox *> GeometryTools;
-      GeometryTools << MainWindow->m_GroupBox->value("TabLensfun")
-                    << MainWindow->m_GroupBox->value("TabRotation")
-                    << MainWindow->m_GroupBox->value("TabResize")
-                    << MainWindow->m_GroupBox->value("TabFlip")
-                    << MainWindow->m_GroupBox->value("TabBlock");
-      for (int i = 0; i < GeometryTools.size(); i++) {
-        GeometryTools.at(i)->SetEnabled(true);
+      } else {
+        // UI in tab mode
+        for (i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
+          if (MainWindow->ProcessingTabBook->widget(i) != MainWindow->GeometryTab) {
+            MainWindow->ProcessingTabBook->setTabEnabled(i, true);
+          }
+        }
+
+        QList<ptGroupBox *> GeometryTools;
+        GeometryTools << MainWindow->m_GroupBox->value("TabRotation")
+                      << MainWindow->m_GroupBox->value("TabResize")
+                      << MainWindow->m_GroupBox->value("TabFlip")
+                      << MainWindow->m_GroupBox->value("TabBlock");
+        for (int i = 0; i < GeometryTools.size(); i++) {
+          GeometryTools.at(i)->setEnabled(true);
+        }
       }
     }
 
@@ -1149,20 +1157,29 @@ void BlockTools(const short state) {
     MainWindow->PipeControlWidget->setEnabled(false);
     MainWindow->StatusWidget->setEnabled(false);
 
-    for (i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
-      if (MainWindow->ProcessingTabBook->widget(i) != MainWindow->GeometryTab) {
-        MainWindow->ProcessingTabBook->setTabEnabled(i, false);
+    if (MainWindow->m_MovedTools->size()>0) {
+      // UI doesn't display tabs
+      for (int i = 0; i < MainWindow->m_MovedTools->size(); i++) {
+        if (MainWindow->m_MovedTools->at(i)->objectName() != "TabCrop")
+          MainWindow->m_MovedTools->at(i)->setEnabled(false);
       }
-    }
 
-    QList<ptGroupBox *> GeometryTools;
-    GeometryTools << MainWindow->m_GroupBox->value("TabLensfun")
-                  << MainWindow->m_GroupBox->value("TabRotation")
-                  << MainWindow->m_GroupBox->value("TabResize")
-                  << MainWindow->m_GroupBox->value("TabFlip")
-                  << MainWindow->m_GroupBox->value("TabBlock");
-    for (int i = 0; i < GeometryTools.size(); i++) {
-      GeometryTools.at(i)->SetEnabled(false);
+    } else {
+      // UI in tab mode
+      for (i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
+        if (MainWindow->ProcessingTabBook->widget(i) != MainWindow->GeometryTab) {
+          MainWindow->ProcessingTabBook->setTabEnabled(i, false);
+        }
+      }
+
+      QList<ptGroupBox *> GeometryTools;
+      GeometryTools << MainWindow->m_GroupBox->value("TabRotation")
+                    << MainWindow->m_GroupBox->value("TabResize")
+                    << MainWindow->m_GroupBox->value("TabFlip")
+                    << MainWindow->m_GroupBox->value("TabBlock");
+      for (int i = 0; i < GeometryTools.size(); i++) {
+        GeometryTools.at(i)->setEnabled(false);
+      }
     }
   }
 
@@ -2652,6 +2669,17 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     }
   }
 
+  // ChannelMixer
+  ChannelMixer->m_Mixer[0][0] = Settings->GetDouble("ChannelMixerR2R");
+  ChannelMixer->m_Mixer[0][1] = Settings->GetDouble("ChannelMixerG2R");
+  ChannelMixer->m_Mixer[0][2] = Settings->GetDouble("ChannelMixerB2R");
+  ChannelMixer->m_Mixer[1][0] = Settings->GetDouble("ChannelMixerR2G");
+  ChannelMixer->m_Mixer[1][1] = Settings->GetDouble("ChannelMixerG2G");
+  ChannelMixer->m_Mixer[1][2] = Settings->GetDouble("ChannelMixerB2G");
+  ChannelMixer->m_Mixer[2][0] = Settings->GetDouble("ChannelMixerR2B");
+  ChannelMixer->m_Mixer[2][1] = Settings->GetDouble("ChannelMixerG2B");
+  ChannelMixer->m_Mixer[2][2] = Settings->GetDouble("ChannelMixerB2B");
+
   // Color space transformations precalc
   if (NeedRecalcTransforms == 1) PreCalcTransforms();
 
@@ -3545,6 +3573,7 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->BottomContainer->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->PipeControlWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->StatusWidget->setStyleSheet(Theme->ptStyleSheet);
+  MainWindow->SearchWidget->setStyleSheet(Theme->ptStyleSheet);
 
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
@@ -3594,6 +3623,7 @@ void CB_LoadStyleButton() {
     MainWindow->BottomContainer->setStyleSheet(style);
     MainWindow->PipeControlWidget->setStyleSheet(style);
     MainWindow->StatusWidget->setStyleSheet(style);
+    MainWindow->SearchWidget->setStyleSheet(style);
   }
   delete data;
 }
@@ -3892,6 +3922,11 @@ void CB_SaveButtonModeChoice(const QVariant Choice) {
 
 void CB_ResetButtonModeChoice(const QVariant Value) {
   Settings->SetValue("ResetButtonMode",Value);
+}
+
+void CB_SearchBarEnableCheck(const QVariant State) {
+  Settings->SetValue("SearchBarEnable",State);
+  MainWindow->SearchWidget->setVisible(Settings->GetInt("SearchBarEnable"));
 }
 
 void SaveButtonToolTip(const short mode) {
@@ -8556,7 +8591,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WorkColorChoice)
   M_Dispatch(CMQualityChoice)
 
-
   M_Dispatch(PreviewColorProfileIntentChoice)
 
   M_Dispatch(StyleChoice)
@@ -8583,6 +8617,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(BackgroundColorCheck)
   M_Dispatch(SaveButtonModeChoice)
   M_Dispatch(ResetButtonModeChoice)
+  M_Dispatch(SearchBarEnableCheck)
 
   M_Dispatch(PipeSizeChoice)
   M_Dispatch(RunModeCheck)
