@@ -87,6 +87,7 @@ QString              m_CameraModel;
 QTimer* m_ResizeTimer;
 // Event0 timer (create event at t=0)
 QTimer* m_Event0Timer;
+QTimer* m_SearchInputTimer;
 
 // ToolBoxes
 QMap<QString, ptGroupBox*>* m_GroupBox;
@@ -141,6 +142,8 @@ void MenuUserReset();
 void MenuOpenPreset();
 void MenuOpenSettings();
 void ShowToolsOnTab();
+void StartSearchTimer(QString);
+void Search();
 
 // The generic catchall input change.
 //~ void OnTagsEditTextChanged();
@@ -152,6 +155,9 @@ void on_ProcessingTabBook_currentChanged(const int Index);
 void OnToGimpButtonClicked();
 
 void OnPreviewModeButtonClicked();
+
+void OnSearchResetButtonClicked();
+void OnSearchActiveToolsButtonClicked();
 
 void OnRunButtonClicked();
 void OnResetButtonClicked();

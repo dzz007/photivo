@@ -509,6 +509,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ToolBoxMode"                ,ptGT_Check ,1,0,0,tr("Enabled")         ,tr("Show seperate toolboxes")},
     {"PreviewTabMode"             ,ptGT_Check ,1,0,0,tr("Tab mode")        ,tr("Show the preview after the active tab")},
     {"BackgroundColor"            ,ptGT_Check ,1,0,0,tr("Override default"),tr("Override the default color")},
+    {"SearchBarEnable"            ,ptGT_Check ,1,0,1,tr("Display search bar"),tr("Display search bar")},
     {"Translation"                ,ptGT_Check ,1,0,0,tr("Enabled")         ,tr("Translate photivo")},
     {"WriteBackupSettings"        ,ptGT_Check ,1,0,0,tr("Backup settings") ,tr("Write backup settings during processing")},
     {"RunMode"                    ,ptGT_Check ,1,0,0,tr("manual")          ,tr("manual or automatic pipe")},
