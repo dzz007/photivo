@@ -59,6 +59,12 @@ public:
   static const ptGuiOptionsItem StyleHighLight[];
   static const ptGuiOptionsItem PipeSize[];
   static const ptGuiOptionsItem RunMode[];
+
+  static const ptGuiOptionsItem LfunCAModel[];
+  static const ptGuiOptionsItem LfunVignetteModel[];
+  static const ptGuiOptionsItem LfunGeo[];
+  static const ptGuiOptionsItem LfunDistModel[];
+
   static const ptGuiOptionsItem CropGuidelines[];
   static const ptGuiOptionsItem ResizeFilter[];
   static const ptGuiOptionsItem IMResizeFilter[];
