@@ -364,47 +364,47 @@ void ptProcessor::Run(short Phase,
 
           case ptProcessorPhase_Lensfun :
 
-            m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags = 0;
-            if (Settings->GetInt("EnableLensfun") &&
-                (Settings->GetInt("LensfunLensIndex") != -1)) {
-              m_ReportProgress(tr("Applying lens corrections"));
-              m_DcRaw->m_UserSetting_photivo_LensfunModifier = lfModifier::Create(
-                LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
-                LensfunData->m_Cameras[Settings->GetInt("LensfunCameraIndex")].
-                  Camera->CropFactor,
-                m_DcRaw->m_OutWidth,
-                m_DcRaw->m_OutHeight);
-              if (Settings->GetInt("LensfunGeometryEnable")) {
-                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-                  LF_MODIFY_GEOMETRY;
-                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-                  LF_MODIFY_SCALE;
-              }
-              if (Settings->GetInt("LensfunTCAEnable")) {
-                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-                  LF_MODIFY_TCA;
-              }
-              if (Settings->GetInt("LensfunVignettingEnable")) {
-                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-                  LF_MODIFY_VIGNETTING;
-              }
-              if (Settings->GetInt("LensfunDistortionEnable")) {
-                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-                  LF_MODIFY_DISTORTION;
-              }
-              // TODO Aperture value or f number ? => review for lensfun.
-              m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags =
-                m_DcRaw->m_UserSetting_photivo_LensfunModifier->Initialize(
-                 LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
-                 LF_PF_U16,
-                 Settings->GetInt("LensfunFocalLength"),
-                 Settings->GetDouble("LensfunF"),
-                 Settings->GetDouble("LensfunDistance"),
-                 Settings->GetDouble("LensfunScale"),
-                 (lfLensType) Settings->GetInt("LensfunGeometry"),
-                 m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags,
-                 0);
-            }
+//            m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags = 0;
+//            if (Settings->GetInt("EnableLensfun") &&
+//                (Settings->GetInt("LensfunLensIndex") != -1)) {
+//              m_ReportProgress(tr("Applying lens corrections"));
+//              m_DcRaw->m_UserSetting_photivo_LensfunModifier = lfModifier::Create(
+//                LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
+//                LensfunData->m_Cameras[Settings->GetInt("LensfunCameraIndex")].
+//                  Camera->CropFactor,
+//                m_DcRaw->m_OutWidth,
+//                m_DcRaw->m_OutHeight);
+//              if (Settings->GetInt("LensfunGeometryEnable")) {    // TODO BJ: remove completely
+//                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
+//                  LF_MODIFY_GEOMETRY;
+//                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
+//                  LF_MODIFY_SCALE;
+//              }
+//              if (Settings->GetInt("LensfunTCAEnable")) {
+//                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
+//                  LF_MODIFY_TCA;
+//              }
+//              if (Settings->GetInt("LensfunVignettingEnable")) {
+//                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
+//                  LF_MODIFY_VIGNETTING;
+//              }
+//              if (Settings->GetInt("LensfunDistortionEnable")) {
+//                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
+//                  LF_MODIFY_DISTORTION;
+//              }
+//              // TODO Aperture value or f number ? => review for lensfun.
+//              m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags =
+//                m_DcRaw->m_UserSetting_photivo_LensfunModifier->Initialize(
+//                 LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
+//                 LF_PF_U16,
+//                 Settings->GetInt("LensfunFocalLength"),
+//                 Settings->GetDouble("LensfunF"),
+//                 Settings->GetDouble("LensfunDistance"),
+//                 Settings->GetDouble("LensfunScale"),
+//                 (lfLensType) Settings->GetInt("LensfunGeometry"),
+//                 m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags,
+//                 0);
+//            }
 
             // Settings->GetInt("JobMode") causes NoCache
             m_DcRaw->RunDcRaw_Phase4(Settings->GetInt("JobMode"));
@@ -2498,9 +2498,9 @@ void ptProcessor::ReadExifBuffer() {
   // Safe defaults.
   FREE(m_ExifBuffer);
   m_ExifBufferLength = 0;
-  Settings->SetValue("LensfunCameraMake","");
-  Settings->SetValue("LensfunCameraModel","");
-  Settings->SetValue("LensfunCameraUpdatedByProcessor",1);
+//  Settings->SetValue("LensfunCameraMake","");
+//  Settings->SetValue("LensfunCameraModel","");
+//  Settings->SetValue("LensfunCameraUpdatedByProcessor",1);
 
   try {
     Exiv2::Image::AutoPtr Image;
@@ -2607,16 +2607,16 @@ void ptProcessor::ReadExifBuffer() {
     if (Pos != m_ExifData.end() ) {
       std::stringstream str;
       str << *Pos;
-      Settings->SetValue("LensfunCameraMake",
-        QString(str.str().c_str()).toUpper().trimmed());
+//      Settings->SetValue("LensfunCameraMake",
+//        QString(str.str().c_str()).toUpper().trimmed());
     }
 
     Pos = m_ExifData.findKey(Exiv2::ExifKey("Exif.Image.Model"));
     if (Pos != m_ExifData.end() ) {
       std::stringstream str;
       str << *Pos;
-      Settings->SetValue("LensfunCameraModel",
-        QString(str.str().c_str()).toUpper().trimmed());
+//      Settings->SetValue("LensfunCameraModel",
+//        QString(str.str().c_str()).toUpper().trimmed());
     }
 
     Pos = m_ExifData.findKey(Exiv2::ExifKey("Exif.Photo.FNumber"));
