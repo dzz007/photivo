@@ -1089,6 +1089,8 @@ void ptMainWindow::OnTabProcessingButtonClicked() {
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
   SearchInputWidget->setText("");
+  ViewWindow->setFocus();
+
   MainTabBook->setCurrentWidget(TabProcessing);
 }
 
@@ -1096,6 +1098,8 @@ void ptMainWindow::OnTabSettingsButtonClicked() {
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
   SearchInputWidget->setText("");
+  ViewWindow->setFocus();
+
   if (MainTabBook->currentWidget() == TabSetting)
     MainTabBook->setCurrentWidget(TabProcessing);
   else
@@ -1106,6 +1110,8 @@ void ptMainWindow::OnTabInfoButtonClicked() {
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
   SearchInputWidget->setText("");
+  ViewWindow->setFocus();
+
   if (MainTabBook->currentWidget() == TabInfo)
     MainTabBook->setCurrentWidget(TabProcessing);
   else {
@@ -1462,6 +1468,7 @@ void CB_WritePipeButton();
 void CB_SpecialPreviewChoice(const QVariant Choice);
 void CB_MenuFileExit(const short);
 void ViewWindowStatusReport(short State);
+void CB_SearchBarEnableCheck(const QVariant State);
 
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
   // Handle ViewWindow: LightsOut, confirm/cancel crop
@@ -1485,6 +1492,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
   if (Event->key()==Qt::Key_Escape) { // back to used view
     if (Settings->GetInt("SpecialPreview") != ptSpecialPreview_RGB) {
         CB_SpecialPreviewChoice(ptSpecialPreview_RGB);
+    } else if (SearchInputWidget->hasFocus()) {
+      OnTabProcessingButtonClicked();
     } else {
       if (Settings->GetInt("ShowToolContainer") == 0) {
         Settings->SetValue("ShowToolContainer", 1);
@@ -1493,6 +1502,11 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         ::CB_FullScreenButton(0);
       }
     }
+  }
+  if (SearchInputWidget->hasFocus() &&
+      (Event->key()==Qt::Key_Return ||
+       Event->key()==Qt::Key_Enter)) {
+    ViewWindow->setFocus();
   }
 
   // most shortcuts should only work when we are not in special state like cropping
@@ -1525,6 +1539,12 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       UpdateSettings();
     } else if (Event->key()==Qt::Key_F5) {
       OnRunButtonClicked();
+    } else if (Event->key()==Qt::Key_F3) {
+      CB_SearchBarEnableCheck(1);
+      if (!SearchInputWidget->hasFocus()) {
+        SearchInputWidget->setText("");
+        SearchInputWidget->setFocus();
+      }
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::ControlModifier) {
       CB_OpenPresetFileButton();
     } else if (Event->key()==Qt::Key_Q && Event->modifiers()==Qt::ControlModifier) {
