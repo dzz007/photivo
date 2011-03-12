@@ -453,6 +453,10 @@ Following stuff is also needed for normal.css
     "  border: 1px solid " + HighLight + ";"
     "}"
 
+    "QLineEdit#SearchInputWidget {"
+    "  margin-left: 5px;"
+    "}"
+
 
 /** Slider ****************************************/
     "QSlider {"

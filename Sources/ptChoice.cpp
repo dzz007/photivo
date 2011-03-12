@@ -266,7 +266,7 @@ void ptChoice::OnValueChangedTimerExpired() {
 bool ptChoice::eventFilter(QObject *obj, QEvent *event)
 {
   if (event->type() == QEvent::ContextMenu) {
-    if (m_HaveDefault)
+    if (m_HaveDefault && m_ComboBox->isEnabled())
       OnButtonClicked();
     return true;
   } else if (event->type() == QEvent::Wheel

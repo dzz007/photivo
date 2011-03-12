@@ -49,11 +49,20 @@ int GetProcessorPhase(const QString GuiName);
 
 ptGroupBox::ptGroupBox(const QString Title,
            QWidget* Parent,
-           const QString Name) {
+           const QString Name,
+           const QString TabName,
+           const short TabNumber,
+           const short IndexInTab) {
 
   QVBoxLayout *Layout = new QVBoxLayout(this);
 
   setParent(Parent);
+
+  m_Name = Name;
+  setObjectName(Name);
+  m_TabName = TabName;
+  m_TabNumber = TabNumber;
+  m_IndexInTab = IndexInTab;
 
   RightArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/rightarrow.png"));
   DownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/downarrow.png"));
@@ -61,7 +70,7 @@ ptGroupBox::ptGroupBox(const QString Title,
   ActiveDownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/activedownarrow.png"));
   BlockedRightArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/blockedrightarrow.png"));
   BlockedDownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/blockeddownarrow.png"));
-  setObjectName("Box");
+
   m_Widget = new QWidget();
   m_Widget->setContentsMargins(8,5,0,5);
 
@@ -80,22 +89,22 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_HelpIcon->setVisible(0);
   m_HelpUri = "";
 
-  QString Temp = Title;
-  Temp.replace("(*)","");
-  Temp.trimmed();
+  m_Title = Title;
+  m_Title.replace("(*)","");
+  m_Title.trimmed();
 
-  m_Title = new QLabel();
-  m_Title->setObjectName("Title");
-  m_Title->setText("<b>"+Temp+"</b>");
-  m_Title->setTextFormat(Qt::RichText);
-  m_Title->setTextInteractionFlags(Qt::NoTextInteraction);
+  m_TitleLabel = new QLabel();
+  m_TitleLabel->setObjectName("Title");
+  m_TitleLabel->setText("<b>"+m_Title+"</b>");
+  m_TitleLabel->setTextFormat(Qt::RichText);
+  m_TitleLabel->setTextInteractionFlags(Qt::NoTextInteraction);
 
   QHBoxLayout *ButtonLayout = new QHBoxLayout(m_Header);
 
   ButtonLayout->addWidget(m_Icon);
-  ButtonLayout->addWidget(m_Title);
+  ButtonLayout->addWidget(m_TitleLabel);
   ButtonLayout->addWidget(m_HelpIcon);
-  if (Temp!=Title) {
+  if (m_Title!=Title) {
     ButtonLayout->addWidget(m_Symbol);
   }
   ButtonLayout->addStretch();
@@ -109,8 +118,6 @@ ptGroupBox::ptGroupBox(const QString Title,
   Layout->setSpacing(0);
   Layout->setMargin(0);
   Layout->setAlignment(Qt::AlignTop);
-
-  m_Name = Name;
 
   m_Folded = Settings->m_IniSettings->value(m_Name,1).toInt();
   m_IsActive = Settings->ToolIsActive(m_Name);
@@ -159,6 +166,28 @@ ptGroupBox::ptGroupBox(const QString Title,
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Information about position in tabs
+//
+////////////////////////////////////////////////////////////////////////////////
+
+QString ptGroupBox::GetTitle() {
+  return m_Title;
+}
+
+QString ptGroupBox::GetTabName() {
+  return m_TabName;
+}
+
+short ptGroupBox::GetTabNumber() {
+  return m_TabNumber;
+}
+
+short ptGroupBox::GetIndexInTab() {
+  return m_IndexInTab;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Update
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,13 +226,13 @@ void ptGroupBox::UpdateView() {
 
   if (m_Folded!=1) {
     m_Header->setObjectName("ToolHeader");
-    m_Title->setObjectName("ToolHeader");
+    m_TitleLabel->setObjectName("ToolHeader");
     m_Symbol->setObjectName("ToolHeader");
     m_HelpIcon->setObjectName("ToolHeader");
     m_Icon->setObjectName("ToolHeader");
   } else {
     m_Header->setObjectName("");
-    m_Title->setObjectName("");
+    m_TitleLabel->setObjectName("");
     m_Symbol->setObjectName("");
     m_HelpIcon->setObjectName("");
     m_Icon->setObjectName("");
@@ -489,10 +518,12 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
   QPoint Position = event->pos()-m_HelpIcon->pos();
   if (Position.x() > 0 && Position.x() < 14 &&
       Position.y() > 0 && Position.y() < 14 &&
-      event->button()==Qt::LeftButton) {
+      event->button()==Qt::LeftButton &&
+      m_HelpIcon->isVisible()) {
     QDesktopServices::openUrl(m_HelpUri);
   } else if (event->y()<20 && event->x()<250) {
     if (event->button()==Qt::LeftButton) {
+      //QMessageBox::critical(0,m_TabName,QString::number(m_IndexInTab+1)+ " in Tab: "+QString::number(m_TabNumber+1));
       m_Folded = 1 - m_Folded;
       UpdateView();
       Settings->m_IniSettings->setValue(m_Name,m_Folded);
@@ -539,10 +570,10 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
 
  void ptGroupBox::paintEvent(QPaintEvent *)
  {
-   QStyleOption opt;
-   opt.init(this);
-   QPainter p(this);
-   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+   //~ QStyleOption opt;
+   //~ opt.init(this);
+   //~ QPainter p(this);
+   //~ style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
  }
 
 ////////////////////////////////////////////////////////////////////////////////

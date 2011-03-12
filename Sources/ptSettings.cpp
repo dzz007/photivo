@@ -542,6 +542,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ToolBoxMode"                ,ptGT_Check ,1,0,0,tr("Enabled")         ,tr("Show seperate toolboxes")},
     {"PreviewTabMode"             ,ptGT_Check ,1,0,0,tr("Tab mode")        ,tr("Show the preview after the active tab")},
     {"BackgroundColor"            ,ptGT_Check ,1,0,0,tr("Override default"),tr("Override the default color")},
+    {"SearchBarEnable"            ,ptGT_Check ,1,0,1,tr("Display search bar"),tr("Display search bar")},
     {"Translation"                ,ptGT_Check ,1,0,0,tr("Enabled")         ,tr("Translate photivo")},
     {"WriteBackupSettings"        ,ptGT_Check ,1,0,0,tr("Backup settings") ,tr("Write backup settings during processing")},
     {"RunMode"                    ,ptGT_Check ,1,0,0,tr("manual")          ,tr("manual or automatic pipe")},
@@ -1908,7 +1909,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Output after gamma curve";
       Info.IsActive = Settings->GetInt("BaseCurve2")!=0?1:0;
   } else if (GuiName == "TabOutContrast") {
-      Info.Name = "Output sigmiodal contrast";
+      Info.Name = "Output sigmoidal contrast";
       Info.IsActive = Settings->GetDouble("RGBContrast3Amount")!=0.0?1:0;
   } else if (GuiName == "TabOutWiener") {
       Info.Name = "Output wiener filter";

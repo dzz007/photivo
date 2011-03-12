@@ -80,10 +80,15 @@ public:
   // Set visible/enabled states for crop tool widgets
   void UpdateCropToolUI();
 
+  // Moved tools
+  void ShowActiveTools();
+  void CleanUpMovedTools();
+
   // Set visible status for lensfun widgets
   void UpdateLfunDistUI();
   void UpdateLfunCAUI();
   void UpdateLfunVignetteUI();
+
 
   // Make and model are remembered because in
   // case of change the choice of white balances must be redone.
@@ -94,11 +99,15 @@ public:
   QTimer* m_ResizeTimer;
   // Event0 timer (create event at t=0)
   QTimer* m_Event0Timer;
+QTimer* m_SearchInputTimer;
 
   // ToolBoxes
-  QList<ptGroupBox *>*      m_ToolBoxes;
-  QIcon                     m_StatusIcon;
-  QList<QWidget *>          m_ActiveTabs;
+QMap<QString, ptGroupBox*>* m_GroupBox;
+QList<QString>*             m_GroupBoxesOrdered;
+QList<QVBoxLayout*>*        m_TabLayouts;
+QList<ptGroupBox*>*         m_MovedTools;
+QIcon                       m_StatusIcon;
+QList<QWidget*>             m_ActiveTabs;
 
   // Desktop
   QDesktopWidget* m_DesktopWidget;
@@ -159,6 +168,8 @@ private :
   void MenuOpenPreset();
   void MenuOpenSettings();
   void ShowToolsOnTab();
+void StartSearchTimer(QString);
+void Search();
 
   // The generic catchall input change.
   //~ void OnTagsEditTextChanged();
@@ -170,6 +181,9 @@ private :
   void OnToGimpButtonClicked();
 
   void OnPreviewModeButtonClicked();
+
+void OnSearchResetButtonClicked();
+void OnSearchActiveToolsButtonClicked();
 
   void OnRunButtonClicked();
   void OnResetButtonClicked();
