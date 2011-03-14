@@ -586,9 +586,11 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(SearchActiveTools);
   connect(SearchInputWidget, SIGNAL(textEdited(QString)), this, SLOT(StartSearchTimer(QString)));
   SearchWidget->setVisible(Settings->GetInt("SearchBarEnable"));
+  SearchInputWidget->setPlaceholderText(tr("Search"));
   m_SearchInputTimer = new QTimer(this);
   m_SearchInputTimer->setSingleShot(1);
   connect(m_SearchInputTimer, SIGNAL(timeout()), this, SLOT(Search()));
+
 
   // Set us in the beginning of the tabbook and show mainwindow.
   // But we do not want to generate events for this during setup
