@@ -586,7 +586,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(SearchActiveTools);
   connect(SearchInputWidget, SIGNAL(textEdited(QString)), this, SLOT(StartSearchTimer(QString)));
   SearchWidget->setVisible(Settings->GetInt("SearchBarEnable"));
+#if (QT_VERSION >= 0x407000)
   SearchInputWidget->setPlaceholderText(tr("Search"));
+#endif
   m_SearchInputTimer = new QTimer(this);
   m_SearchInputTimer->setSingleShot(1);
   connect(m_SearchInputTimer, SIGNAL(timeout()), this, SLOT(Search()));
