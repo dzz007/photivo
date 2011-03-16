@@ -78,6 +78,7 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
   m_ComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
   m_ComboBox->setToolTip(ToolTip);
   m_ComboBox->setFixedHeight(24);
+  m_ComboBox->setMaxVisibleItems(24);
   //~ m_ComboBox->setLayoutDirection(Qt::RightToLeft);
   m_InitialOptions = InitialOptions;
   for (short i=0; InitialOptions && InitialOptions[i].Value !=-1; i++ ) {
