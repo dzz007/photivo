@@ -76,9 +76,10 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
 
     {"LfunFocal"                     ,ptGT_Input           ,2,1,1 ,50.0 ,4.0  ,1000.0,1.0  ,0 ,tr("Focal length"), tr("")},
     {"LfunAperture"                  ,ptGT_Input           ,2,1,1 ,8.0  ,0.8  ,32.0  ,1.0  ,1 ,tr("Aperture"), tr("")},
-    {"LfunDistance"                  ,ptGT_Input           ,2,1,1 ,1.0  ,0.01 ,500.0 ,1.0  ,2 ,tr("Distance"), tr("Distance between object and camera in meters")},
-    {"LfunCALinearKb"                ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("kb"),tr("")},
+    {"LfunCameraCrop"                ,ptGT_Input           ,2,1,1 ,1.5  ,1.0  ,10.0  ,0.1  ,1 ,tr("Camera crop"), tr("Crop factor of the current image’s camera.\n35mm film = 1.0")},
+    {"LfunDistance"                  ,ptGT_Input           ,2,1,1 ,1.0  ,0.01 ,500.0 ,1.0  ,2 ,tr("Distance"), tr("Distance between object and camera")},
     {"LfunCALinearKr"                ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("kr"),tr("")},
+    {"LfunCALinearKb"                ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("kb"),tr("")},
     {"LfunCAPoly3Vr"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("vr"),tr("")},
     {"LfunCAPoly3Vb"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("vb"),tr("")},
     {"LfunCAPoly3Cr"                 ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.01,0.01  ,0.001,5 ,tr("cr"),tr("")},

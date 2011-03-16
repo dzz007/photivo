@@ -24,6 +24,7 @@
 #ifndef DLIMAGE_H
 #define DLIMAGE_H
 
+#include <lensfun.h>
 #include "ptDefines.h"
 #include "ptConstants.h"
 #include "ptDcRaw.h"
@@ -589,6 +590,10 @@ ptImage* ptCIPerspective(const float RotateAngle,
                          const float TurnAngle,
                          const float ScaleX,
                          const float ScaleY);
+
+// ptImage_Lensfun.cpp
+ptImage* Lensfun(const uint32_t LfunActions,
+                 const lfModifier* LfunData);
 
 };
 

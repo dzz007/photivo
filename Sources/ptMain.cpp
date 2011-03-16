@@ -4513,6 +4513,11 @@ void CB_LfunApertureInput(const QVariant Value) {
   //Update(ptProcessorPhase_Geometry);
 }
 
+void CB_LfunCameraCropInput(const QVariant Value) {
+  Settings->SetValue("LfunCameraCrop", Value);
+  //Update(ptProcessorPhase_Geometry);
+}
+
 void CB_LfunDistanceInput(const QVariant Value) {
   Settings->SetValue("LfunDistance", Value);
   //Update(ptProcessorPhase_Geometry);
@@ -8810,6 +8815,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(LfunFocalInput)
   M_Dispatch(LfunApertureInput)
+  M_Dispatch(LfunCameraCropInput)
   M_Dispatch(LfunDistanceInput)
   M_Dispatch(LfunCAModelChoice)
   M_Dispatch(LfunCALinearKbInput)
