@@ -1572,7 +1572,15 @@ struct sToolInfo {
 sToolInfo ToolInfo (const QString GuiName) {
   sToolInfo Info = {"N.N.",0,0,0};
   // Tab Geometry
-  if (GuiName == "TabRotation") {
+  if (GuiName == "TabLensfunCAVignette") {
+    Info.Name = "Lensfun - CA and Vignette";
+    Info.IsActive = (Settings->GetInt("LfunCAModel") != 0 ||
+                     Settings->GetInt("LfunVignetteModel") != 0);
+  } else if (GuiName == "TabLensfunLens") {
+    Info.Name == "Lensfun - Lens Correction";
+    Info.IsActive = (Settings->GetInt("LfunSrcGeo") != Settings->GetInt("LfunTargetGeo") ||
+                     Settings->GetInt("LfunDistModel") != 0);
+  } else if (GuiName == "TabRotation") {
       Info.Name = "Rotation";
       Info.IsActive = (Settings->GetDouble("Rotate")!=0.0f ||
                        Settings->GetDouble("PerspectiveTilt")!=0.0f ||

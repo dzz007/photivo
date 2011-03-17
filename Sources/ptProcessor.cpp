@@ -176,7 +176,7 @@ void ptProcessor::Run(short Phase,
   }
 
   switch(Phase) {
-    case ptProcessorPhase_Raw :
+    case ptProcessorPhase_Raw:
 
       Settings->ToDcRaw(m_DcRaw);
 
@@ -408,11 +408,11 @@ void ptProcessor::Run(short Phase,
 //            }
 
             // Settings->GetInt("JobMode") causes NoCache
-            m_DcRaw->RunDcRaw_Phase4(Settings->GetInt("JobMode"));
+//            m_DcRaw->RunDcRaw_Phase4(Settings->GetInt("JobMode"));
 
-            TRACEMAIN("Done lensfun corrections at %d ms.",Timer.elapsed());
+//            TRACEMAIN("Done lensfun corrections at %d ms.",Timer.elapsed());
 
-            m_ReportProgress(tr("RGB to RGB"));
+//            m_ReportProgress(tr("RGB to RGB"));
 
            break;
 
@@ -421,7 +421,8 @@ void ptProcessor::Run(short Phase,
         }
       }
 
-    case ptProcessorPhase_Geometry :
+    case ptProcessorPhase_Geometry: {
+
 
       if (Settings->GetInt("IsRAW")==0) {
         m_ReportProgress(tr("Transfer Bitmap"));
@@ -460,135 +461,140 @@ void ptProcessor::Run(short Phase,
 
 
       // Lensfun
-      m_ReportProgress(tr("Lensfun corrections"));
-      int modflags = 0;
+      if (Settings->ToolIsActive("TabLensfunCAVignette") ||
+          Settings->ToolIsActive("TabLensfunLens"))
+      {
+        m_ReportProgress(tr("Lensfun corrections"));
+        int modflags = 0;
 
-      lfLensCalibTCA TCAData;
-      TCAData.Model = Settings->GetInt("LfunCAModel");
-      TCAData.Focal = Settings->GetDouble("LfunFocal");
-      switch (TCAData.Model) {
-        case LF_TCA_MODEL_NONE:
-          TCAData.Terms[0] = 0.0;
-          TCAData.Terms[1] = 0.0;
-          TCAData.Terms[2] = 0.0;
-          TCAData.Terms[3] = 0.0;
-          TCAData.Terms[4] = 0.0;
-          TCAData.Terms[5] = 0.0;
-          break;
-        case LF_TCA_MODEL_LINEAR:
-          modflags |= LF_MODIFY_TCA;
-          TCAData.Terms[0] = Settings->GetDouble("LfunCALinearKr");
-          TCAData.Terms[1] = Settings->GetDouble("LfunCALinearKb");
-          TCAData.Terms[2] = 0.0;
-          TCAData.Terms[3] = 0.0;
-          TCAData.Terms[4] = 0.0;
-          TCAData.Terms[5] = 0.0;
-          break;
-        case LF_TCA_MODEL_POLY3:
-          modflags |= LF_MODIFY_TCA;
-          TCAData.Terms[0] = Settings->GetDouble("LfunCAPoly3Vr");
-          TCAData.Terms[1] = Settings->GetDouble("LfunCAPoly3Vb");
-          TCAData.Terms[2] = Settings->GetDouble("LfunCAPoly3Cr");
-          TCAData.Terms[3] = Settings->GetDouble("LfunCAPoly3Cb");
-          TCAData.Terms[4] = Settings->GetDouble("LfunCAPoly3Br");
-          TCAData.Terms[5] = Settings->GetDouble("LfunCAPoly3Bb");
-          break;
-        default:
-          assert(0);
+        lfLensCalibTCA TCAData;
+        TCAData.Model = (lfTCAModel)(Settings->GetInt("LfunCAModel"));
+        TCAData.Focal = Settings->GetDouble("LfunFocal");
+        switch (TCAData.Model) {
+          case LF_TCA_MODEL_NONE:
+            TCAData.Terms[0] = 0.0;
+            TCAData.Terms[1] = 0.0;
+            TCAData.Terms[2] = 0.0;
+            TCAData.Terms[3] = 0.0;
+            TCAData.Terms[4] = 0.0;
+            TCAData.Terms[5] = 0.0;
+            break;
+          case LF_TCA_MODEL_LINEAR:
+            modflags |= LF_MODIFY_TCA;
+            TCAData.Terms[0] = Settings->GetDouble("LfunCALinearKr");
+            TCAData.Terms[1] = Settings->GetDouble("LfunCALinearKb");
+            TCAData.Terms[2] = 0.0;
+            TCAData.Terms[3] = 0.0;
+            TCAData.Terms[4] = 0.0;
+            TCAData.Terms[5] = 0.0;
+            break;
+          case LF_TCA_MODEL_POLY3:
+            modflags |= LF_MODIFY_TCA;
+            TCAData.Terms[0] = Settings->GetDouble("LfunCAPoly3Vr");
+            TCAData.Terms[1] = Settings->GetDouble("LfunCAPoly3Vb");
+            TCAData.Terms[2] = Settings->GetDouble("LfunCAPoly3Cr");
+            TCAData.Terms[3] = Settings->GetDouble("LfunCAPoly3Cb");
+            TCAData.Terms[4] = Settings->GetDouble("LfunCAPoly3Br");
+            TCAData.Terms[5] = Settings->GetDouble("LfunCAPoly3Bb");
+            break;
+          default:
+            assert(0);
+        }
+
+        lfLensCalibVignetting VignetteData;
+        VignetteData.Model = (lfVignettingModel)(Settings->GetInt("LfunVignetteModel"));
+        VignetteData.Focal = Settings->GetDouble("LfunFocal");
+        VignetteData.Distance = Settings->GetDouble("LfunDistance");
+        switch (VignetteData.Model) {
+          case LF_VIGNETTING_MODEL_NONE:
+            VignetteData.Terms[0] = 0.0;
+            VignetteData.Terms[1] = 0.0;
+            VignetteData.Terms[2] = 0.0;
+            break;
+          case LF_VIGNETTING_MODEL_PA:
+            modflags |= LF_MODIFY_VIGNETTING;
+            VignetteData.Terms[0] = Settings->GetDouble("LfunVignettePoly6K1");
+            VignetteData.Terms[1] = Settings->GetDouble("LfunVignettePoly6K2");
+            VignetteData.Terms[2] = Settings->GetDouble("LfunVignettePoly6K3");
+            break;
+          default:
+            assert(0);
+        }
+
+        lfLensCalibDistortion DistortionData;
+        DistortionData.Model = (lfDistortionModel)(Settings->GetInt("LfunDistModel"));
+        DistortionData.Focal = Settings->GetDouble("LfunFocal");
+        switch (DistortionData.Model) {
+          case LF_DIST_MODEL_NONE:
+            DistortionData.Terms[0] = 0.0;
+            DistortionData.Terms[1] = 0.0;
+            DistortionData.Terms[2] = 0.0;
+            break;
+          case LF_DIST_MODEL_POLY3:
+            modflags |= LF_MODIFY_DISTORTION;
+            DistortionData.Terms[0] = Settings->GetDouble("LfunDistPoly3K1");
+            DistortionData.Terms[1] = 0.0;
+            DistortionData.Terms[2] = 0.0;
+            break;
+          case LF_DIST_MODEL_POLY5:
+            modflags |= LF_MODIFY_DISTORTION;
+            DistortionData.Terms[0] = Settings->GetDouble("LfunDistPoly5K1");
+            DistortionData.Terms[1] = Settings->GetDouble("LfunDistPoly5K2");
+            DistortionData.Terms[2] = 0.0;
+            break;
+          case LF_DIST_MODEL_FOV1:
+            modflags |= LF_MODIFY_DISTORTION;
+            DistortionData.Terms[0] = Settings->GetDouble("LfunDistFov1Omega");
+            DistortionData.Terms[1] = 0.0;
+            DistortionData.Terms[2] = 0.0;
+            break;
+          case LF_DIST_MODEL_PTLENS:
+            modflags |= LF_MODIFY_DISTORTION;
+            DistortionData.Terms[0] = Settings->GetDouble("LfunDistPTLensA");
+            DistortionData.Terms[1] = Settings->GetDouble("LfunDistPTLensB");
+            DistortionData.Terms[2] = Settings->GetDouble("LfunDistPTLensC");
+            break;
+          default:
+            assert(0);
+        }
+
+        lfLens LensData = lfLens();
+        LensData.Type = (lfLensType)(Settings->GetInt("LfunSrcGeo"));
+        LensData.SetMaker("Photivo Custom");
+        LensData.SetModel("Photivo Custom");
+        LensData.AddMount("Photivo Custom");
+        LensData.AddCalibTCA(&TCAData);
+        LensData.AddCalibVignetting(&VignetteData);
+        LensData.AddCalibDistortion(&DistortionData);
+        assert(LensData.Check());
+
+        lfModifier* LfunData = lfModifier::Create(&LensData,
+                                                  Settings->GetDouble("LfunCameraCrop"),
+                                                  m_Image_AfterGeometry->m_Width,
+                                                  m_Image_AfterGeometry->m_Height);
+
+        // complete list of desired modify actions
+        lfLensType TargetGeo = (lfLensType)(Settings->GetInt("LfunTargetGeo"));
+        if (LensData.Type != TargetGeo) {
+          modflags |= LF_MODIFY_GEOMETRY;
+        }
+
+        // Init modifier and get list of lensfun actions that actually get performed
+        modflags = LfunData->Initialize(&LensData,
+                                        LF_PF_U16,  //image is uint16 data
+                                        Settings->GetDouble("LfunFocal"),
+                                        Settings->GetDouble("LfunAperture"),
+                                        Settings->GetDouble("LfunDistance"),
+                                        1.0,  // no image scaling
+                                        TargetGeo,
+                                        modflags,
+                                        false);  //distortion correction, not dist. simulation
+
+        m_Image_AfterGeometry->Lensfun(modflags, LfunData);
+        LfunData->Destroy();
+
+        TRACEMAIN("Done Lensfun corrections at %d ms.",Timer.elapsed());
       }
-
-      lfLensCalibVignetting VignetteData;
-      VignetteData.Model = Settings->GetInt("LfunVignetteModel");
-      VignetteData.Focal = Settings->GetDouble("LfunFocal");
-      VignetteData.Distance = Settings->GetDouble("LfunDistance");
-      switch (VignetteData.Model) {
-        case LF_VIGNETTING_MODEL_NONE:
-          VignetteData.Terms[0] = 0.0;
-          VignetteData.Terms[1] = 0.0;
-          VignetteData.Terms[2] = 0.0;
-          break;
-        case LF_VIGNETTING_MODEL_PA:
-          modflags |= LF_MODIFY_VIGNETTING;
-          VignetteData.Terms[0] = Settings->GetDouble("LfunVignettePoly6K1");
-          VignetteData.Terms[1] = Settings->GetDouble("LfunVignettePoly6K2");
-          VignetteData.Terms[2] = Settings->GetDouble("LfunVignettePoly6K3");
-          break;
-        default:
-          assert(0);
-      }
-
-      lfLensCalibDistortion DistortionData;
-      DistortionData.Model = Settings->GetInt("LfunDistModel");
-      DistortionData.Focal = Settings->GetDouble("LfunFocal");
-      switch (DistortionData.Model) {
-        case LF_DIST_MODEL_NONE:
-          DistortionData.Terms[0] = 0.0;
-          DistortionData.Terms[1] = 0.0;
-          DistortionData.Terms[2] = 0.0;
-          break;
-        case LF_DIST_MODEL_POLY3:
-          modflags |= LF_MODIFY_DISTORTION;
-          DistortionData.Terms[0] = Settings->GetDouble("LfunDistPoly3K1");
-          DistortionData.Terms[1] = 0.0;
-          DistortionData.Terms[2] = 0.0;
-          break;
-        case LF_DIST_MODEL_POLY5:
-          modflags |= LF_MODIFY_DISTORTION;
-          DistortionData.Terms[0] = Settings->GetDouble("LfunDistPoly5K1");
-          DistortionData.Terms[1] = Settings->GetDouble("LfunDistPoly5K2");
-          DistortionData.Terms[2] = 0.0;
-          break;
-        case LF_DIST_MODEL_FOV1:
-          modflags |= LF_MODIFY_DISTORTION;
-          DistortionData.Terms[0] = Settings->GetDouble("LfunDistFov1Omega");
-          DistortionData.Terms[1] = 0.0;
-          DistortionData.Terms[2] = 0.0;
-          break;
-        case LF_DIST_MODEL_PTLENS:
-          modflags |= LF_MODIFY_DISTORTION;
-          DistortionData.Terms[0] = Settings->GetDouble("LfunDistPTLensA");
-          DistortionData.Terms[1] = Settings->GetDouble("LfunDistPTLensB");
-          DistortionData.Terms[2] = Settings->GetDouble("LfunDistPTLensC");
-          break;
-        default:
-          assert(0);
-      }
-
-      lfLens LensData = lfLens();
-      LensData.SetMaker("Photivo Custom");
-      LensData.SetModel("Photivo Custom");
-      LensData.Type = Settings->GetInt("LfunSrcGeo");
-      LensData.AddCalibTCA(&TCAData);
-      LensData.AddCalibVignetting(&VignetteData);
-      LensData.AddCalibDistortion(&DistortionData);
-      assert(LensData.Check());
-
-      lfModifier* LfunData = lfModifier::Create(&LensData,
-                                                Settings->GetDouble("LfunCameraCrop"),
-                                                m_Image_AfterGeometry->m_Width,
-                                                m_Image_AfterGeometry->m_Height);
-
-      // complete list of desired modify actions
-      lfLensType TargetGeo = Settings->GetDouble("LfunTargetGeo");
-      if (LensData.Type != TargetGeo) {
-        modflags |= LF_MODIFY_GEOMETRY;
-      }
-
-      // Init modifier and get list of lensfun actions that actually get performed
-      modflags = LfunData->Initialize(&lens,
-                                      LF_PF_U16,  //image is uint16 data
-                                      Settings->GetDouble("LfunFocal"),
-                                      Settings->GetDouble("LfunAperture"),
-                                      Settings->GetDouble("LfunDistance"),
-                                      1.0,  // no image scaling
-                                      TargetGeo,
-                                      modflags,
-                                      false);  //distortion correction, not dist. simulation
-
-      m_Image_AfterGeometry->Lensfun(modflags, LfunData);
-      LfunData->Destroy();
-
-      TRACEMAIN("Done Lensfun corrections at %d ms.",Timer.elapsed());
 
 
 
@@ -700,6 +706,8 @@ void ptProcessor::Run(short Phase,
           Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
 
       m_ReportProgress(tr("Next"));
+    }
+
 
     case ptProcessorPhase_RGB : // Run everything in RGB.
 

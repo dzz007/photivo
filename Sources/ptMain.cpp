@@ -4505,22 +4505,22 @@ void CB_ClipParameterInput(const QVariant Value) {
 
 void CB_LfunFocalInput(const QVariant Value) {
   Settings->SetValue("LfunFocal", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunApertureInput(const QVariant Value) {
   Settings->SetValue("LfunAperture", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunCameraCropInput(const QVariant Value) {
   Settings->SetValue("LfunCameraCrop", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunDistanceInput(const QVariant Value) {
   Settings->SetValue("LfunDistance", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 
@@ -4529,68 +4529,68 @@ void CB_LfunDistanceInput(const QVariant Value) {
 void CB_LfunCAModelChoice(const QVariant Choice) {
   Settings->SetValue("LfunCAModel", Choice);
   MainWindow->UpdateLfunCAUI();
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunCALinearKbInput(const QVariant Value) {
   Settings->SetValue("LfunCALinearKb", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunCALinearKrInput(const QVariant Value) {
   Settings->SetValue("LfunCALinearKr", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunCAPoly3BbInput(const QVariant Value) {
   Settings->SetValue("LfunCALinearBb", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunCAPoly3BrInput(const QVariant Value) {
   Settings->SetValue("LfunCALinearBr", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunCAPoly3CbInput(const QVariant Value) {
   Settings->SetValue("LfunCALinearCb", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunCAPoly3CrInput(const QVariant Value) {
   Settings->SetValue("LfunCALinearCr", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunCAPoly3VbInput(const QVariant Value) {
   Settings->SetValue("LfunCALinearVb", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunCAPoly3VrInput(const QVariant Value) {
   Settings->SetValue("LfunCALinearVr", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunVignetteModelChoice(const QVariant Choice) {
   Settings->SetValue("LfunVignetteModel", Choice);
   MainWindow->UpdateLfunVignetteUI();
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunVignettePoly6K1Input(const QVariant Value) {
   Settings->SetValue("LfunVignettePoly6K1", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunVignettePoly6K2Input(const QVariant Value) {
   Settings->SetValue("LfunVignettePoly6K2", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunVignettePoly6K3Input(const QVariant Value) {
   Settings->SetValue("LfunVignettePoly6K3", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 
@@ -4598,53 +4598,53 @@ void CB_LfunVignettePoly6K3Input(const QVariant Value) {
 
 void CB_LfunSrcGeoChoice(const QVariant Choice) {
   Settings->SetValue("LfunSrcGeo", Choice);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunTargetGeoChoice(const QVariant Choice) {
   Settings->SetValue("LfunTargetGeo", Choice);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunDistModelChoice(const QVariant Choice) {
   Settings->SetValue("LfunDistModel", Choice);
   MainWindow->UpdateLfunDistUI();
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunDistPoly3K1Input(const QVariant Value) {
   Settings->SetValue("LfunDistPoly3K1", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunDistPoly5K1Input(const QVariant Value) {
   Settings->SetValue("LfunDistPoly5K1", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunDistPoly5K2Input(const QVariant Value) {
   Settings->SetValue("LfunDistPoly5K2", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunDistFov1OmegaInput(const QVariant Value) {
   Settings->SetValue("LfunDistFov1Omega", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunDistPTLensAInput(const QVariant Value) {
   Settings->SetValue("LfunDistPTLensA", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunDistPTLensBInput(const QVariant Value) {
   Settings->SetValue("LfunDistPTLensB", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunDistPTLensCInput(const QVariant Value) {
   Settings->SetValue("LfunDistPTLensC", Value);
-  //Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_Geometry);
 }
 
 
