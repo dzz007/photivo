@@ -591,9 +591,27 @@ ptImage* ptCIPerspective(const float RotateAngle,
                          const float ScaleX,
                          const float ScaleY);
 
-// ptImage_Lensfun.cpp
-ptImage* Lensfun(const uint32_t LfunActions,
-                 const lfModifier* LfunData);
+/**
+ * ptImage_Lensfun.cpp
+ * Wrapper for the actual execution of lensfun processing. Returns the stage 2 (vignetting)
+ * corrected image. Returns stage 1/3 converted pixel coordinates in TransformedCoords.
+ *
+ * LfunActions
+ *     A bitmask of LF_MODIFY_XX values stating which image corrections to perform.
+ *
+ * LfunData
+ *     A pointer to an lfModifier object containing the data for all corrections. Must be
+ *     properly intantiated and initialised before calling Lensfun().
+ *
+ * TransformedCoords
+ *     Same as lensfun: "A pointer to an output array which receives the respective X and Y
+ *     distorted coordinates for every pixel of the block." May be NULL if no CA (stage 1)
+ *     and no lens geometry/distortion (stage 3) correction is done. Proper memory
+ *     allocation is handled by Lensfun().
+ */
+ptImage* Lensfun(const int LfunActions,
+                 const lfModifier* LfunData,
+                 float* TransformedCoords = NULL);
 
 };
 
