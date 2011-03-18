@@ -1,0 +1,16 @@
+;
+; photivo Curve File
+;
+; This is a portrait type curve. Aims to produce low contrast images
+; and give accurate smooth looking skins tones, eliminating the
+; interference of harsh shadows.
+;
+Magic FLOSSCurveFile
+IntendedChannel 0
+CurveType 1
+0 0
+201 253
+663 733
+980 965
+990 976
+1000 1000
