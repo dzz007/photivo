@@ -625,6 +625,9 @@ ptMainWindow::ptMainWindow(const QString Title)
           SLOT(Event0TimerExpired()));
 
   UpdateCropToolUI();
+
+	// create VisibleTools box
+	UpdateVisibleTools();
 }
 
 void CB_Event0();
@@ -1095,6 +1098,10 @@ void ptMainWindow::OnTabProcessingButtonClicked() {
   SearchInputWidget->setText("");
   ViewWindow->setFocus();
 
+	// apply changes at VisibleTools box
+	if (MainTabBook->currentWidget() == TabSetting)
+		ApplyVisibleTools();
+
   MainTabBook->setCurrentWidget(TabProcessing);
 }
 
@@ -1104,10 +1111,16 @@ void ptMainWindow::OnTabSettingsButtonClicked() {
   SearchInputWidget->setText("");
   ViewWindow->setFocus();
 
-  if (MainTabBook->currentWidget() == TabSetting)
+  if (MainTabBook->currentWidget() == TabSetting) {
+		// apply changes at VisibleTools box
+		ApplyVisibleTools();
     MainTabBook->setCurrentWidget(TabProcessing);
-  else
+	}
+	else {
+		// update VisibleTools box
+		UpdateVisibleTools();
     MainTabBook->setCurrentWidget(TabSetting);
+	}
 }
 
 void ptMainWindow::OnTabInfoButtonClicked() {
@@ -1116,12 +1129,16 @@ void ptMainWindow::OnTabInfoButtonClicked() {
   SearchInputWidget->setText("");
   ViewWindow->setFocus();
 
+	// apply changes at VisibleTools box
+	if (MainTabBook->currentWidget() == TabSetting)
+		ApplyVisibleTools();
+
   if (MainTabBook->currentWidget() == TabInfo)
-    MainTabBook->setCurrentWidget(TabProcessing);
-  else {
-    UpdateSettings();
-    MainTabBook->setCurrentWidget(TabInfo);
-  }
+		MainTabBook->setCurrentWidget(TabProcessing);
+	else {
+		UpdateSettings();
+		MainTabBook->setCurrentWidget(TabInfo);
+	}
 }
 
 //
@@ -1678,8 +1695,12 @@ void ptMainWindow::Search() {
 
   if (SearchString == "") {
     OnTabProcessingButtonClicked();
-    return;
+		return;
   }
+
+	// apply changes at VisibleTools box
+	if (MainTabBook->currentWidget() == TabSetting)
+		ApplyVisibleTools();
 
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
@@ -1711,6 +1732,10 @@ void ptMainWindow::Search() {
 }
 
 void ptMainWindow::ShowActiveTools() {
+	// apply changes at VisibleTools box
+	if (MainTabBook->currentWidget() == TabSetting)
+		ApplyVisibleTools();
+
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
   SearchInputWidget->setText("");
@@ -2491,6 +2516,151 @@ void ptMainWindow::UpdateCropToolUI() {
     AspectRatioWWidget->setEnabled(false);
     AspectRatioHWidget->setEnabled(false);
   }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Update visible tools
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::UpdateVisibleTools() {
+	bool isTreeEmpty = false;
+	if (VisibleToolsTree->topLevelItemCount() == 0)
+		isTreeEmpty = true;
+
+	// add top level items corresponding to tab titles
+	if (isTreeEmpty)
+		for (int i=0; i < ProcessingTabBook->count(); i++) {
+			QTreeWidgetItem *topItem = new QTreeWidgetItem(QStringList(ProcessingTabBook->tabText(i)));
+			VisibleToolsTree->addTopLevelItem(topItem);
+		}
+
+	QStringList hiddenTools = Settings->GetStringList("HiddenTools");
+
+	// run through tools that aren't always visible
+	for (QList<QString>::iterator itGroupBox=m_GroupBoxesOrdered->begin();
+			 itGroupBox != m_GroupBoxesOrdered->end(); itGroupBox++)
+		if (!Settings->ToolAlwaysVisible(*itGroupBox)) {
+			QTreeWidgetItem *item = NULL;
+
+			if (isTreeEmpty) {
+				item = new QTreeWidgetItem(QStringList(m_GroupBox->value(*itGroupBox)->GetTitle()));
+				VisibleToolsTree->topLevelItem(m_GroupBox->value(*itGroupBox)->GetTabNumber())->addChild(item);
+			}
+			else {
+				// a try to update the tree without deleting it
+				// find all TreeItems with necessary name (in different tabs)
+				QList<QTreeWidgetItem *> itemList = VisibleToolsTree->findItems(
+							m_GroupBox->value(*itGroupBox)->GetTitle(), Qt::MatchExactly | Qt::MatchRecursive);
+
+				// find item corresponding to proper tab (maybe their is a simplier way)
+				for (int i=0; i < itemList.count(); i++)
+					if (VisibleToolsTree->findItems(ProcessingTabBook->tabText(ProcessingTabBook->indexOf(
+							ProcessingTabBook->findChild<QWidget *>(m_GroupBox->value(*itGroupBox)->GetTabName()))),
+																					Qt::MatchExactly).first()->indexOfChild(itemList.at(i)) >= 0) {
+						item = itemList.at(i);
+						break;
+					}
+			}
+
+			// set checkstate
+			if (!hiddenTools.contains(*itGroupBox))
+				item->setCheckState(0, Qt::Checked);
+			else
+				item->setCheckState(0, Qt::Unchecked);
+		}
+
+	// delete top level items, which tools are always visible
+	if (isTreeEmpty)
+		for (int i=0; i < VisibleToolsTree->topLevelItemCount(); i++)
+			if (VisibleToolsTree->topLevelItem(i)->childCount() == 0)
+				VisibleToolsTree->takeTopLevelItem(i--);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Apply visible tools
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::ApplyVisibleTools() {
+	QStringList hiddenTools = Settings->GetStringList("HiddenTools");
+
+	// run through tools that aren't always visible
+	for (QList<QString>::iterator itGroupBox=m_GroupBoxesOrdered->begin();
+			 itGroupBox != m_GroupBoxesOrdered->end(); itGroupBox++)
+		if (!Settings->ToolAlwaysVisible(*itGroupBox)) {
+			QTreeWidgetItem *item = NULL;
+
+			// find all TreeItems with necessary name (in different tabs)
+			QList<QTreeWidgetItem *> itemList = VisibleToolsTree->findItems(
+						m_GroupBox->value(*itGroupBox)->GetTitle(), Qt::MatchExactly | Qt::MatchRecursive);
+
+			// find item corresponding to proper tab (maybe their is a simplier way)
+			for (int i=0; i < itemList.count(); i++)
+				if (VisibleToolsTree->findItems(ProcessingTabBook->tabText(ProcessingTabBook->indexOf(
+						ProcessingTabBook->findChild<QWidget *>(m_GroupBox->value(*itGroupBox)->GetTabName()))),
+																				Qt::MatchExactly).first()->indexOfChild(itemList.at(i)) >= 0) {
+					item = itemList.at(i);
+					break;
+				}
+
+			// hide/show tools according to checkstate
+			if (item->checkState(0) == Qt::Checked && hiddenTools.contains(*itGroupBox)) {
+				hiddenTools.removeOne(*itGroupBox);
+				m_GroupBox->value(*itGroupBox)->show();
+			}
+			if (item->checkState(0) == Qt::Unchecked && !hiddenTools.contains(*itGroupBox)) {
+				hiddenTools.append(*itGroupBox);
+				m_GroupBox->value(*itGroupBox)->hide();
+			}
+		}
+
+	Settings->SetValue("HiddenTools", hiddenTools);
+
+	// Image need to be updated, if active tools have changed their state
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Reload visible tools tree
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::OnVisibleToolsDiscardButtonClicked() {
+	// update VisibleTools box
+	UpdateVisibleTools();
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Unhide all tools
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::OnVisibleToolsCheckAllButtonClicked() {
+	for (int i=0; i < VisibleToolsTree->topLevelItemCount(); i++)
+		for (int j=0; j < VisibleToolsTree->topLevelItem(i)->childCount(); j++)
+			VisibleToolsTree->topLevelItem(i)->child(j)->setCheckState(0, Qt::Checked);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Hide all tools
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::OnVisibleToolsUncheckAllButtonClicked() {
+	for (int i=0; i < VisibleToolsTree->topLevelItemCount(); i++)
+		for (int j=0; j < VisibleToolsTree->topLevelItem(i)->childCount(); j++)
+			VisibleToolsTree->topLevelItem(i)->child(j)->setCheckState(0, Qt::Unchecked);
 }
 
 

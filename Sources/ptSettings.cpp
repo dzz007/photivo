@@ -1906,6 +1906,7 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     << "TabTheming"
     << "TabTranslation"
     << "TabMemoryTest"
+		<< "TabVisibleTools"
     // Info tab
     << "TabInfoPhotivo"
     << "TabInfoFile"
@@ -1916,7 +1917,7 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     << "TabCameraColorSpace"
     << "TabGenCorrections"
     << "TabWhiteBalance"
-    << "TabDemosaicing"
+		<< "TabDemosaicing"
     << "TabHighlightRecovery"
     // Output Tab
     << "TabOutputColorSpace"
