@@ -572,6 +572,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurvesDirectory"                      ,0         ,"@INSTALL@/Curves"                       ,1},
     {"ChannelMixersDirectory"               ,0         ,"@INSTALL@/ChannelMixers"                ,1},
     {"PresetDirectory"                      ,0         ,"@INSTALL@/Presets"                      ,0},
+		{"UIDirectory"                          ,0         ,"@INSTALL@/"                             ,0},
     {"CameraColorProfilesDirectory"         ,0         ,"@INSTALL@/Profiles/Camera"              ,1},
     {"PreviewColorProfilesDirectory"        ,0         ,"@INSTALL@/Profiles/Preview"             ,0},
     {"OutputColorProfilesDirectory"         ,0         ,"@INSTALL@/Profiles/Output"              ,1},
@@ -1906,6 +1907,7 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     << "TabTheming"
     << "TabTranslation"
     << "TabMemoryTest"
+		<< "TabVisibleTools"
     // Info tab
     << "TabInfoPhotivo"
     << "TabInfoFile"

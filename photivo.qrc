@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/photivo">
         <file>Icons/wilber.png</file>
+        <file>Icons/nocheck.png</file>
         <file>Icons/reload.png</file>
         <file>Icons/viewmag_h.png</file>
         <file>Icons/viewmag1.png</file>

@@ -535,6 +535,7 @@ int photivoMain(int Argc, char *Argv[]) {
   if (FirstStart == 1) {
     Settings->SetValue("RawsDirectory", UserDirectory);
     Settings->SetValue("OutputDirectory", UserDirectory);
+		Settings->SetValue("UIDirectory", UserDirectory);
     Settings->SetValue("PresetDirectory", UserDirectory + "Presets");
     Settings->SetValue("CurvesDirectory", UserDirectory + "Curves");
     Settings->SetValue("ChannelMixersDirectory", UserDirectory + "ChannelMixers");
@@ -2481,6 +2482,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
       << "CurvesDirectory"
       << "ChannelMixersDirectory"
       << "PresetDirectory"
+			<< "UIDirectory"
       << "CameraColorProfilesDirectory"
       << "PreviewColorProfilesDirectory"
       << "OutputColorProfilesDirectory"

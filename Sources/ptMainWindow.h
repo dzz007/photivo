@@ -74,6 +74,12 @@ void UpdateExifInfo(Exiv2::ExifData ExifData);
 // Set visible/enabled states for crop tool widgets
 void UpdateCropToolUI();
 
+// Set visible/hidden tools according to their state in the processing tab
+void UpdateVisibleTools();
+
+// Show/hide tools in the processing tab according to current settings
+void ApplyVisibleTools();
+
 // Moved tools
 void ShowActiveTools();
 void CleanUpMovedTools();
@@ -239,6 +245,12 @@ void OnGradualOverlay2ColorButtonClicked();
 void OnOutputColorProfileResetButtonClicked();
 void OnWriteOutputButtonClicked();
 void OnWritePipeButtonClicked();
+
+void OnVisibleToolsDiscardButtonClicked();
+void OnVisibleToolsCheckAllButtonClicked();
+void OnVisibleToolsUncheckAllButtonClicked();
+void OnVisibleToolsSaveButtonClicked();
+void OnVisibleToolsLoadButtonClicked();
 };
 
 #endif
