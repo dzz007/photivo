@@ -336,7 +336,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(SpotWB);
 
   //
-  // TAB : Lensfun
+  // TAB : Geometry
   //
 
   // Not coverd by the macros as it takes input from lensfun
@@ -361,9 +361,9 @@ ptMainWindow::ptMainWindow(const QString Title)
 //  Settings->SetEnabled("LensfunVignettingEnable",0);
 //  Settings->SetEnabled("LensfunDistortionEnable",0);
 
-  //
-  // TAB : RGB
-  //
+  // TODO BJ: Unhide when lensfun DB is implemented properly.
+  widget_158->setVisible(false);  //Camera
+  widget_159->setVisible(false);  //Lens
 
   Macro_ConnectSomeButton(RotateLeft);
   Macro_ConnectSomeButton(RotateRight);
@@ -371,6 +371,10 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(MakeCrop);
   Macro_ConnectSomeButton(ConfirmCrop);
   Macro_ConnectSomeButton(CancelCrop);
+
+  //
+  // TAB : RGB
+  //
 
   Macro_ConnectSomeButton(ChannelMixerOpen);
   Macro_ConnectSomeButton(ChannelMixerSave);

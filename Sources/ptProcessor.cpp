@@ -567,9 +567,8 @@ void ptProcessor::Run(short Phase,
         LensData.AddCalibVignetting(&VignetteData);
         LensData.AddCalibDistortion(&DistortionData);
         assert(LensData.Check());
-
         lfModifier* LfunData = lfModifier::Create(&LensData,
-                                                  Settings->GetDouble("LfunCameraCrop"),
+                                                  1,  // focal length always normalised to 35mm equiv.
                                                   m_Image_AfterGeometry->m_Width,
                                                   m_Image_AfterGeometry->m_Height);
 
@@ -578,7 +577,6 @@ void ptProcessor::Run(short Phase,
         if (LensData.Type != TargetGeo) {
           modflags |= LF_MODIFY_GEOMETRY;
         }
-
         // Init modifier and get list of lensfun actions that actually get performed
         modflags = LfunData->Initialize(&LensData,
                                         LF_PF_U16,  //image is uint16 data
@@ -590,8 +588,14 @@ void ptProcessor::Run(short Phase,
                                         modflags,
                                         false);  //distortion correction, not dist. simulation
 
-        m_Image_AfterGeometry->Lensfun(modflags, LfunData);
+        // Execute lensfun corrections. For vignetting the image is changed in place.
+        // For everything else new pixel coordinates are returned in TransformedCoords.
+        float* TransformedCoords = NULL;
+        m_Image_AfterGeometry->Lensfun(modflags, LfunData, TransformedCoords);
         LfunData->Destroy();
+
+        // TODO BJ: Transform image if needed
+        FREE(TransformedCoords);
 
         TRACEMAIN("Done Lensfun corrections at %d ms.",Timer.elapsed());
       }

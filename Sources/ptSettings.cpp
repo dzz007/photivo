@@ -74,9 +74,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ESMedianPasses"                ,ptGT_Input           ,2,1,1 ,0    ,0    ,10     ,1    ,0 ,tr("Edge sensitive median passes")      ,tr("Nr of edge sensitive median filter passes")},
     {"ClipParameter"                 ,ptGT_InputSlider     ,1,1,1 ,0    ,0    ,100   ,1    ,0 ,tr("Parameter")          ,tr("Clip function dependent parameter")},
 
-    {"LfunFocal"                     ,ptGT_Input           ,2,1,1 ,50.0 ,4.0  ,1000.0,1.0  ,0 ,tr("Focal length"), tr("")},
+    {"LfunFocal"                     ,ptGT_Input           ,2,1,1 ,50.0 ,4.0  ,1000.0,1.0  ,0 ,tr("Focal length (35mm equiv.)"), tr("Focal length (35mm equiv.)")},
     {"LfunAperture"                  ,ptGT_Input           ,2,1,1 ,8.0  ,0.8  ,32.0  ,1.0  ,1 ,tr("Aperture"), tr("")},
-    {"LfunCameraCrop"                ,ptGT_Input           ,2,1,1 ,1.5  ,1.0  ,10.0  ,0.1  ,1 ,tr("Camera crop"), tr("Crop factor of the current image’s camera.\n35mm film = 1.0")},
     {"LfunDistance"                  ,ptGT_Input           ,2,1,1 ,1.0  ,0.01 ,500.0 ,1.0  ,2 ,tr("Distance"), tr("Distance between object and camera")},
     {"LfunCALinearKr"                ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("kr"),tr("")},
     {"LfunCALinearKb"                ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("kb"),tr("")},
@@ -90,6 +89,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LfunVignettePoly6K2"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,2.0   ,0.01 ,3 ,tr("k2"),tr("")},
     {"LfunVignettePoly6K3"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,2.0   ,0.01 ,3 ,tr("k3"),tr("")},
 
+    {"LfunFocalAdjust"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-50.0,50.0  ,1.0  ,0 ,tr("Focal length adjustment"), tr("Deviation in mm from the default focal length set in \"Lensfun - General\".\nUsed for geometry correction.")},
     {"LfunDistPoly3K1"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k1"),tr("")},
     {"LfunDistPoly5K1"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k1"),tr("")},
     {"LfunDistPoly5K2"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k2"),tr("")},
