@@ -584,6 +584,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   // Search bar
   Macro_ConnectSomeButton(SearchReset);
   Macro_ConnectSomeButton(SearchActiveTools);
+  Macro_ConnectSomeButton(SearchAllTools);
+  Macro_ConnectSomeButton(SearchFavouriteTools);
   connect(SearchInputWidget, SIGNAL(textEdited(QString)), this, SLOT(StartSearchTimer(QString)));
   SearchWidget->setVisible(Settings->GetInt("SearchBarEnable"));
 #if (QT_VERSION >= 0x40700)
@@ -1669,6 +1671,14 @@ void ptMainWindow::OnSearchActiveToolsButtonClicked() {
   ShowActiveTools();
 }
 
+void ptMainWindow::OnSearchAllToolsButtonClicked() {
+  ShowAllTools();
+}
+
+void ptMainWindow::OnSearchFavouriteToolsButtonClicked() {
+  ShowFavouriteTools();
+}
+
 void ptMainWindow::StartSearchTimer(QString) {
   m_SearchInputTimer->start(50);
 }
@@ -1726,6 +1736,67 @@ void ptMainWindow::ShowActiveTools() {
   }
 
   ToolContainerLabel->setText(tr("Active tools:"));
+
+  while (ToolContainer->layout()->count()!=0) {
+    ToolContainer->layout()->takeAt(0);
+  }
+
+  for (short i=0; i<m_MovedTools->size(); i++) {
+    ToolContainer->layout()->addWidget(m_MovedTools->at(i));
+  }
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->addStretch();
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setSpacing(0);
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setContentsMargins(0,0,0,0);
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setMargin(0);
+  MainTabBook->setCurrentWidget(TabMovedTools);
+}
+
+void ptMainWindow::ShowAllTools() {
+  // clean up first!
+  if (m_MovedTools->size()>0) CleanUpMovedTools();
+  SearchInputWidget->setText("");
+
+  for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
+    m_MovedTools->append(m_GroupBox->value(m_GroupBoxesOrdered->at(i)));
+  }
+  if (m_MovedTools->size() == 0) {
+    QMessageBox::information(this,tr("All tools hidden"),tr("No visible tools!"));
+    return;
+  }
+
+  ToolContainerLabel->setText(tr("All visible tools:"));
+
+  while (ToolContainer->layout()->count()!=0) {
+    ToolContainer->layout()->takeAt(0);
+  }
+
+  for (short i=0; i<m_MovedTools->size(); i++) {
+    ToolContainer->layout()->addWidget(m_MovedTools->at(i));
+  }
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->addStretch();
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setSpacing(0);
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setContentsMargins(0,0,0,0);
+  static_cast<QVBoxLayout*>(ToolContainer->layout())->setMargin(0);
+  MainTabBook->setCurrentWidget(TabMovedTools);
+}
+
+void ptMainWindow::ShowFavouriteTools() {
+  // clean up first!
+  if (m_MovedTools->size()>0) CleanUpMovedTools();
+  SearchInputWidget->setText("");
+
+  QStringList FavTools = Settings->GetStringList("FavouriteTools");
+  for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
+    if (FavTools.contains(m_GroupBoxesOrdered->at(i))) {
+      m_MovedTools->append(m_GroupBox->value(m_GroupBoxesOrdered->at(i)));
+    }
+  }
+  if (m_MovedTools->size() == 0) {
+    QMessageBox::information(this,tr("Favourite tools"),tr("No favourite tools!"));
+    return;
+  }
+
+  ToolContainerLabel->setText(tr("Favourite tools:"));
 
   while (ToolContainer->layout()->count()!=0) {
     ToolContainer->layout()->takeAt(0);
