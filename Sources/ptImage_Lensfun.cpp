@@ -31,8 +31,8 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData, flo
       (LfunActions == LF_MODIFY_ALL) )
   {
     LfunData->ApplyColorModification(m_Image, 0.0, 0.0, m_Width, m_Height,
-                                     LF_CR_3(RED, GREEN, BLUE),
-                                     m_Width * 3 * 2);    // 3 color components, 2 bytes per color
+                                     LF_CR_4(RED, GREEN, BLUE, GREEN),  // TODO BJ: Taken from Jos’s old code. I have
+                                     m_Width * 4 * sizeof(uint16_t));   // no idea why it has to be LF_CRF_4
   }
 
   // Stage 1+3: CA, lens Geometry/distortion
@@ -40,17 +40,17 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData, flo
       (LfunActions & (LF_MODIFY_DISTORTION | LF_MODIFY_GEOMETRY))) ||
       (LfunActions == LF_MODIFY_ALL) )
   {
-    TransformedCoords = (float*) CALLOC((uint32_t)m_Width * m_Height * 2, sizeof(float));
+    TransformedCoords = (float*) CALLOC((uint32_t)m_Width * m_Height * 4 * 2, sizeof(float));
     LfunData->ApplySubpixelGeometryDistortion(0.0, 0.0, m_Width, m_Height, TransformedCoords);
 
   // Stage 1 only: CA
   } else if (LfunActions & LF_MODIFY_TCA) {
-    TransformedCoords = (float*) CALLOC((uint32_t)m_Width * m_Height * 2, sizeof(float));
+    TransformedCoords = (float*) CALLOC((uint32_t)m_Width * m_Height * 4 * 2, sizeof(float));
     LfunData->ApplySubpixelDistortion(0.0, 0.0, m_Width, m_Height, TransformedCoords);
 
-  // Stage 3 only: lens Geometry/distortion
+  // Stage 3 only: lens geometry/distortion
   } else if (LfunActions & (LF_MODIFY_DISTORTION | LF_MODIFY_GEOMETRY)) {
-    TransformedCoords = (float*) CALLOC((uint32_t)m_Width * m_Height * 2, sizeof(float));
+    TransformedCoords = (float*) CALLOC((uint32_t)m_Width * m_Height * 4 * 2, sizeof(float));
     LfunData->ApplyGeometryDistortion(0.0, 0.0, m_Width, m_Height, TransformedCoords);
   }
 

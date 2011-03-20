@@ -605,14 +605,12 @@ ptImage* ptCIPerspective(const float RotateAngle,
  *
  * TransformedCoords
  *     Same as lensfun: "A pointer to an output array which receives the respective X and Y
- *     distorted coordinates for every pixel of the block." May be NULL if no CA (stage 1)
- *     and no lens geometry/distortion (stage 3) correction is done. Proper memory
- *     allocation is handled by Lensfun().
+ *     distorted coordinates for every pixel of the block." Proper memory allocation is
+ *     handled by Lensfun(). But freeing memory is the responsibility of the calling code!
  */
 ptImage* Lensfun(const int LfunActions,
                  const lfModifier* LfunData,
-                 float* TransformedCoords = NULL);
-
+                 float* TransformedCoords);
 };
 
 #endif
