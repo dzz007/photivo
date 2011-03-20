@@ -59,6 +59,8 @@ QPixmap*    ptIconCheckGreen;
 QPixmap*    ptIconReset;
 QPixmap*    ptIconDisk;
 QPixmap*    ptIconQuestion;
+QPixmap*    ptIconStar;
+QPixmap*    ptIconStarGrey;
 
 QColor      ptBackGround;
 

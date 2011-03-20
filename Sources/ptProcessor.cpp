@@ -325,9 +325,9 @@ void ptProcessor::Run(short Phase,
                 }
             } else if (Settings->GetInt("CameraColor") == ptCameraColor_Flat) {
               QString InputFileName;
-              InputFileName =
-                Settings->GetString("CameraColorProfilesDirectory");
-              InputFileName += "/Flat/FlatProfile.icc";
+              InputFileName = Settings->GetString("UserDirectory");
+              // hard coded, other paths may be altered by user
+              InputFileName += "/Profiles/Camera/Flat/FlatProfile.icc";
               QFileInfo PathInfo(InputFileName);
               if (PathInfo.exists() &&
                   PathInfo.isFile() &&
@@ -337,6 +337,7 @@ void ptProcessor::Run(short Phase,
                 TRACEMAIN("Found profile at %d ms.",Timer.elapsed());
               } else {
                 TRACEMAIN("Not found profile at %d ms.",Timer.elapsed());
+                printf("profile %s\n\n",InputFileName.toAscii().data());
                 Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
               }
             }

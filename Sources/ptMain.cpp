@@ -773,6 +773,19 @@ void CB_Event0() {
     ViewWindow->setFocus();
   }
 
+  if (Settings->GetStringList("FavouriteTools") == QStringList()) {
+    QStringList Temp;
+    Temp << "TabWhiteBalance"
+         << "TabRotation"
+         << "TabCrop"
+         << "TabReinhard05"
+         << "TabLABTexture2"
+         << "TabDetailCurve"
+         << "TabLABVignette"
+         << "TabOutContrast";
+    Settings->SetValue("FavouriteTools", Temp);
+  }
+
   InStartup = 0;
 }
 

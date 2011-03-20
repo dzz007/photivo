@@ -82,6 +82,8 @@ public:
 
   // Moved tools
   void ShowActiveTools();
+void ShowAllTools();
+void ShowFavouriteTools();
   void CleanUpMovedTools();
 
   // Set visible status for lensfun widgets
@@ -184,6 +186,8 @@ void Search();
 
 void OnSearchResetButtonClicked();
 void OnSearchActiveToolsButtonClicked();
+void OnSearchAllToolsButtonClicked();
+void OnSearchFavouriteToolsButtonClicked();
 
   void OnRunButtonClicked();
   void OnResetButtonClicked();

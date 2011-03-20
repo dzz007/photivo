@@ -712,6 +712,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"HueCurveType"                         ,1         ,0                                                   ,1},
     {"FullOutput"                           ,9         ,0                                                   ,0},
     {"HiddenTools"                          ,0         ,QStringList()                                       ,1},
+    {"FavouriteTools"                       ,0         ,QStringList()                                       ,1},
     {"BlockedTools"                         ,0         ,QStringList()                                       ,1},
     {"BlockUpdate"                          ,9         ,0                                                   ,0},
     {"FocalLengthIn35mmFilm"                ,0         ,0.0                                                 ,0},
@@ -1941,11 +1942,16 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     << "TabPreviewColorSpace"
     << "TabGimpCommand"
     << "TabRememberSettings"
+    << "TabStartupSettings"
     << "TabInputControl"
     << "TabToolBoxControl"
     << "TabTabStatusIndicator"
     << "TabPreviewControl"
     << "TabTheming"
+    << "TabConfigSaveMode"
+    << "TabSearchBar"
+    << "TabConfirmDialogs"
+    << "TabBackupSettings"
     << "TabTranslation"
     << "TabMemoryTest"
     // Info tab

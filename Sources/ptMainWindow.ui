@@ -177,7 +177,7 @@
                    <widget class="QLineEdit" name="SearchInputWidget">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
+                      <horstretch>200</horstretch>
                       <verstretch>200</verstretch>
                      </sizepolicy>
                     </property>
@@ -238,6 +238,52 @@
                    </spacer>
                   </item>
                   <item>
+                   <widget class="QToolButton" name="SearchFavouriteToolsButton">
+                    <property name="toolTip">
+                     <string>Favourite tools</string>
+                    </property>
+                    <property name="text">
+                     <string>Favourite tools</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="../photivo.qrc">
+                      <normaloff>:/photivo/Icons/star.png</normaloff>:/photivo/Icons/star.png</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>16</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="toolButtonStyle">
+                     <enum>Qt::ToolButtonIconOnly</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="SearchAllToolsButton">
+                    <property name="toolTip">
+                     <string>All visible tools</string>
+                    </property>
+                    <property name="text">
+                     <string>All tools</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="../photivo.qrc">
+                      <normaloff>:/photivo/Icons/lines.png</normaloff>:/photivo/Icons/lines.png</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>16</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="toolButtonStyle">
+                     <enum>Qt::ToolButtonIconOnly</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
                    <widget class="QToolButton" name="SearchActiveToolsButton">
                     <property name="toolTip">
                      <string>Active tools</string>
@@ -275,7 +321,7 @@
                   <enum>Qt::NoFocus</enum>
                  </property>
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>2</number>
                  </property>
                  <widget class="QWidget" name="TabProcessing">
                   <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -343,7 +389,7 @@
                            <item>
                             <widget class="QToolBox" name="toolBox_2">
                              <property name="currentIndex">
-                              <number>0</number>
+                              <number>3</number>
                              </property>
                              <widget class="QWidget" name="TabInput">
                               <property name="geometry">
@@ -643,7 +689,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>83</width>
-                                <height>62</height>
+                                <height>422</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -707,7 +753,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>124</width>
+                                <width>822</width>
                                 <height>184</height>
                                </rect>
                               </property>
@@ -931,8 +977,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>108</width>
-                                <height>270</height>
+                                <width>822</width>
+                                <height>422</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -1080,7 +1126,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>83</width>
-                                <height>68</height>
+                                <height>422</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -10075,6 +10121,22 @@
                  <widget class="QWidget" name="TabMovedTools">
                   <layout class="QVBoxLayout" name="verticalLayout_247">
                    <item>
+                    <spacer name="verticalSpacer_130">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>10</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
                     <widget class="QLabel" name="ToolContainerLabel">
                      <property name="font">
                       <font>
@@ -10148,7 +10210,7 @@
                           <enum>QFrame::NoFrame</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>15</number>
+                          <number>13</number>
                          </property>
                          <property name="tabSpacing">
                           <number>6</number>
@@ -10944,7 +11006,7 @@
                            </item>
                           </layout>
                          </widget>
-                         <widget class="QWidget" name="page_2">
+                         <widget class="QWidget" name="TabSearchBar">
                           <property name="geometry">
                            <rect>
                             <x>0</x>
@@ -11024,7 +11086,7 @@
                            </item>
                           </layout>
                          </widget>
-                         <widget class="QWidget" name="page">
+                         <widget class="QWidget" name="TabBackupSettings">
                           <property name="geometry">
                            <rect>
                             <x>0</x>
