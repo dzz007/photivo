@@ -25,6 +25,7 @@
 #define DLCONSTANTS_H
 
 #include <lcms2.h>
+#include <lensfun.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -148,6 +149,28 @@ const short ptStyleHighLight_Purple   = 1;
 const short ptStyleHighLight_Blue     = 2;
 const short ptStyleHighLight_Green    = 3;
 const short ptStyleHighLight_Orange   = 4;
+
+
+// Lensfun
+const short ptLfunCAModel_None        = LF_TCA_MODEL_NONE;
+const short ptLfunCAModel_Linear      = LF_TCA_MODEL_LINEAR;
+const short ptLfunCAModel_Poly3       = LF_TCA_MODEL_POLY3;
+
+const short ptLfunVignetteModel_None  = LF_VIGNETTING_MODEL_NONE;
+const short ptLfunVignetteModel_Poly6 = LF_VIGNETTING_MODEL_PA;
+
+const short ptLfunGeo_Unknown         = LF_UNKNOWN;
+const short ptLfunGeo_Rectilinear     = LF_RECTILINEAR;
+const short ptLfunGeo_Fisheye         = LF_FISHEYE;
+const short ptLfunGeo_Panoramic       = LF_PANORAMIC;
+const short ptLfunGeo_Equirectangular = LF_EQUIRECTANGULAR;
+
+const short ptLfunDistModel_None      = LF_DIST_MODEL_NONE;
+const short ptLfunDistModel_Poly3     = LF_DIST_MODEL_POLY3;
+const short ptLfunDistModel_Poly5     = LF_DIST_MODEL_POLY5;
+const short ptLfunDistModel_Fov1      = LF_DIST_MODEL_FOV1;
+const short ptLfunDistModel_PTLens    = LF_DIST_MODEL_PTLENS;
+
 
 // White balances.
 
