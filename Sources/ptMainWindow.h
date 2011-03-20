@@ -76,6 +76,8 @@ void UpdateCropToolUI();
 
 // Moved tools
 void ShowActiveTools();
+void ShowAllTools();
+void ShowFavouriteTools();
 void CleanUpMovedTools();
 
 // Make and model are remembered because in
@@ -158,6 +160,8 @@ void OnPreviewModeButtonClicked();
 
 void OnSearchResetButtonClicked();
 void OnSearchActiveToolsButtonClicked();
+void OnSearchAllToolsButtonClicked();
+void OnSearchFavouriteToolsButtonClicked();
 
 void OnRunButtonClicked();
 void OnResetButtonClicked();
