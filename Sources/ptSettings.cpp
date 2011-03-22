@@ -716,6 +716,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BlockedTools"                         ,0         ,QStringList()                                       ,1},
     {"BlockUpdate"                          ,9         ,0                                                   ,0},
     {"FocalLengthIn35mmFilm"                ,0         ,0.0                                                 ,0},
+    {"ApertureFromExif"                     ,0         ,0.0                                                 ,0}   // aperture from exif data
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.

@@ -361,9 +361,10 @@ ptMainWindow::ptMainWindow(const QString Title)
 //  Settings->SetEnabled("LensfunVignettingEnable",0);
 //  Settings->SetEnabled("LensfunDistortionEnable",0);
 
-  // TODO BJ: Unhide when lensfun DB is implemented properly.
+  // TODO BJ: Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
+  LfunFocalAdjustWidget->setVisible(false);
 
   Macro_ConnectSomeButton(RotateLeft);
   Macro_ConnectSomeButton(RotateRight);
@@ -2456,16 +2457,19 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
   TempString = TheInfo + tr(" at ");
   TheInfo="";
 
+  Settings->SetValue("ApertureFromExif", 0.0);
   Pos = ExifData.findKey(Exiv2::ExifKey("Exif.Photo.FNumber"));
   if (Pos != ExifData.end() ) {
     std::stringstream str;
     str << *Pos;
+    Settings->SetValue("ApertureFromExif", QString(str.str().c_str()).remove("F", Qt::CaseInsensitive).toDouble());
     TheInfo.append(QString(str.str().c_str()));
   } else {
     Pos = ExifData.findKey(Exiv2::ExifKey("Exif.Photo.ApertureValue"));
     if (Pos != ExifData.end() ) {
       std::stringstream str;
       str << *Pos;
+      Settings->SetValue("ApertureFromExif", QString(str.str().c_str()).remove("F", Qt::CaseInsensitive).toDouble());
       TheInfo.append(QString(str.str().c_str()));
     }
   }
