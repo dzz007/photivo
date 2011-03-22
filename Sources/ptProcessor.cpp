@@ -596,9 +596,9 @@ void ptProcessor::Run(short Phase,
         LfunData->Destroy();
 
         // TODO BJ: Transform image if needed
-        FREE(TransformedCoords);
+        FREE(TransformedCoords)
 
-        TRACEMAIN("Done Lensfun corrections at %d ms.",Timer.elapsed());
+        TRACEMAIN("Done Lensfun corrections at %d ms.",Timer.elapsed())
       }
 
 

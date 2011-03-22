@@ -2986,9 +2986,14 @@ void CB_MenuFileOpen(const short HaveFile) {
   } else {
     Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
   }
+
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  Settings->SetValue("PerspectiveFocalLength", Settings->GetDouble("FocalLengthIn35mmFilm"));
+  Settings->SetValue("LfunFocal", Settings->GetDouble("FocalLengthIn35mmFilm"));
+  double TmpAprt = Settings->GetDouble("ApertureFromExif");
+  Settings->SetValue("LfunAperture", (TmpAprt==0.0) ? 8.0 : TmpAprt);
+
   MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
-  Settings->SetValue("PerspectiveFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
   #ifdef Q_OS_WIN32
     MainWindow->setWindowTitle(QString((Settings->GetStringList("InputFileNameList"))[0]).replace(QString("/"), QString("\\")) + " - Photivo");
   #else
