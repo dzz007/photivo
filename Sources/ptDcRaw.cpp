@@ -7878,7 +7878,7 @@ void CLASS stretch()
   for (c=0; c < m_Colors; c++) img[row*m_Width+col][c] =
           (uint16_t)(pix0[c]*(1-frac) + pix1[c]*frac + 0.5);
     }
-    m_Height = newdim;
+    m_OutHeight = m_Height = newdim;
   } else {
     newdim = (uint16_t) (m_Width * m_PixelAspect + 0.5);
     img = (uint16_t (*)[4]) CALLOC (m_Height*newdim, sizeof *img);
@@ -7891,7 +7891,7 @@ void CLASS stretch()
   for (c=0; c < m_Colors; c++) img[row*newdim+col][c] =
          (uint16_t) (pix0[c]*(1-frac) + pix1[c]*frac + 0.5);
     }
-    m_Width = newdim;
+    m_OutWidth = m_Width = newdim;
   }
   FREE (m_Image);
   m_Image = img;
