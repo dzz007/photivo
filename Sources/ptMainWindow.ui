@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1258</width>
-    <height>854</height>
+    <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -238,6 +238,52 @@
                    </spacer>
                   </item>
                   <item>
+                   <widget class="QToolButton" name="SearchFavouriteToolsButton">
+                    <property name="toolTip">
+                     <string>Favourite tools</string>
+                    </property>
+                    <property name="text">
+                     <string>Favourite tools</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="../photivo.qrc">
+                      <normaloff>:/photivo/Icons/star.png</normaloff>:/photivo/Icons/star.png</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>16</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="toolButtonStyle">
+                     <enum>Qt::ToolButtonIconOnly</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="SearchAllToolsButton">
+                    <property name="toolTip">
+                     <string>All visible tools</string>
+                    </property>
+                    <property name="text">
+                     <string>All tools</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="../photivo.qrc">
+                      <normaloff>:/photivo/Icons/lines.png</normaloff>:/photivo/Icons/lines.png</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>16</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="toolButtonStyle">
+                     <enum>Qt::ToolButtonIconOnly</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
                    <widget class="QToolButton" name="SearchActiveToolsButton">
                     <property name="toolTip">
                      <string>Active tools</string>
@@ -275,7 +321,7 @@
                   <enum>Qt::NoFocus</enum>
                  </property>
                  <property name="currentIndex">
-                  <number>3</number>
+                  <number>2</number>
                  </property>
                  <widget class="QWidget" name="TabProcessing">
                   <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -300,7 +346,7 @@
                       <enum>QTabWidget::West</enum>
                      </property>
                      <property name="currentIndex">
-                      <number>4</number>
+                      <number>0</number>
                      </property>
                      <property name="iconSize">
                       <size>
@@ -335,23 +381,23 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>78</width>
-                            <height>240</height>
+                            <width>840</width>
+                            <height>626</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_19">
                            <item>
                             <widget class="QToolBox" name="toolBox_2">
                              <property name="currentIndex">
-                              <number>0</number>
+                              <number>3</number>
                              </property>
                              <widget class="QWidget" name="TabInput">
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>151</width>
-                                <height>103</height>
+                                <width>822</width>
+                                <height>422</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -540,8 +586,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>87</height>
+                                <width>822</width>
+                                <height>422</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -642,8 +688,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>40</height>
+                                <width>822</width>
+                                <height>422</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -707,8 +753,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>165</height>
+                                <width>822</width>
+                                <height>422</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -931,8 +977,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>93</width>
-                                <height>232</height>
+                                <width>822</width>
+                                <height>422</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -1079,8 +1125,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>54</height>
+                                <width>822</width>
+                                <height>422</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -1149,8 +1195,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>78</width>
-                            <height>240</height>
+                            <width>840</width>
+                            <height>626</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -1164,8 +1210,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>162</width>
-                                <height>405</height>
+                                <width>210</width>
+                                <height>471</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -1600,8 +1646,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>137</width>
-                                <height>171</height>
+                                <width>165</width>
+                                <height>210</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -1845,8 +1891,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>134</width>
-                                <height>93</height>
+                                <width>822</width>
+                                <height>422</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2101,8 +2147,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>68</height>
+                                <width>87</width>
+                                <height>94</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2172,8 +2218,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>100</width>
-                                <height>30</height>
+                                <width>87</width>
+                                <height>52</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2209,8 +2255,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>100</width>
-                                <height>30</height>
+                                <width>87</width>
+                                <height>52</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2270,8 +2316,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>78</width>
-                            <height>510</height>
+                            <width>840</width>
+                            <height>626</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -2288,8 +2334,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>131</height>
+                                <width>100</width>
+                                <height>159</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2475,8 +2521,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>58</height>
+                                <width>87</width>
+                                <height>84</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2518,8 +2564,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>86</height>
+                                <width>87</width>
+                                <height>116</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2580,8 +2626,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>58</height>
+                                <width>87</width>
+                                <height>84</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2623,8 +2669,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>56</width>
-                                <height>82</height>
+                                <width>822</width>
+                                <height>112</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2720,8 +2766,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>72</height>
+                                <width>87</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2766,8 +2812,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>44</height>
+                                <width>87</width>
+                                <height>68</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2806,8 +2852,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>100</width>
-                                <height>30</height>
+                                <width>87</width>
+                                <height>52</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2843,8 +2889,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>44</height>
+                                <width>87</width>
+                                <height>68</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2883,8 +2929,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>170</height>
+                                <width>87</width>
+                                <height>212</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2963,8 +3009,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>100</height>
+                                <width>87</width>
+                                <height>132</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3015,8 +3061,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>128</height>
+                                <width>87</width>
+                                <height>164</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3073,8 +3119,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>128</height>
+                                <width>87</width>
+                                <height>164</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3131,8 +3177,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>44</height>
+                                <width>87</width>
+                                <height>68</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3174,8 +3220,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>44</height>
+                                <width>87</width>
+                                <height>68</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3214,8 +3260,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>65</height>
+                                <width>94</width>
+                                <height>78</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3246,7 +3292,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -3377,8 +3423,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>78</width>
-                            <height>483</height>
+                            <width>840</width>
+                            <height>626</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_43">
@@ -3392,8 +3438,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>60</width>
-                                <height>60</height>
+                                <width>822</width>
+                                <height>143</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3429,8 +3475,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>90</width>
-                                <height>111</height>
+                                <width>108</width>
+                                <height>140</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3464,7 +3510,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -3571,8 +3617,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>170</height>
+                                <width>87</width>
+                                <height>212</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3651,8 +3697,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>58</height>
+                                <width>87</width>
+                                <height>84</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3694,8 +3740,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>65</height>
+                                <width>94</width>
+                                <height>78</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3723,7 +3769,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -3833,8 +3879,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>100</height>
+                                <width>87</width>
+                                <height>132</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3885,8 +3931,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>100</height>
+                                <width>87</width>
+                                <height>132</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3937,8 +3983,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>124</height>
+                                <width>87</width>
+                                <height>158</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3982,8 +4028,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>128</height>
+                                <width>87</width>
+                                <height>164</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4040,8 +4086,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>72</height>
+                                <width>87</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4086,8 +4132,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>72</height>
+                                <width>87</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4132,8 +4178,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>44</height>
+                                <width>87</width>
+                                <height>68</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4175,8 +4221,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>100</width>
-                                <height>30</height>
+                                <width>87</width>
+                                <height>52</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4215,8 +4261,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>44</height>
+                                <width>87</width>
+                                <height>68</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4255,8 +4301,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>44</height>
+                                <width>87</width>
+                                <height>68</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4319,23 +4365,23 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>78</width>
-                            <height>510</height>
+                            <width>840</width>
+                            <height>626</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_40">
                            <item>
                             <widget class="QToolBox" name="toolBox_4">
                              <property name="currentIndex">
-                              <number>7</number>
+                              <number>0</number>
                              </property>
                              <widget class="QWidget" name="TabLABImpulseDenoise">
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>44</height>
+                                <width>822</width>
+                                <height>112</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4374,8 +4420,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>128</height>
+                                <width>87</width>
+                                <height>164</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4445,8 +4491,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>208</height>
+                                <width>87</width>
+                                <height>254</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4546,8 +4592,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>96</height>
+                                <width>93</width>
+                                <height>126</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4638,8 +4684,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>170</height>
+                                <width>87</width>
+                                <height>212</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4718,8 +4764,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>72</height>
+                                <width>87</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4764,8 +4810,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>72</height>
+                                <width>87</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4810,8 +4856,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>43</width>
-                                <height>72</height>
+                                <width>87</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4856,8 +4902,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>90</width>
-                                <height>111</height>
+                                <width>108</width>
+                                <height>140</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4882,7 +4928,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -4998,8 +5044,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>128</height>
+                                <width>87</width>
+                                <height>164</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5082,8 +5128,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>96</height>
+                                <width>87</width>
+                                <height>126</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5159,8 +5205,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>54</height>
+                                <width>87</width>
+                                <height>78</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5230,8 +5276,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>72</height>
+                                <width>87</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5276,8 +5322,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>72</height>
+                                <width>87</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5322,8 +5368,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>223</height>
+                                <width>87</width>
+                                <height>269</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5464,8 +5510,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>100</width>
-                                <height>30</height>
+                                <width>87</width>
+                                <height>52</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5528,8 +5574,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>78</width>
-                            <height>402</height>
+                            <width>840</width>
+                            <height>626</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_169">
@@ -5543,8 +5589,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>65</height>
+                                <width>822</width>
+                                <height>236</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5572,7 +5618,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -5682,8 +5728,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>65</height>
+                                <width>94</width>
+                                <height>78</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5711,7 +5757,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -5821,8 +5867,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>65</height>
+                                <width>94</width>
+                                <height>78</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5850,7 +5896,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -5960,8 +6006,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>65</height>
+                                <width>94</width>
+                                <height>78</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5989,7 +6035,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -6096,8 +6142,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>118</height>
+                                <width>94</width>
+                                <height>134</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6125,7 +6171,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -6224,7 +6270,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -6331,8 +6377,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>72</height>
+                                <width>87</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6377,8 +6423,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>114</height>
+                                <width>87</width>
+                                <height>148</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6432,8 +6478,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>114</height>
+                                <width>87</width>
+                                <height>148</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6487,8 +6533,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>128</height>
+                                <width>87</width>
+                                <height>164</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6545,8 +6591,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>128</height>
+                                <width>87</width>
+                                <height>164</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6603,8 +6649,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>260</height>
+                                <width>111</width>
+                                <height>320</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6725,8 +6771,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>138</height>
+                                <width>87</width>
+                                <height>174</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6835,8 +6881,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>78</width>
-                            <height>456</height>
+                            <width>840</width>
+                            <height>626</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_181">
@@ -6850,8 +6896,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>96</height>
+                                <width>87</width>
+                                <height>126</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6927,8 +6973,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>58</height>
+                                <width>87</width>
+                                <height>84</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6970,8 +7016,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>132</width>
-                                <height>200</height>
+                                <width>152</width>
+                                <height>242</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7156,8 +7202,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>58</height>
+                                <width>87</width>
+                                <height>84</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7199,8 +7245,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>44</height>
+                                <width>87</width>
+                                <height>68</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7239,8 +7285,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
-                                <height>193</height>
+                                <width>809</width>
+                                <height>239</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7406,8 +7452,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>132</width>
-                                <height>115</height>
+                                <width>152</width>
+                                <height>147</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7511,8 +7557,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>132</width>
-                                <height>115</height>
+                                <width>152</width>
+                                <height>147</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7616,8 +7662,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>138</height>
+                                <width>87</width>
+                                <height>174</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7702,8 +7748,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>86</height>
+                                <width>87</width>
+                                <height>116</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7751,8 +7797,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>86</height>
+                                <width>87</width>
+                                <height>116</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7813,8 +7859,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>65</height>
+                                <width>94</width>
+                                <height>78</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7842,7 +7888,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -7949,8 +7995,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>65</height>
+                                <width>94</width>
+                                <height>78</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7978,7 +8024,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -8085,8 +8131,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>65</height>
+                                <width>94</width>
+                                <height>78</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8114,7 +8160,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -8245,8 +8291,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>78</width>
-                            <height>321</height>
+                            <width>840</width>
+                            <height>626</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="OutLayout">
@@ -8263,8 +8309,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
-                                <height>65</height>
+                                <width>94</width>
+                                <height>78</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8292,7 +8338,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -8399,8 +8445,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>58</height>
+                                <width>87</width>
+                                <height>84</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8442,8 +8488,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>100</width>
-                                <height>61</height>
+                                <width>127</width>
+                                <height>87</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8558,8 +8604,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>90</width>
-                                <height>69</height>
+                                <width>108</width>
+                                <height>92</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8584,7 +8630,7 @@
                                      </size>
                                     </property>
                                     <property name="autoFillBackground">
-                                     <bool>false</bool>
+                                     <bool>true</bool>
                                     </property>
                                     <property name="frameShape">
                                      <enum>QFrame::StyledPanel</enum>
@@ -8691,8 +8737,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>44</height>
+                                <width>87</width>
+                                <height>68</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8731,8 +8777,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>68</height>
+                                <width>87</width>
+                                <height>94</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8805,8 +8851,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>96</height>
+                                <width>87</width>
+                                <height>126</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8882,8 +8928,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>246</width>
-                                <height>187</height>
+                                <width>822</width>
+                                <height>329</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9184,8 +9230,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>41</height>
+                                <width>87</width>
+                                <height>52</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9282,8 +9328,8 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>78</width>
-                        <height>186</height>
+                        <width>875</width>
+                        <height>634</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_236">
@@ -9297,8 +9343,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>281</width>
-                            <height>88</height>
+                            <width>857</width>
+                            <height>492</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -9446,8 +9492,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
-                            <height>54</height>
+                            <width>119</width>
+                            <height>82</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -9556,8 +9602,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>117</width>
-                            <height>320</height>
+                            <width>157</width>
+                            <height>396</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -9842,8 +9888,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
-                            <height>73</height>
+                            <width>120</width>
+                            <height>105</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10011,6 +10057,22 @@
                  <widget class="QWidget" name="TabMovedTools">
                   <layout class="QVBoxLayout" name="verticalLayout_247">
                    <item>
+                    <spacer name="verticalSpacer_130">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>10</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
                     <widget class="QLabel" name="ToolContainerLabel">
                      <property name="font">
                       <font>
@@ -10033,8 +10095,8 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>71</width>
-                        <height>16</height>
+                        <width>875</width>
+                        <height>595</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_248"/>
@@ -10067,8 +10129,8 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>825</width>
-                        <height>592</height>
+                        <width>877</width>
+                        <height>636</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_143">
@@ -10084,7 +10146,7 @@
                           <enum>QFrame::NoFrame</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>16</number>
+                          <number>13</number>
                          </property>
                          <property name="tabSpacing">
                           <number>6</number>
@@ -10094,8 +10156,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10134,8 +10196,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10233,8 +10295,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10326,8 +10388,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10363,8 +10425,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10476,8 +10538,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10513,8 +10575,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10550,8 +10612,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10587,8 +10649,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10624,8 +10686,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10765,8 +10827,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10880,13 +10942,13 @@
                            </item>
                           </layout>
                          </widget>
-                         <widget class="QWidget" name="page_2">
+                         <widget class="QWidget" name="TabSearchBar">
                           <property name="geometry">
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10922,8 +10984,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10960,13 +11022,13 @@
                            </item>
                           </layout>
                          </widget>
-                         <widget class="QWidget" name="page">
+                         <widget class="QWidget" name="TabBackupSettings">
                           <property name="geometry">
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -11002,8 +11064,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -11039,8 +11101,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>807</width>
-                            <height>81</height>
+                            <width>859</width>
+                            <height>122</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -11068,95 +11130,6 @@
                               </size>
                              </property>
                             </spacer>
-                           </item>
-                          </layout>
-                         </widget>
-                         <widget class="QWidget" name="TabVisibleTools">
-                          <property name="geometry">
-                           <rect>
-                            <x>0</x>
-                            <y>0</y>
-                            <width>790</width>
-                            <height>346</height>
-                           </rect>
-                          </property>
-                          <attribute name="label">
-                           <string>Visible tools</string>
-                          </attribute>
-                          <layout class="QVBoxLayout" name="verticalLayout_253">
-                           <item>
-                            <widget class="QWidget" name="widget_158" native="true">
-                             <layout class="QVBoxLayout" name="verticalLayout_254">
-                              <item>
-                               <layout class="QHBoxLayout" name="horizontalLayout_88">
-                                <item>
-                                 <widget class="QToolButton" name="VisibleToolsDiscardButton">
-                                  <property name="toolTip">
-                                   <string>Discard all changes</string>
-                                  </property>
-                                  <property name="text">
-                                   <string>Discard</string>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item>
-                                 <spacer name="horizontalSpacer_66">
-                                  <property name="orientation">
-                                   <enum>Qt::Horizontal</enum>
-                                  </property>
-                                  <property name="sizeHint" stdset="0">
-                                   <size>
-                                    <width>40</width>
-                                    <height>20</height>
-                                   </size>
-                                  </property>
-                                 </spacer>
-                                </item>
-                                <item>
-                                 <widget class="QToolButton" name="VisibleToolsCheckAllButton">
-                                  <property name="toolTip">
-                                   <string>Mark all tools as shown</string>
-                                  </property>
-                                  <property name="text">
-                                   <string>Check all</string>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item>
-                                 <widget class="QToolButton" name="VisibleToolsUncheckAllButton">
-                                  <property name="toolTip">
-                                   <string>Mark all tools as hidden</string>
-                                  </property>
-                                  <property name="text">
-                                   <string>Uncheck all</string>
-                                  </property>
-                                 </widget>
-                                </item>
-                               </layout>
-                              </item>
-                              <item>
-                               <widget class="QTreeWidget" name="VisibleToolsTree">
-                                <property name="minimumSize">
-                                 <size>
-                                  <width>0</width>
-                                  <height>300</height>
-                                 </size>
-                                </property>
-                                <property name="selectionMode">
-                                 <enum>QAbstractItemView::NoSelection</enum>
-                                </property>
-                                <attribute name="headerVisible">
-                                 <bool>false</bool>
-                                </attribute>
-                                <column>
-                                 <property name="text">
-                                  <string notr="true">1</string>
-                                 </property>
-                                </column>
-                               </widget>
-                              </item>
-                             </layout>
-                            </widget>
                            </item>
                           </layout>
                          </widget>
@@ -11746,59 +11719,5 @@
  <resources>
   <include location="../photivo.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>VisibleToolsCheckAllButton</sender>
-   <signal>clicked()</signal>
-   <receiver>ptMainWindow</receiver>
-   <slot>OnVisibleToolsCheckAllButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>698</x>
-     <y>722</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>528</x>
-     <y>853</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>VisibleToolsUncheckAllButton</sender>
-   <signal>clicked()</signal>
-   <receiver>ptMainWindow</receiver>
-   <slot>OnVisibleToolsUncheckAllButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>767</x>
-     <y>723</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>770</x>
-     <y>853</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>VisibleToolsDiscardButton</sender>
-   <signal>clicked()</signal>
-   <receiver>ptMainWindow</receiver>
-   <slot>OnVisibleToolsDiscardButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>77</x>
-     <y>715</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-2</x>
-     <y>717</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
- <slots>
-  <slot>OnVisibleToolsDiscardButtonClicked()</slot>
-  <slot>OnVisibleToolsCheckAllButtonClicked()</slot>
-  <slot>OnVisibleToolsUncheckAllButtonClicked()</slot>
- </slots>
+ <connections/>
 </ui>

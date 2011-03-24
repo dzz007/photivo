@@ -124,6 +124,10 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_IsBlocked = Settings->ToolIsBlocked(m_Name)?1:0;
   m_IsEnabled = 1;
 
+  m_AtnFav = new QAction(tr("Favourite"), this);
+  connect(m_AtnFav, SIGNAL(triggered()), this, SLOT(SetFavourite()));
+  m_AtnFav->setIconVisibleInMenu(true);
+
   m_AtnHide = new QAction(tr("Hide"), this);
   connect(m_AtnHide, SIGNAL(triggered()), this, SLOT(Hide()));
   m_AtnHide->setIcon(QIcon(*Theme->ptIconCrossRed));
@@ -489,6 +493,22 @@ void ptGroupBox::Hide() {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Set Favourite
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptGroupBox::SetFavourite() {
+  QStringList Temp = Settings->GetStringList("FavouriteTools");
+  if (!Temp.contains(m_Name)) {
+    Temp.append(m_Name);
+  } else {
+    Temp.removeAll(m_Name);
+  }
+  Settings->SetValue("FavouriteTools", Temp);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Set help
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -547,6 +567,16 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
         Menu.addAction(m_AtnSavePreset);
         Menu.addAction(m_AtnAppendPreset);
         Menu.addSeparator();
+        QStringList Temp = Settings->GetStringList("FavouriteTools");
+        if (!Temp.contains(m_Name)) {
+          m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));
+          m_AtnFav->setText(tr("Favourite tool"));
+        } else {
+          m_AtnFav->setIcon(QIcon(*Theme->ptIconStarGrey));
+          m_AtnFav->setText(tr("Normal tool"));
+        }
+        Menu.addAction(m_AtnFav);
+        Menu.addSeparator();
         Menu.addAction(m_AtnHide);
         Menu.exec(event->globalPos());
       } else if (m_Name == "TabCameraColorSpace" ||
@@ -558,8 +588,34 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
         Menu.setStyle(Theme->ptStyle);
         Menu.addAction(m_AtnSavePreset);
         Menu.addAction(m_AtnAppendPreset);
+        Menu.addSeparator();
+        QStringList Temp = Settings->GetStringList("FavouriteTools");
+        if (!Temp.contains(m_Name)) {
+          m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));
+          m_AtnFav->setText(tr("Favourite tool"));
+        } else {
+          m_AtnFav->setIcon(QIcon(*Theme->ptIconStarGrey));
+          m_AtnFav->setText(tr("Normal tool"));
+        }
+        Menu.addAction(m_AtnFav);
+        Menu.exec(event->globalPos());
+      } else if (parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName() != "TabSetting" &&
+                 parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName() != "TabInfo") {
+        QMenu Menu(NULL);
+        Menu.setPalette(Theme->ptMenuPalette);
+        Menu.setStyle(Theme->ptStyle);
+        QStringList Temp = Settings->GetStringList("FavouriteTools");
+        if (!Temp.contains(m_Name)) {
+          m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));
+          m_AtnFav->setText(tr("Favourite tool"));
+        } else {
+          m_AtnFav->setIcon(QIcon(*Theme->ptIconStarGrey));
+          m_AtnFav->setText(tr("Normal tool"));
+        }
+        Menu.addAction(m_AtnFav);
         Menu.exec(event->globalPos());
       }
+
     }/* else if (event->button()==Qt::RightButton &&
               event->modifiers() == Qt::ControlModifier) {
       if (!Settings->ToolAlwaysVisible(m_Name))
