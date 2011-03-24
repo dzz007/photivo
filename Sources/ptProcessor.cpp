@@ -591,12 +591,12 @@ void ptProcessor::Run(short Phase,
 
         // Execute lensfun corrections. For vignetting the image is changed in place.
         // For everything else new pixel coordinates are returned in TransformedCoords.
-        float* TransformedCoords = NULL;
-        m_Image_AfterGeometry->Lensfun(modflags, LfunData, TransformedCoords);
+        //float* TransformedCoords = NULL;
+        m_Image_AfterGeometry->Lensfun(modflags, LfunData);
         LfunData->Destroy();
 
         // TODO BJ: Transform image if needed
-        FREE(TransformedCoords)
+        //FREE(TransformedCoords)
 
         TRACEMAIN("Done Lensfun corrections at %d ms.",Timer.elapsed())
       }
