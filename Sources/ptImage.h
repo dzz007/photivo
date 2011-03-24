@@ -601,16 +601,10 @@ ptImage* ptCIPerspective(const float RotateAngle,
  *
  * LfunData
  *     A pointer to an lfModifier object containing the data for all corrections. Must be
- *     properly intantiated and initialised before calling Lensfun().
- *
- * TransformedCoords
- *     Same as lensfun: "A pointer to an output array which receives the respective X and Y
- *     distorted coordinates for every pixel of the block." Proper memory allocation is
- *     handled by Lensfun(). But freeing memory is the responsibility of the calling code!
+ *     properly instantiated and initialised before calling Lensfun().
  */
 ptImage* Lensfun(const int LfunActions,
-                 const lfModifier* LfunData,
-                 float* TransformedCoords);
+                 const lfModifier* LfunData);
 };
 
 #endif
