@@ -92,6 +92,11 @@ m_UserSetting_Quality = 3;
 m_UserSetting_BlackPoint = -1;
 m_UserSetting_Saturation = -1;
 m_UserSetting_InputFileName       = NULL;
+m_UserSetting_DetailView          = 0;
+m_UserSetting_DetailViewCropX     = 0;
+m_UserSetting_DetailViewCropY     = 0;
+m_UserSetting_DetailViewCropW     = 0;
+m_UserSetting_DetailViewCropH     = 0;
 m_UserSetting_BadPixelsFileName   = NULL;
 m_UserSetting_DarkFrameFileName   = NULL;
 m_UserSetting_AdjustMaximum       = 0;
@@ -8253,6 +8258,12 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
   TRACEKEYVALS("Phase2 begin OutWidth","%d",m_OutWidth);
   TRACEKEYVALS("Phase2 begin OutHeight","%d",m_OutHeight);
 
+  // Crop for detail view
+  if (m_UserSetting_DetailView == 1 &&
+      m_IsFuji == 0 &&
+      m_PixelAspect == 1.0f) {
+    ptCrop();
+  }
 
   // Copied from earlier to here also.
   // Enables Phase3 to reenter with a different FourColorRGB setting.
@@ -8431,6 +8442,13 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
   // And they don't hurt for others as they are early stopped.
   fuji_rotate();
   stretch();
+
+  // Crop for detail view
+  if (m_UserSetting_DetailView == 1 &&
+      (m_IsFuji != 0 ||
+       m_PixelAspect != 1.0f)) {
+    ptCrop();
+  }
 
   // Cache the image after Phase2.
   FREE(m_Image_AfterPhase2);
@@ -8831,6 +8849,57 @@ void CLASS ptHotpixelReductionBayer() {
       }
     }
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Crop for detail view
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CLASS ptCrop() {
+  assert (m_UserSetting_HalfSize == 0);
+
+  uint16_t (*TempImage)[4];
+  uint16_t CropW = m_UserSetting_DetailViewCropW;
+  uint16_t CropH = m_UserSetting_DetailViewCropH;
+  uint16_t CropX = m_UserSetting_DetailViewCropX;
+  uint16_t CropY = m_UserSetting_DetailViewCropY;
+printf("\nFlip: %d\n\n", m_Flip);
+
+  if (m_Flip & 2) {
+    CropX = m_Height - CropX - CropW;
+  }
+  if (m_Flip & 1) {
+    CropY = m_Width - CropY - CropH;
+  }
+  if (m_Flip & 4) {
+    SWAP(CropW, CropH);
+    SWAP(CropX, CropY);
+  }
+  m_OutHeight = CropH;
+  m_OutWidth  = CropW;
+  TempImage = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *TempImage);
+  merror (TempImage, "Temp for detail view");
+
+#pragma omp parallel for schedule(static)
+  for (uint16_t row=0; row < m_OutHeight; row++) {
+    for (uint16_t col=0; col < m_OutWidth; col++) {
+      for (short c=0; c<4; c++) {
+        TempImage[row *m_OutWidth + col][c] =
+          m_Image[(row+CropY)*m_Width + (col+CropX)][c];
+      }
+    }
+  }
+
+  m_Width = m_OutWidth;
+  m_Height = m_OutHeight;
+  FREE(m_Image);
+  m_Image = TempImage;
+  TRACEKEYVALS("Phase2 detail view Width","%d",m_Width);
+  TRACEKEYVALS("Phase2 detail view Height","%d",m_Height);
+  TRACEKEYVALS("Phase2 detail view OutWidth","%d",m_OutWidth);
+  TRACEKEYVALS("Phase2 detail view OutHeight","%d",m_OutHeight);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

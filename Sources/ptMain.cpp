@@ -1138,7 +1138,7 @@ void BlockTools(const short state) {
       if (MainWindow->m_MovedTools->size()>0) {
         // UI doesn't display tabs
         for (int i = 0; i < MainWindow->m_MovedTools->size(); i++) {
-          MainWindow->m_MovedTools->at(i)->setEnabled(true);
+          MainWindow->m_MovedTools->at(i)->SetEnabled(true);
         }
 
       } else {
@@ -1155,7 +1155,7 @@ void BlockTools(const short state) {
                       << MainWindow->m_GroupBox->value("TabFlip")
                       << MainWindow->m_GroupBox->value("TabBlock");
         for (int i = 0; i < GeometryTools.size(); i++) {
-          GeometryTools.at(i)->setEnabled(true);
+          GeometryTools.at(i)->SetEnabled(true);
         }
       }
     }
@@ -1202,7 +1202,7 @@ void BlockTools(const short state) {
                     << MainWindow->m_GroupBox->value("TabFlip")
                     << MainWindow->m_GroupBox->value("TabBlock");
       for (int i = 0; i < GeometryTools.size(); i++) {
-        GeometryTools.at(i)->setEnabled(false);
+        GeometryTools.at(i)->SetEnabled(false);
       }
     }
   }
@@ -1280,7 +1280,8 @@ void BeforeGamma(ptImage* Image, const short FinalRun = 0, const short Resize = 
 
   if (Settings->GetInt("WebResizeBeforeGamma")==1 && Resize) {
     if (FinalRun == 1) Settings->SetValue("FullOutput",1);
-    if (Settings->ToolIsActive("TabWebResize")) {
+    if (Settings->ToolIsActive("TabWebResize") &&
+        !Settings->GetInt("DetailViewActive")) {
       ReportProgress(QObject::tr("WebResizing"));
       //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
       Image->ptGMResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
@@ -1334,7 +1335,8 @@ void AfterAll(ptImage* Image, const short FinalRun = 0, const short Resize = 1) 
   // WebResize for quality reasons done after output profile
   if (Settings->GetInt("WebResizeBeforeGamma")==0 && Resize) {
     if (FinalRun == 1) Settings->SetValue("FullOutput",1);
-    if (Settings->ToolIsActive("TabWebResize")) {
+    if (Settings->ToolIsActive("TabWebResize") &&
+        !Settings->GetInt("DetailViewActive")) {
       ReportProgress(QObject::tr("WebResizing"));
       //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
       Image->ptGMResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
@@ -1591,8 +1593,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       if ((((TempCropX) + (TempCropW)) > Width) ||
           (((TempCropY) + (TempCropH)) >  Height)) {
         QMessageBox::information(MainWindow,
-               QObject::tr("Crop outside the image"),
-               QObject::tr("Crop rectangle too large.\nNo crop, try again."));
+               QObject::tr("Histogram selection outside the image"),
+               QObject::tr("Histogram selection rectangle too large.\nNo crop, try again."));
         Settings->SetValue("HistogramCropX",0);
         Settings->SetValue("HistogramCropY",0);
         Settings->SetValue("HistogramCropW",0);
@@ -1704,8 +1706,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       if ((((TempCropX) + (TempCropW)) >  Width) ||
           (((TempCropY) + (TempCropH)) >  Height)) {
         QMessageBox::information(MainWindow,
-          QObject::tr("Crop outside the image"),
-          QObject::tr("Crop rectangle too large.\nNo crop, try again."));
+          QObject::tr("Histogram selection outside the image"),
+          QObject::tr("Histogram selection rectangle too large.\nNo crop, try again."));
         Settings->SetValue("HistogramCropX",0);
         Settings->SetValue("HistogramCropY",0);
         Settings->SetValue("HistogramCropW",0);
@@ -1768,8 +1770,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       if ((((TempCropX) + (TempCropW)) >  Width) ||
           (((TempCropY) + (TempCropH)) >  Height)) {
         QMessageBox::information(MainWindow,
-          QObject::tr("Crop outside the image"),
-          QObject::tr("Crop rectangle too large.\nNo crop, try again."));
+          QObject::tr("Histogram selection outside the image"),
+          QObject::tr("Histogram selection rectangle too large.\nNo crop, try again."));
         Settings->SetValue("HistogramCropX",0);
         Settings->SetValue("HistogramCropY",0);
         Settings->SetValue("HistogramCropW",0);
@@ -2942,6 +2944,9 @@ void CB_MenuFileOpen(const short HaveFile) {
            break;
       }
     }
+    // Catch 1:1 pipe size when opening
+    if (Settings->GetInt("PipeSize") == 0)
+      Settings->SetValue("PipeSize",1);
   }
 
   // TODO mike: need to delete the processor here?
@@ -2958,6 +2963,15 @@ void CB_MenuFileOpen(const short HaveFile) {
     Temp << "CropX" << "CropY" << "CropW" << "CropH";
     Temp << "RotateW" << "RotateH";
     for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i),0);
+  }
+  // clean up possible detail view cache
+  if (Settings->GetInt("DetailViewActive")==1) {
+    Settings->SetValue("DetailViewActive",0);
+    Settings->SetValue("DetailViewCropX", 0);
+    Settings->SetValue("DetailViewCropY", 0);
+    Settings->SetValue("DetailViewCropW", 0);
+    Settings->SetValue("DetailViewCropH", 0);
+    Settings->ToDcRaw(TestDcRaw);
   }
 
   TheDcRaw = TestDcRaw;
@@ -3697,39 +3711,144 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       Settings->GetInt("FullPipeConfirmation")==1 &&
       (Settings->GetInt("ImageH") > 2000 ||
        Settings->GetInt("ImageW") > 2000)) {
-    if (QMessageBox::question(MainWindow,
-      QObject::tr("Really switch to 1:1 pipe?"),
-      QObject::tr("Switching to 1:1 pipe will increase memory usage and processing time greatly.\nAre you sure?"),
-        QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Cancel){;
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(QObject::tr("Really switch to 1:1 pipe?"));
+    msgBox.setText(QObject::tr("Switching to 1:1 pipe will increase memory usage and processing time greatly.\nAre you sure?"));
+
+    QPushButton *DetailButton = msgBox.addButton(QObject::tr("Detail view"), QMessageBox::ActionRole);
+    QPushButton *CancelButton = msgBox.addButton(QMessageBox::Cancel);
+    msgBox.addButton(QMessageBox::Ok);
+
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == CancelButton ||
+        (msgBox.clickedButton() == DetailButton &&
+         Settings->GetInt("HaveImage")==0)) {
       Settings->SetValue("PipeSize",PreviousPipeSize);
       return;
+    } else if (msgBox.clickedButton() == DetailButton &&
+               Settings->GetInt("HaveImage")==1) {
+      uint16_t Width = 0;
+      uint16_t Height = 0;
+      short OldZoom = 0;
+      short OldZoomMode = 0;
+      if (Settings->GetInt("DetailViewActive")==0) {
+        Settings->SetValue("DetailViewScale", PreviousPipeSize);
+        if (TheProcessor->m_Image_DetailPreview == NULL)
+          TheProcessor->m_Image_DetailPreview = new ptImage();
+        // save a full image if we have several detail views without full view
+        if (Settings->GetInt("IsRAW")==0) {
+          TheProcessor->m_Image_DetailPreview->SetScaled(TheProcessor->m_Image_AfterDcRaw,
+                                                         Settings->GetInt("Scaled"));
+        } else {
+          TheProcessor->m_Image_DetailPreview->Set(TheProcessor->m_Image_AfterDcRaw);
+        }
+      }
+      // display the cache image and start crop mode
+
+      // First : make sure we have Image_AfterDcRaw in the view window.
+      // Anything else might have undergone geometric transformations that are
+      // impossible to calculate reverse to a spot in dcraw.
+      Width = TheProcessor->m_Image_DetailPreview->m_Width;
+      Height = TheProcessor->m_Image_DetailPreview->m_Height;
+      OldZoom = Settings->GetInt("Zoom");
+      OldZoomMode = Settings->GetInt("ZoomMode");
+      ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
+      Settings->SetValue("ZoomMode",ptZoomMode_Fit);
+      UpdatePreviewImage(TheProcessor->m_Image_DetailPreview);
+
+      // Allow to be selected in the view window. And deactivate main.
+      BlockTools(1);
+      ViewWindow->StatusReport("Detail view");
+      ViewWindow->StartSelection();
+      while (ViewWindow->OngoingAction() == vaSelectRect) {
+        QApplication::processEvents();
+      }
+
+      // Selection is done at this point. Disallow it further and activate main.
+      BlockTools(0);
+      QRect SelectionRect = ViewWindow->GetRectangle();
+
+      if (SelectionRect.width() >>4 <<4 > 19 &&
+          SelectionRect.height() >>4 <<4 > 19) {
+        Settings->SetValue("DetailViewActive",1);
+        short CachedPipeSize = Settings->GetInt("DetailViewScale");
+        Settings->SetValue("DetailViewCropX", ((SelectionRect.left() >>4) <<4) << CachedPipeSize);
+        Settings->SetValue("DetailViewCropY", ((SelectionRect.top() >>4) <<4) << CachedPipeSize);
+        Settings->SetValue("DetailViewCropW", ((SelectionRect.width() >>4) <<4) << CachedPipeSize);
+        Settings->SetValue("DetailViewCropH", ((SelectionRect.height() >>4) <<4) << CachedPipeSize);
+        Settings->ToDcRaw(TheDcRaw);
+      } else {
+        QMessageBox::information(NULL,"No crop","Too small. Please try again!");
+        ViewWindow->Zoom(OldZoom,0);
+        Settings->SetValue("ZoomMode",OldZoomMode);
+        Update(ptProcessorPhase_NULL);
+        if (Settings->GetInt("DetailViewActive")==0) {
+          delete TheProcessor->m_Image_DetailPreview;
+          TheProcessor->m_Image_DetailPreview = NULL;
+        }
+        Settings->SetValue("PipeSize",PreviousPipeSize);
+        return;
+      }
+
+      ViewWindow->Zoom(OldZoom,0);
+      Settings->SetValue("ZoomMode",OldZoomMode);
+
+    } else { // 1:1 full mode
+      // clean up possible detail view cache
+      if (TheProcessor->m_Image_DetailPreview != NULL) {
+        delete TheProcessor->m_Image_DetailPreview;
+        TheProcessor->m_Image_DetailPreview = NULL;
+        Settings->SetValue("DetailViewActive",0);
+        Settings->SetValue("DetailViewCropX", 0);
+        Settings->SetValue("DetailViewCropY", 0);
+        Settings->SetValue("DetailViewCropW", 0);
+        Settings->SetValue("DetailViewCropH", 0);
+        Settings->ToDcRaw(TheDcRaw);
+      }
+    }
+  } else {
+    // clean up possible detail view cache
+    if (TheProcessor->m_Image_DetailPreview != NULL) {
+      delete TheProcessor->m_Image_DetailPreview;
+      TheProcessor->m_Image_DetailPreview = NULL;
+      Settings->SetValue("DetailViewActive",0);
+      Settings->SetValue("DetailViewCropX", 0);
+      Settings->SetValue("DetailViewCropY", 0);
+      Settings->SetValue("DetailViewCropW", 0);
+      Settings->SetValue("DetailViewCropH", 0);
+      Settings->ToDcRaw(TheDcRaw);
     }
   }
+
+  MainWindow->UpdateToolBoxes();
 
   Settings->SetValue("PipeSize",Choice);
   short PipeSize = Settings->GetInt("PipeSize");
   short Expansion = PreviousPipeSize-PipeSize;
 
-  // Following adaptation is needed for the case spot WB is in place.
-  if (Expansion > 0) {
-    Settings->SetValue("VisualSelectionX",
-                       Settings->GetInt("VisualSelectionX")<<Expansion);
-    Settings->SetValue("VisualSelectionY",
-                       Settings->GetInt("VisualSelectionY")<<Expansion);
-    Settings->SetValue("VisualSelectionWidth",
-                       Settings->GetInt("VisualSelectionWidth")<<Expansion);
-    Settings->SetValue("VisualSelectionHeight",
-                       Settings->GetInt("VisualSelectionHeight")<<Expansion);
-  } else {
-    Expansion = -Expansion;
-    Settings->SetValue("VisualSelectionX",
-                       Settings->GetInt("VisualSelectionX")>>Expansion);
-    Settings->SetValue("VisualSelectionY",
-                       Settings->GetInt("VisualSelectionY")>>Expansion);
-    Settings->SetValue("VisualSelectionWidth",
-                       Settings->GetInt("VisualSelectionWidth")>>Expansion);
-    Settings->SetValue("VisualSelectionHeight",
-                       Settings->GetInt("VisualSelectionHeight")>>Expansion);
+  if (Settings->GetInt("DetailViewActive")==0) {
+    // Following adaptation is needed for the case spot WB is in place.
+    if (Expansion > 0) {
+      Settings->SetValue("VisualSelectionX",
+                         Settings->GetInt("VisualSelectionX")<<Expansion);
+      Settings->SetValue("VisualSelectionY",
+                         Settings->GetInt("VisualSelectionY")<<Expansion);
+      Settings->SetValue("VisualSelectionWidth",
+                         Settings->GetInt("VisualSelectionWidth")<<Expansion);
+      Settings->SetValue("VisualSelectionHeight",
+                         Settings->GetInt("VisualSelectionHeight")<<Expansion);
+    } else {
+      Expansion = -Expansion;
+      Settings->SetValue("VisualSelectionX",
+                         Settings->GetInt("VisualSelectionX")>>Expansion);
+      Settings->SetValue("VisualSelectionY",
+                         Settings->GetInt("VisualSelectionY")>>Expansion);
+      Settings->SetValue("VisualSelectionWidth",
+                         Settings->GetInt("VisualSelectionWidth")>>Expansion);
+      Settings->SetValue("VisualSelectionHeight",
+                         Settings->GetInt("VisualSelectionHeight")>>Expansion);
+    }
   }
 
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
@@ -4719,26 +4838,18 @@ void CB_MakeCropButton() {
   // First : make sure we have the view window.
   // And we reset the Image_AfterLensfun such that we can
   // again select on the whole. It might have been cropped before !
-  if (Settings->GetInt("IsRAW")) {
-    TheProcessor->m_Image_AfterGeometry->Set(
-            TheProcessor->m_DcRaw,
-            Settings->GetInt("WorkColor"),
-            (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
-              NULL : Settings->GetString("CameraColorProfile").toAscii().data(),
-            Settings->GetInt("CameraColorProfileIntent"),
-            Settings->GetInt("CameraColorGamma"));
+  if (Settings->GetInt("IsRAW")==0) {
+    if (!TheProcessor->m_Image_AfterGeometry)
+      TheProcessor->m_Image_AfterGeometry = new ptImage();
+
+    TheProcessor->m_Image_AfterGeometry->
+      SetScaled(TheProcessor->m_Image_AfterDcRaw,
+                Settings->GetInt("Scaled"));
   } else {
-    int Success = 0;
-    TheProcessor->m_Image_AfterGeometry->ptGMOpenImage(
-        (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
-        Settings->GetInt("WorkColor"),
-        Settings->GetInt("PreviewColorProfileIntent"),
-        Settings->GetInt("Scaled"),
-        Success);
-    if (Success == 0) {
-      QMessageBox::critical(0,"File not found","File not found!");
-      return;
-    }
+    if (!TheProcessor->m_Image_AfterGeometry)
+      TheProcessor->m_Image_AfterGeometry = new ptImage();
+    TheProcessor->m_Image_AfterGeometry->
+      Set(TheProcessor->m_Image_AfterDcRaw);
   }
 
   ViewWindow->StatusReport(QObject::tr("Prepare"));

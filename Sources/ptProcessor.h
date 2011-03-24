@@ -46,6 +46,9 @@ ptImage*  m_Image_AfterLabSN;
 ptImage*  m_Image_AfterLabEyeCandy;
 ptImage*  m_Image_AfterEyeCandy;
 
+// Cached image for detail preview
+ptImage*  m_Image_DetailPreview;
+
 // Sidecar image for texture overlay
 ptImage*  m_Image_TextureOverlay;
 

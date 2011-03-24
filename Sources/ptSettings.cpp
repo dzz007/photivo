@@ -682,6 +682,12 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BlockedTools"                         ,0         ,QStringList()                                       ,1},
     {"BlockUpdate"                          ,9         ,0                                                   ,0},
     {"FocalLengthIn35mmFilm"                ,0         ,0.0                                                 ,0},
+    {"DetailViewActive"                     ,9         ,0                                                   ,0},
+    {"DetailViewScale"                      ,9         ,0                                                   ,0},
+    {"DetailViewCropX"                      ,9         ,0                                                   ,0},
+    {"DetailViewCropY"                      ,9         ,0                                                   ,0},
+    {"DetailViewCropW"                      ,9         ,0                                                   ,0},
+    {"DetailViewCropH"                      ,9         ,0                                                   ,0},
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.
@@ -1235,6 +1241,13 @@ void ptSettings::ToDcRaw(DcRaw* TheDcRaw) {
     (char*) MALLOC(1+strlen(InputFileName.toAscii().data()));
   ptMemoryError(TheDcRaw->m_UserSetting_InputFileName,__FILE__,__LINE__);
   strcpy(TheDcRaw->m_UserSetting_InputFileName,InputFileName.toAscii().data());
+
+  // Detail view
+  TheDcRaw->m_UserSetting_DetailView = Settings->GetInt("DetailViewActive");
+  TheDcRaw->m_UserSetting_DetailViewCropX = Settings->GetInt("DetailViewCropX");
+  TheDcRaw->m_UserSetting_DetailViewCropY = Settings->GetInt("DetailViewCropY");
+  TheDcRaw->m_UserSetting_DetailViewCropW = Settings->GetInt("DetailViewCropW");
+  TheDcRaw->m_UserSetting_DetailViewCropH = Settings->GetInt("DetailViewCropH");
 
   // Adjust Maximum
   TheDcRaw->m_UserSetting_AdjustMaximum = GetDouble("AdjustMaximumThreshold");
@@ -1869,7 +1882,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Output gamma compensation";
       Info.IsActive = Settings->GetInt("OutputGammaCompensation")!=0?1:0;
   } else if (GuiName == "TabWebResize") {
-      Info.Name = "Output webreisze";
+      Info.Name = "Output web resize";
       Info.IsActive = (Settings->GetInt("WebResize")==2 ||
                        (Settings->GetInt("FullOutput") &&
                         Settings->GetInt("WebResize")==1))!=0?1:0;

@@ -61,6 +61,8 @@ ptProcessor::ptProcessor(void (*ReportProgress)(const QString Message)) {
   m_Image_AfterLabEyeCandy = NULL;
   m_Image_AfterEyeCandy    = NULL;
 
+  m_Image_DetailPreview    = NULL;
+
   m_Image_TextureOverlay   = NULL;
 
   //
@@ -243,11 +245,13 @@ void ptProcessor::Run(short Phase,
             // Not in DcRawToSettings as at this point it is
             // not yet influenced by HalfSize. Later it is and
             // it would be wrongly overwritten then.
-            Settings->SetValue("ImageW",m_DcRaw->m_ReportedWidth);
-            Settings->SetValue("ImageH",m_DcRaw->m_ReportedHeight);
+            if (Settings->GetInt("DetailViewActive")==0) {
+              Settings->SetValue("ImageW",m_DcRaw->m_ReportedWidth);
+              Settings->SetValue("ImageH",m_DcRaw->m_ReportedHeight);
 
-            TRACEKEYVALS("ImageW","%d",Settings->GetInt("ImageW"));
-            TRACEKEYVALS("ImageH","%d",Settings->GetInt("ImageH"));
+              TRACEKEYVALS("ImageW","%d",Settings->GetInt("ImageW"));
+              TRACEKEYVALS("ImageH","%d",Settings->GetInt("ImageH"));
+            }
 
             m_ReportProgress(tr("Reading exif info"));
 
@@ -439,6 +443,13 @@ void ptProcessor::Run(short Phase,
         m_Image_AfterGeometry->SetScaled(m_Image_AfterDcRaw,
                                         Settings->GetInt("Scaled"));
 
+        if (Settings->GetInt("DetailViewActive") == 1) {
+          m_Image_AfterGeometry->Crop(Settings->GetInt("DetailViewCropX") >> Settings->GetInt("Scaled"),
+                                      Settings->GetInt("DetailViewCropY") >> Settings->GetInt("Scaled"),
+                                      Settings->GetInt("DetailViewCropW") >> Settings->GetInt("Scaled"),
+                                      Settings->GetInt("DetailViewCropH") >> Settings->GetInt("Scaled"));
+        }
+
         // The full image width and height is already set.
         // This is the current size:
         TRACEKEYVALS("ImageW","%d",m_Image_AfterGeometry->m_Width);
@@ -482,7 +493,8 @@ void ptProcessor::Run(short Phase,
       TRACEKEYVALS("RotateH","%d",Settings->GetInt("RotateH"));
 
       // Crop
-      if (Settings->ToolIsActive("TabCrop")) {
+      if (Settings->ToolIsActive("TabCrop") &&
+          !Settings->GetInt("DetailViewActive")) {
 
         if (((Settings->GetInt("CropX") >> TmpScaled) + (Settings->GetInt("CropW") >> TmpScaled))
               > m_Image_AfterGeometry->m_Width ||
@@ -518,7 +530,8 @@ void ptProcessor::Run(short Phase,
       m_ScaleFactor = 1/powf(2.0, Settings->GetInt("Scaled"));
 
       // Resize
-      if (Settings->ToolIsActive("TabResize")) {
+      if (Settings->ToolIsActive("TabResize") &&
+          !Settings->GetInt("DetailViewActive")) {
         m_ReportProgress(tr("Resize image"));
 
         float WidthIn = m_Image_AfterGeometry->m_Width;
@@ -2686,6 +2699,7 @@ ptProcessor::~ptProcessor() {
               << m_Image_AfterLabSN
               << m_Image_AfterLabEyeCandy
               << m_Image_AfterEyeCandy
+              << m_Image_DetailPreview
               << m_Image_TextureOverlay;
   while(PointerList.size()) {
     if (PointerList[0] != NULL) {

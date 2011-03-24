@@ -1811,6 +1811,17 @@ void ptMainWindow::UpdateToolBoxes() {
   for (int i = 0; i < m_RawTools.size(); i++) {
     m_RawTools.at(i)->SetEnabled(Temp);
   }
+
+  // disable Raw tools when we have a bitmap
+  QList<ptGroupBox *> m_DetailViewTools;
+  m_DetailViewTools << m_GroupBox->value("TabCrop")
+                    << m_GroupBox->value("TabResize")
+                    << m_GroupBox->value("TabWebResize");
+
+  Temp = 1 - Settings->GetInt("DetailViewActive");
+  for (int i = 0; i < m_DetailViewTools.size(); i++) {
+    m_DetailViewTools.at(i)->SetEnabled(Temp);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

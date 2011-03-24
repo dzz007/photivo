@@ -229,6 +229,13 @@ short       m_UserSetting_CameraMatrix;
 // Filename to process.
 char*       m_UserSetting_InputFileName;
 
+// Detail view
+short       m_UserSetting_DetailView;
+uint16_t    m_UserSetting_DetailViewCropX;
+uint16_t    m_UserSetting_DetailViewCropY;
+uint16_t    m_UserSetting_DetailViewCropW;
+uint16_t    m_UserSetting_DetailViewCropH;
+
 // Adjust maximum threshold (between 0 and 0.25)
 double      m_UserSetting_AdjustMaximum;
 
@@ -308,6 +315,7 @@ void  CamToLab(uint16_t Cam[4], double Lab[3]);
 
 void  ptRebuildHighlights(const short Effort);
 void  ptBlendHighlights();
+void  ptCrop();
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -353,7 +361,7 @@ unsigned  m_IsRaw;
 unsigned  m_ProfileLength;
 
 // Pixel aspect ratio. Whatever this may be.
-double    m_PixelAspect;
+float    m_PixelAspect;
 
 // Dimensions of thumb.
 uint16_t  m_ThumbWidth;
