@@ -1708,24 +1708,11 @@ void ptMainWindow::Search() {
     }
   }
 
-  ToolContainerLabel->setText(tr("Search results:"));
-
   if (m_MovedTools->size() == 0) {
     return;
   }
 
-  while (ToolContainer->layout()->count()!=0) {
-    ToolContainer->layout()->takeAt(0);
-  }
-
-  for (short i=0; i<m_MovedTools->size(); i++) {
-    ToolContainer->layout()->addWidget(m_MovedTools->at(i));
-  }
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->addStretch();
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->setSpacing(0);
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->setContentsMargins(0,0,0,0);
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->setMargin(0);
-  MainTabBook->setCurrentWidget(TabMovedTools);
+  ShowMovedTools(tr("Search results:"));
 }
 
 void ptMainWindow::ShowActiveTools() {
@@ -1743,20 +1730,7 @@ void ptMainWindow::ShowActiveTools() {
     return;
   }
 
-  ToolContainerLabel->setText(tr("Active tools:"));
-
-  while (ToolContainer->layout()->count()!=0) {
-    ToolContainer->layout()->takeAt(0);
-  }
-
-  for (short i=0; i<m_MovedTools->size(); i++) {
-    ToolContainer->layout()->addWidget(m_MovedTools->at(i));
-  }
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->addStretch();
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->setSpacing(0);
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->setContentsMargins(0,0,0,0);
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->setMargin(0);
-  MainTabBook->setCurrentWidget(TabMovedTools);
+  ShowMovedTools(tr("Active tools:"));
 }
 
 void ptMainWindow::ShowAllTools() {
@@ -1771,21 +1745,7 @@ void ptMainWindow::ShowAllTools() {
     QMessageBox::information(this,tr("All tools hidden"),tr("No visible tools!"));
     return;
   }
-
-  ToolContainerLabel->setText(tr("All visible tools:"));
-
-  while (ToolContainer->layout()->count()!=0) {
-    ToolContainer->layout()->takeAt(0);
-  }
-
-  for (short i=0; i<m_MovedTools->size(); i++) {
-    ToolContainer->layout()->addWidget(m_MovedTools->at(i));
-  }
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->addStretch();
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->setSpacing(0);
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->setContentsMargins(0,0,0,0);
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->setMargin(0);
-  MainTabBook->setCurrentWidget(TabMovedTools);
+  ShowMovedTools(tr("All visible tools:"));
 }
 
 void ptMainWindow::ShowFavouriteTools() {
@@ -1804,8 +1764,12 @@ void ptMainWindow::ShowFavouriteTools() {
     return;
   }
 
-  ToolContainerLabel->setText(tr("Favourite tools:"));
+  ShowMovedTools(tr("Favourite tools:"));
+}
 
+void ptMainWindow::ShowMovedTools(const QString Title) {
+  ToolContainerLabel->setText(Title);
+  MainTabBook->setCurrentWidget(TabMovedTools);
   while (ToolContainer->layout()->count()!=0) {
     ToolContainer->layout()->takeAt(0);
   }
@@ -1813,11 +1777,11 @@ void ptMainWindow::ShowFavouriteTools() {
   for (short i=0; i<m_MovedTools->size(); i++) {
     ToolContainer->layout()->addWidget(m_MovedTools->at(i));
   }
+
   static_cast<QVBoxLayout*>(ToolContainer->layout())->addStretch();
   static_cast<QVBoxLayout*>(ToolContainer->layout())->setSpacing(0);
   static_cast<QVBoxLayout*>(ToolContainer->layout())->setContentsMargins(0,0,0,0);
   static_cast<QVBoxLayout*>(ToolContainer->layout())->setMargin(0);
-  MainTabBook->setCurrentWidget(TabMovedTools);
 }
 
 void ptMainWindow::CleanUpMovedTools() {

@@ -155,6 +155,7 @@ private :
   QAction* m_AtnShowTools;
 
   void AnalyzeToolBoxStructure();
+void ShowMovedTools(const QString Title);
 
   private slots:
   void ResizeTimerExpired();
