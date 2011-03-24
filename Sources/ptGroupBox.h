@@ -60,6 +60,7 @@ short GetTabNumber();
 short GetIndexInTab();
 
 private slots:
+void SetFavourite();
 void Hide();
 void SetBlocked();
 void Reset();
@@ -98,6 +99,7 @@ short     m_TabNumber;
 short     m_IndexInTab;
 QString   m_HelpUri;
 QLabel*   test;
+QAction*  m_AtnFav;
 QAction*  m_AtnHide;
 QAction*  m_AtnBlock;
 QAction*  m_AtnReset;

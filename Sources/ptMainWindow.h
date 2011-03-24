@@ -74,14 +74,10 @@ void UpdateExifInfo(Exiv2::ExifData ExifData);
 // Set visible/enabled states for crop tool widgets
 void UpdateCropToolUI();
 
-// Set visible/hidden tools according to their state in the processing tab
-void UpdateVisibleTools();
-
-// Show/hide tools in the processing tab according to current settings
-void ApplyVisibleTools();
-
 // Moved tools
 void ShowActiveTools();
+void ShowAllTools();
+void ShowFavouriteTools();
 void CleanUpMovedTools();
 
 // Make and model are remembered because in
@@ -133,6 +129,7 @@ short    m_ContextMenuOnTab;
 QAction* m_AtnShowTools;
 
 void AnalyzeToolBoxStructure();
+void ShowMovedTools(const QString Title);
 
 private slots:
 void ResizeTimerExpired();
@@ -164,6 +161,8 @@ void OnPreviewModeButtonClicked();
 
 void OnSearchResetButtonClicked();
 void OnSearchActiveToolsButtonClicked();
+void OnSearchAllToolsButtonClicked();
+void OnSearchFavouriteToolsButtonClicked();
 
 void OnRunButtonClicked();
 void OnResetButtonClicked();
@@ -245,10 +244,6 @@ void OnGradualOverlay2ColorButtonClicked();
 void OnOutputColorProfileResetButtonClicked();
 void OnWriteOutputButtonClicked();
 void OnWritePipeButtonClicked();
-
-void OnVisibleToolsDiscardButtonClicked();
-void OnVisibleToolsCheckAllButtonClicked();
-void OnVisibleToolsUncheckAllButtonClicked();
 };
 
 #endif

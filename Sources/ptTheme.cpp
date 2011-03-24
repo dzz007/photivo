@@ -55,6 +55,8 @@ ptTheme::ptTheme(QApplication* Application) {
   ptIconReset =  new QPixmap(QString::fromUtf8(":/photivo/Icons/reload.png"));
   ptIconDisk =  new QPixmap(QString::fromUtf8(":/photivo/Icons/filesave.png"));
   ptIconQuestion =  new QPixmap(QString::fromUtf8(":/photivo/Icons/question.png"));
+  ptIconStar =  new QPixmap(QString::fromUtf8(":/photivo/Icons/star.png"));
+  ptIconStarGrey =  new QPixmap(QString::fromUtf8(":/photivo/Icons/star-grey.png"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

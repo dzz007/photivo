@@ -279,28 +279,45 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
     NewHeight = (int32_t)(uy+vy);
     TempImage = (uint16_t (*)[3]) CALLOC((int32_t)NewWidth*NewHeight,sizeof(*TempImage));
     ptMemoryError(TempImage,__FILE__,__LINE__);
+    // temp values
+    const float
+      sin_ver = sinf(angle_ver),
+      cos_ver = cosf(angle_ver),
+      sin_hor = sinf(angle_hor),
+      cos_hor = cosf(angle_hor);
+    float fx,fy,gx,gy,hx,hy;
     {
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static) private(fx,fy,gx,gy,hx,hy)
       for (int32_t Row = 0; Row < NewHeight; Row++) {
         int32_t Temp = Row*NewWidth;
         for (int32_t Col = 0; Col < NewWidth; Col++) {
           // rotation and scaling
-          const float hx = w2 + (Col-dw2)*ca*sc1 + (Row-dh2)*sa*sc1;
-          const float hy = h2 - (Col-dw2)*sa*sc2 + (Row-dh2)*ca*sc2;
+          hx = w2 + (Col-dw2)*ca*sc1 + (Row-dh2)*sa*sc1;
+          hy = h2 - (Col-dw2)*sa*sc2 + (Row-dh2)*ca*sc2;
 
           // vertical perspective (turn)
-          const float ver_x_temp_sin = (hx-vx_ver)*sinf(angle_ver);
-          const float ver_x_temp_cos = (hx-vx_ver)*cosf(angle_ver);
-          const float gx_temp = r_ver*ver_x_temp_cos/(r_ver-ver_x_temp_sin);
-          const float gx = x_mid_ver+gx_temp;
-          const float gy = y_mid_ver+(hy-y_ver1)*powf((r_ver*r_ver+gx_temp*gx_temp)/(powf(r_ver-ver_x_temp_sin,2.0f)+powf(ver_x_temp_cos,2.0f)),0.5f);
+          if (TurnAngle != 0.0f) {
+            const float ver_x_temp_sin = (hx-vx_ver)*sin_ver;
+            const float ver_x_temp_cos = (hx-vx_ver)*cos_ver;
+            const float gx_temp = r_ver*ver_x_temp_cos/(r_ver-ver_x_temp_sin);
+            gx = x_mid_ver+gx_temp;
+            gy = y_mid_ver+(hy-y_ver1)*powf((r_ver*r_ver+gx_temp*gx_temp)/(powf(r_ver-ver_x_temp_sin,2.0f)+powf(ver_x_temp_cos,2.0f)),0.5f);
+          } else {
+            gx = hx;
+            gy = hy;
+          }
 
           // horizontal perspective (tilt)
-          const float hor_y_temp_sin = (gy-vy_hor)*sinf(angle_hor);
-          const float hor_y_temp_cos = (gy-vy_hor)*cosf(angle_hor);
-          const float fy_temp = r_hor*hor_y_temp_cos/(r_hor-hor_y_temp_sin);
-          const float fy = y_mid_hor+fy_temp;
-          const float fx = x_mid_hor+(gx-x_hor1)*powf((r_hor*r_hor+fy_temp*fy_temp)/(powf(r_hor-hor_y_temp_sin,2.0f)+powf(hor_y_temp_cos,2.0f)),0.5f);
+          if (TiltAngle != 0.0f) {
+            const float hor_y_temp_sin = (gy-vy_hor)*sin_hor;
+            const float hor_y_temp_cos = (gy-vy_hor)*cos_hor;
+            const float fy_temp = r_hor*hor_y_temp_cos/(r_hor-hor_y_temp_sin);
+            fy = y_mid_hor+fy_temp;
+            fx = x_mid_hor+(gx-x_hor1)*powf((r_hor*r_hor+fy_temp*fy_temp)/(powf(r_hor-hor_y_temp_sin,2.0f)+powf(hor_y_temp_cos,2.0f)),0.5f);
+          } else {
+            fx = gx;
+            fy = gy;
+          }
 
           // outside source?
           if (fx < 0 || fx > m_Width-1 || fy < 0 || fy > m_Height-1) {
