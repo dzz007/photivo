@@ -460,6 +460,11 @@ Following stuff is also needed for normal.css
     "}"
 
 
+/** QScrollArea ****************************************/
+    "QScrollArea {"
+    "  border: none;"
+    "}"
+
 /** Slider ****************************************/
     "QSlider {"
     "  background: none;"
