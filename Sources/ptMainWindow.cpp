@@ -42,6 +42,7 @@ using namespace std;
 
 extern ptTheme* Theme;
 extern ptViewWindow* ViewWindow;
+void CB_OpenFileButton();
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -538,14 +539,17 @@ ptMainWindow::ptMainWindow(const QString Title)
   QString Temp(TOSTRING(APPVERSION));
   Temp.replace("_"," ");
   Temp.replace("!","(");
-  Temp.replace("@",")");
+  Temp.replace("@","");
+  Temp.append(")");
   AppVersionLabel->setText(Temp);
+  AppVersion2Label->setText(Temp);
 
   Tabbar = ProcessingTabBook->findChild<QTabBar*>();
   Tabbar->installEventFilter(this);
   WritePipeButton->installEventFilter(this);
   ToGimpButton->installEventFilter(this);
   ResetButton->installEventFilter(this);
+  LogoLabel->installEventFilter(this);
 
   m_ContextMenuOnTab = -1;
 
@@ -607,6 +611,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   ProcessingTabBook->blockSignals(1);
   ProcessingTabBook->setCurrentIndex(0);
   ProcessingTabBook->blockSignals(0);
+
+  setAcceptDrops(true);     // Drag and drop
 
   // Timer to delay on resize operations.
   // (avoiding excessive calculations and loops in the ZoomFit approach.)
@@ -701,6 +707,11 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     }
     return QObject::eventFilter(obj, event);
+  } else if (obj == LogoLabel &&
+             event->type() == QEvent::MouseButtonPress &&
+             static_cast <QMouseEvent*>(event)->button() == Qt::LeftButton) {
+    ::CB_OpenFileButton();
+    return 0;
   } else {
     // pass the event on to the parent class
     return QObject::eventFilter(obj, event);
@@ -1167,7 +1178,6 @@ void ptMainWindow::OnStartupSettingsButtonClicked() {
 // Tab : Camera
 //
 
-void CB_OpenFileButton();
 void ptMainWindow::OnOpenFileButtonClicked() {
   ::CB_OpenFileButton();
 }
@@ -1462,12 +1472,85 @@ void ptMainWindow::ResizeTimerExpired() {
   }
 }
 
-// Catch keyboard shortcuts
+////////////////////////////////////////////////////////////////////////
+//
+// dragEnterEvent
+//
+////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::dragEnterEvent(QDragEnterEvent* Event) {
+  if (ViewWindow->OngoingAction() != vaNone) {
+    return;
+  }
+
+  // accept just text/uri-list mime format
+  if (Event->mimeData()->hasFormat("text/uri-list")) {
+    Event->acceptProposedAction();
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+// dropEvent
+//
+////////////////////////////////////////////////////////////////////////
+
+void CB_MenuFileOpen(const short HaveFile);
+void CB_OpenSettingsFile(QString SettingsFileName);
+extern QString ImageFileToOpen;
+
+void ptMainWindow::dropEvent(QDropEvent* Event) {
+  if (ViewWindow->OngoingAction() != vaNone) {
+    return;
+  }
+
+  QList<QUrl> UrlList;
+  QString DropName;
+  QFileInfo DropInfo;
+
+  if (Event->mimeData()->hasUrls())
+  {
+    UrlList = Event->mimeData()->urls(); // returns list of QUrls
+
+    // if just text was dropped, urlList is empty (size == 0)
+    if ( UrlList.size() > 0) // if at least one QUrl is present in list
+    {
+      DropName = UrlList[0].toLocalFile(); // convert first QUrl to local path
+      DropInfo.setFile( DropName ); // information about file
+      if ( DropInfo.isFile() ) { // if is file
+        if (DropInfo.completeSuffix()!="pts" && DropInfo.completeSuffix()!="ptj" &&
+            DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj") {
+          ImageFileToOpen = DropName;
+          CB_MenuFileOpen(1);
+        } else {
+          if ( Settings->GetInt("ResetSettingsConfirmation") == 0 ) {
+            CB_OpenSettingsFile(DropName);
+          } else {
+            #ifdef Q_OS_WIN32
+              DropName = DropName.replace(QString("/"), QString("\\"));
+            #endif
+            QMessageBox msgBox;
+            msgBox.setIcon(QMessageBox::Question);
+            msgBox.setWindowTitle(tr("Settings file dropped!"));
+            msgBox.setText(tr("Do you really want to open\n")+DropName);
+            msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+            msgBox.setDefaultButton(QMessageBox::Ok);
+            if (msgBox.exec()==QMessageBox::Ok){
+              CB_OpenSettingsFile(DropName);
+            }
+          }
+        }
+      }
+    }
+  }
+  Event->acceptProposedAction();
+}
+
 void CB_FullScreenButton(const int State);
 void UpdateSettings();
 void CB_RunModeCheck(const QVariant Check);
 void CB_OpenPresetFileButton();
-void CB_MenuFileOpen(const short HaveFile);
 void CB_InputChanged(const QString,const QVariant);
 void CB_ZoomFitButton();
 void CB_WritePipeButton();
@@ -1476,6 +1559,7 @@ void CB_MenuFileExit(const short);
 void ViewWindowStatusReport(short State);
 void CB_SearchBarEnableCheck(const QVariant State);
 
+// Catch keyboard shortcuts
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
   // Handle ViewWindow: LightsOut, confirm/cancel crop
   if (((ViewWindow->OngoingAction() == vaCrop) || (ViewWindow->OngoingAction() == vaSelectRect)) &&

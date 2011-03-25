@@ -143,8 +143,6 @@ protected:
   void mouseReleaseEvent(QMouseEvent* Event);
   void contextMenuEvent(QContextMenuEvent* Event);
   void wheelEvent(QWheelEvent* Event);
-  void dragEnterEvent(QDragEnterEvent* Event);
-  void dropEvent(QDropEvent* Event);
   void scrollContentsBy(int dx, int dy);
   void leaveEvent(QEvent*);
   void keyPressEvent(QKeyEvent* Event);

@@ -493,8 +493,7 @@ void ptProcessor::Run(short Phase,
       TRACEKEYVALS("RotateH","%d",Settings->GetInt("RotateH"));
 
       // Crop
-      if (Settings->ToolIsActive("TabCrop") &&
-          !Settings->GetInt("DetailViewActive")) {
+      if (Settings->ToolIsActive("TabCrop")) {
 
         if (((Settings->GetInt("CropX") >> TmpScaled) + (Settings->GetInt("CropW") >> TmpScaled))
               > m_Image_AfterGeometry->m_Width ||
@@ -530,8 +529,7 @@ void ptProcessor::Run(short Phase,
       m_ScaleFactor = 1/powf(2.0, Settings->GetInt("Scaled"));
 
       // Resize
-      if (Settings->ToolIsActive("TabResize") &&
-          !Settings->GetInt("DetailViewActive")) {
+      if (Settings->ToolIsActive("TabResize")) {
         m_ReportProgress(tr("Resize image"));
 
         float WidthIn = m_Image_AfterGeometry->m_Width;

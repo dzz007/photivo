@@ -111,6 +111,8 @@ void closeEvent(QCloseEvent * Event);
 void resizeEvent(QResizeEvent * Event);
 void keyPressEvent(QKeyEvent * Event);
 void wheelEvent(QWheelEvent * Event);
+void dragEnterEvent(QDragEnterEvent* Event);
+void dropEvent(QDropEvent* Event);
 bool eventFilter(QObject *obj, QEvent *event);
 
 private :
