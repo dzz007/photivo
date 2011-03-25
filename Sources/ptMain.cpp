@@ -1280,8 +1280,7 @@ void BeforeGamma(ptImage* Image, const short FinalRun = 0, const short Resize = 
 
   if (Settings->GetInt("WebResizeBeforeGamma")==1 && Resize) {
     if (FinalRun == 1) Settings->SetValue("FullOutput",1);
-    if (Settings->ToolIsActive("TabWebResize") &&
-        !Settings->GetInt("DetailViewActive")) {
+    if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
       //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
       Image->ptGMResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
@@ -1335,8 +1334,7 @@ void AfterAll(ptImage* Image, const short FinalRun = 0, const short Resize = 1) 
   // WebResize for quality reasons done after output profile
   if (Settings->GetInt("WebResizeBeforeGamma")==0 && Resize) {
     if (FinalRun == 1) Settings->SetValue("FullOutput",1);
-    if (Settings->ToolIsActive("TabWebResize") &&
-        !Settings->GetInt("DetailViewActive")) {
+    if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
       //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
       Image->ptGMResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
@@ -1451,25 +1449,16 @@ void EndSharpen(ptImage* Image, cmsHPROFILE Profile, const int Intent) {
 void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
                         const short    OnlyHistogram /* = false */) {
 
-  // If we don't have yet an Image_AfterDcRaw we are probably in
-  // startup condition and no preview.
-  // We 'fake' one to show the splash.
+  if (!PreviewImage) PreviewImage = new (ptImage);
+
+  // If we don't have yet a m_Image_AfterGeometry we are in
+  // startup condition and show the start screen
   if (!TheProcessor->m_Image_AfterGeometry) {
-    if (!PreviewImage) PreviewImage = new (ptImage);
-    QString FileName = Settings->GetString("UserDirectory") + "photivoPreview.jpg";
-    printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
-    //~ PreviewImage->ReadPpm(FileName.toAscii().data());
-    PreviewImage->ptGMSimpleOpen(FileName.toAscii().data());
-    ViewWindow->UpdateView(PreviewImage);
-    // The splash we want to fit always, but not loosing the
-    // m_ZoomMode or m_Zoom setting due to that process.
-    int StoredZoom     = Settings->GetInt("Zoom");
-    int StoredZoomMode = Settings->GetInt("ZoomMode");
-    CB_ZoomFitButton();
-    Settings->SetValue("Zoom",StoredZoom);
-    Settings->SetValue("ZoomMode",StoredZoomMode);
+    MainWindow->ViewFrameStackedWidget->setCurrentWidget(MainWindow->ViewStartPage);
     return;
   }
+
+  MainWindow->ViewFrameStackedWidget->setCurrentWidget(MainWindow->ViewFrameCentralWidget);
 
   // Fast display of an image, e.g. for cropping
   // -> no histogram
@@ -1499,9 +1488,6 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
   ViewWindow->StatusReport(1);
   ReportProgress(QObject::tr("Updating preview image"));
-
-  // Create PreviewImage if needed and it's not yet there.
-  if (!PreviewImage && !OnlyHistogram) PreviewImage = new (ptImage);
 
   if (!HistogramImage) HistogramImage = new (ptImage);
 
@@ -3604,6 +3590,7 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->MainSplitter->setStyle(Theme->ptStyle);
   MainWindow->ControlSplitter->setStyle(Theme->ptStyle);
   MainWindow->ViewSplitter->setStyle(Theme->ptStyle);
+  MainWindow->ViewStartPage->setStyle(Theme->ptStyle);
 
   TheApplication->setPalette(Theme->ptPalette);
 
@@ -3612,6 +3599,7 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->PipeControlWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->StatusWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->SearchWidget->setStyleSheet(Theme->ptStyleSheet);
+  MainWindow->ViewStartPageFrame->setStyleSheet(Theme->ptStyleSheet);
 
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
@@ -4053,8 +4041,10 @@ void SetBackgroundColor(int SetIt) {
                                                 Settings->GetInt("BackgroundGreen"),
                                                 Settings->GetInt("BackgroundBlue")));
     ViewWindow->setPalette(BGPal);
+    MainWindow->ViewStartPage->setPalette(BGPal);
   } else {
     ViewWindow->setPalette(Theme->ptPalette);
+    MainWindow->ViewStartPage->setPalette(Theme->ptPalette);
   }
 }
 

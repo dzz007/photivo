@@ -85,7 +85,6 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-  setAcceptDrops(true);     // Drag and drop
   setMouseTracking(true);   // Move events without pressed button. Needed for cursor change.
 
   QVBoxLayout *Layout = new QVBoxLayout;
@@ -1513,7 +1512,7 @@ void ptViewWindow::keyReleaseEvent(QKeyEvent* Event) {
 //
 ////////////////////////////////////////////////////////////////////////
 
-void ptViewWindow::wheelEvent(QWheelEvent* Event) {  
+void ptViewWindow::wheelEvent(QWheelEvent* Event) {
   if ((m_InteractionMode == vaNone) && (((QMouseEvent*)Event)->modifiers() == Qt::NoModifier)) {
     m_SizeReportTimer->start(m_SizeReportTimeOut);
 
@@ -1541,78 +1540,6 @@ void ptViewWindow::wheelEvent(QWheelEvent* Event) {
     m_SizeReport->update();
     m_SizeReport->setVisible(1);
   }
-}
-
-
-////////////////////////////////////////////////////////////////////////
-//
-// dragEnterEvent
-//
-////////////////////////////////////////////////////////////////////////
-
-void ptViewWindow::dragEnterEvent(QDragEnterEvent* Event) {
-  if (m_InteractionMode != vaNone) {
-    return;
-  }
-
-  // accept just text/uri-list mime format
-  if (Event->mimeData()->hasFormat("text/uri-list")) {
-    Event->acceptProposedAction();
-  }
-}
-
-
-////////////////////////////////////////////////////////////////////////
-//
-// dropEvent
-//
-////////////////////////////////////////////////////////////////////////
-
-void ptViewWindow::dropEvent(QDropEvent* Event) {
-  if (m_InteractionMode != vaNone) {
-    return;
-  }
-
-  QList<QUrl> UrlList;
-  QString DropName;
-  QFileInfo DropInfo;
-
-  if (Event->mimeData()->hasUrls())
-  {
-    UrlList = Event->mimeData()->urls(); // returns list of QUrls
-
-    // if just text was dropped, urlList is empty (size == 0)
-    if ( UrlList.size() > 0) // if at least one QUrl is present in list
-    {
-      DropName = UrlList[0].toLocalFile(); // convert first QUrl to local path
-      DropInfo.setFile( DropName ); // information about file
-      if ( DropInfo.isFile() ) { // if is file
-        if (DropInfo.completeSuffix()!="pts" && DropInfo.completeSuffix()!="ptj" &&
-            DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj") {
-          ImageFileToOpen = DropName;
-          CB_MenuFileOpen(1);
-        } else {
-          if ( Settings->GetInt("ResetSettingsConfirmation") == 0 ) {
-            CB_OpenSettingsFile(DropName);
-          } else {
-            #ifdef Q_OS_WIN32
-              DropName = DropName.replace(QString("/"), QString("\\"));
-            #endif
-            QMessageBox msgBox;
-            msgBox.setIcon(QMessageBox::Question);
-            msgBox.setWindowTitle(tr("Settings file dropped!"));
-            msgBox.setText(tr("Do you really want to open\n")+DropName);
-            msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-            msgBox.setDefaultButton(QMessageBox::Ok);
-            if (msgBox.exec()==QMessageBox::Ok){
-              CB_OpenSettingsFile(DropName);
-            }
-          }
-        }
-      }
-    }
-  }
-  Event->acceptProposedAction();
 }
 
 

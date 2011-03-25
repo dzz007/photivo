@@ -443,11 +443,16 @@ void ptGroupBox::WriteSettings(const short Append) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptGroupBox::SetEnabled(const short Enabled) {
+  QStringList Temp = Settings->GetStringList("DisabledTools");
+  Temp.removeDuplicates();
   if (Enabled == 0) {
+    Temp.append(m_Name);
     m_IsEnabled = 0;
   } else {
+    Temp.removeOne(m_Name);
     m_IsEnabled = 1;
   }
+  Settings->SetValue("DisabledTools",Temp);
   UpdateView();
 }
 

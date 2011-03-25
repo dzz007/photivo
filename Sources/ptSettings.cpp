@@ -678,8 +678,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"HueCurveType"                         ,1         ,0                                                   ,1},
     {"FullOutput"                           ,9         ,0                                                   ,0},
     {"HiddenTools"                          ,0         ,QStringList()                                       ,1},
-    {"FavouriteTools"                       ,0         ,QStringList()                                       ,1},
+    {"FavouriteTools"                       ,0         ,QStringList()                                       ,0},
     {"BlockedTools"                         ,0         ,QStringList()                                       ,1},
+    {"DisabledTools"                        ,9         ,QStringList()                                       ,0},
     {"BlockUpdate"                          ,9         ,0                                                   ,0},
     {"FocalLengthIn35mmFilm"                ,0         ,0.0                                                 ,0},
     {"DetailViewActive"                     ,9         ,0                                                   ,0},
@@ -1544,9 +1545,10 @@ void ptSettings::FromDcRaw(DcRaw* TheDcRaw) {
 
 struct sToolInfo {
   QString               Name;
-  int                   IsActive;
-  int                   IsHidden;
-  int                   IsBlocked;
+  short                 IsActive;
+  short                 IsHidden;
+  short                 IsBlocked;
+  short                 IsDisabled;
 };
 
 sToolInfo ToolInfo (const QString GuiName) {
@@ -1902,6 +1904,9 @@ sToolInfo ToolInfo (const QString GuiName) {
 
   // tool hidden?
   Info.IsHidden = (Settings->GetStringList("HiddenTools")).contains(GuiName)?1:0;
+
+  // tool disabled?
+  Info.IsDisabled = (Settings->GetStringList("DisabledTools")).contains(GuiName)?1:0;
   return Info;
 }
 
@@ -1952,7 +1957,7 @@ QString ptSettings::ToolGetName (const QString GuiName) const {
 
 int ptSettings::ToolIsActive (const QString GuiName) const {
   sToolInfo Info = ToolInfo(GuiName);
-  return (Info.IsHidden || Info.IsBlocked)?0:Info.IsActive;
+  return (Info.IsHidden || Info.IsBlocked || Info.IsDisabled)?0:Info.IsActive;
 }
 
 int ptSettings::ToolIsBlocked (const QString GuiName) const {
