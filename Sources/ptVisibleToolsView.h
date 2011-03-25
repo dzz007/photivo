@@ -29,10 +29,10 @@
 #include <QStyledItemDelegate>
 
 class ptVisibleToolsModel : public QStandardItemModel {
-	Q_OBJECT
+  Q_OBJECT
 public:
-	explicit ptVisibleToolsModel(QObject *parent = 0);
-	bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+  explicit ptVisibleToolsModel(QObject *parent = 0);
+  bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
 signals:
 
@@ -42,12 +42,12 @@ public slots:
 
 
 class ptVisibleToolsItemDelegate : public QStyledItemDelegate {
-	Q_OBJECT
+  Q_OBJECT
 public:
-	explicit ptVisibleToolsItemDelegate(QObject *parent = 0);
-	QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-	void setEditorData(QWidget *editor, const QModelIndex &index) const;
-	void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+  explicit ptVisibleToolsItemDelegate(QObject *parent = 0);
+  QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+  void setEditorData(QWidget *editor, const QModelIndex &index) const;
+  void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
 signals:
 

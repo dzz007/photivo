@@ -657,9 +657,9 @@ const double D65Reference[3] = {0.950456, 1.0, 1.088754};
 // Possible tool states
 
 enum ptToolState {
-	tsHidden = 0,
-	tsNormal = 1,
-	tsFavourite = 2,
+  tsHidden = 0,
+  tsNormal = 1,
+  tsFavourite = 2,
 };
 
 #endif
