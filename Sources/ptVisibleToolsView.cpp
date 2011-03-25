@@ -29,48 +29,46 @@
 extern ptTheme* Theme;
 
 ptVisibleToolsModel::ptVisibleToolsModel(QObject *parent) :
-		QStandardItemModel(parent) {
+  QStandardItemModel(parent) {
 }
 
 bool ptVisibleToolsModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-	QStandardItemModel::setData(index, value, role);
-	if (role == Qt::UserRole+1)
-	{
-		if (value.toInt() == tsHidden)
-			setData(index, QIcon(* Theme->ptIconCrossRed), Qt::DecorationRole);
-		if (value.toInt() == tsFavourite)
-			setData(index, QIcon(* Theme->ptIconStar), Qt::DecorationRole);
-		if (value.toInt() == tsNormal)
-			setData(index, QIcon(* Theme->ptIconStarGrey), Qt::DecorationRole);
-	}
+  QStandardItemModel::setData(index, value, role);
+  if (role == Qt::UserRole+1)
+  {
+    if (value.toInt() == tsHidden)
+      setData(index, QIcon(* Theme->ptIconCrossRed), Qt::DecorationRole);
+    if (value.toInt() == tsFavourite)
+      setData(index, QIcon(* Theme->ptIconStar), Qt::DecorationRole);
+    if (value.toInt() == tsNormal)
+      setData(index, QIcon(* Theme->ptIconStarGrey), Qt::DecorationRole);
+  }
 }
 
 
 ptVisibleToolsItemDelegate::ptVisibleToolsItemDelegate(QObject *parent) :
-		QStyledItemDelegate(parent) {
+  QStyledItemDelegate(parent) {
 }
 
 QWidget* ptVisibleToolsItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-	return new QComboBox(parent);
+  return new QComboBox(parent);
 }
 
 void ptVisibleToolsItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
-	QComboBox *box = qobject_cast<QComboBox*>(editor);
-//	box->setInsertPolicy(QComboBox::InsertAtTop);
-	box->addItem(/*qvariant_cast<QIcon>(index.data(Qt::DecorationRole)),*/ index.data().toString(), index.data(Qt::UserRole+1));
-	box->addItem(QIcon(* Theme->ptIconCrossRed), tr("Hidden"), tsHidden);
-	box->addItem(QIcon(* Theme->ptIconStarGrey), tr("Normal"), tsNormal);
-	box->addItem(QIcon(* Theme->ptIconStar), tr("Favourite"), tsFavourite);
+  QComboBox *box = qobject_cast<QComboBox*>(editor);
+  box->addItem(index.data().toString(), index.data(Qt::UserRole+1));
+  if (!index.data(Qt::UserRole+2).toBool())
+    box->addItem(QIcon(* Theme->ptIconCrossRed), tr("Hidden"));
+  box->addItem(QIcon(* Theme->ptIconStarGrey), tr("Normal"));
+  box->addItem(QIcon(* Theme->ptIconStar), tr("Favourite"));
 }
 
 void ptVisibleToolsItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
-	QComboBox *box = qobject_cast<QComboBox*>(editor);
-//	if (box->currentIndex() > 0)
-//		model->setData(index, box->currentIndex()-1, Qt::UserRole+1);
-	if (box->currentText() == tr("Hidden"))
-		model->setData(index, tsHidden, Qt::UserRole+1);
-	if (box->currentText() == tr("Normal"))
-		model->setData(index, tsNormal, Qt::UserRole+1);
-	if (box->currentText() == tr("Favourite"))
-		model->setData(index, tsFavourite, Qt::UserRole+1);
+  QComboBox *box = qobject_cast<QComboBox*>(editor);
+  if (box->currentText() == tr("Hidden"))
+    model->setData(index, tsHidden, Qt::UserRole+1);
+  if (box->currentText() == tr("Normal"))
+    model->setData(index, tsNormal, Qt::UserRole+1);
+  if (box->currentText() == tr("Favourite"))
+    model->setData(index, tsFavourite, Qt::UserRole+1);
 }
