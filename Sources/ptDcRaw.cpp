@@ -8865,7 +8865,6 @@ void CLASS ptCrop() {
   uint16_t CropH = m_UserSetting_DetailViewCropH;
   uint16_t CropX = m_UserSetting_DetailViewCropX;
   uint16_t CropY = m_UserSetting_DetailViewCropY;
-printf("\nFlip: %d\n\n", m_Flip);
 
   if (m_Flip & 2) {
     CropX = m_Height - CropX - CropW;
