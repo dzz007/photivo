@@ -2461,7 +2461,10 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
     // save focal length (need 35mm equiv.)
     QString FL = TheInfo;
     while(FL.endsWith("m") || FL.endsWith(" ")) FL.chop(1);
-    Settings->SetValue("FocalLengthIn35mmFilm",FL.toFloat());
+    if (FL.toFloat() >= 4.0f && FL.toFloat() <= 6000.0f)
+      Settings->SetValue("FocalLengthIn35mmFilm",FL.toFloat());
+    else
+      Settings->SetValue("FocalLengthIn35mmFilm",50.0);
   } else {
     Settings->SetValue("FocalLengthIn35mmFilm",50.0);
   }
@@ -2479,7 +2482,10 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
     // save focal length (crop camera!)
     QString FL = TheInfo;
     while(FL.endsWith("m") || FL.endsWith(" ")) FL.chop(1);
-    Settings->SetValue("FocalLengthIn35mmFilm",FL.toFloat());
+    if (FL.toFloat() >= 4.0f && FL.toFloat() <= 6000.0f)
+      Settings->SetValue("FocalLengthIn35mmFilm",FL.toFloat());
+    else
+      Settings->SetValue("FocalLengthIn35mmFilm",50.0);
   }
   InfoFocalLengthLabel->setText(TempString);
   TheInfo="";
