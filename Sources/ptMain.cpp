@@ -492,14 +492,16 @@ int photivoMain(int Argc, char *Argv[]) {
                   << NewShareDirectory + "ChannelMixers"
                   << NewShareDirectory + "Presets"
                   << NewShareDirectory + "Profiles"
-                  << NewShareDirectory + "LensfunDatabase";
+                  << NewShareDirectory + "LensfunDatabase"
+                  << NewShareDirectory + "UISettings";
     QStringList DestFolders;
     DestFolders << UserDirectory + "Translations"
                 << UserDirectory + "Curves"
                 << UserDirectory + "ChannelMixers"
                 << UserDirectory + "Presets"
                 << UserDirectory + "Profiles"
-                << UserDirectory + "LensfunDatabase";
+                << UserDirectory + "LensfunDatabase"
+                << UserDirectory + "UISettings";
 
     for (int i = 0; i < SourceFolders.size(); i++) {
       copyFolder(SourceFolders.at(i), DestFolders.at(i));
