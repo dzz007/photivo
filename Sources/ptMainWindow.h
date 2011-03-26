@@ -35,6 +35,7 @@
 #include "ptChoice.h"
 #include "ptCheck.h"
 #include "ptGroupBox.h"
+#include "ptVisibleToolsView.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,6 +80,12 @@ void ShowActiveTools();
 void ShowAllTools();
 void ShowFavouriteTools();
 void CleanUpMovedTools();
+
+// Visible tools
+void ApplyVisibleTools();
+void UpdateVisibleTools();
+void LoadUISettings(const QString &fileName);
+void SaveUISettings(const QString &fileName) const;
 
 // Make and model are remembered because in
 // case of change the choice of white balances must be redone.
@@ -130,8 +137,11 @@ QAction* m_AtnMenuOpenSettings;
 short    m_ContextMenuOnTab;
 QAction* m_AtnShowTools;
 
+ptVisibleToolsModel* m_VisibleToolsModel;
+
 void AnalyzeToolBoxStructure();
 void ShowMovedTools(const QString Title);
+void InitVisibleTools();
 
 private slots:
 void ResizeTimerExpired();
@@ -246,6 +256,10 @@ void OnGradualOverlay2ColorButtonClicked();
 void OnOutputColorProfileResetButtonClicked();
 void OnWriteOutputButtonClicked();
 void OnWritePipeButtonClicked();
+
+void OnVisibleToolsDiscardButtonClicked();
+void OnVisibleToolsLoadButtonClicked();
+void OnVisibleToolsSaveButtonClicked();
 };
 
 #endif
