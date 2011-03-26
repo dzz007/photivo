@@ -28,31 +28,23 @@
 #include <QStandardItemModel>
 #include <QStyledItemDelegate>
 
+// model for UI settings tool
 class ptVisibleToolsModel : public QStandardItemModel {
-  Q_OBJECT
+//  Q_OBJECT
 public:
   explicit ptVisibleToolsModel(QObject *parent = 0);
   bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-
-signals:
-
-public slots:
-
 };
 
 
+// item delegate for UI settings tool
 class ptVisibleToolsItemDelegate : public QStyledItemDelegate {
-  Q_OBJECT
+//  Q_OBJECT
 public:
   explicit ptVisibleToolsItemDelegate(QObject *parent = 0);
   QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
   void setEditorData(QWidget *editor, const QModelIndex &index) const;
   void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-
-signals:
-
-public slots:
-
 };
 
 #endif // PTVISIBLETOOLSVIEW_H

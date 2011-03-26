@@ -2568,50 +2568,43 @@ void ptMainWindow::UpdateCropToolUI() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::InitVisibleTools() {
-  visibleToolsModel = new ptVisibleToolsModel;
+  m_VisibleToolsModel = new ptVisibleToolsModel;
 
   // fill items corresponding to tabs
   for (int i=0; i < ProcessingTabBook->count(); i++) {
     QStandardItem *topItem = new QStandardItem(ProcessingTabBook->tabText(i));
     topItem->setFlags(Qt::NoItemFlags);
-    visibleToolsModel->appendRow(topItem);
+    m_VisibleToolsModel->appendRow(topItem);
   }
 
   QStringList hiddenTools = Settings->GetStringList("HiddenTools");
   QStringList favouriteTools = Settings->GetStringList("FavouriteTools");
 
-  // run through tools that aren't always visible
   foreach (QString itGroupBox, *m_GroupBoxesOrdered) {
-//    if (!Settings->ToolAlwaysVisible(itGroupBox)) {
     QStandardItem *item = new QStandardItem(m_GroupBox->value(itGroupBox)->GetTitle());
-
-    visibleToolsModel->item(m_GroupBox->value(itGroupBox)->GetTabNumber())->appendRow(item);
 
     // set tool state and corresponding icon will be set automatically
     if (hiddenTools.contains(itGroupBox))
-      visibleToolsModel->setData(visibleToolsModel->indexFromItem(item), tsHidden, Qt::UserRole+1);
+      item->setData(tsHidden, Qt::UserRole+1);
     else
       if (favouriteTools.contains(itGroupBox))
-        visibleToolsModel->setData(visibleToolsModel->indexFromItem(item), tsFavourite, Qt::UserRole+1);
+        item->setData(tsFavourite, Qt::UserRole+1);
       else
-        visibleToolsModel->setData(visibleToolsModel->indexFromItem(item), tsNormal, Qt::UserRole+1);
+        item->setData(tsNormal, Qt::UserRole+1);
 
+    // check if tool can be hidden and set corresponding flag
     if (Settings->ToolAlwaysVisible(itGroupBox))
-      visibleToolsModel->setData(visibleToolsModel->indexFromItem(item), true, Qt::UserRole+2);
+      item->setData(1, Qt::UserRole+2);
     else
-      visibleToolsModel->setData(visibleToolsModel->indexFromItem(item), false, Qt::UserRole+2);
+      item->setData(0, Qt::UserRole+2);
+
+    m_VisibleToolsModel->item(m_GroupBox->value(itGroupBox)->GetTabNumber())->appendRow(item);
   }
 
-  // remove items coreesponding to tabs which tools are always visible
-//  for (int i=0; i < visibleToolsModel->rowCount(); i++)
-//    if (visibleToolsModel->item(i)->rowCount() == 0)
-//      visibleToolsModel->removeRow(i--);
-
   // connect model with Visible Tools View
-  VisibleToolsView->setModel(visibleToolsModel);
+  VisibleToolsView->setModel(m_VisibleToolsModel);
   VisibleToolsView->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::DoubleClicked);
-  ptVisibleToolsItemDelegate *visibleToolsDelegate = new ptVisibleToolsItemDelegate;
-  VisibleToolsView->setItemDelegate(visibleToolsDelegate);
+  VisibleToolsView->setItemDelegate(new ptVisibleToolsItemDelegate);
 }
 
 
@@ -2624,27 +2617,25 @@ void ptMainWindow::InitVisibleTools() {
 void ptMainWindow::ApplyVisibleTools() {
   QString FirstActive;
 
-  // run through tools that aren't always visible
   foreach (QString itGroupBox, *m_GroupBoxesOrdered) {
-    //    if (!Settings->ToolAlwaysVisible(itGroupBox)) {
-    // find all TreeItems with necessary name (in different tabs)
-    QList<QStandardItem *> itemList = visibleToolsModel->findItems(
+    // find all items with necessary name (in different tabs)
+    QList<QStandardItem *> itemList = m_VisibleToolsModel->findItems(
           m_GroupBox->value(itGroupBox)->GetTitle(), Qt::MatchExactly | Qt::MatchRecursive);
+
     // find item corresponding to proper tab (maybe their is a simplier way)
     QStandardItem *item = NULL;
-
     foreach (QStandardItem *it, itemList) {
       QString tabName = ProcessingTabBook->tabText(ProcessingTabBook->indexOf(
-                                                     ProcessingTabBook->findChild<QWidget *>(m_GroupBox->value(itGroupBox)->GetTabName())));
-      if (visibleToolsModel->indexFromItem(it).parent() ==
-          visibleToolsModel->indexFromItem(visibleToolsModel->findItems(tabName,	Qt::MatchExactly).first())) {
+                          ProcessingTabBook->findChild<QWidget *>(m_GroupBox->value(itGroupBox)->GetTabName())));
+      if (m_VisibleToolsModel->indexFromItem(it).parent() ==
+          m_VisibleToolsModel->indexFromItem(m_VisibleToolsModel->findItems(tabName,	Qt::MatchExactly).first())) {
         item = it;
         break;
       }
     }
 
     // hide/show tools according to state
-    if (visibleToolsModel->data(visibleToolsModel->indexFromItem(item), Qt::UserRole+1).toInt() == tsHidden) {
+    if (item->data(Qt::UserRole+1).toInt() == tsHidden) {
       QStringList hiddenTools = Settings->GetStringList("HiddenTools");
       if (!hiddenTools.contains(itGroupBox)) {
         hiddenTools.append(itGroupBox);
@@ -2657,11 +2648,11 @@ void ptMainWindow::ApplyVisibleTools() {
 
       QStringList favouriteTools = Settings->GetStringList("FavouriteTools");
       if (favouriteTools.contains(itGroupBox))
-        favouriteTools.removeOne(itGroupBox);
+        favouriteTools.removeAll(itGroupBox);
       Settings->SetValue("FavouriteTools", favouriteTools);
     }
 
-    if (visibleToolsModel->data(visibleToolsModel->indexFromItem(item), Qt::UserRole+1).toInt() == tsFavourite) {
+    if (item->data(Qt::UserRole+1).toInt() == tsFavourite) {
       QStringList favouriteTools = Settings->GetStringList("FavouriteTools");
       if (!favouriteTools.contains(itGroupBox))
         favouriteTools.append(itGroupBox);
@@ -2670,7 +2661,7 @@ void ptMainWindow::ApplyVisibleTools() {
 
       // show tool if it was hidden
       if (hiddenTools.contains(itGroupBox)) {
-        hiddenTools.removeOne(itGroupBox);
+        hiddenTools.removeAll(itGroupBox);
         m_GroupBox->value(itGroupBox)->show();
         // find first active tool, which changes it's state
         if (Settings->ToolIsActive(itGroupBox) && FirstActive.size() == 0)
@@ -2679,11 +2670,11 @@ void ptMainWindow::ApplyVisibleTools() {
       Settings->SetValue("HiddenTools", hiddenTools);
     }
 
-    if (visibleToolsModel->data(visibleToolsModel->indexFromItem(item), Qt::UserRole+1).toInt() == tsNormal) {
+    if (item->data(Qt::UserRole+1).toInt() == tsNormal) {
       QStringList hiddenTools = Settings->GetStringList("HiddenTools");
       // show tool if it was hidden
       if (hiddenTools.contains(itGroupBox)) {
-        hiddenTools.removeOne(itGroupBox);
+        hiddenTools.removeAll(itGroupBox);
         m_GroupBox->value(itGroupBox)->show();
         // find first active tool, which changes it's state
         if (Settings->ToolIsActive(itGroupBox) && FirstActive.size() == 0)
@@ -2693,13 +2684,14 @@ void ptMainWindow::ApplyVisibleTools() {
 
       QStringList favouriteTools = Settings->GetStringList("FavouriteTools");
       if (favouriteTools.contains(itGroupBox))
-        favouriteTools.removeOne(itGroupBox);
+        favouriteTools.removeAll(itGroupBox);
       Settings->SetValue("FavouriteTools", favouriteTools);
     }
   }
 
   // Image need to be updated, if active tools have changed their state
-  if (FirstActive.size() != 0) Update(FirstActive);
+  if (FirstActive.size() != 0)
+    Update(FirstActive);
 }
 
 
@@ -2713,20 +2705,18 @@ void ptMainWindow::UpdateVisibleTools() {
   QStringList hiddenTools = Settings->GetStringList("HiddenTools");
   QStringList favouriteTools = Settings->GetStringList("FavouriteTools");
 
-  // run through tools that aren't always visible
   foreach (QString itGroupBox, *m_GroupBoxesOrdered) {
-    //    if (!Settings->ToolAlwaysVisible(itGroupBox)) {
     // find all TreeItems with necessary name (in different tabs)
-    QList<QStandardItem *> itemList = visibleToolsModel->findItems(
+    QList<QStandardItem *> itemList = m_VisibleToolsModel->findItems(
           m_GroupBox->value(itGroupBox)->GetTitle(), Qt::MatchExactly | Qt::MatchRecursive);
 
     // find item corresponding to proper tab (maybe their is a simplier way)
     QStandardItem *item = NULL;
     foreach (QStandardItem *it, itemList) {
       QString tabName = ProcessingTabBook->tabText(ProcessingTabBook->indexOf(
-                                                     ProcessingTabBook->findChild<QWidget *>(m_GroupBox->value(itGroupBox)->GetTabName())));
-      if (visibleToolsModel->indexFromItem(it).parent() ==
-          visibleToolsModel->indexFromItem(visibleToolsModel->findItems(tabName,	Qt::MatchExactly).first())) {
+                          ProcessingTabBook->findChild<QWidget *>(m_GroupBox->value(itGroupBox)->GetTabName())));
+      if (m_VisibleToolsModel->indexFromItem(it).parent() ==
+          m_VisibleToolsModel->indexFromItem(m_VisibleToolsModel->findItems(tabName,	Qt::MatchExactly).first())) {
         item = it;
         break;
       }
@@ -2734,17 +2724,18 @@ void ptMainWindow::UpdateVisibleTools() {
 
     // set tool state and corresponding icon will be set automatically
     if (hiddenTools.contains(itGroupBox))
-      visibleToolsModel->setData(visibleToolsModel->indexFromItem(item), tsHidden, Qt::UserRole+1);
+      m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item), tsHidden, Qt::UserRole+1);
     else
       if (favouriteTools.contains(itGroupBox))
-        visibleToolsModel->setData(visibleToolsModel->indexFromItem(item), tsFavourite, Qt::UserRole+1);
+        m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item), tsFavourite, Qt::UserRole+1);
       else
-        visibleToolsModel->setData(visibleToolsModel->indexFromItem(item), tsNormal, Qt::UserRole+1);
+        m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item), tsNormal, Qt::UserRole+1);
 
+    // check if tool can be hidden and set corresponding flag
     if (Settings->ToolAlwaysVisible(itGroupBox))
-      visibleToolsModel->setData(visibleToolsModel->indexFromItem(item), true, Qt::UserRole+2);
+      m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item), 1, Qt::UserRole+2);
     else
-      visibleToolsModel->setData(visibleToolsModel->indexFromItem(item), false, Qt::UserRole+2);
+      m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item), 0, Qt::UserRole+2);
   }
 }
 
@@ -2758,6 +2749,7 @@ void ptMainWindow::UpdateVisibleTools() {
 void ptMainWindow::LoadUISettings(const QString &fileName) {
   QSettings UISettings(fileName, QSettings::IniFormat);
   UISettings.sync();
+
   if (UISettings.status() != QSettings::NoError) {
     QMessageBox::critical(0, "Error", "Error reading UI file\n" + fileName);
     return;
@@ -2773,6 +2765,7 @@ void ptMainWindow::LoadUISettings(const QString &fileName) {
   QStringList currentHiddenTools = UISettings.value("HiddenTools").toStringList();
   Settings->SetValue("HiddenTools", currentHiddenTools);
 
+  // find difference between previous and current hidden tools list
   previousHiddenTools.removeDuplicates();
   currentHiddenTools.removeDuplicates();
   foreach (QString str, previousHiddenTools)
@@ -2782,6 +2775,7 @@ void ptMainWindow::LoadUISettings(const QString &fileName) {
       currentHiddenTools.removeOne(str);
     }
 
+  // create a list of active tools which change their state
   QStringList ActiveTools;
   foreach (QString str, previousHiddenTools) {
     m_GroupBox->value(str)->show();
@@ -2812,6 +2806,7 @@ void ptMainWindow::LoadUISettings(const QString &fileName) {
 void ptMainWindow::SaveUISettings(const QString &fileName) const {
   QSettings UISettings(fileName, QSettings::IniFormat);
   UISettings.clear();
+
   UISettings.setValue("Magic", "photivoUIFile");
   UISettings.setValue("HiddenTools", Settings->GetStringList("HiddenTools"));
   UISettings.setValue("FavouriteTools", Settings->GetStringList("FavouriteTools"));
@@ -2842,7 +2837,7 @@ void ptMainWindow::OnVisibleToolsDiscardButtonClicked() {
 
 void ptMainWindow::OnVisibleToolsLoadButtonClicked() {
   QString UIFilePattern = tr("Photivo UI file (*.ptu);;All files (*.*)");
-  QString UIFileName = QFileDialog::getOpenFileName(NULL,
+  QString UIFileName = QFileDialog::getOpenFileName(this,
                                                     tr("Open UI"),
                                                     Settings->GetString("UIDirectory"),
                                                     UIFilePattern);
@@ -2866,7 +2861,7 @@ void ptMainWindow::OnVisibleToolsSaveButtonClicked() {
   ApplyVisibleTools();
 
   QString UIFilePattern = tr("Photivo UI file (*.ptu);;All files (*.*)");
-  QString UIFileName = QFileDialog::getSaveFileName(NULL,
+  QString UIFileName = QFileDialog::getSaveFileName(this,
                                                     tr("Save UI"),
                                                     Settings->GetString("UIDirectory"),
                                                     UIFilePattern);
