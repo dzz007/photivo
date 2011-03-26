@@ -135,7 +135,7 @@ QAction* m_AtnMenuOpenSettings;
 short    m_ContextMenuOnTab;
 QAction* m_AtnShowTools;
 
-ptVisibleToolsModel* visibleToolsModel;
+ptVisibleToolsModel* m_VisibleToolsModel;
 
 void AnalyzeToolBoxStructure();
 void ShowMovedTools(const QString Title);

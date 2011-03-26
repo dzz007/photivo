@@ -34,6 +34,8 @@ ptVisibleToolsModel::ptVisibleToolsModel(QObject *parent) :
 
 bool ptVisibleToolsModel::setData(const QModelIndex &index, const QVariant &value, int role) {
   QStandardItemModel::setData(index, value, role);
+
+  // set icon automatically according to state
   if (role == Qt::UserRole+1)
   {
     if (value.toInt() == tsHidden)
@@ -50,14 +52,16 @@ ptVisibleToolsItemDelegate::ptVisibleToolsItemDelegate(QObject *parent) :
   QStyledItemDelegate(parent) {
 }
 
-QWidget* ptVisibleToolsItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+QWidget* ptVisibleToolsItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem&, const QModelIndex&) const {
   return new QComboBox(parent);
 }
 
 void ptVisibleToolsItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
   QComboBox *box = qobject_cast<QComboBox*>(editor);
   box->addItem(index.data().toString(), index.data(Qt::UserRole+1));
-  if (!index.data(Qt::UserRole+2).toBool())
+
+  // test if tool isn't always visible
+  if (index.data(Qt::UserRole+2).toInt() != 1)
     box->addItem(QIcon(* Theme->ptIconCrossRed), tr("Hidden"));
   box->addItem(QIcon(* Theme->ptIconStarGrey), tr("Normal"));
   box->addItem(QIcon(* Theme->ptIconStar), tr("Favourite"));
@@ -65,6 +69,8 @@ void ptVisibleToolsItemDelegate::setEditorData(QWidget *editor, const QModelInde
 
 void ptVisibleToolsItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
   QComboBox *box = qobject_cast<QComboBox*>(editor);
+
+  // save state to the model
   if (box->currentText() == tr("Hidden"))
     model->setData(index, tsHidden, Qt::UserRole+1);
   if (box->currentText() == tr("Normal"))
