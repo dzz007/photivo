@@ -465,6 +465,11 @@ Following stuff is also needed for normal.css
     "  border: none;"
     "}"
 
+/** tree view ****************************************/
+    "QTreeView {"
+    "  border: 1px solid " + Dark + ";"
+    "}"
+
 /** Slider ****************************************/
     "QSlider {"
     "  background: none;"
