@@ -98,6 +98,7 @@ win32 {
 
 # Input
 HEADERS += ../Sources/ptConstants.h
+HEADERS += ../Sources/ptVisibleToolsView.h
 HEADERS += ../Sources/ptCurve.h
 HEADERS += ../Sources/ptChannelMixer.h
 HEADERS += ../Sources/ptDcRaw.h
@@ -142,6 +143,7 @@ HEADERS += ../Sources/fastbilateral/math_tools.h
 HEADERS += ../Sources/fastbilateral/mixed_vector.h
 FORMS +=   ../Sources/ptMainWindow.ui
 SOURCES += ../Sources/ptCurve.cpp
+SOURCES += ../Sources/ptVisibleToolsView.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptDcRaw.cpp
 SOURCES += ../Sources/ptError.cpp

@@ -492,14 +492,16 @@ int photivoMain(int Argc, char *Argv[]) {
                   << NewShareDirectory + "ChannelMixers"
                   << NewShareDirectory + "Presets"
                   << NewShareDirectory + "Profiles"
-                  << NewShareDirectory + "LensfunDatabase";
+                  << NewShareDirectory + "LensfunDatabase"
+                  << NewShareDirectory + "UISettings";
     QStringList DestFolders;
     DestFolders << UserDirectory + "Translations"
                 << UserDirectory + "Curves"
                 << UserDirectory + "ChannelMixers"
                 << UserDirectory + "Presets"
                 << UserDirectory + "Profiles"
-                << UserDirectory + "LensfunDatabase";
+                << UserDirectory + "LensfunDatabase"
+                << UserDirectory + "UISettings";
 
     for (int i = 0; i < SourceFolders.size(); i++) {
       copyFolder(SourceFolders.at(i), DestFolders.at(i));
@@ -535,6 +537,7 @@ int photivoMain(int Argc, char *Argv[]) {
   if (FirstStart == 1) {
     Settings->SetValue("RawsDirectory", UserDirectory);
     Settings->SetValue("OutputDirectory", UserDirectory);
+		Settings->SetValue("UIDirectory", UserDirectory + "UISettings");
     Settings->SetValue("PresetDirectory", UserDirectory + "Presets");
     Settings->SetValue("CurvesDirectory", UserDirectory + "Curves");
     Settings->SetValue("ChannelMixersDirectory", UserDirectory + "ChannelMixers");
@@ -2482,6 +2485,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
       << "CurvesDirectory"
       << "ChannelMixersDirectory"
       << "PresetDirectory"
+			<< "UIDirectory"
       << "CameraColorProfilesDirectory"
       << "PreviewColorProfilesDirectory"
       << "OutputColorProfilesDirectory"

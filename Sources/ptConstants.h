@@ -654,6 +654,14 @@ const cmsCIExyYTRIPLE RGBPrimaries[5] =
 const double D50Reference[3] = {0.96422,  1.0, 0.82521};
 const double D65Reference[3] = {0.950456, 1.0, 1.088754};
 
+// Possible tool states
+
+enum ptToolState {
+  tsHidden = 0,
+  tsNormal = 1,
+  tsFavourite = 2,
+};
+
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
