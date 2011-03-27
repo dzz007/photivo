@@ -584,7 +584,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"MainDirectory"                        ,0         ,"@INSTALL@/"                             ,0},
     {"ShareDirectory"                       ,0         ,"@INSTALL@/"                             ,1},
     {"UserDirectory"                        ,0         ,"@INSTALL@/"                             ,1},
-		{"UIDirectory"                          ,0         ,"@INSTALL@/UISettings"                   ,0},
+    {"UIDirectory"                          ,0         ,"@INSTALL@/UISettings"                   ,0},
     {"TranslationsDirectory"                ,0         ,"@INSTALL@/Translations"                 ,0},
     {"CurvesDirectory"                      ,0         ,"@INSTALL@/Curves"                       ,1},
     {"ChannelMixersDirectory"               ,0         ,"@INSTALL@/ChannelMixers"                ,1},
@@ -1945,7 +1945,7 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     << "TabBackupSettings"
     << "TabTranslation"
     << "TabMemoryTest"
-		<< "TabVisibleTools"
+    << "TabVisibleTools"
     // Info tab
     << "TabInfoPhotivo"
     << "TabInfoFile"
