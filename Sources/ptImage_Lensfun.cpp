@@ -26,10 +26,6 @@
 typedef float Tfloat;   // needed by the interpolation code
 
 ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
-  struct Coords {
-    float x;
-    float y;
-  };
 
   // Stage 2: Vignetting.
   if ((LfunActions & LF_MODIFY_VIGNETTING) ||
@@ -41,38 +37,33 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
                                      m_Width * 3 * sizeof(uint16_t));
   }
 
+
   // Stage 1 and/or 3: CA, lens Geometry/distortion
   // Processing row by row to avoid *huge* memory requirements
   if (((LfunActions & LF_MODIFY_TCA) || (LfunActions & LF_MODIFY_DISTORTION) || (LfunActions & LF_MODIFY_GEOMETRY)) ||
       (LfunActions == LF_MODIFY_ALL) )
   {
-printf("!!!!!!START\n");
-    Coords NewCoords[m_Width];  //CALLOC((uint32_t)m_Width * 2, sizeof(float));
-    memset(NewCoords, 0, sizeof(Coords)*m_Width);
+    float* NewCoords = (float*) CALLOC((uint32_t)m_Width * 3 * 2, sizeof(float));
     uint16_t (*TempImage)[3] = (uint16_t (*)[3]) CALLOC((int32_t)m_Width * m_Height, sizeof(*TempImage));
 
     for (uint16_t row = 0; row < m_Height; row++) {
       int32_t Temp = row * m_Width;
-printf("!!!!!!MARKER\n");
-      LfunData->ApplySubpixelGeometryDistortion(0.0, row, m_Width, 1, (float*)&NewCoords);
-printf("!!!!!!MARKER222222222\n");
+      LfunData->ApplySubpixelDistortion(0.0, row, m_Width, 1, NewCoords);
 
       // Bicubic interpolation
       for (uint16_t col = 0; col < m_Width; col++) {
-        printf("!!!!!!MARKER333333333\n");
-        printf("!!!%u\n", (unsigned int)sizeof(NewCoords));
-        if (NewCoords[col].x < 0 || NewCoords[col].x > m_Width-1 || NewCoords[col].y < 0 || NewCoords[col].y > m_Height-1) {
+        if (NewCoords[col*2] < 0 || NewCoords[col*2] > m_Width-1 || NewCoords[col*2+1] < 0 || NewCoords[col*2+1] > m_Height-1) {
           for (short c = 0; c < 3; c++) {
             TempImage[Temp+col][c] = 0;
           }
           continue;
         }
         const int32_t
-          x = (int32_t)NewCoords[col].x,
-          y = (int32_t)NewCoords[col].y;
+          x = (int32_t)NewCoords[col*2],
+          y = (int32_t)NewCoords[col*2+1];
         const float
-          dx = NewCoords[col].x - x,
-          dy = NewCoords[col].y - y;
+          dx = NewCoords[col*2] - x,
+          dy = NewCoords[col*2+1] - y;
         const int32_t
           px = x-1<0?0:x-1, nx = dx>0?x+1:x, ax = x+2>=m_Width?m_Width-1:x+2,
           py = y-1<0?0:y-1, ny = dy>0?y+1:y, ay = y+2>=m_Height?m_Height-1:y+2;
@@ -95,7 +86,7 @@ printf("!!!!!!MARKER222222222\n");
       }
     }
 
-    free(&NewCoords);
+    FREE(NewCoords);
     FREE(m_Image);
     m_Image = TempImage;
   }
