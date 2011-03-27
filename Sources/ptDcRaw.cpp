@@ -8542,10 +8542,10 @@ short CLASS RunDcRaw_Phase4(const short NoCache) {
     m_Filters    = m_Filters_AfterPhase3;
   }
 
-  if (!m_UserSetting_photivo_LensfunModifierFlags) return 0;
+//  if (!m_UserSetting_photivo_LensfunModifierFlags) return 0;
 
-  ptLensfunModify(m_UserSetting_photivo_LensfunModifier,
-                  m_UserSetting_photivo_LensfunModifierFlags);
+//  ptLensfunModify(m_UserSetting_photivo_LensfunModifier,
+//                  m_UserSetting_photivo_LensfunModifierFlags);
 
   return 0;
 }
