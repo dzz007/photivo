@@ -537,7 +537,7 @@ int photivoMain(int Argc, char *Argv[]) {
   if (FirstStart == 1) {
     Settings->SetValue("RawsDirectory", UserDirectory);
     Settings->SetValue("OutputDirectory", UserDirectory);
-		Settings->SetValue("UIDirectory", UserDirectory + "UISettings");
+    Settings->SetValue("UIDirectory", UserDirectory + "UISettings");
     Settings->SetValue("PresetDirectory", UserDirectory + "Presets");
     Settings->SetValue("CurvesDirectory", UserDirectory + "Curves");
     Settings->SetValue("ChannelMixersDirectory", UserDirectory + "ChannelMixers");
@@ -2485,7 +2485,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
       << "CurvesDirectory"
       << "ChannelMixersDirectory"
       << "PresetDirectory"
-			<< "UIDirectory"
+      << "UIDirectory"
       << "CameraColorProfilesDirectory"
       << "PreviewColorProfilesDirectory"
       << "OutputColorProfilesDirectory"
@@ -2984,15 +2984,15 @@ void CB_MenuFileOpen(const short HaveFile) {
     Settings->SetValue("CameraColor",ptCameraColor_Adobe_Profile);
   short OldRunMode = Settings->GetInt("RunMode");
   Settings->SetValue("RunMode",0);
-  MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-  MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
-  Settings->SetValue("PerspectiveFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
   if (Settings->GetInt("AutomaticPipeSize") && Settings->ToolIsActive("TabResize")) {
     if (!CalculatePipeSize())
       Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
   } else {
     Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
   }
+  MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  Settings->SetValue("PerspectiveFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
+  MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
   #ifdef Q_OS_WIN32
     MainWindow->setWindowTitle(QString((Settings->GetStringList("InputFileNameList"))[0]).replace(QString("/"), QString("\\")) + " - Photivo");
   #else
