@@ -122,7 +122,6 @@ typedef unsigned long long UINT64;
 #endif
 
 #include "ptDefines.h"
-#include "lensfun.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -267,9 +266,6 @@ char*     m_UserSetting_BadPixelsFileName;
 // Default on NULL and not used.
 char*     m_UserSetting_DarkFrameFileName;
 
-lfModifier* m_UserSetting_photivo_LensfunModifier;
-int         m_UserSetting_photivo_LensfunModifierFlags;
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Methods that the user can apply.
@@ -295,12 +291,9 @@ short  Identify();
 short  RunDcRaw_Phase1(); //Load,bad pxs,darkframe.
 short  RunDcRaw_Phase2(const short NoCache=0); // WB,Interpolation
 short  RunDcRaw_Phase3(const short NoCache=0); // Highlights
-short  RunDcRaw_Phase4(const short NoCache=0); // lensfun
 
 // Member functions specifically for photivo or photivo adapted.
 
-void  ptLensfunModify(const lfModifier* Modifier,
-                      const int         ModifierFlags);
 void  ptWaveletDenoise();
 void  ptScaleColors();
 void  ptMedianFilter();

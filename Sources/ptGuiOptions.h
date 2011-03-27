@@ -59,6 +59,12 @@ public:
   static const ptGuiOptionsItem StyleHighLight[];
   static const ptGuiOptionsItem PipeSize[];
   static const ptGuiOptionsItem RunMode[];
+
+  static const ptGuiOptionsItem LfunCAModel[];
+  static const ptGuiOptionsItem LfunVignetteModel[];
+  static const ptGuiOptionsItem LfunGeo[];
+  static const ptGuiOptionsItem LfunDistModel[];
+
   static const ptGuiOptionsItem CropGuidelines[];
   static const ptGuiOptionsItem ResizeFilter[];
   static const ptGuiOptionsItem IMResizeFilter[];
@@ -67,7 +73,6 @@ public:
   static const ptGuiOptionsItem Interpolation[];
   static const ptGuiOptionsItem BayerDenoise[];
   static const ptGuiOptionsItem ClipMode[];
-  static const ptGuiOptionsItem LensfunGeometry[];
   static const ptGuiOptionsItem AspectRatioW[];
   static const ptGuiOptionsItem AspectRatioH[];
   static const ptGuiOptionsItem ExposureClipMode[];

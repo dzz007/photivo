@@ -33,60 +33,59 @@
 #include "ptDcRaw.h"
 #include "ptImage.h"
 
+
 class ptProcessor {
 Q_DECLARE_TR_FUNCTIONS(ptProcessor)
 public:
-
-// Cached image versions at different points.
-ptImage*  m_Image_AfterDcRaw;
-ptImage*  m_Image_AfterGeometry;
-ptImage*  m_Image_AfterRGB;
-ptImage*  m_Image_AfterLabCC;
-ptImage*  m_Image_AfterLabSN;
-ptImage*  m_Image_AfterLabEyeCandy;
-ptImage*  m_Image_AfterEyeCandy;
+  // Cached image versions at different points.
+  ptImage*  m_Image_AfterDcRaw;
+  ptImage*  m_Image_AfterGeometry;
+  ptImage*  m_Image_AfterRGB;
+  ptImage*  m_Image_AfterLabCC;
+  ptImage*  m_Image_AfterLabSN;
+  ptImage*  m_Image_AfterLabEyeCandy;
+  ptImage*  m_Image_AfterEyeCandy;
 
 // Cached image for detail preview
 ptImage*  m_Image_DetailPreview;
 
-// Sidecar image for texture overlay
-ptImage*  m_Image_TextureOverlay;
+  // Sidecar image for texture overlay
+  ptImage*  m_Image_TextureOverlay;
 
-// Reporting back
-void (*m_ReportProgress)(const QString Message);
+  // Reporting back
+  void (*m_ReportProgress)(const QString Message);
 
-// Constructor
-ptProcessor(void (*ReportProgress)(const QString Message));
-// Destructor
-~ptProcessor();
+  // Constructor
+  ptProcessor(void (*ReportProgress)(const QString Message));
+  // Destructor
+  ~ptProcessor();
 
-// The associated DcRaw.
-DcRaw* m_DcRaw;
+  // The associated DcRaw.
+  DcRaw* m_DcRaw;
 
-// The real processing.
-void Run(short Phase,
-         short SubPhase      = -1,
-         short WithIdentify  = 1,
-         short ProcessorMode = ptProcessorMode_Preview);
+  // The real processing.
+  void Run(short Phase,
+           short SubPhase      = -1,
+           short WithIdentify  = 1,
+           short ProcessorMode = ptProcessorMode_Preview);
 
-// Exif Related
-Exiv2::ExifData m_ExifData;
-unsigned char*  m_ExifBuffer;
-unsigned int    m_ExifBufferLength;
-void            ReadExifBuffer();
+  // Exif Related
+  Exiv2::ExifData m_ExifData;
+  unsigned char*  m_ExifBuffer;
+  unsigned int    m_ExifBufferLength;
+  void            ReadExifBuffer();
 
-// Reporting
-void ReportProgress(const QString Message);
+  // Reporting
+  void ReportProgress(const QString Message);
 
-// AutoExposure Value in EV.
-double m_AutoExposureValue;
-// CalculateAutoExposure
-// There should be GuiSettings->m_WhiteFraction % pixels above 90%
-double CalculateAutoExposure(ptImage *Image);
+  // AutoExposure Value in EV.
+  double m_AutoExposureValue;
+  // CalculateAutoExposure
+  // There should be GuiSettings->m_WhiteFraction % pixels above 90%
+  double CalculateAutoExposure(ptImage* Image);
 
-// Factor for size dependend filters
-float           m_ScaleFactor;
-
+  // Factor for size dependend filters
+  float           m_ScaleFactor;
 };
 
 #endif
