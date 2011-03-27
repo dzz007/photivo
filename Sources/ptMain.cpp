@@ -4545,43 +4545,43 @@ void CB_LfunCAModelChoice(const QVariant Choice) {
   Update(ptProcessorPhase_Geometry);
 }
 
-void CB_LfunCALinearKbInput(const QVariant Value) {
-  Settings->SetValue("LfunCALinearKb", Value);
-  Update(ptProcessorPhase_Geometry);
-}
-
 void CB_LfunCALinearKrInput(const QVariant Value) {
   Settings->SetValue("LfunCALinearKr", Value);
   Update(ptProcessorPhase_Geometry);
 }
 
-void CB_LfunCAPoly3BbInput(const QVariant Value) {
-  Settings->SetValue("LfunCALinearBb", Value);
-  Update(ptProcessorPhase_Geometry);
-}
-
-void CB_LfunCAPoly3BrInput(const QVariant Value) {
-  Settings->SetValue("LfunCALinearBr", Value);
-  Update(ptProcessorPhase_Geometry);
-}
-
-void CB_LfunCAPoly3CbInput(const QVariant Value) {
-  Settings->SetValue("LfunCALinearCb", Value);
-  Update(ptProcessorPhase_Geometry);
-}
-
-void CB_LfunCAPoly3CrInput(const QVariant Value) {
-  Settings->SetValue("LfunCALinearCr", Value);
-  Update(ptProcessorPhase_Geometry);
-}
-
-void CB_LfunCAPoly3VbInput(const QVariant Value) {
-  Settings->SetValue("LfunCALinearVb", Value);
+void CB_LfunCALinearKbInput(const QVariant Value) {
+  Settings->SetValue("LfunCALinearKb", Value);
   Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LfunCAPoly3VrInput(const QVariant Value) {
-  Settings->SetValue("LfunCALinearVr", Value);
+  Settings->SetValue("LfunCAPoly3Vr", Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LfunCAPoly3VbInput(const QVariant Value) {
+  Settings->SetValue("LfunCAPoly3Vb", Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LfunCAPoly3CrInput(const QVariant Value) {
+  Settings->SetValue("LfunCAPoly3Cr", Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LfunCAPoly3CbInput(const QVariant Value) {
+  Settings->SetValue("LfunCAPoly3Cb", Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LfunCAPoly3BrInput(const QVariant Value) {
+  Settings->SetValue("LfunCAPoly3Br", Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LfunCAPoly3BbInput(const QVariant Value) {
+  Settings->SetValue("LfunCAPoly3Bb", Value);
   Update(ptProcessorPhase_Geometry);
 }
 
