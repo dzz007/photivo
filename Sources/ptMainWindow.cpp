@@ -1092,9 +1092,9 @@ void ptMainWindow::OnTabProcessingButtonClicked() {
   SearchInputWidget->setText("");
   ViewWindow->setFocus();
 
-	// apply changes at VisibleTools box
-	if (MainTabBook->currentWidget() == TabSetting)
-		ApplyVisibleTools();
+  // apply changes at VisibleTools box
+  if (MainTabBook->currentWidget() == TabSetting)
+    ApplyVisibleTools();
 
   MainTabBook->setCurrentWidget(TabProcessing);
 }
@@ -1105,16 +1105,16 @@ void ptMainWindow::OnTabSettingsButtonClicked() {
   SearchInputWidget->setText("");
   ViewWindow->setFocus();
 
-	if (MainTabBook->currentWidget() == TabSetting) {
-		// apply changes at VisibleTools box
-		ApplyVisibleTools();
+  if (MainTabBook->currentWidget() == TabSetting) {
+    // apply changes at VisibleTools box
+    ApplyVisibleTools();
     MainTabBook->setCurrentWidget(TabProcessing);
-	}
-	else {
-		// update VisibleTools box
-		UpdateVisibleTools();
+  }
+  else {
+    // update VisibleTools box
+    UpdateVisibleTools();
     MainTabBook->setCurrentWidget(TabSetting);
-	}
+  }
 }
 
 void ptMainWindow::OnTabInfoButtonClicked() {
@@ -1123,16 +1123,16 @@ void ptMainWindow::OnTabInfoButtonClicked() {
   SearchInputWidget->setText("");
   ViewWindow->setFocus();
 
-	// apply changes at VisibleTools box
-	if (MainTabBook->currentWidget() == TabSetting)
-		ApplyVisibleTools();
+  // apply changes at VisibleTools box
+  if (MainTabBook->currentWidget() == TabSetting)
+    ApplyVisibleTools();
 
   if (MainTabBook->currentWidget() == TabInfo)
     MainTabBook->setCurrentWidget(TabProcessing);
   else {
     UpdateSettings();
     MainTabBook->setCurrentWidget(TabInfo);
-	}
+  }
 }
 
 //
@@ -1773,9 +1773,9 @@ void ptMainWindow::Search() {
     return;
   }
 
-	// apply changes at VisibleTools box
-	if (MainTabBook->currentWidget() == TabSetting)
-		ApplyVisibleTools();
+  // apply changes at VisibleTools box
+  if (MainTabBook->currentWidget() == TabSetting)
+    ApplyVisibleTools();
 
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
@@ -1794,9 +1794,9 @@ void ptMainWindow::Search() {
 }
 
 void ptMainWindow::ShowActiveTools() {
-	// apply changes at VisibleTools box
-	if (MainTabBook->currentWidget() == TabSetting)
-		ApplyVisibleTools();
+  // apply changes at VisibleTools box
+  if (MainTabBook->currentWidget() == TabSetting)
+    ApplyVisibleTools();
 
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
@@ -1816,9 +1816,9 @@ void ptMainWindow::ShowActiveTools() {
 }
 
 void ptMainWindow::ShowAllTools() {
-	// apply changes at VisibleTools box
-	if (MainTabBook->currentWidget() == TabSetting)
-		ApplyVisibleTools();
+  // apply changes at VisibleTools box
+  if (MainTabBook->currentWidget() == TabSetting)
+    ApplyVisibleTools();
 
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
@@ -1835,9 +1835,9 @@ void ptMainWindow::ShowAllTools() {
 }
 
 void ptMainWindow::ShowFavouriteTools() {
-	// apply changes at VisibleTools box
-	if (MainTabBook->currentWidget() == TabSetting)
-		ApplyVisibleTools();
+  // apply changes at VisibleTools box
+  if (MainTabBook->currentWidget() == TabSetting)
+    ApplyVisibleTools();
 
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
@@ -1910,9 +1910,11 @@ void ptMainWindow::UpdateToolBoxes() {
     m_RawTools.at(i)->SetEnabled(Temp);
   }
 
-  // disable Raw tools when we have a bitmap
+  // disable tools when we are in detail view
   QList<ptGroupBox *> m_DetailViewTools;
-  m_DetailViewTools << m_GroupBox->value("TabCrop")
+  m_DetailViewTools << m_GroupBox->value("TabLensfunCAVignette")
+                    << m_GroupBox->value("TabLensfunLens")
+                    << m_GroupBox->value("TabCrop")
                     << m_GroupBox->value("TabResize")
                     << m_GroupBox->value("TabWebResize");
 
@@ -2628,7 +2630,7 @@ void ptMainWindow::ApplyVisibleTools() {
       QString tabName = ProcessingTabBook->tabText(ProcessingTabBook->indexOf(
                           ProcessingTabBook->findChild<QWidget *>(m_GroupBox->value(itGroupBox)->GetTabName())));
       if (m_VisibleToolsModel->indexFromItem(it).parent() ==
-          m_VisibleToolsModel->indexFromItem(m_VisibleToolsModel->findItems(tabName,	Qt::MatchExactly).first())) {
+          m_VisibleToolsModel->indexFromItem(m_VisibleToolsModel->findItems(tabName,  Qt::MatchExactly).first())) {
         item = it;
         break;
       }
@@ -2720,7 +2722,7 @@ void ptMainWindow::UpdateVisibleTools() {
       QString tabName = ProcessingTabBook->tabText(ProcessingTabBook->indexOf(
                           ProcessingTabBook->findChild<QWidget *>(m_GroupBox->value(itGroupBox)->GetTabName())));
       if (m_VisibleToolsModel->indexFromItem(it).parent() ==
-          m_VisibleToolsModel->indexFromItem(m_VisibleToolsModel->findItems(tabName,	Qt::MatchExactly).first())) {
+          m_VisibleToolsModel->indexFromItem(m_VisibleToolsModel->findItems(tabName,  Qt::MatchExactly).first())) {
         item = it;
         break;
       }
