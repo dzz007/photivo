@@ -56,7 +56,6 @@ const short ptProcessorPhase_Raw           = 1;
 const short ptProcessorPhase_Load          = 1; // Same constant, subphase !
 const short ptProcessorPhase_Demosaic      = 2; // Same constant, subphase !
 const short ptProcessorPhase_Highlights    = 3; // Same constant, subphase !
-const short ptProcessorPhase_Lensfun       = 4; // Same constant, subphase !
 const short ptProcessorPhase_Geometry      = 2;
 const short ptProcessorPhase_RGB           = 3;
 const short ptProcessorPhase_LabCC         = 4;

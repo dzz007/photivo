@@ -36,7 +36,7 @@
 #include "ptHistogramWindow.h"
 #include "ptGuiOptions.h"
 #include "ptSettings.h"
-#include "ptLensfun.h"
+//#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
 #include "ptError.h"
 #include "ptRGBTemperature.h"
 #include "ptWhiteBalances.h"
@@ -127,7 +127,7 @@ ptGuiOptions  *GuiOptions = NULL;
 ptSettings    *Settings = NULL;
 
 // Lensfun database.
-ptLensfun*  LensfunData = NULL;
+//ptLensfun*  LensfunData = NULL;    // TODO BJ: implement lensfun DB
 
 // Screen position
 QPoint MainWindowPos;
@@ -557,7 +557,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Load also the LensfunDatabase.
   printf("Lensfun database: '%s'; \n",Settings->GetString("LensfunDatabaseDirectory").toAscii().data());
-  LensfunData = new ptLensfun;
+//  LensfunData = new ptLensfun;    // TODO BJ: implement lensfun DB
 
   // Instantiate the processor.
   TheProcessor = new ptProcessor(ReportProgress);
@@ -713,7 +713,7 @@ void CleanupResources() {
   // delete Settings; // Don't, is done at CB_MenuFileExit
   // Also : do not delete items which are handled by MainWindow, such as
   // ViewWindow or HistogramWindow or CurveWindows
-  delete LensfunData;
+//  delete LensfunData;    // TODO BJ: implement lensfun DB
   delete TheProcessor;
   delete ChannelMixer;
   delete GuiOptions;
@@ -1060,7 +1060,7 @@ void Update(short Phase,
         UpdatePreviewImage();
       }
       NextPhase = ptProcessorPhase_Output;
-      NextSubPhase = ptProcessorPhase_Lensfun;
+      NextSubPhase = ptProcessorPhase_Highlights;
     }
   } else if (Phase == ptProcessorPhase_OnlyHistogram) {
     // only histogram update, don't care about manual mode
@@ -2323,6 +2323,7 @@ void WriteOut() {
 
   ReportProgress(QObject::tr("Writing output (exif)"));
 
+  // TODO BJ: implement lensfun DB
 //  if (Settings->GetInt("IncludeExif") &&
 //      (Settings->GetString("LensfunCameraMake") != "")) {
 //    WriteExif(Settings->GetString("OutputFileName").toAscii().data(),
@@ -4470,169 +4471,6 @@ void CB_ClipParameterInput(const QVariant Value) {
 // Callbacks pertaining to Lensfun (Geometry tab)
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-//void CB_EnableLensfunCheck(const QVariant State) {
-//  Settings->SetValue("EnableLensfun",State);
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex")!= -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//  // This part for switching of lensfun.
-//  if (!Settings->GetInt("EnableLensfun")) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-//void CB_LensfunCameraChoice(const QVariant Choice) {
-//  // Choice is already the ItemData (and thus -1 for the first 'none'
-//  Settings->SetValue("LensfunCameraIndex",Choice);
-//  if (Choice.toInt() == -1) {
-//    Settings->SetValue("LensfunCameraMake","");
-//    Settings->SetValue("LensfunCameraModel","");
-//  } else {
-//    Settings->SetValue("LensfunCameraMake",
-//                       LensfunData->m_Cameras[Choice.toInt()].Make);
-//    Settings->SetValue("LensfunCameraModel",
-//                       LensfunData->m_Cameras[Choice.toInt()].Model);
-//  }
-//  MainWindow->UpdateSettings(); // to update lenses etc.
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex") != -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-//void CB_LensfunLensChoice(const QVariant Choice) {  // TODO BJ: remove completely
-//  Settings->SetValue("LensfunLensIndex",Choice);
-//  if (Settings->GetInt("LensfunCameraIndex") == -1) return;
-//  if (Settings->GetInt("LensfunLensIndex") == -1) return;
-//  // Having selected a lens might incur correction models.
-//  const lfLens* Lens =
-//    LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens;
-
-//  lfLensCalibDistortion** PtrDistortion = Lens->CalibDistortion;
-//  if (PtrDistortion) {
-//    Settings->SetValue("LensfunHaveDistortionModel",1);
-//    Settings->SetValue("LensfunDistortionModel",
-//      lfLens::GetDistortionModelDesc(PtrDistortion[0]->Model,NULL,NULL));
-//  } else {
-//    Settings->SetValue("LensfunDistortionEnable",0);
-//    Settings->SetValue("LensfunHaveDistortionModel",0);
-//    Settings->SetValue("LensfunDistortionModel",QObject::tr("None"));
-//  }
-
-//  lfLensCalibVignetting** PtrVignetting = Lens->CalibVignetting;
-//  if (PtrVignetting) {
-//    Settings->SetValue("LensfunHaveVignettingModel",1);
-//    Settings->SetValue("LensfunVignettingModel",
-//      lfLens::GetVignettingModelDesc(PtrVignetting[0]->Model,NULL,NULL));
-//  } else {
-//    Settings->SetValue("LensfunVignettingEnable",0);
-//    Settings->SetValue("LensfunHaveVignettingModel",0);
-//    Settings->SetValue("LensfunVignettingModel",QObject::tr("None"));
-//  }
-
-//  lfLensCalibTCA** PtrTCA = Lens->CalibTCA;
-//  if (PtrTCA) {
-//    Settings->SetValue("LensfunHaveTCAModel",1);
-//    Settings->SetValue("LensfunTCAModel",
-//      lfLens::GetTCAModelDesc(PtrTCA[0]->Model,NULL,NULL));
-//  } else {
-//    Settings->SetValue("LensfunTCAEnable",0);
-//    Settings->SetValue("LensfunHaveTCAModel",0);
-//    Settings->SetValue("LensfunTCAModel",QObject::tr("None"));
-//  }
-
-//  MainWindow->UpdateSettings(); // to update models etc.
-
-//  if (Settings->GetInt("EnableLensfun"))  {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-//void CB_LensfunFocalLengthInput(const QVariant Value) {
-//  Settings->SetValue("LensfunFocalLength",Value);
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex")!= -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-//void CB_LensfunFInput(const QVariant Value) {
-//  Settings->SetValue("LensfunF",Value);
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex")!= -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-//void CB_LensfunDistanceInput(const QVariant Value) {
-//  Settings->SetValue("LensfunDistance",Value);
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex")!= -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-//void CB_LensfunTCAEnableCheck(const QVariant State) {
-//  Settings->SetValue("LensfunTCAEnable",State);
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex")!= -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-//void CB_LensfunVignettingEnableCheck(const QVariant State) {
-//  Settings->SetValue("LensfunVignettingEnable",State);
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex")!= -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-//void CB_LensfunDistortionEnableCheck(const QVariant State) {
-//  Settings->SetValue("LensfunDistortionEnable",State);
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex")!= -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-// TODO BJ: remove completely
-//void CB_LensfunGeometryEnableCheck(const QVariant State) {
-//  Settings->SetValue("LensfunGeometryEnable",State);
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex")!= -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-//void CB_LensfunGeometryChoice(const QVariant Choice) {
-//  Settings->SetValue("LensfunGeometry",Choice);
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex")!= -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
-
-//void CB_LensfunScaleInput(const QVariant Value) {
-//  Settings->SetValue("LensfunScale",Value);
-//  if (Settings->GetInt("EnableLensfun") &&
-//      Settings->GetInt("LensfunCameraIndex") != -1 &&
-//      Settings->GetInt("LensfunLensIndex")!= -1) {
-//    Update(ptProcessorPhase_Raw,ptProcessorPhase_Lensfun);
-//  }
-//}
 
 // General tab
 
@@ -8965,19 +8803,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LfunDistPTLensAInput)
   M_Dispatch(LfunDistPTLensBInput)
   M_Dispatch(LfunDistPTLensCInput)
-
-//  M_Dispatch(EnableLensfunCheck)  // TODO BJ: remove completely
-//  M_Dispatch(LensfunCameraChoice)
-//  M_Dispatch(LensfunLensChoice)
-//  M_Dispatch(LensfunFocalLengthInput)
-//  M_Dispatch(LensfunFInput)
-//  M_Dispatch(LensfunDistanceInput)
-//  M_Dispatch(LensfunTCAEnableCheck)
-//  M_Dispatch(LensfunVignettingEnableCheck)
-  //M_Dispatch(LensfunDistortionEnableCheck)
-//  M_Dispatch(LensfunGeometryEnableCheck)
-//  M_Dispatch(LensfunGeometryChoice)
-//  M_Dispatch(LensfunScaleInput)
 
   M_Dispatch(RotateInput)
   M_Dispatch(PerspectiveFocalLengthInput)

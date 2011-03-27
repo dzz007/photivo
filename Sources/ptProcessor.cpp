@@ -28,7 +28,7 @@
 #include "ptConstants.h"
 #include "ptError.h"
 #include "ptSettings.h"
-#include "ptLensfun.h"
+//#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
 #include "ptCurve.h"
 #include "ptChannelMixer.h"
 #include "ptCimg.h"
@@ -368,61 +368,9 @@ void ptProcessor::Run(short Phase,
             TRACEMAIN("Done m_Image_AfterDcRaw transfer to GUI at %d ms.",
                        Timer.elapsed());
 
-          case ptProcessorPhase_Lensfun :
-
-//            m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags = 0;
-//            if (Settings->GetInt("EnableLensfun") &&
-//                (Settings->GetInt("LensfunLensIndex") != -1)) {
-//              m_ReportProgress(tr("Applying lens corrections"));
-//              m_DcRaw->m_UserSetting_photivo_LensfunModifier = lfModifier::Create(
-//                LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
-//                LensfunData->m_Cameras[Settings->GetInt("LensfunCameraIndex")].
-//                  Camera->CropFactor,
-//                m_DcRaw->m_OutWidth,
-//                m_DcRaw->m_OutHeight);
-//              if (Settings->GetInt("LensfunGeometryEnable")) {    // TODO BJ: remove completely
-//                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-//                  LF_MODIFY_GEOMETRY;
-//                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-//                  LF_MODIFY_SCALE;
-//              }
-//              if (Settings->GetInt("LensfunTCAEnable")) {
-//                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-//                  LF_MODIFY_TCA;
-//              }
-//              if (Settings->GetInt("LensfunVignettingEnable")) {
-//                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-//                  LF_MODIFY_VIGNETTING;
-//              }
-//              if (Settings->GetInt("LensfunDistortionEnable")) {
-//                m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags |=
-//                  LF_MODIFY_DISTORTION;
-//              }
-//              // TODO Aperture value or f number ? => review for lensfun.
-//              m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags =
-//                m_DcRaw->m_UserSetting_photivo_LensfunModifier->Initialize(
-//                 LensfunData->m_Lenses[Settings->GetInt("LensfunLensIndex")].Lens,
-//                 LF_PF_U16,
-//                 Settings->GetInt("LensfunFocalLength"),
-//                 Settings->GetDouble("LensfunF"),
-//                 Settings->GetDouble("LensfunDistance"),
-//                 Settings->GetDouble("LensfunScale"),
-//                 (lfLensType) Settings->GetInt("LensfunGeometry"),
-//                 m_DcRaw->m_UserSetting_photivo_LensfunModifierFlags,
-//                 0);
-//            }
-
-            // Settings->GetInt("JobMode") causes NoCache
-//            m_DcRaw->RunDcRaw_Phase4(Settings->GetInt("JobMode"));
-
-//            TRACEMAIN("Done lensfun corrections at %d ms.",Timer.elapsed());
-
-//            m_ReportProgress(tr("RGB to RGB"));
-
-           break;
 
           default : // Should not happen.
-            assert(0);
+            assert(!"Processor subphase " + SubPhase + " does not exist.");
         }
       }
 
@@ -512,10 +460,10 @@ void ptProcessor::Run(short Phase,
           default:
             assert(0);
         }
-
         lfLensCalibVignetting VignetteData;
         VignetteData.Model = (lfVignettingModel)(Settings->GetInt("LfunVignetteModel"));
         VignetteData.Focal = Settings->GetDouble("LfunFocal");
+        VignetteData.Aperture = Settings->GetDouble("LfunAperture");
         VignetteData.Distance = Settings->GetDouble("LfunDistance");
         switch (VignetteData.Model) {
           case LF_VIGNETTING_MODEL_NONE:
@@ -580,7 +528,7 @@ void ptProcessor::Run(short Phase,
         LensData.AddCalibDistortion(&DistortionData);
         assert(LensData.Check());
         lfModifier* LfunData = lfModifier::Create(&LensData,
-                                                  1,  // focal length always normalised to 35mm equiv.
+                                                  1.0,  // focal length always normalised to 35mm equiv.
                                                   m_Image_AfterGeometry->m_Width,
                                                   m_Image_AfterGeometry->m_Height);
 
@@ -589,6 +537,7 @@ void ptProcessor::Run(short Phase,
         if (LensData.Type != TargetGeo) {
           modflags |= LF_MODIFY_GEOMETRY;
         }
+
         // Init modifier and get list of lensfun actions that actually get performed
         modflags = LfunData->Initialize(&LensData,
                                         LF_PF_U16,  //image is uint16 data
@@ -602,12 +551,8 @@ void ptProcessor::Run(short Phase,
 
         // Execute lensfun corrections. For vignetting the image is changed in place.
         // For everything else new pixel coordinates are returned in TransformedCoords.
-        //float* TransformedCoords = NULL;
         m_Image_AfterGeometry->Lensfun(modflags, LfunData);
         LfunData->Destroy();
-
-        // TODO BJ: Transform image if needed
-        //FREE(TransformedCoords)
 
         TRACEMAIN("Done Lensfun corrections at %d ms.",Timer.elapsed())
       }

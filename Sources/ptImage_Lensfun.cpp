@@ -22,19 +22,19 @@
 
 #include <lensfun.h>
 #include "ptImage.h"
+#include "ptError.h"
 
 typedef float Tfloat;   // needed by the interpolation code
 
 ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
-
   // Stage 2: Vignetting.
-  if ((LfunActions & LF_MODIFY_VIGNETTING) ||
-      (LfunActions & LF_MODIFY_CCI) ||   // TODO: not yet supported by Photivo
-      (LfunActions == LF_MODIFY_ALL) )
-  {
-    LfunData->ApplyColorModification(m_Image, 0.0, 0.0, m_Width, m_Height,
-                                     LF_CR_3(RED, GREEN, BLUE),
-                                     m_Width * 3 * sizeof(uint16_t));
+  if ((LfunActions & LF_MODIFY_VIGNETTING) || (LfunActions == LF_MODIFY_ALL)) {
+    if (!LfunData->ApplyColorModification(m_Image, 0.0, 0.0, m_Width, m_Height,
+                                          LF_CR_3(RED, GREEN, BLUE),
+                                          m_Width * 3 * sizeof(uint16_t)) )
+    {
+      ptLogError(ptError_Lensfun, "Could not apply vignetting correction.");
+    }
   }
 
   /**
@@ -54,11 +54,16 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
     float* NewCoords = (float*) CALLOC((uint32_t)m_Width * 3 * 2, sizeof(float));
     uint16_t (*TempImage)[3] = (uint16_t (*)[3]) CALLOC((int32_t)m_Width * m_Height, sizeof(*TempImage));
 
+    bool LfunSuccess = false;
     for (uint16_t row = 0; row < m_Height; row++) {
-      int32_t Temp = row * m_Width;
-      LfunData->ApplySubpixelGeometryDistortion(0.0, row, m_Width, 1, NewCoords);
+      LfunSuccess = LfunData->ApplySubpixelGeometryDistortion(0.0, row, m_Width, 1, NewCoords);
+      if (!LfunSuccess) {
+        ptLogError(ptError_Lensfun, "Could not apply geometry/distortion correction.");
+        break;
+      }
 
       // Bicubic interpolation
+      int32_t Temp = row * m_Width;
       for (uint16_t col = 0; col < m_Width; col++) {
         for (short channel = 0; channel < 3; channel++) {
           uint32_t MemPosX = col * 6 + channel * 2;
@@ -94,8 +99,13 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
     }
 
     FREE(NewCoords);
-    FREE(m_Image);
-    m_Image = TempImage;
+
+    if (LfunSuccess) {
+      FREE(m_Image);
+      m_Image = TempImage;
+    } else {
+      FREE(TempImage);
+    }
   }
 
   return this;

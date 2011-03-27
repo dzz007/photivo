@@ -189,13 +189,6 @@ const ptGuiOptionsItem ptGuiOptions::IMResizeFilter[] = {
 //  {ptIMFilter_Sinc,               QObject::tr("Sinc filter") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::LensfunGeometry[] = {
-  {LF_RECTILINEAR,     QObject::tr("Rectilinear")     },
-  {LF_FISHEYE,         QObject::tr("Fisheye")         },
-  {LF_PANORAMIC,       QObject::tr("Panoramic")       },
-  {LF_EQUIRECTANGULAR, QObject::tr("Equirectangular") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::WhiteBalance[] = {
   {ptWhiteBalance_Camera,   QObject::tr("Camera")    },
   {ptWhiteBalance_Auto,     QObject::tr("Automatic") },

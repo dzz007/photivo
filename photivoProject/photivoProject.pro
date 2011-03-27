@@ -93,7 +93,7 @@ win32 {
   LIBS += -lwsock32 -lexpat -lregex -lgdi32 -liconv
   INCLUDEPATH += /mingw/include/GraphicsMagick
   RC_FILE = photivo.rc
-  CONFIG += console
+#  CONFIG += console
 }
 
 # Input
@@ -118,7 +118,7 @@ HEADERS += ../Sources/ptHistogramWindow.h
 HEADERS += ../Sources/ptAdobeTable.h
 HEADERS += ../Sources/ptRefocusMatrix.h
 HEADERS += ../Sources/ptViewWindow.h
-HEADERS += ../Sources/ptLensfun.h
+# HEADERS += ../Sources/ptLensfun.h
 HEADERS += ../Sources/ptProcessor.h
 HEADERS += ../Sources/ptCimg.h
 HEADERS += ../Sources/ptFastBilateral.h
@@ -168,7 +168,7 @@ SOURCES += ../Sources/ptCurveWindow.cpp
 SOURCES += ../Sources/ptHistogramWindow.cpp
 SOURCES += ../Sources/ptRefocusMatrix.cpp
 SOURCES += ../Sources/ptViewWindow.cpp
-SOURCES += ../Sources/ptLensfun.cpp
+# SOURCES += ../Sources/ptLensfun.cpp
 SOURCES += ../Sources/ptProcessor.cpp
 SOURCES += ../Sources/ptCimg.cpp
 SOURCES += ../Sources/ptFastBilateral.cpp

@@ -27,7 +27,7 @@
 #include "ptChannelMixer.h"
 #include "ptError.h"
 #include "ptGuiOptions.h"
-#include "ptLensfun.h"
+//#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
 #include "ptSettings.h"
 #include "ptConstants.h"
 #include "ptDefines.h"
@@ -340,28 +340,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : Geometry
   //
 
-  // Not coverd by the macros as it takes input from lensfun
-  // database rather than gui settings.
-
-  // 'None' on 0. Hence -1.
-//  Settings->AddOrReplaceOption("LensfunCamera",
-//                               tr("None"),
-//                               QVariant(-1));
-//  for (short i=0; i<LensfunData->m_NrCameras; i++) {
-//    QString CameraName;
-//    CameraName += "(";
-//    CameraName += LensfunData->m_Cameras[i].Make;
-//    CameraName += ") ";
-//    CameraName += LensfunData->m_Cameras[i].Model;
-//    Settings->AddOrReplaceOption("LensfunCamera",
-//                                 CameraName,
-//                                 QVariant(i));
-//  }
-
-//  Settings->SetEnabled("LensfunTCAEnable",0);     // TODO BJ: remove completely
-//  Settings->SetEnabled("LensfunVignettingEnable",0);
-//  Settings->SetEnabled("LensfunDistortionEnable",0);
-
   // TODO BJ: Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
@@ -494,9 +472,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   findChild<ptGroupBox *>(QString("TabToolBoxControl"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabMemoryTest"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabRememberSettings"))->setVisible(0);
-  //m_GroupBox->value("TabLensfun")->setVisible(0);
-  //m_GroupBox->remove("TabLensfun");
-  //m_GroupBoxesOrdered->removeOne("TabLensfun");
   m_GroupBox->value("TabOutput")->setVisible(0);
   m_GroupBox->remove("TabOutput");
   m_GroupBoxesOrdered->removeOne("TabOutput");
@@ -2147,92 +2122,6 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("InterpolationPasses",1);
   else
     Settings->SetEnabled("InterpolationPasses",0);
-
-  // lensfun : get make and model out of the exif and
-  // compare with lensfun database cameras.
-  // Select the choice accordingly.
-
-//  int PreviousLensfunCameraIndex = Settings->GetInt("LensfunCameraIndex");
-
-//  if (Settings->GetInt("LensfunCameraUpdatedByProcessor")) {
-
-//    Settings->SetValue("LensfunCameraUpdatedByProcessor",0);
-
-//    Settings->SetValue("LensfunCamera",0); // XXX JDLA Check me !
-//    Settings->SetValue("LensfunCameraIndex",-1);
-
-//    short HaveCamera = Settings->GetString("LensfunCameraMake").size()
-//                     && Settings->GetString("LensfunCameraModel").size();
-//    for (short i=0;
-//         HaveCamera && i<Settings->GetNrOptions("LensfunCamera");
-//         i++) {
-//      QVariant ItemData = Settings->GetOptionsValue("LensfunCamera",i);
-//      if (ItemData.toInt() == -1) continue;
-//      /*
-//      printf("(%s,%d) Checking '%s' against '%s' and '%s' against '%s'\n",
-//             __FILE__,__LINE__,
-//             Settings->GetString("LensfunCameraMake").toAscii().data(),
-//             LensfunData->m_Cameras[ItemData.toInt()].Make.toAscii().data(),
-//             Settings->GetString("LensfunCameraModel").toAscii().data(),
-//             LensfunData->m_Cameras[ItemData.toInt()].Model.toAscii().data());
-//      */
-//      if ( (Settings->GetString("LensfunCameraMake") ==
-//            LensfunData->m_Cameras[ItemData.toInt()].Make)
-//          &&
-//           (Settings->GetString("LensfunCameraModel") ==
-//            LensfunData->m_Cameras[ItemData.toInt()].Model) ) {
-//        // got it !
-//        //printf("(%s,%d) Got It\n",__FILE__,__LINE__);
-//        Settings->SetValue("LensfunCamera",ItemData); // XXX JDLA CHECK ME !
-//        Settings->SetValue("LensfunCameraIndex",ItemData.toInt());
-//        break;
-//      }
-//    }
-//  }
-
-//  if (Settings->GetInt("LensfunCameraIndex") != PreviousLensfunCameraIndex) {
-//    // Presents sensible lenses, i.e. the mount corresponds.
-//    Settings->ClearOptions("LensfunLens");
-//    Settings->AddOrReplaceOption("LensfunLens",
-//                                 tr("None"),
-//                                 QVariant(-1)); // None on 0.
-//    for (short i=0; i<LensfunData->m_NrLenses; i++) {
-//      QString LensMount   = LensfunData->m_Lenses[i].Mount;
-//      QString CameraMount;
-//      if (Settings->GetInt("LensfunCameraIndex") == -1) {
-//        CameraMount = "GENERIC";
-//      } else {
-//        CameraMount =
-//          LensfunData->m_Cameras[Settings->GetInt("LensfunCameraIndex")].Mount;
-//      }
-//      // Some flexible match.
-//      if ( LensMount == "GENERIC" ||
-//           LensMount == CameraMount ||
-//           (LensMount == "CANON EF" && CameraMount == "CANON EF-S") ) {
-//        // We have a lens with a matching mount.
-//        QString LensName;
-//        LensName += "(";
-//        LensName += LensfunData->m_Lenses[i].Make;
-//        LensName += ") ";
-//        LensName += LensfunData->m_Lenses[i].Model;
-//        Settings->AddOrReplaceOption("LensfunLens",LensName,QVariant(i));
-//      }
-//    }
-//  }
-
-//  Settings->SetEnabled("LensfunTCAEnable",
-//                       Settings->GetInt("LensfunHaveTCAModel"));
-  //LensfunTCAModelLabel->setText(Settings->GetString("LensfunTCAModel"));
-
-//  Settings->SetEnabled("LensfunVignettingEnable",
-//                       Settings->GetInt("LensfunHaveVignettingModel"));
-//  LensfunVignettingModelLabel->
-//    setText(Settings->GetString("LensfunVignettingModel"));
-
-//  Settings->SetEnabled("LensfunDistortionEnable",
-//                       Settings->GetInt("LensfunHaveDistortionModel"));
-//  LensfunDistortionModelLabel->
-//    setText(Settings->GetString("LensfunDistortionModel"));
 
   //~ // Resize
   //~ Settings->SetMaximum("ResizeW",Settings->GetInt("CropW"));
