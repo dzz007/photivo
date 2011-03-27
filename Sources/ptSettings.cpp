@@ -73,10 +73,37 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"MedianPasses"                  ,ptGT_Input           ,2,1,1 ,0    ,0    ,10     ,1    ,0 ,tr("Median passes")      ,tr("Nr of median filter passes")},
     {"ESMedianPasses"                ,ptGT_Input           ,2,1,1 ,0    ,0    ,10     ,1    ,0 ,tr("Edge sensitive median passes")      ,tr("Nr of edge sensitive median filter passes")},
     {"ClipParameter"                 ,ptGT_InputSlider     ,1,1,1 ,0    ,0    ,100   ,1    ,0 ,tr("Parameter")          ,tr("Clip function dependent parameter")},
-    {"LensfunFocalLength"            ,ptGT_InputSlider     ,9,0,0 ,50   ,4    ,1000  ,1    ,0 ,tr("Focal Length")       ,tr("Focal Length")},
-    {"LensfunF"                      ,ptGT_InputSlider     ,9,0,0 ,4.0  ,1.0  ,50.0  ,0.1  ,1 ,tr("F Number")           ,tr("F Number")},
-    {"LensfunDistance"               ,ptGT_InputSlider     ,9,0,0 ,1.0  ,0.1  ,100.0 ,0.1  ,1 ,tr("Distance")           ,tr("Subject distance")},
-    {"LensfunScale"                  ,ptGT_InputSlider     ,9,0,1 ,1.0  ,0.1  ,10.0  ,0.1  ,1 ,tr("Scale")              ,tr("Scale")},
+
+    {"LfunFocal"                     ,ptGT_Input           ,2,1,1 ,50.0 ,4.0  ,1000.0,1.0  ,0 ,tr("Focal length (35mm equiv.)"), tr("Focal length (35mm equiv.)")},
+    {"LfunAperture"                  ,ptGT_Input           ,2,1,1 ,8.0  ,0.8  ,32.0  ,1.0  ,1 ,tr("Aperture"), tr("")},
+    {"LfunDistance"                  ,ptGT_Input           ,2,1,1 ,1.0  ,0.01 ,500.0 ,1.0  ,2 ,tr("Distance"), tr("Distance between object and camera")},
+    {"LfunCALinearKr"                ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("kr"),tr("")},
+    {"LfunCALinearKb"                ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("kb"),tr("")},
+    {"LfunCAPoly3Vr"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("vr"),tr("")},
+    {"LfunCAPoly3Vb"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("vb"),tr("")},
+    {"LfunCAPoly3Cr"                 ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.01,0.01  ,0.001,5 ,tr("cr"),tr("")},
+    {"LfunCAPoly3Cb"                 ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.01,0.01  ,0.001,5 ,tr("cb"),tr("")},
+    {"LfunCAPoly3Br"                 ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.01,0.01  ,0.001,5 ,tr("br"),tr("")},
+    {"LfunCAPoly3Bb"                 ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.01,0.01  ,0.001,5 ,tr("bb"),tr("")},
+    {"LfunVignettePoly6K1"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,2.0   ,0.01 ,3 ,tr("k1"),tr("")},
+    {"LfunVignettePoly6K2"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,2.0   ,0.01 ,3 ,tr("k2"),tr("")},
+    {"LfunVignettePoly6K3"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,2.0   ,0.01 ,3 ,tr("k3"),tr("")},
+
+    {"LfunFocalAdjust"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-50.0,50.0  ,1.0  ,0 ,tr("Focal length adjustment"), tr("Deviation in mm from the default focal length set in \"Lensfun - General\".\nUsed for geometry correction.")},
+    {"LfunDistPoly3K1"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k1"),tr("")},
+    {"LfunDistPoly5K1"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k1"),tr("")},
+    {"LfunDistPoly5K2"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k2"),tr("")},
+    {"LfunDistFov1Omega"             ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.4   ,0.1  ,3 ,tr("omega"),tr("")},
+    {"LfunDistPTLensA"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("a"),tr("")},
+    {"LfunDistPTLensB"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("b"),tr("")},
+    {"LfunDistPTLensC"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("c"),tr("")},
+
+//TODO BJ: old lensfun stuff: remove
+//    {"LensfunFocalLength"            ,ptGT_InputSlider     ,9,0,0 ,50   ,4    ,1000  ,1    ,0 ,tr("Focal Length")       ,tr("Focal Length")},
+//    {"LensfunF"                      ,ptGT_InputSlider     ,9,0,0 ,4.0  ,1.0  ,50.0  ,0.1  ,1 ,tr("F Number")           ,tr("F Number")},
+//    {"LensfunDistance"               ,ptGT_InputSlider     ,9,0,0 ,1.0  ,0.1  ,100.0 ,0.1  ,1 ,tr("Distance")           ,tr("Subject distance")},
+//    {"LensfunScale"                  ,ptGT_InputSlider     ,9,0,1 ,1.0  ,0.1  ,10.0  ,0.1  ,1 ,tr("Scale")              ,tr("Scale")},
+
     {"Rotate"                        ,ptGT_InputSlider     ,9,1,1 ,0.0  ,-180.0,180.0 ,0.1 ,2 ,tr("Rotate")             ,tr("Rotate")},
     {"PerspectiveFocalLength"        ,ptGT_Input           ,9,1,1 ,50.0 ,4.0  ,600.0 ,1.0  ,0 ,tr("Focal length (35mm equiv.)")  ,tr("Focal length (35mm equiv.)")},
     {"PerspectiveTilt"               ,ptGT_InputSlider     ,9,1,1 ,0.0  ,-45.0,45.0  ,0.1  ,2 ,tr("Tilt")               ,tr("Tilt")},
@@ -434,9 +461,16 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BayerDenoise"                ,ptGT_Choice       ,2,1,1 ,ptBayerDenoise_None         ,GuiOptions->BayerDenoise              ,tr("Denosie on Bayer pattern")},
     {"CropGuidelines"              ,ptGT_Choice       ,1,0,0 ,ptCropGuidelines_GoldenRatio,GuiOptions->CropGuidelines            ,tr("Guide lines for crop")},
     {"ClipMode"                    ,ptGT_Choice       ,1,1,1 ,ptClipMode_Blend            ,GuiOptions->ClipMode                  ,tr("How to handle clipping")},
-    {"LensfunCamera"               ,ptGT_Choice       ,9,0,0 ,0                           ,NULL                                  ,tr("Camera for lensfun")},
-    {"LensfunLens"                 ,ptGT_Choice       ,9,0,0 ,0                           ,NULL                                  ,tr("Lens for lensfun")},
-    {"LensfunGeometry"             ,ptGT_Choice       ,9,0,1 ,LF_RECTILINEAR              ,GuiOptions->LensfunGeometry           ,tr("Target geometry for lensfun")},
+
+    {"LfunCAModel"                 ,ptGT_Choice       ,2,1,1 ,ptLfunCAModel_None          ,GuiOptions->LfunCAModel               ,tr("Mathematical model for CA correction")},
+    {"LfunVignetteModel"           ,ptGT_Choice       ,2,1,1 ,ptLfunVignetteModel_None    ,GuiOptions->LfunVignetteModel         ,tr("Mathematical model for vignetting correction")},
+    {"LfunSrcGeo"                  ,ptGT_Choice       ,2,1,1 ,ptLfunGeo_Unknown           ,GuiOptions->LfunGeo                   ,tr("Geometry of the lens the image was taken with")},
+    {"LfunTargetGeo"               ,ptGT_Choice       ,2,1,1 ,ptLfunGeo_Unknown           ,GuiOptions->LfunGeo                   ,tr("Convert image to this lens geometry")},
+    {"LfunDistModel"               ,ptGT_Choice       ,2,1,1 ,ptLfunDistModel_None        ,GuiOptions->LfunDistModel             ,tr("Mathematical distortion model to apply to the image")},
+
+//    {"LensfunCamera"               ,ptGT_Choice       ,9,0,0 ,0                           ,NULL                                  ,tr("Camera for lensfun")},
+//    {"LensfunLens"                 ,ptGT_Choice       ,9,0,0 ,0                           ,NULL                                  ,tr("Lens for lensfun")},
+//    {"LensfunGeometry"             ,ptGT_Choice       ,9,0,1 ,LF_RECTILINEAR              ,GuiOptions->LensfunGeometry           ,tr("Target geometry for lensfun")},
     {"ResizeFilter"                ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Mitchell         ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatioW              ,tr("Aspect width")},
@@ -517,11 +551,11 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ManualBlackPoint"           ,ptGT_Check ,2,1,0,tr("Manual BP")       ,tr("Manual black point setting enabled")},
     {"ManualWhitePoint"           ,ptGT_Check ,2,1,0,tr("Manual WP")       ,tr("Manual white point setting enabled")},
     {"EeciRefine"                 ,ptGT_Check ,2,1,0,tr("Eeci refinement") ,tr("Eeci refinement")},
-    {"EnableLensfun"              ,ptGT_Check ,9,0,0,tr("Enable automatic lensfun")   ,tr("Overall enabling or disabling lensfun")},
-    {"LensfunTCAEnable"           ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable TCA correction")},
-    {"LensfunVignettingEnable"    ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable vignetting correction")},
-    {"LensfunDistortionEnable"    ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable distortion correction")},
-    {"LensfunGeometryEnable"      ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable geometry correction")},
+//    {"EnableLensfun"              ,ptGT_Check ,9,0,0,tr("Enable automatic lensfun")   ,tr("Overall enabling or disabling lensfun")},
+//    {"LensfunTCAEnable"           ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable TCA correction")},
+//    {"LensfunVignettingEnable"    ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable vignetting correction")},
+//    {"LensfunDistortionEnable"    ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable distortion correction")},
+//    {"LensfunGeometryEnable"      ,ptGT_Check ,9,0,0,tr("")                ,tr("Enable geometry correction")},    // TODO BJ: remove completely
     {"Grid"                       ,ptGT_Check ,9,1,0,tr("Grid")            ,tr("Enable the overlay grid")},
     {"Crop"                       ,ptGT_Check ,9,1,0,tr("Crop")            ,tr("Enable to make a crop")},
     {"FixedAspectRatio"           ,ptGT_Check ,1,0,0,tr("Aspect Ratio")    ,tr("Crop with a fixed aspect ratio")},
@@ -593,17 +627,17 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"VisualSelectionY"                     ,9         ,0                                                   ,1},
     {"VisualSelectionWidth"                 ,9         ,0                                                   ,1},
     {"VisualSelectionHeight"                ,9         ,0                                                   ,1},
-    {"LensfunCameraIndex"                   ,9         ,0                                                   ,0},
-    {"LensfunCameraUpdatedByProcessor"      ,9         ,0                                                   ,0},
-    {"LensfunLensIndex"                     ,9         ,0                                                   ,0},
-    {"LensfunHaveTCAModel"                  ,9         ,0                                                   ,0},
-    {"LensfunTCAModel"                      ,9         ,tr("None")                                           ,0},
-    {"LensfunHaveVignettingModel"           ,9         ,0                                                   ,0},
-    {"LensfunVignettingModel"               ,9         ,tr("None")                                           ,0},
-    {"LensfunHaveDistortionModel"           ,9         ,0                                                   ,0},
-    {"LensfunDistortionModel"               ,9         ,tr("None")                                           ,0},
-    {"LensfunCameraMake"                    ,9         ,""                                                  ,0},
-    {"LensfunCameraModel"                   ,9         ,""                                                  ,0},
+//    {"LensfunCameraIndex"                   ,9         ,0                                                   ,0},
+//    {"LensfunCameraUpdatedByProcessor"      ,9         ,0                                                   ,0},
+//    {"LensfunLensIndex"                     ,9         ,0                                                   ,0},
+//    {"LensfunHaveTCAModel"                  ,9         ,0                                                   ,0},
+//    {"LensfunTCAModel"                      ,9         ,tr("None")                                           ,0},
+//    {"LensfunHaveVignettingModel"           ,9         ,0                                                   ,0},
+//    {"LensfunVignettingModel"               ,9         ,tr("None")                                           ,0},
+//    {"LensfunHaveDistortionModel"           ,9         ,0                                                   ,0},
+//    {"LensfunDistortionModel"               ,9         ,tr("None")                                           ,0},
+//    {"LensfunCameraMake"                    ,9         ,""                                                  ,0},
+//    {"LensfunCameraModel"                   ,9         ,""                                                  ,0},
     {"ImageW"                               ,9         ,0                                                   ,0},
     {"ImageH"                               ,9         ,0                                                   ,0},
     {"PipeImageW"                           ,9         ,0                                                   ,0},
@@ -684,6 +718,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"DisabledTools"                        ,9         ,QStringList()                                       ,0},
     {"BlockUpdate"                          ,9         ,0                                                   ,0},
     {"FocalLengthIn35mmFilm"                ,0         ,0.0                                                 ,0},
+    {"ApertureFromExif"                     ,0         ,0.0                                                 ,0},   // aperture from exif data
     {"DetailViewActive"                     ,9         ,0                                                   ,0},
     {"DetailViewScale"                      ,9         ,0                                                   ,0},
     {"DetailViewCropX"                      ,9         ,0                                                   ,0},
@@ -1555,7 +1590,15 @@ struct sToolInfo {
 sToolInfo ToolInfo (const QString GuiName) {
   sToolInfo Info = {"N.N.",0,0,0};
   // Tab Geometry
-  if (GuiName == "TabRotation") {
+  if (GuiName == "TabLensfunCAVignette") {
+    Info.Name = "Lensfun - CA and Vignette";
+    Info.IsActive = (Settings->GetInt("LfunCAModel") != 0 ||
+                     Settings->GetInt("LfunVignetteModel") != 0);
+  } else if (GuiName == "TabLensfunLens") {
+    Info.Name == "Lensfun - Lens Correction";
+    Info.IsActive = (Settings->GetInt("LfunSrcGeo") != Settings->GetInt("LfunTargetGeo") ||
+                     Settings->GetInt("LfunDistModel") != 0);
+  } else if (GuiName == "TabRotation") {
       Info.Name = "Rotation";
       Info.IsActive = (Settings->GetDouble("Rotate")!=0.0f ||
                        Settings->GetDouble("PerspectiveTilt")!=0.0f ||

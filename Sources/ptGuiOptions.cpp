@@ -121,6 +121,33 @@ const ptGuiOptionsItem ptGuiOptions::RunMode[] = {
   {ptRunMode_Auto, QObject::tr("Run always") },
   {-1,NULL}};
 
+const ptGuiOptionsItem ptGuiOptions::LfunCAModel[] = {
+  {ptLfunCAModel_None,    QObject::tr("None") },
+  {ptLfunCAModel_Linear,  QObject::tr("Linear") },
+  {ptLfunCAModel_Poly3,   QObject::tr("3rd order polynomial") },
+  {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::LfunVignetteModel[] = {
+  {ptLfunVignetteModel_None,    QObject::tr("None") },
+  {ptLfunVignetteModel_Poly6,  QObject::tr("6th order polynomial") },
+  {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::LfunGeo[] = {
+  {ptLfunGeo_Unknown,           QObject::tr("Unknown") },
+  {ptLfunGeo_Rectilinear,       QObject::tr("Rectilinear") },
+  {ptLfunGeo_Fisheye,           QObject::tr("Fisheye") },
+  {ptLfunGeo_Panoramic,         QObject::tr("Panoramic") },
+  {ptLfunGeo_Equirectangular,   QObject::tr("Equirectangular") },
+  {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::LfunDistModel[] = {
+  {ptLfunDistModel_None,     QObject::tr("None") },
+  {ptLfunDistModel_Poly3,    QObject::tr("3rd order polynomial") },
+  {ptLfunDistModel_Poly5,    QObject::tr("5th order polynomial") },
+  {ptLfunDistModel_Fov1,     QObject::tr("1st order field of view") },
+  {ptLfunDistModel_PTLens,   QObject::tr("Panotools lens model") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::CropGuidelines[] = {
   {ptCropGuidelines_None,         QObject::tr("No guidelines") },
   {ptCropGuidelines_RuleThirds,   QObject::tr("Rule of thirds") },
