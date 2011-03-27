@@ -30,7 +30,7 @@
 
 // model for UI settings tool
 class ptVisibleToolsModel : public QStandardItemModel {
-//  Q_OBJECT
+  Q_OBJECT
 public:
   explicit ptVisibleToolsModel(QObject *parent = 0);
   bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
@@ -39,7 +39,7 @@ public:
 
 // item delegate for UI settings tool
 class ptVisibleToolsItemDelegate : public QStyledItemDelegate {
-//  Q_OBJECT
+  Q_OBJECT
 public:
   explicit ptVisibleToolsItemDelegate(QObject *parent = 0);
   QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
