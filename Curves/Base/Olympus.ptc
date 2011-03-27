@@ -1,0 +1,15 @@
+;
+; photivo Curve File
+;
+; This is an experimental base curve for Olympus cameras.
+; Original values are from the darktable project.
+;
+Magic FLOSSCurveFile
+IntendedChannel 8
+CurveType 1
+0 0
+12 10
+116 167
+556 711
+899 956
+1000 1000
