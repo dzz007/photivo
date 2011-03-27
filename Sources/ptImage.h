@@ -24,6 +24,7 @@
 #ifndef DLIMAGE_H
 #define DLIMAGE_H
 
+#include <lensfun.h>
 #include "ptDefines.h"
 #include "ptConstants.h"
 #include "ptDcRaw.h"
@@ -590,6 +591,20 @@ ptImage* ptCIPerspective(const float RotateAngle,
                          const float ScaleX,
                          const float ScaleY);
 
+/**
+ * ptImage_Lensfun.cpp
+ * Wrapper for the actual execution of lensfun processing. Returns the stage 2 (vignetting)
+ * corrected image. Returns stage 1/3 converted pixel coordinates in TransformedCoords.
+ *
+ * LfunActions
+ *     A bitmask of LF_MODIFY_XX values stating which image corrections to perform.
+ *
+ * LfunData
+ *     A pointer to an lfModifier object containing the data for all corrections. Must be
+ *     properly instantiated and initialised before calling Lensfun().
+ */
+ptImage* Lensfun(const int LfunActions,
+                 const lfModifier* LfunData);
 };
 
 #endif
