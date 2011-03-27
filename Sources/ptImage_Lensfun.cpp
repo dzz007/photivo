@@ -37,9 +37,17 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
                                      m_Width * 3 * sizeof(uint16_t));
   }
 
-
-  // Stage 1 and/or 3: CA, lens Geometry/distortion
-  // Processing row by row to avoid *huge* memory requirements
+  /**
+   * Stage 1 and/or 3: CA and lens geometry/distortion correction
+   * Processing row by row to avoid *huge* memory requirements.
+   * Note that lensfun’s ApplySubpixelGeometryDistortion() always returns separated
+   * RGB channels in contrast to what the docu says.
+   *
+   * NewCoords
+   *     A pointer to an array of output pixels containing for each pixel its x and y
+   *     position in the input image. Pixels are split into R, G, and B channels. Memory
+   *     layout for each pixel is as follows: Rx, Ry, Gx, Gy, Bx, By
+   */
   if (((LfunActions & LF_MODIFY_TCA) || (LfunActions & LF_MODIFY_DISTORTION) || (LfunActions & LF_MODIFY_GEOMETRY)) ||
       (LfunActions == LF_MODIFY_ALL) )
   {
@@ -48,40 +56,39 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
 
     for (uint16_t row = 0; row < m_Height; row++) {
       int32_t Temp = row * m_Width;
-      LfunData->ApplySubpixelDistortion(0.0, row, m_Width, 1, NewCoords);
+      LfunData->ApplySubpixelGeometryDistortion(0.0, row, m_Width, 1, NewCoords);
 
       // Bicubic interpolation
       for (uint16_t col = 0; col < m_Width; col++) {
-        if (NewCoords[col*2] < 0 || NewCoords[col*2] > m_Width-1 || NewCoords[col*2+1] < 0 || NewCoords[col*2+1] > m_Height-1) {
-          for (short c = 0; c < 3; c++) {
-            TempImage[Temp+col][c] = 0;
+        for (short channel = 0; channel < 3; channel++) {
+          uint32_t MemPosX = col * 6 + channel * 2;
+          if (NewCoords[MemPosX] < 0 || NewCoords[MemPosX] > m_Width-1 || NewCoords[MemPosX+1] < 0 || NewCoords[MemPosX+1] > m_Height-1) {
+            TempImage[Temp+col][channel] = 0;
+            continue;
           }
-          continue;
-        }
-        const int32_t
-          x = (int32_t)NewCoords[col*2],
-          y = (int32_t)NewCoords[col*2+1];
-        const float
-          dx = NewCoords[col*2] - x,
-          dy = NewCoords[col*2+1] - y;
-        const int32_t
-          px = x-1<0?0:x-1, nx = dx>0?x+1:x, ax = x+2>=m_Width?m_Width-1:x+2,
-          py = y-1<0?0:y-1, ny = dy>0?y+1:y, ay = y+2>=m_Height?m_Height-1:y+2;
-        const int32_t
-          pyw = py * m_Width, yw = y * m_Width,
-          nyw = ny * m_Width, ayw = ay * m_Width;
-        for (short c = 0; c < 3; c++) {
+          const int32_t
+            x = (int32_t)NewCoords[MemPosX],
+            y = (int32_t)NewCoords[MemPosX+1];
+          const float
+            dx = NewCoords[MemPosX] - x,
+            dy = NewCoords[MemPosX+1] - y;
+          const int32_t
+            px = x-1<0?0:x-1, nx = dx>0?x+1:x, ax = x+2>=m_Width?m_Width-1:x+2,
+            py = y-1<0?0:y-1, ny = dy>0?y+1:y, ay = y+2>=m_Height?m_Height-1:y+2;
+          const int32_t
+            pyw = py * m_Width, yw = y * m_Width,
+            nyw = ny * m_Width, ayw = ay * m_Width;
           const Tfloat
-            Ipp = m_Image[px+pyw][c], Icp = m_Image[x+pyw][c], Inp = m_Image[nx+pyw][c], Iap = m_Image[ax+pyw][c],
+            Ipp = m_Image[px+pyw][channel], Icp = m_Image[x+pyw][channel], Inp = m_Image[nx+pyw][channel], Iap = m_Image[ax+pyw][channel],
             Ip = Icp + 0.5f*(dx*(-Ipp+Inp) + dx*dx*(2*Ipp-5*Icp+4*Inp-Iap) + dx*dx*dx*(-Ipp+3*Icp-3*Inp+Iap)),
-            Ipc = m_Image[px+yw][c], Icc = m_Image[x+yw][c], Inc = m_Image[nx+yw][c], Iac = m_Image[ax+yw][c],
+            Ipc = m_Image[px+yw][channel], Icc = m_Image[x+yw][channel], Inc = m_Image[nx+yw][channel], Iac = m_Image[ax+yw][channel],
             Ic = Icc + 0.5f*(dx*(-Ipc+Inc) + dx*dx*(2*Ipc-5*Icc+4*Inc-Iac) + dx*dx*dx*(-Ipc+3*Icc-3*Inc+Iac)),
-            Ipn = m_Image[px+nyw][c], Icn = m_Image[x+nyw][c], Inn = m_Image[nx+nyw][c], Ian = m_Image[ax+nyw][c],
+            Ipn = m_Image[px+nyw][channel], Icn = m_Image[x+nyw][channel], Inn = m_Image[nx+nyw][channel], Ian = m_Image[ax+nyw][channel],
             In = Icn + 0.5f*(dx*(-Ipn+Inn) + dx*dx*(2*Ipn-5*Icn+4*Inn-Ian) + dx*dx*dx*(-Ipn+3*Icn-3*Inn+Ian)),
-            Ipa = m_Image[px+ayw][c], Ica = m_Image[x+ayw][c], Ina = m_Image[nx+ayw][c], Iaa = m_Image[ax+ayw][c],
+            Ipa = m_Image[px+ayw][channel], Ica = m_Image[x+ayw][channel], Ina = m_Image[nx+ayw][channel], Iaa = m_Image[ax+ayw][channel],
             Ia = Ica + 0.5f*(dx*(-Ipa+Ina) + dx*dx*(2*Ipa-5*Ica+4*Ina-Iaa) + dx*dx*dx*(-Ipa+3*Ica-3*Ina+Iaa));
           const Tfloat val = Ic + 0.5f*(dy*(-Ip+In) + dy*dy*(2*Ip-5*Ic+4*In-Ia) + dy*dy*dy*(-Ip+3*Ic-3*In+Ia));
-          TempImage[Temp+col][c] = CLIP((int32_t) val);
+          TempImage[Temp+col][channel] = CLIP((int32_t) val);
         }
       }
     }
