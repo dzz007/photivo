@@ -1,0 +1,1 @@
+changeset="{date|shortdate}_!rev_{node|short}@"
