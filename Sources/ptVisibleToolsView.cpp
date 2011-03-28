@@ -33,18 +33,20 @@ ptVisibleToolsModel::ptVisibleToolsModel(QObject *parent) :
 }
 
 bool ptVisibleToolsModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-  QStandardItemModel::setData(index, value, role);
+  bool result = QStandardItemModel::setData(index, value, role);
 
   // set icon automatically according to state
   if (role == Qt::UserRole+1)
   {
     if (value.toInt() == tsHidden)
-      setData(index, QIcon(* Theme->ptIconCrossRed), Qt::DecorationRole);
+      result = (result && setData(index, QIcon(* Theme->ptIconCrossRed), Qt::DecorationRole));
     if (value.toInt() == tsFavourite)
-      setData(index, QIcon(* Theme->ptIconStar), Qt::DecorationRole);
+      result = (result && setData(index, QIcon(* Theme->ptIconStar), Qt::DecorationRole));
     if (value.toInt() == tsNormal)
-      setData(index, QIcon(* Theme->ptIconStarGrey), Qt::DecorationRole);
+      result = (result && setData(index, QIcon(* Theme->ptIconStarGrey), Qt::DecorationRole));
   }
+
+  return result;
 }
 
 
