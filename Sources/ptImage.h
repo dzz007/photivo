@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -250,6 +250,12 @@ ptImage* BilateralDenoise(const double Threshold,
                           const double Softness,
                           const double Opacity,
                           const double UseMask = 0);
+
+// Denoise curve
+ptImage* ApplyDenoiseCurve(const double Threshold,
+                           const double Softness,
+                           const ptCurve *MaskCurve,
+                           const short Type);
 
 // Texturecontrast
 ptImage* TextureContrast(const double Threshold,

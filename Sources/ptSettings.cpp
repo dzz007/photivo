@@ -264,6 +264,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BilateralASigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("A scale")         ,tr("Denoise scale on A")},
     {"BilateralBSigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("B amount")         ,tr("Color B denoise")},
     {"BilateralBSigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("B scale")         ,tr("Denoise scale on B")},
+    {"DenoiseCurveSigmaS"            ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("L scale")         ,tr("Denoise scale on L")},
+    {"DenoiseCurveSigmaR"            ,ptGT_InputSlider     ,2,1,1 ,0.3    ,0.0 ,3.0   ,0.02 ,2 ,tr("L amount")         ,tr("Denoise on L")},
     {"WaveletDenoiseL"               ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,10.0  ,0.1  ,1 ,tr("L amount")             ,tr("Threshold for wavelet L denoise (with edge mask)")},
     {"WaveletDenoiseLSoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("L softness")           ,tr("Softness for wavelet L denoise (with edge mask)")},
     {"WaveletDenoiseLSharpness"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,2.0   ,0.1  ,1 ,tr("Sharpness")          ,tr("Sharpness")},
@@ -500,7 +502,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BaseCurve"                   ,ptGT_Choice       ,1,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Base curve")},
     {"BaseCurve2"                  ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("After gamma curve")},
     {"CurveShadowsHighlights"      ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Shadows / Highlights curve")},
-    {"CurveDenoise"                ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Denoise curve")},
+    {"CurveDenoise"                ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Detail curve")},
+    {"CurveDenoise2"               ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Denoise curve")},
     //{"GREYCInterpolation"        ,ptGT_Choice       ,2,1,1 ,ptGREYCInterpolation_NearestNeighbour,GuiOptions->GREYCInterpolation, tr("GREYC Interpolation")},
     {"ViewLAB"                     ,ptGT_Choice       ,2,1,1 ,ptViewLAB_LAB               ,GuiOptions->ViewLAB                   ,tr("View seperate LAB channels")},
     {"LABToneAdjust1MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for tone adjustment")},
@@ -639,6 +642,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveFileNamesBase2"                  ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesShadowsHighlights"      ,0         ,QStringList()                                       ,1},
     {"CurveFileNamesDenoise"                ,0         ,QStringList()                                       ,1},
+    {"CurveFileNamesDenoise2"               ,0         ,QStringList()                                       ,1},
     {"OutputFileName"                       ,9         ,""                                                  ,0}, // Not in JobFile. Constructed.
     {"JobMode"                              ,9         ,0                                                   ,0}, // Not in JobFile !! Overwrites else.
     {"InputFileNameList"                    ,9         ,QStringList()                                       ,1},
@@ -684,6 +688,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"SatCurveType"                         ,1         ,0                                                   ,1},
     {"TextureCurveType"                     ,1         ,0                                                   ,1},
     {"DenoiseCurveType"                     ,1         ,0                                                   ,1},
+    {"Denoise2CurveType"                    ,1         ,0                                                   ,1},
     {"HueCurveType"                         ,1         ,0                                                   ,1},
     {"FullOutput"                           ,9         ,0                                                   ,0},
     {"HiddenTools"                          ,0         ,QStringList()                                       ,1},
@@ -1740,6 +1745,9 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabLuminanceDenoise") {
       Info.Name = "Lab Luminance denoise";
       Info.IsActive = Settings->GetDouble("BilateralLOpacity")!=0.0?1:0;
+  } else if (GuiName == "TabDenoiseCurve") {
+      Info.Name = "Lab denoise curve";
+      Info.IsActive = Settings->GetInt("CurveDenoise2")!=0;
   } else if (GuiName == "TabPyramidDenoise") {
       Info.Name = "Lab Pyramid denoise";
       Info.IsActive = (Settings->GetInt("PyrDenoiseLAmount")!=0.0||

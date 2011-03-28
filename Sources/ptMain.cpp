@@ -75,8 +75,8 @@ ptCurve*  RGBContrastCurve  = NULL;
 ptCurve*  ExposureCurve     = NULL;
 ptCurve*  ContrastCurve     = NULL;
 // RGB,R,G,B,L,a,b,Base
-ptCurve*  Curve[15]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-ptCurve*  BackupCurve[15]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  Curve[16]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  BackupCurve[16]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 // I don't manage to init statically following ones. Done in InitCurves.
 QStringList CurveKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
@@ -115,7 +115,7 @@ ptImage*  HistogramImage   = NULL;
 ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
-ptCurveWindow*     CurveWindow[15] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurveWindow*     CurveWindow[16] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 // Theming
 ptTheme* Theme = NULL;
@@ -350,7 +350,7 @@ int photivoMain(int Argc, char *Argv[]) {
     }
   }
 
-  // Some QStringLists to be initialized.
+  // Some QStringLists to be initialized, has to be the same order as the constants.
   CurveKeys << "CurveRGB"
             << "CurveR"
             << "CurveG"
@@ -365,7 +365,8 @@ int photivoMain(int Argc, char *Argv[]) {
             << "CurveTexture"
             << "CurveShadowsHighlights"
             << "CurveDenoise"
-            << "CurveHue";
+            << "CurveHue"
+            << "CurveDenoise2";
 
   CurveFileNamesKeys << "CurveFileNamesRGB"
                      << "CurveFileNamesR"
@@ -381,7 +382,8 @@ int photivoMain(int Argc, char *Argv[]) {
                      << "CurveFileNamesTexture"
                      << "CurveFileNamesShadowsHighlights"
                      << "CurveFileNamesDenoise"
-                     << "CurveFileNamesHue";
+                     << "CurveFileNamesHue"
+                     << "CurveFileNamesDenoise2";
 
   CurveBackupKeys = CurveKeys;
 
@@ -627,7 +629,8 @@ int photivoMain(int Argc, char *Argv[]) {
                              MainWindow->TextureCurveCentralWidget,
                              MainWindow->ShadowsHighlightsCurveCentralWidget,
                              MainWindow->DenoiseCurveCentralWidget,
-                             MainWindow->HueCurveCentralWidget};
+                             MainWindow->HueCurveCentralWidget,
+                             MainWindow->Denoise2CurveCentralWidget};
 
   for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
     Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
@@ -5558,9 +5561,9 @@ void CB_CurveOpenButton(const int Channel) {
     return;
   }
   if (Curve[Channel]->m_IntendedChannel != Channel) {
-    const QString IntendedChannel[15] = {"RGB","R","G","B","L","a","b",
+    const QString IntendedChannel[16] = {"RGB","R","G","B","L","a","b",
       "Saturation","Base","After gamma","L by hue","Texture",
-      "Shadows / Highlights","Denoise","Hue"};
+      "Shadows / Highlights","Denoise","Denoise 2","Hue"};
     QString Message = QObject::tr("This curve is meant for channel ") +
                         IntendedChannel[Curve[Channel]->m_IntendedChannel] +
                         QObject::tr(". Continue anyway ?");
@@ -5641,6 +5644,10 @@ void CB_CurveShadowsHighlightsOpenButton() {
 
 void CB_CurveDenoiseOpenButton() {
   CB_CurveOpenButton(ptCurveChannel_Denoise);
+}
+
+void CB_CurveDenoise2OpenButton() {
+  CB_CurveOpenButton(ptCurveChannel_Denoise2);
 }
 
 void CB_CurveSaturationOpenButton() {
@@ -5735,6 +5742,10 @@ void CB_CurveDenoiseSaveButton() {
   CB_CurveSaveButton(ptCurveChannel_Denoise);
 }
 
+void CB_CurveDenoise2SaveButton() {
+  CB_CurveSaveButton(ptCurveChannel_Denoise2);
+}
+
 void CB_CurveSaturationSaveButton() {
   CB_CurveSaveButton(ptCurveChannel_Saturation);
 }
@@ -5801,6 +5812,7 @@ void CB_CurveChoice(const int Channel, const int Choice) {
         Update(ptProcessorPhase_LabCC);
         break;
       case ptCurveChannel_Denoise :
+      case ptCurveChannel_Denoise2 :
         Update(ptProcessorPhase_LabSN);
         break;
       case ptCurveChannel_LByHue :
@@ -5873,6 +5885,10 @@ void CB_CurveDenoiseChoice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_Denoise,Choice.toInt());
 }
 
+void CB_CurveDenoise2Choice(const QVariant Choice) {
+  CB_CurveChoice(ptCurveChannel_Denoise2,Choice.toInt());
+}
+
 void CB_CurveSaturationChoice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_Saturation,Choice.toInt());
 }
@@ -5896,6 +5912,7 @@ void CB_CurveWindowRecalc(const short Channel) {
       Update(ptProcessorPhase_LabCC);
       break;
     case ptCurveChannel_Denoise :
+    case ptCurveChannel_Denoise2 :
       Update(ptProcessorPhase_LabSN);
       break;
     case ptCurveChannel_LByHue :
@@ -7048,6 +7065,27 @@ void CB_WaveletDenoiseBInput(const QVariant Value) {
 void CB_WaveletDenoiseBSoftnessInput(const QVariant Value) {
   Settings->SetValue("WaveletDenoiseBSoftness",Value);
   if (Settings->GetDouble("WaveletDenoiseB")) {
+    Update(ptProcessorPhase_LabSN);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the LabSN Tab
+// Partim Detail Curve
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_DenoiseCurveSigmaRInput(const QVariant Value) {
+  Settings->SetValue("DenoiseCurveSigmaR",Value);
+  if (Settings->GetInt("CurveDenoise2")) {
+    Update(ptProcessorPhase_LabSN);
+  }
+}
+
+void CB_DenoiseCurveSigmaSInput(const QVariant Value) {
+  Settings->SetValue("DenoiseCurveSigmaS",Value);
+  if (Settings->GetInt("CurveDenoise2")) {
     Update(ptProcessorPhase_LabSN);
   }
 }
@@ -8954,6 +8992,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(CurveTextureChoice)
   M_Dispatch(CurveShadowsHighlightsChoice)
   M_Dispatch(CurveDenoiseChoice)
+  M_Dispatch(CurveDenoise2Choice)
   M_Dispatch(CurveSaturationChoice)
   M_Dispatch(BaseCurveChoice)
   M_Dispatch(BaseCurve2Choice)
@@ -9069,6 +9108,9 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(BilateralASigmaSInput)
   M_Dispatch(BilateralBSigmaRInput)
   M_Dispatch(BilateralBSigmaSInput)
+
+  M_Dispatch(DenoiseCurveSigmaRInput)
+  M_Dispatch(DenoiseCurveSigmaSInput)
 
   M_Dispatch(WaveletDenoiseLInput)
   M_Dispatch(WaveletDenoiseLSoftnessInput)

@@ -576,7 +576,7 @@ void ptProcessor::Run(short Phase,
         // complete list of desired modify actions
         lfLensType TargetGeo = (lfLensType)LF_RECTILINEAR;
         int modflags = LF_MODIFY_GEOMETRY;
-        if (Settings->GetDouble("DefishScale") != 0.0) modflags |= LF_MODIFY_SCALE;
+        if (Settings->GetDouble("DefishScale") != 1.0) modflags |= LF_MODIFY_SCALE;
 
         // Init modifier and get list of lensfun actions that actually get performed
         modflags = LfunData->Initialize(&LensData,
@@ -1609,6 +1609,28 @@ void ptProcessor::Run(short Phase,
                Settings->GetDouble("BilateralLUseMask")*m_ScaleFactor);
 
         TRACEMAIN("Done Luminance denoise at %d ms.",Timer.elapsed());
+      }
+
+      // Denoise curve
+
+      if (Settings->ToolIsActive("TabDenoiseCurve")) {
+
+        m_ReportProgress(tr("Denoise curve"));
+
+        //Postponed RGBToLab for performance.
+        if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
+          m_Image_AfterLabSN->RGBToLab();
+
+          TRACEMAIN("Done conversion to LAB at %d ms.",
+                    Timer.elapsed());
+
+        }
+        m_Image_AfterLabSN->ApplyDenoiseCurve(Settings->GetDouble("DenoiseCurveSigmaS")*m_ScaleFactor,
+                                              Settings->GetDouble("DenoiseCurveSigmaR")/10,
+                                              Curve[ptCurveChannel_Denoise2],
+                                              Settings->GetInt("Denoise2CurveType"));
+
+        TRACEMAIN("Done denoise curve at %d ms.",Timer.elapsed());
       }
 
       // Pyramid denoise filter
