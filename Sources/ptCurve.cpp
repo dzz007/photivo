@@ -44,6 +44,7 @@ ptCurve::ptCurve(const short Channel) {
       Channel == ptCurveChannel_LByHue ||
       Channel == ptCurveChannel_Texture ||
       Channel == ptCurveChannel_Denoise ||
+      Channel == ptCurveChannel_Denoise2 ||
       Channel == ptCurveChannel_Hue)
     m_IntType = ptCurveIT_Cosine;
   else
@@ -71,7 +72,8 @@ short ptCurve::SetNullCurve(const short Channel) {
   m_IntendedChannel = Channel;
   if (Channel == ptCurveChannel_Saturation ||
       Channel == ptCurveChannel_LByHue ||
-      Channel == ptCurveChannel_Hue) {
+      Channel == ptCurveChannel_Hue ||
+      Channel == ptCurveChannel_Denoise2) {
     m_Type            = ptCurveType_Anchor;
     m_NrAnchors       = 3;
     m_XAnchor[0]      = 0.0;
@@ -324,6 +326,7 @@ short ptCurve::ReadCurve(const char *FileName) {
         case ptCurveChannel_Saturation :
         case ptCurveChannel_ShadowsHighlights :
         case ptCurveChannel_Denoise :
+        case ptCurveChannel_Denoise2 :
         case ptCurveChannel_Base :
         case ptCurveChannel_Base2 :
           m_IntendedChannel = IntendedChannel;

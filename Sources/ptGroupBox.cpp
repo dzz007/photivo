@@ -34,7 +34,7 @@
 extern ptTheme* Theme;
 extern QStringList CurveKeys;
 extern QString SettingsFilePattern;
-extern ptCurve* Curve[15];
+extern ptCurve* Curve[16];
 extern ptViewWindow* ViewWindow;
 
 // Prototypes
@@ -344,6 +344,8 @@ void ptGroupBox::WriteSettings(const short Append) {
     Keys << "TextureCurveType";
   if (Curves.contains("CurveDenoise"))
     Keys << "DenoiseCurveType";
+  if (Curves.contains("CurveDenoise2"))
+    Keys << "Denoise2CurveType";
   if (Curves.contains("CurveHue"))
     Keys << "HueCurveType";
   if(m_Name == "TabRGBTone")

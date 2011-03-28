@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -4025,6 +4025,137 @@ ptImage* ptImage::BilateralDenoise(const double Threshold,
   delete DenoiseLayer;
   return this;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Denoise curve
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+ptImage* ptImage::ApplyDenoiseCurve(const double Threshold,
+                                    const double Softness,
+                                    const ptCurve *MaskCurve,
+                                    const short Type) {
+
+  assert (m_ColorSpace == ptSpace_Lab);
+
+  ptImage *DenoiseLayer = new ptImage;
+  DenoiseLayer->Set(this);
+  const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
+  const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
+  float WPH = 0x7fff;
+
+  ptFastBilateralChannel(DenoiseLayer, Threshold, Softness, 2, ChannelMask);
+
+  double UseMask = 50.0;
+
+  float m = 10.0;
+  float t = (1.0 - m)*WPH;
+
+  uint16_t Table[0x10000];
+#pragma omp parallel for schedule(static)
+  for (uint32_t i=0; i<0x10000; i++) {
+    Table[i] = CLIP((int32_t)(m*i+t));
+  }
+
+  ptImage *MaskLayer = new ptImage;
+  MaskLayer->m_Colors = 3;
+  MaskLayer->Set(DenoiseLayer);
+
+  uint16_t (*Temp) = (uint16_t(*)) CALLOC(m_Width*m_Height,sizeof(*Temp));
+  ptMemoryError(Temp,__FILE__,__LINE__);
+
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+    for (short Ch=0; Ch<NrChannels; Ch++) {
+      MaskLayer->m_Image[i][Ch] = CLIP((int32_t) ((WPH-(int32_t)DenoiseLayer->m_Image[i][Ch])+m_Image[i][Ch]));
+      MaskLayer->m_Image[i][Ch] = Table[MaskLayer->m_Image[i][Ch]];
+    }
+    Temp[i] = m_Image[i][0];
+  }
+
+  ptCurve* Curve = new ptCurve();
+  Curve->m_Type = ptCurveType_Anchor;
+  Curve->m_XAnchor[0]=0.0;
+  Curve->m_YAnchor[0]=1.0;
+  Curve->m_XAnchor[1]=0.4;
+  Curve->m_YAnchor[1]=0.3;
+  Curve->m_XAnchor[2]=0.5;
+  Curve->m_YAnchor[2]=0.0;
+  Curve->m_XAnchor[3]=0.6;
+  Curve->m_YAnchor[3]=0.3;
+  Curve->m_XAnchor[4]=1.0;
+  Curve->m_YAnchor[4]=1.0;
+  Curve->m_NrAnchors=5;
+  Curve->SetCurveFromAnchors();
+  MaskLayer->ApplyCurve(Curve,1);
+
+  MaskLayer->ptCIBlur(UseMask, 1);
+
+  Curve->m_XAnchor[0]=0.0;
+  Curve->m_YAnchor[0]=0.0;
+  Curve->m_XAnchor[1]=0.6;
+  Curve->m_YAnchor[1]=0.4;
+  Curve->m_XAnchor[2]=1.0;
+  Curve->m_YAnchor[2]=0.8;
+  Curve->m_NrAnchors=3;
+  Curve->SetCurveFromAnchors();
+  MaskLayer->ApplyCurve(Curve,1);
+  delete Curve;
+
+  float (*Mask);
+  Mask = MaskLayer->GetMask(ptMaskType_Shadows, 0.0, 1.0, 0.0, 1,0,0);
+  delete MaskLayer;
+  Overlay(DenoiseLayer->m_Image,1.0f,Mask,ptOverlayMode_Normal);
+  FREE(Mask);
+  delete DenoiseLayer;
+
+  // at this point Temp contains the unaltered L channel and m_Image
+  // contains the denoised layer.
+
+  // neutral value for a* and b* channel
+  WPH = 0x8080;
+
+  float ValueA = 0.0;
+  float ValueB = 0.0;
+  float Hue = 0.0;
+
+  if (Type == 0) { // by chroma
+#pragma omp parallel for schedule(static) private(ValueA, ValueB, Hue)
+    for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
+      // Factor by hue
+      ValueA = (float)m_Image[i][1]-WPH;
+      ValueB = (float)m_Image[i][2]-WPH;
+
+      if (ValueA == 0.0 && ValueB == 0.0) {
+        Hue = 0;   // value for grey pixel
+      } else {
+        Hue = atan2f(ValueB,ValueA);
+      }
+      while (Hue < 0) Hue += 2.*ptPI;
+
+      float Factor = MaskCurve->m_Curve[CLIP((int32_t)(Hue/ptPI*WPH))]-(float)0x7fff;
+      Factor /= (float)0x7fff;
+
+      m_Image[i][0]=CLIP((int32_t)(Temp[i]*(1.0f - Factor)+m_Image[i][0]*Factor ));
+    }
+  } else { // by luma
+#pragma omp parallel for schedule(static) private(ValueA, ValueB)
+    for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
+      // Factor by luminance
+      float Factor = MaskCurve->m_Curve[Temp[i]]-(float)0x7fff;
+      Factor /= (float)0x7fff;
+
+      m_Image[i][0]=CLIP((int32_t)(Temp[i]*(1.0f - Factor)+m_Image[i][0]*Factor ));
+    }
+  }
+
+  FREE(Temp);
+
+  return this;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
