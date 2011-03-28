@@ -2996,6 +2996,7 @@ void CB_MenuFileOpen(const short HaveFile) {
 
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   Settings->SetValue("PerspectiveFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
+  Settings->SetValue("DefishFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
   Settings->SetValue("LfunFocal", Settings->GetDouble("FocalLengthIn35mmFilm"));
   double TmpAprt = Settings->GetDouble("ApertureFromExif");
   Settings->SetValue("LfunAperture", (TmpAprt==0.0) ? 8.0 : TmpAprt);
@@ -4618,6 +4619,29 @@ void CB_LfunDistPTLensCInput(const QVariant Value) {
   Update(ptProcessorPhase_Geometry);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the Geometry Tab
+// Partim Defish
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_DefishCheck(const QVariant State) {
+  Settings->SetValue("Defish",State);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_DefishFocalLengthInput(const QVariant Value) {
+  Settings->SetValue("DefishFocalLength", Value);
+  if (Settings->GetInt("Defish"))
+    Update(ptProcessorPhase_Geometry);
+}
+
+void CB_DefishScaleInput(const QVariant Value) {
+  Settings->SetValue("DefishScale", Value);
+  if (Settings->GetInt("Defish"))
+    Update(ptProcessorPhase_Geometry);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -8803,6 +8827,10 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LfunDistPTLensAInput)
   M_Dispatch(LfunDistPTLensBInput)
   M_Dispatch(LfunDistPTLensCInput)
+
+  M_Dispatch(DefishCheck)
+  M_Dispatch(DefishFocalLengthInput)
+  M_Dispatch(DefishScaleInput)
 
   M_Dispatch(RotateInput)
   M_Dispatch(PerspectiveFocalLengthInput)

@@ -557,6 +557,45 @@ void ptProcessor::Run(short Phase,
         TRACEMAIN("Done Lensfun corrections at %d ms.",Timer.elapsed())
       }
 
+      // Defish (dedicated lensfun)
+      if (Settings->ToolIsActive("TabDefish"))
+      {
+        m_ReportProgress(tr("Defish correction"));
+
+        lfLens LensData = lfLens();
+        LensData.Type = (lfLensType)LF_FISHEYE;
+        LensData.SetMaker("Photivo Custom");
+        LensData.SetModel("Photivo Custom");
+        LensData.AddMount("Photivo Custom");
+        assert(LensData.Check());
+        lfModifier* LfunData = lfModifier::Create(&LensData,
+                                                  1.0,  // focal length always normalised to 35mm equiv.
+                                                  m_Image_AfterGeometry->m_Width,
+                                                  m_Image_AfterGeometry->m_Height);
+
+        // complete list of desired modify actions
+        lfLensType TargetGeo = (lfLensType)LF_RECTILINEAR;
+        int modflags = LF_MODIFY_GEOMETRY;
+        if (Settings->GetDouble("DefishScale") != 0.0) modflags |= LF_MODIFY_SCALE;
+
+        // Init modifier and get list of lensfun actions that actually get performed
+        modflags = LfunData->Initialize(&LensData,
+                                        LF_PF_U16,  //image is uint16 data
+                                        Settings->GetDouble("DefishFocalLength"),
+                                        1.0, // doesn't matter for defish
+                                        1.0, // doesn't matter for defish
+                                        Settings->GetDouble("DefishScale"),
+                                        TargetGeo,
+                                        modflags,
+                                        false);  //distortion correction, not dist. simulation
+
+        // Execute lensfun corrections. For vignetting the image is changed in place.
+        // For everything else new pixel coordinates are returned in TransformedCoords.
+        m_Image_AfterGeometry->Lensfun(modflags, LfunData);
+        LfunData->Destroy();
+
+        TRACEMAIN("Done defish correction at %d ms.",Timer.elapsed())
+      }
 
 
       // Rotation

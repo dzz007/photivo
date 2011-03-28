@@ -96,6 +96,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LfunDistPTLensA"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("a"),tr("")},
     {"LfunDistPTLensB"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("b"),tr("")},
     {"LfunDistPTLensC"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("c"),tr("")},
+    {"DefishFocalLength"             ,ptGT_Input           ,9,1,1 ,15.0 ,4.0  ,50.0  ,1.0  ,1 ,tr("Focal length (35mm equiv.)")  ,tr("Focal length (35mm equiv.)")},
+    {"DefishScale"                   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,5.0   ,0.01 ,2 ,tr("Scale")              ,tr("Scale")},
     {"Rotate"                        ,ptGT_InputSlider     ,9,1,1 ,0.0  ,-180.0,180.0 ,0.1 ,2 ,tr("Rotate")             ,tr("Rotate")},
     {"PerspectiveFocalLength"        ,ptGT_Input           ,9,1,1 ,50.0 ,4.0  ,600.0 ,1.0  ,0 ,tr("Focal length (35mm equiv.)")  ,tr("Focal length (35mm equiv.)")},
     {"PerspectiveTilt"               ,ptGT_InputSlider     ,9,1,1 ,0.0  ,-45.0,45.0  ,0.1  ,2 ,tr("Tilt")               ,tr("Tilt")},
@@ -257,7 +259,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BilateralLOpacity"             ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,1.0   ,0.10 ,2 ,tr("Opacity")         ,tr("Opacity of denoising on L")},
     {"BilateralLUseMask"             ,ptGT_InputSlider     ,2,1,1 ,50.0   ,0.0 ,50.0  ,10.0 ,0 ,tr("Edge Threshold")  ,tr("Edge thresholding for denoising on L")},
     {"BilateralLSigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("L scale")         ,tr("Denoise scale on L")},
-    {"BilateralLSigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,3.0   ,0.02 ,2 ,tr("L amount")         ,tr("Denoise on L")},
+    {"BilateralLSigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.3    ,0.0 ,3.0   ,0.02 ,2 ,tr("L amount")         ,tr("Denoise on L")},
     {"BilateralASigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("A amount")         ,tr("Color A denoise")},
     {"BilateralASigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("A scale")         ,tr("Denoise scale on A")},
     {"BilateralBSigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("B amount")         ,tr("Color B denoise")},
@@ -538,6 +540,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ManualBlackPoint"           ,ptGT_Check ,2,1,0,tr("Manual BP")       ,tr("Manual black point setting enabled")},
     {"ManualWhitePoint"           ,ptGT_Check ,2,1,0,tr("Manual WP")       ,tr("Manual white point setting enabled")},
     {"EeciRefine"                 ,ptGT_Check ,2,1,0,tr("Eeci refinement") ,tr("Eeci refinement")},
+    {"Defish"                     ,ptGT_Check ,2,1,0,tr("Enable")          ,tr("Enable defishing")},
     {"Grid"                       ,ptGT_Check ,9,1,0,tr("Grid")            ,tr("Enable the overlay grid")},
     {"Crop"                       ,ptGT_Check ,9,1,0,tr("Crop")            ,tr("Enable to make a crop")},
     {"FixedAspectRatio"           ,ptGT_Check ,1,0,0,tr("Aspect Ratio")    ,tr("Crop with a fixed aspect ratio")},
@@ -1569,6 +1572,9 @@ sToolInfo ToolInfo (const QString GuiName) {
     Info.Name == "Lensfun - Lens Correction";
     Info.IsActive = (Settings->GetInt("LfunSrcGeo") != Settings->GetInt("LfunTargetGeo") ||
                      Settings->GetInt("LfunDistModel") != 0);
+  } else if (GuiName == "TabDefish") {
+      Info.Name = "Defish";
+      Info.IsActive = Settings->GetInt("Defish");
   } else if (GuiName == "TabRotation") {
       Info.Name = "Rotation";
       Info.IsActive = (Settings->GetDouble("Rotate")!=0.0f ||
