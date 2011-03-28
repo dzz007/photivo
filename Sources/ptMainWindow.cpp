@@ -1914,6 +1914,7 @@ void ptMainWindow::UpdateToolBoxes() {
   QList<ptGroupBox *> m_DetailViewTools;
   m_DetailViewTools << m_GroupBox->value("TabLensfunCAVignette")
                     << m_GroupBox->value("TabLensfunLens")
+                    << m_GroupBox->value("TabDefish")
                     << m_GroupBox->value("TabCrop")
                     << m_GroupBox->value("TabResize")
                     << m_GroupBox->value("TabWebResize");
