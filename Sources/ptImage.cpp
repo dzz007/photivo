@@ -5207,10 +5207,18 @@ ptImage* ptImage::Vignette(const short VignetteMode,
       break;
 
     case ptVignetteMode_Mask:
+      if (m_ColorSpace == ptSpace_Lab) {
 #pragma omp parallel for schedule(static) default(shared)
-      for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-        m_Image[i][0] = m_Image[i][1] = m_Image[i][2] =
-          CLIP((int32_t) (VignetteMask[i]*0xffff));
+        for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+          m_Image[i][0] = CLIP((int32_t) (VignetteMask[i]*0xffff));
+          m_Image[i][1] = m_Image[i][2] = 0x8080;
+        }
+      } else {
+#pragma omp parallel for schedule(static) default(shared)
+        for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+          m_Image[i][0] = m_Image[i][1] = m_Image[i][2] =
+            CLIP((int32_t) (VignetteMask[i]*0xffff));
+        }
       }
       break;
   }
