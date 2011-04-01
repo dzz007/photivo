@@ -538,13 +538,17 @@ void ptProcessor::Run(short Phase,
           modflags |= LF_MODIFY_GEOMETRY;
         }
 
+        if (Settings->GetDouble("LfunScale") != 1.0) {
+          modflags |= LF_MODIFY_SCALE;
+        }
+
         // Init modifier and get list of lensfun actions that actually get performed
         modflags = LfunData->Initialize(&LensData,
                                         LF_PF_U16,  //image is uint16 data
                                         Settings->GetDouble("LfunFocal"),
                                         Settings->GetDouble("LfunAperture"),
                                         Settings->GetDouble("LfunDistance"),
-                                        1.0,  // no image scaling
+                                        Settings->GetDouble("LfunScale"),
                                         TargetGeo,
                                         modflags,
                                         false);  //distortion correction, not dist. simulation
@@ -556,6 +560,7 @@ void ptProcessor::Run(short Phase,
 
         TRACEMAIN("Done Lensfun corrections at %d ms.",Timer.elapsed())
       }
+
 
       // Defish (dedicated lensfun)
       if (Settings->ToolIsActive("TabDefish"))

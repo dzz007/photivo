@@ -4490,6 +4490,11 @@ void CB_LfunDistanceInput(const QVariant Value) {
   Update(ptProcessorPhase_Geometry);
 }
 
+void CB_LfunScaleInput(const QVariant Value) {
+  Settings->SetValue("LfunScale", Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
 
 // CA and Vignette tab
 
@@ -8833,6 +8838,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LfunFocalInput)
   M_Dispatch(LfunApertureInput)
   M_Dispatch(LfunDistanceInput)
+  M_Dispatch(LfunScaleInput)
   M_Dispatch(LfunCAModelChoice)
   M_Dispatch(LfunCALinearKbInput)
   M_Dispatch(LfunCALinearKrInput)
