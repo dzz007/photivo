@@ -302,9 +302,6 @@ QApplication* TheApplication;
 
 int photivoMain(int Argc, char *Argv[]) {
   QString VerTemp(TOSTRING(APPVERSION));
-  VerTemp.replace("_"," ");
-  VerTemp.replace("!","(");
-  VerTemp.replace("@",")");
   printf("Photivo version %s\n", VerTemp.toAscii().data());
 
   Magick::InitializeMagick(*Argv);

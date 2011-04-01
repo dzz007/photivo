@@ -517,10 +517,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   // Character replacements are hacks to avoid problems with make and stringify
   // and certain special characters.
   QString Temp(TOSTRING(APPVERSION));
-  Temp.replace("_"," ");
-  Temp.replace("!","(");
-  Temp.replace("@","");
-  Temp.append(")");
   AppVersionLabel->setText(Temp);
   AppVersion2Label->setText(Temp);
 

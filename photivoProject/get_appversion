@@ -32,4 +32,4 @@
 HgRev=`hg identify | cut -c -12`
 ptAppVer=`hg log --rev $HgRev --style ./hg-appversion.style`
 ptChanged=`hg identify | cut -c 13`
-echo $ptAppVer$ptChanged | tr -d " "
+echo $ptAppVer$ptChanged
