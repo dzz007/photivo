@@ -66,7 +66,10 @@ unix {
   QMAKE_POST_LINK=strip $(TARGET)
 }
 win32 {
-  LIBS += -lwsock32 -lexpat -lregex -lgdi32
+  LIBS += -lwsock32 -lexpat -lgdi32
+  QMAKE_CXXFLAGS_RELEASE += -I/my/include
+  QMAKE_CFLAGS_RELEASE += -I/my/include
+  QMAKE_LFLAGS_RELEASE += -L/my/lib
 }
 
 # Input
