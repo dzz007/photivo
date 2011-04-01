@@ -1,0 +1,17 @@
+;
+; photivo Channelmixer File
+;
+; This curve was written from within photivo
+;
+; Red, blue channelswitch
+;
+Magic photivoChannelMixerFile
+0 0
+1 0
+2 1000
+3 0
+4 1000
+5 0
+6 1000
+7 0
+8 0
