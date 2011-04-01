@@ -88,7 +88,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LfunVignettePoly6K1"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,2.0   ,0.01 ,3 ,tr("k1"),tr("")},
     {"LfunVignettePoly6K2"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,2.0   ,0.01 ,3 ,tr("k2"),tr("")},
     {"LfunVignettePoly6K3"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,2.0   ,0.01 ,3 ,tr("k3"),tr("")},
-    {"LfunFocalAdjust"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-50.0,50.0  ,1.0  ,0 ,tr("Focal length adjustment"), tr("Deviation in mm from the default focal length set in \"Lensfun - General\".\nUsed for geometry correction.")},
     {"LfunDistPoly3K1"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k1"),tr("")},
     {"LfunDistPoly5K1"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k1"),tr("")},
     {"LfunDistPoly5K2"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k2"),tr("")},
@@ -1569,14 +1568,18 @@ struct sToolInfo {
 sToolInfo ToolInfo (const QString GuiName) {
   sToolInfo Info = {"N.N.",0,0,0};
   // Tab Geometry
-  if (GuiName == "TabLensfunCAVignette") {
-    Info.Name = "Lensfun - CA and Vignette";
-    Info.IsActive = (Settings->GetInt("LfunCAModel") != 0 ||
-                     Settings->GetInt("LfunVignetteModel") != 0);
-  } else if (GuiName == "TabLensfunLens") {
-    Info.Name == "Lensfun - Lens Correction";
-    Info.IsActive = (Settings->GetInt("LfunSrcGeo") != Settings->GetInt("LfunTargetGeo") ||
-                     Settings->GetInt("LfunDistModel") != 0);
+  if (GuiName == "TabLensfunCA") {
+    Info.Name = "Chromatic Aberration (Lensfun)";
+    Info.IsActive = Settings->GetInt("LfunCAModel") != 0;
+  } else if (GuiName == "TabLensfunVignette") {
+    Info.Name = "Vignetting (Lensfun)";
+    Info.IsActive = Settings->GetInt("LfunVignetteModel") != 0;
+  } else if (GuiName == "TabLensfunDistortion") {
+    Info.Name == "Lens Distortion (Lensfun)";
+    Info.IsActive = Settings->GetInt("LfunDistModel") != 0;
+  } else if (GuiName == "TabLensfunGeometry") {
+    Info.Name == "Geometry Conversion (Lensfun)";
+    Info.IsActive = Settings->GetInt("LfunSrcGeo") != Settings->GetInt("LfunTargetGeo");
   } else if (GuiName == "TabDefish") {
       Info.Name = "Defish";
       Info.IsActive = Settings->GetInt("Defish");

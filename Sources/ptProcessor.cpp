@@ -421,8 +421,8 @@ void ptProcessor::Run(short Phase,
 
 
       // Lensfun
-      if (Settings->ToolIsActive("TabLensfunCAVignette") ||
-          Settings->ToolIsActive("TabLensfunLens"))
+      if (Settings->ToolIsActive("TabLensfunCA") || Settings->ToolIsActive("TabLensfunVignette") ||
+          Settings->ToolIsActive("TabLensfunDistortion") || Settings->ToolIsActive("TabLensfunGeometry") )
       {
         m_ReportProgress(tr("Lensfun corrections"));
         int modflags = 0;

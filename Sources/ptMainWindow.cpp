@@ -343,7 +343,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TODO BJ: Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
-  LfunFocalAdjustWidget->setVisible(false);
 
   Macro_ConnectSomeButton(RotateLeft);
   Macro_ConnectSomeButton(RotateRight);
@@ -1908,8 +1907,10 @@ void ptMainWindow::UpdateToolBoxes() {
 
   // disable tools when we are in detail view
   QList<ptGroupBox *> m_DetailViewTools;
-  m_DetailViewTools << m_GroupBox->value("TabLensfunCAVignette")
-                    << m_GroupBox->value("TabLensfunLens")
+  m_DetailViewTools << m_GroupBox->value("TabLensfunCA")
+                    << m_GroupBox->value("TabLensfunVignette")
+                    << m_GroupBox->value("TabLensfunDistortion")
+                    << m_GroupBox->value("TabLensfunGeometry")
                     << m_GroupBox->value("TabDefish")
                     << m_GroupBox->value("TabCrop")
                     << m_GroupBox->value("TabResize")
