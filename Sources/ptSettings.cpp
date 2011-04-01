@@ -106,6 +106,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"PerspectiveScaleY"             ,ptGT_InputSlider     ,9,1,1 ,1.0  ,0.2  ,5.0   ,0.05 ,2 ,tr("Scale vertical")     ,tr("Scale vertical")},
     {"GridX"                         ,ptGT_Input           ,1,0,0 ,5    ,0    ,20    ,1    ,0 ,tr("X")                  ,tr("Vertical lines")},
     {"GridY"                         ,ptGT_Input           ,1,0,0 ,5    ,0    ,20    ,1    ,0 ,tr("Y")                  ,tr("Horizontal lines")},
+    {"LqrHorScale"                   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.2  ,2.0   ,0.02 ,3 ,tr("Scale horizontal")   ,tr("Scale horizontal")},
+    {"LqrVertScale"                  ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.2  ,2.0   ,0.02 ,3 ,tr("Scale vertical")     ,tr("Scale vertical")},
     {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Size")               ,tr("Image size")},
     {"LevelsBlackPoint"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.002,3 ,tr("Blackpoint")         ,tr("Levels Blackpoint")},
     {"LevelsWhitePoint"              ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.002,3 ,tr("Whitepoint")         ,tr("Levels Whitepoint")},
@@ -1567,7 +1569,7 @@ struct sToolInfo {
 };
 
 sToolInfo ToolInfo (const QString GuiName) {
-  sToolInfo Info = {"N.N.",0,0,0};
+  sToolInfo Info = {"N.N.",0,0,0,0};
   // Tab Geometry
   if (GuiName == "TabLensfunCAVignette") {
     Info.Name = "Lensfun - CA and Vignette";
@@ -1587,6 +1589,10 @@ sToolInfo ToolInfo (const QString GuiName) {
                        Settings->GetDouble("PerspectiveTurn")!=0.0f ||
                        Settings->GetDouble("PerspectiveScaleX")!=1.0f ||
                        Settings->GetDouble("PerspectiveScaleY")!=1.0f)?1:0;
+  } else if (GuiName == "TabLiquidRescale") {
+      Info.Name = "Seam carving";
+      Info.IsActive = (Settings->GetDouble("LqrHorScale") != 1.0f ||
+                       Settings->GetDouble("LqrVertScale") != 1.0)?1:0;
   } else if (GuiName == "TabCrop") {
       Info.Name = "Crop";
       Info.IsActive = Settings->GetInt("Crop");

@@ -4794,7 +4794,7 @@ void CB_FlipModeChoice(const QVariant Value) {
 
 void CB_GeometryBlockCheck(const QVariant State) {
   Settings->SetValue("GeometryBlock",State);
-  Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_RGB);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4988,6 +4988,24 @@ void CB_CropCheck(const QVariant State) {
     return;
   }
 
+  Update(ptProcessorPhase_Geometry);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the Geometry Tab
+// Partim Liquid rescale
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_LqrHorScaleInput(const QVariant Value) {
+  Settings->SetValue("LqrHorScale",Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LqrVertScaleInput(const QVariant Value) {
+  Settings->SetValue("LqrVertScale",Value);
   Update(ptProcessorPhase_Geometry);
 }
 
@@ -8879,17 +8897,22 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GridCheck)
   M_Dispatch(GridXInput)
   M_Dispatch(GridYInput)
-  M_Dispatch(FlipModeChoice)
+
   M_Dispatch(CropCheck)
   M_Dispatch(CropGuidelinesChoice)
   M_Dispatch(FixedAspectRatioCheck)
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)
 
+  M_Dispatch(LqrHorScaleInput)
+  M_Dispatch(LqrVertScaleInput)
+
   M_Dispatch(ResizeCheck)
   M_Dispatch(ResizeScaleInput)
   M_Dispatch(ResizeFilterChoice)
   M_Dispatch(AutomaticPipeSizeCheck)
+
+  M_Dispatch(FlipModeChoice)
 
   M_Dispatch(GeometryBlockCheck)
 

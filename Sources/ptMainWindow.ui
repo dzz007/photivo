@@ -328,7 +328,7 @@
                       <enum>QTabWidget::West</enum>
                      </property>
                      <property name="currentIndex">
-                      <number>4</number>
+                      <number>1</number>
                      </property>
                      <property name="iconSize">
                       <size>
@@ -1185,7 +1185,7 @@
                            <item>
                             <widget class="QToolBox" name="GeometryToolbox">
                              <property name="currentIndex">
-                              <number>3</number>
+                              <number>6</number>
                              </property>
                              <widget class="QWidget" name="TabLensfunGeneral">
                               <property name="geometry">
@@ -1735,8 +1735,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>165</width>
-                                <height>210</height>
+                                <width>621</width>
+                                <height>329</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -1980,8 +1980,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>156</width>
-                                <height>118</height>
+                                <width>621</width>
+                                <height>298</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2225,6 +2225,38 @@
                                   <size>
                                    <width>20</width>
                                    <height>20</height>
+                                  </size>
+                                 </property>
+                                </spacer>
+                               </item>
+                              </layout>
+                             </widget>
+                             <widget class="QWidget" name="TabLiquidRescale">
+                              <attribute name="label">
+                               <string>Seam carving</string>
+                              </attribute>
+                              <layout class="QVBoxLayout" name="verticalLayout_262">
+                               <item>
+                                <widget class="QWidget" name="widget_166" native="true">
+                                 <layout class="QVBoxLayout" name="verticalLayout_261">
+                                  <item>
+                                   <widget class="QWidget" name="LqrHorScaleWidget" native="true"/>
+                                  </item>
+                                  <item>
+                                   <widget class="QWidget" name="LqrVertScaleWidget" native="true"/>
+                                  </item>
+                                 </layout>
+                                </widget>
+                               </item>
+                               <item>
+                                <spacer name="verticalSpacer_87">
+                                 <property name="orientation">
+                                  <enum>Qt::Vertical</enum>
+                                 </property>
+                                 <property name="sizeHint" stdset="0">
+                                  <size>
+                                   <width>20</width>
+                                   <height>227</height>
                                   </size>
                                  </property>
                                 </spacer>
@@ -4454,8 +4486,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>621</width>
-                            <height>630</height>
+                            <width>639</width>
+                            <height>626</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_40">
@@ -4853,7 +4885,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>586</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -4898,8 +4930,8 @@
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
-                                <y>-28</y>
-                                <width>586</width>
+                                <y>0</y>
+                                <width>608</width>
                                 <height>124</height>
                                </rect>
                               </property>
@@ -5084,7 +5116,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>586</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -7513,7 +7545,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>604</width>
+                                <width>608</width>
                                 <height>239</height>
                                </rect>
                               </property>
@@ -9556,8 +9588,8 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>103</width>
-                        <height>227</height>
+                        <width>98</width>
+                        <height>215</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_236">
@@ -10357,8 +10389,8 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>103</width>
-                        <height>630</height>
+                        <width>98</width>
+                        <height>618</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_143">
@@ -10523,7 +10555,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>124</width>
+                            <width>116</width>
                             <height>366</height>
                            </rect>
                           </property>
@@ -10622,9 +10654,6 @@
                                 <property name="selectionMode">
                                  <enum>QAbstractItemView::NoSelection</enum>
                                 </property>
-                                <attribute name="headerVisible">
-                                 <bool>false</bool>
-                                </attribute>
                                 <attribute name="headerVisible">
                                  <bool>false</bool>
                                 </attribute>
@@ -11891,7 +11920,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>591</width>
-                  <height>852</height>
+                  <height>854</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_240">

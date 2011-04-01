@@ -657,6 +657,16 @@ void ptProcessor::Run(short Phase,
       // set scale factor for size dependend filters
       m_ScaleFactor = 1/powf(2.0, Settings->GetInt("Scaled"));
 
+      // Liquid rescale
+      if (Settings->ToolIsActive("TabLiquidRescale")) {
+        m_ReportProgress(tr("Seam carving"));
+
+        m_Image_AfterGeometry->LiquidRescale(Settings->GetDouble("LqrHorScale"),
+                                             Settings->GetDouble("LqrVertScale"));
+
+        TRACEMAIN("Done seam carving at %d ms.",Timer.elapsed());
+      }
+
       // Resize
       if (Settings->ToolIsActive("TabResize")) {
         m_ReportProgress(tr("Resize image"));
@@ -696,15 +706,6 @@ void ptProcessor::Run(short Phase,
         goto Exit;
       }
 
-      // Calculate the autoexposure required value at this point.
-      if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
-        m_ReportProgress(tr("Calculate auto exposure"));
-        m_AutoExposureValue = CalculateAutoExposure(m_Image_AfterGeometry);
-        Settings->SetValue("Exposure",m_AutoExposureValue);
-      }
-      if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw)
-          Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
-
       m_ReportProgress(tr("Next"));
     }
 
@@ -717,6 +718,15 @@ void ptProcessor::Run(short Phase,
         if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage();
         m_Image_AfterRGB->Set(m_Image_AfterGeometry);
       }
+
+      // Calculate the autoexposure required value at this point.
+      if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
+        m_ReportProgress(tr("Calculate auto exposure"));
+        m_AutoExposureValue = CalculateAutoExposure(m_Image_AfterGeometry);
+        Settings->SetValue("Exposure",m_AutoExposureValue);
+      }
+      if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw)
+          Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
 
       // Channel mixing.
 
@@ -2634,12 +2644,12 @@ void ptProcessor::Run(short Phase,
 
       }
 
+Exit:
+
       Settings->SetValue("PipeImageW",m_Image_AfterEyeCandy->m_Width);
       Settings->SetValue("PipeImageH",m_Image_AfterEyeCandy->m_Height);
 
     case ptProcessorPhase_Output : // Run Output.
-
-Exit:
 
       TRACEMAIN("Done pipe processing at %d ms.",Timer.elapsed());
 

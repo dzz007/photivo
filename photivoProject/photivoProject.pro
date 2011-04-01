@@ -51,6 +51,13 @@ unix {
   UI_HEADERS_DIR = ../Objects
   RCC_DIR = ../Objects
 }
+# Stuff for liquid rescale
+QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)
+QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
+QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)
+QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
+LIBS += $$system(pkg-config --libs-only-l lqr-1)
+
 QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP
 QMAKE_CXXFLAGS_DEBUG += -ffast-math -O0 -g
 QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp
@@ -157,6 +164,7 @@ SOURCES += ../Sources/ptImage_GMC.cpp
 SOURCES += ../Sources/ptImage_Pyramid.cpp
 SOURCES += ../Sources/ptImage_Cimg.cpp
 SOURCES += ../Sources/ptImage_Lensfun.cpp
+SOURCES += ../Sources/ptImage_Lqr.cpp
 SOURCES += ../Sources/ptImage8.cpp
 SOURCES += ../Sources/ptResizeFilters.cpp
 SOURCES += ../Sources/ptKernel.cpp

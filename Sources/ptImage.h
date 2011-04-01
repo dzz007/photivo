@@ -597,6 +597,9 @@ ptImage* ptCIPerspective(const float RotateAngle,
                          const float ScaleX,
                          const float ScaleY);
 
+// ptImage_Lqr.cpp
+ptImage* LiquidRescale(const double HorScale, const double VertScale);
+
 /**
  * ptImage_Lensfun.cpp
  * Wrapper for the actual execution of lensfun processing. Returns the stage 2 (vignetting)
