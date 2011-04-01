@@ -77,6 +77,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LfunFocal"                     ,ptGT_Input           ,2,1,1 ,50.0 ,4.0  ,1000.0,1.0  ,0 ,tr("Focal length (35mm equiv.)"), tr("Focal length (35mm equiv.)")},
     {"LfunAperture"                  ,ptGT_Input           ,2,1,1 ,8.0  ,0.8  ,32.0  ,1.0  ,1 ,tr("Aperture"), tr("")},
     {"LfunDistance"                  ,ptGT_Input           ,2,1,1 ,1.0  ,0.01 ,500.0 ,1.0  ,2 ,tr("Distance"), tr("Distance between object and camera")},
+    {"LfunScale"                     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,5.0   ,0.01 ,2 ,tr("Scale"),tr("Image scaling.\nUseful to avoid losing content through the distortion/geometry tools.\n0.0 means auto-scaling.")},
     {"LfunCALinearKr"                ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("kr"),tr("")},
     {"LfunCALinearKb"                ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("kb"),tr("")},
     {"LfunCAPoly3Vr"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.99 ,1.01  ,0.001,5 ,tr("vr"),tr("")},
@@ -95,8 +96,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LfunDistPTLensA"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("a"),tr("")},
     {"LfunDistPTLensB"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("b"),tr("")},
     {"LfunDistPTLensC"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("c"),tr("")},
+
     {"DefishFocalLength"             ,ptGT_Input           ,9,1,1 ,15.0 ,4.0  ,50.0  ,1.0  ,1 ,tr("Focal length (35mm equiv.)")  ,tr("Focal length (35mm equiv.)")},
-    {"DefishScale"                   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,5.0   ,0.01 ,2 ,tr("Scale")              ,tr("Scale")},
+    {"DefishScale"                   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,5.0   ,0.01 ,2 ,tr("Scale")              ,tr("Image scaling.\n0.0 means auto-scaling.")},
     {"Rotate"                        ,ptGT_InputSlider     ,9,1,1 ,0.0  ,-180.0,180.0 ,0.1 ,2 ,tr("Rotate")             ,tr("Rotate")},
     {"PerspectiveFocalLength"        ,ptGT_Input           ,9,1,1 ,50.0 ,4.0  ,600.0 ,1.0  ,0 ,tr("Focal length (35mm equiv.)")  ,tr("Focal length (35mm equiv.)")},
     {"PerspectiveTilt"               ,ptGT_InputSlider     ,9,1,1 ,0.0  ,-45.0,45.0  ,0.1  ,2 ,tr("Tilt")               ,tr("Tilt")},
