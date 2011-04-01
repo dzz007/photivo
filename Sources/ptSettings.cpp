@@ -464,6 +464,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LfunSrcGeo"                  ,ptGT_Choice       ,2,1,1 ,ptLfunGeo_Unknown           ,GuiOptions->LfunGeo                   ,tr("Geometry of the lens the image was taken with")},
     {"LfunTargetGeo"               ,ptGT_Choice       ,2,1,1 ,ptLfunGeo_Unknown           ,GuiOptions->LfunGeo                   ,tr("Convert image to this lens geometry")},
     {"LfunDistModel"               ,ptGT_Choice       ,2,1,1 ,ptLfunDistModel_None        ,GuiOptions->LfunDistModel             ,tr("Mathematical distortion model to apply to the image")},
+    {"LqrEnergy"                   ,ptGT_Choice       ,1,1,1 ,ptLqr_GradXabs              ,GuiOptions->LqrEnergy                 ,tr("Energy method for liquid rescale")},
     {"ResizeFilter"                ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Mitchell         ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatioW              ,tr("Aspect width")},

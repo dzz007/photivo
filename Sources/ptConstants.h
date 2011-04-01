@@ -502,6 +502,14 @@ const short ptIMFilter_Lanczos   = 12;
 //const short ptIMFilter_Bessel    = 13;
 //const short ptIMFilter_Sinc      = 14;
 
+// Liquid rescale energies
+
+const short ptLqr_GradXabs         = 0;
+const short ptLqr_GradSumabs       = 1;
+const short ptLqr_GradNorm         = 2;
+const short ptLqr_LumaGradXabs     = 3;
+const short ptLqr_LumaGradSumabs   = 4;
+const short ptLqr_LumaGradNorm     = 5;
 
 // Zoom modes
 const short ptZoomMode_Fit    = 0;

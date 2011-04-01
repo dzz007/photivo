@@ -68,6 +68,7 @@ public:
   static const ptGuiOptionsItem CropGuidelines[];
   static const ptGuiOptionsItem ResizeFilter[];
   static const ptGuiOptionsItem IMResizeFilter[];
+  static const ptGuiOptionsItem LqrEnergy[];
   static const ptGuiOptionsItem WhiteBalance[];
   static const ptGuiOptionsItem CACorrect[];
   static const ptGuiOptionsItem Interpolation[];

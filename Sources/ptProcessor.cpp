@@ -662,7 +662,8 @@ void ptProcessor::Run(short Phase,
         m_ReportProgress(tr("Seam carving"));
 
         m_Image_AfterGeometry->LiquidRescale(Settings->GetDouble("LqrHorScale"),
-                                             Settings->GetDouble("LqrVertScale"));
+                                             Settings->GetDouble("LqrVertScale"),
+                                             Settings->GetInt("LqrEnergy"));
 
         TRACEMAIN("Done seam carving at %d ms.",Timer.elapsed());
       }
@@ -690,6 +691,12 @@ void ptProcessor::Run(short Phase,
         TRACEMAIN("Done flip at %d ms.",Timer.elapsed());
       }
 
+      m_ReportProgress(tr("Next"));
+    }
+
+
+    case ptProcessorPhase_RGB : // Run everything in RGB.
+
       // Geometry block
       // This will skip the rest of the pipe, to make geometry adjustments easier.
 
@@ -705,12 +712,6 @@ void ptProcessor::Run(short Phase,
         m_Image_AfterEyeCandy->Set(m_Image_AfterGeometry);
         goto Exit;
       }
-
-      m_ReportProgress(tr("Next"));
-    }
-
-
-    case ptProcessorPhase_RGB : // Run everything in RGB.
 
       if (Settings->GetInt("JobMode")) {
         m_Image_AfterRGB = m_Image_AfterGeometry; // Job mode -> no cache

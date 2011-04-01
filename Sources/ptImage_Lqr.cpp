@@ -29,7 +29,9 @@
 #endif
 
 
-ptImage* ptImage::LiquidRescale(const double HorScale, const double VertScale) {
+ptImage* ptImage::LiquidRescale(const double HorScale,
+                                const double VertScale,
+                                const short Energy) {
   uint16_t NewWidth = m_Width * HorScale;
   uint16_t NewHeight = m_Height * VertScale;
 
@@ -40,6 +42,29 @@ ptImage* ptImage::LiquidRescale(const double HorScale, const double VertScale) {
                                          LQR_COLDEPTH_16I);
 
   // lqr_carver_set_preserve_input_image(carver);
+
+  switch(Energy) {
+    case ptLqr_GradXabs:
+      lqr_carver_set_energy_function_builtin(carver, LQR_EF_GRAD_XABS);
+      break;
+    case ptLqr_GradSumabs:
+      lqr_carver_set_energy_function_builtin(carver, LQR_EF_GRAD_SUMABS);
+      break;
+    case ptLqr_GradNorm:
+      lqr_carver_set_energy_function_builtin(carver, LQR_EF_GRAD_NORM);
+      break;
+    case ptLqr_LumaGradXabs:
+      lqr_carver_set_energy_function_builtin(carver, LQR_EF_LUMA_GRAD_XABS);
+      break;
+    case ptLqr_LumaGradSumabs:
+      lqr_carver_set_energy_function_builtin(carver, LQR_EF_LUMA_GRAD_SUMABS);
+      break;
+    case ptLqr_LumaGradNorm:
+      lqr_carver_set_energy_function_builtin(carver, LQR_EF_LUMA_GRAD_NORM);
+      break;
+    default:
+      assert(0);
+  }
 
   lqr_carver_init(carver,1,0.0);
 
@@ -53,14 +78,16 @@ ptImage* ptImage::LiquidRescale(const double HorScale, const double VertScale) {
   void *rgb;
   uint16_t *rgb_out;
 
+  while (lqr_carver_scan_ext (carver, &Col, &Row, &rgb)) {
+    rgb_out = (uint16_t*) rgb;
+    m_Image[Row*NewWidth+Col][0] = rgb_out[0];
+    m_Image[Row*NewWidth+Col][1] = rgb_out[1];
+    m_Image[Row*NewWidth+Col][2] = rgb_out[2];
+  }
+
   //~ for (uint16_t Row=0; Row<NewHeight; Row++) {
     //~ for (uint16_t Col=0; Col<NewWidth; Col++) {
-      while (lqr_carver_scan_ext (carver, &Col, &Row, &rgb)) {
-        rgb_out = (uint16_t*) rgb;
-        m_Image[Row*NewWidth+Col][0] = rgb_out[0];
-        m_Image[Row*NewWidth+Col][1] = rgb_out[1];
-        m_Image[Row*NewWidth+Col][2] = rgb_out[2];
-      }
+
     //~ }
   //~ }
 

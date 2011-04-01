@@ -189,6 +189,15 @@ const ptGuiOptionsItem ptGuiOptions::IMResizeFilter[] = {
 //  {ptIMFilter_Sinc,               QObject::tr("Sinc filter") },
   {-1,NULL}};
 
+const ptGuiOptionsItem ptGuiOptions::LqrEnergy[] = {
+  {ptLqr_GradXabs,                QObject::tr("Directional grad brightness") },
+  {ptLqr_GradSumabs,              QObject::tr("Average grad brightness") },
+  {ptLqr_GradNorm,                QObject::tr("Norm brightness") },
+  {ptLqr_LumaGradXabs,            QObject::tr("Directional grad luminance") },
+  {ptLqr_LumaGradSumabs,          QObject::tr("Average grad luminance") },
+  {ptLqr_LumaGradNorm,            QObject::tr("Norm luminance") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::WhiteBalance[] = {
   {ptWhiteBalance_Camera,   QObject::tr("Camera")    },
   {ptWhiteBalance_Auto,     QObject::tr("Automatic") },

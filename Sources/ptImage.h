@@ -598,7 +598,9 @@ ptImage* ptCIPerspective(const float RotateAngle,
                          const float ScaleY);
 
 // ptImage_Lqr.cpp
-ptImage* LiquidRescale(const double HorScale, const double VertScale);
+ptImage* LiquidRescale(const double HorScale,
+                       const double VertScale,
+                       const short Energy);
 
 /**
  * ptImage_Lensfun.cpp

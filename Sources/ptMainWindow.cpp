@@ -1916,6 +1916,7 @@ void ptMainWindow::UpdateToolBoxes() {
                     << m_GroupBox->value("TabLensfunLens")
                     << m_GroupBox->value("TabDefish")
                     << m_GroupBox->value("TabCrop")
+                    << m_GroupBox->value("TabLiquidRescale")
                     << m_GroupBox->value("TabResize")
                     << m_GroupBox->value("TabWebResize");
 

@@ -2326,13 +2326,12 @@ void WriteOut() {
 
   ReportProgress(QObject::tr("Writing output (exif)"));
 
-  // TODO BJ: implement lensfun DB
-//  if (Settings->GetInt("IncludeExif") &&
-//      (Settings->GetString("LensfunCameraMake") != "")) {
-//    WriteExif(Settings->GetString("OutputFileName").toAscii().data(),
-//        TheProcessor->m_ExifBuffer,
-//        TheProcessor->m_ExifBufferLength);
-//    }
+  if (Settings->GetInt("IncludeExif") &&
+      TheProcessor->m_ExifBufferLength) {
+    WriteExif(Settings->GetString("OutputFileName").toAscii().data(),
+        TheProcessor->m_ExifBuffer,
+        TheProcessor->m_ExifBufferLength);
+  }
 
   if (Settings->GetInt("JobMode") == 0) delete OutImage;
 
@@ -5009,6 +5008,11 @@ void CB_LqrVertScaleInput(const QVariant Value) {
   Update(ptProcessorPhase_Geometry);
 }
 
+void CB_LqrEnergyChoice(const QVariant Choice) {
+  Settings->SetValue("LqrEnergy",Choice);
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -8906,6 +8910,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(LqrHorScaleInput)
   M_Dispatch(LqrVertScaleInput)
+  M_Dispatch(LqrEnergyChoice)
 
   M_Dispatch(ResizeCheck)
   M_Dispatch(ResizeScaleInput)
