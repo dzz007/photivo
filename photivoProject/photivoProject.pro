@@ -225,7 +225,7 @@ SOURCES += ../Sources/rawtherapee/cfa_line_dn.c
 SOURCES += ../Sources/rawtherapee/ca_correct.c
 SOURCES += ../Sources/rawtherapee/green_equil.c
 RESOURCES = ../photivo.qrc
-TRANSLATIONS += ../Translations/photivo_de.ts
-TRANSLATIONS += ../Translations/photivo_it.ts
+TRANSLATIONS += ../Translations/photivo_Deutsch.ts
+TRANSLATIONS += ../Translations/photivo_Italiano.ts
 
 ###############################################################################

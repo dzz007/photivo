@@ -61,6 +61,9 @@ public:
   // Destructor.
   ~ptMainWindow();
 
+  // Populate Translations combobox
+  void PopulateTranslationsCombobox(const QStringList UiLanguages, const int LangIdx);
+
   // Get the current active tab expressed in pt*Tab from Constants.h.
   // -1 on error.
   short GetCurrentTab();
@@ -83,8 +86,8 @@ public:
 
   // Moved tools
   void ShowActiveTools();
-void ShowAllTools();
-void ShowFavouriteTools();
+  void ShowAllTools();
+  void ShowFavouriteTools();
   void CleanUpMovedTools();
 
   // Set visible status for lensfun widgets
@@ -107,15 +110,15 @@ void ShowFavouriteTools();
   QTimer* m_ResizeTimer;
   // Event0 timer (create event at t=0)
   QTimer* m_Event0Timer;
-QTimer* m_SearchInputTimer;
+  QTimer* m_SearchInputTimer;
 
   // ToolBoxes
-QMap<QString, ptGroupBox*>* m_GroupBox;
-QList<QString>*             m_GroupBoxesOrdered;
-QList<QVBoxLayout*>*        m_TabLayouts;
-QList<ptGroupBox*>*         m_MovedTools;
-QIcon                       m_StatusIcon;
-QList<QWidget*>             m_ActiveTabs;
+  QMap<QString, ptGroupBox*>* m_GroupBox;
+  QList<QString>*             m_GroupBoxesOrdered;
+  QList<QVBoxLayout*>*        m_TabLayouts;
+  QList<ptGroupBox*>*         m_MovedTools;
+  QIcon                       m_StatusIcon;
+  QList<QWidget*>             m_ActiveTabs;
 
   // Desktop
   QDesktopWidget* m_DesktopWidget;
@@ -136,8 +139,8 @@ protected:
   void resizeEvent(QResizeEvent * Event);
   void keyPressEvent(QKeyEvent * Event);
   void wheelEvent(QWheelEvent * Event);
-void dragEnterEvent(QDragEnterEvent* Event);
-void dropEvent(QDropEvent* Event);
+  void dragEnterEvent(QDragEnterEvent* Event);
+  void dropEvent(QDropEvent* Event);
   bool eventFilter(QObject *obj, QEvent *event);
 
 
@@ -162,13 +165,20 @@ private :
   short    m_ContextMenuOnTab;
   QAction* m_AtnShowTools;
 
-ptVisibleToolsModel* m_VisibleToolsModel;
+  ptVisibleToolsModel* m_VisibleToolsModel;
 
   void AnalyzeToolBoxStructure();
-void ShowMovedTools(const QString Title);
-void InitVisibleTools();
+  void ShowMovedTools(const QString Title);
+  void InitVisibleTools();
 
-  private slots:
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// PRIVATE slots
+//
+////////////////////////////////////////////////////////////////////////////////
+
+private slots:
   void ResizeTimerExpired();
   void Event0TimerExpired();
   void SaveMenuPipe();
@@ -182,8 +192,9 @@ void InitVisibleTools();
   void MenuOpenPreset();
   void MenuOpenSettings();
   void ShowToolsOnTab();
-void StartSearchTimer(QString);
-void Search();
+  void StartSearchTimer(QString);
+  void Search();
+  void OnTranslationChoiceChanged(int idx);
 
   // The generic catchall input change.
   //~ void OnTagsEditTextChanged();
@@ -196,10 +207,10 @@ void Search();
 
   void OnPreviewModeButtonClicked();
 
-void OnSearchResetButtonClicked();
-void OnSearchActiveToolsButtonClicked();
-void OnSearchAllToolsButtonClicked();
-void OnSearchFavouriteToolsButtonClicked();
+  void OnSearchResetButtonClicked();
+  void OnSearchActiveToolsButtonClicked();
+  void OnSearchAllToolsButtonClicked();
+  void OnSearchFavouriteToolsButtonClicked();
 
   void OnRunButtonClicked();
   void OnResetButtonClicked();
@@ -282,9 +293,9 @@ void OnSearchFavouriteToolsButtonClicked();
   void OnWriteOutputButtonClicked();
   void OnWritePipeButtonClicked();
 
-void OnVisibleToolsDiscardButtonClicked();
-void OnVisibleToolsLoadButtonClicked();
-void OnVisibleToolsSaveButtonClicked();
+  void OnVisibleToolsDiscardButtonClicked();
+  void OnVisibleToolsLoadButtonClicked();
+  void OnVisibleToolsSaveButtonClicked();
 };
 
 #endif

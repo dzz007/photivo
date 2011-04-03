@@ -507,16 +507,25 @@ int photivoMain(int Argc, char *Argv[]) {
     }
   }
 
+
   // Load Translation
-  QTranslator qtTranslator;
-  if(TempSettings->value("Translation",0).toInt() == 1) {
-    appTranslator.load("photivo_" + QLocale::system().name(), UserDirectory + "Translations");
-    TheApplication->installTranslator(&appTranslator);
-    qtTranslator.load("qt_" + QLocale::system().name(), UserDirectory + "Translations");
-    TheApplication->installTranslator(&qtTranslator);
+  int TranslMode = TempSettings->value("TranslationMode",0).toInt();
+  QDir TranslDir(UserDirectory + "Translations");
+  QStringList UiLanguages = TranslDir.entryList(QStringList("photivo_*.qm"), QDir::Files|QDir::Readable, QDir::Name).replaceInStrings(".qm", "", Qt::CaseInsensitive);
+  UiLanguages.replaceInStrings("photivo_", "", Qt::CaseInsensitive);
+  int LangIdx = -1;
+
+  if (TranslMode == 1) {
+    LangIdx = UiLanguages.indexOf(TempSettings->value("UiLanguage","").toString());
+    if (LangIdx >= 0) {
+      QTranslator qtTranslator;
+      appTranslator.load("photivo_" + UiLanguages[LangIdx], UserDirectory + "Translations");
+      TheApplication->installTranslator(&appTranslator);
+      qtTranslator.load("qt_" + UiLanguages[LangIdx], UserDirectory + "Translations");
+      TheApplication->installTranslator(&qtTranslator);
+      printf("Enabled translation: \"%s\".\n", UiLanguages[LangIdx].toAscii().data());
+    }
   }
-  printf("Language '%s'; ",QLocale::system().name().toAscii().data());
-  printf("Translation enabled: %d\n",TempSettings->value("Translation",0).toInt());
 
   delete TempSettings;
 
@@ -601,6 +610,9 @@ int photivoMain(int Argc, char *Argv[]) {
 
   HistogramWindow =
     new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
+
+  // Populate Translations combobox
+  MainWindow->PopulateTranslationsCombobox(UiLanguages, LangIdx);
 
   // Theming
   CB_StyleChoice(Settings->GetInt("Style"));
@@ -2601,6 +2613,16 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     Settings->SetValue(Key,Tmp);
   }
 
+  // Crop from settings file takes precedence. If its AR does not match the fixed
+  // AR currently set in the UI, disable the fixed AR checkbox.
+  if ((Settings->GetInt("Crop") == 1) && (Settings->GetInt("FixedAspectRatio") == 1)) {
+    double CropARFromSettings = (double)Settings->GetInt("CropW") / Settings->GetInt("CropH");
+    double CropARFromUI = (double)Settings->GetInt("AspectRatioW") / Settings->GetInt("AspectRatioH");
+    if (qAbs(CropARFromSettings - CropARFromUI) > 0.01) {
+      Settings->SetValue("FixedAspectRatio", 0);
+    }
+  }
+
   // Hidden tools:
   // current hidden tools, stay hidden, unless they are needed for settings.
   QStringList CurrentHiddenTools = Settings->GetStringList("HiddenTools");
@@ -3683,11 +3705,6 @@ void CB_FullPipeConfirmationCheck(const QVariant Check) {
 
 void CB_WriteBackupSettingsCheck(const QVariant Check) {
   Settings->SetValue("WriteBackupSettings",Check);
-}
-
-void CB_TranslationCheck(const QVariant Check) {
-  Settings->SetValue("Translation",Check);
-  QMessageBox::information(0,QObject::tr("Please restart"),QObject::tr("Please restart Photivo to switch\n the language settings."));
 }
 
 void CB_MemoryTestInput(const QVariant Value) {
@@ -8782,8 +8799,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FullPipeConfirmationCheck)
 
   M_Dispatch(WriteBackupSettingsCheck)
-
-  M_Dispatch(TranslationCheck)
 
   M_Dispatch(MemoryTestInput)
 
