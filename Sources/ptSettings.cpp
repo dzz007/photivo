@@ -457,6 +457,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Interpolation"               ,ptGT_Choice       ,2,1,1 ,ptInterpolation_DCB         ,GuiOptions->Interpolation             ,tr("Demosaicing algorithm")},
     {"BayerDenoise"                ,ptGT_Choice       ,2,1,1 ,ptBayerDenoise_None         ,GuiOptions->BayerDenoise              ,tr("Denosie on Bayer pattern")},
     {"CropGuidelines"              ,ptGT_Choice       ,1,0,0 ,ptCropGuidelines_GoldenRatio,GuiOptions->CropGuidelines            ,tr("Guide lines for crop")},
+    {"LightsOut"                   ,ptGT_Choice       ,1,0,0 ,ptLightsOutMode_Dimmed      ,GuiOptions->LightsOutMode             ,tr("Dim areas outside the crop rectangle")},
     {"ClipMode"                    ,ptGT_Choice       ,1,1,1 ,ptClipMode_Blend            ,GuiOptions->ClipMode                  ,tr("How to handle clipping")},
     {"LfunCAModel"                 ,ptGT_Choice       ,2,1,1 ,ptLfunCAModel_None          ,GuiOptions->LfunCAModel               ,tr("Mathematical model for CA correction")},
     {"LfunVignetteModel"           ,ptGT_Choice       ,2,1,1 ,ptLfunVignetteModel_None    ,GuiOptions->LfunVignetteModel         ,tr("Mathematical model for vignetting correction")},

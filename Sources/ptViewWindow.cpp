@@ -66,7 +66,7 @@ ptViewWindow::ptViewWindow(const ptImage* RelatedImage,
   m_GridX            = 0;
   m_GridY            = 0;
   m_CropGuidelines   = 0;
-  m_CropLightsOut    = Settings->m_IniSettings->value("CropLightsOut",0).toInt();
+  m_CropLightsOut    = Settings->GetInt("LightsOut");
   m_FixedAspectRatio = 0;
   m_AspectRatio      = 0.0;
   m_AspectRatioW     = 0;
@@ -404,10 +404,11 @@ void ptViewWindow::setAspectRatio(const short FixedAspectRatio, uint AspectRatio
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void CB_LightsOutChoice(const QVariant Choice);
+
 void ptViewWindow::ToggleLightsOut() {
   m_CropLightsOut = (m_CropLightsOut+1)%3;
-  Settings->m_IniSettings->setValue("CropLightsOut",m_CropLightsOut);
-  viewport()->repaint();
+  ::CB_LightsOutChoice(m_CropLightsOut);
 }
 
 
@@ -745,10 +746,8 @@ void ptViewWindow::RecalcRect() {
   }
 
   if (m_FixedAspectRatio) {
-    EnforceRectAspectRatio();
+    EnforceRectAspectRatio(dx, dy);
   }
-
-//  UpdateViewportRects();
 }
 
 
@@ -846,7 +845,9 @@ void ptViewWindow::UpdateViewportRects() {
 //
 ////////////////////////////////////////////////////////////////////////
 
-void ptViewWindow::EnforceRectAspectRatio() {
+void ptViewWindow::EnforceRectAspectRatio(int dx, int dy) {
+  dx = qAbs(dx);
+  dy = qAbs(dy);
   int ImageRight = m_QImage->width() - 1;
   int ImageBottom = m_QImage->height() - 1;
   int NewWidth = qRound(m_PipeSizeRect->height() * m_AspectRatio);
@@ -855,10 +856,18 @@ void ptViewWindow::EnforceRectAspectRatio() {
 
   switch (m_MovingEdge){
     case meTopLeft:
-      m_PipeSizeRect->setTop(m_PipeSizeRect->top() + m_PipeSizeRect->height() - NewHeight);
-      if (m_PipeSizeRect->top() < 0) {
-        m_PipeSizeRect->setTop(0);
-        m_PipeSizeRect->setLeft(m_PipeSizeRect->right() - qRound(m_PipeSizeRect->height() * m_AspectRatio));
+      if (dx > dy) {  // primarily horizontal mouse movement: new width takes precedence
+        m_PipeSizeRect->setTop(m_PipeSizeRect->top() + m_PipeSizeRect->height() - NewHeight);
+        if (m_PipeSizeRect->top() < 0) {
+          m_PipeSizeRect->setTop(0);
+          m_PipeSizeRect->setLeft(m_PipeSizeRect->right() - qRound(m_PipeSizeRect->height() * m_AspectRatio));
+        }
+      } else {  // primarily vertical mouse movement: new height takes precedence
+        m_PipeSizeRect->setLeft(m_PipeSizeRect->left() + m_PipeSizeRect->width() - NewWidth);
+        if (m_PipeSizeRect->left() < 0) {
+          m_PipeSizeRect->setLeft(0);
+          m_PipeSizeRect->setTop(m_PipeSizeRect->bottom() - qRound(m_PipeSizeRect->width() / m_AspectRatio));
+        }
       }
       break;
 
@@ -877,10 +886,18 @@ void ptViewWindow::EnforceRectAspectRatio() {
       break;
 
     case meTopRight:
-      m_PipeSizeRect->setTop(m_PipeSizeRect->top() + m_PipeSizeRect->height() - NewHeight);
-      if (m_PipeSizeRect->top() < 0) {
-        m_PipeSizeRect->setTop(0);
-        m_PipeSizeRect->setRight(m_PipeSizeRect->left() + qRound(m_PipeSizeRect->height() * m_AspectRatio));
+      if (dx > dy) {
+        m_PipeSizeRect->setTop(m_PipeSizeRect->top() + m_PipeSizeRect->height() - NewHeight);
+        if (m_PipeSizeRect->top() < 0) {
+          m_PipeSizeRect->setTop(0);
+          m_PipeSizeRect->setRight(m_PipeSizeRect->left() + qRound(m_PipeSizeRect->height() * m_AspectRatio));
+        }
+      } else {
+        m_PipeSizeRect->setWidth(NewWidth);
+        if (m_PipeSizeRect->right() > ImageRight) {
+          m_PipeSizeRect->setRight(ImageRight);
+          m_PipeSizeRect->setTop(m_PipeSizeRect->bottom() - qRound(m_PipeSizeRect->width() / m_AspectRatio));
+        }
       }
       break;
 
@@ -899,10 +916,18 @@ void ptViewWindow::EnforceRectAspectRatio() {
       break;
 
     case meBottomRight:
-      m_PipeSizeRect->setBottom(m_PipeSizeRect->bottom() + NewHeight - m_PipeSizeRect->height());
-      if (m_PipeSizeRect->bottom() > ImageBottom) {
-        m_PipeSizeRect->setBottom(ImageBottom);
-        m_PipeSizeRect->setRight(m_PipeSizeRect->left() + qRound(m_PipeSizeRect->height() * m_AspectRatio));
+      if (dx > dy) {
+        m_PipeSizeRect->setBottom(m_PipeSizeRect->bottom() + NewHeight - m_PipeSizeRect->height());
+        if (m_PipeSizeRect->bottom() > ImageBottom) {
+          m_PipeSizeRect->setBottom(ImageBottom);
+          m_PipeSizeRect->setRight(m_PipeSizeRect->left() + qRound(m_PipeSizeRect->height() * m_AspectRatio));
+        }
+      } else {
+        m_PipeSizeRect->setWidth(NewWidth);
+        if (m_PipeSizeRect->right() > ImageRight) {
+          m_PipeSizeRect->setRight(ImageRight);
+          m_PipeSizeRect->setTop(m_PipeSizeRect->bottom() - qRound(m_PipeSizeRect->width() / m_AspectRatio));
+        }
       }
       break;
 
@@ -921,10 +946,18 @@ void ptViewWindow::EnforceRectAspectRatio() {
       break;
 
     case meBottomLeft:
-      m_PipeSizeRect->setBottom(m_PipeSizeRect->bottom() + NewHeight - m_PipeSizeRect->height());
-      if (m_PipeSizeRect->bottom() > ImageBottom) {
-        m_PipeSizeRect->setBottom(ImageBottom);
-        m_PipeSizeRect->setLeft(m_PipeSizeRect->right() - qRound(m_PipeSizeRect->height() * m_AspectRatio));
+      if (dx > dy) {
+        m_PipeSizeRect->setBottom(m_PipeSizeRect->bottom() + NewHeight - m_PipeSizeRect->height());
+        if (m_PipeSizeRect->bottom() > ImageBottom) {
+          m_PipeSizeRect->setBottom(ImageBottom);
+          m_PipeSizeRect->setLeft(m_PipeSizeRect->right() - qRound(m_PipeSizeRect->height() * m_AspectRatio));
+        }
+      } else {
+        m_PipeSizeRect->setLeft(m_PipeSizeRect->left() + m_PipeSizeRect->width() - NewWidth);
+        if (m_PipeSizeRect->left() < 0) {
+          m_PipeSizeRect->setLeft(0);
+          m_PipeSizeRect->setTop(m_PipeSizeRect->bottom() - qRound(m_PipeSizeRect->width() / m_AspectRatio));
+        }
       }
       break;
 
