@@ -4851,6 +4851,12 @@ void CB_CropGuidelinesChoice(const QVariant Choice) {
   ViewWindow->setCropGuidelines(Choice.toInt());
 }
 
+void CB_LightsOutChoice(const QVariant Choice) {
+  Settings->SetValue("LightsOut",Choice);
+  ViewWindow->m_CropLightsOut = Choice.toInt();
+  ViewWindow->viewport()->repaint();
+}
+
 
 // Prepare and start image crop interaction
 void CB_MakeCropButton() {
@@ -8894,6 +8900,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FlipModeChoice)
   M_Dispatch(CropCheck)
   M_Dispatch(CropGuidelinesChoice)
+  M_Dispatch(LightsOutChoice)
   M_Dispatch(FixedAspectRatioCheck)
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)

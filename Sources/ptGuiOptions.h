@@ -66,6 +66,7 @@ public:
   static const ptGuiOptionsItem LfunDistModel[];
 
   static const ptGuiOptionsItem CropGuidelines[];
+  static const ptGuiOptionsItem LightsOutMode[];
   static const ptGuiOptionsItem ResizeFilter[];
   static const ptGuiOptionsItem IMResizeFilter[];
   static const ptGuiOptionsItem WhiteBalance[];

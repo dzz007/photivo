@@ -124,6 +124,8 @@ public:
   void StatusReport(const short State);
   void StatusReport(const QString Text);
 
+  short       m_CropLightsOut;
+
   QAction*    m_AtnFullScreen;
 
 
@@ -163,7 +165,7 @@ private:
   // methods
   void          RecalcCut();
   void          RecalcRect();
-  void          EnforceRectAspectRatio();   // force fixed AR for a crop rectangle
+  void          EnforceRectAspectRatio(int dx = 0, int dy = 0);   // force fixed AR for a crop rectangle
   ptMovingEdge  MouseDragPos(QMouseEvent* Event);
   void          ContextMenu(QEvent* Event);
   void          FinalizeAction();
@@ -197,7 +199,6 @@ private:
   uint        m_AspectRatioH;
   double      m_AspectRatio;        //  m_AspectRatioW / m_AspectRatioH
   short       m_CropGuidelines;
-  short       m_CropLightsOut;
   double      m_ZoomFactor;
   double      m_PreviousZoomFactor;
   uint16_t    m_ZoomWidth;
