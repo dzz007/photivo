@@ -29,19 +29,29 @@
 #endif
 
 
-ptImage* ptImage::LiquidRescale(const double HorScale,
-                                const double VertScale,
-                                const short Energy) {
-  uint16_t NewWidth = m_Width * HorScale;
-  uint16_t NewHeight = m_Height * VertScale;
+ptImage* ptImage::LiquidRescaleRelative(const double HorScale,
+                                        const double VertScale,
+                                        const short Energy,
+                                        const short VertFirst) {
+
+  uint16_t Width = m_Width * HorScale;
+  uint16_t Height = m_Height * VertScale;
+
+  LiquidRescale(Width, Height, Energy, VertFirst);
+
+  return this;
+}
+
+ptImage* ptImage::LiquidRescale(const uint16_t Width,
+                                const uint16_t Height,
+                                const short Energy,
+                                const short VertFirst) {
 
   LqrCarver* carver = lqr_carver_new_ext((void*) m_Image,
                                          m_Width,
                                          m_Height,
                                          3, // channels
                                          LQR_COLDEPTH_16I);
-
-  // lqr_carver_set_preserve_input_image(carver);
 
   switch(Energy) {
     case ptLqr_GradXabs:
@@ -66,12 +76,19 @@ ptImage* ptImage::LiquidRescale(const double HorScale,
       assert(0);
   }
 
+  lqr_carver_set_side_switch_frequency(carver, 10);
+
+  if (VertFirst == 1) {
+    lqr_carver_set_resize_order(carver,LQR_RES_ORDER_VERT);
+    // otherwise horizontal is default
+  }
+
   lqr_carver_init(carver,1,0.0);
 
-  lqr_carver_resize(carver, NewWidth, NewHeight);
+  lqr_carver_resize(carver, Width, Height);
 
   // old m_Image will be freed by lqr
-  m_Image = (uint16_t (*)[3]) CALLOC(NewWidth*NewHeight,sizeof(*m_Image));
+  m_Image = (uint16_t (*)[3]) CALLOC(Width*Height,sizeof(*m_Image));
   ptMemoryError(m_Image,__FILE__,__LINE__);
 
   int Row, Col;
@@ -80,19 +97,13 @@ ptImage* ptImage::LiquidRescale(const double HorScale,
 
   while (lqr_carver_scan_ext (carver, &Col, &Row, &rgb)) {
     rgb_out = (uint16_t*) rgb;
-    m_Image[Row*NewWidth+Col][0] = rgb_out[0];
-    m_Image[Row*NewWidth+Col][1] = rgb_out[1];
-    m_Image[Row*NewWidth+Col][2] = rgb_out[2];
+    m_Image[Row*Width+Col][0] = rgb_out[0];
+    m_Image[Row*Width+Col][1] = rgb_out[1];
+    m_Image[Row*Width+Col][2] = rgb_out[2];
   }
 
-  //~ for (uint16_t Row=0; Row<NewHeight; Row++) {
-    //~ for (uint16_t Col=0; Col<NewWidth; Col++) {
-
-    //~ }
-  //~ }
-
-  m_Width = NewWidth;
-  m_Height = NewHeight;
+  m_Width = Width;
+  m_Height = Height;
 
   lqr_carver_destroy(carver);
 

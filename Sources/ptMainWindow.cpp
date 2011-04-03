@@ -616,6 +616,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateLfunDistUI();
   UpdateLfunCAUI();
   UpdateLfunVignetteUI();
+  UpdateLiquidRescaleUI();
   InitVisibleTools();
 }
 
@@ -2127,6 +2128,8 @@ void ptMainWindow::UpdateSettings() {
   else
     Settings->SetEnabled("InterpolationPasses",0);
 
+
+
   //~ // Resize
   //~ Settings->SetMaximum("ResizeW",Settings->GetInt("CropW"));
   //~ Settings->SetMaximum("ResizeH",Settings->GetInt("CropH"));
@@ -2909,6 +2912,18 @@ void ptMainWindow::UpdateLfunVignetteUI() {
   LfunVignettePoly6Container->setVisible(VignetteModel == ptLfunVignetteModel_Poly6);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// Update liquid rescale UI elements
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::UpdateLiquidRescaleUI() {
+  short Scaling = Settings->GetInt("LqrScaling");
+  LqrHorScaleWidget->setVisible(Scaling == ptLqr_ScaleRelative);
+  LqrVertScaleWidget->setVisible(Scaling == ptLqr_ScaleRelative);
+  LqrWHContainter->setVisible(Scaling == ptLqr_ScaleAbsolute);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //

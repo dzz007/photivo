@@ -2251,10 +2251,47 @@
                                    <widget class="QWidget" name="LqrEnergyWidget" native="true"/>
                                   </item>
                                   <item>
+                                   <widget class="QWidget" name="LqrScalingWidget" native="true"/>
+                                  </item>
+                                  <item>
                                    <widget class="QWidget" name="LqrHorScaleWidget" native="true"/>
                                   </item>
                                   <item>
                                    <widget class="QWidget" name="LqrVertScaleWidget" native="true"/>
+                                  </item>
+                                  <item>
+                                   <widget class="QWidget" name="LqrWHContainter" native="true">
+                                    <layout class="QHBoxLayout" name="horizontalLayout_64">
+                                     <property name="sizeConstraint">
+                                      <enum>QLayout::SetFixedSize</enum>
+                                     </property>
+                                     <property name="margin">
+                                      <number>0</number>
+                                     </property>
+                                     <item>
+                                      <widget class="QWidget" name="LqrWidthWidget" native="true"/>
+                                     </item>
+                                     <item>
+                                      <widget class="QWidget" name="LqrHeightWidget" native="true"/>
+                                     </item>
+                                     <item>
+                                      <spacer name="horizontalSpacer_60">
+                                       <property name="orientation">
+                                        <enum>Qt::Horizontal</enum>
+                                       </property>
+                                       <property name="sizeHint" stdset="0">
+                                        <size>
+                                         <width>10</width>
+                                         <height>20</height>
+                                        </size>
+                                       </property>
+                                      </spacer>
+                                     </item>
+                                    </layout>
+                                   </widget>
+                                  </item>
+                                  <item>
+                                   <widget class="QWidget" name="LqrVertFirstWidget" native="true"/>
                                   </item>
                                  </layout>
                                 </widget>

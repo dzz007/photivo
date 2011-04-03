@@ -190,12 +190,18 @@ const ptGuiOptionsItem ptGuiOptions::IMResizeFilter[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::LqrEnergy[] = {
+  {ptLqr_Disabled,                QObject::tr("Disabled") },
   {ptLqr_GradXabs,                QObject::tr("Directional grad brightness") },
   {ptLqr_GradSumabs,              QObject::tr("Average grad brightness") },
   {ptLqr_GradNorm,                QObject::tr("Norm brightness") },
   {ptLqr_LumaGradXabs,            QObject::tr("Directional grad luminance") },
   {ptLqr_LumaGradSumabs,          QObject::tr("Average grad luminance") },
   {ptLqr_LumaGradNorm,            QObject::tr("Norm luminance") },
+  {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::LqrScaling[] = {
+  {ptLqr_ScaleRelative,           QObject::tr("Relative") },
+  {ptLqr_ScaleAbsolute,           QObject::tr("Absolute") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::WhiteBalance[] = {
