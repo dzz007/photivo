@@ -4998,18 +4998,44 @@ void CB_CropCheck(const QVariant State) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void CB_LqrEnergyChoice(const QVariant Choice) {
+  Settings->SetValue("LqrEnergy",Choice);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LqrScalingChoice(const QVariant Choice) {
+  Settings->SetValue("LqrScaling",Choice);
+  MainWindow->UpdateLiquidRescaleUI();
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
+}
+
 void CB_LqrHorScaleInput(const QVariant Value) {
   Settings->SetValue("LqrHorScale",Value);
-  Update(ptProcessorPhase_Geometry);
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
 }
 
 void CB_LqrVertScaleInput(const QVariant Value) {
   Settings->SetValue("LqrVertScale",Value);
-  Update(ptProcessorPhase_Geometry);
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
 }
 
-void CB_LqrEnergyChoice(const QVariant Choice) {
-  Settings->SetValue("LqrEnergy",Choice);
+void CB_LqrWidthInput(const QVariant Value) {
+  Settings->SetValue("LqrWidth",Value);
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LqrHeightInput(const QVariant Value) {
+  Settings->SetValue("LqrHeight",Value);
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LqrVertFirstCheck(const QVariant Check) {
+  Settings->SetValue("LqrVertFirst",Check);
   if (Settings->ToolIsActive("TabLiquidRescale"))
     Update(ptProcessorPhase_Geometry);
 }
@@ -8908,9 +8934,13 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)
 
+  M_Dispatch(LqrEnergyChoice)
+  M_Dispatch(LqrScalingChoice)
   M_Dispatch(LqrHorScaleInput)
   M_Dispatch(LqrVertScaleInput)
-  M_Dispatch(LqrEnergyChoice)
+  M_Dispatch(LqrWidthInput)
+  M_Dispatch(LqrHeightInput)
+  M_Dispatch(LqrVertFirstCheck)
 
   M_Dispatch(ResizeCheck)
   M_Dispatch(ResizeScaleInput)

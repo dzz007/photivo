@@ -661,10 +661,17 @@ void ptProcessor::Run(short Phase,
       if (Settings->ToolIsActive("TabLiquidRescale")) {
         m_ReportProgress(tr("Seam carving"));
 
-        m_Image_AfterGeometry->LiquidRescale(Settings->GetDouble("LqrHorScale"),
-                                             Settings->GetDouble("LqrVertScale"),
-                                             Settings->GetInt("LqrEnergy"));
-
+        if (Settings->GetInt("LqrScaling") == ptLqr_ScaleRelative) {
+          m_Image_AfterGeometry->LiquidRescaleRelative(Settings->GetDouble("LqrHorScale"),
+                                                       Settings->GetDouble("LqrVertScale"),
+                                                       Settings->GetInt("LqrEnergy"),
+                                                       Settings->GetInt("LqrVertFirst"));
+        } else if (Settings->GetInt("LqrScaling") == ptLqr_ScaleAbsolute) {
+          m_Image_AfterGeometry->LiquidRescale(Settings->GetInt("LqrWidth"),
+                                               Settings->GetInt("LqrHeight"),
+                                               Settings->GetInt("LqrEnergy"),
+                                               Settings->GetInt("LqrVertFirst"));
+        }
         TRACEMAIN("Done seam carving at %d ms.",Timer.elapsed());
       }
 

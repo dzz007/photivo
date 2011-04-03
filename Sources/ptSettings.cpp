@@ -73,7 +73,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"MedianPasses"                  ,ptGT_Input           ,2,1,1 ,0    ,0    ,10     ,1    ,0 ,tr("Median passes")      ,tr("Nr of median filter passes")},
     {"ESMedianPasses"                ,ptGT_Input           ,2,1,1 ,0    ,0    ,10     ,1    ,0 ,tr("Edge sensitive median passes")      ,tr("Nr of edge sensitive median filter passes")},
     {"ClipParameter"                 ,ptGT_InputSlider     ,1,1,1 ,0    ,0    ,100   ,1    ,0 ,tr("Parameter")          ,tr("Clip function dependent parameter")},
-
     {"LfunFocal"                     ,ptGT_Input           ,2,1,1 ,50.0 ,4.0  ,1000.0,1.0  ,0 ,tr("Focal length (35mm equiv.)"), tr("Focal length (35mm equiv.)")},
     {"LfunAperture"                  ,ptGT_Input           ,2,1,1 ,8.0  ,0.8  ,32.0  ,1.0  ,1 ,tr("Aperture"), tr("")},
     {"LfunDistance"                  ,ptGT_Input           ,2,1,1 ,1.0  ,0.01 ,500.0 ,1.0  ,2 ,tr("Distance"), tr("Distance between object and camera")},
@@ -108,6 +107,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GridY"                         ,ptGT_Input           ,1,0,0 ,5    ,0    ,20    ,1    ,0 ,tr("Y")                  ,tr("Horizontal lines")},
     {"LqrHorScale"                   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.2  ,2.0   ,0.02 ,3 ,tr("Scale horizontal")   ,tr("Scale horizontal")},
     {"LqrVertScale"                  ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.2  ,2.0   ,0.02 ,3 ,tr("Scale vertical")     ,tr("Scale vertical")},
+    {"LqrWidth"                      ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Width")              ,tr("Width")},
+    {"LqrHeight"                     ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Height")},
     {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Size")               ,tr("Image size")},
     {"LevelsBlackPoint"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.002,3 ,tr("Blackpoint")         ,tr("Levels Blackpoint")},
     {"LevelsWhitePoint"              ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.002,3 ,tr("Whitepoint")         ,tr("Levels Whitepoint")},
@@ -464,7 +465,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LfunSrcGeo"                  ,ptGT_Choice       ,2,1,1 ,ptLfunGeo_Unknown           ,GuiOptions->LfunGeo                   ,tr("Geometry of the lens the image was taken with")},
     {"LfunTargetGeo"               ,ptGT_Choice       ,2,1,1 ,ptLfunGeo_Unknown           ,GuiOptions->LfunGeo                   ,tr("Convert image to this lens geometry")},
     {"LfunDistModel"               ,ptGT_Choice       ,2,1,1 ,ptLfunDistModel_None        ,GuiOptions->LfunDistModel             ,tr("Mathematical distortion model to apply to the image")},
-    {"LqrEnergy"                   ,ptGT_Choice       ,1,1,1 ,ptLqr_GradXabs              ,GuiOptions->LqrEnergy                 ,tr("Energy method for liquid rescale")},
+    {"LqrEnergy"                   ,ptGT_Choice       ,2,1,1 ,ptLqr_Disabled              ,GuiOptions->LqrEnergy                 ,tr("Energy method for liquid rescale")},
+    {"LqrScaling"                  ,ptGT_Choice       ,1,1,1 ,ptLqr_ScaleRelative         ,GuiOptions->LqrScaling                ,tr("Scaling method for liquid rescale")},
     {"ResizeFilter"                ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Mitchell         ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatioW              ,tr("Aspect width")},
@@ -550,6 +552,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Grid"                       ,ptGT_Check ,9,1,0,tr("Grid")            ,tr("Enable the overlay grid")},
     {"Crop"                       ,ptGT_Check ,9,1,0,tr("Crop")            ,tr("Enable to make a crop")},
     {"FixedAspectRatio"           ,ptGT_Check ,1,0,0,tr("Aspect Ratio")    ,tr("Crop with a fixed aspect ratio")},
+    {"LqrVertFirst"               ,ptGT_Check ,2,1,0,tr("Vertical first")  ,tr("Resizing starts with vertical direction")},
     {"Resize"                     ,ptGT_Check ,9,1,0,tr("Resize")          ,tr("Enable resize")},
     {"AutomaticPipeSize"          ,ptGT_Check ,1,1,0,tr("Automatic pipe size") ,tr("Automatic pipe size")},
     {"GeometryBlock"              ,ptGT_Check ,9,0,0,tr("Block pipe")      ,tr("Disable the pipe")},
@@ -1592,8 +1595,7 @@ sToolInfo ToolInfo (const QString GuiName) {
                        Settings->GetDouble("PerspectiveScaleY")!=1.0f)?1:0;
   } else if (GuiName == "TabLiquidRescale") {
       Info.Name = "Seam carving";
-      Info.IsActive = (Settings->GetDouble("LqrHorScale") != 1.0f ||
-                       Settings->GetDouble("LqrVertScale") != 1.0)?1:0;
+      Info.IsActive = Settings->GetInt("LqrEnergy");
   } else if (GuiName == "TabCrop") {
       Info.Name = "Crop";
       Info.IsActive = Settings->GetInt("Crop");
