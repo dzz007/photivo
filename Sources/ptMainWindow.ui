@@ -303,7 +303,7 @@
                   <enum>Qt::NoFocus</enum>
                  </property>
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>3</number>
                  </property>
                  <widget class="QWidget" name="TabProcessing">
                   <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -1331,8 +1331,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>737</width>
-                                <height>286</height>
+                                <width>86</width>
+                                <height>183</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -1744,8 +1744,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>737</width>
-                                <height>286</height>
+                                <width>83</width>
+                                <height>84</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9608,8 +9608,8 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>87</width>
-                        <height>195</height>
+                        <width>783</width>
+                        <height>611</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_236">
@@ -9623,8 +9623,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>294</width>
-                            <height>105</height>
+                            <width>765</width>
+                            <height>485</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10375,8 +10375,8 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>63</width>
-                        <height>18</height>
+                        <width>783</width>
+                        <height>576</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_248"/>
@@ -10409,8 +10409,8 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>87</width>
-                        <height>546</height>
+                        <width>785</width>
+                        <height>613</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_143">
@@ -10426,7 +10426,7 @@
                           <enum>QFrame::NoFrame</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>2</number>
+                          <number>15</number>
                          </property>
                          <property name="tabSpacing">
                           <number>6</number>
@@ -10575,7 +10575,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>119</width>
+                            <width>750</width>
                             <height>364</height>
                            </rect>
                           </property>
@@ -11458,8 +11458,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
-                            <height>52</height>
+                            <width>767</width>
+                            <height>136</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -11470,7 +11470,49 @@
                             <widget class="QWidget" name="widget_107" native="true">
                              <layout class="QVBoxLayout" name="verticalLayout_197">
                               <item>
-                               <widget class="QWidget" name="TranslationWidget" native="true"/>
+                               <widget class="QWidget" name="TranslationWidget" native="true">
+                                <layout class="QHBoxLayout" name="horizontalLayout_62">
+                                 <property name="margin">
+                                  <number>0</number>
+                                 </property>
+                                 <item>
+                                  <widget class="QComboBox" name="TranslationChoice">
+                                   <property name="focusPolicy">
+                                    <enum>Qt::ClickFocus</enum>
+                                   </property>
+                                   <property name="toolTip">
+                                    <string>Switch Photivo's language</string>
+                                   </property>
+                                   <property name="maxVisibleItems">
+                                    <number>24</number>
+                                   </property>
+                                   <property name="sizeAdjustPolicy">
+                                    <enum>QComboBox::AdjustToContents</enum>
+                                   </property>
+                                  </widget>
+                                 </item>
+                                 <item>
+                                  <spacer name="horizontalSpacer_59">
+                                   <property name="orientation">
+                                    <enum>Qt::Horizontal</enum>
+                                   </property>
+                                   <property name="sizeHint" stdset="0">
+                                    <size>
+                                     <width>10</width>
+                                     <height>5</height>
+                                    </size>
+                                   </property>
+                                  </spacer>
+                                 </item>
+                                </layout>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLabel" name="TranslationLabel">
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
                               </item>
                              </layout>
                             </widget>

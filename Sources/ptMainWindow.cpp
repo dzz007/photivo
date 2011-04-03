@@ -619,6 +619,28 @@ void ptMainWindow::Event0TimerExpired() {
   ::CB_Event0();
 }
 
+// Setup the UI language combobox. Only done once after constructing MainWindow.
+// The languages combobox is a regular QComboBox because its dynamic content (depends on
+// available translation files) doesn’t fit the logic of ptChoice (static, pre-defined lists).
+void ptMainWindow::PopulateTranslationsCombobox(const QStringList UiLanguages, const int LangIdx) {
+  TranslationChoice->setFixedHeight(24);
+  TranslationChoice->addItem(tr("English (Default)"));
+  TranslationChoice->addItems(UiLanguages);
+  TranslationChoice->setCurrentIndex(LangIdx==-1 ? 0 : LangIdx+1);
+  connect(TranslationChoice, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTranslationChoiceChanged(int)));
+}
+
+void ptMainWindow::OnTranslationChoiceChanged(int idx) {
+  TranslationLabel->setText(tr("Restart Photivo to change the language."));
+  if (idx == 0) {   // no translation
+    Settings->SetValue("TranslationMode", 0);
+    Settings->SetValue("UiLanguage", "");
+  } else {
+    Settings->SetValue("TranslationMode", 1);
+    Settings->SetValue("UiLanguage", TranslationChoice->itemText(idx));
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Event filter
