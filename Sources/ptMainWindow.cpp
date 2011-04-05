@@ -343,7 +343,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TODO BJ: Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
-  LfunFocalAdjustWidget->setVisible(false);
 
   Macro_ConnectSomeButton(RotateLeft);
   Macro_ConnectSomeButton(RotateRight);
@@ -517,10 +516,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   // Character replacements are hacks to avoid problems with make and stringify
   // and certain special characters.
   QString Temp(TOSTRING(APPVERSION));
-  Temp.replace("_"," ");
-  Temp.replace("!","(");
-  Temp.replace("@","");
-  Temp.append(")");
   AppVersionLabel->setText(Temp);
   AppVersion2Label->setText(Temp);
 
@@ -623,6 +618,28 @@ ptMainWindow::ptMainWindow(const QString Title)
 void CB_Event0();
 void ptMainWindow::Event0TimerExpired() {
   ::CB_Event0();
+}
+
+// Setup the UI language combobox. Only done once after constructing MainWindow.
+// The languages combobox is a regular QComboBox because its dynamic content (depends on
+// available translation files) doesn’t fit the logic of ptChoice (static, pre-defined lists).
+void ptMainWindow::PopulateTranslationsCombobox(const QStringList UiLanguages, const int LangIdx) {
+  TranslationChoice->setFixedHeight(24);
+  TranslationChoice->addItem(tr("English (Default)"));
+  TranslationChoice->addItems(UiLanguages);
+  TranslationChoice->setCurrentIndex(LangIdx==-1 ? 0 : LangIdx+1);
+  connect(TranslationChoice, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTranslationChoiceChanged(int)));
+}
+
+void ptMainWindow::OnTranslationChoiceChanged(int idx) {
+  TranslationLabel->setText(tr("Restart Photivo to change the language."));
+  if (idx == 0) {   // no translation
+    Settings->SetValue("TranslationMode", 0);
+    Settings->SetValue("UiLanguage", "");
+  } else {
+    Settings->SetValue("TranslationMode", 1);
+    Settings->SetValue("UiLanguage", TranslationChoice->itemText(idx));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1913,8 +1930,10 @@ void ptMainWindow::UpdateToolBoxes() {
 
   // disable tools when we are in detail view
   QList<ptGroupBox *> m_DetailViewTools;
-  m_DetailViewTools << m_GroupBox->value("TabLensfunCAVignette")
-                    << m_GroupBox->value("TabLensfunLens")
+  m_DetailViewTools << m_GroupBox->value("TabLensfunCA")
+                    << m_GroupBox->value("TabLensfunVignette")
+                    << m_GroupBox->value("TabLensfunDistortion")
+                    << m_GroupBox->value("TabLensfunGeometry")
                     << m_GroupBox->value("TabDefish")
                     << m_GroupBox->value("TabCrop")
                     << m_GroupBox->value("TabLiquidRescale")

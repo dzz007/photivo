@@ -156,6 +156,12 @@ const ptGuiOptionsItem ptGuiOptions::CropGuidelines[] = {
   {ptCropGuidelines_Centerlines,  QObject::tr("Center lines") },
   {-1,NULL}};
 
+const ptGuiOptionsItem ptGuiOptions::LightsOutMode[] = {
+  {ptLightsOutMode_None,    QObject::tr("None") },
+  {ptLightsOutMode_Dimmed,  QObject::tr("Dimmed") },
+  {ptLightsOutMode_Black,   QObject::tr("Black") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::ResizeFilter[] = {
   {ptResizeFilter_Box,              QObject::tr("Box filter") },
   {ptResizeFilter_Triangle,         QObject::tr("Triangle filter") },

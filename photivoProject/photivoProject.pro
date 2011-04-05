@@ -4,6 +4,7 @@
 ##
 ## Copyright (C) 2008,2009 Jos De Laender
 ## Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+## Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
 ##
 ## This file is part of photivo.
 ##
@@ -36,6 +37,14 @@ CONFIG += release silent
 TEMPLATE = app
 TARGET = photivo
 DEPENDPATH += .
+
+unix {
+  DESTDIR = ..
+  OBJECTS_DIR = ../Objects
+  MOC_DIR = ../Objects
+  UI_HEADERS_DIR = ../Objects
+  RCC_DIR = ../Objects
+}
 win32 {
   BUILDDIR = $$system(cat ../builddir)
   DESTDIR = ../$${BUILDDIR}
@@ -44,13 +53,6 @@ win32 {
   UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
   RCC_DIR = ../$${BUILDDIR}/Objects
 }
-unix {
-  DESTDIR = ..
-  OBJECTS_DIR = ../Objects
-  MOC_DIR = ../Objects
-  UI_HEADERS_DIR = ../Objects
-  RCC_DIR = ../Objects
-}
 # Stuff for liquid rescale
 QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)
 QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
@@ -58,29 +60,20 @@ QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)
 QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
 LIBS += $$system(pkg-config --libs-only-l lqr-1)
 
-QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP
-QMAKE_CXXFLAGS_DEBUG += -ffast-math -O0 -g
-QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp
-QMAKE_CXXFLAGS_RELEASE += -ffast-math
-QMAKE_CXXFLAGS_RELEASE += -DDLRAW_HAVE_GIMP
-QMAKE_CFLAGS_DEBUG += -DDLRAW_HAVE_GIMP
-QMAKE_CFLAGS_DEBUG += -ffast-math -O0 -g
-QMAKE_CFLAGS_RELEASE += -O3 -fopenmp
-QMAKE_CFLAGS_RELEASE += -ffast-math
-QMAKE_CFLAGS_RELEASE += -DDLRAW_HAVE_GIMP
-QMAKE_LFLAGS_RELEASE += -fopenmp
+QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP -ffast-math -O0 -g
+QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp -ffast-math -DDLRAW_HAVE_GIMP
+QMAKE_CFLAGS_DEBUG += -ffast-math -O0 -g -DDLRAW_HAVE_GIMP
+QMAKE_CFLAGS_RELEASE += -O3 -fopenmp -ffast-math -DDLRAW_HAVE_GIMP -fopenmp
 QMAKE_LFLAGS_DEBUG += -rdynamic
-LIBS += -ljpeg -llcms2 -lexiv2 -lfftw3
-# LIBS += -lMagick++ -lMagickWand -lMagickCore
-LIBS += -llensfun
-LIBS += -lgomp -lpthread
 
 APPVERSION = $$system(sh ./get_appversion)
 !build_pass:message("Photivo $${APPVERSION}")
-QMAKE_CXXFLAGS_DEBUG += -DAPPVERSION=$${APPVERSION}
-QMAKE_CXXFLAGS_RELEASE += -DAPPVERSION=$${APPVERSION}
-QMAKE_CFLAGS_DEBUG += -DAPPVERSION=$${APPVERSION}
-QMAKE_CFLAGS_RELEASE += -DAPPVERSION=$${APPVERSION}
+QMAKE_CXXFLAGS_DEBUG += -DAPPVERSION=\'$${APPVERSION}\'
+QMAKE_CXXFLAGS_RELEASE += -DAPPVERSION=\'$${APPVERSION}\'
+QMAKE_CFLAGS_DEBUG += -DAPPVERSION=\'$${APPVERSION}\'
+QMAKE_CFLAGS_RELEASE += -DAPPVERSION=\'$${APPVERSION}\'
+
+LIBS += -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
 unix {
   CONFIG += link_pkgconfig
@@ -96,9 +89,14 @@ unix {
   QMAKE_POST_LINK=strip $(TARGET)
 }
 win32 {
+  QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE += $$(CXXFLAGS)
+  QMAKE_CFLAGS_DEBUG += $$(CFLAGS)
+  QMAKE_CFLAGS_RELEASE += $$(CFLAGS)
+  QMAKE_LFLAGS_DEBUG += $$(LDFLAGS)
+  QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
   LIBS += -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick
   LIBS += -lwsock32 -lexpat -lregex -lgdi32 -liconv
-  INCLUDEPATH += /mingw/include/GraphicsMagick
   RC_FILE = photivo.rc
 #  CONFIG += console
 }
@@ -234,7 +232,7 @@ SOURCES += ../Sources/rawtherapee/cfa_line_dn.c
 SOURCES += ../Sources/rawtherapee/ca_correct.c
 SOURCES += ../Sources/rawtherapee/green_equil.c
 RESOURCES = ../photivo.qrc
-TRANSLATIONS += ../Translations/photivo_de.ts
-TRANSLATIONS += ../Translations/photivo_it.ts
+TRANSLATIONS += ../Translations/photivo_Deutsch.ts
+TRANSLATIONS += ../Translations/photivo_Italiano.ts
 
 ###############################################################################

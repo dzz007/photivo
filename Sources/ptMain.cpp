@@ -302,9 +302,6 @@ QApplication* TheApplication;
 
 int photivoMain(int Argc, char *Argv[]) {
   QString VerTemp(TOSTRING(APPVERSION));
-  VerTemp.replace("_"," ");
-  VerTemp.replace("!","(");
-  VerTemp.replace("@",")");
   printf("Photivo version %s\n", VerTemp.toAscii().data());
 
   Magick::InitializeMagick(*Argv);
@@ -510,16 +507,25 @@ int photivoMain(int Argc, char *Argv[]) {
     }
   }
 
+
   // Load Translation
-  QTranslator qtTranslator;
-  if(TempSettings->value("Translation",0).toInt() == 1) {
-    appTranslator.load("photivo_" + QLocale::system().name(), UserDirectory + "Translations");
-    TheApplication->installTranslator(&appTranslator);
-    qtTranslator.load("qt_" + QLocale::system().name(), UserDirectory + "Translations");
-    TheApplication->installTranslator(&qtTranslator);
+  int TranslMode = TempSettings->value("TranslationMode",0).toInt();
+  QDir TranslDir(UserDirectory + "Translations");
+  QStringList UiLanguages = TranslDir.entryList(QStringList("photivo_*.qm"), QDir::Files|QDir::Readable, QDir::Name).replaceInStrings(".qm", "", Qt::CaseInsensitive);
+  UiLanguages.replaceInStrings("photivo_", "", Qt::CaseInsensitive);
+  int LangIdx = -1;
+
+  if (TranslMode == 1) {
+    LangIdx = UiLanguages.indexOf(TempSettings->value("UiLanguage","").toString());
+    if (LangIdx >= 0) {
+      QTranslator qtTranslator;
+      appTranslator.load("photivo_" + UiLanguages[LangIdx], UserDirectory + "Translations");
+      TheApplication->installTranslator(&appTranslator);
+      qtTranslator.load("qt_" + UiLanguages[LangIdx], UserDirectory + "Translations");
+      TheApplication->installTranslator(&qtTranslator);
+      printf("Enabled translation: \"%s\".\n", UiLanguages[LangIdx].toAscii().data());
+    }
   }
-  printf("Language '%s'; ",QLocale::system().name().toAscii().data());
-  printf("Translation enabled: %d\n",TempSettings->value("Translation",0).toInt());
 
   delete TempSettings;
 
@@ -604,6 +610,9 @@ int photivoMain(int Argc, char *Argv[]) {
 
   HistogramWindow =
     new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
+
+  // Populate Translations combobox
+  MainWindow->PopulateTranslationsCombobox(UiLanguages, LangIdx);
 
   // Theming
   CB_StyleChoice(Settings->GetInt("Style"));
@@ -2603,6 +2612,16 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     Settings->SetValue(Key,Tmp);
   }
 
+  // Crop from settings file takes precedence. If its AR does not match the fixed
+  // AR currently set in the UI, disable the fixed AR checkbox.
+  if ((Settings->GetInt("Crop") == 1) && (Settings->GetInt("FixedAspectRatio") == 1)) {
+    double CropARFromSettings = (double)Settings->GetInt("CropW") / Settings->GetInt("CropH");
+    double CropARFromUI = (double)Settings->GetInt("AspectRatioW") / Settings->GetInt("AspectRatioH");
+    if (qAbs(CropARFromSettings - CropARFromUI) > 0.01) {
+      Settings->SetValue("FixedAspectRatio", 0);
+    }
+  }
+
   // Hidden tools:
   // current hidden tools, stay hidden, unless they are needed for settings.
   QStringList CurrentHiddenTools = Settings->GetStringList("HiddenTools");
@@ -3687,11 +3706,6 @@ void CB_WriteBackupSettingsCheck(const QVariant Check) {
   Settings->SetValue("WriteBackupSettings",Check);
 }
 
-void CB_TranslationCheck(const QVariant Check) {
-  Settings->SetValue("Translation",Check);
-  QMessageBox::information(0,QObject::tr("Please restart"),QObject::tr("Please restart Photivo to switch\n the language settings."));
-}
-
 void CB_MemoryTestInput(const QVariant Value) {
   Settings->SetValue("MemoryTest",0);
   if (Value.toInt()>0)
@@ -4492,6 +4506,11 @@ void CB_LfunDistanceInput(const QVariant Value) {
   Update(ptProcessorPhase_Geometry);
 }
 
+void CB_LfunScaleInput(const QVariant Value) {
+  Settings->SetValue("LfunScale", Value);
+  Update(ptProcessorPhase_Geometry);
+}
+
 
 // CA and Vignette tab
 
@@ -4572,11 +4591,6 @@ void CB_LfunSrcGeoChoice(const QVariant Choice) {
 
 void CB_LfunTargetGeoChoice(const QVariant Choice) {
   Settings->SetValue("LfunTargetGeo", Choice);
-  Update(ptProcessorPhase_Geometry);
-}
-
-void CB_LfunFocalAdjustInput(const QVariant Value) {
-  Settings->SetValue("LfunFocalAdjust", Value);
   Update(ptProcessorPhase_Geometry);
 }
 
@@ -4834,6 +4848,12 @@ void CB_AspectRatioHChoice(const QVariant Value) {
 void CB_CropGuidelinesChoice(const QVariant Choice) {
   Settings->SetValue("CropGuidelines",Choice);
   ViewWindow->setCropGuidelines(Choice.toInt());
+}
+
+void CB_LightsOutChoice(const QVariant Choice) {
+  Settings->SetValue("LightsOut",Choice);
+  ViewWindow->m_CropLightsOut = Choice.toInt();
+  ViewWindow->viewport()->repaint();
 }
 
 
@@ -8834,8 +8854,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(WriteBackupSettingsCheck)
 
-  M_Dispatch(TranslationCheck)
-
   M_Dispatch(MemoryTestInput)
 
   M_Dispatch(StartupSettingsCheck)
@@ -8889,6 +8907,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LfunFocalInput)
   M_Dispatch(LfunApertureInput)
   M_Dispatch(LfunDistanceInput)
+  M_Dispatch(LfunScaleInput)
   M_Dispatch(LfunCAModelChoice)
   M_Dispatch(LfunCALinearKbInput)
   M_Dispatch(LfunCALinearKrInput)
@@ -8904,7 +8923,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LfunVignettePoly6K3Input)
   M_Dispatch(LfunSrcGeoChoice)
   M_Dispatch(LfunTargetGeoChoice)
-  M_Dispatch(LfunFocalAdjustInput)
   M_Dispatch(LfunDistModelChoice)
   M_Dispatch(LfunDistPoly3K1Input)
   M_Dispatch(LfunDistPoly5K1Input)
@@ -8930,6 +8948,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(CropCheck)
   M_Dispatch(CropGuidelinesChoice)
+  M_Dispatch(LightsOutChoice)
   M_Dispatch(FixedAspectRatioCheck)
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)

@@ -67,17 +67,26 @@ QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I gtk+-2.0)
 QMAKE_CFLAGS_DEBUG += -DDLRAW_GIMP_PLUGIN
 QMAKE_CFLAGS_RELEASE += -O3
 QMAKE_CFLAGS_RELEASE += -ffast-math
-QMAKE_LFLAGS_RELEASE +=
+QMAKE_LFLAGS_RELEASE += $$system(pkg-config --libs-only-L gimp-2.0)
+QMAKE_LFLAGS_RELEASE += $$system(pkg-config --libs-only-L gtk+-2.0)
 QMAKE_LFLAGS_DEBUG += -rdynamic
 LIBS += $$system(pkg-config --libs-only-l gimp-2.0)
+LIBS += $$system(pkg-config --libs-only-L gimp-2.0)
 LIBS += $$system(pkg-config --libs-only-l gtk+-2.0)
+
 unix {
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
   QMAKE_POST_LINK=strip $(TARGET)
 }
 win32 {
-  LIBS += -lwsock32 -lexpat -lregex -lgdi32 -lgimp
+  QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE += $$(CXXFLAGS)
+  QMAKE_CFLAGS_DEBUG += $$(CFLAGS)
+  QMAKE_CFLAGS_RELEASE += $$(CFLAGS)
+  QMAKE_LFLAGS_DEBUG += $$(LDFLAGS)
+  QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
+  LIBS += -lwsock32 -lexpat -lregex -lgdi32
 }
 
 # Input

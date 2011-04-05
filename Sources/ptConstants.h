@@ -228,6 +228,12 @@ const short ptCropGuidelines_GoldenRatio = 2;
 const short ptCropGuidelines_Diagonals   = 3;
 const short ptCropGuidelines_Centerlines = 4;
 
+// Lights Out modes
+
+const short ptLightsOutMode_None    = 0;
+const short ptLightsOutMode_Dimmed  = 1;
+const short ptLightsOutMode_Black   = 2;
+
 // Channel Mixer
 
 const short ptChannelMixerChoice_None   = 0;
