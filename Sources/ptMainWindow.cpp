@@ -480,6 +480,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   // Set help pages
   m_GroupBox->value("TabCrop")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#crop");
+  m_GroupBox->value("TabLiquidRescale")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#seam_carving");
   m_GroupBox->value("TabWhiteBalance")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
   m_GroupBox->value("TabBW")->
