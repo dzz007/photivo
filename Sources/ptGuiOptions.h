@@ -69,6 +69,8 @@ public:
   static const ptGuiOptionsItem LightsOutMode[];
   static const ptGuiOptionsItem ResizeFilter[];
   static const ptGuiOptionsItem IMResizeFilter[];
+  static const ptGuiOptionsItem LqrEnergy[];
+  static const ptGuiOptionsItem LqrScaling[];
   static const ptGuiOptionsItem WhiteBalance[];
   static const ptGuiOptionsItem CACorrect[];
   static const ptGuiOptionsItem Interpolation[];

@@ -662,6 +662,24 @@ void ptProcessor::Run(short Phase,
       // set scale factor for size dependend filters
       m_ScaleFactor = 1/powf(2.0, Settings->GetInt("Scaled"));
 
+      // Liquid rescale
+      if (Settings->ToolIsActive("TabLiquidRescale")) {
+        m_ReportProgress(tr("Seam carving"));
+
+        if (Settings->GetInt("LqrScaling") == ptLqr_ScaleRelative) {
+          m_Image_AfterGeometry->LiquidRescaleRelative(Settings->GetDouble("LqrHorScale"),
+                                                       Settings->GetDouble("LqrVertScale"),
+                                                       Settings->GetInt("LqrEnergy"),
+                                                       Settings->GetInt("LqrVertFirst"));
+        } else if (Settings->GetInt("LqrScaling") == ptLqr_ScaleAbsolute) {
+          m_Image_AfterGeometry->LiquidRescale(Settings->GetInt("LqrWidth"),
+                                               Settings->GetInt("LqrHeight"),
+                                               Settings->GetInt("LqrEnergy"),
+                                               Settings->GetInt("LqrVertFirst"));
+        }
+        TRACEMAIN("Done seam carving at %d ms.",Timer.elapsed());
+      }
+
       // Resize
       if (Settings->ToolIsActive("TabResize")) {
         m_ReportProgress(tr("Resize image"));
@@ -685,6 +703,12 @@ void ptProcessor::Run(short Phase,
         TRACEMAIN("Done flip at %d ms.",Timer.elapsed());
       }
 
+      m_ReportProgress(tr("Next"));
+    }
+
+
+    case ptProcessorPhase_RGB : // Run everything in RGB.
+
       // Geometry block
       // This will skip the rest of the pipe, to make geometry adjustments easier.
 
@@ -701,6 +725,13 @@ void ptProcessor::Run(short Phase,
         goto Exit;
       }
 
+      if (Settings->GetInt("JobMode")) {
+        m_Image_AfterRGB = m_Image_AfterGeometry; // Job mode -> no cache
+      } else {
+        if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage();
+        m_Image_AfterRGB->Set(m_Image_AfterGeometry);
+      }
+
       // Calculate the autoexposure required value at this point.
       if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
         m_ReportProgress(tr("Calculate auto exposure"));
@@ -709,19 +740,6 @@ void ptProcessor::Run(short Phase,
       }
       if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw)
           Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
-
-      m_ReportProgress(tr("Next"));
-    }
-
-
-    case ptProcessorPhase_RGB : // Run everything in RGB.
-
-      if (Settings->GetInt("JobMode")) {
-        m_Image_AfterRGB = m_Image_AfterGeometry; // Job mode -> no cache
-      } else {
-        if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage();
-        m_Image_AfterRGB->Set(m_Image_AfterGeometry);
-      }
 
       // Channel mixing.
 
@@ -2639,12 +2657,12 @@ void ptProcessor::Run(short Phase,
 
       }
 
+Exit:
+
       Settings->SetValue("PipeImageW",m_Image_AfterEyeCandy->m_Width);
       Settings->SetValue("PipeImageH",m_Image_AfterEyeCandy->m_Height);
 
     case ptProcessorPhase_Output : // Run Output.
-
-Exit:
 
       TRACEMAIN("Done pipe processing at %d ms.",Timer.elapsed());
 

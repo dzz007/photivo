@@ -611,6 +611,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateLfunDistUI();
   UpdateLfunCAUI();
   UpdateLfunVignetteUI();
+  UpdateLiquidRescaleUI();
   InitVisibleTools();
 }
 
@@ -1935,6 +1936,7 @@ void ptMainWindow::UpdateToolBoxes() {
                     << m_GroupBox->value("TabLensfunGeometry")
                     << m_GroupBox->value("TabDefish")
                     << m_GroupBox->value("TabCrop")
+                    << m_GroupBox->value("TabLiquidRescale")
                     << m_GroupBox->value("TabResize")
                     << m_GroupBox->value("TabWebResize");
 
@@ -2144,6 +2146,8 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("InterpolationPasses",1);
   else
     Settings->SetEnabled("InterpolationPasses",0);
+
+
 
   //~ // Resize
   //~ Settings->SetMaximum("ResizeW",Settings->GetInt("CropW"));
@@ -2927,6 +2931,18 @@ void ptMainWindow::UpdateLfunVignetteUI() {
   LfunVignettePoly6Container->setVisible(VignetteModel == ptLfunVignetteModel_Poly6);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// Update liquid rescale UI elements
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::UpdateLiquidRescaleUI() {
+  short Scaling = Settings->GetInt("LqrScaling");
+  LqrHorScaleWidget->setVisible(Scaling == ptLqr_ScaleRelative);
+  LqrVertScaleWidget->setVisible(Scaling == ptLqr_ScaleRelative);
+  LqrWHContainter->setVisible(Scaling == ptLqr_ScaleAbsolute);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //

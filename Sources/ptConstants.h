@@ -508,6 +508,18 @@ const short ptIMFilter_Lanczos   = 12;
 //const short ptIMFilter_Bessel    = 13;
 //const short ptIMFilter_Sinc      = 14;
 
+// Liquid rescale energies
+const short ptLqr_Disabled         = 0;
+const short ptLqr_GradXabs         = 1;
+const short ptLqr_GradSumabs       = 2;
+const short ptLqr_GradNorm         = 3;
+const short ptLqr_LumaGradXabs     = 4;
+const short ptLqr_LumaGradSumabs   = 5;
+const short ptLqr_LumaGradNorm     = 6;
+
+// Liquid rescale scaling
+const short ptLqr_ScaleRelative    = 0;
+const short ptLqr_ScaleAbsolute    = 1;
 
 // Zoom modes
 const short ptZoomMode_Fit    = 0;

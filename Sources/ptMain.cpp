@@ -2335,13 +2335,12 @@ void WriteOut() {
 
   ReportProgress(QObject::tr("Writing output (exif)"));
 
-  // TODO BJ: implement lensfun DB
-//  if (Settings->GetInt("IncludeExif") &&
-//      (Settings->GetString("LensfunCameraMake") != "")) {
-//    WriteExif(Settings->GetString("OutputFileName").toAscii().data(),
-//        TheProcessor->m_ExifBuffer,
-//        TheProcessor->m_ExifBufferLength);
-//    }
+  if (Settings->GetInt("IncludeExif") &&
+      TheProcessor->m_ExifBufferLength) {
+    WriteExif(Settings->GetString("OutputFileName").toAscii().data(),
+        TheProcessor->m_ExifBuffer,
+        TheProcessor->m_ExifBufferLength);
+  }
 
   if (Settings->GetInt("JobMode") == 0) delete OutImage;
 
@@ -4808,7 +4807,7 @@ void CB_FlipModeChoice(const QVariant Value) {
 
 void CB_GeometryBlockCheck(const QVariant State) {
   Settings->SetValue("GeometryBlock",State);
-  Update(ptProcessorPhase_Geometry);
+  Update(ptProcessorPhase_RGB);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -5011,6 +5010,55 @@ void CB_CropCheck(const QVariant State) {
   Update(ptProcessorPhase_Geometry);
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the Geometry Tab
+// Partim Liquid rescale
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_LqrEnergyChoice(const QVariant Choice) {
+  Settings->SetValue("LqrEnergy",Choice);
+  Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LqrScalingChoice(const QVariant Choice) {
+  Settings->SetValue("LqrScaling",Choice);
+  MainWindow->UpdateLiquidRescaleUI();
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LqrHorScaleInput(const QVariant Value) {
+  Settings->SetValue("LqrHorScale",Value);
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LqrVertScaleInput(const QVariant Value) {
+  Settings->SetValue("LqrVertScale",Value);
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LqrWidthInput(const QVariant Value) {
+  Settings->SetValue("LqrWidth",Value);
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LqrHeightInput(const QVariant Value) {
+  Settings->SetValue("LqrHeight",Value);
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
+}
+
+void CB_LqrVertFirstCheck(const QVariant Check) {
+  Settings->SetValue("LqrVertFirst",Check);
+  if (Settings->ToolIsActive("TabLiquidRescale"))
+    Update(ptProcessorPhase_Geometry);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -8897,7 +8945,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GridCheck)
   M_Dispatch(GridXInput)
   M_Dispatch(GridYInput)
-  M_Dispatch(FlipModeChoice)
+
   M_Dispatch(CropCheck)
   M_Dispatch(CropGuidelinesChoice)
   M_Dispatch(LightsOutChoice)
@@ -8905,10 +8953,20 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)
 
+  M_Dispatch(LqrEnergyChoice)
+  M_Dispatch(LqrScalingChoice)
+  M_Dispatch(LqrHorScaleInput)
+  M_Dispatch(LqrVertScaleInput)
+  M_Dispatch(LqrWidthInput)
+  M_Dispatch(LqrHeightInput)
+  M_Dispatch(LqrVertFirstCheck)
+
   M_Dispatch(ResizeCheck)
   M_Dispatch(ResizeScaleInput)
   M_Dispatch(ResizeFilterChoice)
   M_Dispatch(AutomaticPipeSizeCheck)
+
+  M_Dispatch(FlipModeChoice)
 
   M_Dispatch(GeometryBlockCheck)
 

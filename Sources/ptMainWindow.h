@@ -95,6 +95,8 @@ public:
   void UpdateLfunCAUI();
   void UpdateLfunVignetteUI();
 
+  void UpdateLiquidRescaleUI();
+
   // Visible tools
   void ApplyVisibleTools();
   void UpdateVisibleTools();
