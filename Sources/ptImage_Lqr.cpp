@@ -94,12 +94,14 @@ ptImage* ptImage::LiquidRescale(const uint16_t Width,
   int Row, Col;
   void *rgb;
   uint16_t *rgb_out;
+  int32_t Index = 0;
 
   while (lqr_carver_scan_ext (carver, &Col, &Row, &rgb)) {
     rgb_out = (uint16_t*) rgb;
-    m_Image[Row*Width+Col][0] = rgb_out[0];
-    m_Image[Row*Width+Col][1] = rgb_out[1];
-    m_Image[Row*Width+Col][2] = rgb_out[2];
+    Index = Row*Width+Col;
+    m_Image[Index][0] = rgb_out[0];
+    m_Image[Index][1] = rgb_out[1];
+    m_Image[Index][2] = rgb_out[2];
   }
 
   m_Width = Width;
