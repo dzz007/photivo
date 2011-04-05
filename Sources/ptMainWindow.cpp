@@ -350,6 +350,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(MakeCrop);
   Macro_ConnectSomeButton(ConfirmCrop);
   Macro_ConnectSomeButton(CancelCrop);
+  Macro_ConnectSomeButton(CropOrientation);
 
   //
   // TAB : RGB
@@ -1244,6 +1245,11 @@ void ptMainWindow::OnConfirmCropButtonClicked() {
 void CB_CancelCropButton();
 void ptMainWindow::OnCancelCropButtonClicked() {
   ::CB_CancelCropButton();
+}
+
+void CB_CropOrientationButton();
+void ptMainWindow::OnCropOrientationButtonClicked() {
+  ::CB_CropOrientationButton();
 }
 
 

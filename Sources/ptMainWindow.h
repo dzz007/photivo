@@ -247,6 +247,7 @@ private slots:
   void OnMakeCropButtonClicked();
   void OnConfirmCropButtonClicked();
   void OnCancelCropButtonClicked();
+  void OnCropOrientationButtonClicked();
 
   void OnChannelMixerOpenButtonClicked();
   void OnChannelMixerSaveButtonClicked();

@@ -398,6 +398,57 @@ void ptViewWindow::setAspectRatio(const short FixedAspectRatio, uint AspectRatio
 }
 
 
+void ptViewWindow::FlipAspectRatio() {
+  QPoint CenterBak = m_PipeSizeRect->center();
+  int HeightBak = m_PipeSizeRect->height();
+  m_PipeSizeRect->setHeight(m_PipeSizeRect->width());
+  m_PipeSizeRect->setWidth(HeightBak);
+  m_PipeSizeRect->moveCenter(CenterBak);
+
+  double NewAR = (double)m_PipeSizeRect->width() / m_PipeSizeRect->height();
+  short WidthAdjusted = 0;
+  short HeightAdjusted = 0;
+
+  if (m_PipeSizeRect->width() > m_QImage->width()) {
+    m_PipeSizeRect->setWidth(m_QImage->width());
+    m_PipeSizeRect->moveLeft(0);
+    WidthAdjusted = 1;
+  }
+  if (m_PipeSizeRect->left() < 0) {
+    m_PipeSizeRect->moveLeft(0);
+  } else if (m_PipeSizeRect->right() >= m_QImage->width()) {
+    m_PipeSizeRect->moveRight(m_QImage->width() - 1);
+  }
+  if (WidthAdjusted) {
+    CenterBak = m_PipeSizeRect->center();
+    m_PipeSizeRect->setHeight((int)(m_PipeSizeRect->width() / NewAR));
+    m_PipeSizeRect->moveCenter(CenterBak);
+  }
+
+  if (m_PipeSizeRect->height() > m_QImage->height()) {
+    m_PipeSizeRect->setHeight(m_QImage->height());
+    m_PipeSizeRect->moveTop(0);
+    HeightAdjusted = 1;
+  }
+  if (m_PipeSizeRect->top() < 0) {
+    m_PipeSizeRect->moveTop(0);
+  } else if (m_PipeSizeRect->bottom() >= m_QImage->height()) {
+    m_PipeSizeRect->moveBottom(m_QImage->height() - 1);
+  }
+  if (HeightAdjusted) {
+    CenterBak = m_PipeSizeRect->center();
+    m_PipeSizeRect->setWidth((int)(m_PipeSizeRect->height() * NewAR));
+    m_PipeSizeRect->moveCenter(CenterBak);
+  }
+
+  if (m_FixedAspectRatio) {
+    setAspectRatio(m_FixedAspectRatio, m_AspectRatioH, m_AspectRatioW, 0);
+  }
+
+  viewport()->repaint();
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // LightsOut
@@ -976,7 +1027,7 @@ void ptViewWindow::EnforceRectAspectRatio(int dx, int dy) {
       break;
 
     case meNone: {
-      QPoint center = QPoint(m_PipeSizeRect->center().x(), m_PipeSizeRect->center().y());
+      QPoint center = m_PipeSizeRect->center();
       m_PipeSizeRect->setWidth(NewWidth);
       m_PipeSizeRect->setHeight(qRound(m_PipeSizeRect->width() / m_AspectRatio));
       m_PipeSizeRect->moveCenter(center);

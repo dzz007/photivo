@@ -39,5 +39,6 @@
         <file>Icons/star.png</file>
         <file>Icons/star-grey.png</file>
         <file>Icons/lines.png</file>
+        <file>Icons/PortraitLandscape.png</file>
     </qresource>
 </RCC>

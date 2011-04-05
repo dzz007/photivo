@@ -4845,6 +4845,20 @@ void CB_AspectRatioHChoice(const QVariant Value) {
   }
 }
 
+void CB_CropOrientationButton() {
+  int w = Settings->GetInt("AspectRatioW");
+  int h = Settings->GetInt("AspectRatioH");
+  if (w != h) {
+    Settings->SetValue("AspectRatioW", h);
+    Settings->SetValue("AspectRatioH", w);
+    QComboBox(MainWindow->AspectRatioWWidget).setCurrentIndex(h);
+    QComboBox(MainWindow->AspectRatioHWidget).setCurrentIndex(w);
+    if (ViewWindow->OngoingAction() == vaCrop) {
+      ViewWindow->FlipAspectRatio();
+    }
+  }
+}
+
 void CB_CropGuidelinesChoice(const QVariant Choice) {
   Settings->SetValue("CropGuidelines",Choice);
   ViewWindow->setCropGuidelines(Choice.toInt());
