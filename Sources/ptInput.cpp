@@ -424,7 +424,7 @@ void ptInput::OnValueChanged(int Value) {
     if(!m_SpinBox->hasFocus()) {
       m_Timer->start(m_TimeOut);
     } else {
-      m_Timer->start(m_KeyTimeOut);
+      // m_Timer->start(m_KeyTimeOut);
     }
   } else {
     OnValueChangedTimerExpired();
@@ -438,7 +438,7 @@ void ptInput::OnValueChanged(double Value) {
     if(!m_SpinBox->hasFocus()) {
       m_Timer->start(m_TimeOut);
     } else {
-      m_Timer->start(m_KeyTimeOut);
+      // m_Timer->start(m_KeyTimeOut);
     }
   } else {
     OnValueChangedTimerExpired();
