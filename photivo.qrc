@@ -40,5 +40,7 @@
         <file>Icons/star-grey.png</file>
         <file>Icons/lines.png</file>
         <file>Icons/PortraitLandscape.png</file>
+        <file>Icons/center-hor.png</file>
+        <file>Icons/center-vert.png</file>
     </qresource>
 </RCC>

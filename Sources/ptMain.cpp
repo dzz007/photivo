@@ -4859,6 +4859,14 @@ void CB_CropOrientationButton() {
   }
 }
 
+void CB_CropCenterHorButton() {
+  ViewWindow->CenterCropRectHor();
+}
+
+void CB_CropCenterVertButton() {
+  ViewWindow->CenterCropRectVert();
+}
+
 void CB_CropGuidelinesChoice(const QVariant Choice) {
   Settings->SetValue("CropGuidelines",Choice);
   ViewWindow->setCropGuidelines(Choice.toInt());

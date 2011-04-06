@@ -351,6 +351,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(ConfirmCrop);
   Macro_ConnectSomeButton(CancelCrop);
   Macro_ConnectSomeButton(CropOrientation);
+  Macro_ConnectSomeButton(CropCenterHor);
+  Macro_ConnectSomeButton(CropCenterVert);
 
   //
   // TAB : RGB
@@ -1252,6 +1254,16 @@ void ptMainWindow::OnCancelCropButtonClicked() {
 void CB_CropOrientationButton();
 void ptMainWindow::OnCropOrientationButtonClicked() {
   ::CB_CropOrientationButton();
+}
+
+void CB_CropCenterHorButton();
+void ptMainWindow::OnCropCenterHorButtonClicked() {
+  ::CB_CropCenterHorButton();
+}
+
+void CB_CropCenterVertButton();
+void ptMainWindow::OnCropCenterVertButtonClicked() {
+  ::CB_CropCenterVertButton();
 }
 
 
@@ -2580,6 +2592,8 @@ void ptMainWindow::UpdateCropToolUI() {
   MakeCropButton->setVisible(!OnOff);
   ConfirmCropButton->setVisible(OnOff);
   CancelCropButton->setVisible(OnOff);
+  CropCenterHorButton->setEnabled(OnOff);
+  CropCenterVertButton->setEnabled(OnOff);
 
   if (Settings->GetInt("FixedAspectRatio") != 0) {
     AspectRatioWLabel->setEnabled(true);
