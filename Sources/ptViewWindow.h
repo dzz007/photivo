@@ -113,6 +113,8 @@ public:
                          uint AspectRatioH,
                          const short ImmediateUpdate = 1);
   void    FlipAspectRatio();    // flip fixed AR between portrait/landscape
+  void    CenterCropRectHor();
+  void    CenterCropRectVert();
   void    setGrid(const short Enabled, const short GridX, const short GridY);
 
   // Zoom functions. Fit returns the factor in %.

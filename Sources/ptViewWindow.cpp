@@ -449,6 +449,28 @@ void ptViewWindow::FlipAspectRatio() {
 }
 
 
+void ptViewWindow::CenterCropRectHor() {
+  if (m_InteractionMode == vaCrop) {
+    int center = (int)(m_QImage->width() / 2);
+    if (m_PipeSizeRect->center().x() != center) {
+      m_PipeSizeRect->moveCenter(QPoint(center, m_PipeSizeRect->center().y()));
+      viewport()->repaint();
+    }
+  }
+}
+
+
+void ptViewWindow::CenterCropRectVert() {
+  if (m_InteractionMode == vaCrop) {
+    int center = (int)(m_QImage->height() / 2);
+    if (m_PipeSizeRect->center().y() != center) {
+      m_PipeSizeRect->moveCenter(QPoint(m_PipeSizeRect->center().x(), center));
+      viewport()->repaint();
+    }
+  }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // LightsOut
