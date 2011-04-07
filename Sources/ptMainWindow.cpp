@@ -2592,8 +2592,8 @@ void ptMainWindow::UpdateCropToolUI() {
   MakeCropButton->setVisible(!OnOff);
   ConfirmCropButton->setVisible(OnOff);
   CancelCropButton->setVisible(OnOff);
-  CropCenterHorButton->setEnabled(OnOff);
-  CropCenterVertButton->setEnabled(OnOff);
+  CropCenterHorButton->setVisible(OnOff);
+  CropCenterVertButton->setVisible(OnOff);
 
   if (Settings->GetInt("FixedAspectRatio") != 0) {
     AspectRatioWLabel->setEnabled(true);
