@@ -481,6 +481,18 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateToolBoxes();
 
   // Set help pages
+  m_GroupBox->value("TabLensfunLensParameters")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#lens_parameters");
+  m_GroupBox->value("TabLensfunCA")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#chromatic_aberration");
+  m_GroupBox->value("TabLensfunVignette")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#vignetting");
+  m_GroupBox->value("TabLensfunDistortion")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#lens_distortion");
+  m_GroupBox->value("TabLensfunGeometry")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#geometry_conversion");
+  m_GroupBox->value("TabDefish")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#defish");
   m_GroupBox->value("TabCrop")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#crop");
   m_GroupBox->value("TabLiquidRescale")->

@@ -542,13 +542,18 @@ void ptProcessor::Run(short Phase,
           modflags |= LF_MODIFY_SCALE;
         }
 
+        double ScaleFactor = 0.0;   // 0.0 is lensfun’s magic value for auto scaling
+        if (!Settings->GetInt("LfunAutoScale")) {
+          ScaleFactor = Settings->GetDouble("LfunScale");
+        }
+
         // Init modifier and get list of lensfun actions that actually get performed
         modflags = LfunData->Initialize(&LensData,
                                         LF_PF_U16,  //image is uint16 data
                                         Settings->GetDouble("LfunFocal"),
                                         Settings->GetDouble("LfunAperture"),
                                         Settings->GetDouble("LfunDistance"),
-                                        Settings->GetDouble("LfunScale"),
+                                        ScaleFactor,
                                         TargetGeo,
                                         modflags,
                                         false);  //distortion correction, not dist. simulation
@@ -583,13 +588,18 @@ void ptProcessor::Run(short Phase,
         int modflags = LF_MODIFY_GEOMETRY;
         if (Settings->GetDouble("DefishScale") != 1.0) modflags |= LF_MODIFY_SCALE;
 
+        double ScaleFactor = 0.0;   // 0.0 is lensfun’s magic value for auto scaling
+        if (!Settings->GetInt("DefishAutoScale")) {
+          ScaleFactor = Settings->GetDouble("DefishScale");
+        }
+
         // Init modifier and get list of lensfun actions that actually get performed
         modflags = LfunData->Initialize(&LensData,
                                         LF_PF_U16,  //image is uint16 data
                                         Settings->GetDouble("DefishFocalLength"),
                                         1.0, // doesn't matter for defish
                                         1.0, // doesn't matter for defish
-                                        Settings->GetDouble("DefishScale"),
+                                        ScaleFactor,
                                         TargetGeo,
                                         modflags,
                                         false);  //distortion correction, not dist. simulation
