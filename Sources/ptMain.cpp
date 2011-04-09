@@ -4511,6 +4511,12 @@ void CB_LfunScaleInput(const QVariant Value) {
   Update(ptProcessorPhase_Geometry);
 }
 
+void CB_LfunAutoScaleCheck(const QVariant State) {
+  Settings->SetValue("LfunAutoScale",State);
+  MainWindow->LfunScaleWidget->setEnabled(!State.toBool());
+  Update(ptProcessorPhase_Geometry);
+}
+
 
 // CA and Vignette tab
 
@@ -4657,6 +4663,12 @@ void CB_DefishScaleInput(const QVariant Value) {
   Settings->SetValue("DefishScale", Value);
   if (Settings->GetInt("Defish"))
     Update(ptProcessorPhase_Geometry);
+}
+
+void CB_DefishAutoScaleCheck(const QVariant State) {
+  Settings->SetValue("DefishAutoScale",State);
+  MainWindow->DefishScaleWidget->setEnabled(!State.toBool());
+  Update(ptProcessorPhase_Geometry);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -8930,6 +8942,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LfunApertureInput)
   M_Dispatch(LfunDistanceInput)
   M_Dispatch(LfunScaleInput)
+  M_Dispatch(LfunAutoScaleCheck)
   M_Dispatch(LfunCAModelChoice)
   M_Dispatch(LfunCALinearKbInput)
   M_Dispatch(LfunCALinearKrInput)
@@ -8957,6 +8970,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(DefishCheck)
   M_Dispatch(DefishFocalLengthInput)
   M_Dispatch(DefishScaleInput)
+  M_Dispatch(DefishAutoScaleCheck)
 
   M_Dispatch(RotateInput)
   M_Dispatch(PerspectiveFocalLengthInput)
