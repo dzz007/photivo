@@ -5446,9 +5446,11 @@ void CB_AutoExposureChoice(const QVariant Value) {
   Settings->SetValue("AutoExposure",Value);
   MainWindow->UpdateSettings();
   if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
-    TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterGeometry);
-    Settings->SetValue("Exposure",TheProcessor->m_AutoExposureValue);
-    Update(ptProcessorPhase_RGB);
+    if(Settings->GetInt("HaveImage") == 1) {
+      TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterGeometry);
+      Settings->SetValue("Exposure",TheProcessor->m_AutoExposureValue);
+      Update(ptProcessorPhase_RGB);
+    }
   } else if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw) {
     Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
     Update(ptProcessorPhase_RGB);
