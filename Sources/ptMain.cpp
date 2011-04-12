@@ -1165,7 +1165,14 @@ void BlockTools(const short state) {
         }
 
         QList<ptGroupBox *> GeometryTools;
-        GeometryTools << MainWindow->m_GroupBox->value("TabRotation")
+        GeometryTools << MainWindow->m_GroupBox->value("TabLensfunLensParameters")
+                      << MainWindow->m_GroupBox->value("TabLensfunCA")
+                      << MainWindow->m_GroupBox->value("TabLensfunVignette")
+                      << MainWindow->m_GroupBox->value("TabLensfunDistortion")
+                      << MainWindow->m_GroupBox->value("TabLensfunGeometry")
+                      << MainWindow->m_GroupBox->value("TabDefish")
+                      << MainWindow->m_GroupBox->value("TabRotation")
+                      << MainWindow->m_GroupBox->value("TabLiquidRescale")
                       << MainWindow->m_GroupBox->value("TabResize")
                       << MainWindow->m_GroupBox->value("TabFlip")
                       << MainWindow->m_GroupBox->value("TabBlock");
@@ -1212,7 +1219,14 @@ void BlockTools(const short state) {
       }
 
       QList<ptGroupBox *> GeometryTools;
-      GeometryTools << MainWindow->m_GroupBox->value("TabRotation")
+      GeometryTools << MainWindow->m_GroupBox->value("TabLensfunLensParameters")
+                    << MainWindow->m_GroupBox->value("TabLensfunCA")
+                    << MainWindow->m_GroupBox->value("TabLensfunVignette")
+                    << MainWindow->m_GroupBox->value("TabLensfunDistortion")
+                    << MainWindow->m_GroupBox->value("TabLensfunGeometry")
+                    << MainWindow->m_GroupBox->value("TabDefish")
+                    << MainWindow->m_GroupBox->value("TabRotation")
+                    << MainWindow->m_GroupBox->value("TabLiquidRescale")
                     << MainWindow->m_GroupBox->value("TabResize")
                     << MainWindow->m_GroupBox->value("TabFlip")
                     << MainWindow->m_GroupBox->value("TabBlock");
@@ -4701,41 +4715,16 @@ void CB_RotateAngleButton() {
       QObject::tr("Open an image first."));
     return;
   }
-  uint16_t Width = 0;
-  uint16_t Height = 0;
-  // First : make sure we have the view window.
-  // And we reset the Image_AfterLensfun such that we can
-  // again select on the whole. It might have been cropped before !
-  if (Settings->GetInt("IsRAW")) {
-    TheProcessor->m_Image_AfterGeometry->Set(
-            TheProcessor->m_DcRaw,
-            Settings->GetInt("WorkColor"),
-            (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
-              NULL : Settings->GetString("CameraColorProfile").toAscii().data(),
-            Settings->GetInt("CameraColorProfileIntent"),
-            Settings->GetInt("CameraColorGamma"));
-  } else {
-    int Success = 0;
-    TheProcessor->m_Image_AfterGeometry->ptGMOpenImage(
-      (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
-      Settings->GetInt("WorkColor"),
-      Settings->GetInt("PreviewColorProfileIntent"),
-      Settings->GetInt("Scaled"),
-      Success);
-    if (Success == 0) {
-      QMessageBox::critical(0,"File not found","File not found!");
-      return;
-    }
-  }
 
-  Width = TheProcessor->m_Image_AfterGeometry->m_Width;
-  Height = TheProcessor->m_Image_AfterGeometry->m_Height;
-  // We *urge* Image_AfterLensfun to be used now for the preview
-  // Rather than end-of-the pipe or so and having to recalculate.
-  // Recalculate happens later on anyway, so no out of sync issue.
+  // Rerun the part of geometry stage before rotate to get correct preview
+  // image in TheProcessor->m_Image_AfterGeometry
+  TheProcessor->RunGeometry(ptProcessorStopBefore_Rotate);
   short OldZoom = Settings->GetInt("Zoom");
   short OldZoomMode = Settings->GetInt("ZoomMode");
-  ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
+  ViewWindow->Zoom(
+                ViewWindow->ZoomFitFactor(TheProcessor->m_Image_AfterGeometry->m_Width,
+                                          TheProcessor->m_Image_AfterGeometry->m_Height),
+                0);
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
@@ -4899,47 +4888,19 @@ void CB_MakeCropButton() {
       QObject::tr("Open an image first."));
     return;
   }
-  uint16_t Width = 0;
-  uint16_t Height = 0;
-
-  // First : make sure we have the view window.
-  // And we reset the Image_AfterLensfun such that we can
-  // again select on the whole. It might have been cropped before !
-  if (Settings->GetInt("IsRAW")==0) {
-    if (!TheProcessor->m_Image_AfterGeometry)
-      TheProcessor->m_Image_AfterGeometry = new ptImage();
-
-    TheProcessor->m_Image_AfterGeometry->
-      SetScaled(TheProcessor->m_Image_AfterDcRaw,
-                Settings->GetInt("Scaled"));
-  } else {
-    if (!TheProcessor->m_Image_AfterGeometry)
-      TheProcessor->m_Image_AfterGeometry = new ptImage();
-    TheProcessor->m_Image_AfterGeometry->
-      Set(TheProcessor->m_Image_AfterDcRaw);
-  }
 
   ViewWindow->StatusReport(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for cropping"));
 
-  // Redo also the rotation step if needed.
-  if (Settings->ToolIsActive("TabRotation")) {
-    TheProcessor->m_Image_AfterGeometry->ptCIPerspective(Settings->GetDouble("Rotate"),
-                                                         Settings->GetDouble("PerspectiveFocalLength"),
-                                                         Settings->GetDouble("PerspectiveTilt"),
-                                                         Settings->GetDouble("PerspectiveTurn"),
-                                                         Settings->GetDouble("PerspectiveScaleX"),
-                                                         Settings->GetDouble("PerspectiveScaleY"));
-  }
-  Width = TheProcessor->m_Image_AfterGeometry->m_Width;
-  Height = TheProcessor->m_Image_AfterGeometry->m_Height;
-
-  // We *urge* Image_AfterGeometry to be used now for the preview
-  // Rather than end-of-the pipe or so and having to recalculate.
-  // Recalculate happens later on anyway, so no out of sync issue.
+  // Rerun the part of geometry stage before crop to get correct preview
+  // image in TheProcessor->m_Image_AfterGeometry
+  TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
   CropOldZoom = Settings->GetInt("Zoom");
   CropOldZoomMode = Settings->GetInt("ZoomMode");
-  ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
+  ViewWindow->Zoom(
+                ViewWindow->ZoomFitFactor(TheProcessor->m_Image_AfterGeometry->m_Width,
+                                          TheProcessor->m_Image_AfterGeometry->m_Height),
+                0);
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.

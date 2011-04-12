@@ -36,6 +36,13 @@
 
 class ptProcessor {
 Q_DECLARE_TR_FUNCTIONS(ptProcessor)
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// PUBLIC members
+//
+///////////////////////////////////////////////////////////////////////////
 public:
   // Cached image versions at different points.
   ptImage*  m_Image_AfterDcRaw;
@@ -69,6 +76,10 @@ public:
            short WithIdentify  = 1,
            short ProcessorMode = ptProcessorMode_Preview);
 
+  // Rerun Geometry stage (and stop for crop or rotate tool)
+  // Use the ptProcessorStopBefore_{Rotate|Crop} constants to stop early.
+  void RunGeometry(const short StopBefore = 0);
+
   // Exif Related
   Exiv2::ExifData m_ExifData;
   unsigned char*  m_ExifBuffer;
@@ -86,8 +97,15 @@ public:
 
   // Factor for size dependend filters
   float           m_ScaleFactor;
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// PRIVATE members
+//
+///////////////////////////////////////////////////////////////////////////
+private:
+  QTime m_RunTimer;
 };
 
 #endif
-
-///////////////////////////////////////////////////////////////////////////////
