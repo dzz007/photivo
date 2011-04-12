@@ -68,6 +68,9 @@ const short ptProcessorPhase_OnlyHistogram = 11;
 const short ptProcessorPhase_WriteOut      = 12;
 const short ptProcessorPhase_ToGimp        = 13;
 
+const short ptProcessorStopBefore_Rotate = 1;
+const short ptProcessorStopBefore_Crop   = 2;
+
 // Processor modes.
 
 const short ptProcessorMode_Preview     = 0;
