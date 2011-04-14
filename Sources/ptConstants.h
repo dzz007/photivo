@@ -521,6 +521,12 @@ const short ptLqr_LumaGradNorm     = 6;
 const short ptLqr_ScaleRelative    = 0;
 const short ptLqr_ScaleAbsolute    = 1;
 
+// Spot repair algos
+// TODO SR: modes are only dummies so far!
+const short ptSpotMode_mode1    = 0;
+const short ptSpotMode_mode2    = 1;
+const short ptSpotMode_mode2    = 2;
+
 // Zoom modes
 const short ptZoomMode_Fit    = 0;
 const short ptZoomMode_NonFit = 1;
