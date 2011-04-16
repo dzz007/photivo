@@ -130,7 +130,7 @@ void GaussianBlur(float *In, float *Out, int w, int h, unsigned int BlurWidth){
 
   //Convolve x.
   float *R = (float *)malloc(sizeof(float)*w*h);
-#pragma omp parallel for private(x, y) schedule(static)
+#pragma omp parallel for private(x, y, i) schedule(static)
   for(y = 0; y < h; y++){
     float *rI = &In[y*w];
     float *rO = &R[y*w];
@@ -165,7 +165,7 @@ void GaussianBlur(float *In, float *Out, int w, int h, unsigned int BlurWidth){
   }
 
   //Convolve y. Working on columns is so messy.
-#pragma omp parallel for private(x, y) schedule(static)
+#pragma omp parallel for private(x, y, i) schedule(static)
   for(x = 0; x < w; x++){
     float *cI = &R[x];
     float *cO = &Out[x];
