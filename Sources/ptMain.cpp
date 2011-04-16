@@ -287,7 +287,6 @@ short   InStartup  = 1;
 
 short   JobMode = 0;
 QString JobFileName;
-
 QString ImageFileToOpen;
 
 #ifndef DLRAW_GIMP_PLUGIN
@@ -301,7 +300,7 @@ int main(int Argc, char *Argv[]) {
 QApplication* TheApplication;
 
 int photivoMain(int Argc, char *Argv[]) {
-  QString VerTemp(TOSTRING(APPVERSION));
+  QString VerTemp(TOSTRING(APPVERSION));    //also used for the cli syntax error msg below!
   printf("Photivo version %s\n", VerTemp.toAscii().data());
 
   Magick::InitializeMagick(*Argv);
@@ -317,35 +316,68 @@ int photivoMain(int Argc, char *Argv[]) {
     QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
   #endif
 
+
   ImageCleanUp = 0;
 
-  if (Argc>1) {
-    QString ErrorMessage = QObject::tr("Usage : Photivo  [-i Image] [-j JobFile] [-g Image (with cleanup, not for regular use!)]");
-    // Argc must be 3,5 ...
-    if (Argc % 2 != 1) {
-      fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
-      if(!(Argc == 2 && QString(Argv[1])=="-i"))
-        exit(EXIT_FAILURE);
-    } else {
-      short CurrentIndex = 1;
-      while (CurrentIndex < Argc) {
-        QString Switch = Argv[CurrentIndex++];
-        QString File   = Argv[CurrentIndex++];
-        if (Switch == "-j") {
-          JobMode     = 1;
-          JobFileName = File;
-        } else if (Switch == "-i") {
-          ImageFileToOpen = File;
-        } else if (Switch == "-g") { // we got an image from gimp
-          ImageFileToOpen = File;
-          ImageCleanUp = 1;
-        } else {
-          fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
-          exit(EXIT_FAILURE);
-        }
-      }
+  QString PhotivoCliUsageMsg = QObject::tr(
+      "Syntax: photivo [-i imagefile | -j jobfile | -g imagefile]\n"
+      "        photivo imagefile\n\n"
+      "Options:\n"
+      "-i imagefile      Specify image file to load. The -i is optional. Starting\n"
+      "                  Photivo with just a file name works the same.\n"
+      "-j jobfile        Specify jobfile for batch processing. Job files are created\n"
+      "                  in Photivo and then executed with this option.\n"
+      "-g imagefile      Specify temporary file used for Gimp-to-Photivo export.\n"
+      "                  Internal option, not intended for general use.\n"
+      "                  BEWARE! This option deletes imagefile!\n"
+      "-h                Display this usage information.\n\n"
+      "For more documentation visit the wiki:\n"
+      "http://photivo.org/photivo/start\n"
+    );
+
+  if (Argc == 2) {
+    QString cliswitch = Argv[1];
+    if (cliswitch == "-h") {  // Help display
+      #ifdef Q_OS_WIN32
+        QMessageBox::information(0, QObject::tr("Photivo command line options"), PhotivoCliUsageMsg);
+      #else
+        fprintf(stdout,"%s",PhotivoCliUsageMsg.toAscii().data());
+      #endif
+      exit(0);
+
+    } else {    // only specify file name, works the same as "-i filename"
+      ImageFileToOpen = Argv[1];
     }
+
+  } else if (Argc == 3) {
+    QString CliSwitch = Argv[1];
+    if (CliSwitch == "-i") {
+      ImageFileToOpen = Argv[2];
+    } else if (CliSwitch == "-j") {
+      JobMode = 1;
+      JobFileName = Argv[2];
+    } else if (CliSwitch == "-g") {
+      ImageCleanUp = 1;
+      ImageFileToOpen = Argv[2];
+    } else {
+      #ifdef Q_OS_WIN32
+        QMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
+      #else
+        fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
+      #endif
+      exit(EXIT_FAILURE);
+    }
+
+  } else if (Argc > 3) {
+    #ifdef Q_OS_WIN32
+      QMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
+    #else
+      fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
+    #endif
+    exit(EXIT_FAILURE);
   }
+
+
 
   // Some QStringLists to be initialized, has to be the same order as the constants.
   CurveKeys << "CurveRGB"
@@ -2871,14 +2903,19 @@ void CB_MenuFileOpen(const short HaveFile) {
   QString InputFileName;
   if (HaveFile) {
     InputFileName = ImageFileToOpen;
-    if (0 == InputFileName.size()) return;
   } else {
     InputFileName =
       QFileDialog::getOpenFileName(NULL,
                                    QObject::tr("Open Raw"),
                                    Settings->GetString("RawsDirectory"),
                                    RawPattern);
-    if (0 == InputFileName.size()) return;
+  }
+
+  if (!QFile::exists(InputFileName)) {
+    QMessageBox::warning(NULL,
+                         QObject::tr("File not found"),
+                         QObject::tr("Intput file does not exist.") + "\n\n" + InputFileName);
+    return;
   }
 
   QFileInfo PathInfo(InputFileName);
