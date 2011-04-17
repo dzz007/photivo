@@ -481,6 +481,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateToolBoxes();
 
   // Set help pages
+  m_GroupBox->value("TabWhiteBalance")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
+
   m_GroupBox->value("TabLensfunLensParameters")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#lens_parameters");
   m_GroupBox->value("TabLensfunCA")->
@@ -493,12 +496,19 @@ ptMainWindow::ptMainWindow(const QString Title)
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#geometry_conversion");
   m_GroupBox->value("TabDefish")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#defish");
+  m_GroupBox->value("TabRotation")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#rotation_and_perspective");
   m_GroupBox->value("TabCrop")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#crop");
   m_GroupBox->value("TabLiquidRescale")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#seam_carving");
-  m_GroupBox->value("TabWhiteBalance")->
-    SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
+  m_GroupBox->value("TabResize")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#resize");
+  m_GroupBox->value("TabFlip")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#flip");
+  m_GroupBox->value("TabBlock")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#block");
+
   m_GroupBox->value("TabBW")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#black_and_white");
 
