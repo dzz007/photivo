@@ -4063,7 +4063,7 @@ void CLASS pre_interpolate()
       m_Colors++;
     } else {
       // RG1BG2 -> RGB
-#pragma omp parallel for schedule(static) default(shared)
+#pragma omp parallel for schedule(static) default(shared) private(row, col)
       for (row = FC(1,0) >> 1; row < m_Height; row+=2)
         for (col = FC(row,1) & 1; col < m_Width; col+=2)
           m_Image[row*m_Width+col][1] = m_Image[row*m_Width+col][3];
