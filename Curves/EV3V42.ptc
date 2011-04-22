@@ -1,0 +1,17 @@
+;
+; photivo Curve File
+;
+; This is a good replacement curve for photographers who constantly
+; find themselves having to use EV compensation to correct for dark 
+; images. It is calibrated to add the equivalent of +0.33 EV to images 
+; while holding more highlight information than if you were to actually
+; set the camera to +0.33 EV. This curve is recommended for most users 
+; as a general use curve when point and shoot is too bright.;
+Magic FLOSSCurveFile
+IntendedChannel 0
+CurveType 1
+0 0
+201 250
+301 377
+404 503
+1000 876
