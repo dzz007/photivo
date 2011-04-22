@@ -288,6 +288,9 @@ short   InStartup  = 1;
 short   JobMode = 0;
 QString JobFileName;
 QString ImageFileToOpen;
+#ifdef Q_OS_MAC
+    bool MacGotFileEvent=false;
+#endif
 
 #ifndef DLRAW_GIMP_PLUGIN
 int main(int Argc, char *Argv[]) {
@@ -296,6 +299,31 @@ int main(int Argc, char *Argv[]) {
   return RV;
 }
 #endif
+
+#ifdef Q_OS_MAC
+  class MyQApplication : public QApplication {
+  protected:
+    virtual bool event(QEvent *event);
+  public:
+      MyQApplication(int & argc, char ** argv);
+  };
+
+  bool MyQApplication::event(QEvent *event)
+  {
+      switch (event->type()) {
+      case QEvent::FileOpen:
+          ImageFileToOpen=static_cast<QFileOpenEvent *>(event)->file();
+          MacGotFileEvent=true;
+          return true;
+      default:
+          MacGotFileEvent=false;
+          break;
+      }
+      return QApplication::event(event);
+  }
+  MyQApplication::MyQApplication(int & argc, char ** argv) : QApplication(argc, argv){};
+#endif
+
 
 QApplication* TheApplication;
 
@@ -309,7 +337,11 @@ int photivoMain(int Argc, char *Argv[]) {
   QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 
   //QApplication TheApplication(Argc,Argv);
+  #ifdef Q_OS_MAC
+  TheApplication = new MyQApplication(Argc,Argv);
+  #else
   TheApplication = new QApplication(Argc,Argv);
+  #endif
 
   #ifdef Q_OS_MAC
     QDir dir(QApplication::applicationDirPath());
@@ -334,7 +366,11 @@ int photivoMain(int Argc, char *Argv[]) {
       "For more documentation visit the wiki:\n"
       "http://photivo.org/photivo/start\n"
     );
-
+  #ifdef Q_OS_MAC
+    if (MacGotFileEvent) {
+          fprintf(stdout,"%s","got file");
+    } else {
+  #endif
   if (Argc == 2) {
     QString cliswitch = Argv[1];
     if (cliswitch == "-h") {  // Help display
@@ -376,6 +412,9 @@ int photivoMain(int Argc, char *Argv[]) {
     #endif
     exit(EXIT_FAILURE);
   }
+  #ifdef Q_OS_MAC
+    }
+  #endif
 
 
 
