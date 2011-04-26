@@ -128,7 +128,8 @@ public:
   QDockWidget* ControlsDockWidget;
 
   void OnToolBoxesEnabledTriggered(const bool Enabled);
-
+public slots:
+  void OtherInstanceMessage(const QString &msg);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -301,6 +302,7 @@ private slots:
   void OnVisibleToolsDiscardButtonClicked();
   void OnVisibleToolsLoadButtonClicked();
   void OnVisibleToolsSaveButtonClicked();
+
 };
 
 #endif
