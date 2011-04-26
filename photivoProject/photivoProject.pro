@@ -53,6 +53,12 @@ win32 {
   UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
   RCC_DIR = ../$${BUILDDIR}/Objects
 }
+macx { 
+    LIBS += -framework QtCore
+    LIBS += -framework QtGui
+    LIBS += -framework QtNetwork
+}
+
 # Stuff for liquid rescale
 QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)
 QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
@@ -61,9 +67,9 @@ QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
 LIBS += $$system(pkg-config --libs-only-l lqr-1)
 
 QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP -ffast-math -O0 -g
-QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp -ffast-math -DDLRAW_HAVE_GIMP
+QMAKE_CXXFLAGS_RELEASE += -O3 -ftree-vectorize -fopenmp -ffast-math -DDLRAW_HAVE_GIMP
 QMAKE_CFLAGS_DEBUG += -ffast-math -O0 -g -DDLRAW_HAVE_GIMP
-QMAKE_CFLAGS_RELEASE += -O3 -fopenmp -ffast-math -DDLRAW_HAVE_GIMP -fopenmp
+QMAKE_CFLAGS_RELEASE += -O3 -ftree-vectorize -fopenmp -ffast-math -DDLRAW_HAVE_GIMP -fopenmp
 QMAKE_LFLAGS_DEBUG += -rdynamic
 
 APPVERSION = $$system(sh ./get_appversion)
@@ -77,10 +83,11 @@ LIBS += -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
 unix {
   CONFIG += link_pkgconfig
-  PKGCONFIG += GraphicsMagick++ GraphicsMagickWand
+  PKGCONFIG += GraphicsMagick++ GraphicsMagickWand lcms2
   LIBS += $$system(GraphicsMagick++-config --libs)
-  QMAKE_CC = ccache /usr/bin/gcc
-  QMAKE_CXX = ccache /usr/bin/g++
+  LIBS += $$system(pkg-config --libs lcms2)
+  QMAKE_CC = /usr/bin/gcc
+  QMAKE_CXX = /usr/bin/g++
   PREFIX = $$system(more ./install_prefix)
   QMAKE_CXXFLAGS_DEBUG += -DPREFIX=$${PREFIX}
   QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX}
@@ -136,6 +143,9 @@ HEADERS += ../Sources/ptCheck.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptGroupBox.h
 HEADERS += ../Sources/ptTheme.h
+HEADERS += ../Sources/qtsingleapplication.h
+HEADERS += ../Sources/qtlocalpeer.h
+HEADERS += ../Sources/qtlockedfile.h
 HEADERS += ../Sources/greyc/CImg.h
 HEADERS += ../Sources/clapack/clapack.h
 HEADERS += ../Sources/clapack/fp.h
@@ -187,6 +197,9 @@ SOURCES += ../Sources/ptCheck.cpp
 SOURCES += ../Sources/ptCalloc.cpp
 SOURCES += ../Sources/ptGroupBox.cpp
 SOURCES += ../Sources/ptTheme.cpp
+SOURCES += ../Sources/qtsingleapplication.cpp
+SOURCES += ../Sources/qtlocalpeer.cpp
+SOURCES += ../Sources/qtlockedfile.cpp
 SOURCES += ../Sources/clapack/xerbla.c
 SOURCES += ../Sources/clapack/open.c
 SOURCES += ../Sources/clapack/ieeeck.c

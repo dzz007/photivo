@@ -2974,7 +2974,10 @@ void ptMainWindow::UpdateLfunVignetteUI() {
   short VignetteModel = Settings->GetInt("LfunVignetteModel");
   LfunVignettePoly6Container->setVisible(VignetteModel == ptLfunVignetteModel_Poly6);
 }
-
+void ptMainWindow::OtherInstanceMessage(const QString &msg) { // Added slot for messages to the single instance
+    ImageFileToOpen = msg;
+    CB_MenuFileOpen(1);
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Update liquid rescale UI elements
