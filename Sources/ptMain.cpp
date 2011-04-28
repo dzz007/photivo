@@ -46,7 +46,7 @@
 #include "ptFastBilateral.h"
 #include "ptTheme.h"
 #include "ptWiener.h"
-#include "qtsingleapplication.h"
+#include "qtsingleapplication/qtsingleapplication.h"
 #ifdef Q_OS_MAC
     #include <QFileOpenEvent> 
 #endif
