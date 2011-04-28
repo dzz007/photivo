@@ -94,6 +94,7 @@ unix {
   QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX}
   QMAKE_CFLAGS_RELEASE += -DPREFIX=$${PREFIX}
   QMAKE_POST_LINK=strip $(TARGET)
+  QT += network
 }
 win32 {
   QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS)
@@ -106,6 +107,7 @@ win32 {
   LIBS += -lwsock32 -lexpat -lregex -lgdi32 -liconv
   RC_FILE = photivo.rc
 #  CONFIG += console
+  QT += network
 }
 
 # Input
