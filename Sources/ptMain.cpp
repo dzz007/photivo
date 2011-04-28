@@ -376,7 +376,6 @@ int photivoMain(int Argc, char *Argv[]) {
   //QtSingleInstance, add CLI-Switch to skip and allow multiple instances
   if(TheApplication->isRunning())
   {
-      // CB_MenuFileExit(1); 
       QString CliSwitch = Argv[1];
       TheApplication->sendMessage(CliSwitch);
       return 0;
