@@ -639,6 +639,11 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 
 
 /** Splitter ****************************************/
+    //should work, but doesn't
+    "#MainSplitter {"
+    "  background-color: " + Dark + ";"
+    "}"
+
     "QSplitter {"
     "  max-width: 4px;"
     "  min-width: 4px;"
