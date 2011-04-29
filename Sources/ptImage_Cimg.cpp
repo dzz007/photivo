@@ -225,55 +225,61 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
       }
     }
   } else { // generic version
-    // horizontal perspective (tilt)
+    // perspective
     const float
-      r_hor = FocalLength/powf(36.0f*36.0f+24.0f*24.0f,0.5f)*powf((float)m_Width*m_Width+(float)m_Height*m_Height,0.5f),
-      angle_hor = (float)(TiltAngle*ptPI/180.0);
-    const float MinDenom = 0.1;
+      r = FocalLength/powf(36.0f*36.0f+24.0f*24.0f,0.5f)*powf((float)m_Width*m_Width+(float)m_Height*m_Height,0.5f),
+      angle_hor = (float)(-TurnAngle*ptPI/180.0),
+      angle_ver = (float)(TiltAngle*ptPI/180.0);
+    const float MinDenom = 0.2;
     short OutOfBounds = 0;
-    if (r_hor*cosf(angle_hor)+m_Height/2.0f*sinf(angle_hor) < MinDenom ||
-        r_hor*cosf(-angle_hor)+m_Height/2.0f*sinf(-angle_hor) < MinDenom)
+    const float
+      denom1 = r*cosf(angle_hor)*cosf(angle_ver)+m_Width/2.0f*sinf(angle_hor)*cosf(angle_ver)+m_Height/2.0f*sinf(angle_ver),
+      denom2 = r*cosf(angle_hor)*cosf(angle_ver)-m_Width/2.0f*sinf(angle_hor)*cosf(angle_ver)+m_Height/2.0f*sinf(angle_ver),
+      denom3 = r*cosf(angle_hor)*cosf(angle_ver)+m_Width/2.0f*sinf(angle_hor)*cosf(angle_ver)-m_Height/2.0f*sinf(angle_ver),
+      denom4 = r*cosf(angle_hor)*cosf(angle_ver)-m_Width/2.0f*sinf(angle_hor)*cosf(angle_ver)-m_Height/2.0f*sinf(angle_ver);
+    if (denom1 < MinDenom ||
+        denom2 < MinDenom ||
+        denom3 < MinDenom ||
+        denom4 < MinDenom) {
       OutOfBounds = 1;
+    }
     const float
-      uy_hor = m_Height/2.0f*r_hor/(r_hor*cosf(angle_hor)+m_Height/2.0f*sinf(angle_hor)),
-      vy_hor = m_Height/2.0f*r_hor/(r_hor*cosf(-angle_hor)+m_Height/2.0f*sinf(-angle_hor)),
-      ux_hor = m_Width*powf((powf(r_hor-uy_hor*sinf(angle_hor),2.0f)+powf(uy_hor*cosf(angle_hor),2.0f))/(r_hor*r_hor+(float)m_Height*m_Height/4.0f),0.5f),
-      vx_hor = m_Width*powf((powf(r_hor-vy_hor*sinf(-angle_hor),2.0f)+powf(vy_hor*cosf(-angle_hor),2.0f))/(r_hor*r_hor+(float)m_Height*m_Height/4.0f),0.5f),
-      x_hor = MAX(fabs(ux_hor),fabs(vx_hor)),
-      x_hor1 = 0.5f*x_hor,
-      y_mid_hor = m_Height*0.5f,
-      x_mid_hor = m_Width*0.5f;
-    uint16_t Height_hor = (int32_t)(uy_hor+vy_hor);
-    uint16_t Width_hor = (int32_t) x_hor;
-    // vertical perspective (turn)
-    const float
-      r_ver = cosf(angle_hor)*r_hor,
-      angle_ver = (float)(-TurnAngle*ptPI/180.0);
-    if (r_ver*cosf(angle_ver)+Width_hor/2.0f*sinf(angle_ver) < MinDenom ||
-        r_ver*cosf(-angle_ver)+Width_hor/2.0f*sinf(-angle_ver) < MinDenom)
-      OutOfBounds = 1;
-    const float
-      ux_ver = Width_hor/2.0f*r_ver/(r_ver*cosf(angle_ver)+Width_hor/2.0f*sinf(angle_ver)),
-      vx_ver = Width_hor/2.0f*r_ver/(r_ver*cosf(-angle_ver)+Width_hor/2.0f*sinf(-angle_ver)),
-      uy_ver = Height_hor*powf((powf(r_ver-ux_ver*sinf(angle_ver),2.0f)+powf(ux_ver*cosf(angle_ver),2.0f))/(r_ver*r_ver+(float)Width_hor*Width_hor/4.0f),0.5f),
-      vy_ver = Height_hor*powf((powf(r_ver-vx_ver*sinf(-angle_ver),2.0f)+powf(vx_ver*cosf(-angle_ver),2.0f))/(r_ver*r_ver+(float)Width_hor*Width_hor/4.0f),0.5f),
-      y_ver = MAX(fabs(uy_ver),fabs(vy_ver)),
-      y_ver1 = 0.5f*y_ver,
-      y_mid_ver = Height_hor*0.5f,
-      x_mid_ver = Width_hor*0.5f;
-    uint16_t Width_ver = (int32_t)(ux_ver+vx_ver);
-    uint16_t Height_ver = (int32_t) y_ver;
+      height1 = m_Height/2.0f*r*cosf(angle_hor)/denom1,
+      height2 = m_Height/2.0f*r*cosf(angle_hor)/denom2,
+      height3 = -m_Height/2.0f*r*cosf(angle_hor)/denom3,
+      height4 = -m_Height/2.0f*r*cosf(angle_hor)/denom4,
+      width1 = (m_Width/2.0f*r*cosf(angle_ver)+m_Height/2.0f*r*sinf(angle_hor)*sinf(angle_ver))/denom1,
+      width2 = (m_Width/2.0f*r*cosf(angle_ver)-m_Height/2.0f*r*sinf(angle_hor)*sinf(angle_ver))/denom3,
+      width3 = (-m_Width/2.0f*r*cosf(angle_ver)+m_Height/2.0f*r*sinf(angle_hor)*sinf(angle_ver))/denom2,
+      width4 = (-m_Width/2.0f*r*cosf(angle_ver)-m_Height/2.0f*r*sinf(angle_hor)*sinf(angle_ver))/denom4,
+      x_pers = MAX(fabs(width1), fabs(width2))+MAX(fabs(width3), fabs(width4)),
+      x_pers1 = MAX(fabs(width3), fabs(width4)),
+      y_pers = MAX(fabs(height1), fabs(height2))+MAX(fabs(height3), fabs(height4)),
+      y_pers1 = MAX(fabs(height3), fabs(height4)),
+      y_mid_pers = m_Height*0.5f,
+      x_mid_pers = m_Width*0.5f;
+    uint16_t Width_pers = (int32_t) x_pers;
+    uint16_t Height_pers = (int32_t) y_pers;
     if (OutOfBounds == 1) return this;
+    // correction angle
+    const float
+      cor_x = r*tanf(angle_hor)+200,
+      cor_y = r*tanf(angle_ver)*cosf(angle_hor)*(1+powf(tanf(angle_hor),2.0f)),
+      cor_l = (cor_x*r*cosf(angle_ver)+cor_y*r*sinf(angle_hor)*sinf(angle_ver))/
+              (r*cosf(angle_hor)*cosf(angle_ver)+cor_x*cosf(angle_ver)*sinf(angle_hor)+cor_y*sinf(angle_ver)),
+      cor_m = cor_y*r*cosf(angle_hor)/
+              (r*cosf(angle_hor)*cosf(angle_ver)+cor_x*cosf(angle_ver)*sinf(angle_hor)+cor_y*sinf(angle_ver)),
+      cor_angle = atanf((r*sinf(angle_ver)*cosf(angle_hor)-cor_m)/(r*sinf(angle_hor)-cor_l));
     // rotation and scaling
     const float
-      rad = (float)(nangle*ptPI/180.0),
+      rad = (float)(nangle*ptPI/180.0)-cor_angle,
       ca = (float)cosf(rad),
       sa = (float)sinf(rad),
       sc1 = 1.0f/ScaleX,
       sc2 = 1.0f/ScaleY,
-      ux = abs(Width_ver/sc1*ca), uy = abs(Width_ver/sc1*sa),
-      vx = abs(Height_ver/sc2*sa), vy = abs(Height_ver/sc2*ca),
-      w2 = 0.5f*Width_ver, h2 = 0.5f*Height_ver,
+      ux = abs(Width_pers/sc1*ca), uy = abs(Width_pers/sc1*sa),
+      vx = abs(Height_pers/sc2*sa), vy = abs(Height_pers/sc2*ca),
+      w2 = 0.5f*Width_pers, h2 = 0.5f*Height_pers,
       dw2 = 0.5f*(ux+vx), dh2 = 0.5f*(uy+vy);
     NewWidth = (int32_t)(ux+vx);
     NewHeight = (int32_t)(uy+vy);
@@ -285,40 +291,60 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
       cos_ver = cosf(angle_ver),
       sin_hor = sinf(angle_hor),
       cos_hor = cosf(angle_hor);
-    float fx,fy,gx,gy,hx,hy;
+    float fx,fy,gx,gy;
     {
-#pragma omp parallel for schedule(static) private(fx,fy,gx,gy,hx,hy)
+#pragma omp parallel for schedule(static) private(fx,fy,gx,gy)
       for (int32_t Row = 0; Row < NewHeight; Row++) {
         int32_t Temp = Row*NewWidth;
         for (int32_t Col = 0; Col < NewWidth; Col++) {
           // rotation and scaling
-          hx = w2 + (Col-dw2)*ca*sc1 + (Row-dh2)*sa*sc1;
-          hy = h2 - (Col-dw2)*sa*sc2 + (Row-dh2)*ca*sc2;
+          gx = w2 + (Col-dw2)*ca*sc1 + (Row-dh2)*sa*sc1;
+          gy = h2 - (Col-dw2)*sa*sc2 + (Row-dh2)*ca*sc2;
 
-          // vertical perspective (turn)
-          if (TurnAngle != 0.0f) {
-            const float ver_x_temp_sin = (hx-vx_ver)*sin_ver;
-            const float ver_x_temp_cos = (hx-vx_ver)*cos_ver;
-            const float gx_temp = r_ver*ver_x_temp_cos/(r_ver-ver_x_temp_sin);
-            gx = x_mid_ver+gx_temp;
-            gy = y_mid_ver+(hy-y_ver1)*powf((r_ver*r_ver+gx_temp*gx_temp)/(powf(r_ver-ver_x_temp_sin,2.0f)+powf(ver_x_temp_cos,2.0f)),0.5f);
-          } else {
-            gx = hx;
-            gy = hy;
-          }
-
-          // horizontal perspective (tilt)
-          if (TiltAngle != 0.0f) {
-            const float hor_y_temp_sin = (gy-vy_hor)*sin_hor;
-            const float hor_y_temp_cos = (gy-vy_hor)*cos_hor;
-            const float fy_temp = r_hor*hor_y_temp_cos/(r_hor-hor_y_temp_sin);
-            fy = y_mid_hor+fy_temp;
-            fx = x_mid_hor+(gx-x_hor1)*powf((r_hor*r_hor+fy_temp*fy_temp)/(powf(r_hor-hor_y_temp_sin,2.0f)+powf(hor_y_temp_cos,2.0f)),0.5f);
+          // perspective
+          if (TiltAngle != 0.0f || TurnAngle !=0.0f) {
+            const float
+              l = gx-x_pers1,
+              m = gy-y_pers1;
+            const float temp = m*sin_ver/(r*cos_hor-m*sin_ver);
+            const float fx_temp = r*cos_hor*(l+(l-r*sin_hor)*temp)/(r-sin_hor*(l+(l-r*sin_hor)*temp));
+            fx = x_mid_pers+fx_temp;
+            fy = y_mid_pers+m*cos_ver*(r*cos_hor+fx_temp*sin_hor)/(r*cos_hor-m*sin_ver);
           } else {
             fx = gx;
             fy = gy;
           }
-
+          // test points
+          /*
+          if (fabsf(fy-r*tanf(angle_ver)*cosf(angle_hor)*(1.0f+powf(tanf(angle_hor),2.0f))-m_Height/2.0f)<3 &&
+              fabsf(fx-r*tanf(angle_hor)-m_Width/2.0f)<3) {
+                TempImage[Temp+Col][0] = 0xffff;
+                TempImage[Temp+Col][1] = 0;
+                TempImage[Temp+Col][2] = 0;
+                continue;
+          }
+          if (fabsf(fy-r*tanf(angle_ver)*cosf(angle_hor)*(1.0f+powf(tanf(angle_hor),2.0f))-m_Height/2.0f)<3 &&
+              fabsf(fx-r*tanf(angle_hor)-200-m_Width/2.0f)<3) {
+                TempImage[Temp+Col][0] = 0xffff;
+                TempImage[Temp+Col][1] = 0xffff;
+                TempImage[Temp+Col][2] = 0;
+                continue;
+          }
+          if (fabsf(fy-(r*tanf(angle_ver)*cosf(angle_hor)*(1-sinf(angle_hor)*powf(tanf(angle_ver),2.0f)/(1+powf(sinf(angle_hor)*tanf(angle_ver),2.0f))))-m_Height/2.0f)<3 &&
+              fabsf(fx-(-r*cosf(angle_hor)*sinf(angle_hor)*powf(tanf(angle_ver),2.0f)/(1+powf(sinf(angle_hor),2.0f)*powf(tanf(angle_ver),2.0f)))-m_Width/2.0f)<3) {
+                TempImage[Temp+Col][0] = 0;
+                TempImage[Temp+Col][1] = 0xffff;
+                TempImage[Temp+Col][2] = 0;
+                continue;
+          }
+          if (fabsf(fy-m_Height/2.0f)<3 &&
+              fabsf(fx-r*tanf(angle_hor)-m_Width/2.0f)<3) {
+                TempImage[Temp+Col][0] = 0;
+                TempImage[Temp+Col][1] = 0;
+                TempImage[Temp+Col][2] = 0xffff;
+                continue;
+          }
+          */
           // outside source?
           if (fx < 0 || fx > m_Width-1 || fy < 0 || fy > m_Height-1) {
             for (short c = 0; c < 3; c++) {
@@ -326,6 +352,7 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
             }
             continue;
           }
+          // interpolation
           const int32_t x = (int32_t)fx, y = (int32_t)fy;
           const float dx = fx - x, dy = fy - y;
           const int32_t
