@@ -3747,9 +3747,6 @@ void CB_OutputColorProfileIntentChoice(const QVariant Choice) {
 
 void CB_StyleChoice(const QVariant Choice) {
 //dirty hack to make theming work
-#ifdef Q_OS_MAC
-    QColor ptDark;
-#endif
   Settings->SetValue("Style",Choice);
   if (Settings->GetInt("Style") == ptStyle_None) {
     Theme->Reset();
@@ -3757,43 +3754,19 @@ void CB_StyleChoice(const QVariant Choice) {
     Theme->Normal(Settings->GetInt("StyleHighLight"));
   } else if (Settings->GetInt("Style") == ptStyle_50Grey) {
     Theme->MidGrey(Settings->GetInt("StyleHighLight"));
-//dirty hack to make theming work
-#ifdef Q_OS_MAC
-  ptDark = QColor(180,180,180);
-  QString Dark = "rgb(" + QString::number(ptDark.red()) + "," +
-                          QString::number(ptDark.green()) + "," +
-                          QString::number(ptDark.blue()) + ")";
-  MainWindow->MainSplitter->setStyleSheet("background-color:"+Dark+";");
-#endif
   } else if (Settings->GetInt("Style") == ptStyle_VeryDark) {
     Theme->VeryDark(Settings->GetInt("StyleHighLight"));
-//dirty hack to make theming work
-#ifdef Q_OS_MAC
-  ptDark = QColor(51,51,51);
-  QString Dark = "rgb(" + QString::number(ptDark.red()) + "," +
-                          QString::number(ptDark.green()) + "," +
-                          QString::number(ptDark.blue()) + ")";
-  MainWindow->MainSplitter->setStyleSheet("background-color:"+Dark+";");
-#endif
   } else {
     Theme->DarkGrey(Settings->GetInt("StyleHighLight"));
-//dirty hack to make theming work
-#ifdef Q_OS_MAC
-  ptDark = QColor(30,30,30);
-  QString Dark = "rgb(" + QString::number(ptDark.red()) + "," +
-                          QString::number(ptDark.green()) + "," +
-                          QString::number(ptDark.blue()) + ")";
-  MainWindow->MainSplitter->setStyleSheet("background-color:"+Dark+";");
-#endif
   }
 
   MainWindow->MainTabBook->setStyle(Theme->ptStyle);
   MainWindow->ProcessingTabBook->setStyle(Theme->ptStyle);
   MainWindow->BottomContainer->setStyle(Theme->ptStyle);
   MainWindow->PipeControlWidget->setStyle(Theme->ptStyle);
-  MainWindow->MainSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ControlSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ViewSplitter->setStyle(Theme->ptStyle);
+  //MainWindow->MainSplitter->setStyle(Theme->ptStyle);
+  //MainWindow->ControlSplitter->setStyle(Theme->ptStyle);
+  //MainWindow->ViewSplitter->setStyle(Theme->ptStyle);
   MainWindow->ViewStartPage->setStyle(Theme->ptStyle);
 
   TheApplication->setPalette(Theme->ptPalette);
@@ -3804,6 +3777,9 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->StatusWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->SearchWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->ViewStartPageFrame->setStyleSheet(Theme->ptStyleSheet);
+  MainWindow->MainSplitter->setStyleSheet(Theme->ptStyleSheet);
+  MainWindow->ViewSplitter->setStyleSheet(Theme->ptStyleSheet);
+  MainWindow->ControlSplitter->setStyleSheet(Theme->ptStyleSheet);
 
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
