@@ -97,6 +97,12 @@ ptMainWindow::ptMainWindow(const QString Title)
   setupUi(this);
   setWindowTitle(Title);
 
+  // Move the fullscreen button in the zoom bar a bit to the left
+  // to make space for the Mac window resize handle
+  #ifdef Q_OS_MAC
+    MacSpacer->setFixedWidth(16);
+  #endif
+
   // Setup splitter
   //~ if (Settings->GetInt("SwitchLayout")) {
     //~ QList SplitterSizes = MainSplitter.sizes();
