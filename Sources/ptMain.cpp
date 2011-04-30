@@ -3764,9 +3764,11 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->ProcessingTabBook->setStyle(Theme->ptStyle);
   MainWindow->BottomContainer->setStyle(Theme->ptStyle);
   MainWindow->PipeControlWidget->setStyle(Theme->ptStyle);
-  //MainWindow->MainSplitter->setStyle(Theme->ptStyle);
-  //MainWindow->ControlSplitter->setStyle(Theme->ptStyle);
-  //MainWindow->ViewSplitter->setStyle(Theme->ptStyle);
+#ifndef Q_OS_MAC
+  MainWindow->MainSplitter->setStyle(Theme->ptStyle);
+  MainWindow->ControlSplitter->setStyle(Theme->ptStyle);
+  MainWindow->ViewSplitter->setStyle(Theme->ptStyle);
+#endif
   MainWindow->ViewStartPage->setStyle(Theme->ptStyle);
 
   TheApplication->setPalette(Theme->ptPalette);
@@ -3777,10 +3779,11 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->StatusWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->SearchWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->ViewStartPageFrame->setStyleSheet(Theme->ptStyleSheet);
+#ifdef Q_OS_MAC
   MainWindow->MainSplitter->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->ViewSplitter->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->ControlSplitter->setStyleSheet(Theme->ptStyleSheet);
-
+#endif
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
 }
