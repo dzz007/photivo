@@ -3759,16 +3759,17 @@ void CB_StyleChoice(const QVariant Choice) {
   } else {
     Theme->DarkGrey(Settings->GetInt("StyleHighLight"));
   }
+#ifdef Q_OS_MAC
+  MainWindow->MainSplitter->setStyleSheet("");
+#endif
 
   MainWindow->MainTabBook->setStyle(Theme->ptStyle);
   MainWindow->ProcessingTabBook->setStyle(Theme->ptStyle);
   MainWindow->BottomContainer->setStyle(Theme->ptStyle);
   MainWindow->PipeControlWidget->setStyle(Theme->ptStyle);
-#ifndef Q_OS_MAC
   MainWindow->MainSplitter->setStyle(Theme->ptStyle);
   MainWindow->ControlSplitter->setStyle(Theme->ptStyle);
   MainWindow->ViewSplitter->setStyle(Theme->ptStyle);
-#endif
   MainWindow->ViewStartPage->setStyle(Theme->ptStyle);
 
   TheApplication->setPalette(Theme->ptPalette);
@@ -3780,9 +3781,9 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->SearchWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->ViewStartPageFrame->setStyleSheet(Theme->ptStyleSheet);
 #ifdef Q_OS_MAC
-  MainWindow->MainSplitter->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->ViewSplitter->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->ControlSplitter->setStyleSheet(Theme->ptStyleSheet);
+  if(Theme->MacStyleFlag){
+  MainWindow->MainSplitter->setStyleSheet("background-color:"+Theme->MacBackGround+";");
+  }
 #endif
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
