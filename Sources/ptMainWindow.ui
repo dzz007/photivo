@@ -1747,8 +1747,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>737</width>
-                                <height>259</height>
+                                <width>98</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2038,8 +2038,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>737</width>
-                                <height>259</height>
+                                <width>258</width>
+                                <height>135</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12582,6 +12582,16 @@
               </property>
               <property name="checkable">
                <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="MacSpacer" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
              </widget>
             </item>
