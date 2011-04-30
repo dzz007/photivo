@@ -42,6 +42,10 @@ ptTheme::ptTheme(QApplication* Application) {
   ptThemeStyle = new QCleanlooksStyle;
 #endif
   ptStyleSheet = "";
+#ifdef Q_OS_MAC
+  MacBackGround ="";
+  MacStyleFlag=false;
+#endif
   ptPalette = QPalette();
   ptMenuPalette = QPalette();
   ptHighLight = QColor(255,255,255);
@@ -70,6 +74,9 @@ void ptTheme::Reset() {
   ptPalette = ptSystemPalette;
   ptMenuPalette = ptSystemPalette;
   ptStyleSheet = "";
+#ifdef Q_OS_MAC
+  MacStyleFlag=false;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +91,9 @@ void ptTheme::Normal(short Color) {
   JustTools();
   ptPalette = ptSystemPalette;
   ptMenuPalette = ptSystemPalette;
+#ifdef Q_OS_MAC
+  MacStyleFlag=false;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +110,9 @@ void ptTheme::MidGrey(short Color) {
   ptGradient = QColor(150,150,150);
   ptBright = QColor(115,115,115);
   ptVeryBright = QColor(220,220,220);
+#ifdef Q_OS_MAC
+  MacStyleFlag=true;
+#endif
 
   ptStyle = ptThemeStyle;
   CSS();
@@ -166,6 +179,9 @@ void ptTheme::DarkGrey(short Color) {
   ptGradient = QColor(70,70,70);
   ptBright = QColor(115,115,115);
   ptVeryBright = QColor(180,180,180);
+#ifdef Q_OS_MAC
+  MacStyleFlag=true;
+#endif
 
   ptStyle = ptThemeStyle;
   CSS();
@@ -232,6 +248,9 @@ void ptTheme::VeryDark(short Color) {
   ptGradient = QColor(40,40,40);
   ptBright = QColor(70,70,70);
   ptVeryBright = QColor(150,150,150);
+#ifdef Q_OS_MAC
+  MacStyleFlag=true;
+#endif
 
   ptStyle = ptThemeStyle;
   CSS();
@@ -312,7 +331,9 @@ void ptTheme::CSS() {
   QString VeryBright = "rgb(" + QString::number(ptVeryBright.red()) + "," +
                                 QString::number(ptVeryBright.green()) + "," +
                                 QString::number(ptVeryBright.blue()) + ")";
-
+#ifdef Q_OS_MAC
+  MacBackGround=BackGround;
+#endif
   ptStyleSheet =
 /************************************************************************************
 Global colour definitions. Not needed for normal.css

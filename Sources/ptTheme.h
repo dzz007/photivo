@@ -48,6 +48,10 @@ QStyle*     ptStyle;
 QPalette    ptPalette;
 QPalette    ptMenuPalette;
 QString     ptStyleSheet;
+#ifdef Q_OS_MAC
+QString     MacBackGround;
+bool        MacStyleFlag;
+#endif
 
 QPalette    ptSystemPalette;
 QStyle*     ptSystemStyle;
