@@ -53,11 +53,6 @@ win32 {
   UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
   RCC_DIR = ../$${BUILDDIR}/Objects
 }
-macx { 
-    LIBS += -framework QtCore
-    LIBS += -framework QtGui
-    LIBS += -framework QtNetwork
-}
 
 # Stuff for liquid rescale
 QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)
@@ -83,11 +78,10 @@ LIBS += -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
 unix {
   CONFIG += link_pkgconfig
-  PKGCONFIG += GraphicsMagick++ GraphicsMagickWand lcms2
+  PKGCONFIG += GraphicsMagick++ GraphicsMagickWand
   LIBS += $$system(GraphicsMagick++-config --libs)
-  LIBS += $$system(pkg-config --libs lcms2)
-  QMAKE_CC = /usr/bin/gcc
-  QMAKE_CXX = /usr/bin/g++
+  QMAKE_CC = ccache /usr/bin/gcc
+  QMAKE_CXX = ccache /usr/bin/g++
   PREFIX = $$system(more ./install_prefix)
   QMAKE_CXXFLAGS_DEBUG += -DPREFIX=$${PREFIX}
   QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX}
@@ -108,6 +102,15 @@ win32 {
   RC_FILE = photivo.rc
 #  CONFIG += console
   QT += network
+}
+macx {
+  PKGCONFIG += lcms2
+  LIBS += $$system(pkg-config --libs lcms2)
+  QMAKE_CC = /usr/bin/gcc
+  QMAKE_CXX = /usr/bin/g++
+  LIBS += -framework QtCore
+  LIBS += -framework QtGui
+  LIBS += -framework QtNetwork
 }
 
 # Input
