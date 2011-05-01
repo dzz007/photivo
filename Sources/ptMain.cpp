@@ -293,7 +293,7 @@ short   InStartup  = 1;
 
 short   JobMode = 0;
 QString JobFileName;
-QString ImageFileToOpen;
+QString ImageFileToOpen = "";
 #ifdef Q_OS_MAC
     bool MacGotFileEvent=false;
 #endif
@@ -373,26 +373,15 @@ int photivoMain(int Argc, char *Argv[]) {
 #endif
   //close on last window closed, seems to be unneeded
   TheApplication->connect(TheApplication, SIGNAL(lastWindowClosed()), TheApplication, SLOT(quit()));
-  //QtSingleInstance, add CLI-Switch to skip and allow multiple instances
-  if(TheApplication->isRunning())
-  {
-      QString CliSwitch = Argv[1];
-      TheApplication->sendMessage(CliSwitch);
-      return 0;
-  }
 
 
-#ifdef Q_OS_MAC
-  QDir dir(QApplication::applicationDirPath());
-  QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
-#endif
-
-
+  // Handle cli arguments
   ImageCleanUp = 0;
+  short AllowNewInstance = 0;
+  short CliArgumentsError = 0;
 
   QString PhotivoCliUsageMsg = QObject::tr(
-          "Syntax: photivo [-i imagefile | -j jobfile | -g imagefile]\n"
-          "        photivo imagefile\n\n"
+          "Syntax: photivo [-i imagefile | -j jobfile | -g imagefile] [h] [--new-instance]\n"
           "Options:\n"
           "-i imagefile      Specify image file to load. The -i is optional. Starting\n"
           "                  Photivo with just a file name works the same.\n"
@@ -401,6 +390,9 @@ int photivoMain(int Argc, char *Argv[]) {
           "-g imagefile      Specify temporary file used for Gimp-to-Photivo export.\n"
           "                  Internal option, not intended for general use.\n"
           "                  BEWARE! This option deletes imagefile!\n"
+          "--new-instance    Allow opening another Photivo instance instead of using a\n"
+          "                  currently running Photivo. Job files are always opened in a\n"
+          "                  new instance.\n"
           "-h                Display this usage information.\n\n"
           "For more documentation visit the wiki:\n"
           "http://photivo.org/photivo/start\n"
@@ -409,51 +401,94 @@ int photivoMain(int Argc, char *Argv[]) {
 //Just Skip if engaged by QFileOpenEvent
   if(!MacGotFileEvent) {
 #endif
-      if (Argc == 2) {
-          QString cliswitch = Argv[1];
-          if (cliswitch == "-h") {  // Help display
-#ifdef Q_OS_WIN32
-              QMessageBox::information(0, QObject::tr("Photivo command line options"), PhotivoCliUsageMsg);
-#else
-              fprintf(stdout,"%s",PhotivoCliUsageMsg.toAscii().data());
-#endif
-              exit(0);
+    // Put Argv[] into a string list for non-PITA handling
+    QStringList CliArgs;
+    for (int i = 1; i < Argc; i++) {
+      CliArgs << Argv[i];
+    }
 
-          } else {    // only specify file name, works the same as "-i filename"
-              ImageFileToOpen = Argv[1];
-          }
-
-      } else if (Argc == 3) {
-          QString CliSwitch = Argv[1];
-          if (CliSwitch == "-i") {
-              ImageFileToOpen = Argv[2];
-          } else if (CliSwitch == "-j") {
-              JobMode = 1;
-              JobFileName = Argv[2];
-          } else if (CliSwitch == "-g") {
-              ImageCleanUp = 1;
-              ImageFileToOpen = Argv[2];
-          } else {
+    if (CliArgs.indexOf("-h") > -1) {
 #ifdef Q_OS_WIN32
-              QMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
+      QMessageBox::information(0, QObject::tr("Photivo command line options"), PhotivoCliUsageMsg);
 #else
-              fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
+      fprintf(stdout,"%s",PhotivoCliUsageMsg.toAscii().data());
 #endif
-              exit(EXIT_FAILURE);
-          }
+      exit(0);
+    }
 
-      } else if (Argc > 3) {
-#ifdef Q_OS_WIN32
-          QMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
-#else
-          fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
-#endif
-          exit(EXIT_FAILURE);
+    if (CliArgs.indexOf("--new-instance") > -1) {
+      AllowNewInstance = 1;
+      CliArgs.removeAll("--new-instance");
+    }
+
+    // all the file open switches
+    if (CliArgs.count() > 0) {
+      if (CliArgs[0] == "-i") {
+        CliArgs.removeAt(0);
+        if (CliArgs.count() != 1) {
+          CliArgumentsError = 1;
+        } else {
+          ImageFileToOpen = CliArgs[0];
+        }
+
+      } else if (CliArgs[0] == "-j") {
+        CliArgs.removeAt(0);
+        if (CliArgs.count() != 1) {
+          CliArgumentsError = 1;
+        } else {
+          AllowNewInstance = 1;
+          JobMode = 1;
+          JobFileName = CliArgs[0];
+        }
+
+      } else if (CliArgs[0] == "-g") {
+        CliArgs.removeAt(0);
+        if (CliArgs.count() != 1) {
+          CliArgumentsError = 1;
+        } else {
+          ImageCleanUp = 1;
+          ImageFileToOpen = CliArgs[0];
+        }
+
+      // only possibility left is file name without -i
+      } else {
+        if (CliArgs.count() != 1) {
+          CliArgumentsError = 1;
+        } else {
+          ImageFileToOpen = CliArgs[0];
+        }
       }
+    }
+
+    if (CliArgumentsError == 1) {
+#ifdef Q_OS_WIN32
+      QMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
+#else
+      fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
+#endif
+      exit(EXIT_FAILURE);
+    }
+
 #ifdef Q_OS_MAC
   }
 #endif
 
+
+  //QtSingleInstance, add CLI-Switch to skip and allow multiple instances
+  if(TheApplication->isRunning() && (AllowNewInstance == 0)) {
+    if (ImageFileToOpen != "") {
+      TheApplication->sendMessage(ImageFileToOpen);
+    } else if (JobFileName != "") {
+      TheApplication->sendMessage(JobFileName);
+    }
+    return 0;
+  }
+
+
+#ifdef Q_OS_MAC
+  QDir dir(QApplication::applicationDirPath());
+  QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
+#endif
 
 
   // Some QStringLists to be initialized, has to be the same order as the constants.
