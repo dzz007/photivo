@@ -97,6 +97,12 @@ ptMainWindow::ptMainWindow(const QString Title)
   setupUi(this);
   setWindowTitle(Title);
 
+  // Move the fullscreen button in the zoom bar a bit to the left
+  // to make space for the Mac window resize handle
+  #ifdef Q_OS_MAC
+    MacSpacer->setFixedWidth(16);
+  #endif
+
   // Setup splitter
   //~ if (Settings->GetInt("SwitchLayout")) {
     //~ QList SplitterSizes = MainSplitter.sizes();
@@ -2974,7 +2980,10 @@ void ptMainWindow::UpdateLfunVignetteUI() {
   short VignetteModel = Settings->GetInt("LfunVignetteModel");
   LfunVignettePoly6Container->setVisible(VignetteModel == ptLfunVignetteModel_Poly6);
 }
-
+void ptMainWindow::OtherInstanceMessage(const QString &msg) { // Added slot for messages to the single instance
+    ImageFileToOpen = msg;
+    CB_MenuFileOpen(1);
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Update liquid rescale UI elements

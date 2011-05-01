@@ -53,6 +53,7 @@ win32 {
   UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
   RCC_DIR = ../$${BUILDDIR}/Objects
 }
+
 # Stuff for liquid rescale
 QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)
 QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
@@ -61,9 +62,9 @@ QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
 LIBS += $$system(pkg-config --libs-only-l lqr-1)
 
 QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP -ffast-math -O0 -g
-QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp -ffast-math -DDLRAW_HAVE_GIMP
+QMAKE_CXXFLAGS_RELEASE += -O3 -ftree-vectorize -fopenmp -ffast-math -DDLRAW_HAVE_GIMP
 QMAKE_CFLAGS_DEBUG += -ffast-math -O0 -g -DDLRAW_HAVE_GIMP
-QMAKE_CFLAGS_RELEASE += -O3 -fopenmp -ffast-math -DDLRAW_HAVE_GIMP -fopenmp
+QMAKE_CFLAGS_RELEASE += -O3 -ftree-vectorize -fopenmp -ffast-math -DDLRAW_HAVE_GIMP -fopenmp
 QMAKE_LFLAGS_DEBUG += -rdynamic
 
 APPVERSION = $$system(sh ./get_appversion)
@@ -87,6 +88,7 @@ unix {
   QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX}
   QMAKE_CFLAGS_RELEASE += -DPREFIX=$${PREFIX}
   QMAKE_POST_LINK=strip $(TARGET)
+  QT += network
 }
 win32 {
   QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS)
@@ -99,6 +101,16 @@ win32 {
   LIBS += -lwsock32 -lexpat -lregex -lgdi32 -liconv
   RC_FILE = photivo.rc
 #  CONFIG += console
+  QT += network
+}
+macx {
+  PKGCONFIG += lcms2
+  LIBS += $$system(pkg-config --libs lcms2)
+  QMAKE_CC = /usr/bin/gcc
+  QMAKE_CXX = /usr/bin/g++
+  LIBS += -framework QtCore
+  LIBS += -framework QtGui
+  LIBS += -framework QtNetwork
 }
 
 # Input
@@ -136,6 +148,9 @@ HEADERS += ../Sources/ptCheck.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptGroupBox.h
 HEADERS += ../Sources/ptTheme.h
+HEADERS += ../Sources/qtsingleapplication/qtsingleapplication.h
+HEADERS += ../Sources/qtsingleapplication/qtlocalpeer.h
+HEADERS += ../Sources/qtsingleapplication/qtlockedfile.h
 HEADERS += ../Sources/greyc/CImg.h
 HEADERS += ../Sources/clapack/clapack.h
 HEADERS += ../Sources/clapack/fp.h
@@ -187,6 +202,9 @@ SOURCES += ../Sources/ptCheck.cpp
 SOURCES += ../Sources/ptCalloc.cpp
 SOURCES += ../Sources/ptGroupBox.cpp
 SOURCES += ../Sources/ptTheme.cpp
+SOURCES += ../Sources/qtsingleapplication/qtsingleapplication.cpp
+SOURCES += ../Sources/qtsingleapplication/qtlocalpeer.cpp
+SOURCES += ../Sources/qtsingleapplication/qtlockedfile.cpp
 SOURCES += ../Sources/clapack/xerbla.c
 SOURCES += ../Sources/clapack/open.c
 SOURCES += ../Sources/clapack/ieeeck.c
