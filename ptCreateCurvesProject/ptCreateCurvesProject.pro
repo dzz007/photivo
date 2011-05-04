@@ -62,6 +62,12 @@ win32 {
   QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
   LIBS += -lwsock32 -lexpat
 }
+macx {
+  QMAKE_CC = /usr/bin/gcc
+  QMAKE_CXX = /usr/bin/g++
+  QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags lcms2) 
+  QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags lcms2) 
+}
 
 # Input
 HEADERS += ../Sources/ptCurve.h

@@ -48,6 +48,12 @@ unix {
   MOC_DIR = ../Objects
   UI_HEADERS_DIR = ../Objects
 }
+macx {
+  QMAKE_CC = /usr/bin/gcc
+  QMAKE_CXX = /usr/bin/g++
+  QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags lcms2) 
+  QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags lcms2) 
+}
 QMAKE_CXXFLAGS_RELEASE += -O3
 QMAKE_CXXFLAGS_RELEASE += -ffast-math
 QMAKE_CFLAGS_RELEASE += -O3

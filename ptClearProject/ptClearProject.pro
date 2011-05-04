@@ -71,6 +71,10 @@ win32 {
   QMAKE_CFLAGS_RELEASE += -I/my/include
   QMAKE_LFLAGS_RELEASE += -L/my/lib
 }
+macx {
+  QMAKE_CC = /usr/bin/gcc
+  QMAKE_CXX = /usr/bin/g++
+}
 
 # Input
 SOURCES += ../Sources/ptClear.cpp

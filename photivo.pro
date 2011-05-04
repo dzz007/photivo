@@ -71,12 +71,10 @@ unix {
 }
 
 SUBDIRS += photivoProject
-!macx {
-  SUBDIRS += ptCreateAdobeProfilesProject
-  SUBDIRS += ptCreateCurvesProject
-  SUBDIRS += ptGimpProject
-  SUBDIRS += ptClearProject
-}
+SUBDIRS += ptCreateAdobeProfilesProject
+SUBDIRS += ptCreateCurvesProject
+SUBDIRS += ptGimpProject
+SUBDIRS += ptClearProject
 
 RETURN = $$system(touch ./photivoProject/install_prefix && rm ./photivoProject/install_prefix && echo $${PREFIX} >> ./photivoProject/install_prefix)
 

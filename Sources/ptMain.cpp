@@ -3043,7 +3043,7 @@ void CB_MenuFileOpen(const short HaveFile) {
       if (!QFile::exists(InputFileName)) {
           QMessageBox::warning(NULL,
                   QObject::tr("File not found"),
-                  QObject::tr("Intput file does not exist.") + "\n\n" + InputFileName);
+                  QObject::tr("Input file does not exist.") + "\n\n" + InputFileName);
           return;
       }
   }
