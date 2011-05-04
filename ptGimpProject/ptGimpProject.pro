@@ -88,6 +88,10 @@ win32 {
   QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
   LIBS += -lwsock32 -lexpat -lregex -lgdi32
 }
+macx {
+  QMAKE_CC = /usr/bin/gcc
+  QMAKE_CXX = /usr/bin/g++
+}
 
 # Input
 HEADERS += ../Sources/ptCalloc.h
