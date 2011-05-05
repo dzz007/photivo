@@ -48,6 +48,13 @@ unix {
   MOC_DIR = ../Objects
   UI_HEADERS_DIR = ../Objects
 }
+#prevent qmake from adding -arch flags
+macx{
+  QMAKE_CFLAGS_X86_64 =-m64
+  QMAKE_CXXFLAGS_X86_64 =-m64
+  QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
+  QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
+}
 QMAKE_CXXFLAGS_RELEASE += -O3
 QMAKE_CXXFLAGS_RELEASE += -ffast-math
 QMAKE_CFLAGS_RELEASE += -O3
