@@ -3785,7 +3785,6 @@ void CB_OutputColorProfileIntentChoice(const QVariant Choice) {
 }
 
 void CB_StyleChoice(const QVariant Choice) {
-//dirty hack to make theming work
   Settings->SetValue("Style",Choice);
   if (Settings->GetInt("Style") == ptStyle_None) {
     Theme->Reset();
@@ -3799,6 +3798,7 @@ void CB_StyleChoice(const QVariant Choice) {
     Theme->DarkGrey(Settings->GetInt("StyleHighLight"));
   }
 #ifdef Q_OS_MAC
+//dirty hack to make theming work
   MainWindow->MainSplitter->setStyleSheet("");
 #endif
 
@@ -3820,6 +3820,7 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->SearchWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->ViewStartPageFrame->setStyleSheet(Theme->ptStyleSheet);
 #ifdef Q_OS_MAC
+//dirty hack to make theming work
   if(Theme->MacStyleFlag){
   MainWindow->MainSplitter->setStyleSheet("background-color:"+Theme->MacBackGround+";");
   }

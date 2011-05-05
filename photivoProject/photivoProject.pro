@@ -53,6 +53,13 @@ win32 {
   UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
   RCC_DIR = ../$${BUILDDIR}/Objects
 }
+#prevent qmake from adding -arch flags
+macx{
+  QMAKE_CFLAGS_X86_64 =-m64
+  QMAKE_CXXFLAGS_X86_64 =-m64
+  QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
+  QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
+}
 
 # Stuff for liquid rescale
 QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)

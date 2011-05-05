@@ -49,6 +49,13 @@ unix {
   UI_HEADERS_DIR = ../Objects
   RCC_DIR = ../Objects
 }
+#prevent qmake from adding -arch flags
+macx{
+  QMAKE_CFLAGS_X86_64 =-m64
+  QMAKE_CXXFLAGS_X86_64 =-m64
+  QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
+  QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
+}
 QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP
 QMAKE_CXXFLAGS_DEBUG += -ffast-math -O0 -g
 QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp

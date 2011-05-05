@@ -50,6 +50,13 @@ unix {
   UI_HEADERS_DIR = ../Objects_Gimp
   RCC_DIR = ../Objects_Gimp
 }
+#prevent qmake from adding -arch flags
+macx{
+  QMAKE_CFLAGS_X86_64 =-m64
+  QMAKE_CXXFLAGS_X86_64 =-m64
+  QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
+  QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
+}
 # Bit funky for the gimp.
 QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gimp-2.0)
 QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gtk+-2.0)
