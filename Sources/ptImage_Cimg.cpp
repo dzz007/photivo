@@ -225,42 +225,16 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
       }
     }
   } else { // generic version
-    // perspective
+    // background
     const float
       r = FocalLength/powf(36.0f*36.0f+24.0f*24.0f,0.5f)*powf((float)m_Width*m_Width+(float)m_Height*m_Height,0.5f),
       angle_hor = (float)(-TurnAngle*ptPI/180.0),
-      angle_ver = (float)(TiltAngle*ptPI/180.0);
-    const float MinDenom = 0.2;
-    short OutOfBounds = 0;
-    const float
-      denom1 = r*cosf(angle_hor)*cosf(angle_ver)+m_Width/2.0f*sinf(angle_hor)*cosf(angle_ver)+m_Height/2.0f*sinf(angle_ver),
-      denom2 = r*cosf(angle_hor)*cosf(angle_ver)-m_Width/2.0f*sinf(angle_hor)*cosf(angle_ver)+m_Height/2.0f*sinf(angle_ver),
-      denom3 = r*cosf(angle_hor)*cosf(angle_ver)+m_Width/2.0f*sinf(angle_hor)*cosf(angle_ver)-m_Height/2.0f*sinf(angle_ver),
-      denom4 = r*cosf(angle_hor)*cosf(angle_ver)-m_Width/2.0f*sinf(angle_hor)*cosf(angle_ver)-m_Height/2.0f*sinf(angle_ver);
-    if (denom1 < MinDenom ||
-        denom2 < MinDenom ||
-        denom3 < MinDenom ||
-        denom4 < MinDenom) {
-      OutOfBounds = 1;
-    }
-    const float
-      height1 = m_Height/2.0f*r*cosf(angle_hor)/denom1,
-      height2 = m_Height/2.0f*r*cosf(angle_hor)/denom2,
-      height3 = -m_Height/2.0f*r*cosf(angle_hor)/denom3,
-      height4 = -m_Height/2.0f*r*cosf(angle_hor)/denom4,
-      width1 = (m_Width/2.0f*r*cosf(angle_ver)+m_Height/2.0f*r*sinf(angle_hor)*sinf(angle_ver))/denom1,
-      width2 = (m_Width/2.0f*r*cosf(angle_ver)-m_Height/2.0f*r*sinf(angle_hor)*sinf(angle_ver))/denom3,
-      width3 = (-m_Width/2.0f*r*cosf(angle_ver)+m_Height/2.0f*r*sinf(angle_hor)*sinf(angle_ver))/denom2,
-      width4 = (-m_Width/2.0f*r*cosf(angle_ver)-m_Height/2.0f*r*sinf(angle_hor)*sinf(angle_ver))/denom4,
-      x_pers = MAX(fabs(width1), fabs(width2))+MAX(fabs(width3), fabs(width4)),
-      x_pers1 = MAX(fabs(width3), fabs(width4)),
-      y_pers = MAX(fabs(height1), fabs(height2))+MAX(fabs(height3), fabs(height4)),
-      y_pers1 = MAX(fabs(height3), fabs(height4)),
-      y_mid_pers = m_Height*0.5f,
-      x_mid_pers = m_Width*0.5f;
-    uint16_t Width_pers = (int32_t) x_pers;
-    uint16_t Height_pers = (int32_t) y_pers;
-    if (OutOfBounds == 1) return this;
+      angle_ver = (float)(TiltAngle*ptPI/180.0),
+      sc1 = 1.0f/ScaleX,
+      sc2 = 1.0f/ScaleY;
+    float
+      angle_rot = (float)(nangle*ptPI/180.0);
+
     // correction angle
     const float
       cor_x = r*tanf(angle_hor)+200,
@@ -268,83 +242,79 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
       cor_l = (cor_x*r*cosf(angle_ver)+cor_y*r*sinf(angle_hor)*sinf(angle_ver))/
               (r*cosf(angle_hor)*cosf(angle_ver)+cor_x*cosf(angle_ver)*sinf(angle_hor)+cor_y*sinf(angle_ver)),
       cor_m = cor_y*r*cosf(angle_hor)/
-              (r*cosf(angle_hor)*cosf(angle_ver)+cor_x*cosf(angle_ver)*sinf(angle_hor)+cor_y*sinf(angle_ver)),
-      cor_angle = atanf((r*sinf(angle_ver)*cosf(angle_hor)-cor_m)/(r*sinf(angle_hor)-cor_l));
-    // rotation and scaling
-    const float
-      rad = (float)(nangle*ptPI/180.0)-cor_angle,
-      ca = (float)cosf(rad),
-      sa = (float)sinf(rad),
-      sc1 = 1.0f/ScaleX,
-      sc2 = 1.0f/ScaleY,
-      ux = abs(Width_pers/sc1*ca), uy = abs(Width_pers/sc1*sa),
-      vx = abs(Height_pers/sc2*sa), vy = abs(Height_pers/sc2*ca),
-      w2 = 0.5f*Width_pers, h2 = 0.5f*Height_pers,
-      dw2 = 0.5f*(ux+vx), dh2 = 0.5f*(uy+vy);
-    NewWidth = (int32_t)(ux+vx);
-    NewHeight = (int32_t)(uy+vy);
-    TempImage = (uint16_t (*)[3]) CALLOC((int32_t)NewWidth*NewHeight,sizeof(*TempImage));
-    ptMemoryError(TempImage,__FILE__,__LINE__);
+              (r*cosf(angle_hor)*cosf(angle_ver)+cor_x*cosf(angle_ver)*sinf(angle_hor)+cor_y*sinf(angle_ver));
+
+    angle_rot += atanf((r*sinf(angle_ver)*cosf(angle_hor)-cor_m)/(r*sinf(angle_hor)-cor_l));
+
     // temp values
     const float
       sin_ver = sinf(angle_ver),
       cos_ver = cosf(angle_ver),
       sin_hor = sinf(angle_hor),
-      cos_hor = cosf(angle_hor);
-    float fx,fy,gx,gy;
+      cos_hor = cosf(angle_hor),
+      sin_rot = sinf(angle_rot),
+      cos_rot = cosf(angle_rot);
+    float fx,fy;
+
+    // rotation and scaling
+/*    const float
+      ca = (float)cosf(angle_rot),
+      sa = (float)sinf(angle_rot),
+      ux = abs(m_Width/sc1*ca), uy = abs(m_Width/sc1*sa),
+      vx = abs(m_Height/sc2*sa), vy = abs(m_Height/sc2*ca),
+      w2 = 0.5f*m_Width, h2 = 0.5f*m_Height,
+      dw2 = 0.5f*(ux+vx), dh2 = 0.5f*(uy+vy);
+    uint16_t Width_rot = (int32_t)(ux+vx);
+    uint16_t Height_rot = (int32_t)(uy+vy); */
+
+    // new bounds
+    const float MinDenom = 0.2;
+    short OutOfBounds = 0;
+    const float
+      denom1 = r*cosf(angle_hor)*cosf(angle_ver)+m_Width/sc1/2.0f*(sin_hor*cos_ver*cos_rot-sin_ver*sin_rot)+m_Height/sc2/2.0f*(sin_hor*cos_ver*sin_rot+sin_ver*cos_rot),
+      denom2 = r*cosf(angle_hor)*cosf(angle_ver)-m_Width/sc1/2.0f*(sin_hor*cos_ver*cos_rot-sin_ver*sin_rot)+m_Height/sc2/2.0f*(sin_hor*cos_ver*sin_rot+sin_ver*cos_rot),
+      denom3 = r*cosf(angle_hor)*cosf(angle_ver)+m_Width/sc1/2.0f*(sin_hor*cos_ver*cos_rot-sin_ver*sin_rot)-m_Height/sc2/2.0f*(sin_hor*cos_ver*sin_rot+sin_ver*cos_rot),
+      denom4 = r*cosf(angle_hor)*cosf(angle_ver)-m_Width/sc1/2.0f*(sin_hor*cos_ver*cos_rot-sin_ver*sin_rot)-m_Height/sc2/2.0f*(sin_hor*cos_ver*sin_rot+sin_ver*cos_rot);
+    if (denom1 < MinDenom ||
+        denom2 < MinDenom ||
+        denom3 < MinDenom ||
+        denom4 < MinDenom) {
+      OutOfBounds = 1;
+    }
+    const float
+      height1 = (m_Height/sc2/2.0f*cos_hor*cos_rot*r-cos_hor*sin_rot*r*(m_Width/sc1/2.0f))/denom1,
+      height2 = (m_Height/sc2/2.0f*cos_hor*cos_rot*r-cos_hor*sin_rot*r*(-m_Width/sc1/2.0f))/denom2,
+      height3 = (-m_Height/sc2/2.0f*cos_hor*cos_rot*r-cos_hor*sin_rot*r*(m_Width/sc1/2.0f))/denom3,
+      height4 = (-m_Height/sc2/2.0f*cos_hor*cos_rot*r-cos_hor*sin_rot*r*(-m_Width/sc1/2.0f))/denom4,
+      width1 = ((cos_ver*sin_rot+sin_hor*sin_ver*cos_rot)*r*(m_Height/sc2/2.0f)+(cos_ver*cos_rot-sin_hor*sin_ver*sin_rot)*r*(m_Width/sc1/2.0f))/denom1,
+      width2 = ((cos_ver*sin_rot+sin_hor*sin_ver*cos_rot)*r*(-m_Height/sc2/2.0f)+(cos_ver*cos_rot-sin_hor*sin_ver*sin_rot)*r*(m_Width/sc1/2.0f))/denom3,
+      width3 = ((cos_ver*sin_rot+sin_hor*sin_ver*cos_rot)*r*(m_Height/sc2/2.0f)+(cos_ver*cos_rot-sin_hor*sin_ver*sin_rot)*r*(-m_Width/sc1/2.0f))/denom2,
+      width4 = ((cos_ver*sin_rot+sin_hor*sin_ver*cos_rot)*r*(-m_Height/sc2/2.0f)+(cos_ver*cos_rot-sin_hor*sin_ver*sin_rot)*r*(-m_Width/sc1/2.0f))/denom4,
+      x_pers = MAX(fabs(width1), fabs(width2))+MAX(fabs(width3), fabs(width4)),
+      x_pers1 = MAX(fabs(width3), fabs(width4)),
+      y_pers = MAX(fabs(height1), fabs(height2))+MAX(fabs(height3), fabs(height4)),
+      y_pers1 = MAX(fabs(height3), fabs(height4)),
+      y_mid_pers = m_Height*0.5f,
+      x_mid_pers = m_Width*0.5f;
+    if (OutOfBounds == 1) return this;
+
+    NewWidth = (int32_t) x_pers;
+    NewHeight = (int32_t) y_pers;
+    TempImage = (uint16_t (*)[3]) CALLOC((int32_t)NewWidth*NewHeight,sizeof(*TempImage));
+    ptMemoryError(TempImage,__FILE__,__LINE__);
     {
-#pragma omp parallel for schedule(static) private(fx,fy,gx,gy)
+#pragma omp parallel for schedule(static) private(fx,fy)
       for (int32_t Row = 0; Row < NewHeight; Row++) {
         int32_t Temp = Row*NewWidth;
         for (int32_t Col = 0; Col < NewWidth; Col++) {
-          // rotation and scaling
-          gx = w2 + (Col-dw2)*ca*sc1 + (Row-dh2)*sa*sc1;
-          gy = h2 - (Col-dw2)*sa*sc2 + (Row-dh2)*ca*sc2;
+          // new coords
+          const float
+            l = Col-x_pers1,
+            m = Row-y_pers1;
+          const float temp = r-cos_hor*sin_ver*m-sin_hor*l;
+          fx = x_mid_pers-((cos_ver*sin_rot+sin_hor*sin_ver*cos_rot)*m-cos_hor*cos_rot*l)*r/temp*sc1;
+          fy = y_mid_pers-((sin_hor*sin_ver*sin_rot-cos_ver*cos_rot)*m-cos_hor*sin_rot*l)*r/temp*sc2;
 
-          // perspective
-          if (TiltAngle != 0.0f || TurnAngle !=0.0f) {
-            const float
-              l = gx-x_pers1,
-              m = gy-y_pers1;
-            const float temp = m*sin_ver/(r*cos_hor-m*sin_ver);
-            const float fx_temp = r*cos_hor*(l+(l-r*sin_hor)*temp)/(r-sin_hor*(l+(l-r*sin_hor)*temp));
-            fx = x_mid_pers+fx_temp;
-            fy = y_mid_pers+m*cos_ver*(r*cos_hor+fx_temp*sin_hor)/(r*cos_hor-m*sin_ver);
-          } else {
-            fx = gx;
-            fy = gy;
-          }
-          // test points
-          /*
-          if (fabsf(fy-r*tanf(angle_ver)*cosf(angle_hor)*(1.0f+powf(tanf(angle_hor),2.0f))-m_Height/2.0f)<3 &&
-              fabsf(fx-r*tanf(angle_hor)-m_Width/2.0f)<3) {
-                TempImage[Temp+Col][0] = 0xffff;
-                TempImage[Temp+Col][1] = 0;
-                TempImage[Temp+Col][2] = 0;
-                continue;
-          }
-          if (fabsf(fy-r*tanf(angle_ver)*cosf(angle_hor)*(1.0f+powf(tanf(angle_hor),2.0f))-m_Height/2.0f)<3 &&
-              fabsf(fx-r*tanf(angle_hor)-200-m_Width/2.0f)<3) {
-                TempImage[Temp+Col][0] = 0xffff;
-                TempImage[Temp+Col][1] = 0xffff;
-                TempImage[Temp+Col][2] = 0;
-                continue;
-          }
-          if (fabsf(fy-(r*tanf(angle_ver)*cosf(angle_hor)*(1-sinf(angle_hor)*powf(tanf(angle_ver),2.0f)/(1+powf(sinf(angle_hor)*tanf(angle_ver),2.0f))))-m_Height/2.0f)<3 &&
-              fabsf(fx-(-r*cosf(angle_hor)*sinf(angle_hor)*powf(tanf(angle_ver),2.0f)/(1+powf(sinf(angle_hor),2.0f)*powf(tanf(angle_ver),2.0f)))-m_Width/2.0f)<3) {
-                TempImage[Temp+Col][0] = 0;
-                TempImage[Temp+Col][1] = 0xffff;
-                TempImage[Temp+Col][2] = 0;
-                continue;
-          }
-          if (fabsf(fy-m_Height/2.0f)<3 &&
-              fabsf(fx-r*tanf(angle_hor)-m_Width/2.0f)<3) {
-                TempImage[Temp+Col][0] = 0;
-                TempImage[Temp+Col][1] = 0;
-                TempImage[Temp+Col][2] = 0xffff;
-                continue;
-          }
-          */
           // outside source?
           if (fx < 0 || fx > m_Width-1 || fy < 0 || fy > m_Height-1) {
             for (short c = 0; c < 3; c++) {
@@ -352,6 +322,7 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
             }
             continue;
           }
+
           // interpolation
           const int32_t x = (int32_t)fx, y = (int32_t)fy;
           const float dx = fx - x, dy = fy - y;
