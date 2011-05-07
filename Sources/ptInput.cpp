@@ -73,6 +73,7 @@ ptInput::ptInput(const QWidget* MainWindow,
  }
 
   m_HaveDefault = HasDefaultValue;
+  m_HaveSlider = HasSlider;
 
   setObjectName(ObjectName);
   m_SettingsName = ObjectName;
@@ -115,14 +116,9 @@ ptInput::ptInput(const QWidget* MainWindow,
   m_SpinBox->installEventFilter(this);
   m_SpinBox->setFocusPolicy(Qt::ClickFocus);
 
-  m_Slider = new QSlider(Qt::Horizontal,m_Parent);
-  m_Slider->setMinimumWidth(100);
-  m_Slider->setMaximumWidth(100);
-  m_Slider->setMinimum(0);
-  m_Slider->setMaximum(100);
-  m_Slider->setToolTip(ToolTip);
-  if (ColorSetting == 1) m_Slider->setObjectName("HueSlider");
-  if (!HasSlider) m_Slider->hide();
+  m_Slider = new ptSlider(m_Parent, LabelText, ToolTip, m_Type, Minimum, Maximum, Default, Step, Decimals);
+//  m_Slider->setMinimumWidth(100);
+  m_Slider->setMaximumWidth(250);
   m_Slider->installEventFilter(this);
   m_Slider->setFocusPolicy(Qt::ClickFocus);
 
@@ -145,12 +141,36 @@ ptInput::ptInput(const QWidget* MainWindow,
 
   //~ Layout->addWidget(m_Button);
   Layout->addWidget(m_SpinBox);
-  Layout->addWidget(m_Slider);
+  QVBoxLayout *colorLayout=NULL;
+  if (ColorSetting == 1)
+  {
+    colorLayout=new QVBoxLayout;
+    Layout->addLayout(colorLayout);
+    colorLayout->addWidget(m_Slider);
+    QWidget *wdg=new QWidget;
+    wdg->setObjectName("HueWidget");
+    colorLayout->addWidget(wdg);
+    colorLayout->setContentsMargins(0,0,0,0);
+    colorLayout->setMargin(0);
+    colorLayout->setSpacing(0);
+  }
+  else
+    Layout->addWidget(m_Slider);
   Layout->addWidget(m_Label);
   Layout->setContentsMargins(0,0,0,0);
   Layout->setMargin(0);
-  Layout->addStretch(1);
-  Layout->setSpacing(2);
+  if (HasSlider)
+  {
+    m_SpinBox->hide();
+    m_Label->hide();
+    Layout->setAlignment(Qt::AlignLeft);
+  }
+  else
+  {
+    m_Slider->hide();
+    Layout->addStretch(1);
+    Layout->setSpacing(2);
+  }
 
   // A timer for time filtering signals going outside.
   m_TimeOut = TimeOut;
@@ -170,10 +190,12 @@ ptInput::ptInput(const QWidget* MainWindow,
     connect(m_SpinBox,SIGNAL(valueChanged(double)),
             this,SLOT(OnSpinBoxChanged(double)));
   }
-  connect(m_Slider,SIGNAL(valueChanged(int)),
-          this,SLOT(OnSliderChanged(int)));
+//  connect(m_Slider,SIGNAL(valueChanged(int)),
+//          this,SLOT(OnSliderChanged(int)));
   //~ connect(m_Button,SIGNAL(clicked()),
           //~ this,SLOT(OnButtonClicked()));
+  connect(m_Slider,SIGNAL(valueChanged(QVariant)),
+          this,SLOT(OnSliderChanged(QVariant)));
   connect(m_SpinBox,SIGNAL(editingFinished()),
           this,SLOT(EditingFinished()));
 
@@ -220,14 +242,14 @@ void ptInput::SetValue(const QVariant Value,
   if (m_Type == QVariant::Int) {
      QSpinBox* IntSpinBox = qobject_cast <QSpinBox *> (m_SpinBox);
      IntSpinBox->setValue(Value.toInt());
-     m_Slider->setValue((int)
-       (0.5 + 100.0*(Value.toInt() - IntSpinBox->minimum()) /
+     m_Slider->setValue(//(int)
+       (/*0.5 +*/ 100.0*(Value.toInt() - IntSpinBox->minimum()) /
           (IntSpinBox->maximum() - IntSpinBox->minimum())) );
   } else if (m_Type == QVariant::Double) {
     QDoubleSpinBox* DoubleSpinBox = qobject_cast <QDoubleSpinBox *> (m_SpinBox);
     DoubleSpinBox->setValue(Value.toDouble());
-    m_Slider->setValue((int)
-      (0.5 + 100.0*(Value.toDouble() - DoubleSpinBox->minimum()) /
+    m_Slider->setValue(//(int)
+      (/*0.5 +*/ 100.0*(Value.toDouble() - DoubleSpinBox->minimum()) /
         (DoubleSpinBox->maximum() - DoubleSpinBox->minimum())) );
   } else {
     assert(0);
@@ -261,6 +283,7 @@ void ptInput::SetMinimum(const QVariant Value) {
     QDoubleSpinBox* DoubleSpinBox = qobject_cast <QDoubleSpinBox *> (m_SpinBox);
     DoubleSpinBox->setMinimum(Value.toDouble());
   }
+  m_Slider->SetMinimum(Value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -288,6 +311,7 @@ void ptInput::SetMaximum(const QVariant Value) {
     QDoubleSpinBox* DoubleSpinBox = qobject_cast <QDoubleSpinBox *> (m_SpinBox);
     DoubleSpinBox->setMaximum(Value.toDouble());
   }
+  m_Slider->SetMaximum(Value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -310,10 +334,13 @@ void ptInput::SetEnabled(const short Enabled) {
 
 void ptInput::Show(const short Show) {
   if (Show) {
-    m_SpinBox->show();
-    m_Slider->show();
+    if (m_HaveSlider)
+      m_Slider->show();
+    else {
+      m_SpinBox->show();
+      m_Label->show();
+    }
     //~ m_Button->show();
-    m_Label->show();
   } else {
     m_SpinBox->hide();
     m_Slider->hide();
@@ -330,6 +357,7 @@ void ptInput::Show(const short Show) {
 
 void ptInput::Reset() {
   m_SpinBox->clearFocus();
+  m_Slider->clearFocus();
   SetValue(m_DefaultValue,0 /* Generate signal */);
 }
 
@@ -343,7 +371,7 @@ void ptInput::Reset() {
 void ptInput::OnSpinBoxChanged(int Value) {
   QSpinBox* IntSpinBox = qobject_cast <QSpinBox *> (m_SpinBox);
   m_Slider->blockSignals(true);
-  m_Slider->setValue((int)
+  m_Slider->setValue(//(int)
     (100.0*(Value - IntSpinBox->minimum()) /
        (IntSpinBox->maximum() - IntSpinBox->minimum()))  );
   m_Slider->blockSignals(false);
@@ -354,8 +382,8 @@ void ptInput::OnSpinBoxChanged(int Value) {
 void ptInput::OnSpinBoxChanged(double Value) {
   QDoubleSpinBox* DoubleSpinBox = qobject_cast <QDoubleSpinBox *> (m_SpinBox);
   m_Slider->blockSignals(true);
-  m_Slider->setValue((int)
-    (0.5 + 100.0*(Value - DoubleSpinBox->minimum()) /
+  m_Slider->setValue(//(int)
+    (/*0.5 +*/ 100.0*(Value - DoubleSpinBox->minimum()) /
        (DoubleSpinBox->maximum() - DoubleSpinBox->minimum()))  );
   m_Slider->blockSignals(false);
   m_Value = Value;
@@ -368,7 +396,7 @@ void ptInput::OnSpinBoxChanged(double Value) {
 // Set the spinbox.
 //
 ////////////////////////////////////////////////////////////////////////////////
-
+/*
 void ptInput::OnSliderChanged(int Value) {
   if (m_Type == QVariant::Int) {
     QSpinBox* IntSpinBox = qobject_cast <QSpinBox *> (m_SpinBox);
@@ -385,6 +413,24 @@ void ptInput::OnSliderChanged(int Value) {
     DoubleSpinBox->setValue(
       DoubleSpinBox->minimum() +
       Value/100.0 * (DoubleSpinBox->maximum() - DoubleSpinBox->minimum()));
+    DoubleSpinBox->blockSignals(false);
+    OnValueChanged(DoubleSpinBox->value());
+  }
+}
+*/
+void ptInput::OnSliderChanged(QVariant Value) {
+  m_Value=Value;
+  if (m_Type == QVariant::Int) {
+    QSpinBox* IntSpinBox = qobject_cast <QSpinBox *> (m_SpinBox);
+    IntSpinBox->blockSignals(true);
+    IntSpinBox->setValue(Value.toInt());
+    IntSpinBox->blockSignals(false);
+    OnValueChanged(IntSpinBox->value());
+  }
+  if (m_Type == QVariant::Double) {
+    QDoubleSpinBox* DoubleSpinBox = qobject_cast <QDoubleSpinBox *> (m_SpinBox);
+    DoubleSpinBox->blockSignals(true);
+    DoubleSpinBox->setValue(Value.toDouble());
     DoubleSpinBox->blockSignals(false);
     OnValueChanged(DoubleSpinBox->value());
   }
@@ -466,7 +512,7 @@ void ptInput::OnValueChangedTimerExpired() {
 bool ptInput::eventFilter(QObject *obj, QEvent *event)
 {
   if (event->type() == QEvent::ContextMenu) {
-    if (m_HaveDefault && m_SpinBox->isEnabled())
+    if (m_HaveDefault && m_SpinBox->isEnabled() && !m_HaveSlider)
       OnButtonClicked();
     return true;
   } else if (0 && ((QMouseEvent*) event)->button()==Qt::RightButton) {

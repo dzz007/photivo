@@ -25,6 +25,7 @@
 #define DLINPUT_H
 
 #include <QtGui>
+#include "ptSlider.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -68,7 +69,8 @@ QString GetName() {return m_SettingsName;}
 private slots:
 void OnSpinBoxChanged(int Value);
 void OnSpinBoxChanged(double Value);
-void OnSliderChanged(int Value);
+//void OnSliderChanged(int Value);
+void OnSliderChanged(QVariant Value);
 void OnButtonClicked();
 void OnValueChanged(int Value);
 void OnValueChanged(double Value);
@@ -86,14 +88,15 @@ QVariant m_Value;
 QVariant m_DefaultValue;
 int      m_TimeOut;
 short    m_HaveDefault;
+short    m_HaveSlider;
 int      m_KeyTimeOut;
 int      m_Emited;
 
 QWidget*          m_Parent;
 QVariant::Type    m_Type; // All values (and determines spinbox f.i.)
 QAbstractSpinBox* m_SpinBox; // Common base for int and double.
-QSlider*          m_Slider;
-QToolButton*      m_Button;
+ptSlider*         m_Slider;
+//QToolButton*      m_Button;
 QLabel*           m_Label;
 QTimer*           m_Timer;
 QString           m_SettingsName;

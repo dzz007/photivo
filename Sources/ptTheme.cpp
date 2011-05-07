@@ -385,6 +385,14 @@ Following stuff is also needed for normal.css
     "  width: 0;"
     "}"
 
+    "ptSlider QAbstractSpinBox {"
+    "  padding-bottom: 1px;"
+    "  max-height: 17px;"
+    "  min-height: 17px;"
+    "  max-width: 80px;"
+    "  min-width: 20px;"
+    "}"
+
 
 /** Checkbox ****************************************/
     "QCheckBox {"
@@ -522,6 +530,35 @@ Following stuff is also needed for normal.css
 
     "QSlider#HueSlider::groove:horizontal {"
     "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 red, stop: 0.25 yellow, stop: 0.5 green, stop: 0.75 blue, stop: 1 red);"
+    "}"
+
+    "ptSlider {"
+    "  background: none;"
+    "  border: 1px solid " + Dark + ";"
+
+    "  padding: 2px;"
+    "  max-height: 14px;"
+    "  min-height: 14px;"
+    "  border-radius: 3px;"
+    "}"
+
+    "QWidget#HueWidget {"
+    "  max-height: 6px;"
+    "  min-height: 6px;"
+    "  border-radius: 3px;"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 red, stop: 0.25 yellow, stop: 0.5 green, stop: 0.75 blue, stop: 1 red);"
+    "}"
+
+    "ptSlider:disabled {"
+    "  color: #888;"
+    "  border: 1px none;"
+    "}"
+
+    "QWidget#HueWidget:disabled {"
+    "  max-height: 6px;"
+    "  min-height: 6px;"
+    "  border-radius: 3px;"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 darkred, stop: 0.25 #808000, stop: 0.5 darkgreen, stop: 0.75 darkblue, stop: 1 darkred);"
     "}"
 
 
@@ -796,6 +833,14 @@ void ptTheme::JustTools() {
     "  width: 0;"
     "}"
 
+    "ptSlider QAbstractSpinBox {"
+    "  padding-bottom: 1px;"
+    "  max-height: 17px;"
+    "  min-height: 17px;"
+    "  max-width: 80px;"
+    "  min-width: 20px;"
+    "}"
+
 
 /** Checkbox ****************************************/
     "QCheckBox {"
@@ -909,6 +954,35 @@ void ptTheme::JustTools() {
 
     "QSlider#HueSlider::groove:horizontal {"
     "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 red, stop: 0.25 yellow, stop: 0.5 green, stop: 0.75 blue, stop: 1 red);"
+    "}"
+
+    "ptSlider {"
+    "  background: none;"
+    "  border: 1px solid #000;"
+
+    "  padding: 2px;"
+    "  max-height: 14px;"
+    "  min-height: 14px;"
+    "  border-radius: 3px;"
+    "}"
+
+    "QWidget#HueWidget {"
+    "  max-height: 6px;"
+    "  min-height: 6px;"
+    "  border-radius: 3px;"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 red, stop: 0.25 yellow, stop: 0.5 green, stop: 0.75 blue, stop: 1 red);"
+    "}"
+
+    "ptSlider:disabled {"
+    "  color: #888;"
+    "  border: 1px none"
+    "}"
+
+    "QWidget#HueWidget:disabled {"
+    "  max-height: 6px;"
+    "  min-height: 6px;"
+    "  border-radius: 3px;"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 darkred, stop: 0.25 #808000, stop: 0.5 darkgreen, stop: 0.75 darkblue, stop: 1 darkred);"
     "}"
 
 
