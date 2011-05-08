@@ -1,3 +1,25 @@
+/*******************************************************************************
+**
+** Photivo
+**
+** Copyright (C) 2011 Sergey Salnikov <salsergey@gmail.com>
+**
+** This file is part of Photivo.
+**
+** Photivo is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License version 3
+** as published by the Free Software Foundation.
+**
+** Photivo is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
+**
+*******************************************************************************/
+
 #include "ptSlider.h"
 #include <QPainter>
 #include <QStyleOption>
@@ -127,10 +149,14 @@ void ptSlider::hoverMoveEvent(QHoverEvent *ev)
 {
   ev->accept();
 
-  if (m_ValueRect.contains(ev->pos()))
-    setCursor(QCursor(Qt::IBeamCursor));
+  int pos=qRound((sliderPosition()*double(width())/(maximum()-minimum())));
+  if (qAbs(ev->pos().x()-pos) < 8)
+    setCursor(QCursor(Qt::SizeHorCursor));
   else
-    setCursor(QCursor(Qt::ArrowCursor));
+    if (m_ValueRect.contains(ev->pos()))
+      setCursor(QCursor(Qt::IBeamCursor));
+    else
+      setCursor(QCursor(Qt::ArrowCursor));
 }
 
 void ptSlider::keyPressEvent(QKeyEvent *ev)
@@ -217,25 +243,20 @@ void ptSlider::paintEvent(QPaintEvent *)
                                    (m_Value.toDouble()-m_Minimum.toDouble()));
   QString val;
   if (m_Type == QVariant::Int)
-    val=m_Value.toString()+"  ";
+    val=m_Value.toString();
   if (m_Type == QVariant::Double)
-    val=locale().toString(m_Value.toDouble(), 'f', m_Decimals)+"  ";
+    val=locale().toString(m_Value.toDouble(), 'f', m_Decimals);
 
   style()->drawControl(QStyle::CE_ProgressBar, &optBar, &p, this);
-  /*
-  QStyleOptionSlider optSlider;
-  optSlider.initFrom(this);
-  optSlider.orientation=Qt::Horizontal;
-  optSlider.activeSubControls=QStyle::SC_SliderHandle;
-  optSlider.minimum=minimum();
-  optSlider.maximum=maximum();
-  optSlider.sliderPosition=minimum()+qRound((maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble())*
-                                            (m_Value.toDouble()-m_Minimum.toDouble()));
-  style()->drawComplexControl(QStyle::CC_Slider, &optSlider, &p, this);
-*/
+
+//  QStyleOptionSpinBox optBox;
+//  optBox.initFrom(this);
+//  optBox.activeSubControls=QStyle::SC_SpinBoxDown | QStyle::SC_SpinBoxUp;
+//  style()->drawComplexControl(QStyle::CC_SpinBox, &optBox, &p, this);
+
   p.setPen(palette().text().color());
   if (!m_IsEditingEnabled)
-    p.drawText(m_ValueRect, Qt::AlignRight | Qt::AlignVCenter, val);
+    p.drawText(m_ValueRect.translated(-8, 0), Qt::AlignRight | Qt::AlignVCenter, val);
   p.drawText(QRect(0, 0, width()-m_ValueRect.width(), height()), Qt::AlignLeft | Qt::AlignVCenter, "  "+m_Label);
 }
 

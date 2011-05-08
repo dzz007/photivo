@@ -117,8 +117,8 @@ ptInput::ptInput(const QWidget* MainWindow,
   m_SpinBox->setFocusPolicy(Qt::ClickFocus);
 
   m_Slider = new ptSlider(m_Parent, LabelText, ToolTip, m_Type, Minimum, Maximum, Default, Step, Decimals);
-//  m_Slider->setMinimumWidth(100);
-  m_Slider->setMaximumWidth(250);
+  m_Slider->setMinimumWidth(120);
+//  m_Slider->setMaximumWidth(250);
   m_Slider->installEventFilter(this);
   m_Slider->setFocusPolicy(Qt::ClickFocus);
 
