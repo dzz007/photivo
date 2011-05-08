@@ -386,9 +386,10 @@ Following stuff is also needed for normal.css
     "}"
 
     "ptSlider QAbstractSpinBox {"
-    "  padding-bottom: 1px;"
-    "  max-height: 17px;"
-    "  min-height: 17px;"
+    "  padding-bottom: 2px;"
+    "  padding-top: 2px;"
+    "  max-height: 16px;"
+    "  min-height: 16px;"
     "  max-width: 80px;"
     "  min-width: 20px;"
     "}"
@@ -534,11 +535,11 @@ Following stuff is also needed for normal.css
 
     "ptSlider {"
     "  background: none;"
-    "  border: 1px solid " + Dark + ";"
+    "  border: 1px solid #000;"
 
     "  padding: 2px;"
-    "  max-height: 14px;"
-    "  min-height: 14px;"
+    "  max-height: 16px;"
+    "  min-height: 16px;"
     "  border-radius: 3px;"
     "}"
 
@@ -834,9 +835,10 @@ void ptTheme::JustTools() {
     "}"
 
     "ptSlider QAbstractSpinBox {"
-    "  padding-bottom: 1px;"
-    "  max-height: 17px;"
-    "  min-height: 17px;"
+    "  padding-bottom: 2px;"
+    "  padding-top: 2px;"
+    "  max-height: 16px;"
+    "  min-height: 16px;"
     "  max-width: 80px;"
     "  min-width: 20px;"
     "}"
@@ -961,8 +963,8 @@ void ptTheme::JustTools() {
     "  border: 1px solid #000;"
 
     "  padding: 2px;"
-    "  max-height: 14px;"
-    "  min-height: 14px;"
+    "  max-height: 16px;"
+    "  min-height: 16px;"
     "  border-radius: 3px;"
     "}"
 
