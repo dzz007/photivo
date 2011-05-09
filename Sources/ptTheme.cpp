@@ -110,6 +110,8 @@ void ptTheme::MidGrey(short Color) {
   ptGradient = QColor(150,150,150);
   ptBright = QColor(115,115,115);
   ptVeryBright = QColor(220,220,220);
+  ptSliderStart = QColor(200,200,200);
+  ptSliderStop = QColor(70,70,70);
 #ifdef Q_OS_MAC
   MacStyleFlag=true;
 #endif
@@ -179,6 +181,8 @@ void ptTheme::DarkGrey(short Color) {
   ptGradient = QColor(70,70,70);
   ptBright = QColor(115,115,115);
   ptVeryBright = QColor(180,180,180);
+  ptSliderStart = ptDark;
+  ptSliderStop = ptBright;
 #ifdef Q_OS_MAC
   MacStyleFlag=true;
 #endif
@@ -248,6 +252,8 @@ void ptTheme::VeryDark(short Color) {
   ptGradient = QColor(40,40,40);
   ptBright = QColor(70,70,70);
   ptVeryBright = QColor(150,150,150);
+  ptSliderStart = ptDark;
+  ptSliderStop = QColor(100,100,100);
 #ifdef Q_OS_MAC
   MacStyleFlag=true;
 #endif
@@ -331,6 +337,12 @@ void ptTheme::CSS() {
   QString VeryBright = "rgb(" + QString::number(ptVeryBright.red()) + "," +
                                 QString::number(ptVeryBright.green()) + "," +
                                 QString::number(ptVeryBright.blue()) + ")";
+  QString SliderStart = "rgb(" + QString::number(ptSliderStart.red()) + "," +
+                                QString::number(ptSliderStart.green()) + "," +
+                                QString::number(ptSliderStart.blue()) + ")";
+  QString SliderStop = "rgb(" + QString::number(ptSliderStop.red()) + "," +
+                                QString::number(ptSliderStop.green()) + "," +
+                                QString::number(ptSliderStop.blue()) + ")";
 #ifdef Q_OS_MAC
   MacBackGround=BackGround;
 #endif
@@ -576,6 +588,12 @@ Following stuff is also needed for normal.css
     "  border-radius: 3px;"
     "}"
 
+#ifdef Q_OS_WIN32
+/** Progress bar/slider ****************************************/
+    "ptSlider::chunk {"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 " + SliderStart + ", stop: 1 " + SliderStop + ");"
+    "}"
+#endif
 
 /************************************************************************************
 Everything from here on shouldn't be relevant for normal.css (I think ;) ...)

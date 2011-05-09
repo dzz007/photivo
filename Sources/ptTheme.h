@@ -92,6 +92,8 @@ QColor      ptText;
 QColor      ptDark;
 QColor      ptBright;
 QColor      ptVeryBright;
+QColor      ptSliderStart;
+QColor      ptSliderStop;
 
 };
 
