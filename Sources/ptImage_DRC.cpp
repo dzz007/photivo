@@ -52,9 +52,9 @@ So for example a pixel at (-1, y) is equal to a pixel at (0, y) by definition.
 extern float ToFloatTable[0x10000];
 
 //Stores derivative of I into (Ix, Iy). Note that this is backward difference by shifting coordinates.
-void ForwardDifferenceGradient(float *Ix, float *Iy, unsigned int w, unsigned int h, float *I){
-  unsigned int x, y;
-  unsigned int w1 = w - 1, h1 = h - 1;
+void ForwardDifferenceGradient(float *Ix, float *Iy, uint32_t w, uint32_t h, float *I){
+  uint32_t x, y;
+  uint32_t w1 = w - 1, h1 = h - 1;
 #pragma omp parallel
 {
 #pragma omp for private(x, y) schedule(static)
@@ -65,7 +65,7 @@ void ForwardDifferenceGradient(float *Ix, float *Iy, unsigned int w, unsigned in
     float *rIy = &Iy[y*w];
 
     //Interior, also the top and left boundaries.
-    for(x = 0; x != w1; x++){
+    for(x = 0; x < w1; x++){
       float c = rI[x];
       rIx[x] = rI[x + 1] - c;
       rIy[x] = rI[x + w] - c;
@@ -77,17 +77,17 @@ void ForwardDifferenceGradient(float *Ix, float *Iy, unsigned int w, unsigned in
   }
 
   //Bottom boundary.
-  y = w1 + h1*w;
 #pragma omp for private(x) schedule(static)
-  for(x = h1*w; x < y; x++)
+  for(x = h1*w; x < w1 + h1*w; x++) {
     Ix[x] = I[x + 1] - I[x];
+  }
 } // end of parallel
-  Ix[y] = 0.0f;
+  Ix[w1 + h1*w] = 0.0f;
   memset(&Iy[h1*w], 0, w*sizeof(float));
 }
 
-void BackwardDifferenceDivergence(float *Div, float *Ix, float *Iy, unsigned int w, unsigned int h){
-  unsigned int x, y;
+void BackwardDifferenceDivergence(float *Div, float *Ix, float *Iy, uint32_t w, uint32_t h){
+  uint32_t x, y;
 #pragma omp parallel
 {
 #pragma omp for private(x, y) schedule(static)
@@ -109,7 +109,7 @@ void BackwardDifferenceDivergence(float *Div, float *Ix, float *Iy, unsigned int
 }
 
 //Ok if In == Out.
-void GaussianBlur(float *In, float *Out, int w, int h, unsigned int BlurWidth){
+void GaussianBlur(float *In, float *Out, int32_t w, int32_t h, uint32_t BlurWidth){
   //Fix blur width if necessary.
   if((int)BlurWidth >= h) BlurWidth = h - 3;
   BlurWidth += 1 - (BlurWidth & 1);     //Ensure odd.
@@ -119,12 +119,12 @@ void GaussianBlur(float *In, float *Out, int w, int h, unsigned int BlurWidth){
     return;
   }
 
-  int i, x, y, w2 = BlurWidth >> 1;
+  int32_t i, x, y, w2 = BlurWidth >> 1;
 
   //Construct a normalized row of Pascal's triangle, this is the convolution vector.
   float *k0 = (float *)malloc(sizeof(float)*BlurWidth);
   k0[0] = k0[BlurWidth - 1] = powf(2.0f, -(float)BlurWidth);
-  for(i = 1; i != w2 + 1; i++)
+  for(i = 1; i < w2 + 1; i++)
     k0[BlurWidth - 1 - i] = k0[i] = k0[i - 1]*(((float)BlurWidth + 1.0)/((float)i) - 1.0);
   float *k = &k0[w2];
 
@@ -171,13 +171,13 @@ void GaussianBlur(float *In, float *Out, int w, int h, unsigned int BlurWidth){
     float *cO = &Out[x];
 
     for(y = w2; y < h - w2; y++){
-      int yw = y*w;
+      int32_t yw = y*w;
       cO[yw] = 0.0f;
       for(i = -w2; i <= w2; i++) cO[yw] += k[i]*cI[yw + i*w];
     }
 
     for(y = 0; y < w2; y++){
-      int yw = y*w;
+      int32_t yw = y*w;
       cO[yw] = 0.0f;
       float ks = 0.0f;
       for(i = -y; i <= w2; i++){
@@ -188,7 +188,7 @@ void GaussianBlur(float *In, float *Out, int w, int h, unsigned int BlurWidth){
     }
 
     for(y = h - w2; y < h; y++){
-      int yw = y*w;
+      int32_t yw = y*w;
       cO[yw] = 0.0f;
       float ks = 0.0f;
       for(i = -w2; i <= h - 1 - y; i++){
@@ -205,10 +205,10 @@ void GaussianBlur(float *In, float *Out, int w, int h, unsigned int BlurWidth){
 
 //Returns the magnitude of the gradient of I. 0 to 1. (Ix, Iy) should be calculated with ForwardDifferenceGradient.
 //Could be MUCH shorter, but this way is most efficient.
-float *MagnitudeOfGradient(float *Ix, float *Iy, int w, int h){
+float *MagnitudeOfGradient(float *Ix, float *Iy, int32_t w, int32_t h){
   float *MoG = (float *)malloc(sizeof(float)*w*h);
-  unsigned int x, y;
-  unsigned int w1 = w - 1, h1 = h - 1;
+  uint32_t x, y;
+  uint32_t w1 = w - 1, h1 = h - 1;
   float ix, iy;
 
 #pragma omp parallel
@@ -216,10 +216,12 @@ float *MagnitudeOfGradient(float *Ix, float *Iy, int w, int h){
   //Interior.
 #pragma omp for private(x, y, ix, iy) schedule(static)
   for(y = 1; y < h1; y++){
+    uint32_t yw = y*w;
     for(x = 1; x < w1; x++){
-      ix = 0.5f*(fabs(Ix[y*w+x]) + fabs(Ix[y*w+x - 1]));
-      iy = 0.5f*(fabs(Iy[y*w+x]) + fabs(Iy[y*w+x - w]));
-      MoG[y*w+x] = sqrtf(ix*ix + iy*iy);
+      uint32_t ywx = yw+x;
+      ix = 0.5f*(fabs(Ix[ywx]) + fabs(Ix[ywx - 1]));
+      iy = 0.5f*(fabs(Iy[ywx]) + fabs(Iy[ywx - w]));
+      MoG[ywx] = powf(ix*ix + iy*iy,0.5f);
     }
   }
 
@@ -229,11 +231,11 @@ float *MagnitudeOfGradient(float *Ix, float *Iy, int w, int h){
   for(x = 1; x < w1; x++){
     ix = 0.5f*(fabs(Ix[x]) + fabs(Ix[x - 1]));
     iy = fabs(Iy[x]);
-    MoG[x] = sqrtf(ix*ix + iy*iy);
+    MoG[x] = powf(ix*ix + iy*iy,0.5f);
 
     ix = 0.5f*(fabs(Ix[x + y]) + fabs(Ix[x - 1 + y]));
     iy = fabs(Iy[x + y - w]);
-    MoG[x + y] = sqrtf(ix*ix + iy*iy);
+    MoG[x + y] = powf(ix*ix + iy*iy,0.5f);
   }
 
   //Left & right not including corners.
@@ -241,39 +243,39 @@ float *MagnitudeOfGradient(float *Ix, float *Iy, int w, int h){
   for(y = w; y < h1*w; y += w){
     ix = fabs(Ix[y]);
     iy = 0.5f*(fabs(Iy[y]) + fabs(Iy[y - w]));
-    MoG[y] = sqrtf(ix*ix + iy*iy);
+    MoG[y] = powf(ix*ix + iy*iy,0.5f);
 
     x = y + w1;
     ix = fabs(Ix[x - 1]);
     iy = 0.5f*(fabs(Iy[x - w]) + fabs(Iy[x]));
-    MoG[x] = sqrtf(ix*ix + iy*iy);
+    MoG[x] = powf(ix*ix + iy*iy,0.5f);
   }
 } // end of parallel
 
   //Corners.
   ix = fabs(Ix[0]);
   iy = fabs(Iy[0]);
-  MoG[0] = sqrtf(ix*ix + iy*iy);
+  MoG[0] = powf(ix*ix + iy*iy,0.5f);
 
   ix = fabs(Ix[h1*w]);
   iy = fabs(Iy[h1*w - w]);
-  MoG[h1*w] = sqrtf(ix*ix + iy*iy);
+  MoG[h1*w] = powf(ix*ix + iy*iy,0.5f);
 
   ix = fabs(Ix[h*w - 2]);
   iy = fabs(Iy[h1*w - 1]);
-  MoG[h*w - 1] = sqrtf(ix*ix + iy*iy);
+  MoG[h*w - 1] = powf(ix*ix + iy*iy,0.5f);
 
   ix = fabs(Ix[w1 - 1]);
   iy = fabs(Iy[w1]);
-  MoG[w1] = sqrtf(ix*ix + iy*iy);
+  MoG[w1] = powf(ix*ix + iy*iy,0.5f);
 
   return MoG;
 }
 
 //Returns magnitude of gradient.
-float *ModifyGradient(float *Ix, float *Iy, unsigned int w, unsigned int h, float alpha, float beta){
+float *ModifyGradient(float *Ix, float *Iy, uint32_t w, uint32_t h, float alpha, float beta){
   //Form the magnitude of gradient first.
-  unsigned int i, n = w*h;
+  uint32_t i, n = w*h;
 
   float *MoG = MagnitudeOfGradient(Ix, Iy, w, h);
 
@@ -309,7 +311,7 @@ float *ModifyGradient(float *Ix, float *Iy, unsigned int w, unsigned int h, floa
 {
   if(alpha <= 0.0f){  //Zero or negative indicates automatic selection.
     alpha = 0.0f;
-    for(i = 0; i != n; i++) alpha += MoG[i];
+    for(i = 0; i < n; i++) alpha += MoG[i];
     alpha *= 0.4f/n;
   }
   beta = beta - 1.0f;
@@ -334,9 +336,9 @@ Parameter pass can be passed through, containing whatever info you like it to co
 Warning: will exit premature if too many iterates are done due to roundoff accumulation.
 Roundoff accumulation can be fixed with a non-recursive calculation of r.
 */
-float *SparseConjugateGradient(void Ax(float *Product, float *x, void *Pass), float *b, unsigned int n, bool OkToModify_b,
-  float *x, float eps, unsigned int MaximumIterates, void *Pass, void Preconditioner(float *Product, float *x, void *Pass)){
-  unsigned int iterate, i;
+float *SparseConjugateGradient(void Ax(float *Product, float *x, void *Pass), float *b, uint32_t n, bool OkToModify_b,
+  float *x, float eps, uint32_t MaximumIterates, void *Pass, void Preconditioner(float *Product, float *x, void *Pass)){
+  uint32_t iterate, i;
 
   //r.
   float *r = (float *)malloc(sizeof(float)*n);
@@ -371,8 +373,9 @@ float *SparseConjugateGradient(void Ax(float *Product, float *x, void *Pass), fl
 #pragma omp parallel
 {
 #pragma omp for schedule(static) private(i) reduction(+:alpha)
-    for(i = 0; i < n; i++)
+    for(i = 0; i < n; i++) {
       alpha += d[i]*b[i];   //dT q
+    }
 #pragma omp single
     alpha = delta_new/alpha;
 
@@ -408,37 +411,46 @@ float *SparseConjugateGradient(void Ax(float *Product, float *x, void *Pass), fl
 
 //Calculates the product AI where A is the five point discretization of the Laplacian in a Neumann homogeneous bounded rectangle.
 void Laplacian5ptNR(float *AI, float *I, void *wh){
-  unsigned int w = ((unsigned int *)wh)[0];
-  unsigned int h = ((unsigned int *)wh)[1];
-  unsigned int w1 = w - 1;
-  unsigned int h1 = h - 1;
-  //~ unsigned int h1w = (h - 1)*w;
-  unsigned int i; // iend;
+  uint32_t w = ((uint32_t *)wh)[0];
+  uint32_t h = ((uint32_t *)wh)[1];
+  uint32_t w1 = w - 1;
+  uint32_t h1 = h - 1;
+  uint32_t h1w = (h - 1)*w;
+  uint32_t i, iend;
 
 /* For multithreading the other loop is better
   //The interior. Isn't this an awesome pair of loops?
-  for(i = w; i != h1w; i++){
+  for(i = w; i < h1w; i++){
     iend = w1 + i++;
     while(i != iend)
       AI[i++] = I[i - w] + I[i - 1] - 4.0f*I[i] + I[i + 1] + I[i + w];
+  } */
+
+// Could use this to cover all pixels. Slower, though. Educational to take a good look at this comment.
+#pragma omp parallel for schedule(static) private(i)
+  for(uint32_t y = 1; y < h1; y++){
+    for(uint32_t x = 1; x < w1; x++){
+      i = x + y*w;
+      AI[i] = I[i - w] + I[i - 1] - 4.0f*I[i] + I[i + 1] + I[i + w];
+    }
   }
 
   //Top row. These four edges calculations exclude corners.
-  for(i = 1; i != w1; i++)
+  for(i = 1; i < w1; i++)
     AI[i] = I[i - 1] - 3.0f*I[i] + I[i + 1] + I[i + w];
 
   //Bottom row.
   iend = h1w + w1;
-  for(i = h1w + 1; i != iend; i++)
+  for(i = h1w + 1; i < iend; i++)
     AI[i] = I[i - w] + I[i - 1] - 3.0f*I[i] + I[i + 1];
 
   //Left column.
-  for(i = w; i != h1w; i += w)
+  for(i = w; i < h1w; i += w)
     AI[i] = I[i - w] - 3.0f*I[i] + I[i + 1] + I[i + w];
 
   //Right column.
   iend = h1w + w1;
-  for(i = w + w1; i != iend; i += w)
+  for(i = w + w1; i < iend; i += w)
     AI[i] = I[i - w] + I[i - 1] - 3.0f*I[i] + I[i + w];
 
   //Corners.
@@ -446,31 +458,16 @@ void Laplacian5ptNR(float *AI, float *I, void *wh){
   AI[w1] = I[w1 - 1] - 2.0f*I[w1] + I[w1 + w];
   AI[h1w] = I[h1w - w] - 2.0f*I[h1w] + I[h1w + 1];
   AI[h*w - 1] = I[h*w - 1 - w] + I[h*w - 1 - 1] - 2.0f*I[h*w - 1];
-*/
-
-// /*  Could use this to cover all pixels. Slower, though. Educational to take a good look at this comment.
-#pragma omp parallel for schedule(static) private(i)
-  for(unsigned int y = 0; y < h; y++){
-    for(unsigned int x = 0; x < w; x++){
-      i = x + y*w;
-      AI[i] = 0.0f;
-
-      if(x > 0) AI[i] += -I[i] + I[i - 1];
-      if(y > 0) AI[i] += -I[i] + I[i - w];
-      if(x < w1)  AI[i] += -I[i] + I[i + 1];
-      if(y < h1)  AI[i] += -I[i] + I[i + w];
-    }
-  }
 }
 
 void Laplacian5ptNRPreconditioner(float *MiI, float *I, void *wh){
-  unsigned int w = ((unsigned int *)wh)[0];
-  unsigned int h = ((unsigned int *)wh)[1];
-  unsigned int w1 = w - 1;
-  unsigned int h1w = (h - 1)*w;
-  unsigned int i, iend;
+  uint32_t w = ((uint32_t *)wh)[0];
+  uint32_t h = ((uint32_t *)wh)[1];
+  uint32_t w1 = w - 1;
+  uint32_t h1w = (h - 1)*w;
+  uint32_t i, iend;
 
-  for(i = w; i != h1w; i++){
+  for(i = w; i < h1w; i++){
     iend = w1 + i++;
     while(i != iend) {
       MiI[i] = I[i]/4.0f;
@@ -498,17 +495,17 @@ void Laplacian5ptNRPreconditioner(float *MiI, float *I, void *wh){
 }
 
 //Returns half sized image by averaging 2 x 2 squares. Output width and height are w >> 1 and h >> 1.
-float *HalfSize(float *I, unsigned int w, unsigned int h){
-  unsigned int ww = w >> 1, hh = h >> 1;
+float *HalfSize(float *I, uint32_t w, uint32_t h){
+  uint32_t ww = w >> 1, hh = h >> 1;
   float *Ih = (float *)malloc(sizeof(float)*ww*hh);
 
   //Note that exact x/2 will always be equal or greater than x >> 1. Output image is then, with odd dimensions, smaller then half size.
 #pragma omp parallel for schedule(static)
-  for(unsigned int y = 0; y < hh; y++){
+  for(uint32_t y = 0; y < hh; y++){
     float *rI0 = &I[2*y*w];
     float *rI1 = &I[(2*y + 1)*w];
     float *rIh = &Ih[y*ww];
-    for(unsigned int x = 0; x < ww; x++)
+    for(uint32_t x = 0; x < ww; x++)
       rIh[x] = 0.25f*(rI0[2*x] + rI0[2*x + 1] + rI1[2*x] + rI1[2*x + 1]);
   }
 
@@ -517,62 +514,89 @@ float *HalfSize(float *I, unsigned int w, unsigned int h){
 
 //w and h are output width and height. Note that, for example, 1501 >> 1 is 750 but 750 << 1 is 1500.
 //By explicitly specifying output size the off by one issue is handled. In is assumed w >> 1 by h >> 1.
-void DoubleSize(float *Out, unsigned int w, unsigned int h, float *In){
-  unsigned int ws = w >> 1;
-  //~ unsigned int hs = h >> 1;
-  unsigned int we = w - (w & 1);
-  unsigned int he = h - (h & 1);
+void DoubleSize(float *Out, uint32_t w, uint32_t h, float *In){
+  uint32_t ws = w >> 1;
+  //~ uint32_t hs = h >> 1;
+  uint32_t we = w - (w & 1);
+  uint32_t he = h - (h & 1);
 
 #pragma omp parallel for schedule(static)
-  for(unsigned int y = 0; y < he; y++){
+  for(uint32_t y = 0; y < he; y++){
     float *rO = &Out[y*w];
     float *rI = &In[(y >> 1)*ws];
-    for(unsigned int x = 0; x < we; x++)
+    for(uint32_t x = 0; x < we; x++)
       rO[x] = rI[x >> 1];
   }
 
-  if(we != w)
-    for(unsigned int y = 0; y != he; y++)
-      Out[w - 1 + y*w] = Out[w - 2 + y*w];
-  if(he != h)
-    for(unsigned int x = 0; x != w; x++)
-      Out[x + (h - 1)*w] = Out[x + (h - 2)*w];
+  if(we != w) {
+    for(uint32_t y = 0; y < he; y++) Out[w - 1 + y*w] = Out[w - 2 + y*w];
+  }
+  if(he != h) {
+    for(uint32_t x = 0; x < w; x++) Out[x + (h - 1)*w] = Out[x + (h - 2)*w];
+  }
 }
 
 
 //This function does what it's name describes using the parameter beta. beta < 1.0 corresponds to compression.
 //alpha <= 0.0 makes it automatically set (which seems to work pretty good).
-void CompressDynamicRange(float *I, unsigned int w, unsigned int h, float alpha, float beta, bool WorkOnLog){
-  //~ printf("Dynamic range compression: \n");
-  double t = (double)clock()/(double)CLOCKS_PER_SEC;
+void CompressDynamicRange(float *I, uint32_t w, uint32_t h, float alpha, float beta, bool WorkOnLog){
+//~ printf("Dynamic range compression: \n");
+  //~ double t = (double)clock()/(double)CLOCKS_PER_SEC;
   float logadd = 0.001f;
 
   //Get the min and max values and optionally take the logarithm.
-  unsigned int i, n = w*h;
+  uint32_t i, n = w*h;
 
   float IMin = FLT_MAX, IMax = -FLT_MAX;
-  if(WorkOnLog)
-    for(i = 0; i != n; i++){
-      if(I[i] > IMax) IMax = I[i];
-      if(I[i] < IMin) IMin = I[i];
+  if(WorkOnLog) {
+#pragma omp parallel
+{ // begin parallel
+    float ThreadMax = -FLT_MAX, ThreadMin = FLT_MAX;
+#pragma omp for schedule(static) private(i)
+    for(i = 0; i < n; i++) {
+      if(I[i] > ThreadMax) ThreadMax = I[i];
+      if(I[i] < ThreadMin) ThreadMin = I[i];
       I[i] = logf(I[i] + logadd);
     }
-  else
-    for(i = 0; i != n; i++){
-      if(I[i] > IMax) IMax = I[i];
-      if(I[i] < IMin) IMin = I[i];
+#pragma omp critical
+    if (ThreadMax > IMax) {
+      IMax = ThreadMax;
     }
+#pragma omp critical
+    if (ThreadMin < IMin) {
+      IMin = ThreadMin;
+    }
+} // end parallel
+  } else {
+#pragma omp parallel
+{ // begin parallel
+    float ThreadMax = -FLT_MAX, ThreadMin = FLT_MAX;
+#pragma omp for schedule(static) private(i)
+    for(i = 0; i < n; i++) {
+      if(I[i] > ThreadMax) ThreadMax = I[i];
+      if(I[i] < ThreadMin) ThreadMin = I[i];
+    }
+#pragma omp critical
+    if (ThreadMax > IMax) {
+      IMax = ThreadMax;
+    }
+#pragma omp critical
+    if (ThreadMin < IMin) {
+      IMin = ThreadMin;
+    }
+} // end parallel
+  }
   //By working with the logarithm, "finite difference" becomes effectively "logarithmic contrast ratio".
 
   /* Unfortunately this problem takes very long to solve at any sensible resolution. But the solution time is cut if a good initial
   guess is used. So, we solve at multiple resolutions: solve the problem at a small resolution, upsize that, solve, upsize, etc. */
 
   //So, start by building a Laplacian pyramid with N levels so that topmost is smaller then 64 x 64.
-  unsigned int level = 0;
+  uint32_t level = 0;
   while((h >> level) > 64) level++;
-  const unsigned int N = level;
-//~ QMessageBox::critical(0,"Feedback","1 ;-)");
-  const unsigned int W = w, H = h;    //We'll modify w and h but these explicitly won't change.
+  const uint32_t N = level;
+
+  const uint32_t W = w, H = h;    //We'll modify w and h but these explicitly won't change.
   float **L = (float **)malloc(sizeof(float *)*N);
   float *img = I;
   for(level = 0; level != N; level++){
@@ -610,9 +634,7 @@ void CompressDynamicRange(float *I, unsigned int w, unsigned int h, float alpha,
     BackwardDifferenceDivergence(L[level], Ix, Iy, w, h);
     free(Ix);
     free(Iy);
-
   }
-//~ QMessageBox::critical(0,"Feedback","2 ;-)");
 
   /* Note that at this point img was not deleted, and that it contains I at the resolution of L[N - 1].
   So now we have the modified Laplacian calculated at many different scales. Mind you, calculating the Laplacian once and then
@@ -620,8 +642,8 @@ void CompressDynamicRange(float *I, unsigned int w, unsigned int h, float alpha,
 
   //Now solve smallest to largest.
   level = N;
-  printf("solution done at level ");
-  while(level != 0){
+  //~ printf("solution done at level ");
+  while(level != 0) {
     level--;
     w = W >> level;
     h = H >> level;
@@ -637,39 +659,66 @@ void CompressDynamicRange(float *I, unsigned int w, unsigned int h, float alpha,
     }
 
     //Undo Laplacian (divergence of gradient) to get pixels corresponding to modified gradient.
-    unsigned int wh[2] = {w, h};  //Form pass through parameter which contains w and n.
+    uint32_t wh[2] = {w, h};  //Form pass through parameter which contains w and n.
     float convergence = 0.001f*(N - 1 - level + 0.001f)/(N - 1);    //Enforce stronger convergence at lower resolutions.
     SparseConjugateGradient(Laplacian5ptNR, L[level], n, true, img,
       convergence, (level + 1)*200, (void *)wh, NULL);
     //Note: typical number of iterates is 20 - 200; more for higher levels, less for lower.
 
     free(L[level]);
-    if(level != 0) printf("%u, ", level);
-    else  printf("and %u; ", level);
+    //~ if(level != 0) printf("%u, ", level);
+    //~ else  printf("and %u; ", level);
   }
   free(L);
 
   //Restore input range (by linear mapping) and exponentiate.
 
   float OutIMin = FLT_MAX, OutIMax = -FLT_MAX;
-  if(WorkOnLog)
-    for(i = 0; i != n; i++){
+  if(WorkOnLog) {
+#pragma omp parallel
+{ // begin parallel
+    float ThreadMax = -FLT_MAX, ThreadMin = FLT_MAX;
+#pragma omp for schedule(static) private(i)
+    for(i = 0; i < n; i++) {
       I[i] = expf(I[i]) - logadd;
-      if(I[i] > OutIMax) OutIMax = I[i];
-      if(I[i] < OutIMin) OutIMin = I[i];
+      if(I[i] > ThreadMax) ThreadMax = I[i];
+      if(I[i] < ThreadMin) ThreadMin = I[i];
     }
-  else
-    for(i = 0; i != n; i++){
-      if(I[i] > OutIMax) OutIMax = I[i];
-      if(I[i] < OutIMin) OutIMin = I[i];
+#pragma omp critical
+    if (ThreadMax > OutIMax) {
+      OutIMax = ThreadMax;
     }
+#pragma omp critical
+    if (ThreadMin < OutIMin) {
+      OutIMin = ThreadMin;
+    }
+} // end parallel
+  } else {
+#pragma omp parallel
+{ // begin parallel
+    float ThreadMax = -FLT_MAX, ThreadMin = FLT_MAX;
+#pragma omp for schedule(static) private(i)
+    for(i = 0; i < n; i++) {
+      if(I[i] > ThreadMax) ThreadMax = I[i];
+      if(I[i] < ThreadMin) ThreadMin = I[i];
+    }
+#pragma omp critical
+    if (ThreadMax > OutIMax) {
+      OutIMax = ThreadMax;
+    }
+#pragma omp critical
+    if (ThreadMin < OutIMin) {
+      OutIMin = ThreadMin;
+    }
+} // end parallel
+  }
 
   float scale = (IMax - IMin)/(OutIMax - OutIMin);
   float shift = IMin - OutIMin*scale;
-  for(i = 0; i != n; i++)
-    I[i] = I[i]*scale + shift;
+#pragma omp parallel for schedule(static) private(i)
+  for(i = 0; i < n; i++) I[i] = I[i]*scale + shift;
 
-  printf("took %.1f seconds.\n", (double)clock()/(double)CLOCKS_PER_SEC - t);
+  //~ printf("took %.1f seconds.\n", (double)clock()/(double)CLOCKS_PER_SEC - t);
 }
 
 
@@ -702,7 +751,7 @@ ptImage* ptImage::DRC(const double alpha,
     } else { // Chromatic adaption, not really nice at the moment.
       Value = CLIP((int32_t)(In[i]*0xffff));
       if (m_Image[i][0] == 0) continue;
-      Factor = MIN(2*sqrtf((float)Value/(float)m_Image[i][0]),100);
+      Factor = MIN(2*powf((float)Value/(float)m_Image[i][0],0.5f),100);
       m_Image[i][0] = Value;
       if (1 || Factor < 1) {
         m_Image[i][1] = CLIP((int32_t)((m_Image[i][1]*Factor + 0x8080*(1.-Factor))*color
