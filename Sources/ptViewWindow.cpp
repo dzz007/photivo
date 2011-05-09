@@ -685,7 +685,7 @@ void ptViewWindow::RecalcRect() {
 
   switch (m_MovingEdge) {
     case meTopLeft:
-      // Calc preliminary new position of moved corner point. Don’t allow it to move
+      // Calc preliminary new position of moved corner point. Don't allow it to move
       // beyond the actual image.
       NewPos.setX(qBound(0, m_PipeSizeRect->left() + dxFloor, ImageRight));
       NewPos.setY(qBound(0, m_PipeSizeRect->top() + dyFloor, ImageBottom));
@@ -1539,7 +1539,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* Event) {
 //
 // leaveEvent
 //
-// Triggered when mouse leaves the ViewWindow. mouseMoveEvent doesn’t
+// Triggered when mouse leaves the ViewWindow. mouseMoveEvent doesn't
 // catch this, so we need this function to do all necessary cleanup.
 //
 ////////////////////////////////////////////////////////////////////////

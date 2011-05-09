@@ -4267,6 +4267,11 @@ void SetBackgroundColor(int SetIt) {
   }
 }
 
+void CB_SliderWidthInput(const QVariant Value) {
+  Settings->SetValue("SliderWidth",Value);
+  MainWindow->UpdateSettings();
+}
+
 void CB_SaveButtonModeChoice(const QVariant Choice) {
   Settings->SetValue("SaveButtonMode",Choice);
   SaveButtonToolTip(Settings->GetInt("SaveButtonMode"));
@@ -9038,6 +9043,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(TabStatusIndicatorInput)
   M_Dispatch(PreviewTabModeCheck)
   M_Dispatch(BackgroundColorCheck)
+  M_Dispatch(SliderWidthInput)
   M_Dispatch(SaveButtonModeChoice)
   M_Dispatch(ResetButtonModeChoice)
   M_Dispatch(SearchBarEnableCheck)

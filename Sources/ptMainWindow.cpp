@@ -655,7 +655,7 @@ void ptMainWindow::Event0TimerExpired() {
 
 // Setup the UI language combobox. Only done once after constructing MainWindow.
 // The languages combobox is a regular QComboBox because its dynamic content (depends on
-// available translation files) doesn’t fit the logic of ptChoice (static, pre-defined lists).
+// available translation files) doesn't fit the logic of ptChoice (static, pre-defined lists).
 void ptMainWindow::PopulateTranslationsCombobox(const QStringList UiLanguages, const int LangIdx) {
   TranslationChoice->setFixedHeight(24);
   TranslationChoice->addItem(tr("English (Default)"));
@@ -2034,6 +2034,12 @@ void ptMainWindow::UpdateSettings() {
     GroupBox->SetActive(Settings->ToolIsActive(GroupBox->objectName()));
   }
 
+  int sliderWidth=Settings->GetInt("SliderWidth");
+  if (sliderWidth == 0)
+    setStyleSheet("ptSlider { max-width: " + QString("%1").arg(10000) + "px; }");
+  else
+    setStyleSheet("ptSlider { max-width: " + QString("%1").arg(sliderWidth) + "px; }");
+
   // Status LED on tabs
   if(Settings->GetInt("TabStatusIndicator")) {
     ProcessingTabBook->setIconSize(QSize(Settings->GetInt("TabStatusIndicator"),Settings->GetInt("TabStatusIndicator")));
@@ -2611,7 +2617,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
 
 void ptMainWindow::UpdateCropToolUI() {
   bool OnOff = false;
-  if (ViewWindow != NULL) {   // when called from MainWindow constructor, ViewWindow doesn’t yet exist
+  if (ViewWindow != NULL) {   // when called from MainWindow constructor, ViewWindow doesn't yet exist
     if (ViewWindow->OngoingAction() == vaCrop) {
       OnOff = true;
     }

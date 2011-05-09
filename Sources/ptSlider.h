@@ -54,7 +54,7 @@ public:
   void SetMinimum(const QVariant min);
   void SetMaximum(const QVariant max);
 
-  void enableEditor(bool e);
+  void enableEditor(bool e, bool save = true);
   void hoverMoveEvent(QHoverEvent *ev);
   void initValueRect();
 

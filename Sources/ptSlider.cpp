@@ -36,6 +36,7 @@ ptSlider::ptSlider(QWidget *parent,
                    const int      Decimals) :
   QSlider(parent)
 {
+  Q_ASSERT(Type == QVariant::Int || Type == QVariant::Double);
   Q_ASSERT(Minimum.type() == Type && Maximum.type() == Type && Default.type() == Type && Step.type() == Type);
   m_EditBox=NULL;
   setMinimum(0);
@@ -61,6 +62,7 @@ void ptSlider::init(const QString  Label,
                     const QVariant Step,
                     const int      Decimals)
 {
+  Q_ASSERT(Type == QVariant::Int || Type == QVariant::Double);
   Q_ASSERT(Minimum.type() == Type && Maximum.type() == Type && Default.type() == Type && Step.type() == Type);
   m_Label=Label;
   setToolTip(ToolTip);
@@ -124,11 +126,11 @@ bool ptSlider::eventFilter(QObject *obj, QEvent *ev)
     {
     case QEvent::MouseButtonPress:
       if (((QMouseEvent*)ev)->button() == Qt::RightButton)
-        enableEditor(false);
+        enableEditor(false, false);
       break;
     case QEvent::ContextMenu:
     case QEvent::FocusOut:
-      enableEditor(false);
+      enableEditor(false, false);
       return true;
     case QEvent::KeyPress:
       m_EditBox->blockSignals(true);
@@ -163,11 +165,14 @@ void ptSlider::keyPressEvent(QKeyEvent *ev)
 {
   ev->accept();
 
-  if (ev->key() == Qt::Key_Return && m_IsEditingEnabled)
-  {
-    m_EditBox->blockSignals(false);
+  if ((ev->key() == Qt::Key_Return || ev->key() == Qt::Key_Enter) && m_IsEditingEnabled)
     enableEditor(false);
-  }
+
+  //    doesn't save value
+  if (ev->key() == Qt::Key_Escape && m_IsEditingEnabled)
+    enableEditor(false, false);
+
+  m_EditBox->blockSignals(false);
 }
 
 void ptSlider::mouseMoveEvent(QMouseEvent *ev)
@@ -189,7 +194,7 @@ void ptSlider::mousePressEvent(QMouseEvent *ev)
     else
     {
       if (m_IsEditingEnabled)
-        enableEditor(false);
+        enableEditor(false, false);
       setValue(minimum()+(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble())*
                (m_Default.toDouble()-m_Minimum.toDouble()));
       triggerAction(SliderNoAction);
@@ -199,7 +204,7 @@ void ptSlider::mousePressEvent(QMouseEvent *ev)
   }
 
   if (m_IsEditingEnabled)
-    enableEditor(false);
+    enableEditor(false, false);
   int pos=qRound((sliderPosition()*double(width())/(maximum()-minimum())));
   if (qAbs(ev->pos().x()-pos) < 8)
   {
@@ -269,7 +274,7 @@ void ptSlider::resizeEvent(QResizeEvent *)
 void ptSlider::wheelEvent(QWheelEvent *ev)
 {
   if (m_IsEditingEnabled)
-    enableEditor(false);
+    enableEditor(false, false);
   if (m_ValueRect.contains(ev->pos()))
     setValue(minimum()+(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble())*
              (m_Value.toDouble()+m_Step.toDouble()*ev->delta()/120-m_Minimum.toDouble()));
@@ -330,7 +335,7 @@ void ptSlider::setValue(QVariant val)
   }
 }
 
-void ptSlider::enableEditor(bool e)
+void ptSlider::enableEditor(bool e, bool save)
 {
   if (e)
   {
@@ -346,12 +351,15 @@ void ptSlider::enableEditor(bool e)
   else
   {
     m_IsEditingEnabled=false;
-    if (m_Type == QVariant::Int)
-      setValue(minimum()+(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble())*
-               (qobject_cast<QSpinBox*>(m_EditBox)->value()-m_Minimum.toInt()));
-    if (m_Type == QVariant::Double)
-      setValue(minimum()+(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble())*
-               (qobject_cast<QDoubleSpinBox*>(m_EditBox)->value()-m_Minimum.toDouble()));
+    if (save)
+    {
+      if (m_Type == QVariant::Int)
+        setValue(minimum()+(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble())*
+                 (qobject_cast<QSpinBox*>(m_EditBox)->value()-m_Minimum.toInt()));
+      if (m_Type == QVariant::Double)
+        setValue(minimum()+(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble())*
+                 (qobject_cast<QDoubleSpinBox*>(m_EditBox)->value()-m_Minimum.toDouble()));
+    }
     m_EditBox->hide();
     setFocus();
   }

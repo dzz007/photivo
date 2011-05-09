@@ -54,6 +54,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     // Unique Name,GuiElement,InitLevel,InJobFile,HasDefault (causes button too !),Default,Min,Max,Step,NrDecimals,Label,ToolTip
     {"MemoryTest"                    ,ptGT_InputSlider     ,9,0,1 ,0    ,0    ,500   ,50   ,0 ,tr("MB")                 ,tr("MB to waste")},
     {"TabStatusIndicator"            ,ptGT_Input           ,1,0,1 ,8    ,0    ,16    ,1    ,0 ,tr("Pixel")              ,tr("Size of the LED")},
+    {"SliderWidth"                   ,ptGT_Input           ,1,0,1 ,0    ,0    ,500   ,50   ,0 ,tr("Maximum slider width") ,tr("Maximum slider width. Enter 0 to remove restriction")},
     {"Zoom"                          ,ptGT_InputSlider     ,9,0,0 ,100  ,5    ,400   ,10   ,0 ,tr("Zoom")               ,tr("Zoom factor")},
     {"ColorTemperature"              ,ptGT_InputSlider     ,2,1,1 ,6500 ,2000 ,15000 ,50   ,0 ,tr("Temp")               ,tr("Color Temperature")},
     {"GreenIntensity"                ,ptGT_Input           ,2,1,1 ,1.0  ,0.001,5.0   ,0.01 ,3 ,tr("WB-G")               ,tr("Green Intensity in balance")},
