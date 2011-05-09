@@ -233,7 +233,7 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
       sc1 = 1.0f/ScaleX,
       sc2 = 1.0f/ScaleY;
     float
-      angle_rot = (float)(nangle*ptPI/180.0);
+      angle_rot = (float)(-nangle*ptPI/180.0);
 
     // correction angle
     const float
