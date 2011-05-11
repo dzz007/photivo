@@ -126,12 +126,14 @@ bool ptSlider::eventFilter(QObject *obj, QEvent *ev)
     {
     case QEvent::MouseButtonPress:
       if (((QMouseEvent*)ev)->button() == Qt::RightButton)
-        enableEditor(false, false);
+        enableEditor(false);
       break;
     case QEvent::ContextMenu:
+      enableEditor(false);
+      return true;
     case QEvent::FocusOut:
       enableEditor(false, false);
-      return true;
+      break;
     case QEvent::KeyPress:
       m_EditBox->blockSignals(true);
       break;
@@ -159,18 +161,33 @@ void ptSlider::hoverMoveEvent(QHoverEvent *ev)
       setCursor(QCursor(Qt::IBeamCursor));
     else
       setCursor(QCursor(Qt::ArrowCursor));
+//  setFocus();
 }
 
 void ptSlider::keyPressEvent(QKeyEvent *ev)
 {
   ev->accept();
-
+/*
   if ((ev->key() == Qt::Key_Return || ev->key() == Qt::Key_Enter) && m_IsEditingEnabled)
     enableEditor(false);
 
   //    doesn't save value
   if (ev->key() == Qt::Key_Escape && m_IsEditingEnabled)
     enableEditor(false, false);
+  */
+  switch (ev->key())
+  {
+  case Qt::Key_Return:
+  case Qt::Key_Enter:
+    if (m_IsEditingEnabled)
+      enableEditor(false);
+    break;
+  case Qt::Key_Escape:
+    enableEditor(false, false);
+    break;
+  default:
+    QSlider::keyPressEvent(ev);
+  }
 
   m_EditBox->blockSignals(false);
 }

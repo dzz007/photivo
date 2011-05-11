@@ -167,7 +167,7 @@ private :
   QAction* m_AtnMenuOpenSettings;
   short    m_ContextMenuOnTab;
   QAction* m_AtnShowTools;
-  int m_sliderWidth;
+
   ptVisibleToolsModel* m_VisibleToolsModel;
 
   void AnalyzeToolBoxStructure();

@@ -646,9 +646,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateLfunVignetteUI();
   UpdateLiquidRescaleUI();
   InitVisibleTools();
-
-  m_sliderWidth=Settings->GetInt("SliderWidth");
-  setStyleSheet("ptSlider { max-width: " + QString("%1").arg(m_sliderWidth) + "px; }");
 }
 
 void CB_Event0();
@@ -2035,15 +2032,6 @@ void ptMainWindow::UpdateSettings() {
   // State of Groupboxes
   foreach (ptGroupBox* GroupBox, *m_GroupBox) {
     GroupBox->SetActive(Settings->ToolIsActive(GroupBox->objectName()));
-  }
-
-  if (m_sliderWidth != Settings->GetInt("SliderWidth"))
-  {
-    m_sliderWidth=Settings->GetInt("SliderWidth");
-    if (m_sliderWidth == 0)
-      setStyleSheet("ptSlider { max-width: " + QString("%1").arg(10000) + "px; }");
-    else
-      setStyleSheet("ptSlider { max-width: " + QString("%1").arg(m_sliderWidth) + "px; }");
   }
 
   // Status LED on tabs
