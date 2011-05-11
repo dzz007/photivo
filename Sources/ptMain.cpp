@@ -253,6 +253,7 @@ void   CB_OpenSettingsFileButton();
 short  WriteSettingsFile(const QString FileName, const short IsJobFile = 0);
 void   SetBackgroundColor(int SetIt);
 void   CB_StyleChoice(const QVariant Choice);
+void   CB_SliderWidthInput(const QVariant Value);
 void GimpExport(const short UsePipe);
 void Update(short Phase,
             short SubPhase      = -1,
@@ -3827,6 +3828,7 @@ void CB_StyleChoice(const QVariant Choice) {
 #endif
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
+  CB_SliderWidthInput(Settings->GetInt("SliderWidth"));
 }
 
 void CB_StyleHighLightChoice(const QVariant Choice) {
@@ -4269,7 +4271,10 @@ void SetBackgroundColor(int SetIt) {
 
 void CB_SliderWidthInput(const QVariant Value) {
   Settings->SetValue("SliderWidth",Value);
-  MainWindow->UpdateSettings();
+  if (Settings->GetInt("SliderWidth") == 0)
+    MainWindow->setStyleSheet("ptSlider { max-width: " + QString("%1").arg(10000) + "px; }");
+  else
+    MainWindow->setStyleSheet("ptSlider { max-width: " + QString("%1").arg(Settings->GetInt("SliderWidth")) + "px; }");
 }
 
 void CB_SaveButtonModeChoice(const QVariant Choice) {
