@@ -37,6 +37,7 @@ CONFIG += release silent
 TEMPLATE = app
 TARGET = photivo
 DEPENDPATH += .
+INCLUDEPATH += $${PREFIX}/include
 
 unix {
   DESTDIR = ..
@@ -90,10 +91,10 @@ unix {
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
   PREFIX = $$system(more ./install_prefix)
-  QMAKE_CXXFLAGS_DEBUG += -DPREFIX=$${PREFIX}
-  QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX}
-  QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX}
-  QMAKE_CFLAGS_RELEASE += -DPREFIX=$${PREFIX}
+  QMAKE_CXXFLAGS_DEBUG += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
+  QMAKE_CFLAGS_RELEASE += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
   QMAKE_POST_LINK=strip $(TARGET)
   QT += network
 }

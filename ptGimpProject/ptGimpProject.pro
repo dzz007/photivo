@@ -35,6 +35,8 @@ CONFIG += release silent
 TEMPLATE = app
 TARGET = ptGimp
 DEPENDPATH += .
+INCLUDEPATH += $${PREFIX}/include
+
 win32 {
   BUILDDIR = $$system(cat ../builddir)
   DESTDIR = ../$${BUILDDIR}
@@ -85,6 +87,12 @@ unix {
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
   QMAKE_POST_LINK=strip $(TARGET)
+  QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS) -I$$(PREFIX)/include
+  QMAKE_CXXFLAGS_RELEASE += $$(CXXFLAGS) -I$$(PREFIX)/include
+  QMAKE_CFLAGS_DEBUG += $$(CFLAGS) -I$$(PREFIX)/include
+  QMAKE_CFLAGS_RELEASE += $$(CFLAGS) -I$$(PREFIX)/include
+  QMAKE_LFLAGS_DEBUG += $$(LDFLAGS)  -L$$(PREFIX)/lib
+  QMAKE_LFLAGS_RELEASE += $$(LDFLAGS) -L$$(PREFIX)/lib
 }
 win32 {
   QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS)
