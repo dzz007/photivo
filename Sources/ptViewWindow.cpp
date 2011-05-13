@@ -1164,7 +1164,7 @@ void ptViewWindow::paintEvent(QPaintEvent*) {
                                 Settings->GetInt("BackgroundGreen"),
                                 Settings->GetInt("BackgroundBlue")));
         } else {
-          LightsOutBrush.setColor(Theme->ptBackGround);
+          LightsOutBrush.setColor(Theme->ptBackground);
         }
       }
 

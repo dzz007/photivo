@@ -258,7 +258,7 @@ SOURCES += ../Sources/rawtherapee/amaze_interpolate.c
 SOURCES += ../Sources/rawtherapee/cfa_line_dn.c
 SOURCES += ../Sources/rawtherapee/ca_correct.c
 SOURCES += ../Sources/rawtherapee/green_equil.c
-RESOURCES = ../photivo.qrc
+RESOURCES = ../qrc/photivo.qrc
 TRANSLATIONS += ../Translations/photivo_Deutsch.ts
 TRANSLATIONS += ../Translations/photivo_Italiano.ts
 
