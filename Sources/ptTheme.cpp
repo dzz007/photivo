@@ -601,6 +601,11 @@ Following stuff is also needed for normal.css
     "ptSlider::chunk {"
     "  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + SliderStart + ", stop: 1 " + SliderStop + ");"
     "  background-image: url(" + SliderStripe + ");"
+#ifdef Q_OS_UNIX
+    "  margin: 3px;"
+#else
+    "  margin: 1px;"
+#endif
     "}"
 
     "ptSlider::chunk:disabled {"
