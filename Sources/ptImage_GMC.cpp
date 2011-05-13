@@ -121,7 +121,7 @@ ptImage* ptImage::ptGMCWriteImage(const char* FileName,
   }
 
   // Quality
-  if (Format==ptSaveFormat_PNG)
+  if (Format==ptSaveFormat_PNG || Format==ptSaveFormat_PNG16)
     MagickSetCompressionQuality(mw, floor((double) Quality/10.0)*10+5);
   else
     MagickSetCompressionQuality(mw,Quality);

@@ -441,6 +441,7 @@ const short ptSaveFormat_TIFF8 = 2;
 const short ptSaveFormat_TIFF16= 3;
 const short ptSaveFormat_JPEG  = 4;
 const short ptSaveFormat_PNG   = 5;
+const short ptSaveFormat_PNG16 = 6;
 
 // Sampling for JPEG
 
