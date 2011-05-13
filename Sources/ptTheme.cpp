@@ -24,8 +24,7 @@
 // Copyright for the original CSS is 2010 Bernd Schoeler
 
 #include "ptTheme.h"
-#include "ptSettings.h"
-#include "ptSettings.h"
+#include "ptConstants.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -50,6 +49,7 @@ ptTheme::ptTheme(QApplication* Application) {
   ptMenuPalette = QPalette();
   ptHighLight = QColor(255,255,255);
   ptStyle = ptSystemStyle;
+  m_CustomCSS = "";
 
   // Icons
   ptIconCircleGreen = new QPixmap(QString::fromUtf8(":/photivo/Icons/circlegreen.png"));
@@ -77,6 +77,7 @@ void ptTheme::Reset() {
 #ifdef Q_OS_MAC
   MacStyleFlag=false;
 #endif
+  m_CustomCSS = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +86,7 @@ void ptTheme::Reset() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptTheme::Normal(short Color) {
+void ptTheme::Normal(const short Color) {
   SetHighLightColor(Color);
   ptStyle = ptSystemStyle;
   JustTools();
@@ -102,16 +103,21 @@ void ptTheme::Normal(short Color) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptTheme::MidGrey(short Color) {
+void ptTheme::MidGrey(const short Color) {
   SetHighLightColor(Color);
   ptText = QColor(30,30,30);
   ptDark = QColor(180,180,180);
-  ptBackGround = QColor(127,127,127);
+  ptBackground = QColor(127,127,127);
   ptGradient = QColor(150,150,150);
   ptBright = QColor(115,115,115);
   ptVeryBright = QColor(220,220,220);
-  ptSliderStart = QColor(200,200,200);
-  ptSliderStop = QColor(70,70,70);
+  ptDisabled = QColor(190,190,190);
+  ptSliderStart = QColor(155,155,155);
+  ptSliderStop = QColor(145,145,145);
+  ptSliderStartDisabled = QColor(150,150,150);
+  ptSliderStopDisabled = QColor(150,150,150);
+  SliderStripe = ":/photivo/Patterns/slider-stripe-midgrey.png";
+  SliderStripeDisabled = "";
 #ifdef Q_OS_MAC
   MacStyleFlag=true;
 #endif
@@ -121,15 +127,15 @@ void ptTheme::MidGrey(short Color) {
 
   // set the palette
   //ptPalette.setColor(QPalette::Window, QColor(255,0,0));
-  ptPalette.setColor(QPalette::Background, ptBackGround);
+  ptPalette.setColor(QPalette::Background, ptBackground);
   //ptPalette.setColor(QPalette::WindowText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
-  ptPalette.setColor(QPalette::Base, ptBackGround); // Menu
+  ptPalette.setColor(QPalette::Base, ptBackground); // Menu
   //ptPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
   //ptPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
   //ptPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Text, ptText);
-  ptPalette.setColor(QPalette::Button, ptBackGround); // Splitter
+  ptPalette.setColor(QPalette::Button, ptBackground); // Splitter
   // ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
   //ptPalette.setColor(QPalette::BrightText, QColor(255,0,0)); //
   ptPalette.setColor(QPalette::Light, ptDark); // Splitter
@@ -144,15 +150,15 @@ void ptTheme::MidGrey(short Color) {
   //ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
 
   //ptMenuPalette.setColor(QPalette::Window, QColor(255,0,0));
-  ptMenuPalette.setColor(QPalette::Background, ptBackGround);
+  ptMenuPalette.setColor(QPalette::Background, ptBackground);
   //ptMenuPalette.setColor(QPalette::WindowText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
-  ptMenuPalette.setColor(QPalette::Base, ptBackGround); // Menu
+  ptMenuPalette.setColor(QPalette::Base, ptBackground); // Menu
   //ptMenuPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
   //ptMenuPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
   //ptMenuPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Text, ptText);
-  ptMenuPalette.setColor(QPalette::Button, ptBackGround); // Splitter
+  ptMenuPalette.setColor(QPalette::Button, ptBackground); // Splitter
   ptMenuPalette.setColor(QPalette::ButtonText, ptText); // Menu
   //ptMenuPalette.setColor(QPalette::BrightText, QColor(255,0,0)); //
   ptMenuPalette.setColor(QPalette::Light, ptDark); // Splitter
@@ -173,16 +179,21 @@ void ptTheme::MidGrey(short Color) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptTheme::DarkGrey(short Color) {
+void ptTheme::DarkGrey(const short Color) {
   SetHighLightColor(Color);
   ptText = QColor(240,240,240);
   ptDark = QColor(30,30,30);
-  ptBackGround = QColor(51,51,51);
+  ptBackground = QColor(51,51,51);
   ptGradient = QColor(70,70,70);
   ptBright = QColor(115,115,115);
   ptVeryBright = QColor(180,180,180);
-  ptSliderStart = ptDark;
-  ptSliderStop = ptBright;
+  ptDisabled = QColor(136,136,136);
+  ptSliderStart = QColor(90,90,90);
+  ptSliderStop = QColor(80,80,80);
+  ptSliderStartDisabled = QColor(70,70,70);
+  ptSliderStopDisabled = QColor(60,60,60);
+  SliderStripe = ":/photivo/Patterns/slider-stripe-grey.png";
+  SliderStripeDisabled = ":/photivo/Patterns/slider-stripe-darkgrey.png";
 #ifdef Q_OS_MAC
   MacStyleFlag=true;
 #endif
@@ -192,15 +203,15 @@ void ptTheme::DarkGrey(short Color) {
 
   // set the palette
   //ptPalette.setColor(QPalette::Window, QColor(255,0,0));
-  ptPalette.setColor(QPalette::Background, ptBackGround);
+  ptPalette.setColor(QPalette::Background, ptBackground);
   //ptPalette.setColor(QPalette::WindowText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
-  ptPalette.setColor(QPalette::Base, ptBackGround); // Menu
+  ptPalette.setColor(QPalette::Base, ptBackground); // Menu
   //ptPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
   //ptPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
   //ptPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Text, ptText);
-  ptPalette.setColor(QPalette::Button, ptBackGround); // Splitter
+  ptPalette.setColor(QPalette::Button, ptBackground); // Splitter
   //ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
   //ptPalette.setColor(QPalette::BrightText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Light, ptDark); // Splitter
@@ -215,15 +226,15 @@ void ptTheme::DarkGrey(short Color) {
   //ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
 
     //ptMenuPalette.setColor(QPalette::Window, QColor(255,0,0));
-  ptMenuPalette.setColor(QPalette::Background, ptBackGround);
+  ptMenuPalette.setColor(QPalette::Background, ptBackground);
     //ptMenuPalette.setColor(QPalette::WindowText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
-  ptMenuPalette.setColor(QPalette::Base, ptBackGround); // Menu
+  ptMenuPalette.setColor(QPalette::Base, ptBackground); // Menu
     //ptMenuPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
     //ptMenuPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
     //ptMenuPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Text, ptText);
-  ptMenuPalette.setColor(QPalette::Button, ptBackGround); // Splitter
+  ptMenuPalette.setColor(QPalette::Button, ptBackground); // Splitter
   ptMenuPalette.setColor(QPalette::ButtonText, ptText); // Menu
     //ptMenuPalette.setColor(QPalette::BrightText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Light, ptDark); // Splitter
@@ -244,16 +255,21 @@ void ptTheme::DarkGrey(short Color) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptTheme::VeryDark(short Color) {
+void ptTheme::VeryDark(const short Color) {
   SetHighLightColor(Color);
   ptText = QColor(200,200,200);
   ptDark = QColor(51,51,51);
-  ptBackGround = QColor(30,30,30);
+  ptBackground = QColor(30,30,30);
   ptGradient = QColor(40,40,40);
   ptBright = QColor(70,70,70);
   ptVeryBright = QColor(150,150,150);
-  ptSliderStart = ptDark;
-  ptSliderStop = QColor(100,100,100);
+  ptDisabled = QColor(136,136,136);
+  ptSliderStart = QColor(70,70,70);
+  ptSliderStop = QColor(60,60,60);
+  ptSliderStartDisabled = QColor(60,60,60);
+  ptSliderStopDisabled = QColor(50,50,50);
+  SliderStripe = ":/photivo/Patterns/slider-stripe-darkgrey.png";
+  SliderStripeDisabled = ":/photivo/Patterns/slider-stripe-dark.png";
 #ifdef Q_OS_MAC
   MacStyleFlag=true;
 #endif
@@ -263,15 +279,15 @@ void ptTheme::VeryDark(short Color) {
 
   // set the palette
   //ptPalette.setColor(QPalette::Window, QColor(255,0,0));
-  ptPalette.setColor(QPalette::Background, ptBackGround);
+  ptPalette.setColor(QPalette::Background, ptBackground);
   //ptPalette.setColor(QPalette::WindowText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
-  ptPalette.setColor(QPalette::Base, ptBackGround); // Menu
+  ptPalette.setColor(QPalette::Base, ptBackground); // Menu
   //ptPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
   //ptPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
   //ptPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Text, ptText);
-  ptPalette.setColor(QPalette::Button, ptBackGround); // Splitter
+  ptPalette.setColor(QPalette::Button, ptBackground); // Splitter
   //ptPalette.setColor(QPalette::ButtonText, ptText); // Menu
   //ptPalette.setColor(QPalette::BrightText, QColor(255,0,0));
   ptPalette.setColor(QPalette::Light, ptDark); // Splitter
@@ -286,15 +302,15 @@ void ptTheme::VeryDark(short Color) {
   //ptPalette.setColor(QPalette::NoRole, QColor(255,0,0));
 
     //ptMenuPalette.setColor(QPalette::Window, QColor(255,0,0));
-  ptMenuPalette.setColor(QPalette::Background, ptBackGround);
+  ptMenuPalette.setColor(QPalette::Background, ptBackground);
     //ptMenuPalette.setColor(QPalette::WindowText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Foreground, ptDark); // QLabel QFrame
-  ptMenuPalette.setColor(QPalette::Base, ptBackGround); // Menu
+  ptMenuPalette.setColor(QPalette::Base, ptBackground); // Menu
     //ptMenuPalette.setColor(QPalette::AlternateBase, QColor(255,0,0));
     //ptMenuPalette.setColor(QPalette::ToolTipBase, QColor(255,0,0));
     //ptMenuPalette.setColor(QPalette::ToolTipText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Text, ptText);
-  ptMenuPalette.setColor(QPalette::Button, ptBackGround); // Splitter
+  ptMenuPalette.setColor(QPalette::Button, ptBackground); // Splitter
   ptMenuPalette.setColor(QPalette::ButtonText, ptText); // Menu
     //ptMenuPalette.setColor(QPalette::BrightText, QColor(255,0,0));
   ptMenuPalette.setColor(QPalette::Light, ptDark); // Splitter
@@ -322,9 +338,9 @@ void ptTheme::CSS() {
   QString Text = "rgb(" + QString::number(ptText.red()) + "," +
                           QString::number(ptText.green()) + "," +
                           QString::number(ptText.blue()) + ")";
-  QString BackGround = "rgb(" + QString::number(ptBackGround.red()) + "," +
-                                QString::number(ptBackGround.green()) + "," +
-                                QString::number(ptBackGround.blue()) + ")";
+  QString BackGround = "rgb(" + QString::number(ptBackground.red()) + "," +
+                                QString::number(ptBackground.green()) + "," +
+                                QString::number(ptBackground.blue()) + ")";
   QString Dark = "rgb(" + QString::number(ptDark.red()) + "," +
                           QString::number(ptDark.green()) + "," +
                           QString::number(ptDark.blue()) + ")";
@@ -337,12 +353,21 @@ void ptTheme::CSS() {
   QString VeryBright = "rgb(" + QString::number(ptVeryBright.red()) + "," +
                                 QString::number(ptVeryBright.green()) + "," +
                                 QString::number(ptVeryBright.blue()) + ")";
+  QString Disabled = "rgb(" + QString::number(ptDisabled.red()) + "," +
+                                QString::number(ptDisabled.green()) + "," +
+                                QString::number(ptDisabled.blue()) + ")";
   QString SliderStart = "rgb(" + QString::number(ptSliderStart.red()) + "," +
                                 QString::number(ptSliderStart.green()) + "," +
                                 QString::number(ptSliderStart.blue()) + ")";
   QString SliderStop = "rgb(" + QString::number(ptSliderStop.red()) + "," +
                                 QString::number(ptSliderStop.green()) + "," +
                                 QString::number(ptSliderStop.blue()) + ")";
+  QString SliderStartDisabled = "rgb(" + QString::number(ptSliderStartDisabled.red()) + "," +
+                                         QString::number(ptSliderStartDisabled.green()) + "," +
+                                         QString::number(ptSliderStartDisabled.blue()) + ")";
+  QString SliderStopDisabled = "rgb(" + QString::number(ptSliderStopDisabled.red()) + "," +
+                                        QString::number(ptSliderStopDisabled.green()) + "," +
+                                        QString::number(ptSliderStopDisabled.blue()) + ")";
 #ifdef Q_OS_MAC
   MacBackGround=BackGround;
 #endif
@@ -380,7 +405,7 @@ Following stuff is also needed for normal.css
     "}"
 
     "QAbstractSpinBox:disabled {"
-    "  color: #888;"
+    "  color: " + Disabled + ";"
     "}"
 
     "QAbstractSpinBox:hover {"
@@ -416,7 +441,7 @@ Following stuff is also needed for normal.css
     "}"
 
     "QCheckBox:disabled {"
-    "  color: #888;"
+    "  color: " + Disabled + ";"
     "}"
 
     "QCheckBox:hover {"
@@ -450,7 +475,7 @@ Following stuff is also needed for normal.css
     "}"
 
     "QComboBox:disabled {"
-    "  color: #888;"
+    "  color: " + Disabled + ";"
     "}"
 
     "QComboBox:hover {"
@@ -490,7 +515,7 @@ Following stuff is also needed for normal.css
     "}"
 
     "QLineEdit:disabled, QPlainTextEdit:disabled {"
-    "  color: #888;"
+    "  color: " + Disabled + ";"
     "}"
 
     "QLineEdit:hover, QPlainTextEdit:hover {"
@@ -563,8 +588,7 @@ Following stuff is also needed for normal.css
     "}"
 
     "ptSlider:disabled {"
-    "  color: #888;"
-    "  border: 1px none;"
+    "  color: " + Disabled + ";"
     "}"
 
     "QWidget#HueWidget:disabled {"
@@ -574,6 +598,15 @@ Following stuff is also needed for normal.css
     "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 darkred, stop: 0.25 #808000, stop: 0.5 darkgreen, stop: 0.75 darkblue, stop: 1 darkred);"
     "}"
 
+    "ptSlider::chunk {"
+    "  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + SliderStart + ", stop: 1 " + SliderStop + ");"
+    "  background-image: url(" + SliderStripe + ");"
+    "}"
+
+    "ptSlider::chunk:disabled {"
+    "  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + SliderStartDisabled + ", stop: 1 " + SliderStopDisabled + ");"
+    "  background-image: url(" + SliderStripeDisabled + ");"
+    "}"
 
 /** Button ****************************************/
     "QToolButton {"
@@ -588,12 +621,6 @@ Following stuff is also needed for normal.css
     "  border-radius: 3px;"
     "}"
 
-#ifdef Q_OS_WIN32
-/** Progress bar/slider ****************************************/
-    "ptSlider::chunk {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 " + SliderStart + ", stop: 1 " + SliderStop + ");"
-    "}"
-#endif
 
 /************************************************************************************
 Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
@@ -809,7 +836,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 
     "*#StatusLabel {"
     "  color: " + Text + ";"
-    "}";
+    "}" + m_CustomCSS;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -822,6 +849,7 @@ void ptTheme::JustTools() {
   QString HighLight = "rgb(" + QString::number(ptHighLight.red()) + "," +
                                QString::number(ptHighLight.green()) + "," +
                                QString::number(ptHighLight.blue()) + ")";
+  QString Disabled = "#888";
   ptStyleSheet =
 /** Spinbox ****************************************/
     "QAbstractSpinBox {"
@@ -888,7 +916,7 @@ void ptTheme::JustTools() {
     "}"
 
     "QComboBox:disabled {"
-    "  color: #888;"
+    "  color: " + Disabled + ";"
     "}"
 
     "QComboBox:hover {"
@@ -994,7 +1022,7 @@ void ptTheme::JustTools() {
     "}"
 
     "ptSlider:disabled {"
-    "  color: #888;"
+    "  color: " + Disabled + ";"
     "  border: 1px none"
     "}"
 
@@ -1023,7 +1051,7 @@ void ptTheme::JustTools() {
 /** Frame ****************************************/
     "#StatusFrame {  /* status text bottom left without border */"
     "  border: none;"
-    "}";
+    "}" + m_CustomCSS;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1043,6 +1071,34 @@ void ptTheme::SetHighLightColor(short Color) {
     ptHighLight = QColor(100,255,100);
   else if (Color == ptStyleHighLight_Orange)
     ptHighLight = QColor(255,180,60);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Set custom css
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptTheme::SetCustomCSS(const QString CSSFileName) {
+  if (CSSFileName == "") {
+    m_CustomCSS = "";
+  } else {
+    if (QFile::exists(CSSFileName)) {
+      QFile *data;
+      data = new QFile(CSSFileName);
+
+      /* ...to open the file */
+      if(data->open(QFile::ReadOnly)) {
+        /* QTextStream... */
+        QTextStream styleIn(data);
+        /* ...read file to a string. */
+        m_CustomCSS = styleIn.readAll();
+        data->close();
+      }
+      delete data;
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

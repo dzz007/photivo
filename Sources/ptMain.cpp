@@ -734,6 +734,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Start the theme class
   Theme = new ptTheme(TheApplication);
+  Theme->SetCustomCSS(Settings->GetString("CustomCSSFile"));
 
   GuiOptions = new ptGuiOptions();
 
@@ -3788,6 +3789,7 @@ void CB_OutputColorProfileIntentChoice(const QVariant Choice) {
 void CB_StyleChoice(const QVariant Choice) {
   Settings->SetValue("Style",Choice);
   if (Settings->GetInt("Style") == ptStyle_None) {
+    Settings->SetValue("CustomCSSFile","");
     Theme->Reset();
   } else if (Settings->GetInt("Style") == ptStyle_Normal) {
     Theme->Normal(Settings->GetInt("StyleHighLight"));
@@ -3842,42 +3844,16 @@ void CB_LoadStyleButton() {
   FileName = QFileDialog::getOpenFileName(NULL,
     QObject::tr("Open Image"),
     Settings->GetString("UserDirectory"),
-    QObject::tr("CSS files (*.css *.qss);;All files(*.*)"));
-
-  QFile *data;
+    QObject::tr("CSS files (*.css *.qss);;All files(*.*)")
+  );
 
   if (FileName.size() == 0) {
     return;
   } else {
-    /* Let's use QFile and point to a resource... */
-    data = new QFile(FileName);
+    Settings->SetValue("CustomCSSFile", FileName);
+    Theme->SetCustomCSS(FileName);
+    CB_StyleChoice(Settings->GetInt("Style"));
   }
-  QString style;
-  /* ...to open the file */
-  if(data->open(QFile::ReadOnly)) {
-    /* QTextStream... */
-    QTextStream styleIn(data);
-    /* ...read file to a string. */
-    style = styleIn.readAll();
-    data->close();
-
-    Theme->Normal(0);
-    MainWindow->setPalette(Theme->ptPalette);
-    MainWindow->MainTabBook->setStyle(Theme->ptThemeStyle);
-    MainWindow->ProcessingTabBook->setStyle(Theme->ptThemeStyle);
-    MainWindow->BottomContainer->setStyle(Theme->ptThemeStyle);
-    MainWindow->PipeControlWidget->setStyle(Theme->ptThemeStyle);
-    MainWindow->MainSplitter->setStyle(Theme->ptThemeStyle);
-    MainWindow->ControlSplitter->setStyle(Theme->ptThemeStyle);
-    MainWindow->ViewSplitter->setStyle(Theme->ptThemeStyle);
-
-    MainWindow->MainTabBook->setStyleSheet(style);
-    MainWindow->BottomContainer->setStyleSheet(style);
-    MainWindow->PipeControlWidget->setStyleSheet(style);
-    MainWindow->StatusWidget->setStyleSheet(style);
-    MainWindow->SearchWidget->setStyleSheet(style);
-  }
-  delete data;
 }
 
 

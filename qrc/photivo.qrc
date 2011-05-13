@@ -42,5 +42,9 @@
         <file>Icons/center-vert.png</file>
         <file>Icons/PortraitLandscape.png</file>
         <file>Icons/rectangle.png</file>
+        <file>Patterns/slider-stripe-dark.png</file>
+        <file>Patterns/slider-stripe-grey.png</file>
+        <file>Patterns/slider-stripe-darkgrey.png</file>
+        <file>Patterns/slider-stripe-midgrey.png</file>
     </qresource>
 </RCC>
