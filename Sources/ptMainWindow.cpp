@@ -471,7 +471,8 @@ ptMainWindow::ptMainWindow(const QString Title)
     Settings->SetEnabled("SaveSampling",0);
 
   if (Settings->GetInt("SaveFormat")==ptSaveFormat_JPEG ||
-      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG)
+      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG||
+      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG16)
     Settings->SetEnabled("SaveQuality",1);
   else
     Settings->SetEnabled("SaveQuality",0);
@@ -2304,7 +2305,8 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("SaveSampling",0);
 
   if (Settings->GetInt("SaveFormat")==ptSaveFormat_JPEG ||
-      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG)
+      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG ||
+      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG16)
     Settings->SetEnabled("SaveQuality",1);
   else
     Settings->SetEnabled("SaveQuality",0);

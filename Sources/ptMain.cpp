@@ -48,7 +48,7 @@
 #include "ptWiener.h"
 #include "qtsingleapplication/qtsingleapplication.h"
 #ifdef Q_OS_MAC
-    #include <QFileOpenEvent> 
+    #include <QFileOpenEvent>
 #endif
 
 #include <Magick++.h>
@@ -958,7 +958,7 @@ void CB_Event0() {
 
   InStartup = 0;
 //prepare for further QFileOpenEvent(s)
-#ifdef Q_OS_MAC 
+#ifdef Q_OS_MAC
   TheApplication->macinit();
 #endif
 }
@@ -2159,6 +2159,7 @@ void RunJob(const QString JobFileName) {
                              Settings->GetString("OutputFileName") + ".jpg");
           break;
         case ptSaveFormat_PNG :
+        case ptSaveFormat_PNG16 :
           Settings->SetValue("OutputFileName",
                              Settings->GetString("OutputFileName") + ".png");
           break;
@@ -2524,7 +2525,7 @@ void WriteOut() {
 
     QFileInfo PathInfo(Settings->GetString("OutputFileName"));
     QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".pts";
-    
+
     WriteSettingsFile(SettingsFileName);
   }
 
@@ -2547,6 +2548,7 @@ void WritePipe() {
       Pattern = QObject::tr("Jpg images (*.jpg *.jpeg);;All files (*.*)");
       break;
     case ptSaveFormat_PNG :
+    case ptSaveFormat_PNG16 :
       SuggestedFileName += ".png";
       Pattern = QObject::tr("PNG images(*.png);;All files (*.*)");
       break;
@@ -3235,6 +3237,7 @@ void CB_MenuFileSaveOutput(const short) {
       Pattern = QObject::tr("Jpg images (*.jpg *.jpeg);;All files (*.*)");
       break;
     case ptSaveFormat_PNG :
+    case ptSaveFormat_PNG16 :
       SuggestedFileName += ".png";
       Pattern = QObject::tr("PNG images(*.png);;All files (*.*)");
       break;

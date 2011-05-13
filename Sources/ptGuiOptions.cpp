@@ -480,7 +480,8 @@ const ptGuiOptionsItem ptGuiOptions::SaveFormat[] = {
   {ptSaveFormat_TIFF8,  QObject::tr("TIFF 8-bit")   },
   {ptSaveFormat_TIFF16, QObject::tr("TIFF 16-bit")  },
   {ptSaveFormat_JPEG,   QObject::tr("JPEG")         },
-  {ptSaveFormat_PNG,    QObject::tr("PNG")          },
+  {ptSaveFormat_PNG,    QObject::tr("PNG 8-bit")    },
+  {ptSaveFormat_PNG16,  QObject::tr("PNG 16-bit")   },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::SaveSampling[] = {
