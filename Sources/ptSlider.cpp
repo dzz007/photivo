@@ -183,7 +183,10 @@ void ptSlider::keyPressEvent(QKeyEvent *ev)
       enableEditor(false);
     break;
   case Qt::Key_Escape:
-    enableEditor(false, false);
+    if (m_IsEditingEnabled)
+      enableEditor(false, false);
+    else
+      QSlider::keyPressEvent(ev);
     break;
   default:
     QSlider::keyPressEvent(ev);
@@ -391,7 +394,7 @@ void ptSlider::initValueRect()
     w=metrics.width(m_Maximum.toString()+"     ");
   if (m_Type == QVariant::Double)
     w=metrics.width(locale().toString(m_Maximum.toDouble(), 'f', m_Decimals)+"     ");
-  //	w=qMax(w, 50);
+  //  w=qMax(w, 50);
   //  int h=metrics.height();
   m_ValueRect=QRect(width()-w, 0, w, height());
 }
