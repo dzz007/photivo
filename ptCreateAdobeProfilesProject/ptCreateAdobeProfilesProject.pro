@@ -34,7 +34,8 @@ CONFIG += release silent
 TEMPLATE = app
 TARGET = ptCreateAdobeProfiles
 DEPENDPATH += .
-INCLUDEPATH += .
+INCLUDEPATH += $${PREFIX}/include .
+
 win32 {
   BUILDDIR = $$system(cat ../builddir)
   DESTDIR = ../$${BUILDDIR}
@@ -48,10 +49,29 @@ unix {
   MOC_DIR = ../Objects
   UI_HEADERS_DIR = ../Objects
 }
-QMAKE_CXXFLAGS_RELEASE += -O3
+#prevent qmake from adding -arch flags
+macx{
+  QMAKE_CFLAGS_X86_64 =-m64
+  QMAKE_CXXFLAGS_X86_64 =-m64
+  QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
+  QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
+}
+macx {
+  QMAKE_CC = /usr/bin/gcc
+  QMAKE_CXX = /usr/bin/g++
+  QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags lcms2) 
+  QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags lcms2) 
+}
+QMAKE_CXXFLAGS_RELEASE += -O3  $$(CXXFLAGS) -I$${PREFIX}/include
 QMAKE_CXXFLAGS_RELEASE += -ffast-math
-QMAKE_CFLAGS_RELEASE += -O3
+QMAKE_CXXFLAGS_DEBUG += -O3  $$(CXXFLAGS)  -I$${PREFIX}/include
+QMAKE_CXXFLAGS_DEBUG += -ffast-math
+QMAKE_CFLAGS_RELEASE += -O3  $$(CFLAGS)  -I$${PREFIX}/include
 QMAKE_CFLAGS_RELEASE += -ffast-math
+QMAKE_CFLAGS_DEBUG += -O3  $$(CFLAGS)  -I$${PREFIX}/include
+QMAKE_CFLAGS_DEBUG += -ffast-math
+QMAKE_LFLAGS_DEBUG += $$(LDFLAGS) -L$${PREFIX}/lib
+QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)  -L$${PREFIX}/lib
 LIBS += -ljpeg -llcms2 -lexiv2
 win32 {
   QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS)

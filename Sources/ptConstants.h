@@ -68,6 +68,9 @@ const short ptProcessorPhase_OnlyHistogram = 11;
 const short ptProcessorPhase_WriteOut      = 12;
 const short ptProcessorPhase_ToGimp        = 13;
 
+const short ptProcessorStopBefore_Rotate = 1;
+const short ptProcessorStopBefore_Crop   = 2;
+
 // Processor modes.
 
 const short ptProcessorMode_Preview     = 0;
@@ -438,6 +441,7 @@ const short ptSaveFormat_TIFF8 = 2;
 const short ptSaveFormat_TIFF16= 3;
 const short ptSaveFormat_JPEG  = 4;
 const short ptSaveFormat_PNG   = 5;
+const short ptSaveFormat_PNG16 = 6;
 
 // Sampling for JPEG
 

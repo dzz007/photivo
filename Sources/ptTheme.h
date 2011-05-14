@@ -34,61 +34,81 @@
 
 class ptTheme {
 
-public :
 
-// Constructor
-ptTheme(QApplication* Application);
 
-// Destructor
-~ptTheme();
+///////////////////////////////////////////////////////////////////////////
+//
+// PUBLIC members
+//
+///////////////////////////////////////////////////////////////////////////
+public:
+  // Constructor
+  ptTheme(QApplication* Application);
 
-// Variables
-QStyle*     ptThemeStyle;
-QStyle*     ptStyle;
-QPalette    ptPalette;
-QPalette    ptMenuPalette;
-QString     ptStyleSheet;
+  // Destructor
+  ~ptTheme();
 
-QPalette    ptSystemPalette;
-QStyle*     ptSystemStyle;
+  // Variables
+  QStyle*     ptThemeStyle;
+  QStyle*     ptStyle;
+  QPalette    ptPalette;
+  QPalette    ptMenuPalette;
+  QString     ptStyleSheet;
+#ifdef Q_OS_MAC
+  QString     MacBackGround;
+  bool        MacStyleFlag;
+#endif
 
-QPixmap*    ptIconCircleGreen;
-QPixmap*    ptIconCircleRed;
-QPixmap*    ptIconCrossRed;
-QPixmap*    ptIconCheckGreen;
-QPixmap*    ptIconReset;
-QPixmap*    ptIconDisk;
-QPixmap*    ptIconQuestion;
-QPixmap*    ptIconStar;
-QPixmap*    ptIconStarGrey;
+  QPalette    ptSystemPalette;
+  QStyle*     ptSystemStyle;
 
-QColor      ptBackGround;
+  QPixmap*    ptIconCircleGreen;
+  QPixmap*    ptIconCircleRed;
+  QPixmap*    ptIconCrossRed;
+  QPixmap*    ptIconCheckGreen;
+  QPixmap*    ptIconReset;
+  QPixmap*    ptIconDisk;
+  QPixmap*    ptIconQuestion;
+  QPixmap*    ptIconStar;
+  QPixmap*    ptIconStarGrey;
 
-// Methods
-void Reset();
-void Normal(short Color);
-void MidGrey(short Color);
-void DarkGrey(short Color);
-void VeryDark(short Color);
-void CSS();
-void JustTools();
-void SetHighLightColor(short Color);
+  QColor      ptBackground;
 
-private slots:
+  // Methods
+  void Reset();
+  void Normal(const short Color);
+  void MidGrey(const short Color);
+  void DarkGrey(const short Color);
+  void VeryDark(const short Color);
+  void SetHighLightColor(const short Color);
+  void SetCustomCSS(const QString CSSFileName);
 
-signals:
 
-protected:
-
+///////////////////////////////////////////////////////////////////////////
+//
+// PRIVATE members
+//
+///////////////////////////////////////////////////////////////////////////
 private:
+  QColor ptHighLight;
+  QColor ptGradient;
+  QColor ptText;
+  QColor ptDark;
+  QColor ptBright;
+  QColor ptVeryBright;
+  QColor ptDisabled;
+  QColor ptSliderStart;
+  QColor ptSliderStop;
+  QColor ptSliderStartDisabled;
+  QColor ptSliderStopDisabled;
 
-QColor      ptHighLight;
-QColor      ptGradient;
-QColor      ptText;
-QColor      ptDark;
-QColor      ptBright;
-QColor      ptVeryBright;
+  QString SliderStripe;
+  QString SliderStripeDisabled;
 
+  QString m_CustomCSS;
+
+  void CSS();
+  void JustTools();
 };
 
 #endif

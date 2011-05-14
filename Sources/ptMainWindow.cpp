@@ -97,6 +97,12 @@ ptMainWindow::ptMainWindow(const QString Title)
   setupUi(this);
   setWindowTitle(Title);
 
+  // Move the fullscreen button in the zoom bar a bit to the left
+  // to make space for the Mac window resize handle
+  #ifdef Q_OS_MAC
+    MacSpacer->setFixedWidth(16);
+  #endif
+
   // Setup splitter
   //~ if (Settings->GetInt("SwitchLayout")) {
     //~ QList SplitterSizes = MainSplitter.sizes();
@@ -465,7 +471,8 @@ ptMainWindow::ptMainWindow(const QString Title)
     Settings->SetEnabled("SaveSampling",0);
 
   if (Settings->GetInt("SaveFormat")==ptSaveFormat_JPEG ||
-      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG)
+      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG||
+      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG16)
     Settings->SetEnabled("SaveQuality",1);
   else
     Settings->SetEnabled("SaveQuality",0);
@@ -481,6 +488,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateToolBoxes();
 
   // Set help pages
+  m_GroupBox->value("TabWhiteBalance")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
+
   m_GroupBox->value("TabLensfunLensParameters")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#lens_parameters");
   m_GroupBox->value("TabLensfunCA")->
@@ -493,12 +503,19 @@ ptMainWindow::ptMainWindow(const QString Title)
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#geometry_conversion");
   m_GroupBox->value("TabDefish")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#defish");
+  m_GroupBox->value("TabRotation")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#rotation_and_perspective");
   m_GroupBox->value("TabCrop")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#crop");
   m_GroupBox->value("TabLiquidRescale")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#seam_carving");
-  m_GroupBox->value("TabWhiteBalance")->
-    SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
+  m_GroupBox->value("TabResize")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#resize");
+  m_GroupBox->value("TabFlip")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#flip");
+  m_GroupBox->value("TabBlock")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#block");
+
   m_GroupBox->value("TabBW")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#black_and_white");
 
@@ -639,7 +656,7 @@ void ptMainWindow::Event0TimerExpired() {
 
 // Setup the UI language combobox. Only done once after constructing MainWindow.
 // The languages combobox is a regular QComboBox because its dynamic content (depends on
-// available translation files) doesn’t fit the logic of ptChoice (static, pre-defined lists).
+// available translation files) doesn't fit the logic of ptChoice (static, pre-defined lists).
 void ptMainWindow::PopulateTranslationsCombobox(const QStringList UiLanguages, const int LangIdx) {
   TranslationChoice->setFixedHeight(24);
   TranslationChoice->addItem(tr("English (Default)"));
@@ -2288,7 +2305,8 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("SaveSampling",0);
 
   if (Settings->GetInt("SaveFormat")==ptSaveFormat_JPEG ||
-      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG)
+      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG ||
+      Settings->GetInt("SaveFormat")==ptSaveFormat_PNG16)
     Settings->SetEnabled("SaveQuality",1);
   else
     Settings->SetEnabled("SaveQuality",0);
@@ -2595,7 +2613,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
 
 void ptMainWindow::UpdateCropToolUI() {
   bool OnOff = false;
-  if (ViewWindow != NULL) {   // when called from MainWindow constructor, ViewWindow doesn’t yet exist
+  if (ViewWindow != NULL) {   // when called from MainWindow constructor, ViewWindow doesn't yet exist
     if (ViewWindow->OngoingAction() == vaCrop) {
       OnOff = true;
     }
@@ -2964,7 +2982,10 @@ void ptMainWindow::UpdateLfunVignetteUI() {
   short VignetteModel = Settings->GetInt("LfunVignetteModel");
   LfunVignettePoly6Container->setVisible(VignetteModel == ptLfunVignetteModel_Poly6);
 }
-
+void ptMainWindow::OtherInstanceMessage(const QString &msg) { // Added slot for messages to the single instance
+    ImageFileToOpen = msg;
+    CB_MenuFileOpen(1);
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Update liquid rescale UI elements

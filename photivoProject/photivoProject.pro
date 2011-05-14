@@ -37,6 +37,7 @@ CONFIG += release silent
 TEMPLATE = app
 TARGET = photivo
 DEPENDPATH += .
+INCLUDEPATH += $${PREFIX}/include
 
 unix {
   DESTDIR = ..
@@ -53,6 +54,13 @@ win32 {
   UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
   RCC_DIR = ../$${BUILDDIR}/Objects
 }
+#prevent qmake from adding -arch flags
+macx{
+  QMAKE_CFLAGS_X86_64 =-m64
+  QMAKE_CXXFLAGS_X86_64 =-m64
+  QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
+  QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
+}
 
 # Stuff for liquid rescale
 QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)
@@ -62,9 +70,9 @@ QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
 LIBS += $$system(pkg-config --libs-only-l lqr-1)
 
 QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP -ffast-math -O0 -g
-QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp -ffast-math -DDLRAW_HAVE_GIMP
+QMAKE_CXXFLAGS_RELEASE += -O3 -ftree-vectorize -fopenmp -ffast-math -DDLRAW_HAVE_GIMP
 QMAKE_CFLAGS_DEBUG += -ffast-math -O0 -g -DDLRAW_HAVE_GIMP
-QMAKE_CFLAGS_RELEASE += -O3 -fopenmp -ffast-math -DDLRAW_HAVE_GIMP -fopenmp
+QMAKE_CFLAGS_RELEASE += -O3 -ftree-vectorize -fopenmp -ffast-math -DDLRAW_HAVE_GIMP -fopenmp
 QMAKE_LFLAGS_DEBUG += -rdynamic
 
 APPVERSION = $$system(sh ./get_appversion)
@@ -83,11 +91,12 @@ unix {
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
   PREFIX = $$system(more ./install_prefix)
-  QMAKE_CXXFLAGS_DEBUG += -DPREFIX=$${PREFIX}
-  QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX}
-  QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX}
-  QMAKE_CFLAGS_RELEASE += -DPREFIX=$${PREFIX}
+  QMAKE_CXXFLAGS_DEBUG += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
+  QMAKE_CFLAGS_RELEASE += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
   QMAKE_POST_LINK=strip $(TARGET)
+  QT += network
 }
 win32 {
   QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS)
@@ -100,6 +109,16 @@ win32 {
   LIBS += -lwsock32 -lexpat -lregex -lgdi32 -liconv
   RC_FILE = photivo.rc
   #CONFIG += console
+  QT += network
+}
+macx {
+  PKGCONFIG += lcms2
+  LIBS += $$system(pkg-config --libs lcms2)
+  QMAKE_CC = /usr/bin/gcc
+  QMAKE_CXX = /usr/bin/g++
+  LIBS += -framework QtCore
+  LIBS += -framework QtGui
+  LIBS += -framework QtNetwork
 }
 
 # Input
@@ -138,6 +157,10 @@ HEADERS += ../Sources/ptVisibleToolsView.h
 HEADERS += ../Sources/ptWhiteBalances.h
 HEADERS += ../Sources/ptWiener.h
 HEADERS += ../Sources/clapack/blaswrap.h
+HEADERS += ../Sources/ptSlider.h
+HEADERS += ../Sources/qtsingleapplication/qtsingleapplication.h
+HEADERS += ../Sources/qtsingleapplication/qtlocalpeer.h
+HEADERS += ../Sources/qtsingleapplication/qtlockedfile.h
 HEADERS += ../Sources/clapack/clapack.h
 HEADERS += ../Sources/clapack/fio.h
 HEADERS += ../Sources/clapack/fmt.h
@@ -188,6 +211,10 @@ SOURCES += ../Sources/ptViewWindow.cpp
 SOURCES += ../Sources/ptVisibleToolsView.cpp
 SOURCES += ../Sources/ptWhiteBalances.cpp
 SOURCES += ../Sources/ptWiener.cpp
+SOURCES += ../Sources/ptSlider.cpp
+SOURCES += ../Sources/qtsingleapplication/qtsingleapplication.cpp
+SOURCES += ../Sources/qtsingleapplication/qtlocalpeer.cpp
+SOURCES += ../Sources/qtsingleapplication/qtlockedfile.cpp
 SOURCES += ../Sources/clapack/abort_.c
 SOURCES += ../Sources/clapack/close.c
 SOURCES += ../Sources/clapack/dgemm.c
@@ -237,6 +264,7 @@ FORMS += ../Sources/ptMainWindow.ui
 
 RESOURCES += ../photivo.qrc
 
+RESOURCES = ../qrc/photivo.qrc
 TRANSLATIONS += ../Translations/photivo_Deutsch.ts
 TRANSLATIONS += ../Translations/photivo_Italiano.ts
 

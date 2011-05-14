@@ -8,7 +8,7 @@ Comment=Edit RAWs and bitmaps
 Type=Application
 Categories=Graphics;Photography;
 
-Exec=photivo -i %F
+Exec=photivo %F
 TryExec=photivo
 Icon=photivo
 

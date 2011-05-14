@@ -26,6 +26,7 @@
 
 #include <QtGui>
 #include <QtCore>
+//#include <QtNetwork>
 #include <string>
 
 #include "ptDcRaw.h"
@@ -45,15 +46,19 @@
 #include "ptFastBilateral.h"
 #include "ptTheme.h"
 #include "ptWiener.h"
+#include "qtsingleapplication/qtsingleapplication.h"
+#ifdef Q_OS_MAC
+    #include <QFileOpenEvent>
+#endif
 
 #include <Magick++.h>
 
 #ifdef Q_OS_WIN32
-  #include "qt_windows.h"
-  #include "qlibrary.h"
-  #ifndef CSIDL_APPDATA
-    #define CSIDL_APPDATA 0x001a
-  #endif
+#include "qt_windows.h"
+#include "qlibrary.h"
+#ifndef CSIDL_APPDATA
+#define CSIDL_APPDATA 0x001a
+#endif
 #endif
 
 using namespace std;
@@ -241,12 +246,14 @@ void   CB_CurveChoice(const int Channel, const int Choice);
 void   CB_ZoomFitButton();
 void   CB_MenuFileOpen(const short HaveFile);
 void   CB_MenuFileExit(const short);
+void   ExtFileOpen(const QString file);
 void   CB_WritePipeButton();
 void   CB_OpenPresetFileButton();
 void   CB_OpenSettingsFileButton();
 short  WriteSettingsFile(const QString FileName, const short IsJobFile = 0);
 void   SetBackgroundColor(int SetIt);
 void   CB_StyleChoice(const QVariant Choice);
+void   CB_SliderWidthInput(const QVariant Value);
 void GimpExport(const short UsePipe);
 void Update(short Phase,
             short SubPhase      = -1,
@@ -287,8 +294,10 @@ short   InStartup  = 1;
 
 short   JobMode = 0;
 QString JobFileName;
-
-QString ImageFileToOpen;
+QString ImageFileToOpen = "";
+#ifdef Q_OS_MAC
+    bool MacGotFileEvent=false;
+#endif
 
 #ifndef DLRAW_GIMP_PLUGIN
 int main(int Argc, char *Argv[]) {
@@ -297,11 +306,51 @@ int main(int Argc, char *Argv[]) {
   return RV;
 }
 #endif
+//class QtSingleApplication with redefined event to handle QFileOpenEvent
+#ifdef Q_OS_MAC
+  class MyQApplication : public QtSingleApplication {
+  protected:
+    virtual bool event(QEvent *event);
+  public:
+      bool initialized;
+      void macinit();
+      MyQApplication(const QString &appId, int & argc, char ** arg);
+  };
 
-QApplication* TheApplication;
+  bool MyQApplication::event(QEvent *event)
+  {
+      switch (event->type()) {
+      case QEvent::FileOpen:
+          ImageFileToOpen=static_cast<QFileOpenEvent *>(event)->file();
+          MacGotFileEvent=true;
+          if(initialized){
+              //skip on first Event
+          ExtFileOpen(ImageFileToOpen);
+          }
+          return true;
+      default:
+          MacGotFileEvent=false;
+          break;
+      }
+      return QtSingleApplication::event(event);
+  }
+  MyQApplication::MyQApplication(const QString &appId,int & argc, char ** argv) : QtSingleApplication(appId,argc, argv){
+  initialized=false;
+  };
+  void MyQApplication::macinit(){
+      initialized=true;
+  };
+#endif
+
+
+#ifdef Q_OS_MAC
+MyQApplication* TheApplication;
+#else
+QtSingleApplication* TheApplication;
+#endif
 
 int photivoMain(int Argc, char *Argv[]) {
-  QString VerTemp(TOSTRING(APPVERSION));
+  QString VerTemp(TOSTRING(APPVERSION));    //also used for the cli syntax error msg below!
   printf("Photivo version %s\n", VerTemp.toAscii().data());
 
   Magick::InitializeMagick(*Argv);
@@ -310,77 +359,173 @@ int photivoMain(int Argc, char *Argv[]) {
   QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 
   //QApplication TheApplication(Argc,Argv);
-  TheApplication = new QApplication(Argc,Argv);
+  QStringList environment = QProcess::systemEnvironment();
+  QString user=environment.filter(QRegExp("^USERNAME=|^USER=",Qt::CaseInsensitive)).first();
+  if(!user.isEmpty()){
+      int l=user.indexOf("=",0);
+      user="_"+user.right(user.length()-l-1);
+  }
+  user="photivo"+user;
 
-  #ifdef Q_OS_MAC
-    QDir dir(QApplication::applicationDirPath());
-    QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
-  #endif
+#ifdef Q_OS_MAC
+  TheApplication = new MyQApplication(user, Argc,Argv);
+#else
+  TheApplication = new QtSingleApplication(user, Argc,Argv);
+#endif
+  //close on last window closed, seems to be unneeded
+  TheApplication->connect(TheApplication, SIGNAL(lastWindowClosed()), TheApplication, SLOT(quit()));
 
+
+  // Handle cli arguments
   ImageCleanUp = 0;
+  short AllowNewInstance = 0;
+  short CliArgumentsError = 0;
 
-  if (Argc>1) {
-    QString ErrorMessage = QObject::tr("Usage : Photivo  [-i Image] [-j JobFile] [-g Image (with cleanup, not for regular use!)]");
-    // Argc must be 3,5 ...
-    if (Argc % 2 != 1) {
-      fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
-      if(!(Argc == 2 && QString(Argv[1])=="-i"))
-        exit(EXIT_FAILURE);
-    } else {
-      short CurrentIndex = 1;
-      while (CurrentIndex < Argc) {
-        QString Switch = Argv[CurrentIndex++];
-        QString File   = Argv[CurrentIndex++];
-        if (Switch == "-j") {
-          JobMode     = 1;
-          JobFileName = File;
-        } else if (Switch == "-i") {
-          ImageFileToOpen = File;
-        } else if (Switch == "-g") { // we got an image from gimp
-          ImageFileToOpen = File;
-          ImageCleanUp = 1;
+  QString PhotivoCliUsageMsg = QObject::tr(
+          "Syntax: photivo [-i imagefile | -j jobfile | -g imagefile] [h] [--new-instance]\n"
+          "Options:\n"
+          "-i imagefile      Specify image file to load. The -i is optional. Starting\n"
+          "                  Photivo with just a file name works the same.\n"
+          "-j jobfile        Specify jobfile for batch processing. Job files are created\n"
+          "                  in Photivo and then executed with this option.\n"
+          "-g imagefile      Specify temporary file used for Gimp-to-Photivo export.\n"
+          "                  Internal option, not intended for general use.\n"
+          "                  BEWARE! This option deletes imagefile!\n"
+          "--new-instance    Allow opening another Photivo instance instead of using a\n"
+          "                  currently running Photivo. Job files are always opened in a\n"
+          "                  new instance.\n"
+          "-h                Display this usage information.\n\n"
+          "For more documentation visit the wiki:\n"
+          "http://photivo.org/photivo/start\n"
+          );
+#ifdef Q_OS_MAC
+//Just Skip if engaged by QFileOpenEvent
+  if(!MacGotFileEvent) {
+#endif
+    // Put Argv[] into a string list for non-PITA handling
+    QStringList CliArgs;
+    for (int i = 1; i < Argc; i++) {
+      CliArgs << Argv[i];
+    }
+
+    if (CliArgs.indexOf("-h") > -1) {
+#ifdef Q_OS_WIN32
+      QMessageBox::information(0, QObject::tr("Photivo command line options"), PhotivoCliUsageMsg);
+#else
+      fprintf(stdout,"%s",PhotivoCliUsageMsg.toAscii().data());
+#endif
+      exit(0);
+    }
+
+    if (CliArgs.indexOf("--new-instance") > -1) {
+      AllowNewInstance = 1;
+      CliArgs.removeAll("--new-instance");
+    }
+
+    // all the file open switches
+    if (CliArgs.count() > 0) {
+      if (CliArgs[0] == "-i") {
+        CliArgs.removeAt(0);
+        if (CliArgs.count() != 1) {
+          CliArgumentsError = 1;
         } else {
-          fprintf(stderr,"%s\n",ErrorMessage.toAscii().data());
-          exit(EXIT_FAILURE);
+          ImageFileToOpen = CliArgs[0];
+        }
+
+      } else if (CliArgs[0] == "-j") {
+        CliArgs.removeAt(0);
+        if (CliArgs.count() != 1) {
+          CliArgumentsError = 1;
+        } else {
+          AllowNewInstance = 1;
+          JobMode = 1;
+          JobFileName = CliArgs[0];
+        }
+
+      } else if (CliArgs[0] == "-g") {
+        CliArgs.removeAt(0);
+        if (CliArgs.count() != 1) {
+          CliArgumentsError = 1;
+        } else {
+          ImageCleanUp = 1;
+          ImageFileToOpen = CliArgs[0];
+        }
+
+      // only possibility left is file name without -i
+      } else {
+        if (CliArgs.count() != 1) {
+          CliArgumentsError = 1;
+        } else {
+          ImageFileToOpen = CliArgs[0];
         }
       }
     }
+
+    if (CliArgumentsError == 1) {
+#ifdef Q_OS_WIN32
+      QMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
+#else
+      fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
+#endif
+      exit(EXIT_FAILURE);
+    }
+
+#ifdef Q_OS_MAC
   }
+#endif
+
+
+  //QtSingleInstance, add CLI-Switch to skip and allow multiple instances
+  if(TheApplication->isRunning() && (AllowNewInstance == 0)) {
+    if (ImageFileToOpen != "") {
+      TheApplication->sendMessage(ImageFileToOpen);
+    } else if (JobFileName != "") {
+      TheApplication->sendMessage(JobFileName);
+    }
+    return 0;
+  }
+
+
+#ifdef Q_OS_MAC
+  QDir dir(QApplication::applicationDirPath());
+  QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
+#endif
+
 
   // Some QStringLists to be initialized, has to be the same order as the constants.
   CurveKeys << "CurveRGB"
-            << "CurveR"
-            << "CurveG"
-            << "CurveB"
-            << "CurveL"
-            << "CurveLa"
-            << "CurveLb"
-            << "CurveSaturation"
-            << "BaseCurve"
-            << "BaseCurve2"
-            << "CurveLByHue"
-            << "CurveTexture"
-            << "CurveShadowsHighlights"
-            << "CurveDenoise"
-            << "CurveHue"
-            << "CurveDenoise2";
+      << "CurveR"
+      << "CurveG"
+      << "CurveB"
+      << "CurveL"
+      << "CurveLa"
+      << "CurveLb"
+      << "CurveSaturation"
+      << "BaseCurve"
+      << "BaseCurve2"
+      << "CurveLByHue"
+      << "CurveTexture"
+      << "CurveShadowsHighlights"
+      << "CurveDenoise"
+      << "CurveHue"
+      << "CurveDenoise2";
 
   CurveFileNamesKeys << "CurveFileNamesRGB"
-                     << "CurveFileNamesR"
-                     << "CurveFileNamesG"
-                     << "CurveFileNamesB"
-                     << "CurveFileNamesL"
-                     << "CurveFileNamesLa"
-                     << "CurveFileNamesLb"
-                     << "CurveFileNamesSaturation"
-                     << "CurveFileNamesBase"
-                     << "CurveFileNamesBase2"
-                     << "CurveFileNamesLByHue"
-                     << "CurveFileNamesTexture"
-                     << "CurveFileNamesShadowsHighlights"
-                     << "CurveFileNamesDenoise"
-                     << "CurveFileNamesHue"
-                     << "CurveFileNamesDenoise2";
+      << "CurveFileNamesR"
+      << "CurveFileNamesG"
+      << "CurveFileNamesB"
+      << "CurveFileNamesL"
+      << "CurveFileNamesLa"
+      << "CurveFileNamesLb"
+      << "CurveFileNamesSaturation"
+      << "CurveFileNamesBase"
+      << "CurveFileNamesBase2"
+      << "CurveFileNamesLByHue"
+      << "CurveFileNamesTexture"
+      << "CurveFileNamesShadowsHighlights"
+      << "CurveFileNamesDenoise"
+      << "CurveFileNamesHue"
+      << "CurveFileNamesDenoise2";
 
   CurveBackupKeys = CurveKeys;
 
@@ -390,76 +535,76 @@ int photivoMain(int Argc, char *Argv[]) {
   short IsPortableProfile = 0;
   QString AppDataFolder = "";
   QString Folder = "";
-  #ifdef Q_OS_WIN32
-    IsPortableProfile = QFile::exists("use-portable-profile");
-    if (IsPortableProfile != 0) {
+#ifdef Q_OS_WIN32
+  IsPortableProfile = QFile::exists("use-portable-profile");
+  if (IsPortableProfile != 0) {
       printf("Photivo running in portable mode.\n");
       AppDataFolder = QCoreApplication::applicationDirPath();
       Folder = "";
-    } else {
+  } else {
       // Get %appdata% via WinAPI call
       QLibrary library(QLatin1String("shell32"));
       QT_WA(
-        {
-          typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
-          GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
-          if (SHGetSpecialFolderPath) {
-            TCHAR path[MAX_PATH];
-            SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-            AppDataFolder = QString::fromUtf16((ushort*)path);
-          }
-        },
-        {
-          typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
-          GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
-          if (SHGetSpecialFolderPath) {
-            char path[MAX_PATH];
-            SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-            AppDataFolder = QString::fromLocal8Bit(path);
-          }
-        }
-      );
+              {
+              typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
+              GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
+              if (SHGetSpecialFolderPath) {
+              TCHAR path[MAX_PATH];
+              SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+              AppDataFolder = QString::fromUtf16((ushort*)path);
+              }
+              },
+              {
+              typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
+              GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
+              if (SHGetSpecialFolderPath) {
+              char path[MAX_PATH];
+              SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+              AppDataFolder = QString::fromLocal8Bit(path);
+              }
+              }
+           );
 
       // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
       AppDataFolder.replace(QString("\\"), QString("/"));
       // Keeping the leading "/" separate here is important or mkdir will fail.
       Folder = "Photivo/";
-    }
-  #else
-    Folder = ".photivo/";
-    AppDataFolder = QDir::homePath();
-  #endif
+  }
+#else
+  Folder = ".photivo/";
+  AppDataFolder = QDir::homePath();
+#endif
 
   QString UserDirectory = AppDataFolder + "/" + Folder;
 
   if (IsPortableProfile == 0) {
-    QDir home(AppDataFolder);
-    if (!home.exists(Folder))
-      home.mkdir(Folder);
+      QDir home(AppDataFolder);
+      if (!home.exists(Folder))
+          home.mkdir(Folder);
   }
 
   QString SettingsFileName = UserDirectory + "photivo.ini";
   // this has to be changed when we move to a different tree structure!
-  #ifdef __unix__
-    QString NewShareDirectory(TOSTRING(PREFIX));
-    if (NewShareDirectory.endsWith("/")) NewShareDirectory.chop(1);
-    NewShareDirectory.append("/share/photivo/");
-  #else
-    QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
-  #endif
+#ifdef __unix__
+  QString NewShareDirectory(TOSTRING(PREFIX));
+  if (NewShareDirectory.endsWith("/")) NewShareDirectory.chop(1);
+  NewShareDirectory.append("/share/photivo/");
+#else
+  QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
+#endif
 
   QFileInfo SettingsFileInfo(SettingsFileName);
   short NeedInitialization = 1;
   short FirstStart = 1;
   if (SettingsFileInfo.exists() &&
-      SettingsFileInfo.isFile() &&
-      SettingsFileInfo.isReadable()) {
-    // photivo was initialized
-    NeedInitialization = 0;
-    FirstStart = 0;
-    printf("Existing settingsfile '%s'\n",SettingsFileName.toAscii().data());
+          SettingsFileInfo.isFile() &&
+          SettingsFileInfo.isReadable()) {
+      // photivo was initialized
+      NeedInitialization = 0;
+      FirstStart = 0;
+      printf("Existing settingsfile '%s'\n",SettingsFileName.toAscii().data());
   } else {
-    printf("New settingsfile '%s'\n",SettingsFileName.toAscii().data());
+      printf("New settingsfile '%s'\n",SettingsFileName.toAscii().data());
   }
 
   printf("User directory: '%s'; \n",UserDirectory.toAscii().data());
@@ -469,42 +614,42 @@ int photivoMain(int Argc, char *Argv[]) {
   QSettings* TempSettings = new QSettings(SettingsFileName, QSettings::IniFormat);
 
   if (TempSettings->value("SettingsVersion",0).toInt() < PhotivoSettingsVersion)
-    NeedInitialization = 1;
+      NeedInitialization = 1;
 
   // Initialize the user folder if needed
   /* TODO: for testing. Enable the other line below once profile versions are final. */
   if (IsPortableProfile == 0) {
-  //if (NeedInitialization == 1 && IsPortableProfile == 0) {
-    printf("Initializing/Updating user profile...\n");
-    QFile::remove(UserDirectory + "photivo.png");
-    QFile::copy(NewShareDirectory + "photivo.png",
-      UserDirectory + "photivo.png");
-    QFile::remove(UserDirectory + "photivoLogo.png");
-    QFile::copy(NewShareDirectory + "photivoLogo.png",
-      UserDirectory + "photivoLogo.png");
-    QFile::remove(UserDirectory + "photivoPreview.jpg");
-    QFile::copy(NewShareDirectory + "photivoPreview.jpg",
-      UserDirectory + "photivoPreview.jpg");
-    QStringList SourceFolders;
-    SourceFolders << NewShareDirectory + "Translations"
-                  << NewShareDirectory + "Curves"
-                  << NewShareDirectory + "ChannelMixers"
-                  << NewShareDirectory + "Presets"
-                  << NewShareDirectory + "Profiles"
-                  << NewShareDirectory + "LensfunDatabase"
-                  << NewShareDirectory + "UISettings";
-    QStringList DestFolders;
-    DestFolders << UserDirectory + "Translations"
-                << UserDirectory + "Curves"
-                << UserDirectory + "ChannelMixers"
-                << UserDirectory + "Presets"
-                << UserDirectory + "Profiles"
-                << UserDirectory + "LensfunDatabase"
-                << UserDirectory + "UISettings";
+      //if (NeedInitialization == 1 && IsPortableProfile == 0) {
+      printf("Initializing/Updating user profile...\n");
+      QFile::remove(UserDirectory + "photivo.png");
+      QFile::copy(NewShareDirectory + "photivo.png",
+              UserDirectory + "photivo.png");
+      QFile::remove(UserDirectory + "photivoLogo.png");
+      QFile::copy(NewShareDirectory + "photivoLogo.png",
+              UserDirectory + "photivoLogo.png");
+      QFile::remove(UserDirectory + "photivoPreview.jpg");
+      QFile::copy(NewShareDirectory + "photivoPreview.jpg",
+              UserDirectory + "photivoPreview.jpg");
+      QStringList SourceFolders;
+      SourceFolders << NewShareDirectory + "Translations"
+          << NewShareDirectory + "Curves"
+          << NewShareDirectory + "ChannelMixers"
+          << NewShareDirectory + "Presets"
+          << NewShareDirectory + "Profiles"
+          << NewShareDirectory + "LensfunDatabase"
+          << NewShareDirectory + "UISettings";
+      QStringList DestFolders;
+      DestFolders << UserDirectory + "Translations"
+          << UserDirectory + "Curves"
+          << UserDirectory + "ChannelMixers"
+          << UserDirectory + "Presets"
+          << UserDirectory + "Profiles"
+          << UserDirectory + "LensfunDatabase"
+          << UserDirectory + "UISettings";
 
-    for (int i = 0; i < SourceFolders.size(); i++) {
-      copyFolder(SourceFolders.at(i), DestFolders.at(i));
-    }
+      for (int i = 0; i < SourceFolders.size(); i++) {
+          copyFolder(SourceFolders.at(i), DestFolders.at(i));
+      }
   }
 
 
@@ -516,15 +661,15 @@ int photivoMain(int Argc, char *Argv[]) {
   int LangIdx = -1;
 
   if (TranslMode == 1) {
-    LangIdx = UiLanguages.indexOf(TempSettings->value("UiLanguage","").toString());
-    if (LangIdx >= 0) {
-      QTranslator qtTranslator;
-      appTranslator.load("photivo_" + UiLanguages[LangIdx], UserDirectory + "Translations");
-      TheApplication->installTranslator(&appTranslator);
-      qtTranslator.load("qt_" + UiLanguages[LangIdx], UserDirectory + "Translations");
-      TheApplication->installTranslator(&qtTranslator);
-      printf("Enabled translation: \"%s\".\n", UiLanguages[LangIdx].toAscii().data());
-    }
+      LangIdx = UiLanguages.indexOf(TempSettings->value("UiLanguage","").toString());
+      if (LangIdx >= 0) {
+          QTranslator qtTranslator;
+          appTranslator.load("photivo_" + UiLanguages[LangIdx], UserDirectory + "Translations");
+          TheApplication->installTranslator(&appTranslator);
+          qtTranslator.load("qt_" + UiLanguages[LangIdx], UserDirectory + "Translations");
+          TheApplication->installTranslator(&qtTranslator);
+          printf("Enabled translation: \"%s\".\n", UiLanguages[LangIdx].toAscii().data());
+      }
   }
 
   delete TempSettings;
@@ -543,21 +688,21 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Set paths once with first start
   if (FirstStart == 1) {
-    Settings->SetValue("RawsDirectory", UserDirectory);
-    Settings->SetValue("OutputDirectory", UserDirectory);
-    Settings->SetValue("UIDirectory", UserDirectory + "UISettings");
-    Settings->SetValue("PresetDirectory", UserDirectory + "Presets");
-    Settings->SetValue("CurvesDirectory", UserDirectory + "Curves");
-    Settings->SetValue("ChannelMixersDirectory", UserDirectory + "ChannelMixers");
-    Settings->SetValue("TranslationsDirectory", UserDirectory + "Translations");
-    Settings->SetValue("CameraColorProfilesDirectory", UserDirectory + "Profiles/Camera");
-    Settings->SetValue("PreviewColorProfilesDirectory", UserDirectory + "Profiles/Preview");
-    Settings->SetValue("OutputColorProfilesDirectory", UserDirectory + "Profiles/Output");
-    Settings->SetValue("StandardAdobeProfilesDirectory", UserDirectory + "Profiles/Camera/Standard");
-    Settings->SetValue("LensfunDatabaseDirectory", UserDirectory + "LensfunDatabase");
-    Settings->SetValue("PreviewColorProfile", UserDirectory + "Profiles/Preview/sRGB.icc");
-    Settings->SetValue("OutputColorProfile", UserDirectory + "Profiles/Output/sRGB.icc");
-    Settings->SetValue("StartupSettingsFile", UserDirectory + "Presets/MakeFancy.pts");
+      Settings->SetValue("RawsDirectory", UserDirectory);
+      Settings->SetValue("OutputDirectory", UserDirectory);
+      Settings->SetValue("UIDirectory", UserDirectory + "UISettings");
+      Settings->SetValue("PresetDirectory", UserDirectory + "Presets");
+      Settings->SetValue("CurvesDirectory", UserDirectory + "Curves");
+      Settings->SetValue("ChannelMixersDirectory", UserDirectory + "ChannelMixers");
+      Settings->SetValue("TranslationsDirectory", UserDirectory + "Translations");
+      Settings->SetValue("CameraColorProfilesDirectory", UserDirectory + "Profiles/Camera");
+      Settings->SetValue("PreviewColorProfilesDirectory", UserDirectory + "Profiles/Preview");
+      Settings->SetValue("OutputColorProfilesDirectory", UserDirectory + "Profiles/Output");
+      Settings->SetValue("StandardAdobeProfilesDirectory", UserDirectory + "Profiles/Camera/Standard");
+      Settings->SetValue("LensfunDatabaseDirectory", UserDirectory + "LensfunDatabase");
+      Settings->SetValue("PreviewColorProfile", UserDirectory + "Profiles/Preview/sRGB.icc");
+      Settings->SetValue("OutputColorProfile", UserDirectory + "Profiles/Output/sRGB.icc");
+      Settings->SetValue("StartupSettingsFile", UserDirectory + "Presets/MakeFancy.pts");
   }
 
   // Initialize patterns (after translation)
@@ -565,7 +710,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Load also the LensfunDatabase.
   printf("Lensfun database: '%s'; \n",Settings->GetString("LensfunDatabaseDirectory").toAscii().data());
-//  LensfunData = new ptLensfun;    // TODO BJ: implement lensfun DB
+  //  LensfunData = new ptLensfun;    // TODO BJ: implement lensfun DB
 
   // Instantiate the processor.
   TheProcessor = new ptProcessor(ReportProgress);
@@ -577,11 +722,11 @@ int photivoMain(int Argc, char *Argv[]) {
   // (And thus have to run a batch job)
 
   if (JobMode) {
-    for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
-      Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
-    }
-    RunJob(JobFileName);
-    exit(EXIT_SUCCESS);
+      for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
+          Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
+      }
+      RunJob(JobFileName);
+      exit(EXIT_SUCCESS);
   }
 
   // If falling through to here we are in an interactive non-job mode.
@@ -589,27 +734,32 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Start the theme class
   Theme = new ptTheme(TheApplication);
+  Theme->SetCustomCSS(Settings->GetString("CustomCSSFile"));
 
   GuiOptions = new ptGuiOptions();
 
   // Open and keep open the profile for previewing.
   PreviewColorProfile = cmsOpenProfileFromFile(
-         Settings->GetString("PreviewColorProfile").toAscii().data(),
-         "r");
+          Settings->GetString("PreviewColorProfile").toAscii().data(),
+          "r");
   if (!PreviewColorProfile) {
-    ptLogError(ptError_FileOpen,
-         Settings->GetString("PreviewColorProfile").toAscii().data());
-    return ptError_FileOpen;
+      ptLogError(ptError_FileOpen,
+              Settings->GetString("PreviewColorProfile").toAscii().data());
+      return ptError_FileOpen;
   }
 
   MainWindow =
-    new ptMainWindow(QObject::tr("Photivo"));
+      new ptMainWindow(QObject::tr("Photivo"));
+  QObject::connect(TheApplication, SIGNAL(messageReceived(const QString &)),
+          MainWindow,   SLOT(OtherInstanceMessage(const QString &)));
+
+
 
   ViewWindow =
-    new ptViewWindow(NULL,MainWindow->ViewFrameCentralWidget);
+      new ptViewWindow(NULL,MainWindow->ViewFrameCentralWidget);
 
   HistogramWindow =
-    new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
+      new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
 
   // Populate Translations combobox
   MainWindow->PopulateTranslationsCombobox(UiLanguages, LangIdx);
@@ -625,26 +775,26 @@ int photivoMain(int Argc, char *Argv[]) {
   MainWindow->UpdateToolBoxes();
 
   QWidget* ParentWidget[] = {MainWindow->RGBCurveCentralWidget,
-                             MainWindow->RCurveCentralWidget,
-                             MainWindow->GCurveCentralWidget,
-                             MainWindow->BCurveCentralWidget,
-                             MainWindow->LCurveCentralWidget,
-                             MainWindow->aCurveCentralWidget,
-                             MainWindow->bCurveCentralWidget,
-                             MainWindow->SaturationCurveCentralWidget,
-                             MainWindow->BaseCurveCentralWidget,
-                             MainWindow->BaseCurve2CentralWidget,
-                             MainWindow->LByHueCurveCentralWidget,
-                             MainWindow->TextureCurveCentralWidget,
-                             MainWindow->ShadowsHighlightsCurveCentralWidget,
-                             MainWindow->DenoiseCurveCentralWidget,
-                             MainWindow->HueCurveCentralWidget,
-                             MainWindow->Denoise2CurveCentralWidget};
+      MainWindow->RCurveCentralWidget,
+      MainWindow->GCurveCentralWidget,
+      MainWindow->BCurveCentralWidget,
+      MainWindow->LCurveCentralWidget,
+      MainWindow->aCurveCentralWidget,
+      MainWindow->bCurveCentralWidget,
+      MainWindow->SaturationCurveCentralWidget,
+      MainWindow->BaseCurveCentralWidget,
+      MainWindow->BaseCurve2CentralWidget,
+      MainWindow->LByHueCurveCentralWidget,
+      MainWindow->TextureCurveCentralWidget,
+      MainWindow->ShadowsHighlightsCurveCentralWidget,
+      MainWindow->DenoiseCurveCentralWidget,
+      MainWindow->HueCurveCentralWidget,
+      MainWindow->Denoise2CurveCentralWidget};
 
   for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
-    Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
-    CurveWindow[Channel] =
-      new ptCurveWindow(Curve[Channel],Channel,ParentWidget[Channel]);
+      Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
+      CurveWindow[Channel] =
+          new ptCurveWindow(Curve[Channel],Channel,ParentWidget[Channel]);
   }
   Settings->SetValue("BlockedTools",Temp);
   MainWindow->UpdateToolBoxes();
@@ -655,43 +805,43 @@ int photivoMain(int Argc, char *Argv[]) {
   QRect DesktopRect = (QApplication::desktop())->screenGeometry(MainWindow);
 
   if (RememberSettingLevel == 0) {
-    MainWindowPos  = QPoint(DesktopRect.width()/20,DesktopRect.height()/20);
-    MainWindowSize = QSize(DesktopRect.width()*9/10,DesktopRect.height()*9/10);
+      MainWindowPos  = QPoint(DesktopRect.width()/20,DesktopRect.height()/20);
+      MainWindowSize = QSize(DesktopRect.width()*9/10,DesktopRect.height()*9/10);
   } else {
-    MainWindowPos = Settings->m_IniSettings->
-            value("MainWindowPos",
-                        QPoint(DesktopRect.width()/20,
-                               DesktopRect.height()/20)
-                       ).toPoint();
-    MainWindowSize = Settings->m_IniSettings->
-            value("MainWindowSize",
-                        QSize(DesktopRect.width()*9/10,
-                              DesktopRect.height()*9/10)
-                       ).toSize();
+      MainWindowPos = Settings->m_IniSettings->
+          value("MainWindowPos",
+                  QPoint(DesktopRect.width()/20,
+                      DesktopRect.height()/20)
+               ).toPoint();
+      MainWindowSize = Settings->m_IniSettings->
+          value("MainWindowSize",
+                  QSize(DesktopRect.width()*9/10,
+                      DesktopRect.height()*9/10)
+               ).toSize();
   }
 
   if (RememberSettingLevel) {
-    MainWindow->MainSplitter->
-      restoreState(Settings->m_IniSettings->
-       value("MainSplitter").toByteArray());
-    MainWindow->ControlSplitter->
-      restoreState(Settings->m_IniSettings->
-       value("ControlSplitter").toByteArray());
+      MainWindow->MainSplitter->
+          restoreState(Settings->m_IniSettings->
+                  value("MainSplitter").toByteArray());
+      MainWindow->ControlSplitter->
+          restoreState(Settings->m_IniSettings->
+                  value("ControlSplitter").toByteArray());
   } else {
-    // Initial value of splitter.
-    QList <int> SizesList;
-    SizesList.append(250);
-    SizesList.append(1000); // Value obtained to avoid resizing at startup.
-    MainWindow->MainSplitter->setSizes(SizesList);
+      // Initial value of splitter.
+      QList <int> SizesList;
+      SizesList.append(250);
+      SizesList.append(1000); // Value obtained to avoid resizing at startup.
+      MainWindow->MainSplitter->setSizes(SizesList);
   }
 
   MainWindow->resize(MainWindowSize);
   MainWindow->move(MainWindowPos);
 
   if (Settings->m_IniSettings->value("IsMaximized",0).toBool()) {
-    MainWindow->showMaximized();
+      MainWindow->showMaximized();
   } else {
-    MainWindow->show();
+      MainWindow->show();
   }
 
   // Update the preview image will result in displaying the splash.
@@ -699,44 +849,49 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Open and keep open the profile for previewing.
   PreviewColorProfile = cmsOpenProfileFromFile(
-        Settings->GetString("PreviewColorProfile").toAscii().data(),
-        "r");
+          Settings->GetString("PreviewColorProfile").toAscii().data(),
+          "r");
   if (!PreviewColorProfile) {
-    ptLogError(ptError_FileOpen,
-        Settings->GetString("PreviewColorProfile").toAscii().data());
-    assert(PreviewColorProfile);
+      ptLogError(ptError_FileOpen,
+              Settings->GetString("PreviewColorProfile").toAscii().data());
+      assert(PreviewColorProfile);
   }
 
   // Start event loops.
   return TheApplication->exec();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// This is only needed for the gimp integration.
-// Calling over and over photivoMain would otherwise leak like hell
-// (or any comparable place).
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CleanupResources() {
-  //printf("(%s,%d) qApp:%p\n",__FILE__,__LINE__,qApp);
-  // Not : is done at CB for the exit.
-  // delete Settings; // Don't, is done at CB_MenuFileExit
-  // Also : do not delete items which are handled by MainWindow, such as
-  // ViewWindow or HistogramWindow or CurveWindows
-//  delete LensfunData;    // TODO BJ: implement lensfun DB
-  delete TheProcessor;
-  delete ChannelMixer;
-  delete GuiOptions;
-  delete MainWindow;  // Cleans up HistogramWindow and ViewWindow also !
-  ViewWindow = NULL;  // needs to be NULL to properly construct MainWindow
-  for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
-    delete Curve[Channel];
   }
-  delete PreviewImage;
-  delete TheDcRaw;
+
+  ////////////////////////////////////////////////////////////////////////////////
+  //
+  // This is only needed for the gimp integration.
+  // Calling over and over photivoMain would otherwise leak like hell
+  // (or any comparable place).
+  //
+  ////////////////////////////////////////////////////////////////////////////////
+
+  void CleanupResources() {
+      //printf("(%s,%d) qApp:%p\n",__FILE__,__LINE__,qApp);
+      // Not : is done at CB for the exit.
+      // delete Settings; // Don't, is done at CB_MenuFileExit
+      // Also : do not delete items which are handled by MainWindow, such as
+      // ViewWindow or HistogramWindow or CurveWindows
+      //  delete LensfunData;    // TODO BJ: implement lensfun DB
+      delete TheProcessor;
+      delete ChannelMixer;
+      delete GuiOptions;
+      delete MainWindow;  // Cleans up HistogramWindow and ViewWindow also !
+      ViewWindow = NULL;  // needs to be NULL to properly construct MainWindow
+      for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
+          delete Curve[Channel];
+      }
+      delete PreviewImage;
+      delete TheDcRaw;
 }
+void   ExtFileOpen(const QString file){
+    ImageFileToOpen = file;
+    CB_MenuFileOpen(1);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -802,6 +957,10 @@ void CB_Event0() {
   }
 
   InStartup = 0;
+//prepare for further QFileOpenEvent(s)
+#ifdef Q_OS_MAC
+  TheApplication->macinit();
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1165,7 +1324,14 @@ void BlockTools(const short state) {
         }
 
         QList<ptGroupBox *> GeometryTools;
-        GeometryTools << MainWindow->m_GroupBox->value("TabRotation")
+        GeometryTools << MainWindow->m_GroupBox->value("TabLensfunLensParameters")
+                      << MainWindow->m_GroupBox->value("TabLensfunCA")
+                      << MainWindow->m_GroupBox->value("TabLensfunVignette")
+                      << MainWindow->m_GroupBox->value("TabLensfunDistortion")
+                      << MainWindow->m_GroupBox->value("TabLensfunGeometry")
+                      << MainWindow->m_GroupBox->value("TabDefish")
+                      << MainWindow->m_GroupBox->value("TabRotation")
+                      << MainWindow->m_GroupBox->value("TabLiquidRescale")
                       << MainWindow->m_GroupBox->value("TabResize")
                       << MainWindow->m_GroupBox->value("TabFlip")
                       << MainWindow->m_GroupBox->value("TabBlock");
@@ -1212,7 +1378,14 @@ void BlockTools(const short state) {
       }
 
       QList<ptGroupBox *> GeometryTools;
-      GeometryTools << MainWindow->m_GroupBox->value("TabRotation")
+      GeometryTools << MainWindow->m_GroupBox->value("TabLensfunLensParameters")
+                    << MainWindow->m_GroupBox->value("TabLensfunCA")
+                    << MainWindow->m_GroupBox->value("TabLensfunVignette")
+                    << MainWindow->m_GroupBox->value("TabLensfunDistortion")
+                    << MainWindow->m_GroupBox->value("TabLensfunGeometry")
+                    << MainWindow->m_GroupBox->value("TabDefish")
+                    << MainWindow->m_GroupBox->value("TabRotation")
+                    << MainWindow->m_GroupBox->value("TabLiquidRescale")
                     << MainWindow->m_GroupBox->value("TabResize")
                     << MainWindow->m_GroupBox->value("TabFlip")
                     << MainWindow->m_GroupBox->value("TabBlock");
@@ -1986,6 +2159,7 @@ void RunJob(const QString JobFileName) {
                              Settings->GetString("OutputFileName") + ".jpg");
           break;
         case ptSaveFormat_PNG :
+        case ptSaveFormat_PNG16 :
           Settings->SetValue("OutputFileName",
                              Settings->GetString("OutputFileName") + ".png");
           break;
@@ -2351,6 +2525,7 @@ void WriteOut() {
 
     QFileInfo PathInfo(Settings->GetString("OutputFileName"));
     QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".pts";
+
     WriteSettingsFile(SettingsFileName);
   }
 
@@ -2373,6 +2548,7 @@ void WritePipe() {
       Pattern = QObject::tr("Jpg images (*.jpg *.jpeg);;All files (*.*)");
       break;
     case ptSaveFormat_PNG :
+    case ptSaveFormat_PNG16 :
       SuggestedFileName += ".png";
       Pattern = QObject::tr("PNG images(*.png);;All files (*.*)");
       break;
@@ -2857,14 +3033,23 @@ void CB_MenuFileOpen(const short HaveFile) {
   QString InputFileName;
   if (HaveFile) {
     InputFileName = ImageFileToOpen;
-    if (0 == InputFileName.size()) return;
   } else {
     InputFileName =
       QFileDialog::getOpenFileName(NULL,
                                    QObject::tr("Open Raw"),
                                    Settings->GetString("RawsDirectory"),
                                    RawPattern);
-    if (0 == InputFileName.size()) return;
+  }
+
+  if (InputFileName == "") {
+      return;
+  } else {
+      if (!QFile::exists(InputFileName)) {
+          QMessageBox::warning(NULL,
+                  QObject::tr("File not found"),
+                  QObject::tr("Input file does not exist.") + "\n\n" + InputFileName);
+          return;
+      }
   }
 
   QFileInfo PathInfo(InputFileName);
@@ -3052,6 +3237,7 @@ void CB_MenuFileSaveOutput(const short) {
       Pattern = QObject::tr("Jpg images (*.jpg *.jpeg);;All files (*.*)");
       break;
     case ptSaveFormat_PNG :
+    case ptSaveFormat_PNG16 :
       SuggestedFileName += ".png";
       Pattern = QObject::tr("PNG images(*.png);;All files (*.*)");
       break;
@@ -3606,6 +3792,7 @@ void CB_OutputColorProfileIntentChoice(const QVariant Choice) {
 void CB_StyleChoice(const QVariant Choice) {
   Settings->SetValue("Style",Choice);
   if (Settings->GetInt("Style") == ptStyle_None) {
+    Settings->SetValue("CustomCSSFile","");
     Theme->Reset();
   } else if (Settings->GetInt("Style") == ptStyle_Normal) {
     Theme->Normal(Settings->GetInt("StyleHighLight"));
@@ -3616,6 +3803,10 @@ void CB_StyleChoice(const QVariant Choice) {
   } else {
     Theme->DarkGrey(Settings->GetInt("StyleHighLight"));
   }
+#ifdef Q_OS_MAC
+//dirty hack to make theming work
+  MainWindow->MainSplitter->setStyleSheet("");
+#endif
 
   MainWindow->MainTabBook->setStyle(Theme->ptStyle);
   MainWindow->ProcessingTabBook->setStyle(Theme->ptStyle);
@@ -3634,9 +3825,15 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->StatusWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->SearchWidget->setStyleSheet(Theme->ptStyleSheet);
   MainWindow->ViewStartPageFrame->setStyleSheet(Theme->ptStyleSheet);
-
+#ifdef Q_OS_MAC
+//dirty hack to make theming work
+  if(Theme->MacStyleFlag){
+  MainWindow->MainSplitter->setStyleSheet("background-color:"+Theme->MacBackGround+";");
+  }
+#endif
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
+  CB_SliderWidthInput(Settings->GetInt("SliderWidth"));
 }
 
 void CB_StyleHighLightChoice(const QVariant Choice) {
@@ -3650,42 +3847,16 @@ void CB_LoadStyleButton() {
   FileName = QFileDialog::getOpenFileName(NULL,
     QObject::tr("Open Image"),
     Settings->GetString("UserDirectory"),
-    QObject::tr("CSS files (*.css *.qss);;All files(*.*)"));
-
-  QFile *data;
+    QObject::tr("CSS files (*.css *.qss);;All files(*.*)")
+  );
 
   if (FileName.size() == 0) {
     return;
   } else {
-    /* Let's use QFile and point to a resource... */
-    data = new QFile(FileName);
+    Settings->SetValue("CustomCSSFile", FileName);
+    Theme->SetCustomCSS(FileName);
+    CB_StyleChoice(Settings->GetInt("Style"));
   }
-  QString style;
-  /* ...to open the file */
-  if(data->open(QFile::ReadOnly)) {
-    /* QTextStream... */
-    QTextStream styleIn(data);
-    /* ...read file to a string. */
-    style = styleIn.readAll();
-    data->close();
-
-    Theme->Normal(0);
-    MainWindow->setPalette(Theme->ptPalette);
-    MainWindow->MainTabBook->setStyle(Theme->ptThemeStyle);
-    MainWindow->ProcessingTabBook->setStyle(Theme->ptThemeStyle);
-    MainWindow->BottomContainer->setStyle(Theme->ptThemeStyle);
-    MainWindow->PipeControlWidget->setStyle(Theme->ptThemeStyle);
-    MainWindow->MainSplitter->setStyle(Theme->ptThemeStyle);
-    MainWindow->ControlSplitter->setStyle(Theme->ptThemeStyle);
-    MainWindow->ViewSplitter->setStyle(Theme->ptThemeStyle);
-
-    MainWindow->MainTabBook->setStyleSheet(style);
-    MainWindow->BottomContainer->setStyleSheet(style);
-    MainWindow->PipeControlWidget->setStyleSheet(style);
-    MainWindow->StatusWidget->setStyleSheet(style);
-    MainWindow->SearchWidget->setStyleSheet(style);
-  }
-  delete data;
 }
 
 
@@ -4075,6 +4246,14 @@ void SetBackgroundColor(int SetIt) {
     ViewWindow->setPalette(Theme->ptPalette);
     MainWindow->ViewStartPage->setPalette(Theme->ptPalette);
   }
+}
+
+void CB_SliderWidthInput(const QVariant Value) {
+  Settings->SetValue("SliderWidth",Value);
+  if (Settings->GetInt("SliderWidth") == 0)
+    MainWindow->setStyleSheet("ptSlider { max-width: " + QString("%1").arg(10000) + "px; }");
+  else
+    MainWindow->setStyleSheet("ptSlider { max-width: " + QString("%1").arg(Settings->GetInt("SliderWidth")) + "px; }");
 }
 
 void CB_SaveButtonModeChoice(const QVariant Choice) {
@@ -4701,41 +4880,16 @@ void CB_RotateAngleButton() {
       QObject::tr("Open an image first."));
     return;
   }
-  uint16_t Width = 0;
-  uint16_t Height = 0;
-  // First : make sure we have the view window.
-  // And we reset the Image_AfterLensfun such that we can
-  // again select on the whole. It might have been cropped before !
-  if (Settings->GetInt("IsRAW")) {
-    TheProcessor->m_Image_AfterGeometry->Set(
-            TheProcessor->m_DcRaw,
-            Settings->GetInt("WorkColor"),
-            (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
-              NULL : Settings->GetString("CameraColorProfile").toAscii().data(),
-            Settings->GetInt("CameraColorProfileIntent"),
-            Settings->GetInt("CameraColorGamma"));
-  } else {
-    int Success = 0;
-    TheProcessor->m_Image_AfterGeometry->ptGMOpenImage(
-      (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
-      Settings->GetInt("WorkColor"),
-      Settings->GetInt("PreviewColorProfileIntent"),
-      Settings->GetInt("Scaled"),
-      Success);
-    if (Success == 0) {
-      QMessageBox::critical(0,"File not found","File not found!");
-      return;
-    }
-  }
 
-  Width = TheProcessor->m_Image_AfterGeometry->m_Width;
-  Height = TheProcessor->m_Image_AfterGeometry->m_Height;
-  // We *urge* Image_AfterLensfun to be used now for the preview
-  // Rather than end-of-the pipe or so and having to recalculate.
-  // Recalculate happens later on anyway, so no out of sync issue.
+  // Rerun the part of geometry stage before rotate to get correct preview
+  // image in TheProcessor->m_Image_AfterGeometry
+  TheProcessor->RunGeometry(ptProcessorStopBefore_Rotate);
   short OldZoom = Settings->GetInt("Zoom");
   short OldZoomMode = Settings->GetInt("ZoomMode");
-  ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
+  ViewWindow->Zoom(
+                ViewWindow->ZoomFitFactor(TheProcessor->m_Image_AfterGeometry->m_Width,
+                                          TheProcessor->m_Image_AfterGeometry->m_Height),
+                0);
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
@@ -4899,47 +5053,19 @@ void CB_MakeCropButton() {
       QObject::tr("Open an image first."));
     return;
   }
-  uint16_t Width = 0;
-  uint16_t Height = 0;
-
-  // First : make sure we have the view window.
-  // And we reset the Image_AfterLensfun such that we can
-  // again select on the whole. It might have been cropped before !
-  if (Settings->GetInt("IsRAW")==0) {
-    if (!TheProcessor->m_Image_AfterGeometry)
-      TheProcessor->m_Image_AfterGeometry = new ptImage();
-
-    TheProcessor->m_Image_AfterGeometry->
-      SetScaled(TheProcessor->m_Image_AfterDcRaw,
-                Settings->GetInt("Scaled"));
-  } else {
-    if (!TheProcessor->m_Image_AfterGeometry)
-      TheProcessor->m_Image_AfterGeometry = new ptImage();
-    TheProcessor->m_Image_AfterGeometry->
-      Set(TheProcessor->m_Image_AfterDcRaw);
-  }
 
   ViewWindow->StatusReport(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for cropping"));
 
-  // Redo also the rotation step if needed.
-  if (Settings->ToolIsActive("TabRotation")) {
-    TheProcessor->m_Image_AfterGeometry->ptCIPerspective(Settings->GetDouble("Rotate"),
-                                                         Settings->GetDouble("PerspectiveFocalLength"),
-                                                         Settings->GetDouble("PerspectiveTilt"),
-                                                         Settings->GetDouble("PerspectiveTurn"),
-                                                         Settings->GetDouble("PerspectiveScaleX"),
-                                                         Settings->GetDouble("PerspectiveScaleY"));
-  }
-  Width = TheProcessor->m_Image_AfterGeometry->m_Width;
-  Height = TheProcessor->m_Image_AfterGeometry->m_Height;
-
-  // We *urge* Image_AfterGeometry to be used now for the preview
-  // Rather than end-of-the pipe or so and having to recalculate.
-  // Recalculate happens later on anyway, so no out of sync issue.
+  // Rerun the part of geometry stage before crop to get correct preview
+  // image in TheProcessor->m_Image_AfterGeometry
+  TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
   CropOldZoom = Settings->GetInt("Zoom");
   CropOldZoomMode = Settings->GetInt("ZoomMode");
-  ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
+  ViewWindow->Zoom(
+                ViewWindow->ZoomFitFactor(TheProcessor->m_Image_AfterGeometry->m_Width,
+                                          TheProcessor->m_Image_AfterGeometry->m_Height),
+                0);
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
@@ -8901,6 +9027,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(TabStatusIndicatorInput)
   M_Dispatch(PreviewTabModeCheck)
   M_Dispatch(BackgroundColorCheck)
+  M_Dispatch(SliderWidthInput)
   M_Dispatch(SaveButtonModeChoice)
   M_Dispatch(ResetButtonModeChoice)
   M_Dispatch(SearchBarEnableCheck)

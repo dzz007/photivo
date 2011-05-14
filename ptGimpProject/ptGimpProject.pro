@@ -35,6 +35,8 @@ CONFIG += release silent
 TEMPLATE = app
 TARGET = ptGimp
 DEPENDPATH += .
+INCLUDEPATH += $${PREFIX}/include
+
 win32 {
   BUILDDIR = $$system(cat ../builddir)
   DESTDIR = ../$${BUILDDIR}
@@ -49,6 +51,13 @@ unix {
   MOC_DIR = ../Objects_Gimp
   UI_HEADERS_DIR = ../Objects_Gimp
   RCC_DIR = ../Objects_Gimp
+}
+#prevent qmake from adding -arch flags
+macx{
+  QMAKE_CFLAGS_X86_64 =-m64
+  QMAKE_CXXFLAGS_X86_64 =-m64
+  QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
+  QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
 }
 # Bit funky for the gimp.
 QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gimp-2.0)
@@ -78,6 +87,12 @@ unix {
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
   QMAKE_POST_LINK=strip $(TARGET)
+  QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS) -I$$(PREFIX)/include
+  QMAKE_CXXFLAGS_RELEASE += $$(CXXFLAGS) -I$$(PREFIX)/include
+  QMAKE_CFLAGS_DEBUG += $$(CFLAGS) -I$$(PREFIX)/include
+  QMAKE_CFLAGS_RELEASE += $$(CFLAGS) -I$$(PREFIX)/include
+  QMAKE_LFLAGS_DEBUG += $$(LDFLAGS)  -L$$(PREFIX)/lib
+  QMAKE_LFLAGS_RELEASE += $$(LDFLAGS) -L$$(PREFIX)/lib
 }
 win32 {
   QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS)
@@ -87,6 +102,10 @@ win32 {
   QMAKE_LFLAGS_DEBUG += $$(LDFLAGS)
   QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
   LIBS += -lwsock32 -lexpat -lregex -lgdi32
+}
+macx {
+  QMAKE_CC = /usr/bin/gcc
+  QMAKE_CXX = /usr/bin/g++
 }
 
 # Input

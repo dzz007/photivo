@@ -311,7 +311,8 @@ ptImage* ptImage::ptGMWriteImage(const char* FileName,
       (Format==ptSaveFormat_PNG)) image.depth( 8 );
 
   // Quality
-  if (Format==ptSaveFormat_PNG) image.quality(floor((double) Quality/10.0)*10+5);
+  if (Format==ptSaveFormat_PNG || Format==ptSaveFormat_PNG16)
+    image.quality(floor((double) Quality/10.0)*10+5);
   else image.quality(Quality);
 
   // Compression
