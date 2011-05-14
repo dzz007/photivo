@@ -39,7 +39,7 @@ public:
   void removeAt(int i);
   void removeFirst();
   void removeLast();
-  void replace(int i, ptImageSpot *const&t);
+  void replace(int i, ptImageSpot *const& NewSpot);
 };
 
 #endif
