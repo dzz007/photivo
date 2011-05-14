@@ -1,6 +1,7 @@
 @echo off
+cls
 
-for /F "tokens=3" %%a in ('reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" /v Desktop ^| find "Desktop"') do set ptLogFile="%%a\Photivo-console.log"
+set ptLogFile="%HOMEDRIVE%%HOMEPATH%\Photivo-console.log"
 
 echo Photivo Troubleshooter
 echo ----------------------
@@ -25,15 +26,18 @@ if exist pthreadGC2_64.dll (
   ptConsole32.exe >> %ptLogFile% 2>&1
 )
 
+explorer "%HOMEDRIVE%%HOMEPATH%"
+
 echo.
 echo Photivo exited or crashed.
-echo I created the file "Photivo-console.log" on your desktop that contains
-echo all of Photivo's console output.
+echo I created the file "Photivo-console.log" in your user folder that contains
+echo all of Photivo's console output. An Explorer windows should have opened
+echo showing that folder. If not, find the logfile here:
 echo %ptLogFile%
 echo.
 echo Now contact the Photivo developers via one of the ways mentioned on
 echo http://photivo.org/photivo/feedback
-echo and attach that file or post its full content. Please also include a
+echo and attach the logfile or post its full content. Please also include a
 echo step by step description of what you did that crashed Photivo and any
 echo error messages that maybe appears on screen.
 echo.
