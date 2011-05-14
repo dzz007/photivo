@@ -1187,6 +1187,94 @@
                              <property name="currentIndex">
                               <number>0</number>
                              </property>
+                             <widget class="QWidget" name="TabSpotRepair">
+                              <attribute name="label">
+                               <string>Spot Repair</string>
+                              </attribute>
+                              <layout class="QVBoxLayout" name="verticalLayout_267">
+                               <item>
+                                <widget class="QWidget" name="widget_171" native="true">
+                                 <layout class="QVBoxLayout" name="verticalLayout_268">
+                                  <item>
+                                   <widget class="QWidget" name="widget_172" native="true">
+                                    <layout class="QHBoxLayout" name="horizontalLayout_95">
+                                     <property name="margin">
+                                      <number>0</number>
+                                     </property>
+                                     <item>
+                                      <widget class="QToolButton" name="AddSpotButton">
+                                       <property name="toolTip">
+                                        <string>Add repair spot</string>
+                                       </property>
+                                       <property name="text">
+                                        <string/>
+                                       </property>
+                                      </widget>
+                                     </item>
+                                     <item>
+                                      <widget class="QToolButton" name="DelSpotButton">
+                                       <property name="toolTip">
+                                        <string>Remove repair spot</string>
+                                       </property>
+                                       <property name="text">
+                                        <string/>
+                                       </property>
+                                      </widget>
+                                     </item>
+                                     <item>
+                                      <widget class="QToolButton" name="MoveSpotUpButton">
+                                       <property name="toolTip">
+                                        <string>Move spot up</string>
+                                       </property>
+                                       <property name="text">
+                                        <string/>
+                                       </property>
+                                      </widget>
+                                     </item>
+                                     <item>
+                                      <widget class="QToolButton" name="MoveSpotDownButton">
+                                       <property name="toolTip">
+                                        <string>Move spot down</string>
+                                       </property>
+                                       <property name="text">
+                                        <string/>
+                                       </property>
+                                      </widget>
+                                     </item>
+                                     <item>
+                                      <spacer name="horizontalSpacer_73">
+                                       <property name="orientation">
+                                        <enum>Qt::Horizontal</enum>
+                                       </property>
+                                       <property name="sizeHint" stdset="0">
+                                        <size>
+                                         <width>20</width>
+                                         <height>10</height>
+                                        </size>
+                                       </property>
+                                      </spacer>
+                                     </item>
+                                    </layout>
+                                   </widget>
+                                  </item>
+                                 </layout>
+                                </widget>
+                               </item>
+                               <item>
+                                <spacer name="verticalSpacer_134">
+                                 <property name="orientation">
+                                  <enum>Qt::Vertical</enum>
+                                 </property>
+                                 <property name="sizeHint" stdset="0">
+                                  <size>
+                                   <width>20</width>
+                                   <height>40</height>
+                                  </size>
+                                 </property>
+                                </spacer>
+                               </item>
+                              </layout>
+                             </widget>
                              <widget class="QWidget" name="TabLensfunLensParameters">
                               <property name="geometry">
                                <rect>
