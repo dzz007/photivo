@@ -36,8 +36,8 @@ class ptImageSpot {
 private:
   short m_IsEnabled;
   short m_HasRepairer;
-  short m_Mode;         // repair algorithm: use ptSpotMode constants
-  double m_Angle;
+
+  float m_Angle;
   uint m_EdgeRadius;
   uint m_RadiusW;
   uint m_RadiusH;
@@ -47,7 +47,14 @@ private:
   QPoint m_SpotPos;
   QPoint m_RepairerPos;
 
-  void UpdateTransparency();
+  short m_Mode;       // repair algorithm: use ptSpotMode constants
+  float m_Opacity;   // basically a global transparency percentage for the repair action
+  float m_Blur;
+  // TODO SR: Is this following pointer stuff a good idea? Better use QVector
+  // or QImage? Is speed an issue?
+  uint16_t* m_WeightMatrix;
+
+  void UpdateWeight();
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -58,7 +65,7 @@ public:
   ptImageSpot(const short isEnabled,
               const short hasRepairer,
               const short Mode,
-              const double Angle,
+              const float Angle,
               const uint EdgeRadius,
               const uint RadiusW, const uint RadiusH,
               const uint SpotX, const uint SpotY,
@@ -67,12 +74,14 @@ public:
   // standard getter and setter methods
   inline short isEnabled() const { return m_IsEnabled; }
   inline short hasRepairer() const { return m_HasRepairer; }
-  inline double Angle() const { return m_Angle; }
+  inline float Angle() const { return m_Angle; }
   inline uint EdgeRadius() const { return m_EgdeRadius; }
   inline uint RadiusW() const { return m_RadiusW; }
   inline uint RadiusH() const { return m_RadiusH; }
   inline QPoint SpotPos() const { return m_SpotPos; }
   inline QPoint RepairerPos() const { return m_RepairerPos; }
+  inline float Opactiy() const { return m_Opacity; }
+  inline float Blur() const { return m_Blur; }
 
   inline void setEnabled(const short state) { m_IsEnabled = state; }
   void setAngle(double angle);
@@ -81,6 +90,8 @@ public:
   void setRadiusH(uint radius);
   void setRepairer(const uint CenterX, const uint CenterY);
   inline void removeRepairer() { m_HasRepairer = 0; }
+  void setOpacity(const float opacity);
+  void setBlur(const float blur);
 
   // Move source and target spot around
   void MoveSpotTo(uint x, y);

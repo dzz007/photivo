@@ -33,7 +33,7 @@
 ptImageSpot::ptImageSpot(const short isEnabled,
                          const short hasRepairer,
                          const short Mode,
-                         const double Angle,
+                         const float Angle,
                          const uint EdgeRadius,
                          const uint RadiusW, const uint RadiusH,
                          const uint SpotX, const uint SpotY,
@@ -57,24 +57,24 @@ ptImageSpot::ptImageSpot(const short isEnabled,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptImageSpot::setAngle(double angle) {
+void ptImageSpot::setAngle(float angle) {
   m_Angle = angle;
-  UpdateTransparency();
+  UpdateWeight();
 }
 
 void ptImageSpot::setEdgeRadius(uint radius) {
   m_EdgeRadius = radius;
-  UpdateTransparency();
+  UpdateWeight();
 }
 
 void ptImageSpot::setRadiusW(uint radius) {
   m_RadiusW = radius;
-  UpdateTransparency();
+  UpdateWeight();
 }
 
 void ptImageSpot::setRadiusH(uint radius) {
   m_RadiusH = radius;
-  UpdateTransparency();
+  UpdateWeight();
 }
 
 void ptImageSpot::setRepairer(const uint CenterX, const uint CenterY) {
@@ -83,6 +83,21 @@ void ptImageSpot::setRepairer(const uint CenterX, const uint CenterY) {
   m_RepairerPos.setY(CenterY);
 }
 
+void ptImageSpot::setOpacity(const float opacity) {
+  if (strength > 1.0f) {
+    m_Opacity = 1.0;
+  } else {
+    m_Opacity = opacity;
+  }
+}
+
+void ptImageSpot::setBlur(const float blur) {
+  if (blur > 1.0f) {
+    m_Blur = 1.0;
+  } else {
+    m_Blur = blur;
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -117,6 +132,6 @@ void ptImageSpot::MoveTo(uint x, y) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptImageSpot::UpdateTransparency() {
+void ptImageSpot::UpdateWeight() {
   // TODO SR: alpha channel calculation
 }
