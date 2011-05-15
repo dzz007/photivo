@@ -262,5 +262,6 @@ SOURCES += ../Sources/rawtherapee/green_equil.c
 RESOURCES = ../qrc/photivo.qrc
 TRANSLATIONS += ../Translations/photivo_Deutsch.ts
 TRANSLATIONS += ../Translations/photivo_Italiano.ts
+TRANSLATIONS += ../Translations/photivo_Русский.ts
 
 ###############################################################################

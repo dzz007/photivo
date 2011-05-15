@@ -84,10 +84,11 @@ private:
   QString m_Label, m_ToolTip;
   QVariant::Type m_Type;
   QVariant m_Minimum, m_Maximum, m_Value, m_Step, m_Default;
-  int m_Decimals;
+  short m_Decimals;
   bool m_IsSliderMoving, m_IsEditingEnabled;
   QRect m_ValueRect;
   QAbstractSpinBox *m_EditBox;
+  short m_HandleWidth;
 };
 
 #endif // PTSLIDER_H

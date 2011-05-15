@@ -1773,8 +1773,13 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
           Tools = Tools + Tab + ": " + Settings->ToolGetName(GroupBox->objectName()) + "\n";
         }
       }
-      if (Tools == "") Tools = "No tools hidden!";
-      QMessageBox::information(this,"Hidden tools",Tools);
+      if (Tools == "") Tools = tr("No tools hidden!");
+      QMessageBox message(this);
+      message.setWindowTitle(tr("Hidden tools"));
+      message.setText(Tools);
+      message.setIcon(QMessageBox::Information);
+      message.setStyleSheet("QWidget {color: " + palette().color(QPalette::Text).name() + ";}");
+      message.exec();
       /*findChild<QWidget *>(QString("TabGenCorrections"))->
         setVisible(1-findChild<QWidget *>(QString("TabGenCorrections"))->isVisible()); */
     } else if (Event->key()==Qt::Key_U && Event->modifiers()==Qt::NoModifier) {
@@ -1793,7 +1798,12 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         }
       }
       if (Tools == "") Tools = tr("No tools blocked!");
-      QMessageBox::information(this,tr("Blocked tools"),Tools);
+      QMessageBox message(this);
+      message.setWindowTitle(tr("Blocked tools"));
+      message.setText(Tools);
+      message.setIcon(QMessageBox::Information);
+      message.setStyleSheet("QWidget {color: " + palette().color(QPalette::Text).name() + ";}");
+      message.exec();
     }
   }
 }
