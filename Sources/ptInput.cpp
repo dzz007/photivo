@@ -141,9 +141,10 @@ ptInput::ptInput(const QWidget* MainWindow,
 
   //~ Layout->addWidget(m_Button);
   Layout->addWidget(m_SpinBox);
+
   QVBoxLayout *colorLayout=NULL;
-  if (ColorSetting == 1)
-  {
+  if (ColorSetting == 1) {
+//  this slider has a hue bar
     colorLayout=new QVBoxLayout;
     Layout->addLayout(colorLayout);
     colorLayout->addWidget(m_Slider);
@@ -156,17 +157,17 @@ ptInput::ptInput(const QWidget* MainWindow,
   }
   else
     Layout->addWidget(m_Slider);
+
   Layout->addWidget(m_Label);
   Layout->setContentsMargins(0,0,0,0);
   Layout->setMargin(0);
-  if (HasSlider)
-  {
+
+  if (HasSlider) {
     m_SpinBox->hide();
     m_Label->hide();
     Layout->setAlignment(Qt::AlignLeft);
   }
-  else
-  {
+  else {
     m_Slider->hide();
     Layout->addStretch(1);
     Layout->setSpacing(2);
@@ -190,8 +191,6 @@ ptInput::ptInput(const QWidget* MainWindow,
     connect(m_SpinBox,SIGNAL(valueChanged(double)),
             this,SLOT(OnSpinBoxChanged(double)));
   }
-//  connect(m_Slider,SIGNAL(valueChanged(int)),
-//          this,SLOT(OnSliderChanged(int)));
   //~ connect(m_Button,SIGNAL(clicked()),
           //~ this,SLOT(OnButtonClicked()));
   connect(m_Slider,SIGNAL(valueChanged(QVariant)),

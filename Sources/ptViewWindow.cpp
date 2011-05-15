@@ -1675,7 +1675,7 @@ void ptViewWindow::StatusReport(short State) {
     "border-radius: 25px; padding: 8px; color: rgb(0,130,0);"
     "background: rgb(120,170,120);}";
     m_StatusReport->setStyleSheet(StatusReportStyleSheet);
-    m_StatusReport->setText("<h1> Done </h1>");
+    m_StatusReport->setText(tr("<h1> Done </h1>"));
     m_StatusReportTimer->start(m_StatusReportTimeOut);
     m_StatusReport->setGeometry(20,20,150,70);
     m_StatusReport->update();
@@ -1687,7 +1687,7 @@ void ptViewWindow::StatusReport(short State) {
     "border-radius: 25px; padding: 8px; color: rgb(255,140,0);"
     "background: rgb(255,200,120);}";
     m_StatusReport->setStyleSheet(StatusReportStyleSheet);
-    m_StatusReport->setText("<h1> Updating </h1>");
+    m_StatusReport->setText(tr("<h1> Updating </h1>"));
     m_StatusReport->setGeometry(20,20,200,70);
     m_StatusReport->update();
     m_StatusReport->setVisible(1);
@@ -1698,7 +1698,7 @@ void ptViewWindow::StatusReport(short State) {
     "border-radius: 25px; padding: 8px; color: rgb(255,75,75);"
     "background: rgb(255,190,190);}";
     m_StatusReport->setStyleSheet(StatusReportStyleSheet);
-    m_StatusReport->setText("<h1> Processing </h1>");
+    m_StatusReport->setText(tr("<h1> Processing </h1>"));
     m_StatusReport->setGeometry(20,20,220,70);
     m_StatusReport->update();
     m_StatusReport->setVisible(1);

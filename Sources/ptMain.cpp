@@ -4251,8 +4251,10 @@ void SetBackgroundColor(int SetIt) {
 void CB_SliderWidthInput(const QVariant Value) {
   Settings->SetValue("SliderWidth",Value);
   if (Settings->GetInt("SliderWidth") == 0)
+//  maximum slider width is equal to the toolbar width
     MainWindow->setStyleSheet("ptSlider { max-width: " + QString("%1").arg(10000) + "px; }");
   else
+//  maximum slider width is equal to "SliderWidth"
     MainWindow->setStyleSheet("ptSlider { max-width: " + QString("%1").arg(Settings->GetInt("SliderWidth")) + "px; }");
 }
 
