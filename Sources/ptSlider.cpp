@@ -298,9 +298,12 @@ void ptSlider::wheelEvent(QWheelEvent *ev)
     enableEditor(false, false);
 
   if (m_ValueRect.contains(ev->pos()))
+  {
 //  wheel step equals to spinbox step
     setValue(minimum()+(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble())*
              (m_Value.toDouble()+m_Step.toDouble()*ev->delta()/120-m_Minimum.toDouble()));
+    update();
+  }
   else
 //  wheel step equals to standard QSlider step
     QSlider::wheelEvent(ev);
