@@ -647,6 +647,10 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateLfunVignetteUI();
   UpdateLiquidRescaleUI();
   InitVisibleTools();
+  if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_Favourite)
+    ShowFavouriteTools();
+  if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_AllTools)
+    ShowAllTools();
 }
 
 void CB_Event0();

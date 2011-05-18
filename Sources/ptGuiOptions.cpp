@@ -106,6 +106,12 @@ const ptGuiOptionsItem ptGuiOptions::StyleHighLight[] = {
   {ptStyleHighLight_Orange,     QObject::tr("Orange") },
   {-1,NULL}};
 
+const ptGuiOptionsItem ptGuiOptions::StartupUIMode[] = {
+  {ptStartupUIMode_Tab,         QObject::tr("Tab mode") },
+  {ptStartupUIMode_Favourite,   QObject::tr("Favourite tools") },
+  {ptStartupUIMode_AllTools,    QObject::tr("All tools") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::PipeSize[] = {
   {ptPipeSize_Thirtyfour, QObject::tr("1:32") },
   {ptPipeSize_Sixteen,    QObject::tr("1:16") },

@@ -57,6 +57,7 @@ public:
   static const ptGuiOptionsItem OutputColorProfileIntent[];
   static const ptGuiOptionsItem Style[];
   static const ptGuiOptionsItem StyleHighLight[];
+  static const ptGuiOptionsItem StartupUIMode[];
   static const ptGuiOptionsItem PipeSize[];
   static const ptGuiOptionsItem RunMode[];
 

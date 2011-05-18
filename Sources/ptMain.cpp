@@ -4175,6 +4175,10 @@ void CB_StartupSettingsButton() {
   MainWindow->UpdateSettings();
 }
 
+void CB_StartupUIModeChoice(const QVariant Choice) {
+  Settings->SetValue("StartupUIMode",Choice);
+}
+
 void CB_InputsAddPowerLawCheck(const QVariant State) {
   Settings->SetValue("InputsAddPowerLaw",State);
   if (Settings->GetInt("InputsAddPowerLaw")) {
@@ -9022,6 +9026,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(StartupSettingsCheck)
   M_Dispatch(StartupSettingsResetCheck)
+  M_Dispatch(StartupUIModeChoice)
 
   M_Dispatch(RememberSettingLevelChoice)
   M_Dispatch(InputsAddPowerLawCheck)
