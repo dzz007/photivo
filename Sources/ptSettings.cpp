@@ -452,6 +452,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ResetButtonMode"             ,ptGT_Choice       ,1,0,1 ,ptResetMode_User            ,GuiOptions->ResetMode                 ,tr("Output mode of reset button")},
     {"Style"                       ,ptGT_Choice       ,1,0,0 ,ptStyle_DarkGrey            ,GuiOptions->Style                     ,tr("Set the theme.")},
     {"StyleHighLight"              ,ptGT_Choice       ,1,0,0 ,ptStyleHighLight_Blue       ,GuiOptions->StyleHighLight            ,tr("Set the highlight color of the theme.")},
+    {"StartupUIMode"               ,ptGT_Choice       ,1,0,0 ,ptStartupUIMode_Tab         ,GuiOptions->StartupUIMode             ,tr("Set the start up mode for the UI.")},
     {"PipeSize"                    ,ptGT_Choice       ,2,0,1 ,ptPipeSize_Quarter          ,GuiOptions->PipeSize                  ,tr("Size of image processed vs original.")},
     {"SpecialPreview"              ,ptGT_Choice       ,2,0,1 ,ptSpecialPreview_RGB        ,GuiOptions->SpecialPreview            ,tr("Special preview for image analysis")},
     {"BadPixels"                   ,ptGT_Choice       ,1,1,0 ,0                           ,GuiOptions->BadPixels                 ,tr("Bad pixels file")},

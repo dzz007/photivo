@@ -152,6 +152,10 @@ const short ptStyleHighLight_Blue     = 2;
 const short ptStyleHighLight_Green    = 3;
 const short ptStyleHighLight_Orange   = 4;
 
+// Starup UI mode
+const short ptStartupUIMode_Tab       = 0;
+const short ptStartupUIMode_Favourite = 1;
+const short ptStartupUIMode_AllTools  = 2;
 
 // Lensfun
 const short ptLfunCAModel_None        = LF_TCA_MODEL_NONE;
