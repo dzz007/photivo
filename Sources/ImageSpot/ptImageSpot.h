@@ -25,6 +25,7 @@
 
 #include <QtGlobal>
 #include <QPoint>
+#include <stdint.h>
 
 
 class ptImageSpot {
@@ -34,24 +35,22 @@ class ptImageSpot {
 //
 ////////////////////////////////////////////////////////////////////////////////
 private:
-  short m_IsEnabled;
-  short m_HasRepairer;
+  short m_init;
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// PROTECTED members
+//
+////////////////////////////////////////////////////////////////////////////////
+protected:
   float m_Angle;
+  float m_EdgeBlur;
   uint m_EdgeRadius;
+  short m_IsEnabled;
+  float m_Opacity;  // global transparency percentage
   uint m_RadiusW;
   uint m_RadiusH;
-  // Spot = the problematic spot to be repaired
-  // Repairer = the spot providing the repair data
-  // Position is the center of each spot
-  QPoint m_SpotPos;
-  QPoint m_RepairerPos;
-
-  short m_Mode;       // repair algorithm: use ptSpotMode constants
-  float m_Opacity;   // basically a global transparency percentage for the repair action
-  float m_Blur;
-  // TODO SR: Is this following pointer stuff a good idea? Better use QVector
-  // or QImage? Is speed an issue?
+  QPoint m_SpotPos;  // Position is the center of the spot
   uint16_t* m_WeightMatrix;
 
   void UpdateWeight();
@@ -63,40 +62,35 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 public:
   ptImageSpot(const short isEnabled,
-              const short hasRepairer,
-              const short Mode,
-              const float Angle,
-              const uint EdgeRadius,
-              const uint RadiusW, const uint RadiusH,
-              const uint SpotX, const uint SpotY,
-              const uint RepairerX = 0, const uint RepairerY = 0);
+              const uint spotX,
+              const uint spotY,
+              const uint radiusW,
+              const uint radiusH,
+              const float angle,
+              const uint edgeRadius,
+              const float edgeBlur,
+              const float opacity);
 
   // standard getter and setter methods
-  inline short isEnabled() const { return m_IsEnabled; }
-  inline short hasRepairer() const { return m_HasRepairer; }
   inline float Angle() const { return m_Angle; }
-  inline uint EdgeRadius() const { return m_EgdeRadius; }
+  inline float EdgeBlur() const { return m_EdgeBlur; }
+  inline uint EdgeRadius() const { return m_EdgeRadius; }
+  inline short isEnabled() const { return m_IsEnabled; }
+  inline float Opactiy() const { return m_Opacity; }
   inline uint RadiusW() const { return m_RadiusW; }
   inline uint RadiusH() const { return m_RadiusH; }
   inline QPoint SpotPos() const { return m_SpotPos; }
-  inline QPoint RepairerPos() const { return m_RepairerPos; }
-  inline float Opactiy() const { return m_Opacity; }
-  inline float Blur() const { return m_Blur; }
 
-  inline void setEnabled(const short state) { m_IsEnabled = state; }
-  void setAngle(double angle);
+  void setAngle(float angle);
+  void setEdgeBlur(const float blur);
   void setEdgeRadius(uint radius);
+  inline void setEnabled(const short state) { m_IsEnabled = state; }
+  void setOpacity(const float opacity);
   void setRadiusW(uint radius);
   void setRadiusH(uint radius);
-  void setRepairer(const uint CenterX, const uint CenterY);
-  inline void removeRepairer() { m_HasRepairer = 0; }
-  void setOpacity(const float opacity);
-  void setBlur(const float blur);
 
-  // Move source and target spot around
-  void MoveSpotTo(uint x, y);
-  void MoveRepairerTo(uint x, y);
-  void MoveTo(uint x, y);   // Moves both, keeps their relative position towards each other the same
+  // more functionality
+  virtual void MoveTo(uint x, uint y);
 };
 
 #endif
