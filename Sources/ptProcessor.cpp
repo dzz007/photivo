@@ -2645,7 +2645,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
       modflags |= LF_MODIFY_GEOMETRY;
     }
 
-    double LfunScaleFactor = 0.0;   // 0.0 is lensfun’s magic value for auto scaling
+    double LfunScaleFactor = 0.0;   // 0.0 is lensfun's magic value for auto scaling
     if (Settings->GetInt("LfunAutoScale") == 0) {
       LfunScaleFactor = Settings->GetDouble("LfunScale");
     }
@@ -2698,7 +2698,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
     lfLensType TargetGeo = (lfLensType)LF_RECTILINEAR;
     int modflags = LF_MODIFY_GEOMETRY;
 
-    double DefishScaleFactor = 0.0;   // 0.0 is lensfun’s magic value for auto scaling
+    double DefishScaleFactor = 0.0;   // 0.0 is lensfun's magic value for auto scaling
     if (Settings->GetInt("DefishAutoScale") == 0) {
       DefishScaleFactor = Settings->GetDouble("DefishScale");
     }
@@ -2893,8 +2893,9 @@ void ptProcessor::ReadExifBuffer() {
 
   try {
     Exiv2::Image::AutoPtr Image;
-    if (Exiv2::ImageFactory::getType(
-      (Settings->GetStringList("InputFileNameList"))[0].toAscii().data()) != Exiv2::ImageType::none)
+    if (Settings->GetStringList("InputFileNameList").size() != 0 &&
+        Exiv2::ImageFactory::getType(
+          (Settings->GetStringList("InputFileNameList"))[0].toAscii().data()) != Exiv2::ImageType::none)
       Image =
         Exiv2::ImageFactory::open((Settings->GetStringList("InputFileNameList"))[0].toAscii().data());
     else return;
