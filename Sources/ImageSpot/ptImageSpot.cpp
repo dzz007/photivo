@@ -31,23 +31,26 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImageSpot::ptImageSpot(const short isEnabled,
-                         const short hasRepairer,
-                         const short Mode,
-                         const float Angle,
-                         const uint EdgeRadius,
-                         const uint RadiusW, const uint RadiusH,
-                         const uint SpotX, const uint SpotY,
-                         const uint RepairerX, const uint RepairerY)
+                         const uint spotX,
+                         const uint spotY,
+                         const uint radiusW,
+                         const uint radiusH,
+                         const float angle,
+                         const uint edgeRadius,
+                         const float edgeBlur,
+                         const float opacity)
+  : m_IsEnabled(isEnabled),
+    m_RadiusW(radiusW),
+    m_RadiusH(radiusH),
+    m_Angle(angle),
+    m_EdgeRadius(edgeRadius)
 {
-  m_IsEnabled = isEnabled;
-  m_HasRepairer = hasRepairer;
-  m_Mode = Mode;
-  m_Angle = Angle;
-  m_EdgeRadius = EdgeRadius;
-  m_RadiusW = RadiusW;
-  m_RadiusH = RadiusH;
-  m_SpotPos = QPoint(SpotX, SpotY);
-  m_RepairerPos = QPoint(RepairerX, RepairerY);
+  m_init = 1;
+  m_SpotPos = QPoint(spotX, spotY);
+  setEdgeBlur(edgeBlur);
+  setOpacity(opacity);
+  UpdateWeight();
+  m_init = 0;
 }
 
 
@@ -60,6 +63,19 @@ ptImageSpot::ptImageSpot(const short isEnabled,
 void ptImageSpot::setAngle(float angle) {
   m_Angle = angle;
   UpdateWeight();
+}
+
+void ptImageSpot::setEdgeBlur(const float blur) {
+  if (blur > 1.0f) {
+    m_EdgeBlur = 1.0;
+  } else if (blur < 0.0f){
+    m_EdgeBlur = 0.0;
+  } else {
+    m_EdgeBlur = blur;
+  }
+  if (!m_init) {
+    UpdateWeight();
+  }
 }
 
 void ptImageSpot::setEdgeRadius(uint radius) {
@@ -77,52 +93,27 @@ void ptImageSpot::setRadiusH(uint radius) {
   UpdateWeight();
 }
 
-void ptImageSpot::setRepairer(const uint CenterX, const uint CenterY) {
-  m_HasRepairer = 1;
-  m_RepairerPos.setX(CenterX);
-  m_RepairerPos.setY(CenterY);
-}
-
 void ptImageSpot::setOpacity(const float opacity) {
-  if (strength > 1.0f) {
+  if (opacity > 1.0f) {
     m_Opacity = 1.0;
   } else {
     m_Opacity = opacity;
   }
-}
-
-void ptImageSpot::setBlur(const float blur) {
-  if (blur > 1.0f) {
-    m_Blur = 1.0;
-  } else {
-    m_Blur = blur;
+  if (!m_init) {
+    UpdateWeight();
   }
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Move spot and/or repairer
+// Move spot
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptImageSpot::MoveSpotTo(uint x, y) {
+void ptImageSpot::MoveTo(uint x, uint y) {
   m_SpotPos.setX(x);
   m_SpotPos.setY(y);
-}
-
-void ptImageSpot::MoveRepairerTo(uint x, y) {
-  assert(m_HasRepairer != 0);
-  m_RepairerPos.setX(x);
-  m_RepairerPos.setY(y);
-}
-
-void ptImageSpot::MoveTo(uint x, y) {
-  m_SpotPos.setX(x);
-  m_SpotPos.setY(y);
-  if (m_HasRepairer) {
-    m_RepairerPos.setX(x);
-    m_RepairerPos.setY(y);
-  }
 }
 
 
