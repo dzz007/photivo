@@ -622,7 +622,7 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="267"/>
         <source>Regular L*</source>
-        <translation type="unfinished"></translation>
+        <translation>Normales L*</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="268"/>
@@ -829,47 +829,47 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="313"/>
         <source>No flip</source>
-        <translation>Keine Drehung</translation>
+        <translation>Keine Spiegelung</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="314"/>
         <source>Horizontal flip</source>
-        <translation>Horizontal drehen</translation>
+        <translation>Horizontal spiegeln</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="315"/>
         <source>Vertical flip</source>
-        <translation>Vertical drehen</translation>
+        <translation>Vertikal spiegeln</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="319"/>
         <source>Soft gaussian</source>
-        <translation type="unfinished"></translation>
+        <translation>Normalverteilt, fein</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="320"/>
         <source>Soft uniform</source>
-        <translation type="unfinished"></translation>
+        <translation>Gleichmäßig, fein</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="321"/>
         <source>Soft salt&apos;n pepper</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;Pfeffer u. Salz&quot;, fein</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="322"/>
         <source>Hard gaussian</source>
-        <translation type="unfinished"></translation>
+        <translation>Normalverteilt, grob</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="323"/>
         <source>Hard uniform</source>
-        <translation type="unfinished"></translation>
+        <translation>Gleichmäßig, grob</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="324"/>
         <source>Hard salt&apos;n pepper</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;Pfeffer u. Salz&quot;, grob</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="333"/>
@@ -1247,7 +1247,7 @@
         <location filename="../Sources/ptMain.cpp" line="2530"/>
         <location filename="../Sources/ptMain.cpp" line="3590"/>
         <source>Ready</source>
-        <translation>Fertig</translation>
+        <translation>Bereit</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="1052"/>
@@ -5236,7 +5236,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5143"/>
         <source>Luminance Denoising (*)</source>
-        <translation>Luminanz-Entrauschung (*)</translation>
+        <translation>Luminanz-Entrauschen (*)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5189"/>
@@ -5246,7 +5246,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5374"/>
         <source>Color Denoising (*)</source>
-        <translation>Farb-Entrauschung (*)</translation>
+        <translation>Farb-Entrauschen (*)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5420"/>
@@ -6638,7 +6638,7 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="2469"/>
         <source>Ready</source>
-        <translation>Fertig</translation>
+        <translation>Bereit</translation>
     </message>
 </context>
 <context>
@@ -7839,19 +7839,19 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
         <location filename="../Sources/ptSettings.cpp" line="294"/>
         <location filename="../Sources/ptSettings.cpp" line="423"/>
         <source>Gaussian</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaußsche Unschärfe</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="295"/>
         <location filename="../Sources/ptSettings.cpp" line="424"/>
         <source>Box</source>
-        <translation>Box</translation>
+        <translation>Feld-Unschärfe</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="296"/>
         <location filename="../Sources/ptSettings.cpp" line="425"/>
         <source>Lens blur</source>
-        <translation>Objektivunschärfe</translation>
+        <translation>Objektiv-Unschärfe</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="297"/>
