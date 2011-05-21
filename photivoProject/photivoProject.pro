@@ -170,6 +170,7 @@ HEADERS += ../Sources/fastbilateral/array.h
 HEADERS += ../Sources/fastbilateral/fast_lbf.h
 HEADERS += ../Sources/fastbilateral/math_tools.h
 HEADERS += ../Sources/fastbilateral/mixed_vector.h
+HEADERS += ../Sources/ptMessageBox.h
 FORMS +=   ../Sources/ptMainWindow.ui
 SOURCES += ../Sources/ptCurve.cpp
 SOURCES += ../Sources/ptVisibleToolsView.cpp
@@ -259,9 +260,11 @@ SOURCES += ../Sources/rawtherapee/amaze_interpolate.c
 SOURCES += ../Sources/rawtherapee/cfa_line_dn.c
 SOURCES += ../Sources/rawtherapee/ca_correct.c
 SOURCES += ../Sources/rawtherapee/green_equil.c
+SOURCES += ../Sources/ptMessageBox.cpp
 RESOURCES = ../qrc/photivo.qrc
 TRANSLATIONS += ../Translations/photivo_Deutsch.ts
 TRANSLATIONS += ../Translations/photivo_Italiano.ts
 TRANSLATIONS += ../Translations/photivo_Русский.ts
+
 
 ###############################################################################

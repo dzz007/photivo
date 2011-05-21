@@ -29,6 +29,7 @@
 //#include <QtNetwork>
 #include <string>
 
+#include "ptMessageBox.h"
 #include "ptDcRaw.h"
 #include "ptProcessor.h"
 #include "ptMainWindow.h"
@@ -410,7 +411,8 @@ int photivoMain(int Argc, char *Argv[]) {
 
     if (CliArgs.indexOf("-h") > -1) {
 #ifdef Q_OS_WIN32
-      QMessageBox::information(0, QObject::tr("Photivo command line options"), PhotivoCliUsageMsg);
+      // no ptMessageBox because we’re on Windows and Theme object not yet created
+      ptMessageBox::information(0, QObject::tr("Photivo command line options"), PhotivoCliUsageMsg);
 #else
       fprintf(stdout,"%s",PhotivoCliUsageMsg.toAscii().data());
 #endif
@@ -463,7 +465,8 @@ int photivoMain(int Argc, char *Argv[]) {
 
     if (CliArgumentsError == 1) {
 #ifdef Q_OS_WIN32
-      QMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
+      // no ptMessageBox because we’re on Windows and Theme object not yet created
+      ptMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
 #else
       fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
 #endif
@@ -1001,7 +1004,7 @@ void InitCurves() {
                            + CurveFileNames[Idx]
                            + "'" ;
         if (Settings->GetInt("JobMode") == 0) {
-          QMessageBox::warning(MainWindow,
+          ptMessageBox::warning(MainWindow,
                            QObject::tr("Curve read error"),
                            ErrorMessage);
         }
@@ -1065,7 +1068,7 @@ void InitChannelMixers() {
                            + ChannelMixerFileNames[Idx]
                            + "'" ;
       if (Settings->GetInt("JobMode") == 0) {
-        QMessageBox::warning(MainWindow,
+        ptMessageBox::warning(MainWindow,
                            QObject::tr("Channelmixer read error"),
                            ErrorMessage);
       }
@@ -1262,7 +1265,7 @@ void Update(short Phase,
 int GetProcessorPhase(const QString GuiName) {
   int Phase = 0;
   QString Tab = MainWindow->m_GroupBox->value(GuiName)->GetTabName();
-  //QMessageBox::information(0,"Feedback","I was called from \n" + GuiName + "\nMy tab is\n" Tab);
+  //ptMessageBox::information(0,"Feedback","I was called from \n" + GuiName + "\nMy tab is\n" Tab);
   if (Tab == "GeometryTab") Phase = ptProcessorPhase_Geometry;
   else if (Tab == "RGBTab") Phase = ptProcessorPhase_RGB;
   else if (Tab == "LabCCTab") Phase = ptProcessorPhase_LabCC;
@@ -1429,7 +1432,7 @@ void HistogramGetCrop() {
 
       // Check if the chosen area is large enough
       if (Settings->GetInt("HistogramCropW") < 50 || Settings->GetInt("HistogramCropH") < 50) {
-        QMessageBox::information(0,
+        ptMessageBox::information(0,
           QObject::tr("Selection too small"),
           QObject::tr("Selection rectangle needs to be at least 50x50 pixels in size.\nNo crop, try again."));
         Settings->SetValue("HistogramCropX",0);
@@ -1766,7 +1769,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       TempCropH = Settings->GetInt("HistogramCropH")*TmpScaled;
       if ((((TempCropX) + (TempCropW)) > Width) ||
           (((TempCropY) + (TempCropH)) >  Height)) {
-        QMessageBox::information(MainWindow,
+        ptMessageBox::information(MainWindow,
                QObject::tr("Histogram selection outside the image"),
                QObject::tr("Histogram selection rectangle too large.\nNo crop, try again."));
         Settings->SetValue("HistogramCropX",0);
@@ -1879,7 +1882,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       TempCropH = Settings->GetInt("HistogramCropH")*TmpScaled;
       if ((((TempCropX) + (TempCropW)) >  Width) ||
           (((TempCropY) + (TempCropH)) >  Height)) {
-        QMessageBox::information(MainWindow,
+        ptMessageBox::information(MainWindow,
           QObject::tr("Histogram selection outside the image"),
           QObject::tr("Histogram selection rectangle too large.\nNo crop, try again."));
         Settings->SetValue("HistogramCropX",0);
@@ -1943,7 +1946,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       TempCropH = Settings->GetInt("HistogramCropH")*TmpScaled;
       if ((((TempCropX) + (TempCropW)) >  Width) ||
           (((TempCropY) + (TempCropH)) >  Height)) {
-        QMessageBox::information(MainWindow,
+        ptMessageBox::information(MainWindow,
           QObject::tr("Histogram selection outside the image"),
           QObject::tr("Histogram selection rectangle too large.\nNo crop, try again."));
         Settings->SetValue("HistogramCropX",0);
@@ -2027,7 +2030,7 @@ void UpdateComboboxes(const QString Key) {
     for (int i = 0; i < FileNames.size(); i++) {
       if (Tmp.ReadChannelMixer(FileNames.at(i).toAscii().data())) {
         if (Settings->GetInt("JobMode") == 0) {
-          QMessageBox::warning(MainWindow,
+          ptMessageBox::warning(MainWindow,
                                QObject::tr("Channelmixer read error"),
                                QObject::tr("Cannot read channelmixer ")
                                  + " '" + FileNames.at(i) + "'");
@@ -2040,7 +2043,7 @@ void UpdateComboboxes(const QString Key) {
     for (int i = 0; i < FileNames.size(); i++) {
       if (Tmp.ReadCurve(FileNames.at(i).toAscii().data())) {
         if (Settings->GetInt("JobMode") == 0) {
-          QMessageBox::warning(MainWindow,
+          ptMessageBox::warning(MainWindow,
                                QObject::tr("Curve read error"),
                                QObject::tr("Cannot read curve ")
                                  + " '" + FileNames.at(i) + "'");
@@ -2258,7 +2261,7 @@ void PrepareTags(const QString TagsInput) {
     //~ WorkString.append("...");
     //~ WorkString.append(Tags.at(i));
   //~ }
-  //~ QMessageBox::warning(0,"Tags",WorkString);
+  //~ ptMessageBox::warning(0,"Tags",WorkString);
 
   return;
 }
@@ -2440,7 +2443,7 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
     } catch (Exiv2::AnyError& Error) {
       std::cout << "Caught Exiv2 exception '" << Error << "'\n";
       if (Settings->GetInt("JobMode") == 0)
-        QMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!");
+        ptMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!");
     }
   }
 #endif
@@ -2706,7 +2709,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     // Adopt the old settings files, just for compatibility.
     // Asumes the LensfunsDatabase dir was the most stable directory
     if (!JobSettings.contains("LensfunDatabaseDirectory")) {
-      QMessageBox::warning(0,"Error","Old settings file, corrections not possible.\nNot applied!");
+      ptMessageBox::warning(0,"Error","Old settings file, corrections not possible.\nNot applied!");
       QFile::remove(TempName);
       SettingsFile.close();
       return 0;
@@ -3045,7 +3048,7 @@ void CB_MenuFileOpen(const short HaveFile) {
       return;
   } else {
       if (!QFile::exists(InputFileName)) {
-          QMessageBox::warning(NULL,
+          ptMessageBox::warning(NULL,
                   QObject::tr("File not found"),
                   QObject::tr("Input file does not exist.") + "\n\n" + InputFileName);
           return;
@@ -3093,7 +3096,7 @@ void CB_MenuFileOpen(const short HaveFile) {
                          + " '"
                          + InputFileNameList[0]
                          + "'" ;
-    QMessageBox::warning(MainWindow,"Decode error",ErrorMessage);
+    ptMessageBox::warning(MainWindow,"Decode error",ErrorMessage);
     Settings->SetValue("InputFileNameList",OldInputFileNameList);
     delete TestDcRaw;
     return;
@@ -3105,7 +3108,7 @@ void CB_MenuFileOpen(const short HaveFile) {
         QFile::remove(OldInputFileNameList.at(0));
       }
     } else {
-      QMessageBox msgBox;
+      ptMessageBox msgBox;
       msgBox.setIcon(QMessageBox::Question);
       msgBox.setWindowTitle("Open new image");
       msgBox.setText("Do you want to save the current image?");
@@ -3360,14 +3363,14 @@ void CB_MenuFileWriteSettings() {
 
 void CB_MenuFileExit(const short) {
   if (ViewWindow->OngoingAction() != vaNone) {
-    QMessageBox::warning(MainWindow,
+    ptMessageBox::warning(MainWindow,
                      QObject::tr("Cannot exit"),
                      QObject::tr("Please finish your crop before closing Photivo."));
     return;
   }
 
   if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0 && Settings->GetInt("SaveConfirmation")==1) {
-    QMessageBox msgBox;
+    ptMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Question);
     msgBox.setWindowTitle("Close Photivo");
     msgBox.setText("Do you want to save the current image?");
@@ -3637,7 +3640,7 @@ void CB_CameraColorChoice(const QVariant Choice) {
   Settings->SetValue("CameraColor",Choice);
   if (Choice.toInt() == ptCameraColor_Profile) {
     if (!Settings->GetString("CameraColorProfile").size()) {
-      QMessageBox::warning(MainWindow,
+      ptMessageBox::warning(MainWindow,
                            QObject::tr("Please load a profile first"),
                            QObject::tr("Please load a profile first"));
       Settings->SetValue("CameraColor",PreviousChoice);
@@ -3646,7 +3649,7 @@ void CB_CameraColorChoice(const QVariant Choice) {
 
   if (Settings->GetInt("CameraColor") == ptCameraColor_Embedded) {
     // TODO
-    QMessageBox::warning(MainWindow,
+    ptMessageBox::warning(MainWindow,
                         QObject::tr("Not yet implemented"),
                         QObject::tr("Not yet implemented. Reverting to Adobe."));
     Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
@@ -3880,14 +3883,14 @@ void CB_WriteBackupSettingsCheck(const QVariant Check) {
 void CB_MemoryTestInput(const QVariant Value) {
   Settings->SetValue("MemoryTest",0);
   if (Value.toInt()>0)
-    if (QMessageBox::question(MainWindow,
+    if (ptMessageBox::question(MainWindow,
         QObject::tr("Are you sure?"),
         QObject::tr("If you don't stop me, I will waste %1 MB of memory.").arg(Value.toInt()),
         QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
       // allocate orphaned memory for testing
       char (*Test) = (char (*)) CALLOC(Value.toInt()*1024*1024,1);
       memset(Test, '\0', Value.toInt()*1024*1024);
-      QMessageBox::critical(0,"Feedback","Memory wasted ;-)");
+      ptMessageBox::critical(0,"Feedback","Memory wasted ;-)");
     }
 }
 
@@ -3899,7 +3902,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       Settings->GetInt("FullPipeConfirmation")==1 &&
       (Settings->GetInt("ImageH") > 2000 ||
        Settings->GetInt("ImageW") > 2000)) {
-    QMessageBox msgBox;
+    ptMessageBox msgBox;
     msgBox.setWindowTitle(QObject::tr("Really switch to 1:1 pipe?"));
     msgBox.setText(QObject::tr("Switching to 1:1 pipe will increase memory usage and processing time greatly.\nAre you sure?"));
 
@@ -3967,7 +3970,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
         Settings->SetValue("DetailViewCropH", ((SelectionRect.height() >>4) <<4) << CachedPipeSize);
         Settings->ToDcRaw(TheDcRaw);
       } else {
-        QMessageBox::information(NULL,"No crop","Too small. Please try again!");
+        ptMessageBox::information(NULL,"No crop","Too small. Please try again!");
         ViewWindow->Zoom(OldZoom,0);
         Settings->SetValue("ZoomMode",OldZoomMode);
         Update(ptProcessorPhase_NULL);
@@ -4080,7 +4083,7 @@ void ResetButtonHandler(const short mode) {
   int DoOpen = 1;
   if (mode == ptResetMode_Full) { // full reset
     if ( Settings->GetInt("ResetSettingsConfirmation")==1 ) {
-      QMessageBox msgBox;
+      ptMessageBox msgBox;
       msgBox.setIcon(QMessageBox::Question);
       msgBox.setWindowTitle(QObject::tr("Reset?"));
       msgBox.setText(QObject::tr("Reset to neutral values?\n"));
@@ -4095,7 +4098,7 @@ void ResetButtonHandler(const short mode) {
     }
   } else if (mode == ptResetMode_User) { // reset to startup settings
     if ( Settings->GetInt("ResetSettingsConfirmation")==1 ) {
-      QMessageBox msgBox;
+      ptMessageBox msgBox;
       msgBox.setIcon(QMessageBox::Question);
       msgBox.setWindowTitle(QObject::tr("Reset?"));
       msgBox.setText(QObject::tr("Reset to start up settings?\n"));
@@ -4304,7 +4307,7 @@ void CB_OpenSettingsFile(QString SettingsFileName) {
   short NextPhase = 1;
   short ReturnValue = ReadSettingsFile(SettingsFileName, NextPhase);
   if (ReturnValue) {
-    QMessageBox::critical(0,"Error","No valid settings file!\n" + SettingsFileName);
+    ptMessageBox::critical(0,"Error","No valid settings file!\n" + SettingsFileName);
     return;
   }
   if (NextPhase == 1) {
@@ -4881,7 +4884,7 @@ void CB_RotateRightButton() {
 
 void CB_RotateAngleButton() {
   if (Settings->GetInt("HaveImage")==0) {
-    QMessageBox::information(MainWindow,
+    ptMessageBox::information(MainWindow,
       QObject::tr("No selection"),
       QObject::tr("Open an image first."));
     return;
@@ -5054,7 +5057,7 @@ void CB_LightsOutChoice(const QVariant Choice) {
 // Prepare and start image crop interaction
 void CB_MakeCropButton() {
   if (Settings->GetInt("HaveImage")==0) {
-    QMessageBox::information(MainWindow,
+    ptMessageBox::information(MainWindow,
       QObject::tr("No crop possible"),
       QObject::tr("Open an image first."));
     return;
@@ -5101,7 +5104,7 @@ void StopCrop(short CropConfirmed) {
     int YScale = 1<<Settings->GetInt("PipeSize");
 
     if ((CropRect.width() * XScale < 4) || (CropRect.height() * YScale < 4)) {
-      QMessageBox::information(MainWindow,
+      ptMessageBox::information(MainWindow,
           QObject::tr("Crop too small"),
           QObject::tr("Crop rectangle needs to be at least 4x4 pixels in size.\nNo crop, try again."));
 
@@ -5165,7 +5168,7 @@ void CB_CropCheck(const QVariant State) {
   if (State.toInt() != 0 &&
       (Settings->GetInt("CropW") <= 4 || Settings->GetInt("CropH") <= 4))
   {
-    QMessageBox::information(MainWindow,
+    ptMessageBox::information(MainWindow,
         QObject::tr("No previous crop found"),
         QObject::tr("Set a crop rectangle now."));
 
@@ -5249,11 +5252,11 @@ int CalculatePipeSize() {
       CB_PipeSizeChoice(s);
       if (ImageSaved == 1) {
         if (Settings->GetInt("PipeSize")==1) {
-          QMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill stay on half size instead!");
+          ptMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill stay on half size instead!");
           ImageSaved = 0;
           return 0;
         } else {
-          QMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill run on half size instead!");
+          ptMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill run on half size instead!");
           CB_PipeSizeChoice(1);
         }
       }
@@ -5365,7 +5368,7 @@ void CB_ChannelMixerOpenButton() {
                            + " '"
                            + ChannelMixerFileNames[Index]
                            + "'" ;
-    QMessageBox::warning(MainWindow,
+    ptMessageBox::warning(MainWindow,
                          QObject::tr("Channelmixer read error"),
                          ErrorMessage);
     // Remove last invalid and return.
@@ -5787,7 +5790,7 @@ void CB_CurveOpenButton(const int Channel) {
                            + " '"
                            + CurveFileNames[Index]
                            + "'" ;
-    QMessageBox::warning(MainWindow,
+    ptMessageBox::warning(MainWindow,
                          QObject::tr("Curve read error"),
                          ErrorMessage);
     // Remove last invalid and return.
@@ -5803,7 +5806,7 @@ void CB_CurveOpenButton(const int Channel) {
     QString Message = QObject::tr("This curve is meant for channel ") +
                         IntendedChannel[Curve[Channel]->m_IntendedChannel] +
                         QObject::tr(". Continue anyway ?");
-    if (QMessageBox::No == QMessageBox::question(
+    if (QMessageBox::No == ptMessageBox::question(
                    MainWindow,
                    QObject::tr("Incompatible curve"),
                    Message,

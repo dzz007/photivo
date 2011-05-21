@@ -22,8 +22,7 @@
 
 #include <cassert>
 
-#include <QMessageBox>
-
+#include "ptMessageBox.h"
 #include "ptGroupBox.h"
 #include "ptSettings.h"
 #include "ptConstants.h"
@@ -358,7 +357,7 @@ void ptGroupBox::WriteSettings(const short Append) {
 
   for (int i = 0; i < Curves.size(); i++) {
     if (Settings->GetInt(Curves.at(i)) > ptCurveChoice_Manual) {
-      QMessageBox::information(0,"Curve problem",
+      ptMessageBox::information(0,"Curve problem",
         "Only manual curves are supported in presets.\nNo preset file will be written!");
       return;
     }
@@ -435,7 +434,7 @@ void ptGroupBox::WriteSettings(const short Append) {
   }
   JobSettings.sync();
   if (JobSettings.status() != QSettings::NoError)
-    QMessageBox::critical(0,"Error","Error while writing preset file!");
+    ptMessageBox::critical(0,"Error","Error while writing preset file!");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -550,7 +549,7 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
     QDesktopServices::openUrl(m_HelpUri);
   } else if (event->y()<20 && event->x()<250) {
     if (event->button()==Qt::LeftButton) {
-      //QMessageBox::critical(0,m_TabName,QString::number(m_IndexInTab+1)+ " in Tab: "+QString::number(m_TabNumber+1));
+      //ptMessageBox::critical(0,m_TabName,QString::number(m_IndexInTab+1)+ " in Tab: "+QString::number(m_TabNumber+1));
       m_Folded = 1 - m_Folded;
       UpdateView();
       Settings->m_IniSettings->setValue(m_Name,m_Folded);
