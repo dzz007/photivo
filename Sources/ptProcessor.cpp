@@ -34,6 +34,7 @@
 #include "ptCimg.h"
 #include "ptFastBilateral.h"
 #include "ptWiener.h"
+#include "ptMessageBox.h"
 
 #include "ptProcessor.h"
 
@@ -214,7 +215,7 @@ void ptProcessor::Run(short Phase,
           Success);
 
         if (Success == 0) {
-          QMessageBox::critical(0,"File not found","File not found!");
+          ptMessageBox::critical(0,"File not found","File not found!");
           return;
         }
 
@@ -304,7 +305,7 @@ void ptProcessor::Run(short Phase,
                              CameraProfileName.toAscii().data());
                 TRACEMAIN("Found profile at %d ms.",m_RunTimer.elapsed());
               } else {
-                QMessageBox::information(0,
+                ptMessageBox::information(0,
                           tr("Profile not found"),
                           tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
                 TRACEMAIN("Not found profile at %d ms.",m_RunTimer.elapsed());
@@ -316,7 +317,7 @@ void ptProcessor::Run(short Phase,
                 if (!(PathInfo.exists() &&
                       PathInfo.isFile() &&
                       PathInfo.isReadable())) {
-                  QMessageBox::information(0,
+                  ptMessageBox::information(0,
                             tr("Profile not found"),
                             tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
                   TRACEMAIN("Not found profile at %d ms.",m_RunTimer.elapsed());
@@ -2224,7 +2225,7 @@ void ptProcessor::Run(short Phase,
             Success);
 
           if (Success == 0) {
-            QMessageBox::critical(0,"File not found","Please open a valid image for texture overlay.");
+            ptMessageBox::critical(0,"File not found","Please open a valid image for texture overlay.");
             Settings->SetValue("TextureOverlayMode",0);
           }
         }
@@ -2781,7 +2782,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
           > m_Image_AfterGeometry->m_Width ||
         ((Settings->GetInt("CropY") >> TmpScaled) + (Settings->GetInt("CropH") >> TmpScaled))
           > m_Image_AfterGeometry->m_Height) {
-      QMessageBox::information(0,
+      ptMessageBox::information(0,
                                tr("Crop outside the image"),
                                tr("Crop rectangle too large.\nNo crop, try again."));
       Settings->SetValue("CropX",0);
