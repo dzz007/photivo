@@ -72,6 +72,9 @@ ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
   m_Image8         = NULL;
   // Nothing moving. (Event hanpting)
   m_MovingAnchor   = -1;
+  m_ActiveAnchor   = -1;
+  m_MousePosX      = 0;
+  m_MousePosY      = 0;
   m_BlockEvents    = 0;
   m_RecalcNeeded   = 0;
 
@@ -83,6 +86,16 @@ ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
           SIGNAL(timeout()),
           this,
           SLOT(ResizeTimerExpired()));
+
+  // Timer for the wheel interaction
+  m_WheelTimer = new QTimer(this);
+  m_WheelTimer->setSingleShot(1);
+  connect(m_WheelTimer,
+          SIGNAL(timeout()),
+          this,
+          SLOT(WheelTimerExpired()));
+
+
 
   m_AtnAdaptive = new QAction(tr("Adaptive"), this);
   m_AtnAdaptive->setStatusTip(tr("Adaptive saturation"));
@@ -905,6 +918,77 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// mouseWheelEvent handler
+// together with the expired timer
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptCurveWindow::wheelEvent(QWheelEvent *Event) {
+  if (m_BlockEvents) return;
+
+  // Do only hanlde curves with minimum 2 anchors.
+  if (m_RelatedCurve->m_Type != ptCurveType_Anchor) return;
+  if (m_RelatedCurve->m_NrAnchors < 2) return;
+
+  // anchor moving?
+  if (m_MovingAnchor != -1) return;
+
+  // we use the mose tracking to disable the wheel event
+  // with the next mouse move.
+  setMouseTracking(true);
+
+  int Width  = width();
+  int Height = height();
+  short Xd;
+  short Yd;
+
+  if (m_ActiveAnchor == -1) {
+    // Did we snap one of the anchors ?
+    for (short i = 0; i < m_RelatedCurve->m_NrAnchors; i++) {
+      Xd = abs(m_XSpot[i]-Event->x());
+      Yd = abs(m_YSpot[i]-Event->y());
+      if ((Xd<SnapDelta) && (Yd<SnapDelta)) {
+        m_ActiveAnchor = i;
+        m_MousePosX    = Event->x();
+        m_MousePosY    = Event->y();
+        break;
+      }
+    }
+  }
+
+  if (m_ActiveAnchor != -1) {
+    float Temp = m_RelatedCurve->m_YAnchor[m_ActiveAnchor];
+    if (((QMouseEvent*)Event)->modifiers() == Qt::ControlModifier) {
+      Temp = Temp + Event->delta()/(float) Height/30.0f;
+    } else {
+      Temp = Temp + Event->delta()/(float) Height/120.0f;
+    }
+    Temp = MAX(0.0, Temp);  // Handle mouse out of range Y coordinate
+    Temp = MIN(1.0, Temp);
+
+    m_RelatedCurve->m_YAnchor[m_ActiveAnchor] = Temp;
+
+    m_RelatedCurve->SetCurveFromAnchors();
+
+    // Notify we have a manual curve now ...
+    SetCurveState(ptCurveChoice_Manual);
+
+    m_OverlayAnchorX = (int32_t) (m_RelatedCurve->m_XAnchor[m_ActiveAnchor]*(Width-1));
+    m_OverlayAnchorY = (int32_t) ((1.0 - m_RelatedCurve->m_YAnchor[m_ActiveAnchor]) * (Height-1));
+    UpdateView();
+    m_WheelTimer->start(200);
+  }
+}
+
+void ptCurveWindow::WheelTimerExpired() {
+  m_BlockEvents  = 1;
+  CB_CurveWindowManuallyChanged(m_Channel);
+  m_RecalcNeeded = 0;
+  m_BlockEvents  = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // mouseMoveEvent handler.
 // Move anchor around.
 //
@@ -913,6 +997,15 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
 const float Delta = 0.005;
 
 void ptCurveWindow::mouseMoveEvent(QMouseEvent *Event) {
+
+  // Reset the wheel status
+  if (m_ActiveAnchor != -1 &&
+      (abs((int)m_MousePosX-Event->x())>2 || abs((int)m_MousePosY-Event->y())>2)) {
+    m_ActiveAnchor = -1;
+    setMouseTracking(false);
+    m_MousePosX    = 0;
+    m_MousePosY    = 0;
+  }
 
   if (m_BlockEvents) return;
 
