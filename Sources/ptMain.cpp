@@ -1296,8 +1296,6 @@ void Update(const QString GuiName) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void BlockTools(const short state) {
-  int i;
-
   // enable all
   if (state == 0) {
     MainWindow->ZoomFitButton->setEnabled(true);
@@ -1320,7 +1318,7 @@ void BlockTools(const short state) {
 
       } else {
         // UI in tab mode
-        for (i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
+        for (int i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
           if (MainWindow->ProcessingTabBook->widget(i) != MainWindow->GeometryTab) {
             MainWindow->ProcessingTabBook->setTabEnabled(i, true);
           }
@@ -1374,7 +1372,7 @@ void BlockTools(const short state) {
 
     } else {
       // UI in tab mode
-      for (i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
+      for (int i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
         if (MainWindow->ProcessingTabBook->widget(i) != MainWindow->GeometryTab) {
           MainWindow->ProcessingTabBook->setTabEnabled(i, false);
         }
