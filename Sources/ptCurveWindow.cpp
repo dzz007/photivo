@@ -803,6 +803,8 @@ void ptCurveWindow::paintEvent(QPaintEvent*) {
 const short SnapDelta = 6;
 // Percentage to be close to a curve to get a new Anchor
 const double CurveDelta = 0.12;
+// Distance to the next anchor
+const float Delta = 0.005;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -813,6 +815,15 @@ const double CurveDelta = 0.12;
 
 void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
 
+  // Reset the wheel status
+  if (m_ActiveAnchor != -1 &&
+      (abs((int)m_MousePosX-Event->x())>2 || abs((int)m_MousePosY-Event->y())>2)) {
+    m_ActiveAnchor = -1;
+    setMouseTracking(false);
+    m_MousePosX    = 0;
+    m_MousePosY    = 0;
+  }
+
   if (m_BlockEvents) return;
 
   // Do only hanlde curves with minimum 2 anchors.
@@ -822,14 +833,15 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
   short Xd;
   short Yd;
   short i;
-  short Snapped;
+  short Snapped  = 0; // got an anchor?
+  short XSnapped = 0; // in the same x range of an anchor?
 
-  Snapped = 0;
   // Did we snap one of the anchors ?
   for (i=0; i<m_RelatedCurve->m_NrAnchors; i++) {
     Xd =  abs(m_XSpot[i]-Event->x());
     Yd =  abs(m_YSpot[i]-Event->y());
-    if ((Xd<SnapDelta) && (Yd<SnapDelta)) {
+    if (Xd<SnapDelta) XSnapped = 1;
+    if (XSnapped && (Yd<SnapDelta)) {
       Snapped = 1;
       if (Event->buttons() == 1) { // Left mouse. Start moving.
         m_MovingAnchor = i;
@@ -862,7 +874,7 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
 
   // Insert a new anchor ? (Right mouse but not on an anchor).
   if (m_RelatedCurve->m_NrAnchors < ptMaxAnchors &&
-      !Snapped && Event->buttons() == 2 &&
+      !XSnapped && Event->buttons() == 2 &&
       // Close to the curve or far away?
       fabs(((double)m_RelatedCurve->
             m_Curve[(int32_t)((double)Event->x()/(double)width()*0xffff)]
@@ -910,7 +922,7 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
     SetCurveState(ptCurveChoice_Manual);
     UpdateView();
   } else if (!Snapped && Event->buttons() == 2) {
-    // ContextMenu
+    // no other interaction needed -> show ContextMenu
     ContextMenu((QMouseEvent*)Event);
   }
   return;
@@ -957,16 +969,36 @@ void ptCurveWindow::wheelEvent(QWheelEvent *Event) {
   }
 
   if (m_ActiveAnchor != -1) {
-    float Temp = m_RelatedCurve->m_YAnchor[m_ActiveAnchor];
-    if (((QMouseEvent*)Event)->modifiers() == Qt::ControlModifier) {
-      Temp = Temp + Event->delta()/(float) Height/30.0f;
+    float Temp = 0;
+    if (((QMouseEvent*)Event)->modifiers() & Qt::AltModifier) {
+      Temp = m_RelatedCurve->m_XAnchor[m_ActiveAnchor];
+      if (((QMouseEvent*)Event)->modifiers() & Qt::ControlModifier) {
+        Temp = Temp + Event->delta()/(float) Width/30.0f;
+      } else {
+        Temp = Temp + Event->delta()/(float) Width/120.0f;
+      }
+      // compare with neighbours
+      if (m_ActiveAnchor < m_RelatedCurve->m_NrAnchors - 1)
+        Temp = MIN(Temp, (m_XSpot[m_ActiveAnchor+1]/(float) (Width-1)) - Delta);
+      if (m_ActiveAnchor > 0)
+        Temp = MAX(Temp, (m_XSpot[m_ActiveAnchor-1]/(float) (Width-1)) + Delta);
     } else {
-      Temp = Temp + Event->delta()/(float) Height/120.0f;
+      Temp = m_RelatedCurve->m_YAnchor[m_ActiveAnchor];
+      if (((QMouseEvent*)Event)->modifiers() & Qt::ControlModifier) {
+        Temp = Temp + Event->delta()/(float) Height/30.0f;
+      } else {
+        Temp = Temp + Event->delta()/(float) Height/120.0f;
+      }
     }
-    Temp = MAX(0.0, Temp);  // Handle mouse out of range Y coordinate
+    // out of range?
+    Temp = MAX(0.0, Temp);
     Temp = MIN(1.0, Temp);
 
-    m_RelatedCurve->m_YAnchor[m_ActiveAnchor] = Temp;
+    if (((QMouseEvent*)Event)->modifiers() & Qt::AltModifier) {
+      m_RelatedCurve->m_XAnchor[m_ActiveAnchor] = Temp;
+    } else {
+      m_RelatedCurve->m_YAnchor[m_ActiveAnchor] = Temp;
+    }
 
     m_RelatedCurve->SetCurveFromAnchors();
 
@@ -993,8 +1025,6 @@ void ptCurveWindow::WheelTimerExpired() {
 // Move anchor around.
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-const float Delta = 0.005;
 
 void ptCurveWindow::mouseMoveEvent(QMouseEvent *Event) {
 
