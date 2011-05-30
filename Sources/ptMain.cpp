@@ -1307,13 +1307,14 @@ void BlockTools(const short state) {
 
     } else if (Settings->GetInt("BlockTools") == 2) {
       MainWindow->HistogramFrameCentralWidget->setEnabled(true);
+      MainWindow->SearchWidget->setEnabled(true);
       MainWindow->PipeControlWidget->setEnabled(true);
       MainWindow->StatusWidget->setEnabled(true);
 
-      if (MainWindow->m_MovedTools->size()>0) {
+      if (MainWindow->m_MovedTools->size() > 0) {
         // UI doesn't display tabs
         for (int i = 0; i < MainWindow->m_MovedTools->size(); i++) {
-          MainWindow->m_MovedTools->at(i)->SetEnabled(true);
+          MainWindow->m_MovedTools->at(i)->setEnabled(true);
         }
 
       } else {
@@ -1362,6 +1363,7 @@ void BlockTools(const short state) {
     MainWindow->HistogramFrameCentralWidget->setEnabled(false);
     MainWindow->PipeControlWidget->setEnabled(false);
     MainWindow->StatusWidget->setEnabled(false);
+    MainWindow->SearchWidget->setEnabled(false);
 
     if (MainWindow->m_MovedTools->size()>0) {
       // UI doesn't display tabs
