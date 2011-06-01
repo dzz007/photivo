@@ -541,6 +541,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"StartupSettings"            ,ptGT_Check ,1,0,1,tr("User settings")   ,tr("Load user settings on startup")},
     {"StartupSettingsReset"       ,ptGT_Check ,1,0,0,tr("Reset on new image") ,tr("Reset to user settings when new image is opened")},
     {"InputsAddPowerLaw"          ,ptGT_Check ,1,1,1,tr("Nonlinear slider response")   ,tr("Alter the slider behaviour")},
+    {"ExportToGimp"               ,ptGT_Check ,1,0,1,tr("Use gimp plugin") ,tr("Use gimp plugin for export")},
     {"ToolBoxMode"                ,ptGT_Check ,1,0,0,tr("Enabled")         ,tr("Show seperate toolboxes")},
     {"PreviewTabMode"             ,ptGT_Check ,1,0,0,tr("Tab mode")        ,tr("Show the preview after the active tab")},
     {"BackgroundColor"            ,ptGT_Check ,1,0,0,tr("Override default"),tr("Override the default color")},

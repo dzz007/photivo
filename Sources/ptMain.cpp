@@ -2535,7 +2535,7 @@ void WriteOut() {
   ReportProgress(QObject::tr("Ready"));
 }
 
-void WritePipe() {
+void WritePipe(QString OutputName = "") {
 
   if (Settings->GetInt("HaveImage")==0) return;
 
@@ -2566,12 +2566,12 @@ void WritePipe() {
       break;
   }
 
-  QString FileName;
-
-  FileName = QFileDialog::getSaveFileName(NULL,
-                                          QObject::tr("Save File"),
-                                          SuggestedFileName,
-                                          Pattern);
+  QString FileName = OutputName;
+  if (FileName == "")
+    FileName = QFileDialog::getSaveFileName(NULL,
+                                            QObject::tr("Save File"),
+                                            SuggestedFileName,
+                                            Pattern);
 
   if (0 == FileName.size()) return; // Operation cancelled.
 
@@ -3224,7 +3224,7 @@ void CB_MenuFileOpen(const short HaveFile) {
   }
 }
 
-void CB_MenuFileSaveOutput(const short) {
+void CB_MenuFileSaveOutput(QString OutputName = "") {
 
   if (Settings->GetInt("HaveImage")==0) return;
 
@@ -3255,12 +3255,12 @@ void CB_MenuFileSaveOutput(const short) {
       break;
   }
 
-  QString FileName;
-
-  FileName = QFileDialog::getSaveFileName(NULL,
-                                          QObject::tr("Save File"),
-                                          SuggestedFileName,
-                                          Pattern);
+  QString FileName = OutputName;
+  if (FileName == "")
+    FileName = QFileDialog::getSaveFileName(NULL,
+                                            QObject::tr("Save File"),
+                                            SuggestedFileName,
+                                            Pattern);
 
   if (0 == FileName.size()) return; // Operation cancelled.
 
@@ -3438,6 +3438,10 @@ void CB_MenuFileExit(const short) {
 // Callbacks pertaining to the gimp
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+void CB_ExportToGimpCheck(const QVariant Check) {
+  Settings->SetValue("ExportToGimp",Check);
+}
 
 void GimpExport(const short UsePipe) {
 
@@ -8960,7 +8964,7 @@ void CB_OutputModeChoice(const QVariant Value) {
 
 void SaveOutput(const short mode) {
   if (mode==ptOutputMode_Full) {
-    CB_MenuFileSaveOutput(1);
+    CB_MenuFileSaveOutput();
   } else if (mode==ptOutputMode_Pipe) {
     WritePipe();
   } else if (mode==ptOutputMode_Jobfile) {
@@ -8971,11 +8975,37 @@ void SaveOutput(const short mode) {
 }
 
 void Export(const short mode) {
-  if (mode==ptExportMode_GimpPipe) {
+  if (mode==ptExportMode_GimpPipe && Settings->GetInt("ExportToGimp")) {
     GimpExport(1);
-  } else if (mode==ptExportMode_GimpFull) {
+    return;
+  } else if (mode==ptExportMode_GimpFull && Settings->GetInt("ExportToGimp")) {
     GimpExport(0);
+    return;
   }
+
+  // regular export without plugin
+  QTemporaryFile ImageFile;
+  ImageFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.tiff");
+  assert (ImageFile.open());
+  QString ImageFileName = ImageFile.fileName();
+  ImageFile.setAutoRemove(false);
+
+  short Temp = Settings->GetInt("SaveFormat");
+  Settings->SetValue("SaveFormat", ptSaveFormat_TIFF16);
+
+  if (mode==ptExportMode_GimpPipe && !Settings->GetInt("ExportToGimp")) {
+    WritePipe(ImageFileName);
+  } else if (mode==ptExportMode_GimpFull && !Settings->GetInt("ExportToGimp")) {
+    CB_MenuFileSaveOutput(ImageFileName);
+  }
+
+  Settings->SetValue("SaveFormat", Temp);
+
+  QString ExportCommand = Settings->GetString("GimpExecCommand");
+  QStringList ExportArguments;
+  ExportArguments << ImageFileName;
+  QProcess* ExportProcess = new QProcess();
+  ExportProcess->startDetached(ExportCommand,ExportArguments);
 }
 
 void CB_WriteOutputButton() {
@@ -9026,6 +9056,8 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WriteBackupSettingsCheck)
 
   M_Dispatch(MemoryTestInput)
+
+  M_Dispatch(ExportToGimpCheck)
 
   M_Dispatch(StartupSettingsCheck)
   M_Dispatch(StartupSettingsResetCheck)
