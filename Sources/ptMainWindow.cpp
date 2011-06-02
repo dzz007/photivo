@@ -1544,9 +1544,9 @@ void ptMainWindow::ResizeTimerExpired() {
 ////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::dragEnterEvent(QDragEnterEvent* Event) {
-  if (ViewWindow->OngoingAction() != vaNone) {
-    return;
-  }
+//  if (ViewWindow->OngoingAction() != vaNone) {    // TODOSR: re-enable
+//    return;
+//  }
 
   // accept just text/uri-list mime format
   if (Event->mimeData()->hasFormat("text/uri-list")) {
@@ -1566,9 +1566,9 @@ void CB_OpenSettingsFile(QString SettingsFileName);
 extern QString ImageFileToOpen;
 
 void ptMainWindow::dropEvent(QDropEvent* Event) {
-  if (ViewWindow->OngoingAction() != vaNone) {
-    return;
-  }
+//  if (ViewWindow->OngoingAction() != vaNone) {    // TODOSR: re-enable
+//    return;
+//  }
 
   QList<QUrl> UrlList;
   QString DropName;
@@ -1627,21 +1627,21 @@ void CB_SearchBarEnableCheck(const QVariant State);
 // Catch keyboard shortcuts
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
   // Handle ViewWindow: LightsOut, confirm/cancel crop
-  if (((ViewWindow->OngoingAction() == vaCrop) || (ViewWindow->OngoingAction() == vaSelectRect)) &&
-      Event->key()==Qt::Key_Alt)
-  {
-    ViewWindow->ToggleLightsOut();
-    return;
-  }
-  if (ViewWindow->OngoingAction() == vaCrop) {
-    if ((Event->key() == Qt::Key_Return) || (Event->key() == Qt::Key_Enter)) {
-      CB_ConfirmCropButton();
-      return;
-    } else if (Event->key() == Qt::Key_Escape) {
-      CB_CancelCropButton();
-      return;
-    }
-  }
+//  if (((ViewWindow->OngoingAction() == vaCrop) || (ViewWindow->OngoingAction() == vaSelectRect)) &&    // TODOSR: re-enable
+//      Event->key()==Qt::Key_Alt)
+//  {
+//    ViewWindow->ToggleLightsOut();
+//    return;
+//  }
+//  if (ViewWindow->OngoingAction() == vaCrop) {    // TODOSR: re-enable
+//    if ((Event->key() == Qt::Key_Return) || (Event->key() == Qt::Key_Enter)) {
+//      CB_ConfirmCropButton();
+//      return;
+//    } else if (Event->key() == Qt::Key_Escape) {
+//      CB_CancelCropButton();
+//      return;
+//    }
+//  }
 
 
   if (Event->key()==Qt::Key_Escape) { // back to used view
@@ -2614,9 +2614,9 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
 void ptMainWindow::UpdateCropToolUI() {
   bool OnOff = false;
   if (ViewWindow != NULL) {   // when called from MainWindow constructor, ViewWindow doesn't yet exist
-    if (ViewWindow->OngoingAction() == vaCrop) {
-      OnOff = true;
-    }
+//    if (ViewWindow->OngoingAction() == vaCrop) {    // TODOSR: re-enable
+//      OnOff = true;
+//    }
   }
   CropWidget->setEnabled(!OnOff);
   MakeCropButton->setVisible(!OnOff);
