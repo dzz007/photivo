@@ -555,7 +555,7 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
       UpdateView();
       Settings->m_IniSettings->setValue(m_Name,m_Folded);
     } else if (event->button()==Qt::RightButton &&
-               ViewWindow->OngoingAction() != vaCrop &&
+               //ViewWindow->OngoingAction() != vaCrop &&    // TODOSR: re-enable
                m_IsEnabled == 1) {
       if (!Settings->ToolAlwaysVisible(m_Name)) {
         if (m_IsBlocked == 1) {

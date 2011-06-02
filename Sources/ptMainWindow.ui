@@ -20,7 +20,7 @@
    <string>photivo</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../photivo.qrc">
+   <iconset resource="../qrc/photivo.qrc">
     <normaloff>:/photivo/photivo.png</normaloff>:/photivo/photivo.png</iconset>
   </property>
   <property name="styleSheet">
@@ -192,7 +192,7 @@
                      <string>Reset</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="../photivo.qrc">
+                     <iconset resource="../qrc/photivo.qrc">
                       <normaloff>:/photivo/Icons/reload.png</normaloff>:/photivo/Icons/reload.png</iconset>
                     </property>
                     <property name="iconSize">
@@ -228,7 +228,7 @@
                      <string>Favourite tools</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="../photivo.qrc">
+                     <iconset resource="../qrc/photivo.qrc">
                       <normaloff>:/photivo/Icons/star.png</normaloff>:/photivo/Icons/star.png</iconset>
                     </property>
                     <property name="iconSize">
@@ -251,7 +251,7 @@
                      <string>All tools</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="../photivo.qrc">
+                     <iconset resource="../qrc/photivo.qrc">
                       <normaloff>:/photivo/Icons/lines.png</normaloff>:/photivo/Icons/lines.png</iconset>
                     </property>
                     <property name="iconSize">
@@ -274,7 +274,7 @@
                      <string>Active tools</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="../photivo.qrc">
+                     <iconset resource="../qrc/photivo.qrc">
                       <normaloff>:/photivo/Icons/exec.png</normaloff>:/photivo/Icons/exec.png</iconset>
                     </property>
                     <property name="iconSize">
@@ -407,7 +407,7 @@
                                         <string>WP</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -459,7 +459,7 @@
                                         <string>WP</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -511,7 +511,7 @@
                                         <string>WP</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -599,7 +599,7 @@
                                        <string>Load</string>
                                       </property>
                                       <property name="icon">
-                                       <iconset resource="../photivo.qrc">
+                                       <iconset resource="../qrc/photivo.qrc">
                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                       </property>
                                       <property name="iconSize">
@@ -773,7 +773,7 @@
                                         <string>WP</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/target.png</normaloff>:/photivo/Icons/target.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -1907,7 +1907,7 @@
                                         <string>Rotate left</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/rotateleft.png</normaloff>:/photivo/Icons/rotateleft.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -1927,7 +1927,7 @@
                                         <string>Rotate right</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/rotateright.png</normaloff>:/photivo/Icons/rotateright.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -1963,7 +1963,7 @@
                                         <string>Rotate angle</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/angle.png</normaloff>:/photivo/Icons/angle.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -2174,7 +2174,7 @@
                                         <string>Crop area</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/rectangle.png</normaloff>:/photivo/Icons/rectangle.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -2197,7 +2197,7 @@
                                         <string>Confirm crop</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/checkgreen.png</normaloff>:/photivo/Icons/checkgreen.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -2217,7 +2217,7 @@
                                         <string>Cancel crop</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/cancel.png</normaloff>:/photivo/Icons/cancel.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -2253,7 +2253,7 @@
                                         <string>Switch crop between portrait/landscape</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/PortraitLandscape.png</normaloff>:/photivo/Icons/PortraitLandscape.png</iconset>
                                        </property>
                                       </widget>
@@ -2267,7 +2267,7 @@
                                         <string>Center horizontally</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/center-hor.png</normaloff>:/photivo/Icons/center-hor.png</iconset>
                                        </property>
                                       </widget>
@@ -2281,7 +2281,7 @@
                                         <string>Center vertically</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/center-vert.png</normaloff>:/photivo/Icons/center-vert.png</iconset>
                                        </property>
                                       </widget>
@@ -2818,7 +2818,7 @@
                                        <string>Open</string>
                                       </property>
                                       <property name="icon">
-                                       <iconset resource="../photivo.qrc">
+                                       <iconset resource="../qrc/photivo.qrc">
                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                       </property>
                                       <property name="iconSize">
@@ -2835,7 +2835,7 @@
                                        <string>Save</string>
                                       </property>
                                       <property name="icon">
-                                       <iconset resource="../photivo.qrc">
+                                       <iconset resource="../qrc/photivo.qrc">
                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                       </property>
                                       <property name="iconSize">
@@ -3782,7 +3782,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -3805,7 +3805,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -4000,7 +4000,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -4023,7 +4023,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -4259,7 +4259,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -4282,7 +4282,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -5326,7 +5326,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -5349,7 +5349,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -5557,7 +5557,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -5580,7 +5580,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6247,7 +6247,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6270,7 +6270,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6386,7 +6386,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6409,7 +6409,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6525,7 +6525,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6548,7 +6548,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6664,7 +6664,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6687,7 +6687,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6800,7 +6800,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6823,7 +6823,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6899,7 +6899,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -6922,7 +6922,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -7940,7 +7940,7 @@
                                         <string>Clear</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/reload.png</normaloff>:/photivo/Icons/reload.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -7973,7 +7973,7 @@
                                         <string>Load</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -8517,7 +8517,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -8540,7 +8540,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -8653,7 +8653,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -8676,7 +8676,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -8789,7 +8789,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -8812,7 +8812,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -8967,7 +8967,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -8990,7 +8990,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -9117,7 +9117,7 @@
                                        <string>Full</string>
                                       </property>
                                       <property name="icon">
-                                       <iconset resource="../photivo.qrc">
+                                       <iconset resource="../qrc/photivo.qrc">
                                         <normaloff>:/photivo/Icons/reload.png</normaloff>:/photivo/Icons/reload.png</iconset>
                                       </property>
                                       <property name="iconSize">
@@ -9150,7 +9150,7 @@
                                        <string>Load</string>
                                       </property>
                                       <property name="icon">
-                                       <iconset resource="../photivo.qrc">
+                                       <iconset resource="../qrc/photivo.qrc">
                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                       </property>
                                       <property name="iconSize">
@@ -9259,7 +9259,7 @@
                                         <string>Open</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -9282,7 +9282,7 @@
                                         <string>Save</string>
                                        </property>
                                        <property name="icon">
-                                        <iconset resource="../photivo.qrc">
+                                        <iconset resource="../qrc/photivo.qrc">
                                          <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                        </property>
                                        <property name="iconSize">
@@ -9860,7 +9860,7 @@
                                      <string>WP</string>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../photivo.qrc">
+                                     <iconset resource="../qrc/photivo.qrc">
                                       <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -9989,7 +9989,7 @@
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap resource="../photivo.qrc">:/photivo/photivo.png</pixmap>
+                                 <pixmap resource="../qrc/photivo.qrc">:/photivo/photivo.png</pixmap>
                                 </property>
                                </widget>
                               </item>
@@ -10822,7 +10822,7 @@
                                    <string>Load</string>
                                   </property>
                                   <property name="icon">
-                                   <iconset resource="../photivo.qrc">
+                                   <iconset resource="../qrc/photivo.qrc">
                                     <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                   </property>
                                   <property name="iconSize">
@@ -10915,7 +10915,7 @@
                                    <string>Load</string>
                                   </property>
                                   <property name="icon">
-                                   <iconset resource="../photivo.qrc">
+                                   <iconset resource="../qrc/photivo.qrc">
                                     <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                   </property>
                                   <property name="iconSize">
@@ -10935,7 +10935,7 @@
                                    <string>Save</string>
                                   </property>
                                   <property name="icon">
-                                   <iconset resource="../photivo.qrc">
+                                   <iconset resource="../qrc/photivo.qrc">
                                     <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
                                   </property>
                                   <property name="iconSize">
@@ -10968,7 +10968,7 @@
                                    <string>Discard</string>
                                   </property>
                                   <property name="icon">
-                                   <iconset resource="../photivo.qrc">
+                                   <iconset resource="../qrc/photivo.qrc">
                                     <normaloff>:/photivo/Icons/cancel.png</normaloff>:/photivo/Icons/cancel.png</iconset>
                                   </property>
                                   <property name="iconSize">
@@ -11035,7 +11035,7 @@
                                    <string>Load</string>
                                   </property>
                                   <property name="icon">
-                                   <iconset resource="../photivo.qrc">
+                                   <iconset resource="../qrc/photivo.qrc">
                                     <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                   </property>
                                   <property name="iconSize">
@@ -11184,7 +11184,7 @@
                                     <string>Load</string>
                                    </property>
                                    <property name="icon">
-                                    <iconset resource="../photivo.qrc">
+                                    <iconset resource="../qrc/photivo.qrc">
                                      <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
                                    </property>
                                    <property name="iconSize">
@@ -11483,7 +11483,7 @@
                                     <string>CSS</string>
                                    </property>
                                    <property name="icon">
-                                    <iconset resource="../photivo.qrc">
+                                    <iconset resource="../qrc/photivo.qrc">
                                      <normaloff>:/photivo/Icons/style.png</normaloff>:/photivo/Icons/style.png</iconset>
                                    </property>
                                    <property name="iconSize">
@@ -11943,7 +11943,7 @@
                  <string>Preview mode</string>
                 </property>
                 <property name="icon">
-                 <iconset resource="../photivo.qrc">
+                 <iconset resource="../qrc/photivo.qrc">
                   <normaloff>:/photivo/Icons/arrow.png</normaloff>
                   <normalon>:/photivo/Icons/arrow-stop.png</normalon>:/photivo/Icons/arrow.png</iconset>
                 </property>
@@ -12001,7 +12001,7 @@
                  <string>Run</string>
                 </property>
                 <property name="icon">
-                 <iconset resource="../photivo.qrc">
+                 <iconset resource="../qrc/photivo.qrc">
                   <normaloff>:/photivo/Icons/play.png</normaloff>:/photivo/Icons/play.png</iconset>
                 </property>
                 <property name="iconSize">
@@ -12040,7 +12040,7 @@
               <string>Reset</string>
              </property>
              <property name="icon">
-              <iconset resource="../photivo.qrc">
+              <iconset resource="../qrc/photivo.qrc">
                <normaloff>:/photivo/Icons/reload.png</normaloff>:/photivo/Icons/reload.png</iconset>
              </property>
              <property name="iconSize">
@@ -12060,7 +12060,7 @@
               <string>Save</string>
              </property>
              <property name="icon">
-              <iconset resource="../photivo.qrc">
+              <iconset resource="../qrc/photivo.qrc">
                <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
              </property>
              <property name="iconSize">
@@ -12080,7 +12080,7 @@
               <string>Export</string>
              </property>
              <property name="icon">
-              <iconset resource="../photivo.qrc">
+              <iconset resource="../qrc/photivo.qrc">
                <normaloff>:/photivo/Icons/wilber.png</normaloff>:/photivo/Icons/wilber.png</iconset>
              </property>
              <property name="iconSize">
@@ -12174,7 +12174,7 @@
               <string>Show processing</string>
              </property>
              <property name="icon">
-              <iconset resource="../photivo.qrc">
+              <iconset resource="../qrc/photivo.qrc">
                <normaloff>:/photivo/Icons/exec.png</normaloff>:/photivo/Icons/exec.png</iconset>
              </property>
              <property name="iconSize">
@@ -12197,7 +12197,7 @@
               <string>Show settings</string>
              </property>
              <property name="icon">
-              <iconset resource="../photivo.qrc">
+              <iconset resource="../qrc/photivo.qrc">
                <normaloff>:/photivo/Icons/configure.png</normaloff>:/photivo/Icons/configure.png</iconset>
              </property>
              <property name="iconSize">
@@ -12220,7 +12220,7 @@
               <string>Show info</string>
              </property>
              <property name="icon">
-              <iconset resource="../photivo.qrc">
+              <iconset resource="../qrc/photivo.qrc">
                <normaloff>:/photivo/Icons/info.png</normaloff>:/photivo/Icons/info.png</iconset>
              </property>
              <property name="iconSize">
@@ -12412,7 +12412,7 @@
                              <string/>
                             </property>
                             <property name="pixmap">
-                             <pixmap resource="../photivo.qrc">:/photivo/Logo.png</pixmap>
+                             <pixmap resource="../qrc/photivo.qrc">:/photivo/Logo.png</pixmap>
                             </property>
                            </widget>
                           </item>
@@ -12599,7 +12599,7 @@
                   <string>Fit</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="../photivo.qrc">
+                  <iconset resource="../qrc/photivo.qrc">
                    <normaloff>:/photivo/Icons/viewmag_h.png</normaloff>:/photivo/Icons/viewmag_h.png</iconset>
                  </property>
                  <property name="iconSize">
@@ -12619,7 +12619,7 @@
                   <string>Full</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="../photivo.qrc">
+                  <iconset resource="../qrc/photivo.qrc">
                    <normaloff>:/photivo/Icons/viewmag1.png</normaloff>:/photivo/Icons/viewmag1.png</iconset>
                  </property>
                  <property name="iconSize">
@@ -12661,7 +12661,7 @@
                <string>Fullscreen</string>
               </property>
               <property name="icon">
-               <iconset resource="../photivo.qrc">
+               <iconset resource="../qrc/photivo.qrc">
                 <normaloff>:/photivo/Icons/FullScreen.png</normaloff>
                 <normalon>:/photivo/Icons/NormalScreen.png</normalon>:/photivo/Icons/FullScreen.png</iconset>
               </property>
@@ -12745,7 +12745,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../photivo.qrc"/>
+  <include location="../qrc/photivo.qrc"/>
  </resources>
  <connections>
   <connection>
