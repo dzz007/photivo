@@ -426,7 +426,7 @@ FILE*     m_InputFile;
 FILE*     m_OutputFile;
 char*     m_MetaData;
 unsigned  m_ThumbMisc;
-char      m_Descridlion[512];
+char      m_Description[512];
 unsigned  m_ShotOrder;
 unsigned  m_Kodak_cbpp;
 unsigned  m_Filters;

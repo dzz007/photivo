@@ -18,7 +18,7 @@ integer ilaenv_(integer *ispec, char *name__, char *opts, integer *n1,
     =======   
 
     ILAENV is called from the LAPACK routines to choose problem-dependent   
-    parameters for the local environment.  See ISPEC for a descridlion of   
+    parameters for the local environment.  See ISPEC for a description of   
     the parameters.   
 
     This version provides a set of parameters which should give good,   
