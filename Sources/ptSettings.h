@@ -36,7 +36,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 // ptSettingItem
-// Descridlion of any setting.
+// Description of any setting.
 // Gui elements will be attached and handled via the setting.
 // Remark that one never will use this class directly but only
 // via its friend class ptSettings. So nothing public.
@@ -209,11 +209,11 @@ extern ptSettings* Settings;
 ////////////////////////////////////////////////////////////////////////////////
 //
 // ptGui*Item
-// Initial descridlion (from .i files) of items.
+// Initial description (from .i files) of items.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-// Initial descridlion of a numerical input gui element.
+// Initial description of a numerical input gui element.
 struct ptGuiInputItem {
 QString  KeyName;
 short    GuiType;
@@ -229,7 +229,7 @@ QString  Label;
 QString  ToolTip;
 };
 
-// Initial descridlion of a choice (combobox) input gui element.
+// Initial description of a choice (combobox) input gui element.
 struct ptGuiChoiceItem {
 QString                 KeyName;
 short                   GuiType;
@@ -241,7 +241,7 @@ const ptGuiOptionsItem* InitialOptions;
 QString                 ToolTip;
 };
 
-// Initial descridlion of a check input gui element.
+// Initial description of a check input gui element.
 struct ptGuiCheckItem {
 QString  KeyName;
 short    GuiType;
@@ -252,7 +252,7 @@ QString  Label;
 QString  ToolTip;
 };
 
-// Initial descridlion of a simple setting element.
+// Initial description of a simple setting element.
 struct ptItem {
 QString  KeyName;
 short    InitLevel;

@@ -2430,9 +2430,9 @@ void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBuf
     if (TitleWorking != "" && TitleWorking != " ") {
       outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
       iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
-      xmpData["Xmp.dc.descridlion"] = TitleWorking.toStdString();
+      xmpData["Xmp.dc.description"] = TitleWorking.toStdString();
       xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
-      xmpData["Xmp.tiff.ImageDescridlion"] = TitleWorking.toStdString();
+      xmpData["Xmp.tiff.ImageDescription"] = TitleWorking.toStdString();
     }
 
     try {
@@ -5418,7 +5418,7 @@ void CB_ChannelMixerSaveButton() {
   QString Explanation =
     QInputDialog::getText(NULL,
                           QObject::tr("Save Channelmixer"),
-                          QObject::tr("Give a descridlion"),
+                          QObject::tr("Give a description"),
                           QLineEdit::Normal,
                           NULL,
                           &Success);
@@ -5925,7 +5925,7 @@ void CB_CurveSaveButton(const int Channel) {
   QString Explanation =
     QInputDialog::getText(NULL,
                           QObject::tr("Save Curve"),
-                          QObject::tr("Give a descridlion"),
+                          QObject::tr("Give a description"),
                           QLineEdit::Normal,
                           NULL,
                           &Success);

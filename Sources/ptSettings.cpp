@@ -724,66 +724,66 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.
   short NrSettings = sizeof(GuiInputItems)/sizeof(ptGuiInputItem);
   for (short i=0; i<NrSettings; i++) {
-    ptGuiInputItem Descridlion = GuiInputItems[i];
+    ptGuiInputItem Description = GuiInputItems[i];
     ptSettingItem* SettingItem = new ptSettingItem;
-    SettingItem->GuiType         = Descridlion.GuiType;
-    SettingItem->InitLevel       = Descridlion.InitLevel;
-    SettingItem->InJobFile       = Descridlion.InJobFile;
-    SettingItem->HasDefaultValue = Descridlion.HasDefaultValue;
-    SettingItem->DefaultValue    = Descridlion.DefaultValue;
-    SettingItem->MinimumValue    = Descridlion.MinimumValue;
-    SettingItem->MaximumValue    = Descridlion.MaximumValue;
-    SettingItem->Step            = Descridlion.Step;
-    SettingItem->NrDecimals      = Descridlion.NrDecimals;
-    SettingItem->Label           = Descridlion.Label;
-    SettingItem->ToolTip         = Descridlion.ToolTip;
-    M_InsertKeyIntoHash(Descridlion.KeyName,SettingItem);
+    SettingItem->GuiType         = Description.GuiType;
+    SettingItem->InitLevel       = Description.InitLevel;
+    SettingItem->InJobFile       = Description.InJobFile;
+    SettingItem->HasDefaultValue = Description.HasDefaultValue;
+    SettingItem->DefaultValue    = Description.DefaultValue;
+    SettingItem->MinimumValue    = Description.MinimumValue;
+    SettingItem->MaximumValue    = Description.MaximumValue;
+    SettingItem->Step            = Description.Step;
+    SettingItem->NrDecimals      = Description.NrDecimals;
+    SettingItem->Label           = Description.Label;
+    SettingItem->ToolTip         = Description.ToolTip;
+    M_InsertKeyIntoHash(Description.KeyName,SettingItem);
   }
   // Gui Choice inputs. Copy them from the const array in ptSettingItem.
   NrSettings = sizeof(GuiChoiceItems)/sizeof(ptGuiChoiceItem);
   for (short i=0; i<NrSettings; i++) {
-    ptGuiChoiceItem Descridlion = GuiChoiceItems[i];
+    ptGuiChoiceItem Description = GuiChoiceItems[i];
     ptSettingItem* SettingItem = new ptSettingItem;
-    SettingItem->GuiType         = Descridlion.GuiType;
-    SettingItem->InitLevel       = Descridlion.InitLevel;
-    SettingItem->InJobFile       = Descridlion.InJobFile;
-    SettingItem->HasDefaultValue = Descridlion.HasDefaultValue;
-    SettingItem->DefaultValue    = Descridlion.DefaultValue;
-    SettingItem->Value           = Descridlion.DefaultValue;
-    SettingItem->ToolTip         = Descridlion.ToolTip;
-    SettingItem->InitialOptions  = Descridlion.InitialOptions;
-    M_InsertKeyIntoHash(Descridlion.KeyName,SettingItem);
+    SettingItem->GuiType         = Description.GuiType;
+    SettingItem->InitLevel       = Description.InitLevel;
+    SettingItem->InJobFile       = Description.InJobFile;
+    SettingItem->HasDefaultValue = Description.HasDefaultValue;
+    SettingItem->DefaultValue    = Description.DefaultValue;
+    SettingItem->Value           = Description.DefaultValue;
+    SettingItem->ToolTip         = Description.ToolTip;
+    SettingItem->InitialOptions  = Description.InitialOptions;
+    M_InsertKeyIntoHash(Description.KeyName,SettingItem);
   }
   // Gui Check inputs. Copy them from the const array in ptSettingItem.
   NrSettings = sizeof(GuiCheckItems)/sizeof(ptGuiCheckItem);
   for (short i=0; i<NrSettings; i++) {
-    ptGuiCheckItem Descridlion = GuiCheckItems[i];
+    ptGuiCheckItem Description = GuiCheckItems[i];
     ptSettingItem* SettingItem = new ptSettingItem;
-    SettingItem->GuiType      = Descridlion.GuiType;
-    SettingItem->InitLevel    = Descridlion.InitLevel;
-    SettingItem->InJobFile    = Descridlion.InJobFile;
-    SettingItem->DefaultValue = Descridlion.DefaultValue;
-    SettingItem->Value        = Descridlion.DefaultValue;
-    SettingItem->Label        = Descridlion.Label;
-    SettingItem->ToolTip      = Descridlion.ToolTip;
-    M_InsertKeyIntoHash(Descridlion.KeyName,SettingItem);
+    SettingItem->GuiType      = Description.GuiType;
+    SettingItem->InitLevel    = Description.InitLevel;
+    SettingItem->InJobFile    = Description.InJobFile;
+    SettingItem->DefaultValue = Description.DefaultValue;
+    SettingItem->Value        = Description.DefaultValue;
+    SettingItem->Label        = Description.Label;
+    SettingItem->ToolTip      = Description.ToolTip;
+    M_InsertKeyIntoHash(Description.KeyName,SettingItem);
   }
   // Non gui elements
   NrSettings = sizeof(Items)/sizeof(ptItem);
   for (short i=0; i<NrSettings; i++) {
-    ptItem Descridlion = Items[i];
+    ptItem Description = Items[i];
     ptSettingItem* SettingItem = new ptSettingItem;
     SettingItem->GuiType      = ptGT_None;
-    SettingItem->InitLevel    = Descridlion.InitLevel;
-    if (Descridlion.DefaultValue.type() == QVariant::String) {
-      QString Tmp = Descridlion.DefaultValue.toString();
+    SettingItem->InitLevel    = Description.InitLevel;
+    if (Description.DefaultValue.type() == QVariant::String) {
+      QString Tmp = Description.DefaultValue.toString();
       Tmp.replace(QString("@INSTALL@"),QCoreApplication::applicationDirPath());
-      Descridlion.DefaultValue = Tmp;
+      Description.DefaultValue = Tmp;
     }
-    SettingItem->DefaultValue = Descridlion.DefaultValue;
-    SettingItem->Value        = Descridlion.DefaultValue;
-    SettingItem->InJobFile    = Descridlion.InJobFile;
-    M_InsertKeyIntoHash(Descridlion.KeyName,SettingItem);
+    SettingItem->DefaultValue = Description.DefaultValue;
+    SettingItem->Value        = Description.DefaultValue;
+    SettingItem->InJobFile    = Description.InJobFile;
+    M_InsertKeyIntoHash(Description.KeyName,SettingItem);
   }
 
   // Now we have initialized from static values.
