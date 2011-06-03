@@ -122,7 +122,8 @@ macx {
 }
 
 # Input
-HEADERS += ../Sources/ptAdobeTable.h
+HEADERS += ../Sources/ptAdobeTable.h \
+    ../Sources/ptReportOverlay.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
 HEADERS += ../Sources/ptCheck.h
@@ -172,7 +173,8 @@ HEADERS += ../Sources/ImageSpot/ptImageSpot.h
 HEADERS += ../Sources/ImageSpot/ptImageSpotList.h
 HEADERS += ../Sources/ImageSpot/ptRepairSpot.h
 
-SOURCES += ../Sources/ptCalloc.cpp
+SOURCES += ../Sources/ptCalloc.cpp \
+    ../Sources/ptReportOverlay.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
 SOURCES += ../Sources/ptChoice.cpp

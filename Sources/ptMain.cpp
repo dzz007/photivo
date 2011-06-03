@@ -1669,7 +1669,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     }
     AfterAll(PreviewImage,0,0);
 
-    ViewWindow->UpdateView(PreviewImage);
+    ViewWindow->UpdateImage(PreviewImage);
     ReportProgress(QObject::tr("Ready"));
     return;
   }
@@ -1982,7 +1982,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
                                    Settings->GetInt("PreviewColorProfileIntent"));
 
     // Update the ViewWindow and show if needed.
-    ViewWindow->UpdateView(PreviewImage);
+    ViewWindow->UpdateImage(PreviewImage);
   }
 
   //ViewWindow->StatusReport(0);    // TODOSR: re-enable

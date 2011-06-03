@@ -37,6 +37,7 @@
 extern ptTheme* Theme;
 extern ptSettings* Settings;
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // ptViewWindow constructor.
@@ -53,15 +54,18 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   // always keep this at the end of the initializer list
   MainWindow(mainWin)
 {
+  assert(MainWindow != NULL);    // Main window must exist before view window
+
   ZoomFactors << MinZoom << 0.08 << 0.10 << 0.15 << 0.20 << 0.25 << 0.33 << 0.50 << 0.66 << 1.00
               << 1.50 << 2.00 << 3.00 << MaxZoom;
 
-  assert(MainWindow != NULL);    // Main window must exist before view window
+  m_DragDelta = new QLine();
+  StatusOverlay = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
+  ZoomSizeOverlay = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255), 1000, Qt::AlignRight, 20);
+
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setMouseTracking(true);   // Move events without pressed button. Needed for crop cursor change.
-
-  m_DragDelta = new QLine();
 
   // Layout to always fill the complete image pane with ViewWindow
   QGridLayout* Layout = new QGridLayout(Parent);
@@ -79,6 +83,7 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   ConstructContextMenu();
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // ptViewWindow destructor.
@@ -87,6 +92,8 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
 
 ptViewWindow::~ptViewWindow() {
   delete m_DragDelta;
+  delete StatusOverlay;
+  delete ZoomSizeOverlay;
 }
 
 
@@ -96,7 +103,7 @@ ptViewWindow::~ptViewWindow() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptViewWindow::UpdateView(const ptImage* relatedImage /*= NULL*/) {
+void ptViewWindow::UpdateImage(const ptImage* relatedImage /*= NULL*/) {
   // Convert the 16bit ptImage to a 8bit QPixmap. Mind R<->B and 16->8
   if (relatedImage) {
     QImage* Img8bit = new QImage(relatedImage->m_Width, relatedImage->m_Height, QImage::Format_RGB32);
@@ -137,8 +144,9 @@ void ptViewWindow::ZoomTo(float factor) {
   setTransform(QTransform(factor, 0, 0, factor, 0, 0));
 
   m_ZoomFactor = transform().m11();
-  Settings->SetValue("Zoom",qRound(m_ZoomFactor * 100));
-  return m_ZoomFactor;
+  int z = qRound(m_ZoomFactor * 100);
+  Settings->SetValue("Zoom", z);
+  ZoomSizeOverlay->exec(QString::number(z) + "%");
 }
 
 
