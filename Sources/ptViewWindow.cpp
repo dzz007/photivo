@@ -2,7 +2,6 @@
 **
 ** Photivo
 **
-** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
 **
@@ -21,6 +20,13 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+/**
+** Reminder:
+** current horizontal scale factor: this->transform().m11();
+** current vertical scale factor: this->transform().m22();
+** Because we do not change aspect ratio both factors are always the same.
+** Use m_ZoomFactor whenever possible and m11() otherwise.
+**/
 
 #include <cassert>
 
@@ -40,20 +46,22 @@ extern ptSettings* Settings;
 ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
 : QGraphicsView(Parent),
   // constants
-  MinZoom(0.1), MaxZoom(400.0),
+  MinZoom(0.05), MaxZoom(4.0),
   // member variables
   m_LeftMousePressed(0),
   m_ZoomFactor(1.0),
-  // always keep this at the end of the list
+  // always keep this at the end of the initializer list
   MainWindow(mainWin)
 {
+  ZoomFactors << MinZoom << 0.08 << 0.10 << 0.15 << 0.20 << 0.25 << 0.33 << 0.50 << 0.66 << 1.00
+              << 1.50 << 2.00 << 3.00 << MaxZoom;
+
   assert(MainWindow != NULL);    // Main window must exist before view window
-
-  m_DragDelta = new QLine();
-
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setMouseTracking(true);   // Move events without pressed button. Needed for crop cursor change.
+
+  m_DragDelta = new QLine();
 
   // Layout to always fill the complete image pane with ViewWindow
   QGridLayout* Layout = new QGridLayout(Parent);
@@ -63,13 +71,12 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   this->setStyleSheet("QGraphicsView { border: none; }");
 
   // Init the scene
-  m_ImageScene = new QGraphicsScene(Parent);
+  m_ImageScene = new QGraphicsScene(0, 0, 0, 0, Parent);
   m_8bitImageItem = m_ImageScene->addPixmap(QPixmap());
   m_8bitImageItem->setPos(0, 0);
   this->setScene(m_ImageScene);
 
   ConstructContextMenu();
-  this->show();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,9 +86,6 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
 ////////////////////////////////////////////////////////////////////////////////
 
 ptViewWindow::~ptViewWindow() {
-  delete m_Menu;
-  delete m_Menu_Mode;
-  delete m_Menu_Clip;
   delete m_DragDelta;
 }
 
@@ -110,13 +114,12 @@ void ptViewWindow::UpdateView(const ptImage* relatedImage /*= NULL*/) {
     }
 
     m_8bitImageItem->setPixmap(QPixmap::fromImage(*Img8bit, Qt::ColorOnly));
-    m_8bitImageItem->setPos(0, 0);
     delete Img8bit;
+    m_ImageScene->setSceneRect(0, 0,
+                               m_8bitImageItem->pixmap().width(),
+                               m_8bitImageItem->pixmap().height());
+    m_8bitImageItem->setPos(0, 0);
   }
-
-  this->horizontalScrollBar()->setRange(0, m_ImageScene->width() - viewport()->width());
-  this->verticalScrollBar()->setRange(0, m_ImageScene->height() - viewport()->height());
-
 }
 
 
@@ -126,35 +129,29 @@ void ptViewWindow::UpdateView(const ptImage* relatedImage /*= NULL*/) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-int ptViewWindow::ZoomTo(const float factor) {
-  if (factor >= MinZoom && factor <= MaxZoom) {
-    m_ZoomFactor = factor;
-    ZoomView(qRound(m_8bitImageItem->pixmap().width() * factor),
-             qRound(m_8bitImageItem->pixmap().height() * factor) );
-  }
+// ZoomTo() is also called by wheelEvent() for mouse wheel zoom.
+void ptViewWindow::ZoomTo(float factor) {
+  Settings->SetValue("ZoomMode",ptZoomMode_NonFit);
+  factor = qBound(MinZoom, factor, MaxZoom);
 
+  setTransform(QTransform(factor, 0, 0, factor, 0, 0));
+
+  m_ZoomFactor = transform().m11();
+  Settings->SetValue("Zoom",qRound(m_ZoomFactor * 100));
   return m_ZoomFactor;
 }
 
 
 int ptViewWindow::ZoomToFit() {
-printf("LEBT000\n");
-if (m_8bitImageItem->pixmap().isNull()) {    printf("FUCK\n"); }
-  float factorW = viewport()->width() / m_8bitImageItem->pixmap().width();
-  float factorH = viewport()->height() / m_8bitImageItem->pixmap().height();
-  m_ZoomFactor = qMin(factorW, factorH);
-printf("LEBT\n");
-  fitInView(m_8bitImageItem, Qt::KeepAspectRatio);
-printf("LEBT NOCH\n");
-//  ZoomView((quint32)(m_8bitImageItem->pixmap().width() * m_ZoomFactor),
-//           (quint32)(m_8bitImageItem->pixmap().height() * m_ZoomFactor) );
+  Settings->SetValue("ZoomMode",ptZoomMode_Fit);
 
+  if (!m_8bitImageItem->pixmap().isNull()) {
+    fitInView(m_8bitImageItem, Qt::KeepAspectRatio);
+    m_ZoomFactor = transform().m11();
+  }
+
+  Settings->SetValue("Zoom",qRound(m_ZoomFactor * 100));
   return m_ZoomFactor;
-}
-
-
-void ptViewWindow::ZoomView(const quint32 width, const quint32 height) {
-
 }
 
 
@@ -167,10 +164,7 @@ void ptViewWindow::ZoomView(const quint32 width, const quint32 height) {
 void ptViewWindow::paintEvent(QPaintEvent* event) {
   // Fill viewport with background colour
   QPainter Painter(viewport());
-  Painter.save();
   Painter.fillRect(0, 0, viewport()->width(), viewport()->height(), palette().color(QPalette::Window));
-  Painter.restore();
-  m_ImageScene->setBackgroundBrush(QBrush(palette().color(QPalette::Window)));
 
   QGraphicsView::paintEvent(event);
 }
@@ -219,6 +213,36 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// wheelEvent()
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::wheelEvent(QWheelEvent* event) {
+  int ZoomIdx = -1;
+
+  if (event->delta() > 0) { // zoom larger
+    for (int i = 0; i < ZoomFactors.size(); i++) {
+      if (ZoomFactors[i] > m_ZoomFactor) {
+        ZoomIdx = i;
+        break;
+      }
+    }
+
+  } else if (event->delta() < 0) {    // zoom smaller
+    for (int i = ZoomFactors.size() - 1; i >= 0; i--) {
+      if (ZoomFactors[i] < m_ZoomFactor) {
+        ZoomIdx = i;
+        break;
+      }
+    }
+  }
+
+  if (ZoomIdx != -1) {
+    ZoomTo(ZoomFactors[ZoomIdx]);
+  }
+}
 
 
 
@@ -237,7 +261,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
 void ptViewWindow::ConstructContextMenu() {
   // Create actions for context menu
   ac_ZoomFit = new QAction(tr("Zoom fit"), this);
-  connect(ac_ZoomFit, SIGNAL(triggered()), this, SLOT(MenuZoomFit()));
+  connect(ac_ZoomFit, SIGNAL(triggered()), this, SLOT(Menu_ZoomFit()));
   QIcon ZoomFitIcon;
   ZoomFitIcon.addPixmap(QPixmap(
     QString::fromUtf8(":/photivo/Icons/viewmag_h.png")));
@@ -245,7 +269,7 @@ void ptViewWindow::ConstructContextMenu() {
   ac_ZoomFit->setIconVisibleInMenu(true);
 
   ac_Zoom100 = new QAction(tr("Zoom 100%"), this);
-  connect(ac_Zoom100, SIGNAL(triggered()), this, SLOT(MenuZoom100()));
+  connect(ac_Zoom100, SIGNAL(triggered()), this, SLOT(Menu_Zoom100()));
   QIcon Zoom100Icon;
   Zoom100Icon.addPixmap(QPixmap(
     QString::fromUtf8(":/photivo/Icons/viewmag1.png")));
@@ -255,27 +279,27 @@ void ptViewWindow::ConstructContextMenu() {
 
   ac_Mode_RGB = new QAction(tr("RGB"), this);
   ac_Mode_RGB->setCheckable(true);
-  connect(ac_Mode_RGB, SIGNAL(triggered()), this, SLOT(MenuMode()));
+  connect(ac_Mode_RGB, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
   ac_Mode_Structure = new QAction(tr("Structure"), this);
   ac_Mode_Structure->setCheckable(true);
-  connect(ac_Mode_Structure, SIGNAL(triggered()), this, SLOT(MenuMode()));
+  connect(ac_Mode_Structure, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
   ac_Mode_L = new QAction(tr("L*"), this);
   ac_Mode_L->setCheckable(true);
-  connect(ac_Mode_L, SIGNAL(triggered()), this, SLOT(MenuMode()));
+  connect(ac_Mode_L, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
   ac_Mode_A = new QAction(tr("a*"), this);
   ac_Mode_A->setCheckable(true);
-  connect(ac_Mode_A, SIGNAL(triggered()), this, SLOT(MenuMode()));
+  connect(ac_Mode_A, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
   ac_Mode_B = new QAction(tr("b*"), this);
   ac_Mode_B->setCheckable(true);
-  connect(ac_Mode_B, SIGNAL(triggered()), this, SLOT(MenuMode()));
+  connect(ac_Mode_B, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
   ac_Mode_Gradient = new QAction(tr("Gradient"), this);
   ac_Mode_Gradient->setCheckable(true);
-  connect(ac_Mode_Gradient, SIGNAL(triggered()), this, SLOT(MenuMode()));
+  connect(ac_Mode_Gradient, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
   ac_ModeGroup = new QActionGroup(this);
   ac_ModeGroup->addAction(ac_Mode_RGB);
@@ -290,95 +314,54 @@ void ptViewWindow::ConstructContextMenu() {
   ac_Clip_Indicate->setStatusTip(tr("Indicate clipping"));
   ac_Clip_Indicate->setCheckable(true);
   ac_Clip_Indicate->setChecked(Settings->GetInt("ExposureIndicator"));
-  connect(ac_Clip_Indicate, SIGNAL(triggered()), this, SLOT(MenuExpIndicate()));
+  connect(ac_Clip_Indicate, SIGNAL(triggered()), this, SLOT(Menu_Clip_Indicate()));
 
   ac_Clip_Over = new QAction(tr("Over exposure"), this);
   ac_Clip_Over->setCheckable(true);
   ac_Clip_Over->setChecked(Settings->GetInt("ExposureIndicatorOver"));
-  connect(ac_Clip_Over, SIGNAL(triggered()), this, SLOT(MenuExpIndOver()));
+  connect(ac_Clip_Over, SIGNAL(triggered()), this, SLOT(Menu_Clip_Over()));
 
   ac_Clip_Under = new QAction(tr("Under exposure"), this);
   ac_Clip_Under->setCheckable(true);
   ac_Clip_Under->setChecked(Settings->GetInt("ExposureIndicatorUnder"));
-  connect(ac_Clip_Under, SIGNAL(triggered()), this, SLOT(MenuExpIndUnder()));
+  connect(ac_Clip_Under, SIGNAL(triggered()), this, SLOT(Menu_Clip_Under()));
 
   ac_Clip_R = new QAction(tr("R"), this);
   ac_Clip_R->setCheckable(true);
   ac_Clip_R->setChecked(Settings->GetInt("ExposureIndicatorR"));
-  connect(ac_Clip_R, SIGNAL(triggered()), this, SLOT(MenuExpIndR()));
+  connect(ac_Clip_R, SIGNAL(triggered()), this, SLOT(Menu_Clip_R()));
 
   ac_Clip_G = new QAction(tr("G"), this);
   ac_Clip_G->setCheckable(true);
   ac_Clip_G->setChecked(Settings->GetInt("ExposureIndicatorG"));
-  connect(ac_Clip_G, SIGNAL(triggered()), this, SLOT(MenuExpIndG()));
+  connect(ac_Clip_G, SIGNAL(triggered()), this, SLOT(Menu_Clip_G()));
 
   ac_Clip_B = new QAction(tr("B"), this);
   ac_Clip_B->setCheckable(true);
   ac_Clip_B->setChecked(Settings->GetInt("ExposureIndicatorB"));
-  connect(ac_Clip_B, SIGNAL(triggered()), this, SLOT(MenuExpIndB()));
+  connect(ac_Clip_B, SIGNAL(triggered()), this, SLOT(Menu_Clip_B()));
 
   ac_SensorClip = new QAction(tr("Sensor"), this);
   ac_SensorClip->setCheckable(true);
   ac_SensorClip->setChecked(Settings->GetInt("ExposureIndicatorSensor"));
-  connect(ac_SensorClip, SIGNAL(triggered()), this, SLOT(MenuExpIndSensor()));
+  connect(ac_SensorClip, SIGNAL(triggered()), this, SLOT(Menu_SensorClip()));
   ac_SensorClipSep = new QAction(this);
   ac_SensorClipSep->setSeparator(true);
 
   ac_ShowZoomBar = new QAction(tr("Show zoom bar"), this);
   ac_ShowZoomBar->setCheckable(true);
   ac_ShowZoomBar->setChecked(Settings->GetInt("ShowBottomContainer"));
-  connect(ac_ShowZoomBar, SIGNAL(triggered()), this, SLOT(MenuShowBottom()));
+  connect(ac_ShowZoomBar, SIGNAL(triggered()), this, SLOT(Menu_ShowZoomBar()));
 
   ac_ShowTools = new QAction(tr("Show tools"), this);
   ac_ShowTools->setCheckable(true);
   ac_ShowTools->setChecked(Settings->GetInt("ShowToolContainer"));
-  connect(ac_ShowTools, SIGNAL(triggered()), this, SLOT(MenuShowTools()));
+  connect(ac_ShowTools, SIGNAL(triggered()), this, SLOT(Menu_ShowTools()));
 
   ac_Fullscreen = new QAction(tr("Full screen"), this);
   ac_Fullscreen->setCheckable(true);
   ac_Fullscreen->setChecked(0);
-  connect(ac_Fullscreen, SIGNAL(triggered()), this, SLOT(MenuFullScreen()));
-
-
-  // Create the menus themselves
-  m_Menu_Mode = new QMenu(tr("Mode"), this);
-  m_Menu_Mode->setPalette(Theme->ptMenuPalette);
-  m_Menu_Mode->setStyle(Theme->ptStyle);
-  m_Menu_Mode->addAction(ac_Mode_RGB);
-  m_Menu_Mode->addAction(ac_Mode_Structure);
-  m_Menu_Mode->addAction(ac_Mode_L);
-  m_Menu_Mode->addAction(ac_Mode_A);
-  m_Menu_Mode->addAction(ac_Mode_B);
-  m_Menu_Mode->addAction(ac_Mode_Gradient);
-  m_Menu_Mode->setTitle(tr("Mode"));
-
-  m_Menu_Clip = new QMenu(tr("Clipping"), this);
-  m_Menu_Clip->setPalette(Theme->ptMenuPalette);
-  m_Menu_Clip->setStyle(Theme->ptStyle);
-  m_Menu_Clip->addAction(ac_Clip_Indicate);
-  m_Menu_Clip->addSeparator();
-  m_Menu_Clip->addAction(ac_Clip_Over);
-  m_Menu_Clip->addAction(ac_Clip_Under);
-  m_Menu_Clip->addSeparator();
-  m_Menu_Clip->addAction(ac_Clip_R);
-  m_Menu_Clip->addAction(ac_Clip_G);
-  m_Menu_Clip->addAction(ac_Clip_B);
-
-  m_Menu = new QMenu(this);
-  m_Menu->setPalette(Theme->ptMenuPalette);
-  m_Menu->setStyle(Theme->ptStyle);
-  m_Menu->addAction(ac_ZoomFit);
-  m_Menu->addAction(ac_Zoom100);
-  m_Menu->addSeparator();
-  m_Menu->addMenu(m_Menu_Mode);
-  m_Menu->addMenu(m_Menu_Clip);
-  m_Menu->addSeparator();
-  m_Menu->addAction(ac_SensorClip);
-  m_Menu->addAction(ac_SensorClipSep);
-  m_Menu->addAction(ac_ShowTools);
-  m_Menu->addAction(ac_ShowZoomBar);
-  m_Menu->addSeparator();
-  m_Menu->addAction(ac_Fullscreen);
+  connect(ac_Fullscreen, SIGNAL(triggered()), this, SLOT(Menu_Fullscreen()));
 }
 
 
@@ -389,6 +372,46 @@ void ptViewWindow::ConstructContextMenu() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
+  // Create the menus themselves
+
+  QMenu Menu_Mode(tr("Mode"), this);
+  Menu_Mode.setPalette(Theme->ptMenuPalette);
+  Menu_Mode.setStyle(Theme->ptStyle);
+  Menu_Mode.addAction(ac_Mode_RGB);
+  Menu_Mode.addAction(ac_Mode_Structure);
+  Menu_Mode.addAction(ac_Mode_L);
+  Menu_Mode.addAction(ac_Mode_A);
+  Menu_Mode.addAction(ac_Mode_B);
+  Menu_Mode.addAction(ac_Mode_Gradient);
+
+  QMenu Menu_Clip(tr("Clipping"), this);
+  Menu_Clip.setPalette(Theme->ptMenuPalette);
+  Menu_Clip.setStyle(Theme->ptStyle);
+  Menu_Clip.addAction(ac_Clip_Indicate);
+  Menu_Clip.addSeparator();
+  Menu_Clip.addAction(ac_Clip_Over);
+  Menu_Clip.addAction(ac_Clip_Under);
+  Menu_Clip.addSeparator();
+  Menu_Clip.addAction(ac_Clip_R);
+  Menu_Clip.addAction(ac_Clip_G);
+  Menu_Clip.addAction(ac_Clip_B);
+
+  QMenu Menu(this);
+  Menu.setPalette(Theme->ptMenuPalette);
+  Menu.setStyle(Theme->ptStyle);
+  Menu.addAction(ac_ZoomFit);
+  Menu.addAction(ac_Zoom100);
+  Menu.addSeparator();
+  Menu.addMenu(&Menu_Mode);
+  Menu.addMenu(&Menu_Clip);
+  Menu.addSeparator();
+  Menu.addAction(ac_SensorClip);
+  Menu.addAction(ac_SensorClipSep);
+  Menu.addAction(ac_ShowTools);
+  Menu.addAction(ac_ShowZoomBar);
+  Menu.addSeparator();
+  Menu.addAction(ac_Fullscreen);
+
   if (Settings->GetInt("SpecialPreview") == ptSpecialPreview_Structure) {
     ac_Mode_Structure->setChecked(true);
   } else if (Settings->GetInt("SpecialPreview") == ptSpecialPreview_Gradient) {
@@ -417,7 +440,7 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
     ac_SensorClipSep->setVisible(false);
   }
 
-  m_Menu->exec(((QMouseEvent*)event)->globalPos());
+  Menu.exec(((QMouseEvent*)event)->globalPos());
 }
 
 
@@ -428,72 +451,71 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void Update(short Phase, short SubPhase = -1, short WithIdentify  = 1, short ProcessorMode = ptProcessorMode_Preview);
-void ptViewWindow::MenuExpIndicate() {
+void ptViewWindow::Menu_Clip_Indicate() {
   Settings->SetValue("ExposureIndicator",(int)ac_Clip_Indicate->isChecked());
   Update(ptProcessorPhase_NULL);
 }
 
-void ptViewWindow::MenuExpIndOver() {
+void ptViewWindow::Menu_Clip_Over() {
   Settings->SetValue("ExposureIndicatorOver",(int)ac_Clip_Over->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
     Update(ptProcessorPhase_NULL);
 }
 
-void ptViewWindow::MenuExpIndUnder() {
+void ptViewWindow::Menu_Clip_Under() {
   Settings->SetValue("ExposureIndicatorUnder",(int)ac_Clip_Under->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
     Update(ptProcessorPhase_NULL);
 }
 
-void ptViewWindow::MenuExpIndR() {
+void ptViewWindow::Menu_Clip_R() {
   Settings->SetValue("ExposureIndicatorR",(int)ac_Clip_R->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
     Update(ptProcessorPhase_NULL);
 }
 
-void ptViewWindow::MenuExpIndG() {
+void ptViewWindow::Menu_Clip_G() {
   Settings->SetValue("ExposureIndicatorG",(int)ac_Clip_G->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
     Update(ptProcessorPhase_NULL);
 }
 
-void ptViewWindow::MenuExpIndB() {
+void ptViewWindow::Menu_Clip_B() {
   Settings->SetValue("ExposureIndicatorB",(int)ac_Clip_B->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
     Update(ptProcessorPhase_NULL);
 }
 
-void ptViewWindow::MenuExpIndSensor() {
+void ptViewWindow::Menu_SensorClip() {
   Settings->SetValue("ExposureIndicatorSensor",(int)ac_SensorClip->isChecked());
   Update(ptProcessorPhase_NULL);
 }
 
-void ptViewWindow::MenuShowBottom() {
+void ptViewWindow::Menu_ShowZoomBar() {
   Settings->SetValue("ShowBottomContainer",(int)ac_ShowZoomBar->isChecked());
   MainWindow->UpdateSettings();
 }
 
-void ptViewWindow::MenuShowTools() {
+void ptViewWindow::Menu_ShowTools() {
   Settings->SetValue("ShowToolContainer",(int)ac_ShowTools->isChecked());
   MainWindow->UpdateSettings();
 }
 
 void CB_FullScreenButton(const int State);
-void ptViewWindow::MenuFullScreen() {
+void ptViewWindow::Menu_Fullscreen() {
   CB_FullScreenButton((int)ac_Fullscreen->isChecked());
 }
 
 void CB_ZoomFitButton();
-void ptViewWindow::MenuZoomFit() {
-  CB_ZoomFitButton();
+void ptViewWindow::Menu_ZoomFit() {
+  ZoomToFit();
 }
 
-void CB_ZoomFullButton();
-void ptViewWindow::MenuZoom100() {
-  CB_ZoomFullButton();
+void ptViewWindow::Menu_Zoom100() {
+  ZoomTo(1.0);
 }
 
-void ptViewWindow::MenuMode() {
+void ptViewWindow::Menu_Mode() {
   if (ac_Mode_RGB->isChecked())
     Settings->SetValue("SpecialPreview", ptSpecialPreview_RGB);
   else if (ac_Mode_L->isChecked())
