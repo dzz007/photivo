@@ -608,7 +608,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   m_SearchInputTimer->setSingleShot(1);
   connect(m_SearchInputTimer, SIGNAL(timeout()), this, SLOT(Search()));
 
-
   // Set us in the beginning of the tabbook and show mainwindow.
   // But we do not want to generate events for this during setup
   MainTabBook->blockSignals(1);
@@ -2118,6 +2117,10 @@ void ptMainWindow::UpdateSettings() {
   PathInfo.setFile(Settings->GetString("PreviewColorProfile"));
   ShortFileName = PathInfo.baseName();
   PreviewColorProfileText->setText(ShortFileName);
+
+  bool Temp = Settings->GetInt("CMQuality") != ptCMQuality_FastSRGB;
+  Settings->SetEnabled("PreviewColorProfileIntent", Temp);
+  PreviewProfileWidget->setEnabled(Temp);
   // End Preview Color Profile.
 
   // Preview Color Profile.

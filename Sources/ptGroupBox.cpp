@@ -250,6 +250,9 @@ void ptGroupBox::UpdateView() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptGroupBox::SetActive(const short IsActive) {
+
+  if (IsActive == m_IsActive) return;
+
   m_IsActive = IsActive;
 
   UpdateView();

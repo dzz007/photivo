@@ -74,6 +74,7 @@ const ptGuiOptionsItem ptGuiOptions::WorkColor[] = {
 const ptGuiOptionsItem ptGuiOptions::CMQuality[] = {
   {ptCMQuality_NoOptimize,       QObject::tr("No optimization")     },
   {ptCMQuality_HighResPreCalc,   QObject::tr("High res pre calc")   },
+  {ptCMQuality_FastSRGB,         QObject::tr("Fast sRGB preview")   },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::PreviewColorProfileIntent[] = {

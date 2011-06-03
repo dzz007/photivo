@@ -146,7 +146,8 @@ short ImageSaved;
 short ImageCleanUp;
 
 // uint16_t (0,0xffff) to float (0.0, 1.0)
-float ToFloatTable[0x10000];
+float    ToFloatTable[0x10000];
+uint16_t ToSRGBTable[0x10000];
 
 // Filter patterns for the filechooser.
 QString ChannelMixerFilePattern;
@@ -915,6 +916,15 @@ void CB_Event0() {
     ToFloatTable[i] = (float)i/(float)0xffff;
   }
 
+  // linear RGB to sRGB table
+#pragma omp parallel for
+  for (uint32_t i=0; i<0x10000; i++) {
+    if ((double)i/0xffff <= 0.0031308)
+      ToSRGBTable[i] = CLIP((int32_t)(12.92*i));
+    else
+      ToSRGBTable[i] = CLIP((int32_t)((1.055*pow((double)i/0xffff,1.0/2.4)-0.055)*0xffff));
+  }
+
   // Init run mode
   NextPhase = ptProcessorPhase_Raw;
   NextSubPhase = ptProcessorPhase_Load;
@@ -1152,7 +1162,7 @@ void PreCalcTransforms() {
                          TYPE_RGB_16,
                          Settings->GetInt("PreviewColorProfileIntent"),
                          cmsFLAGS_HIGHRESPRECALC | cmsFLAGS_BLACKPOINTCOMPENSATION);
-  } else {
+  } else { // fast sRGB preview also uses the not optimized profile for output
     ToPreviewTransform =
       cmsCreateTransform(InProfile,
                          TYPE_RGB_16,
@@ -1230,7 +1240,8 @@ void Update(short Phase,
       ImageSaved = 0;
       MainWindow->UpdateSettings();
       if(Settings->GetInt("HaveImage")==1) {
-        TheProcessor->Run(NextPhase, NextSubPhase, WithIdentify, ProcessorMode);
+        if (Phase < ptProcessorPhase_Output)
+          TheProcessor->Run(NextPhase, NextSubPhase, WithIdentify, ProcessorMode);
         UpdatePreviewImage();
       }
       NextPhase = ptProcessorPhase_Output;
@@ -1782,9 +1793,9 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       }
     }
 
-    HistogramWindow->UpdateView(HistogramImage);
     // In case of histogram update only, we're done.
     if (OnlyHistogram) {
+      HistogramWindow->UpdateView(HistogramImage);
       ViewWindow->StatusReport(0);
       return;
     }
@@ -1894,8 +1905,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
         HistogramImage->Crop(TempCropX, TempCropY, TempCropW, TempCropH);
       }
     }
-    HistogramWindow->UpdateView(HistogramImage);
-      if (OnlyHistogram) {
+    if (OnlyHistogram) {
+      HistogramWindow->UpdateView(HistogramImage);
       ViewWindow->StatusReport(0);
       return;
     }
@@ -1904,12 +1915,18 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   ReportProgress(QObject::tr("Converting to screen space"));
 
   // Convert from working space to screen space.
-  // Using lcms and a standard sRGB or custom profile.
-
-  ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB();
-  if (!ReturnValue) {
-    ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
-    assert(ReturnValue);
+  if (Settings->GetInt("CMQuality") != ptCMQuality_FastSRGB) {
+    // Using lcms and a standard sRGB or custom profile.
+    PreviewImage->lcmsRGBToPreviewRGB();
+  } else {
+    PreviewImage->RGBToRGB(ptSpace_sRGB_D65);
+    uint16_t (*Image)[3] = PreviewImage->m_Image;
+#pragma omp parallel for schedule(static)
+    for (uint32_t i=0; i<(uint32_t)PreviewImage->m_Height*PreviewImage->m_Width; i++) {
+      Image[i][0] = ToSRGBTable[Image[i][0]];
+      Image[i][1] = ToSRGBTable[Image[i][1]];
+      Image[i][2] = ToSRGBTable[Image[i][2]];
+    }
   }
 
   if (!ForcedImage) {
@@ -1958,7 +1975,6 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
         HistogramImage->Crop(TempCropX, TempCropY, TempCropW, TempCropH);
       }
     }
-    HistogramWindow->UpdateView(HistogramImage);
   }
 
   if (!OnlyHistogram) {
@@ -1987,6 +2003,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     // Update the ViewWindow and show if needed.
     ViewWindow->UpdateView(PreviewImage);
   }
+
+  HistogramWindow->UpdateView(HistogramImage);
 
   ViewWindow->StatusReport(0);
   ReportProgress(QObject::tr("Ready"));
@@ -3700,6 +3718,7 @@ void CB_WorkColorChoice(const QVariant Choice) {
 
 void CB_CMQualityChoice(const QVariant Choice) {
   Settings->SetValue("CMQuality",Choice);
+  MainWindow->UpdateSettings();
   PreCalcTransforms();
   Update(ptProcessorPhase_NULL);
 }

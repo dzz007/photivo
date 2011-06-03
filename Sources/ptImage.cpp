@@ -290,7 +290,7 @@ ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
                          TYPE_RGB_16,
                          Intent,
                          cmsFLAGS_HIGHRESPRECALC | cmsFLAGS_BLACKPOINTCOMPENSATION);
-  } else {
+  } else { // fast sRGB preview also uses the not optimized profile for output
     Transform =
       cmsCreateTransform(InProfile,
                          TYPE_RGB_16,

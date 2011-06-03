@@ -111,6 +111,7 @@ const short ptOutputColor_Profile    = 21;/* Avoid collision with RGB or LAB */
 
 const short ptCMQuality_NoOptimize         = 0;
 const short ptCMQuality_HighResPreCalc     = 1;
+const short ptCMQuality_FastSRGB           = 2;
 
 // Size of the pipe.
 

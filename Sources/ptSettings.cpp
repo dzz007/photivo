@@ -445,7 +445,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CameraColorProfileIntent"    ,ptGT_Choice       ,1,1,1 ,INTENT_PERCEPTUAL           ,GuiOptions->CameraColorProfileIntent  ,tr("Intent of the profile")},
     {"CameraColorGamma"            ,ptGT_Choice       ,1,1,1 ,ptCameraColorGamma_None     ,GuiOptions->CameraColorGamma          ,tr("Gamma that was applied before this profile")},
     {"WorkColor"                   ,ptGT_Choice       ,1,1,1 ,ptSpace_sRGB_D65            ,GuiOptions->WorkColor                 ,tr("Working colorspace")},
-    {"CMQuality"                   ,ptGT_Choice       ,1,1,0 ,ptCMQuality_HighResPreCalc  ,GuiOptions->CMQuality                 ,tr("Color management quality")},
+    {"CMQuality"                   ,ptGT_Choice       ,1,1,0 ,ptCMQuality_FastSRGB        ,GuiOptions->CMQuality                 ,tr("Color management quality")},
     {"PreviewColorProfileIntent"   ,ptGT_Choice       ,1,0,1 ,INTENT_PERCEPTUAL           ,GuiOptions->PreviewColorProfileIntent ,tr("Intent of the profile")},
     {"OutputColorProfileIntent"    ,ptGT_Choice       ,1,1,1 ,INTENT_PERCEPTUAL           ,GuiOptions->OutputColorProfileIntent  ,tr("Intent of the profile")},
     {"SaveButtonMode"              ,ptGT_Choice       ,1,0,1 ,ptOutputMode_Pipe           ,GuiOptions->OutputMode                ,tr("Output mode of save button")},
