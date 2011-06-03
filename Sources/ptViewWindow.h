@@ -30,6 +30,7 @@
 
 #include "ptImage.h"
 #include "ptMainWindow.h"
+#include "ptReportOverlay.h"
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -50,9 +51,9 @@ public:
   ptViewWindow(QWidget* Parent, ptMainWindow* mainWin);
   ~ptViewWindow();
 
-  void UpdateView(const ptImage* relatedImage = NULL);
+  void UpdateImage(const ptImage* relatedImage = NULL);
   inline int zoomPercent() { return qRound(m_ZoomFactor * 100); }
-  inline float zoomFactor() { return m_ZoomFactor; }
+  inline float zoomFactor() const { return m_ZoomFactor; }
   void ZoomTo(float factor);  // 1.0 means 100%
   int ZoomToFit();  // fit complete image into viewport
 
@@ -84,9 +85,11 @@ private:
   short m_LeftMousePressed;
   float m_ZoomFactor;
 
-  QGraphicsScene* m_ImageScene;
   QGraphicsPixmapItem* m_8bitImageItem;
   QLine* m_DragDelta;
+  QGraphicsScene* m_ImageScene;
+  ptReportOverlay* StatusOverlay;
+  ptReportOverlay* ZoomSizeOverlay;
 
   // context menu stuff
   void ConstructContextMenu();
