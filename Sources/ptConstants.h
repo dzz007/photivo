@@ -535,6 +535,11 @@ const short ptSpotMode_mode3    = 2;
 const short ptZoomMode_Fit    = 0;
 const short ptZoomMode_NonFit = 1;
 
+// Status overlay modes
+const short ptStatus_Done = 0;
+const short ptStatus_Updating = 1;
+const short ptStatus_Processing = 2;
+
 // Gui events : timeout filter
 // 1s after releasing input arrows, processing will be triggered.
 // Should be working also for sufficiently fast typing :)

@@ -1621,7 +1621,7 @@ void CB_ZoomFitButton();
 void CB_WritePipeButton();
 void CB_SpecialPreviewChoice(const QVariant Choice);
 void CB_MenuFileExit(const short);
-void ViewWindowStatusReport(short State);
+void ViewWindowShowStatus(short State);
 void CB_SearchBarEnableCheck(const QVariant State);
 
 // Catch keyboard shortcuts
@@ -1739,27 +1739,27 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (Event->key()==Qt::Key_0 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_RGB)
         CB_SpecialPreviewChoice(ptSpecialPreview_RGB);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_9 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_Structure)
         CB_SpecialPreviewChoice(ptSpecialPreview_Structure);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_8 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_L)
         CB_SpecialPreviewChoice(ptSpecialPreview_L);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_7 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_A)
         CB_SpecialPreviewChoice(ptSpecialPreview_A);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_6 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_B)
         CB_SpecialPreviewChoice(ptSpecialPreview_B);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_5 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_Gradient)
         CB_SpecialPreviewChoice(ptSpecialPreview_Gradient);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_C && Event->modifiers()==Qt::NoModifier) {
       Settings->SetValue("ExposureIndicator",1-Settings->GetInt("ExposureIndicator"));
       Update(ptProcessorPhase_NULL);

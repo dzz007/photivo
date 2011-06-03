@@ -33,6 +33,7 @@
 #include "ptSettings.h"
 #include "ptTheme.h"
 #include "ptViewWindow.h"
+#include "ptConstants.h"
 
 extern ptTheme* Theme;
 extern ptSettings* Settings;
@@ -60,8 +61,8 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
               << 1.50 << 2.00 << 3.00 << MaxZoom;
 
   m_DragDelta = new QLine();
-  StatusOverlay = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
-  ZoomSizeOverlay = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255), 1000, Qt::AlignRight, 20);
+  m_StatusOverlay = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
+  m_ZoomSizeOverlay = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255), 1000, Qt::AlignRight, 20);
 
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -92,8 +93,8 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
 
 ptViewWindow::~ptViewWindow() {
   delete m_DragDelta;
-  delete StatusOverlay;
-  delete ZoomSizeOverlay;
+  delete m_StatusOverlay;
+  delete m_ZoomSizeOverlay;
 }
 
 
@@ -146,7 +147,7 @@ void ptViewWindow::ZoomTo(float factor) {
   m_ZoomFactor = transform().m11();
   int z = qRound(m_ZoomFactor * 100);
   Settings->SetValue("Zoom", z);
-  ZoomSizeOverlay->exec(QString::number(z) + "%");
+  m_ZoomSizeOverlay->exec(QString::number(z) + "%");
 }
 
 
@@ -252,6 +253,44 @@ void ptViewWindow::wheelEvent(QWheelEvent* event) {
   }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// showStatus()
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::showStatus(short mode) {
+  switch (mode) {
+    case ptStatus_Done:
+      m_StatusOverlay->setColors(QColor(0,130,0), QColor(120,170,120));   // green
+      m_StatusOverlay->setDuration(1500);
+      m_StatusOverlay->exec(QObject::tr("Done"));
+      break;
+
+    case ptStatus_Updating:
+      m_StatusOverlay->setColors(QColor(255,140,0), QColor(255,200,120));   // orange
+      m_StatusOverlay->setDuration(0);
+      m_StatusOverlay->exec(QObject::tr("Updating"));
+      break;
+
+    case ptStatus_Processing:
+      m_StatusOverlay->setColors(QColor(255,75,75), QColor(255,190,190));   // red
+      m_StatusOverlay->setDuration(0);
+      m_StatusOverlay->exec(QObject::tr("Processing"));
+      break;
+
+    default:    // should not happen
+      m_StatusOverlay->stop();
+      break;
+  }
+}
+
+void ptViewWindow::showStatus(const QString text) {
+  m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255));    // blue
+  m_StatusOverlay->setDuration(1500);
+  m_StatusOverlay->exec(text);
+}
 
 
 
