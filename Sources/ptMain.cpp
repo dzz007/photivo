@@ -3215,8 +3215,6 @@ void CB_MenuFileOpen(const short HaveFile) {
   #endif
   Settings->SetValue("RunMode",OldRunMode);
 
-  ViewWindow->UpdateView(PreviewImage);
-
   // Let the toplevel window adapt to the new photo.
   if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
     CB_ZoomFitButton();
@@ -3400,8 +3398,6 @@ void CB_MenuFileExit(const short) {
     QString OldInputFileName = Settings->GetStringList("InputFileNameList")[0];
     QFile::remove(OldInputFileName);
   }
-  // TODO Do we need some blabla before exiting ?
-  printf("That's all folks ...\n");
 
   // Delete backup settingsfile
   if (Settings->GetInt("WriteBackupSettings"))
@@ -3412,6 +3408,8 @@ void CB_MenuFileExit(const short) {
     if (Settings->GetInt(CurveKeys.at(i))==ptCurveChoice_Manual)
       Settings->SetValue(CurveKeys.at(i),ptCurveChoice_None);
   }
+
+  printf("Saving settings ...\n");
 
   // Store the position of the splitter and main window
   Settings->m_IniSettings->
@@ -3428,7 +3426,7 @@ void CB_MenuFileExit(const short) {
   delete Settings;
 
   ALLOCATED(10000000);
-
+  printf("Exiting Photivo.\n");
   QCoreApplication::exit(EXIT_SUCCESS);
 }
 
@@ -3602,22 +3600,21 @@ void GimpExport(const short UsePipe) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void CB_ZoomInput(const QVariant Value) {
+  ViewWindow->ZoomTo(Value.toFloat() / 100.0);
+  // TODOSR: updatesettings doesnt seem to be necessary
+//    MainWindow->UpdateSettings(); // To reflect maybe new zoom
+}
+
 void CB_ZoomFitButton() {
-
-  Settings->SetValue("ZoomMode",ptZoomMode_Fit);
-  //Settings->SetValue("Zoom",ViewWindow->ZoomFit());   // TODOSR: re-enable
-
   ViewWindow->ZoomToFit();
-  MainWindow->UpdateSettings(); // To reflect maybe new zoom
-
-  return ;
+  //MainWindow->UpdateSettings(); // To reflect maybe new zoom
 }
 
-void CB_InputChanged(const QString,const QVariant);
 void CB_ZoomFullButton() {
-  Settings->SetValue("ZoomMode",ptZoomMode_NonFit);
-  CB_InputChanged("ZoomInput",100);
+  CB_ZoomInput(100);
 }
+
 
 void CB_FullScreenButton(const int State) {
   if (State == 1) {
@@ -8994,10 +8991,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   if (InStartup) return;
 
   if (ObjectName == "ZoomInput") {
-    Settings->SetValue("ZoomMode",ptZoomMode_NonFit);
-    Settings->SetValue("Zoom",Value.toInt());
-    //ViewWindow->Zoom(Value.toInt());    // TODOSR: re-enable
-    MainWindow->UpdateSettings(); // To reflect maybe new zoom
+    CB_ZoomInput(Value);
 
   #define M_Dispatch(Name)\
   } else if (ObjectName == #Name) { CB_ ## Name (Value);

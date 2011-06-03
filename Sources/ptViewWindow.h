@@ -2,7 +2,6 @@
 **
 ** Photivo
 **
-** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
 **
@@ -54,8 +53,8 @@ public:
   void UpdateView(const ptImage* relatedImage = NULL);
   inline int zoomPercent() { return qRound(m_ZoomFactor * 100); }
   inline float zoomFactor() { return m_ZoomFactor; }
-  int ZoomTo(const float factor);  // 1.0 means 100%
-  int ZoomToFit();
+  void ZoomTo(float factor);  // 1.0 means 100%
+  int ZoomToFit();  // fit complete image into viewport
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -69,6 +68,7 @@ protected:
   void mousePressEvent(QMouseEvent* event);
   void mouseReleaseEvent(QMouseEvent* event);
   void mouseMoveEvent(QMouseEvent* event);
+  void wheelEvent(QWheelEvent* event);
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -79,23 +79,17 @@ protected:
 private:
   const float MinZoom;
   const float MaxZoom;
+  QList<float> ZoomFactors;
 
-
-  QGraphicsScene* m_ImageScene;
-  QGraphicsPixmapItem* m_8bitImageItem;
-
-  QLine* m_DragDelta;
   short m_LeftMousePressed;
   float m_ZoomFactor;
 
-  void ZoomView(const quint32 width, const quint32 height);
-
+  QGraphicsScene* m_ImageScene;
+  QGraphicsPixmapItem* m_8bitImageItem;
+  QLine* m_DragDelta;
 
   // context menu stuff
   void ConstructContextMenu();
-  QMenu* m_Menu;
-  QMenu* m_Menu_Mode;
-  QMenu* m_Menu_Clip;
   QAction* ac_ZoomFit;
   QAction* ac_Zoom100;
   QAction* ac_Mode_RGB;
@@ -127,19 +121,19 @@ private:
 ///////////////////////////////////////////////////////////////////////////
 private slots:
   // context menu stuff
-  void MenuExpIndicate();
-  void MenuExpIndOver();
-  void MenuExpIndUnder();
-  void MenuExpIndR();
-  void MenuExpIndG();
-  void MenuExpIndB();
-  void MenuExpIndSensor();
-  void MenuShowBottom();
-  void MenuShowTools();
-  void MenuFullScreen();
-  void MenuZoomFit();
-  void MenuZoom100();
-  void MenuMode();
+  void Menu_Clip_Indicate();
+  void Menu_Clip_Over();
+  void Menu_Clip_Under();
+  void Menu_Clip_R();
+  void Menu_Clip_G();
+  void Menu_Clip_B();
+  void Menu_SensorClip();
+  void Menu_ShowZoomBar();
+  void Menu_ShowTools();
+  void Menu_Fullscreen();
+  void Menu_ZoomFit();
+  void Menu_Zoom100();
+  void Menu_Mode();
 };
 
 #endif
