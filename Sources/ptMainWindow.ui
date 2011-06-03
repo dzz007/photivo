@@ -10656,7 +10656,7 @@
                           <enum>QFrame::NoFrame</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>3</number>
+                          <number>1</number>
                          </property>
                          <property name="tabSpacing">
                           <number>6</number>
@@ -10666,8 +10666,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
-                            <height>68</height>
+                            <width>799</width>
+                            <height>91</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10679,9 +10679,6 @@
                              <layout class="QVBoxLayout" name="verticalLayout_21">
                               <item>
                                <widget class="QWidget" name="WorkColorWidget" native="true"/>
-                              </item>
-                              <item>
-                               <widget class="QWidget" name="CMQualityWidget" native="true"/>
                               </item>
                              </layout>
                             </widget>
@@ -10705,9 +10702,9 @@
                           <property name="geometry">
                            <rect>
                             <x>0</x>
-                            <y>0</y>
-                            <width>98</width>
-                            <height>87</height>
+                            <y>-10</y>
+                            <width>786</width>
+                            <height>101</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10718,66 +10715,74 @@
                             <widget class="QWidget" name="widget_41" native="true">
                              <layout class="QVBoxLayout" name="verticalLayout_22">
                               <item>
-                               <layout class="QHBoxLayout" name="horizontalLayout_15">
-                                <property name="spacing">
-                                 <number>2</number>
-                                </property>
-                                <property name="sizeConstraint">
-                                 <enum>QLayout::SetFixedSize</enum>
-                                </property>
-                                <item>
-                                 <widget class="QToolButton" name="PreviewColorProfileButton">
-                                  <property name="toolTip">
-                                   <string>Load an icc profile</string>
-                                  </property>
-                                  <property name="text">
-                                   <string>Load</string>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset resource="../qrc/photivo.qrc">
-                                    <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>14</width>
-                                    <height>14</height>
-                                   </size>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item>
-                                 <widget class="QLineEdit" name="PreviewColorProfileText">
-                                  <property name="enabled">
-                                   <bool>true</bool>
-                                  </property>
-                                  <property name="maximumSize">
-                                   <size>
-                                    <width>250</width>
-                                    <height>16777215</height>
-                                   </size>
-                                  </property>
-                                  <property name="readOnly">
-                                   <bool>true</bool>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item>
-                                 <spacer name="horizontalSpacer_8">
-                                  <property name="orientation">
-                                   <enum>Qt::Horizontal</enum>
-                                  </property>
-                                  <property name="sizeType">
-                                   <enum>QSizePolicy::Expanding</enum>
-                                  </property>
-                                  <property name="sizeHint" stdset="0">
-                                   <size>
-                                    <width>40</width>
-                                    <height>20</height>
-                                   </size>
-                                  </property>
-                                 </spacer>
-                                </item>
-                               </layout>
+                               <widget class="QWidget" name="CMQualityWidget" native="true"/>
+                              </item>
+                              <item>
+                               <widget class="QWidget" name="PreviewProfileWidget" native="true">
+                                <layout class="QHBoxLayout" name="horizontalLayout_15">
+                                 <property name="spacing">
+                                  <number>2</number>
+                                 </property>
+                                 <property name="sizeConstraint">
+                                  <enum>QLayout::SetFixedSize</enum>
+                                 </property>
+                                 <property name="margin">
+                                  <number>0</number>
+                                 </property>
+                                 <item>
+                                  <widget class="QToolButton" name="PreviewColorProfileButton">
+                                   <property name="toolTip">
+                                    <string>Load an icc profile</string>
+                                   </property>
+                                   <property name="text">
+                                    <string>Load</string>
+                                   </property>
+                                   <property name="icon">
+                                    <iconset resource="../qrc/photivo.qrc">
+                                     <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                   </property>
+                                   <property name="iconSize">
+                                    <size>
+                                     <width>14</width>
+                                     <height>14</height>
+                                    </size>
+                                   </property>
+                                  </widget>
+                                 </item>
+                                 <item>
+                                  <widget class="QLineEdit" name="PreviewColorProfileText">
+                                   <property name="enabled">
+                                    <bool>true</bool>
+                                   </property>
+                                   <property name="maximumSize">
+                                    <size>
+                                     <width>250</width>
+                                     <height>16777215</height>
+                                    </size>
+                                   </property>
+                                   <property name="readOnly">
+                                    <bool>true</bool>
+                                   </property>
+                                  </widget>
+                                 </item>
+                                 <item>
+                                  <spacer name="horizontalSpacer_8">
+                                   <property name="orientation">
+                                    <enum>Qt::Horizontal</enum>
+                                   </property>
+                                   <property name="sizeType">
+                                    <enum>QSizePolicy::Expanding</enum>
+                                   </property>
+                                   <property name="sizeHint" stdset="0">
+                                    <size>
+                                     <width>40</width>
+                                     <height>20</height>
+                                    </size>
+                                   </property>
+                                  </spacer>
+                                 </item>
+                                </layout>
+                               </widget>
                               </item>
                               <item>
                                <widget class="QWidget" name="PreviewColorProfileIntentWidget" native="true"/>
@@ -10919,8 +10924,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>799</width>
-                            <height>91</height>
+                            <width>98</width>
+                            <height>87</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -11052,7 +11057,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>786</width>
+                            <width>99</width>
                             <height>117</height>
                            </rect>
                           </property>
