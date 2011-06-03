@@ -51,6 +51,8 @@ public:
   ptViewWindow(QWidget* Parent, ptMainWindow* mainWin);
   ~ptViewWindow();
 
+  void showStatus(short mode);
+  void showStatus(const QString text);
   void UpdateImage(const ptImage* relatedImage = NULL);
   inline int zoomPercent() { return qRound(m_ZoomFactor * 100); }
   inline float zoomFactor() const { return m_ZoomFactor; }
@@ -88,8 +90,8 @@ private:
   QGraphicsPixmapItem* m_8bitImageItem;
   QLine* m_DragDelta;
   QGraphicsScene* m_ImageScene;
-  ptReportOverlay* StatusOverlay;
-  ptReportOverlay* ZoomSizeOverlay;
+  ptReportOverlay* m_StatusOverlay;
+  ptReportOverlay* m_ZoomSizeOverlay;
 
   // context menu stuff
   void ConstructContextMenu();

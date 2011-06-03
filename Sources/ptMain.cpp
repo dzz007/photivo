@@ -1409,8 +1409,8 @@ void HistogramGetCrop() {
   if (Settings->GetInt("HistogramCrop")) {
       // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
-//      ViewWindow->StatusReport("Selection");    // TODOSR: re-enable
-//      ViewWindow->StartSelection();
+      ViewWindow->showStatus(QObject::tr("Selection"));
+//      ViewWindow->StartSelection();    // TODOSR: re-enable
 //      while (ViewWindow->OngoingAction() == vaSelectRect) {
 //          QApplication::processEvents();
 //      }
@@ -1451,9 +1451,10 @@ void HistogramGetCrop() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ViewWindowStatusReport(short State) {
-  if (!ViewWindow) return;
-  //ViewWindow->StatusReport(State);    // TODOSR: re-enable
+void ViewWindowShowStatus(short State) {
+  if (ViewWindow) {
+    ViewWindow->showStatus(State);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1674,7 +1675,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     return;
   }
 
-  //ViewWindow->StatusReport(1);    // TODOSR: re-enable
+  ViewWindow->showStatus(ptStatus_Updating);
   ReportProgress(QObject::tr("Updating preview image"));
 
   if (!HistogramImage) HistogramImage = new (ptImage);
@@ -1782,7 +1783,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     HistogramWindow->UpdateView(HistogramImage);
     // In case of histogram update only, we're done.
     if (OnlyHistogram) {
-      //ViewWindow->StatusReport(0);    // TODOSR: re-enable
+      ViewWindow->showStatus(ptStatus_Done);
       return;
     }
   }
@@ -1892,8 +1893,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       }
     }
     HistogramWindow->UpdateView(HistogramImage);
-      if (OnlyHistogram) {
-      //ViewWindow->StatusReport(0);    // TODOSR: re-enable
+    if (OnlyHistogram) {
+      ViewWindow->showStatus(ptStatus_Done);
       return;
     }
   }
@@ -1985,7 +1986,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     ViewWindow->UpdateImage(PreviewImage);
   }
 
-  //ViewWindow->StatusReport(0);    // TODOSR: re-enable
+  ViewWindow->showStatus(ptStatus_Done);
   ReportProgress(QObject::tr("Ready"));
 
   if (!OnlyHistogram)
@@ -3088,7 +3089,6 @@ void CB_MenuFileOpen(const short HaveFile) {
   }
   if (OpenError == 1) {
     // We don't have a RAW or a bitmap!
-    //~ ViewWindow->StatusReport(0);
     QString ErrorMessage = QObject::tr("Cannot decode")
                          + " '"
                          + InputFileNameList[0]
@@ -3948,7 +3948,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
 
       // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
-//      ViewWindow->StatusReport("Detail view");    // TODOSR: re-enable
+      ViewWindow->showStatus(QObject::tr("Detail view"));
 //      ViewWindow->StartSelection();
 //      while (ViewWindow->OngoingAction() == vaSelectRect) {
 //        QApplication::processEvents();
@@ -4428,7 +4428,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
 
       // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
-//      ViewWindow->StatusReport("Spot WB");    // TODOSR: re-enable
+      ViewWindow->showStatus(QObject::tr("Spot WB"));
 //      ViewWindow->StartSelection();
 //      while (ViewWindow->OngoingAction() == vaSelectRect) {
 //        QApplication::processEvents();
@@ -4894,7 +4894,7 @@ void CB_RotateAngleButton() {
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
-  //ViewWindow->StatusReport(QObject::tr("Get angle"));    // TODOSR: re-enable
+  ViewWindow->showStatus(QObject::tr("Get angle"));
   ReportProgress(QObject::tr("Get angle"));
 
   BlockTools(1);
@@ -5055,7 +5055,7 @@ void CB_MakeCropButton() {
     return;
   }
 
-  //ViewWindow->StatusReport(QObject::tr("Prepare"));    // TODOSR: re-enable
+  ViewWindow->showStatus(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for cropping"));
 
   // Rerun the part of geometry stage before crop to get correct preview
@@ -5070,7 +5070,7 @@ void CB_MakeCropButton() {
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
-  //ViewWindow->StatusReport(QObject::tr("Crop"));    // TODOSR: re-enable
+  ViewWindow->showStatus(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
   BlockTools(2);
 //  ViewWindow->StartCrop(Settings->GetInt("CropX")>>Settings->GetInt("Scaled"),    // TODOSR: re-enable

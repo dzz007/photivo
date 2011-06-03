@@ -114,4 +114,5 @@ void ptReportOverlay::UpdatePosition() {
   } else {
     assert(!"Only AlignLeft or AlignRight allowed!");
   }
+  updateGeometry();
 }
