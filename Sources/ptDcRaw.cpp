@@ -175,7 +175,7 @@ m_Tiff_Flip = m_Flip = -1; /* 0 is valid, so -1 is unknown */
 m_Filters = (unsigned)(-1); // hack not to change dcraw.
 m_RawHeight = m_RawWidth = m_Fuji_Width = m_IsFuji = fuji_layout = cr2_slice[0] = 0;
 m_WhiteLevel = m_Height = m_Width = m_TopMargin = m_LeftMargin = 0;
-m_ColorDescriptor[0] = m_Descridlion[0] = m_Artist[0] = m_CameraMake[0] = m_CameraModel[0] = m_CameraModelBis[0] = 0;
+m_ColorDescriptor[0] = m_Description[0] = m_Artist[0] = m_CameraMake[0] = m_CameraModel[0] = m_CameraModelBis[0] = 0;
 m_IsoSpeed = m_Shutter = m_Aperture = m_FocalLength = unique_id = 0;
 m_Tiff_NrIFDs = 0;
 memset (m_Tiff_IFD, 0, sizeof m_Tiff_IFD);
@@ -5090,8 +5090,8 @@ int CLASS parse_tiff_ifd (int l_Base) {
       case 262:       /* PhotometricInterpretation */
   m_Tiff_IFD[l_ifd].phint = get2();
   break;
-      case 270:       /* ImageDescridlion */
-  ptfread (m_Descridlion, 512, 1, m_InputFile);
+      case 270:       /* ImageDescription */
+  ptfread (m_Description, 512, 1, m_InputFile);
   break;
       case 271:       /* Make */
   ptfgets (m_CameraMake, 64, m_InputFile);
@@ -6629,7 +6629,7 @@ void CLASS identify() {
   if (!strncmp (m_CameraModel,"Digital Camera ",15))
     strcpy (m_CameraModel, m_CameraModel+15);
 
-  m_Descridlion[511] = m_Artist[63] = m_CameraMake[63] = m_CameraModel[63] = m_CameraModelBis[63] = 0;
+  m_Description[511] = m_Artist[63] = m_CameraMake[63] = m_CameraModel[63] = m_CameraModelBis[63] = 0;
 
   if (!m_IsRaw) goto notraw;
 
@@ -7982,7 +7982,7 @@ void CLASS tiff_head (struct tiff_hdr *th)
   tiff_set (&th->nexif, 33437, 5, 1, TOFF(th->rat[6]));
   tiff_set (&th->nexif, 34855, 3, 1, (int) m_IsoSpeed);
   tiff_set (&th->nexif, 37386, 5, 1, TOFF(th->rat[8]));
-  strncpy (th->desc, m_Descridlion, 512);
+  strncpy (th->desc, m_Description, 512);
   strncpy (th->make, m_CameraMake, 64);
   strncpy (th->model, m_CameraModel, 64);
   strcpy (th->soft, "dcraw v"VERSION);

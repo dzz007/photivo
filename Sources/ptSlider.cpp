@@ -38,12 +38,14 @@ ptSlider::ptSlider(QWidget *parent,
 {
   Q_ASSERT(Type == QVariant::Int || Type == QVariant::Double);
   Q_ASSERT(Minimum.type() == Type && Maximum.type() == Type && Default.type() == Type && Step.type() == Type);
+
   m_EditBox=NULL;
   setMinimum(0);
   setMaximum(100);
   init(Label, ToolTip, Type, Minimum, Maximum, Default, Step, Decimals);
   m_IsSliderMoving=false;
   m_IsEditingEnabled=false;
+  m_HandleWidth=8;
   setMinimumSize(100, 20);
   setFixedHeight(22);
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -64,6 +66,7 @@ void ptSlider::init(const QString  Label,
 {
   Q_ASSERT(Type == QVariant::Int || Type == QVariant::Double);
   Q_ASSERT(Minimum.type() == Type && Maximum.type() == Type && Default.type() == Type && Step.type() == Type);
+
   m_Label=Label;
   setToolTip(ToolTip);
   m_Type=Type;
@@ -125,16 +128,20 @@ bool ptSlider::eventFilter(QObject *obj, QEvent *ev)
     switch (ev->type())
     {
     case QEvent::MouseButtonPress:
+//    close spinbox and save value
       if (((QMouseEvent*)ev)->button() == Qt::RightButton)
         enableEditor(false);
       break;
     case QEvent::ContextMenu:
+//    close spinbox and save value
       enableEditor(false);
       return true;
     case QEvent::FocusOut:
+//    close spinbox without saving value
       enableEditor(false, false);
       break;
     case QEvent::KeyPress:
+//    slider value need not be equal to spinbox value
       m_EditBox->blockSignals(true);
       break;
     case QEvent::Wheel:
@@ -154,35 +161,31 @@ void ptSlider::hoverMoveEvent(QHoverEvent *ev)
   ev->accept();
 
   int pos=qRound((sliderPosition()*double(width())/(maximum()-minimum())));
-  if (qAbs(ev->pos().x()-pos) < 8)
+  if (qAbs(ev->pos().x()-pos) < m_HandleWidth)
     setCursor(QCursor(Qt::SizeHorCursor));
   else
     if (m_ValueRect.contains(ev->pos()))
       setCursor(QCursor(Qt::IBeamCursor));
     else
       setCursor(QCursor(Qt::ArrowCursor));
-//  setFocus();
 }
 
 void ptSlider::keyPressEvent(QKeyEvent *ev)
 {
   ev->accept();
-/*
-  if ((ev->key() == Qt::Key_Return || ev->key() == Qt::Key_Enter) && m_IsEditingEnabled)
-    enableEditor(false);
 
-  //    doesn't save value
-  if (ev->key() == Qt::Key_Escape && m_IsEditingEnabled)
-    enableEditor(false, false);
-  */
   switch (ev->key())
   {
   case Qt::Key_Return:
   case Qt::Key_Enter:
+//    close spinbox and save value
     if (m_IsEditingEnabled)
       enableEditor(false);
+    else
+      QSlider::keyPressEvent(ev);
     break;
   case Qt::Key_Escape:
+//    close spinbox without saving value
     if (m_IsEditingEnabled)
       enableEditor(false, false);
     else
@@ -210,9 +213,11 @@ void ptSlider::mousePressEvent(QMouseEvent *ev)
   if (ev->button() == Qt::RightButton)
   {
     if (m_ValueRect.contains(ev->pos()))
+//  open spinbox
       enableEditor(true);
     else
     {
+//    close spinbox and set value to default
       if (m_IsEditingEnabled)
         enableEditor(false, false);
       setValue(minimum()+(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble())*
@@ -223,27 +228,26 @@ void ptSlider::mousePressEvent(QMouseEvent *ev)
     return;
   }
 
+//    close spinbox without saving value
   if (m_IsEditingEnabled)
     enableEditor(false, false);
   int pos=qRound((sliderPosition()*double(width())/(maximum()-minimum())));
-  if (qAbs(ev->pos().x()-pos) < 8)
+  if (qAbs(ev->pos().x()-pos) < m_HandleWidth)
   {
+//  move slider
     m_IsSliderMoving=true;
     triggerAction(SliderMove);
     setRepeatAction(SliderNoAction);
   }
   else
   {
+//  page up or page down action
     SliderAction action=SliderNoAction;
     if (ev->pos().x() > pos)
-    {
       action=SliderPageStepAdd;
-    }
     else
       if (ev->pos().x() < pos)
-      {
         action=SliderPageStepSub;
-      }
     triggerAction(action);
     setRepeatAction(action);
   }
@@ -272,12 +276,8 @@ void ptSlider::paintEvent(QPaintEvent *)
   if (m_Type == QVariant::Double)
     val=locale().toString(m_Value.toDouble(), 'f', m_Decimals);
 
+//  slider looks like a QProgressBar
   style()->drawControl(QStyle::CE_ProgressBar, &optBar, &p, this);
-
-//  QStyleOptionSpinBox optBox;
-//  optBox.initFrom(this);
-//  optBox.activeSubControls=QStyle::SC_SpinBoxDown | QStyle::SC_SpinBoxUp;
-//  style()->drawComplexControl(QStyle::CC_SpinBox, &optBox, &p, this);
 
   p.setPen(palette().text().color());
   if (!m_IsEditingEnabled)
@@ -293,12 +293,19 @@ void ptSlider::resizeEvent(QResizeEvent *)
 
 void ptSlider::wheelEvent(QWheelEvent *ev)
 {
+//    close spinbox without saving value
   if (m_IsEditingEnabled)
     enableEditor(false, false);
+
   if (m_ValueRect.contains(ev->pos()))
+  {
+//  wheel step equals to spinbox step
     setValue(minimum()+(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble())*
              (m_Value.toDouble()+m_Step.toDouble()*ev->delta()/120-m_Minimum.toDouble()));
+    update();
+  }
   else
+//  wheel step equals to standard QSlider step
     QSlider::wheelEvent(ev);
 }
 
@@ -306,6 +313,7 @@ void ptSlider::setValue(int val)
 {
   if (m_EditBox && sender() == m_EditBox)
   {
+//  value was sent by spinbox
     setValue(QVariant(val));
     val=minimum()+qRound((val-m_Minimum.toInt())*(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble()));
     QSlider::setValue(val);
@@ -326,6 +334,7 @@ void ptSlider::setValue(double val)
 {
   if (m_EditBox && sender() == m_EditBox)
   {
+//  value was sent by spinbox
     setValue(QVariant(val));
     val=minimum()+(val-m_Minimum.toDouble())*(maximum()-minimum())/(m_Maximum.toDouble()-m_Minimum.toDouble());
     QSlider::setValue(qRound(val));
@@ -344,6 +353,7 @@ void ptSlider::setValue(double val)
 
 void ptSlider::setValue(QVariant val)
 {
+//  private function only for internal use
   if (m_Value != val)
   {
     if (m_Type == QVariant::Int)
@@ -351,7 +361,6 @@ void ptSlider::setValue(QVariant val)
     if (m_Type == QVariant::Double)
       m_Value=qBound(m_Minimum.toDouble(), val.toDouble(), m_Maximum.toDouble());
     emit valueChanged(val);
-    //    updateValueRect();
   }
 }
 
@@ -394,8 +403,6 @@ void ptSlider::initValueRect()
     w=metrics.width(m_Maximum.toString()+"     ");
   if (m_Type == QVariant::Double)
     w=metrics.width(locale().toString(m_Maximum.toDouble(), 'f', m_Decimals)+"     ");
-  //  w=qMax(w, 50);
-  //  int h=metrics.height();
   m_ValueRect=QRect(width()-w, 0, w, height());
 }
 

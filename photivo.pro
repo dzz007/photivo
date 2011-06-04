@@ -44,7 +44,7 @@ contains(QT_VERSION, ^4\\.[0-5]\\..*) {
 }
 
 CONFIG += release silent
-#CONFIG += debug silent
+#CONFIG += debug
 TEMPLATE = subdirs
 
 isEmpty(PREFIX) {
@@ -89,7 +89,7 @@ unix {
   shortcut2.path = ~/.local/share/applications
   shortcut2.files = ./ReferenceMaterial/photivo.desktop
   icon.path = $${PREFIX}/share/pixmaps
-  icon.files = ./photivo.png
+  icon.files = ./qrc/photivo.png
   curves.path = $${PREFIX}/share/photivo/Curves
   curves.files = ./Curves/*
   mixer.path = $${PREFIX}/share/photivo/ChannelMixers
@@ -105,9 +105,8 @@ unix {
   uisettings.path = $${PREFIX}/share/photivo/UISettings
   uisettings.files = ./UISettings/*
   images.path = $${PREFIX}/share/photivo/
-  images.files = ./photivo.png
+  images.files = ./qrc/photivo.png
   images.files += ./photivoLogo.png
-  images.files += ./photivoPreview.jpg
   INSTALLS += binaries
   INSTALLS += shortcut
   INSTALLS += shortcut2

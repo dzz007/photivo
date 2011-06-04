@@ -37,7 +37,7 @@
 #include <iomanip>
 
 #include <iostream>
-#include <QMessageBox>
+#include "ptMessageBox.h"
 using namespace std;
 
 extern ptTheme* Theme;
@@ -608,7 +608,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   m_SearchInputTimer->setSingleShot(1);
   connect(m_SearchInputTimer, SIGNAL(timeout()), this, SLOT(Search()));
 
-
   // Set us in the beginning of the tabbook and show mainwindow.
   // But we do not want to generate events for this during setup
   MainTabBook->blockSignals(1);
@@ -647,6 +646,10 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateLfunVignetteUI();
   UpdateLiquidRescaleUI();
   InitVisibleTools();
+  if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_Favourite)
+    ShowFavouriteTools();
+  if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_AllTools)
+    ShowAllTools();
 }
 
 void CB_Event0();
@@ -1595,7 +1598,7 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
             #ifdef Q_OS_WIN32
               DropName = DropName.replace(QString("/"), QString("\\"));
             #endif
-            QMessageBox msgBox;
+            ptMessageBox msgBox;
             msgBox.setIcon(QMessageBox::Question);
             msgBox.setWindowTitle(tr("Settings file dropped!"));
             msgBox.setText(tr("Do you really want to open\n")+DropName);
@@ -1773,8 +1776,13 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
           Tools = Tools + Tab + ": " + Settings->ToolGetName(GroupBox->objectName()) + "\n";
         }
       }
-      if (Tools == "") Tools = "No tools hidden!";
-      QMessageBox::information(this,"Hidden tools",Tools);
+      if (Tools == "") Tools = tr("No tools hidden!");
+      ptMessageBox message(this);
+      message.setWindowTitle(tr("Hidden tools"));
+      message.setText(Tools);
+      message.setIcon(QMessageBox::Information);
+      message.setStyleSheet("QWidget {color: " + palette().color(QPalette::Text).name() + ";}");
+      message.exec();
       /*findChild<QWidget *>(QString("TabGenCorrections"))->
         setVisible(1-findChild<QWidget *>(QString("TabGenCorrections"))->isVisible()); */
     } else if (Event->key()==Qt::Key_U && Event->modifiers()==Qt::NoModifier) {
@@ -1793,7 +1801,12 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         }
       }
       if (Tools == "") Tools = tr("No tools blocked!");
-      QMessageBox::information(this,tr("Blocked tools"),Tools);
+      ptMessageBox message(this);
+      message.setWindowTitle(tr("Blocked tools"));
+      message.setText(Tools);
+      message.setIcon(QMessageBox::Information);
+      message.setStyleSheet("QWidget {color: " + palette().color(QPalette::Text).name() + ";}");
+      message.exec();
     }
   }
 }
@@ -1875,7 +1888,7 @@ void ptMainWindow::ShowActiveTools() {
     }
   }
   if (m_MovedTools->size() == 0) {
-    QMessageBox::information(this,tr("Active tools"),tr("No tools active!"));
+    ptMessageBox::information(this,tr("Active tools"),tr("No tools active!"));
     return;
   }
 
@@ -1895,7 +1908,7 @@ void ptMainWindow::ShowAllTools() {
     m_MovedTools->append(m_GroupBox->value(m_GroupBoxesOrdered->at(i)));
   }
   if (m_MovedTools->size() == 0) {
-    QMessageBox::information(this,tr("All tools hidden"),tr("No visible tools!"));
+    ptMessageBox::information(this,tr("All tools hidden"),tr("No visible tools!"));
     return;
   }
   ShowMovedTools(tr("All visible tools:"));
@@ -1917,7 +1930,7 @@ void ptMainWindow::ShowFavouriteTools() {
     }
   }
   if (m_MovedTools->size() == 0) {
-    QMessageBox::information(this,tr("Favourite tools"),tr("No favourite tools!"));
+    ptMessageBox::information(this,tr("Favourite tools"),tr("No favourite tools!"));
     return;
   }
 
@@ -2104,6 +2117,10 @@ void ptMainWindow::UpdateSettings() {
   PathInfo.setFile(Settings->GetString("PreviewColorProfile"));
   ShortFileName = PathInfo.baseName();
   PreviewColorProfileText->setText(ShortFileName);
+
+  bool Temp = Settings->GetInt("CMQuality") != ptCMQuality_FastSRGB;
+  Settings->SetEnabled("PreviewColorProfileIntent", Temp);
+  PreviewProfileWidget->setEnabled(Temp);
   // End Preview Color Profile.
 
   // Preview Color Profile.
@@ -2833,11 +2850,11 @@ void ptMainWindow::LoadUISettings(const QString &fileName) {
   UISettings.sync();
 
   if (UISettings.status() != QSettings::NoError) {
-    QMessageBox::critical(0, "Error", "Error reading UI file\n" + fileName);
+    ptMessageBox::critical(0, "Error", "Error reading UI file\n" + fileName);
     return;
   }
   if (UISettings.value("Magic") != "photivoUIFile") {
-    QMessageBox::warning(0, "Error", fileName + "\nis not an UI file.");
+    ptMessageBox::warning(0, "Error", fileName + "\nis not an UI file.");
     return;
   }
 
@@ -2896,7 +2913,7 @@ void ptMainWindow::SaveUISettings(const QString &fileName) const {
 
   UISettings.sync();
   if (UISettings.status() != QSettings::NoError)
-    QMessageBox::critical(0, "Error", "Error writing UI file\n" + fileName);
+    ptMessageBox::critical(0, "Error", "Error writing UI file\n" + fileName);
 }
 
 

@@ -74,6 +74,7 @@ const ptGuiOptionsItem ptGuiOptions::WorkColor[] = {
 const ptGuiOptionsItem ptGuiOptions::CMQuality[] = {
   {ptCMQuality_NoOptimize,       QObject::tr("No optimization")     },
   {ptCMQuality_HighResPreCalc,   QObject::tr("High res pre calc")   },
+  {ptCMQuality_FastSRGB,         QObject::tr("Fast sRGB preview")   },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::PreviewColorProfileIntent[] = {
@@ -104,6 +105,12 @@ const ptGuiOptionsItem ptGuiOptions::StyleHighLight[] = {
   {ptStyleHighLight_Blue,       QObject::tr("Blue") },
   {ptStyleHighLight_Green,      QObject::tr("Green") },
   {ptStyleHighLight_Orange,     QObject::tr("Orange") },
+  {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::StartupUIMode[] = {
+  {ptStartupUIMode_Tab,         QObject::tr("Tab mode") },
+  {ptStartupUIMode_Favourite,   QObject::tr("Favourite tools") },
+  {ptStartupUIMode_AllTools,    QObject::tr("All tools") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::PipeSize[] = {

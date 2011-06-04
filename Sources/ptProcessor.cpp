@@ -34,6 +34,7 @@
 #include "ptCimg.h"
 #include "ptFastBilateral.h"
 #include "ptWiener.h"
+#include "ptMessageBox.h"
 
 #include "ptProcessor.h"
 
@@ -214,7 +215,7 @@ void ptProcessor::Run(short Phase,
           Success);
 
         if (Success == 0) {
-          QMessageBox::critical(0,"File not found","File not found!");
+          ptMessageBox::critical(0,"File not found","File not found!");
           return;
         }
 
@@ -304,7 +305,7 @@ void ptProcessor::Run(short Phase,
                              CameraProfileName.toAscii().data());
                 TRACEMAIN("Found profile at %d ms.",m_RunTimer.elapsed());
               } else {
-                QMessageBox::information(0,
+                ptMessageBox::information(0,
                           tr("Profile not found"),
                           tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
                 TRACEMAIN("Not found profile at %d ms.",m_RunTimer.elapsed());
@@ -316,7 +317,7 @@ void ptProcessor::Run(short Phase,
                 if (!(PathInfo.exists() &&
                       PathInfo.isFile() &&
                       PathInfo.isReadable())) {
-                  QMessageBox::information(0,
+                  ptMessageBox::information(0,
                             tr("Profile not found"),
                             tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
                   TRACEMAIN("Not found profile at %d ms.",m_RunTimer.elapsed());
@@ -2224,7 +2225,7 @@ void ptProcessor::Run(short Phase,
             Success);
 
           if (Success == 0) {
-            QMessageBox::critical(0,"File not found","Please open a valid image for texture overlay.");
+            ptMessageBox::critical(0,"File not found","Please open a valid image for texture overlay.");
             Settings->SetValue("TextureOverlayMode",0);
           }
         }
@@ -2645,7 +2646,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
       modflags |= LF_MODIFY_GEOMETRY;
     }
 
-    double LfunScaleFactor = 0.0;   // 0.0 is lensfun’s magic value for auto scaling
+    double LfunScaleFactor = 0.0;   // 0.0 is lensfun's magic value for auto scaling
     if (Settings->GetInt("LfunAutoScale") == 0) {
       LfunScaleFactor = Settings->GetDouble("LfunScale");
     }
@@ -2698,7 +2699,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
     lfLensType TargetGeo = (lfLensType)LF_RECTILINEAR;
     int modflags = LF_MODIFY_GEOMETRY;
 
-    double DefishScaleFactor = 0.0;   // 0.0 is lensfun’s magic value for auto scaling
+    double DefishScaleFactor = 0.0;   // 0.0 is lensfun's magic value for auto scaling
     if (Settings->GetInt("DefishAutoScale") == 0) {
       DefishScaleFactor = Settings->GetDouble("DefishScale");
     }
@@ -2781,7 +2782,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
           > m_Image_AfterGeometry->m_Width ||
         ((Settings->GetInt("CropY") >> TmpScaled) + (Settings->GetInt("CropH") >> TmpScaled))
           > m_Image_AfterGeometry->m_Height) {
-      QMessageBox::information(0,
+      ptMessageBox::information(0,
                                tr("Crop outside the image"),
                                tr("Crop rectangle too large.\nNo crop, try again."));
       Settings->SetValue("CropX",0);
@@ -2893,8 +2894,9 @@ void ptProcessor::ReadExifBuffer() {
 
   try {
     Exiv2::Image::AutoPtr Image;
-    if (Exiv2::ImageFactory::getType(
-      (Settings->GetStringList("InputFileNameList"))[0].toAscii().data()) != Exiv2::ImageType::none)
+    if (Settings->GetStringList("InputFileNameList").size() != 0 &&
+        Exiv2::ImageFactory::getType(
+          (Settings->GetStringList("InputFileNameList"))[0].toAscii().data()) != Exiv2::ImageType::none)
       Image =
         Exiv2::ImageFactory::open((Settings->GetStringList("InputFileNameList"))[0].toAscii().data());
     else return;

@@ -171,6 +171,7 @@ HEADERS += ../Sources/fastbilateral/fast_lbf.h
 HEADERS += ../Sources/fastbilateral/math_tools.h
 HEADERS += ../Sources/fastbilateral/mixed_vector.h
 HEADERS += ../Sources/greyc/CImg.h
+HEADERS += ../Sources/ptMessageBox.h
 HEADERS += ../Sources/ImageSpot/ptImageSpot.h
 HEADERS += ../Sources/ImageSpot/ptImageSpotList.h
 HEADERS += ../Sources/ImageSpot/ptRepairSpot.h
@@ -272,8 +273,11 @@ FORMS += ../Sources/ptMainWindow.ui
 
 RESOURCES += ../photivo.qrc
 
+SOURCES += ../Sources/ptMessageBox.cpp
 RESOURCES = ../qrc/photivo.qrc
 TRANSLATIONS += ../Translations/photivo_Deutsch.ts
 TRANSLATIONS += ../Translations/photivo_Italiano.ts
+TRANSLATIONS += ../Translations/photivo_Russian.ts
+
 
 ###############################################################################

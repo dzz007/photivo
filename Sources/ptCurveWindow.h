@@ -68,6 +68,7 @@ void changeEvent(QEvent* Event);
 void resizeEvent(QResizeEvent*);
 void paintEvent(QPaintEvent*);
 void mousePressEvent(QMouseEvent *Event);
+void wheelEvent(QWheelEvent *Event);
 void mouseMoveEvent(QMouseEvent *Event);
 void mouseReleaseEvent(QMouseEvent *Event);
 QSize sizeHint() const { return QSize(100,100); };
@@ -76,6 +77,7 @@ int  heightForWidth(int w) const { return w;};
 
 private slots:
 void ResizeTimerExpired();
+void WheelTimerExpired();
 void SetSatMode();
 void SetType();
 void SetInterpolationType();
@@ -85,12 +87,16 @@ void UpdateCurve();
 void SetCurveState(const short state);
 short GetCurveState();
 
+QTimer*             m_WheelTimer;
 short               m_XSpot[ptMaxAnchors];
 short               m_YSpot[ptMaxAnchors];
 QPixmap*            m_QPixmap;
 int32_t             m_OverlayAnchorX;
 int32_t             m_OverlayAnchorY;
 short               m_MovingAnchor;
+short               m_ActiveAnchor;  // gets the wheel event, -1 neutral
+uint16_t            m_MousePosX;
+uint16_t            m_MousePosY;
 short               m_BlockEvents;
 short               m_RecalcNeeded;
 short               m_CyclicCurve;

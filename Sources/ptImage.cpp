@@ -25,7 +25,7 @@
 // which seems a bug in the jpeglib header ?
 #include <cstdlib>
 #include <cstdio>
-#include <QMessageBox>
+#include "ptMessageBox.h"
 #include <QString>
 #include <QTime>
 
@@ -136,7 +136,7 @@ ptImage* ptImage::lcmsRGBToRGB(const short To,
 
   // assert ((m_ColorSpace>0) && (m_ColorSpace<5));
   if (!((m_ColorSpace>0) && (m_ColorSpace<5))) {
-    QMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
+    ptMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
     return this;
   }
   assert ((To>0) && (To<5));
@@ -243,7 +243,7 @@ ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
 
   // assert ((m_ColorSpace>0) && (m_ColorSpace<5));
   if (!((m_ColorSpace>0) && (m_ColorSpace<5))) {
-    QMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
+    ptMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
     return this;
   }
   assert (3 == m_Colors);
@@ -290,7 +290,7 @@ ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
                          TYPE_RGB_16,
                          Intent,
                          cmsFLAGS_HIGHRESPRECALC | cmsFLAGS_BLACKPOINTCOMPENSATION);
-  } else {
+  } else { // fast sRGB preview also uses the not optimized profile for output
     Transform =
       cmsCreateTransform(InProfile,
                          TYPE_RGB_16,
@@ -320,7 +320,7 @@ ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
 ptImage* ptImage::lcmsRGBToPreviewRGB(){
   // assert ((m_ColorSpace>0) && (m_ColorSpace<5));
   if (!((m_ColorSpace>0) && (m_ColorSpace<5))) {
-    QMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
+    ptMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
     return this;
   }
   assert (3 == m_Colors);
@@ -721,7 +721,7 @@ ptImage* ptImage::lcmsRGBToLab(const int Intent) {
 ptImage* ptImage::LabToRGB(const short To) {
 
   if (!(m_ColorSpace == ptSpace_Lab)) {
-    QMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
+    ptMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
     return this;
   }
 
