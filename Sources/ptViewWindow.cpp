@@ -50,8 +50,13 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   // constants
   MinZoom(0.05), MaxZoom(4.0),
   // member variables
+  m_DrawLine(NULL),
+  m_Interaction(iaNone),
   m_LeftMousePressed(0),
+  m_ZoomIsSaved(0),
   m_ZoomFactor(1.0),
+  m_ZoomFactorSav(0.0),
+  m_ZoomModeSav(ptZoomMode_Fit),
   // always keep this at the end of the initializer list
   MainWindow(mainWin)
 {
@@ -62,7 +67,8 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
 
   m_DragDelta = new QLine();
   m_StatusOverlay = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
-  m_ZoomSizeOverlay = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255), 1000, Qt::AlignRight, 20);
+  m_ZoomSizeOverlay = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
+                                          1000, Qt::AlignRight, 20);
 
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -95,17 +101,20 @@ ptViewWindow::~ptViewWindow() {
   delete m_DragDelta;
   delete m_StatusOverlay;
   delete m_ZoomSizeOverlay;
+  if (m_DrawLine != NULL) delete m_DrawLine;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// UpdateView()
+// UpdateImage()
+//
+// Convert a 16bit ptImage to an 8bit QPixmap. Mind R<->B. Also update the
+// graphics scene and the viewport.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptViewWindow::UpdateImage(const ptImage* relatedImage /*= NULL*/) {
-  // Convert the 16bit ptImage to a 8bit QPixmap. Mind R<->B and 16->8
+void ptViewWindow::UpdateImage(const ptImage* relatedImage) {
   if (relatedImage) {
     QImage* Img8bit = new QImage(relatedImage->m_Width, relatedImage->m_Height, QImage::Format_RGB32);
     uint32_t Size = relatedImage->m_Height * relatedImage->m_Width;
@@ -166,6 +175,32 @@ int ptViewWindow::ZoomToFit() {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Save and restore current zoom
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::RestoreZoom() {
+  if (m_ZoomIsSaved) {
+    if (m_ZoomModeSav == ptZoomMode_Fit) {
+      ZoomToFit();
+    } else {
+      ZoomTo(m_ZoomFactorSav);
+    }
+
+    m_ZoomIsSaved = 0;
+  }
+}
+
+
+void ptViewWindow::SaveZoom() {
+  m_ZoomFactorSav = m_ZoomFactor;
+  m_ZoomModeSav = Settings->GetValue("ZoomMode").toInt();
+  m_ZoomIsSaved = 1;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // paintEvent()
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -190,6 +225,11 @@ void ptViewWindow::mousePressEvent(QMouseEvent* event) {
     m_LeftMousePressed = 1;
     m_DragDelta->setPoints(event->pos(), event->pos());
   }
+
+  // Broadcast event to possible interaction handlers
+  if (m_Interaction != iaNone) {
+    emit mouseChanged(event);
+  }
 }
 
 
@@ -203,6 +243,11 @@ void ptViewWindow::mouseReleaseEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
     m_LeftMousePressed = 0;
   }
+
+  // Broadcast event to possible interaction handlers
+  if (m_Interaction != iaNone) {
+    emit mouseChanged(event);
+  }
 }
 
 
@@ -213,11 +258,21 @@ void ptViewWindow::mouseReleaseEvent(QMouseEvent* event) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
-  if (m_LeftMousePressed) {
+  // drag image with left mouse button to scroll
+  if (m_LeftMousePressed && (m_Interaction == iaNone || m_Interaction == iaCrop)) {
     m_DragDelta->setP2(event->pos());
-    horizontalScrollBar()->setValue(horizontalScrollBar()->value() - m_DragDelta->x2() + m_DragDelta->x1());
-    verticalScrollBar()->setValue(verticalScrollBar()->value() - m_DragDelta->y2() + m_DragDelta->y1());
+    horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
+                                    m_DragDelta->x2() +
+                                    m_DragDelta->x1());
+    verticalScrollBar()->setValue(verticalScrollBar()->value() -
+                                  m_DragDelta->y2() +
+                                  m_DragDelta->y1());
     m_DragDelta->setP1(event->pos());
+  }
+
+  // Broadcast event to possible interaction handlers
+  if (m_Interaction != iaNone) {
+    emit mouseChanged(event);
   }
 }
 
@@ -260,7 +315,7 @@ void ptViewWindow::wheelEvent(QWheelEvent* event) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptViewWindow::showStatus(short mode) {
+void ptViewWindow::ShowStatus(short mode) {
   switch (mode) {
     case ptStatus_Done:
       m_StatusOverlay->setColors(QColor(0,130,0), QColor(120,170,120));   // green
@@ -286,11 +341,60 @@ void ptViewWindow::showStatus(short mode) {
   }
 }
 
-void ptViewWindow::showStatus(const QString text) {
+void ptViewWindow::ShowStatus(const QString text) {
   m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255));    // blue
   m_StatusOverlay->setDuration(1500);
   m_StatusOverlay->exec(text);
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// StartLine()
+// Start draw line interaction to determine rotation angle.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::StartLine() {
+  if (m_Interaction == iaNone) {
+    m_DrawLine = new ptDrawLineInteraction(this, m_ImageScene);
+    connect(m_DrawLine, SIGNAL(finished()), this, SLOT(finishInteraction()));
+    connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_DrawLine, SLOT(mouseAction(QMouseEvent*)));
+    m_Interaction = iaDrawLine;
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// finishInteraction()
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void RotateAngleDetermined(double RotateAngle);
+void ptViewWindow::finishInteraction() {
+  switch (m_Interaction) {
+    case iaDrawLine: {
+      double Angle = m_DrawLine->angle();
+      delete m_DrawLine;
+      m_DrawLine = NULL;
+      m_Interaction = iaNone;
+      RotateAngleDetermined(Angle);
+      break;
+    }
+
+    default:
+      assert(!"Unknown m_Interaction");
+      break;
+  }
+}
+
+
+
+
+
+
 
 
 

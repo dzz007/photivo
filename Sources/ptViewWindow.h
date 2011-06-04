@@ -31,15 +31,30 @@
 #include "ptImage.h"
 #include "ptMainWindow.h"
 #include "ptReportOverlay.h"
+#include "ptDrawLineInteraction.h"
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Custom types used in ViewWindow
+//
+///////////////////////////////////////////////////////////////////////////
+
+enum ptInteraction {
+  iaNone = 0,
+  iaCrop = 1,
+  iaSelectRect = 2, // simple rectangle selection: e.g. for spot WB
+  iaDrawLine = 3    // draw a single straight line: e.g. for
+};
+
+
 
 ///////////////////////////////////////////////////////////////////////////
 //
 // class ptViewWindow
 //
 ///////////////////////////////////////////////////////////////////////////
-
 class ptViewWindow : public QGraphicsView {
-
 Q_OBJECT
 
 ///////////////////////////////////////////////////////////////////////////
@@ -51,9 +66,13 @@ public:
   ptViewWindow(QWidget* Parent, ptMainWindow* mainWin);
   ~ptViewWindow();
 
-  void showStatus(short mode);
-  void showStatus(const QString text);
-  void UpdateImage(const ptImage* relatedImage = NULL);
+  inline ptInteraction interaction() const { return m_Interaction; }
+  void RestoreZoom();
+  void SaveZoom();
+  void ShowStatus(short mode);
+  void ShowStatus(const QString text);
+  void StartLine();
+  void UpdateImage(const ptImage* relatedImage);
   inline int zoomPercent() { return qRound(m_ZoomFactor * 100); }
   inline float zoomFactor() const { return m_ZoomFactor; }
   void ZoomTo(float factor);  // 1.0 means 100%
@@ -84,8 +103,13 @@ private:
   const float MaxZoom;
   QList<float> ZoomFactors;
 
+  ptDrawLineInteraction* m_DrawLine;
+  ptInteraction m_Interaction;
   short m_LeftMousePressed;
+  short m_ZoomIsSaved;
   float m_ZoomFactor;
+  float m_ZoomFactorSav;
+  short m_ZoomModeSav;
 
   QGraphicsPixmapItem* m_8bitImageItem;
   QLine* m_DragDelta;
@@ -121,10 +145,12 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// PRIVATE SLOTS
+// PRIVATE slots
 //
 ///////////////////////////////////////////////////////////////////////////
 private slots:
+  void finishInteraction();
+
   // context menu stuff
   void Menu_Clip_Indicate();
   void Menu_Clip_Over();
@@ -139,6 +165,16 @@ private slots:
   void Menu_ZoomFit();
   void Menu_Zoom100();
   void Menu_Mode();
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// signals
+//
+///////////////////////////////////////////////////////////////////////////
+signals:
+  void mouseChanged(QMouseEvent* event);
+
 };
 
 #endif
