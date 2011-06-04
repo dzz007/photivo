@@ -719,6 +719,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TranslationMode"                      ,1    ,0                                     ,0},  // 0 no transl (English), 1 load qm file
     {"UiLanguage"                           ,1    ,""                                    ,0},  // Language name to load from qm file, e.g. "Deutsch"
     {"CustomCSSFile"                        ,1    ,""                                    ,0},
+    {"FullscreenActive"                     ,9    ,0                                     ,0},
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.
