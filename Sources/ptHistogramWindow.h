@@ -91,8 +91,10 @@ QAction*        m_AtnRGB;
 QAction*        m_AtnR;
 QAction*        m_AtnG;
 QAction*        m_AtnB;
+uint16_t*       m_LookUp;
 
 void CalculateHistogram();
+void FillLookUp();
 };
 
 #endif
