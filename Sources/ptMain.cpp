@@ -1409,7 +1409,7 @@ void HistogramGetCrop() {
   if (Settings->GetInt("HistogramCrop")) {
       // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
-      ViewWindow->showStatus(QObject::tr("Selection"));
+      ViewWindow->ShowStatus(QObject::tr("Selection"));
 //      ViewWindow->StartSelection();    // TODOSR: re-enable
 //      while (ViewWindow->OngoingAction() == vaSelectRect) {
 //          QApplication::processEvents();
@@ -1453,7 +1453,7 @@ void HistogramGetCrop() {
 
 void ViewWindowShowStatus(short State) {
   if (ViewWindow) {
-    ViewWindow->showStatus(State);
+    ViewWindow->ShowStatus(State);
   }
 }
 
@@ -1675,7 +1675,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     return;
   }
 
-  ViewWindow->showStatus(ptStatus_Updating);
+  ViewWindow->ShowStatus(ptStatus_Updating);
   ReportProgress(QObject::tr("Updating preview image"));
 
   if (!HistogramImage) HistogramImage = new (ptImage);
@@ -1783,7 +1783,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     HistogramWindow->UpdateView(HistogramImage);
     // In case of histogram update only, we're done.
     if (OnlyHistogram) {
-      ViewWindow->showStatus(ptStatus_Done);
+      ViewWindow->ShowStatus(ptStatus_Done);
       return;
     }
   }
@@ -1894,7 +1894,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     }
     HistogramWindow->UpdateView(HistogramImage);
     if (OnlyHistogram) {
-      ViewWindow->showStatus(ptStatus_Done);
+      ViewWindow->ShowStatus(ptStatus_Done);
       return;
     }
   }
@@ -1986,7 +1986,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     ViewWindow->UpdateImage(PreviewImage);
   }
 
-  ViewWindow->showStatus(ptStatus_Done);
+  ViewWindow->ShowStatus(ptStatus_Done);
   ReportProgress(QObject::tr("Ready"));
 
   if (!OnlyHistogram)
@@ -3948,7 +3948,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
 
       // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
-      ViewWindow->showStatus(QObject::tr("Detail view"));
+      ViewWindow->ShowStatus(QObject::tr("Detail view"));
 //      ViewWindow->StartSelection();
 //      while (ViewWindow->OngoingAction() == vaSelectRect) {
 //        QApplication::processEvents();
@@ -4428,7 +4428,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
 
       // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
-      ViewWindow->showStatus(QObject::tr("Spot WB"));
+      ViewWindow->ShowStatus(QObject::tr("Spot WB"));
 //      ViewWindow->StartSelection();
 //      while (ViewWindow->OngoingAction() == vaSelectRect) {
 //        QApplication::processEvents();
@@ -4885,33 +4885,30 @@ void CB_RotateAngleButton() {
   // Rerun the part of geometry stage before rotate to get correct preview
   // image in TheProcessor->m_Image_AfterGeometry
   TheProcessor->RunGeometry(ptProcessorStopBefore_Rotate);
-  short OldZoom = Settings->GetInt("Zoom");
-  short OldZoomMode = Settings->GetInt("ZoomMode");
-//  ViewWindow->Zoom(    // TODOSR: re-enable
-//                ViewWindow->ZoomFitFactor(TheProcessor->m_Image_AfterGeometry->m_Width,
-//                                          TheProcessor->m_Image_AfterGeometry->m_Height),
-//                0);
+  ViewWindow->SaveZoom();
+  ViewWindow->ZoomToFit();
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
-  ViewWindow->showStatus(QObject::tr("Get angle"));
+  ViewWindow->ShowStatus(QObject::tr("Get angle"));
   ReportProgress(QObject::tr("Get angle"));
 
   BlockTools(1);
-//  ViewWindow->StartLine();    // TODOSR: re-enable
-//  while (ViewWindow->OngoingAction() == vaDrawLine) {
-//    QApplication::processEvents();
-//  }
+  ViewWindow->StartLine();
+}
 
+void RotateAngleDetermined(double RotateAngle) {
   // Selection is done at this point. Disallow it further and activate main.
   BlockTools(0);
-  double Angle;// = ViewWindow->GetRotationAngle();    // TODOSR: re-enable
-  if (Angle < -45.0) Angle += 180.0;
-  if (fabs(fabs(Angle)-90.0)<45.0) Angle -= 90.0;
-  Settings->SetValue("Rotate",Angle);
+  if (RotateAngle < -45.0) {
+    RotateAngle += 180.0;
+  }
+  if (fabs(fabs(RotateAngle) - 90.0) < 45.0) {
+    RotateAngle -= 90.0;
+  }
+  Settings->SetValue("Rotate",RotateAngle);
 
-  //ViewWindow->Zoom(OldZoom,0);    // TODOSR: re-enable
-  Settings->SetValue("ZoomMode",OldZoomMode);
+  ViewWindow->RestoreZoom();
   Update(ptProcessorPhase_Geometry);
 }
 
@@ -5055,7 +5052,7 @@ void CB_MakeCropButton() {
     return;
   }
 
-  ViewWindow->showStatus(QObject::tr("Prepare"));
+  ViewWindow->ShowStatus(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for cropping"));
 
   // Rerun the part of geometry stage before crop to get correct preview
@@ -5070,7 +5067,7 @@ void CB_MakeCropButton() {
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
-  ViewWindow->showStatus(QObject::tr("Crop"));
+  ViewWindow->ShowStatus(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
   BlockTools(2);
 //  ViewWindow->StartCrop(Settings->GetInt("CropX")>>Settings->GetInt("Scaled"),    // TODOSR: re-enable
