@@ -1240,7 +1240,7 @@ void Update(short Phase,
       ImageSaved = 0;
       MainWindow->UpdateSettings();
       if(Settings->GetInt("HaveImage")==1) {
-        if (Phase < ptProcessorPhase_Output)
+        if (NextPhase < ptProcessorPhase_Output)
           TheProcessor->Run(NextPhase, NextSubPhase, WithIdentify, ProcessorMode);
         UpdatePreviewImage();
       }
