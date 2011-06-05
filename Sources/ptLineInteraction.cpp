@@ -25,7 +25,8 @@
 #include <math.h>
 
 #include "ptConstants.h"
-#include "ptDrawLineInteraction.h"
+#include "ptLineInteraction.h"
+#include "ptDefines.h"
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -34,15 +35,15 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-ptDrawLineInteraction::ptDrawLineInteraction(QGraphicsView* View, QGraphicsScene* Scene)
-: ptImageInteraction(View, Scene),
+ptLineInteraction::ptLineInteraction(QGraphicsView* View)
+: ptImageInteraction(View),
   m_NowDragging(0)
 {
   m_Line = new QLineF();
   m_LineItem = NULL;
 }
 
-ptDrawLineInteraction::~ptDrawLineInteraction() {
+ptLineInteraction::~ptLineInteraction() {
   delete m_Line;
 }
 
@@ -54,7 +55,7 @@ ptDrawLineInteraction::~ptDrawLineInteraction() {
 //
 ///////////////////////////////////////////////////////////////////////////
 
-double ptDrawLineInteraction::angle() {
+double ptLineInteraction::angle() {
   if (m_Line->x1() == m_Line->x2()) {
     return 90.0;
   }
@@ -69,7 +70,7 @@ double ptDrawLineInteraction::angle() {
 //
 ///////////////////////////////////////////////////////////////////////////
 
-void ptDrawLineInteraction::mouseAction(QMouseEvent* event) {
+void ptLineInteraction::mouseAction(QMouseEvent* event) {
   switch (event->type()) {
     // left button press
     case QEvent::MouseButtonPress: {
@@ -81,8 +82,8 @@ void ptDrawLineInteraction::mouseAction(QMouseEvent* event) {
         m_Line->setPoints(pos, pos);
 
         QPen pen(QColor(255, 0, 0));
-        m_LineItem = m_Scene->addLine(*m_Line, pen);
-        m_Scene->update();
+        m_LineItem = m_View->scene()->addLine(*m_Line, pen);
+        m_View->scene()->update();
 
         m_NowDragging = 1;
       }
@@ -93,8 +94,8 @@ void ptDrawLineInteraction::mouseAction(QMouseEvent* event) {
     // left button release
     case QEvent::MouseButtonRelease: {
       if (event->button() == Qt::LeftButton) {
-        m_Scene->removeItem(m_LineItem);
-        delete m_LineItem;
+        m_View->scene()->removeItem(m_LineItem);
+        DelAndNull(m_LineItem);
         m_NowDragging = 0;
         emit finished();
       }
@@ -107,7 +108,7 @@ void ptDrawLineInteraction::mouseAction(QMouseEvent* event) {
       if (m_NowDragging) {
         m_Line->setP2(m_View->mapToScene(event->pos()));
         m_LineItem->setLine(*m_Line);
-        m_Scene->update();
+        m_View->scene()->update();
       }
       break;
     }

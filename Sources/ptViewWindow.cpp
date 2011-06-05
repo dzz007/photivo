@@ -34,6 +34,7 @@
 #include "ptTheme.h"
 #include "ptViewWindow.h"
 #include "ptConstants.h"
+#include "ptDefines.h"
 
 extern ptTheme* Theme;
 extern ptSettings* Settings;
@@ -51,6 +52,7 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   MinZoom(0.05), MaxZoom(4.0),
   // member variables
   m_DrawLine(NULL),
+  m_SelectRect(NULL),
   m_Interaction(iaNone),
   m_LeftMousePressed(0),
   m_ZoomIsSaved(0),
@@ -101,7 +103,8 @@ ptViewWindow::~ptViewWindow() {
   delete m_DragDelta;
   delete m_StatusOverlay;
   delete m_ZoomSizeOverlay;
-  if (m_DrawLine != NULL) delete m_DrawLine;
+  delete m_DrawLine;
+  delete m_SelectRect;
 }
 
 
@@ -131,7 +134,7 @@ void ptViewWindow::UpdateImage(const ptImage* relatedImage) {
     }
 
     m_8bitImageItem->setPixmap(QPixmap::fromImage(*Img8bit, Qt::ColorOnly));
-    delete Img8bit;
+    DelAndNull(Img8bit);
     m_ImageScene->setSceneRect(0, 0,
                                m_8bitImageItem->pixmap().width(),
                                m_8bitImageItem->pixmap().height());
@@ -358,10 +361,29 @@ void ptViewWindow::ShowStatus(const QString text) {
 
 void ptViewWindow::StartLine() {
   if (m_Interaction == iaNone) {
-    m_DrawLine = new ptDrawLineInteraction(this, m_ImageScene);
+    m_DrawLine = new ptLineInteraction(this);
     connect(m_DrawLine, SIGNAL(finished()), this, SLOT(finishInteraction()));
     connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_DrawLine, SLOT(mouseAction(QMouseEvent*)));
     m_Interaction = iaDrawLine;
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// StartSelectRect()
+// Start simple selection interaction for spot WB and histogram "crop".
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(QRectF)) {
+  if (m_Interaction == iaNone) {
+    assert(CB_SimpleRect != NULL);
+    m_CB_SimpleRect = CB_SimpleRect;
+    m_SelectRect = new ptSimpleRectInteraction(this);
+    connect(m_SelectRect, SIGNAL(finished()), this, SLOT(finishInteraction()));
+    connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_SelectRect, SLOT(mouseAction(QMouseEvent*)));
+    m_Interaction = iaSelectRect;
   }
 }
 
@@ -373,14 +395,22 @@ void ptViewWindow::StartLine() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void RotateAngleDetermined(double RotateAngle);
+
 void ptViewWindow::finishInteraction() {
   switch (m_Interaction) {
     case iaDrawLine: {
       double Angle = m_DrawLine->angle();
-      delete m_DrawLine;
-      m_DrawLine = NULL;
+      DelAndNull(m_DrawLine);
       m_Interaction = iaNone;
       RotateAngleDetermined(Angle);
+      break;
+    }
+
+    case iaSelectRect: {
+      QRectF sr = m_SelectRect->rect();
+      DelAndNull(m_SelectRect);
+      m_Interaction = iaNone;
+      m_CB_SimpleRect(sr);
       break;
     }
 
@@ -657,7 +687,6 @@ void ptViewWindow::Menu_Fullscreen() {
   CB_FullScreenButton((int)ac_Fullscreen->isChecked());
 }
 
-void CB_ZoomFitButton();
 void ptViewWindow::Menu_ZoomFit() {
   ZoomToFit();
 }
