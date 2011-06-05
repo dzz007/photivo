@@ -31,7 +31,8 @@
 #include "ptImage.h"
 #include "ptMainWindow.h"
 #include "ptReportOverlay.h"
-#include "ptDrawLineInteraction.h"
+#include "ptLineInteraction.h"
+#include "ptSimpleRectInteraction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -63,21 +64,34 @@ Q_OBJECT
 //
 ///////////////////////////////////////////////////////////////////////////
 public:
+  // TODO SR: Pointer to main window may not be necessary.
   ptViewWindow(QWidget* Parent, ptMainWindow* mainWin);
   ~ptViewWindow();
 
   inline ptInteraction interaction() const { return m_Interaction; }
-  void RestoreZoom();
-  void SaveZoom();
-  void ShowStatus(short mode);
-  void ShowStatus(const QString text);
-  void StartLine();
-  void UpdateImage(const ptImage* relatedImage);
   inline int zoomPercent() { return qRound(m_ZoomFactor * 100); }
   inline float zoomFactor() const { return m_ZoomFactor; }
+
+  // Save (and later restore) current zoom settings. Takes care of
+  // everything incl. ptSettings. RestoreZoom() also updates the
+  // viewport accordingly.
+  void SaveZoom();
+  void RestoreZoom();
+
+  // Show status overlay in the top left viewport corner.
+  // For mode use ptStatus_ constants.
+  void ShowStatus(short mode);
+  void ShowStatus(const QString text);    // shown for 1.5sec
+
+  void UpdateImage(const ptImage* relatedImage);
   void ZoomTo(float factor);  // 1.0 means 100%
   int ZoomToFit();  // fit complete image into viewport
 
+  // Start and stop interactions
+  // - StartSimpleRect: Pass the function that is called after the
+  //   selection finishes.
+  void StartLine();
+  void StartSimpleRect(void (*CB_SimpleRect)(QRectF));
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -103,9 +117,11 @@ private:
   const float MaxZoom;
   QList<float> ZoomFactors;
 
-  ptDrawLineInteraction* m_DrawLine;
+  ptLineInteraction* m_DrawLine;
+  ptSimpleRectInteraction* m_SelectRect;
   ptInteraction m_Interaction;
   short m_LeftMousePressed;
+  void (*m_CB_SimpleRect)(QRectF);
   short m_ZoomIsSaved;
   float m_ZoomFactor;
   float m_ZoomFactorSav;

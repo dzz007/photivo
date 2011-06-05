@@ -33,10 +33,10 @@
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// class ptDrawLineInteraction
+// class ptLineInteraction
 //
 ///////////////////////////////////////////////////////////////////////////
-class ptDrawLineInteraction : public ptImageInteraction {
+class ptLineInteraction : public ptImageInteraction {
 Q_OBJECT
 
 
@@ -46,8 +46,8 @@ Q_OBJECT
 //
 ///////////////////////////////////////////////////////////////////////////
 public:
-  explicit ptDrawLineInteraction(QGraphicsView* View, QGraphicsScene* Scene);
-  ~ptDrawLineInteraction();
+  explicit ptLineInteraction(QGraphicsView* View);
+  ~ptLineInteraction();
 
   double angle();
 

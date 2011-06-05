@@ -1417,6 +1417,7 @@ void BlockTools(const short state) {
 // Histogram
 //
 ////////////////////////////////////////////////////////////////////////////////
+void HistogramCropDone(QRectF SelectionRect);
 
 void HistogramGetCrop() {
   // Get the crop for the histogram
@@ -1424,40 +1425,43 @@ void HistogramGetCrop() {
       // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
       ViewWindow->ShowStatus(QObject::tr("Selection"));
-//      ViewWindow->StartSelection();    // TODOSR: re-enable
-//      while (ViewWindow->OngoingAction() == vaSelectRect) {
-//          QApplication::processEvents();
-//      }
-
-      // Selection is done at this point. Disallow it further and activate main.
-      BlockTools(0);
-      QRect SelectionRect;// = ViewWindow->GetRectangle();    // TODOSR: re-enable
-
-      short XScale = 1<<Settings->GetInt("PipeSize");
-      short YScale = 1<<Settings->GetInt("PipeSize");
-
-      Settings->SetValue("HistogramCropX", SelectionRect.left() * XScale);
-      Settings->SetValue("HistogramCropY", SelectionRect.top() * YScale);
-      Settings->SetValue("HistogramCropW", SelectionRect.width() * XScale);
-      Settings->SetValue("HistogramCropH", SelectionRect.height() * YScale);
-
-      // Check if the chosen area is large enough
-      if (Settings->GetInt("HistogramCropW") < 50 || Settings->GetInt("HistogramCropH") < 50) {
-        ptMessageBox::information(0,
-          QObject::tr("Selection too small"),
-          QObject::tr("Selection rectangle needs to be at least 50x50 pixels in size.\nNo crop, try again."));
-        Settings->SetValue("HistogramCropX",0);
-        Settings->SetValue("HistogramCropY",0);
-        Settings->SetValue("HistogramCropW",0);
-        Settings->SetValue("HistogramCropH",0);
-        Settings->SetValue("HistogramCrop",0);
-      }
+      ViewWindow->StartSimpleRect(HistogramCropDone);
   }
 
   ReportProgress(QObject::tr("Updating histogram"));
   Update(ptProcessorPhase_NULL);
   ReportProgress(QObject::tr("Ready"));
 }
+
+void HistogramCropDone(QRectF SelectionRect) {
+  // Selection is done at this point. Disallow it further and activate main.
+  BlockTools(0);
+
+  short XScale = 1<<Settings->GetInt("PipeSize");
+  short YScale = 1<<Settings->GetInt("PipeSize");
+
+  Settings->SetValue("HistogramCropX", (int)SelectionRect.left() * XScale);
+  Settings->SetValue("HistogramCropY", (int)SelectionRect.top() * YScale);
+  Settings->SetValue("HistogramCropW", (int)SelectionRect.width() * XScale);
+  Settings->SetValue("HistogramCropH", (int)SelectionRect.height() * YScale);
+
+  // Check if the chosen area is large enough
+  if (Settings->GetInt("HistogramCropW") < 50 || Settings->GetInt("HistogramCropH") < 50) {
+    ptMessageBox::information(0,
+      QObject::tr("Selection too small"),
+      QObject::tr("Selection rectangle needs to be at least 50x50 pixels in size.\nNo crop, try again."));
+    Settings->SetValue("HistogramCropX",0);
+    Settings->SetValue("HistogramCropY",0);
+    Settings->SetValue("HistogramCropW",0);
+    Settings->SetValue("HistogramCropH",0);
+    Settings->SetValue("HistogramCrop",0);
+  }
+
+  ReportProgress(QObject::tr("Updating histogram"));
+  Update(ptProcessorPhase_NULL);
+  ReportProgress(QObject::tr("Ready"));
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -4426,14 +4430,11 @@ void CB_DarkFrameChoice(const QVariant Choice) {
 // Partim White Balance.
 //
 ////////////////////////////////////////////////////////////////////////////////
+void SelectSpotWBDone(const QRectF SelectionRect);
 
 void CB_WhiteBalanceChoice(const QVariant Choice) {
   Settings->SetValue("WhiteBalance",Choice);
   if (Settings->GetInt("HaveImage") == 0 || Settings->GetInt("IsRAW") == 0) return;
-  uint16_t Width = 0;
-  uint16_t Height = 0;
-  short OldZoom = 0;
-  short OldZoomMode = 0;
 
   switch (Choice.toInt()) {
     case ptWhiteBalance_Camera :
@@ -4447,41 +4448,14 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       // First : make sure we have Image_AfterDcRaw in the view window.
       // Anything else might have undergone geometric transformations that are
       // impossible to calculate reverse to a spot in dcraw.
-      Width = TheProcessor->m_Image_AfterDcRaw->m_Width;
-      Height = TheProcessor->m_Image_AfterDcRaw->m_Height;
-      OldZoom = Settings->GetInt("Zoom");
-      OldZoomMode = Settings->GetInt("ZoomMode");
-      //ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);    // TODOSR: re-enable
-      Settings->SetValue("ZoomMode",ptZoomMode_Fit);
+      ViewWindow->SaveZoom();
+      ViewWindow->ZoomToFit();
       UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw);
 
       // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
       ViewWindow->ShowStatus(QObject::tr("Spot WB"));
-//      ViewWindow->StartSelection();
-//      while (ViewWindow->OngoingAction() == vaSelectRect) {
-//        QApplication::processEvents();
-//      }
-
-      // Selection is done at this point. Disallow it further and activate main.
-      BlockTools(0);
-      QRect SelectionRect;// = ViewWindow->GetRectangle();    // TODOSR: re-enable
-
-      Settings->SetValue("VisualSelectionX", SelectionRect.left());
-      Settings->SetValue("VisualSelectionY", SelectionRect.top());
-      Settings->SetValue("VisualSelectionWidth", SelectionRect.width());
-      Settings->SetValue("VisualSelectionHeight", SelectionRect.height());
-
-      TRACEKEYVALS("Selection X","%d",
-                   Settings->GetInt("VisualSelectionX"));
-      TRACEKEYVALS("Selection Y","%d",
-                   Settings->GetInt("VisualSelectionY"));
-      TRACEKEYVALS("Selection W","%d",
-                   Settings->GetInt("VisualSelectionWidth"));
-      TRACEKEYVALS("Selection H","%d",
-                   Settings->GetInt("VisualSelectionHeight"));
-      //ViewWindow->Zoom(OldZoom,0);    // TODOSR: re-enable
-      Settings->SetValue("ZoomMode",OldZoomMode);
+      ViewWindow->StartSimpleRect(SelectSpotWBDone);
       break;
     }
 
@@ -4497,6 +4471,28 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
                          ptWhiteBalances[Choice.toInt()].m_Multipliers[2]);
   }
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
+}
+
+void SelectSpotWBDone(const QRectF SelectionRect) {
+  // Selection is done at this point. Disallow it further and activate main.
+  BlockTools(0);
+
+  Settings->SetValue("VisualSelectionX", (int)SelectionRect.left());
+  Settings->SetValue("VisualSelectionY", (int)SelectionRect.top());
+  Settings->SetValue("VisualSelectionWidth", (int)SelectionRect.width());
+  Settings->SetValue("VisualSelectionHeight", (int)SelectionRect.height());
+
+  TRACEKEYVALS("Selection X","%d",
+               Settings->GetInt("VisualSelectionX"));
+  TRACEKEYVALS("Selection Y","%d",
+               Settings->GetInt("VisualSelectionY"));
+  TRACEKEYVALS("Selection W","%d",
+               Settings->GetInt("VisualSelectionWidth"));
+  TRACEKEYVALS("Selection H","%d",
+               Settings->GetInt("VisualSelectionHeight"));
+
+  Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
+  ViewWindow->RestoreZoom();
 }
 
 void CB_SpotWBButton() {
