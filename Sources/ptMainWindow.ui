@@ -10656,7 +10656,7 @@
                           <enum>QFrame::NoFrame</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>1</number>
+                          <number>5</number>
                          </property>
                          <property name="tabSpacing">
                           <number>6</number>
@@ -10666,8 +10666,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>799</width>
-                            <height>91</height>
+                            <width>98</width>
+                            <height>52</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -10702,7 +10702,7 @@
                           <property name="geometry">
                            <rect>
                             <x>0</x>
-                            <y>-10</y>
+                            <y>0</y>
                             <width>786</width>
                             <height>101</height>
                            </rect>
@@ -11056,9 +11056,9 @@
                           <property name="geometry">
                            <rect>
                             <x>0</x>
-                            <y>0</y>
-                            <width>99</width>
-                            <height>117</height>
+                            <y>-26</y>
+                            <width>786</width>
+                            <height>133</height>
                            </rect>
                           </property>
                           <attribute name="label">
@@ -11149,6 +11149,9 @@
                               </item>
                               <item>
                                <widget class="QWidget" name="StartupUIModeWidget" native="true"/>
+                              </item>
+                              <item>
+                               <widget class="QWidget" name="StartupSwitchARWidget" native="true"/>
                               </item>
                              </layout>
                             </widget>

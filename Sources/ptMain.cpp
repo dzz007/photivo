@@ -252,6 +252,7 @@ void   ExtFileOpen(const QString file);
 void   CB_WritePipeButton();
 void   CB_OpenPresetFileButton();
 void   CB_OpenSettingsFileButton();
+void   CB_CropOrientationButton();
 short  WriteSettingsFile(const QString FileName, const short IsJobFile = 0);
 void   SetBackgroundColor(int SetIt);
 void   CB_StyleChoice(const QVariant Choice);
@@ -3199,6 +3200,19 @@ void CB_MenuFileOpen(const short HaveFile) {
   } else {
     Settings->SetValue("ImageW",TheDcRaw->m_Width);
     Settings->SetValue("ImageH",TheDcRaw->m_Height);
+  }
+
+  if (Settings->GetInt("StartupSwitchAR")) {
+    // portrait image
+    if ((Settings->GetInt("IsRAW")==0 &&
+         Settings->GetInt("ImageW") < Settings->GetInt("ImageH")) ||
+        TheDcRaw->m_Flip & 4) {
+      if (Settings->GetInt("AspectRatioW") > Settings->GetInt("AspectRatioH"))
+        CB_CropOrientationButton();
+    } else { // landscape
+      if (Settings->GetInt("AspectRatioW") < Settings->GetInt("AspectRatioH"))
+        CB_CropOrientationButton();
+    }
   }
 
   // reflect RAW or bitmap in GUI
@@ -9056,6 +9070,12 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   #define M_Dispatch(Name)\
   } else if (ObjectName == #Name) { CB_ ## Name (Value);
 
+  #define M_JustSetDispatch(Name)\
+  } else if (ObjectName == #Name) { QString Temp = #Name;\
+    if (Temp.endsWith("Input") || Temp.endsWith("Check")) Temp.chop(5);\
+    if (Temp.endsWith("Choice")) Temp.chop(6);\
+    Settings->SetValue(Temp,Value);
+
   M_Dispatch(CameraColorChoice)
   M_Dispatch(CameraColorProfileIntentChoice)
   M_Dispatch(CameraColorGammaChoice)
@@ -9081,6 +9101,8 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(StartupSettingsCheck)
   M_Dispatch(StartupSettingsResetCheck)
   M_Dispatch(StartupUIModeChoice)
+
+  M_JustSetDispatch(StartupSwitchARCheck)
 
   M_Dispatch(RememberSettingLevelChoice)
   M_Dispatch(InputsAddPowerLawCheck)
