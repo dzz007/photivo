@@ -9055,6 +9055,38 @@ void CB_WritePipeButton() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// for simple switches, just get the value to the settings
+void Standard_CB_JustSet (const QString ObjectName, const QVariant Value) {
+  QString Temp = ObjectName;
+  if (Temp.endsWith("Input") || Temp.endsWith("Check")) Temp.chop(5);
+  if (Temp.endsWith("Choice")) Temp.chop(6);
+  Settings->SetValue(Temp,Value);
+}
+
+// simple form of call backs, value to settings and pipe run if needed
+void Standard_CB_SetAndRun (const QString ObjectName, const QVariant Value) {
+  QString Temp = ObjectName;
+  if (Temp.endsWith("Input") || Temp.endsWith("Check")) Temp.chop(5);
+  if (Temp.endsWith("Choice")) Temp.chop(6);
+
+  QString ToolName = "";
+  for (int i = 0; i < MainWindow->m_GroupBoxesOrdered->size(); i++) {
+    if (((QWidget*)(MainWindow->m_GroupBox->value(MainWindow->m_GroupBoxesOrdered->at(i))))->
+        findChild<QWidget*>(Temp + "Widget")) {
+      ToolName = MainWindow->m_GroupBoxesOrdered->at(i);
+      break;
+    }
+  }
+
+  // Save previous state for rerun when disabling a filter
+  short PreviousActiveState = Settings->ToolIsActive(ToolName);
+
+  Settings->SetValue(Temp,Value);
+
+  if (Settings->ToolIsActive(ToolName) || PreviousActiveState)
+    Update(ToolName);
+}
+
 void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   // No CB processing while in startup phase. Too much
@@ -9071,10 +9103,10 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   } else if (ObjectName == #Name) { CB_ ## Name (Value);
 
   #define M_JustSetDispatch(Name)\
-  } else if (ObjectName == #Name) { QString Temp = #Name;\
-    if (Temp.endsWith("Input") || Temp.endsWith("Check")) Temp.chop(5);\
-    if (Temp.endsWith("Choice")) Temp.chop(6);\
-    Settings->SetValue(Temp,Value);
+  } else if (ObjectName == #Name) { Standard_CB_JustSet(#Name,Value);
+
+  #define M_SetAndRunDispatch(Name)\
+  } else if (ObjectName == #Name) { Standard_CB_SetAndRun(#Name,Value);
 
   M_Dispatch(CameraColorChoice)
   M_Dispatch(CameraColorProfileIntentChoice)
@@ -9474,10 +9506,10 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(USMAmountInput)
   M_Dispatch(USMThresholdInput)
 
-  M_Dispatch(HighpassChoice)
-  M_Dispatch(HighpassRadiusInput)
-  M_Dispatch(HighpassAmountInput)
-  M_Dispatch(HighpassDenoiseInput)
+  M_SetAndRunDispatch(HighpassChoice)
+  M_SetAndRunDispatch(HighpassRadiusInput)
+  M_SetAndRunDispatch(HighpassAmountInput)
+  M_SetAndRunDispatch(HighpassDenoiseInput)
 
   M_Dispatch(Grain1MaskTypeChoice)
   M_Dispatch(Grain1ModeChoice)
