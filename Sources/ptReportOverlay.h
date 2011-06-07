@@ -22,8 +22,10 @@
 *******************************************************************************/
 /**
 ** Displays the status overlays in the view window.
-** The overlay is displayed for duration() milliseconds. If you set the
-** duration to 0 the overlay is displayed until you call stop().
+**
+** - The overlay is displayed for duration() milliseconds. If you set the
+**   duration to 0 the overlay is displayed until you call stop().
+** - Foreground colours is for the text and wiget border. Background colour
 **/
 
 #ifndef PTREPORTOVERLAY_H
@@ -74,6 +76,7 @@ private:
   int m_Padding;
   Qt::Alignment m_Position;  // only left or right for now
   QTimer* m_Timer;
+  QWidget* m_Parent;
 
   void UpdatePosition();
 

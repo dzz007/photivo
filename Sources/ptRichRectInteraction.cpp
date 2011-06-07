@@ -30,11 +30,16 @@
 // constructor and destructor
 //
 ///////////////////////////////////////////////////////////////////////////
+
 ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
       const int x, const int y, const int width, const int height,
       const short FixedAspectRatio, const uint AspectRatioW,
       const uint AspectRatioH, const short CropGuidelines)
 : ptImageInteraction(View),
+  //constants
+  EdgeThickness(20),
+  TinyRectThreshold(40),
+  //variables
   m_AspectRatioW(AspectRatioW),
   m_AspectRatioH(AspectRatioH),
   m_CropGuidelines(CropGuidelines),
@@ -42,15 +47,22 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
 {
   m_Rect = new QRectF();
   m_RectItem = NULL;
-
-
 }
+
 
 ptRichRectInteraction::~ptRichRectInteraction() {
+  delete m_Rect;
+  delete m_RectItem;
 }
 
 
 
+
+///////////////////////////////////////////////////////////////////////////
+//
+// setAspectRatio()
+//
+///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::setAspectRatio(const short FixedAspectRatio, uint AspectRatioW,
                                            uint AspectRatioH, const short ImmediateUpdate)
@@ -72,6 +84,75 @@ void ptRichRectInteraction::setAspectRatio(const short FixedAspectRatio, uint As
 
 
 
-void ptRichRectInteraction::mouseAction(QMouseEvent* event) {
+///////////////////////////////////////////////////////////////////////////
+//
+// mouseAction()
+// Slot receiving mouse events from the parent.
+//
+///////////////////////////////////////////////////////////////////////////
 
+void ptRichRectInteraction::mouseAction(QMouseEvent* event) {
+  switch (event->type()) {
+    // left button press
+    case QEvent::MouseButtonPress: {
+      if (event->button() == Qt::LeftButton) {
+      }
+      break;
+    }
+
+
+    // left button release
+    case QEvent::MouseButtonRelease: {
+      if (event->button() == Qt::LeftButton) {
+      }
+      break;
+    }
+
+
+    // dblclick:
+    case QEvent::MouseButtonDblClick: {
+    if (m_RectItem->contains(m_View->mapToScene(event->pos())) ) {
+      Finalize();
+    }
+      break;
+    }
+
+
+    // mouse move
+    case QEvent::MouseMove: {
+      break;
+    }
+
+
+    default: {
+      assert(!"Wrong event type");
+      break;
+    }
+  } //switch
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// keyAction()
+// Slot receiving keyboard events from the parent.
+//
+///////////////////////////////////////////////////////////////////////////
+
+void ptRichRectInteraction::keyAction(QKeyEvent* event) {
+
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Finalize()
+//
+///////////////////////////////////////////////////////////////////////////
+
+void ptRichRectInteraction::Finalize() {
+  m_View->scene()->removeItem(m_RectItem);
+  DelAndNull(m_RectItem);
+  emit finished();
 }

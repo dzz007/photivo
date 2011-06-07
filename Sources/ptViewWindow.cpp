@@ -53,6 +53,7 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   // member variables
   m_DrawLine(NULL),
   m_SelectRect(NULL),
+  m_Crop(NULL),
   m_Interaction(iaNone),
   m_LeftMousePressed(0),
   m_ZoomIsSaved(0),
@@ -89,6 +90,7 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   m_8bitImageItem->setPos(0, 0);
   this->setScene(m_ImageScene);
 
+  m_Grid = new ptGridInteraction(this);  // scene must already be alive
   ConstructContextMenu();
 }
 
@@ -105,6 +107,7 @@ ptViewWindow::~ptViewWindow() {
   delete m_ZoomSizeOverlay;
   delete m_DrawLine;
   delete m_SelectRect;
+  delete m_Grid;
 }
 
 
@@ -154,6 +157,13 @@ void ptViewWindow::ZoomTo(float factor) {
   Settings->SetValue("ZoomMode",ptZoomMode_NonFit);
   factor = qBound(MinZoom, factor, MaxZoom);
 
+  if(((uint)(factor * 10000) % 10000) < 1) {
+    // nearest neighbour resize for 200%, 300%, 400% zoom
+    m_8bitImageItem->setTransformationMode(Qt::FastTransformation);
+  } else {
+    // bilinear resize for all others
+    m_8bitImageItem->setTransformationMode(Qt::SmoothTransformation);
+  }
   setTransform(QTransform(factor, 0, 0, factor, 0, 0));
 
   m_ZoomFactor = transform().m11();
@@ -167,8 +177,11 @@ int ptViewWindow::ZoomToFit() {
   Settings->SetValue("ZoomMode",ptZoomMode_Fit);
 
   if (!m_8bitImageItem->pixmap().isNull()) {
+    // Always smooth scaling because we don’t know the zoom factor in advance.
+    m_8bitImageItem->setTransformationMode(Qt::SmoothTransformation);
     fitInView(m_8bitImageItem, Qt::KeepAspectRatio);
     m_ZoomFactor = transform().m11();
+    m_ZoomSizeOverlay->exec(tr("Fit"));
   }
 
   Settings->SetValue("Zoom",qRound(m_ZoomFactor * 100));
@@ -204,6 +217,21 @@ void ptViewWindow::SaveZoom() {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// setGrid()
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::setGrid(const short enabled, const uint linesX, const uint linesY) {
+  if (enabled) {
+    m_Grid->show(linesX, linesY);
+  } else {
+    m_Grid->hide();
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // paintEvent()
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -219,14 +247,17 @@ void ptViewWindow::paintEvent(QPaintEvent* event) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// mousePressEvent()
+// Mouse clicks
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mousePressEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
+    event->accept();
     m_LeftMousePressed = 1;
     m_DragDelta->setPoints(event->pos(), event->pos());
+  } else {
+    event->ignore();
   }
 
   // Broadcast event to possible interaction handlers
@@ -236,21 +267,29 @@ void ptViewWindow::mousePressEvent(QMouseEvent* event) {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// mouseReleaseEvent()
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptViewWindow::mouseReleaseEvent(QMouseEvent* event) {
-  if (event->button() == Qt::LeftButton) {
+  if (event->button() == Qt::LeftButton && m_LeftMousePressed) {
     m_LeftMousePressed = 0;
+    event->accept();
+  } else {
+    event->ignore();
   }
 
   // Broadcast event to possible interaction handlers
   if (m_Interaction != iaNone) {
     emit mouseChanged(event);
   }
+}
+
+
+void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
+  // Broadcast event to possible interaction handlers
+  if (m_Interaction != iaNone) {
+    emit mouseChanged(event);
+  } else {
+    event->ignore();
+  }
+
 }
 
 
@@ -271,6 +310,10 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
                                   m_DragDelta->y2() +
                                   m_DragDelta->y1());
     m_DragDelta->setP1(event->pos());
+    event->accept();
+    return;
+  } else {
+    event->ignore();
   }
 
   // Broadcast event to possible interaction handlers
@@ -289,7 +332,8 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
 void ptViewWindow::wheelEvent(QWheelEvent* event) {
   int ZoomIdx = -1;
 
-  if (event->delta() > 0) { // zoom larger
+  // zoom larger
+  if (event->delta() > 0) {
     for (int i = 0; i < ZoomFactors.size(); i++) {
       if (ZoomFactors[i] > m_ZoomFactor) {
         ZoomIdx = i;
@@ -297,7 +341,8 @@ void ptViewWindow::wheelEvent(QWheelEvent* event) {
       }
     }
 
-  } else if (event->delta() < 0) {    // zoom smaller
+  // zoom smaller
+  } else if (event->delta() < 0) {
     for (int i = ZoomFactors.size() - 1; i >= 0; i--) {
       if (ZoomFactors[i] < m_ZoomFactor) {
         ZoomIdx = i;
@@ -314,7 +359,29 @@ void ptViewWindow::wheelEvent(QWheelEvent* event) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// showStatus()
+// keyPressEvent() and keyReleaseEvent()
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::keyPressEvent(QKeyEvent* event) {
+  if (m_Interaction != iaNone) {
+    emit keyChanged(event);
+  }
+  event->ignore();
+}
+
+void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
+  if (m_Interaction != iaNone) {
+    emit keyChanged(event);
+  }
+  event->ignore();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ShowStatus()
+// Top left corner overlay for the processing status
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -390,6 +457,37 @@ void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(QRectF)) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// StartCrop()
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::StartCrop(int x, int y, int width, int height, const short FixedAspectRatio,
+                             const uint AspectRatioW, const uint AspectRatioH,
+                             const short CropGuidelines)
+{
+  if (m_Interaction != iaNone) {
+    return;
+  }
+
+  // Catch invalid inital rect
+  if ((width <= 0) || (height <= 0)) {
+    width = m_8bitImageItem->pixmap().width();
+    height = m_8bitImageItem->pixmap().height();
+  }
+  x = qBound(0, x, m_8bitImageItem->pixmap().width());
+  y = qBound(0, y, m_8bitImageItem->pixmap().height());
+
+  m_Crop = new ptRichRectInteraction(this, x, y, width, height, FixedAspectRatio,
+                                     AspectRatioW, AspectRatioH, CropGuidelines);
+  connect(m_Crop, SIGNAL(finished()), this, SLOT(finishInteraction()));
+  connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_Crop, SLOT(mouseAction(QMouseEvent*)));
+  connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_Crop, SLOT(keyAction(QKeyEvent*)));
+  m_Interaction = iaCrop;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // finishInteraction()
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -400,7 +498,7 @@ void ptViewWindow::finishInteraction() {
   switch (m_Interaction) {
     case iaDrawLine: {
       double Angle = m_DrawLine->angle();
-      DelAndNull(m_DrawLine);
+      DelAndNull(m_DrawLine);   // also disconnects all signals/slots
       m_Interaction = iaNone;
       RotateAngleDetermined(Angle);
       break;
@@ -408,9 +506,15 @@ void ptViewWindow::finishInteraction() {
 
     case iaSelectRect: {
       QRectF sr = m_SelectRect->rect();
-      DelAndNull(m_SelectRect);
+      DelAndNull(m_SelectRect);   // also disconnects all signals/slots
       m_Interaction = iaNone;
       m_CB_SimpleRect(sr);
+      break;
+    }
+
+    case iaCrop: {
+      DelAndNull(m_Crop);   // also disconnects all signals/slots
+      m_Interaction = iaNone;
       break;
     }
 
@@ -554,7 +658,7 @@ void ptViewWindow::ConstructContextMenu() {
 
 void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   // Create the menus themselves
-
+  // Note: Menus cannot be created with new. That breaks the theming.
   QMenu Menu_Mode(tr("Mode"), this);
   Menu_Mode.setPalette(Theme->ptMenuPalette);
   Menu_Mode.setStyle(Theme->ptStyle);

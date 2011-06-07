@@ -127,7 +127,8 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/ptImageInteraction.h \
     ../Sources/ptLineInteraction.h \
     ../Sources/ptSimpleRectInteraction.h \
-    ../Sources/ptRichRectInteraction.h
+    ../Sources/ptRichRectInteraction.h \
+    ../Sources/ptGridInteraction.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
 HEADERS += ../Sources/ptCheck.h
@@ -183,7 +184,8 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptImageInteraction.cpp \
     ../Sources/ptLineInteraction.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
-    ../Sources/ptRichRectInteraction.cpp
+    ../Sources/ptRichRectInteraction.cpp \
+    ../Sources/ptGridInteraction.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
 SOURCES += ../Sources/ptChoice.cpp

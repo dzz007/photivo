@@ -20,7 +20,12 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
+/**
+** Displays the preview image and manages all interactions that happen directly
+** on the image itself, e.g. zoom, crop, spot repair
+**
+** - Create ptMainWindow and the global ptTheme BEFORE you create ptViewWindow.
+**/
 #ifndef PTVIEWWINDOW_H
 #define PTVIEWWINDOW_H
 
@@ -33,6 +38,8 @@
 #include "ptReportOverlay.h"
 #include "ptLineInteraction.h"
 #include "ptSimpleRectInteraction.h"
+#include "ptRichRectInteraction.h"
+#include "ptGridInteraction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -83,15 +90,21 @@ public:
   void ShowStatus(short mode);
   void ShowStatus(const QString text);    // shown for 1.5sec
 
-  void UpdateImage(const ptImage* relatedImage);
-  void ZoomTo(float factor);  // 1.0 means 100%
-  int ZoomToFit();  // fit complete image into viewport
-
   // Start and stop interactions
   // - StartSimpleRect: Pass the function that is called after the
   //   selection finishes.
   void StartLine();
   void StartSimpleRect(void (*CB_SimpleRect)(QRectF));
+  void StartCrop(const int x, const int y,
+                 int width, int height,
+                 const short FixedAspectRatio,
+                 const uint AspectRatioW, const uint AspectRatioH,
+                 const short CropGuidelines);
+
+  void setGrid(const short enabled, const uint linesX, const uint linesY);
+  void UpdateImage(const ptImage* relatedImage);
+  void ZoomTo(float factor);  // 1.0 means 100%
+  int ZoomToFit();  // fit complete image into viewport
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -100,7 +113,10 @@ public:
 ///////////////////////////////////////////////////////////////////////////
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
+  void keyPressEvent(QKeyEvent* event);
+  void keyReleaseEvent(QKeyEvent* event);
   void paintEvent(QPaintEvent* event);
+  void mouseDoubleClickEvent(QMouseEvent* event);
   void mousePressEvent(QMouseEvent* event);
   void mouseReleaseEvent(QMouseEvent* event);
   void mouseMoveEvent(QMouseEvent* event);
@@ -115,10 +131,12 @@ protected:
 private:
   const float MinZoom;
   const float MaxZoom;
-  QList<float> ZoomFactors;
+  QList<float> ZoomFactors;   // steps for wheel zoom
 
   ptLineInteraction* m_DrawLine;
   ptSimpleRectInteraction* m_SelectRect;
+  ptRichRectInteraction* m_Crop;
+  ptGridInteraction* m_Grid;
   ptInteraction m_Interaction;
   short m_LeftMousePressed;
   void (*m_CB_SimpleRect)(QRectF);
@@ -189,6 +207,7 @@ private slots:
 //
 ///////////////////////////////////////////////////////////////////////////
 signals:
+  void keyChanged(QKeyEvent* event);
   void mouseChanged(QMouseEvent* event);
 
 };
