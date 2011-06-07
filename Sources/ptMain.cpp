@@ -95,9 +95,6 @@ cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
 
-short CropOldZoom;
-short CropOldZoomMode;
-
 
 //
 // The 'tee' towards the display.
@@ -4969,14 +4966,14 @@ void CB_PerspectiveScaleYInput(const QVariant Value) {
 
 void CB_GridCheck(const QVariant State) {
   Settings->SetValue("Grid",State);
-  //ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));    // TODOSR: re-enable
+  ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));    // TODOSR: re-enable
   Update(ptProcessorPhase_NULL);
 }
 
 void CB_GridXInput(const QVariant Value) {
   Settings->SetValue("GridX",Value);
   if (Settings->GetInt("Grid")) {
-    //ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));    // TODOSR: re-enable
+    ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));    // TODOSR: re-enable
     Update(ptProcessorPhase_NULL);
   }
 }
@@ -4984,7 +4981,7 @@ void CB_GridXInput(const QVariant Value) {
 void CB_GridYInput(const QVariant Value) {
   Settings->SetValue("GridY",Value);
   if (Settings->GetInt("Grid")) {
-    //ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));    // TODOSR: re-enable
+    ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));    // TODOSR: re-enable
     Update(ptProcessorPhase_NULL);
   }
 }
@@ -5083,26 +5080,22 @@ void CB_MakeCropButton() {
   // Rerun the part of geometry stage before crop to get correct preview
   // image in TheProcessor->m_Image_AfterGeometry
   TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
-  CropOldZoom = Settings->GetInt("Zoom");
-  CropOldZoomMode = Settings->GetInt("ZoomMode");
-//  ViewWindow->Zoom(    // TODOSR: re-enable
-//                ViewWindow->ZoomFitFactor(TheProcessor->m_Image_AfterGeometry->m_Width,
-//                                          TheProcessor->m_Image_AfterGeometry->m_Height),
-//                0);
+  ViewWindow->SaveZoom();
+  ViewWindow->ZoomToFit();
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->ShowStatus(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
   BlockTools(2);
-//  ViewWindow->StartCrop(Settings->GetInt("CropX")>>Settings->GetInt("Scaled"),    // TODOSR: re-enable
-//                        Settings->GetInt("CropY")>>Settings->GetInt("Scaled"),
-//                        Settings->GetInt("CropW")>>Settings->GetInt("Scaled"),
-//                        Settings->GetInt("CropH")>>Settings->GetInt("Scaled"),
-//                        Settings->GetInt("FixedAspectRatio"),
-//                        Settings->GetInt("AspectRatioW"),
-//                        Settings->GetInt("AspectRatioH"),
-//                        Settings->GetInt("CropGuidelines"));
+  ViewWindow->StartCrop(Settings->GetInt("CropX")>>Settings->GetInt("Scaled"),
+                        Settings->GetInt("CropY")>>Settings->GetInt("Scaled"),
+                        Settings->GetInt("CropW")>>Settings->GetInt("Scaled"),
+                        Settings->GetInt("CropH")>>Settings->GetInt("Scaled"),
+                        Settings->GetInt("FixedAspectRatio"),
+                        Settings->GetInt("AspectRatioW"),
+                        Settings->GetInt("AspectRatioH"),
+                        Settings->GetInt("CropGuidelines"));
   MainWindow->UpdateCropToolUI();
 }
 
@@ -5129,8 +5122,7 @@ void StopCrop(short CropConfirmed) {
 
       if(Settings->GetInt("RunMode")==1) {
         // we're in manual mode!
-        //ViewWindow->Zoom(CropOldZoom,0);    // TODOSR: re-enable
-        Settings->SetValue("ZoomMode",CropOldZoomMode);
+        ViewWindow->RestoreZoom();
         Update(ptProcessorPhase_NULL);
       }
     } else {
@@ -5160,8 +5152,7 @@ void StopCrop(short CropConfirmed) {
     }
   }
 
-  //ViewWindow->Zoom(CropOldZoom,0);    // TODOSR: re-enable
-  Settings->SetValue("ZoomMode",CropOldZoomMode);
+  ViewWindow->RestoreZoom();
   Update(ptProcessorPhase_Geometry);
   MainWindow->UpdateCropToolUI();
 }

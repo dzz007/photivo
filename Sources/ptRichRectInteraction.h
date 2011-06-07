@@ -25,7 +25,9 @@
 
 #include <QGraphicsRectItem>
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include <QRectF>
+#include <QRect>
 
 #include "ptImageInteraction.h"
 
@@ -75,6 +77,7 @@ public:
                                  const short CropGuidelines);
   ~ptRichRectInteraction();
 
+  QRect rect() { return QRect(m_Rect->normalized().toRect()); }
   void setAspectRatio(const short FixedAspectRatio,
                       uint AspectRatioW,
                       uint AspectRatioH,
@@ -86,6 +89,9 @@ public:
 //
 ///////////////////////////////////////////////////////////////////////////
 private:
+  const int EdgeThickness;
+  const int TinyRectThreshold;
+
   QRectF* m_Rect;
   QGraphicsRectItem* m_RectItem;
 
@@ -95,12 +101,15 @@ private:
   short       m_CropGuidelines;
   short       m_FixedAspectRatio;   // 0: fixed AR, 1: no AR restriction
 
+  void Finalize();
+
 ///////////////////////////////////////////////////////////////////////////
 //
 // PRIVATE slots
 //
 ///////////////////////////////////////////////////////////////////////////
 private slots:
+  void keyAction(QKeyEvent* event);
   void mouseAction(QMouseEvent* event);
 
 };

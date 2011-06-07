@@ -32,8 +32,10 @@ ptReportOverlay::ptReportOverlay(QWidget* parent, const QString& text, const QCo
 : QLabel(text, parent),
   m_Padding(padding), m_Position(pos)
 {
-  setVisible(false);
-  //setTextFormat(Qt::RichText);
+  m_Parent = parent;
+  assert(parent != NULL);
+
+  hide();
   setTextFormat(Qt::PlainText);
   setAlignment(Qt::AlignCenter);
   setTextInteractionFlags(Qt::NoTextInteraction);
@@ -42,7 +44,6 @@ ptReportOverlay::ptReportOverlay(QWidget* parent, const QString& text, const QCo
   TheFont.setPixelSize(22);
   setFont(TheFont);
   setColors(color, backgroundColor);
-  UpdatePosition();
 
   m_Timer = new QTimer(this);
   m_Timer->setSingleShot(true);
@@ -76,15 +77,14 @@ void ptReportOverlay::setColors(const QColor& color, const QColor& backgroundCol
 void ptReportOverlay::exec(const QString& newText /*= ""*/) {
   if (m_Timer->isActive()) {
     m_Timer->stop();
-    setVisible(false);
   }
 
   if (newText != "") {
+    hide();   // ensures that new width is set properly
     setText(newText);
-    UpdatePosition();
   }
 
-  setVisible(true);
+  UpdatePosition();
 
   if (m_Timer->interval() > 0) {
     m_Timer->start();
@@ -95,24 +95,27 @@ void ptReportOverlay::exec(const QString& newText /*= ""*/) {
 
 void ptReportOverlay::stop() {
   m_Timer->stop();
-  setVisible(false);
+  hide();
 }
 
 
 
 void ptReportOverlay::TimerExpired() {
-  setVisible(false);
+  hide();
 }
 
 
 
 void ptReportOverlay::UpdatePosition() {
+  // With right aligned overlays repositioning is only reliable when
+  // it’s visible => Call show() before moving the widget.
+  show();
+
   if (m_Position == Qt::AlignLeft) {
     move(m_Padding, m_Padding);
   } else if (m_Position == Qt::AlignRight) {
-    move(parentWidget()->width() - m_Padding - this->width(), m_Padding);
+    move(m_Parent->width() - m_Padding - this->width(), m_Padding);
   } else {
     assert(!"Only AlignLeft or AlignRight allowed!");
   }
-  updateGeometry();
 }
