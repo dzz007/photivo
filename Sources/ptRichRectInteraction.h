@@ -77,7 +77,9 @@ public:
                                  const short CropGuidelines);
   ~ptRichRectInteraction();
 
-  QRect rect() { return QRect(m_Rect->normalized().toRect()); }
+  void flipAspectRatio();
+  void moveToCenter(const short horizontal, const short vertical);
+  QRect rect() { return QRect(m_RectItem->rect().toRect()); }
   void setAspectRatio(const short FixedAspectRatio,
                       uint AspectRatioW,
                       uint AspectRatioH,
@@ -92,16 +94,28 @@ private:
   const int EdgeThickness;
   const int TinyRectThreshold;
 
-  QRectF* m_Rect;
+//  QRectF* m_Rect;
+  QLine*      m_DragDelta;
   QGraphicsRectItem* m_RectItem;
 
-  double      m_AspectRatio;        //  m_AspectRatioW / m_AspectRatioH
+  qreal       m_AspectRatio;        //  m_AspectRatioW / m_AspectRatioH
   uint        m_AspectRatioW;
   uint        m_AspectRatioH;
   short       m_CropGuidelines;
   short       m_FixedAspectRatio;   // 0: fixed AR, 1: no AR restriction
+  ptMovingEdge m_MovingEdge;
+  short       m_NowDragging;
 
+  void ClampToScene();
+  void EnforceAspectRatio(int dx = 0, int dy = 0);
   void Finalize();
+  ptMovingEdge MouseDragPos(const QMouseEvent* event);
+  void RecalcRect();
+
+  void MousePressHandler(const QMouseEvent* event);
+  void MouseReleaseHandler(const QMouseEvent* event);
+  void MouseDblClickHandler(const QMouseEvent* event);
+  void MouseMoveHandler(const QMouseEvent* event);
 
 ///////////////////////////////////////////////////////////////////////////
 //

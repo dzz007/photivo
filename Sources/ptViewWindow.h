@@ -95,11 +95,7 @@ public:
   //   selection finishes.
   void StartLine();
   void StartSimpleRect(void (*CB_SimpleRect)(QRectF));
-  void StartCrop(const int x, const int y,
-                 int width, int height,
-                 const short FixedAspectRatio,
-                 const uint AspectRatioW, const uint AspectRatioH,
-                 const short CropGuidelines);
+  void StartCrop();
 
   void setGrid(const short enabled, const uint linesX, const uint linesY);
   void UpdateImage(const ptImage* relatedImage);
