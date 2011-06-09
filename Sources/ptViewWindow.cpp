@@ -64,6 +64,8 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   MainWindow(mainWin)
 {
   assert(MainWindow != NULL);    // Main window must exist before view window
+  assert(Theme != NULL);
+  assert(Settings != NULL);
 
   ZoomFactors << MinZoom << 0.08 << 0.10 << 0.15 << 0.20 << 0.25 << 0.33 << 0.50 << 0.66 << 1.00
               << 1.50 << 2.00 << 3.00 << MaxZoom;
@@ -461,24 +463,39 @@ void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(QRectF)) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptViewWindow::StartCrop(int x, int y, int width, int height, const short FixedAspectRatio,
-                             const uint AspectRatioW, const uint AspectRatioH,
-                             const short CropGuidelines)
+void ptViewWindow::StartCrop()
 {
   if (m_Interaction != iaNone) {
     return;
   }
 
-  // Catch invalid inital rect
-  if ((width <= 0) || (height <= 0)) {
+  // Get crop rect values from settings. The bit shift converts from 1:1 to
+  // current pipe size.
+  int x = Settings->GetInt("CropX") >> Settings->GetInt("Scaled");
+  int y = Settings->GetInt("CropY") >> Settings->GetInt("Scaled");
+  int width = Settings->GetInt("CropW") >> Settings->GetInt("Scaled");
+  int height = Settings->GetInt("CropH") >> Settings->GetInt("Scaled");
+
+  // If any value is outside the allowed range reset the inital crop
+  // rectangle to the whole image.
+  if(x < 0 || x >= m_8bitImageItem->pixmap().width() ||
+     y < 0 || y >= m_8bitImageItem->pixmap().height() ||
+     width <= 0 || width > m_8bitImageItem->pixmap().width() ||
+     height <= 0 || height > m_8bitImageItem->pixmap().height() )
+  {
+    x = 0;
+    y = 0;
     width = m_8bitImageItem->pixmap().width();
     height = m_8bitImageItem->pixmap().height();
   }
-  x = qBound(0, x, m_8bitImageItem->pixmap().width());
-  y = qBound(0, y, m_8bitImageItem->pixmap().height());
 
-  m_Crop = new ptRichRectInteraction(this, x, y, width, height, FixedAspectRatio,
-                                     AspectRatioW, AspectRatioH, CropGuidelines);
+
+  m_Crop = new ptRichRectInteraction(this, x, y, width, height,
+                                     Settings->GetInt("FixedAspectRatio"),
+                                     Settings->GetInt("AspectRatioW"),
+                                     Settings->GetInt("AspectRatioH"),
+                                     Settings->GetInt("CropGuidelines") );
+
   connect(m_Crop, SIGNAL(finished()), this, SLOT(finishInteraction()));
   connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_Crop, SLOT(mouseAction(QMouseEvent*)));
   connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_Crop, SLOT(keyAction(QKeyEvent*)));
@@ -513,6 +530,7 @@ void ptViewWindow::finishInteraction() {
     }
 
     case iaCrop: {
+      QRect cr = m_Crop->rect();
       DelAndNull(m_Crop);   // also disconnects all signals/slots
       m_Interaction = iaNone;
       break;

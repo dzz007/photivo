@@ -5088,14 +5088,7 @@ void CB_MakeCropButton() {
   ViewWindow->ShowStatus(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
   BlockTools(2);
-  ViewWindow->StartCrop(Settings->GetInt("CropX")>>Settings->GetInt("Scaled"),
-                        Settings->GetInt("CropY")>>Settings->GetInt("Scaled"),
-                        Settings->GetInt("CropW")>>Settings->GetInt("Scaled"),
-                        Settings->GetInt("CropH")>>Settings->GetInt("Scaled"),
-                        Settings->GetInt("FixedAspectRatio"),
-                        Settings->GetInt("AspectRatioW"),
-                        Settings->GetInt("AspectRatioH"),
-                        Settings->GetInt("CropGuidelines"));
+  ViewWindow->StartCrop();
   MainWindow->UpdateCropToolUI();
 }
 
