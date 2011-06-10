@@ -9055,7 +9055,7 @@ void CB_WritePipeButton() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-// for simple switches, just get the value to the settings
+// For simple switches, just get the value to the settings
 void Standard_CB_JustSet (const QString ObjectName, const QVariant Value) {
   QString Temp = ObjectName;
   if (Temp.endsWith("Input") || Temp.endsWith("Check")) Temp.chop(5);
@@ -9063,26 +9063,25 @@ void Standard_CB_JustSet (const QString ObjectName, const QVariant Value) {
   Settings->SetValue(Temp,Value);
 }
 
-// simple form of call backs, value to settings and pipe run if needed
+// Standard form of call backs, value to settings and pipe run if needed
 void Standard_CB_SetAndRun (const QString ObjectName, const QVariant Value) {
-  QString Temp = ObjectName;
-  if (Temp.endsWith("Input") || Temp.endsWith("Check")) Temp.chop(5);
-  if (Temp.endsWith("Choice")) Temp.chop(6);
+  QString Key = ObjectName;
+  if (Key.endsWith("Input") || Key.endsWith("Check")) Key.chop(5);
+  if (Key.endsWith("Choice")) Key.chop(6);
 
-  QString ToolName = "";
-  for (int i = 0; i < MainWindow->m_GroupBoxesOrdered->size(); i++) {
-    if (((QWidget*)(MainWindow->m_GroupBox->value(MainWindow->m_GroupBoxesOrdered->at(i))))->
-        findChild<QWidget*>(Temp + "Widget")) {
-      ToolName = MainWindow->m_GroupBoxesOrdered->at(i);
-      break;
-    }
+  QWidget* CurrentControl = Settings->GetGuiWidget(Key);
+  ptGroupBox* CurrentTool = dynamic_cast<ptGroupBox*>(CurrentControl);
+
+  while (CurrentTool == NULL) {
+    CurrentControl = CurrentControl->parentWidget();
+    CurrentTool = dynamic_cast<ptGroupBox*>(CurrentControl);
   }
+  QString ToolName = CurrentTool->objectName();
 
   // Save previous state for rerun when disabling a filter
   short PreviousActiveState = Settings->ToolIsActive(ToolName);
 
-  Settings->SetValue(Temp,Value);
-
+  Settings->SetValue(Key,Value);
   if (Settings->ToolIsActive(ToolName) || PreviousActiveState)
     Update(ToolName);
 }
@@ -9679,8 +9678,8 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(OutputGammaInput)
   M_Dispatch(OutputLinearityInput)
 
-  M_Dispatch(RGBContrast3AmountInput)
-  M_Dispatch(RGBContrast3ThresholdInput)
+  M_SetAndRunDispatch(RGBContrast3AmountInput)
+  M_SetAndRunDispatch(RGBContrast3ThresholdInput)
 
   M_Dispatch(WebResizeChoice)
   M_Dispatch(WebResizeBeforeGammaCheck)
