@@ -137,6 +137,8 @@ const ptGuiOptionsItem* GetInitialOptions(const QString Key)
 short GetInJobFile(const QString Key)
   { return m_Hash[Key]->InJobFile;};
 
+// Low level access to the underlying QWidget
+QWidget* GetGuiWidget(const QString Key);
 
 // Constructor
 // The InitLevel determines how much of the .ini information is preserved.
