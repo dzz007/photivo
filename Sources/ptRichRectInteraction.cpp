@@ -600,9 +600,158 @@ ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
 ///////////////////////////////////////////////////////////////////////////
 //
 // RecalcRect()
+// Calc new corner point, change moving edge/corner when rect is
+// dragged into another "quadrant", and update rectangle.
 //
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::RecalcRect() {
+  QRectF NewPos;
+  qreal ImageRight = m_View->scene()->sceneRect().right();
+  qreal ImageBottom = m_View->scene()->sceneRect().bottom();
+  qreal dx = m_DragDelta->dx() / m_View->transform().m11();
+  qreal dy = m_DragDelta->dy() / m_View->transform().m11();
+  qreal dxCeil = dx;
+  qreal dyCeil = dy;
+  qreal dxFloor = dx;
+  qreal dyFloor = dy;
 
+  switch (m_MovingEdge) {
+    case meTopLeft:
+      // Calc preliminary new position of moved corner point. Don't allow it to move
+      // beyond the actual image.
+      NewPos.setX(qBound(0, m_RectItem->rect().left() + dxFloor, ImageRight));
+      NewPos.setY(qBound(0, m_RectItem->rect().top() + dyFloor, ImageBottom));
+      // Determine if moving corner changed
+      m_PrevMovingEdge = m_MovingEdge;
+      if ((NewPos.x() > m_RectItem->rect().right()) && (NewPos.y() <= m_RectItem->rect().bottom())) {
+        m_MovingEdge = meTopRight;
+      } else if ((NewPos.x() > m_RectItem->rect().right()) && (NewPos.y() >= m_RectItem->rect().bottom())) {
+        m_MovingEdge = meBottomRight;
+      } else if ((NewPos.x() <= m_RectItem->rect().right()) && (NewPos.y() > m_RectItem->rect().bottom())) {
+        m_MovingEdge = meBottomLeft;
+      }
+      // Update crop rect
+      m_RectItem->rect().setCoords(qMin(NewPos.x(), m_RectItem->rect().right()),
+                                qMin(NewPos.y(), m_RectItem->rect().bottom()),
+                                qMax(NewPos.x(), m_RectItem->rect().right()),
+                                qMax(NewPos.y(), m_RectItem->rect().bottom()) );
+      break;
+
+
+    case meTop:
+      dx = 0;
+      NewPos.setY(qBound(0, m_RectItem->rect().top() + dyFloor, ImageBottom));
+      m_PrevMovingEdge = m_MovingEdge;
+      if (NewPos.y() > m_RectItem->rect().bottom()) {
+        m_MovingEdge = meBottom;
+      }
+      m_RectItem->rect().setCoords(m_RectItem->rect().left(),
+                                qMin(NewPos.y(), m_RectItem->rect().bottom()),
+                                m_RectItem->rect().right(),
+                                qMax(NewPos.y(), m_RectItem->rect().bottom()) );
+      break;
+
+    case meTopRight:
+      NewPos.setX(qBound(0, m_RectItem->rect().right() + dxCeil, ImageRight));
+      NewPos.setY(qBound(0, m_RectItem->rect().top() + dyFloor, ImageBottom));
+      m_PrevMovingEdge = m_MovingEdge;
+      if ((NewPos.x() < m_RectItem->rect().left()) && (NewPos.y() <= m_RectItem->rect().bottom())) {
+        m_MovingEdge = meTopLeft;
+      } else if ((NewPos.x() < m_RectItem->rect().left()) && (NewPos.y() > m_RectItem->rect().bottom())) {
+        m_MovingEdge = meBottomLeft;
+      } else if ((NewPos.x() >= m_RectItem->rect().left()) && (NewPos.y() > m_RectItem->rect().bottom())) {
+        m_MovingEdge = meBottomRight;
+      }
+      m_RectItem->rect().setCoords(MIN(NewPos.x(), m_RectItem->rect().left()),
+                                MIN(NewPos.y(), m_RectItem->rect().bottom()),
+                                MAX(NewPos.x(), m_RectItem->rect().left()),
+                                MAX(NewPos.y(), m_RectItem->rect().bottom()) );
+      break;
+
+    case meRight:
+      dy = 0;
+      m_PrevMovingEdge = m_MovingEdge;
+      NewPos.setX(qBound(0, m_RectItem->rect().right() + dxCeil, ImageRight));
+      if ((NewPos.x() < m_RectItem->rect().left())) {
+        m_MovingEdge = meLeft;
+      }
+      m_RectItem->rect().setCoords(MIN(NewPos.x(), m_RectItem->rect().left()),
+                                m_RectItem->rect().top(),
+                                MAX(NewPos.x(), m_RectItem->rect().left()),
+                                m_RectItem->rect().bottom() );
+      break;
+
+    case meBottomRight:
+      NewPos.setX(qBound(0, m_RectItem->rect().right() + dxCeil, ImageRight));
+      NewPos.setY(qBound(0, m_RectItem->rect().bottom() + dyCeil, ImageBottom));
+      m_PrevMovingEdge = m_MovingEdge;
+      if ((NewPos.x() < m_RectItem->rect().left()) && (NewPos.y() >= m_RectItem->rect().top())) {
+        m_MovingEdge = meBottomLeft;
+      } else if ((NewPos.x() < m_RectItem->rect().left()) && (NewPos.y() < m_RectItem->rect().top())) {
+        m_MovingEdge = meTopLeft;
+      } else if ((NewPos.x() >= m_RectItem->rect().left()) && (NewPos.y() < m_RectItem->rect().top())) {
+        m_MovingEdge = meTopRight;
+      }
+      m_RectItem->rect().setCoords(MIN(NewPos.x(), m_RectItem->rect().left()),
+                                MIN(NewPos.y(), m_RectItem->rect().top()),
+                                MAX(NewPos.x(), m_RectItem->rect().left()),
+                                MAX(NewPos.y(), m_RectItem->rect().top()) );
+      break;
+
+    case meBottom:
+      dx = 0;
+      NewPos.setY(qBound(0, m_RectItem->rect().bottom() + dy, ImageBottom));
+      m_PrevMovingEdge = m_MovingEdge;
+      if (NewPos.y() < m_RectItem->rect().top()) {
+        m_MovingEdge = meTop;
+      }
+      m_RectItem->rect().setCoords(m_RectItem->rect().left(),
+                                MIN(NewPos.y(), m_RectItem->rect().top()),
+                                m_RectItem->rect().right(),
+                                MAX(NewPos.y(), m_RectItem->rect().top()) );
+      break;
+
+    case meBottomLeft:
+      NewPos.setX(qBound(0, m_RectItem->rect().left() + dx, ImageRight));
+      NewPos.setY(qBound(0, m_RectItem->rect().bottom() + dy, ImageBottom));
+      m_PrevMovingEdge = m_MovingEdge;
+      if ((NewPos.x() > m_RectItem->rect().right()) && (NewPos.y() >= m_RectItem->rect().top())) {
+        m_MovingEdge = meBottomRight;
+      } else if ((NewPos.x() > m_RectItem->rect().right()) && (NewPos.y() < m_RectItem->rect().top())) {
+        m_MovingEdge = meTopRight;
+      } else if ((NewPos.x() <= m_RectItem->rect().right()) && (NewPos.y() < m_RectItem->rect().top())) {
+        m_MovingEdge = meTopLeft;
+      }
+      m_RectItem->rect().setCoords(MIN(NewPos.x(), m_RectItem->rect().right()),
+                                MIN(NewPos.y(), m_RectItem->rect().top()),
+                                MAX(NewPos.x(), m_RectItem->rect().right()),
+                                MAX(NewPos.y(), m_RectItem->rect().top()) );
+      break;
+
+    case meLeft:
+      dy = 0;
+      NewPos.setX(qBound(0, m_RectItem->rect().left() + dx, ImageRight));
+      m_PrevMovingEdge = m_MovingEdge;
+      if (NewPos.x() > m_RectItem->rect().right()) {
+        m_MovingEdge = meRight;
+      }
+      m_RectItem->rect().setCoords(MIN(NewPos.x(), m_RectItem->rect().right()),
+                                m_RectItem->rect().top(),
+                                MAX(NewPos.x(), m_RectItem->rect().right()),
+                                m_RectItem->rect().bottom() );
+      break;
+
+
+    case meNone:
+      break;
+
+    default:
+      assert(0);
+      break;
+  }
+
+  if (m_FixedAspectRatio) {
+    EnforceRectAspectRatio(dx, dy);
+  }
 }
