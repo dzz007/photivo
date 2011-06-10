@@ -1252,6 +1252,32 @@ void ptSettings::SetGuiCheck(const QString Key, ptCheck* Value) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// GetGuiWidget
+// low level access to the underlying QWidget
+//
+////////////////////////////////////////////////////////////////////////////////
+
+QWidget* ptSettings::GetGuiWidget(const QString Key) {
+  if (!m_Hash.contains(Key)) {
+    ptLogError(ptError_Argument,
+               "(%s,%d) Could not find key '%s'\n",
+               __FILE__,__LINE__,Key.toAscii().data());
+    assert (m_Hash.contains(Key));
+  }
+  if (m_Hash[Key]->GuiInput) {
+    return (QWidget*)m_Hash[Key]->GuiInput;
+  } else if (m_Hash[Key]->GuiChoice) {
+    return (QWidget*)m_Hash[Key]->GuiChoice;
+  } else if (m_Hash[Key]->GuiCheck) {
+    return (QWidget*)m_Hash[Key]->GuiCheck;
+  }
+  
+  assert (!"No Gui widget");
+  return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Transfer the settings from Settings To DcRaw UserSettings.
 // This is sometimes not straightforward as DcRaw assumes certain
 // combinations. That's taken care of here.
