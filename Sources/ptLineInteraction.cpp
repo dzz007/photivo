@@ -97,7 +97,7 @@ void ptLineInteraction::mouseAction(QMouseEvent* event) {
         m_View->scene()->removeItem(m_LineItem);
         DelAndNull(m_LineItem);
         m_NowDragging = 0;
-        emit finished();
+        emit finished(stSuccess);
       }
       break;
     }

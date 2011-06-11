@@ -5006,51 +5006,54 @@ void CB_GeometryBlockCheck(const QVariant State) {
 void CB_FixedAspectRatioCheck(const QVariant Check) {
   Settings->SetValue("FixedAspectRatio", Check);
   MainWindow->UpdateCropToolUI();
-//  if (ViewWindow->OngoingAction() == vaCrop) {    // TODOSR: re-enable
-//    ViewWindow->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
-//                               Settings->GetInt("AspectRatioW"),
-//                               Settings->GetInt("AspectRatioH"));
-//  }
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
+                                       Settings->GetInt("AspectRatioW"),
+                                       Settings->GetInt("AspectRatioH"));
+  }
 }
 
 void CB_AspectRatioWChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioW",Value);
-//  if (ViewWindow->OngoingAction() == vaCrop) {    // TODOSR: re-enable
-//    ViewWindow->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
-//                               Settings->GetInt("AspectRatioW"),
-//                               Settings->GetInt("AspectRatioH"));
-//  }
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
+                                       Settings->GetInt("AspectRatioW"),
+                                       Settings->GetInt("AspectRatioH"));
+  }
 }
 
 void CB_AspectRatioHChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioH",Value);
-//  if (ViewWindow->OngoingAction() == vaCrop) {    // TODOSR: re-enable
-//    ViewWindow->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
-//                               Settings->GetInt("AspectRatioW"),
-//                               Settings->GetInt("AspectRatioH"));
-//  }
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
+                                       Settings->GetInt("AspectRatioW"),
+                                       Settings->GetInt("AspectRatioH"));
+  }
 }
 
 void CB_CropOrientationButton() {
   int w = Settings->GetInt("AspectRatioW");
   int h = Settings->GetInt("AspectRatioH");
+
   if (w != h) {
     Settings->SetValue("AspectRatioW", h);
     Settings->SetValue("AspectRatioH", w);
-    QComboBox(MainWindow->AspectRatioWWidget).setCurrentIndex(h);
-    QComboBox(MainWindow->AspectRatioHWidget).setCurrentIndex(w);
-//    if (ViewWindow->OngoingAction() == vaCrop) {
-//      ViewWindow->FlipAspectRatio();
-//    }
+    if (ViewWindow->interaction() == iaCrop) {
+      ViewWindow->crop()->flipAspectRatio();
+    }
   }
 }
 
 void CB_CropCenterHorButton() {
-  //ViewWindow->CenterCropRectHor();    // TODOSR: re-enable
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->moveToCenter(1, 0);
+  }
 }
 
 void CB_CropCenterVertButton() {
-  //ViewWindow->CenterCropRectVert();    // TODOSR: re-enable
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->moveToCenter(0, 1);
+  }
 }
 
 void CB_CropGuidelinesChoice(const QVariant Choice) {
@@ -5060,8 +5063,9 @@ void CB_CropGuidelinesChoice(const QVariant Choice) {
 
 void CB_LightsOutChoice(const QVariant Choice) {
   Settings->SetValue("LightsOut",Choice);
-  //ViewWindow->m_CropLightsOut = Choice.toInt();    // TODOSR: re-enable
-  ViewWindow->viewport()->repaint();
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->setLightsOut(Choice.toInt());
+  }
 }
 
 
@@ -5080,8 +5084,6 @@ void CB_MakeCropButton() {
   // Rerun the part of geometry stage before crop to get correct preview
   // image in TheProcessor->m_Image_AfterGeometry
   TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
-  ViewWindow->SaveZoom();
-  ViewWindow->ZoomToFit();
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
@@ -5094,11 +5096,11 @@ void CB_MakeCropButton() {
 
 
 // After-crop processing and cleanup.
-void StopCrop(short CropConfirmed) {
+void CleanupAfterCrop(ptStatus CropStatus) {
   QRect CropRect;// = ViewWindow->StopCrop();    // TODOSR: re-enable
   BlockTools(0);
 
-  if (CropConfirmed) {
+  if (CropStatus == stSuccess) {
     // Account for the pipesize factor.
     int XScale = 1<<Settings->GetInt("PipeSize");
     int YScale = 1<<Settings->GetInt("PipeSize");
@@ -5115,7 +5117,6 @@ void StopCrop(short CropConfirmed) {
 
       if(Settings->GetInt("RunMode")==1) {
         // we're in manual mode!
-        ViewWindow->RestoreZoom();
         Update(ptProcessorPhase_NULL);
       }
     } else {
@@ -5124,7 +5125,7 @@ void StopCrop(short CropConfirmed) {
       Settings->SetValue("CropY",CropRect.top() * YScale);
       Settings->SetValue("CropW",CropRect.width() * XScale);
       Settings->SetValue("CropH",CropRect.height() * YScale);
-      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Checked);
+//      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Checked);
     }
 
     TRACEKEYVALS("PreviewImageW","%d",PreviewImage->m_Width);
@@ -5141,21 +5142,21 @@ void StopCrop(short CropConfirmed) {
   } else {
     if ((Settings->GetInt("CropW") < 4) || (Settings->GetInt("CropH") < 4)) {
       Settings->SetValue("Crop", 0);
-      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Unchecked);
+//      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Unchecked);
     }
   }
 
-  ViewWindow->RestoreZoom();
   Update(ptProcessorPhase_Geometry);
   MainWindow->UpdateCropToolUI();
 }
 
+
 void CB_ConfirmCropButton() {
-  StopCrop(1);    // user confirmed crop
+  ViewWindow->crop()->stop(stSuccess);    // user confirmed crop
 }
 
 void CB_CancelCropButton() {
-  StopCrop(0);    // user cancelled crop
+  ViewWindow->crop()->stop(stFailure);    // user cancelled crop
 }
 
 

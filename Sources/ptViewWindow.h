@@ -90,12 +90,13 @@ public:
   void ShowStatus(short mode);
   void ShowStatus(const QString text);    // shown for 1.5sec
 
-  // Start and stop interactions
+  // Star, stop, control interactions
   // - StartSimpleRect: Pass the function that is called after the
   //   selection finishes.
   void StartLine();
   void StartSimpleRect(void (*CB_SimpleRect)(QRectF));
   void StartCrop();
+  ptRichRectInteraction* crop() const { return m_Crop; }
 
   void setGrid(const short enabled, const uint linesX, const uint linesY);
   void UpdateImage(const ptImage* relatedImage);
@@ -179,7 +180,7 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////
 private slots:
-  void finishInteraction();
+  void finishInteraction(ptStatus ExitStatus);
 
   // context menu stuff
   void Menu_Clip_Indicate();

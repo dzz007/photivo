@@ -48,7 +48,7 @@ enum ptMovingEdge {
   meTopRight = 6,
   meBottomLeft = 7,
   meBottomRight = 8,
-  meCenter = 9      // move rect instead of resize
+  meCenter = 9
 };
 
 
@@ -77,13 +77,17 @@ public:
                                  const short CropGuidelines);
   ~ptRichRectInteraction();
 
+  inline ptStatus exitStatus() { return m_ExitStatus; }
   void flipAspectRatio();
-  void moveToCenter(const short horizontal, const short vertical);
-  QRect rect() { return QRect(m_RectItem->rect().toRect()); }
+  void moveToCenter(const short horizontal, const short vertical);  
+  inline QRect rect() { return QRect(m_RectItem->rect().toRect()); }
   void setAspectRatio(const short FixedAspectRatio,
                       uint AspectRatioW,
                       uint AspectRatioH,
                       const short ImmediateUpdate = 1);
+  void setGuidelines(const short mode);
+  void setLightsOut(short mode);
+  void stop(ptStatus exitStatus);
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -94,23 +98,33 @@ private:
   const int EdgeThickness;
   const int TinyRectThreshold;
 
-//  QRectF* m_Rect;
   QLine*      m_DragDelta;
+  QGraphicsLineItem* m_GuideItems[4];
+  QBrush*     m_LightsOutBrushes[3];
+  QGraphicsRectItem* m_LightsOutRects[4];
   QGraphicsRectItem* m_RectItem;
 
   qreal       m_AspectRatio;        //  m_AspectRatioW / m_AspectRatioH
   uint        m_AspectRatioW;
   uint        m_AspectRatioH;
-  short       m_CropGuidelines;
+  int         m_CtrlIsPressed;
   short       m_FixedAspectRatio;   // 0: fixed AR, 1: no AR restriction
+  short       m_Guides;
   ptMovingEdge m_MovingEdge;
   short       m_NowDragging;
+  ptStatus    m_ExitStatus;
 
   void ClampToScene();
-  void EnforceAspectRatio(int dx = 0, int dy = 0);
+  void ClearGuidesList();
+  void CreateGuidesList();
+  void EnforceAspectRatio(qreal dx = 0, qreal dy = 0);
   void Finalize();
   ptMovingEdge MouseDragPos(const QMouseEvent* event);
   void RecalcRect();
+  void RecalcGuides();
+  void RecalcLightsOutRects();
+  void UpdateScene();
+  void UpdateCursor();
 
   void MousePressHandler(const QMouseEvent* event);
   void MouseReleaseHandler(const QMouseEvent* event);
