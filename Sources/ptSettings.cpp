@@ -1215,7 +1215,9 @@ void ptSettings::SetGuiInput(const QString Key, ptInput* Value) {
                __FILE__,__LINE__,Key.toAscii().data());
     assert (m_Hash.contains(Key));
   }
-  m_Hash[Key]->GuiInput = Value;
+  m_Hash[Key]->GuiInput  = Value;
+  m_Hash[Key]->GuiChoice = NULL;
+  m_Hash[Key]->GuiCheck  = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1231,7 +1233,9 @@ void ptSettings::SetGuiChoice(const QString Key, ptChoice* Value) {
                __FILE__,__LINE__,Key.toAscii().data());
     assert (m_Hash.contains(Key));
   }
+  m_Hash[Key]->GuiInput  = NULL;
   m_Hash[Key]->GuiChoice = Value;
+  m_Hash[Key]->GuiCheck  = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1247,7 +1251,9 @@ void ptSettings::SetGuiCheck(const QString Key, ptCheck* Value) {
                __FILE__,__LINE__,Key.toAscii().data());
     assert (m_Hash.contains(Key));
   }
-  m_Hash[Key]->GuiCheck = Value;
+  m_Hash[Key]->GuiInput  = NULL;
+  m_Hash[Key]->GuiChoice = NULL;
+  m_Hash[Key]->GuiCheck  = Value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1271,7 +1277,7 @@ QWidget* ptSettings::GetGuiWidget(const QString Key) {
   } else if (m_Hash[Key]->GuiCheck) {
     return (QWidget*)m_Hash[Key]->GuiCheck;
   }
-  
+
   assert (!"No Gui widget");
   return NULL;
 }
@@ -1908,10 +1914,12 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = (Settings->GetDouble("SimpleToneR") !=0.0 ||
                        Settings->GetDouble("SimpleToneG") !=0.0 ||
                        Settings->GetDouble("SimpleToneB") !=0.0)!=0?1:0;
-  } else if (GuiName == "TabRGBTone") {
-      Info.Name = "RGB Toning";
-      Info.IsActive = (Settings->GetInt("Tone1MaskType") ||
-                       Settings->GetInt("Tone2MaskType"))!=0?1:0;
+  } else if (GuiName == "TabRGBTone1") {
+      Info.Name = "RGB Toning 1";
+      Info.IsActive = Settings->GetInt("Tone1MaskType")!=0?1:0;
+  } else if (GuiName == "TabRGBTone2") {
+      Info.Name = "RGB Toning 2";
+      Info.IsActive = Settings->GetInt("Tone2MaskType")!=0?1:0;
   } else if (GuiName == "TabCrossProcessing") {
       Info.Name = "Cross processing";
       Info.IsActive = Settings->GetInt("CrossprocessingMode")!=0?1:0;
