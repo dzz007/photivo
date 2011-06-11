@@ -90,7 +90,7 @@ void ptSimpleRectInteraction::mouseAction(QMouseEvent* event) {
         m_View->scene()->removeItem(m_RectItem);
         DelAndNull(m_RectItem);
         m_NowDragging = 0;
-        emit finished();
+        emit finished(stSuccess);
       }
       break;
     }
