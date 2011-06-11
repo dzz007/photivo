@@ -245,6 +245,7 @@ void   InitChannelMixers();
 void   PreCalcTransforms();
 void   CB_ChannelMixerChoice(const QVariant Choice);
 void   CB_CurveChoice(const int Channel, const int Choice);
+void   CB_CurveWindowRecalc(const short Channel);
 void   CB_ZoomFitButton();
 void   CB_MenuFileOpen(const short HaveFile);
 void   CB_MenuFileExit(const short);
@@ -6077,40 +6078,7 @@ void CB_CurveChoice(const int Channel, const int Choice) {
   if (Settings->GetInt("JobMode") == 0)
     CurveWindow[Channel]->UpdateView(Curve[Channel]);
 
-  // Run the graphical pipe according to a changed curve.
-  if (!InStartup)
-    switch(Channel) {
-      case ptCurveChannel_RGB :
-        Update(ptProcessorPhase_RGB);
-        break;
-      case ptCurveChannel_Texture :
-      case ptCurveChannel_ShadowsHighlights :
-        Update(ptProcessorPhase_LabCC);
-        break;
-      case ptCurveChannel_Denoise :
-      case ptCurveChannel_Denoise2 :
-        Update(ptProcessorPhase_LabSN);
-        break;
-      case ptCurveChannel_LByHue :
-      case ptCurveChannel_Hue :
-      case ptCurveChannel_Saturation :
-      case ptCurveChannel_L :
-      case ptCurveChannel_a :
-      case ptCurveChannel_b :
-        Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_R :
-      case ptCurveChannel_G :
-      case ptCurveChannel_B :
-        Update(ptProcessorPhase_EyeCandy);
-        break;
-      case ptCurveChannel_Base :
-      case ptCurveChannel_Base2 :
-        Update(ptProcessorPhase_Output);
-        break;
-      default :
-        assert(0);
-    }
+  CB_CurveWindowRecalc(Channel);
 }
 
 void CB_CurveRGBChoice(const QVariant Choice) {
@@ -6178,38 +6146,62 @@ void CB_BaseCurve2Choice(const QVariant Choice) {
 }
 
 void CB_CurveWindowRecalc(const short Channel) {
-  // Run the graphical pipe according to a changed curve.
-  switch(Channel) {
-    case ptCurveChannel_RGB :
-      Update(ptProcessorPhase_RGB);
-      break;
-    case ptCurveChannel_Texture :
-    case ptCurveChannel_ShadowsHighlights :
-      Update(ptProcessorPhase_LabCC);
-      break;
-    case ptCurveChannel_Denoise :
-    case ptCurveChannel_Denoise2 :
-      Update(ptProcessorPhase_LabSN);
-      break;
-    case ptCurveChannel_LByHue :
-    case ptCurveChannel_Hue :
-    case ptCurveChannel_Saturation :
-    case ptCurveChannel_L :
-    case ptCurveChannel_a :
-    case ptCurveChannel_b :
-      Update(ptProcessorPhase_LabEyeCandy);
-      break;
-    case ptCurveChannel_R :
-    case ptCurveChannel_G :
-    case ptCurveChannel_B :
-      Update(ptProcessorPhase_EyeCandy);
-      break;
-    case ptCurveChannel_Base :
-    case ptCurveChannel_Base2 :
-      Update(ptProcessorPhase_Output);
-      break;
-    default :
-      assert(0);
+  if (!InStartup) {
+    // Run the graphical pipe according to a changed curve.
+    switch(Channel) {
+      case ptCurveChannel_RGB :
+        if (Settings->ToolIsActive("TabRGBCurve")) Update(ptProcessorPhase_RGB);
+        break;
+      case ptCurveChannel_ShadowsHighlights :
+        if (Settings->ToolIsActive("TabLABShadowsHighlights")) Update(ptProcessorPhase_LabCC);
+        break;
+      case ptCurveChannel_Texture :
+        if (Settings->ToolIsActive("TabLABTextureCurve")) Update(ptProcessorPhase_LabCC);
+        break;
+      case ptCurveChannel_Denoise :
+        if (Settings->ToolIsActive("TabDetailCurve")) Update(ptProcessorPhase_LabSN);
+        break;
+      case ptCurveChannel_Denoise2 :
+        if (Settings->ToolIsActive("TabDenoiseCurve")) Update(ptProcessorPhase_LabSN);
+        break;
+      case ptCurveChannel_LByHue :
+        if (Settings->ToolIsActive("TabLbyHue")) Update(ptProcessorPhase_LabEyeCandy);
+        break;
+      case ptCurveChannel_Hue :
+        if (Settings->ToolIsActive("TabHueCurve")) Update(ptProcessorPhase_LabEyeCandy);
+        break;
+      case ptCurveChannel_Saturation :
+        if (Settings->ToolIsActive("TabSaturationCurve")) Update(ptProcessorPhase_LabEyeCandy);
+        break;
+      case ptCurveChannel_L :
+        if (Settings->ToolIsActive("TabLCurve")) Update(ptProcessorPhase_LabEyeCandy);
+        break;
+      case ptCurveChannel_a :
+        if (Settings->ToolIsActive("TabABCurves") && Settings->GetInt("CurveLa"))
+          Update(ptProcessorPhase_LabEyeCandy);
+        break;
+      case ptCurveChannel_b :
+        if (Settings->ToolIsActive("TabABCurves") && Settings->GetInt("CurveLb"))
+          Update(ptProcessorPhase_LabEyeCandy);
+        break;
+      case ptCurveChannel_R :
+        if (Settings->ToolIsActive("TabRToneCurve")) Update(ptProcessorPhase_EyeCandy);
+        break;
+      case ptCurveChannel_G :
+        if (Settings->ToolIsActive("TabGToneCurve")) Update(ptProcessorPhase_EyeCandy);
+        break;
+      case ptCurveChannel_B :
+        if (Settings->ToolIsActive("TabBToneCurve")) Update(ptProcessorPhase_EyeCandy);
+        break;
+      case ptCurveChannel_Base :
+        if (Settings->ToolIsActive("TabBaseCurve")) Update(ptProcessorPhase_Output);
+        break;
+      case ptCurveChannel_Base2 :
+        if (Settings->ToolIsActive("TabAfterGammaCurve")) Update(ptProcessorPhase_Output);
+        break;
+      default :
+        assert(!"Unknown curve");
+    }
   }
 }
 
@@ -6596,65 +6588,6 @@ void CB_LabLMHLightRecovery2SoftnessInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LABCC Tab
-// Partim LocalContrast
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LC1RadiusInput(const QVariant Value) {
-  Settings->SetValue("LC1Radius",Value);
-  if (Settings->GetDouble("LC1Opacity")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LC1FeatherInput(const QVariant Value) {
-  Settings->SetValue("LC1Feather",Value);
-  if (Settings->GetDouble("LC1Opacity")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LC1OpacityInput(const QVariant Value) {
-  Settings->SetValue("LC1Opacity",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_LC1mInput(const QVariant Value) {
-  Settings->SetValue("LC1m",Value);
-  if (Settings->GetDouble("LC1Opacity")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LC2RadiusInput(const QVariant Value) {
-  Settings->SetValue("LC2Radius",Value);
-  if (Settings->GetDouble("LC2Opacity")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LC2FeatherInput(const QVariant Value) {
-  Settings->SetValue("LC2Feather",Value);
-  if (Settings->GetDouble("LC2Opacity")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LC2OpacityInput(const QVariant Value) {
-  Settings->SetValue("LC2Opacity",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_LC2mInput(const QVariant Value) {
-  Settings->SetValue("LC2m",Value);
-  if (Settings->GetDouble("LC2Opacity")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LABCC Tab
 // Texturecontrast
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -6852,75 +6785,6 @@ void CB_LabMicrocontrast2SoftnessInput(const QVariant Value) {
   if (Settings->GetInt("LabMicrocontrast2MaskType")) {
     Update(ptProcessorPhase_LabCC);
   }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabCC Tab
-// Partim Saturation and Contrast
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_ContrastAmountInput(const QVariant Value) {
-  Settings->SetValue("ContrastAmount",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_ContrastThresholdInput(const QVariant Value) {
-  Settings->SetValue("ContrastThreshold",Value);
-  if (Settings->GetDouble("ContrastAmount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_SaturationAmountInput(const QVariant Value) {
-  Settings->SetValue("SaturationAmount",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_ColorBoostValueAInput(const QVariant Value) {
-  Settings->SetValue("ColorBoostValueA",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_ColorBoostValueBInput(const QVariant Value) {
-  Settings->SetValue("ColorBoostValueB",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabCC Tab
-// Partim Levels
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LabLevelsBlackPointInput(const QVariant Value) {
-  Settings->SetValue("LabLevelsBlackPoint",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_LabLevelsWhitePointInput(const QVariant Value) {
-  Settings->SetValue("LabLevelsWhitePoint",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Impulse denoise
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_ImpulseDenoiseThresholdLInput(const QVariant Value) {
-  Settings->SetValue("ImpulseDenoiseThresholdL",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_ImpulseDenoiseThresholdABInput(const QVariant Value) {
-  Settings->SetValue("ImpulseDenoiseThresholdAB",Value);
-  Update(ptProcessorPhase_LabSN);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -7825,100 +7689,6 @@ void CB_LABToneAdjust2SoftnessInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabEyeCandy Tab
-// Partim Luminance adjustment
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LAdjustC1Input(const QVariant Value) {
-  Settings->SetValue("LAdjustC1",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustC2Input(const QVariant Value) {
-  Settings->SetValue("LAdjustC2",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustC3Input(const QVariant Value) {
-  Settings->SetValue("LAdjustC3",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustC4Input(const QVariant Value) {
-  Settings->SetValue("LAdjustC4",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustC5Input(const QVariant Value) {
-  Settings->SetValue("LAdjustC5",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustC6Input(const QVariant Value) {
-  Settings->SetValue("LAdjustC6",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustC7Input(const QVariant Value) {
-  Settings->SetValue("LAdjustC7",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustC8Input(const QVariant Value) {
-  Settings->SetValue("LAdjustC8",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabEyeCandy Tab
-// Partim Saturation adjustment
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LAdjustSC1Input(const QVariant Value) {
-  Settings->SetValue("LAdjustSC1",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustSC2Input(const QVariant Value) {
-  Settings->SetValue("LAdjustSC2",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustSC3Input(const QVariant Value) {
-  Settings->SetValue("LAdjustSC3",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustSC4Input(const QVariant Value) {
-  Settings->SetValue("LAdjustSC4",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustSC5Input(const QVariant Value) {
-  Settings->SetValue("LAdjustSC5",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustSC6Input(const QVariant Value) {
-  Settings->SetValue("LAdjustSC6",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustSC7Input(const QVariant Value) {
-  Settings->SetValue("LAdjustSC7",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LAdjustSC8Input(const QVariant Value) {
-  Settings->SetValue("LAdjustSC8",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabEyeCandy Tab
 // Partim LAB Tone
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -7998,28 +7768,9 @@ void CB_LABToneHHueInput(const QVariant Value) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CB_LabVignetteModeChoice(const QVariant Choice) {
-  Settings->SetValue("LabVignetteMode",Choice);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LabVignetteInput(const QVariant Choice) {
-  Settings->SetValue("LabVignette",Choice);
-  if (Settings->GetInt("LabVignetteMode")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-void CB_LabVignetteAmountInput(const QVariant Value) {
-  Settings->SetValue("LabVignetteAmount",Value);
-  if (Settings->GetInt("LabVignetteMode")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
 void CB_LabVignetteInnerRadiusInput(const QVariant Value) {
   Settings->SetValue("LabVignetteInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("LabVignetteOuterRadius")));
-  if (Settings->GetInt("LabVignetteMode")) {
+  if (Settings->ToolIsActive("TabLABVignette")) {
     Update(ptProcessorPhase_LabEyeCandy);
   }
 }
@@ -8027,35 +7778,7 @@ void CB_LabVignetteInnerRadiusInput(const QVariant Value) {
 
 void CB_LabVignetteOuterRadiusInput(const QVariant Value) {
   Settings->SetValue("LabVignetteOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("LabVignetteInnerRadius")));
-  if (Settings->GetInt("LabVignetteMode")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-void CB_LabVignetteRoundnessInput(const QVariant Value) {
-  Settings->SetValue("LabVignetteRoundness",Value);
-  if (Settings->GetInt("LabVignetteMode")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-void CB_LabVignetteCenterXInput(const QVariant Value) {
-  Settings->SetValue("LabVignetteCenterX",Value);
-  if (Settings->GetInt("LabVignetteMode")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-void CB_LabVignetteCenterYInput(const QVariant Value) {
-  Settings->SetValue("LabVignetteCenterY",Value);
-  if (Settings->GetInt("LabVignetteMode")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-void CB_LabVignetteSoftnessInput(const QVariant Value) {
-  Settings->SetValue("LabVignetteSoftness",Value);
-  if (Settings->GetInt("LabVignetteMode")) {
+  if (Settings->ToolIsActive("TabLABVignette")) {
     Update(ptProcessorPhase_LabEyeCandy);
   }
 }
@@ -8067,68 +7790,13 @@ void CB_LabVignetteSoftnessInput(const QVariant Value) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CB_BWStylerOpacityInput(const QVariant Value) {
-  Settings->SetValue("BWStylerOpacity",Value);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
 void CB_BWStylerFilmTypeChoice(const QVariant Choice) {
   Settings->SetValue("BWStylerFilmType",Choice);
-  if (Settings->GetDouble("BWStylerOpacity")) {
+  if (Settings->ToolIsActive("TabBW")) {
     Update(ptProcessorPhase_EyeCandy);
   } else {
     MainWindow->UpdateSettings();
   }
-}
-
-void CB_BWStylerColorFilterTypeChoice(const QVariant Choice) {
-  Settings->SetValue("BWStylerColorFilterType",Choice);
-  if (Settings->GetDouble("BWStylerOpacity")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_BWStylerMultRInput(const QVariant Value) {
-  Settings->SetValue("BWStylerMultR",Value);
-  if (Settings->GetDouble("BWStylerOpacity")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_BWStylerMultGInput(const QVariant Value) {
-  Settings->SetValue("BWStylerMultG",Value);
-  if (Settings->GetDouble("BWStylerOpacity")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_BWStylerMultBInput(const QVariant Value) {
-  Settings->SetValue("BWStylerMultB",Value);
-  if (Settings->GetDouble("BWStylerOpacity")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the EyeCandy Tab
-// Partim Simple Tone
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_SimpleToneRInput(const QVariant Value) {
-  Settings->SetValue("SimpleToneR",Value);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-void CB_SimpleToneGInput(const QVariant Value) {
-  Settings->SetValue("SimpleToneG",Value);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-void CB_SimpleToneBInput(const QVariant Value) {
-  Settings->SetValue("SimpleToneB",Value);
-  Update(ptProcessorPhase_EyeCandy);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -8137,11 +7805,6 @@ void CB_SimpleToneBInput(const QVariant Value) {
 // Partim Toning
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-void CB_Tone1MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("Tone1MaskType",Choice);
-  Update(ptProcessorPhase_EyeCandy);
-}
 
 void CB_Tone1ColorButton() {
   QPixmap Pix(80, 14);
@@ -8161,43 +7824,24 @@ void CB_Tone1ColorButton() {
     Settings->SetValue("Tone1ColorBlue",Color.blue());
     Pix.fill(Color);
     MainWindow->Tone1ColorButton->setIcon(Pix);
-    if (Settings->GetInt("Tone1MaskType")){
+    if (Settings->ToolIsActive("TabRGBTone1")){
       Update(ptProcessorPhase_EyeCandy);
     }
   }
 }
 
-void CB_Tone1AmountInput(const QVariant Value) {
-  Settings->SetValue("Tone1Amount",Value);
-  if (Settings->GetInt("Tone1MaskType")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
 void CB_Tone1LowerLimitInput(const QVariant Value) {
   Settings->SetValue("Tone1LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("Tone1UpperLimit")-0.01));
-  if (Settings->GetInt("Tone1MaskType")) {
+  if (Settings->ToolIsActive("TabRGBTone1")) {
     Update(ptProcessorPhase_EyeCandy);
   }
 }
 
 void CB_Tone1UpperLimitInput(const QVariant Value) {
   Settings->SetValue("Tone1UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("Tone1LowerLimit")+0.01));
-  if (Settings->GetInt("Tone1MaskType")) {
+  if (Settings->ToolIsActive("TabRGBTone1")) {
     Update(ptProcessorPhase_EyeCandy);
   }
-}
-
-void CB_Tone1SoftnessInput(const QVariant Value) {
-  Settings->SetValue("Tone1Softness",Value);
-  if (Settings->GetInt("Tone1MaskType")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_Tone2MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("Tone2MaskType",Choice);
-  Update(ptProcessorPhase_EyeCandy);
 }
 
 void CB_Tone2ColorButton() {
@@ -8218,81 +7862,22 @@ void CB_Tone2ColorButton() {
     Settings->SetValue("Tone2ColorBlue",Color.blue());
     Pix.fill(Color);
     MainWindow->Tone2ColorButton->setIcon(Pix);
-    if (Settings->GetInt("Tone2MaskType")){
+    if (Settings->ToolIsActive("TabRGBTone1")){
       Update(ptProcessorPhase_EyeCandy);
     }
   }
 }
 
-void CB_Tone2AmountInput(const QVariant Value) {
-  Settings->SetValue("Tone2Amount",Value);
-  if (Settings->GetInt("Tone2MaskType")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
 void CB_Tone2LowerLimitInput(const QVariant Value) {
   Settings->SetValue("Tone2LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("Tone2UpperLimit")-0.01));
-  if (Settings->GetInt("Tone2MaskType")) {
+  if (Settings->ToolIsActive("TabRGBTone1")) {
     Update(ptProcessorPhase_EyeCandy);
   }
 }
 
 void CB_Tone2UpperLimitInput(const QVariant Value) {
   Settings->SetValue("Tone2UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("Tone2LowerLimit")+0.01));
-  if (Settings->GetInt("Tone2MaskType")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_Tone2SoftnessInput(const QVariant Value) {
-  Settings->SetValue("Tone2Softness",Value);
-  if (Settings->GetInt("Tone2MaskType")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the EyeCandy Tab
-// Partim Crossprocessing
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_CrossprocessingModeChoice(const QVariant Choice) {
-  Settings->SetValue("CrossprocessingMode",Choice);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-void CB_CrossprocessingColor1Input(const QVariant Value) {
-  Settings->SetValue("CrossprocessingColor1",Value);
-  if (Settings->GetInt("CrossprocessingMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_CrossprocessingColor2Input(const QVariant Value) {
-  Settings->SetValue("CrossprocessingColor2",Value);
-  if (Settings->GetInt("CrossprocessingMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the EyeCandy Tab
-// Partim RGB Contrast 2
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_RGBContrast2AmountInput(const QVariant Value) {
-  Settings->SetValue("RGBContrast2Amount",Value);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-void CB_RGBContrast2ThresholdInput(const QVariant Value) {
-  Settings->SetValue("RGBContrast2Threshold",Value);
-  if (Settings->GetDouble("RGBContrast2Amount")) {
+  if (Settings->ToolIsActive("TabRGBTone1")) {
     Update(ptProcessorPhase_EyeCandy);
   }
 }
@@ -8304,14 +7889,9 @@ void CB_RGBContrast2ThresholdInput(const QVariant Value) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CB_TextureOverlayModeChoice(const QVariant Choice) {
-  Settings->SetValue("TextureOverlayMode",Choice);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
 void CB_TextureOverlayMaskChoice(const QVariant Choice) {
   Settings->SetValue("TextureOverlayMask",Choice);
-  if (Settings->GetInt("TextureOverlayMode")) {
+  if (Settings->ToolIsActive("TabTextureOverlay")) {
     Update(ptProcessorPhase_EyeCandy);
   } else {
     MainWindow->UpdateSettings();
@@ -8341,7 +7921,7 @@ void CB_TextureOverlayButton() {
   }
 
   // Reflect in gui.
-  if (Settings->GetInt("TextureOverlayMode")) {
+  if (Settings->ToolIsActive("TabTextureOverlay")) {
     // free old one
     if (TheProcessor->m_Image_TextureOverlay) {
       delete TheProcessor->m_Image_TextureOverlay;
@@ -8359,7 +7939,7 @@ void CB_TextureOverlayClearButton() {
     TheProcessor->m_Image_TextureOverlay = NULL;
   }
   Settings->SetValue("TextureOverlayFile","");
-  if (Settings->GetInt("TextureOverlayMode")) {
+  if (Settings->ToolIsActive("TabTextureOverlay")) {
     Settings->SetValue("TextureOverlayMode",0);
     Update(ptProcessorPhase_EyeCandy);
   } else {
@@ -8367,65 +7947,16 @@ void CB_TextureOverlayClearButton() {
   }
 }
 
-void CB_TextureOverlayOpacityInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlayOpacity",Value);
-  if (Settings->GetInt("TextureOverlayMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_TextureOverlaySaturationInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlaySaturation",Value);
-  if (Settings->GetInt("TextureOverlayMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_TextureOverlayExponentInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlayExponent",Value);
-  if (Settings->GetInt("TextureOverlayMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
 void CB_TextureOverlayInnerRadiusInput(const QVariant Value) {
   Settings->SetValue("TextureOverlayInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("TextureOverlayOuterRadius")));
-  if (Settings->GetInt("TextureOverlayMode")) {
+  if (Settings->ToolIsActive("TabTextureOverlay")) {
     Update(ptProcessorPhase_EyeCandy);
   }
 }
 
 void CB_TextureOverlayOuterRadiusInput(const QVariant Value) {
   Settings->SetValue("TextureOverlayOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("TextureOverlayInnerRadius")));
-  if (Settings->GetInt("TextureOverlayMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_TextureOverlayRoundnessInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlayRoundness",Value);
-  if (Settings->GetInt("TextureOverlayMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_TextureOverlayCenterXInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlayCenterX",Value);
-  if (Settings->GetInt("TextureOverlayMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_TextureOverlayCenterYInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlayCenterY",Value);
-  if (Settings->GetInt("TextureOverlayMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_TextureOverlaySoftnessInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlaySoftness",Value);
-  if (Settings->GetInt("TextureOverlayMode")) {
+  if (Settings->ToolIsActive("TabTextureOverlay")) {
     Update(ptProcessorPhase_EyeCandy);
   }
 }
@@ -8436,11 +7967,6 @@ void CB_TextureOverlaySoftnessInput(const QVariant Value) {
 // Partim Gradual Overlay
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-void CB_GradualOverlay1Choice(const QVariant Choice) {
-  Settings->SetValue("GradualOverlay1",Choice);
-  Update(ptProcessorPhase_EyeCandy);
-}
 
 void CB_GradualOverlay1ColorButton() {
   QPixmap Pix(80, 14);
@@ -8460,29 +7986,15 @@ void CB_GradualOverlay1ColorButton() {
     Settings->SetValue("GradualOverlay1ColorBlue",Color.blue());
     Pix.fill(Color);
     MainWindow->GradualOverlay1ColorButton->setIcon(Pix);
-    if (Settings->GetInt("GradualOverlay1")){
+    if (Settings->ToolIsActive("TabGradualOverlay1")){
       Update(ptProcessorPhase_EyeCandy);
     }
   }
 }
 
-void CB_GradualOverlay1AmountInput(const QVariant Choice) {
-  Settings->SetValue("GradualOverlay1Amount",Choice);
-  if (Settings->GetInt("GradualOverlay1")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_GradualOverlay1AngleInput(const QVariant Choice) {
-  Settings->SetValue("GradualOverlay1Angle",Choice);
-  if (Settings->GetInt("GradualOverlay1")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
 void CB_GradualOverlay1LowerLevelInput(const QVariant Value) {
   Settings->SetValue("GradualOverlay1LowerLevel",MIN(Value.toDouble(), Settings->GetDouble("GradualOverlay1UpperLevel")));
-  if (Settings->GetInt("GradualOverlay1")) {
+  if (Settings->ToolIsActive("TabGradualOverlay1")) {
     Update(ptProcessorPhase_EyeCandy);
   }
 }
@@ -8490,21 +8002,9 @@ void CB_GradualOverlay1LowerLevelInput(const QVariant Value) {
 
 void CB_GradualOverlay1UpperLevelInput(const QVariant Value) {
   Settings->SetValue("GradualOverlay1UpperLevel",MAX(Value.toDouble(), Settings->GetDouble("GradualOverlay1LowerLevel")));
-  if (Settings->GetInt("GradualOverlay1")) {
+  if (Settings->ToolIsActive("TabGradualOverlay1")) {
     Update(ptProcessorPhase_EyeCandy);
   }
-}
-
-void CB_GradualOverlay1SoftnessInput(const QVariant Value) {
-  Settings->SetValue("GradualOverlay1Softness",Value);
-  if (Settings->GetInt("GradualOverlay1")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_GradualOverlay2Choice(const QVariant Choice) {
-  Settings->SetValue("GradualOverlay2",Choice);
-  Update(ptProcessorPhase_EyeCandy);
 }
 
 void CB_GradualOverlay2ColorButton() {
@@ -8525,43 +8025,22 @@ void CB_GradualOverlay2ColorButton() {
     Settings->SetValue("GradualOverlay2ColorBlue",Color.blue());
     Pix.fill(Color);
     MainWindow->GradualOverlay2ColorButton->setIcon(Pix);
-    if (Settings->GetInt("GradualOverlay2")){
+    if (Settings->ToolIsActive("TabGradualOverlay2")){
       Update(ptProcessorPhase_EyeCandy);
     }
   }
 }
 
-void CB_GradualOverlay2AmountInput(const QVariant Choice) {
-  Settings->SetValue("GradualOverlay2Amount",Choice);
-  if (Settings->GetInt("GradualOverlay2")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_GradualOverlay2AngleInput(const QVariant Choice) {
-  Settings->SetValue("GradualOverlay2Angle",Choice);
-  if (Settings->GetInt("GradualOverlay2")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
 void CB_GradualOverlay2LowerLevelInput(const QVariant Value) {
   Settings->SetValue("GradualOverlay2LowerLevel",MIN(Value.toDouble(), Settings->GetDouble("GradualOverlay2UpperLevel")));
-  if (Settings->GetInt("GradualOverlay2")) {
+  if (Settings->ToolIsActive("TabGradualOverlay2")) {
     Update(ptProcessorPhase_EyeCandy);
   }
 }
 
 void CB_GradualOverlay2UpperLevelInput(const QVariant Value) {
   Settings->SetValue("GradualOverlay2UpperLevel",MAX(Value.toDouble(), Settings->GetDouble("GradualOverlay2LowerLevel")));
-  if (Settings->GetInt("GradualOverlay2")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_GradualOverlay2SoftnessInput(const QVariant Value) {
-  Settings->SetValue("GradualOverlay2Softness",Value);
-  if (Settings->GetInt("GradualOverlay2")) {
+  if (Settings->ToolIsActive("TabGradualOverlay2")) {
     Update(ptProcessorPhase_EyeCandy);
   }
 }
@@ -8573,28 +8052,9 @@ void CB_GradualOverlay2SoftnessInput(const QVariant Value) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CB_VignetteModeChoice(const QVariant Choice) {
-  Settings->SetValue("VignetteMode",Choice);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-void CB_VignetteInput(const QVariant Choice) {
-  Settings->SetValue("Vignette",Choice);
-  if (Settings->GetInt("VignetteMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_VignetteAmountInput(const QVariant Value) {
-  Settings->SetValue("VignetteAmount",Value);
-  if (Settings->GetInt("VignetteMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
 void CB_VignetteInnerRadiusInput(const QVariant Value) {
   Settings->SetValue("VignetteInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("VignetteOuterRadius")));
-  if (Settings->GetInt("VignetteMode")) {
+  if (Settings->ToolIsActive("TabRGBVignette")) {
     Update(ptProcessorPhase_EyeCandy);
   }
 }
@@ -8602,318 +8062,8 @@ void CB_VignetteInnerRadiusInput(const QVariant Value) {
 
 void CB_VignetteOuterRadiusInput(const QVariant Value) {
   Settings->SetValue("VignetteOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("VignetteInnerRadius")));
-  if (Settings->GetInt("VignetteMode")) {
+  if (Settings->ToolIsActive("TabRGBVignette")) {
     Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_VignetteRoundnessInput(const QVariant Value) {
-  Settings->SetValue("VignetteRoundness",Value);
-  if (Settings->GetInt("VignetteMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_VignetteCenterXInput(const QVariant Value) {
-  Settings->SetValue("VignetteCenterX",Value);
-  if (Settings->GetInt("VignetteMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_VignetteCenterYInput(const QVariant Value) {
-  Settings->SetValue("VignetteCenterY",Value);
-  if (Settings->GetInt("VignetteMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_VignetteSoftnessInput(const QVariant Value) {
-  Settings->SetValue("VignetteSoftness",Value);
-  if (Settings->GetInt("VignetteMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the EyeCandy Tab
-// Partim Softglow
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_SoftglowModeChoice(const QVariant Choice) {
-  Settings->SetValue("SoftglowMode",Choice);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-void CB_SoftglowRadiusInput(const QVariant Choice) {
-  Settings->SetValue("SoftglowRadius",Choice);
-  if (Settings->GetInt("SoftglowMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_SoftglowAmountInput(const QVariant Value) {
-  Settings->SetValue("SoftglowAmount",Value);
-  if (Settings->GetInt("SoftglowMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_SoftglowContrastInput(const QVariant Value) {
-  Settings->SetValue("SoftglowContrast",Value);
-  if (Settings->GetInt("SoftglowMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_SoftglowSaturationInput(const QVariant Value) {
-  Settings->SetValue("SoftglowSaturation",Value);
-  if (Settings->GetInt("SoftglowMode")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the EyeCandy Tab
-// Partim Intensitytool
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_Vibrance2Input(const QVariant Value) {
-  Settings->SetValue("Vibrance2",Value);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-void CB_Intensity2RedInput(const QVariant Value) {
-  Settings->SetValue("Intensity2Red",Value);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-void CB_Intensity2GreenInput(const QVariant Value) {
-  Settings->SetValue("Intensity2Green",Value);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-void CB_Intensity2BlueInput(const QVariant Value) {
-  Settings->SetValue("Intensity2Blue",Value);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the EyeCandy Tab
-// Partim WebResize
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_WebResizeChoice(const QVariant Choice) {
-  Settings->SetValue("WebResize",Choice);
-  Update(ptProcessorPhase_Output);
-  MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-}
-
-void CB_WebResizeBeforeGammaCheck(const QVariant State) {
-  Settings->SetValue("WebResizeBeforeGamma",State);
-  if (Settings->GetInt("WebResize")==2) {
-    Update(ptProcessorPhase_Output);
-    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-  }
-}
-
-void CB_WebResizeScaleInput(const QVariant Value) {
-  Settings->SetValue("WebResizeScale",Value);
-  if (Settings->GetInt("WebResize")==2) {
-    Update(ptProcessorPhase_Output);
-    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-  }
-}
-
-void CB_WebResizeFilterChoice(const QVariant Choice) {
-  Settings->SetValue("WebResizeFilter",Choice);
-  if (Settings->GetInt("WebResize")==2) {
-    Update(ptProcessorPhase_Output);
-    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the GREYC Tab
-//
-////////////////////////////////////////////////////////////////////////////////
-
-//void CB_GREYCCheck(const QVariant State) {
-//  Settings->SetValue("GREYC",State);
-//  TheProcessor->Run(ptProcessorPhase_Greyc);
-//  MainWindow->UpdateSettings();
-//  UpdatePreviewImage();
-//}
-//
-//void CB_GREYCFastCheck(const QVariant State) {
-//  Settings->SetValue("GREYCFast",State);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-//
-//void CB_GREYCInterpolationChoice(const QVariant Choice) {
-//  Settings->SetValue("GREYCInterpolation",Choice);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-//
-//void CB_GREYCAmplitudeInput(const QVariant Value) {
-//  Settings->SetValue("GREYCAmplitude",Value);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-//
-//void CB_GREYCIterationsInput(const QVariant Value) {
-//  Settings->SetValue("GREYCIterations",Value);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-//
-//void CB_GREYCSharpnessInput(const QVariant Value) {
-//  Settings->SetValue("GREYCSharpness",Value);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-//
-//void CB_GREYCAnisotropyInput(const QVariant Value) {
-//  Settings->SetValue("GREYCAnisotropy",Value);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-//
-//void CB_GREYCAlphaInput(const QVariant Value) {
-//  Settings->SetValue("GREYCAlpha",Value);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-//
-//void CB_GREYCSigmaInput(const QVariant Value) {
-//  Settings->SetValue("GREYCSigma",Value);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-//
-//void CB_GREYCGaussPrecisionInput(const QVariant Value) {
-//  Settings->SetValue("GREYCGaussPrecision",Value);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-//
-//void CB_GREYCptInput(const QVariant Value) {
-//  Settings->SetValue("GREYCpt",Value);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-//
-//void CB_GREYCdaInput(const QVariant Value) {
-//  Settings->SetValue("GREYCda",Value);
-//  if (Settings->GetInt("GREYC")) {
-//    TheProcessor->Run(ptProcessorPhase_Greyc);
-//    MainWindow->UpdateSettings();
-//    UpdatePreviewImage();
-//  }
-//}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the Out Tab
-// Partim RGB Contrast 3
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_RGBContrast3AmountInput(const QVariant Value) {
-  Settings->SetValue("RGBContrast3Amount",Value);
-  Update(ptProcessorPhase_EyeCandy);
-}
-
-void CB_RGBContrast3ThresholdInput(const QVariant Value) {
-  Settings->SetValue("RGBContrast3Threshold",Value);
-  if (Settings->GetDouble("RGBContrast3Amount")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the Out Tab
-// Partim Wiener Filter Sharpen
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_WienerFilter2Check(const QVariant State) {
-  Settings->SetValue("WienerFilter2",State);
-  Update(ptProcessorPhase_Output);
-}
-
-void CB_WienerFilter2AmountInput(const QVariant Value) {
-  Settings->SetValue("WienerFilter2Amount",Value);
-  if (Settings->GetInt("WienerFilter2")) {
-    Update(ptProcessorPhase_Output);
-  }
-}
-
-void CB_WienerFilter2UseEdgeMaskCheck(const QVariant State) {
-  Settings->SetValue("WienerFilter2UseEdgeMask",State);
-  if (Settings->GetInt("WienerFilter2")) {
-    Update(ptProcessorPhase_Output);
-  }
-}
-
-void CB_WienerFilter2GaussianInput(const QVariant Value) {
-  Settings->SetValue("WienerFilter2Gaussian",Value);
-  if (Settings->GetInt("WienerFilter2")) {
-    Update(ptProcessorPhase_Output);
-  }
-}
-
-void CB_WienerFilter2BoxInput(const QVariant Value) {
-  Settings->SetValue("WienerFilter2Box",Value);
-  if (Settings->GetInt("WienerFilter2")) {
-    Update(ptProcessorPhase_Output);
-  }
-}
-
-void CB_WienerFilter2LensBlurInput(const QVariant Value) {
-  Settings->SetValue("WienerFilter2LensBlur",Value);
-  if (Settings->GetInt("WienerFilter2")) {
-    Update(ptProcessorPhase_Output);
   }
 }
 
@@ -8923,25 +8073,7 @@ void CB_WienerFilter2LensBlurInput(const QVariant Value) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CB_OutputGammaCompensationCheck(const QVariant State) {
-  Settings->SetValue("OutputGammaCompensation",State);
-  Update(ptProcessorPhase_Output);
-}
-
-void CB_OutputGammaInput(const QVariant Value) {
-  Settings->SetValue("OutputGamma",Value);
-  if (Settings->GetInt("OutputGammaCompensation")) {
-    Update(ptProcessorPhase_Output);
-  }
-}
-
-void CB_OutputLinearityInput(const QVariant Value) {
-  Settings->SetValue("OutputLinearity",Value);
-  if (Settings->GetInt("OutputGammaCompensation")) {
-    Update(ptProcessorPhase_Output);
-  }
-}
-
+/* TODO MIKE: dead?
 void CB_OutputExposureInput(const QVariant Value) {
   // The Gui element is expressed in EV.
   Settings->SetValue("OutputExposure",Value);
@@ -8952,26 +8084,11 @@ void CB_OutputExposureClipModeChoice(const QVariant Value) {
   Settings->SetValue("OutputExposureClipMode",Value);
   Update(ptProcessorPhase_Output);
 }
+*/
 
 void CB_SaveFormatChoice(const QVariant Choice) {
   Settings->SetValue("SaveFormat",Choice);
   MainWindow->UpdateSettings();
-}
-
-void CB_SaveSamplingChoice(const QVariant Choice) {
-  Settings->SetValue("SaveSampling",Choice);
-}
-
-void CB_SaveQualityInput(const QVariant Value) {
-  Settings->SetValue("SaveQuality",Value);
-}
-
-void CB_SaveResolutionInput(const QVariant Value) {
-  Settings->SetValue("SaveResolution",Value);
-}
-
-void CB_IncludeExifCheck(const QVariant State) {
-  Settings->SetValue("IncludeExif",State);
 }
 
 void CB_EraseExifThumbnailCheck(const QVariant State) {
@@ -8982,17 +8099,6 @@ void CB_EraseExifThumbnailCheck(const QVariant State) {
 void CB_ImageRatingInput(const QVariant Value) {
   Settings->SetValue("ImageRating",Value);
   TheProcessor->ReadExifBuffer();
-}
-
-// Not needed one can access the text directly with
-// MainWindow->TagsEditWidget->toPlainText()
-
-//~ void CB_TagsEditTextEdit(const QString Text) {
-  //~ Settings->SetValue("TagsText",Text);
-//~ }
-
-void CB_OutputModeChoice(const QVariant Value) {
-  Settings->SetValue("OutputMode",Value);
 }
 
 void SaveOutput(const short mode) {
@@ -9053,6 +8159,11 @@ void CB_WritePipeButton() {
 //
 // Callback dispatcher
 //
+// For refactoring:
+// The control switching the active state of the tool needs always to trigger
+// a pipe run (also if it just disabled the tool!) The only exception is the
+// external blocked state (blocked or hidden tools!).
+//
 ////////////////////////////////////////////////////////////////////////////////
 
 // For simple switches, just get the value to the settings
@@ -9070,6 +8181,7 @@ void Standard_CB_SetAndRun (const QString ObjectName, const QVariant Value) {
   if (Key.endsWith("Choice")) Key.chop(6);
 
   QWidget* CurrentControl = Settings->GetGuiWidget(Key);
+  if (CurrentControl == NULL) assert(!"Widget not found");
   ptGroupBox* CurrentTool = dynamic_cast<ptGroupBox*>(CurrentControl);
 
   while (CurrentTool == NULL) {
@@ -9388,11 +8500,20 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(TextureContrast2EdgeControlInput)
   M_Dispatch(TextureContrast2MaskingInput)
 
-  M_Dispatch(ContrastAmountInput)
-  M_Dispatch(ContrastThresholdInput)
-  M_Dispatch(SaturationAmountInput)
-  M_Dispatch(ColorBoostValueAInput)
-  M_Dispatch(ColorBoostValueBInput)
+  M_SetAndRunDispatch(LC1RadiusInput)
+  M_SetAndRunDispatch(LC1FeatherInput)
+  M_SetAndRunDispatch(LC1OpacityInput)
+  M_SetAndRunDispatch(LC1mInput)
+  M_SetAndRunDispatch(LC2RadiusInput)
+  M_SetAndRunDispatch(LC2FeatherInput)
+  M_SetAndRunDispatch(LC2OpacityInput)
+  M_SetAndRunDispatch(LC2mInput)
+
+  M_SetAndRunDispatch(ContrastAmountInput)
+  M_SetAndRunDispatch(ContrastThresholdInput)
+  M_SetAndRunDispatch(SaturationAmountInput)
+  M_SetAndRunDispatch(ColorBoostValueAInput)
+  M_SetAndRunDispatch(ColorBoostValueBInput)
 
   M_Dispatch(LabMicrocontrast1MaskTypeChoice)
   M_Dispatch(LabMicrocontrast1RadiusInput)
@@ -9412,11 +8533,11 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LabMicrocontrast2UpperLimitInput)
   M_Dispatch(LabMicrocontrast2SoftnessInput)
 
-  M_Dispatch(LabLevelsBlackPointInput)
-  M_Dispatch(LabLevelsWhitePointInput)
+  M_SetAndRunDispatch(LabLevelsBlackPointInput)
+  M_SetAndRunDispatch(LabLevelsWhitePointInput)
 
-  M_Dispatch(ImpulseDenoiseThresholdLInput)
-  M_Dispatch(ImpulseDenoiseThresholdABInput)
+  M_SetAndRunDispatch(ImpulseDenoiseThresholdLInput)
+  M_SetAndRunDispatch(ImpulseDenoiseThresholdABInput)
 
   M_Dispatch(EAWMasterInput)
   M_Dispatch(EAWLevel1Input)
@@ -9548,22 +8669,22 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LABToneAdjust2UpperLimitInput)
   M_Dispatch(LABToneAdjust2SoftnessInput)
 
-  M_Dispatch(LAdjustC1Input)
-  M_Dispatch(LAdjustC2Input)
-  M_Dispatch(LAdjustC3Input)
-  M_Dispatch(LAdjustC4Input)
-  M_Dispatch(LAdjustC5Input)
-  M_Dispatch(LAdjustC6Input)
-  M_Dispatch(LAdjustC7Input)
-  M_Dispatch(LAdjustC8Input)
-  M_Dispatch(LAdjustSC1Input)
-  M_Dispatch(LAdjustSC2Input)
-  M_Dispatch(LAdjustSC3Input)
-  M_Dispatch(LAdjustSC4Input)
-  M_Dispatch(LAdjustSC5Input)
-  M_Dispatch(LAdjustSC6Input)
-  M_Dispatch(LAdjustSC7Input)
-  M_Dispatch(LAdjustSC8Input)
+  M_SetAndRunDispatch(LAdjustC1Input)
+  M_SetAndRunDispatch(LAdjustC2Input)
+  M_SetAndRunDispatch(LAdjustC3Input)
+  M_SetAndRunDispatch(LAdjustC4Input)
+  M_SetAndRunDispatch(LAdjustC5Input)
+  M_SetAndRunDispatch(LAdjustC6Input)
+  M_SetAndRunDispatch(LAdjustC7Input)
+  M_SetAndRunDispatch(LAdjustC8Input)
+  M_SetAndRunDispatch(LAdjustSC1Input)
+  M_SetAndRunDispatch(LAdjustSC2Input)
+  M_SetAndRunDispatch(LAdjustSC3Input)
+  M_SetAndRunDispatch(LAdjustSC4Input)
+  M_SetAndRunDispatch(LAdjustSC5Input)
+  M_SetAndRunDispatch(LAdjustSC6Input)
+  M_SetAndRunDispatch(LAdjustSC7Input)
+  M_SetAndRunDispatch(LAdjustSC8Input)
 
   M_Dispatch(LABToneSaturationInput)
   M_Dispatch(LABToneAmountInput)
@@ -9578,120 +8699,111 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LABToneHAmountInput)
   M_Dispatch(LABToneHHueInput)
 
-  M_Dispatch(LabVignetteModeChoice)
-  M_Dispatch(LabVignetteInput)
-  M_Dispatch(LabVignetteAmountInput)
+  M_SetAndRunDispatch(LabVignetteModeChoice)
+  M_SetAndRunDispatch(LabVignetteInput)
+  M_SetAndRunDispatch(LabVignetteAmountInput)
   M_Dispatch(LabVignetteInnerRadiusInput)
   M_Dispatch(LabVignetteOuterRadiusInput)
-  M_Dispatch(LabVignetteRoundnessInput)
-  M_Dispatch(LabVignetteCenterXInput)
-  M_Dispatch(LabVignetteCenterYInput)
-  M_Dispatch(LabVignetteSoftnessInput)
+  M_SetAndRunDispatch(LabVignetteRoundnessInput)
+  M_SetAndRunDispatch(LabVignetteCenterXInput)
+  M_SetAndRunDispatch(LabVignetteCenterYInput)
+  M_SetAndRunDispatch(LabVignetteSoftnessInput)
 
   M_Dispatch(BWStylerFilmTypeChoice)
-  M_Dispatch(BWStylerColorFilterTypeChoice)
-  M_Dispatch(BWStylerMultRInput)
-  M_Dispatch(BWStylerMultGInput)
-  M_Dispatch(BWStylerMultBInput)
-  M_Dispatch(BWStylerOpacityInput)
+  M_SetAndRunDispatch(BWStylerColorFilterTypeChoice)
+  M_SetAndRunDispatch(BWStylerMultRInput)
+  M_SetAndRunDispatch(BWStylerMultGInput)
+  M_SetAndRunDispatch(BWStylerMultBInput)
+  M_SetAndRunDispatch(BWStylerOpacityInput)
 
-  M_Dispatch(LC1RadiusInput)
-  M_Dispatch(LC1FeatherInput)
-  M_Dispatch(LC1OpacityInput)
-  M_Dispatch(LC1mInput)
-  M_Dispatch(LC2RadiusInput)
-  M_Dispatch(LC2FeatherInput)
-  M_Dispatch(LC2OpacityInput)
-  M_Dispatch(LC2mInput)
+  M_SetAndRunDispatch(SimpleToneRInput)
+  M_SetAndRunDispatch(SimpleToneGInput)
+  M_SetAndRunDispatch(SimpleToneBInput)
 
-  M_Dispatch(SimpleToneRInput)
-  M_Dispatch(SimpleToneGInput)
-  M_Dispatch(SimpleToneBInput)
-
-  M_Dispatch(Tone1MaskTypeChoice)
-  M_Dispatch(Tone1AmountInput)
+  M_SetAndRunDispatch(Tone1MaskTypeChoice)
+  M_SetAndRunDispatch(Tone1AmountInput)
   M_Dispatch(Tone1LowerLimitInput)
   M_Dispatch(Tone1UpperLimitInput)
-  M_Dispatch(Tone1SoftnessInput)
+  M_SetAndRunDispatch(Tone1SoftnessInput)
 
-  M_Dispatch(Tone2MaskTypeChoice)
-  M_Dispatch(Tone2AmountInput)
+  M_SetAndRunDispatch(Tone2MaskTypeChoice)
+  M_SetAndRunDispatch(Tone2AmountInput)
   M_Dispatch(Tone2LowerLimitInput)
   M_Dispatch(Tone2UpperLimitInput)
-  M_Dispatch(Tone2SoftnessInput)
+  M_SetAndRunDispatch(Tone2SoftnessInput)
 
-  M_Dispatch(CrossprocessingModeChoice)
-  M_Dispatch(CrossprocessingColor1Input)
-  M_Dispatch(CrossprocessingColor2Input)
+  M_SetAndRunDispatch(CrossprocessingModeChoice)
+  M_SetAndRunDispatch(CrossprocessingColor1Input)
+  M_SetAndRunDispatch(CrossprocessingColor2Input)
 
-  M_Dispatch(RGBContrast2AmountInput)
-  M_Dispatch(RGBContrast2ThresholdInput)
+  M_SetAndRunDispatch(RGBContrast2AmountInput)
+  M_SetAndRunDispatch(RGBContrast2ThresholdInput)
 
-  M_Dispatch(TextureOverlayModeChoice)
+  M_SetAndRunDispatch(TextureOverlayModeChoice)
   M_Dispatch(TextureOverlayMaskChoice)
-  M_Dispatch(TextureOverlayOpacityInput)
-  M_Dispatch(TextureOverlaySaturationInput)
-  M_Dispatch(TextureOverlayExponentInput)
+  M_SetAndRunDispatch(TextureOverlayOpacityInput)
+  M_SetAndRunDispatch(TextureOverlaySaturationInput)
+  M_SetAndRunDispatch(TextureOverlayExponentInput)
   M_Dispatch(TextureOverlayInnerRadiusInput)
   M_Dispatch(TextureOverlayOuterRadiusInput)
-  M_Dispatch(TextureOverlayRoundnessInput)
-  M_Dispatch(TextureOverlayCenterXInput)
-  M_Dispatch(TextureOverlayCenterYInput)
-  M_Dispatch(TextureOverlaySoftnessInput)
+  M_SetAndRunDispatch(TextureOverlayRoundnessInput)
+  M_SetAndRunDispatch(TextureOverlayCenterXInput)
+  M_SetAndRunDispatch(TextureOverlayCenterYInput)
+  M_SetAndRunDispatch(TextureOverlaySoftnessInput)
 
-  M_Dispatch(GradualOverlay1Choice)
-  M_Dispatch(GradualOverlay1AmountInput)
-  M_Dispatch(GradualOverlay1AngleInput)
+  M_SetAndRunDispatch(GradualOverlay1Choice)
+  M_SetAndRunDispatch(GradualOverlay1AmountInput)
+  M_SetAndRunDispatch(GradualOverlay1AngleInput)
   M_Dispatch(GradualOverlay1LowerLevelInput)
   M_Dispatch(GradualOverlay1UpperLevelInput)
-  M_Dispatch(GradualOverlay1SoftnessInput)
+  M_SetAndRunDispatch(GradualOverlay1SoftnessInput)
 
-  M_Dispatch(GradualOverlay2Choice)
-  M_Dispatch(GradualOverlay2AmountInput)
-  M_Dispatch(GradualOverlay2AngleInput)
+  M_SetAndRunDispatch(GradualOverlay2Choice)
+  M_SetAndRunDispatch(GradualOverlay2AmountInput)
+  M_SetAndRunDispatch(GradualOverlay2AngleInput)
   M_Dispatch(GradualOverlay2LowerLevelInput)
   M_Dispatch(GradualOverlay2UpperLevelInput)
-  M_Dispatch(GradualOverlay2SoftnessInput)
+  M_SetAndRunDispatch(GradualOverlay2SoftnessInput)
 
-  M_Dispatch(VignetteModeChoice)
-  M_Dispatch(VignetteInput)
-  M_Dispatch(VignetteAmountInput)
+  M_SetAndRunDispatch(VignetteModeChoice)
+  M_SetAndRunDispatch(VignetteInput)
+  M_SetAndRunDispatch(VignetteAmountInput)
   M_Dispatch(VignetteInnerRadiusInput)
   M_Dispatch(VignetteOuterRadiusInput)
-  M_Dispatch(VignetteRoundnessInput)
-  M_Dispatch(VignetteCenterXInput)
-  M_Dispatch(VignetteCenterYInput)
-  M_Dispatch(VignetteSoftnessInput)
+  M_SetAndRunDispatch(VignetteRoundnessInput)
+  M_SetAndRunDispatch(VignetteCenterXInput)
+  M_SetAndRunDispatch(VignetteCenterYInput)
+  M_SetAndRunDispatch(VignetteSoftnessInput)
 
-  M_Dispatch(SoftglowModeChoice)
-  M_Dispatch(SoftglowRadiusInput)
-  M_Dispatch(SoftglowAmountInput)
-  M_Dispatch(SoftglowContrastInput)
-  M_Dispatch(SoftglowSaturationInput)
+  M_SetAndRunDispatch(SoftglowModeChoice)
+  M_SetAndRunDispatch(SoftglowRadiusInput)
+  M_SetAndRunDispatch(SoftglowAmountInput)
+  M_SetAndRunDispatch(SoftglowContrastInput)
+  M_SetAndRunDispatch(SoftglowSaturationInput)
 
-  M_Dispatch(Vibrance2Input)
-  M_Dispatch(Intensity2RedInput)
-  M_Dispatch(Intensity2GreenInput)
-  M_Dispatch(Intensity2BlueInput)
+  M_SetAndRunDispatch(Vibrance2Input)
+  M_SetAndRunDispatch(Intensity2RedInput)
+  M_SetAndRunDispatch(Intensity2GreenInput)
+  M_SetAndRunDispatch(Intensity2BlueInput)
 
-  M_Dispatch(OutputGammaCompensationCheck)
-  M_Dispatch(OutputGammaInput)
-  M_Dispatch(OutputLinearityInput)
+  M_SetAndRunDispatch(OutputGammaCompensationCheck)
+  M_SetAndRunDispatch(OutputGammaInput)
+  M_SetAndRunDispatch(OutputLinearityInput)
 
   M_SetAndRunDispatch(RGBContrast3AmountInput)
   M_SetAndRunDispatch(RGBContrast3ThresholdInput)
 
-  M_Dispatch(WebResizeChoice)
-  M_Dispatch(WebResizeBeforeGammaCheck)
-  M_Dispatch(WebResizeScaleInput)
-  M_Dispatch(WebResizeFilterChoice)
+  M_SetAndRunDispatch(WebResizeChoice)
+  M_SetAndRunDispatch(WebResizeBeforeGammaCheck)
+  M_SetAndRunDispatch(WebResizeScaleInput)
+  M_SetAndRunDispatch(WebResizeFilterChoice)
 
-  M_Dispatch(WienerFilter2Check)
-  M_Dispatch(WienerFilter2UseEdgeMaskCheck)
-  M_Dispatch(WienerFilter2AmountInput)
-  M_Dispatch(WienerFilter2GaussianInput)
-  M_Dispatch(WienerFilter2BoxInput)
-  M_Dispatch(WienerFilter2LensBlurInput)
+  M_SetAndRunDispatch(WienerFilter2Check)
+  M_SetAndRunDispatch(WienerFilter2UseEdgeMaskCheck)
+  M_SetAndRunDispatch(WienerFilter2AmountInput)
+  M_SetAndRunDispatch(WienerFilter2GaussianInput)
+  M_SetAndRunDispatch(WienerFilter2BoxInput)
+  M_SetAndRunDispatch(WienerFilter2LensBlurInput)
 
 //  M_Dispatch(GREYCCheck)
 //  M_Dispatch(GREYCFastCheck)
@@ -9708,14 +8820,14 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(OutputColorProfileIntentChoice)
 
-  M_Dispatch(SaveQualityInput)
-  M_Dispatch(SaveResolutionInput)
+  M_JustSetDispatch(SaveQualityInput)
+  M_JustSetDispatch(SaveResolutionInput)
   M_Dispatch(SaveFormatChoice)
-  M_Dispatch(SaveSamplingChoice)
-  M_Dispatch(IncludeExifCheck)
+  M_JustSetDispatch(SaveSamplingChoice)
+  M_JustSetDispatch(IncludeExifCheck)
   M_Dispatch(EraseExifThumbnailCheck)
   M_Dispatch(ImageRatingInput)
-  M_Dispatch(OutputModeChoice)
+  M_JustSetDispatch(OutputModeChoice)
 
   } else {
     fprintf(stderr,"(%s,%d) Unexpected ObjectName '%s'\n",
