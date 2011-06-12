@@ -1777,7 +1777,7 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         }
       }
       if (Tools == "") Tools = tr("No tools hidden!");
-      ptMessageBox::information(this,"Hidden tools",Tools);
+      ptMessageBox::information(this,tr("Hidden tools"),Tools);
       /*findChild<QWidget *>(QString("TabGenCorrections"))->
         setVisible(1-findChild<QWidget *>(QString("TabGenCorrections"))->isVisible()); */
     } else if (Event->key()==Qt::Key_U && Event->modifiers()==Qt::NoModifier) {
