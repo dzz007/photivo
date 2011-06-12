@@ -414,7 +414,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
     if (CliArgs.indexOf("-h") > -1) {
 #ifdef Q_OS_WIN32
-      // no ptMessageBox because we’re on Windows and Theme object not yet created
+      // no ptMessageBox because we're on Windows and Theme object not yet created
       ptMessageBox::information(0, QObject::tr("Photivo command line options"), PhotivoCliUsageMsg);
 #else
       fprintf(stdout,"%s",PhotivoCliUsageMsg.toAscii().data());
@@ -468,7 +468,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
     if (CliArgumentsError == 1) {
 #ifdef Q_OS_WIN32
-      // no ptMessageBox because we’re on Windows and Theme object not yet created
+      // no ptMessageBox because we're on Windows and Theme object not yet created
       ptMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
 #else
       fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
