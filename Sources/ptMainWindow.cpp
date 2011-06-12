@@ -2631,9 +2631,9 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
 void ptMainWindow::UpdateCropToolUI() {
   bool OnOff = false;
   if (ViewWindow != NULL) {   // when called from MainWindow constructor, ViewWindow doesn't yet exist
-//    if (ViewWindow->OngoingAction() == vaCrop) {    // TODOSR: re-enable
-//      OnOff = true;
-//    }
+    if (ViewWindow->interaction() == iaCrop) {
+      OnOff = true;
+    }
   }
   CropWidget->setEnabled(!OnOff);
   MakeCropButton->setVisible(!OnOff);

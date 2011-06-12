@@ -303,7 +303,11 @@ void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   // drag image with left mouse button to scroll
-  if (m_LeftMousePressed && (m_Interaction == iaNone || m_Interaction == iaCrop)) {
+  short CropDrag = 0;
+  if (m_Interaction == iaCrop) {
+    CropDrag = m_Crop->isDragging();
+  }
+  if (m_LeftMousePressed && (m_Interaction == iaNone || !CropDrag)) {
     m_DragDelta->setP2(event->pos());
     horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
                                     m_DragDelta->x2() +
