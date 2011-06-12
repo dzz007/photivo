@@ -20,7 +20,7 @@
 **
 *******************************************************************************/
 /**
-** Wrapper around QMessageBox to ensure all message boxes have the system’s
+** Wrapper around QMessageBox to ensure all message boxes have the system's
 ** palette. Avoids partly styled and possibly illegible dialogs.
 **
 ** Always use ptMessageBox instead of QMessageBox!
