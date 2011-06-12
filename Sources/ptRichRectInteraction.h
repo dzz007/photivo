@@ -77,7 +77,8 @@ public:
                                  const short CropGuidelines);
   ~ptRichRectInteraction();
 
-  inline ptStatus exitStatus() { return m_ExitStatus; }
+  inline ptStatus exitStatus() const { return m_ExitStatus; }
+  inline short isDragging() const { return m_NowDragging; }
   void flipAspectRatio();
   void moveToCenter(const short horizontal, const short vertical);  
   inline QRect rect() { return QRect(m_RectItem->rect().toRect()); }
