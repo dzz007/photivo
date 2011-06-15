@@ -55,7 +55,7 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
   assert(Settings != NULL);
   assert(Theme != NULL);
 
-  // Brushes for the LightsOut modes
+  // Setup brushes for the LightsOut rectangles
   m_LightsOutBrushes[0] = new QBrush();
   m_LightsOutBrushes[1] = new QBrush(QColor(20, 20, 20, 200));
   if (Settings->GetInt("BackgroundColor")) {
@@ -70,14 +70,16 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
   for (int i = 0; i <= 3; i++) {
     m_LightsOutRects[i] = m_View->scene()->addRect(
                               0,0,0,0,
-                              QPen(),
+                              QPen(Qt::NoPen),
                               *m_LightsOutBrushes[Settings->GetInt("LightsOut")]);
    }
 
   m_DragDelta = new QLine();
-  m_RectItem = m_View->scene()->addRect(x, y, width, height, QPen(QColor(150,150,150)));
+  m_Rect.setRect(x, y, width, height);
+  m_RectItem = m_View->scene()->addRect(m_Rect, QPen(QColor(150,150,150)));
+  m_RectItem->setVisible(Settings->GetInt("LightsOut") != ptLightsOutMode_Black);
 
-  // Guidelines items init
+  // Init guidelines items
   for (int i = 0; i <= 3; i++) {
     m_GuideItems[i] = new QGraphicsLineItem();
     m_GuideItems[i]->hide();
@@ -85,7 +87,8 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
     m_View->scene()->addItem(m_GuideItems[i]);
   }
 
-  setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH);
+  setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH, 0);
+  UpdateScene();
 }
 
 
@@ -126,7 +129,7 @@ void ptRichRectInteraction::setAspectRatio(const short FixedAspectRatio,
 
   if (ImmediateUpdate) {
     m_MovingEdge = meNone;
-    EnforceAspectRatio();
+    UpdateScene();
   }
 }
 
@@ -141,6 +144,7 @@ void ptRichRectInteraction::setGuidelines(const short mode) {
   if (m_Guides != mode) {
     m_Guides = mode;
     RecalcGuides();
+    m_View->repaint();
   }
 }
 
@@ -154,9 +158,11 @@ void ptRichRectInteraction::setGuidelines(const short mode) {
 void ptRichRectInteraction::setLightsOut(short mode) {
   mode = qBound((short)0, mode, (short)2);
   Settings->SetValue("LightsOut", mode);
+  m_RectItem->setVisible(mode != ptLightsOutMode_Black);
   for (int i = 0; i <= 3; i++) {
     m_LightsOutRects[i]->setBrush(*m_LightsOutBrushes[mode]);
   }
+  UpdateScene();
 }
 
 
@@ -197,16 +203,19 @@ void ptRichRectInteraction::mouseAction(QMouseEvent* event) {
 void ptRichRectInteraction::MousePressHandler(const QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
     QPointF scPos = m_View->mapToScene(event->pos());
+    m_DragDelta->setPoints(event->pos(), event->pos());
 
-    if (m_RectItem->rect().contains(scPos)) {
+    if (m_RectItem->contains(scPos)) {
       m_NowDragging = 1;
-      m_DragDelta->setPoints(event->pos(), event->pos());
 
     // Start new rect when none is present or clicked outside current one.
-    } else if (m_View->scene()->sceneRect().contains(scPos)) {
+    } else if (m_View->scene()->sceneRect().contains(scPos) && (m_CtrlIsPressed > 0)) {
       m_NowDragging = 1;
       m_MovingEdge = meNone;
-      m_RectItem->setRect(scPos.x(), scPos.y(), 0.0, 0.0);
+      m_Rect.setRect(scPos.x(), scPos.y(), 1.0, 1.0);
+      m_RectItem->setRect(m_Rect);
+      m_CtrlIsPressed = 0;
+      UpdateScene();
     }
   }
 }
@@ -253,14 +262,15 @@ void ptRichRectInteraction::MouseMoveHandler(const QMouseEvent* event) {
 
     // Move current rectangle. The qBounds make sure it stops at image boundaries.
     if (m_CtrlIsPressed > 0) {
-      m_RectItem->rect().moveTo(
-          qBound(0.0, m_RectItem->rect().left() + dx,
-                 m_View->scene()->sceneRect().width() - m_RectItem->rect().width()),
-          qBound(0.0, m_RectItem->rect().top() + dy,
-                 m_View->scene()->sceneRect().height() - m_RectItem->rect().height())
+      m_Rect.moveTo(
+          qBound(0.0, m_Rect.left() + dx,
+                 m_View->scene()->sceneRect().width() - m_Rect.width()),
+          qBound(0.0, m_Rect.top() + dy,
+                 m_View->scene()->sceneRect().height() - m_Rect.height())
       );
       RecalcGuides();
       RecalcLightsOutRects();
+      m_RectItem->setRect(m_Rect);
 
     } else {
       // initialize movement direction when rectangle was just started
@@ -275,9 +285,9 @@ void ptRichRectInteraction::MouseMoveHandler(const QMouseEvent* event) {
           m_MovingEdge = meTopRight;
         }
       }
-
       UpdateScene();
     }
+
     m_DragDelta->setP1(m_DragDelta->p2());
 
 
@@ -299,27 +309,28 @@ void ptRichRectInteraction::MouseMoveHandler(const QMouseEvent* event) {
 void ptRichRectInteraction::keyAction(QKeyEvent* event) {
   if (event->type() == QEvent::KeyPress) {
     switch (event->key()) {
-      case Qt::Key_Escape:
+      case Qt::Key_Escape:    // cancel interaction
         event->accept();
         m_ExitStatus = stFailure;
         Finalize();
         break;
 
-      case Qt::Key_Enter:
+      case Qt::Key_Enter:   // confirm rectangle and end interaction
+      case Qt::Key_Return:
         event->accept();
         m_ExitStatus = stSuccess;
         Finalize();
         break;
 
-      case Qt::Key_Alt:
+      case Qt::Key_Alt:   // toggle LightsOut mode
         event->accept();
         setLightsOut((Settings->GetInt("LightsOut") + 1) % 3);
         break;
 
       // Ctrl needs to be held down to move the rectangle.
-      // m_CtrlIsPressed not a simple bool flag to account for keyboards with
-      // multiple ctrl keys. There’s a lot of those. ;-) For each ctrl press the
-      // variable is increased, for each release it’s decreased. This is necessary
+      // m_CtrlIsPressed is not a simple bool flag to account for keyboards with
+      // multiple ctrl keys. There's a lot of those. ;-) For each ctrl press the
+      // variable is increased, for each release it's decreased. This is necessary
       // because in cases like press left ctrl - press right ctrl - release left ctrl
       // Photivo should still recognise the ctrl key as being held down.
       case Qt::Key_Control:
@@ -336,8 +347,11 @@ void ptRichRectInteraction::keyAction(QKeyEvent* event) {
 
   } else if (event->type() == QEvent::KeyRelease) {
     if (event->key() == Qt::Key_Control) {
-      m_CtrlIsPressed--;
-      UpdateCursor();
+      event->accept();
+      if (m_CtrlIsPressed > 0) {
+        m_CtrlIsPressed--;
+        UpdateCursor();
+      }
     }
   }
 }
@@ -350,8 +364,13 @@ void ptRichRectInteraction::keyAction(QKeyEvent* event) {
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::UpdateCursor() {
+  // move rectangle cursor
   if ((m_MovingEdge != meNone) && (m_CtrlIsPressed > 0)) {
     m_View->setCursor(Qt::SizeAllCursor);
+
+  // start new rect cursor
+  } else if ((m_MovingEdge == meNone) && (m_CtrlIsPressed > 0)) {
+    m_View->setCursor(Qt::CrossCursor);
 
   } else {
     switch (m_MovingEdge) {
@@ -403,7 +422,7 @@ void ptRichRectInteraction::stop(ptStatus exitStatus) {
 
 void ptRichRectInteraction::Finalize() {
   m_View->scene()->removeItem(m_RectItem);
-  // Do not delete m_RectItem here! It’s still needed to report the size and
+  // Do not delete m_RectItem here! It's still needed to report the size and
   // position of the rectangle to the caller. Deletion happens in the destructor.
   m_View->setCursor(Qt::ArrowCursor);
   emit finished(m_ExitStatus);
@@ -417,7 +436,7 @@ void ptRichRectInteraction::Finalize() {
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::moveToCenter(const short horizontal, const short vertical) {
-  QPointF NewCenter = m_RectItem->rect().center();
+  QPointF NewCenter = m_Rect.center();
 
   if (horizontal) {
     NewCenter.setX(m_View->scene()->width() / 2);
@@ -426,7 +445,8 @@ void ptRichRectInteraction::moveToCenter(const short horizontal, const short ver
     NewCenter.setY(m_View->scene()->height() / 2);
   }
 
-  m_RectItem->rect().moveCenter(NewCenter);
+  m_Rect.moveCenter(NewCenter);
+  m_RectItem->setRect(m_Rect);
 }
 
 
@@ -437,11 +457,17 @@ void ptRichRectInteraction::moveToCenter(const short horizontal, const short ver
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::flipAspectRatio() {
-  if (!m_FixedAspectRatio) {
-    setAspectRatio(0, m_RectItem->rect().height(), m_RectItem->rect().width(), 0);
-  } else {
+  if (m_FixedAspectRatio) {
     setAspectRatio(1, m_AspectRatioH, m_AspectRatioW, 0);
   }
+  QPointF center = m_Rect.center();
+  qreal newH = m_Rect.width();
+  qreal newW = m_Rect.height();
+  m_Rect.setWidth(newW);
+  m_Rect.setHeight(newH);
+  m_Rect.moveCenter(center);
+  ClampToScene();
+  UpdateScene();
 }
 
 
@@ -455,27 +481,28 @@ void ptRichRectInteraction::flipAspectRatio() {
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::ClampToScene() {
-  QPointF center = m_RectItem->rect().center();
-  qreal arw = m_RectItem->rect().width();
-  qreal arh = m_RectItem->rect().height();
+  QPointF center = m_Rect.center();
+  qreal arw = m_Rect.width();
+  qreal arh = m_Rect.height();
 
-  qreal MaxWidth = qMin(center.x() - m_View->scene()->sceneRect().left(),
-                        m_View->scene()->sceneRect().right() - center.x());
-  qreal MaxHeight = qMin(center.y() - m_View->scene()->sceneRect().top(),
-                         m_View->scene()->sceneRect().bottom() - center.y());
+  qreal MaxWidth = 2 * qMin(center.x() - m_View->scene()->sceneRect().left(),
+                            m_View->scene()->sceneRect().right() - center.x());
+  qreal MaxHeight = 2* qMin(center.y() - m_View->scene()->sceneRect().top(),
+                            m_View->scene()->sceneRect().bottom() - center.y());
 
-  if (m_RectItem->rect().width() > MaxWidth) {
-    m_RectItem->rect().setWidth(MaxWidth);
-    m_RectItem->rect().setHeight(MaxWidth * arh / arw);
-    MaxHeight = qMin(MaxHeight, m_RectItem->rect().height());
+  if (m_Rect.width() > MaxWidth) {
+    m_Rect.setWidth(MaxWidth);
+    m_Rect.setHeight(MaxWidth * arh / arw);
+    MaxHeight = qMin(MaxHeight, m_Rect.height());
   }
 
-  if (m_RectItem->rect().height() > MaxHeight) {
-    m_RectItem->rect().setHeight(MaxHeight);
-    m_RectItem->rect().setWidth(MaxHeight * arw / arh);
+  if (m_Rect.height() > MaxHeight) {
+    m_Rect.setHeight(MaxHeight);
+    m_Rect.setWidth(MaxHeight * arw / arh);
   }
 
-  m_RectItem->rect().moveCenter(center);
+  m_Rect.moveCenter(center);
+  m_RectItem->setRect(m_Rect);
 }
 
 
@@ -495,150 +522,130 @@ void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*
   dy = qAbs(dy);
   qreal ImageRight = m_View->scene()->sceneRect().right();
   qreal ImageBottom = m_View->scene()->sceneRect().bottom();
-  qreal NewWidth = m_RectItem->rect().height() * m_AspectRatio;
-  qreal NewHeight = m_RectItem->rect().width() / m_AspectRatio;
+  qreal NewWidth = m_Rect.height() * m_AspectRatio;
+  qreal NewHeight = m_Rect.width() / m_AspectRatio;
   qreal EdgeCenter = 0.0;
 
   switch (m_MovingEdge){
     case meTopLeft:
       if (dx > dy) {  // primarily horizontal mouse movement: new width takes precedence
-        m_RectItem->rect().setTop(m_RectItem->rect().top() +
-                                  m_RectItem->rect().height() - NewHeight);
-        if (m_RectItem->rect().top() < 0) {
-          m_RectItem->rect().setTop(0);
-          m_RectItem->rect().setLeft(m_RectItem->rect().right() -
-                                     m_RectItem->rect().height() * m_AspectRatio);
+        m_Rect.setTop(m_Rect.top() +
+                                  m_Rect.height() - NewHeight);
+        if (m_Rect.top() < 0) {
+          m_Rect.setTop(0);
+          m_Rect.setLeft(m_Rect.right() - m_Rect.height() * m_AspectRatio);
         }
       } else {  // primarily vertical mouse movement: new height takes precedence
-        m_RectItem->rect().setLeft(m_RectItem->rect().left() +
-                                   m_RectItem->rect().width() - NewWidth);
-        if (m_RectItem->rect().left() < 0) {
-          m_RectItem->rect().setLeft(0);
-          m_RectItem->rect().setTop(m_RectItem->rect().bottom() -
-                                    m_RectItem->rect().width() / m_AspectRatio);
+        m_Rect.setLeft(m_Rect.left() +
+                                   m_Rect.width() - NewWidth);
+        if (m_Rect.left() < 0) {
+          m_Rect.setLeft(0);
+          m_Rect.setTop(m_Rect.bottom() - m_Rect.width() / m_AspectRatio);
         }
       }
       break;
 
     case meTop:
-      EdgeCenter = m_RectItem->rect().left() + m_RectItem->rect().width() / 2;
-      m_RectItem->rect().setWidth(NewWidth);
-      m_RectItem->rect().moveLeft(EdgeCenter - NewWidth / 2);
-      if (m_RectItem->rect().right() > ImageRight) {
-        m_RectItem->rect().setRight(ImageRight);
-        m_RectItem->rect().setTop(m_RectItem->rect().bottom() -
-                                  m_RectItem->rect().width() / m_AspectRatio);
+      EdgeCenter = m_Rect.left() + m_Rect.width() / 2;
+      m_Rect.setWidth(NewWidth);
+      m_Rect.moveLeft(EdgeCenter - NewWidth / 2);
+      if (m_Rect.right() > ImageRight) {
+        m_Rect.setRight(ImageRight);
+        m_Rect.setTop(m_Rect.bottom() - m_Rect.width() / m_AspectRatio);
       }
-      if (m_RectItem->rect().left() < 0) {
-        m_RectItem->rect().setLeft(0);
-        m_RectItem->rect().setTop(m_RectItem->rect().bottom() -
-                                  m_RectItem->rect().width() / m_AspectRatio);
+      if (m_Rect.left() < 0) {
+        m_Rect.setLeft(0);
+        m_Rect.setTop(m_Rect.bottom() - m_Rect.width() / m_AspectRatio);
       }
       break;
 
     case meTopRight:
       if (dx > dy) {
-        m_RectItem->rect().setTop(m_RectItem->rect().top() +
-                                  m_RectItem->rect().height() - NewHeight);
-        if (m_RectItem->rect().top() < 0) {
-          m_RectItem->rect().setTop(0);
-          m_RectItem->rect().setRight(m_RectItem->rect().left() +
-                                      m_RectItem->rect().height() * m_AspectRatio);
+        m_Rect.setTop(m_Rect.top() + m_Rect.height() - NewHeight);
+        if (m_Rect.top() < 0) {
+          m_Rect.setTop(0);
+          m_Rect.setRight(m_Rect.left() + m_Rect.height() * m_AspectRatio);
         }
       } else {
-        m_RectItem->rect().setWidth(NewWidth);
-        if (m_RectItem->rect().right() > ImageRight) {
-          m_RectItem->rect().setRight(ImageRight);
-          m_RectItem->rect().setTop(m_RectItem->rect().bottom() -
-                                    m_RectItem->rect().width() / m_AspectRatio);
+        m_Rect.setWidth(NewWidth);
+        if (m_Rect.right() > ImageRight) {
+          m_Rect.setRight(ImageRight);
+          m_Rect.setTop(m_Rect.bottom() - m_Rect.width() / m_AspectRatio);
         }
       }
       break;
 
     case meRight:
-      EdgeCenter = m_RectItem->rect().top() + m_RectItem->rect().height() / 2;
-      m_RectItem->rect().setHeight(NewHeight);
-      m_RectItem->rect().moveTop(EdgeCenter - NewHeight / 2);
-      if (m_RectItem->rect().bottom() > ImageBottom) {
-        m_RectItem->rect().setBottom(ImageBottom);
-        m_RectItem->rect().setRight(m_RectItem->rect().left() +
-                                    m_RectItem->rect().height() * m_AspectRatio);
+      EdgeCenter = m_Rect.top() + m_Rect.height() / 2;
+      m_Rect.setHeight(NewHeight);
+      m_Rect.moveTop(EdgeCenter - NewHeight / 2);
+      if (m_Rect.bottom() > ImageBottom) {
+        m_Rect.setBottom(ImageBottom);
+        m_Rect.setRight(m_Rect.left() + m_Rect.height() * m_AspectRatio);
       }
-      if (m_RectItem->rect().top() < 0) {
-        m_RectItem->rect().setTop(0);
-        m_RectItem->rect().setRight(m_RectItem->rect().left() +
-                                    m_RectItem->rect().height() * m_AspectRatio);
+      if (m_Rect.top() < 0) {
+        m_Rect.setTop(0);
+        m_Rect.setRight(m_Rect.left() + m_Rect.height() * m_AspectRatio);
       }
       break;
 
     case meBottomRight:
       if (dx > dy) {
-        m_RectItem->rect().setBottom(m_RectItem->rect().bottom() +
-                                     NewHeight - m_RectItem->rect().height());
-        if (m_RectItem->rect().bottom() > ImageBottom) {
-          m_RectItem->rect().setBottom(ImageBottom);
-          m_RectItem->rect().setRight(m_RectItem->rect().left() +
-                                      m_RectItem->rect().height() * m_AspectRatio);
+        m_Rect.setBottom(m_Rect.bottom() + NewHeight - m_Rect.height());
+        if (m_Rect.bottom() > ImageBottom) {
+          m_Rect.setBottom(ImageBottom);
+          m_Rect.setRight(m_Rect.left() + m_Rect.height() * m_AspectRatio);
         }
       } else {
-        m_RectItem->rect().setWidth(NewWidth);
-        if (m_RectItem->rect().right() > ImageRight) {
-          m_RectItem->rect().setRight(ImageRight);
-          m_RectItem->rect().setTop(m_RectItem->rect().bottom() -
-                                    m_RectItem->rect().width() / m_AspectRatio);
+        m_Rect.setWidth(NewWidth);
+        if (m_Rect.right() > ImageRight) {
+          m_Rect.setRight(ImageRight);
+          m_Rect.setTop(m_Rect.bottom() - m_Rect.width() / m_AspectRatio);
         }
       }
       break;
 
     case meBottom:
-      EdgeCenter = m_RectItem->rect().left() + m_RectItem->rect().width() / 2;
-      m_RectItem->rect().setWidth(NewWidth);
-      m_RectItem->rect().moveLeft(EdgeCenter - NewWidth / 2);
-      if (m_RectItem->rect().right() > ImageRight) {
-        m_RectItem->rect().setRight(ImageRight);
-        m_RectItem->rect().setBottom(m_RectItem->rect().top() +
-                                     m_RectItem->rect().width() / m_AspectRatio);
+      EdgeCenter = m_Rect.left() + m_Rect.width() / 2;
+      m_Rect.setWidth(NewWidth);
+      m_Rect.moveLeft(EdgeCenter - NewWidth / 2);
+      if (m_Rect.right() > ImageRight) {
+        m_Rect.setRight(ImageRight);
+        m_Rect.setBottom(m_Rect.top() + m_Rect.width() / m_AspectRatio);
       }
-      if (m_RectItem->rect().left() < 0) {
-        m_RectItem->rect().setLeft(0);
-        m_RectItem->rect().setBottom(m_RectItem->rect().top() +
-                                     m_RectItem->rect().width() / m_AspectRatio);
+      if (m_Rect.left() < 0) {
+        m_Rect.setLeft(0);
+        m_Rect.setBottom(m_Rect.top() + m_Rect.width() / m_AspectRatio);
       }
       break;
 
     case meBottomLeft:
       if (dx > dy) {
-        m_RectItem->rect().setBottom(m_RectItem->rect().bottom() +
-                                     NewHeight - m_RectItem->rect().height());
-        if (m_RectItem->rect().bottom() > ImageBottom) {
-          m_RectItem->rect().setBottom(ImageBottom);
-          m_RectItem->rect().setLeft(m_RectItem->rect().right() -
-                                     m_RectItem->rect().height() * m_AspectRatio);
+        m_Rect.setBottom(m_Rect.bottom() + NewHeight - m_Rect.height());
+        if (m_Rect.bottom() > ImageBottom) {
+          m_Rect.setBottom(ImageBottom);
+          m_Rect.setLeft(m_Rect.right() - m_Rect.height() * m_AspectRatio);
         }
       } else {
-        m_RectItem->rect().setLeft(m_RectItem->rect().left() +
-                                   m_RectItem->rect().width() - NewWidth);
-        if (m_RectItem->rect().left() < 0) {
-          m_RectItem->rect().setLeft(0);
-          m_RectItem->rect().setTop(m_RectItem->rect().bottom() -
-                                    m_RectItem->rect().width() / m_AspectRatio);
+        m_Rect.setLeft(m_Rect.left() + m_Rect.width() - NewWidth);
+        if (m_Rect.left() < 0) {
+          m_Rect.setLeft(0);
+          m_Rect.setTop(m_Rect.bottom() - m_Rect.width() / m_AspectRatio);
         }
       }
       break;
 
     case meLeft:
-      EdgeCenter = m_RectItem->rect().top() + m_RectItem->rect().height() / 2;
-      m_RectItem->rect().setHeight(NewHeight);
-      m_RectItem->rect().moveTop(EdgeCenter - NewHeight / 2);
-      if (m_RectItem->rect().bottom() > ImageBottom) {
-        m_RectItem->rect().setBottom(ImageBottom);
-        m_RectItem->rect().setLeft(m_RectItem->rect().right() -
-                                   m_RectItem->rect().height() * m_AspectRatio);
+      EdgeCenter = m_Rect.top() + m_Rect.height() / 2;
+      m_Rect.setHeight(NewHeight);
+      m_Rect.moveTop(EdgeCenter - NewHeight / 2);
+      if (m_Rect.bottom() > ImageBottom) {
+        m_Rect.setBottom(ImageBottom);
+        m_Rect.setLeft(m_Rect.right() - m_Rect.height() * m_AspectRatio);
       }
-      if (m_RectItem->rect().top() < 0) {
-        m_RectItem->rect().setTop(0);
-        m_RectItem->rect().setLeft(m_RectItem->rect().right() -
-                                   m_RectItem->rect().height() * m_AspectRatio);
+      if (m_Rect.top() < 0) {
+        m_Rect.setTop(0);
+        m_Rect.setLeft(m_Rect.right() - m_Rect.height() * m_AspectRatio);
       }
       break;
 
@@ -647,19 +654,24 @@ void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*
       // OldWidth * OldHeight = x * NewARW * x * NewARH
       // x = sqrt((OldWidth * OldHeight) / (NewARW * NewARH))
       // Center point stays the same.
-      QPointF center = m_RectItem->rect().center();
-      float x = sqrt((m_RectItem->rect().width() * m_RectItem->rect().height()) /
-                     (m_AspectRatioW * m_AspectRatioH));
-      m_RectItem->rect().setWidth(x * m_AspectRatioW);
-      m_RectItem->rect().setHeight(x * m_AspectRatioH);
-      m_RectItem->rect().moveCenter(center);
+      QPointF center = m_Rect.center();
+      float x = sqrt((m_Rect.width() * m_Rect.height()) / (m_AspectRatioW * m_AspectRatioH));
+      m_Rect.setWidth(x * m_AspectRatioW);
+      m_Rect.setHeight(x * m_AspectRatioH);
+      m_Rect.moveCenter(center);
       ClampToScene();
       break;
     }
 
+    case meCenter:
+      // nothing to do
+      break;
+
     default:
       assert(!"Unhandled m_MovingEdge!");
   }
+
+  m_RectItem->setRect(m_Rect);
 }
 
 
@@ -683,7 +695,6 @@ void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*
 //
 ////////////////////////////////////////////////////////////////////////
 
-
 ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
   QPointF pos(m_View->mapToScene(event->pos()));
 
@@ -697,27 +708,27 @@ ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
   int LRthick = 0;    // left/right
 
   // Determine edge area thickness
-  if (m_RectItem->rect().height() <= TinyRectThreshold) {
-    TBthick = (int)(m_RectItem->rect().height() / 2);
+  if (m_Rect.height() <= TinyRectThreshold) {
+    TBthick = (int)(m_Rect.height() / 2);
   } else {
     TBthick = EdgeThickness;
   }
-  if (m_RectItem->rect().width() <= TinyRectThreshold) {
-    LRthick = (int)(m_RectItem->rect().width() / 2);
+  if (m_Rect.width() <= TinyRectThreshold) {
+    LRthick = (int)(m_Rect.width() / 2);
   } else {
     LRthick = EdgeThickness;
   }
 
   // Determine in which area the mouse is
-  if (m_RectItem->rect().bottom() - pos.y() <= TBthick) {
+  if (m_Rect.bottom() - pos.y() <= TBthick) {
     HoverOver = meBottom;
-  } else if (pos.y() - m_RectItem->rect().top() <= TBthick) {
+  } else if (pos.y() - m_Rect.top() <= TBthick) {
     HoverOver = meTop;
   } else {
     HoverOver = meCenter;
   }
 
-  if (m_RectItem->rect().right() - pos.x() <= LRthick) {
+  if (m_Rect.right() - pos.x() <= LRthick) {
     if (HoverOver == meBottom) {
       HoverOver = meBottomRight;
     } else if (HoverOver == meTop) {
@@ -726,7 +737,7 @@ ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
       HoverOver = meRight;
     }
 
-  } else if (pos.x() - m_RectItem->rect().left() <= LRthick) {
+  } else if (pos.x() - m_Rect.left() <= LRthick) {
     if (HoverOver == meBottom) {
       HoverOver = meBottomLeft;
     } else if (HoverOver == meTop) {
@@ -749,7 +760,7 @@ ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::RecalcRect() {
-  QRectF NewRect = m_RectItem->rect();
+  QRectF NewRect = m_Rect;
   qreal ImageRight = m_View->scene()->sceneRect().right();
   qreal ImageBottom = m_View->scene()->sceneRect().bottom();
   qreal dx = m_DragDelta->dx() / m_View->transform().m11();
@@ -763,97 +774,98 @@ void ptRichRectInteraction::RecalcRect() {
     case meTopLeft:
       // Calc preliminary new position of moved corner point. Don't allow it to move
       // beyond the actual image.
-      NewRect.setLeft(qBound(0.0, m_RectItem->rect().left() + dxFloor, ImageRight));
-      NewRect.setTop(qBound(0.0, m_RectItem->rect().top() + dyFloor, ImageBottom));
+      NewRect.setLeft(qBound(0.0, m_Rect.left() + dxFloor, ImageRight));
+      NewRect.setTop(qBound(0.0, m_Rect.top() + dyFloor, ImageBottom));
       // Determine if moving corner changed
-      if ((NewRect.left() > m_RectItem->rect().right()) && (NewRect.top() <= m_RectItem->rect().bottom())) {
+      if ((NewRect.left() > m_Rect.right()) && (NewRect.top() <= m_Rect.bottom())) {
         m_MovingEdge = meTopRight;
-      } else if ((NewRect.left() > m_RectItem->rect().right()) && (NewRect.top() >= m_RectItem->rect().bottom())) {
+      } else if ((NewRect.left() > m_Rect.right()) && (NewRect.top() >= m_Rect.bottom())) {
         m_MovingEdge = meBottomRight;
-      } else if ((NewRect.left() <= m_RectItem->rect().right()) && (NewRect.top() > m_RectItem->rect().bottom())) {
+      } else if ((NewRect.left() <= m_Rect.right()) && (NewRect.top() > m_Rect.bottom())) {
         m_MovingEdge = meBottomLeft;
       }
       // Update crop rect
-      m_RectItem->setRect( NewRect.normalized());
+      m_Rect = NewRect.normalized();
       break;
 
     case meTop:
       dx = 0;
-      NewRect.setTop(qBound(0.0, m_RectItem->rect().top() + dyFloor, ImageBottom));
-      if (NewRect.top() > m_RectItem->rect().bottom()) {
+      NewRect.setTop(qBound(0.0, m_Rect.top() + dyFloor, ImageBottom));
+      if (NewRect.top() > m_Rect.bottom()) {
         m_MovingEdge = meBottom;
       }
-      m_RectItem->setRect(NewRect.normalized());
+      m_Rect = NewRect.normalized();
       break;
 
     case meTopRight:
-      NewRect.setRight(qBound(0.0, m_RectItem->rect().right() + dxCeil, ImageRight));
-      NewRect.setTop(qBound(0.0, m_RectItem->rect().top() + dyFloor, ImageBottom));
-      if ((NewRect.right() < m_RectItem->rect().left()) && (NewRect.top() <= m_RectItem->rect().bottom())) {
+      NewRect.setRight(qBound(0.0, m_Rect.right() + dxCeil, ImageRight));
+      NewRect.setTop(qBound(0.0, m_Rect.top() + dyFloor, ImageBottom));
+      if ((NewRect.right() < m_Rect.left()) && (NewRect.top() <= m_Rect.bottom())) {
         m_MovingEdge = meTopLeft;
-      } else if ((NewRect.right() < m_RectItem->rect().left()) && (NewRect.top() > m_RectItem->rect().bottom())) {
+      } else if ((NewRect.right() < m_Rect.left()) && (NewRect.top() > m_Rect.bottom())) {
         m_MovingEdge = meBottomLeft;
-      } else if ((NewRect.right() >= m_RectItem->rect().left()) && (NewRect.top() > m_RectItem->rect().bottom())) {
+      } else if ((NewRect.right() >= m_Rect.left()) && (NewRect.top() > m_Rect.bottom())) {
         m_MovingEdge = meBottomRight;
       }
-      m_RectItem->setRect(NewRect.normalized());
+      m_Rect = NewRect.normalized();
       break;
 
     case meRight:
       dy = 0;
-      NewRect.setRight(qBound(0.0, m_RectItem->rect().right() + dxCeil, ImageRight));
-      if ((NewRect.right() < m_RectItem->rect().left())) {
+      NewRect.setRight(qBound(0.0, m_Rect.right() + dxCeil, ImageRight));
+      if ((NewRect.right() < m_Rect.left())) {
         m_MovingEdge = meLeft;
       }
-      m_RectItem->setRect(NewRect.normalized());
+      m_Rect = NewRect.normalized();
       break;
 
     case meBottomRight:
-      NewRect.setRight(qBound(0.0, m_RectItem->rect().right() + dxCeil, ImageRight));
-      NewRect.setBottom(qBound(0.0, m_RectItem->rect().bottom() + dyCeil, ImageBottom));
-      if ((NewRect.right() < m_RectItem->rect().left()) && (NewRect.bottom() >= m_RectItem->rect().top())) {
+      NewRect.setRight(qBound(0.0, m_Rect.right() + dxCeil, ImageRight));
+      NewRect.setBottom(qBound(0.0, m_Rect.bottom() + dyCeil, ImageBottom));
+      if ((NewRect.right() < m_Rect.left()) && (NewRect.bottom() >= m_Rect.top())) {
         m_MovingEdge = meBottomLeft;
-      } else if ((NewRect.right() < m_RectItem->rect().left()) && (NewRect.bottom() < m_RectItem->rect().top())) {
+      } else if ((NewRect.right() < m_Rect.left()) && (NewRect.bottom() < m_Rect.top())) {
         m_MovingEdge = meTopLeft;
-      } else if ((NewRect.right() >= m_RectItem->rect().left()) && (NewRect.bottom() < m_RectItem->rect().top())) {
+      } else if ((NewRect.right() >= m_Rect.left()) && (NewRect.bottom() < m_Rect.top())) {
         m_MovingEdge = meTopRight;
       }
-      m_RectItem->setRect(NewRect.normalized());
+      m_Rect = NewRect.normalized();
       break;
 
     case meBottom:
       dx = 0;
-      NewRect.setBottom(qBound(0.0, m_RectItem->rect().bottom() + dy, ImageBottom));
-      if (NewRect.bottom() < m_RectItem->rect().top()) {
+      NewRect.setBottom(qBound(0.0, m_Rect.bottom() + dy, ImageBottom));
+      if (NewRect.bottom() < m_Rect.top()) {
         m_MovingEdge = meTop;
       }
-      m_RectItem->setRect(NewRect.normalized());
+      m_Rect = NewRect.normalized();
       break;
 
     case meBottomLeft:
-      NewRect.setLeft(qBound(0.0, m_RectItem->rect().left() + dx, ImageRight));
-      NewRect.setBottom(qBound(0.0, m_RectItem->rect().bottom() + dy, ImageBottom));
-      if ((NewRect.left() > m_RectItem->rect().right()) && (NewRect.bottom() >= m_RectItem->rect().top())) {
+      NewRect.setLeft(qBound(0.0, m_Rect.left() + dx, ImageRight));
+      NewRect.setBottom(qBound(0.0, m_Rect.bottom() + dy, ImageBottom));
+      if ((NewRect.left() > m_Rect.right()) && (NewRect.bottom() >= m_Rect.top())) {
         m_MovingEdge = meBottomRight;
-      } else if ((NewRect.left() > m_RectItem->rect().right()) && (NewRect.bottom() < m_RectItem->rect().top())) {
+      } else if ((NewRect.left() > m_Rect.right()) && (NewRect.bottom() < m_Rect.top())) {
         m_MovingEdge = meTopRight;
-      } else if ((NewRect.left() <= m_RectItem->rect().right()) && (NewRect.bottom() < m_RectItem->rect().top())) {
+      } else if ((NewRect.left() <= m_Rect.right()) && (NewRect.bottom() < m_Rect.top())) {
         m_MovingEdge = meTopLeft;
       }
-      m_RectItem->setRect(NewRect.normalized());
+      m_Rect = NewRect.normalized();
       break;
 
     case meLeft:
       dy = 0;
-      NewRect.setLeft(qBound(0.0, m_RectItem->rect().left() + dx, ImageRight));
-      if (NewRect.left() > m_RectItem->rect().right()) {
+      NewRect.setLeft(qBound(0.0, m_Rect.left() + dx, ImageRight));
+      if (NewRect.left() > m_Rect.right()) {
         m_MovingEdge = meRight;
       }
-      m_RectItem->setRect(NewRect.normalized());
+      m_Rect = NewRect.normalized();
       break;
 
 
     case meNone:
+    case meCenter:
       // nothing to do here
       break;
 
@@ -863,127 +875,138 @@ void ptRichRectInteraction::RecalcRect() {
   }
 
   if (m_FixedAspectRatio) {
-    EnforceAspectRatio(dx, dy);
+    EnforceAspectRatio(dx, dy);    // also updates m_RectItem
+  } else {
+    m_RectItem->setRect(m_Rect);
   }
 }
 
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// RecalcLightsOutRects()
+// RecalcGuides()
 //
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::RecalcGuides() {
-  if (Settings->GetInt("LightsOut") != ptLightsOutMode_Black) {
+  // Draw no guides when LightsOut is on "black" setting. In that case calc
+  // lines but set them all to invisible.
+  bool ShowLines = Settings->GetInt("LightsOut") != ptLightsOutMode_Black;
 
-    switch (m_Guides) {
-      case ptGuidelines_RuleThirds: {
-        qreal HeightThird = m_RectItem->rect().height() / 3.0;
-        qreal WidthThird = m_RectItem->rect().width() / 3.0;
-
-        m_GuideItems[0]->line().setLine(m_RectItem->rect().left() + WidthThird,
-                                        m_RectItem->rect().top(),
-                                        m_RectItem->rect().left() + WidthThird,
-                                        m_RectItem->rect().bottom());
-        m_GuideItems[1]->line().setLine(m_RectItem->rect().right() - WidthThird,
-                                        m_RectItem->rect().top(),
-                                        m_RectItem->rect().right() - WidthThird,
-                                        m_RectItem->rect().bottom());
-        m_GuideItems[2]->line().setLine(m_RectItem->rect().left(),
-                                        m_RectItem->rect().top() + HeightThird,
-                                        m_RectItem->rect().right(),
-                                        m_RectItem->rect().top() + HeightThird);
-        m_GuideItems[3]->line().setLine(m_RectItem->rect().left(),
-                                        m_RectItem->rect().bottom() - HeightThird,
-                                        m_RectItem->rect().right(),
-                                        m_RectItem->rect().bottom() - HeightThird);
-
-        for (int i = 0; i <= 3; i++) {
-          m_GuideItems[i]->show();
-        }
-        break;
+  switch (m_Guides) {
+    case ptGuidelines_None: {
+      for (int i = 0; i <= 3; i++) {
+        m_GuideItems[i]->hide();
       }
-
-
-      case ptGuidelines_GoldenRatio: {
-        qreal ShortWidth = m_RectItem->rect().width() * 5.0/13.0;
-        qreal ShortHeight = m_RectItem->rect().height() * 5.0/13.0;
-
-        m_GuideItems[0]->line().setLine(m_RectItem->rect().left() + ShortWidth,
-                                        m_RectItem->rect().top(),
-                                        m_RectItem->rect().left() + ShortWidth,
-                                        m_RectItem->rect().bottom());
-        m_GuideItems[1]->line().setLine(m_RectItem->rect().right() - ShortWidth,
-                                        m_RectItem->rect().top(),
-                                        m_RectItem->rect().right() - ShortWidth,
-                                        m_RectItem->rect().bottom());
-        m_GuideItems[2]->line().setLine(m_RectItem->rect().left(),
-                                        m_RectItem->rect().top() + ShortHeight,
-                                        m_RectItem->rect().right(),
-                                        m_RectItem->rect().top() + ShortHeight);
-        m_GuideItems[3]->line().setLine(m_RectItem->rect().left(),
-                                        m_RectItem->rect().bottom() - ShortHeight,
-                                        m_RectItem->rect().right(),
-                                        m_RectItem->rect().bottom() - ShortHeight);
-
-        for (int i = 0; i <= 3; i++) {
-          m_GuideItems[i]->show();
-        }
-        break;
-      }
-
-
-      case ptGuidelines_Diagonals: {
-        qreal length = m_RectItem->rect().width() > m_RectItem->rect().height()
-                       ? m_RectItem->rect().height()
-                       : m_RectItem->rect().width();
-
-        m_GuideItems[0]->line().setLine(m_RectItem->rect().left(),
-                                        m_RectItem->rect().top(),
-                                        m_RectItem->rect().left() + length,
-                                        m_RectItem->rect().top() + length);
-        m_GuideItems[1]->line().setLine(m_RectItem->rect().right(),
-                                        m_RectItem->rect().bottom(),
-                                        m_RectItem->rect().right() - length + 1,
-                                        m_RectItem->rect().bottom() - length + 1);
-        m_GuideItems[2]->line().setLine(m_RectItem->rect().left(),
-                                        m_RectItem->rect().bottom(),
-                                        m_RectItem->rect().left() + length,
-                                        m_RectItem->rect().bottom() - length + 1);
-        m_GuideItems[3]->line().setLine(m_RectItem->rect().right(),
-                                        m_RectItem->rect().top(),
-                                        m_RectItem->rect().right() - length + 1,
-                                        m_RectItem->rect().top() + length);
-
-        for (int i = 0; i <= 3; i++) {
-          m_GuideItems[i]->show();
-        }
-        break;
-      }
-
-
-      case ptGuidelines_Centerlines: {
-        m_GuideItems[0]->line().setLine(m_RectItem->rect().center().x(),
-                                        m_RectItem->rect().top(),
-                                        m_RectItem->rect().center().x(),
-                                        m_RectItem->rect().bottom());
-        m_GuideItems[1]->line().setLine(m_RectItem->rect().left(),
-                                        m_RectItem->rect().center().y(),
-                                        m_RectItem->rect().right(),
-                                        m_RectItem->rect().center().y());
-
-        m_GuideItems[0]->show();
-        m_GuideItems[1]->show();
-        m_GuideItems[2]->hide();
-        m_GuideItems[3]->hide();
-      }
-
-
-      default:
-        // nothing to do here
-        break;
+      break;
     }
+
+
+    case ptGuidelines_RuleThirds: {
+      qreal HeightThird = m_Rect.height() / 3.0;
+      qreal WidthThird = m_Rect.width() / 3.0;
+
+      m_GuideItems[0]->setLine(m_Rect.left() + WidthThird,
+                               m_Rect.top(),
+                               m_Rect.left() + WidthThird,
+                               m_Rect.bottom());
+      m_GuideItems[1]->setLine(m_Rect.right() - WidthThird,
+                               m_Rect.top(),
+                               m_Rect.right() - WidthThird,
+                               m_Rect.bottom());
+      m_GuideItems[2]->setLine(m_Rect.left(),
+                               m_Rect.top() + HeightThird,
+                               m_Rect.right(),
+                               m_Rect.top() + HeightThird);
+      m_GuideItems[3]->setLine(m_Rect.left(),
+                               m_Rect.bottom() - HeightThird,
+                               m_Rect.right(),
+                               m_Rect.bottom() - HeightThird);
+
+      for (int i = 0; i <= 3; i++) {
+        m_GuideItems[i]->setVisible(ShowLines);
+      }
+      break;
+    }
+
+
+    case ptGuidelines_GoldenRatio: {
+      qreal ShortWidth = m_Rect.width() * 5.0/13.0;
+      qreal ShortHeight = m_Rect.height() * 5.0/13.0;
+
+      m_GuideItems[0]->setLine(m_Rect.left() + ShortWidth,
+                               m_Rect.top(),
+                               m_Rect.left() + ShortWidth,
+                               m_Rect.bottom());
+      m_GuideItems[1]->setLine(m_Rect.right() - ShortWidth,
+                               m_Rect.top(),
+                               m_Rect.right() - ShortWidth,
+                               m_Rect.bottom());
+      m_GuideItems[2]->setLine(m_Rect.left(),
+                               m_Rect.top() + ShortHeight,
+                               m_Rect.right(),
+                               m_Rect.top() + ShortHeight);
+      m_GuideItems[3]->setLine(m_Rect.left(),
+                               m_Rect.bottom() - ShortHeight,
+                               m_Rect.right(),
+                               m_Rect.bottom() - ShortHeight);
+
+      for (int i = 0; i <= 3; i++) {
+        m_GuideItems[i]->setVisible(ShowLines);
+      }
+      break;
+    }
+
+
+    case ptGuidelines_Diagonals: {
+      qreal length = m_Rect.width() > m_Rect.height()
+                     ? m_Rect.height()
+                     : m_Rect.width();
+
+      m_GuideItems[0]->setLine(m_Rect.left(),
+                               m_Rect.top(),
+                               m_Rect.left() + length,
+                               m_Rect.top() + length);
+      m_GuideItems[1]->setLine(m_Rect.right(),
+                               m_Rect.bottom(),
+                               m_Rect.right() - length + 1,
+                               m_Rect.bottom() - length + 1);
+      m_GuideItems[2]->setLine(m_Rect.left(),
+                               m_Rect.bottom(),
+                               m_Rect.left() + length,
+                               m_Rect.bottom() - length + 1);
+      m_GuideItems[3]->setLine(m_Rect.right(),
+                               m_Rect.top(),
+                               m_Rect.right() - length + 1,
+                               m_Rect.top() + length);
+
+      for (int i = 0; i <= 3; i++) {
+        m_GuideItems[i]->setVisible(ShowLines);
+      }
+      break;
+    }
+
+
+    case ptGuidelines_Centerlines: {
+      m_GuideItems[0]->setLine(m_Rect.center().x(),
+                               m_Rect.top(),
+                               m_Rect.center().x(),
+                               m_Rect.bottom());
+      m_GuideItems[1]->setLine(m_Rect.left(),
+                               m_Rect.center().y(),
+                               m_Rect.right(),
+                               m_Rect.center().y());
+
+      m_GuideItems[0]->setVisible(ShowLines);
+      m_GuideItems[1]->setVisible(ShowLines);
+      m_GuideItems[2]->hide();
+      m_GuideItems[3]->hide();
+    }
+
+
+    default:
+      // nothing to do here
+      break;
   }
 }
 
@@ -1002,32 +1025,32 @@ void ptRichRectInteraction::RecalcGuides() {
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::RecalcLightsOutRects() {
-  m_LightsOutRects[0]->rect().setCoords(    // top
+  m_LightsOutRects[0]->setRect(    // top
       m_View->scene()->sceneRect().left(),
       m_View->scene()->sceneRect().top(),
       m_View->scene()->sceneRect().width(),
-      m_RectItem->rect().top() - m_View->scene()->sceneRect().top()
+      m_Rect.top() - m_View->scene()->sceneRect().top()
   );
 
-  m_LightsOutRects[1]->rect().setCoords(    // right
-      m_RectItem->rect().right() + 1,
-      m_RectItem->rect().top(),
-      m_View->scene()->sceneRect().right() - m_RectItem->rect().right(),
-      m_RectItem->rect().height()
+  m_LightsOutRects[1]->setRect(    // right
+      m_Rect.right() + 1,
+      m_Rect.top(),
+      m_View->scene()->sceneRect().right() - m_Rect.right(),
+      m_Rect.height()
   );
 
-  m_LightsOutRects[2]->rect().setCoords(    // bottom
+  m_LightsOutRects[2]->setRect(    // bottom
       m_View->scene()->sceneRect().left(),
-      m_RectItem->rect().bottom() + 1,
+      m_Rect.bottom(),
       m_View->scene()->sceneRect().width(),
-      m_View->scene()->sceneRect().bottom() - m_RectItem->rect().bottom()
+      m_View->scene()->sceneRect().bottom() - m_Rect.bottom()
   );
 
-  m_LightsOutRects[3]->rect().setCoords(    // left
+  m_LightsOutRects[3]->setRect(    // left
       m_View->scene()->sceneRect().left(),
-      m_RectItem->rect().top(),
-      m_RectItem->rect().left() - m_View->scene()->sceneRect().left(),
-      m_RectItem->rect().height()
+      m_Rect.top(),
+      m_Rect.left() - m_View->scene()->sceneRect().left(),
+      m_Rect.height()
   );
 }
 

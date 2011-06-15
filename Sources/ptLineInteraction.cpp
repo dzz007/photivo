@@ -75,15 +75,15 @@ void ptLineInteraction::mouseAction(QMouseEvent* event) {
     // left button press
     case QEvent::MouseButtonPress: {
       if (event->button() == Qt::LeftButton) {
+        event->accept();
         assert(m_LineItem == NULL);
 
         // map viewport coords to scene coords
         QPointF pos(m_View->mapToScene(event->pos()));
         m_Line->setPoints(pos, pos);
 
-        QPen pen(QColor(255, 0, 0));
-        m_LineItem = m_View->scene()->addLine(*m_Line, pen);
-        m_View->scene()->update();
+        m_LineItem = m_View->scene()->addLine(*m_Line, QPen(QColor(255, 0, 0)));
+        m_View->repaint();
 
         m_NowDragging = 1;
       }
@@ -94,6 +94,7 @@ void ptLineInteraction::mouseAction(QMouseEvent* event) {
     // left button release
     case QEvent::MouseButtonRelease: {
       if (event->button() == Qt::LeftButton) {
+        event->accept();
         m_View->scene()->removeItem(m_LineItem);
         DelAndNull(m_LineItem);
         m_NowDragging = 0;
@@ -106,9 +107,10 @@ void ptLineInteraction::mouseAction(QMouseEvent* event) {
     // mouse move
     case QEvent::MouseMove: {
       if (m_NowDragging) {
+        event->accept();
         m_Line->setP2(m_View->mapToScene(event->pos()));
         m_LineItem->setLine(*m_Line);
-        m_View->scene()->update();
+        m_View->repaint();
       }
       break;
     }

@@ -1547,9 +1547,9 @@ void ptMainWindow::ResizeTimerExpired() {
 ////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::dragEnterEvent(QDragEnterEvent* Event) {
-//  if (ViewWindow->OngoingAction() != vaNone) {    // TODOSR: re-enable
-//    return;
-//  }
+  if (ViewWindow->interaction() != iaNone) {
+    return;
+  }
 
   // accept just text/uri-list mime format
   if (Event->mimeData()->hasFormat("text/uri-list")) {
@@ -1569,9 +1569,9 @@ void CB_OpenSettingsFile(QString SettingsFileName);
 extern QString ImageFileToOpen;
 
 void ptMainWindow::dropEvent(QDropEvent* Event) {
-//  if (ViewWindow->OngoingAction() != vaNone) {    // TODOSR: re-enable
-//    return;
-//  }
+  if (ViewWindow->interaction() != iaNone) {
+    return;
+  }
 
   QList<QUrl> UrlList;
   QString DropName;
@@ -1629,25 +1629,9 @@ void CB_SearchBarEnableCheck(const QVariant State);
 
 // Catch keyboard shortcuts
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
-  // Handle ViewWindow: LightsOut, confirm/cancel crop
-//  if (((ViewWindow->OngoingAction() == vaCrop) || (ViewWindow->OngoingAction() == vaSelectRect)) &&    // TODOSR: re-enable
-//      Event->key()==Qt::Key_Alt)
-//  {
-//    ViewWindow->ToggleLightsOut();
-//    return;
-//  }
-//  if (ViewWindow->OngoingAction() == vaCrop) {    // TODOSR: re-enable
-//    if ((Event->key() == Qt::Key_Return) || (Event->key() == Qt::Key_Enter)) {
-//      CB_ConfirmCropButton();
-//      return;
-//    } else if (Event->key() == Qt::Key_Escape) {
-//      CB_CancelCropButton();
-//      return;
-//    }
-//  }
 
 
-  if (Event->key()==Qt::Key_Escape) { // back to used view
+  if (Event->key()==Qt::Key_Escape) {// back to used view
     if (Settings->GetInt("SpecialPreview") != ptSpecialPreview_RGB) {
         CB_SpecialPreviewChoice(ptSpecialPreview_RGB);
     } else if (SearchInputWidget->hasFocus()) {
@@ -1661,19 +1645,18 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       }
     }
   }
+
   if (SearchInputWidget->hasFocus() &&
       (Event->key()==Qt::Key_Return ||
        Event->key()==Qt::Key_Enter)) {
     ViewWindow->setFocus();
   }
 
+
   // most shortcuts should only work when we are not in special state like cropping
   if (Settings->GetInt("BlockTools")==0) {
     if (Event->key()==Qt::Key_F11) { // toggle full screen
-      if (isFullScreen()==true)
-        ::CB_FullScreenButton(0);
-      else
-        ::CB_FullScreenButton(1);
+      ::CB_FullScreenButton(!isFullScreen());
     } else if (Event->key()==Qt::Key_F1) {
       QDesktopServices::openUrl(QString("http://photivo.org/photivo/manual"));
     } if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::NoModifier) {
