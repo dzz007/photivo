@@ -540,6 +540,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     // Name, GuiType,InitLevel,InJobFile,Default,Label,Tip
     {"StartupSettings"            ,ptGT_Check ,1,0,1,tr("User settings")   ,tr("Load user settings on startup")},
     {"StartupSettingsReset"       ,ptGT_Check ,1,0,0,tr("Reset on new image") ,tr("Reset to user settings when new image is opened")},
+    {"StartupSwitchAR"            ,ptGT_Check ,1,0,1,tr("Adjust aspect ratio") ,tr("Adjust crop aspect ratio to image aspect ratio")},
     {"InputsAddPowerLaw"          ,ptGT_Check ,1,1,1,tr("Nonlinear slider response")   ,tr("Alter the slider behaviour")},
     {"ExportToGimp"               ,ptGT_Check ,1,0,1,tr("Use gimp plugin") ,tr("Use gimp plugin for export")},
     {"ToolBoxMode"                ,ptGT_Check ,1,0,0,tr("Enabled")         ,tr("Show seperate toolboxes")},
@@ -1215,7 +1216,9 @@ void ptSettings::SetGuiInput(const QString Key, ptInput* Value) {
                __FILE__,__LINE__,Key.toAscii().data());
     assert (m_Hash.contains(Key));
   }
-  m_Hash[Key]->GuiInput = Value;
+  m_Hash[Key]->GuiInput  = Value;
+  m_Hash[Key]->GuiChoice = NULL;
+  m_Hash[Key]->GuiCheck  = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1231,7 +1234,9 @@ void ptSettings::SetGuiChoice(const QString Key, ptChoice* Value) {
                __FILE__,__LINE__,Key.toAscii().data());
     assert (m_Hash.contains(Key));
   }
+  m_Hash[Key]->GuiInput  = NULL;
   m_Hash[Key]->GuiChoice = Value;
+  m_Hash[Key]->GuiCheck  = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1247,7 +1252,35 @@ void ptSettings::SetGuiCheck(const QString Key, ptCheck* Value) {
                __FILE__,__LINE__,Key.toAscii().data());
     assert (m_Hash.contains(Key));
   }
-  m_Hash[Key]->GuiCheck = Value;
+  m_Hash[Key]->GuiInput  = NULL;
+  m_Hash[Key]->GuiChoice = NULL;
+  m_Hash[Key]->GuiCheck  = Value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// GetGuiWidget
+// low level access to the underlying QWidget
+//
+////////////////////////////////////////////////////////////////////////////////
+
+QWidget* ptSettings::GetGuiWidget(const QString Key) {
+  if (!m_Hash.contains(Key)) {
+    ptLogError(ptError_Argument,
+               "(%s,%d) Could not find key '%s'\n",
+               __FILE__,__LINE__,Key.toAscii().data());
+    assert (m_Hash.contains(Key));
+  }
+  if (m_Hash[Key]->GuiInput) {
+    return (QWidget*)m_Hash[Key]->GuiInput;
+  } else if (m_Hash[Key]->GuiChoice) {
+    return (QWidget*)m_Hash[Key]->GuiChoice;
+  } else if (m_Hash[Key]->GuiCheck) {
+    return (QWidget*)m_Hash[Key]->GuiCheck;
+  }
+
+  assert (!"No Gui widget");
+  return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1882,10 +1915,12 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = (Settings->GetDouble("SimpleToneR") !=0.0 ||
                        Settings->GetDouble("SimpleToneG") !=0.0 ||
                        Settings->GetDouble("SimpleToneB") !=0.0)!=0?1:0;
-  } else if (GuiName == "TabRGBTone") {
-      Info.Name = "RGB Toning";
-      Info.IsActive = (Settings->GetInt("Tone1MaskType") ||
-                       Settings->GetInt("Tone2MaskType"))!=0?1:0;
+  } else if (GuiName == "TabRGBTone1") {
+      Info.Name = "RGB Toning 1";
+      Info.IsActive = Settings->GetInt("Tone1MaskType")!=0?1:0;
+  } else if (GuiName == "TabRGBTone2") {
+      Info.Name = "RGB Toning 2";
+      Info.IsActive = Settings->GetInt("Tone2MaskType")!=0?1:0;
   } else if (GuiName == "TabCrossProcessing") {
       Info.Name = "Cross processing";
       Info.IsActive = Settings->GetInt("CrossprocessingMode")!=0?1:0;

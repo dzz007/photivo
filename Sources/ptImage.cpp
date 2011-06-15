@@ -1835,13 +1835,13 @@ ptImage* ptImage::SigmoidalContrast(const double Contrast,
 #pragma omp parallel for
     for (uint32_t i=1; i<0x10000; i++) {
       ContrastTable[i] = CLIP((int32_t)(powf((((1.0/(1.0+
-        exp(Contrast*(0.5-powf((float)i/(float)0xffff,logft)))))+Offset)/Scaling),logtf)*0xffff));
+        expf(Contrast*(0.5-powf(ToFloatTable[i],logft)))))+Offset)/Scaling),logtf)*0xffff));
     }
   else
 #pragma omp parallel for
     for (uint32_t i=1; i<0x10000; i++) {
       ContrastTable[i] = CLIP((int32_t)(powf(0.5-1.0/Contrast*
-        logf(1.0/(Scaling*powf((float)i/(float)0xffff,logft)-Offset)-1.0),logtf)*0xffff));
+        logf(1.0/(Scaling*powf(ToFloatTable[i],logft)-Offset)-1.0),logtf)*0xffff));
     }
 
 #pragma omp parallel for default(shared)

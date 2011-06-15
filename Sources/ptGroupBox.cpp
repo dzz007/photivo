@@ -208,7 +208,8 @@ void ptGroupBox::Update() {
 
 void ptGroupBox::UpdateView() {
   if (m_IsBlocked == 1 || m_IsEnabled == 0) {
-    m_Widget->setEnabled(0);
+    if (!(m_TabName == "EyeCandyTab" || m_TabName == "OutTab"))
+      m_Widget->setEnabled(0);
   } else {
     m_Widget->setEnabled(1);
   }
@@ -468,7 +469,8 @@ void ptGroupBox::SetEnabled(const short Enabled) {
 
 void ptGroupBox::SetBlocked() {
   m_IsBlocked = 1 - m_IsBlocked;
-  m_Folded = m_IsBlocked;
+  if (!(m_TabName == "EyeCandyTab" || m_TabName == "OutTab"))
+    m_Folded = m_IsBlocked;
   UpdateView();
   int Active = Settings->ToolIsActive(m_Name);
   QStringList Temp = Settings->GetStringList("BlockedTools");

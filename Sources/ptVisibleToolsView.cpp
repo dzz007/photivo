@@ -2,9 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2011 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2010-2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011 Sergey Salnikov <salsergey@gmail.com>
 **
 ** This file is part of Photivo.
 **

@@ -2131,10 +2131,9 @@ void ptProcessor::Run(short Phase,
       //***************************************************************************
       // Tone
 
-      if (Settings->GetInt("Tone1MaskType") &&
-          Settings->ToolIsActive("TabRGBTone")) {
+      if (Settings->ToolIsActive("TabRGBTone1")) {
 
-        m_ReportProgress(tr("Toning"));
+        m_ReportProgress(tr("Toning 1"));
 
         m_Image_AfterEyeCandy->Tone(
           (uint16_t)(0xffff*
@@ -2155,10 +2154,9 @@ void ptProcessor::Run(short Phase,
           Settings->GetDouble("Tone1Softness"));
       }
 
-      if (Settings->GetInt("Tone2MaskType") &&
-          Settings->ToolIsActive("TabRGBTone")) {
+      if (Settings->ToolIsActive("TabRGBTone2")) {
 
-        m_ReportProgress(tr("Toning"));
+        m_ReportProgress(tr("Toning 2"));
 
         m_Image_AfterEyeCandy->Tone(
           (uint16_t)(0xffff*
