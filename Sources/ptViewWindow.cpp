@@ -229,14 +229,6 @@ void ptViewWindow::setGrid(const short enabled, const uint linesX, const uint li
   } else {
     m_Grid->hide();
   }
-    if(((uint)(m_ZoomFactor * 10000) % 10000) < 1) {
-      // nearest neighbour resize for 200%, 300%, 400% zoom
-      m_QImageZoomed = new QImage(m_QImage->scaled(m_ZoomWidth,
-                                                   m_ZoomHeight,
-                                                   Qt::IgnoreAspectRatio,
-                                                   Qt::FastTransformation));
-    } else {
-      // bilinear resize for all others
 }
 
 
