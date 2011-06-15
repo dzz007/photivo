@@ -99,11 +99,12 @@ private:
   const int EdgeThickness;
   const int TinyRectThreshold;
 
-  QLine*      m_DragDelta;
-  QGraphicsLineItem* m_GuideItems[4];
-  QBrush*     m_LightsOutBrushes[3];
-  QGraphicsRectItem* m_LightsOutRects[4];
-  QGraphicsRectItem* m_RectItem;
+  QLine*              m_DragDelta;
+  QGraphicsLineItem*  m_GuideItems[4];
+  QBrush*             m_LightsOutBrushes[3];
+  QGraphicsRectItem*  m_LightsOutRects[4];
+  QRectF              m_Rect;
+  QGraphicsRectItem*  m_RectItem;
 
   qreal       m_AspectRatio;        //  m_AspectRatioW / m_AspectRatioH
   uint        m_AspectRatioW;

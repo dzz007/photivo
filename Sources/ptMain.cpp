@@ -409,7 +409,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
     if (CliArgs.indexOf("-h") > -1) {
 #ifdef Q_OS_WIN32
-      // no ptMessageBox because we’re on Windows and Theme object not yet created
+      // no ptMessageBox because we're on Windows and Theme object not yet created
       ptMessageBox::information(0, QObject::tr("Photivo command line options"), PhotivoCliUsageMsg);
 #else
       fprintf(stdout,"%s",PhotivoCliUsageMsg.toAscii().data());
@@ -463,7 +463,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
     if (CliArgumentsError == 1) {
 #ifdef Q_OS_WIN32
-      // no ptMessageBox because we’re on Windows and Theme object not yet created
+      // no ptMessageBox because we're on Windows and Theme object not yet created
       ptMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
 #else
       fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
@@ -5010,6 +5010,7 @@ void CB_FixedAspectRatioCheck(const QVariant Check) {
     ViewWindow->crop()->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
                                        Settings->GetInt("AspectRatioW"),
                                        Settings->GetInt("AspectRatioH"));
+    ViewWindow->setFocus();
   }
 }
 
@@ -5019,6 +5020,7 @@ void CB_AspectRatioWChoice(const QVariant Value) {
     ViewWindow->crop()->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
                                        Settings->GetInt("AspectRatioW"),
                                        Settings->GetInt("AspectRatioH"));
+    ViewWindow->setFocus();
   }
 }
 
@@ -5028,6 +5030,7 @@ void CB_AspectRatioHChoice(const QVariant Value) {
     ViewWindow->crop()->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
                                        Settings->GetInt("AspectRatioW"),
                                        Settings->GetInt("AspectRatioH"));
+    ViewWindow->setFocus();
   }
 }
 
@@ -5040,6 +5043,7 @@ void CB_CropOrientationButton() {
     Settings->SetValue("AspectRatioH", w);
     if (ViewWindow->interaction() == iaCrop) {
       ViewWindow->crop()->flipAspectRatio();
+      ViewWindow->setFocus();
     }
   }
 }
@@ -5047,24 +5051,30 @@ void CB_CropOrientationButton() {
 void CB_CropCenterHorButton() {
   if (ViewWindow->interaction() == iaCrop) {
     ViewWindow->crop()->moveToCenter(1, 0);
+    ViewWindow->setFocus();
   }
 }
 
 void CB_CropCenterVertButton() {
   if (ViewWindow->interaction() == iaCrop) {
     ViewWindow->crop()->moveToCenter(0, 1);
+    ViewWindow->setFocus();
   }
 }
 
 void CB_CropGuidelinesChoice(const QVariant Choice) {
   Settings->SetValue("CropGuidelines",Choice);
-  //ViewWindow->setCropGuidelines(Choice.toInt());    // TODOSR: re-enable
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->setGuidelines(Choice.toInt());
+    ViewWindow->setFocus();
+  }
 }
 
 void CB_LightsOutChoice(const QVariant Choice) {
-  Settings->SetValue("LightsOut",Choice);
+  // View window takes care of Settings
   if (ViewWindow->interaction() == iaCrop) {
     ViewWindow->crop()->setLightsOut(Choice.toInt());
+    ViewWindow->setFocus();
   }
 }
 
@@ -5090,14 +5100,14 @@ void CB_MakeCropButton() {
   ViewWindow->ShowStatus(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
   BlockTools(2);
-  ViewWindow->StartCrop();
-  MainWindow->UpdateCropToolUI();
+  ViewWindow->StartCrop();          // always start the interaction first,
+  MainWindow->UpdateCropToolUI();   // *then* update main window
+  ViewWindow->setFocus();
 }
 
 
 // After-crop processing and cleanup.
-void CleanupAfterCrop(ptStatus CropStatus) {
-  QRect CropRect;// = ViewWindow->StopCrop();    // TODOSR: re-enable
+void CleanupAfterCrop(ptStatus CropStatus, const QRect CropRect) {
   BlockTools(0);
 
   if (CropStatus == stSuccess) {

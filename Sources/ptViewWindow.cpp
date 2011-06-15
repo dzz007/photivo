@@ -179,7 +179,7 @@ int ptViewWindow::ZoomToFit() {
   Settings->SetValue("ZoomMode",ptZoomMode_Fit);
 
   if (!m_8bitImageItem->pixmap().isNull()) {
-    // Always smooth scaling because we don’t know the zoom factor in advance.
+    // Always smooth scaling because we don't know the zoom factor in advance.
     m_8bitImageItem->setTransformationMode(Qt::SmoothTransformation);
     fitInView(m_8bitImageItem, Qt::KeepAspectRatio);
     m_ZoomFactor = transform().m11();
@@ -291,7 +291,6 @@ void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
   } else {
     event->ignore();
   }
-
 }
 
 
@@ -303,11 +302,11 @@ void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   // drag image with left mouse button to scroll
-  short CropDrag = 0;
+  short dragging = 1;
   if (m_Interaction == iaCrop) {
-    CropDrag = m_Crop->isDragging();
+    dragging = m_Crop->isDragging();
   }
-  if (m_LeftMousePressed && (m_Interaction == iaNone || !CropDrag)) {
+  if (m_LeftMousePressed && (m_Interaction == iaNone || !dragging)) {
     m_DragDelta->setP2(event->pos());
     horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
                                     m_DragDelta->x2() +
@@ -514,7 +513,7 @@ void ptViewWindow::StartCrop()
 ////////////////////////////////////////////////////////////////////////////////
 
 void RotateAngleDetermined(double RotateAngle);
-void CleanupAfterCrop(ptStatus CropStatus);
+void CleanupAfterCrop(ptStatus CropStatus, const QRect CropRect);
 
 void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
   switch (m_Interaction) {
@@ -538,7 +537,7 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
       QRect cr = m_Crop->rect();
       DelAndNull(m_Crop);   // also disconnects all signals/slots
       m_Interaction = iaNone;
-      CleanupAfterCrop(ExitStatus);
+      CleanupAfterCrop(ExitStatus, cr);
       break;
     }
 
