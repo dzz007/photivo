@@ -284,6 +284,7 @@ RESOURCES = ../qrc/photivo.qrc
 TRANSLATIONS += ../Translations/photivo_Deutsch.ts
 TRANSLATIONS += ../Translations/photivo_Italiano.ts
 TRANSLATIONS += ../Translations/photivo_Russian.ts
+TRANSLATIONS += ../Translations/photivo_Français.ts
 
 
 ###############################################################################

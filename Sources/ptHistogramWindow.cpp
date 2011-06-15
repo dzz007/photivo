@@ -168,6 +168,8 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
   else
     m_AtnB->setChecked(true);
 
+  m_LookUp = NULL;
+  FillLookUp();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -180,6 +182,7 @@ ptHistogramWindow::~ptHistogramWindow() {
   //printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
   delete m_QPixmap;
   delete m_Image8;
+  delete m_LookUp;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -199,6 +202,7 @@ void ptHistogramWindow::resizeEvent(QResizeEvent*) {
 void ptHistogramWindow::ResizeTimerExpired() {
   // Create side effect for recalibrating the maximum
   m_PreviousHistogramGamma = -1;
+
   // m_RelatedImage enforces update, even if it is the same image.
   UpdateView(m_RelatedImage);
 }
@@ -213,8 +217,8 @@ void ptHistogramWindow::ResizeTimerExpired() {
 
 void ptHistogramWindow::CalculateHistogram() {
 
-  //QTime Timer;
-  //Timer.start();
+  // QTime Timer;
+  // Timer.start();
 
   int WidgetWidth  = width();
   int WidgetHeight = height();
@@ -239,9 +243,7 @@ void ptHistogramWindow::CalculateHistogram() {
   const uint16_t Height = m_RelatedImage->m_Height;
   const int32_t Size   = Width*Height;
   const short HistogramGamma = Settings->GetInt("HistogramMode");
-  double r = 0;
-  uint16_t HistogramPoint = 0;
-#pragma omp parallel default(shared) private (r, HistogramPoint)
+#pragma omp parallel default(shared)
     {
 #ifdef _OPENMP
       // We need a thread-private copy.
@@ -251,12 +253,10 @@ void ptHistogramWindow::CalculateHistogram() {
 #pragma omp for
     for (int32_t i=0; i<(int32_t) Size; i++) {
       for (short c=0;c<MaxColor;c++) {
-        r = ToFloatTable[m_RelatedImage->m_Image[i][c]];
-        HistogramPoint = (uint16_t)(r*HistogramWidth);
 #ifdef _OPENMP
-          TpHistogram[c][HistogramPoint]++;
+          TpHistogram[c][m_LookUp[m_RelatedImage->m_Image[i][c]]]++;
 #else
-          Histogram[c][HistogramPoint]++;
+          Histogram[c][m_LookUp[m_RelatedImage->m_Image[i][c]]]++;
 #endif
       }
     }
@@ -291,7 +291,7 @@ void ptHistogramWindow::CalculateHistogram() {
         // sqrt(10)-1 such that average arrives on 50%
         Histogram[c][k] = (uint32_t)
           //4096 is rather random scaler. Later rescaled.
-          (4096* log10(1+2.16227766/HistoAverage*Histogram[c][k]));
+          (4096* log10f(1+2.16227766/HistoAverage*Histogram[c][k]));
       }
     }
     // On 50% per construction.
@@ -357,15 +357,17 @@ void ptHistogramWindow::CalculateHistogram() {
       uint16_t Row = RowLimit-(uint16_t)(r*WidgetHeight);
       // if (Row<0) Row = 0;
       if (Row >= WidgetHeight) Row=WidgetHeight-1;
+      uint32_t Index = 0;
       for (uint16_t k=Row;k<RowLimit;k++) {
+        Index = k*WidgetWidth+i+HistogramMargin;
         // 2- ! Image8[0]=B for QT !
         for (short z=0; z<3; z++) {
-          m_Image8->m_Image[k*m_Image8->m_Width+i+HistogramMargin][z] +=
+          m_Image8->m_Image[Index][z] +=
             ((z==(2-c)) || (MaxColor ==1))?0xff:0;
         }
       }
       // baselines. A grey colour.
-      uint32_t Index = RowLimit*m_Image8->m_Width+i+HistogramMargin;
+      Index = RowLimit*m_Image8->m_Width+i+HistogramMargin;
       m_Image8->m_Image[Index][0] = 0x80;
       m_Image8->m_Image[Index][1] = 0x80;
       m_Image8->m_Image[Index][2] = 0x80;
@@ -385,36 +387,43 @@ void ptHistogramWindow::CalculateHistogram() {
   // Grid
   int Sections = 5;
   int Step = (int) ((double)HistogramWidth/(double)Sections);
-  for (short i=1; i<Sections; i++) {
-    uint16_t Col=i*Step+HistogramMargin;
-    for (uint16_t Row=0; Row<WidgetHeight; Row++) {
-      int value = (int) MIN(MAX(Row-15,0), 0x60);
-      uint32_t Index = Row*WidgetWidth+Col;
-      if (!m_Image8->m_Image[Index][0] &&
-          !m_Image8->m_Image[Index][1] &&
-          !m_Image8->m_Image[Index][2]) {
-        m_Image8->m_Image[Index][0] = value;
-        m_Image8->m_Image[Index][1] = value;
+  for (uint16_t Row=0; Row<WidgetHeight; Row++) {
+    int value      = (int) MIN(MAX(Row-15,0), 0x60);
+    uint32_t Index = Row*WidgetWidth+HistogramMargin;
+    for (short i=1; i<Sections; i++) {
+      Index += Step;
+      if (m_Image8->m_Image[Index][0] == 0 &&
+          m_Image8->m_Image[Index][1] == 0 &&
+          m_Image8->m_Image[Index][2] == 0) {
+        m_Image8->m_Image[Index][0] =
+        m_Image8->m_Image[Index][1] =
         m_Image8->m_Image[Index][2] = value;
       }
     }
   }
 
-  //~ // Replace now what's still black with the background color
-  //~ // Changed to background color black, to be independent of the QT$ theme
-  //~ QColor BGColor = Qt::black;//palette().color(QPalette::Window);
-  //~ for (uint16_t Row=0; Row<WidgetHeight; Row++) {
-    //~ for (uint16_t Col=1; Col<WidgetWidth-1; Col++) {
-      //~ if (!m_Image8->m_Image[Row*WidgetWidth+Col][0] &&
-          //~ !m_Image8->m_Image[Row*WidgetWidth+Col][1] &&
-          //~ !m_Image8->m_Image[Row*WidgetWidth+Col][2]) {
-      //~ m_Image8->m_Image[Row*WidgetWidth+Col][0] = BGColor.blue();
-      //~ m_Image8->m_Image[Row*WidgetWidth+Col][1] = BGColor.green();
-      //~ m_Image8->m_Image[Row*WidgetWidth+Col][2] = BGColor.red();
-      //~ }
-    //~ }
-  //~ }
+  // printf("\n(%s,%d) %d\n\n",__FILE__,__LINE__,Timer.elapsed());
+}
+////////////////////////////////////////////////////////////////////////////////
+//
+// Fill the look up table for fast histogram creation
+//
+////////////////////////////////////////////////////////////////////////////////
 
+void ptHistogramWindow::FillLookUp() {
+  if (m_LookUp == NULL) {
+    m_LookUp = new uint16_t[0x10000];
+  }
+
+  int WidgetWidth  = width();
+
+  const uint16_t HistogramMargin = 5;
+  const uint16_t HistogramWidth  = WidgetWidth-2*HistogramMargin;
+
+#pragma omp parallel for
+  for (uint32_t i=0; i<0x10000; i++) {
+    m_LookUp[i] = (uint16_t)(ToFloatTable[i]*HistogramWidth);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -424,6 +433,8 @@ void ptHistogramWindow::CalculateHistogram() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptHistogramWindow::UpdateView(const ptImage* NewRelatedImage) {
+
+  FillLookUp();
 
   if (NewRelatedImage) m_RelatedImage = NewRelatedImage;
   if (!m_RelatedImage) return;
