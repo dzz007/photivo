@@ -62,6 +62,8 @@ private:
   short m_NowDragging;
   QGraphicsLineItem* m_LineItem;
 
+  void Finalize(const ptStatus status);
+
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -69,6 +71,7 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////
 private slots:
+  void keyAction(QKeyEvent* event);
   void mouseAction(QMouseEvent* event);
 
 };

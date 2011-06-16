@@ -436,6 +436,7 @@ void ptViewWindow::StartLine() {
     m_DrawLine = new ptLineInteraction(this);
     connect(m_DrawLine, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
     connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_DrawLine, SLOT(mouseAction(QMouseEvent*)));
+    connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_DrawLine, SLOT(keyAction(QKeyEvent*)));
     m_Interaction = iaDrawLine;
   }
 }
@@ -448,13 +449,14 @@ void ptViewWindow::StartLine() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(QRect)) {
+void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect)) {
   if (m_Interaction == iaNone) {
     assert(CB_SimpleRect != NULL);
     m_CB_SimpleRect = CB_SimpleRect;
     m_SelectRect = new ptSimpleRectInteraction(this);
     connect(m_SelectRect, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
     connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_SelectRect, SLOT(mouseAction(QMouseEvent*)));
+    connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_SelectRect, SLOT(keyAction(QKeyEvent*)));
     m_Interaction = iaSelectRect;
   }
 }
@@ -512,8 +514,8 @@ void ptViewWindow::StartCrop()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void RotateAngleDetermined(double RotateAngle);
-void CleanupAfterCrop(ptStatus CropStatus, const QRect CropRect);
+void RotateAngleDetermined(const ptStatus ExitStatus, double RotateAngle);
+void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect);
 
 void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
   switch (m_Interaction) {
@@ -521,7 +523,7 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
       double Angle = m_DrawLine->angle();
       DelAndNull(m_DrawLine);   // also disconnects all signals/slots
       m_Interaction = iaNone;
-      RotateAngleDetermined(Angle);
+      RotateAngleDetermined(ExitStatus, Angle);
       break;
     }
 
@@ -529,7 +531,7 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
       QRect sr = m_SelectRect->rect();
       DelAndNull(m_SelectRect);   // also disconnects all signals/slots
       m_Interaction = iaNone;
-      m_CB_SimpleRect(sr);
+      m_CB_SimpleRect(ExitStatus, sr);
       break;
     }
 
