@@ -46,7 +46,7 @@ public:
   explicit ptSimpleRectInteraction(QGraphicsView* View);
   ~ptSimpleRectInteraction();
 
-  QRectF rect();
+  inline QRect rect() const { return QRect(m_Rect->normalized().toRect()); }
 
 
 ///////////////////////////////////////////////////////////////////////////
