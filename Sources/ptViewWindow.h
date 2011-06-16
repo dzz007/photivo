@@ -94,7 +94,7 @@ public:
   // - StartSimpleRect: Pass the function that is called after the
   //   selection finishes.
   void StartLine();
-  void StartSimpleRect(void (*CB_SimpleRect)(QRectF));
+  void StartSimpleRect(void (*CB_SimpleRect)(QRect));
   void StartCrop();
   ptRichRectInteraction* crop() const { return m_Crop; }
 
@@ -136,7 +136,7 @@ private:
   ptGridInteraction* m_Grid;
   ptInteraction m_Interaction;
   short m_LeftMousePressed;
-  void (*m_CB_SimpleRect)(QRectF);
+  void (*m_CB_SimpleRect)(QRect);
   short m_ZoomIsSaved;
   float m_ZoomFactor;
   float m_ZoomFactorSav;
