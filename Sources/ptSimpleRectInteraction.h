@@ -24,6 +24,7 @@
 #define PTSELECTINTERACTION_H
 
 #include <QRectF>
+#include <QLine>
 #include <QGraphicsRectItem>
 #include <QMouseEvent>
 
@@ -55,9 +56,13 @@ public:
 //
 ///////////////////////////////////////////////////////////////////////////
 private:
+  int m_CtrlPressed;
+  QLine* m_DragDelta;
   QRectF* m_Rect;
   short m_NowDragging;
   QGraphicsRectItem* m_RectItem;
+
+  void Finalize(const ptStatus status);
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -66,6 +71,7 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////
 private slots:
+  void keyAction(QKeyEvent* event);
   void mouseAction(QMouseEvent* event);
 
 };

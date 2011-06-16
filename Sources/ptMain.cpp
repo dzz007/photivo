@@ -1417,7 +1417,7 @@ void BlockTools(const short state) {
 // Histogram
 //
 ////////////////////////////////////////////////////////////////////////////////
-void HistogramCropDone(QRect SelectionRect);
+void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect);
 
 void HistogramGetCrop() {
   // Get the crop for the histogram
@@ -1426,6 +1426,7 @@ void HistogramGetCrop() {
       BlockTools(1);
       ViewWindow->ShowStatus(QObject::tr("Selection"));
       ViewWindow->StartSimpleRect(HistogramCropDone);
+      ViewWindow->setFocus();
   } else {
     ReportProgress(QObject::tr("Updating histogram"));
     Update(ptProcessorPhase_NULL);
@@ -1433,9 +1434,17 @@ void HistogramGetCrop() {
   }
 }
 
-void HistogramCropDone(QRect SelectionRect) {
+void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect) {
   // Selection is done at this point. Disallow it further and activate main.
   BlockTools(0);
+  if (ExitStatus == stFailure) {
+    Settings->SetValue("HistogramCropX",0);
+    Settings->SetValue("HistogramCropY",0);
+    Settings->SetValue("HistogramCropW",0);
+    Settings->SetValue("HistogramCropH",0);
+    Settings->SetValue("HistogramCrop",0);
+    return;
+  }
 
   short XScale = 1<<Settings->GetInt("PipeSize");
   short YScale = 1<<Settings->GetInt("PipeSize");
@@ -3462,6 +3471,7 @@ void CB_MenuFileExit(const short) {
   delete Settings;
 
 
+
   ALLOCATED(10000000);
   printf("Exiting Photivo.\n");
   QCoreApplication::exit(EXIT_SUCCESS);
@@ -3934,7 +3944,7 @@ void CB_MemoryTestInput(const QVariant Value) {
     }
 }
 
-void SetDetailViewRect(QRect rect) {
+void SetDetailViewRect(const ptStatus, QRect rect) {
   DetailViewRect = rect;
 }
 void CB_PipeSizeChoice(const QVariant Choice) {
@@ -4447,7 +4457,7 @@ void CB_DarkFrameChoice(const QVariant Choice) {
 // Partim White Balance.
 //
 ////////////////////////////////////////////////////////////////////////////////
-void SelectSpotWBDone(const QRect SelectionRect);
+void SelectSpotWBDone(const ptStatus ExitStatus, const QRect SelectionRect);
 
 void CB_WhiteBalanceChoice(const QVariant Choice) {
   Settings->SetValue("WhiteBalance",Choice);
@@ -4475,6 +4485,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       ViewWindow->ShowStatus(QObject::tr("Spot WB"));
       ReportProgress(QObject::tr("Spot WB"));
       ViewWindow->StartSimpleRect(SelectSpotWBDone);
+      ViewWindow->setFocus();
       break;
     }
 
@@ -4492,23 +4503,25 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
   }
 }
 
-void SelectSpotWBDone(const QRect SelectionRect) {
+void SelectSpotWBDone(const ptStatus ExitStatus, const QRect SelectionRect) {
   // Selection is done at this point. Disallow it further and activate main.
   BlockTools(0);
 
-  Settings->SetValue("VisualSelectionX", (int)SelectionRect.left());
-  Settings->SetValue("VisualSelectionY", (int)SelectionRect.top());
-  Settings->SetValue("VisualSelectionWidth", (int)SelectionRect.width());
-  Settings->SetValue("VisualSelectionHeight", (int)SelectionRect.height());
+  if (ExitStatus == stSuccess) {
+    Settings->SetValue("VisualSelectionX", SelectionRect.left());
+    Settings->SetValue("VisualSelectionY", SelectionRect.top());
+    Settings->SetValue("VisualSelectionWidth", SelectionRect.width());
+    Settings->SetValue("VisualSelectionHeight", SelectionRect.height());
 
-  TRACEKEYVALS("Selection X","%d",
-               Settings->GetInt("VisualSelectionX"));
-  TRACEKEYVALS("Selection Y","%d",
-               Settings->GetInt("VisualSelectionY"));
-  TRACEKEYVALS("Selection W","%d",
-               Settings->GetInt("VisualSelectionWidth"));
-  TRACEKEYVALS("Selection H","%d",
-               Settings->GetInt("VisualSelectionHeight"));
+    TRACEKEYVALS("Selection X","%d",
+                 Settings->GetInt("VisualSelectionX"));
+    TRACEKEYVALS("Selection Y","%d",
+                 Settings->GetInt("VisualSelectionY"));
+    TRACEKEYVALS("Selection W","%d",
+                 Settings->GetInt("VisualSelectionWidth"));
+    TRACEKEYVALS("Selection H","%d",
+                 Settings->GetInt("VisualSelectionHeight"));
+  }
 
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
   ViewWindow->RestoreZoom();
@@ -4939,18 +4952,22 @@ void CB_RotateAngleButton() {
 
   BlockTools(1);
   ViewWindow->StartLine();
+  ViewWindow->setFocus();
 }
 
-void RotateAngleDetermined(double RotateAngle) {
+void RotateAngleDetermined(const ptStatus ExitStatus, double RotateAngle) {
   // Selection is done at this point. Disallow it further and activate main.
   BlockTools(0);
-  if (RotateAngle < -45.0) {
-    RotateAngle += 180.0;
+
+  if (ExitStatus == stSuccess) {
+    if (RotateAngle < -45.0) {
+      RotateAngle += 180.0;
+    }
+    if (fabs(fabs(RotateAngle) - 90.0) < 45.0) {
+      RotateAngle -= 90.0;
+    }
+    Settings->SetValue("Rotate",RotateAngle);
   }
-  if (fabs(fabs(RotateAngle) - 90.0) < 45.0) {
-    RotateAngle -= 90.0;
-  }
-  Settings->SetValue("Rotate",RotateAngle);
 
   ViewWindow->RestoreZoom();
   Update(ptProcessorPhase_Geometry);
@@ -5129,7 +5146,7 @@ void CB_MakeCropButton() {
 
 
 // After-crop processing and cleanup.
-void CleanupAfterCrop(ptStatus CropStatus, const QRect CropRect) {
+void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
   BlockTools(0);
 
   if (CropStatus == stSuccess) {

@@ -66,6 +66,43 @@ double ptLineInteraction::angle() {
 
 ///////////////////////////////////////////////////////////////////////////
 //
+// Finalize()
+//
+///////////////////////////////////////////////////////////////////////////
+
+void ptLineInteraction::Finalize(const ptStatus status) {
+  if (m_LineItem != NULL) {
+    m_View->scene()->removeItem(m_LineItem);
+    DelAndNull(m_LineItem);
+  }
+
+  m_NowDragging = 0;
+  emit finished(status);
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Key actions
+//
+///////////////////////////////////////////////////////////////////////////
+
+void ptLineInteraction::keyAction(QKeyEvent* event) {
+  switch (event->type()) {
+    case QEvent::KeyPress:
+      event->accept();
+      Finalize(stFailure);
+      break;
+
+    default:
+      // nothing to do
+      break;
+  }
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+//
 // Mouse actions: left press/release, move
 //
 ///////////////////////////////////////////////////////////////////////////
@@ -95,10 +132,7 @@ void ptLineInteraction::mouseAction(QMouseEvent* event) {
     case QEvent::MouseButtonRelease: {
       if (event->button() == Qt::LeftButton) {
         event->accept();
-        m_View->scene()->removeItem(m_LineItem);
-        DelAndNull(m_LineItem);
-        m_NowDragging = 0;
-        emit finished(stSuccess);
+        Finalize(stSuccess);
       }
       break;
     }
