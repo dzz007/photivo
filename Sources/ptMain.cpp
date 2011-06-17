@@ -2957,7 +2957,7 @@ void CalculateMultipliersFromTemperature() {
   double RefRGB[3];
   TemperatureToRGB(Settings->GetInt("ColorTemperature"),RefRGB);
   RefRGB[1] /= Settings->GetDouble("GreenIntensity");
-  if (TheDcRaw->m_RawColor) {
+  if (TheDcRaw->m_RawColorPhotivo) {
    Settings->SetValue("RMultiplier",
                       VALUE(TheDcRaw->m_D65Multipliers[0])/RefRGB[0]);
    Settings->SetValue("GMultiplier",
@@ -2984,7 +2984,7 @@ void CalculateMultipliersFromTemperature() {
           Settings->SetValue("BMultiplier",1/InverseMultiplier);
           break;
         default :
-    assert(0);
+          assert(0);
       }
     }
   }

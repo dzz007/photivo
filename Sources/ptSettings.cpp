@@ -1532,7 +1532,7 @@ void ptSettings::FromDcRaw(DcRaw* TheDcRaw) {
   // rgbWB = (x,x,x) and 6500 temperature).
 
   double RefRGB[3];
-  if (TheDcRaw->m_RawColor) {
+  if (TheDcRaw->m_RawColorPhotivo) {
     for (short c=0; c<3; c++) {
       RefRGB[c] = VALUE(TheDcRaw->m_D65Multipliers[c]) /
                   VALUE(TheDcRaw->m_PreMultipliers[c]);
