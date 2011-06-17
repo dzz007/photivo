@@ -450,6 +450,7 @@ unsigned  m_WhiteLevel;
 unsigned  m_WhiteLevel_AfterPhase1;
 unsigned  m_MixGreen;
 unsigned  m_RawColor;
+unsigned  m_RawColorPhotivo; // mirror for Photivo
 unsigned  m_ZeroIsBad;
 unsigned  m_DNG_Version;
 unsigned  m_IsFoveon;
