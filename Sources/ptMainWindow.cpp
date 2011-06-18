@@ -1629,37 +1629,37 @@ void CB_SearchBarEnableCheck(const QVariant State);
 
 // Catch keyboard shortcuts
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
-
-
   if (Event->key()==Qt::Key_Escape) {// back to used view
     if (Settings->GetInt("SpecialPreview") != ptSpecialPreview_RGB) {
         CB_SpecialPreviewChoice(ptSpecialPreview_RGB);
+        return;
     } else if (SearchInputWidget->hasFocus()) {
       OnTabProcessingButtonClicked();
+      return;
     } else {
       if (Settings->GetInt("ShowToolContainer") == 0) {
         Settings->SetValue("ShowToolContainer", 1);
         UpdateSettings();
+        return;
       } else {
         ::CB_FullScreenButton(0);
+        return;
       }
     }
   }
 
   if (SearchInputWidget->hasFocus() &&
       (Event->key()==Qt::Key_Return ||
-       Event->key()==Qt::Key_Enter)) {
+       Event->key()==Qt::Key_Enter))
+  {
     ViewWindow->setFocus();
+    return;
   }
 
-
-  // most shortcuts should only work when we are not in special state like cropping
-  if (Settings->GetInt("BlockTools")==0) {
+  if (Settings->GetInt("BlockTools") == 0 || ViewWindow->interaction() == iaCrop) {
     if (Event->key()==Qt::Key_F11) { // toggle full screen
       ::CB_FullScreenButton(!isFullScreen());
-    } else if (Event->key()==Qt::Key_F1) {
-      QDesktopServices::openUrl(QString("http://photivo.org/photivo/manual"));
-    } if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::NoModifier) {
+    } else if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::NoModifier) {
       CB_InputChanged("ZoomInput",50);
     } else if (Event->key()==Qt::Key_2 && Event->modifiers()==Qt::NoModifier) {
       CB_InputChanged("ZoomInput",100);
@@ -1667,6 +1667,19 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       CB_InputChanged("ZoomInput",200);
     } else if (Event->key()==Qt::Key_4 && Event->modifiers()==Qt::NoModifier) {
       CB_ZoomFitButton();
+    } else if (Event->key()==Qt::Key_Space) {
+      Settings->SetValue("ShowToolContainer",1-Settings->GetInt("ShowToolContainer"));
+      UpdateSettings();
+      if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
+        ViewWindow->ZoomToFit(0);
+      }
+    }
+  }
+
+  // most shortcuts should only work when we are not in special state like cropping
+  if (Settings->GetInt("BlockTools")==0) {
+    if (Event->key()==Qt::Key_F1) {
+      QDesktopServices::openUrl(QString("http://photivo.org/photivo/manual"));
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::NoModifier) {
       OnTabProcessingButtonClicked();
     } else if (Event->key()==Qt::Key_S && Event->modifiers()==Qt::NoModifier) {
@@ -1675,9 +1688,6 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       OnTabInfoButtonClicked();
     } else if (Event->key()==Qt::Key_M && Event->modifiers()==Qt::NoModifier) {
       ::CB_RunModeCheck(1-Settings->GetInt("RunMode"));
-    } else if (Event->key()==Qt::Key_Space) {
-      Settings->SetValue("ShowToolContainer",1-Settings->GetInt("ShowToolContainer"));
-      UpdateSettings();
     } else if (Event->key()==Qt::Key_F5) {
       OnRunButtonClicked();
     } else if (Event->key()==Qt::Key_F3) {

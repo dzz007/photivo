@@ -52,7 +52,7 @@ enum ptInteraction {
   iaNone = 0,
   iaCrop = 1,
   iaSelectRect = 2, // simple rectangle selection: e.g. for spot WB
-  iaDrawLine = 3    // draw a single straight line: e.g. for
+  iaDrawLine = 3    // draw a single straight line: e.g. for rotate angle
 };
 
 
@@ -71,7 +71,6 @@ Q_OBJECT
 //
 ///////////////////////////////////////////////////////////////////////////
 public:
-  // TODO SR: Pointer to main window may not be necessary.
   ptViewWindow(QWidget* Parent, ptMainWindow* mainWin);
   ~ptViewWindow();
 
@@ -101,7 +100,7 @@ public:
   void setGrid(const short enabled, const uint linesX, const uint linesY);
   void UpdateImage(const ptImage* relatedImage);
   void ZoomTo(float factor);  // 1.0 means 100%
-  int ZoomToFit();  // fit complete image into viewport
+  int ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -110,9 +109,12 @@ public:
 ///////////////////////////////////////////////////////////////////////////
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
+  void dragEnterEvent(QDragEnterEvent* event);
+  void dropEvent(QDropEvent* event);
   void keyPressEvent(QKeyEvent* event);
   void keyReleaseEvent(QKeyEvent* event);
   void paintEvent(QPaintEvent* event);
+  void resizeEvent(QResizeEvent* event);
   void mouseDoubleClickEvent(QMouseEvent* event);
   void mousePressEvent(QMouseEvent* event);
   void mouseReleaseEvent(QMouseEvent* event);
