@@ -1191,10 +1191,10 @@
                               <attribute name="label">
                                <string>Spot Repair</string>
                               </attribute>
-                              <layout class="QVBoxLayout" name="verticalLayout_267">
+                              <layout class="QVBoxLayout" name="verticalLayout_901">
                                <item>
                                 <widget class="QWidget" name="widget_171" native="true">
-                                 <layout class="QVBoxLayout" name="verticalLayout_268">
+                                 <layout class="QVBoxLayout" name="verticalLayout_900">
                                   <item>
                                    <widget class="QWidget" name="widget_172" native="true">
                                     <layout class="QHBoxLayout" name="horizontalLayout_95">

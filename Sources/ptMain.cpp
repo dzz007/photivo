@@ -1309,10 +1309,7 @@ void Update(const QString GuiName) {
 void BlockTools(const short state) {
   // enable all
   if (state == 0) {
-    MainWindow->ZoomFitButton->setEnabled(true);
-    MainWindow->ZoomFullButton->setEnabled(true);
-    MainWindow->ZoomWidget->setEnabled(true);
-
+    MainWindow->SpecialPreviewWidget->setEnabled(true);
     if (Settings->GetInt("BlockTools") == 1) {
       MainWindow->ControlFrame->setEnabled(true);
 
@@ -1358,19 +1355,14 @@ void BlockTools(const short state) {
   // block everything
   } else if (state == 1) {
     assert(Settings->GetInt("BlockTools") == 0);
+    MainWindow->SpecialPreviewWidget->setEnabled(false);
     MainWindow->ControlFrame->setEnabled(false);
-    MainWindow->ZoomFitButton->setEnabled(false);
-    MainWindow->ZoomFullButton->setEnabled(false);
-    MainWindow->ZoomWidget->setEnabled(false);
 
 
   // block everything except crop tool
   } else if (state == 2) {
     assert(Settings->GetInt("BlockTools") == 0);
-
-    MainWindow->ZoomFitButton->setEnabled(false);
-    MainWindow->ZoomFullButton->setEnabled(false);
-    MainWindow->ZoomWidget->setEnabled(false);
+    MainWindow->SpecialPreviewWidget->setEnabled(false);
     MainWindow->HistogramFrameCentralWidget->setEnabled(false);
     MainWindow->PipeControlWidget->setEnabled(false);
     MainWindow->StatusWidget->setEnabled(false);
@@ -1422,11 +1414,11 @@ void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect);
 void HistogramGetCrop() {
   // Get the crop for the histogram
   if (Settings->GetInt("HistogramCrop")) {
-      // Allow to be selected in the view window. And deactivate main.
-      BlockTools(1);
-      ViewWindow->ShowStatus(QObject::tr("Selection"));
-      ViewWindow->StartSimpleRect(HistogramCropDone);
-      ViewWindow->setFocus();
+    // Allow to be selected in the view window. And deactivate main.
+    BlockTools(1);
+    ViewWindow->ShowStatus(QObject::tr("Selection"));
+    ViewWindow->StartSimpleRect(HistogramCropDone);
+    ViewWindow->setFocus();
   } else {
     ReportProgress(QObject::tr("Updating histogram"));
     Update(ptProcessorPhase_NULL);

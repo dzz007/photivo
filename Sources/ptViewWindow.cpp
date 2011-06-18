@@ -175,7 +175,7 @@ void ptViewWindow::ZoomTo(float factor) {
 }
 
 
-int ptViewWindow::ZoomToFit() {
+int ptViewWindow::ZoomToFit(const short withMsg /*= 1*/) {
   Settings->SetValue("ZoomMode",ptZoomMode_Fit);
 
   if (!m_8bitImageItem->pixmap().isNull()) {
@@ -183,7 +183,10 @@ int ptViewWindow::ZoomToFit() {
     m_8bitImageItem->setTransformationMode(Qt::SmoothTransformation);
     fitInView(m_8bitImageItem, Qt::KeepAspectRatio);
     m_ZoomFactor = transform().m11();
-    m_ZoomSizeOverlay->exec(tr("Fit"));
+
+    if (withMsg) {
+      m_ZoomSizeOverlay->exec(tr("Fit"));
+    }
   }
 
   Settings->SetValue("Zoom",qRound(m_ZoomFactor * 100));
@@ -243,6 +246,7 @@ void ptViewWindow::paintEvent(QPaintEvent* event) {
   QPainter Painter(viewport());
   Painter.fillRect(0, 0, viewport()->width(), viewport()->height(), palette().color(QPalette::Window));
 
+  // takes care of updating the scene
   QGraphicsView::paintEvent(event);
 }
 
@@ -380,6 +384,41 @@ void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
     emit keyChanged(event);
   }
   event->ignore();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Drag & Drop
+//
+// The two functions are necessary to enable d&d over the view window.
+// The actual d&d action is handled by the resp. main window events.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::dragEnterEvent(QDragEnterEvent* event) {
+  event->ignore();
+}
+
+void ptViewWindow::dropEvent(QDropEvent* event) {
+  event->ignore();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// resizeEvent()
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::resizeEvent(QResizeEvent* event) {
+  if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
+    event->accept();
+    ZoomToFit(0);
+  } else {
+    // takes care of positioning the scene inside the viewport on non-fit zooms
+    QGraphicsView::resizeEvent(event);
+  }
 }
 
 
@@ -682,6 +721,10 @@ void ptViewWindow::ConstructContextMenu() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
+  if (m_Interaction != iaNone) {
+    return;
+  }
+
   // Create the menus themselves
   // Note: Menus cannot be created with new. That breaks the theming.
   QMenu Menu_Mode(tr("Mode"), this);

@@ -206,7 +206,9 @@ void ptRichRectInteraction::MousePressHandler(const QMouseEvent* event) {
     m_DragDelta->setPoints(event->pos(), event->pos());
 
     if (m_RectItem->contains(scPos)) {
-      m_NowDragging = 1;
+      if (m_CtrlIsPressed > 0 || m_MovingEdge != meCenter) {
+        m_NowDragging = 1;
+      }
 
     // Start new rect when none is present or clicked outside current one.
     } else if (m_View->scene()->sceneRect().contains(scPos) && (m_CtrlIsPressed > 0)) {
@@ -447,6 +449,7 @@ void ptRichRectInteraction::moveToCenter(const short horizontal, const short ver
 
   m_Rect.moveCenter(NewCenter);
   m_RectItem->setRect(m_Rect);
+  UpdateScene();
 }
 
 
