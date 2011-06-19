@@ -741,7 +741,7 @@ void ptViewWindow::ConstructContextMenu() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
-  if (m_Interaction != iaNone) {
+  if (m_Interaction == iaSelectRect || m_Interaction == iaDrawLine) {
     return;
   }
 
@@ -775,11 +775,13 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu.addAction(ac_ZoomFit);
   Menu.addAction(ac_Zoom100);
   Menu.addSeparator();
-  Menu.addMenu(&Menu_Mode);
-  Menu.addMenu(&Menu_Clip);
-  Menu.addSeparator();
-  Menu.addAction(ac_SensorClip);
-  Menu.addAction(ac_SensorClipSep);
+  if (m_Interaction == iaNone) {
+    Menu.addMenu(&Menu_Mode);
+    Menu.addMenu(&Menu_Clip);
+    Menu.addSeparator();
+    Menu.addAction(ac_SensorClip);
+    Menu.addAction(ac_SensorClipSep);
+  }
   Menu.addAction(ac_ShowTools);
   Menu.addAction(ac_ShowZoomBar);
   Menu.addSeparator();

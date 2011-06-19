@@ -4230,6 +4230,10 @@ void CB_StartupPipeSizeChoice(const QVariant Choice) {
   Settings->SetValue("StartupPipeSize", Choice);
 }
 
+void CB_CropInitialZoomChoice(const QVariant Choice) {
+  Settings->SetValue("CropInitialZoom",Choice);
+}
+
 void CB_InputsAddPowerLawCheck(const QVariant State) {
   Settings->SetValue("InputsAddPowerLaw",State);
   if (Settings->GetInt("InputsAddPowerLaw")) {
@@ -5135,6 +5139,21 @@ void CB_MakeCropButton() {
   ViewWindow->ShowStatus(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
   BlockTools(2);
+
+  switch (Settings->GetInt("CropInitialZoom")) {
+    case ptZoomLevel_Current:
+      // nothing to do
+      break;
+
+    case ptZoomLevel_Fit:
+      ViewWindow->ZoomToFit(0);
+      break;
+
+    default:
+      ViewWindow->ZoomTo((float)Settings->GetInt("CropInitialZoom") / 100);
+      break;
+  }
+
   ViewWindow->StartCrop();          // always start the interaction first,
   MainWindow->UpdateCropToolUI();   // *then* update main window
   ViewWindow->setFocus();
@@ -8250,6 +8269,8 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(StartupPipeSizeChoice)
 
   M_JustSetDispatch(StartupSwitchARCheck)
+
+  M_Dispatch(CropInitialZoomChoice)
 
   M_Dispatch(RememberSettingLevelChoice)
   M_Dispatch(InputsAddPowerLawCheck)

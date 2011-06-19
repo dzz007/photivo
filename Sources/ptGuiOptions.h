@@ -47,6 +47,7 @@ struct ptGuiOptionsItem {
 
 class ptGuiOptions {
 public:
+  static const ptGuiOptionsItem ZoomLevel[];
   static const ptGuiOptionsItem RememberSettingLevel[];
   static const ptGuiOptionsItem CameraColor[];
   static const ptGuiOptionsItem CameraColorProfileIntent[];

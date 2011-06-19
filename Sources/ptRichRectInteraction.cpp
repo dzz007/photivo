@@ -43,8 +43,8 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
       const uint AspectRatioH, const short Guidelines)
 : ptImageInteraction(View),
   //constants
-  EdgeThickness(20),
-  TinyRectThreshold(40),
+  EdgeThickness(40),
+  TinyRectThreshold(80),
   //variables
   m_CtrlIsPressed(0),
   m_Guides(Guidelines),
@@ -689,15 +689,15 @@ ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
   int LRthick = 0;    // left/right
 
   // Determine edge area thickness
-  if (m_Rect.height() <= TinyRectThreshold) {
+  if (m_Rect.height() <= (int)(TinyRectThreshold / m_View->transform().m11())) {
     TBthick = (int)(m_Rect.height() / 2);
   } else {
-    TBthick = EdgeThickness;
+    TBthick = (int)(EdgeThickness / m_View->transform().m11());
   }
-  if (m_Rect.width() <= TinyRectThreshold) {
+  if (m_Rect.width() <= (int)(TinyRectThreshold / m_View->transform().m11())) {
     LRthick = (int)(m_Rect.width() / 2);
   } else {
-    LRthick = EdgeThickness;
+    LRthick = (int)(EdgeThickness / m_View->transform().m11());
   }
 
   // Determine in which area the mouse is

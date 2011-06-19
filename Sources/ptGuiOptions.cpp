@@ -35,6 +35,22 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+const ptGuiOptionsItem ptGuiOptions::ZoomLevel[] = {
+  {ptZoomLevel_Current, QObject::tr("Current") },
+  {ptZoomLevel_Fit,     QObject::tr("Zoom fit") },
+  {ptZoomLevel_5,   QObject::tr("5%") },
+  {ptZoomLevel_10,  QObject::tr("10%") },
+  {ptZoomLevel_25,  QObject::tr("25%") },
+  {ptZoomLevel_33,  QObject::tr("33%") },
+  {ptZoomLevel_50,  QObject::tr("50%") },
+  {ptZoomLevel_66,  QObject::tr("66%") },
+  {ptZoomLevel_100, QObject::tr("100%") },
+  {ptZoomLevel_150, QObject::tr("150%") },
+  {ptZoomLevel_200, QObject::tr("200%") },
+  {ptZoomLevel_300, QObject::tr("300%") },
+  {ptZoomLevel_400, QObject::tr("400%") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::RememberSettingLevel[] = {
   {0,    QObject::tr("None: even this setting is lost ...")  },
   {1,    QObject::tr("Minimal: dirs, available curves ...")     },
