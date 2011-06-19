@@ -439,7 +439,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
 
   // Load in the gui choice (combo) elements
   const ptGuiChoiceItem GuiChoiceItems[] = {
-    // Unique Name,GuiElement,InitLevel,InJobFile,HasDefault (causes button too !),Default,Choices (from ptGuiOptions.h),ToolTip
+    // Unique Name,                 GuiElement,    InitLevel,InJobFile,HasDefault,Default, Choices (from ptGuiOptions.h),         ToolTip
     {"RememberSettingLevel"        ,ptGT_Choice       ,1,0,0 ,2                           ,GuiOptions->RememberSettingLevel      ,tr("Remember setting level")},
     {"CameraColor"                 ,ptGT_Choice       ,1,1,1 ,ptCameraColor_Adobe_Profile ,GuiOptions->CameraColor               ,tr("Transform camera RGB to working space RGB")},
     {"CameraColorProfileIntent"    ,ptGT_Choice       ,1,1,1 ,INTENT_PERCEPTUAL           ,GuiOptions->CameraColorProfileIntent  ,tr("Intent of the profile")},
@@ -462,7 +462,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CaCorrect"                   ,ptGT_Choice       ,2,1,1 ,ptCACorrect_Off             ,GuiOptions->CACorrect                 ,tr("CA correction")},
     {"Interpolation"               ,ptGT_Choice       ,2,1,1 ,ptInterpolation_DCB         ,GuiOptions->Interpolation             ,tr("Demosaicing algorithm")},
     {"BayerDenoise"                ,ptGT_Choice       ,2,1,1 ,ptBayerDenoise_None         ,GuiOptions->BayerDenoise              ,tr("Denosie on Bayer pattern")},
-    {"CropGuidelines"              ,ptGT_Choice       ,1,0,0 ,ptCropGuidelines_GoldenRatio,GuiOptions->CropGuidelines            ,tr("Guide lines for crop")},
+    {"CropGuidelines"              ,ptGT_Choice       ,1,0,0 ,ptGuidelines_GoldenRatio    ,GuiOptions->CropGuidelines            ,tr("Guide lines for crop")},
     {"LightsOut"                   ,ptGT_Choice       ,1,0,0 ,ptLightsOutMode_Dimmed      ,GuiOptions->LightsOutMode             ,tr("Dim areas outside the crop rectangle")},
     {"ClipMode"                    ,ptGT_Choice       ,1,1,1 ,ptClipMode_Blend            ,GuiOptions->ClipMode                  ,tr("How to handle clipping")},
     {"LfunCAModel"                 ,ptGT_Choice       ,2,1,1 ,ptLfunCAModel_None          ,GuiOptions->LfunCAModel               ,tr("Mathematical model for CA correction")},
@@ -721,6 +721,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TranslationMode"                      ,1    ,0                                     ,0},  // 0 no transl (English), 1 load qm file
     {"UiLanguage"                           ,1    ,""                                    ,0},  // Language name to load from qm file, e.g. "Deutsch"
     {"CustomCSSFile"                        ,1    ,""                                    ,0},
+    {"FullscreenActive"                     ,9    ,0                                     ,0},
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.

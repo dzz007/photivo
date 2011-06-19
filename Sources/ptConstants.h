@@ -230,11 +230,11 @@ const short ptAspectRatio_Manual    = 2;
 
 // Crop/Selection rectangle guidelines modes
 
-const short ptCropGuidelines_None        = 0;
-const short ptCropGuidelines_RuleThirds  = 1;
-const short ptCropGuidelines_GoldenRatio = 2;
-const short ptCropGuidelines_Diagonals   = 3;
-const short ptCropGuidelines_Centerlines = 4;
+const short ptGuidelines_None        = 0;
+const short ptGuidelines_RuleThirds  = 1;
+const short ptGuidelines_GoldenRatio = 2;
+const short ptGuidelines_Diagonals   = 3;
+const short ptGuidelines_Centerlines = 4;
 
 // Lights Out modes
 
@@ -534,6 +534,11 @@ const short ptLqr_ScaleAbsolute    = 1;
 const short ptZoomMode_Fit    = 0;
 const short ptZoomMode_NonFit = 1;
 
+// Status overlay modes
+const short ptStatus_Done = 0;
+const short ptStatus_Updating = 1;
+const short ptStatus_Processing = 2;
+
 // Gui events : timeout filter
 // 1s after releasing input arrows, processing will be triggered.
 // Should be working also for sufficiently fast typing :)
@@ -709,7 +714,15 @@ const double D65Reference[3] = {0.950456, 1.0, 1.088754};
 enum ptToolState {
   tsHidden = 0,
   tsNormal = 1,
-  tsFavourite = 2,
+  tsFavourite = 2
+};
+
+// General status.
+// More states can be added with values >= 2
+enum ptStatus {
+  stUndetermined = -1,
+  stSuccess = 0,
+  stFailure = 1
 };
 
 #endif

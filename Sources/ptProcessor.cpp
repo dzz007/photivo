@@ -76,7 +76,7 @@ ptProcessor::ptProcessor(void (*ReportProgress)(const QString Message)) {
 }
 
 // Prototype for status report in Viewwindow
-void ViewWindowStatusReport(short State);
+void ViewWindowShowStatus(short State);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -163,7 +163,7 @@ void ptProcessor::Run(short Phase,
   if (!m_DcRaw) goto Exit;
 
   // Status report
-  ::ViewWindowStatusReport(2);
+  ::ViewWindowShowStatus(ptStatus_Processing);
 
   // correction for bitmaps
   if (!Settings->GetInt("IsRAW")) {

@@ -156,11 +156,11 @@ const ptGuiOptionsItem ptGuiOptions::LfunDistModel[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::CropGuidelines[] = {
-  {ptCropGuidelines_None,         QObject::tr("No guidelines") },
-  {ptCropGuidelines_RuleThirds,   QObject::tr("Rule of thirds") },
-  {ptCropGuidelines_GoldenRatio,  QObject::tr("Golden ratio") },
-  {ptCropGuidelines_Diagonals,    QObject::tr("Diagonals") },
-  {ptCropGuidelines_Centerlines,  QObject::tr("Center lines") },
+  {ptGuidelines_None,         QObject::tr("No guidelines") },
+  {ptGuidelines_RuleThirds,   QObject::tr("Rule of thirds") },
+  {ptGuidelines_GoldenRatio,  QObject::tr("Golden ratio") },
+  {ptGuidelines_Diagonals,    QObject::tr("Diagonals") },
+  {ptGuidelines_Centerlines,  QObject::tr("Center lines") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::LightsOutMode[] = {
