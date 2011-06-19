@@ -2,7 +2,6 @@
 **
 ** Photivo
 **
-** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
 **
@@ -21,15 +20,26 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+/**
+** Displays the preview image and manages all interactions that happen directly
+** on the image itself, e.g. zoom, crop, spot repair
+**
+** - Create ptMainWindow and the global ptTheme BEFORE you create ptViewWindow.
+**/
+#ifndef PTVIEWWINDOW_H
+#define PTVIEWWINDOW_H
 
-#ifndef DLVIEWWINDOW_H
-#define DLVIEWWINDOW_H
-
-#include <QtGui>
-#include <QRect>
 #include <QLine>
+#include <QMenu>
+#include <QGraphicsView>
 
 #include "ptImage.h"
+#include "ptMainWindow.h"
+#include "ptReportOverlay.h"
+#include "ptLineInteraction.h"
+#include "ptSimpleRectInteraction.h"
+#include "ptRichRectInteraction.h"
+#include "ptGridInteraction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -38,26 +48,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-// Crop: Position of the mouse when button pressed for dragging
-enum ptMovingEdge {
-  meNone = 0,
-  meTop = 1,
-  meRight = 2,
-  meBottom = 3,
-  meLeft = 4,
-  meTopLeft = 5,
-  meTopRight = 6,
-  meBottomLeft = 7,
-  meBottomRight = 8,
-  meCenter = 9      // move crop rect instead of resize
-};
-
-// User interaction in the view window
-enum ptViewportAction {
-  vaNone = 0,
-  vaCrop = 1,
-  vaSelectRect = 2,
-  vaDrawLine = 3
+enum ptInteraction {
+  iaNone = 0,
+  iaCrop = 1,
+  iaSelectRect = 2, // simple rectangle selection: e.g. for spot WB
+  iaDrawLine = 3    // draw a single straight line: e.g. for rotate angle
 };
 
 
@@ -67,9 +62,7 @@ enum ptViewportAction {
 // class ptViewWindow
 //
 ///////////////////////////////////////////////////////////////////////////
-
-class ptViewWindow : public QAbstractScrollArea {
-
+class ptViewWindow : public QGraphicsView {
 Q_OBJECT
 
 ///////////////////////////////////////////////////////////////////////////
@@ -77,81 +70,56 @@ Q_OBJECT
 // PUBLIC members
 //
 ///////////////////////////////////////////////////////////////////////////
-
 public:
-  ptViewWindow(const ptImage* RelatedImage,
-                     QWidget* Parent);
+  ptViewWindow(QWidget* Parent, ptMainWindow* mainWin);
   ~ptViewWindow();
 
-  // NewRelatedImage to associate anonter ptImage with this window.
-  void UpdateView(const ptImage* NewRelatedImage = NULL);
+  inline ptInteraction interaction() const { return m_Interaction; }
+  inline int zoomPercent() { return qRound(m_ZoomFactor * 100); }
+  inline float zoomFactor() const { return m_ZoomFactor; }
 
-  /*user interaction:
-    - Selection: mouse push/drag/release to draw a selection rectangle.
-      Used for spot WB and histogram "crop".
-    - Cropping: usage similar to Gimp’s crop tool. Used for image cropping.
-    - Line drawing: mouse push/drag/release to draw a line. Used for image rotation angle.
-  */
-  void StartCrop(const int x,
-                 const int y,
-                 const int width,
-                 const int height,
-                 const short FixedAspectRatio,
-                 const uint AspectRatioW,
-                 const uint AspectRatioH,
-                 const short CropGuidelines);
+  // Save (and later restore) current zoom settings. Takes care of
+  // everything incl. ptSettings. RestoreZoom() also updates the
+  // viewport accordingly.
+  void SaveZoom();
+  void RestoreZoom();
 
-  QRect   StopCrop();   // QRect scale is 100% zoom and current pipe size
-  void    StartSelection();
-  void    StartLine();
-  ptViewportAction  OngoingAction();
-  double  GetRotationAngle();
-  QRect   GetRectangle();
-  void    setCropGuidelines(const short CropGuidelines);
-  void    setAspectRatio(const short FixedAspectRatio,
-                         uint AspectRatioW,
-                         uint AspectRatioH,
-                         const short ImmediateUpdate = 1);
-  void    FlipAspectRatio();    // flip fixed AR between portrait/landscape
-  void    CenterCropRectHor();
-  void    CenterCropRectVert();
-  void    setGrid(const short Enabled, const short GridX, const short GridY);
+  // Show status overlay in the top left viewport corner.
+  // For mode use ptStatus_ constants.
+  void ShowStatus(short mode);
+  void ShowStatus(const QString text);    // shown for 1.5sec
 
-  // Zoom functions. Fit returns the factor in %.
-  short ZoomFit();
-  short ZoomFitFactor(const uint16_t Width, const uint16_t Height);
-  void  Zoom(const short Factor, const short Update = 1); // Expressed in %
-  void  ToggleLightsOut();
+  // Star, stop, control interactions
+  // - StartSimpleRect: Pass the function that is called after the
+  //   selection finishes.
+  void StartLine();
+  void StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect));
+  void StartCrop();
+  ptRichRectInteraction* crop() const { return m_Crop; }
 
-  // Status report
-  void StatusReport(const short State);
-  void StatusReport(const QString Text);
-
-  short       m_CropLightsOut;
-
-  QAction*    m_AtnFullScreen;
-
+  void setGrid(const short enabled, const uint linesX, const uint linesY);
+  void UpdateImage(const ptImage* relatedImage);
+  void ZoomTo(float factor);  // 1.0 means 100%
+  int ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
 
 ///////////////////////////////////////////////////////////////////////////
 //
 // PROTECTED members
 //
 ///////////////////////////////////////////////////////////////////////////
-
 protected:
-  // overloaded virtual ones.
-  void paintEvent(QPaintEvent*);
-  void resizeEvent(QResizeEvent*);
-  void mousePressEvent(QMouseEvent* Event);
-  void mouseDoubleClickEvent(QMouseEvent* Event);
-  void mouseMoveEvent(QMouseEvent* Event);
-  void mouseReleaseEvent(QMouseEvent* Event);
-  void contextMenuEvent(QContextMenuEvent* Event);
-  void wheelEvent(QWheelEvent* Event);
-  void scrollContentsBy(int dx, int dy);
-  void leaveEvent(QEvent*);
-  void keyPressEvent(QKeyEvent* Event);
-  void keyReleaseEvent(QKeyEvent* Event);
+  void contextMenuEvent(QContextMenuEvent* event);
+  void dragEnterEvent(QDragEnterEvent* event);
+  void dropEvent(QDropEvent* event);
+  void keyPressEvent(QKeyEvent* event);
+  void keyReleaseEvent(QKeyEvent* event);
+  void paintEvent(QPaintEvent* event);
+  void resizeEvent(QResizeEvent* event);
+  void mouseDoubleClickEvent(QMouseEvent* event);
+  void mousePressEvent(QMouseEvent* event);
+  void mouseReleaseEvent(QMouseEvent* event);
+  void mouseMoveEvent(QMouseEvent* event);
+  void wheelEvent(QWheelEvent* event);
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -159,111 +127,88 @@ protected:
 // PRIVATE members
 //
 ///////////////////////////////////////////////////////////////////////////
-
 private:
-  // constants
-  const int EdgeThickness;
-  const int TinyRectThreshold;
+  const float MinZoom;
+  const float MaxZoom;
+  QList<float> ZoomFactors;   // steps for wheel zoom
 
-  // methods
-  void          RecalcCut();
-  void          RecalcRect();
-  void          EnforceRectAspectRatio(int dx = 0, int dy = 0);   // force fixed AR for a crop rectangle
-  ptMovingEdge  MouseDragPos(QMouseEvent* Event);
-  void          ContextMenu(QEvent* Event);
-  void          FinalizeAction();
-  void          UpdateViewportRects();
+  ptLineInteraction* m_DrawLine;
+  ptSimpleRectInteraction* m_SelectRect;
+  ptRichRectInteraction* m_Crop;
+  ptGridInteraction* m_Grid;
+  ptInteraction m_Interaction;
+  short m_LeftMousePressed;
+  void (*m_CB_SimpleRect)(const ptStatus, QRect);
+  short m_ZoomIsSaved;
+  float m_ZoomFactor;
+  float m_ZoomFactorSav;
+  short m_ZoomModeSav;
 
-  //variables
-  const ptImage*   m_RelatedImage;    // 16bit pipe sized image //TODO: Really needed as a member?
-  QImage*          m_QImage;          // 8bit pipe sized image (directly converted from m_RelatedImage)
-  QImage*          m_QImageZoomed;    // m_QImage scaled to current zoom factor
-  QImage*          m_QImageCut;       // visible part of the zoomed image
+  QGraphicsPixmapItem* m_8bitImageItem;
+  QLine* m_DragDelta;
+  QGraphicsScene* m_ImageScene;
+  ptReportOverlay* m_StatusOverlay;
+  ptReportOverlay* m_ZoomSizeOverlay;
 
-  /* Crop/selection rectangles:
-     m_PipeSizeRect: Master rect defining current values in image pipe size. No viewport
-          offsets involed, i.e. coordinate system always starts topleft at (0,0).
-     m_ViewSizeRect: Current rectrangle in viewport scale including any offsets if the
-          visible part of the image is smaller than the viewport.
-     m_ImageFrame: Defines position and size of the visible part of the image in the
-          viewport. Width/height are always the same as m_QImageCut.
-  */
-  QRect*      m_ViewSizeRect;
-  QRect*      m_PipeSizeRect;
-  QRect*      m_ImageFrame;
+  // context menu stuff
+  void ConstructContextMenu();
+  QAction* ac_ZoomFit;
+  QAction* ac_Zoom100;
+  QAction* ac_Mode_RGB;
+  QAction* ac_Mode_Structure;
+  QAction* ac_Mode_L;
+  QAction* ac_Mode_A;
+  QAction* ac_Mode_B;
+  QAction* ac_Mode_Gradient;
+  QAction* ac_Clip_Indicate;
+  QAction* ac_Clip_Over;
+  QAction* ac_Clip_Under;
+  QAction* ac_Clip_R;
+  QAction* ac_Clip_G;
+  QAction* ac_Clip_B;
+  QAction* ac_SensorClip;
+  QAction* ac_SensorClipSep;
+  QAction* ac_ShowTools;
+  QAction* ac_ShowZoomBar;
+  QAction* ac_Fullscreen;
+  QActionGroup* ac_ModeGroup;
 
-  QLine*      m_DragDelta;      // direction and distance of mouse drag (viewport scale)
-  short       m_NowDragging;    // flag, if mouse drag is ongoing
-  ptMovingEdge      m_MovingEdge;
-  ptMovingEdge      m_PrevMovingEdge;
-  ptViewportAction  m_InteractionMode;
-  short       m_FixedAspectRatio;   // 0: fixed AR, 1: no AR restriction
-  uint        m_AspectRatioW;
-  uint        m_AspectRatioH;
-  double      m_AspectRatio;        //  m_AspectRatioW / m_AspectRatioH
-  short       m_CropGuidelines;
-  double      m_ZoomFactor;
-  double      m_PreviousZoomFactor;
-  uint16_t    m_ZoomWidth;
-  uint16_t    m_ZoomHeight;
-  short       m_HasGrid;
-  short       m_GridX;
-  short       m_GridY;
-
-  QAction*      m_AtnExpIndicate;
-  QAction*      m_AtnExpIndR;
-  QAction*      m_AtnExpIndG;
-  QAction*      m_AtnExpIndB;
-  QAction*      m_AtnExpIndOver;
-  QAction*      m_AtnExpIndUnder;
-  QAction*      m_AtnExpIndSensor;
-  QAction*      m_AtnShowBottom;
-  QAction*      m_AtnShowTools;
-  QAction*      m_AtnZoomFit;
-  QAction*      m_AtnZoom100;
-  QAction*      m_AtnModeRGB;
-  QAction*      m_AtnModeL;
-  QAction*      m_AtnModeA;
-  QAction*      m_AtnModeB;
-  QAction*      m_AtnModeGradient;
-  QAction*      m_AtnModeStructure;
-  QActionGroup* m_ModeGroup;
-
-  QLabel*     m_SizeReport;
-  QString     m_SizeReportText;
-  int         m_SizeReportTimeOut;
-  QTimer*     m_SizeReportTimer;
-  QLabel*     m_StatusReport;
-  int         m_StatusReportTimeOut;
-  QTimer*     m_StatusReportTimer;
-  int         m_ResizeTimeOut;
-  QTimer*     m_ResizeTimer;
-  int         m_NewSize;
+  ptMainWindow* MainWindow;
 
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// PRIVATE SLOTS
+// PRIVATE slots
 //
 ///////////////////////////////////////////////////////////////////////////
-
 private slots:
-  void MenuExpIndicate();
-  void MenuExpIndOver();
-  void MenuExpIndUnder();
-  void MenuExpIndR();
-  void MenuExpIndG();
-  void MenuExpIndB();
-  void MenuExpIndSensor();
-  void MenuShowBottom();
-  void MenuShowTools();
-  void MenuFullScreen();
-  void MenuZoomFit();
-  void MenuZoom100();
-  void MenuMode();
-  void SizeReportTimerExpired();
-  void StatusReportTimerExpired();
-  void ResizeTimerExpired();
+  void finishInteraction(ptStatus ExitStatus);
+
+  // context menu stuff
+  void Menu_Clip_Indicate();
+  void Menu_Clip_Over();
+  void Menu_Clip_Under();
+  void Menu_Clip_R();
+  void Menu_Clip_G();
+  void Menu_Clip_B();
+  void Menu_SensorClip();
+  void Menu_ShowZoomBar();
+  void Menu_ShowTools();
+  void Menu_Fullscreen();
+  void Menu_ZoomFit();
+  void Menu_Zoom100();
+  void Menu_Mode();
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// signals
+//
+///////////////////////////////////////////////////////////////////////////
+signals:
+  void keyChanged(QKeyEvent* event);
+  void mouseChanged(QMouseEvent* event);
+
 };
 
 #endif

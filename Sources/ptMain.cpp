@@ -95,9 +95,6 @@ cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
 
-short CropOldZoom;
-short CropOldZoomMode;
-
 
 //
 // The 'tee' towards the display.
@@ -302,6 +299,7 @@ QString ImageFileToOpen = "";
 #ifdef Q_OS_MAC
     bool MacGotFileEvent=false;
 #endif
+QRect DetailViewRect;
 
 #ifndef DLRAW_GIMP_PLUGIN
 int main(int Argc, char *Argv[]) {
@@ -762,7 +760,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
 
   ViewWindow =
-      new ptViewWindow(NULL,MainWindow->ViewFrameCentralWidget);
+      new ptViewWindow(MainWindow->ViewFrameCentralWidget, MainWindow);
 
   HistogramWindow =
       new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
@@ -1311,10 +1309,7 @@ void Update(const QString GuiName) {
 void BlockTools(const short state) {
   // enable all
   if (state == 0) {
-    MainWindow->ZoomFitButton->setEnabled(true);
-    MainWindow->ZoomFullButton->setEnabled(true);
-    MainWindow->ZoomWidget->setEnabled(true);
-
+    MainWindow->SpecialPreviewWidget->setEnabled(true);
     if (Settings->GetInt("BlockTools") == 1) {
       MainWindow->ControlFrame->setEnabled(true);
 
@@ -1360,19 +1355,14 @@ void BlockTools(const short state) {
   // block everything
   } else if (state == 1) {
     assert(Settings->GetInt("BlockTools") == 0);
+    MainWindow->SpecialPreviewWidget->setEnabled(false);
     MainWindow->ControlFrame->setEnabled(false);
-    MainWindow->ZoomFitButton->setEnabled(false);
-    MainWindow->ZoomFullButton->setEnabled(false);
-    MainWindow->ZoomWidget->setEnabled(false);
 
 
   // block everything except crop tool
   } else if (state == 2) {
     assert(Settings->GetInt("BlockTools") == 0);
-
-    MainWindow->ZoomFitButton->setEnabled(false);
-    MainWindow->ZoomFullButton->setEnabled(false);
-    MainWindow->ZoomWidget->setEnabled(false);
+    MainWindow->SpecialPreviewWidget->setEnabled(false);
     MainWindow->HistogramFrameCentralWidget->setEnabled(false);
     MainWindow->PipeControlWidget->setEnabled(false);
     MainWindow->StatusWidget->setEnabled(false);
@@ -1419,41 +1409,53 @@ void BlockTools(const short state) {
 // Histogram
 //
 ////////////////////////////////////////////////////////////////////////////////
+void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect);
 
 void HistogramGetCrop() {
   // Get the crop for the histogram
   if (Settings->GetInt("HistogramCrop")) {
-      // Allow to be selected in the view window. And deactivate main.
-      BlockTools(1);
-      ViewWindow->StatusReport("Selection");
-      ViewWindow->StartSelection();
-      while (ViewWindow->OngoingAction() == vaSelectRect) {
-          QApplication::processEvents();
-      }
+    // Allow to be selected in the view window. And deactivate main.
+    BlockTools(1);
+    ViewWindow->ShowStatus(QObject::tr("Selection"));
+    ViewWindow->StartSimpleRect(HistogramCropDone);
+    ViewWindow->setFocus();
+  } else {
+    ReportProgress(QObject::tr("Updating histogram"));
+    Update(ptProcessorPhase_NULL);
+    ReportProgress(QObject::tr("Ready"));
+  }
+}
 
-      // Selection is done at this point. Disallow it further and activate main.
-      BlockTools(0);
-      QRect SelectionRect = ViewWindow->GetRectangle();
+void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect) {
+  // Selection is done at this point. Disallow it further and activate main.
+  BlockTools(0);
+  if (ExitStatus == stFailure) {
+    Settings->SetValue("HistogramCropX",0);
+    Settings->SetValue("HistogramCropY",0);
+    Settings->SetValue("HistogramCropW",0);
+    Settings->SetValue("HistogramCropH",0);
+    Settings->SetValue("HistogramCrop",0);
+    return;
+  }
 
-      short XScale = 1<<Settings->GetInt("PipeSize");
-      short YScale = 1<<Settings->GetInt("PipeSize");
+  short XScale = 1<<Settings->GetInt("PipeSize");
+  short YScale = 1<<Settings->GetInt("PipeSize");
 
-      Settings->SetValue("HistogramCropX", SelectionRect.left() * XScale);
-      Settings->SetValue("HistogramCropY", SelectionRect.top() * YScale);
-      Settings->SetValue("HistogramCropW", SelectionRect.width() * XScale);
-      Settings->SetValue("HistogramCropH", SelectionRect.height() * YScale);
+  Settings->SetValue("HistogramCropX", SelectionRect.left() * XScale);
+  Settings->SetValue("HistogramCropY", SelectionRect.top() * YScale);
+  Settings->SetValue("HistogramCropW", SelectionRect.width() * XScale);
+  Settings->SetValue("HistogramCropH", SelectionRect.height() * YScale);
 
-      // Check if the chosen area is large enough
-      if (Settings->GetInt("HistogramCropW") < 50 || Settings->GetInt("HistogramCropH") < 50) {
-        ptMessageBox::information(0,
-          QObject::tr("Selection too small"),
-          QObject::tr("Selection rectangle needs to be at least 50x50 pixels in size.\nNo crop, try again."));
-        Settings->SetValue("HistogramCropX",0);
-        Settings->SetValue("HistogramCropY",0);
-        Settings->SetValue("HistogramCropW",0);
-        Settings->SetValue("HistogramCropH",0);
-        Settings->SetValue("HistogramCrop",0);
-      }
+  // Check if the chosen area is large enough
+  if (Settings->GetInt("HistogramCropW") < 50 || Settings->GetInt("HistogramCropH") < 50) {
+    ptMessageBox::information(0,
+      QObject::tr("Selection too small"),
+      QObject::tr("Selection rectangle needs to be at least 50x50 pixels in size.\nNo crop, try again."));
+    Settings->SetValue("HistogramCropX",0);
+    Settings->SetValue("HistogramCropY",0);
+    Settings->SetValue("HistogramCropW",0);
+    Settings->SetValue("HistogramCropH",0);
+    Settings->SetValue("HistogramCrop",0);
   }
 
   ReportProgress(QObject::tr("Updating histogram"));
@@ -1461,15 +1463,17 @@ void HistogramGetCrop() {
   ReportProgress(QObject::tr("Ready"));
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Status report in Viewwindow
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ViewWindowStatusReport(short State) {
-  if (!ViewWindow) return;
-  ViewWindow->StatusReport(State);
+void ViewWindowShowStatus(short State) {
+  if (ViewWindow) {
+    ViewWindow->ShowStatus(State);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1685,12 +1689,12 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     }
     AfterAll(PreviewImage,0,0);
 
-    ViewWindow->UpdateView(PreviewImage);
+    ViewWindow->UpdateImage(PreviewImage);
     ReportProgress(QObject::tr("Ready"));
     return;
   }
 
-  ViewWindow->StatusReport(1);
+  ViewWindow->ShowStatus(ptStatus_Updating);
   ReportProgress(QObject::tr("Updating preview image"));
 
   if (!HistogramImage) HistogramImage = new (ptImage);
@@ -1797,8 +1801,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     // In case of histogram update only, we're done.
     if (OnlyHistogram) {
-      HistogramWindow->UpdateView(HistogramImage);
-      ViewWindow->StatusReport(0);
+      ViewWindow->ShowStatus(ptStatus_Done);
       return;
     }
   }
@@ -1908,8 +1911,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       }
     }
     if (OnlyHistogram) {
-      HistogramWindow->UpdateView(HistogramImage);
-      ViewWindow->StatusReport(0);
+      ViewWindow->ShowStatus(ptStatus_Done);
       return;
     }
   }
@@ -2003,12 +2005,12 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
                                    Settings->GetInt("PreviewColorProfileIntent"));
 
     // Update the ViewWindow and show if needed.
-    ViewWindow->UpdateView(PreviewImage);
+    ViewWindow->UpdateImage(PreviewImage);
   }
 
   HistogramWindow->UpdateView(HistogramImage);
+  ViewWindow->ShowStatus(ptStatus_Done);
 
-  ViewWindow->StatusReport(0);
   ReportProgress(QObject::tr("Ready"));
 
   if (!OnlyHistogram)
@@ -3111,7 +3113,6 @@ void CB_MenuFileOpen(const short HaveFile) {
   }
   if (OpenError == 1) {
     // We don't have a RAW or a bitmap!
-    //~ ViewWindow->StatusReport(0);
     QString ErrorMessage = QObject::tr("Cannot decode")
                          + " '"
                          + InputFileNameList[0]
@@ -3395,7 +3396,7 @@ void CB_MenuFileWriteSettings() {
 
 
 void CB_MenuFileExit(const short) {
-  if (ViewWindow->OngoingAction() != vaNone) {
+  if (ViewWindow->interaction() != iaNone) {
     ptMessageBox::warning(MainWindow,
                      QObject::tr("Cannot exit"),
                      QObject::tr("Please finish your crop before closing Photivo."));
@@ -3434,8 +3435,6 @@ void CB_MenuFileExit(const short) {
     QString OldInputFileName = Settings->GetStringList("InputFileNameList")[0];
     QFile::remove(OldInputFileName);
   }
-  // TODO Do we need some blabla before exiting ?
-  printf("That's all folks ...\n");
 
   // Delete backup settingsfile
   if (Settings->GetInt("WriteBackupSettings"))
@@ -3446,6 +3445,8 @@ void CB_MenuFileExit(const short) {
     if (Settings->GetInt(CurveKeys.at(i))==ptCurveChoice_Manual)
       Settings->SetValue(CurveKeys.at(i),ptCurveChoice_None);
   }
+
+  printf("Saving settings ...\n");
 
   // Store the position of the splitter and main window
   Settings->m_IniSettings->
@@ -3461,8 +3462,10 @@ void CB_MenuFileExit(const short) {
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
 
-  ALLOCATED(10000000);
 
+
+  ALLOCATED(10000000);
+  printf("Exiting Photivo.\n");
   QCoreApplication::exit(EXIT_SUCCESS);
 }
 
@@ -3640,30 +3643,31 @@ void GimpExport(const short UsePipe) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void CB_ZoomInput(const QVariant Value) {
+  ViewWindow->ZoomTo(Value.toFloat() / 100.0);
+  // TODO SR: updatesettings doesnt seem to be necessary
+//    MainWindow->UpdateSettings(); // To reflect maybe new zoom
+}
+
 void CB_ZoomFitButton() {
-
-  Settings->SetValue("ZoomMode",ptZoomMode_Fit);
-  Settings->SetValue("Zoom",ViewWindow->ZoomFit());
-
-  MainWindow->UpdateSettings(); // To reflect maybe new zoom
-
-  return ;
+  ViewWindow->ZoomToFit();
+  //MainWindow->UpdateSettings(); // To reflect maybe new zoom
 }
 
-void CB_InputChanged(const QString,const QVariant);
 void CB_ZoomFullButton() {
-  Settings->SetValue("ZoomMode",ptZoomMode_NonFit);
-  CB_InputChanged("ZoomInput",100);
+  CB_ZoomInput(100);
 }
+
 
 void CB_FullScreenButton(const int State) {
   if (State == 1) {
     MainWindow->showFullScreen();
+    Settings->SetValue("FullscreenActive", 1);
   } else {
     MainWindow->showNormal();
+    Settings->SetValue("FullscreenActive", 0);
   }
   MainWindow->FullScreenButton->setChecked(State);
-  ViewWindow->m_AtnFullScreen->setChecked(State);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3932,6 +3936,9 @@ void CB_MemoryTestInput(const QVariant Value) {
     }
 }
 
+void SetDetailViewRect(const ptStatus, QRect rect) {
+  DetailViewRect = rect;
+}
 void CB_PipeSizeChoice(const QVariant Choice) {
 
   short PreviousPipeSize = Settings->GetInt("PipeSize");
@@ -3982,34 +3989,32 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       Height = TheProcessor->m_Image_DetailPreview->m_Height;
       OldZoom = Settings->GetInt("Zoom");
       OldZoomMode = Settings->GetInt("ZoomMode");
-      ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
-      Settings->SetValue("ZoomMode",ptZoomMode_Fit);
+      ViewWindow->ZoomToFit();
       UpdatePreviewImage(TheProcessor->m_Image_DetailPreview);
 
       // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
-      ViewWindow->StatusReport("Detail view");
-      ViewWindow->StartSelection();
-      while (ViewWindow->OngoingAction() == vaSelectRect) {
+      ViewWindow->ShowStatus(QObject::tr("Detail view"));
+      ViewWindow->StartSimpleRect(SetDetailViewRect);
+      while (ViewWindow->interaction() == iaSelectRect) {
         QApplication::processEvents();
       }
 
       // Selection is done at this point. Disallow it further and activate main.
       BlockTools(0);
-      QRect SelectionRect = ViewWindow->GetRectangle();
 
-      if (SelectionRect.width() >>4 <<4 > 19 &&
-          SelectionRect.height() >>4 <<4 > 19) {
+      if (DetailViewRect.width() >>4 <<4 > 19 &&
+          DetailViewRect.height() >>4 <<4 > 19) {
         Settings->SetValue("DetailViewActive",1);
         short CachedPipeSize = Settings->GetInt("DetailViewScale");
-        Settings->SetValue("DetailViewCropX", ((SelectionRect.left() >>4) <<4) << CachedPipeSize);
-        Settings->SetValue("DetailViewCropY", ((SelectionRect.top() >>4) <<4) << CachedPipeSize);
-        Settings->SetValue("DetailViewCropW", ((SelectionRect.width() >>4) <<4) << CachedPipeSize);
-        Settings->SetValue("DetailViewCropH", ((SelectionRect.height() >>4) <<4) << CachedPipeSize);
+        Settings->SetValue("DetailViewCropX", ((DetailViewRect.left() >>4) <<4) << CachedPipeSize);
+        Settings->SetValue("DetailViewCropY", ((DetailViewRect.top() >>4) <<4) << CachedPipeSize);
+        Settings->SetValue("DetailViewCropW", ((DetailViewRect.width() >>4) <<4) << CachedPipeSize);
+        Settings->SetValue("DetailViewCropH", ((DetailViewRect.height() >>4) <<4) << CachedPipeSize);
         Settings->ToDcRaw(TheDcRaw);
       } else {
         ptMessageBox::information(NULL,"No crop","Too small. Please try again!");
-        ViewWindow->Zoom(OldZoom,0);
+        //ViewWindow->Zoom(OldZoom,0);    // TODOSR: re-enable
         Settings->SetValue("ZoomMode",OldZoomMode);
         Update(ptProcessorPhase_NULL);
         if (Settings->GetInt("DetailViewActive")==0) {
@@ -4020,7 +4025,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
         return;
       }
 
-      ViewWindow->Zoom(OldZoom,0);
+      //ViewWindow->Zoom(OldZoom,0);    // TODOSR: re-enable
       Settings->SetValue("ZoomMode",OldZoomMode);
 
     } else { // 1:1 full mode
@@ -4088,6 +4093,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
 
   ALLOCATED(10000000);
 }
+
 
 void CB_RunModeCheck(const QVariant Check) {
   Settings->SetValue("RunMode",Check);
@@ -4447,14 +4453,11 @@ void CB_DarkFrameChoice(const QVariant Choice) {
 // Partim White Balance.
 //
 ////////////////////////////////////////////////////////////////////////////////
+void SelectSpotWBDone(const ptStatus ExitStatus, const QRect SelectionRect);
 
 void CB_WhiteBalanceChoice(const QVariant Choice) {
   Settings->SetValue("WhiteBalance",Choice);
   if (Settings->GetInt("HaveImage") == 0 || Settings->GetInt("IsRAW") == 0) return;
-  uint16_t Width = 0;
-  uint16_t Height = 0;
-  short OldZoom = 0;
-  short OldZoomMode = 0;
 
   switch (Choice.toInt()) {
     case ptWhiteBalance_Camera :
@@ -4462,47 +4465,23 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
     case ptWhiteBalance_Manual :
       // In fact all of above just translates to settings into
       // DcRaw handled via GuiSettingsToDcRaw. Nothing more to do.
+      Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
       break;
 
     case ptWhiteBalance_Spot: {
       // First : make sure we have Image_AfterDcRaw in the view window.
       // Anything else might have undergone geometric transformations that are
       // impossible to calculate reverse to a spot in dcraw.
-      Width = TheProcessor->m_Image_AfterDcRaw->m_Width;
-      Height = TheProcessor->m_Image_AfterDcRaw->m_Height;
-      OldZoom = Settings->GetInt("Zoom");
-      OldZoomMode = Settings->GetInt("ZoomMode");
-      ViewWindow->Zoom(ViewWindow->ZoomFitFactor(Width,Height),0);
-      Settings->SetValue("ZoomMode",ptZoomMode_Fit);
+      ViewWindow->SaveZoom();
+      ViewWindow->ZoomToFit();
       UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw);
 
       // Allow to be selected in the view window. And deactivate main.
       BlockTools(1);
-      ViewWindow->StatusReport("Spot WB");
-      ViewWindow->StartSelection();
-      while (ViewWindow->OngoingAction() == vaSelectRect) {
-        QApplication::processEvents();
-      }
-
-      // Selection is done at this point. Disallow it further and activate main.
-      BlockTools(0);
-      QRect SelectionRect = ViewWindow->GetRectangle();
-
-      Settings->SetValue("VisualSelectionX", SelectionRect.left());
-      Settings->SetValue("VisualSelectionY", SelectionRect.top());
-      Settings->SetValue("VisualSelectionWidth", SelectionRect.width());
-      Settings->SetValue("VisualSelectionHeight", SelectionRect.height());
-
-      TRACEKEYVALS("Selection X","%d",
-                   Settings->GetInt("VisualSelectionX"));
-      TRACEKEYVALS("Selection Y","%d",
-                   Settings->GetInt("VisualSelectionY"));
-      TRACEKEYVALS("Selection W","%d",
-                   Settings->GetInt("VisualSelectionWidth"));
-      TRACEKEYVALS("Selection H","%d",
-                   Settings->GetInt("VisualSelectionHeight"));
-      ViewWindow->Zoom(OldZoom,0);
-      Settings->SetValue("ZoomMode",OldZoomMode);
+      ViewWindow->ShowStatus(QObject::tr("Spot WB"));
+      ReportProgress(QObject::tr("Spot WB"));
+      ViewWindow->StartSimpleRect(SelectSpotWBDone);
+      ViewWindow->setFocus();
       break;
     }
 
@@ -4516,8 +4495,32 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
                          ptWhiteBalances[Choice.toInt()].m_Multipliers[1]);
       Settings->SetValue("BMultiplier",
                          ptWhiteBalances[Choice.toInt()].m_Multipliers[2]);
+      Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
   }
+}
+
+void SelectSpotWBDone(const ptStatus ExitStatus, const QRect SelectionRect) {
+  // Selection is done at this point. Disallow it further and activate main.
+  BlockTools(0);
+
+  if (ExitStatus == stSuccess) {
+    Settings->SetValue("VisualSelectionX", SelectionRect.left());
+    Settings->SetValue("VisualSelectionY", SelectionRect.top());
+    Settings->SetValue("VisualSelectionWidth", SelectionRect.width());
+    Settings->SetValue("VisualSelectionHeight", SelectionRect.height());
+
+    TRACEKEYVALS("Selection X","%d",
+                 Settings->GetInt("VisualSelectionX"));
+    TRACEKEYVALS("Selection Y","%d",
+                 Settings->GetInt("VisualSelectionY"));
+    TRACEKEYVALS("Selection W","%d",
+                 Settings->GetInt("VisualSelectionWidth"));
+    TRACEKEYVALS("Selection H","%d",
+                 Settings->GetInt("VisualSelectionHeight"));
+  }
+
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
+  ViewWindow->RestoreZoom();
 }
 
 void CB_SpotWBButton() {
@@ -4935,33 +4938,34 @@ void CB_RotateAngleButton() {
   // Rerun the part of geometry stage before rotate to get correct preview
   // image in TheProcessor->m_Image_AfterGeometry
   TheProcessor->RunGeometry(ptProcessorStopBefore_Rotate);
-  short OldZoom = Settings->GetInt("Zoom");
-  short OldZoomMode = Settings->GetInt("ZoomMode");
-  ViewWindow->Zoom(
-                ViewWindow->ZoomFitFactor(TheProcessor->m_Image_AfterGeometry->m_Width,
-                                          TheProcessor->m_Image_AfterGeometry->m_Height),
-                0);
+  ViewWindow->SaveZoom();
+  ViewWindow->ZoomToFit();
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
-  ViewWindow->StatusReport(QObject::tr("Get angle"));
+  ViewWindow->ShowStatus(QObject::tr("Get angle"));
   ReportProgress(QObject::tr("Get angle"));
 
   BlockTools(1);
   ViewWindow->StartLine();
-  while (ViewWindow->OngoingAction() == vaDrawLine) {
-    QApplication::processEvents();
-  }
+  ViewWindow->setFocus();
+}
 
+void RotateAngleDetermined(const ptStatus ExitStatus, double RotateAngle) {
   // Selection is done at this point. Disallow it further and activate main.
   BlockTools(0);
-  double Angle = ViewWindow->GetRotationAngle();
-  if (Angle < -45.0) Angle += 180.0;
-  if (fabs(fabs(Angle)-90.0)<45.0) Angle -= 90.0;
-  Settings->SetValue("Rotate",Angle);
 
-  ViewWindow->Zoom(OldZoom,0);
-  Settings->SetValue("ZoomMode",OldZoomMode);
+  if (ExitStatus == stSuccess) {
+    if (RotateAngle < -45.0) {
+      RotateAngle += 180.0;
+    }
+    if (fabs(fabs(RotateAngle) - 90.0) < 45.0) {
+      RotateAngle -= 90.0;
+    }
+    Settings->SetValue("Rotate",RotateAngle);
+  }
+
+  ViewWindow->RestoreZoom();
   Update(ptProcessorPhase_Geometry);
 }
 
@@ -5037,62 +5041,76 @@ void CB_GeometryBlockCheck(const QVariant State) {
 void CB_FixedAspectRatioCheck(const QVariant Check) {
   Settings->SetValue("FixedAspectRatio", Check);
   MainWindow->UpdateCropToolUI();
-  if (ViewWindow->OngoingAction() == vaCrop) {
-    ViewWindow->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
-                               Settings->GetInt("AspectRatioW"),
-                               Settings->GetInt("AspectRatioH"));
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
+                                       Settings->GetInt("AspectRatioW"),
+                                       Settings->GetInt("AspectRatioH"));
+    ViewWindow->setFocus();
   }
 }
 
 void CB_AspectRatioWChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioW",Value);
-  if (ViewWindow->OngoingAction() == vaCrop) {
-    ViewWindow->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
-                               Settings->GetInt("AspectRatioW"),
-                               Settings->GetInt("AspectRatioH"));
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
+                                       Settings->GetInt("AspectRatioW"),
+                                       Settings->GetInt("AspectRatioH"));
+    ViewWindow->setFocus();
   }
 }
 
 void CB_AspectRatioHChoice(const QVariant Value) {
   Settings->SetValue("AspectRatioH",Value);
-  if (ViewWindow->OngoingAction() == vaCrop) {
-    ViewWindow->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
-                               Settings->GetInt("AspectRatioW"),
-                               Settings->GetInt("AspectRatioH"));
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->setAspectRatio(Settings->GetInt("FixedAspectRatio"),
+                                       Settings->GetInt("AspectRatioW"),
+                                       Settings->GetInt("AspectRatioH"));
+    ViewWindow->setFocus();
   }
 }
 
 void CB_CropOrientationButton() {
   int w = Settings->GetInt("AspectRatioW");
   int h = Settings->GetInt("AspectRatioH");
+
   if (w != h) {
     Settings->SetValue("AspectRatioW", h);
     Settings->SetValue("AspectRatioH", w);
-    QComboBox(MainWindow->AspectRatioWWidget).setCurrentIndex(h);
-    QComboBox(MainWindow->AspectRatioHWidget).setCurrentIndex(w);
-    if (ViewWindow->OngoingAction() == vaCrop) {
-      ViewWindow->FlipAspectRatio();
+    if (ViewWindow->interaction() == iaCrop) {
+      ViewWindow->crop()->flipAspectRatio();
+      ViewWindow->setFocus();
     }
   }
 }
 
 void CB_CropCenterHorButton() {
-  ViewWindow->CenterCropRectHor();
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->moveToCenter(1, 0);
+    ViewWindow->setFocus();
+  }
 }
 
 void CB_CropCenterVertButton() {
-  ViewWindow->CenterCropRectVert();
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->moveToCenter(0, 1);
+    ViewWindow->setFocus();
+  }
 }
 
 void CB_CropGuidelinesChoice(const QVariant Choice) {
   Settings->SetValue("CropGuidelines",Choice);
-  ViewWindow->setCropGuidelines(Choice.toInt());
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->setGuidelines(Choice.toInt());
+    ViewWindow->setFocus();
+  }
 }
 
 void CB_LightsOutChoice(const QVariant Choice) {
-  Settings->SetValue("LightsOut",Choice);
-  ViewWindow->m_CropLightsOut = Choice.toInt();
-  ViewWindow->viewport()->repaint();
+  // View window takes care of Settings
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->crop()->setLightsOut(Choice.toInt());
+    ViewWindow->setFocus();
+  }
 }
 
 
@@ -5105,42 +5123,29 @@ void CB_MakeCropButton() {
     return;
   }
 
-  ViewWindow->StatusReport(QObject::tr("Prepare"));
+  ViewWindow->ShowStatus(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for cropping"));
 
   // Rerun the part of geometry stage before crop to get correct preview
   // image in TheProcessor->m_Image_AfterGeometry
   TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
-  CropOldZoom = Settings->GetInt("Zoom");
-  CropOldZoomMode = Settings->GetInt("ZoomMode");
-  ViewWindow->Zoom(
-                ViewWindow->ZoomFitFactor(TheProcessor->m_Image_AfterGeometry->m_Width,
-                                          TheProcessor->m_Image_AfterGeometry->m_Height),
-                0);
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
-  ViewWindow->StatusReport(QObject::tr("Crop"));
+  ViewWindow->ShowStatus(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
   BlockTools(2);
-  ViewWindow->StartCrop(Settings->GetInt("CropX")>>Settings->GetInt("Scaled"),
-                        Settings->GetInt("CropY")>>Settings->GetInt("Scaled"),
-                        Settings->GetInt("CropW")>>Settings->GetInt("Scaled"),
-                        Settings->GetInt("CropH")>>Settings->GetInt("Scaled"),
-                        Settings->GetInt("FixedAspectRatio"),
-                        Settings->GetInt("AspectRatioW"),
-                        Settings->GetInt("AspectRatioH"),
-                        Settings->GetInt("CropGuidelines"));
-  MainWindow->UpdateCropToolUI();
+  ViewWindow->StartCrop();          // always start the interaction first,
+  MainWindow->UpdateCropToolUI();   // *then* update main window
+  ViewWindow->setFocus();
 }
 
 
 // After-crop processing and cleanup.
-void StopCrop(short CropConfirmed) {
-  QRect CropRect = ViewWindow->StopCrop();
+void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
   BlockTools(0);
 
-  if (CropConfirmed) {
+  if (CropStatus == stSuccess) {
     // Account for the pipesize factor.
     int XScale = 1<<Settings->GetInt("PipeSize");
     int YScale = 1<<Settings->GetInt("PipeSize");
@@ -5157,8 +5162,6 @@ void StopCrop(short CropConfirmed) {
 
       if(Settings->GetInt("RunMode")==1) {
         // we're in manual mode!
-        ViewWindow->Zoom(CropOldZoom,0);
-        Settings->SetValue("ZoomMode",CropOldZoomMode);
         Update(ptProcessorPhase_NULL);
       }
     } else {
@@ -5167,7 +5170,7 @@ void StopCrop(short CropConfirmed) {
       Settings->SetValue("CropY",CropRect.top() * YScale);
       Settings->SetValue("CropW",CropRect.width() * XScale);
       Settings->SetValue("CropH",CropRect.height() * YScale);
-      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Checked);
+//      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Checked);
     }
 
     TRACEKEYVALS("PreviewImageW","%d",PreviewImage->m_Width);
@@ -5184,22 +5187,21 @@ void StopCrop(short CropConfirmed) {
   } else {
     if ((Settings->GetInt("CropW") < 4) || (Settings->GetInt("CropH") < 4)) {
       Settings->SetValue("Crop", 0);
-      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Unchecked);
+//      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Unchecked);
     }
   }
 
-  ViewWindow->Zoom(CropOldZoom,0);
-  Settings->SetValue("ZoomMode",CropOldZoomMode);
   Update(ptProcessorPhase_Geometry);
   MainWindow->UpdateCropToolUI();
 }
 
+
 void CB_ConfirmCropButton() {
-  StopCrop(1);    // user confirmed crop
+  ViewWindow->crop()->stop(stSuccess);    // user confirmed crop
 }
 
 void CB_CancelCropButton() {
-  StopCrop(0);    // user cancelled crop
+  ViewWindow->crop()->stop(stFailure);    // user cancelled crop
 }
 
 
@@ -8209,10 +8211,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   if (InStartup) return;
 
   if (ObjectName == "ZoomInput") {
-    Settings->SetValue("ZoomMode",ptZoomMode_NonFit);
-    Settings->SetValue("Zoom",Value.toInt());
-    ViewWindow->Zoom(Value.toInt());
-    MainWindow->UpdateSettings(); // To reflect maybe new zoom
+    CB_ZoomInput(Value);
 
   #define M_Dispatch(Name)\
   } else if (ObjectName == #Name) { CB_ ## Name (Value);
