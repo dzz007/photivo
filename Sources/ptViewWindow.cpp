@@ -262,8 +262,6 @@ void ptViewWindow::mousePressEvent(QMouseEvent* event) {
     event->accept();
     m_LeftMousePressed = 1;
     m_DragDelta->setPoints(event->pos(), event->pos());
-  } else {
-    event->ignore();
   }
 
   // Broadcast event to possible interaction handlers
@@ -306,11 +304,13 @@ void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   // drag image with left mouse button to scroll
-  short dragging = 1;
+  // Also Ctrl needed in crop mode
+  short ImgDragging = m_LeftMousePressed && m_Interaction == iaNone;
   if (m_Interaction == iaCrop) {
-    dragging = m_Crop->isDragging();
+    ImgDragging = m_LeftMousePressed && m_CtrlIsPressed;
   }
-  if (m_LeftMousePressed && (m_Interaction == iaNone || !dragging)) {
+
+  if (ImgDragging) {
     m_DragDelta->setP2(event->pos());
     horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
                                     m_DragDelta->x2() +
@@ -320,14 +320,13 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
                                   m_DragDelta->y1());
     m_DragDelta->setP1(event->pos());
     event->accept();
-    return;
+
   } else {
     event->ignore();
-  }
-
-  // Broadcast event to possible interaction handlers
-  if (m_Interaction != iaNone) {
-    emit mouseChanged(event);
+    // Broadcast event to possible interaction handlers
+    if (m_Interaction != iaNone) {
+      emit mouseChanged(event);
+    }
   }
 }
 
@@ -373,17 +372,38 @@ void ptViewWindow::wheelEvent(QWheelEvent* event) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::keyPressEvent(QKeyEvent* event) {
+  // m_CtrlIsPressed is not a simple bool flag to account for keyboards with
+  // multiple ctrl keys. There's a lot of those. ;-) For each ctrl press the
+  // variable is increased, for each release it's decreased. This is necessary
+  // because in cases like press left ctrl - press right ctrl - release left ctrl
+  // Photivo should still recognise the ctrl key as being held down.
+  if (event->key() == Qt::Key_Control) {
+    m_CtrlIsPressed++;
+    if (m_Interaction == iaNone || m_Interaction == iaCrop) {
+      setCursor(Qt::ClosedHandCursor);
+    }
+  } else {
+    event->ignore();  // necessary to forward unhandled keys to main window
+  }
+
   if (m_Interaction != iaNone) {
     emit keyChanged(event);
   }
-  event->ignore();
 }
 
 void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
+  if (event->key() == Qt::Key_Control) {
+    m_CtrlIsPressed--;
+    if (m_CtrlIsPressed == 0 && (m_Interaction == iaNone || m_Interaction == iaCrop)) {
+      setCursor(Qt::ArrowCursor);
+    }
+  } else {
+    event->ignore();  // necessary to forward unhandled keys to main window
+  }
+
   if (m_Interaction != iaNone) {
     emit keyChanged(event);
   }
-  event->ignore();
 }
 
 
