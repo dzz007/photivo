@@ -188,7 +188,7 @@ m_Kodak_cbpp = zero_after_ff = m_DNG_Version = m_Load_Flags = 0;
 m_TimeStamp = m_ShotOrder = m_Tiff_Samples = m_BlackLevel = m_IsFoveon = 0;
 for (int k=0; k<8; k++) m_CBlackLevel[k] = 0;
 m_MixGreen = m_ProfileLength = data_error = m_ZeroIsBad = 0;
-m_PixelAspect = m_IsRaw = m_RawColor = 1;
+m_PixelAspect = m_IsRaw = m_RawColor = 1; m_RawColorPhotivo = 0;
 m_TileWidth = m_TileLength = INT_MAX;
 for (int i=0; i < 4; i++) {
   short c;
@@ -3593,6 +3593,7 @@ void CLASS cam_xyz_coeff (double MatrixXYZToCamRGB[4][3])
   }
 
   pseudoinverse (MatrixSRGBToCamRGB, inverse, m_Colors);
+  m_RawColorPhotivo = m_RawColor;
   for (m_RawColor = i=0; i < 3; i++)
     for (j=0; j < m_Colors; j++)
       m_MatrixCamRGBToSRGB[i][j] = inverse[j][i];

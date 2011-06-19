@@ -454,6 +454,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"StyleHighLight"              ,ptGT_Choice       ,1,0,0 ,ptStyleHighLight_Blue       ,GuiOptions->StyleHighLight            ,tr("Set the highlight color of the theme.")},
     {"StartupUIMode"               ,ptGT_Choice       ,1,0,0 ,ptStartupUIMode_Tab         ,GuiOptions->StartupUIMode             ,tr("Set the start up mode for the UI.")},
     {"PipeSize"                    ,ptGT_Choice       ,2,0,1 ,ptPipeSize_Quarter          ,GuiOptions->PipeSize                  ,tr("Size of image processed vs original.")},
+    {"StartupPipeSize"             ,ptGT_Choice       ,1,0,1 ,ptPipeSize_Quarter          ,GuiOptions->PipeSize                  ,tr("Initial pipe size when Photivo starts.")},
     {"SpecialPreview"              ,ptGT_Choice       ,2,0,1 ,ptSpecialPreview_RGB        ,GuiOptions->SpecialPreview            ,tr("Special preview for image analysis")},
     {"BadPixels"                   ,ptGT_Choice       ,1,1,0 ,0                           ,GuiOptions->BadPixels                 ,tr("Bad pixels file")},
     {"DarkFrame"                   ,ptGT_Choice       ,1,1,0 ,0                           ,GuiOptions->DarkFrame                 ,tr("Darkframe file")},
@@ -1533,7 +1534,7 @@ void ptSettings::FromDcRaw(DcRaw* TheDcRaw) {
   // rgbWB = (x,x,x) and 6500 temperature).
 
   double RefRGB[3];
-  if (TheDcRaw->m_RawColor) {
+  if (TheDcRaw->m_RawColorPhotivo) {
     for (short c=0; c<3; c++) {
       RefRGB[c] = VALUE(TheDcRaw->m_D65Multipliers[c]) /
                   VALUE(TheDcRaw->m_PreMultipliers[c]);

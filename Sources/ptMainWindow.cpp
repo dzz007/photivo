@@ -646,6 +646,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateLfunVignetteUI();
   UpdateLiquidRescaleUI();
   InitVisibleTools();
+  Settings->SetValue("PipeSize", Settings->GetValue("StartupPipeSize"));
   if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_Favourite)
     ShowFavouriteTools();
   if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_AllTools)
