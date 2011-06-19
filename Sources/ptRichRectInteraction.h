@@ -39,6 +39,7 @@
 
 // Position of the mouse when button pressed for dragging
 enum ptMovingEdge {
+  meOutside = -1,
   meNone = 0,
   meTop = 1,
   meRight = 2,

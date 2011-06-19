@@ -90,8 +90,10 @@ void ptLineInteraction::Finalize(const ptStatus status) {
 void ptLineInteraction::keyAction(QKeyEvent* event) {
   switch (event->type()) {
     case QEvent::KeyPress:
-      event->accept();
-      Finalize(stFailure);
+      if (event->key() == Qt::Key_Escape) {
+        event->accept();
+        Finalize(stFailure);
+      }
       break;
 
     default:
