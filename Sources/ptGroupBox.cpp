@@ -558,8 +558,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
       m_Folded = 1 - m_Folded;
       UpdateView();
       Settings->m_IniSettings->setValue(m_Name,m_Folded);
-    } else if (event->button()==Qt::RightButton &&
-               ViewWindow->OngoingAction() != vaCrop &&
+    } else if (event->button() == Qt::RightButton &&
+               ViewWindow->interaction() != iaCrop &&
                m_IsEnabled == 1) {
       if (!Settings->ToolAlwaysVisible(m_Name)) {
         if (m_IsBlocked == 1) {

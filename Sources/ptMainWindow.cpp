@@ -1548,7 +1548,7 @@ void ptMainWindow::ResizeTimerExpired() {
 ////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::dragEnterEvent(QDragEnterEvent* Event) {
-  if (ViewWindow->OngoingAction() != vaNone) {
+  if (ViewWindow->interaction() != iaNone) {
     return;
   }
 
@@ -1570,7 +1570,7 @@ void CB_OpenSettingsFile(QString SettingsFileName);
 extern QString ImageFileToOpen;
 
 void ptMainWindow::dropEvent(QDropEvent* Event) {
-  if (ViewWindow->OngoingAction() != vaNone) {
+  if (ViewWindow->interaction() != iaNone) {
     return;
   }
 
@@ -1625,59 +1625,42 @@ void CB_ZoomFitButton();
 void CB_WritePipeButton();
 void CB_SpecialPreviewChoice(const QVariant Choice);
 void CB_MenuFileExit(const short);
-void ViewWindowStatusReport(short State);
+void ViewWindowShowStatus(short State);
 void CB_SearchBarEnableCheck(const QVariant State);
 
 // Catch keyboard shortcuts
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
-  // Handle ViewWindow: LightsOut, confirm/cancel crop
-  if (((ViewWindow->OngoingAction() == vaCrop) || (ViewWindow->OngoingAction() == vaSelectRect)) &&
-      Event->key()==Qt::Key_Alt)
-  {
-    ViewWindow->ToggleLightsOut();
-    return;
-  }
-  if (ViewWindow->OngoingAction() == vaCrop) {
-    if ((Event->key() == Qt::Key_Return) || (Event->key() == Qt::Key_Enter)) {
-      CB_ConfirmCropButton();
-      return;
-    } else if (Event->key() == Qt::Key_Escape) {
-      CB_CancelCropButton();
-      return;
-    }
-  }
-
-
-  if (Event->key()==Qt::Key_Escape) { // back to used view
+  if (Event->key()==Qt::Key_Escape) {// back to used view
     if (Settings->GetInt("SpecialPreview") != ptSpecialPreview_RGB) {
         CB_SpecialPreviewChoice(ptSpecialPreview_RGB);
+        return;
     } else if (SearchInputWidget->hasFocus()) {
       OnTabProcessingButtonClicked();
+      return;
     } else {
       if (Settings->GetInt("ShowToolContainer") == 0) {
         Settings->SetValue("ShowToolContainer", 1);
         UpdateSettings();
+        return;
       } else {
         ::CB_FullScreenButton(0);
+        return;
       }
     }
   }
+
   if (SearchInputWidget->hasFocus() &&
       (Event->key()==Qt::Key_Return ||
-       Event->key()==Qt::Key_Enter)) {
+       Event->key()==Qt::Key_Enter))
+  {
     ViewWindow->setFocus();
+    return;
   }
 
-  // most shortcuts should only work when we are not in special state like cropping
-  if (Settings->GetInt("BlockTools")==0) {
+  if (Settings->GetInt("BlockTools") == 0 || ViewWindow->interaction() == iaCrop) {
     if (Event->key()==Qt::Key_F11) { // toggle full screen
-      if (isFullScreen()==true)
-        ::CB_FullScreenButton(0);
-      else
-        ::CB_FullScreenButton(1);
-    } else if (Event->key()==Qt::Key_F1) {
-      QDesktopServices::openUrl(QString("http://photivo.org/photivo/manual"));
-    } if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::NoModifier) {
+      ::CB_FullScreenButton(!isFullScreen());
+    } else if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::NoModifier) {
       CB_InputChanged("ZoomInput",50);
     } else if (Event->key()==Qt::Key_2 && Event->modifiers()==Qt::NoModifier) {
       CB_InputChanged("ZoomInput",100);
@@ -1685,6 +1668,19 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       CB_InputChanged("ZoomInput",200);
     } else if (Event->key()==Qt::Key_4 && Event->modifiers()==Qt::NoModifier) {
       CB_ZoomFitButton();
+    } else if (Event->key()==Qt::Key_Space) {
+      Settings->SetValue("ShowToolContainer",1-Settings->GetInt("ShowToolContainer"));
+      UpdateSettings();
+      if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
+        ViewWindow->ZoomToFit(0);
+      }
+    }
+  }
+
+  // most shortcuts should only work when we are not in special state like cropping
+  if (Settings->GetInt("BlockTools")==0) {
+    if (Event->key()==Qt::Key_F1) {
+      QDesktopServices::openUrl(QString("http://photivo.org/photivo/manual"));
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::NoModifier) {
       OnTabProcessingButtonClicked();
     } else if (Event->key()==Qt::Key_S && Event->modifiers()==Qt::NoModifier) {
@@ -1693,9 +1689,6 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       OnTabInfoButtonClicked();
     } else if (Event->key()==Qt::Key_M && Event->modifiers()==Qt::NoModifier) {
       ::CB_RunModeCheck(1-Settings->GetInt("RunMode"));
-    } else if (Event->key()==Qt::Key_Space) {
-      Settings->SetValue("ShowToolContainer",1-Settings->GetInt("ShowToolContainer"));
-      UpdateSettings();
     } else if (Event->key()==Qt::Key_F5) {
       OnRunButtonClicked();
     } else if (Event->key()==Qt::Key_F3) {
@@ -1743,27 +1736,27 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (Event->key()==Qt::Key_0 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_RGB)
         CB_SpecialPreviewChoice(ptSpecialPreview_RGB);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_9 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_Structure)
         CB_SpecialPreviewChoice(ptSpecialPreview_Structure);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_8 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_L)
         CB_SpecialPreviewChoice(ptSpecialPreview_L);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_7 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_A)
         CB_SpecialPreviewChoice(ptSpecialPreview_A);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_6 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_B)
         CB_SpecialPreviewChoice(ptSpecialPreview_B);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_5 && Event->modifiers()==Qt::NoModifier) {
       if (Settings->GetInt("SpecialPreview")!=ptSpecialPreview_Gradient)
         CB_SpecialPreviewChoice(ptSpecialPreview_Gradient);
-      else ViewWindowStatusReport(0);
+      else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_C && Event->modifiers()==Qt::NoModifier) {
       Settings->SetValue("ExposureIndicator",1-Settings->GetInt("ExposureIndicator"));
       Update(ptProcessorPhase_NULL);
@@ -2622,7 +2615,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
 void ptMainWindow::UpdateCropToolUI() {
   bool OnOff = false;
   if (ViewWindow != NULL) {   // when called from MainWindow constructor, ViewWindow doesn't yet exist
-    if (ViewWindow->OngoingAction() == vaCrop) {
+    if (ViewWindow->interaction() == iaCrop) {
       OnOff = true;
     }
   }
