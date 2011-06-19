@@ -533,7 +533,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WebResizeFilter"             ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Lanczos          ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
     {"SaveFormat"                  ,ptGT_Choice       ,1,1,1 ,ptSaveFormat_JPEG           ,GuiOptions->SaveFormat                ,tr("Output format")},
     {"SaveSampling"                ,ptGT_Choice       ,1,1,1 ,ptSaveSampling_211          ,GuiOptions->SaveSampling              ,tr("JPEG color sampling")},
-    {"OutputMode"                  ,ptGT_Choice       ,1,1,1 ,ptOutputMode_Full           ,GuiOptions->OutputMode                ,tr("Output mode")}
+    {"OutputMode"                  ,ptGT_Choice       ,1,1,1 ,ptOutputMode_Full           ,GuiOptions->OutputMode                ,tr("Output mode")},
+    {"CropInitialZoom"             ,ptGT_Choice       ,1,0,1 ,ptZoomLevel_Fit             ,GuiOptions->ZoomLevel                 ,tr("Switch to this zoom level when starting to crop.")}
   };
 
   // Load in the gui check elements

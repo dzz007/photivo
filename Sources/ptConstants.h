@@ -534,6 +534,22 @@ const short ptLqr_ScaleAbsolute    = 1;
 const short ptZoomMode_Fit    = 0;
 const short ptZoomMode_NonFit = 1;
 
+// Zoom levels
+const short ptZoomLevel_Current = 0;
+const short ptZoomLevel_Fit     = 1;
+const short ptZoomLevel_5       = 5;
+const short ptZoomLevel_10      = 10;
+const short ptZoomLevel_20      = 20;
+const short ptZoomLevel_25      = 25;
+const short ptZoomLevel_33      = 33;
+const short ptZoomLevel_50      = 50;
+const short ptZoomLevel_66      = 66;
+const short ptZoomLevel_100     = 100;
+const short ptZoomLevel_150     = 150;
+const short ptZoomLevel_200     = 200;
+const short ptZoomLevel_300     = 300;
+const short ptZoomLevel_400     = 400;
+
 // Status overlay modes
 const short ptStatus_Done = 0;
 const short ptStatus_Updating = 1;
