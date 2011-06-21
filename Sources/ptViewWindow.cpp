@@ -51,6 +51,7 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   // constants
   MinZoom(0.05), MaxZoom(4.0),
   // member variables
+  m_CtrlIsPressed(0),
   m_DrawLine(NULL),
   m_SelectRect(NULL),
   m_Crop(NULL),

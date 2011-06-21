@@ -640,12 +640,9 @@ void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*
       break;
     }
 
-    case meCenter:
+    default:
       // nothing to do
       break;
-
-    default:
-      assert(!"Unhandled m_MovingEdge!");
   }
 
   m_RectItem->setRect(m_Rect);
@@ -844,14 +841,8 @@ void ptRichRectInteraction::RecalcRect() {
       m_Rect = NewRect.normalized();
       break;
 
-
-    case meNone:
-    case meCenter:
-      // nothing to do here
-      break;
-
     default:
-      assert(!"Unhandled m_MovingEdge");
+      // nothing to do here
       break;
   }
 
