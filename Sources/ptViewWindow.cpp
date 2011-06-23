@@ -246,6 +246,7 @@ void ptViewWindow::paintEvent(QPaintEvent* event) {
   // Fill viewport with background colour
   QPainter Painter(viewport());
   Painter.fillRect(0, 0, viewport()->width(), viewport()->height(), palette().color(QPalette::Window));
+  Painter.end();
 
   // takes care of updating the scene
   QGraphicsView::paintEvent(event);
