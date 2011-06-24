@@ -3251,11 +3251,6 @@ void CB_MenuFileOpen(const short HaveFile) {
     MainWindow->setWindowTitle((Settings->GetStringList("InputFileNameList"))[0]+ " - Photivo");
   #endif
   Settings->SetValue("RunMode",OldRunMode);
-
-  // Let the toplevel window adapt to the new photo.
-  if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
-    CB_ZoomFitButton();
-  }
 }
 
 void CB_MenuFileSaveOutput(QString OutputName = "") {
@@ -4087,9 +4082,6 @@ void CB_PipeSizeChoice(const QVariant Choice) {
 
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Demosaic);
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-  if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
-    CB_ZoomFitButton();
-  }
 
   ALLOCATED(10000000);
 }

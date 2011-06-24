@@ -1035,8 +1035,10 @@ void ptRichRectInteraction::RecalcLightsOutRects() {
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::UpdateScene() {
+  m_View->blockSignals(1);
   RecalcRect();
   RecalcGuides();
   RecalcLightsOutRects();
-  m_View->repaint();
+  m_View->blockSignals(0);
+  //m_View->repaint();
 }

@@ -125,6 +125,7 @@ ptViewWindow::~ptViewWindow() {
 
 void ptViewWindow::UpdateImage(const ptImage* relatedImage) {
   if (relatedImage) {
+    this->blockSignals(1);
     QImage* Img8bit = new QImage(relatedImage->m_Width, relatedImage->m_Height, QImage::Format_RGB32);
     uint32_t Size = relatedImage->m_Height * relatedImage->m_Width;
     uint32_t* ImagePtr = (QRgb*) Img8bit->scanLine(0);
@@ -144,7 +145,12 @@ void ptViewWindow::UpdateImage(const ptImage* relatedImage) {
     m_ImageScene->setSceneRect(0, 0,
                                m_8bitImageItem->pixmap().width(),
                                m_8bitImageItem->pixmap().height());
-    m_8bitImageItem->setPos(0, 0);
+
+    if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
+      ZoomToFit(0);
+    }
+
+    this->blockSignals(0);
   }
 }
 
