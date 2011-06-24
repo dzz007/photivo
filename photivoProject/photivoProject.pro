@@ -175,9 +175,6 @@ HEADERS += ../Sources/fastbilateral/math_tools.h
 HEADERS += ../Sources/fastbilateral/mixed_vector.h
 HEADERS += ../Sources/greyc/CImg.h
 HEADERS += ../Sources/ptMessageBox.h
-HEADERS += ../Sources/ImageSpot/ptImageSpot.h
-HEADERS += ../Sources/ImageSpot/ptImageSpotList.h
-HEADERS += ../Sources/ImageSpot/ptRepairSpot.h
 
 SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptReportOverlay.cpp \
@@ -260,9 +257,6 @@ SOURCES += ../Sources/clapack/wsfe.c
 SOURCES += ../Sources/clapack/xerbla.c
 SOURCES += ../Sources/dcb/dcb_demosaicing_old.c
 SOURCES += ../Sources/dcb/dcb_demosaicing.c
-SOURCES += ../Sources/ImageSpot/ptImageSpot.cpp
-SOURCES += ../Sources/ImageSpot/ptImageSpotList.cpp
-SOURCES += ../Sources/ImageSpot/ptRepairSpot.cpp
 SOURCES += ../Sources/perfectraw/lmmse_interpolate.c
 SOURCES += ../Sources/rawtherapee/amaze_interpolate.c
 SOURCES += ../Sources/rawtherapee/ca_correct.c

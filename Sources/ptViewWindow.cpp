@@ -51,6 +51,7 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   // constants
   MinZoom(0.05), MaxZoom(4.0),
   // member variables
+  m_CtrlIsPressed(0),
   m_DrawLine(NULL),
   m_SelectRect(NULL),
   m_Crop(NULL),
@@ -124,6 +125,7 @@ ptViewWindow::~ptViewWindow() {
 
 void ptViewWindow::UpdateImage(const ptImage* relatedImage) {
   if (relatedImage) {
+    this->blockSignals(1);
     QImage* Img8bit = new QImage(relatedImage->m_Width, relatedImage->m_Height, QImage::Format_RGB32);
     uint32_t Size = relatedImage->m_Height * relatedImage->m_Width;
     uint32_t* ImagePtr = (QRgb*) Img8bit->scanLine(0);
@@ -143,7 +145,12 @@ void ptViewWindow::UpdateImage(const ptImage* relatedImage) {
     m_ImageScene->setSceneRect(0, 0,
                                m_8bitImageItem->pixmap().width(),
                                m_8bitImageItem->pixmap().height());
-    m_8bitImageItem->setPos(0, 0);
+
+    if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
+      ZoomToFit(0);
+    }
+
+    this->blockSignals(0);
   }
 }
 
@@ -245,6 +252,7 @@ void ptViewWindow::paintEvent(QPaintEvent* event) {
   // Fill viewport with background colour
   QPainter Painter(viewport());
   Painter.fillRect(0, 0, viewport()->width(), viewport()->height(), palette().color(QPalette::Window));
+  Painter.end();
 
   // takes care of updating the scene
   QGraphicsView::paintEvent(event);
@@ -262,8 +270,6 @@ void ptViewWindow::mousePressEvent(QMouseEvent* event) {
     event->accept();
     m_LeftMousePressed = 1;
     m_DragDelta->setPoints(event->pos(), event->pos());
-  } else {
-    event->ignore();
   }
 
   // Broadcast event to possible interaction handlers
@@ -306,11 +312,13 @@ void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   // drag image with left mouse button to scroll
-  short dragging = 1;
+  // Also Ctrl needed in crop mode
+  short ImgDragging = m_LeftMousePressed && m_Interaction == iaNone;
   if (m_Interaction == iaCrop) {
-    dragging = m_Crop->isDragging();
+    ImgDragging = m_LeftMousePressed && m_CtrlIsPressed;
   }
-  if (m_LeftMousePressed && (m_Interaction == iaNone || !dragging)) {
+
+  if (ImgDragging) {
     m_DragDelta->setP2(event->pos());
     horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
                                     m_DragDelta->x2() +
@@ -320,14 +328,13 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
                                   m_DragDelta->y1());
     m_DragDelta->setP1(event->pos());
     event->accept();
-    return;
+
   } else {
     event->ignore();
-  }
-
-  // Broadcast event to possible interaction handlers
-  if (m_Interaction != iaNone) {
-    emit mouseChanged(event);
+    // Broadcast event to possible interaction handlers
+    if (m_Interaction != iaNone) {
+      emit mouseChanged(event);
+    }
   }
 }
 
@@ -373,17 +380,38 @@ void ptViewWindow::wheelEvent(QWheelEvent* event) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::keyPressEvent(QKeyEvent* event) {
+  // m_CtrlIsPressed is not a simple bool flag to account for keyboards with
+  // multiple ctrl keys. There's a lot of those. ;-) For each ctrl press the
+  // variable is increased, for each release it's decreased. This is necessary
+  // because in cases like press left ctrl - press right ctrl - release left ctrl
+  // Photivo should still recognise the ctrl key as being held down.
+  if (event->key() == Qt::Key_Control) {
+    m_CtrlIsPressed++;
+    if (m_Interaction == iaNone || m_Interaction == iaCrop) {
+      setCursor(Qt::ClosedHandCursor);
+    }
+  } else {
+    event->ignore();  // necessary to forward unhandled keys to main window
+  }
+
   if (m_Interaction != iaNone) {
     emit keyChanged(event);
   }
-  event->ignore();
 }
 
 void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
+  if (event->key() == Qt::Key_Control) {
+    m_CtrlIsPressed--;
+    if (m_CtrlIsPressed == 0 && (m_Interaction == iaNone || m_Interaction == iaCrop)) {
+      setCursor(Qt::ArrowCursor);
+    }
+  } else {
+    event->ignore();  // necessary to forward unhandled keys to main window
+  }
+
   if (m_Interaction != iaNone) {
     emit keyChanged(event);
   }
-  event->ignore();
 }
 
 
@@ -721,7 +749,7 @@ void ptViewWindow::ConstructContextMenu() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
-  if (m_Interaction != iaNone) {
+  if (m_Interaction == iaSelectRect || m_Interaction == iaDrawLine) {
     return;
   }
 
@@ -755,11 +783,13 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu.addAction(ac_ZoomFit);
   Menu.addAction(ac_Zoom100);
   Menu.addSeparator();
-  Menu.addMenu(&Menu_Mode);
-  Menu.addMenu(&Menu_Clip);
-  Menu.addSeparator();
-  Menu.addAction(ac_SensorClip);
-  Menu.addAction(ac_SensorClipSep);
+  if (m_Interaction == iaNone) {
+    Menu.addMenu(&Menu_Mode);
+    Menu.addMenu(&Menu_Clip);
+    Menu.addSeparator();
+    Menu.addAction(ac_SensorClip);
+    Menu.addAction(ac_SensorClipSep);
+  }
   Menu.addAction(ac_ShowTools);
   Menu.addAction(ac_ShowZoomBar);
   Menu.addSeparator();

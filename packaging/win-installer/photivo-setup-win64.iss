@@ -2,7 +2,7 @@
 ;;
 ;; photivo
 ;;
-;; Copyright (C) 2010 Bernd Schoeler <brjohn@brother-john.net>
+;; Copyright (C) 2010-2011 Bernd Schoeler <brjohn@brother-john.net>
 ;;
 ;; This file is part of photivo.
 ;;
@@ -26,7 +26,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppID={{9B7CEA17-E1CC-43E1-A2F6-F36A34051539}
 AppName=Photivo
-AppVersion=DD MMM 20YY (???)
+AppVersion=DD MMM 20YY (rev ???)
 AppPublisherURL=http://photivo.org/
 AppSupportURL=http://photivo.org/
 AppUpdatesURL=http://code.google.com/p/photivo/downloads/list
@@ -56,6 +56,7 @@ Source: "..\..\_bin-win64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubd
 
 [Icons]
 Name: "{group}\Photivo"; Filename: "{app}\photivo.exe"
+Name: "{group}\Clear settings"; Filename: "{app}\ptClear.exe"
 Name: "{group}\{cm:ProgramOnTheWeb,Photivo}"; Filename: "http://photivo.org/"
 Name: "{group}\{cm:UninstallProgram,Photivo}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\Photivo"; Filename: "{app}\photivo.exe"; Tasks: desktopicon

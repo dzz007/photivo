@@ -132,6 +132,7 @@ private:
   const float MaxZoom;
   QList<float> ZoomFactors;   // steps for wheel zoom
 
+  short m_CtrlIsPressed;
   ptLineInteraction* m_DrawLine;
   ptSimpleRectInteraction* m_SelectRect;
   ptRichRectInteraction* m_Crop;

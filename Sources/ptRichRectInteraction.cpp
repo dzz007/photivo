@@ -43,8 +43,8 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
       const uint AspectRatioH, const short Guidelines)
 : ptImageInteraction(View),
   //constants
-  EdgeThickness(20),
-  TinyRectThreshold(40),
+  EdgeThickness(40),
+  TinyRectThreshold(80),
   //variables
   m_CtrlIsPressed(0),
   m_Guides(Guidelines),
@@ -201,17 +201,15 @@ void ptRichRectInteraction::mouseAction(QMouseEvent* event) {
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::MousePressHandler(const QMouseEvent* event) {
-  if (event->button() == Qt::LeftButton) {
+  if (event->button() == Qt::LeftButton && event->modifiers() == Qt::NoModifier) {
     QPointF scPos = m_View->mapToScene(event->pos());
     m_DragDelta->setPoints(event->pos(), event->pos());
 
     if (m_RectItem->contains(scPos)) {
-      if (m_CtrlIsPressed > 0 || m_MovingEdge != meCenter) {
-        m_NowDragging = 1;
-      }
+      m_NowDragging = 1;
 
     // Start new rect when none is present or clicked outside current one.
-    } else if (m_View->scene()->sceneRect().contains(scPos) && (m_CtrlIsPressed > 0)) {
+    } else if (m_View->scene()->sceneRect().contains(scPos)) {
       m_NowDragging = 1;
       m_MovingEdge = meNone;
       m_Rect.setRect(scPos.x(), scPos.y(), 1.0, 1.0);
@@ -263,7 +261,8 @@ void ptRichRectInteraction::MouseMoveHandler(const QMouseEvent* event) {
     qreal dy = m_DragDelta->dy() / m_View->transform().m11();
 
     // Move current rectangle. The qBounds make sure it stops at image boundaries.
-    if (m_CtrlIsPressed > 0) {
+    //if (m_CtrlIsPressed > 0) {
+    if (m_MovingEdge == meCenter) {
       m_Rect.moveTo(
           qBound(0.0, m_Rect.left() + dx,
                  m_View->scene()->sceneRect().width() - m_Rect.width()),
@@ -296,7 +295,9 @@ void ptRichRectInteraction::MouseMoveHandler(const QMouseEvent* event) {
   // No dragging in progress. Just update mouse cursor.
   } else {
     m_MovingEdge = MouseDragPos(event);
-    UpdateCursor();
+    if (event->modifiers() == Qt::NoModifier) {
+      UpdateCursor();
+    }
   }
 }
 
@@ -329,31 +330,9 @@ void ptRichRectInteraction::keyAction(QKeyEvent* event) {
         setLightsOut((Settings->GetInt("LightsOut") + 1) % 3);
         break;
 
-      // Ctrl needs to be held down to move the rectangle.
-      // m_CtrlIsPressed is not a simple bool flag to account for keyboards with
-      // multiple ctrl keys. There's a lot of those. ;-) For each ctrl press the
-      // variable is increased, for each release it's decreased. This is necessary
-      // because in cases like press left ctrl - press right ctrl - release left ctrl
-      // Photivo should still recognise the ctrl key as being held down.
-      case Qt::Key_Control:
-        event->accept();
-        m_CtrlIsPressed++;
-        UpdateCursor();
-        break;
-
       default:
         // nothing to do here
         break;
-    }
-
-
-  } else if (event->type() == QEvent::KeyRelease) {
-    if (event->key() == Qt::Key_Control) {
-      event->accept();
-      if (m_CtrlIsPressed > 0) {
-        m_CtrlIsPressed--;
-        UpdateCursor();
-      }
     }
   }
 }
@@ -366,40 +345,35 @@ void ptRichRectInteraction::keyAction(QKeyEvent* event) {
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::UpdateCursor() {
-  // move rectangle cursor
-  if ((m_MovingEdge != meNone) && (m_CtrlIsPressed > 0)) {
-    m_View->setCursor(Qt::SizeAllCursor);
-
-  // start new rect cursor
-  } else if ((m_MovingEdge == meNone) && (m_CtrlIsPressed > 0)) {
-    m_View->setCursor(Qt::CrossCursor);
-
-  } else {
-    switch (m_MovingEdge) {
-      case meNone:
-      case meCenter:
-        m_View->setCursor(Qt::ArrowCursor);
-        break;
-      case meTop:
-      case meBottom:
-        m_View->setCursor(Qt::SizeVerCursor);
-        break;
-      case meLeft:
-      case meRight:
-        m_View->setCursor(Qt::SizeHorCursor);
-        break;
-      case meTopLeft:
-      case meBottomRight:
-        m_View->setCursor(Qt::SizeFDiagCursor);
-        break;
-      case meTopRight:
-      case meBottomLeft:
-        m_View->setCursor(Qt::SizeBDiagCursor);
-        break;
-      default:
-        assert(!"Unhandled m_MovingEdge!");
-        break;
-    }
+  switch (m_MovingEdge) {
+    case meOutside:
+      m_View->setCursor(Qt::ArrowCursor);
+      break;
+    case meNone:
+      m_View->setCursor(Qt::CrossCursor);
+      break;
+    case meCenter:
+      m_View->setCursor(Qt::SizeAllCursor);
+      break;
+    case meTop:
+    case meBottom:
+      m_View->setCursor(Qt::SizeVerCursor);
+      break;
+    case meLeft:
+    case meRight:
+      m_View->setCursor(Qt::SizeHorCursor);
+      break;
+    case meTopLeft:
+    case meBottomRight:
+      m_View->setCursor(Qt::SizeFDiagCursor);
+      break;
+    case meTopRight:
+    case meBottomLeft:
+      m_View->setCursor(Qt::SizeBDiagCursor);
+      break;
+    default:
+      assert(!"Unhandled m_MovingEdge!");
+      break;
   }
 }
 
@@ -666,12 +640,9 @@ void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*
       break;
     }
 
-    case meCenter:
+    default:
       // nothing to do
       break;
-
-    default:
-      assert(!"Unhandled m_MovingEdge!");
   }
 
   m_RectItem->setRect(m_Rect);
@@ -703,7 +674,11 @@ ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
 
   // Catch mouse outside current crop rect
   if (!m_RectItem->contains(pos)) {
-    return meNone;
+    if (m_View->scene()->sceneRect().contains(pos)) {
+      return meNone;
+    } else {
+      return meOutside;
+    }
   }
 
   ptMovingEdge HoverOver = meNone;
@@ -711,15 +686,15 @@ ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
   int LRthick = 0;    // left/right
 
   // Determine edge area thickness
-  if (m_Rect.height() <= TinyRectThreshold) {
+  if (m_Rect.height() <= (int)(TinyRectThreshold / m_View->transform().m11())) {
     TBthick = (int)(m_Rect.height() / 2);
   } else {
-    TBthick = EdgeThickness;
+    TBthick = (int)(EdgeThickness / m_View->transform().m11());
   }
-  if (m_Rect.width() <= TinyRectThreshold) {
+  if (m_Rect.width() <= (int)(TinyRectThreshold / m_View->transform().m11())) {
     LRthick = (int)(m_Rect.width() / 2);
   } else {
-    LRthick = EdgeThickness;
+    LRthick = (int)(EdgeThickness / m_View->transform().m11());
   }
 
   // Determine in which area the mouse is
@@ -866,14 +841,8 @@ void ptRichRectInteraction::RecalcRect() {
       m_Rect = NewRect.normalized();
       break;
 
-
-    case meNone:
-    case meCenter:
-      // nothing to do here
-      break;
-
     default:
-      assert(!"Unhandled m_MovingEdge");
+      // nothing to do here
       break;
   }
 
@@ -1036,7 +1005,7 @@ void ptRichRectInteraction::RecalcLightsOutRects() {
   );
 
   m_LightsOutRects[1]->setRect(    // right
-      m_Rect.right() + 1,
+      m_Rect.right(),
       m_Rect.top(),
       m_View->scene()->sceneRect().right() - m_Rect.right(),
       m_Rect.height()
@@ -1066,8 +1035,10 @@ void ptRichRectInteraction::RecalcLightsOutRects() {
 ///////////////////////////////////////////////////////////////////////////
 
 void ptRichRectInteraction::UpdateScene() {
+  m_View->blockSignals(1);
   RecalcRect();
   RecalcGuides();
   RecalcLightsOutRects();
-  m_View->repaint();
+  m_View->blockSignals(0);
+  //m_View->repaint();
 }
