@@ -2352,6 +2352,44 @@ void ptProcessor::Run(short Phase,
 
       }
 
+      //***************************************************************************
+      // Gradual Blur 1
+      if (Settings->ToolIsActive("TabGradualBlur1")) {
+        m_ReportProgress(tr("Gradual Blur 1"));
+
+        m_Image_AfterEyeCandy->GradualBlur(Settings->GetInt("GradBlur1"),
+                                           Settings->GetDouble("GradBlur1Radius")*m_ScaleFactor,
+                                           Settings->GetDouble("GradBlur1LowerLevel"),
+                                           Settings->GetDouble("GradBlur1UpperLevel"),
+                                           Settings->GetDouble("GradBlur1Softness"),
+                                           Settings->GetDouble("GradBlur1Angle"),
+                                           Settings->GetInt("GradBlur1Vignette"),
+                                           Settings->GetDouble("GradBlur1Roundness"),
+                                           Settings->GetDouble("GradBlur1CenterX"),
+                                           Settings->GetDouble("GradBlur1CenterY"));
+
+        TRACEMAIN("Done gradual blur 1 at %d ms.",m_RunTimer.elapsed());
+      }
+
+      //***************************************************************************
+      // Gradual Blur 2
+      if (Settings->ToolIsActive("TabGradualBlur2")) {
+        m_ReportProgress(tr("Gradual Blur 2"));
+
+        m_Image_AfterEyeCandy->GradualBlur(Settings->GetInt("GradBlur2"),
+                                           Settings->GetDouble("GradBlur2Radius")*m_ScaleFactor,
+                                           Settings->GetDouble("GradBlur2LowerLevel"),
+                                           Settings->GetDouble("GradBlur2UpperLevel"),
+                                           Settings->GetDouble("GradBlur2Softness"),
+                                           Settings->GetDouble("GradBlur2Angle"),
+                                           Settings->GetInt("GradBlur2Vignette"),
+                                           Settings->GetDouble("GradBlur2Roundness"),
+                                           Settings->GetDouble("GradBlur2CenterX"),
+                                           Settings->GetDouble("GradBlur2CenterY"));
+
+        TRACEMAIN("Done gradual blur 2 at %d ms.",m_RunTimer.elapsed());
+      }
+
 
       //***************************************************************************
       // Softglow
@@ -2366,8 +2404,8 @@ void ptProcessor::Run(short Phase,
           7,
           Settings->GetDouble("SoftglowContrast"),
           Settings->GetInt("SoftglowSaturation"));
-      }
 
+      }
 
       //***************************************************************************
       // Vibrance

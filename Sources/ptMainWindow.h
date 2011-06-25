@@ -97,6 +97,8 @@ public:
 
   void UpdateLiquidRescaleUI();
 
+  void UpdateGradualBlurUI();
+
   // Visible tools
   void ApplyVisibleTools();
   void UpdateVisibleTools();
