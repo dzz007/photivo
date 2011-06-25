@@ -8219,8 +8219,11 @@ void Standard_CB_SetAndRun (const QString ObjectName, const QVariant Value) {
   short PreviousActiveState = Settings->ToolIsActive(ToolName);
 
   Settings->SetValue(Key,Value);
-  if (Settings->ToolIsActive(ToolName) || PreviousActiveState)
+  if (Settings->ToolIsActive(ToolName) || PreviousActiveState) {
     Update(ToolName);
+  } else {
+    MainWindow->UpdateSettings();
+  }
 }
 
 void CB_InputChanged(const QString ObjectName, const QVariant Value) {
@@ -8799,6 +8802,27 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(VignetteCenterXInput)
   M_SetAndRunDispatch(VignetteCenterYInput)
   M_SetAndRunDispatch(VignetteSoftnessInput)
+
+  M_SetAndRunDispatch(GradBlur1Choice)
+  M_SetAndRunDispatch(GradBlur1RadiusInput)
+  M_SetAndRunDispatch(GradBlur1LowerLevelInput)
+  M_SetAndRunDispatch(GradBlur1UpperLevelInput)
+  M_SetAndRunDispatch(GradBlur1SoftnessInput)
+  M_SetAndRunDispatch(GradBlur1AngleInput)
+  M_SetAndRunDispatch(GradBlur1VignetteInput)
+  M_SetAndRunDispatch(GradBlur1RoundnessInput)
+  M_SetAndRunDispatch(GradBlur1CenterXInput)
+  M_SetAndRunDispatch(GradBlur1CenterYInput)
+  M_SetAndRunDispatch(GradBlur2Choice)
+  M_SetAndRunDispatch(GradBlur2RadiusInput)
+  M_SetAndRunDispatch(GradBlur2LowerLevelInput)
+  M_SetAndRunDispatch(GradBlur2UpperLevelInput)
+  M_SetAndRunDispatch(GradBlur2SoftnessInput)
+  M_SetAndRunDispatch(GradBlur2AngleInput)
+  M_SetAndRunDispatch(GradBlur2VignetteInput)
+  M_SetAndRunDispatch(GradBlur2RoundnessInput)
+  M_SetAndRunDispatch(GradBlur2CenterXInput)
+  M_SetAndRunDispatch(GradBlur2CenterYInput)
 
   M_SetAndRunDispatch(SoftglowModeChoice)
   M_SetAndRunDispatch(SoftglowRadiusInput)

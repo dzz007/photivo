@@ -195,13 +195,7 @@ void ptChoice::Clear(const short WithDefault) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptChoice::Show(const short Show) {
-  if (Show) {
-    m_ComboBox->show();
-    //~ if (m_HaveDefault) m_Button->show();
-  } else {
-    m_ComboBox->hide();
-    //~ m_Button->hide();
-  }
+  m_Parent->setVisible(Show);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

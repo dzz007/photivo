@@ -116,15 +116,15 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LevelsWhitePoint"              ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.002,3 ,tr("Whitepoint")         ,tr("Levels Whitepoint")},
     {"LabLevelsBlackPoint"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.002,3 ,tr("Blackpoint")         ,tr("Levels Blackpoint")},
     {"LabLevelsWhitePoint"           ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.002,3 ,tr("Whitepoint")         ,tr("Levels Whitepoint")},
-    {"ChannelMixerR2R"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")               ,tr("Contribution of red to red")},
-    {"ChannelMixerG2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")               ,tr("Contribution of green to red")},
-    {"ChannelMixerB2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")               ,tr("Contribution of blue to red")},
-    {"ChannelMixerR2G"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")               ,tr("Contribution of red to green")},
-    {"ChannelMixerG2G"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")               ,tr("Contribution of green to green")},
-    {"ChannelMixerB2G"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")               ,tr("Contribution of blue to green")},
-    {"ChannelMixerR2B"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")               ,tr("Contribution of red to blue")},
-    {"ChannelMixerG2B"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")               ,tr("Contribution of green to blue")},
-    {"ChannelMixerB2B"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")               ,tr("Contribution of blue to blue")},
+    {"ChannelMixerR2R"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to red")},
+    {"ChannelMixerG2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to red")},
+    {"ChannelMixerB2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to red")},
+    {"ChannelMixerR2G"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to green")},
+    {"ChannelMixerG2G"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to green")},
+    {"ChannelMixerB2G"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to green")},
+    {"ChannelMixerR2B"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to blue")},
+    {"ChannelMixerG2B"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to blue")},
+    {"ChannelMixerB2B"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to blue")},
     {"Vibrance"                      ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Vibrance")           ,tr("Vibrance")},
     {"IntensityRed"                  ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Red")                ,tr("Intensity red")},
     {"IntensityGreen"                ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Green")              ,tr("Intensity green")},
@@ -352,7 +352,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LABToneHSaturation"            ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0   ,4.0   ,0.1 ,2  ,tr("Saturation")        ,tr("Saturation")},
     {"LABToneHAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05,2  ,tr("Amount")            ,tr("Amount")},
     {"LABToneHHue"                   ,ptGT_InputSliderHue  ,2,1,1 ,60.0 ,0.0  ,360.0  ,10.0,0  ,tr("Hue")               ,tr("Hue")},
-    {"LabVignette"                   ,ptGT_Input           ,2,1,1 ,2    ,1    ,6     ,1    ,0  ,tr("Shape")             ,tr("Shape of the vignette")},
+    {"LabVignette"                   ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0  ,tr("Shape")             ,tr("Shape of the vignette")},
     {"LabVignetteAmount"             ,ptGT_InputSlider     ,2,1,1 ,0.3  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Amount")            ,tr("Amount")},
     {"LabVignetteInnerRadius"        ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2  ,tr("Inner Radius")      ,tr("Inner Radius")},
     {"LabVignetteOuterRadius"        ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2  ,tr("Outer Radius")      ,tr("Outer Radius")},
@@ -398,7 +398,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradualOverlay2LowerLevel"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,3.0   ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
     {"GradualOverlay2UpperLevel"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0   ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
     {"GradualOverlay2Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
-    {"Vignette"                      ,ptGT_Input           ,2,1,1 ,2    ,1    ,6     ,1    ,0 ,tr("Shape")             ,tr("Shape of the vignette")},
+    {"Vignette"                      ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0 ,tr("Shape")             ,tr("Shape of the vignette")},
     {"VignetteAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Amount")        ,tr("Amount")},
     {"VignetteInnerRadius"           ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2 ,tr("Inner Radius")        ,tr("Inner Radius")},
     {"VignetteOuterRadius"           ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2 ,tr("Outer Radius")        ,tr("Outer Radius")},
@@ -406,6 +406,24 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"VignetteCenterX"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center X")        ,tr("Center X")},
     {"VignetteCenterY"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center Y")        ,tr("Center Y")},
     {"VignetteSoftness"              ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
+    {"GradBlur1Radius"               ,ptGT_InputSlider     ,2,1,1 ,0.0 ,0.0  ,200.0 ,5.0  ,0 ,tr("Radius")             ,tr("Maximal radius for the blur")},
+    {"GradBlur1LowerLevel"           ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,10.0  ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
+    {"GradBlur1UpperLevel"           ,ptGT_InputSlider     ,2,1,1 ,1.5  ,0.0  ,10.0  ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
+    {"GradBlur1Softness"             ,ptGT_InputSlider     ,2,1,1 ,0.01 ,0.0  ,1.0   ,0.001,3 ,tr("Softness")           ,tr("Softness")},
+    {"GradBlur1Angle"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-180.0,180.0,5.0  ,0 ,tr("Angle")              ,tr("Angle")},
+    {"GradBlur1Vignette"             ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0 ,tr("Shape")              ,tr("Shape of the vignette")},
+    {"GradBlur1Roundness"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-3.0 ,3.0   ,0.1  ,2 ,tr("Roundness")          ,tr("Roundness")},
+    {"GradBlur1CenterX"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Center X")           ,tr("Center X")},
+    {"GradBlur1CenterY"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Center Y")           ,tr("Center Y")},
+    {"GradBlur2Radius"               ,ptGT_InputSlider     ,2,1,1 ,0.0 ,0.0  ,200.0 ,5.0  ,0 ,tr("Radius")             ,tr("Maximal radius for the blur")},
+    {"GradBlur2LowerLevel"           ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,10.0  ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
+    {"GradBlur2UpperLevel"           ,ptGT_InputSlider     ,2,1,1 ,1.5  ,0.0  ,10.0  ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
+    {"GradBlur2Softness"             ,ptGT_InputSlider     ,2,1,1 ,0.01 ,0.0  ,1.0   ,0.001,3 ,tr("Softness")           ,tr("Softness")},
+    {"GradBlur2Angle"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-180.0,180.0,5.0  ,0 ,tr("Angle")              ,tr("Angle")},
+    {"GradBlur2Vignette"             ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0 ,tr("Shape")              ,tr("Shape of the vignette")},
+    {"GradBlur2Roundness"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-3.0 ,3.0   ,0.1  ,2 ,tr("Roundness")          ,tr("Roundness")},
+    {"GradBlur2CenterX"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Center X")           ,tr("Center X")},
+    {"GradBlur2CenterY"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Center Y")           ,tr("Center Y")},
     {"SoftglowRadius"                ,ptGT_InputSlider     ,2,1,1 ,10.0  ,0.0  ,30.0  ,1.0 ,1 ,tr("Radius")        ,tr("Radius")},
     {"SoftglowAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,1  ,tr("Amount")        ,tr("Amount")},
     {"SoftglowSaturation"            ,ptGT_InputSlider     ,2,1,1 ,-50  ,-100  ,100    ,5  ,0 ,tr("Saturation")     ,tr("Saturation")},
@@ -528,6 +546,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradualOverlay1"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"GradualOverlay2"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"VignetteMode"                ,ptGT_Choice       ,2,1,1 ,ptVignetteMode_None         ,GuiOptions->VignetteMode              ,tr("Mode for Vignette")},
+    {"GradBlur1"                   ,ptGT_Choice       ,1,1,1 ,ptGradualBlur_Linear        ,GuiOptions->GradualBlurMode           ,tr("Mode for the gradual blur")},
+    {"GradBlur2"                   ,ptGT_Choice       ,1,1,1 ,ptGradualBlur_Linear        ,GuiOptions->GradualBlurMode           ,tr("Mode for the gradual blur")},
     {"SoftglowMode"                ,ptGT_Choice       ,2,1,1 ,ptSoftglowMode_None         ,GuiOptions->SoftglowMode              ,tr("Mode for Softglow")},
     {"WebResize"                   ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable web resizing")},
     {"WebResizeFilter"             ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Lanczos          ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
@@ -1945,6 +1965,12 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Eyecandy vignette";
       Info.IsActive = (Settings->GetInt("VignetteMode") &&
                        Settings->GetDouble("VignetteAmount")!=0.0)!=0?1:0;
+  } else if (GuiName == "TabGradualBlur1") {
+      Info.Name = "Gradual blur 1";
+      Info.IsActive = Settings->GetDouble("GradBlur1Radius")!=0.0?1:0;
+  } else if (GuiName == "TabGradualBlur2") {
+      Info.Name = "Gradual blur 2";
+      Info.IsActive = Settings->GetDouble("GradBlur2Radius")!=0.0?1:0;
   } else if (GuiName == "TabSoftglow") {
       Info.Name = "Softglow / Orton";
       Info.IsActive = (Settings->GetInt("SoftglowMode") &&
