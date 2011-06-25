@@ -518,6 +518,10 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   m_GroupBox->value("TabBW")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#black_and_white");
+  m_GroupBox->value("TabGradualBlur1")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#gradual_blur");
+  m_GroupBox->value("TabGradualBlur2")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#gradual_blur");
 
   m_ActiveTabs.append(GeometryTab);
   m_ActiveTabs.append(RGBTab);
