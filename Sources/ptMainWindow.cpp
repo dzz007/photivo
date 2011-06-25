@@ -3024,7 +3024,7 @@ void ptMainWindow::UpdateGradualBlurUI() {
   Settings->Show("GradBlur1CenterY",   !Visible);
 
   Visible = Settings->GetInt("GradBlur2") == ptGradualBlur_Linear  ||
-            Settings->GetInt("GradBlur1") == ptGradualBlur_MaskLinear;
+            Settings->GetInt("GradBlur2") == ptGradualBlur_MaskLinear;
   Settings->Show("GradBlur2Angle",      Visible);
   Settings->Show("GradBlur2Vignette",  !Visible);
   Settings->Show("GradBlur2Roundness", !Visible);
