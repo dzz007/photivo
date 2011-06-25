@@ -62,6 +62,7 @@ signals :
 void valueChanged(QVariant Value);
 
 private:
+QWidget*   m_Parent;
 QVariant   m_DefaultValue;
 QVariant   m_Value;
 QCheckBox* m_CheckBox;

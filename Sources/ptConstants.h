@@ -312,6 +312,15 @@ const short ptFlipMode_None       = 0;
 const short ptFlipMode_Horizontal = 1;
 const short ptFlipMode_Vertical   = 2;
 
+// Gradual Blur modes
+
+const short ptGradualBlur_None         = 0;
+const short ptGradualBlur_Linear       = 1;
+const short ptGradualBlur_Vignette     = 2;
+const short ptGradualBlur_MaskLinear   = 3;
+const short ptGradualBlur_MaskVignette = 4;
+
+
 // GrainModes
 
 const short ptGrainMode_SoftGaussian   = 0;

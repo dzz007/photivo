@@ -645,6 +645,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateLfunCAUI();
   UpdateLfunVignetteUI();
   UpdateLiquidRescaleUI();
+  UpdateGradualBlurUI();
   InitVisibleTools();
   Settings->SetValue("PipeSize", Settings->GetValue("StartupPipeSize"));
   if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_Favourite)
@@ -2295,6 +2296,8 @@ void ptMainWindow::UpdateSettings() {
   Pix.fill(Color);
   GradualOverlay2ColorButton->setIcon(Pix);
 
+  UpdateGradualBlurUI();
+
   // sRGB gamma compensation
   Settings->SetEnabled("OutputGamma",Settings->GetInt("OutputGammaCompensation"));
   Settings->SetEnabled("OutputLinearity",Settings->GetInt("OutputGammaCompensation"));
@@ -2987,6 +2990,7 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) { // Added slot for 
     ImageFileToOpen = msg;
     CB_MenuFileOpen(1);
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Update liquid rescale UI elements
@@ -2998,6 +3002,30 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
   LqrHorScaleWidget->setVisible(Scaling == ptLqr_ScaleRelative);
   LqrVertScaleWidget->setVisible(Scaling == ptLqr_ScaleRelative);
   LqrWHContainter->setVisible(Scaling == ptLqr_ScaleAbsolute);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Update gradual blur UI elements
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::UpdateGradualBlurUI() {
+  boolean Visible = Settings->GetInt("GradBlur1") == ptGradualBlur_Linear  ||
+                    Settings->GetInt("GradBlur1") == ptGradualBlur_MaskLinear;
+  Settings->Show("GradBlur1Angle",      Visible);
+  Settings->Show("GradBlur1Vignette",  !Visible);
+  Settings->Show("GradBlur1Roundness", !Visible);
+  Settings->Show("GradBlur1CenterX",   !Visible);
+  Settings->Show("GradBlur1CenterY",   !Visible);
+
+  Visible = Settings->GetInt("GradBlur2") == ptGradualBlur_Linear  ||
+            Settings->GetInt("GradBlur1") == ptGradualBlur_MaskLinear;
+  Settings->Show("GradBlur2Angle",      Visible);
+  Settings->Show("GradBlur2Vignette",  !Visible);
+  Settings->Show("GradBlur2Roundness", !Visible);
+  Settings->Show("GradBlur2CenterX",   !Visible);
+  Settings->Show("GradBlur2CenterY",   !Visible);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
