@@ -128,7 +128,8 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/ptLineInteraction.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptRichRectInteraction.h \
-    ../Sources/ptGridInteraction.h
+    ../Sources/ptGridInteraction.h \
+    ../Sources/ptRepairInteraction.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
 HEADERS += ../Sources/ptCheck.h
@@ -175,6 +176,9 @@ HEADERS += ../Sources/fastbilateral/math_tools.h
 HEADERS += ../Sources/fastbilateral/mixed_vector.h
 HEADERS += ../Sources/greyc/CImg.h
 HEADERS += ../Sources/ptMessageBox.h
+HEADERS += ../Sources/ptImageSpot.h
+HEADERS += ../Sources/ptImageSpotList.h
+HEADERS += ../Sources/ptRepairSpot.h
 
 SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptReportOverlay.cpp \
@@ -182,7 +186,8 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptLineInteraction.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptRichRectInteraction.cpp \
-    ../Sources/ptGridInteraction.cpp
+    ../Sources/ptGridInteraction.cpp \
+    ../Sources/ptRepairInteraction.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
 SOURCES += ../Sources/ptChoice.cpp
@@ -268,6 +273,9 @@ SOURCES += ../Sources/vcd/es_median_filter.c
 SOURCES += ../Sources/vcd/median_filter_new.c
 SOURCES += ../Sources/vcd/refinement.c
 SOURCES += ../Sources/vcd/vcd_interpolate.c
+SOURCES += ../Sources/ptImageSpot.cpp
+SOURCES += ../Sources/ptImageSpotList.cpp
+SOURCES += ../Sources/ptRepairSpot.cpp
 
 FORMS += ../Sources/ptMainWindow.ui
 

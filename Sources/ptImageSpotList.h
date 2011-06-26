@@ -24,6 +24,7 @@
 #define PTIMAGESPOTMLIST_H
 
 #include <QList>
+
 #include "ptImageSpot.h"
 
 class ptImageSpotList: public QList<ptImageSpot*> {
@@ -33,13 +34,28 @@ class ptImageSpotList: public QList<ptImageSpot*> {
 //
 ////////////////////////////////////////////////////////////////////////////////
 public:
+  // IniPrefix is a unique string that identifies this image spot list. The ini
+  // file needs this so we can store multiple lists in it.
+  ptImageSpotList(const QString IniPrefix = "");
   ~ptImageSpotList();
+
+  inline QString iniName() const { return m_IniName; }
 
   void clear();
   void removeAt(int i);
   void removeFirst();
   void removeLast();
   void replace(int i, ptImageSpot *const& NewSpot);
+  void WriteToIni();
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// PRIVATE members
+//
+////////////////////////////////////////////////////////////////////////////////
+private:
+  QString m_IniName;
+
 };
 
 #endif

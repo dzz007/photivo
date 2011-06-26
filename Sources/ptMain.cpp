@@ -47,6 +47,7 @@
 #include "ptFastBilateral.h"
 #include "ptTheme.h"
 #include "ptWiener.h"
+#include "ptImageSpotList.h"
 #include "qtsingleapplication/qtsingleapplication.h"
 #ifdef Q_OS_MAC
     #include <QFileOpenEvent>
@@ -95,6 +96,7 @@ cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
 
+ptImageSpotList RepairSpotList("Repair");
 
 //
 // The 'tee' towards the display.
@@ -2930,6 +2932,17 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     JobSettings.setValue(Locations.at(i), Settings->GetStringList(Locations.at(i)));
   }
   JobSettings.setValue("CameraColorProfile", Settings->GetString("CameraColorProfile"));*/
+
+  // list of spotrepair spots
+  if (JobSettings.contains(RepairSpotList.iniName())) {
+    RepairSpotList.clear();
+    int size = JobSettings.beginReadArray(RepairSpotList.iniName());
+    for (int i = 0; i < size; i++) {
+      JobSettings.setArrayIndex(i);
+      RepairSpotList.append(new ptImageSpot(1));
+    }
+    JobSettings.endArray();
+  }
 
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) {
