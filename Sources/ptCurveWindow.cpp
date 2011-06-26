@@ -28,8 +28,8 @@
 #include <iostream>
 using namespace std;
 
-void CB_CurveWindowManuallyChanged(const short Channel);
-void CB_CurveWindowRecalc(const short Channel);
+extern void CB_CurveWindowManuallyChanged(const short Channel);
+extern void CB_CurveWindowRecalc(const short Channel, const short ForceUpdate = 0);
 
 extern ptTheme* Theme;
 
@@ -359,7 +359,6 @@ void ptCurveWindow::ContextMenu(QMouseEvent* event) {
   Menu.exec(event->globalPos());
 }
 
-void CB_CurveWindowRecalc(const short Channel);
 void ptCurveWindow::SetSatMode() {
   if (Settings->GetInt("SatCurveMode") == (int)m_AtnAdaptive->isChecked())
     return;
