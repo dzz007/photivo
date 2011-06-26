@@ -30,12 +30,22 @@
 *******************************************************************************/
 
 #include "ptImageSpotList.h"
+#include "ptSettings.h"
+
+extern ptSettings* Settings;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ptImageSpotList destructor.
+// constructor and destructor.
 //
 ////////////////////////////////////////////////////////////////////////////////
+ptImageSpotList::ptImageSpotList(const QString IniPrefix /*= ""*/)
+: QList<ptImageSpot*>()
+{
+  m_IniName = IniPrefix + "Spot";
+}
+
 ptImageSpotList::~ptImageSpotList() {
   while (!isEmpty()) {
     delete takeFirst();
@@ -69,4 +79,25 @@ void ptImageSpotList::removeLast() {
 void ptImageSpotList::replace(int i, ptImageSpot *const& NewSpot) {
   delete at(i);
   QList::replace(i, NewSpot);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// WriteToIni()
+//
+////////////////////////////////////////////////////////////////////////////////
+void ptImageSpotList::WriteToIni() {
+  // Clear old stored spots
+  Settings->m_IniSettings->beginGroup(m_IniName);
+  Settings->m_IniSettings->remove("");
+  Settings->m_IniSettings->endGroup();
+
+  // Save the new ones
+  Settings->m_IniSettings->beginWriteArray(m_IniName);
+  for (int i = 0; i < this->count(); i++) {
+    Settings->m_IniSettings->setArrayIndex(i);
+    at(i)->WriteToIni();
+  }
+  Settings->m_IniSettings->endArray();
 }

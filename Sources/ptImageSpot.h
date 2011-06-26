@@ -61,6 +61,7 @@ protected:
 //
 ////////////////////////////////////////////////////////////////////////////////
 public:
+  ptImageSpot(const short CreateFromIni = 0);
   ptImageSpot(const short isEnabled,
               const uint spotX,
               const uint spotY,
@@ -91,6 +92,7 @@ public:
 
   // more functionality
   virtual void MoveTo(uint x, uint y);
+  virtual void WriteToIni();
 };
 
 #endif

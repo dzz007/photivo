@@ -2,7 +2,6 @@
 **
 ** Photivo
 **
-** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
@@ -21,22 +20,19 @@
 **
 *******************************************************************************/
 
-#ifndef PTDRAWLINEINTERACTION_H
-#define PTDRAWLINEINTERACTION_H
+#ifndef PTREPAIRINTERACTION_H
+#define PTREPAIRINTERACTION_H
 
-#include <QMouseEvent>
-#include <QLine>
-#include <QGraphicsLineItem>
 
 #include "ptImageInteraction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// class ptLineInteraction
+// class ptRepairInteraction
 //
 ///////////////////////////////////////////////////////////////////////////
-class ptLineInteraction : public ptImageInteraction {
+class ptRepairInteraction : public ptImageInteraction {
 Q_OBJECT
 
 
@@ -46,10 +42,8 @@ Q_OBJECT
 //
 ///////////////////////////////////////////////////////////////////////////
 public:
-  explicit ptLineInteraction(QGraphicsView* View);
-  ~ptLineInteraction();
-
-  double angle();
+  explicit ptRepairInteraction(QGraphicsView* View);
+  ~ptRepairInteraction();
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -58,12 +52,7 @@ public:
 //
 ///////////////////////////////////////////////////////////////////////////
 private:
-  QLineF* m_Line;
-  short m_NowDragging;
-  QGraphicsLineItem* m_LineItem;
-
-  void Finalize(const ptStatus status);
 
 };
 
-#endif // PTDRAWLINEINTERACTION_H
+#endif // PTREPAIRINTERACTION_H

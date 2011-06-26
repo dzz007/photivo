@@ -27,7 +27,11 @@
 **/
 
 #include <cassert>
+
 #include "ptRepairSpot.h"
+#include "ptSettings.h"
+
+extern ptSettings* Settings;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,8 +53,8 @@ ptRepairSpot::ptRepairSpot(const short isEnabled,
                            const short hasRepairer,
                            const uint repairerX,
                            const uint repairerY)
-  : ptImageSpot(isEnabled, spotX, spotY, radiusW, radiusH, angle, edgeRadius, edgeBlur, opacity),
-    m_Mode(mode), m_HasRepairer(hasRepairer)
+: ptImageSpot(isEnabled, spotX, spotY, radiusW, radiusH, angle, edgeRadius, edgeBlur, opacity),
+  m_Mode(mode), m_HasRepairer(hasRepairer)
 {
   m_RepairerPos = QPoint(repairerX, repairerY);
 }
@@ -94,4 +98,19 @@ void ptRepairSpot::MoveTo(uint x, uint y) {
   }
   m_SpotPos.setX(x);
   m_SpotPos.setY(y);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// WriteToIni
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptRepairSpot::WriteToIni() {
+  ptImageSpot::WriteToIni();
+  Settings->m_IniSettings("HasRepairer", m_HasRepairer);
+  Settings->m_IniSettings("Mode", m_Mode);
+  Settings->m_IniSettings("RepairerPosX", m_RepairerPosX);
+  Settings->m_IniSettings("RepairerPosY", m_RepairerPosY);
 }

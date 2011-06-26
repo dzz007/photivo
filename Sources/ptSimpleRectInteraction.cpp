@@ -40,6 +40,10 @@ ptSimpleRectInteraction::ptSimpleRectInteraction(QGraphicsView* View)
   m_DragDelta = new QLine();
   m_Rect = new QRectF();
   m_RectItem = NULL;
+
+  connect(this, SIGNAL(finished(ptStatus)), m_View, SLOT(finishInteraction(ptStatus)));
+  connect(m_View, SIGNAL(mouseChanged(QMouseEvent*)), this, SLOT(mouseAction(QMouseEvent*)));
+  connect(m_View, SIGNAL(keyChanged(QKeyEvent*)), this, SLOT(keyAction(QKeyEvent*)));
 }
 
 ptSimpleRectInteraction::~ptSimpleRectInteraction() {
