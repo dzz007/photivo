@@ -84,7 +84,7 @@ ptCurve*  ContrastCurve     = NULL;
 ptCurve*  Curve[16]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 ptCurve*  BackupCurve[16]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 // I don't manage to init statically following ones. Done in InitCurves.
-QStringList CurveKeys, CurveBackupKeys;
+QStringList CurveKeys, CurveToolNameKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
 
 ptChannelMixer* ChannelMixer = NULL;
@@ -242,7 +242,7 @@ void   InitChannelMixers();
 void   PreCalcTransforms();
 void   CB_ChannelMixerChoice(const QVariant Choice);
 void   CB_CurveChoice(const int Channel, const int Choice);
-void   CB_CurveWindowRecalc(const short Channel);
+void   CB_CurveWindowRecalc(const short Channel, const short ForceUpdate = 0);
 void   CB_ZoomFitButton();
 void   CB_MenuFileOpen(const short HaveFile);
 void   CB_MenuFileExit(const short);
@@ -498,38 +498,55 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Some QStringLists to be initialized, has to be the same order as the constants.
   CurveKeys << "CurveRGB"
-      << "CurveR"
-      << "CurveG"
-      << "CurveB"
-      << "CurveL"
-      << "CurveLa"
-      << "CurveLb"
-      << "CurveSaturation"
-      << "BaseCurve"
-      << "BaseCurve2"
-      << "CurveLByHue"
-      << "CurveTexture"
-      << "CurveShadowsHighlights"
-      << "CurveDenoise"
-      << "CurveHue"
-      << "CurveDenoise2";
+            << "CurveR"
+            << "CurveG"
+            << "CurveB"
+            << "CurveL"
+            << "CurveLa"
+            << "CurveLb"
+            << "CurveSaturation"
+            << "BaseCurve"
+            << "BaseCurve2"
+            << "CurveLByHue"
+            << "CurveTexture"
+            << "CurveShadowsHighlights"
+            << "CurveDenoise"
+            << "CurveHue"
+            << "CurveDenoise2";
+
+  CurveToolNameKeys << "TabRGBCurve"
+                    << "TabRToneCurve"
+                    << "TabGToneCurve"
+                    << "TabBToneCurve"
+                    << "TabLCurve"
+                    << "TabABCurves"
+                    << "TabABCurves"
+                    << "TabSaturationCurve"
+                    << "TabBaseCurve"
+                    << "TabAfterGammaCurve"
+                    << "TabLbyHue"
+                    << "TabLABTextureCurve"
+                    << "TabLABShadowsHighlights"
+                    << "TabDetailCurve"
+                    << "TabHueCurve"
+                    << "TabDenoiseCurve";
 
   CurveFileNamesKeys << "CurveFileNamesRGB"
-      << "CurveFileNamesR"
-      << "CurveFileNamesG"
-      << "CurveFileNamesB"
-      << "CurveFileNamesL"
-      << "CurveFileNamesLa"
-      << "CurveFileNamesLb"
-      << "CurveFileNamesSaturation"
-      << "CurveFileNamesBase"
-      << "CurveFileNamesBase2"
-      << "CurveFileNamesLByHue"
-      << "CurveFileNamesTexture"
-      << "CurveFileNamesShadowsHighlights"
-      << "CurveFileNamesDenoise"
-      << "CurveFileNamesHue"
-      << "CurveFileNamesDenoise2";
+                     << "CurveFileNamesR"
+                     << "CurveFileNamesG"
+                     << "CurveFileNamesB"
+                     << "CurveFileNamesL"
+                     << "CurveFileNamesLa"
+                     << "CurveFileNamesLb"
+                     << "CurveFileNamesSaturation"
+                     << "CurveFileNamesBase"
+                     << "CurveFileNamesBase2"
+                     << "CurveFileNamesLByHue"
+                     << "CurveFileNamesTexture"
+                     << "CurveFileNamesShadowsHighlights"
+                     << "CurveFileNamesDenoise"
+                     << "CurveFileNamesHue"
+                     << "CurveFileNamesDenoise2";
 
   CurveBackupKeys = CurveKeys;
 
@@ -6052,6 +6069,8 @@ void CB_BaseCurve2SaveButton() {
   CB_CurveSaveButton(ptCurveChannel_Base2);
 }
 void CB_CurveChoice(const int Channel, const int Choice) {
+  short PreviousActiveState = Settings->ToolIsActive(CurveToolNameKeys[Channel]);
+
   // Save the old Curve
   if (Settings->GetInt(CurveKeys.at(Channel))==ptCurveChoice_Manual) {
     if (!BackupCurve[Channel]) BackupCurve[Channel] = new ptCurve();
@@ -6095,7 +6114,7 @@ void CB_CurveChoice(const int Channel, const int Choice) {
   if (Settings->GetInt("JobMode") == 0)
     CurveWindow[Channel]->UpdateView(Curve[Channel]);
 
-  CB_CurveWindowRecalc(Channel);
+  CB_CurveWindowRecalc(Channel, PreviousActiveState);
 }
 
 void CB_CurveRGBChoice(const QVariant Choice) {
@@ -6162,62 +6181,13 @@ void CB_BaseCurve2Choice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_Base2,Choice.toInt());
 }
 
-void CB_CurveWindowRecalc(const short Channel) {
+void CB_CurveWindowRecalc(const short Channel, const short ForceUpdate /* =0 */) {
   if (!InStartup) {
+    short NewActiveState = Settings->ToolIsActive(CurveToolNameKeys[Channel]);
+    MainWindow->m_GroupBox->value(CurveToolNameKeys[Channel])->SetActive(NewActiveState);
     // Run the graphical pipe according to a changed curve.
-    switch(Channel) {
-      case ptCurveChannel_RGB :
-        if (Settings->ToolIsActive("TabRGBCurve")) Update(ptProcessorPhase_RGB);
-        break;
-      case ptCurveChannel_ShadowsHighlights :
-        if (Settings->ToolIsActive("TabLABShadowsHighlights")) Update(ptProcessorPhase_LabCC);
-        break;
-      case ptCurveChannel_Texture :
-        if (Settings->ToolIsActive("TabLABTextureCurve")) Update(ptProcessorPhase_LabCC);
-        break;
-      case ptCurveChannel_Denoise :
-        if (Settings->ToolIsActive("TabDetailCurve")) Update(ptProcessorPhase_LabSN);
-        break;
-      case ptCurveChannel_Denoise2 :
-        if (Settings->ToolIsActive("TabDenoiseCurve")) Update(ptProcessorPhase_LabSN);
-        break;
-      case ptCurveChannel_LByHue :
-        if (Settings->ToolIsActive("TabLbyHue")) Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_Hue :
-        if (Settings->ToolIsActive("TabHueCurve")) Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_Saturation :
-        if (Settings->ToolIsActive("TabSaturationCurve")) Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_L :
-        if (Settings->ToolIsActive("TabLCurve")) Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_a :
-        if (Settings->ToolIsActive("TabABCurves") && Settings->GetInt("CurveLa"))
-          Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_b :
-        if (Settings->ToolIsActive("TabABCurves") && Settings->GetInt("CurveLb"))
-          Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_R :
-        if (Settings->ToolIsActive("TabRToneCurve")) Update(ptProcessorPhase_EyeCandy);
-        break;
-      case ptCurveChannel_G :
-        if (Settings->ToolIsActive("TabGToneCurve")) Update(ptProcessorPhase_EyeCandy);
-        break;
-      case ptCurveChannel_B :
-        if (Settings->ToolIsActive("TabBToneCurve")) Update(ptProcessorPhase_EyeCandy);
-        break;
-      case ptCurveChannel_Base :
-        if (Settings->ToolIsActive("TabBaseCurve")) Update(ptProcessorPhase_Output);
-        break;
-      case ptCurveChannel_Base2 :
-        if (Settings->ToolIsActive("TabAfterGammaCurve")) Update(ptProcessorPhase_Output);
-        break;
-      default :
-        assert(!"Unknown curve");
+    if (ForceUpdate || NewActiveState) {
+      Update(CurveToolNameKeys[Channel]);
     }
   }
 }
@@ -6228,7 +6198,6 @@ void CB_CurveWindowManuallyChanged(const short Channel) {
   // Run the graphical pipe according to a changed curve.
   CB_CurveWindowRecalc(Channel);
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -8211,7 +8180,11 @@ void Standard_CB_SetAndRun (const QString ObjectName, const QVariant Value) {
   short PreviousActiveState = Settings->ToolIsActive(ToolName);
 
   Settings->SetValue(Key,Value);
-  if (Settings->ToolIsActive(ToolName) || PreviousActiveState) {
+
+  short NewActiveState = Settings->ToolIsActive(ToolName);
+  CurrentTool->SetActive(NewActiveState);
+
+  if (NewActiveState || PreviousActiveState) {
     Update(ToolName);
   } else {
     MainWindow->UpdateSettings();
