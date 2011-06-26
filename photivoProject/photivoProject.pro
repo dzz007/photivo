@@ -275,10 +275,11 @@ RESOURCES += ../photivo.qrc
 
 SOURCES += ../Sources/ptMessageBox.cpp
 RESOURCES = ../qrc/photivo.qrc
-TRANSLATIONS += ../Translations/photivo_Deutsch.ts
-TRANSLATIONS += ../Translations/photivo_Italiano.ts
+TRANSLATIONS += ../Translations/photivo_Dutch.ts
+TRANSLATIONS += ../Translations/photivo_German.ts
+TRANSLATIONS += ../Translations/photivo_Italian.ts
 TRANSLATIONS += ../Translations/photivo_Russian.ts
-TRANSLATIONS += ../Translations/photivo_Français.ts
+TRANSLATIONS += ../Translations/photivo_French.ts
 
 
 ###############################################################################
