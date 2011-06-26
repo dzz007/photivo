@@ -1,0 +1,15 @@
+;
+; photivo Curve File
+;
+; This is an experimental base curve for Canon cameras.
+; Original values are from the darktable project.
+;
+Magic FLOSSCurveFile
+IntendedChannel 8
+CurveType 1
+0 0
+28 29
+120 232
+459 747
+858 967
+1000 1000
