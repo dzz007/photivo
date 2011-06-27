@@ -255,7 +255,7 @@ short  WriteSettingsFile(const QString FileName, const short IsJobFile = 0);
 void   SetBackgroundColor(int SetIt);
 void   CB_StyleChoice(const QVariant Choice);
 void   CB_SliderWidthInput(const QVariant Value);
-void GimpExport(const short UsePipe);
+void Export(const short mode);
 void Update(short Phase,
             short SubPhase      = -1,
             short WithIdentify  = 1,
@@ -1274,8 +1274,8 @@ void Update(short Phase,
     // write output
     WriteOut();
   } else if (Phase == ptProcessorPhase_ToGimp) {
-    // export to gimp
-    GimpExport(1);
+    // export
+    Export(ptExportMode_GimpPipe);
   } else {
     // should not happen!
     assert(0);
@@ -8087,7 +8087,20 @@ void CB_ImageRatingInput(const QVariant Value) {
   TheProcessor->ReadExifBuffer();
 }
 
+inline void BlockExport(bool Block) {
+  if (!Block) QApplication::processEvents();
+  MainWindow->ToGimpButton->setEnabled(!Block);
+  QApplication::processEvents();
+}
+
+inline void BlockSave(bool Block) {
+  if (!Block) QApplication::processEvents();
+  MainWindow->WritePipeButton->setEnabled(!Block);
+  QApplication::processEvents();
+}
+
 void SaveOutput(const short mode) {
+  BlockSave(true);
   if (mode==ptOutputMode_Full) {
     CB_MenuFileSaveOutput();
   } else if (mode==ptOutputMode_Pipe) {
@@ -8097,14 +8110,18 @@ void SaveOutput(const short mode) {
   } else if (mode==ptOutputMode_Settingsfile) {
     CB_MenuFileWriteSettings();
   }
+  BlockSave(false);
 }
 
 void Export(const short mode) {
+  BlockExport(true);
   if (mode==ptExportMode_GimpPipe && Settings->GetInt("ExportToGimp")) {
     GimpExport(1);
+    BlockExport(false);
     return;
   } else if (mode==ptExportMode_GimpFull && Settings->GetInt("ExportToGimp")) {
     GimpExport(0);
+    BlockExport(false);
     return;
   }
 
@@ -8131,6 +8148,7 @@ void Export(const short mode) {
   ExportArguments << ImageFileName;
   QProcess* ExportProcess = new QProcess();
   ExportProcess->startDetached(ExportCommand,ExportArguments);
+  BlockExport(false);
 }
 
 void CB_WriteOutputButton() {
