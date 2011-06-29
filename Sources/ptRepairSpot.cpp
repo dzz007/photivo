@@ -54,7 +54,8 @@ ptRepairSpot::ptRepairSpot(const short isEnabled,
                            const uint repairerX,
                            const uint repairerY)
 : ptImageSpot(isEnabled, spotX, spotY, radiusW, radiusH, angle, edgeRadius, edgeBlur, opacity),
-  m_Mode(mode), m_HasRepairer(hasRepairer)
+  m_HasRepairer(hasRepairer),
+  m_Mode(mode)
 {
   m_RepairerPos = QPoint(repairerX, repairerY);
 }
@@ -109,8 +110,8 @@ void ptRepairSpot::MoveTo(uint x, uint y) {
 
 void ptRepairSpot::WriteToIni() {
   ptImageSpot::WriteToIni();
-  Settings->m_IniSettings("HasRepairer", m_HasRepairer);
-  Settings->m_IniSettings("Mode", m_Mode);
-  Settings->m_IniSettings("RepairerPosX", m_RepairerPosX);
-  Settings->m_IniSettings("RepairerPosY", m_RepairerPosY);
+  Settings->m_IniSettings->setValue("HasRepairer", m_HasRepairer);
+  Settings->m_IniSettings->setValue("Mode", m_Mode);
+  Settings->m_IniSettings->setValue("RepairerPosX", m_RepairerPos.x());
+  Settings->m_IniSettings->setValue("RepairerPosY", m_RepairerPos.y());
 }

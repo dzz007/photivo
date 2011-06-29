@@ -56,11 +56,11 @@ ptImageSpot::ptImageSpot(const short isEnabled,
                          const uint edgeRadius,
                          const float edgeBlur,
                          const float opacity)
-  : m_IsEnabled(isEnabled),
+  : m_Angle(angle),
+    m_EdgeRadius(edgeRadius),
+    m_IsEnabled(isEnabled),
     m_RadiusW(radiusW),
-    m_RadiusH(radiusH),
-    m_Angle(angle),
-    m_EdgeRadius(edgeRadius)
+    m_RadiusH(radiusH)
 {
   m_init = 1;
   m_SpotPos = QPoint(spotX, spotY);
