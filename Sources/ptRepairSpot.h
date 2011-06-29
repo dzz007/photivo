@@ -75,6 +75,7 @@ public:
   void MoveRepairerTo(uint x, uint y);
   void MoveSpotTo(uint x, uint y);
   void MoveTo(uint x, uint y);   // move both spot and repairer
+  void WriteToIni();
 };
 
 #endif

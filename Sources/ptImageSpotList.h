@@ -24,6 +24,7 @@
 #define PTIMAGESPOTMLIST_H
 
 #include <QList>
+#include <QString>
 
 #include "ptImageSpot.h"
 
@@ -55,6 +56,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 private:
   QString m_IniName;
+
 
 };
 

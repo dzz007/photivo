@@ -64,6 +64,16 @@ private:
 
   void Finalize(const ptStatus status);
 
+
+///////////////////////////////////////////////////////////////////////////
+//
+// PRIVATE slots
+//
+///////////////////////////////////////////////////////////////////////////
+private slots:
+  void keyAction(QKeyEvent* event);
+  void mouseAction(QMouseEvent* event);
+
 };
 
 #endif // PTDRAWLINEINTERACTION_H
