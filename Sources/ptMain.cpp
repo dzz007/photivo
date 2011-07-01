@@ -986,6 +986,8 @@ void CB_Event0() {
     Settings->SetValue("FavouriteTools", Temp);
   }
 
+  HistogramWindow->FillLookUp();
+
   InStartup = 0;
 //prepare for further QFileOpenEvent(s)
 #ifdef Q_OS_MAC

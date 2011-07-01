@@ -203,6 +203,7 @@ void ptHistogramWindow::ResizeTimerExpired() {
   // Create side effect for recalibrating the maximum
   m_PreviousHistogramGamma = -1;
 
+  FillLookUp();
   // m_RelatedImage enforces update, even if it is the same image.
   UpdateView(m_RelatedImage);
 }
@@ -433,8 +434,6 @@ void ptHistogramWindow::FillLookUp() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptHistogramWindow::UpdateView(const ptImage* NewRelatedImage) {
-
-  FillLookUp();
 
   if (NewRelatedImage) m_RelatedImage = NewRelatedImage;
   if (!m_RelatedImage) return;
