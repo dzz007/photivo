@@ -90,7 +90,7 @@ unix {
   LIBS += $$system(GraphicsMagick++-config --libs)
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
-  PREFIX = $$system(more ./install_prefix)
+  PREFIX = $$system(cat ./install_prefix)
   QMAKE_CXXFLAGS_DEBUG += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
