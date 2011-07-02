@@ -32,7 +32,8 @@
 #
 ######################################################################
 
-CONFIG += release silent
+CONFIG += silent
+#CONFIG += release
 #CONFIG += debug
 TEMPLATE = app
 TARGET = photivo
@@ -95,7 +96,7 @@ unix {
   QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
   QMAKE_CFLAGS_RELEASE += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_POST_LINK=strip $(TARGET)
+  #QMAKE_POST_LINK=strip $(TARGET)
   QT += network
 }
 win32 {
