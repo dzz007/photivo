@@ -4,8 +4,8 @@ EXECUTE_PROCESS(COMMAND /bin/sh -c "cd ${CMAKE_CURRENT_SOURCE_DIR}/photivoProjec
 
 PROJECT(photivo)
 find_package(PkgConfig REQUIRED)
-find_package(JPEG REQUIRED) 
-find_package(Qt4 REQUIRED) 
+find_package(JPEG REQUIRED)
+find_package(Qt4 REQUIRED)
 set(QT_USE_QTNETWORK 1)
 set(QT_USE_QTDESIGNER 1)
 include(${QT_USE_FILE})
@@ -21,8 +21,9 @@ pkg_check_modules(GIMP gimp-2.0)
 pkg_check_modules(FFTW3 fftw3)
 
 ADD_DEFINITIONS("-DAPPVERSION=\"${APPVERSION}\"")
+ADD_DEFINITIONS("-DPREFIX=${CMAKE_INSTALL_PREFIX}")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Wall -O2 -g -ffast-math -ftree-vectorize -fopenmp")
-set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O4 -DNDEBUG -ffast-math -ftree-vectorize -fopenmp") 
+set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O4 -DNDEBUG -ffast-math -ftree-vectorize -fopenmp")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Wall -O2 -g -ffast-math -ftree-vectorize -fopenmp")
 set(CMAKE_C_FLAGS_RELEASE "-Wall -O4 -DNDEBUG -ffast-math -ftree-vectorize -fopenmp")
 set(CMAKE_L_FLAGS_RELWITHDEBINFO "-rdynamic")
@@ -35,7 +36,9 @@ link_directories( ${GLIB2_LIBRARY_DIRS} ${JPEG_LIBRARY_DIRS} ${EXIV2_LIBRARY_DIR
                            ${GMW_LIBRARY_DIRS} ${GTK2_LIBRARY_DIRS} ${GIMP_LIBRARY_DIRS} ${FFTW3_LIBRARY_DIRS} )
 
 set(photivo_MOC_HDRS  Sources/ptVisibleToolsView.h Sources/ptMainWindow.h Sources/ptMessageBox.h Sources/ptCurveWindow.h Sources/ptHistogramWindow.h Sources/ptViewWindow.h Sources/ptInput.h
-  Sources/ptChoice.h Sources/ptCheck.h Sources/ptGroupBox.h Sources/ptSlider.h Sources/qtsingleapplication/qtsingleapplication.h Sources/qtsingleapplication/qtlocalpeer.h)
+  Sources/ptChoice.h Sources/ptCheck.h Sources/ptGroupBox.h Sources/ptSlider.h Sources/qtsingleapplication/qtsingleapplication.h Sources/qtsingleapplication/qtlocalpeer.h
+  Sources/ptGridInteraction.h Sources/ptImageInteraction.h Sources/ptLineInteraction.h Sources/ptReportOverlay.h Sources/ptRichRectInteraction.h Sources/ptSimpleRectInteraction.h
+)
 
 set(photivo_SRCS  Sources/ptCurve.cpp Sources/ptVisibleToolsView.cpp Sources/ptChannelMixer.cpp Sources/ptDcRaw.cpp Sources/ptError.cpp Sources/ptGuiOptions.cpp
   Sources/ptSettings.cpp Sources/ptImage.cpp Sources/ptImage_DRC.cpp Sources/ptImage_EAW.cpp Sources/ptImage_GM.cpp Sources/ptImage_GMC.cpp Sources/ptImage_Pyramid.cpp
@@ -43,6 +46,7 @@ set(photivo_SRCS  Sources/ptCurve.cpp Sources/ptVisibleToolsView.cpp Sources/ptC
   Sources/ptMainWindow.cpp Sources/ptMessageBox.cpp Sources/ptRGBTemperature.cpp Sources/ptWhiteBalances.cpp Sources/ptCurveWindow.cpp Sources/ptHistogramWindow.cpp Sources/ptRefocusMatrix.cpp
   Sources/ptViewWindow.cpp Sources/ptProcessor.cpp Sources/ptCimg.cpp Sources/ptFastBilateral.cpp Sources/ptWiener.cpp Sources/ptInput.cpp Sources/ptChoice.cpp Sources/ptCheck.cpp
   Sources/ptCalloc.cpp Sources/ptGroupBox.cpp Sources/ptSlider.cpp Sources/ptTheme.cpp Sources/qtsingleapplication/qtsingleapplication.cpp Sources/qtsingleapplication/qtlocalpeer.cpp
+  Sources/ptGridInteraction.cpp Sources/ptImageInteraction.cpp Sources/ptLineInteraction.cpp Sources/ptReportOverlay.cpp Sources/ptRichRectInteraction.cpp Sources/ptSimpleRectInteraction.cpp
   Sources/clapack/xerbla.c Sources/clapack/open.c Sources/clapack/ieeeck.c Sources/clapack/dtrsm.c Sources/clapack/util.c Sources/clapack/wsfe.c
   Sources/clapack/s_cmp.c Sources/clapack/dgetrs.c Sources/clapack/ptaswp.c Sources/clapack/ilaenv.c Sources/clapack/s_stop.c Sources/clapack/dgemm.c Sources/clapack/s_copy.c
   Sources/clapack/abort_.c Sources/clapack/dgesv.c Sources/clapack/dgetrf.c Sources/clapack/fmtlib.c Sources/clapack/sig_die.c Sources/clapack/idamax.c Sources/clapack/close.c
