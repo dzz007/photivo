@@ -28,10 +28,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 ptRepairInteraction::ptRepairInteraction(QGraphicsView* View)
-: ptImageInteraction(View)
+: ptImageInteraction(View),
+  m_CfgWindow(new ptRepairInteractionUI(View))
 {
 }
 
 ptRepairInteraction::~ptRepairInteraction() {
-
+  delete m_CfgWindow;
 }

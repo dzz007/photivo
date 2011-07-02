@@ -23,9 +23,10 @@
 #ifndef PTREPAIRINTERACTION_H
 #define PTREPAIRINTERACTION_H
 
+#include <QDockWidget>
 
 #include "ptImageInteraction.h"
-
+#include "ptRepairInteractionUI.h"
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -52,7 +53,7 @@ public:
 //
 ///////////////////////////////////////////////////////////////////////////
 private:
-
+  ptRepairInteractionUI* m_CfgWindow;
 };
 
 #endif // PTREPAIRINTERACTION_H
