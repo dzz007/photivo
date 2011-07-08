@@ -2532,22 +2532,26 @@ void WriteOut() {
 
   ReportProgress(QObject::tr("Writing output"));
 
-  OutImage->ptGMCWriteImage(
-      Settings->GetString("OutputFileName").toAscii().data(),
-      Settings->GetInt("SaveFormat"),
-      Settings->GetInt("SaveQuality"),
-      Settings->GetInt("SaveSampling"),
-      Settings->GetInt("SaveResolution"),
-      Settings->GetString("OutputColorProfile").toAscii().data(),
-      Settings->GetInt("OutputColorProfileIntent"));
+  bool FileWritten =  OutImage->ptGMCWriteImage(
+    Settings->GetString("OutputFileName").toAscii().data(),
+    Settings->GetInt("SaveFormat"),
+    Settings->GetInt("SaveQuality"),
+    Settings->GetInt("SaveSampling"),
+    Settings->GetInt("SaveResolution"),
+    Settings->GetString("OutputColorProfile").toAscii().data(),
+    Settings->GetInt("OutputColorProfileIntent"));
 
-  ReportProgress(QObject::tr("Writing output (exif)"));
+  if (!FileWritten) {
+    ptMessageBox::warning(MainWindow,"GraphicsMagick Error","No output file written.");
+  } else {
+    ReportProgress(QObject::tr("Writing output (exif)"));
 
-  if (Settings->GetInt("IncludeExif") &&
-      TheProcessor->m_ExifBufferLength) {
-    WriteExif(Settings->GetString("OutputFileName"),
-        TheProcessor->m_ExifBuffer,
-        TheProcessor->m_ExifBufferLength);
+    if (Settings->GetInt("IncludeExif") &&
+        TheProcessor->m_ExifBufferLength) {
+      WriteExif(Settings->GetString("OutputFileName"),
+          TheProcessor->m_ExifBuffer,
+          TheProcessor->m_ExifBufferLength);
+    }
   }
 
   if (Settings->GetInt("JobMode") == 0) delete OutImage;
