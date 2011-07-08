@@ -588,13 +588,13 @@ ptImage* ptGMUnsharp(const double Radius, const double Amount, const double Thre
 ptImage* ptGMNormalize(const double Opacity);
 
 // ptImage_GMC.cpp
-ptImage* ptGMCWriteImage(const char* FileName,
-                         const short Format,
-                         const int Quality,
-                         const int Sampling,
-                         const int Resolution,
-                         const char* ColorProfileFileName,
-                         const int Intent);
+bool ptGMCWriteImage(const char* FileName,
+                     const short Format,
+                     const int Quality,
+                     const int Sampling,
+                     const int Resolution,
+                     const char* ColorProfileFileName,
+                     const int Intent);
 
 // ptImage_Pyramid.cpp
 ptImage* dirpyrLab_denoise(const int luma,

@@ -35,13 +35,13 @@
 extern float ToFloatTable[0x10000];
 
 // Write Image
-ptImage* ptImage::ptGMCWriteImage(const char* FileName,
-                                  const short Format,
-                                  const int Quality,
-                                  const int Sampling,
-                                  const int Resolution,
-                                  const char* ColorProfileFileName,
-                                  const int Intent) {
+bool ptImage::ptGMCWriteImage(const char* FileName,
+                              const short Format,
+                              const int Quality,
+                              const int Sampling,
+                              const int Resolution,
+                              const char* ColorProfileFileName,
+                              const int Intent) {
 
   long unsigned int Width  = m_Width;
   long unsigned int Height = m_Height;
@@ -136,9 +136,9 @@ ptImage* ptImage::ptGMCWriteImage(const char* FileName,
   MagickSetImageUnits(mw, PixelsPerInchResolution);
   MagickSetImageResolution(mw, Resolution, Resolution);
 
-  MagickWriteImage(mw, FileName);
+  bool Result = MagickWriteImage(mw, FileName);
   DestroyMagickWand(mw);
-  return this;
+  return Result;
 }
 
 
