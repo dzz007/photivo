@@ -370,13 +370,13 @@ void ptHistogramWindow::CalculateHistogram() {
       // baselines. A grey colour.
       Index = RowLimit*m_Image8->m_Width+i+HistogramMargin;
       m_Image8->m_Image[Index][0] = 0x80;
-      m_Image8->m_Image[Index][1] = 0x80;/*
-      m_Image8->m_Image[Index][2] = 0x80;*/
+      m_Image8->m_Image[Index][1] = 0x80;
+      m_Image8->m_Image[Index][2] = 0x80;
       // Average line.
       r = HistoAverage/(double)(m_HistoMax);
       if (r>=0.99) r=0.99; // Safety.
       Row = RowLimit-(uint16_t)(r*WidgetHeight);
-       if (Row<0) Row = 0;
+      // if (Row<0) Row = 0;
       if (Row >= WidgetHeight) Row=WidgetHeight-1;
       Index = Row*m_Image8->m_Width+i+HistogramMargin;
       m_Image8->m_Image[Index][0] = 0xa0;
