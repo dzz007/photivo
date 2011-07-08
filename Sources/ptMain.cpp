@@ -2314,177 +2314,167 @@ void PrepareTags(const QString TagsInput) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBufferLength) {
-
-  std::string FileType=FileName;
-  int Ending=FileType.rfind(".");
-  FileType.erase(0,Ending+1);
-  // since the next line is not working, here just manual...
-  // std::transform(test.begin(), test.end(), test.begin(), std::tolower);
-
-  std::string Extensions[] = {"jpg", "JPG", "Jpg", "jpeg", "Jpeg", "JPEG",
-            "tif", "TIF", "Tif", "tiff", "Tiff", "TIFF"};
-  int doexif = 0;
-  for (int i=0; i<12; i++) if (!FileType.compare(Extensions[i])) doexif = 1;
+void WriteExif(const QString FileName, uint8_t* ExifBuffer, const unsigned ExifBufferLength) {
 
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-  if (doexif && ExifBufferLength) {
+  try {
+    if (ExifBufferLength) {
 
-    // Open the raw again for full exif data
-    //~ Exiv2::Image::AutoPtr InImage =
-    //~ Exiv2::ImageFactory::open((Settings->GetStringList("InputFileNameList"))[0].toAscii().data());
-    //~ assert(InImage.get() != 0);
-    //~ InImage->readMetadata();
+      // Open the raw again for full exif data
+      //~ Exiv2::Image::AutoPtr InImage =
+      //~ Exiv2::ImageFactory::open((Settings->GetStringList("InputFileNameList"))[0].toAscii().data());
+      //~ assert(InImage.get() != 0);
+      //~ InImage->readMetadata();
 
-    const unsigned char ExifHeader[] = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
+      const unsigned char ExifHeader[] = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
 
-    unsigned char*  Buffer;
-    unsigned long   BufferLength;
+      unsigned char*  Buffer;
+      unsigned long   BufferLength;
 
-    BufferLength = ExifBufferLength-sizeof(ExifHeader);
+      BufferLength = ExifBufferLength-sizeof(ExifHeader);
 
-    Buffer = (unsigned char*) MALLOC(BufferLength);
-    ptMemoryError(Buffer,__FILE__,__LINE__);
+      Buffer = (unsigned char*) MALLOC(BufferLength);
+      ptMemoryError(Buffer,__FILE__,__LINE__);
 
-    Exiv2::ExifData exifData;
+      Exiv2::ExifData exifData;
 
-    memcpy(Buffer,ExifBuffer+sizeof(ExifHeader), BufferLength);
+      memcpy(Buffer,ExifBuffer+sizeof(ExifHeader), BufferLength);
 
-    Exiv2::ExifParser::decode(exifData, Buffer, BufferLength);
+      Exiv2::ExifParser::decode(exifData, Buffer, BufferLength);
 
-    // Reset orientation
-    Exiv2::ExifData::iterator pos = exifData.begin();
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Orientation")))
-    != exifData.end() ) {
-      pos->setValue("1"); // Normal orientation
-    }
-
-    // Code from UFRaw, necessary for Tiff files
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageLength")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.BitsPerSample")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Compression")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.PhotometricInterpretation")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.FillOrder")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.SamplesPerPixel")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.StripOffsets")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.RowsPerStrip")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.StripByteCounts")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.XResolution")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.YResolution")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.PlanarConfiguration")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ResolutionUnit")))
-    != exifData.end() )
-      exifData.erase(pos);
-
-    if (Settings->GetInt("EraseExifThumbnail")) {
-#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-      Exiv2::ExifThumb Thumb(exifData);
-      Thumb.erase();
-#else
-      exifData.eraseThumbnail();
-#endif
-    }
-
-    std::string JpegExtensions[] = {"jpg", "JPG", "Jpg", "jpeg", "Jpeg", "JPEG"};
-    short deleteDNGdata = 0;
-    for (int i=0; i<6; i++) if (!FileType.compare(JpegExtensions[i])) deleteDNGdata = 1;
-
-    Exiv2::Image::AutoPtr Exiv2Image = Exiv2::ImageFactory::open(FileName);
-    assert(Exiv2Image.get() != 0);
-
-    Exiv2Image->readMetadata();
-    Exiv2::ExifData &outExifData = Exiv2Image->exifData();
-    pos = exifData.begin();
-    while ( !exifData.empty() ) {
-      if (deleteDNGdata == 0 || (*pos).key() != "Exif.Image.DNGPrivateData") {
-        outExifData.add(*pos);
+      // Reset orientation
+      Exiv2::ExifData::iterator pos = exifData.begin();
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Orientation")))
+      != exifData.end() ) {
+        pos->setValue("1"); // Normal orientation
       }
-      pos = exifData.erase(pos);
-    }
 
-    if (Settings->GetInt("JobMode") == 0)
-      PrepareTags(MainWindow->TagsEditWidget->toPlainText());
+      // Code from UFRaw, necessary for Tiff files
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageLength")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.BitsPerSample")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Compression")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.PhotometricInterpretation")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.FillOrder")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.SamplesPerPixel")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.StripOffsets")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.RowsPerStrip")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.StripByteCounts")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.XResolution")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.YResolution")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.PlanarConfiguration")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ResolutionUnit")))
+      != exifData.end() )
+        exifData.erase(pos);
 
-    // IPTC data
-    Exiv2::IptcData iptcData;
+      if (Settings->GetInt("EraseExifThumbnail")) {
+#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
+        Exiv2::ExifThumb Thumb(exifData);
+        Thumb.erase();
+#else
+        exifData.eraseThumbnail();
+#endif
+      }
 
-    QStringList Tags = Settings->GetStringList("TagsList");
-    QStringList DigikamTags = Settings->GetStringList("DigikamTagsList");
+      QString JpegExtensions[] = {"jpg", "JPG", "Jpg", "jpeg", "Jpeg", "JPEG"};
+      short deleteDNGdata = 0;
+      for (int i=0; i<6; i++) if (!FileName.endsWith(JpegExtensions[i])) deleteDNGdata = 1;
 
-    Exiv2::StringValue StringValue;
-    for (int i = 0; i < Tags.size(); i++) {
-      StringValue.read(Tags.at(i).toStdString());
-      iptcData.add(Exiv2::IptcKey("Iptc.Application2.Keywords"), &StringValue);
-    }
+      Exiv2::Image::AutoPtr Exiv2Image = Exiv2::ImageFactory::open(FileName.toAscii().data());
 
-    // XMP data
-    Exiv2::XmpData xmpData;
+      Exiv2Image->readMetadata();
+      Exiv2::ExifData &outExifData = Exiv2Image->exifData();
+      pos = exifData.begin();
+      while ( !exifData.empty() ) {
+        if (deleteDNGdata == 0 || (*pos).key() != "Exif.Image.DNGPrivateData") {
+          outExifData.add(*pos);
+        }
+        pos = exifData.erase(pos);
+      }
 
-    if (Settings->GetInt("ImageRating"))
-      xmpData["Xmp.xmp.Rating"] = Settings->GetInt("ImageRating");
-    for (int i = 0; i < Tags.size(); i++) {
-      xmpData["Xmp.dc.subject"] = Tags.at(i).toStdString();
-    }
-    for (int i = 0; i < DigikamTags.size(); i++) {
-      xmpData["Xmp.digiKam.TagsList"] = DigikamTags.at(i).toStdString();
-    }
+      if (Settings->GetInt("JobMode") == 0)
+        PrepareTags(MainWindow->TagsEditWidget->toPlainText());
 
-    // Program name
-    iptcData["Iptc.Application2.Program"] = ProgramName;
-    iptcData["Iptc.Application2.ProgramVersion"] = "idle";
-    xmpData["Xmp.xmp.CreatorTool"] = ProgramName;
-    xmpData["Xmp.tiff.Software"] = ProgramName;
+      // IPTC data
+      Exiv2::IptcData iptcData;
 
-    // Title
-    if (Settings->GetInt("JobMode") == 0)
-      Settings->SetValue("ImageTitle",MainWindow->TitleEditWidget->text());
-    QString TitleWorking = Settings->GetString("ImageTitle");
-    while (TitleWorking.contains("  "))
-      TitleWorking.replace("  "," ");
-    if (TitleWorking != "" && TitleWorking != " ") {
-      outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
-      iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
-      xmpData["Xmp.dc.description"] = TitleWorking.toStdString();
-      xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
-      xmpData["Xmp.tiff.ImageDescription"] = TitleWorking.toStdString();
-    }
+      QStringList Tags = Settings->GetStringList("TagsList");
+      QStringList DigikamTags = Settings->GetStringList("DigikamTagsList");
 
-    try {
+      Exiv2::StringValue StringValue;
+      for (int i = 0; i < Tags.size(); i++) {
+        StringValue.read(Tags.at(i).toStdString());
+        iptcData.add(Exiv2::IptcKey("Iptc.Application2.Keywords"), &StringValue);
+      }
+
+      // XMP data
+      Exiv2::XmpData xmpData;
+
+      if (Settings->GetInt("ImageRating"))
+        xmpData["Xmp.xmp.Rating"] = Settings->GetInt("ImageRating");
+      for (int i = 0; i < Tags.size(); i++) {
+        xmpData["Xmp.dc.subject"] = Tags.at(i).toStdString();
+      }
+      for (int i = 0; i < DigikamTags.size(); i++) {
+        xmpData["Xmp.digiKam.TagsList"] = DigikamTags.at(i).toStdString();
+      }
+
+      // Program name
+      iptcData["Iptc.Application2.Program"] = ProgramName;
+      iptcData["Iptc.Application2.ProgramVersion"] = "idle";
+      xmpData["Xmp.xmp.CreatorTool"] = ProgramName;
+      xmpData["Xmp.tiff.Software"] = ProgramName;
+
+      // Title
+      if (Settings->GetInt("JobMode") == 0)
+        Settings->SetValue("ImageTitle",MainWindow->TitleEditWidget->text());
+      QString TitleWorking = Settings->GetString("ImageTitle");
+      while (TitleWorking.contains("  "))
+        TitleWorking.replace("  "," ");
+      if (TitleWorking != "" && TitleWorking != " ") {
+        outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
+        iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
+        xmpData["Xmp.dc.description"] = TitleWorking.toStdString();
+        xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
+        xmpData["Xmp.tiff.ImageDescription"] = TitleWorking.toStdString();
+      }
+
       Exiv2Image->setExifData(outExifData);
       Exiv2Image->setIptcData(iptcData);
       Exiv2Image->setXmpData(xmpData);
       Exiv2Image->writeMetadata();
-    } catch (Exiv2::AnyError& Error) {
+    }
+  } catch (Exiv2::AnyError& Error) {
+    if (Settings->GetInt("JobMode") == 0) {
+      ptMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!\nCaught Exiv2 exception '" + QString(Error.what()) + "'\n");
+    } else {
       std::cout << "Caught Exiv2 exception '" << Error << "'\n";
-      if (Settings->GetInt("JobMode") == 0)
-        ptMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!");
     }
   }
 #endif
@@ -2555,7 +2545,7 @@ void WriteOut() {
 
   if (Settings->GetInt("IncludeExif") &&
       TheProcessor->m_ExifBufferLength) {
-    WriteExif(Settings->GetString("OutputFileName").toAscii().data(),
+    WriteExif(Settings->GetString("OutputFileName"),
         TheProcessor->m_ExifBuffer,
         TheProcessor->m_ExifBufferLength);
   }
