@@ -971,6 +971,7 @@ void CB_Event0() {
     }
     MainWindow->UpdateSettings();
     ViewWindow->setFocus();
+    HistogramWindow->FillLookUp();
   }
 
   if (Settings->GetStringList("FavouriteTools") == QStringList()) {
@@ -985,8 +986,6 @@ void CB_Event0() {
          << "TabOutContrast";
     Settings->SetValue("FavouriteTools", Temp);
   }
-
-  HistogramWindow->FillLookUp();
 
   InStartup = 0;
 //prepare for further QFileOpenEvent(s)
