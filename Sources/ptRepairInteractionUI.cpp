@@ -21,50 +21,92 @@
 *******************************************************************************/
 
 #include "ptRepairInteractionUI.h"
+#include "ptTheme.h"
+#include "ptGuiOptions.h"
 
-ptRepairInteractionUI::ptRepairInteractionUI(QObject *parent)
+extern ptTheme* Theme;
+
+ptRepairInteractionUI::ptRepairInteractionUI(QWidget* parent)
 : QDockWidget(parent)
 {
-  DockContainer = QWidget(this);
-  DockContainer.setObjectName("DockContainer");
+  this->setStyle(Theme->ptStyle);
+  this->setStyleSheet(Theme->ptStyleSheet);
+  DockContainer = new QWidget(this);
+  DockContainer->setObjectName("DockContainer");
+  QVBoxLayout* MainVLayout = new QVBoxLayout();
+  DockContainer->setLayout(MainVLayout);
 
-  GeneralHLayout = QHBoxLayout(DockContainer);
-  GeneralHLayout.setObjectName("GeneralHLayout");
-  SpotEnabled     = ptCheck(DockContainer,  "SpotEnabled",     "DockContainer",    0, tr("Enabled"), tr(""));
-  Algorithm       = ptChoice(DockContainer, "Algorithm",       "GeneralHLayout",   1, 0, , tr("Repair mode"));
-  HSpacer1 = QSpacerItem(20, 10, QSizePolicy::Expanding);
+  // Global enable and algorithm choice
+  GeneralHLayout = new QHBoxLayout(DockContainer);
+  GeneralHLayout->setObjectName("GeneralHLayout");
 
-  // TODO SR: ptGroupBox SpotGroup
-  SpotGroupWidget = QWidget(SpotGroup);
-  SpotPosHLayout = QHBoxLayout(SpotGroupWidget);
-  SpotPosHLayout.setObjectName("SpotPosHLayout");
-  SpotPosLabel = QLabel(tr("Position"), SpotPosHLayout);
-  SpotPosX = ptInput(DockContainer, "SpotPosX", "SpotPosHLayout", 0, 0, 1, 0, 0, 10000, 1, 0, tr("left"), tr("Horizontal position of spot's center"), 0);
-  SpotPosY = ptInput(DockContainer, "SpotPosY", "SpotPosHLayout", 0, 0, 1, 0, 0, 10000, 1, 0, tr("top"), tr("Vertical position of spot's center"), 0);
-
-  RadiusHLayout = QHBoxLayout(SpotGroupWidget);
-  RadiusHLayout.setObjectName("RadiusHLayout");
-  RadiusLabel = QLabel(tr("Radius"), RadiusHLayout);
-  RadiusW = ptInput(DockContainer, "RadiusW", "RadiusHLayout", 0, 0, 1, 0, 0, 5000, 1, 0, tr("w"), tr("Width radius"), 0);
-  RadiusH = ptInput(DockContainer, "RadiusH", "RadiusHLayout", 0, 0, 1, 0, 0, 5000, 1, 0, tr("h"), tr("Height radius"), 0);
-
-  Angle = ptInput(DockContainer, "Angle", "SpotGroupWidget", 1, 0, 1, 0.0, -180.0, 180.0, 1, 1, tr("Angle"), tr("Rotate the spot"), 0);
-
-  EdgeRadHLayout = QHBoxLayout(SpotGroupWidget);
-  EdgeRadHLayout.setObjectName("EdgeRadHLayout");
-  EdgeRadLabel = QLabel(tr("Edge radius"), EdgeRadHLayout);
-  EdgeRadius = ptInput(DockContainer, "EdgeRadius", "EdgeRadHLayout", 0, 0, 1, 0, 0, 5000, 1, 0, tr("px"), tr("Radius of the spot's edge"), 0);
-
-  EdgeBlur = ptInput(DockContainer, "EdgeBlur", "SpotGroupWidget", 1, 0, 1, 0.0, 0.0, 1.0, 0.05, 2, tr("Edge blur"), tr("Strength of edge blurring"), 0);
-  Opacity =  ptInput(DockContainer, "Opacity",  "SpotGroupWidget", 1, 0, 1, 1.0, 0.0, 1.0, 0.05, 2, tr("Opacity"), tr("Opacity"), 0);
+  SpotEnabled = new ptCheck(DockContainer,  "SpotEnabled", DockContainer->objectName(),
+                            0, tr("Enabled"), tr(""));
+  Algorithm = new ptChoice(DockContainer, "Algorithm", DockContainer->objectName(),
+                           1, ptSpotRepairAlgo_Copy, GuiOptions->SpotRepairAlgorithm,
+                           tr("Repair mode"), ptTimeout_Input);
+  GeneralHLayout->addWidget(SpotEnabled);
+  GeneralHLayout->addWidget(Algorithm);
+  GeneralHLayout->addStretch();
 
 
-  // TODO SR: ptGroupBox RepairerGroup;
-  RepGroupWidget = QWidget(RepairerGroup);
-  RepairerEnabled = ptCheck(DockContainer, "RepairerEnabled", "RepGroupWidget", 0, tr("Enabled"), tr("Toggle repairer spot"));
-  RepPosHLayout = QHBoxLayout(RepGroupWidget);
-  RepPosHLayout.setObjectName("RepPosHLayout");
-  RepPosLabel = QLabel(tr("Position"), RepPosHLayout);
-  SpotPosX = ptInput(DockContainer, "RepPosX", "RepPosHLayout", 0, 0, 1, 0, 0, 10000, 1, 0, tr("left"), tr("Horizontal position of repairer's center"), 0);
-  SpotPosY = ptInput(DockContainer, "RepPosY", "RepPosHLayout", 0, 0, 1, 0, 0, 10000, 1, 0, tr("top"), tr("Vertical position of repairer's center"), 0);
+  // Controls for the spot that is to be repaired
+  SpotGroup = new ptBaseFoldBox(DockContainer, tr("Spot"), "SpotGroup");
+  SpotPosHLayout = new QHBoxLayout(SpotGroup->body());
+  SpotPosHLayout->setObjectName("SpotPosHLayout");
+  SpotPosLabel = new QLabel(tr("Position"));
+  SpotPosX = new ptInput(DockContainer, "SpotPosX", SpotGroup->body()->objectName(), 0, 0, 1, 0, 0, 10000, 1, 0,
+                         tr("left"), tr("Horizontal position of spot's center"), 0);
+  SpotPosY = new ptInput(DockContainer, "SpotPosY", SpotGroup->body()->objectName(), 0, 0, 1, 0, 0, 10000, 1, 0,
+                         tr("top"), tr("Vertical position of spot's center"), 0);
+  SpotPosHLayout->addWidget(SpotPosLabel);
+  SpotPosHLayout->addWidget(SpotPosX);
+  SpotPosHLayout->addWidget(SpotPosY);
+  SpotPosHLayout->addStretch();
+
+  RadiusHLayout = new QHBoxLayout(SpotGroup->body());
+  RadiusHLayout->setObjectName("RadiusHLayout");
+  RadiusLabel = new QLabel(tr("Radius"));
+  RadiusW = new ptInput(DockContainer, "RadiusW", SpotGroup->body()->objectName(), 0, 0, 1, 0, 0, 5000, 1, 0,
+                        tr("w"), tr("Width radius"), ptTimeout_Input);
+  RadiusH = new ptInput(DockContainer, "RadiusH", SpotGroup->body()->objectName(), 0, 0, 1, 0, 0, 5000, 1, 0,
+                        tr("h"), tr("Height radius"), ptTimeout_Input);
+  RadiusHLayout->addWidget(RadiusLabel);
+  RadiusHLayout->addWidget(RadiusW);
+  RadiusHLayout->addWidget(RadiusH);
+  RadiusHLayout->addStretch();
+
+  Angle = new ptInput(DockContainer, "Angle", SpotGroup->body()->objectName(), 1, 0, 1,
+                      0.0, -180.0, 180.0, 1, 1, tr("Angle"), tr("Rotate the spot"), ptTimeout_Input);
+
+  EdgeRadHLayout = new QHBoxLayout(SpotGroup->body());
+  EdgeRadHLayout->setObjectName("EdgeRadHLayout");
+  EdgeRadLabel = new QLabel(tr("Edge radius"));
+  EdgeRadius = new ptInput(DockContainer, "EdgeRadius", SpotGroup->body()->objectName(), 0, 0, 1, 0, 0, 5000, 1, 0,
+                           tr("px"), tr("Radius of the spot's edge"), ptTimeout_Input);
+  EdgeRadHLayout->addWidget(EdgeRadLabel);
+  EdgeRadHLayout->addWidget(EdgeRadius);
+  EdgeRadHLayout->addStretch();
+
+  EdgeBlur = new ptInput(DockContainer, "EdgeBlur", SpotGroup->body()->objectName(), 1, 0, 1,
+                         0.0, 0.0, 1.0, 0.05, 2, tr("Edge blur"), tr("Strength of edge blurring"), 0);
+  Opacity =  new ptInput(DockContainer, "Opacity",  SpotGroup->body()->objectName(), 1, 0, 1,
+                         1.0, 0.0, 1.0, 0.05, 2, tr("Opacity"), tr("Opacity"), 0);
+
+
+  // Controls for the optional repairer
+  RepairerGroup = new ptBaseFoldBox(DockContainer, tr("Repairer"), "RepairerGroup");
+  RepairerEnabled = new ptCheck(DockContainer, "RepairerEnabled", RepairerGroup->body()->objectName(), 0,
+                                tr("Enabled"), tr("Toggle repairer spot"));
+  RepPosHLayout = new QHBoxLayout(RepairerGroup->body());
+  RepPosHLayout->setObjectName("RepPosHLayout");
+  RepPosLabel = new QLabel(tr("Position"));
+  RepPosX = new ptInput(DockContainer, "RepPosX", "RepPosHLayout", 0, 0, 1, 0, 0, 10000, 1, 0,
+                        tr("left"), tr("Horizontal position of repairer's center"), ptTimeout_Input);
+  RepPosY = new ptInput(DockContainer, "RepPosY", "RepPosHLayout", 0, 0, 1, 0, 0, 10000, 1, 0,
+                        tr("top"), tr("Vertical position of repairer's center"), ptTimeout_Input);
+  RepPosHLayout->addWidget(RepPosLabel);
+  RepPosHLayout->addWidget(RepPosX);
+  RepPosHLayout->addWidget(RepPosY);
+  RepPosHLayout->addStretch();
 }
