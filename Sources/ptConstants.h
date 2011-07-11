@@ -531,10 +531,8 @@ const short ptLqr_ScaleRelative    = 0;
 const short ptLqr_ScaleAbsolute    = 1;
 
 // Spot repair algos
-// TODO SR: modes are only dummies so far!
-const short ptSpotMode_mode1    = 0;
-const short ptSpotMode_mode2    = 1;
-const short ptSpotMode_mode3    = 2;
+const short ptSpotRepairAlgo_Clone    = 0;
+const short ptSpotRepairAlgo_Heal     = 1;
 
 // Zoom modes
 const short ptZoomMode_Fit    = 0;

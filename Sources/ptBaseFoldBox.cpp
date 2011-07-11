@@ -40,14 +40,13 @@ extern ptTheme* Theme;
 ptBaseFoldBox::ptBaseFoldBox(QWidget* Parent, const QString Title,
                                const QString ObjectName, QWidget* Body /*= new QWidget()*/)
 : QWidget(Parent),
-  m_Title(Title.trimmed()),
-  m_Enabled(1),
-  m_Folded(0),
-  m_Title(Title),
   m_Head(new QWidget()),
   m_Body(Body),
   m_ArrowLabel(new QLabel()),
-  m_TitleLabel(new QLabel("<b>" + m_Title + "</b>"))
+  m_Enabled(1),
+  m_Folded(0),
+  m_Title(Title),
+  m_TitleLabel(new QLabel("<b>" + Title + "</b>"))
 {
   assert(Parent != NULL);
   m_DefaultArrow[0] = QPixmap(QString::fromUtf8(":/photivo/Icons/downarrow.png"));

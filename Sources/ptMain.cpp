@@ -49,6 +49,7 @@
 #include "ptWiener.h"
 #include "ptImageSpotList.h"
 #include "qtsingleapplication/qtsingleapplication.h"
+
 #ifdef Q_OS_MAC
     #include <QFileOpenEvent>
 #endif
@@ -96,7 +97,7 @@ cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
 
-ptImageSpotList RepairSpotList("Repair");
+ptImageSpotList* RepairSpotList;
 
 //
 // The 'tee' towards the display.
@@ -588,6 +589,8 @@ int photivoMain(int Argc, char *Argv[]) {
       if (!home.exists(Folder))
           home.mkdir(Folder);
   }
+
+  RepairSpotList = new ptImageSpotList("Repair");
 
   QString SettingsFileName = UserDirectory + "photivo.ini";
   // this has to be changed when we move to a different tree structure!
@@ -3467,9 +3470,11 @@ void CB_MenuFileExit(const short) {
   // Store the version of the settings and files
   Settings->m_IniSettings->setValue("SettingsVersion",PhotivoSettingsVersion);
 
+  RepairSpotList->WriteToIni();
+
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
-
+  delete RepairSpotList;
 
 
   ALLOCATED(10000000);
@@ -4723,6 +4728,24 @@ void CB_ClipModeChoice(const QVariant Choice) {
 void CB_ClipParameterInput(const QVariant Value) {
   Settings->SetValue("ClipParameter",Value);
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Highlights);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to spot repair (Geometry tab)
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_SpotOpacityInput(const QVariant Value) {
+
+}
+
+void CB_SpotEdgeSoftnessInput(const QVariant Value) {
+
+}
+
+void CB_SpotRepairModeChoice(const QVariant Choice) {
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -8322,6 +8345,10 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(EeciRefineCheck)
   M_Dispatch(ClipModeChoice)
   M_Dispatch(ClipParameterInput)
+
+  M_Dispatch(SpotOpacityInput)
+  M_Dispatch(SpotEdgeSoftnessInput)
+  M_Dispatch(SpotRepairModeChoice)
 
   M_Dispatch(LfunFocalInput)
   M_Dispatch(LfunApertureInput)

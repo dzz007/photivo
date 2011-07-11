@@ -109,6 +109,8 @@ public:
   static const ptGuiOptionsItem ResetMode[];
   static const ptGuiOptionsItem BadPixels[];
   static const ptGuiOptionsItem DarkFrame[];
+
+  static const ptGuiOptionsItem SpotRepair[];
 };
 
 extern ptGuiOptions* GuiOptions;

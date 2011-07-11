@@ -30,46 +30,43 @@
 
 #include "ptCheck.h"
 #include "ptChoice.h"
-#include "ptGroupBox.h"
+#include "ptBaseFoldBox.h"
 #include "ptInput.h"
 
 class ptRepairInteractionUI : public QDockWidget {
 Q_OBJECT
 
 public:
-  explicit ptRepairInteractionUI(QObject *parent = 0);
+  explicit ptRepairInteractionUI(QWidget* parent = 0);
 
-  QWidget DockContainer;
+  QWidget* DockContainer;
 
-  QHBoxLayout GeneralHLayout;
-    ptCheck SpotEnabled;
-    ptChoice Algorithm;
-    QSpacerItem HSpacer1;
+  QHBoxLayout* GeneralHLayout;
+    ptCheck* SpotEnabled;
+    ptChoice* Algorithm;
 
-  ptGroupBox SpotGroup;
-    QWidget SpotGroupWidget;
-      QHBoxLayout SpotPosHLayout;
-        QLabel SpotPosLabel;
-        ptInput SpotPosX;
-        ptInput SpotPosY;
-      QHBoxLayout RadiusHLayout;
-        QLabel RadiusLabel;
-        ptInput RadiusW;
-        ptInput RadiusH;
-      ptInput Angle;
-      QHBoxLayout EdgeRadHLayout;
-        QLabel EdgeRadLabel;
-        ptInput EdgeRadius;
-      ptInput EdgeBlur;
-      ptInput Opacity;
+  ptBaseFoldBox* SpotGroup;
+    QHBoxLayout* SpotPosHLayout;
+      QLabel* SpotPosLabel;
+      ptInput* SpotPosX;
+      ptInput* SpotPosY;
+    QHBoxLayout* RadiusHLayout;
+      QLabel* RadiusLabel;
+      ptInput* RadiusW;
+      ptInput* RadiusH;
+    ptInput* Angle;
+    QHBoxLayout* EdgeRadHLayout;
+      QLabel* EdgeRadLabel;
+      ptInput* EdgeRadius;
+    ptInput* EdgeBlur;
+    ptInput* Opacity;
 
-  ptGroupBox RepairerGroup;
-    QWidget RepGroupWidget;
-      ptCheck RepairerEnabled;
-      QHBoxLayout RepPosHLayout;
-        QLabel RepPosLabel;
-        ptInput RepPosX;
-        ptInput RepPosY;
+  ptBaseFoldBox* RepairerGroup;
+    ptCheck* RepairerEnabled;
+    QHBoxLayout* RepPosHLayout;
+      QLabel* RepPosLabel;
+      ptInput* RepPosX;
+      ptInput* RepPosY;
 
 
 signals:

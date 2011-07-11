@@ -41,7 +41,7 @@ class ptRepairSpot: public ptImageSpot {
 ////////////////////////////////////////////////////////////////////////////////
 private:
   short m_HasRepairer;
-  short m_Mode;           // repair algorithm: use ptSpotMode constants
+  short m_Mode;           // repair algorithm: use ptSpotRepairAlgo constants
   QPoint m_RepairerPos;   // the spot providing the repair data
 
 ////////////////////////////////////////////////////////////////////////////////
