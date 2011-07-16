@@ -36,6 +36,7 @@
 #include "ptCheck.h"
 #include "ptGroupBox.h"
 #include "ptVisibleToolsView.h"
+#include "ptRepairSpotView.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -169,10 +170,12 @@ private :
   QAction* m_AtnShowTools;
 
   ptVisibleToolsModel* m_VisibleToolsModel;
+  ptRepairSpotModel* m_RepairSpotModel;
 
   void AnalyzeToolBoxStructure();
   void ShowMovedTools(const QString Title);
   void InitVisibleTools();
+  void PopulateSpotRepairList();
 
 
 ////////////////////////////////////////////////////////////////////////////////

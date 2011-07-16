@@ -32,6 +32,8 @@
 #include "ptConstants.h"
 #include "ptDefines.h"
 #include "ptTheme.h"
+#include "ptImageSpotList.h"
+#include "ptRepairSpot.h"
 
 #include <iostream>
 #include <iomanip>
@@ -42,6 +44,7 @@ using namespace std;
 
 extern ptTheme* Theme;
 extern ptViewWindow* ViewWindow;
+extern ptImageSpotList* RepairSpotList;
 void CB_OpenFileButton();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -640,6 +643,8 @@ ptMainWindow::ptMainWindow(const QString Title)
           this,
           SLOT(Event0TimerExpired()));
 
+  PopulateSpotRepairList();
+
   UpdateCropToolUI();
   UpdateLfunDistUI();
   UpdateLfunCAUI();
@@ -679,6 +684,7 @@ void ptMainWindow::OnTranslationChoiceChanged(int idx) {
     Settings->SetValue("UiLanguage", TranslationChoice->itemText(idx));
   }
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -2636,6 +2642,26 @@ void ptMainWindow::UpdateCropToolUI() {
     AspectRatioHLabel->setEnabled(false);
     AspectRatioWWidget->setEnabled(false);
     AspectRatioHWidget->setEnabled(false);
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// PopulateSpotRepairList
+// Populate spot repair list when constructing main window.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::PopulateSpotRepairList() {
+  m_RepairSpotModel = new ptRepairSpotModel;
+
+  for (int i = 0; i < RepairSpotList->count(); i++) {
+    ptRepairSpot* spot = static_cast<ptRepairSpot*>(RepairSpotList->at(i));
+    QStandardItem* SpotItem = new QStandardItem(GuiOptions->SpotRepair[spot->mode()].Text);
+    SpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
+                       Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    m_RepairSpotModel->appendRow(SpotItem);
   }
 }
 
