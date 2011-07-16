@@ -67,6 +67,7 @@ public:
   // standard getter and setter methods
   inline short hasRepairer() const { return m_HasRepairer; }
   inline QPoint RepairerPos() const { return m_RepairerPos; }
+  inline short mode() const { return m_Mode; }
 
   void setRepairer(const uint CenterX, const uint CenterY);
   inline void removeRepairer() { m_HasRepairer = 0; }

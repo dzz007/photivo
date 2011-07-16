@@ -2937,12 +2937,12 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   JobSettings.setValue("CameraColorProfile", Settings->GetString("CameraColorProfile"));*/
 
   // list of spotrepair spots
-  if (JobSettings.contains(RepairSpotList.iniName())) {
-    RepairSpotList.clear();
-    int size = JobSettings.beginReadArray(RepairSpotList.iniName());
+  if (JobSettings.contains(RepairSpotList->iniName())) {
+    RepairSpotList->clear();
+    int size = JobSettings.beginReadArray(RepairSpotList->iniName());
     for (int i = 0; i < size; i++) {
       JobSettings.setArrayIndex(i);
-      RepairSpotList.append(new ptImageSpot(1));
+      RepairSpotList->append(new ptImageSpot(1));
     }
     JobSettings.endArray();
   }
