@@ -29,7 +29,7 @@
 #include <QRectF>
 #include <QRect>
 
-#include "ptImageInteraction.h"
+#include "ptAbstractInteraction.h"
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -58,7 +58,7 @@ enum ptMovingEdge {
 // class ptSimpleRectInteraction
 //
 ///////////////////////////////////////////////////////////////////////////
-class ptRichRectInteraction : public ptImageInteraction {
+class ptRichRectInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
 ///////////////////////////////////////////////////////////////////////////

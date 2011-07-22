@@ -25,7 +25,7 @@
 #include <cstdio>
 
 ptGridInteraction::ptGridInteraction(QGraphicsView* View)
-: ptImageInteraction(View)
+: ptAbstractInteraction(View)
 {
 }
 

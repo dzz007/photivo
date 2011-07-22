@@ -353,6 +353,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
 
+  Macro_ConnectSomeButton(SpotRepair);
+  Macro_ConnectSomeButton(ConfirmSpotRepair);
   Macro_ConnectSomeButton(RotateLeft);
   Macro_ConnectSomeButton(RotateRight);
   Macro_ConnectSomeButton(RotateAngle);
@@ -643,6 +645,7 @@ ptMainWindow::ptMainWindow(const QString Title)
           this,
           SLOT(Event0TimerExpired()));
 
+  ConfirmSpotRepairButton->hide();
   PopulateSpotRepairList();
 
   UpdateCropToolUI();
@@ -1259,6 +1262,16 @@ void ptMainWindow::OnSpotWBButtonClicked() {
 // Tab : Geometry
 //
 
+
+void CB_SpotRepairButton();
+void ptMainWindow::OnSpotRepairButtonClicked() {
+  ::CB_SpotRepairButton();
+}
+
+void CB_ConfirmSpotRepairButton();
+void ptMainWindow::OnConfirmSpotRepairButtonClicked() {
+  ::CB_ConfirmSpotRepairButton();
+}
 
 void CB_RotateLeftButton();
 void ptMainWindow::OnRotateLeftButtonClicked() {
@@ -2663,6 +2676,10 @@ void ptMainWindow::PopulateSpotRepairList() {
                        Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     m_RepairSpotModel->appendRow(SpotItem);
   }
+
+  RepairSpotsView->setModel(m_RepairSpotModel);
+  RepairSpotsView->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::DoubleClicked);
+  RepairSpotsView->setItemDelegate(new ptRepairSpotItemDelegate);
 }
 
 
@@ -3013,6 +3030,7 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) { // Added slot for 
     ImageFileToOpen = msg;
     CB_MenuFileOpen(1);
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Update liquid rescale UI elements
@@ -3024,6 +3042,18 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
   LqrHorScaleWidget->setVisible(Scaling == ptLqr_ScaleRelative);
   LqrVertScaleWidget->setVisible(Scaling == ptLqr_ScaleRelative);
   LqrWHContainter->setVisible(Scaling == ptLqr_ScaleAbsolute);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Update spot repair UI elements
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::UpdateSpotRepairUI() {
+  SpotRepairButton->setVisible(ViewWindow->interaction() != iaSpotRepair);
+  ConfirmSpotRepairButton->setVisible(!SpotRepairButton->isVisible());
 }
 
 ////////////////////////////////////////////////////////////////////////////////

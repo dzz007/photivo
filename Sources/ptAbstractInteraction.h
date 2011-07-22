@@ -19,23 +19,26 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+/**
+** Base class for image interactions (crop, spot repair etc.).
+** Do not instantiate directly.
+**/
 
-#ifndef PTREPAIRINTERACTION_H
-#define PTREPAIRINTERACTION_H
+#ifndef PTIMAGEINTERACTION_H
+#define PTIMAGEINTERACTION_H
 
-#include <QDockWidget>
+#include <QObject>
+#include <QGraphicsView>
 
-#include "ptImageInteraction.h"
-#include "ptRepairInteractionUI.h"
+#include "ptConstants.h"
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// class ptRepairInteraction
+// class ptAbstractInteraction
 //
 ///////////////////////////////////////////////////////////////////////////
-class ptRepairInteraction : public ptImageInteraction {
+class ptAbstractInteraction : public QObject {
 Q_OBJECT
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -43,17 +46,34 @@ Q_OBJECT
 //
 ///////////////////////////////////////////////////////////////////////////
 public:
-  explicit ptRepairInteraction(QGraphicsView* View);
-  ~ptRepairInteraction();
+  explicit ptAbstractInteraction(QGraphicsView* View);
 
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// PRIVATE members
+// PROTECTED members
 //
 ///////////////////////////////////////////////////////////////////////////
-private:
-  ptRepairInteractionUI* m_CfgWindow;
+protected:
+  QGraphicsView* m_View;
+
+///////////////////////////////////////////////////////////////////////////
+//
+// PRIVATE slots
+//
+///////////////////////////////////////////////////////////////////////////
+private slots:
+  virtual void keyAction(QKeyEvent* event) = 0;
+  virtual void mouseAction(QMouseEvent* event) = 0;
+
+///////////////////////////////////////////////////////////////////////////
+//
+// signals
+//
+///////////////////////////////////////////////////////////////////////////
+signals:
+  void finished(ptStatus ExitStatus);
+
 };
 
-#endif // PTREPAIRINTERACTION_H
+#endif // PTIMAGEINTERACTION_H

@@ -20,14 +20,36 @@
 **
 *******************************************************************************/
 
-#include <cassert>
+#include "ptRepairInteraction.h"
+#include "ptConstants.h"
 
-#include "ptImageInteraction.h"
-
-ptImageInteraction::ptImageInteraction(QGraphicsView* View)
-: QObject(),
-  m_View(View)
+///////////////////////////////////////////////////////////////////////////
+//
+// constructor and destructor
+//
+///////////////////////////////////////////////////////////////////////////
+ptRepairInteraction::ptRepairInteraction(QGraphicsView* View)
+: ptAbstractInteraction(View)
 {
-  assert(m_View != NULL);
-  assert(m_View->scene() != NULL);
+  connect(this, SIGNAL(finished(ptStatus)), m_View, SLOT(finishInteraction(ptStatus)));
+  connect(m_View, SIGNAL(mouseChanged(QMouseEvent*)), this, SLOT(mouseAction(QMouseEvent*)));
+  connect(m_View, SIGNAL(keyChanged(QKeyEvent*)), this, SLOT(keyAction(QKeyEvent*)));
+}
+
+ptRepairInteraction::~ptRepairInteraction() {
+}
+
+
+void ptRepairInteraction::stop() {
+  emit finished(stSuccess);
+}
+
+
+void ptRepairInteraction::mouseAction(QMouseEvent *event) {
+
+}
+
+
+void ptRepairInteraction::keyAction(QKeyEvent *event) {
+
 }

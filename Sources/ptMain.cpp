@@ -4744,9 +4744,6 @@ void CB_SpotEdgeSoftnessInput(const QVariant Value) {
 
 }
 
-void CB_SpotRepairModeChoice(const QVariant Choice) {
-
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -4942,6 +4939,40 @@ void CB_DefishAutoScaleCheck(const QVariant State) {
 // Partim Rotate
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+void CB_SpotRepairButton() {
+  if (Settings->GetInt("HaveImage")==0) {
+    ptMessageBox::information(MainWindow,
+      QObject::tr("No image opened"),
+      QObject::tr("Open an image before editing repair spots."));
+    return;
+  }
+
+  ViewWindow->ShowStatus(QObject::tr("Prepare"));
+  ReportProgress(QObject::tr("Prepare for spot repair"));
+
+  //TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
+  UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw); // Calculate in any case.
+
+  // Allow to be selected in the view window. And deactivate main.
+  ViewWindow->ShowStatus(QObject::tr("Spot repair"));
+  ReportProgress(QObject::tr("Spot repair"));
+  BlockTools(2);
+
+  ViewWindow->StartSpotRepair();      // always start the interaction first,
+  MainWindow->UpdateSpotRepairUI();   // *then* update main window
+  ViewWindow->setFocus();
+}
+
+void CleanupAfterSpotRepair() {
+  BlockTools(0);
+  Update(ptProcessorPhase_Geometry);
+  MainWindow->UpdateSpotRepairUI();
+}
+
+void CB_ConfirmSpotRepairButton() {
+  ViewWindow->spotRepair()->stop();
+}
 
 void CB_RotateLeftButton() {
   double Value = Settings->GetDouble("Rotate");
@@ -5217,7 +5248,6 @@ void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
       Settings->SetValue("CropY",CropRect.top() * YScale);
       Settings->SetValue("CropW",CropRect.width() * XScale);
       Settings->SetValue("CropH",CropRect.height() * YScale);
-//      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Checked);
     }
 
     TRACEKEYVALS("PreviewImageW","%d",PreviewImage->m_Width);
@@ -5234,7 +5264,6 @@ void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
   } else {
     if ((Settings->GetInt("CropW") < 4) || (Settings->GetInt("CropH") < 4)) {
       Settings->SetValue("Crop", 0);
-//      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Unchecked);
     }
   }
 
@@ -8348,7 +8377,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(SpotOpacityInput)
   M_Dispatch(SpotEdgeSoftnessInput)
-  M_Dispatch(SpotRepairModeChoice)
 
   M_Dispatch(LfunFocalInput)
   M_Dispatch(LfunApertureInput)

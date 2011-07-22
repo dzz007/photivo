@@ -40,6 +40,7 @@
 #include "ptSimpleRectInteraction.h"
 #include "ptRichRectInteraction.h"
 #include "ptGridInteraction.h"
+#include "ptRepairInteraction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -52,7 +53,8 @@ enum ptInteraction {
   iaNone = 0,
   iaCrop = 1,
   iaSelectRect = 2, // simple rectangle selection: e.g. for spot WB
-  iaDrawLine = 3    // draw a single straight line: e.g. for rotate angle
+  iaDrawLine = 3,    // draw a single straight line: e.g. for rotate angle
+  iaSpotRepair = 4
 };
 
 
@@ -95,7 +97,9 @@ public:
   void StartLine();
   void StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect));
   void StartCrop();
+  void StartSpotRepair();
   ptRichRectInteraction* crop() const { return m_Crop; }
+  ptRepairInteraction* spotRepair() const { return m_SpotRepair; }
 
   void setGrid(const short enabled, const uint linesX, const uint linesY);
   void UpdateImage(const ptImage* relatedImage);
@@ -137,6 +141,7 @@ private:
   ptSimpleRectInteraction* m_SelectRect;
   ptRichRectInteraction* m_Crop;
   ptGridInteraction* m_Grid;
+  ptRepairInteraction* m_SpotRepair;
   ptInteraction m_Interaction;
   short m_LeftMousePressed;
   void (*m_CB_SimpleRect)(const ptStatus, QRect);

@@ -467,7 +467,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CropGuidelines"              ,ptGT_Choice       ,1,0,0 ,ptGuidelines_GoldenRatio    ,GuiOptions->CropGuidelines            ,tr("Guide lines for crop")},
     {"LightsOut"                   ,ptGT_Choice       ,1,0,0 ,ptLightsOutMode_Dimmed      ,GuiOptions->LightsOutMode             ,tr("Dim areas outside the crop rectangle")},
     {"ClipMode"                    ,ptGT_Choice       ,1,1,1 ,ptClipMode_Blend            ,GuiOptions->ClipMode                  ,tr("How to handle clipping")},
-    {"SpotRepairMode"              ,ptGT_Check        ,2,1,1 ,ptSpotRepairAlgo_Clone      ,GuiOptions->SpotRepair                ,tr("Repair algorithm used for this spot")},
     {"LfunCAModel"                 ,ptGT_Choice       ,2,1,1 ,ptLfunCAModel_None          ,GuiOptions->LfunCAModel               ,tr("Mathematical model for CA correction")},
     {"LfunVignetteModel"           ,ptGT_Choice       ,2,1,1 ,ptLfunVignetteModel_None    ,GuiOptions->LfunVignetteModel         ,tr("Mathematical model for vignetting correction")},
     {"LfunSrcGeo"                  ,ptGT_Choice       ,2,1,1 ,ptLfunGeo_Unknown           ,GuiOptions->LfunGeo                   ,tr("Geometry of the lens the image was taken with")},
