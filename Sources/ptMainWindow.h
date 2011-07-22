@@ -98,6 +98,8 @@ public:
 
   void UpdateLiquidRescaleUI();
 
+  void UpdateSpotRepairUI();
+
   // Visible tools
   void ApplyVisibleTools();
   void UpdateVisibleTools();
@@ -244,6 +246,8 @@ private slots:
 
   void OnStartupSettingsButtonClicked();
 
+  void OnSpotRepairButtonClicked();
+  void OnConfirmSpotRepairButtonClicked();
   void OnRotateLeftButtonClicked();
   void OnRotateRightButtonClicked();
   void OnRotateAngleButtonClicked();

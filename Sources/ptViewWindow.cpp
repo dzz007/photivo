@@ -312,9 +312,9 @@ void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   // drag image with left mouse button to scroll
-  // Also Ctrl needed in crop mode
+  // Also Ctrl needed in crop & spot repair modes
   short ImgDragging = m_LeftMousePressed && m_Interaction == iaNone;
-  if (m_Interaction == iaCrop) {
+  if (m_Interaction == iaCrop || m_Interaction == iaSpotRepair) {
     ImgDragging = m_LeftMousePressed && m_CtrlIsPressed;
   }
 
@@ -387,7 +387,7 @@ void ptViewWindow::keyPressEvent(QKeyEvent* event) {
   // Photivo should still recognise the ctrl key as being held down.
   if (event->key() == Qt::Key_Control) {
     m_CtrlIsPressed++;
-    if (m_Interaction == iaNone || m_Interaction == iaCrop) {
+    if (m_Interaction == iaNone || m_Interaction == iaCrop || m_Interaction == iaSpotRepair) {
       setCursor(Qt::ClosedHandCursor);
     }
   } else {
@@ -402,7 +402,9 @@ void ptViewWindow::keyPressEvent(QKeyEvent* event) {
 void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
   if (event->key() == Qt::Key_Control) {
     m_CtrlIsPressed--;
-    if (m_CtrlIsPressed == 0 && (m_Interaction == iaNone || m_Interaction == iaCrop)) {
+    if (m_CtrlIsPressed == 0 &&
+      (m_Interaction == iaNone || m_Interaction == iaCrop || m_Interaction == iaSpotRepair))
+    {
       setCursor(Qt::ArrowCursor);
     }
   } else {
@@ -561,11 +563,22 @@ void ptViewWindow::StartCrop()
                                      Settings->GetInt("AspectRatioW"),
                                      Settings->GetInt("AspectRatioH"),
                                      Settings->GetInt("CropGuidelines") );
-
-  connect(m_Crop, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
-  connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_Crop, SLOT(mouseAction(QMouseEvent*)));
-  connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_Crop, SLOT(keyAction(QKeyEvent*)));
   m_Interaction = iaCrop;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// StartSpotRepair()
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptViewWindow::StartSpotRepair() {
+  if (m_Interaction != iaNone) {
+    return;
+  }
+  m_SpotRepair = new ptRepairInteraction(this);
+  m_Interaction = iaSpotRepair;
 }
 
 
@@ -577,6 +590,7 @@ void ptViewWindow::StartCrop()
 
 void RotateAngleDetermined(const ptStatus ExitStatus, double RotateAngle);
 void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect);
+void CleanupAfterSpotRepair();
 
 void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
   switch (m_Interaction) {
@@ -601,6 +615,13 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
       DelAndNull(m_Crop);   // also disconnects all signals/slots
       m_Interaction = iaNone;
       CleanupAfterCrop(ExitStatus, cr);
+      break;
+    }
+
+    case iaSpotRepair: {
+      DelAndNull(m_SpotRepair);   // also disconnects all signals/slots
+      m_Interaction = iaNone;
+      CleanupAfterSpotRepair();
       break;
     }
 

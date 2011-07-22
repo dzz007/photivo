@@ -28,7 +28,7 @@
 #include <QLine>
 #include <QGraphicsLineItem>
 
-#include "ptImageInteraction.h"
+#include "ptAbstractInteraction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@
 // class ptLineInteraction
 //
 ///////////////////////////////////////////////////////////////////////////
-class ptLineInteraction : public ptImageInteraction {
+class ptLineInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
 

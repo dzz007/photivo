@@ -19,26 +19,22 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-/**
-** Base class for image interactions (crop, spot repair etc.).
-** Do not instantiate directly.
-**/
 
-#ifndef PTIMAGEINTERACTION_H
-#define PTIMAGEINTERACTION_H
+#ifndef PTREPAIRINTERACTION_H
+#define PTREPAIRINTERACTION_H
 
-#include <QObject>
-#include <QGraphicsView>
+#include <QDockWidget>
 
-#include "ptConstants.h"
+#include "ptAbstractInteraction.h"
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// class ptImageInteraction
+// class ptRepairInteraction
 //
 ///////////////////////////////////////////////////////////////////////////
-class ptImageInteraction : public QObject {
+class ptRepairInteraction : public ptAbstractInteraction {
 Q_OBJECT
+
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -46,34 +42,18 @@ Q_OBJECT
 //
 ///////////////////////////////////////////////////////////////////////////
 public:
-  explicit ptImageInteraction(QGraphicsView* View);
+  explicit ptRepairInteraction(QGraphicsView* View);
+  ~ptRepairInteraction();
+
+  void stop();
 
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// PROTECTED members
+// PRIVATE members
 //
 ///////////////////////////////////////////////////////////////////////////
-protected:
-  QGraphicsView* m_View;
-
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-///////////////////////////////////////////////////////////////////////////
-private slots:
-  virtual void keyAction(QKeyEvent* event) = 0;
-  virtual void mouseAction(QMouseEvent* event) = 0;
-
-///////////////////////////////////////////////////////////////////////////
-//
-// signals
-//
-///////////////////////////////////////////////////////////////////////////
-signals:
-  void finished(ptStatus ExitStatus);
-
+private:
 };
 
-#endif // PTIMAGEINTERACTION_H
+#endif // PTREPAIRINTERACTION_H

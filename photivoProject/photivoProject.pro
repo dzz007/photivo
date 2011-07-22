@@ -124,13 +124,14 @@ macx {
 # Input
 HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/ptReportOverlay.h \
-    ../Sources/ptImageInteraction.h \
+    ../Sources/ptAbstractInteraction.h \
     ../Sources/ptLineInteraction.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptRichRectInteraction.h \
     ../Sources/ptGridInteraction.h \
-    ../Sources/ptRepairInteraction.h \
-    ../Sources/ptRepairSpotView.h
+    ../Sources/imagespot/ptRepairInteraction.h \
+    ../Sources/imagespot/ptRepairSpotView.h \
+    ../Sources/imagespot/ptRepairSpotEditor.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
 HEADERS += ../Sources/ptCheck.h
@@ -177,19 +178,20 @@ HEADERS += ../Sources/fastbilateral/math_tools.h
 HEADERS += ../Sources/fastbilateral/mixed_vector.h
 HEADERS += ../Sources/greyc/CImg.h
 HEADERS += ../Sources/ptMessageBox.h
-HEADERS += ../Sources/ptImageSpot.h
-HEADERS += ../Sources/ptImageSpotList.h
-HEADERS += ../Sources/ptRepairSpot.h
+HEADERS += ../Sources/imagespot/ptImageSpot.h
+HEADERS += ../Sources/imagespot/ptImageSpotList.h
+HEADERS += ../Sources/imagespot/ptRepairSpot.h
 
 SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptReportOverlay.cpp \
-    ../Sources/ptImageInteraction.cpp \
+    ../Sources/ptAbstractInteraction.cpp \
     ../Sources/ptLineInteraction.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptRichRectInteraction.cpp \
     ../Sources/ptGridInteraction.cpp \
-    ../Sources/ptRepairInteraction.cpp \
-    ../Sources/ptRepairSpotView.cpp
+    ../Sources/imagespot/ptRepairInteraction.cpp \
+    ../Sources/imagespot/ptRepairSpotView.cpp \
+    ../Sources/imagespot/ptRepairSpotEditor.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
 SOURCES += ../Sources/ptChoice.cpp
@@ -275,9 +277,9 @@ SOURCES += ../Sources/vcd/es_median_filter.c
 SOURCES += ../Sources/vcd/median_filter_new.c
 SOURCES += ../Sources/vcd/refinement.c
 SOURCES += ../Sources/vcd/vcd_interpolate.c
-SOURCES += ../Sources/ptImageSpot.cpp
-SOURCES += ../Sources/ptImageSpotList.cpp
-SOURCES += ../Sources/ptRepairSpot.cpp
+SOURCES += ../Sources/imagespot/ptImageSpot.cpp
+SOURCES += ../Sources/imagespot/ptImageSpotList.cpp
+SOURCES += ../Sources/imagespot/ptRepairSpot.cpp
 
 FORMS += ../Sources/ptMainWindow.ui
 

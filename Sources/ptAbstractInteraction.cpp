@@ -20,19 +20,14 @@
 **
 *******************************************************************************/
 
-#include "ptRepairInteraction.h"
+#include <cassert>
 
-///////////////////////////////////////////////////////////////////////////
-//
-// constructor and destructor
-//
-///////////////////////////////////////////////////////////////////////////
-ptRepairInteraction::ptRepairInteraction(QGraphicsView* View)
-: ptImageInteraction(View),
-  m_CfgWindow(new ptRepairInteractionUI(View))
+#include "ptAbstractInteraction.h"
+
+ptAbstractInteraction::ptAbstractInteraction(QGraphicsView* View)
+: QObject(),
+  m_View(View)
 {
-}
-
-ptRepairInteraction::~ptRepairInteraction() {
-  delete m_CfgWindow;
+  assert(m_View != NULL);
+  assert(m_View->scene() != NULL);
 }

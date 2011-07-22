@@ -23,58 +23,39 @@
 #include "ptRepairSpotView.h"
 #include "ptConstants.h"
 #include "ptTheme.h"
+#include "ptRepairSpotEditor.h"
+#include "ptImageSpotList.h"
+#include "ptRepairSpot.h"
 
 extern ptTheme* Theme;
+extern ptImageSpotList* RepairSpotList;
 
-ptRepairSpotModel::ptRepairSpotModel(QObject *parent) :
-  QStandardItemModel(parent) {
+ptRepairSpotModel::ptRepairSpotModel(QObject *parent)
+: QStandardItemModel(parent)
+{
 }
 
 bool ptRepairSpotModel::setData(const QModelIndex &index, const QVariant &value, int role) {
   bool result = QStandardItemModel::setData(index, value, role);
 
-  // set icon automatically according to state
-  if (role == Qt::UserRole+1)
-  {
-    if (value.toInt() == tsHidden)
-      result = (result && setData(index, QIcon(* Theme->ptIconCrossRed), Qt::DecorationRole));
-    if (value.toInt() == tsFavourite)
-      result = (result && setData(index, QIcon(* Theme->ptIconStar), Qt::DecorationRole));
-    if (value.toInt() == tsNormal)
-      result = (result && setData(index, QIcon(* Theme->ptIconStarGrey), Qt::DecorationRole));
-  }
-
   return result;
 }
 
 
-ptRepairSpotItemDelegate::ptRepairSpotItemDelegate(QObject *parent) :
-  QStyledItemDelegate(parent) {
+ptRepairSpotItemDelegate::ptRepairSpotItemDelegate(QObject *parent)
+: QStyledItemDelegate(parent)
+{
 }
 
 QWidget* ptRepairSpotItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem&, const QModelIndex&) const {
-  return new QComboBox(parent);
+  return new ptRepairSpotEditor(parent);
 }
 
 void ptRepairSpotItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
-  QComboBox *box = qobject_cast<QComboBox*>(editor);
-  box->addItem(index.data().toString(), index.data(Qt::UserRole+1));
-
-  // test if tool isn't always visible
-  if (index.data(Qt::UserRole+2).toInt() != 1)
-    box->addItem(QIcon(* Theme->ptIconCrossRed), tr("Hidden"));
-  box->addItem(QIcon(* Theme->ptIconStarGrey), tr("Normal"));
-  box->addItem(QIcon(* Theme->ptIconStar), tr("Favourite"));
+  ptRepairSpotEditor *ed = qobject_cast<ptRepairSpotEditor*>(editor);
+  ed->ModeCombo->setCurrentIndex(static_cast<ptRepairSpot*>(RepairSpotList->at(index))->mode());
 }
 
 void ptRepairSpotItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
-  QComboBox *box = qobject_cast<QComboBox*>(editor);
-
-  // save state to the model
-  if (box->currentText() == tr("Hidden"))
-    model->setData(index, tsHidden, Qt::UserRole+1);
-  if (box->currentText() == tr("Normal"))
-    model->setData(index, tsNormal, Qt::UserRole+1);
-  if (box->currentText() == tr("Favourite"))
-    model->setData(index, tsFavourite, Qt::UserRole+1);
+  ptRepairSpotEditor *ed = qobject_cast<ptRepairSpotEditor*>(editor);
 }

@@ -36,7 +36,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 ptLineInteraction::ptLineInteraction(QGraphicsView* View)
-: ptImageInteraction(View),
+: ptAbstractInteraction(View),
   m_NowDragging(0)
 {
   m_Line = new QLineF();

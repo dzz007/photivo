@@ -538,7 +538,7 @@ const ptGuiOptionsItem ptGuiOptions::BadPixels[] = {
 
 const ptGuiOptionsItem ptGuiOptions::SpotRepair[] = {
   {ptSpotRepairAlgo_Clone,     QObject::tr("Clone")},
-  {ptSpotRepairAlgo_Heal,      QObject::tr("Heal")},
+  {ptSpotRepairAlgo_Heal,      QObject::tr("Heal (Dummy)")},
   {-1, NULL}};
 
 ////////////////////////////////////////////////////////////////////////////////

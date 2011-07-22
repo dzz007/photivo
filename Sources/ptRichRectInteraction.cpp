@@ -41,7 +41,7 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
       const int x, const int y, const int width, const int height,
       const short FixedAspectRatio, const uint AspectRatioW,
       const uint AspectRatioH, const short Guidelines)
-: ptImageInteraction(View),
+: ptAbstractInteraction(View),
   //constants
   EdgeThickness(40),
   TinyRectThreshold(80),
@@ -89,6 +89,10 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
 
   setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH, 0);
   UpdateScene();
+
+  connect(this, SIGNAL(finished(ptStatus)), m_View, SLOT(finishInteraction(ptStatus)));
+  connect(m_View, SIGNAL(mouseChanged(QMouseEvent*)), this, SLOT(mouseAction(QMouseEvent*)));
+  connect(m_View, SIGNAL(keyChanged(QKeyEvent*)), this, SLOT(keyAction(QKeyEvent*)));
 }
 
 
