@@ -52,7 +52,7 @@ ptHistogramWindow(const ptImage* RelatedImage,
 
 // NewRelatedImage to associate anonter ptImage with this window.
 void UpdateView(const ptImage* NewRelatedImage = NULL);
-void FillLookUp();
+void Init();
 
 protected:
 void resizeEvent(QResizeEvent*);
@@ -95,6 +95,7 @@ QAction*        m_AtnB;
 uint16_t*       m_LookUp;
 
 void CalculateHistogram();
+void FillLookUp();
 };
 
 #endif
