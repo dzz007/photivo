@@ -107,7 +107,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"PerspectiveScaleY"             ,ptGT_InputSlider     ,9,1,1 ,1.0  ,0.2  ,5.0   ,0.05 ,2 ,tr("Vertical scale")     ,tr("Vertical scale")},
     {"GridX"                         ,ptGT_Input           ,1,0,0 ,5    ,0    ,20    ,1    ,0 ,tr("X")                  ,tr("Vertical lines")},
     {"GridY"                         ,ptGT_Input           ,1,0,0 ,5    ,0    ,20    ,1    ,0 ,tr("Y")                  ,tr("Horizontal lines")},
-    {"CropExposure"                  ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1  ,2 ,tr("EV")                 ,tr("Exposure in EV")},
+    {"CropExposure"                  ,ptGT_InputSlider     ,1,1,1 ,0.0  ,-5.0 ,5.0   ,0.1  ,2 ,tr("Crop exposure")      ,tr("Temporary exposure in EV")},
     {"LqrHorScale"                   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.2  ,2.0   ,0.02 ,3 ,tr("Horizontal scale")   ,tr("Horizontal scale")},
     {"LqrVertScale"                  ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.2  ,2.0   ,0.02 ,3 ,tr("Vertical scale")     ,tr("Vertical scale")},
     {"LqrWidth"                      ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Width")              ,tr("Width")},
