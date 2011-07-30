@@ -28,6 +28,7 @@
 #include <QtCore>
 //#include <QtNetwork>
 #include <string>
+#include <csignal>
 
 #include "ptMessageBox.h"
 #include "ptDcRaw.h"
@@ -119,6 +120,9 @@ ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
 ptCurveWindow*     CurveWindow[16] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+
+// Error dialog for segfaults
+ptMessageBox* SegfaultErrorBox;
 
 // Theming
 ptTheme* Theme = NULL;
@@ -303,12 +307,23 @@ QString ImageFileToOpen = "";
 QRect DetailViewRect;
 
 #ifndef DLRAW_GIMP_PLUGIN
+void SegfaultAbort(int) {
+  // prevent infinite recursion if SegfaultAbort() causes another segfault
+  std::signal(SIGSEGV, SIG_DFL);
+  std::signal(SIGABRT, SIG_DFL);
+  SegfaultErrorBox->exec();
+  std::abort();
+}
+
 int main(int Argc, char *Argv[]) {
   int RV = photivoMain(Argc,Argv);
+  DelAndNull(SegfaultErrorBox);
   CleanupResources(); // Not necessary , for debug.
   return RV;
 }
 #endif
+
+
 //class QtSingleApplication with redefined event to handle QFileOpenEvent
 #ifdef Q_OS_MAC
   class MyQApplication : public QtSingleApplication {
@@ -377,6 +392,17 @@ int photivoMain(int Argc, char *Argv[]) {
 #endif
   //close on last window closed, seems to be unneeded
   TheApplication->connect(TheApplication, SIGNAL(lastWindowClosed()), TheApplication, SLOT(quit()));
+
+  // Error handling for segfaults (to prevent silent crashes)
+  SegfaultErrorBox = new ptMessageBox(QMessageBox::Critical,
+                                      QObject::tr("Photivo crashed"),
+                                      QObject::tr("Photivo crashed. You can get help on our flickr forum at\n"
+                                      "<a href=\"http://www.flickr.com/groups/photivo/discuss/\">http://www.flickr.com/groups/photivo/discuss/</a>"
+                                      "\nWhen you post there make sure to describe your last actions before the crash occurred."),
+                                      QMessageBox::Ok);
+  SegfaultErrorBox->setTextFormat(Qt::RichText);
+  std::signal(SIGSEGV, SegfaultAbort);
+  std::signal(SIGABRT, SegfaultAbort);
 
 
   // Handle cli arguments
@@ -774,7 +800,6 @@ int photivoMain(int Argc, char *Argv[]) {
       new ptMainWindow(QObject::tr("Photivo"));
   QObject::connect(TheApplication, SIGNAL(messageReceived(const QString &)),
           MainWindow,   SLOT(OtherInstanceMessage(const QString &)));
-
 
 
   ViewWindow =
@@ -1701,6 +1726,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     // Convert from working space to screen space.
     // Using lcms and a standard sRGB or custom profile.
+
     ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
     if (!ReturnValue) {
       ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
@@ -3393,13 +3419,6 @@ void CB_MenuFileWriteSettings() {
 
 
 void CB_MenuFileExit(const short) {
-  if (ViewWindow->interaction() != iaNone) {
-    ptMessageBox::warning(MainWindow,
-                     QObject::tr("Cannot exit"),
-                     QObject::tr("Please finish your crop before closing Photivo."));
-    return;
-  }
-
   if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0 && Settings->GetInt("SaveConfirmation")==1) {
     ptMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Question);
