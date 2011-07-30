@@ -43,22 +43,22 @@ ptCheck::ptCheck(const QWidget* MainWindow,
   m_SettingsName = ObjectName;
   m_SettingsName.chop(5);
 
-  QWidget* Parent = MainWindow->findChild <QWidget*> (ParentName);
+  m_Parent = MainWindow->findChild <QWidget*> (ParentName);
 
-  if (!Parent) {
+  if (!m_Parent) {
     fprintf(stderr,"(%s,%d) Could not find '%s'. Aborting\n",
            __FILE__,__LINE__,ParentName.toAscii().data());
-    assert(Parent);
+    assert(m_Parent);
   }
-  setParent(Parent);
+  setParent(m_Parent);
 
-  QHBoxLayout *Layout = new QHBoxLayout(Parent);
+  QHBoxLayout *Layout = new QHBoxLayout(m_Parent);
 
   Layout->setContentsMargins(2,2,2,2);
   Layout->setMargin(2);
-  Parent->setLayout(Layout);
+  m_Parent->setLayout(Layout);
 
-  m_CheckBox = new QCheckBox(Parent);
+  m_CheckBox = new QCheckBox(m_Parent);
   m_CheckBox->setToolTip(ToolTip);
   m_CheckBox->setText(Label);
   m_CheckBox->setFocusPolicy(Qt::NoFocus);
@@ -125,9 +125,7 @@ void ptCheck::SetEnabled(const short Enabled) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptCheck::Show(const short Show) {
-  if (Show) m_CheckBox->show();
-  if (!Show) m_CheckBox->hide();
-  return;
+  m_Parent->setVisible(Show);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -523,6 +523,10 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   m_GroupBox->value("TabBW")->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#black_and_white");
+  m_GroupBox->value("TabGradualBlur1")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#gradual_blur");
+  m_GroupBox->value("TabGradualBlur2")->
+    SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#gradual_blur");
 
   m_ActiveTabs.append(GeometryTab);
   m_ActiveTabs.append(RGBTab);
@@ -653,6 +657,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   UpdateLfunCAUI();
   UpdateLfunVignetteUI();
   UpdateLiquidRescaleUI();
+  UpdateGradualBlurUI();
   InitVisibleTools();
   Settings->SetValue("PipeSize", Settings->GetValue("StartupPipeSize"));
   if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_Favourite)
@@ -2314,6 +2319,8 @@ void ptMainWindow::UpdateSettings() {
   Pix.fill(Color);
   GradualOverlay2ColorButton->setIcon(Pix);
 
+  UpdateGradualBlurUI();
+
   // sRGB gamma compensation
   Settings->SetEnabled("OutputGamma",Settings->GetInt("OutputGammaCompensation"));
   Settings->SetEnabled("OutputLinearity",Settings->GetInt("OutputGammaCompensation"));
@@ -3054,6 +3061,31 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
 void ptMainWindow::UpdateSpotRepairUI() {
   SpotRepairButton->setVisible(ViewWindow->interaction() != iaSpotRepair);
   ConfirmSpotRepairButton->setVisible(!SpotRepairButton->isVisible());
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Update gradual blur UI elements
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::UpdateGradualBlurUI() {
+  boolean Visible = Settings->GetInt("GradBlur1") == ptGradualBlur_Linear  ||
+                    Settings->GetInt("GradBlur1") == ptGradualBlur_MaskLinear;
+  Settings->Show("GradBlur1Angle",      Visible);
+  Settings->Show("GradBlur1Vignette",  !Visible);
+  Settings->Show("GradBlur1Roundness", !Visible);
+  Settings->Show("GradBlur1CenterX",   !Visible);
+  Settings->Show("GradBlur1CenterY",   !Visible);
+
+  Visible = Settings->GetInt("GradBlur2") == ptGradualBlur_Linear  ||
+            Settings->GetInt("GradBlur2") == ptGradualBlur_MaskLinear;
+  Settings->Show("GradBlur2Angle",      Visible);
+  Settings->Show("GradBlur2Vignette",  !Visible);
+  Settings->Show("GradBlur2Roundness", !Visible);
+  Settings->Show("GradBlur2CenterX",   !Visible);
+  Settings->Show("GradBlur2CenterY",   !Visible);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

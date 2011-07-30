@@ -332,20 +332,7 @@ void ptInput::SetEnabled(const short Enabled) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptInput::Show(const short Show) {
-  if (Show) {
-    if (m_HaveSlider)
-      m_Slider->show();
-    else {
-      m_SpinBox->show();
-      m_Label->show();
-    }
-    //~ m_Button->show();
-  } else {
-    m_SpinBox->hide();
-    m_Slider->hide();
-    //~ m_Button->hide();
-    m_Label->hide();
-  }
+  m_Parent->setVisible(Show);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

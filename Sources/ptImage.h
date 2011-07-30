@@ -337,6 +337,11 @@ ptImage* Crossprocess(const short Mode,
           const double Color1,
           const double Color2);
 
+// Gradual Mask
+float *GetGradualMask(const double Angle,
+                      const double LowerLevel,
+                      const double UpperLevel,
+                      const double Softness);
 
 // Gradual Overlay
 ptImage* GradualOverlay(const uint16_t R,
@@ -391,6 +396,21 @@ float *GetVignetteMask(const short Inverted,
                        const double CenterX,
                        const double CenterY,
                        const double Softness);
+
+// GradualBlur
+ptImage* GradualBlur(const int    Mode,
+                     const double MaxRadius,
+                     const double LowerLevel,
+                     const double UpperLevel,
+                     const double Softness,
+                     const double Angle,
+                     const int    Vignette,
+                     const double Roundness,
+                     const double CenterX,
+                     const double CenterY);
+
+// Box
+ptImage* Box(const uint16_t MaxRadius, float* Mask);
 
 // Blur the image. Probably not used standalone, but
 // it is part of the USM algorithm.
@@ -568,13 +588,13 @@ ptImage* ptGMUnsharp(const double Radius, const double Amount, const double Thre
 ptImage* ptGMNormalize(const double Opacity);
 
 // ptImage_GMC.cpp
-ptImage* ptGMCWriteImage(const char* FileName,
-                         const short Format,
-                         const int Quality,
-                         const int Sampling,
-                         const int Resolution,
-                         const char* ColorProfileFileName,
-                         const int Intent);
+bool ptGMCWriteImage(const char* FileName,
+                     const short Format,
+                     const int Quality,
+                     const int Sampling,
+                     const int Resolution,
+                     const char* ColorProfileFileName,
+                     const int Intent);
 
 // ptImage_Pyramid.cpp
 ptImage* dirpyrLab_denoise(const int luma,

@@ -86,7 +86,7 @@ ptCurve*  ContrastCurve     = NULL;
 ptCurve*  Curve[16]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 ptCurve*  BackupCurve[16]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 // I don't manage to init statically following ones. Done in InitCurves.
-QStringList CurveKeys, CurveBackupKeys;
+QStringList CurveKeys, CurveToolNameKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
 
 ptChannelMixer* ChannelMixer = NULL;
@@ -245,7 +245,7 @@ void   InitChannelMixers();
 void   PreCalcTransforms();
 void   CB_ChannelMixerChoice(const QVariant Choice);
 void   CB_CurveChoice(const int Channel, const int Choice);
-void   CB_CurveWindowRecalc(const short Channel);
+void   CB_CurveWindowRecalc(const short Channel, const short ForceUpdate = 0);
 void   CB_ZoomFitButton();
 void   CB_MenuFileOpen(const short HaveFile);
 void   CB_MenuFileExit(const short);
@@ -258,7 +258,7 @@ short  WriteSettingsFile(const QString FileName, const short IsJobFile = 0);
 void   SetBackgroundColor(int SetIt);
 void   CB_StyleChoice(const QVariant Choice);
 void   CB_SliderWidthInput(const QVariant Value);
-void GimpExport(const short UsePipe);
+void Export(const short mode);
 void Update(short Phase,
             short SubPhase      = -1,
             short WithIdentify  = 1,
@@ -501,38 +501,55 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Some QStringLists to be initialized, has to be the same order as the constants.
   CurveKeys << "CurveRGB"
-      << "CurveR"
-      << "CurveG"
-      << "CurveB"
-      << "CurveL"
-      << "CurveLa"
-      << "CurveLb"
-      << "CurveSaturation"
-      << "BaseCurve"
-      << "BaseCurve2"
-      << "CurveLByHue"
-      << "CurveTexture"
-      << "CurveShadowsHighlights"
-      << "CurveDenoise"
-      << "CurveHue"
-      << "CurveDenoise2";
+            << "CurveR"
+            << "CurveG"
+            << "CurveB"
+            << "CurveL"
+            << "CurveLa"
+            << "CurveLb"
+            << "CurveSaturation"
+            << "BaseCurve"
+            << "BaseCurve2"
+            << "CurveLByHue"
+            << "CurveTexture"
+            << "CurveShadowsHighlights"
+            << "CurveDenoise"
+            << "CurveHue"
+            << "CurveDenoise2";
+
+  CurveToolNameKeys << "TabRGBCurve"
+                    << "TabRToneCurve"
+                    << "TabGToneCurve"
+                    << "TabBToneCurve"
+                    << "TabLCurve"
+                    << "TabABCurves"
+                    << "TabABCurves"
+                    << "TabSaturationCurve"
+                    << "TabBaseCurve"
+                    << "TabAfterGammaCurve"
+                    << "TabLbyHue"
+                    << "TabLABTextureCurve"
+                    << "TabLABShadowsHighlights"
+                    << "TabDetailCurve"
+                    << "TabHueCurve"
+                    << "TabDenoiseCurve";
 
   CurveFileNamesKeys << "CurveFileNamesRGB"
-      << "CurveFileNamesR"
-      << "CurveFileNamesG"
-      << "CurveFileNamesB"
-      << "CurveFileNamesL"
-      << "CurveFileNamesLa"
-      << "CurveFileNamesLb"
-      << "CurveFileNamesSaturation"
-      << "CurveFileNamesBase"
-      << "CurveFileNamesBase2"
-      << "CurveFileNamesLByHue"
-      << "CurveFileNamesTexture"
-      << "CurveFileNamesShadowsHighlights"
-      << "CurveFileNamesDenoise"
-      << "CurveFileNamesHue"
-      << "CurveFileNamesDenoise2";
+                     << "CurveFileNamesR"
+                     << "CurveFileNamesG"
+                     << "CurveFileNamesB"
+                     << "CurveFileNamesL"
+                     << "CurveFileNamesLa"
+                     << "CurveFileNamesLb"
+                     << "CurveFileNamesSaturation"
+                     << "CurveFileNamesBase"
+                     << "CurveFileNamesBase2"
+                     << "CurveFileNamesLByHue"
+                     << "CurveFileNamesTexture"
+                     << "CurveFileNamesShadowsHighlights"
+                     << "CurveFileNamesDenoise"
+                     << "CurveFileNamesHue"
+                     << "CurveFileNamesDenoise2";
 
   CurveBackupKeys = CurveKeys;
 
@@ -959,6 +976,7 @@ void CB_Event0() {
     }
     MainWindow->UpdateSettings();
     ViewWindow->setFocus();
+    HistogramWindow->Init();
   }
 
   if (Settings->GetStringList("FavouriteTools") == QStringList()) {
@@ -1262,8 +1280,8 @@ void Update(short Phase,
     // write output
     WriteOut();
   } else if (Phase == ptProcessorPhase_ToGimp) {
-    // export to gimp
-    GimpExport(1);
+    // export
+    Export(ptExportMode_GimpPipe);
   } else {
     // should not happen!
     assert(0);
@@ -1679,8 +1697,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   // -> transfer to preview color space
   if (ForcedImage) {
     PreviewImage->Set(ForcedImage);
-    float Factor = powf(2,Settings->GetDouble("ExposureNormalization"));
-    if (Settings->GetInt("PreviewMode") == ptPreviewMode_End) {
+    if (Settings->GetDouble("CropExposure") != 0.0) {
+      float Factor = powf(2,Settings->GetDouble("CropExposure"));
       PreviewImage->Expose(Factor,ptExposureClipMode_Ratio);
     }
     BeforeGamma(PreviewImage,0,0);
@@ -2300,177 +2318,167 @@ void PrepareTags(const QString TagsInput) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void WriteExif(const char* FileName, uint8_t* ExifBuffer, const unsigned ExifBufferLength) {
-
-  std::string FileType=FileName;
-  int Ending=FileType.rfind(".");
-  FileType.erase(0,Ending+1);
-  // since the next line is not working, here just manual...
-  // std::transform(test.begin(), test.end(), test.begin(), std::tolower);
-
-  std::string Extensions[] = {"jpg", "JPG", "Jpg", "jpeg", "Jpeg", "JPEG",
-            "tif", "TIF", "Tif", "tiff", "Tiff", "TIFF"};
-  int doexif = 0;
-  for (int i=0; i<12; i++) if (!FileType.compare(Extensions[i])) doexif = 1;
+void WriteExif(const QString FileName, uint8_t* ExifBuffer, const unsigned ExifBufferLength) {
 
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-  if (doexif && ExifBufferLength) {
+  try {
+    if (ExifBufferLength) {
 
-    // Open the raw again for full exif data
-    //~ Exiv2::Image::AutoPtr InImage =
-    //~ Exiv2::ImageFactory::open((Settings->GetStringList("InputFileNameList"))[0].toAscii().data());
-    //~ assert(InImage.get() != 0);
-    //~ InImage->readMetadata();
+      // Open the raw again for full exif data
+      //~ Exiv2::Image::AutoPtr InImage =
+      //~ Exiv2::ImageFactory::open((Settings->GetStringList("InputFileNameList"))[0].toAscii().data());
+      //~ assert(InImage.get() != 0);
+      //~ InImage->readMetadata();
 
-    const unsigned char ExifHeader[] = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
+      const unsigned char ExifHeader[] = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
 
-    unsigned char*  Buffer;
-    unsigned long   BufferLength;
+      unsigned char*  Buffer;
+      unsigned long   BufferLength;
 
-    BufferLength = ExifBufferLength-sizeof(ExifHeader);
+      BufferLength = ExifBufferLength-sizeof(ExifHeader);
 
-    Buffer = (unsigned char*) MALLOC(BufferLength);
-    ptMemoryError(Buffer,__FILE__,__LINE__);
+      Buffer = (unsigned char*) MALLOC(BufferLength);
+      ptMemoryError(Buffer,__FILE__,__LINE__);
 
-    Exiv2::ExifData exifData;
+      Exiv2::ExifData exifData;
 
-    memcpy(Buffer,ExifBuffer+sizeof(ExifHeader), BufferLength);
+      memcpy(Buffer,ExifBuffer+sizeof(ExifHeader), BufferLength);
 
-    Exiv2::ExifParser::decode(exifData, Buffer, BufferLength);
+      Exiv2::ExifParser::decode(exifData, Buffer, BufferLength);
 
-    // Reset orientation
-    Exiv2::ExifData::iterator pos = exifData.begin();
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Orientation")))
-    != exifData.end() ) {
-      pos->setValue("1"); // Normal orientation
-    }
-
-    // Code from UFRaw, necessary for Tiff files
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageLength")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.BitsPerSample")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Compression")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.PhotometricInterpretation")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.FillOrder")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.SamplesPerPixel")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.StripOffsets")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.RowsPerStrip")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.StripByteCounts")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.XResolution")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.YResolution")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.PlanarConfiguration")))
-    != exifData.end() )
-      exifData.erase(pos);
-    if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ResolutionUnit")))
-    != exifData.end() )
-      exifData.erase(pos);
-
-    if (Settings->GetInt("EraseExifThumbnail")) {
-#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-      Exiv2::ExifThumb Thumb(exifData);
-      Thumb.erase();
-#else
-      exifData.eraseThumbnail();
-#endif
-    }
-
-    std::string JpegExtensions[] = {"jpg", "JPG", "Jpg", "jpeg", "Jpeg", "JPEG"};
-    short deleteDNGdata = 0;
-    for (int i=0; i<6; i++) if (!FileType.compare(JpegExtensions[i])) deleteDNGdata = 1;
-
-    Exiv2::Image::AutoPtr Exiv2Image = Exiv2::ImageFactory::open(FileName);
-    assert(Exiv2Image.get() != 0);
-
-    Exiv2Image->readMetadata();
-    Exiv2::ExifData &outExifData = Exiv2Image->exifData();
-    pos = exifData.begin();
-    while ( !exifData.empty() ) {
-      if (deleteDNGdata == 0 || (*pos).key() != "Exif.Image.DNGPrivateData") {
-        outExifData.add(*pos);
+      // Reset orientation
+      Exiv2::ExifData::iterator pos = exifData.begin();
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Orientation")))
+      != exifData.end() ) {
+        pos->setValue("1"); // Normal orientation
       }
-      pos = exifData.erase(pos);
-    }
 
-    if (Settings->GetInt("JobMode") == 0)
-      PrepareTags(MainWindow->TagsEditWidget->toPlainText());
+      // Code from UFRaw, necessary for Tiff files
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageLength")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.BitsPerSample")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Compression")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.PhotometricInterpretation")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.FillOrder")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.SamplesPerPixel")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.StripOffsets")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.RowsPerStrip")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.StripByteCounts")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.XResolution")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.YResolution")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.PlanarConfiguration")))
+      != exifData.end() )
+        exifData.erase(pos);
+      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ResolutionUnit")))
+      != exifData.end() )
+        exifData.erase(pos);
 
-    // IPTC data
-    Exiv2::IptcData iptcData;
+      if (Settings->GetInt("EraseExifThumbnail")) {
+#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
+        Exiv2::ExifThumb Thumb(exifData);
+        Thumb.erase();
+#else
+        exifData.eraseThumbnail();
+#endif
+      }
 
-    QStringList Tags = Settings->GetStringList("TagsList");
-    QStringList DigikamTags = Settings->GetStringList("DigikamTagsList");
+      QString JpegExtensions[] = {"jpg", "JPG", "Jpg", "jpeg", "Jpeg", "JPEG"};
+      short deleteDNGdata = 0;
+      for (int i=0; i<6; i++) if (!FileName.endsWith(JpegExtensions[i])) deleteDNGdata = 1;
 
-    Exiv2::StringValue StringValue;
-    for (int i = 0; i < Tags.size(); i++) {
-      StringValue.read(Tags.at(i).toStdString());
-      iptcData.add(Exiv2::IptcKey("Iptc.Application2.Keywords"), &StringValue);
-    }
+      Exiv2::Image::AutoPtr Exiv2Image = Exiv2::ImageFactory::open(FileName.toAscii().data());
 
-    // XMP data
-    Exiv2::XmpData xmpData;
+      Exiv2Image->readMetadata();
+      Exiv2::ExifData &outExifData = Exiv2Image->exifData();
+      pos = exifData.begin();
+      while ( !exifData.empty() ) {
+        if (deleteDNGdata == 0 || (*pos).key() != "Exif.Image.DNGPrivateData") {
+          outExifData.add(*pos);
+        }
+        pos = exifData.erase(pos);
+      }
 
-    if (Settings->GetInt("ImageRating"))
-      xmpData["Xmp.xmp.Rating"] = Settings->GetInt("ImageRating");
-    for (int i = 0; i < Tags.size(); i++) {
-      xmpData["Xmp.dc.subject"] = Tags.at(i).toStdString();
-    }
-    for (int i = 0; i < DigikamTags.size(); i++) {
-      xmpData["Xmp.digiKam.TagsList"] = DigikamTags.at(i).toStdString();
-    }
+      if (Settings->GetInt("JobMode") == 0)
+        PrepareTags(MainWindow->TagsEditWidget->toPlainText());
 
-    // Program name
-    iptcData["Iptc.Application2.Program"] = ProgramName;
-    iptcData["Iptc.Application2.ProgramVersion"] = "idle";
-    xmpData["Xmp.xmp.CreatorTool"] = ProgramName;
-    xmpData["Xmp.tiff.Software"] = ProgramName;
+      // IPTC data
+      Exiv2::IptcData iptcData;
 
-    // Title
-    if (Settings->GetInt("JobMode") == 0)
-      Settings->SetValue("ImageTitle",MainWindow->TitleEditWidget->text());
-    QString TitleWorking = Settings->GetString("ImageTitle");
-    while (TitleWorking.contains("  "))
-      TitleWorking.replace("  "," ");
-    if (TitleWorking != "" && TitleWorking != " ") {
-      outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
-      iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
-      xmpData["Xmp.dc.description"] = TitleWorking.toStdString();
-      xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
-      xmpData["Xmp.tiff.ImageDescription"] = TitleWorking.toStdString();
-    }
+      QStringList Tags = Settings->GetStringList("TagsList");
+      QStringList DigikamTags = Settings->GetStringList("DigikamTagsList");
 
-    try {
+      Exiv2::StringValue StringValue;
+      for (int i = 0; i < Tags.size(); i++) {
+        StringValue.read(Tags.at(i).toStdString());
+        iptcData.add(Exiv2::IptcKey("Iptc.Application2.Keywords"), &StringValue);
+      }
+
+      // XMP data
+      Exiv2::XmpData xmpData;
+
+      if (Settings->GetInt("ImageRating"))
+        xmpData["Xmp.xmp.Rating"] = Settings->GetInt("ImageRating");
+      for (int i = 0; i < Tags.size(); i++) {
+        xmpData["Xmp.dc.subject"] = Tags.at(i).toStdString();
+      }
+      for (int i = 0; i < DigikamTags.size(); i++) {
+        xmpData["Xmp.digiKam.TagsList"] = DigikamTags.at(i).toStdString();
+      }
+
+      // Program name
+      iptcData["Iptc.Application2.Program"] = ProgramName;
+      iptcData["Iptc.Application2.ProgramVersion"] = "idle";
+      xmpData["Xmp.xmp.CreatorTool"] = ProgramName;
+      xmpData["Xmp.tiff.Software"] = ProgramName;
+
+      // Title
+      if (Settings->GetInt("JobMode") == 0)
+        Settings->SetValue("ImageTitle",MainWindow->TitleEditWidget->text());
+      QString TitleWorking = Settings->GetString("ImageTitle");
+      while (TitleWorking.contains("  "))
+        TitleWorking.replace("  "," ");
+      if (TitleWorking != "" && TitleWorking != " ") {
+        outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
+        iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
+        xmpData["Xmp.dc.description"] = TitleWorking.toStdString();
+        xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
+        xmpData["Xmp.tiff.ImageDescription"] = TitleWorking.toStdString();
+      }
+
       Exiv2Image->setExifData(outExifData);
       Exiv2Image->setIptcData(iptcData);
       Exiv2Image->setXmpData(xmpData);
       Exiv2Image->writeMetadata();
-    } catch (Exiv2::AnyError& Error) {
+    }
+  } catch (Exiv2::AnyError& Error) {
+    if (Settings->GetInt("JobMode") == 0) {
+      ptMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!\nCaught Exiv2 exception '" + QString(Error.what()) + "'\n");
+    } else {
       std::cout << "Caught Exiv2 exception '" << Error << "'\n";
-      if (Settings->GetInt("JobMode") == 0)
-        ptMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!");
     }
   }
 #endif
@@ -2528,22 +2536,26 @@ void WriteOut() {
 
   ReportProgress(QObject::tr("Writing output"));
 
-  OutImage->ptGMCWriteImage(
-      Settings->GetString("OutputFileName").toAscii().data(),
-      Settings->GetInt("SaveFormat"),
-      Settings->GetInt("SaveQuality"),
-      Settings->GetInt("SaveSampling"),
-      Settings->GetInt("SaveResolution"),
-      Settings->GetString("OutputColorProfile").toAscii().data(),
-      Settings->GetInt("OutputColorProfileIntent"));
+  bool FileWritten =  OutImage->ptGMCWriteImage(
+    Settings->GetString("OutputFileName").toAscii().data(),
+    Settings->GetInt("SaveFormat"),
+    Settings->GetInt("SaveQuality"),
+    Settings->GetInt("SaveSampling"),
+    Settings->GetInt("SaveResolution"),
+    Settings->GetString("OutputColorProfile").toAscii().data(),
+    Settings->GetInt("OutputColorProfileIntent"));
 
-  ReportProgress(QObject::tr("Writing output (exif)"));
+  if (!FileWritten) {
+    ptMessageBox::warning(MainWindow,"GraphicsMagick Error","No output file written.");
+  } else {
+    ReportProgress(QObject::tr("Writing output (exif)"));
 
-  if (Settings->GetInt("IncludeExif") &&
-      TheProcessor->m_ExifBufferLength) {
-    WriteExif(Settings->GetString("OutputFileName").toAscii().data(),
-        TheProcessor->m_ExifBuffer,
-        TheProcessor->m_ExifBufferLength);
+    if (Settings->GetInt("IncludeExif") &&
+        TheProcessor->m_ExifBufferLength) {
+      WriteExif(Settings->GetString("OutputFileName"),
+          TheProcessor->m_ExifBuffer,
+          TheProcessor->m_ExifBufferLength);
+    }
   }
 
   if (Settings->GetInt("JobMode") == 0) delete OutImage;
@@ -5132,6 +5144,21 @@ void CB_AspectRatioHChoice(const QVariant Value) {
   }
 }
 
+void CB_CropExposureInput(const QVariant Value) {
+  Settings->SetValue("CropExposure", Value);
+
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->ShowStatus(QObject::tr("Prepare"));
+    ReportProgress(QObject::tr("Prepare for cropping"));
+
+    UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
+
+    // Allow to be selected in the view window. And deactivate main.
+    ViewWindow->ShowStatus(QObject::tr("Crop"));
+    ReportProgress(QObject::tr("Crop"));
+  }
+}
+
 void CB_CropOrientationButton() {
   int w = Settings->GetInt("AspectRatioW");
   int h = Settings->GetInt("AspectRatioH");
@@ -6117,6 +6144,8 @@ void CB_BaseCurve2SaveButton() {
   CB_CurveSaveButton(ptCurveChannel_Base2);
 }
 void CB_CurveChoice(const int Channel, const int Choice) {
+  short PreviousActiveState = Settings->ToolIsActive(CurveToolNameKeys[Channel]);
+
   // Save the old Curve
   if (Settings->GetInt(CurveKeys.at(Channel))==ptCurveChoice_Manual) {
     if (!BackupCurve[Channel]) BackupCurve[Channel] = new ptCurve();
@@ -6160,7 +6189,7 @@ void CB_CurveChoice(const int Channel, const int Choice) {
   if (Settings->GetInt("JobMode") == 0)
     CurveWindow[Channel]->UpdateView(Curve[Channel]);
 
-  CB_CurveWindowRecalc(Channel);
+  CB_CurveWindowRecalc(Channel, PreviousActiveState);
 }
 
 void CB_CurveRGBChoice(const QVariant Choice) {
@@ -6227,62 +6256,13 @@ void CB_BaseCurve2Choice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_Base2,Choice.toInt());
 }
 
-void CB_CurveWindowRecalc(const short Channel) {
+void CB_CurveWindowRecalc(const short Channel, const short ForceUpdate /* =0 */) {
   if (!InStartup) {
+    short NewActiveState = Settings->ToolIsActive(CurveToolNameKeys[Channel]);
+    MainWindow->m_GroupBox->value(CurveToolNameKeys[Channel])->SetActive(NewActiveState);
     // Run the graphical pipe according to a changed curve.
-    switch(Channel) {
-      case ptCurveChannel_RGB :
-        if (Settings->ToolIsActive("TabRGBCurve")) Update(ptProcessorPhase_RGB);
-        break;
-      case ptCurveChannel_ShadowsHighlights :
-        if (Settings->ToolIsActive("TabLABShadowsHighlights")) Update(ptProcessorPhase_LabCC);
-        break;
-      case ptCurveChannel_Texture :
-        if (Settings->ToolIsActive("TabLABTextureCurve")) Update(ptProcessorPhase_LabCC);
-        break;
-      case ptCurveChannel_Denoise :
-        if (Settings->ToolIsActive("TabDetailCurve")) Update(ptProcessorPhase_LabSN);
-        break;
-      case ptCurveChannel_Denoise2 :
-        if (Settings->ToolIsActive("TabDenoiseCurve")) Update(ptProcessorPhase_LabSN);
-        break;
-      case ptCurveChannel_LByHue :
-        if (Settings->ToolIsActive("TabLbyHue")) Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_Hue :
-        if (Settings->ToolIsActive("TabHueCurve")) Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_Saturation :
-        if (Settings->ToolIsActive("TabSaturationCurve")) Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_L :
-        if (Settings->ToolIsActive("TabLCurve")) Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_a :
-        if (Settings->ToolIsActive("TabABCurves") && Settings->GetInt("CurveLa"))
-          Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_b :
-        if (Settings->ToolIsActive("TabABCurves") && Settings->GetInt("CurveLb"))
-          Update(ptProcessorPhase_LabEyeCandy);
-        break;
-      case ptCurveChannel_R :
-        if (Settings->ToolIsActive("TabRToneCurve")) Update(ptProcessorPhase_EyeCandy);
-        break;
-      case ptCurveChannel_G :
-        if (Settings->ToolIsActive("TabGToneCurve")) Update(ptProcessorPhase_EyeCandy);
-        break;
-      case ptCurveChannel_B :
-        if (Settings->ToolIsActive("TabBToneCurve")) Update(ptProcessorPhase_EyeCandy);
-        break;
-      case ptCurveChannel_Base :
-        if (Settings->ToolIsActive("TabBaseCurve")) Update(ptProcessorPhase_Output);
-        break;
-      case ptCurveChannel_Base2 :
-        if (Settings->ToolIsActive("TabAfterGammaCurve")) Update(ptProcessorPhase_Output);
-        break;
-      default :
-        assert(!"Unknown curve");
+    if (ForceUpdate || NewActiveState) {
+      Update(CurveToolNameKeys[Channel]);
     }
   }
 }
@@ -6293,7 +6273,6 @@ void CB_CurveWindowManuallyChanged(const short Channel) {
   // Run the graphical pipe according to a changed curve.
   CB_CurveWindowRecalc(Channel);
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -8183,7 +8162,20 @@ void CB_ImageRatingInput(const QVariant Value) {
   TheProcessor->ReadExifBuffer();
 }
 
+inline void BlockExport(bool Block) {
+  if (!Block) QApplication::processEvents();
+  MainWindow->ToGimpButton->setEnabled(!Block);
+  QApplication::processEvents();
+}
+
+inline void BlockSave(bool Block) {
+  if (!Block) QApplication::processEvents();
+  MainWindow->WritePipeButton->setEnabled(!Block);
+  QApplication::processEvents();
+}
+
 void SaveOutput(const short mode) {
+  BlockSave(true);
   if (mode==ptOutputMode_Full) {
     CB_MenuFileSaveOutput();
   } else if (mode==ptOutputMode_Pipe) {
@@ -8193,14 +8185,18 @@ void SaveOutput(const short mode) {
   } else if (mode==ptOutputMode_Settingsfile) {
     CB_MenuFileWriteSettings();
   }
+  BlockSave(false);
 }
 
 void Export(const short mode) {
+  BlockExport(true);
   if (mode==ptExportMode_GimpPipe && Settings->GetInt("ExportToGimp")) {
     GimpExport(1);
+    BlockExport(false);
     return;
   } else if (mode==ptExportMode_GimpFull && Settings->GetInt("ExportToGimp")) {
     GimpExport(0);
+    BlockExport(false);
     return;
   }
 
@@ -8227,6 +8223,7 @@ void Export(const short mode) {
   ExportArguments << ImageFileName;
   QProcess* ExportProcess = new QProcess();
   ExportProcess->startDetached(ExportCommand,ExportArguments);
+  BlockExport(false);
 }
 
 void CB_WriteOutputButton() {
@@ -8276,8 +8273,15 @@ void Standard_CB_SetAndRun (const QString ObjectName, const QVariant Value) {
   short PreviousActiveState = Settings->ToolIsActive(ToolName);
 
   Settings->SetValue(Key,Value);
-  if (Settings->ToolIsActive(ToolName) || PreviousActiveState)
+
+  short NewActiveState = Settings->ToolIsActive(ToolName);
+  CurrentTool->SetActive(NewActiveState);
+
+  if (NewActiveState || PreviousActiveState) {
     Update(ToolName);
+  } else {
+    MainWindow->UpdateSettings();
+  }
 }
 
 void CB_InputChanged(const QString ObjectName, const QVariant Value) {
@@ -8428,6 +8432,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FixedAspectRatioCheck)
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)
+  M_Dispatch(CropExposureInput)
 
   M_Dispatch(LqrEnergyChoice)
   M_Dispatch(LqrScalingChoice)
@@ -8859,6 +8864,27 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(VignetteCenterXInput)
   M_SetAndRunDispatch(VignetteCenterYInput)
   M_SetAndRunDispatch(VignetteSoftnessInput)
+
+  M_SetAndRunDispatch(GradBlur1Choice)
+  M_SetAndRunDispatch(GradBlur1RadiusInput)
+  M_SetAndRunDispatch(GradBlur1LowerLevelInput)
+  M_SetAndRunDispatch(GradBlur1UpperLevelInput)
+  M_SetAndRunDispatch(GradBlur1SoftnessInput)
+  M_SetAndRunDispatch(GradBlur1AngleInput)
+  M_SetAndRunDispatch(GradBlur1VignetteInput)
+  M_SetAndRunDispatch(GradBlur1RoundnessInput)
+  M_SetAndRunDispatch(GradBlur1CenterXInput)
+  M_SetAndRunDispatch(GradBlur1CenterYInput)
+  M_SetAndRunDispatch(GradBlur2Choice)
+  M_SetAndRunDispatch(GradBlur2RadiusInput)
+  M_SetAndRunDispatch(GradBlur2LowerLevelInput)
+  M_SetAndRunDispatch(GradBlur2UpperLevelInput)
+  M_SetAndRunDispatch(GradBlur2SoftnessInput)
+  M_SetAndRunDispatch(GradBlur2AngleInput)
+  M_SetAndRunDispatch(GradBlur2VignetteInput)
+  M_SetAndRunDispatch(GradBlur2RoundnessInput)
+  M_SetAndRunDispatch(GradBlur2CenterXInput)
+  M_SetAndRunDispatch(GradBlur2CenterYInput)
 
   M_SetAndRunDispatch(SoftglowModeChoice)
   M_SetAndRunDispatch(SoftglowRadiusInput)

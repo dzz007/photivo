@@ -68,6 +68,9 @@ const short ptProcessorPhase_OnlyHistogram = 11;
 const short ptProcessorPhase_WriteOut      = 12;
 const short ptProcessorPhase_ToGimp        = 13;
 
+// if stop is set, we have no console output of processing, to prevent
+// spamming while crop preview
+const short ptProcessorStopBefore_NoStop = 0;
 const short ptProcessorStopBefore_Rotate = 1;
 const short ptProcessorStopBefore_Crop   = 2;
 
@@ -311,6 +314,15 @@ const short ptDenoiseMask_Shadows5 = 5;
 const short ptFlipMode_None       = 0;
 const short ptFlipMode_Horizontal = 1;
 const short ptFlipMode_Vertical   = 2;
+
+// Gradual Blur modes
+
+const short ptGradualBlur_None         = 0;
+const short ptGradualBlur_Linear       = 1;
+const short ptGradualBlur_Vignette     = 2;
+const short ptGradualBlur_MaskLinear   = 3;
+const short ptGradualBlur_MaskVignette = 4;
+
 
 // GrainModes
 
