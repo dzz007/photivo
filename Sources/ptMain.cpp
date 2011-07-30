@@ -267,6 +267,7 @@ void SaveButtonToolTip(const short mode);
 int    photivoMain(int Argc, char *Argv[]);
 void   CleanupResources();
 void copyFolder(QString sourceFolder, QString destFolder);
+bool GBusy = false;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1700,7 +1701,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     // Convert from working space to screen space.
     // Using lcms and a standard sRGB or custom profile.
-    ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB();
+    ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
     if (!ReturnValue) {
       ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
       assert(ReturnValue);
@@ -1937,19 +1938,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   ReportProgress(QObject::tr("Converting to screen space"));
 
   // Convert from working space to screen space.
-  if (Settings->GetInt("CMQuality") != ptCMQuality_FastSRGB) {
-    // Using lcms and a standard sRGB or custom profile.
-    PreviewImage->lcmsRGBToPreviewRGB();
-  } else {
-    PreviewImage->RGBToRGB(ptSpace_sRGB_D65);
-    uint16_t (*Image)[3] = PreviewImage->m_Image;
-#pragma omp parallel for schedule(static)
-    for (uint32_t i=0; i<(uint32_t)PreviewImage->m_Height*PreviewImage->m_Width; i++) {
-      Image[i][0] = ToSRGBTable[Image[i][0]];
-      Image[i][1] = ToSRGBTable[Image[i][1]];
-      Image[i][2] = ToSRGBTable[Image[i][2]];
-    }
-  }
+  // Using lcms and a standard sRGB or custom profile.
+  PreviewImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
 
   if (!ForcedImage) {
     AfterAll(PreviewImage);
@@ -1964,7 +1954,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     } else if (Settings->GetInt("HistogramCrop")) {
       BeforeGamma(HistogramImage,0,0);
 
-      ptImage* ReturnValue = HistogramImage->lcmsRGBToPreviewRGB();
+      ptImage* ReturnValue = HistogramImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
       if (!ReturnValue) {
         ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
         assert(ReturnValue);
@@ -5081,14 +5071,10 @@ void CB_CropExposureInput(const QVariant Value) {
   Settings->SetValue("CropExposure", Value);
 
   if (ViewWindow->interaction() == iaCrop) {
-    ViewWindow->ShowStatus(QObject::tr("Prepare"));
-    ReportProgress(QObject::tr("Prepare for cropping"));
-
+    if (GBusy) return;
+    else GBusy = true;
     UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
-
-    // Allow to be selected in the view window. And deactivate main.
-    ViewWindow->ShowStatus(QObject::tr("Crop"));
-    ReportProgress(QObject::tr("Crop"));
+    GBusy = false;
   }
 }
 

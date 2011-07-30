@@ -72,7 +72,8 @@ extern cmsHPROFILE PreviewColorProfile;
 extern cmsHTRANSFORM ToPreviewTransform;
 
 // Lut
-extern float ToFloatTable[0x10000];
+extern float    ToFloatTable[0x10000];
+extern uint16_t ToSRGBTable[0x10000];
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -317,23 +318,33 @@ ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
   return this;
 }
 
-ptImage* ptImage::lcmsRGBToPreviewRGB(){
-  // assert ((m_ColorSpace>0) && (m_ColorSpace<5));
-  if (!((m_ColorSpace>0) && (m_ColorSpace<5))) {
-    ptMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
-    return this;
-  }
-  assert (3 == m_Colors);
-
-  int32_t Size = m_Width*m_Height;
-  int32_t Step = 10000;
+ptImage* ptImage::lcmsRGBToPreviewRGB(const bool Fast /* = false */){
+  if (Fast) {
+    // Fast transform to sRGB by lookup
+    RGBToRGB(ptSpace_sRGB_D65);
 #pragma omp parallel for schedule(static)
-  for (int32_t i = 0; i < Size; i+=Step) {
-    int32_t Length = (i+Step)<Size ? Step : Size - i;
-    uint16_t* Image = &m_Image[i][0];
-    cmsDoTransform(ToPreviewTransform,Image,Image,Length);
-  }
+    for (uint32_t i=0; i<(uint32_t)m_Height*m_Width; i++) {
+      m_Image[i][0] = ToSRGBTable[m_Image[i][0]];
+      m_Image[i][1] = ToSRGBTable[m_Image[i][1]];
+      m_Image[i][2] = ToSRGBTable[m_Image[i][2]];
+    }
+  } else {
+    // assert ((m_ColorSpace>0) && (m_ColorSpace<5));
+    if (!((m_ColorSpace>0) && (m_ColorSpace<5))) {
+      ptMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
+      return this;
+    }
+    assert (3 == m_Colors);
 
+    int32_t Size = m_Width*m_Height;
+    int32_t Step = 10000;
+  #pragma omp parallel for schedule(static)
+    for (int32_t i = 0; i < Size; i+=Step) {
+      int32_t Length = (i+Step)<Size ? Step : Size - i;
+      uint16_t* Image = &m_Image[i][0];
+      cmsDoTransform(ToPreviewTransform,Image,Image,Length);
+    }
+  }
   m_ColorSpace = ptSpace_Profiled;
 
   return this;
