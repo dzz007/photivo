@@ -2515,7 +2515,7 @@ Exit:
 
 void ptProcessor::RunGeometry(const short StopBefore) {
   if (Settings->GetInt("IsRAW")==0) {
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       m_ReportProgress(tr("Transfer Bitmap"));
     }
 
@@ -2541,7 +2541,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
 
     // The full image width and height is already set.
     // This is the current size:
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       TRACEKEYVALS("ImageW","%d",m_Image_AfterGeometry->m_Width);
       TRACEKEYVALS("ImageH","%d",m_Image_AfterGeometry->m_Height);
       TRACEMAIN("Done bitmap transfer at %d ms.", m_RunTimer.elapsed());
@@ -2566,7 +2566,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   if (Settings->ToolIsActive("TabLensfunCA") || Settings->ToolIsActive("TabLensfunVignette") ||
       Settings->ToolIsActive("TabLensfunDistortion") || Settings->ToolIsActive("TabLensfunGeometry") )
   {
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       m_ReportProgress(tr("Lensfun corrections"));
     }
     int modflags = 0;
@@ -2706,7 +2706,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
     m_Image_AfterGeometry->Lensfun(modflags, LfunData);
     LfunData->Destroy();
 
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       TRACEMAIN("Done Lensfun corrections at %d ms.",m_RunTimer.elapsed());
     }
   }
@@ -2716,7 +2716,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   // Defish (dedicated lensfun)
   if (Settings->ToolIsActive("TabDefish"))
   {
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       m_ReportProgress(tr("Defish correction"));
     }
 
@@ -2759,7 +2759,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
     m_Image_AfterGeometry->Lensfun(modflags, LfunData);
     LfunData->Destroy();
 
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       TRACEMAIN("Done defish correction at %d ms.",m_RunTimer.elapsed());
     }
   }
@@ -2775,7 +2775,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   //***************************************************************************
   // Rotation
   if (Settings->ToolIsActive("TabRotation")) {
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       m_ReportProgress(tr("Perspective transform"));
     }
 
@@ -2786,7 +2786,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
                                            Settings->GetDouble("PerspectiveScaleX"),
                                            Settings->GetDouble("PerspectiveScaleY"));
 
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       TRACEMAIN("Done perspective at %d ms.",m_RunTimer.elapsed());
     }
   }
@@ -2797,7 +2797,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   Settings->SetValue("RotateW",m_Image_AfterGeometry->m_Width << TmpScaled);
   Settings->SetValue("RotateH",m_Image_AfterGeometry->m_Height<< TmpScaled);
 
-  if (StopBefore == 0) {
+  if (StopBefore == ptProcessorStopBefore_NoStop) {
     TRACEKEYVALS("RotateW","%d",Settings->GetInt("RotateW"));
     TRACEKEYVALS("RotateH","%d",Settings->GetInt("RotateH"));
   }
@@ -2827,7 +2827,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
       Settings->SetValue("CropH",0);
       Settings->SetValue("Crop",0);
     } else {
-      if (StopBefore == 0) {
+      if (StopBefore == ptProcessorStopBefore_NoStop) {
         TRACEKEYVALS("CropW","%d",Settings->GetInt("CropW"));
         TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
         m_ReportProgress(tr("Cropping"));
@@ -2838,13 +2838,13 @@ void ptProcessor::RunGeometry(const short StopBefore) {
                                  Settings->GetInt("CropW") >> TmpScaled,
                                  Settings->GetInt("CropH") >> TmpScaled);
 
-      if (StopBefore == 0) {
+      if (StopBefore == ptProcessorStopBefore_NoStop) {
         TRACEMAIN("Done cropping at %d ms.",m_RunTimer.elapsed());
       }
     }
   }
 
-  if (StopBefore == 0) {
+  if (StopBefore == ptProcessorStopBefore_NoStop) {
     TRACEKEYVALS("CropW","%d",m_Image_AfterGeometry->m_Width << TmpScaled);
     TRACEKEYVALS("CropH","%d",m_Image_AfterGeometry->m_Height<< TmpScaled);
   }
@@ -2856,7 +2856,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   //***************************************************************************
   // Liquid rescale
   if (Settings->ToolIsActive("TabLiquidRescale")) {
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       m_ReportProgress(tr("Seam carving"));
     }
 
@@ -2871,7 +2871,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
                                            Settings->GetInt("LqrEnergy"),
                                            Settings->GetInt("LqrVertFirst"));
     }
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       TRACEMAIN("Done seam carving at %d ms.",m_RunTimer.elapsed());
     }
   }
@@ -2879,7 +2879,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   //***************************************************************************
   // Resize
   if (Settings->ToolIsActive("TabResize")) {
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       m_ReportProgress(tr("Resize image"));
     }
 
@@ -2890,7 +2890,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
 
     m_ScaleFactor = (float) m_Image_AfterGeometry->m_Width/WidthIn/powf(2.0, Settings->GetInt("Scaled"));
 
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       TRACEMAIN("Done resize at %d ms.",m_RunTimer.elapsed());
     }
   }
@@ -2898,13 +2898,13 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   //***************************************************************************
   // Flip
   if (Settings->ToolIsActive("TabFlip")) {
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       m_ReportProgress(tr("Flip image"));
     }
 
     m_Image_AfterGeometry->Flip(Settings->GetInt("FlipMode"));
 
-    if (StopBefore == 0) {
+    if (StopBefore == ptProcessorStopBefore_NoStop) {
       TRACEMAIN("Done flip at %d ms.",m_RunTimer.elapsed());
     }
   }

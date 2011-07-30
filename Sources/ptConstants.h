@@ -68,6 +68,9 @@ const short ptProcessorPhase_OnlyHistogram = 11;
 const short ptProcessorPhase_WriteOut      = 12;
 const short ptProcessorPhase_ToGimp        = 13;
 
+// if stop is set, we have no console output of processing, to prevent
+// spamming while crop preview
+const short ptProcessorStopBefore_NoStop = 0;
 const short ptProcessorStopBefore_Rotate = 1;
 const short ptProcessorStopBefore_Crop   = 2;
 

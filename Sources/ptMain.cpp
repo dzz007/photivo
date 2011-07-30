@@ -1692,7 +1692,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   // -> transfer to preview color space
   if (ForcedImage) {
     PreviewImage->Set(ForcedImage);
-    float Factor = powf(2,Settings->GetDouble("ExposureNormalization"));
+    float Factor = powf(2,Settings->GetDouble("ExposureNormalization") +
+                          Settings->GetDouble("CropExposure"));
     if (Settings->GetInt("PreviewMode") == ptPreviewMode_End) {
       PreviewImage->Expose(Factor,ptExposureClipMode_Ratio);
     }
@@ -5077,6 +5078,21 @@ void CB_AspectRatioHChoice(const QVariant Value) {
   }
 }
 
+void CB_CropExposureInput(const QVariant Value) {
+  Settings->SetValue("CropExposure", Value);
+
+  if (ViewWindow->interaction() == iaCrop) {
+    ViewWindow->ShowStatus(QObject::tr("Prepare"));
+    ReportProgress(QObject::tr("Prepare for cropping"));
+
+    UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
+
+    // Allow to be selected in the view window. And deactivate main.
+    ViewWindow->ShowStatus(QObject::tr("Crop"));
+    ReportProgress(QObject::tr("Crop"));
+  }
+}
+
 void CB_CropOrientationButton() {
   int w = Settings->GetInt("AspectRatioW");
   int h = Settings->GetInt("AspectRatioH");
@@ -8349,6 +8365,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FixedAspectRatioCheck)
   M_Dispatch(AspectRatioWChoice)
   M_Dispatch(AspectRatioHChoice)
+  M_Dispatch(CropExposureInput)
 
   M_Dispatch(LqrEnergyChoice)
   M_Dispatch(LqrScalingChoice)
