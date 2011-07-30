@@ -63,7 +63,7 @@ void ptLogError(const short ErrorCode,
   va_list ArgPtr;
   va_start(ArgPtr,Format);
   vfprintf(stderr,Format,ArgPtr);
-  vsnprintf(ptErrorMessage,1024,Format,ArgPtr);
+  // TODO: mike vsnprintf(ptErrorMessage,1024,Format,ArgPtr);
   va_end(ArgPtr);
   fprintf(stderr,"\n");
   ptErrNo = ErrorCode;
@@ -84,7 +84,7 @@ void ptLogWarning(const short WarningCode,
   va_list ArgPtr;
   va_start(ArgPtr,Format);
   vfprintf(stderr,Format,ArgPtr);
-  vsnprintf(ptWarningMessage,1024,Format,ArgPtr);
+  // TODO: mike vsnprintf(ptWarningMessage,1024,Format,ArgPtr);
   va_end(ArgPtr);
   ptWarNo = WarningCode;
 }
