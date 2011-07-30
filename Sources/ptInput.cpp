@@ -174,7 +174,12 @@ ptInput::ptInput(const QWidget* MainWindow,
   }
 
   // A timer for time filtering signals going outside.
-  m_TimeOut = TimeOut;
+  // Bad coding but fun ;-) (mike)
+  if (ObjectName == "CropExposureInput")
+    m_TimeOut = 5;
+  else
+    m_TimeOut = TimeOut;
+
   m_KeyTimeOut = 2000;
   m_Timer = new QTimer(this);
   m_Timer->setSingleShot(1);
