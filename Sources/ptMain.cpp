@@ -1692,9 +1692,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   // -> transfer to preview color space
   if (ForcedImage) {
     PreviewImage->Set(ForcedImage);
-    float Factor = powf(2,Settings->GetDouble("ExposureNormalization") +
-                          Settings->GetDouble("CropExposure"));
-    if (Settings->GetInt("PreviewMode") == ptPreviewMode_End) {
+    if (Settings->GetDouble("CropExposure") != 0.0) {
+      float Factor = powf(2,Settings->GetDouble("CropExposure"));
       PreviewImage->Expose(Factor,ptExposureClipMode_Ratio);
     }
     BeforeGamma(PreviewImage,0,0);
