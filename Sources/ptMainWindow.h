@@ -99,6 +99,7 @@ public:
   void UpdateLiquidRescaleUI();
 
   void UpdateSpotRepairUI();
+  void UpdateGradualBlurUI();
 
   // Visible tools
   void ApplyVisibleTools();

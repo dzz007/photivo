@@ -78,7 +78,7 @@ public:
 
   // Rerun Geometry stage (and stop for crop or rotate tool)
   // Use the ptProcessorStopBefore_{Rotate|Crop} constants to stop early.
-  void RunGeometry(const short StopBefore = 0);
+  void RunGeometry(const short StopBefore = ptProcessorStopBefore_NoStop);
 
   // Exif Related
   Exiv2::ExifData m_ExifData;

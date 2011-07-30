@@ -92,6 +92,7 @@ public:
   static const ptGuiOptionsItem GREYCInterpolation[];
   static const ptGuiOptionsItem FilmType[];
   static const ptGuiOptionsItem ColorFilterType[];
+  static const ptGuiOptionsItem GradualBlurMode[];
   static const ptGuiOptionsItem FlipMode[];
   static const ptGuiOptionsItem GrainMode[];
   static const ptGuiOptionsItem MaskType[];

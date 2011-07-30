@@ -32,7 +32,8 @@
 #
 ######################################################################
 
-CONFIG += release silent
+CONFIG += silent
+#CONFIG += release
 #CONFIG += debug
 TEMPLATE = app
 TARGET = photivo
@@ -90,12 +91,12 @@ unix {
   LIBS += $$system(GraphicsMagick++-config --libs)
   QMAKE_CC = ccache /usr/bin/gcc
   QMAKE_CXX = ccache /usr/bin/g++
-  PREFIX = $$system(more ./install_prefix)
+  PREFIX = $$system(cat ./install_prefix)
   QMAKE_CXXFLAGS_DEBUG += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
   QMAKE_CFLAGS_RELEASE += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_POST_LINK=strip $(TARGET)
+  #QMAKE_POST_LINK=strip $(TARGET)
   QT += network
 }
 win32 {
@@ -287,10 +288,11 @@ RESOURCES += ../photivo.qrc
 
 SOURCES += ../Sources/ptMessageBox.cpp
 RESOURCES = ../qrc/photivo.qrc
-TRANSLATIONS += ../Translations/photivo_Deutsch.ts
-TRANSLATIONS += ../Translations/photivo_Italiano.ts
+TRANSLATIONS += ../Translations/photivo_Dutch.ts
+TRANSLATIONS += ../Translations/photivo_German.ts
+TRANSLATIONS += ../Translations/photivo_Italian.ts
 TRANSLATIONS += ../Translations/photivo_Russian.ts
-TRANSLATIONS += ../Translations/photivo_Français.ts
+TRANSLATIONS += ../Translations/photivo_French.ts
 
 
 ###############################################################################

@@ -1297,6 +1297,7 @@ ptImage* ptImage::Set(const ptImage *Origin) { // Always deep
   m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
   ptMemoryError(m_Image,__FILE__,__LINE__);
   memcpy(m_Image,Origin->m_Image,m_Width*m_Height*sizeof(*m_Image));
+
   return this;
 }
 
@@ -2137,7 +2138,7 @@ ptImage* ptImage::Crop(const uint16_t X,
   WorkImage->m_Width  = W;
   WorkImage->m_Height = H;
   WorkImage->m_Colors = m_Colors;
-    return WorkImage;
+  return WorkImage;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -5020,6 +5021,96 @@ ptImage* ptImage::Crossprocess(const short Mode,
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Gradual Overlay Mask
+//
+////////////////////////////////////////////////////////////////////////////////
+
+float *ptImage::GetGradualMask(const double Angle,
+                               const double LowerLevel,
+                               const double UpperLevel,
+                               const double Softness) {
+
+  float (*GradualMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*GradualMask));
+  ptMemoryError(GradualMask,__FILE__,__LINE__);
+
+  double Length = 0;
+  if (fabs(Angle) == 0 || fabs(Angle) == 180 ) {
+    Length = m_Height;
+  } else if (fabs(Angle) == 90) {
+    Length = m_Width;
+  } else if (fabs(Angle) < 90) {
+    Length = (((double)m_Width) + ((double)m_Height)/tan(fabs(Angle)/180*ptPI))*sin(fabs(Angle)/180*ptPI);
+  } else {
+    Length = (((double)m_Width) + ((double)m_Height)/tan((180.0-fabs(Angle))/180.0*ptPI))*sin((180.0-fabs(Angle))/180.0*ptPI);
+  }
+
+  boolean Switch = UpperLevel < LowerLevel;
+
+  float LL = Length*(Switch?UpperLevel:LowerLevel);
+  float UL = Length*(Switch?LowerLevel:UpperLevel);
+  float Black = Switch?1.0:0.0;
+  float White = Switch?0.0:1.0;
+  float Denom = 1.0/MAX((UL-LL),0.0001f);
+
+  float coordinate = 0;
+  float Value = 0;
+
+  float dist = 0;
+
+  float Factor1 = 0;
+  float Factor2 = 0;
+  if (Angle > 0.0 && Angle < 90.0) {
+    Factor1 = 1.0/tanf(Angle/180*ptPI);
+    Factor2 = sinf(Angle/180*ptPI);
+  } else if (Angle > 90.0 && Angle < 180.0) {
+    Factor1 = 1.0/tanf((180.0-Angle)/180*ptPI);
+    Factor2 = sinf((180.0-Angle)/180*ptPI);
+  } else if (Angle > -90.0 && Angle < 0.0) {
+    Factor1 = 1.0/tanf(fabs(Angle)/180*ptPI);
+    Factor2 = sinf(fabs(Angle)/180*ptPI);
+  } else if (Angle > -180.0 && Angle < -90.0) {
+    Factor1 = 1.0/tanf((180.0-fabs(Angle))/180*ptPI);
+    Factor2 = sinf((180.0-fabs(Angle))/180*ptPI);
+  }
+
+#pragma omp parallel for schedule(static) firstprivate(dist, Value, coordinate)
+  for (uint16_t Row=0; Row<m_Height; Row++) {
+    for (uint16_t Col=0; Col<m_Width; Col++) {
+      if (fabs(Angle) == 0.0)
+        dist = m_Height-Row;
+      else if (fabs(Angle) == 180.0)
+        dist = Row;
+      else if (Angle == 90.0)
+        dist = Col;
+      else if (Angle == -90.0)
+        dist = m_Width-Col;
+      else if (Angle > 0.0 && Angle < 90.0)
+        dist = (Col + (float)(m_Height-Row)*Factor1)*Factor2;
+      else if (Angle > 90.0 && Angle < 180.0)
+        dist = Length-((m_Width-Col) + (float)(m_Height-Row)*Factor1)*Factor2;
+      else if (Angle > -90.0 && Angle < 0.0)
+        dist = ((m_Width-Col) + (float)(m_Height-Row)*Factor1)*Factor2;
+      else if (Angle > -180.0 && Angle < -90.0)
+        dist = Length-((float)Col + (float)(m_Height-Row)*Factor1)*Factor2;
+
+      if (dist <= LL)
+        GradualMask[Row*m_Width+Col] = Black;
+      else if (dist >= UL)
+        GradualMask[Row*m_Width+Col] = White;
+      else {
+        coordinate = 1.0 - (UL-dist)*Denom;
+        Value = (1.0-powf(cosf(coordinate*ptPI/2.0),50.0*Softness))
+                  * powf(coordinate,0.07*Softness);
+        GradualMask[Row*m_Width+Col] = LIM(Value*White, 0.0, 1.0);
+      }
+    }
+  }
+
+  return GradualMask;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Gradual Overlay
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -5377,8 +5468,8 @@ float *ptImage::GetMask(const short MaskType,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-float *ptImage::GetVignetteMask(const short Inverted,
-                                const short Exponent,
+float *ptImage::GetVignetteMask(const short  Inverted,
+                                const short  Exponent,
                                 const double InnerRadius,
                                 const double OuterRadius,
                                 const double Roundness,
@@ -5387,10 +5478,17 @@ float *ptImage::GetVignetteMask(const short Inverted,
                                 const double Softness) {
 
   float Radius = MIN(m_Width, m_Height)/2;
-  float OR = Radius*OuterRadius;
-  float IR = Radius*InnerRadius;
+
+  boolean Switch = OuterRadius < InnerRadius;
+
+  float OR = Radius*(Switch?InnerRadius:OuterRadius);
+  float IR = Radius*(Switch?OuterRadius:InnerRadius);
   float Black = Inverted?1.0:0.0;
   float White = Inverted?0.0:1.0;
+  if (Switch) {
+    Black = 1.0 - Black;
+    White = 1.0 - White;
+  }
   float ColorDiff = White - Black;
 
   float CX = (1+CenterX)*m_Width/2;
@@ -5426,6 +5524,123 @@ float *ptImage::GetVignetteMask(const short Inverted,
   }
 
   return VignetteMask;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Gradual Blur
+//
+////////////////////////////////////////////////////////////////////////////////
+
+ptImage* ptImage::GradualBlur(const int    Mode,
+                              const double MaxRadius,
+                              const double LowerLevel,
+                              const double UpperLevel,
+                              const double Softness,
+                              const double Angle,
+                              const int    Vignette,
+                              const double Roundness,
+                              const double CenterX,
+                              const double CenterY) {
+
+  float* Mask = 0;
+  if (Mode == ptGradualBlur_Linear ||
+      Mode == ptGradualBlur_MaskLinear) {
+    Mask = GetGradualMask(Angle, LowerLevel, UpperLevel, Softness);
+  } else if (Mode == ptGradualBlur_Vignette ||
+             Mode == ptGradualBlur_MaskVignette) {
+    Mask = GetVignetteMask(0, Vignette, LowerLevel, UpperLevel, Roundness, CenterX, CenterY, Softness);
+  }
+
+  if (Mode == ptGradualBlur_MaskLinear ||
+      Mode == ptGradualBlur_MaskVignette) {
+    Overlay(m_Image, 1, Mask, ptOverlayMode_ShowMask);
+  } else {
+    Box((uint16_t)(ceil(MaxRadius)), Mask);
+  }
+
+  FREE(Mask);
+
+  return this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Box
+//
+////////////////////////////////////////////////////////////////////////////////
+
+ptImage* ptImage::Box(const uint16_t MaxRadius, float* Mask) {
+  ptImage* Source = new ptImage();
+  Source->Set(this);
+
+  const uint16_t Height1   = m_Height - 1;
+  const uint16_t Width1    = m_Width  - 1;
+  const uint16_t Height1_2 = 2*Height1;
+  const uint16_t Width1_2  = 2*Width1;
+
+  // Construct the distance matrix
+  const uint16_t DistSize = MaxRadius+1;
+  float** Dist = (float**) CALLOC(DistSize,sizeof(float*));
+  for(int16_t i = 0; i < DistSize; i++) Dist[i] = (float*) CALLOC(DistSize,sizeof(float));
+
+  // fill distance matrix
+  for(int16_t i = 0; i <= MaxRadius; i++) {
+    for(int16_t j = 0; j <= MaxRadius; j++) {
+      Dist[i][j] = powf((float) i*i + (float) j*j, 0.5f);
+    }
+  }
+
+  float     Sum0, Sum1, Sum2, Radius;
+  int16_t   i, j;
+  int32_t   Temp, NewRow, NewCol, Index;
+  uint16_t  Row, Col, Count, IntRadius, *PtrSource, *PtrTarget;
+
+#pragma omp parallel for private(Sum0, Sum1, Sum2, i, j, Temp, Row, Col, Count, Radius, IntRadius, NewRow, NewCol, PtrSource, PtrTarget, Index)
+  for (Row=0; Row<m_Height; Row++) {
+    Temp = Row*m_Width;
+    for (Col=0; Col<m_Width; Col++) {
+      Sum0  = 0.0f;
+      Sum1  = 0.0f;
+      Sum2  = 0.0f;
+      Count = 0;
+
+      Index     = Temp + Col;
+      Radius    = MaxRadius * Mask[Index];
+      IntRadius = ceil(Radius);
+      if (IntRadius == 0) continue;
+
+      for(i = -IntRadius; i <= IntRadius; i++) {
+        NewRow = Row+i;
+        NewRow = NewRow < 0? -NewRow : NewRow > Height1? Height1_2-NewRow : NewRow ;
+        NewRow *= m_Width;
+        for(j = -IntRadius; j <= IntRadius; j++) {
+          if (Dist[abs(i)][abs(j)] < Radius) {
+            NewCol = Col+j;
+            NewCol = NewCol < 0? -NewCol : NewCol > Width1? Width1_2-NewCol : NewCol ;
+
+            Count++;
+            PtrSource = Source->m_Image[NewRow + NewCol];
+            Sum0     += PtrSource[0];
+            Sum1     += PtrSource[1];
+            Sum2     += PtrSource[2];
+          }
+        }
+      }
+
+      PtrTarget    = m_Image[Index];
+      PtrTarget[0] = Sum0 / Count;
+      PtrTarget[1] = Sum1 / Count;
+      PtrTarget[2] = Sum2 / Count;
+    }
+  }
+
+  for(uint16_t i = 0; i < DistSize; i++) FREE(Dist[i]);
+  FREE(Dist);
+
+  delete Source;
+
+  return this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -52,6 +52,7 @@ ptHistogramWindow(const ptImage* RelatedImage,
 
 // NewRelatedImage to associate anonter ptImage with this window.
 void UpdateView(const ptImage* NewRelatedImage = NULL);
+void Init();
 
 protected:
 void resizeEvent(QResizeEvent*);

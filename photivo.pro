@@ -43,7 +43,8 @@ contains(QT_VERSION, ^4\\.[0-5]\\..*) {
   error("Use at least Qt 4.6.")
 }
 
-CONFIG += release silent
+CONFIG += silent
+#CONFIG += release
 #CONFIG += debug
 TEMPLATE = subdirs
 
