@@ -47,7 +47,7 @@
 #include "ptFastBilateral.h"
 #include "ptTheme.h"
 #include "ptWiener.h"
-#include "ptImageSpotList.h"
+#include "imagespot/ptImageSpotList.h"
 #include "qtsingleapplication/qtsingleapplication.h"
 
 #ifdef Q_OS_MAC
@@ -5375,6 +5375,7 @@ void CB_LqrVertFirstCheck(const QVariant Check) {
   if (Settings->ToolIsActive("TabLiquidRescale"))
     Update(ptProcessorPhase_Geometry);
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //

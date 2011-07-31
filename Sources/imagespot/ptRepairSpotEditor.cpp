@@ -23,7 +23,7 @@
 #include <QHBoxLayout>
 
 #include "ptRepairSpotEditor.h"
-#include "ptGuiOptions.h"
+#include "../ptGuiOptions.h"
 
 extern ptGuiOptions* GuiOptions;
 

@@ -30,7 +30,7 @@
 *******************************************************************************/
 
 #include "ptImageSpotList.h"
-#include "ptSettings.h"
+#include "../ptSettings.h"
 
 extern ptSettings* Settings;
 

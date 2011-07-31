@@ -21,8 +21,8 @@
 *******************************************************************************/
 
 #include "ptRepairSpotView.h"
-#include "ptConstants.h"
-#include "ptTheme.h"
+#include "../ptConstants.h"
+#include "../ptTheme.h"
 #include "ptRepairSpotEditor.h"
 #include "ptImageSpotList.h"
 #include "ptRepairSpot.h"
@@ -53,7 +53,7 @@ QWidget* ptRepairSpotItemDelegate::createEditor(QWidget *parent, const QStyleOpt
 
 void ptRepairSpotItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
   ptRepairSpotEditor *ed = qobject_cast<ptRepairSpotEditor*>(editor);
-  ed->ModeCombo->setCurrentIndex(static_cast<ptRepairSpot*>(RepairSpotList->at(index))->mode());
+  ed->ModeCombo->setCurrentIndex(static_cast<ptRepairSpot*>(RepairSpotList->at(index))->algorithm());
 }
 
 void ptRepairSpotItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
