@@ -32,8 +32,8 @@
 #include "ptConstants.h"
 #include "ptDefines.h"
 #include "ptTheme.h"
-#include "ptImageSpotList.h"
-#include "ptRepairSpot.h"
+#include "imagespot/ptImageSpotList.h"
+#include "imagespot/ptRepairSpot.h"
 
 #include <iostream>
 #include <iomanip>
@@ -1931,6 +1931,7 @@ void ptMainWindow::ShowFavouriteTools() {
   if (m_MovedTools->size()>0) CleanUpMovedTools();
   SearchInputWidget->setText("");
 
+
   QStringList FavTools = Settings->GetStringList("FavouriteTools");
   for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
     if (FavTools.contains(m_GroupBoxesOrdered->at(i))) {
@@ -2678,7 +2679,7 @@ void ptMainWindow::PopulateSpotRepairList() {
 
   for (int i = 0; i < RepairSpotList->count(); i++) {
     ptRepairSpot* spot = static_cast<ptRepairSpot*>(RepairSpotList->at(i));
-    QStandardItem* SpotItem = new QStandardItem(GuiOptions->SpotRepair[spot->mode()].Text);
+    QStandardItem* SpotItem = new QStandardItem(GuiOptions->SpotRepair[spot->algorithm()].Text);
     SpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
                        Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     m_RepairSpotModel->appendRow(SpotItem);

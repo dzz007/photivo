@@ -19,13 +19,25 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+/*!
+  \class ptRepairInteraction
+
+  \brief On-image user interaction for the spot repair tool
+
+  This class provides all the functionality for the interactive spot repair
+  mode, i.e. all manipulation of repair spots that happen directly on the image.
+*/
 
 #ifndef PTREPAIRINTERACTION_H
 #define PTREPAIRINTERACTION_H
 
-#include <QDockWidget>
+#include <QGraphicsItemGroup>
+#include <QGraphicsEllipseItem>
+#include <QGraphicsLineItem>
+#include <QGraphicsRectItem>
 
-#include "ptAbstractInteraction.h"
+#include "../ptAbstractInteraction.h"
+
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -42,9 +54,19 @@ Q_OBJECT
 //
 ///////////////////////////////////////////////////////////////////////////
 public:
+  /*!
+    Create a repair interaction object.
+    \param View
+      A pointer to existing QGraphicsView object that will be used for
+      drawing the spot. \\View must have a QGraphicsScene assigned.
+  */
   explicit ptRepairInteraction(QGraphicsView* View);
   ~ptRepairInteraction();
 
+  /*!
+    Stop the repair interaction. Cleans up the QGraphicsScene and then emits
+    the \\finished() signal.
+  */
   void stop();
 
 
@@ -54,6 +76,40 @@ public:
 //
 ///////////////////////////////////////////////////////////////////////////
 private:
+  void UpdateSpotShape();
+  void MousePressHandler(QMouseEvent* event);
+
+  // Components of the spot visual spot shape
+  QGraphicsItemGroup*   m_TheSpotShape;
+  QGraphicsItemGroup*   m_TheSpot;
+  QGraphicsItemGroup*   m_TheRepairer;
+  QGraphicsEllipseItem* m_Spot;
+  QGraphicsEllipseItem* m_SpotBorder;
+  QGraphicsRectItem*    m_RadiusHandle;
+  QGraphicsEllipseItem* m_Repairer;
+  QGraphicsLineItem*    m_Connector;
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// PRIVATE slots
+//
+///////////////////////////////////////////////////////////////////////////
+private slots:
+  /*!
+    Slot for all keyboard events.
+    \param event
+      A pointer to the QKeyEvent that triggered this slot.
+  */
+  void keyAction(QKeyEvent* event);
+
+  /*!
+    Slot for all mouse events.
+    \param event
+      A pointer to the QMouseEvent that triggered this slot.
+  */
+  void mouseAction(QMouseEvent* event);
+
 };
 
 #endif // PTREPAIRINTERACTION_H

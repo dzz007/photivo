@@ -543,8 +543,10 @@ const short ptLqr_ScaleRelative    = 0;
 const short ptLqr_ScaleAbsolute    = 1;
 
 // Spot repair algos
-const short ptSpotRepairAlgo_Clone    = 0;
-const short ptSpotRepairAlgo_Heal     = 1;
+enum ptSpotRepairAlgo {
+  SpotRepairAlgo_Clone = 0,
+  SpotRepairAlgo_Heal  = 1
+};
 
 // Zoom modes
 const short ptZoomMode_Fit    = 0;

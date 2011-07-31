@@ -20,25 +20,35 @@
 **
 *******************************************************************************/
 
-/**
-** Base class for local selections ("spots")
-** Data storage and functionality to move etc. the spot.
-** No image manipulation or UI interface.
-**/
-
 #include <cassert>
 
 #include "ptRepairSpot.h"
-#include "ptSettings.h"
+#include "../ptSettings.h"
 
 extern ptSettings* Settings;
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ptRepairSpot constructor
+// ptRepairSpot constructors
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+ptRepairSpot::ptRepairSpot(const short CreateFromIni /*= 0*/)
+: ptImageSpot(CreateFromIni),
+  m_HasRepairer(1),
+  m_Algorithm(SpotRepairAlgo_Clone),
+  m_RepairerPos(QPoint())
+{
+  if (CreateFromIni) {
+    m_HasRepairer = Settings->m_IniSettings->value("HasRepairer", 1).toInt();
+    m_Algorithm =
+        (ptRepairSpot)(Settings->m_IniSettings->value("Algorithm", SpotRepairAlgo_Clone).toInt());
+    m_RepairerPos.setX(Settings->m_IniSettings->value("RepairerPosX", 0).toInt());
+    m_RepairerPos.setY(Settings->m_IniSettings->value("RepairerPosY", 0).toInt());
+  }
+}
+
 
 ptRepairSpot::ptRepairSpot(const short isEnabled,
                            const uint spotX,
@@ -49,15 +59,28 @@ ptRepairSpot::ptRepairSpot(const short isEnabled,
                            const uint edgeRadius,
                            const float edgeBlur,
                            const float opacity,
-                           const short mode,
-                           const short hasRepairer,
-                           const uint repairerX,
-                           const uint repairerY)
+                           const ptSpotRepairAlgo algorithm,
+                           const short hasRepairer /*= 0*/,
+                           const uint repairerX /*= 0*/,
+                           const uint repairerY /*= 0*/)
 : ptImageSpot(isEnabled, spotX, spotY, radiusW, radiusH, angle, edgeRadius, edgeBlur, opacity),
   m_HasRepairer(hasRepairer),
-  m_Mode(mode)
+  m_Algorithm(algorithm)
 {
-  m_RepairerPos = QPoint(repairerX, repairerY);
+  m_RepairerPos = QPoint(repairerX * (1 >> Settings->GetInt("PipeSize")),
+                         repairerY * (1 >> Settings->GetInt("PipeSize")) );
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Getter methods
+//
+///////////////////////////////////////////////////////////////////////////
+
+inline QPoint ptRepairSpot::repairerPos() const {
+  return QPoint(m_RepairerPos.x() * (1 >> Settings->GetInt("PipeSize")),
+                m_RepairerPos.y() * (1 >> Settings->GetInt("PipeSize")) );
 }
 
 
@@ -67,38 +90,29 @@ ptRepairSpot::ptRepairSpot(const short isEnabled,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptRepairSpot::setRepairer(const uint CenterX, const uint CenterY) {
+void ptRepairSpot::setPos(uint x, uint y) {
+  x *= (1 << Settings->GetInt("PipeSize"));
+  y *= (1 << Settings->GetInt("PipeSize"));
+
+  if (m_HasRepairer) {
+    m_RepairerPos.setX(m_RepairerPos.x() + m_Pos.x() - x);
+    m_RepairerPos.setY(m_RepairerPos.y() + m_Pos.y() - y);
+  }
+  m_Pos.setX(x);
+  m_Pos.setY(y);
+}
+
+
+void ptRepairSpot::setRepairerPos(const uint x, const uint y) {
   m_HasRepairer = 1;
-  m_RepairerPos.setX(CenterX);
-  m_RepairerPos.setY(CenterY);
+  m_RepairerPos.setX(CenterX * (1 << Settings->GetInt("PipeSize")));
+  m_RepairerPos.setY(CenterY * (1 << Settings->GetInt("PipeSize")));
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Move spot and/or repairer
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptRepairSpot::MoveRepairerTo(uint x, uint y) {
-  if (m_HasRepairer) {
-    m_RepairerPos.setX(x);
-    m_RepairerPos.setY(y);
-  }
-}
-
-void ptRepairSpot::MoveSpotTo(uint x, uint y) {
-  m_SpotPos.setX(x);
-  m_SpotPos.setY(y);
-}
-
-void ptRepairSpot::MoveTo(uint x, uint y) {
-  if (m_HasRepairer) {
-    m_RepairerPos.setX(m_RepairerPos.x() + m_SpotPos.x() - x);
-    m_RepairerPos.setY(m_RepairerPos.y() + m_SpotPos.y() - y);
-  }
-  m_SpotPos.setX(x);
-  m_SpotPos.setY(y);
+void ptRepairSpot::setSpotPos(const uint x, const uint y) {
+  m_Pos.setX(x * (1 << Settings->GetInt("PipeSize")));
+  m_Pos.setY(y * (1 << Settings->GetInt("PipeSize")));
 }
 
 
@@ -111,7 +125,7 @@ void ptRepairSpot::MoveTo(uint x, uint y) {
 void ptRepairSpot::WriteToIni() {
   ptImageSpot::WriteToIni();
   Settings->m_IniSettings->setValue("HasRepairer", m_HasRepairer);
-  Settings->m_IniSettings->setValue("Mode", m_Mode);
+  Settings->m_IniSettings->setValue("Algorithm", m_Algorithm);
   Settings->m_IniSettings->setValue("RepairerPosX", m_RepairerPos.x());
   Settings->m_IniSettings->setValue("RepairerPosY", m_RepairerPos.y());
 }

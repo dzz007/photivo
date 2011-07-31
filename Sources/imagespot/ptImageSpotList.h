@@ -57,7 +57,5 @@ public:
 private:
   QString m_IniName;
 
-
 };
-
 #endif

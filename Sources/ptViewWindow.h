@@ -40,7 +40,7 @@
 #include "ptSimpleRectInteraction.h"
 #include "ptRichRectInteraction.h"
 #include "ptGridInteraction.h"
-#include "ptRepairInteraction.h"
+#include "imagespot/ptRepairInteraction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////
