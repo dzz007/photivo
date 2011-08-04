@@ -40,9 +40,8 @@ public:
   ptImageSpotList(const QString IniPrefix = "");
   ~ptImageSpotList();
 
-  inline QString iniName() const { return m_IniName; }
-
   void clear();
+  inline QString iniName() const { return m_IniName; }
   void removeAt(int i);
   void removeFirst();
   void removeLast();

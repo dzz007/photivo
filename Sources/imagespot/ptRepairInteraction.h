@@ -80,9 +80,9 @@ private:
   void MousePressHandler(QMouseEvent* event);
 
   // Components of the spot visual spot shape
-  QGraphicsItemGroup*   m_TheSpotShape;
-  QGraphicsItemGroup*   m_TheSpot;
-  QGraphicsItemGroup*   m_TheRepairer;
+  QGraphicsItemGroup*   m_FullSpotGroup;
+  QGraphicsItemGroup*   m_SpotGroup;
+  QGraphicsItemGroup*   m_RepairerGroup;
   QGraphicsEllipseItem* m_Spot;
   QGraphicsEllipseItem* m_SpotBorder;
   QGraphicsRectItem*    m_RadiusHandle;
