@@ -1727,6 +1727,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     // Convert from working space to screen space.
     // Using lcms and a standard sRGB or custom profile.
 
+
     ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
     if (!ReturnValue) {
       ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
@@ -3439,6 +3440,7 @@ void CB_MenuFileExit(const short) {
          break;
       case QMessageBox::Cancel:
          // Cancel was clicked
+
         return;
         break;
       default:
@@ -5494,8 +5496,7 @@ void CB_ChannelMixerSaveButton() {
     "; photivo Channelmixer File\n"
     ";\n"
     "; This curve was written from within photivo\n"
-    ";\n"
-    "; ";
+    ";\n";
 
   bool Success;
   QString Explanation =
@@ -5506,7 +5507,7 @@ void CB_ChannelMixerSaveButton() {
                           NULL,
                           &Success);
   if (Success && !Explanation.isEmpty()) {
-    Header += Explanation + "\n;\n";
+    Header += "; " + Explanation + "\n;\n";
   }
 
   ChannelMixer->WriteChannelMixer(ChannelMixerFileName.toAscii().data(),
@@ -6001,8 +6002,7 @@ void CB_CurveSaveButton(const int Channel) {
     "; photivo Curve File\n"
     ";\n"
     "; This curve was written from within photivo\n"
-    ";\n"
-    "; ";
+    ";\n";
 
   bool Success;
   QString Explanation =
@@ -6013,7 +6013,7 @@ void CB_CurveSaveButton(const int Channel) {
                           NULL,
                           &Success);
   if (Success && !Explanation.isEmpty()) {
-    Header += Explanation + "\n;\n";
+    Header += "; " + Explanation + "\n;\n";
   }
 
   Curve[Channel]->WriteCurve(CurveFileName.toAscii().data(),
