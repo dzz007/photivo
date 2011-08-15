@@ -82,8 +82,8 @@ ptCurve*  RGBContrastCurve  = NULL;
 ptCurve*  ExposureCurve     = NULL;
 ptCurve*  ContrastCurve     = NULL;
 // RGB,R,G,B,L,a,b,Base
-ptCurve*  Curve[16]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-ptCurve*  BackupCurve[16]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  Curve[17]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  BackupCurve[17]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 // I don't manage to init statically following ones. Done in InitCurves.
 QStringList CurveKeys, CurveToolNameKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
@@ -119,7 +119,7 @@ ptImage*  HistogramImage   = NULL;
 ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
-ptCurveWindow*     CurveWindow[16] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurveWindow*     CurveWindow[17] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 // Error dialog for segfaults
 ptMessageBox* SegfaultErrorBox;
@@ -539,7 +539,8 @@ int photivoMain(int Argc, char *Argv[]) {
             << "CurveShadowsHighlights"
             << "CurveDenoise"
             << "CurveHue"
-            << "CurveDenoise2";
+            << "CurveDenoise2"
+            << "CurveOutline";
 
   CurveToolNameKeys << "TabRGBCurve"
                     << "TabRToneCurve"
@@ -556,7 +557,8 @@ int photivoMain(int Argc, char *Argv[]) {
                     << "TabLABShadowsHighlights"
                     << "TabDetailCurve"
                     << "TabHueCurve"
-                    << "TabDenoiseCurve";
+                    << "TabDenoiseCurve"
+                    << "TabOutline";
 
   CurveFileNamesKeys << "CurveFileNamesRGB"
                      << "CurveFileNamesR"
@@ -573,7 +575,8 @@ int photivoMain(int Argc, char *Argv[]) {
                      << "CurveFileNamesShadowsHighlights"
                      << "CurveFileNamesDenoise"
                      << "CurveFileNamesHue"
-                     << "CurveFileNamesDenoise2";
+                     << "CurveFileNamesDenoise2"
+                     << "CurveFileNamesOutline";
 
   CurveBackupKeys = CurveKeys;
 
@@ -836,7 +839,8 @@ int photivoMain(int Argc, char *Argv[]) {
       MainWindow->ShadowsHighlightsCurveCentralWidget,
       MainWindow->DenoiseCurveCentralWidget,
       MainWindow->HueCurveCentralWidget,
-      MainWindow->Denoise2CurveCentralWidget};
+      MainWindow->Denoise2CurveCentralWidget,
+      MainWindow->OutlineCurveCentralWidget};
 
   for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
       Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
@@ -1726,6 +1730,9 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     // Convert from working space to screen space.
     // Using lcms and a standard sRGB or custom profile.
+
+
+
 
 
     ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
@@ -5888,9 +5895,9 @@ void CB_CurveOpenButton(const int Channel) {
     return;
   }
   if (Curve[Channel]->m_IntendedChannel != Channel) {
-    const QString IntendedChannel[16] = {"RGB","R","G","B","L","a","b",
+    const QString IntendedChannel[17] = {"RGB","R","G","B","L","a","b",
       "Saturation","Base","After gamma","L by hue","Texture",
-      "Shadows / Highlights","Denoise","Denoise 2","Hue"};
+                                         "Shadows / Highlights","Denoise","Denoise 2","Hue","Outline"};
     QString Message = QObject::tr("This curve is meant for channel ") +
                         IntendedChannel[Curve[Channel]->m_IntendedChannel] +
                         QObject::tr(". Continue anyway ?");
@@ -5951,6 +5958,10 @@ void CB_CurveaOpenButton() {
 
 void CB_CurvebOpenButton() {
   CB_CurveOpenButton(ptCurveChannel_b);
+}
+
+void CB_CurveOutlineOpenButton() {
+  CB_CurveOpenButton(ptCurveChannel_Outline);
 }
 
 void CB_CurveLByHueOpenButton() {
@@ -6048,6 +6059,10 @@ void CB_CurvebSaveButton() {
   CB_CurveSaveButton(ptCurveChannel_b);
 }
 
+void CB_CurveOutlineSaveButton() {
+  CB_CurveSaveButton(ptCurveChannel_Outline);
+}
+
 void CB_CurveLByHueSaveButton() {
   CB_CurveSaveButton(ptCurveChannel_LByHue);
 }
@@ -6091,6 +6106,10 @@ void CB_CurveChoice(const int Channel, const int Choice) {
     if (!BackupCurve[Channel]) BackupCurve[Channel] = new ptCurve();
     BackupCurve[Channel]->Set(Curve[Channel]);
   }
+
+  QString Test = CurveKeys.at(Channel);
+
+  int T = Settings->GetInt(Test);
 
   // Restore the saved curve
   if (Settings->GetInt(CurveKeys.at(Channel))!=ptCurveChoice_Manual &&
@@ -6158,6 +6177,10 @@ void CB_CurveLaChoice(const QVariant Choice) {
 
 void CB_CurveLbChoice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_b,Choice.toInt());
+}
+
+void CB_CurveOutlineChoice(const QVariant Choice) {
+  CB_CurveChoice(ptCurveChannel_Outline,Choice.toInt());
 }
 
 void CB_CurveLByHueChoice(const QVariant Choice) {
@@ -8491,6 +8514,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(CurveSaturationChoice)
   M_Dispatch(BaseCurveChoice)
   M_Dispatch(BaseCurve2Choice)
+  M_Dispatch(CurveOutlineChoice)
 
   M_Dispatch(LABTransformChoice)
 
@@ -8675,6 +8699,10 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(Grain2UpperLimitInput)
 
   M_Dispatch(ViewLABChoice)
+
+  M_SetAndRunDispatch(OutlineModeChoice)
+  M_SetAndRunDispatch(OutlineWeightInput)
+  M_SetAndRunDispatch(OutlineBlurRadiusInput)
 
   M_Dispatch(ColorcontrastRadiusInput)
   M_Dispatch(ColorcontrastAmountInput)

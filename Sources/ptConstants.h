@@ -280,6 +280,7 @@ const short ptCurveChannel_ShadowsHighlights = 12;
 const short ptCurveChannel_Denoise           = 13;
 const short ptCurveChannel_Hue               = 14;
 const short ptCurveChannel_Denoise2          = 15;
+const short ptCurveChannel_Outline           = 16;
 
 const short ptCurveType_Full         = 0;
 const short ptCurveType_Anchor       = 1;

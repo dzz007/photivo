@@ -3129,6 +3129,38 @@ ptImage* ptImage::LAdjust(const double LC1, // 8 colors for L
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Outline
+//
+////////////////////////////////////////////////////////////////////////////////
+
+ptImage* ptImage::Outline(const short Mode,
+                          const ptCurve *Curve,
+                          const double Weight,
+                          const double Radius) {
+
+  assert (m_ColorSpace == ptSpace_Lab);
+
+  if (Mode == ptOverlayMode_None) return this;
+
+  ptImage *Gradient = new ptImage;
+
+  Gradient->Set(this);
+
+  ptCimgEdgeDetectionSum(Gradient, Weight);
+
+  Gradient->ptCIBlur(Radius, 1);
+
+  Gradient->ApplyCurve(Curve, 1);
+
+  Overlay(Gradient->m_Image, 1.0f, NULL, Mode);
+
+  delete Gradient;
+
+  return this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Color Enhance
 // http://docs.google.com/View?id=dsgjq79_829f9wv8ncd
 //

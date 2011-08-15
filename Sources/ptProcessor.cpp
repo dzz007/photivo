@@ -1730,6 +1730,27 @@ void ptProcessor::Run(short Phase,
         m_Image_AfterLabEyeCandy->Set(m_Image_AfterLabSN);
       }
 
+      //***************************************************************************
+      // Outline
+
+      if (Settings->ToolIsActive("TabOutline")) {
+        m_ReportProgress(tr("Applying Outline"));
+
+        //Postponed RGBToLab for performance.
+        if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
+          m_Image_AfterLabEyeCandy->RGBToLab();
+
+          TRACEMAIN("Done conversion to LAB at %d ms.",
+                    m_RunTimer.elapsed());
+        }
+
+        m_Image_AfterLabEyeCandy->Outline(Settings->GetInt("OutlineMode"),
+                                          Curve[ptCurveChannel_Outline],
+                                          Settings->GetDouble("OutlineWeight"),
+                                          Settings->GetDouble("OutlineBlurRadius"));
+
+        TRACEMAIN("Done Outline at %d ms.",m_RunTimer.elapsed());
+      }
 
       //***************************************************************************
       // LByHue Curve

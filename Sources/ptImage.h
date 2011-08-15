@@ -193,6 +193,12 @@ ptImage* LAdjust(const double LC1, // 8 colors for L
                  const double SC7,
                  const double SC8);
 
+// Outline
+ptImage* Outline(const short Mode,
+                 const ptCurve *Curve,
+                 const double Weight,
+                 const double Radius);
+
 // Color Enhance
 ptImage* ColorEnhance(const double Shadows,
                       const double Highlights);

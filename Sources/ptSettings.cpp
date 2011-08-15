@@ -313,6 +313,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Grain2Opacity"                 ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity for film grain")},
     {"Grain2LowerLimit"              ,ptGT_InputSlider     ,2,1,1 ,0.1  ,0.0  ,1.0   ,0.002,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"Grain2UpperLimit"              ,ptGT_InputSlider     ,2,1,1 ,0.4  ,0.0  ,1.0   ,0.002,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
+    {"OutlineWeight"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,5.0   ,0.5  ,2 ,tr("Weight")             ,tr("Weight")},
+    {"OutlineBlurRadius"             ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,20.0  ,0.2  ,2 ,tr("Radius")             ,tr("Blur radius")},
     {"LABToneAdjust1Saturation"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0   ,4.0   ,0.1 ,2  ,tr("Saturation")        ,tr("Saturation")},
     {"LABToneAdjust1Amount"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05,2  ,tr("Amount")            ,tr("Amount")},
     {"LABToneAdjust1Hue"             ,ptGT_InputSliderHue  ,2,1,1 ,60.0 ,0.0  ,360.0  ,10.0,0  ,tr("Hue")               ,tr("Hue")},
@@ -524,6 +526,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveL"                      ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("L curve")},
     {"CurveLa"                     ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("a curve")},
     {"CurveLb"                     ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("b curve")},
+    {"CurveOutline"                ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Outline curve")},
     {"CurveLByHue"                 ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("L by hue curve")},
     {"CurveHue"                    ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Hue curve")},
     {"CurveTexture"                ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Texture curve")},
@@ -535,6 +538,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveDenoise2"               ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Denoise curve")},
     //{"GREYCInterpolation"        ,ptGT_Choice       ,2,1,1 ,ptGREYCInterpolation_NearestNeighbour,GuiOptions->GREYCInterpolation, tr("GREYC Interpolation")},
     {"ViewLAB"                     ,ptGT_Choice       ,2,1,1 ,ptViewLAB_LAB               ,GuiOptions->ViewLAB                   ,tr("View seperate LAB channels")},
+    {"OutlineMode"                 ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
     {"LABToneAdjust1MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for tone adjustment")},
     {"LABToneAdjust2MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for tone adjustment")},
     {"BWStylerFilmType"            ,ptGT_Choice       ,2,1,1 ,ptFilmType_Luminance        ,GuiOptions->FilmType                  ,tr("Film emulation")},
@@ -670,6 +674,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveFileNamesL"                      ,0    ,QStringList()                         ,1},
     {"CurveFileNamesLa"                     ,0    ,QStringList()                         ,1},
     {"CurveFileNamesLb"                     ,0    ,QStringList()                         ,1},
+    {"CurveFileNamesOutline"                ,0    ,QStringList()                         ,1},
     {"CurveFileNamesLByHue"                 ,0    ,QStringList()                         ,1},
     {"CurveFileNamesHue"                    ,0    ,QStringList()                         ,1},
     {"CurveFileNamesTexture"                ,0    ,QStringList()                         ,1},
@@ -1869,7 +1874,10 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetInt("ViewLAB")!=0?1:0;
   }
   // Tab Lab EyeCandy
-  else if (GuiName == "TabLbyHue") {
+  else if (GuiName == "TabOutline") {
+      Info.Name = "Outline";
+      Info.IsActive = Settings->GetInt("OutlineMode")!=0?1:0;
+  } else if (GuiName == "TabLbyHue") {
       Info.Name = "Lab luminance by hue curve";
       Info.IsActive = Settings->GetInt("CurveLByHue")!=0?1:0;
   } else if (GuiName == "TabSaturationCurve") {

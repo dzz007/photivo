@@ -622,6 +622,92 @@ float *ptGradientMask(const ptImage* Image, const double Radius, const double Th
   return dMask;
 }
 
+// This edge detection sums over all channels
+void ptCimgEdgeDetectionSum(ptImage* Image,
+                            const double ColorWeight) {
+
+  assert(Image->m_ColorSpace == ptSpace_Lab);
+
+  uint16_t Width  = Image->m_Width;
+  uint16_t Height = Image->m_Height;
+
+  CImg <uint16_t> CImage(Width,Height,1,3,0);
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Image->m_Height; Row++) {
+    for (uint16_t Col=0; Col<Image->m_Width; Col++) {
+      for (short Channel=0; Channel<3; Channel++) {
+        CImage(Col,Row,Channel) = Image->m_Image[Row*Width+Col][Channel];
+      }
+    }
+  }
+
+  CImgList<float> grad = CImage.get_gradient("xy",3);
+  ~CImage;
+
+  CImg <float> Sum(Width, Height, 1, 1, 0);
+
+  const double Denom = 1.0f + 2 * ColorWeight;
+
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Image->m_Height; Row++) {
+    for (uint16_t Col=0; Col<Image->m_Width; Col++) {
+      Sum(Col,Row) = ((powf(powf(grad[0](Col,Row,0),2.f)+powf(grad[1](Col,Row,0),2.f),.5f)) +
+                      ColorWeight*(powf(powf(grad[0](Col,Row,1),2.f)+powf(grad[1](Col,Row,1),2.f),.5f)) +
+                      ColorWeight*(powf(powf(grad[0](Col,Row,2),2.f)+powf(grad[1](Col,Row,2),2.f),.5f))   )/Denom;
+    }
+  }
+  Sum.normalize(0,1);
+
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Image->m_Height; Row++) {
+    for (uint16_t Col=0; Col<Image->m_Width; Col++) {
+      Image->m_Image[Row*Width+Col][0] = CLIP((int32_t)(powf(Sum(Col,Row),0.25f)*0xffff));
+    }
+  }
+}
+
+// This edge detection sums over all channels (alternaive version with int16 internally)
+void ptCimgEdgeDetectionSumAlt(ptImage* Image,
+                            const double ColorWeight) {
+
+  assert(Image->m_ColorSpace == ptSpace_Lab);
+
+  uint16_t Width  = Image->m_Width;
+  uint16_t Height = Image->m_Height;
+
+  CImg <uint16_t> CImage(Width,Height,1,3,0);
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Image->m_Height; Row++) {
+    for (uint16_t Col=0; Col<Image->m_Width; Col++) {
+      for (short Channel=0; Channel<3; Channel++) {
+        CImage(Col,Row,Channel) = Image->m_Image[Row*Width+Col][Channel];
+      }
+    }
+  }
+
+  CImgList<float> grad = CImage.get_gradient("xy",3);
+
+  const double Denom = 1.0f + 2 * ColorWeight;
+
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Image->m_Height; Row++) {
+    for (uint16_t Col=0; Col<Image->m_Width; Col++) {
+      CImage(Col,Row,0) = CLIP((int32_t)(((powf(powf(grad[0](Col,Row,0),2.f)+powf(grad[1](Col,Row,0),2.f),.5f)) +
+                                          ColorWeight*(powf(powf(grad[0](Col,Row,1),2.f)+powf(grad[1](Col,Row,1),2.f),.5f)) +
+                                          ColorWeight*(powf(powf(grad[0](Col,Row,2),2.f)+powf(grad[1](Col,Row,2),2.f),.5f))   )/Denom));
+    }
+  }
+  CImage.normalize(0,0xffff);
+
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Image->m_Height; Row++) {
+    for (uint16_t Col=0; Col<Image->m_Width; Col++) {
+      Image->m_Image[Row*Width+Col][0] = CLIP((int32_t)(powf((float)CImage(Col,Row,0)/0xffff,0.25f)*0xffff));
+    }
+  }
+}
+
+// Edges per channel
 void ptCimgEdgeDetection(ptImage* Image, const short ChannelMask){
 
   uint16_t Width  = Image->m_Width;
@@ -659,6 +745,38 @@ void ptCimgEdgeDetection(ptImage* Image, const short ChannelMask){
       for (uint16_t Col=0; Col<Image->m_Width; Col++) {
         Image->m_Image[Row*Width+Col][Channel] = CImage(Col,Row,Channel);
       }
+    }
+  }
+
+  ~CImage;
+}
+
+void ptCimgEdgeDetectionLayer(uint16_t *Layer,
+                              const uint16_t Width,
+                              const uint16_t Height) {
+
+  CImg <uint16_t> CImage(Width,Height,1,1,0);
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Height; Row++) {
+    for (uint16_t Col=0; Col<Width; Col++) {
+        CImage(Col,Row) = Layer[Row*Width+Col];
+    }
+  }
+
+  CImgList<float> grad = CImage.get_gradient("xy",3);
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Height; Row++) {
+    for (uint16_t Col=0; Col<Width; Col++) {
+      CImage(Col,Row) = CLIP((int32_t) (sqrt(pow(grad[0](Col,Row),2.)+pow(grad[1](Col,Row),2.))));
+    }
+  }
+
+  CImage.normalize(0,0xffff);
+
+#pragma omp parallel for default(shared) schedule(static)
+  for (uint16_t Row=0; Row<Height; Row++) {
+    for (uint16_t Col=0; Col<Width; Col++) {
+      Layer[Row*Width+Col] = CImage(Col,Row);
     }
   }
 

@@ -55,44 +55,54 @@ void ptGreycStorationLab(ptImage* Image,
                          float    GaussPrecision,
                          int      Interpolation,
                          short    Fast,
-       short    MaskType,
-       double   Opacity);
+                         short    MaskType,
+                         double   Opacity);
 
 void ptCimgEdgeTensors(ptImage* Image,
-           const double    Sharpness,
+                       const double    Sharpness,
                        const double    Anisotropy,
                        const double    Alpha,
                        const double    Sigma,
-           const double    Blur = 0,
-           const short     MaskType = ptMaskType_All);
+                       const double    Blur = 0,
+                       const short     MaskType = ptMaskType_All);
 
 void ptCimgBlurBilateralChannel(ptImage* Image,
-              const float Sigma_s,
-        const float Sigma_r);
+                                const float Sigma_s,
+                                const float Sigma_r);
 
 void ptCimgBlur(ptImage* Image,
-          const short ChannelMask,
-    const float Sigma);
+                const short ChannelMask,
+                const float Sigma);
 
 void ptCimgBlurLayer(uint16_t *Layer,
-         const uint16_t Width,
-         const uint16_t Height,
-         const float Sigma);
+                     const uint16_t Width,
+                     const uint16_t Height,
+                     const float Sigma);
 
 void ptCimgNoise(ptImage* Image,
-     const double Sigma,
-     const short NoiseType,
-           const double Radius);
+                 const double Sigma,
+                 const short NoiseType,
+                 const double Radius);
 
 void ptCimgSharpen(ptImage* Image,
-       const short ChannelMask,
-       const float Amplitude,
-       const short NrIterations,
-       const short UseEdgeMask = 0);
+                   const short ChannelMask,
+                   const float Amplitude,
+                   const short NrIterations,
+                   const short UseEdgeMask = 0);
 
 float *ptGradientMask(const ptImage* Image, const double Radius, const double Threshold = 0);
 
+void ptCimgEdgeDetectionSum(ptImage* Image,
+                            const double ColorWeight);
+
+void ptCimgEdgeDetectionSumAlt(ptImage* Image,
+                               const double ColorWeight);
+
 void ptCimgEdgeDetection(ptImage* Image, const short ChannelMask);
+
+void ptCimgEdgeDetectionLayer(uint16_t *Layer,
+                              const uint16_t Width,
+                              const uint16_t Height);
 
 void ptCimgEqualize(ptImage* Image, const double Opacity);
 

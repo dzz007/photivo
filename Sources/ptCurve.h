@@ -158,7 +158,7 @@ extern ptCurve*  RGBContrastCurve;
 extern ptCurve*  ExposureCurve;
 extern ptCurve*  ContrastCurve;
 // RGB,R,G,B,L,a,b,Base
-extern ptCurve*  Curve[16];
+extern ptCurve*  Curve[17];
 
 #endif
 

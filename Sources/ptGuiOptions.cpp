@@ -381,6 +381,8 @@ const ptGuiOptionsItem ptGuiOptions::OverlayMode[] = {
   {ptOverlayMode_Screen,            QObject::tr("Screen") },
   {ptOverlayMode_GammaDark,         QObject::tr("Gamma dark") },
   {ptOverlayMode_GammaBright,       QObject::tr("Gamma bright") },
+  {ptOverlayMode_ColorBurn,         QObject::tr("Color burn") },
+  {ptOverlayMode_ColorDodge,        QObject::tr("Color dodge") },
   {ptOverlayMode_Normal,            QObject::tr("Normal") },
   {ptOverlayMode_Replace,           QObject::tr("Replace") },
 //  {ptOverlayMode_Overlay,           QObject::tr("Overlay") },
