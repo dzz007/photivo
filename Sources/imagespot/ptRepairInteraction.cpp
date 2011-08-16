@@ -163,10 +163,10 @@ void ptRepairInteraction::UpdateSpotShape() {
 
   // repairer and connector line between spot and repairer
   if (spotData->hasRepairer()) {
-    m_Repairer->setPos(spotData->repairerPos().x() - spotData->radiusH(),
-                       spotData->repairerPos().y() - spotData->radiusW(),
-                       spotData->radiusH() * 2,
-                       spotData->radiusW() * 2);
+    m_Repairer->setRect(spotData->repairerPos().x() - spotData->radiusH(),
+                        spotData->repairerPos().y() - spotData->radiusW(),
+                        spotData->radiusH() * 2,
+                        spotData->radiusW() * 2);
     m_Repairer->setRotation(spotData->angle());
     m_Connector->setLine(m_Spot->x(), m_Spot->y(), m_Repairer->x(), m_Repairer->y());
     m_RepairerGroup->show();

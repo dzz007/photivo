@@ -36,7 +36,8 @@
 #include "ptCheck.h"
 #include "ptGroupBox.h"
 #include "ptVisibleToolsView.h"
-#include "imagespot/ptRepairSpotView.h"
+#include "imagespot/ptRepairSpotModel.h"
+#include "imagespot/ptRepairSpotItemDelegate.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
