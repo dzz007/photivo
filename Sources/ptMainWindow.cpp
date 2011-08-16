@@ -2677,11 +2677,14 @@ void ptMainWindow::UpdateCropToolUI() {
 void ptMainWindow::PopulateSpotRepairList() {
   m_RepairSpotModel = new ptRepairSpotModel;
 
+  // Create model from the actual spot data. Data included:
+  // name of current algorithm as the caption; enabled state
   for (int i = 0; i < RepairSpotList->count(); i++) {
     ptRepairSpot* spot = static_cast<ptRepairSpot*>(RepairSpotList->at(i));
     QStandardItem* SpotItem = new QStandardItem(GuiOptions->SpotRepair[spot->algorithm()].Text);
     SpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
                        Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    SpotItem->setCheckState(Qt::CheckState(spot->isEnabled()));
     m_RepairSpotModel->appendRow(SpotItem);
   }
 

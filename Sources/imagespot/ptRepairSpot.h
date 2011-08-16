@@ -78,7 +78,7 @@ public:
   inline short hasRepairer() const { return m_HasRepairer; }
 
   /*! Returns the position of the repairer’s center. */
-  inline QPoint repairerPos() const;
+  QPoint repairerPos() const;
 
   /*! Returns algorithm used for repairing. */
   inline ptSpotRepairAlgo algorithm() const { return m_Algorithm; }

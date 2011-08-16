@@ -43,7 +43,7 @@ ptRepairSpot::ptRepairSpot(const short CreateFromIni /*= 0*/)
   if (CreateFromIni) {
     m_HasRepairer = Settings->m_IniSettings->value("HasRepairer", 1).toInt();
     m_Algorithm =
-        (ptRepairSpot)(Settings->m_IniSettings->value("Algorithm", SpotRepairAlgo_Clone).toInt());
+        (ptSpotRepairAlgo)(Settings->m_IniSettings->value("Algorithm", SpotRepairAlgo_Clone).toInt());
     m_RepairerPos.setX(Settings->m_IniSettings->value("RepairerPosX", 0).toInt());
     m_RepairerPos.setY(Settings->m_IniSettings->value("RepairerPosY", 0).toInt());
   }
@@ -78,7 +78,7 @@ ptRepairSpot::ptRepairSpot(const short isEnabled,
 //
 ///////////////////////////////////////////////////////////////////////////
 
-inline QPoint ptRepairSpot::repairerPos() const {
+QPoint ptRepairSpot::repairerPos() const {
   return QPoint(m_RepairerPos.x() * (1 >> Settings->GetInt("PipeSize")),
                 m_RepairerPos.y() * (1 >> Settings->GetInt("PipeSize")) );
 }
@@ -105,8 +105,8 @@ void ptRepairSpot::setPos(uint x, uint y) {
 
 void ptRepairSpot::setRepairerPos(const uint x, const uint y) {
   m_HasRepairer = 1;
-  m_RepairerPos.setX(CenterX * (1 << Settings->GetInt("PipeSize")));
-  m_RepairerPos.setY(CenterY * (1 << Settings->GetInt("PipeSize")));
+  m_RepairerPos.setX(x * (1 << Settings->GetInt("PipeSize")));
+  m_RepairerPos.setY(x * (1 << Settings->GetInt("PipeSize")));
 }
 
 

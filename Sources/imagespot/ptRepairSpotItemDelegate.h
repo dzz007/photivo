@@ -26,15 +26,6 @@
 #include <QStandardItemModel>
 #include <QStyledItemDelegate>
 
-// model for UI settings tool
-class ptRepairSpotModel : public QStandardItemModel {
-  Q_OBJECT
-public:
-  explicit ptRepairSpotModel(QObject *parent = 0);
-  bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-};
-
-
 // item delegate for UI settings tool
 class ptRepairSpotItemDelegate : public QStyledItemDelegate {
   Q_OBJECT
