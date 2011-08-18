@@ -195,6 +195,7 @@ ptImage* LAdjust(const double LC1, // 8 colors for L
 
 // Outline
 ptImage* Outline(const short Mode,
+                 const short GradientMode,
                  const ptCurve *Curve,
                  const double Weight,
                  const double Radius);

@@ -624,7 +624,8 @@ float *ptGradientMask(const ptImage* Image, const double Radius, const double Th
 
 // This edge detection sums over all channels
 void ptCimgEdgeDetectionSum(ptImage* Image,
-                            const double ColorWeight) {
+                            const double ColorWeight,
+                            const short GradientMode /* = 4 */) {
 
   assert(Image->m_ColorSpace == ptSpace_Lab);
 
@@ -641,7 +642,8 @@ void ptCimgEdgeDetectionSum(ptImage* Image,
     }
   }
 
-  CImgList<float> grad = CImage.get_gradient("xy",3);
+  // We could not use negative GradientMode in Photivo, so GradientMode - 1 here
+  CImgList<float> grad = CImage.get_gradient("xy",GradientMode - 1);
   ~CImage;
 
   CImg <float> Sum(Width, Height, 1, 1, 0);
