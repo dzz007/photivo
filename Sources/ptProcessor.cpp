@@ -1745,6 +1745,7 @@ void ptProcessor::Run(short Phase,
         }
 
         m_Image_AfterLabEyeCandy->Outline(Settings->GetInt("OutlineMode"),
+                                          Settings->GetInt("OutlineGradientMode"),
                                           Curve[ptCurveChannel_Outline],
                                           Settings->GetDouble("OutlineWeight"),
                                           Settings->GetDouble("OutlineBlurRadius"));

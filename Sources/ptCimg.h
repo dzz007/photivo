@@ -93,7 +93,8 @@ void ptCimgSharpen(ptImage* Image,
 float *ptGradientMask(const ptImage* Image, const double Radius, const double Threshold = 0);
 
 void ptCimgEdgeDetectionSum(ptImage* Image,
-                            const double ColorWeight);
+                            const double ColorWeight,
+                            const short GradientMode = 4);
 
 void ptCimgEdgeDetectionSumAlt(ptImage* Image,
                                const double ColorWeight);

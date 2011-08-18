@@ -98,6 +98,8 @@ public:
   static const ptGuiOptionsItem MaskType[];
   static const ptGuiOptionsItem GrainMaskType[];
   static const ptGuiOptionsItem OverlayMode[];
+  static const ptGuiOptionsItem OutlineMode[];
+  static const ptGuiOptionsItem OutlineGradientMode[];
   static const ptGuiOptionsItem OverlayMaskMode[];
   static const ptGuiOptionsItem CrossprocessMode[];
   static const ptGuiOptionsItem VignetteMode[];

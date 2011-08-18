@@ -3134,6 +3134,7 @@ ptImage* ptImage::LAdjust(const double LC1, // 8 colors for L
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::Outline(const short Mode,
+                          const short GradientMode,
                           const ptCurve *Curve,
                           const double Weight,
                           const double Radius) {
@@ -3146,7 +3147,7 @@ ptImage* ptImage::Outline(const short Mode,
 
   Gradient->Set(this);
 
-  ptCimgEdgeDetectionSum(Gradient, Weight);
+  ptCimgEdgeDetectionSum(Gradient, Weight, GradientMode);
 
   Gradient->ptCIBlur(Radius, 1);
 

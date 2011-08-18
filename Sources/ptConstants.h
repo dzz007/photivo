@@ -334,6 +334,15 @@ const short ptGrainMode_HardGaussian   = 3;
 const short ptGrainMode_HardUniform    = 4;
 const short ptGrainMode_HardSaltPepper = 5;
 
+// GradientModes
+
+const short ptGradientMode_Backward    = 0;
+const short ptGradientMode_Centered    = 1;
+const short ptGradientMode_Forward     = 2;
+const short ptGradientMode_Sobel       = 3;
+const short ptGradientMode_RotInv      = 4;
+const short ptGradientMode_Deriche     = 5;
+
 // MaskTypes
 
 const short ptMaskType_None       = 0;

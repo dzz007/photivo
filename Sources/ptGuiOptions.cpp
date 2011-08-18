@@ -389,6 +389,28 @@ const ptGuiOptionsItem ptGuiOptions::OverlayMode[] = {
   {ptOverlayMode_ShowMask,          QObject::tr("Show Mask") },
   {-1,NULL}};
 
+const ptGuiOptionsItem ptGuiOptions::OutlineMode[] = {
+  {ptOverlayMode_None,              QObject::tr("Disabled") },
+  {ptOverlayMode_SoftLight,         QObject::tr("SoftLight") },
+  {ptOverlayMode_Multiply,          QObject::tr("Multiply") },
+  {ptOverlayMode_Screen,            QObject::tr("Screen") },
+  {ptOverlayMode_GammaDark,         QObject::tr("Gamma dark") },
+  {ptOverlayMode_GammaBright,       QObject::tr("Gamma bright") },
+  {ptOverlayMode_ColorBurn,         QObject::tr("Color burn") },
+  {ptOverlayMode_ColorDodge,        QObject::tr("Color dodge") },
+  {ptOverlayMode_Replace,           QObject::tr("Show outlines") },
+//  {ptOverlayMode_Overlay,           QObject::tr("Overlay") },
+  {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::OutlineGradientMode[] = {
+  {ptGradientMode_Backward,         QObject::tr("Backward finite differences") },
+  {ptGradientMode_Centered,         QObject::tr("Centered finite differences") },
+  {ptGradientMode_Forward,          QObject::tr("Forward finite differences") },
+  {ptGradientMode_Sobel,            QObject::tr("Sobel masks") },
+  {ptGradientMode_RotInv,           QObject::tr("Rotation invariant masks") },
+  {ptGradientMode_Deriche,          QObject::tr("Deriche recursive filter") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::OverlayMaskMode[] = {
   {ptOverlayMaskMode_FullImage,     QObject::tr("Full image") },
   {ptOverlayMaskMode_Vignette,      QObject::tr("Vignette") },

@@ -264,7 +264,7 @@ void Update(short Phase,
             short SubPhase      = -1,
             short WithIdentify  = 1,
             short ProcessorMode = ptProcessorMode_Preview);
-int CalculatePipeSize();
+int CalculatePipeSize(const bool NewImage = false);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void SaveButtonToolTip(const short mode);
 
@@ -3267,11 +3267,10 @@ void CB_MenuFileOpen(const short HaveFile) {
 
 
   if (Settings->GetInt("AutomaticPipeSize") && Settings->ToolIsActive("TabResize")) {
-    if (!CalculatePipeSize())
-      Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
-  } else {
-    Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+    CalculatePipeSize(true);
   }
+
+  Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
 
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   Settings->SetValue("PerspectiveFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
@@ -5332,8 +5331,16 @@ void CB_LqrVertFirstCheck(const QVariant Check) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void CalculatePipeSizeHelper(const short Size, const bool NewImage) {
+  if (NewImage) {
+    Settings->SetValue("PipeSize",Size);
+  } else {
+    CB_PipeSizeChoice(Size);
+  }
+}
+
 // returns 1 if pipe was updated
-int CalculatePipeSize() {
+int CalculatePipeSize(const bool NewImage /* = False */) {
   uint16_t InSize = 0;
   if (Settings->GetInt("HaveImage")==0) return 0;
   if (Settings->GetInt("Crop")==0) {
@@ -5345,19 +5352,19 @@ int CalculatePipeSize() {
   if (s < Settings->GetInt("PipeSize")) {
     if (Settings->GetInt("RunMode") != 1) {// not manual mode
       ImageSaved = 1; // bad hack to check what happens in the next step
-      CB_PipeSizeChoice(s);
-      if (ImageSaved == 1) {
+      CalculatePipeSizeHelper(s, NewImage);
+      if (ImageSaved == 1 && !NewImage) {
         if (Settings->GetInt("PipeSize")==1) {
           ptMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill stay on half size instead!");
           ImageSaved = 0;
           return 0;
         } else {
           ptMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill run on half size instead!");
-          CB_PipeSizeChoice(1);
+          CalculatePipeSizeHelper(1, NewImage);
         }
       }
     } else {
-      CB_PipeSizeChoice(s);
+      CalculatePipeSizeHelper(s, NewImage);
     }
     return 1;
   }
@@ -6106,10 +6113,6 @@ void CB_CurveChoice(const int Channel, const int Choice) {
     if (!BackupCurve[Channel]) BackupCurve[Channel] = new ptCurve();
     BackupCurve[Channel]->Set(Curve[Channel]);
   }
-
-  QString Test = CurveKeys.at(Channel);
-
-  int T = Settings->GetInt(Test);
 
   // Restore the saved curve
   if (Settings->GetInt(CurveKeys.at(Channel))!=ptCurveChoice_Manual &&
@@ -8701,6 +8704,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(ViewLABChoice)
 
   M_SetAndRunDispatch(OutlineModeChoice)
+  M_SetAndRunDispatch(OutlineGradientModeChoice)
   M_SetAndRunDispatch(OutlineWeightInput)
   M_SetAndRunDispatch(OutlineBlurRadiusInput)
 
