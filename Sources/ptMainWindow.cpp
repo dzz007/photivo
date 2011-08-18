@@ -94,8 +94,9 @@ void Update(const QString GuiName);
 ////////////////////////////////////////////////////////////////////////////////
 
 ptMainWindow::ptMainWindow(const QString Title)
-  : QMainWindow(NULL) {
-
+: QMainWindow(NULL),
+  m_RepairSpotModel(NULL)
+{
   // Setup from the Gui builder.
   setupUi(this);
   setWindowTitle(Title);
@@ -650,7 +651,6 @@ ptMainWindow::ptMainWindow(const QString Title)
           SLOT(Event0TimerExpired()));
 
   ConfirmSpotRepairButton->hide();
-  PopulateSpotRepairList();
 
   UpdateCropToolUI();
   UpdateLfunDistUI();
@@ -2675,6 +2675,9 @@ void ptMainWindow::UpdateCropToolUI() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::PopulateSpotRepairList() {
+  if (m_RepairSpotModel != NULL) {
+    DelAndNull(m_RepairSpotModel);
+  }
   m_RepairSpotModel = new ptRepairSpotModel;
 
   // Create model from the actual spot data. Data included:

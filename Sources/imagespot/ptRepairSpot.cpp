@@ -34,18 +34,18 @@ extern ptSettings* Settings;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptRepairSpot::ptRepairSpot(const short CreateFromIni /*= 0*/)
-: ptImageSpot(CreateFromIni),
+ptRepairSpot::ptRepairSpot(QSettings* Ini /*= NULL*/)
+: ptImageSpot(Ini),
   m_HasRepairer(1),
   m_Algorithm(SpotRepairAlgo_Clone),
   m_RepairerPos(QPoint())
 {
-  if (CreateFromIni) {
-    m_HasRepairer = Settings->m_IniSettings->value("HasRepairer", 1).toInt();
+  if (Ini != NULL) {
+    m_HasRepairer = Ini->value("HasRepairer", 1).toInt();
     m_Algorithm =
-        (ptSpotRepairAlgo)(Settings->m_IniSettings->value("Algorithm", SpotRepairAlgo_Clone).toInt());
-    m_RepairerPos.setX(Settings->m_IniSettings->value("RepairerPosX", 0).toInt());
-    m_RepairerPos.setY(Settings->m_IniSettings->value("RepairerPosY", 0).toInt());
+        (ptSpotRepairAlgo)(Ini->value("Algorithm", SpotRepairAlgo_Clone).toInt());
+    m_RepairerPos.setX(Ini->value("RepairerPosX", 0).toInt());
+    m_RepairerPos.setY(Ini->value("RepairerPosY", 0).toInt());
   }
 }
 
@@ -122,10 +122,10 @@ void ptRepairSpot::setSpotPos(const uint x, const uint y) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptRepairSpot::WriteToIni() {
-  ptImageSpot::WriteToIni();
-  Settings->m_IniSettings->setValue("HasRepairer", m_HasRepairer);
-  Settings->m_IniSettings->setValue("Algorithm", m_Algorithm);
-  Settings->m_IniSettings->setValue("RepairerPosX", m_RepairerPos.x());
-  Settings->m_IniSettings->setValue("RepairerPosY", m_RepairerPos.y());
+void ptRepairSpot::WriteToIni(QSettings* Ini) {
+  ptImageSpot::WriteToIni(Ini);
+  Ini->setValue("HasRepairer", m_HasRepairer);
+  Ini->setValue("Algorithm", m_Algorithm);
+  Ini->setValue("RepairerPosX", m_RepairerPos.x());
+  Ini->setValue("RepairerPosY", m_RepairerPos.y());
 }

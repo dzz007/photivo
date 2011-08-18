@@ -25,6 +25,7 @@
 
 #include <QList>
 #include <QString>
+#include <QSettings>
 
 #include "ptImageSpot.h"
 
@@ -46,7 +47,7 @@ public:
   void removeFirst();
   void removeLast();
   void replace(int i, ptImageSpot *const& NewSpot);
-  void WriteToIni();
+  void WriteToIni(QSettings* Ini);
 
 ////////////////////////////////////////////////////////////////////////////////
 //

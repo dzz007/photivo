@@ -133,6 +133,9 @@ public:
   QDockWidget* ControlsDockWidget;
 
   void OnToolBoxesEnabledTriggered(const bool Enabled);
+  void PopulateSpotRepairList();
+
+
 public slots:
   void OtherInstanceMessage(const QString &msg);
 
@@ -179,7 +182,6 @@ private :
   void AnalyzeToolBoxStructure();
   void ShowMovedTools(const QString Title);
   void InitVisibleTools();
-  void PopulateSpotRepairList();
 
 
 ////////////////////////////////////////////////////////////////////////////////
