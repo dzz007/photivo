@@ -54,7 +54,7 @@ public:
       from the currently opened ini file. Default is \\0 (no load from ini). The ini’s
       \\ReadArray() must be set appropriately before you can use this.
   */
-  ptImageSpot(const short CreateFromIni = 0);
+  ptImageSpot(QSettings* Ini = NULL);
 
   /*! Create an image spot with specific values. */
   ptImageSpot(const short isEnabled,
@@ -131,7 +131,7 @@ public:
   /*! Writes the spot’s data to the currently opened ini file.
     The ini’s \\WriteArray() must be set appropriately before you use this.
   */
-  virtual void WriteToIni();
+  virtual void WriteToIni(QSettings* Ini);
 
 
 ////////////////////////////////////////////////////////////////////////////////

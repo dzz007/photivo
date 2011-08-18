@@ -48,6 +48,7 @@
 #include "ptTheme.h"
 #include "ptWiener.h"
 #include "imagespot/ptImageSpotList.h"
+#include "imagespot/ptRepairSpot.h"
 #include "qtsingleapplication/qtsingleapplication.h"
 
 #ifdef Q_OS_MAC
@@ -2652,6 +2653,13 @@ short WriteSettingsFile(const QString FileName, const short IsJobFile /* = 0 */)
       JobSettings.setValue(CurveKeys.at(i) + "Type",Curve[i]->m_IntType);
     }
   }
+
+  // Save list of spotrepair spots
+  ReportProgress(QObject::tr(
+      QString("Writing %1 repair spots to settings file.")
+      .arg(RepairSpotList->count()).toAscii().data()) );
+  RepairSpotList->WriteToIni(&JobSettings);
+
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) return 0;
   assert(JobSettings.status() == QSettings::NoError); // TODO
@@ -2949,15 +2957,15 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   JobSettings.setValue("CameraColorProfile", Settings->GetString("CameraColorProfile"));*/
 
   // list of spotrepair spots
-  if (JobSettings.contains(RepairSpotList->iniName())) {
-    RepairSpotList->clear();
-    int size = JobSettings.beginReadArray(RepairSpotList->iniName());
-    for (int i = 0; i < size; i++) {
-      JobSettings.setArrayIndex(i);
-      RepairSpotList->append(new ptImageSpot(1));
-    }
-    JobSettings.endArray();
+  RepairSpotList->clear();
+  int size = JobSettings.beginReadArray(RepairSpotList->iniName());
+  ReportProgress(QObject::tr(QString("Reading %1 repair spots.\n").arg(size).toAscii().data()));
+  for (int i = 0; i < size; i++) {
+    JobSettings.setArrayIndex(i);
+    RepairSpotList->append(new ptRepairSpot(&JobSettings));
   }
+  JobSettings.endArray();
+  MainWindow->PopulateSpotRepairList();
 
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) {
@@ -3452,6 +3460,7 @@ void CB_MenuFileExit(const short) {
          // should never be reached
          break;
     }
+
   }
   // clean up the input file if we got just a temp file
   if (Settings->GetInt("HaveImage")==1 && ImageCleanUp == 1) {
@@ -3481,8 +3490,6 @@ void CB_MenuFileExit(const short) {
   Settings->m_IniSettings->setValue("IsMaximized", MainWindow->windowState() == Qt::WindowMaximized);
   // Store the version of the settings and files
   Settings->m_IniSettings->setValue("SettingsVersion",PhotivoSettingsVersion);
-
-  RepairSpotList->WriteToIni();
 
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;

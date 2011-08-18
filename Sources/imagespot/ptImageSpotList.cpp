@@ -43,7 +43,7 @@ extern ptSettings* Settings;
 ptImageSpotList::ptImageSpotList(const QString IniPrefix /*= ""*/)
 : QList<ptImageSpot*>()
 {
-  m_IniName = IniPrefix + "Spot";
+  m_IniName = IniPrefix + "Spots";
 }
 
 ptImageSpotList::~ptImageSpotList() {
@@ -87,17 +87,17 @@ void ptImageSpotList::replace(int i, ptImageSpot *const& NewSpot) {
 // WriteToIni()
 //
 ////////////////////////////////////////////////////////////////////////////////
-void ptImageSpotList::WriteToIni() {
+void ptImageSpotList::WriteToIni(QSettings* Ini) {
   // Clear old stored spots
-  Settings->m_IniSettings->beginGroup(m_IniName);
-  Settings->m_IniSettings->remove("");
-  Settings->m_IniSettings->endGroup();
+  Ini->beginGroup(m_IniName);
+  Ini->remove("");
+  Ini->endGroup();
 
   // Save the new ones
-  Settings->m_IniSettings->beginWriteArray(m_IniName);
+  Ini->beginWriteArray(m_IniName);
   for (int i = 0; i < this->count(); i++) {
-    Settings->m_IniSettings->setArrayIndex(i);
-    at(i)->WriteToIni();
+    Ini->setArrayIndex(i);
+    at(i)->WriteToIni(Ini);
   }
-  Settings->m_IniSettings->endArray();
+  Ini->endArray();
 }

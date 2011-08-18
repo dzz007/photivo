@@ -53,7 +53,7 @@ public:
       from the currently opened ini file. Default is \\0 (no load from ini). The ini’s
       \\ReadArray() must be set appropriately before you can use this.
   */
-  ptRepairSpot(const short CreateFromIni = 0);
+  ptRepairSpot(QSettings* Ini = NULL);
 
   /*! Create a repair spot with specific values.  */
   ptRepairSpot(const short isEnabled,
@@ -103,7 +103,7 @@ public:
   /*! Writes all data to the currently opened ini file.
     The ini’s \\WriteArray() must be set appropriately before you use this.
   */
-  void WriteToIni();
+  void WriteToIni(QSettings* Ini);
 
 ////////////////////////////////////////////////////////////////////////////////
 //

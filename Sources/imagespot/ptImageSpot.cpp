@@ -34,7 +34,7 @@ extern ptSettings* Settings;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImageSpot::ptImageSpot(const short CreateFromIni /*= 0*/)
+ptImageSpot::ptImageSpot(QSettings* Ini /*= NULL*/)
 : m_Angle(0.0),
   m_EdgeBlur(0.0),
   m_EdgeRadius(0),
@@ -46,16 +46,16 @@ ptImageSpot::ptImageSpot(const short CreateFromIni /*= 0*/)
 {
   m_Pos = QPoint();
 
-  if (CreateFromIni) {
-    m_Angle = Settings->m_IniSettings->value("Angle", 0.0).toFloat();
-    m_EdgeBlur = Settings->m_IniSettings->value("EdgeBlur", 0.0).toFloat();
-    m_EdgeRadius = Settings->m_IniSettings->value("EdgeRadius", 0).toUInt();
-    m_IsEnabled = Settings->m_IniSettings->value("IsEnabled", 0).toInt();
-    m_Opacity = Settings->m_IniSettings->value("Opacity", 1.0).toFloat();
-    m_RadiusW = Settings->m_IniSettings->value("RadiusW", 0).toUInt();
-    m_RadiusH = Settings->m_IniSettings->value("RadiusH", 0.).toUInt();
-    m_Pos.setX(Settings->m_IniSettings->value("SpotPosX", 0).toInt());
-    m_Pos.setY(Settings->m_IniSettings->value("SpotPosY", 0).toInt());
+  if (Ini != NULL) {
+    m_Angle = Ini->value("Angle", 0.0).toFloat();
+    m_EdgeBlur = Ini->value("EdgeBlur", 0.0).toFloat();
+    m_EdgeRadius = Ini->value("EdgeRadius", 0).toUInt();
+    m_IsEnabled = Ini->value("IsEnabled", 0).toInt();
+    m_Opacity = Ini->value("Opacity", 1.0).toFloat();
+    m_RadiusW = Ini->value("RadiusW", 0).toUInt();
+    m_RadiusH = Ini->value("RadiusH", 0.).toUInt();
+    m_Pos.setX(Ini->value("SpotPosX", 0).toInt());
+    m_Pos.setY(Ini->value("SpotPosY", 0).toInt());
   }
 }
 
@@ -178,14 +178,14 @@ void ptImageSpot::UpdateWeight() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptImageSpot::WriteToIni() {
-  Settings->m_IniSettings->setValue("Angle", m_Angle);
-  Settings->m_IniSettings->setValue("EdgeBlur", m_EdgeBlur);
-  Settings->m_IniSettings->setValue("EdgeRadius", m_EdgeRadius);
-  Settings->m_IniSettings->setValue("IsEnabled", m_IsEnabled);
-  Settings->m_IniSettings->setValue("Opacity", m_Opacity);
-  Settings->m_IniSettings->setValue("RadiusW", m_RadiusW);
-  Settings->m_IniSettings->setValue("RadiusH", m_RadiusH);
-  Settings->m_IniSettings->setValue("SpotPosX", m_Pos.x());
-  Settings->m_IniSettings->setValue("SpotPosY", m_Pos.y());
+void ptImageSpot::WriteToIni(QSettings* Ini) {
+  Ini->setValue("Angle", m_Angle);
+  Ini->setValue("EdgeBlur", m_EdgeBlur);
+  Ini->setValue("EdgeRadius", m_EdgeRadius);
+  Ini->setValue("IsEnabled", m_IsEnabled);
+  Ini->setValue("Opacity", m_Opacity);
+  Ini->setValue("RadiusW", m_RadiusW);
+  Ini->setValue("RadiusH", m_RadiusH);
+  Ini->setValue("SpotPosX", m_Pos.x());
+  Ini->setValue("SpotPosY", m_Pos.y());
 }
