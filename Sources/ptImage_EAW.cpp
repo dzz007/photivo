@@ -47,7 +47,8 @@ void wtf_channel(float *buf, float **weight_a, const int l, const int width, con
   for(int j=0;j<height;j++)
   { // rows
     // precompute weights:
-    float tmp[width];
+    // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
+    float *tmp = (float*)CALLOC(width,sizeof(float));
     for(int i=0;i<width-st;i+=st) tmp[i] = gweight(i, j, i+st, j);
     // predict, get detail
     int i = st;
@@ -61,6 +62,7 @@ void wtf_channel(float *buf, float **weight_a, const int l, const int width, con
       gbuf(buf, i, j) += (tmp[i-st]*gbuf(buf, i-st, j) + tmp[i]*gbuf(buf, i+st, j))
         /(2.0*(tmp[i-st] + tmp[i]));
     if(i < width) gbuf(buf, i, j) += gbuf(buf, i-st, j)*.5f;
+    FREE(tmp);
   }
 #ifdef _OPENMP
 #pragma omp parallel for default(none) shared(weight_a,buf) schedule(static) //private(ch)
@@ -68,7 +70,8 @@ void wtf_channel(float *buf, float **weight_a, const int l, const int width, con
   for(int i=0;i<width;i++)
   { // cols
     // precompute weights:
-    float tmp[height];
+    // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
+    float *tmp = (float*)CALLOC(height,sizeof(float));
     for(int j=0;j<height-st;j+=st) tmp[j] = gweight(i, j, i, j+st);
     int j = st;
     // predict, get detail
@@ -82,6 +85,7 @@ void wtf_channel(float *buf, float **weight_a, const int l, const int width, con
       gbuf(buf, i, j) += (tmp[j-st]*gbuf(buf, i, j-st) + tmp[j]*gbuf(buf, i, j+st))
         /(2.0*(tmp[j-st] + tmp[j]));
     if(j < height) gbuf(buf, i, j) += gbuf(buf, i, j-st)*.5f;
+    FREE(tmp);
   }
 }
 
@@ -97,7 +101,8 @@ void iwtf_channel(float *buf, float **weight_a, const int l, const int width, co
 #endif
   for(int i=0;i<width;i++)
   { //cols
-    float tmp[height];
+    // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
+    float *tmp = (float*)CALLOC(height,sizeof(float));
     int j;
     for(j=0;j<height-st;j+=st) tmp[j] = gweight(i, j, i, j+st);
     // update coarse
@@ -111,13 +116,15 @@ void iwtf_channel(float *buf, float **weight_a, const int l, const int width, co
       gbuf(buf, i, j) += (tmp[j-st]*gbuf(buf, i, j-st) + tmp[j]*gbuf(buf, i, j+st))
         /(tmp[j-st] + tmp[j]);
     if(j < height) gbuf(buf, i, j) += gbuf(buf, i, j-st);
+    FREE(tmp);
   }
 #ifdef _OPENMP
 #pragma omp parallel for default(none) shared(weight_a,buf) schedule(static) //private(ch)
 #endif
   for(int j=0;j<height;j++)
   { // rows
-    float tmp[width];
+    // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
+    float *tmp = (float*)CALLOC(width,sizeof(float));
     int i;
     for(int i=0;i<width-st;i+=st) tmp[i] = gweight(i, j, i+st, j);
     // update
@@ -131,6 +138,7 @@ void iwtf_channel(float *buf, float **weight_a, const int l, const int width, co
       gbuf(buf, i, j) += (tmp[i-st]*gbuf(buf, i-st, j) + tmp[i]*gbuf(buf, i+st, j))
         /(tmp[i-st] + tmp[i]);
     if(i < width) gbuf(buf, i, j) += gbuf(buf, i-st, j);
+    FREE(tmp);
   }
 }
 
@@ -151,7 +159,8 @@ void dt_iop_equalizer_wtf(float *buf, float **weight_a, const int l, const int w
   for(int j=0;j<height;j++)
   { // rows
     // precompute weights:
-    float tmp[width];
+    // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
+    float *tmp = (float*)CALLOC(width,sizeof(float));
     for(int i=0;i<width-st;i+=st) tmp[i] = gweight(i, j, i+st, j);
     // predict, get detail
     int i = st;
@@ -165,6 +174,7 @@ void dt_iop_equalizer_wtf(float *buf, float **weight_a, const int l, const int w
       gbuf(buf, i, j) += (tmp[i-st]*gbuf(buf, i-st, j) + tmp[i]*gbuf(buf, i+st, j))
         /(2.0*(tmp[i-st] + tmp[i]));
     if(i < width) for(ch=0;ch<3;ch++) gbuf(buf, i, j) += gbuf(buf, i-st, j)*.5f;
+    FREE(tmp);
   }
 #ifdef _OPENMP
 #pragma omp parallel for default(none) shared(weight_a,buf) private(ch) schedule(static)
@@ -172,7 +182,8 @@ void dt_iop_equalizer_wtf(float *buf, float **weight_a, const int l, const int w
   for(int i=0;i<width;i++)
   { // cols
     // precompute weights:
-    float tmp[height];
+    // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
+    float *tmp = (float*)CALLOC(height,sizeof(float));
     for(int j=0;j<height-st;j+=st) tmp[j] = gweight(i, j, i, j+st);
     int j = st;
     // predict, get detail
@@ -186,6 +197,7 @@ void dt_iop_equalizer_wtf(float *buf, float **weight_a, const int l, const int w
       gbuf(buf, i, j) += (tmp[j-st]*gbuf(buf, i, j-st) + tmp[j]*gbuf(buf, i, j+st))
         /(2.0*(tmp[j-st] + tmp[j]));
     if(j < height) for(int ch=0;ch<3;ch++) gbuf(buf, i, j) += gbuf(buf, i, j-st)*.5f;
+    FREE(tmp);
   }
 }
 
@@ -200,7 +212,8 @@ void dt_iop_equalizer_iwtf(float *buf, float **weight_a, const int l, const int 
 #endif
   for(int i=0;i<width;i++)
   { //cols
-    float tmp[height];
+    // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
+    float *tmp = (float*)CALLOC(height,sizeof(float));
     int j;
     for(j=0;j<height-st;j+=st) tmp[j] = gweight(i, j, i, j+st);
     // update coarse
@@ -214,13 +227,15 @@ void dt_iop_equalizer_iwtf(float *buf, float **weight_a, const int l, const int 
       gbuf(buf, i, j) += (tmp[j-st]*gbuf(buf, i, j-st) + tmp[j]*gbuf(buf, i, j+st))
         /(tmp[j-st] + tmp[j]);
     if(j < height) for(int ch=0;ch<3;ch++) gbuf(buf, i, j) += gbuf(buf, i, j-st);
+    FREE(tmp);
   }
 #ifdef _OPENMP
 #pragma omp parallel for default(none) shared(weight_a,buf) schedule(static)
 #endif
   for(int j=0;j<height;j++)
   { // rows
-    float tmp[width];
+    // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
+    float *tmp = (float*)CALLOC(width,sizeof(float));
     int i;
     for(int i=0;i<width-st;i+=st) tmp[i] = gweight(i, j, i+st, j);
     // update
@@ -234,6 +249,7 @@ void dt_iop_equalizer_iwtf(float *buf, float **weight_a, const int l, const int 
       gbuf(buf, i, j) += (tmp[i-st]*gbuf(buf, i-st, j) + tmp[i]*gbuf(buf, i+st, j))
         /(tmp[i-st] + tmp[i]);
     if(i < width) for(int ch=0;ch<3;ch++) gbuf(buf, i, j) += gbuf(buf, i-st, j);
+    FREE(tmp);
   }
 }
 
