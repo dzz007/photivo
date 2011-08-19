@@ -1539,7 +1539,9 @@ void BeforeGamma(ptImage* Image, const short FinalRun = 0, const short Resize = 
     if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
       //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
-      Image->ptGMResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
+      Image->ptGMResize(Settings->GetInt("WebResizeScale"),
+                        Settings->GetInt("WebResizeFilter"),
+                        Settings->GetInt("WebResizeMode"));
     }
     if (FinalRun == 1) Settings->SetValue("FullOutput",0);
   }
@@ -1592,8 +1594,9 @@ void AfterAll(ptImage* Image, const short FinalRun = 0, const short Resize = 1) 
     if (FinalRun == 1) Settings->SetValue("FullOutput",1);
     if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
-      //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
-      Image->ptGMResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
+      Image->ptGMResize(Settings->GetInt("WebResizeScale"),
+                        Settings->GetInt("WebResizeFilter"),
+                        Settings->GetInt("WebResizeMode"));
     }
     if (FinalRun == 1) Settings->SetValue("FullOutput",0);
   }
@@ -5382,6 +5385,19 @@ void CB_ResizeCheck(const QVariant Check) {
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
 }
 
+void CB_ResizeModeChoice(const QVariant Choice) {
+  Settings->SetValue("ResizeMode",Choice);
+  if (Settings->GetInt("Resize")) {
+    if (Settings->GetInt("AutomaticPipeSize")) {
+      if (!CalculatePipeSize())
+        Update(ptProcessorPhase_Geometry);
+    } else {
+      Update(ptProcessorPhase_Geometry);
+    }
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  }
+}
+
 void CB_ResizeScaleInput(const QVariant Value) {
   Settings->SetValue("ResizeScale",Value);
   if (Settings->GetInt("Resize")) {
@@ -8406,6 +8422,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LqrVertFirstCheck)
 
   M_Dispatch(ResizeCheck)
+  M_Dispatch(ResizeModeChoice)
   M_Dispatch(ResizeScaleInput)
   M_Dispatch(ResizeFilterChoice)
   M_Dispatch(AutomaticPipeSizeCheck)
@@ -8874,6 +8891,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(RGBContrast3ThresholdInput)
 
   M_SetAndRunDispatch(WebResizeChoice)
+  M_SetAndRunDispatch(WebResizeModeChoice)
   M_SetAndRunDispatch(WebResizeBeforeGammaCheck)
   M_SetAndRunDispatch(WebResizeScaleInput)
   M_SetAndRunDispatch(WebResizeFilterChoice)

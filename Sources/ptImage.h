@@ -585,8 +585,12 @@ ptImage* ptGMWriteImage(const char* FileName,
                         const char* ColorProfileFileName,
                         const int Intent);
 
-ptImage* ptGMResize(uint16_t Size, const short Filter);
-ptImage* ptGMResize(uint16_t NewWidth, uint16_t NewHeight, const short Filter);
+ptImage* ptGMResize(const uint16_t Size,
+                    const short Filter,
+                    const short Mode);
+ptImage* ptGMResizeWH(const uint16_t NewWidth,
+                      const uint16_t NewHeight,
+                      const short Filter);
 
 ptImage* ptGMBlur(const double Radius);
 

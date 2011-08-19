@@ -539,6 +539,11 @@ const short ptIMFilter_Lanczos   = 12;
 //const short ptIMFilter_Bessel    = 13;
 //const short ptIMFilter_Sinc      = 14;
 
+// Resize modes
+const short ptResizeMode_LongerSide = 0;
+const short ptResizeMode_Width      = 1;
+const short ptResizeMode_Height     = 2;
+
 // Liquid rescale energies
 const short ptLqr_Disabled         = 0;
 const short ptLqr_GradXabs         = 1;

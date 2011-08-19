@@ -355,10 +355,22 @@ ptImage* ptImage::ptGMSimpleOpen(const char* FileName) {
 }
 
 // Resize
-ptImage* ptImage::ptGMResize(uint16_t Size, const short Filter) {
+ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const short Mode) {
 
   uint16_t Width  = m_Width;
   uint16_t Height = m_Height;
+
+  QString TempString;
+
+  if (Mode == ptResizeMode_LongerSide) {
+    TempString = QString::number(Size) + "x";
+  } else if (Mode == ptResizeMode_Width) {
+    int NewHeight = Height/(double)Width*Size+0.5;
+    TempString = QString::number(Size) + "x" + QString::number(NewHeight) + "!";
+  } else if (Mode == ptResizeMode_Height) {
+    int NewWidth = Width/(double)Height*Size+0.5;
+    TempString = QString::number(NewWidth) + "x" + QString::number(Size) + "!";
+  } else return this;
 
   Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
   FREE(m_Image);
@@ -413,14 +425,6 @@ ptImage* ptImage::ptGMResize(uint16_t Size, const short Filter) {
       assert(0);
   }
 
-  QString TempString = QString::number(Size);
-  TempString += "x";
-
-  // Leftover from ImageMagick
-  // if (Width <= Height)  {
-    // TempString.prepend("x");
-  // }
-
   image.zoom(TempString.toStdString());
   image.modifyImage();
 
@@ -433,7 +437,9 @@ ptImage* ptImage::ptGMResize(uint16_t Size, const short Filter) {
   return this;
 }
 
-ptImage* ptImage::ptGMResize(uint16_t NewWidth, uint16_t NewHeight, const short Filter) {
+ptImage* ptImage::ptGMResizeWH(const uint16_t NewWidth,
+                               const uint16_t NewHeight,
+                               const short Filter) {
 
   uint16_t Width  = m_Width;
   uint16_t Height = m_Height;
