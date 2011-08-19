@@ -2909,7 +2909,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
 
     m_Image_AfterGeometry->ptGMResize(Settings->GetInt("ResizeScale"),
                                       Settings->GetInt("ResizeFilter"),
-                                      Settings->GetInt("ResizeMode"));
+                                      Settings->GetInt("ResizeDimension"));
 
     m_ScaleFactor = (float) m_Image_AfterGeometry->m_Width/WidthIn/powf(2.0, Settings->GetInt("Scaled"));
 

@@ -70,7 +70,7 @@ public:
   static const ptGuiOptionsItem CropGuidelines[];
   static const ptGuiOptionsItem LightsOutMode[];
   static const ptGuiOptionsItem ResizeFilter[];
-  static const ptGuiOptionsItem ResizeMode[];
+  static const ptGuiOptionsItem ResizeDimension[];
   static const ptGuiOptionsItem IMResizeFilter[];
   static const ptGuiOptionsItem LqrEnergy[];
   static const ptGuiOptionsItem LqrScaling[];
