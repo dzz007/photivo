@@ -540,9 +540,9 @@ const short ptIMFilter_Lanczos   = 12;
 //const short ptIMFilter_Sinc      = 14;
 
 // Resize modes
-const short ptResizeMode_LongerSide = 0;
-const short ptResizeMode_Width      = 1;
-const short ptResizeMode_Height     = 2;
+const short ptResizeDimension_LongerEdge = 0;
+const short ptResizeDimension_Width      = 1;
+const short ptResizeDimension_Height     = 2;
 
 // Liquid rescale energies
 const short ptLqr_Disabled         = 0;

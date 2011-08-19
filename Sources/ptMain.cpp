@@ -1541,7 +1541,7 @@ void BeforeGamma(ptImage* Image, const short FinalRun = 0, const short Resize = 
       //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
       Image->ptGMResize(Settings->GetInt("WebResizeScale"),
                         Settings->GetInt("WebResizeFilter"),
-                        Settings->GetInt("WebResizeMode"));
+                        Settings->GetInt("WebResizeDimension"));
     }
     if (FinalRun == 1) Settings->SetValue("FullOutput",0);
   }
@@ -1596,7 +1596,7 @@ void AfterAll(ptImage* Image, const short FinalRun = 0, const short Resize = 1) 
       ReportProgress(QObject::tr("WebResizing"));
       Image->ptGMResize(Settings->GetInt("WebResizeScale"),
                         Settings->GetInt("WebResizeFilter"),
-                        Settings->GetInt("WebResizeMode"));
+                        Settings->GetInt("WebResizeDimension"));
     }
     if (FinalRun == 1) Settings->SetValue("FullOutput",0);
   }
@@ -5385,8 +5385,8 @@ void CB_ResizeCheck(const QVariant Check) {
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
 }
 
-void CB_ResizeModeChoice(const QVariant Choice) {
-  Settings->SetValue("ResizeMode",Choice);
+void CB_ResizeDimensionChoice(const QVariant Choice) {
+  Settings->SetValue("ResizeDimension",Choice);
   if (Settings->GetInt("Resize")) {
     if (Settings->GetInt("AutomaticPipeSize")) {
       if (!CalculatePipeSize())
@@ -8422,7 +8422,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LqrVertFirstCheck)
 
   M_Dispatch(ResizeCheck)
-  M_Dispatch(ResizeModeChoice)
+  M_Dispatch(ResizeDimensionChoice)
   M_Dispatch(ResizeScaleInput)
   M_Dispatch(ResizeFilterChoice)
   M_Dispatch(AutomaticPipeSizeCheck)
@@ -8891,7 +8891,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(RGBContrast3ThresholdInput)
 
   M_SetAndRunDispatch(WebResizeChoice)
-  M_SetAndRunDispatch(WebResizeModeChoice)
+  M_SetAndRunDispatch(WebResizeDimensionChoice)
   M_SetAndRunDispatch(WebResizeBeforeGammaCheck)
   M_SetAndRunDispatch(WebResizeScaleInput)
   M_SetAndRunDispatch(WebResizeFilterChoice)
