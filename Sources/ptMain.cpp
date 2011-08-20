@@ -1733,11 +1733,6 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     // Convert from working space to screen space.
     // Using lcms and a standard sRGB or custom profile.
-
-
-
-
-
     ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
     if (!ReturnValue) {
       ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
@@ -3611,7 +3606,7 @@ void GimpExport(const short UsePipe) {
   long lSize = ftell (pFile);
   rewind (pFile);
 
-  char* pchBuffer = (char*) CALLOC(lSize,sizeof(uint8_t));
+  char* pchBuffer = (char*) CALLOC2(lSize,sizeof(uint8_t));
   ptMemoryError(pchBuffer,__FILE__,__LINE__);
 
   size_t RV = fread (pchBuffer, 1, lSize, pFile);
@@ -3957,7 +3952,7 @@ void CB_MemoryTestInput(const QVariant Value) {
         QObject::tr("If you don't stop me, I will waste %1 MB of memory.").arg(Value.toInt()),
         QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
       // allocate orphaned memory for testing
-      char (*Test) = (char (*)) CALLOC(Value.toInt()*1024*1024,1);
+      char (*Test) = (char (*)) CALLOC2(Value.toInt()*1024*1024,1);
       memset(Test, '\0', Value.toInt()*1024*1024);
       ptMessageBox::critical(0,"Feedback","Memory wasted ;-)");
     }

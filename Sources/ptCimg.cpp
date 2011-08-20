@@ -554,7 +554,7 @@ float *ptGradientMask(const ptImage* Image, const double Radius, const double Th
   uint16_t Width  = Image->m_Width;
   uint16_t Height = Image->m_Height;
 
-  float (*dMask) = (float (*)) CALLOC(Width*Height,sizeof(*dMask));
+  float (*dMask) = (float (*)) CALLOC2(Width*Height,sizeof(*dMask));
   ptMemoryError(dMask,__FILE__,__LINE__);
 
   CImg <float> CImage(Width,Height,1,1,0);
@@ -837,7 +837,7 @@ void ptCimgRotate(ptImage* Image, const double Angle, const short Interpolation)
   Image->m_Height = CImage.height();
   Width  = Image->m_Width;
   Height = Image->m_Height;
-  Image->m_Image = (uint16_t (*)[3]) CALLOC(Image->m_Width*Image->m_Height,sizeof(*Image->m_Image));
+  Image->m_Image = (uint16_t (*)[3]) CALLOC2(Image->m_Width*Image->m_Height,sizeof(*Image->m_Image));
   ptMemoryError(Image->m_Image,__FILE__,__LINE__);
 
 #pragma omp parallel for default(shared) schedule(static)
