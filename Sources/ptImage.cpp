@@ -2388,6 +2388,32 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
       }
       break;
 
+  case ptOverlayMode_Darken:
+    if (!Mask) {
+      for (short Ch=0; Ch<3; Ch++) {
+        // Is it a channel we are supposed to handle ?
+        if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+        for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+          Source   = SourceImage[i][Ch];
+          Blend    = BlendImage[i][Ch];
+          m_Image[i][Ch] = CLIP((int32_t) (MIN(Blend*Amount, Source)));
+        }
+      }
+    } else {
+      for (short Ch=0; Ch<3; Ch++) {
+        // Is it a channel we are supposed to handle ?
+        if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+        for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+          Source   = SourceImage[i][Ch];
+          Blend    = BlendImage[i][Ch];
+          m_Image[i][Ch] = CLIP((int32_t)(MIN(Blend*Mask[i]+Source*(1-Mask[i])*Amount,Source)));
+        }
+      }
+    }
+    break;
+
     case ptOverlayMode_Overlay:
       if (!Mask) {
         for (short Ch=0; Ch<3; Ch++) {

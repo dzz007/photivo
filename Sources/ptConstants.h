@@ -435,6 +435,7 @@ const short ptOverlayMode_ColorDodge   = 10;
 const short ptOverlayMode_ColorBurn    = 11;
 const short ptOverlayMode_GammaDark    = 12;
 const short ptOverlayMode_GammaBright  = 13;
+const short ptOverlayMode_Darken       = 14;
 
 // OverlayMaskMode
 
