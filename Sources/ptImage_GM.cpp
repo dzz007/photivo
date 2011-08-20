@@ -362,12 +362,14 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
 
   QString TempString;
 
-  if (Mode == ptResizeDimension_LongerEdge) {
-    TempString = QString::number(Size) + "x";
-  } else if (Mode == ptResizeDimension_Width) {
+  bool WidthLonger = Width > Height;
+
+  if (Mode == ptResizeDimension_Width ||
+      (Mode == ptResizeDimension_LongerEdge && WidthLonger)) {
     int NewHeight = Height/(double)Width*Size+0.5;
     TempString = QString::number(Size) + "x" + QString::number(NewHeight) + "!";
-  } else if (Mode == ptResizeDimension_Height) {
+  } else if (Mode == ptResizeDimension_Height ||
+             (Mode == ptResizeDimension_LongerEdge && !WidthLonger)) {
     int NewWidth = Width/(double)Height*Size+0.5;
     TempString = QString::number(NewWidth) + "x" + QString::number(Size) + "!";
   } else return this;
