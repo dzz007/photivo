@@ -152,10 +152,10 @@ void ptRun(const gchar*     Name,
     Colors = 3;
 
     unsigned short (* ImageForGimp)[3] =
-      (unsigned short (*)[3]) CALLOC(Width*Height,sizeof(*ImageForGimp));
+      (unsigned short (*)[3]) CALLOC2(Width*Height,sizeof(*ImageForGimp));
     ptMemoryError(ImageForGimp,__FILE__,__LINE__);
 
-    unsigned short*  PpmRow = (unsigned short *) CALLOC(Width*Height,sizeof(*PpmRow));
+    unsigned short*  PpmRow = (unsigned short *) CALLOC2(Width*Height,sizeof(*PpmRow));
     ptMemoryError(PpmRow,__FILE__,__LINE__);
 
     for (unsigned short Row=0; Row<Height; Row++) {

@@ -48,7 +48,7 @@ void wtf_channel(float *buf, float **weight_a, const int l, const int width, con
   { // rows
     // precompute weights:
     // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
-    float *tmp = (float*)CALLOC(width,sizeof(float));
+    float *tmp = (float*)CALLOC2(width,sizeof(float));
     for(int i=0;i<width-st;i+=st) tmp[i] = gweight(i, j, i+st, j);
     // predict, get detail
     int i = st;
@@ -71,7 +71,7 @@ void wtf_channel(float *buf, float **weight_a, const int l, const int width, con
   { // cols
     // precompute weights:
     // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
-    float *tmp = (float*)CALLOC(height,sizeof(float));
+    float *tmp = (float*)CALLOC2(height,sizeof(float));
     for(int j=0;j<height-st;j+=st) tmp[j] = gweight(i, j, i, j+st);
     int j = st;
     // predict, get detail
@@ -102,7 +102,7 @@ void iwtf_channel(float *buf, float **weight_a, const int l, const int width, co
   for(int i=0;i<width;i++)
   { //cols
     // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
-    float *tmp = (float*)CALLOC(height,sizeof(float));
+    float *tmp = (float*)CALLOC2(height,sizeof(float));
     int j;
     for(j=0;j<height-st;j+=st) tmp[j] = gweight(i, j, i, j+st);
     // update coarse
@@ -124,7 +124,7 @@ void iwtf_channel(float *buf, float **weight_a, const int l, const int width, co
   for(int j=0;j<height;j++)
   { // rows
     // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
-    float *tmp = (float*)CALLOC(width,sizeof(float));
+    float *tmp = (float*)CALLOC2(width,sizeof(float));
     int i;
     for(int i=0;i<width-st;i+=st) tmp[i] = gweight(i, j, i+st, j);
     // update
@@ -160,7 +160,7 @@ void dt_iop_equalizer_wtf(float *buf, float **weight_a, const int l, const int w
   { // rows
     // precompute weights:
     // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
-    float *tmp = (float*)CALLOC(width,sizeof(float));
+    float *tmp = (float*)CALLOC2(width,sizeof(float));
     for(int i=0;i<width-st;i+=st) tmp[i] = gweight(i, j, i+st, j);
     // predict, get detail
     int i = st;
@@ -183,7 +183,7 @@ void dt_iop_equalizer_wtf(float *buf, float **weight_a, const int l, const int w
   { // cols
     // precompute weights:
     // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
-    float *tmp = (float*)CALLOC(height,sizeof(float));
+    float *tmp = (float*)CALLOC2(height,sizeof(float));
     for(int j=0;j<height-st;j+=st) tmp[j] = gweight(i, j, i, j+st);
     int j = st;
     // predict, get detail
@@ -213,7 +213,7 @@ void dt_iop_equalizer_iwtf(float *buf, float **weight_a, const int l, const int 
   for(int i=0;i<width;i++)
   { //cols
     // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
-    float *tmp = (float*)CALLOC(height,sizeof(float));
+    float *tmp = (float*)CALLOC2(height,sizeof(float));
     int j;
     for(j=0;j<height-st;j+=st) tmp[j] = gweight(i, j, i, j+st);
     // update coarse
@@ -235,7 +235,7 @@ void dt_iop_equalizer_iwtf(float *buf, float **weight_a, const int l, const int 
   for(int j=0;j<height;j++)
   { // rows
     // Allocation is done with calloc to avoid a compiler error with OpenMP/MacOSX Lion
-    float *tmp = (float*)CALLOC(width,sizeof(float));
+    float *tmp = (float*)CALLOC2(width,sizeof(float));
     int i;
     for(int i=0;i<width-st;i+=st) tmp[i] = gweight(i, j, i+st, j);
     // update
@@ -271,7 +271,7 @@ ptImage* ptImage::EAWChannel(const double scaling,
   uint16_t w = m_Width;
   uint16_t h = m_Height;
 
-  float (*out) = (float (*)) CALLOC(w*h,sizeof(*out));
+  float (*out) = (float (*)) CALLOC2(w*h,sizeof(*out));
   ptMemoryError(out,__FILE__,__LINE__);
 
 #pragma omp parallel for schedule(static)

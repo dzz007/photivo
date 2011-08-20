@@ -96,6 +96,7 @@ uint16_t*       m_LookUp;
 
 void CalculateHistogram();
 void FillLookUp();
+void *m_TpHistogram;
 };
 
 #endif
