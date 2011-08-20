@@ -360,19 +360,22 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
   uint16_t Width  = m_Width;
   uint16_t Height = m_Height;
 
-  QString TempString;
+  uint16_t NewWidth  = 0;
+  uint16_t NewHeight = 0;
 
   bool WidthLonger = Width > Height;
 
   if (Mode == ptResizeDimension_Width ||
       (Mode == ptResizeDimension_LongerEdge && WidthLonger)) {
-    int NewHeight = Height/(double)Width*Size+0.5;
-    TempString = QString::number(Size) + "x" + QString::number(NewHeight) + "!";
+    NewHeight = Height/(double)Width*Size+0.5;
+    NewWidth  = Width;
   } else if (Mode == ptResizeDimension_Height ||
              (Mode == ptResizeDimension_LongerEdge && !WidthLonger)) {
-    int NewWidth = Width/(double)Height*Size+0.5;
-    TempString = QString::number(NewWidth) + "x" + QString::number(Size) + "!";
+    NewWidth  = Width/(double)Height*Size+0.5;
+    NewHeight = Height;
   } else return this;
+
+  Magick::Geometry geometry(NewWidth, NewHeight);
 
   Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
   FREE(m_Image);
@@ -427,7 +430,7 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
       assert(0);
   }
 
-  image.zoom(TempString.toStdString());
+  image.zoom(geometry);
   image.modifyImage();
 
   m_Width  = image.columns();
@@ -501,9 +504,9 @@ ptImage* ptImage::ptGMResizeWH(const uint16_t NewWidth,
       assert(0);
   }
 
-  QString TempString = QString::number(NewWidth) + "x" + QString::number(NewHeight) + "!";
+  Magick::Geometry geometry(NewWidth, NewHeight);
 
-  image.zoom(TempString.toStdString());
+  image.zoom(geometry);
   image.modifyImage();
 
   m_Width  = image.columns();
