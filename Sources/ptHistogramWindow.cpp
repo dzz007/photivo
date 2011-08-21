@@ -56,7 +56,6 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
   // Some other dynamic members we want to have clean.
   m_QPixmap      = NULL;
   m_Image8       = NULL;
-  m_TpHistogram  = NULL;
 
   m_LogoActive   = 1;
 
@@ -184,7 +183,6 @@ ptHistogramWindow::~ptHistogramWindow() {
   delete m_QPixmap;
   delete m_Image8;
   delete m_LookUp;
-  FREE(m_TpHistogram);
 }
 
 
@@ -257,25 +255,12 @@ void ptHistogramWindow::CalculateHistogram() {
   const uint16_t Height = m_RelatedImage->m_Height;
   const int32_t Size   = Width*Height;
   const short HistogramGamma = Settings->GetInt("HistogramMode");
-  memset(m_TpHistogram,0,3*omp_get_max_threads()*HistogramWidth*sizeof(int));
 
-#pragma omp parallel default(shared)
-{
-  // We get the thread private part of the allocated memory
-  int (*TpHistogram)[3] = (int(*)[3]) ((int*)m_TpHistogram + omp_get_thread_num()*3*HistogramWidth);
-#pragma omp for
   for (int32_t i=0; i<(int32_t) Size; i++) {
     for (short c=0;c<MaxColor;c++) {
-      TpHistogram[m_LookUp[m_RelatedImage->m_Image[i][c]]][c]++;
+      Histogram[c][m_LookUp[m_RelatedImage->m_Image[i][c]]]++;
     }
   }
-#pragma omp critical
-  for(int c = 0; c < HistogramWidth; c++) {
-    Histogram[0][c] += TpHistogram[c][0];
-    Histogram[1][c] += TpHistogram[c][1];
-    Histogram[2][c] += TpHistogram[c][2];
-  }
-} // End omp parallel zone.
 
   // Logaritmic variants.
   const short HistogramLogX = Settings->GetInt("HistogramLogX");
@@ -433,10 +418,6 @@ void ptHistogramWindow::FillLookUp() {
   for (uint32_t i=0; i<0x10000; i++) {
     m_LookUp[i] = (uint16_t)(ToFloatTable[i]*HistogramWidth);
   }
-
-  // We allocate thread private memory
-  FREE(m_TpHistogram);
-  m_TpHistogram = CALLOC(3*omp_get_max_threads()*HistogramWidth, sizeof(int));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
