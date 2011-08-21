@@ -375,8 +375,6 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
     NewHeight = Height;
   } else return this;
 
-  Magick::Geometry geometry(NewWidth, NewHeight);
-
   Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
   FREE(m_Image);
 
@@ -430,7 +428,7 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
       assert(0);
   }
 
-  image.zoom(geometry);
+  image.zoom(Magick::Geometry(NewWidth, NewHeight));
   image.modifyImage();
 
   m_Width  = image.columns();
@@ -504,9 +502,7 @@ ptImage* ptImage::ptGMResizeWH(const uint16_t NewWidth,
       assert(0);
   }
 
-  Magick::Geometry geometry(NewWidth, NewHeight);
-
-  image.zoom(geometry);
+  image.zoom(Magick::Geometry(NewWidth, NewHeight));
   image.modifyImage();
 
   m_Width  = image.columns();
