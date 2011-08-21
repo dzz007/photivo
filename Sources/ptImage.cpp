@@ -3163,7 +3163,8 @@ ptImage* ptImage::Outline(const short Mode,
                           const short GradientMode,
                           const ptCurve *Curve,
                           const double Weight,
-                          const double Radius) {
+                          const double Radius,
+                          const short SwitchLayer) {
 
   assert (m_ColorSpace == ptSpace_Lab);
 
@@ -3179,7 +3180,10 @@ ptImage* ptImage::Outline(const short Mode,
 
   Gradient->ApplyCurve(Curve, 1);
 
-  Overlay(Gradient->m_Image, 1.0f, NULL, Mode);
+  if (Mode != ptOverlayMode_Replace)
+    Overlay(Gradient->m_Image, 1.0f, NULL, Mode, SwitchLayer);
+  else
+    Overlay(Gradient->m_Image, 1.0f, NULL, Mode);
 
   delete Gradient;
 

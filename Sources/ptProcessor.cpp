@@ -1748,7 +1748,8 @@ void ptProcessor::Run(short Phase,
                                           Settings->GetInt("OutlineGradientMode"),
                                           Curve[ptCurveChannel_Outline],
                                           Settings->GetDouble("OutlineWeight"),
-                                          Settings->GetDouble("OutlineBlurRadius"));
+                                          Settings->GetDouble("OutlineBlurRadius"),
+                                          Settings->GetInt("OutlineSwitchLayer"));
 
         TRACEMAIN("Done Outline at %d ms.",m_RunTimer.elapsed());
       }

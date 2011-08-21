@@ -198,7 +198,8 @@ ptImage* Outline(const short Mode,
                  const short GradientMode,
                  const ptCurve *Curve,
                  const double Weight,
-                 const double Radius);
+                 const double Radius,
+                 const short SwitchLayer);
 
 // Color Enhance
 ptImage* ColorEnhance(const double Shadows,

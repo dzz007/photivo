@@ -8716,6 +8716,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(ViewLABChoice)
 
   M_SetAndRunDispatch(OutlineModeChoice)
+  M_SetAndRunDispatch(OutlineSwitchLayerCheck)
   M_SetAndRunDispatch(OutlineGradientModeChoice)
   M_SetAndRunDispatch(OutlineWeightInput)
   M_SetAndRunDispatch(OutlineBlurRadiusInput)
