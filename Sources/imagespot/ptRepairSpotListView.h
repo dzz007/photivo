@@ -19,21 +19,30 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-#ifndef PTREPAIRSPOTMODEL_H
-#define PTREPAIRSPOTMODEL_H
 
-#include <QStandardItemModel>
+#ifndef PTREPAIRSPOTLISTVIEW_H
+#define PTREPAIRSPOTLISTVIEW_H
 
-// model for UI settings tool
-class ptRepairSpotModel : public QStandardItemModel {
-  Q_OBJECT
+#include <QListView>
+#include <QToolButton>
+
+class ptRepairSpotListView : public QListView
+{
+    Q_OBJECT
 public:
-  explicit ptRepairSpotModel(QObject *parent, const QSize SizeHint);
-  bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-  bool removeRows(int row, int count, const QModelIndex &parent);
+    explicit ptRepairSpotListView(QWidget *parent = 0);
 
 private:
-  QSize m_SizeHint;
+  QToolButton DelButton;
+
+signals:
+
+public slots:
+  void deleteSpot();
+
+protected slots:
+  void currentChanged(const QModelIndex &current, const QModelIndex &previous);
 
 };
-#endif // PTREPAIRSPOTMODEL_H
+
+#endif // PTREPAIRSPOTLISTVIEW_H

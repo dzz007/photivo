@@ -21,34 +21,48 @@
 *******************************************************************************/
 
 #include "ptRepairSpotItemDelegate.h"
+#include "ptRepairSpotListView.h"
 #include "../ptConstants.h"
 #include "../ptTheme.h"
+#include "../ptGuiOptions.h"
 #include "ptRepairSpotEditor.h"
 #include "ptImageSpotList.h"
 #include "ptRepairSpot.h"
 
 extern ptTheme* Theme;
 extern ptImageSpotList* RepairSpotList;
+extern ptGuiOptions* GuiOptions;
 
 ptRepairSpotItemDelegate::ptRepairSpotItemDelegate(QObject *parent)
 : QStyledItemDelegate(parent)
 {
 }
 
-QWidget* ptRepairSpotItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem&, const QModelIndex&) const {
-  return new ptRepairSpotEditor(parent);
+QWidget* ptRepairSpotItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem&,
+                                                const QModelIndex &index) const
+{
+  return new ptRepairSpotEditor(
+      parent,
+      (int)static_cast<ptRepairSpot*>(RepairSpotList->at(index.row()))->algorithm()
+  );
 }
+
 
 void ptRepairSpotItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
-  ptRepairSpotEditor *ed = qobject_cast<ptRepairSpotEditor*>(editor);
-  ed->ModeCombo->setCurrentIndex(
-        static_cast<ptRepairSpot*>(RepairSpotList->at(index.row()))->algorithm() );
+//  ptRepairSpotEditor *ed = qobject_cast<ptRepairSpotEditor*>(editor);
+//  ed->AlgoCombo->setCurrentIndex(
+//        static_cast<ptRepairSpot*>(RepairSpotList->at(index.row()))->algorithm() );
 }
 
-void ptRepairSpotItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
+void ptRepairSpotItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+                                            const QModelIndex &index) const
+{
   ptRepairSpotEditor *ed = qobject_cast<ptRepairSpotEditor*>(editor);
-
   model->setData(index,
-                 GuiOptions->SpotRepair[ed->ModeCombo->currentIndex()].Text,
+                 GuiOptions->SpotRepair[
+                     static_cast<ptRepairSpot*>(RepairSpotList->at(ed->AlgoCombo->currentIndex()))
+                         ->algorithm()].Text,
                  Qt::DisplayRole);
 }
+
+

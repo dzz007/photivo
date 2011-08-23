@@ -30,14 +30,18 @@ class ptRepairSpotEditor : public QWidget
 {
     Q_OBJECT
 public:
-  explicit ptRepairSpotEditor(QWidget *parent = 0);
+  explicit ptRepairSpotEditor(QWidget *Parent,
+                              //const QModelIndex &index,
+                              const int InitialAlgoIndex);
   ~ptRepairSpotEditor();
-  QComboBox* ModeCombo;
+  QComboBox* AlgoCombo;
   QToolButton* DelButton;
 
-signals:
+protected:
+  bool eventFilter(QObject *obj, QEvent *event);
 
-public slots:
+signals:
+  void deleteButtonClicked();
 
 };
 

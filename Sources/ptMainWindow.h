@@ -38,6 +38,7 @@
 #include "ptVisibleToolsView.h"
 #include "imagespot/ptRepairSpotModel.h"
 #include "imagespot/ptRepairSpotItemDelegate.h"
+#include "imagespot/ptRepairSpotListView.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,6 +136,9 @@ public:
   void OnToolBoxesEnabledTriggered(const bool Enabled);
   void PopulateSpotRepairList();
 
+  ptRepairSpotListView* RepairSpotListView;
+  ptRepairSpotModel* RepairSpotModel;
+
 
 public slots:
   void OtherInstanceMessage(const QString &msg);
@@ -177,7 +181,6 @@ private :
   QAction* m_AtnShowTools;
 
   ptVisibleToolsModel* m_VisibleToolsModel;
-  ptRepairSpotModel* m_RepairSpotModel;
 
   void AnalyzeToolBoxStructure();
   void ShowMovedTools(const QString Title);
@@ -313,7 +316,6 @@ private slots:
   void OnVisibleToolsDiscardButtonClicked();
   void OnVisibleToolsLoadButtonClicked();
   void OnVisibleToolsSaveButtonClicked();
-
 };
 
 #endif

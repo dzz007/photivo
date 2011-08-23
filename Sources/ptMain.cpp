@@ -4756,11 +4756,19 @@ void CB_ClipParameterInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void CB_SpotOpacityInput(const QVariant Value) {
-
+  if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
+    Settings->SetValue("SpotOpacity", Value);
+    RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row())
+        ->setOpacity(Value.toFloat());
+  }
 }
 
 void CB_SpotEdgeSoftnessInput(const QVariant Value) {
-
+  if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
+    Settings->SetValue("SpotEdgeSoftness", Value);
+    RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row())
+        ->setEdgeBlur(Value.toFloat());
+  }
 }
 
 

@@ -543,6 +543,7 @@ const short ptLqr_ScaleRelative    = 0;
 const short ptLqr_ScaleAbsolute    = 1;
 
 // Spot repair algos
+// indexes MUST be consecutive integers starting from 0
 enum ptSpotRepairAlgo {
   SpotRepairAlgo_Clone = 0,
   SpotRepairAlgo_Heal  = 1

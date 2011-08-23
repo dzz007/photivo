@@ -103,9 +103,10 @@ public:
   void setEdgeRadius(uint radius);
 
   /*! Enables or disables the spot. Disabled spots are ignored when running
-      the pipe.
+      the pipe. Values are 0 (disabled) or 2 (enabled), corresponding to what QListView
+      checkboxes use.
   */
-  inline void setEnabled(const short state) { m_IsEnabled = state; }
+  inline void setEnabled(const short state) { m_IsEnabled = state; printf("######en: %d\n",isEnabled());}
 
   /*! Sets the spot's global opacity.
       \param opacity
