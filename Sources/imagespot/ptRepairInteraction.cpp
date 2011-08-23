@@ -25,6 +25,7 @@
 #include "ptRepairInteraction.h"
 #include "ptImageSpotList.h"
 #include "ptRepairSpot.h"
+#include "ptRepairSpotListView.h"
 #include "../ptDefines.h"
 #include "../ptConstants.h"
 #include "../ptMainWindow.h"
@@ -65,7 +66,7 @@ ptRepairInteraction::ptRepairInteraction(QGraphicsView* View)
   m_FullSpotGroup->addToGroup(m_SpotGroup);
   m_FullSpotGroup->addToGroup(m_RepairerGroup);
 
-  if (MainWindow->RepairSpotsView->currentIndex().row() > -1) {
+  if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
     UpdateSpotShape();
   }
 
@@ -142,7 +143,7 @@ void ptRepairInteraction::keyAction(QKeyEvent *event) {
 
 void ptRepairInteraction::UpdateSpotShape() {
   ptRepairSpot* spotData = static_cast<ptRepairSpot*>(
-      RepairSpotList->at(MainWindow->RepairSpotsView->currentIndex().row()));
+      RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row()));
 
   // spot outer edge
   m_Spot->setRect(spotData->pos().x() - spotData->radiusH(),

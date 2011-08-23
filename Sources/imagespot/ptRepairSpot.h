@@ -87,7 +87,7 @@ public:
   inline void removeRepairer() { m_HasRepairer = 0; }
 
   /*! Sets the repair algorithm. */
-  void setAlgorithm(const ptSpotRepairAlgo algorithm) { m_Algorithm = algorithm; }
+  void setAlgorithm(const ptSpotRepairAlgo algorithm) { m_Algorithm = algorithm;printf("#######algo: %d\n",m_Algorithm); }
 
   /*! Moves the complete spot (including a repairer) to a new position. */
   void setPos(uint x, uint y);
@@ -114,6 +114,7 @@ private:
   short m_HasRepairer;
   ptSpotRepairAlgo m_Algorithm;
   QPoint m_RepairerPos;   // the spot providing the source for the repair data
-};
 
+
+};
 #endif

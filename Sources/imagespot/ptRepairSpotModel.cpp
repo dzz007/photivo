@@ -19,13 +19,59 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-#include "ptRepairSpotModel.h"
 
-ptRepairSpotModel::ptRepairSpotModel(QObject *parent)
-: QStandardItemModel(parent)
+#include "ptRepairSpotModel.h"
+#include "ptImageSpotList.h"
+#include "ptRepairSpot.h"
+#include "../ptGuiOptions.h"
+#include "../ptConstants.h"
+
+extern ptImageSpotList* RepairSpotList;
+extern ptGuiOptions* GuiOptions;
+
+ptRepairSpotModel::ptRepairSpotModel(QObject *parent, const QSize SizeHint)
+: QStandardItemModel(parent),
+  m_SizeHint(SizeHint)
 {
+  // Create model from the actual spot data. Data included:
+  // name of current algorithm as the caption; enabled state
+  for (int i = 0; i < RepairSpotList->count(); i++) {
+    ptRepairSpot* spot = static_cast<ptRepairSpot*>(RepairSpotList->at(i));
+    QStandardItem* SpotItem = new QStandardItem(GuiOptions->SpotRepair[spot->algorithm()].Text);
+    SpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
+                       Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    SpotItem->setCheckState(Qt::CheckState(spot->isEnabled()));
+    SpotItem->setSizeHint(m_SizeHint);
+    appendRow(SpotItem);
+  }
 }
 
 bool ptRepairSpotModel::setData(const QModelIndex &index, const QVariant &value, int role) {
   return QStandardItemModel::setData(index, value, role);
+
+  // Update actual repair spot data
+  ptRepairSpot* spot = static_cast<ptRepairSpot*>(RepairSpotList->at(index.row()));
+  if (role == Qt::DisplayRole) {    // algorithm
+    int i = 0;
+    QString AlgoName = value.toString();
+    while (GuiOptions->SpotRepair[i].Value.toInt() > -1) {
+      if (AlgoName == GuiOptions->SpotRepair[i].Text) {
+        spot->setAlgorithm((ptSpotRepairAlgo)i);
+        break;
+      }
+      i++;
+    }
+
+  } else if (role == Qt::CheckStateRole) {    // en/disabled switch
+    spot->setEnabled(value.toInt());
+  }
+}
+
+
+bool ptRepairSpotModel::removeRows(int row, int count, const QModelIndex &parent) {
+  beginRemoveRows(parent, row, row+count-1);
+  RepairSpotList->removeAt(row);
+  bool success = QStandardItemModel::removeRows(row, count, parent);
+  endRemoveRows();
+  return success;
 }

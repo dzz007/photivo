@@ -32,8 +32,8 @@
 #include "ptConstants.h"
 #include "ptDefines.h"
 #include "ptTheme.h"
-#include "imagespot/ptImageSpotList.h"
 #include "imagespot/ptRepairSpot.h"
+#include "imagespot/ptImageSpotList.h"
 
 #include <iostream>
 #include <iomanip>
@@ -42,9 +42,9 @@
 #include "ptMessageBox.h"
 using namespace std;
 
+extern ptImageSpotList* RepairSpotList;
 extern ptTheme* Theme;
 extern ptViewWindow* ViewWindow;
-extern ptImageSpotList* RepairSpotList;
 void CB_OpenFileButton();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ void Update(const QString GuiName);
 
 ptMainWindow::ptMainWindow(const QString Title)
 : QMainWindow(NULL),
-  m_RepairSpotModel(NULL)
+  RepairSpotModel(NULL)
 {
   // Setup from the Gui builder.
   setupUi(this);
@@ -349,6 +349,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   //
   // TAB : Geometry
   //
+
+  RepairSpotListView = new ptRepairSpotListView;
+  SpotRepairVLayout->insertWidget(1, RepairSpotListView);
 
   // TODO BJ: Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
@@ -652,6 +655,7 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   ConfirmSpotRepairButton->hide();
 
+  UpdateSpotRepairUI();
   UpdateCropToolUI();
   UpdateLfunDistUI();
   UpdateLfunCAUI();
@@ -2675,25 +2679,16 @@ void ptMainWindow::UpdateCropToolUI() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::PopulateSpotRepairList() {
-  if (m_RepairSpotModel != NULL) {
-    DelAndNull(m_RepairSpotModel);
+  if (RepairSpotModel != NULL) {
+    DelAndNull(RepairSpotModel);
   }
-  m_RepairSpotModel = new ptRepairSpotModel;
-
-  // Create model from the actual spot data. Data included:
-  // name of current algorithm as the caption; enabled state
-  for (int i = 0; i < RepairSpotList->count(); i++) {
-    ptRepairSpot* spot = static_cast<ptRepairSpot*>(RepairSpotList->at(i));
-    QStandardItem* SpotItem = new QStandardItem(GuiOptions->SpotRepair[spot->algorithm()].Text);
-    SpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
-                       Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    SpotItem->setCheckState(Qt::CheckState(spot->isEnabled()));
-    m_RepairSpotModel->appendRow(SpotItem);
-  }
-
-  RepairSpotsView->setModel(m_RepairSpotModel);
-  RepairSpotsView->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::DoubleClicked);
-  RepairSpotsView->setItemDelegate(new ptRepairSpotItemDelegate);
+  RepairSpotModel = new ptRepairSpotModel(NULL,
+                                          QSize(/*RepairSpotListView->contentsRect().width(),*/0,
+                                                RepairSpotListView->fontMetrics().lineSpacing() + 2));
+  RepairSpotListView->setModel(RepairSpotModel);
+  RepairSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
+                                      QAbstractItemView::SelectedClicked);
+  RepairSpotListView->setItemDelegate(new ptRepairSpotItemDelegate);
 }
 
 
@@ -2739,7 +2734,8 @@ void ptMainWindow::InitVisibleTools() {
 
   // connect model with Visible Tools View
   VisibleToolsView->setModel(m_VisibleToolsModel);
-  VisibleToolsView->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::DoubleClicked);
+  VisibleToolsView->setEditTriggers(QAbstractItemView::CurrentChanged |
+                                    QAbstractItemView::DoubleClicked);
   VisibleToolsView->setItemDelegate(new ptVisibleToolsItemDelegate);
 }
 
@@ -3066,8 +3062,18 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::UpdateSpotRepairUI() {
-  SpotRepairButton->setVisible(ViewWindow->interaction() != iaSpotRepair);
-  ConfirmSpotRepairButton->setVisible(!SpotRepairButton->isVisible());
+  // interactive mode buttons
+  if (ViewWindow == NULL) {
+    SpotRepairButton->setVisible(true);
+    ConfirmSpotRepairButton->setVisible(false);
+  } else {
+    SpotRepairButton->setVisible(ViewWindow->interaction() != iaSpotRepair);
+    ConfirmSpotRepairButton->setVisible(!SpotRepairButton->isVisible());
+  }
+
+  // additional config sliders at the bottom
+  SpotOpacityWidget->setEnabled(RepairSpotListView->currentIndex().row() > -1);
+  SpotEdgeSoftnessWidget->setEnabled(SpotOpacityWidget->isEnabled());
 }
 
 

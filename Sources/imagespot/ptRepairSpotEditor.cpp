@@ -24,31 +24,62 @@
 
 #include "ptRepairSpotEditor.h"
 #include "../ptGuiOptions.h"
+#include "../ptMainWindow.h"
+#include "../ptTheme.h"
 
 extern ptGuiOptions* GuiOptions;
+extern ptMainWindow* MainWindow;
+extern ptTheme* Theme;
 
-
-ptRepairSpotEditor::ptRepairSpotEditor(QWidget *parent)
-: QWidget(parent)
+ptRepairSpotEditor::ptRepairSpotEditor(QWidget *Parent,
+                                       const int InitialAlgoIndex)
+: QWidget(Parent)
 {
-  ModeCombo = new QComboBox(this);
+  setContentsMargins(0,0,0,0);
+  QPalette pal = palette();
+  pal.setColor(QPalette::Window, Theme->ptBackground);
+  setPalette(pal);
+
+  // init combobox with repair alorithms
+  AlgoCombo = new QComboBox(this);
   int i = 0;
   while (GuiOptions->SpotRepair[i].Value != -1) {
-    ModeCombo->addItem(GuiOptions->SpotRepair[i].Text);
+    AlgoCombo->addItem(GuiOptions->SpotRepair[i].Text);
     i++;
   }
+  AlgoCombo->setCurrentIndex(InitialAlgoIndex);
 
   DelButton = new QToolButton(this);
   DelButton->setIcon(QIcon(QString::fromUtf8(":/photivo/Icons/cancel.png")));
+  DelButton->installEventFilter(this);
 
   QHBoxLayout* Layout = new QHBoxLayout;
-  Layout->addWidget(ModeCombo);
-  Layout->addStretch();
+  Layout->setContentsMargins(0,0,0,0);
+  Layout->setSpacing(0);
+  Layout->addWidget(AlgoCombo);
   Layout->addWidget(DelButton);
   this->setLayout(Layout);
+
+  connect(this, SIGNAL(deleteButtonClicked()),
+          MainWindow->RepairSpotListView, SLOT(deleteSpot()));
 }
 
+
 ptRepairSpotEditor::~ptRepairSpotEditor() {
-  delete ModeCombo;
+  delete AlgoCombo;
   delete DelButton;
+}
+
+
+bool ptRepairSpotEditor::eventFilter(QObject *obj, QEvent *event) {
+  // detect delete button click
+  if (event->type() == QEvent::MouseButtonPress) {
+    if (obj == DelButton) {
+      emit deleteButtonClicked();
+      return true;
+    }
+  }
+
+  // else: pass the event on to the parent class
+  return QObject::eventFilter(obj, event);
 }
