@@ -19,6 +19,14 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+/*!
+  \class ptRepairSpotListView
+
+  \brief The toolpane ListView for repair spots.
+
+  This class represents the ListView in the toolpane holding the repair spots. It also takes
+  care of updating the spot config widgets in the toolpane below the ListView.
+*/
 
 #ifndef PTREPAIRSPOTLISTVIEW_H
 #define PTREPAIRSPOTLISTVIEW_H
@@ -30,17 +38,19 @@ class ptRepairSpotListView : public QListView
 {
     Q_OBJECT
 public:
+    /*! Creates a \c ptRepairSpotListView object. This is done by \c MainWindow in Photivo’s
+      startup phase. Do not create additional objects of this type!
+    */
     explicit ptRepairSpotListView(QWidget *parent = 0);
 
-private:
-  QToolButton DelButton;
-
-signals:
-
 public slots:
+  /*! This slot gets called when the delete button of a spot is pressed. */
   void deleteSpot();
 
 protected slots:
+  /*! [EVENT] Triggered when the focused spot in the list changes. Additional config widgets
+    outside the ListView are handled here.
+  */
   void currentChanged(const QModelIndex &current, const QModelIndex &previous);
 
 };

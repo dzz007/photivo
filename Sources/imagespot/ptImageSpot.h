@@ -49,10 +49,11 @@ class ptImageSpot {
 ////////////////////////////////////////////////////////////////////////////////
 public:
   /*! Creates an empty and disabled image spot or loads a spot from the current ini file.
-    \param CreateFromIni
-      Optional flag for creation from ini file. Set to \\1 to create the spot
-      from the currently opened ini file. Default is \\0 (no load from ini). The ini’s
-      \\ReadArray() must be set appropriately before you can use this.
+    \param Ini
+      Optional QSettings object representing a pts file. When is parameter is non-NULL
+      the constructor will attempt to initialise the spot with data read from \c Ini.
+      All values not present in the pts file are set to their default values. The ini’s
+      \c ReadArray() must be set appropriately before you can use this.
   */
   ptImageSpot(QSettings* Ini = NULL);
 
@@ -79,8 +80,8 @@ public:
   /*! Returns the spot's enabled status. */
   inline short isEnabled() const { return m_IsEnabled; }
 
-  /*! Returns the global opacity. \\0.0 is fully transparent and
-      \\1.0 is fully opaque.
+  /*! Returns the global opacity. \c 0.0 is fully transparent and
+      \c 1.0 is fully opaque.
   */
   inline float opactiy() const { return m_Opacity; }
 
@@ -110,14 +111,14 @@ public:
 
   /*! Sets the spot's global opacity.
       \param opacity
-        Opacity in the range from \\0.0 (fully transparent) to \\1.0
+        Opacity in the range from \c 0.0 (fully transparent) to \c 1.0
         (fully opaque).
   */
   void setOpacity(const float opacity);
 
   /*! Moves the spot to a new position.
 
-      Derived classes should re-implement \\setPos() to move the complete spot including repairers
+      Derived classes should re-implement \c setPos() to move the complete spot including repairers
       or any other additional elements. The default ptImageSpot implementation moves only spot
       itself.
   */
@@ -130,7 +131,7 @@ public:
   void setRadiusW(uint radius);
 
   /*! Writes the spot’s data to the currently opened ini file.
-    The ini’s \\WriteArray() must be set appropriately before you use this.
+    The ini’s \c WriteArray() must be set appropriately before you use this.
   */
   virtual void WriteToIni(QSettings* Ini);
 

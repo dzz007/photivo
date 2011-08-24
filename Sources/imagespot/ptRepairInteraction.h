@@ -58,14 +58,14 @@ public:
     Create a repair interaction object.
     \param View
       A pointer to existing QGraphicsView object that will be used for
-      drawing the spot. \\View must have a QGraphicsScene assigned.
+      drawing the spot. \c View must have a QGraphicsScene assigned.
   */
   explicit ptRepairInteraction(QGraphicsView* View);
   ~ptRepairInteraction();
 
   /*!
     Stop the repair interaction. Cleans up the QGraphicsScene and then emits
-    the \\finished() signal.
+    the \c finished() signal.
   */
   void stop();
 

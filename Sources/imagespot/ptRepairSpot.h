@@ -48,10 +48,11 @@ class ptRepairSpot: public ptImageSpot {
 public:
   /*! Creates an empty and disabled repair spot using the clone algorithm or loads a spot
     from the current ini file.
-    \param CreateFromIni
-      Optional flag for creation from ini file. Set to \\1 to create the spot
-      from the currently opened ini file. Default is \\0 (no load from ini). The ini’s
-      \\ReadArray() must be set appropriately before you can use this.
+    \param Ini
+      Optional QSettings object representing a pts file. When is parameter is non-NULL
+      the constructor will attempt to initialise the spot with data read from \c Ini.
+      All values not present in the pts file are set to their default values. The ini’s
+      \c ReadArray() must be set appropriately before you can use this.
   */
   ptRepairSpot(QSettings* Ini = NULL);
 
@@ -70,7 +71,7 @@ public:
                const uint repairerX = 0,
                const uint repairerY = 0);
 
-  /*! Returns \\1 if the spot has a repairer, \\0 otherwise.
+  /*! Returns \c 1 if the spot has a repairer, \c 0 otherwise.
     A repairer is only applicable for algorithms that need data from somewhere else in the image
     as the source for the repair action. The simplest example is clone that copies the image data
     from the repairer to the spot.
@@ -101,7 +102,7 @@ public:
   void setSpotPos(const uint x, const uint y);
 
   /*! Writes all data to the currently opened ini file.
-    The ini’s \\WriteArray() must be set appropriately before you use this.
+    The ini’s \c WriteArray() must be set appropriately before you use this.
   */
   void WriteToIni(QSettings* Ini);
 
