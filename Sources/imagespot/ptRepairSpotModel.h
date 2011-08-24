@@ -19,6 +19,12 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+/*!
+  \class ptRepairSpotModel
+
+  \brief The model belonging to \c ptRepairSpotListView.
+*/
+
 #ifndef PTREPAIRSPOTMODEL_H
 #define PTREPAIRSPOTMODEL_H
 
@@ -28,8 +34,20 @@
 class ptRepairSpotModel : public QStandardItemModel {
   Q_OBJECT
 public:
+  /*! Constructs a \c ptRepairSpotModel object and creates the list of items from the
+    actual repair spot data.
+    \param parent
+      The parent widget.
+    \param SizeHint
+      The \c SizeHint used for each item in the model. Width should be \c 0 and height
+      large enough to contain the editor widget.
+  */
   explicit ptRepairSpotModel(QObject *parent, const QSize SizeHint);
+
+  /*! Update an item and the underlying spot repair data.  */
   bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
+  /*! Remove one or more items from the model and delete the underlying repair spots. */
   bool removeRows(int row, int count, const QModelIndex &parent);
 
 private:
