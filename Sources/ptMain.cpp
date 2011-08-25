@@ -1326,106 +1326,72 @@ void Update(const QString GuiName) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Block tools
-// 0: enable tools, 1: disable everything, 2: disable but keep crop tools enabled
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void BlockTools(const short state) {
-  // enable all
-  if (state == 0) {
-    MainWindow->SpecialPreviewWidget->setEnabled(true);
-    if (Settings->GetInt("BlockTools") == 1) {
-      MainWindow->ControlFrame->setEnabled(true);
+enum ptBlockToolsMode {
+  Unblock             = 0,
+  BlockAll            = 1,
+  BlockForCrop        = 2,
+  BlockForSpotRepair  = 3
+};
 
-    } else if (Settings->GetInt("BlockTools") == 2) {
-      MainWindow->HistogramFrameCentralWidget->setEnabled(true);
-      MainWindow->SearchWidget->setEnabled(true);
-      MainWindow->PipeControlWidget->setEnabled(true);
-      MainWindow->StatusWidget->setEnabled(true);
+void BlockTools(const ptBlockToolsMode NewState) {
+  // Set the object name of the widget that is excluded from blocking.
+  QString ExcludeTool = "";
+  switch (NewState) {
+    case BlockForCrop:
+      ExcludeTool = "TabCrop";
+      break;
+    case BlockForSpotRepair:
+      ExcludeTool = "TabSpotRepair";
+      break;
+    default:
+      // nothing to do
+      break;
+  }
 
-      if (MainWindow->m_MovedTools->size() > 0) {
-        // UI doesn't display tabs
-        for (int i = 0; i < MainWindow->m_MovedTools->size(); i++) {
-          MainWindow->m_MovedTools->at(i)->setEnabled(true);
-        }
+  bool EnabledStatus = NewState == Unblock;
 
-      } else {
-        // UI in tab mode
-        for (int i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
-          if (MainWindow->ProcessingTabBook->widget(i) != MainWindow->GeometryTab) {
-            MainWindow->ProcessingTabBook->setTabEnabled(i, true);
-          }
-        }
+  // Handle all necessary widgets outside the processing tabbook
+  MainWindow->HistogramFrameCentralWidget->setEnabled(EnabledStatus);
+  MainWindow->SearchWidget->setEnabled(EnabledStatus);
+  MainWindow->PipeControlWidget->setEnabled(EnabledStatus);
+  MainWindow->StatusWidget->setEnabled(EnabledStatus);
 
-        QList<ptGroupBox *> GeometryTools;
-        GeometryTools << MainWindow->m_GroupBox->value("TabLensfunLensParameters")
-                      << MainWindow->m_GroupBox->value("TabLensfunCA")
-                      << MainWindow->m_GroupBox->value("TabLensfunVignette")
-                      << MainWindow->m_GroupBox->value("TabLensfunDistortion")
-                      << MainWindow->m_GroupBox->value("TabLensfunGeometry")
-                      << MainWindow->m_GroupBox->value("TabDefish")
-                      << MainWindow->m_GroupBox->value("TabRotation")
-                      << MainWindow->m_GroupBox->value("TabLiquidRescale")
-                      << MainWindow->m_GroupBox->value("TabResize")
-                      << MainWindow->m_GroupBox->value("TabFlip")
-                      << MainWindow->m_GroupBox->value("TabBlock");
-        for (int i = 0; i < GeometryTools.size(); i++) {
-          GeometryTools.at(i)->SetEnabled(true);
-        }
-      }
+  /* Process moved tools list when UI is not in tab mode (e.g. showing favourites)
+    We just cycle through the list of currently visible tools and en/disable them.
+  */
+  if (MainWindow->m_MovedTools->size() > 0) {
+    for (int i = 0; i < MainWindow->m_MovedTools->size(); i++) {
+      if (MainWindow->m_MovedTools->at(i)->objectName() != ExcludeTool)
+        MainWindow->m_MovedTools->at(i)->SetEnabled(EnabledStatus);
     }
 
+  /* Process processing tabbook
+    To avoid cycling through all ptGroupBox objects on every tab every time we use the following
+    approach: We assume that the tabbook is switched to the appropriate tab when BlockTools() is
+    called, i.e. the tab containing the filter that should not be blocked (if there is such a one).
+    We en/disable all tabs except the current one completely. Now we only need to cycle through the
+    remaining ptGroupBoxes on the current tab.
+  */
+  } else {
+    int CurrentTab = MainWindow->ProcessingTabBook->currentIndex();
 
-  // block everything
-  } else if (state == 1) {
-    assert(Settings->GetInt("BlockTools") == 0);
-    MainWindow->SpecialPreviewWidget->setEnabled(false);
-    MainWindow->ControlFrame->setEnabled(false);
+    for (int i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
+      if (i != CurrentTab)
+        MainWindow->ProcessingTabBook->setTabEnabled(i, EnabledStatus);
+    }
 
-
-  // block everything except crop tool
-  } else if (state == 2) {
-    assert(Settings->GetInt("BlockTools") == 0);
-    MainWindow->SpecialPreviewWidget->setEnabled(false);
-    MainWindow->HistogramFrameCentralWidget->setEnabled(false);
-    MainWindow->PipeControlWidget->setEnabled(false);
-    MainWindow->StatusWidget->setEnabled(false);
-    MainWindow->SearchWidget->setEnabled(false);
-
-    if (MainWindow->m_MovedTools->size()>0) {
-      // UI doesn't display tabs
-      for (int i = 0; i < MainWindow->m_MovedTools->size(); i++) {
-        if (MainWindow->m_MovedTools->at(i)->objectName() != "TabCrop")
-          MainWindow->m_MovedTools->at(i)->setEnabled(false);
-      }
-
-    } else {
-      // UI in tab mode
-      for (int i = 0; i < MainWindow->ProcessingTabBook->count(); i++) {
-        if (MainWindow->ProcessingTabBook->widget(i) != MainWindow->GeometryTab) {
-          MainWindow->ProcessingTabBook->setTabEnabled(i, false);
-        }
-      }
-
-      QList<ptGroupBox *> GeometryTools;
-      GeometryTools << MainWindow->m_GroupBox->value("TabLensfunLensParameters")
-                    << MainWindow->m_GroupBox->value("TabLensfunCA")
-                    << MainWindow->m_GroupBox->value("TabLensfunVignette")
-                    << MainWindow->m_GroupBox->value("TabLensfunDistortion")
-                    << MainWindow->m_GroupBox->value("TabLensfunGeometry")
-                    << MainWindow->m_GroupBox->value("TabDefish")
-                    << MainWindow->m_GroupBox->value("TabRotation")
-                    << MainWindow->m_GroupBox->value("TabLiquidRescale")
-                    << MainWindow->m_GroupBox->value("TabResize")
-                    << MainWindow->m_GroupBox->value("TabFlip")
-                    << MainWindow->m_GroupBox->value("TabBlock");
-      for (int i = 0; i < GeometryTools.size(); i++) {
-        GeometryTools.at(i)->SetEnabled(false);
-      }
+    QList<ptGroupBox*> ToolList =
+        MainWindow->ProcessingTabBook->widget(CurrentTab)->findChildren<ptGroupBox*>();
+    foreach (ptGroupBox* Tool, ToolList) {
+      if (Tool->objectName() != ExcludeTool)
+        Tool->SetEnabled(EnabledStatus);
     }
   }
 
-  Settings->SetValue("BlockTools", state);
+  Settings->SetValue("BlockTools", NewState);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1439,7 +1405,7 @@ void HistogramGetCrop() {
   // Get the crop for the histogram
   if (Settings->GetInt("HistogramCrop")) {
     // Allow to be selected in the view window. And deactivate main.
-    BlockTools(1);
+    BlockTools(BlockAll);
     ViewWindow->ShowStatus(QObject::tr("Selection"));
     ViewWindow->StartSimpleRect(HistogramCropDone);
     ViewWindow->setFocus();
@@ -1452,7 +1418,7 @@ void HistogramGetCrop() {
 
 void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(0);
+  BlockTools(Unblock);
   if (ExitStatus == stFailure) {
     Settings->SetValue("HistogramCropX",0);
     Settings->SetValue("HistogramCropY",0);
@@ -4025,7 +3991,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       UpdatePreviewImage(TheProcessor->m_Image_DetailPreview);
 
       // Allow to be selected in the view window. And deactivate main.
-      BlockTools(1);
+      BlockTools(BlockAll);
       ViewWindow->ShowStatus(QObject::tr("Detail view"));
       ViewWindow->StartSimpleRect(SetDetailViewRect);
       while (ViewWindow->interaction() == iaSelectRect) {
@@ -4033,7 +3999,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       }
 
       // Selection is done at this point. Disallow it further and activate main.
-      BlockTools(0);
+      BlockTools(Unblock);
 
       if (DetailViewRect.width() >>4 <<4 > 19 &&
           DetailViewRect.height() >>4 <<4 > 19) {
@@ -4510,7 +4476,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw);
 
       // Allow to be selected in the view window. And deactivate main.
-      BlockTools(1);
+      BlockTools(BlockAll);
       ViewWindow->ShowStatus(QObject::tr("Spot WB"));
       ReportProgress(QObject::tr("Spot WB"));
       ViewWindow->StartSimpleRect(SelectSpotWBDone);
@@ -4534,7 +4500,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
 
 void SelectSpotWBDone(const ptStatus ExitStatus, const QRect SelectionRect) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(0);
+  BlockTools(Unblock);
 
   if (ExitStatus == stSuccess) {
     Settings->SetValue("VisualSelectionX", SelectionRect.left());
@@ -4984,7 +4950,7 @@ void CB_SpotRepairButton() {
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->ShowStatus(QObject::tr("Spot repair"));
   ReportProgress(QObject::tr("Spot repair"));
-  BlockTools(2);
+  BlockTools(BlockForCrop);
 
   ViewWindow->StartSpotRepair();      // always start the interaction first,
   MainWindow->UpdateSpotRepairUI();   // *then* update main window
@@ -4992,7 +4958,7 @@ void CB_SpotRepairButton() {
 }
 
 void CleanupAfterSpotRepair() {
-  BlockTools(0);
+  BlockTools(Unblock);
   Update(ptProcessorPhase_Geometry);
   MainWindow->UpdateSpotRepairUI();
 }
@@ -5036,14 +5002,14 @@ void CB_RotateAngleButton() {
   ViewWindow->ShowStatus(QObject::tr("Get angle"));
   ReportProgress(QObject::tr("Get angle"));
 
-  BlockTools(1);
+  BlockTools(BlockAll);
   ViewWindow->StartLine();
   ViewWindow->setFocus();
 }
 
 void RotateAngleDetermined(const ptStatus ExitStatus, double RotateAngle) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(0);
+  BlockTools(Unblock);
 
   if (ExitStatus == stSuccess) {
     if (RotateAngle < -45.0) {
@@ -5239,7 +5205,7 @@ void CB_MakeCropButton() {
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->ShowStatus(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
-  BlockTools(2);
+  BlockTools(BlockForCrop);
 
   switch (Settings->GetInt("CropInitialZoom")) {
     case ptZoomLevel_Current:
@@ -5263,7 +5229,7 @@ void CB_MakeCropButton() {
 
 // After-crop processing and cleanup.
 void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
-  BlockTools(0);
+  BlockTools(Unblock);
 
   if (CropStatus == stSuccess) {
     // Account for the pipesize factor.

@@ -2682,8 +2682,8 @@ void ptMainWindow::PopulateSpotRepairList() {
   if (RepairSpotModel != NULL) {
     DelAndNull(RepairSpotModel);
   }
-  RepairSpotModel = new ptRepairSpotModel(NULL,
-                                          QSize(/*RepairSpotListView->contentsRect().width(),*/0,
+  RepairSpotModel = new ptRepairSpotModel(RepairSpotList,
+                                          QSize(0,
                                                 RepairSpotListView->fontMetrics().lineSpacing() + 2));
   RepairSpotListView->setModel(RepairSpotModel);
   RepairSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
