@@ -35,8 +35,8 @@ class ptRepairSpotModel : public QStandardItemModel {
   Q_OBJECT
 
 public:
-  /*! Constructs a \c ptRepairSpotModel object and creates the list of items from the
-    actual repair spot data.
+  /*! Constructs a \c ptRepairSpotModel object and creates the list of items
+    from the actual repair spot data.
     \param SpotList
       A pointer to the list where the actual spot data is stored.
     \param SizeHint
@@ -47,6 +47,9 @@ public:
 
   /*! Update an item and the underlying spot repair data.  */
   bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
+  /*! Returns a pointer to the \c ptImageSpotList associated with the model. */
+  inline ptImageSpotList* spotList() { return m_SpotList; }
 
   /*! Remove one or more items from the model and delete the underlying repair spots. */
   bool removeRows(int row, int count, const QModelIndex &parent);

@@ -1749,6 +1749,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   } else if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output &&
              !(Settings->GetInt("HistogramCrop") && !Settings->GetInt("WebResize"))) {
     HistogramImage->Set(PreviewImage);
+
   } else if (Settings->GetInt("HistogramCrop")) {
     HistogramImage->Set(PreviewImage);
   }
@@ -4950,10 +4951,11 @@ void CB_SpotRepairButton() {
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->ShowStatus(QObject::tr("Spot repair"));
   ReportProgress(QObject::tr("Spot repair"));
-  BlockTools(BlockForCrop);
+  BlockTools(BlockForSpotRepair);
 
-  ViewWindow->StartSpotRepair();      // always start the interaction first,
-  MainWindow->UpdateSpotRepairUI();   // *then* update main window
+  // always start the interaction first, *then* update main window
+  ViewWindow->StartSpotRepair(MainWindow->RepairSpotListView);
+  MainWindow->UpdateSpotRepairUI();
   ViewWindow->setFocus();
 }
 

@@ -32,12 +32,11 @@
 #define PTREPAIRINTERACTION_H
 
 #include <QGraphicsItemGroup>
-#include <QGraphicsEllipseItem>
-#include <QGraphicsLineItem>
-#include <QGraphicsRectItem>
 
 #include "../ptAbstractInteraction.h"
-
+#include "ptRepairSpotListView.h"
+#include "ptRepairSpot.h"
+#include "ptRepairSpotShape.h"
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -54,18 +53,20 @@ Q_OBJECT
 //
 ///////////////////////////////////////////////////////////////////////////
 public:
-  /*!
-    Create a repair interaction object.
+  /*! Create a repair interaction object.
     \param View
-      A pointer to existing QGraphicsView object that will be used for
-      drawing the spot. \c View must have a QGraphicsScene assigned.
+      A pointer to an existing \c QGraphicsView object that will be used for
+      drawing the spot. \c View must have a \c QGraphicsScene assigned.
+    \param ListView
+      A pointer to an existing list view widget containing the spots. \c ListView must
+      have a model assigned.
   */
-  explicit ptRepairInteraction(QGraphicsView* View);
+  explicit ptRepairInteraction(QGraphicsView* View, ptRepairSpotListView* ListView);
+
   ~ptRepairInteraction();
 
-  /*!
-    Stop the repair interaction. Cleans up the QGraphicsScene and then emits
-    the \c finished() signal.
+  /*! Stop the repair interaction.
+    Cleans up the QGraphicsScene and then emits the \c finished() signal.
   */
   void stop();
 
@@ -76,18 +77,13 @@ public:
 //
 ///////////////////////////////////////////////////////////////////////////
 private:
-  void UpdateSpotShape();
   void MousePressHandler(QMouseEvent* event);
 
+  ptRepairSpot* m_SpotData;   // pointer to current spot’s config data
+  ptRepairSpotListView* m_ListView;
+
   // Components of the spot visual spot shape
-  QGraphicsItemGroup*   m_FullSpotGroup;
-  QGraphicsItemGroup*   m_SpotGroup;
-  QGraphicsItemGroup*   m_RepairerGroup;
-  QGraphicsEllipseItem* m_Spot;
-  QGraphicsEllipseItem* m_SpotBorder;
-  QGraphicsRectItem*    m_RadiusHandle;
-  QGraphicsEllipseItem* m_Repairer;
-  QGraphicsLineItem*    m_Connector;
+  ptRepairSpotShape*    m_SpotShape;    // container for the complete spot shape
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -96,20 +92,24 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////
 private slots:
-  /*!
-    Slot for all keyboard events.
+  /*! Slot that is called when the current spot is changed.
+    \param index
+      The model index of the new spot.
+  */
+  void changeSpot(const QModelIndex &index);
+
+  /*! Slot for all keyboard events.
     \param event
       A pointer to the QKeyEvent that triggered this slot.
   */
   void keyAction(QKeyEvent* event);
 
-  /*!
-    Slot for all mouse events.
+  /*! Slot for all mouse events.
     \param event
       A pointer to the QMouseEvent that triggered this slot.
   */
   void mouseAction(QMouseEvent* event);
 
-};
 
+};
 #endif // PTREPAIRINTERACTION_H

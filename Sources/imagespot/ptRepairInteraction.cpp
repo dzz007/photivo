@@ -20,69 +20,41 @@
 **
 *******************************************************************************/
 
-#include <QPen>
+#include <cassert>
 
 #include "ptRepairInteraction.h"
-#include "ptImageSpotList.h"
-#include "ptRepairSpot.h"
-#include "ptRepairSpotListView.h"
+#include "ptRepairSpotModel.h"
 #include "../ptDefines.h"
 #include "../ptConstants.h"
-#include "../ptMainWindow.h"
 
-extern ptImageSpotList* RepairSpotList;
-extern ptMainWindow* MainWindow;
 
 ///////////////////////////////////////////////////////////////////////////
 //
 // constructor and destructor
 //
 ///////////////////////////////////////////////////////////////////////////
-ptRepairInteraction::ptRepairInteraction(QGraphicsView* View)
+ptRepairInteraction::ptRepairInteraction(QGraphicsView* View, ptRepairSpotListView* ListView)
 : ptAbstractInteraction(View),
-  m_FullSpotGroup(new QGraphicsItemGroup()),
-  m_SpotGroup(new QGraphicsItemGroup()),
-  m_RepairerGroup(new QGraphicsItemGroup()),
-  m_Spot(new QGraphicsEllipseItem()),
-  m_SpotBorder(new QGraphicsEllipseItem()),
-  m_RadiusHandle(new QGraphicsRectItem(0.0, 0.0, 10.0, 10.0)),
-  m_Repairer(new QGraphicsEllipseItem()),
-  m_Connector(new QGraphicsLineItem())
+  m_SpotData(NULL),
+  m_ListView(ListView),
+  m_SpotShape(new ptRepairSpotShape)
 {
-  QPen solidPen = QPen(QColor(150,150,150));
-
-  m_Spot->setPen(solidPen);
-  m_SpotBorder->setPen(QPen(QColor(150,150,150), 0, Qt::DashLine));
-  m_RadiusHandle->setPen(solidPen);
-  m_Repairer->setPen(solidPen);
-  m_Connector->setPen(solidPen);
-
-  m_SpotBorder->setParentItem(m_Spot);
-  m_RadiusHandle->setParentItem(m_Spot);
-
-  m_SpotGroup->addToGroup(m_Spot);
-  m_RepairerGroup->addToGroup(m_Repairer);
-  m_RepairerGroup->addToGroup(m_Connector);
-  m_FullSpotGroup->addToGroup(m_SpotGroup);
-  m_FullSpotGroup->addToGroup(m_RepairerGroup);
-
-  if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
-    UpdateSpotShape();
-  }
+  assert(m_ListView != NULL);
+  m_View->scene()->addItem(m_SpotShape);
 
   connect(this, SIGNAL(finished(ptStatus)), m_View, SLOT(finishInteraction(ptStatus)));
   connect(m_View, SIGNAL(mouseChanged(QMouseEvent*)), this, SLOT(mouseAction(QMouseEvent*)));
   connect(m_View, SIGNAL(keyChanged(QKeyEvent*)), this, SLOT(keyAction(QKeyEvent*)));
+
+  connect(m_ListView, SIGNAL(activated(QModelIndex)), this, SLOT(changeSpot(QModelIndex)));
+  changeSpot(m_ListView->currentIndex());
 }
 
 
 ptRepairInteraction::~ptRepairInteraction() {
-  DelAndNull(m_Spot);
-  DelAndNull(m_SpotBorder);
-  DelAndNull(m_RadiusHandle);
-  DelAndNull(m_Repairer);
-  DelAndNull(m_Connector);
-  DelAndNull(m_SpotGroup);
+  m_View->scene()->removeItem(m_SpotShape);
+  DelAndNull(m_SpotShape);
+  // Warning: Never delete m_View, m_ListView, m_SpotData!
 }
 
 
@@ -137,41 +109,20 @@ void ptRepairInteraction::keyAction(QKeyEvent *event) {
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// UpdateSpotShape()
+// changeSpot()
 //
 ///////////////////////////////////////////////////////////////////////////
 
-void ptRepairInteraction::UpdateSpotShape() {
-  ptRepairSpot* spotData = static_cast<ptRepairSpot*>(
-      RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row()));
+void ptRepairInteraction::changeSpot(const QModelIndex &index) {
+  // Set new current spot
+  if (index.isValid()) {
+    m_SpotData = static_cast<ptRepairSpot*>(
+        static_cast<ptRepairSpotModel*>(m_ListView->model())->spotList()->at(index.row()) );
 
-  // spot outer edge
-  m_Spot->setRect(spotData->pos().x() - spotData->radiusH(),
-                  spotData->pos().y() - spotData->radiusW(),
-                  spotData->radiusH() * 2,
-                  spotData->radiusW() * 2);
-  m_Spot->setRotation(spotData->angle());
-
-  // spot inner edge
-  if (spotData->edgeRadius() == 0) {
-    m_SpotBorder->hide();
+  // No spot focused in list -> remove the reference to active spot.
   } else {
-    m_SpotBorder->setRect(spotData->edgeRadius(), spotData->edgeRadius(),
-                          spotData->radiusH() - 2 * spotData->edgeRadius(),
-                          spotData->radiusW() - 2 * spotData->edgeRadius() );
-    m_SpotBorder->show();
+    m_SpotData = NULL;
   }
 
-  // repairer and connector line between spot and repairer
-  if (spotData->hasRepairer()) {
-    m_Repairer->setRect(spotData->repairerPos().x() - spotData->radiusH(),
-                        spotData->repairerPos().y() - spotData->radiusW(),
-                        spotData->radiusH() * 2,
-                        spotData->radiusW() * 2);
-    m_Repairer->setRotation(spotData->angle());
-    m_Connector->setLine(m_Spot->x(), m_Spot->y(), m_Repairer->x(), m_Repairer->y());
-    m_RepairerGroup->show();
-  } else {
-    m_RepairerGroup->hide();
-  }
+  m_SpotShape->Draw(m_SpotData);
 }

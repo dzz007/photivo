@@ -573,11 +573,11 @@ void ptViewWindow::StartCrop()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptViewWindow::StartSpotRepair() {
+void ptViewWindow::StartSpotRepair(ptRepairSpotListView* ListView) {
   if (m_Interaction != iaNone) {
     return;
   }
-  m_SpotRepair = new ptRepairInteraction(this);
+  m_SpotRepair = new ptRepairInteraction(this, ListView);
   m_Interaction = iaSpotRepair;
 }
 
