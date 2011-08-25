@@ -21,7 +21,7 @@
 *******************************************************************************/
 
 #ifndef PTIMAGESPOTLIST_H
-#define PTIMAGESPOTMLIST_H
+#define PTIMAGESPOTLIST_H
 
 #include <QList>
 #include <QString>

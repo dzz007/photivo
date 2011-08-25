@@ -21,22 +21,21 @@
 *******************************************************************************/
 
 #include "ptRepairSpotModel.h"
-#include "ptImageSpotList.h"
 #include "ptRepairSpot.h"
 #include "../ptGuiOptions.h"
 #include "../ptConstants.h"
 
-extern ptImageSpotList* RepairSpotList;
 extern ptGuiOptions* GuiOptions;
 
-ptRepairSpotModel::ptRepairSpotModel(QObject *parent, const QSize SizeHint)
-: QStandardItemModel(parent),
-  m_SizeHint(SizeHint)
+ptRepairSpotModel::ptRepairSpotModel(ptImageSpotList* SpotList, const QSize SizeHint)
+: QStandardItemModel(NULL),
+  m_SizeHint(SizeHint),
+  m_SpotList(SpotList)
 {
   // Create model from the actual spot data. Data included:
   // name of current algorithm as the caption; enabled state
-  for (int i = 0; i < RepairSpotList->count(); i++) {
-    ptRepairSpot* spot = static_cast<ptRepairSpot*>(RepairSpotList->at(i));
+  for (int i = 0; i < m_SpotList->count(); i++) {
+    ptRepairSpot* spot = static_cast<ptRepairSpot*>(m_SpotList->at(i));
     QStandardItem* SpotItem = new QStandardItem(GuiOptions->SpotRepair[spot->algorithm()].Text);
     SpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
                        Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
@@ -50,7 +49,7 @@ bool ptRepairSpotModel::setData(const QModelIndex &index, const QVariant &value,
   return QStandardItemModel::setData(index, value, role);
 
   // Update actual repair spot data
-  ptRepairSpot* spot = static_cast<ptRepairSpot*>(RepairSpotList->at(index.row()));
+  ptRepairSpot* spot = static_cast<ptRepairSpot*>(m_SpotList->at(index.row()));
   if (role == Qt::DisplayRole) {    // algorithm
     int i = 0;
     QString AlgoName = value.toString();
@@ -70,7 +69,7 @@ bool ptRepairSpotModel::setData(const QModelIndex &index, const QVariant &value,
 
 bool ptRepairSpotModel::removeRows(int row, int count, const QModelIndex &parent) {
   beginRemoveRows(parent, row, row+count-1);
-  RepairSpotList->removeAt(row);
+  m_SpotList->removeAt(row);
   bool success = QStandardItemModel::removeRows(row, count, parent);
   endRemoveRows();
   return success;

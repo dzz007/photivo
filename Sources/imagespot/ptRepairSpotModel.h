@@ -29,20 +29,21 @@
 #define PTREPAIRSPOTMODEL_H
 
 #include <QStandardItemModel>
+#include "ptImageSpotList.h"
 
-// model for UI settings tool
 class ptRepairSpotModel : public QStandardItemModel {
   Q_OBJECT
+
 public:
   /*! Constructs a \c ptRepairSpotModel object and creates the list of items from the
     actual repair spot data.
-    \param parent
-      The parent widget.
+    \param SpotList
+      A pointer to the list where the actual spot data is stored.
     \param SizeHint
       The \c SizeHint used for each item in the model. Width should be \c 0 and height
       large enough to contain the editor widget.
   */
-  explicit ptRepairSpotModel(QObject *parent, const QSize SizeHint);
+  explicit ptRepairSpotModel(ptImageSpotList* SpotList, const QSize SizeHint);
 
   /*! Update an item and the underlying spot repair data.  */
   bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
@@ -50,8 +51,10 @@ public:
   /*! Remove one or more items from the model and delete the underlying repair spots. */
   bool removeRows(int row, int count, const QModelIndex &parent);
 
+
 private:
   QSize m_SizeHint;
+  ptImageSpotList* m_SpotList;
 
 };
 #endif // PTREPAIRSPOTMODEL_H
