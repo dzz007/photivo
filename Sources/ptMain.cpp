@@ -47,6 +47,7 @@
 #include "ptFastBilateral.h"
 #include "ptTheme.h"
 #include "ptWiener.h"
+#include "ptParseCli.h"
 #include "imagespot/ptImageSpotList.h"
 #include "imagespot/ptRepairSpot.h"
 #include "qtsingleapplication/qtsingleapplication.h"
@@ -298,8 +299,9 @@ void ReportProgress(const QString Message) {
 short   InStartup  = 1;
 
 short   JobMode = 0;
-QString JobFileName;
+QString JobFileName = "";
 QString ImageFileToOpen = "";
+QString PtsFileToOpen = "";
 #ifdef Q_OS_MAC
     bool MacGotFileEvent=false;
 #endif
@@ -382,115 +384,74 @@ int photivoMain(int Argc, char *Argv[]) {
   TheApplication->connect(TheApplication, SIGNAL(lastWindowClosed()), TheApplication, SLOT(quit()));
 
 
-  // Handle cli arguments
-  ImageCleanUp = 0;
-  short AllowNewInstance = 0;
-  short CliArgumentsError = 0;
-
+// Handle cli arguments
   QString PhotivoCliUsageMsg = QObject::tr(
-          "Syntax: photivo [-i imagefile | -j jobfile | -g imagefile] [h] [--new-instance]\n"
-          "Options:\n"
-          "-i imagefile      Specify image file to load. The -i is optional. Starting\n"
-          "                  Photivo with just a file name works the same.\n"
-          "-j jobfile        Specify jobfile for batch processing. Job files are created\n"
-          "                  in Photivo and then executed with this option.\n"
-          "-g imagefile      Specify temporary file used for Gimp-to-Photivo export.\n"
-          "                  Internal option, not intended for general use.\n"
-          "                  BEWARE! This option deletes imagefile!\n"
-          "--new-instance    Allow opening another Photivo instance instead of using a\n"
-          "                  currently running Photivo. Job files are always opened in a\n"
-          "                  new instance.\n"
-          "-h                Display this usage information.\n\n"
-          "For more documentation visit the wiki:\n"
-          "http://photivo.org/photivo/start\n"
-          );
+    "Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
+    "                [-h] [--new-instance]\n"
+    "Options:\n"
+    "inputfile         Specify the image or settings file to load. Works like -i"
+    "                  for image files and like --pts for settings files."
+    "-i imagefile      Specify image file to load.\n"
+    "-j jobfile        Specify jobfile for batch processing. Job files are created\n"
+    "                  in Photivo and then executed with this option.\n"
+    "-g imagefile      Specify temporary file used for Gimp-to-Photivo export.\n"
+    "                  Internal option, not intended for general use.\n"
+    "                  BEWARE! This option deletes imagefile!\n"
+    "--pts ptsfile     Specify settings file to load with the image. Must be used\n"
+    "                  together with -i."
+    "--new-instance    Allow opening another Photivo instance instead of using a\n"
+    "                  currently running Photivo. Job files are always opened in a\n"
+    "                  new instance.\n"
+    "-h                Display this usage information.\n\n"
+    "For more documentation visit the wiki:\n"
+    "http://photivo.org/photivo/start\n"
+  );
+
 #ifdef Q_OS_MAC
 //Just Skip if engaged by QFileOpenEvent
   if(!MacGotFileEvent) {
 #endif
-    // Put Argv[] into a string list for non-PITA handling
-    QStringList CliArgs;
-    for (int i = 1; i < Argc; i++) {
-      CliArgs << Argv[i];
-    }
 
-    if (CliArgs.indexOf("-h") > -1) {
-#ifdef Q_OS_WIN32
-      // no ptMessageBox because we're on Windows and Theme object not yet created
-      ptMessageBox::information(0, QObject::tr("Photivo command line options"), PhotivoCliUsageMsg);
-#else
-      fprintf(stdout,"%s",PhotivoCliUsageMsg.toAscii().data());
-#endif
-      exit(0);
-    }
+  ptCliCommands cli = ParseCli(Argc, Argv);
 
-    if (CliArgs.indexOf("--new-instance") > -1) {
-      AllowNewInstance = 1;
-      CliArgs.removeAll("--new-instance");
-    }
+  // Show help message and exit Photivo
+  if (cli.Mode == cliShowHelp) {
+  #ifdef Q_OS_WIN32
+    ptMessageBox::critical(0, QObject::tr("Photivo"), PhotivoCliUsageMsg);
+  #else
+    fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
+  #endif
+    exit(EXIT_FAILURE);
+  }
 
-    // all the file open switches
-    if (CliArgs.count() > 0) {
-      if (CliArgs[0] == "-i") {
-        CliArgs.removeAt(0);
-        if (CliArgs.count() != 1) {
-          CliArgumentsError = 1;
-        } else {
-          ImageFileToOpen = CliArgs[0];
-        }
+  ImageCleanUp = cli.Mode == cliLoadAndDelImage;
+  JobMode = cli.Mode == cliProcessJob;
+  PtsFileToOpen = cli.PtsFilename;
 
-      } else if (CliArgs[0] == "-j") {
-        CliArgs.removeAt(0);
-        if (CliArgs.count() != 1) {
-          CliArgumentsError = 1;
-        } else {
-          AllowNewInstance = 1;
-          JobMode = 1;
-          JobFileName = CliArgs[0];
-        }
-
-      } else if (CliArgs[0] == "-g") {
-        CliArgs.removeAt(0);
-        if (CliArgs.count() != 1) {
-          CliArgumentsError = 1;
-        } else {
-          ImageCleanUp = 1;
-          ImageFileToOpen = CliArgs[0];
-        }
-
-      // only possibility left is file name without -i
-      } else {
-        if (CliArgs.count() != 1) {
-          CliArgumentsError = 1;
-        } else {
-          ImageFileToOpen = CliArgs[0];
-        }
-      }
-    }
-
-    if (CliArgumentsError == 1) {
-#ifdef Q_OS_WIN32
-      // no ptMessageBox because we're on Windows and Theme object not yet created
-      ptMessageBox::critical(0, QObject::tr("Unrecognized command line options"), PhotivoCliUsageMsg);
-#else
-      fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
-#endif
-      exit(EXIT_FAILURE);
-    }
+  if (JobMode) {
+    JobFileName = cli.Filename;
+  } else {
+    ImageFileToOpen = cli.Filename;
+  }
 
 #ifdef Q_OS_MAC
-  }
+  } // !MacGotFileEvent
 #endif
 
 
-  //QtSingleInstance, add CLI-Switch to skip and allow multiple instances
-  if(TheApplication->isRunning() && (AllowNewInstance == 0)) {
-    if (ImageFileToOpen != "") {
-      TheApplication->sendMessage(ImageFileToOpen);
-    } else if (JobFileName != "") {
-      TheApplication->sendMessage(JobFileName);
+  // QtSingleInstance, add CLI-Switch to skip and allow multiple instances
+  // JobMode is always run in a new instance
+  // Sent messages are handled by ptMainWindow::OtherInstanceMessage
+  if (!JobMode) {
+    if (TheApplication->isRunning() && !cli.NewInstance) {
+      if (PtsFileToOpen != "") {
+        TheApplication->sendMessage("::pts::" + PtsFileToOpen);
+      }
+      if (ImageFileToOpen != "") {
+        TheApplication->sendMessage("::img::" + ImageFileToOpen);
+      }
+      exit(0);
     }
-    return 0;
   }
 
 
@@ -886,7 +847,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Start event loops.
   return TheApplication->exec();
-  }
+}
 
   ////////////////////////////////////////////////////////////////////////////////
   //
@@ -972,7 +933,10 @@ void CB_Event0() {
       for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i),0);
     }
 
-    if (ImageFileToOpen.size()) {
+    if (PtsFileToOpen != "") {
+      CB_OpenSettingsFile(PtsFileToOpen);
+    }
+    if (ImageFileToOpen != "") {
       CB_MenuFileOpen(1);
     }
     MainWindow->UpdateSettings();
@@ -1329,21 +1293,14 @@ void Update(const QString GuiName) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-enum ptBlockToolsMode {
-  Unblock             = 0,
-  BlockAll            = 1,
-  BlockForCrop        = 2,
-  BlockForSpotRepair  = 3
-};
-
 void BlockTools(const ptBlockToolsMode NewState) {
   // Set the object name of the widget that is excluded from blocking.
   QString ExcludeTool = "";
   switch (NewState) {
-    case BlockForCrop:
+    case btmBlockForCrop:
       ExcludeTool = "TabCrop";
       break;
-    case BlockForSpotRepair:
+    case btmBlockForSpotRepair:
       ExcludeTool = "TabSpotRepair";
       break;
     default:
@@ -1351,7 +1308,7 @@ void BlockTools(const ptBlockToolsMode NewState) {
       break;
   }
 
-  bool EnabledStatus = NewState == Unblock;
+  bool EnabledStatus = NewState == btmUnblock;
 
   // Handle all necessary widgets outside the processing tabbook
   MainWindow->HistogramFrameCentralWidget->setEnabled(EnabledStatus);
@@ -1405,7 +1362,7 @@ void HistogramGetCrop() {
   // Get the crop for the histogram
   if (Settings->GetInt("HistogramCrop")) {
     // Allow to be selected in the view window. And deactivate main.
-    BlockTools(BlockAll);
+    BlockTools(btmBlockAll);
     ViewWindow->ShowStatus(QObject::tr("Selection"));
     ViewWindow->StartSimpleRect(HistogramCropDone);
     ViewWindow->setFocus();
@@ -1418,7 +1375,7 @@ void HistogramGetCrop() {
 
 void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(Unblock);
+  BlockTools(btmUnblock);
   if (ExitStatus == stFailure) {
     Settings->SetValue("HistogramCropX",0);
     Settings->SetValue("HistogramCropY",0);
@@ -1749,6 +1706,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   } else if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output &&
              !(Settings->GetInt("HistogramCrop") && !Settings->GetInt("WebResize"))) {
     HistogramImage->Set(PreviewImage);
+
 
   } else if (Settings->GetInt("HistogramCrop")) {
     HistogramImage->Set(PreviewImage);
@@ -3992,7 +3950,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       UpdatePreviewImage(TheProcessor->m_Image_DetailPreview);
 
       // Allow to be selected in the view window. And deactivate main.
-      BlockTools(BlockAll);
+      BlockTools(btmBlockAll);
       ViewWindow->ShowStatus(QObject::tr("Detail view"));
       ViewWindow->StartSimpleRect(SetDetailViewRect);
       while (ViewWindow->interaction() == iaSelectRect) {
@@ -4000,7 +3958,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       }
 
       // Selection is done at this point. Disallow it further and activate main.
-      BlockTools(Unblock);
+      BlockTools(btmUnblock);
 
       if (DetailViewRect.width() >>4 <<4 > 19 &&
           DetailViewRect.height() >>4 <<4 > 19) {
@@ -4477,7 +4435,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw);
 
       // Allow to be selected in the view window. And deactivate main.
-      BlockTools(BlockAll);
+      BlockTools(btmBlockAll);
       ViewWindow->ShowStatus(QObject::tr("Spot WB"));
       ReportProgress(QObject::tr("Spot WB"));
       ViewWindow->StartSimpleRect(SelectSpotWBDone);
@@ -4501,7 +4459,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
 
 void SelectSpotWBDone(const ptStatus ExitStatus, const QRect SelectionRect) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(Unblock);
+  BlockTools(btmUnblock);
 
   if (ExitStatus == stSuccess) {
     Settings->SetValue("VisualSelectionX", SelectionRect.left());
@@ -4951,7 +4909,7 @@ void CB_SpotRepairButton() {
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->ShowStatus(QObject::tr("Spot repair"));
   ReportProgress(QObject::tr("Spot repair"));
-  BlockTools(BlockForSpotRepair);
+  BlockTools(btmBlockForSpotRepair);
 
   // always start the interaction first, *then* update main window
   ViewWindow->StartSpotRepair(MainWindow->RepairSpotListView);
@@ -4960,7 +4918,7 @@ void CB_SpotRepairButton() {
 }
 
 void CleanupAfterSpotRepair() {
-  BlockTools(Unblock);
+  BlockTools(btmUnblock);
   Update(ptProcessorPhase_Geometry);
   MainWindow->UpdateSpotRepairUI();
 }
@@ -5004,14 +4962,14 @@ void CB_RotateAngleButton() {
   ViewWindow->ShowStatus(QObject::tr("Get angle"));
   ReportProgress(QObject::tr("Get angle"));
 
-  BlockTools(BlockAll);
+  BlockTools(btmBlockAll);
   ViewWindow->StartLine();
   ViewWindow->setFocus();
 }
 
 void RotateAngleDetermined(const ptStatus ExitStatus, double RotateAngle) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(Unblock);
+  BlockTools(btmUnblock);
 
   if (ExitStatus == stSuccess) {
     if (RotateAngle < -45.0) {
@@ -5207,7 +5165,7 @@ void CB_MakeCropButton() {
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->ShowStatus(QObject::tr("Crop"));
   ReportProgress(QObject::tr("Crop"));
-  BlockTools(BlockForCrop);
+  BlockTools(btmBlockForCrop);
 
   switch (Settings->GetInt("CropInitialZoom")) {
     case ptZoomLevel_Current:
@@ -5231,7 +5189,7 @@ void CB_MakeCropButton() {
 
 // After-crop processing and cleanup.
 void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
-  BlockTools(Unblock);
+  BlockTools(btmUnblock);
 
   if (CropStatus == stSuccess) {
     // Account for the pipesize factor.
