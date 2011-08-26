@@ -45,6 +45,13 @@ using namespace std;
 extern ptImageSpotList* RepairSpotList;
 extern ptTheme* Theme;
 extern ptViewWindow* ViewWindow;
+extern QString ImageFileToOpen;
+extern QString PtsFileToOpen;
+void CB_MenuFileOpen(const short HaveFile);
+void CB_OpenSettingsFile(QString SettingsFileName);
+
+
+
 void CB_OpenFileButton();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -867,6 +874,26 @@ void ptMainWindow::ShowToolsOnTab() {
   if (ActiveTool != "") Update(ActiveTool);
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Added slot for messages to the single instance
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::OtherInstanceMessage(const QString &msg) {
+  if (msg.startsWith("::pts::")) {
+    PtsFileToOpen = msg;
+    PtsFileToOpen.remove(0,7);
+    CB_OpenSettingsFile(PtsFileToOpen);
+  } else if (msg.startsWith("::img::")) {
+    ImageFileToOpen = msg;
+    ImageFileToOpen.remove(0,7);
+    CB_MenuFileOpen(1);
+  }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // GetCurrentTab
@@ -1592,10 +1619,6 @@ void ptMainWindow::dragEnterEvent(QDragEnterEvent* Event) {
 // dropEvent
 //
 ////////////////////////////////////////////////////////////////////////
-
-void CB_MenuFileOpen(const short HaveFile);
-void CB_OpenSettingsFile(QString SettingsFileName);
-extern QString ImageFileToOpen;
 
 void ptMainWindow::dropEvent(QDropEvent* Event) {
   if (ViewWindow->interaction() != iaNone) {
@@ -3035,10 +3058,6 @@ void ptMainWindow::UpdateLfunCAUI() {
 void ptMainWindow::UpdateLfunVignetteUI() {
   short VignetteModel = Settings->GetInt("LfunVignetteModel");
   LfunVignettePoly6Container->setVisible(VignetteModel == ptLfunVignetteModel_Poly6);
-}
-void ptMainWindow::OtherInstanceMessage(const QString &msg) { // Added slot for messages to the single instance
-    ImageFileToOpen = msg;
-    CB_MenuFileOpen(1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

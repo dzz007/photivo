@@ -760,6 +760,14 @@ enum ptStatus {
   stFailure = 1
 };
 
+enum ptBlockToolsMode {
+  btmUnblock             = 0,
+  btmBlockAll            = 1,
+  btmBlockForCrop        = 2,
+  btmBlockForSpotRepair  = 3
+};
+
+
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
