@@ -29,6 +29,7 @@
 //#include <QtNetwork>
 #include <string>
 
+#include "ptConfirmRequest.h"
 #include "ptMessageBox.h"
 #include "ptDcRaw.h"
 #include "ptProcessor.h"
@@ -450,6 +451,7 @@ int photivoMain(int Argc, char *Argv[]) {
       if (ImageFileToOpen != "") {
         TheApplication->sendMessage("::img::" + ImageFileToOpen);
       }
+      TheApplication->activateWindow();
       exit(0);
     }
   }
@@ -736,11 +738,10 @@ int photivoMain(int Argc, char *Argv[]) {
       return ptError_FileOpen;
   }
 
-  MainWindow =
-      new ptMainWindow(QObject::tr("Photivo"));
+  MainWindow = new ptMainWindow(QObject::tr("Photivo"));
   QObject::connect(TheApplication, SIGNAL(messageReceived(const QString &)),
-          MainWindow,   SLOT(OtherInstanceMessage(const QString &)));
-
+                   MainWindow, SLOT(OtherInstanceMessage(const QString &)));
+  TheApplication->setActivationWindow(MainWindow);
 
 
   ViewWindow =
@@ -3016,10 +3017,20 @@ void CB_Tabs(const short) {
 
 void CB_MenuFileOpen(const short HaveFile) {
   QStringList OldInputFileNameList = Settings->GetStringList("InputFileNameList");
-  QString InputFileName;
+  QString InputFileName = "";
   if (HaveFile) {
     InputFileName = ImageFileToOpen;
-  } else {
+  }
+
+  // Ask user confirmation
+  if (!InStartup) {
+    if (!ptConfirmRequest::saveImage(InputFileName)) {
+      return;
+    }
+  }
+
+  // open file dialog
+  if (!HaveFile) {
     InputFileName =
       QFileDialog::getOpenFileName(NULL,
                                    QObject::tr("Open Raw"),
@@ -3027,15 +3038,16 @@ void CB_MenuFileOpen(const short HaveFile) {
                                    RawPattern);
   }
 
+  // no new image file: abort
   if (InputFileName == "") {
-      return;
+    return;
   } else {
-      if (!QFile::exists(InputFileName)) {
-          ptMessageBox::warning(NULL,
-                  QObject::tr("File not found"),
-                  QObject::tr("Input file does not exist.") + "\n\n" + InputFileName);
-          return;
-      }
+    if (!QFile::exists(InputFileName)) {
+      ptMessageBox::warning(NULL,
+          QObject::tr("File not found"),
+          QObject::tr("Input file does not exist.") + "\n\n" + InputFileName);
+      return;
+    }
   }
 
   QFileInfo PathInfo(InputFileName);
@@ -3083,49 +3095,8 @@ void CB_MenuFileOpen(const short HaveFile) {
     delete TestDcRaw;
     return;
   }
-  if (Settings->GetInt("HaveImage")==1) {
-    if ( Settings->GetInt("SaveConfirmation") == 0 ) {
-      if (ImageCleanUp == 1) {
-        // clean up the input file if we got just a temp file
-        QFile::remove(OldInputFileNameList.at(0));
-      }
-    } else {
-      ptMessageBox msgBox;
-      msgBox.setIcon(QMessageBox::Question);
-      msgBox.setWindowTitle("Open new image");
-      msgBox.setText("Do you want to save the current image?");
-      msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-      msgBox.setDefaultButton(QMessageBox::Save);
-      int ret = msgBox.exec();
-      switch (ret) {
-        case QMessageBox::Save:
-          // Save was clicked
-          Settings->SetValue("InputFileNameList",OldInputFileNameList);
-          CB_WritePipeButton();
-          Settings->SetValue("InputFileNameList",InputFileNameList);
-          if (ImageCleanUp == 1) {
-            // clean up the input file if we got just a temp file
-            QFile::remove(OldInputFileNameList.at(0));
-          }
-          return;
-        case QMessageBox::Discard:
-          // Don't Save was clicked
-          if (ImageCleanUp == 1) {
-            // clean up the input file if we got just a temp file
-            QFile::remove(OldInputFileNameList.at(0));
-          }
-          break;
-        case QMessageBox::Cancel:
-           // Cancel was clicked
-          Settings->SetValue("InputFileNameList",OldInputFileNameList);
-          delete TestDcRaw;
-          return;
-          break;
-        default:
-           // should never be reached
-           break;
-      }
-    }
+
+  if (Settings->GetInt("HaveImage") == 1) {
     // Catch 1:1 pipe size when opening
     if (Settings->GetInt("PipeSize") == 0)
       Settings->SetValue("PipeSize",1);
@@ -3360,31 +3331,35 @@ void CB_MenuFileExit(const short) {
   }
 
   if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0 && Settings->GetInt("SaveConfirmation")==1) {
-    ptMessageBox msgBox;
-    msgBox.setIcon(QMessageBox::Question);
-    msgBox.setWindowTitle("Close Photivo");
-    msgBox.setText("Do you want to save the current image?");
-    msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-    msgBox.setDefaultButton(QMessageBox::Save);
-    msgBox.move((MainWindow->pos()).x()+(MainWindow->size()).width()/2-msgBox.size().width()/4,
-                (MainWindow->pos()).y()+(MainWindow->size()).height()/2-msgBox.size().height()/4);
-    int ret = msgBox.exec();
-    switch (ret) {
-      case QMessageBox::Save:
-         // Save was clicked
-         CB_WritePipeButton();
-         break;
-      case QMessageBox::Discard:
-         // Don't Save was clicked
-         break;
-      case QMessageBox::Cancel:
-         // Cancel was clicked
-        return;
-        break;
-      default:
-         // should never be reached
-         break;
+    if (!ptConfirmRequest::saveImage()) {
+      return;
     }
+//    ptMessageBox msgBox;
+//    msgBox.setIcon(QMessageBox::Question);
+//    msgBox.setWindowTitle("Close Photivo");
+//    msgBox.setText("Do you want to save the current image?");
+//    msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+//    msgBox.setDefaultButton(QMessageBox::Save);
+//    msgBox.move((MainWindow->pos()).x()+(MainWindow->size()).width()/2-msgBox.size().width()/4,
+//                (MainWindow->pos()).y()+(MainWindow->size()).height()/2-msgBox.size().height()/4);
+//    int ret = msgBox.exec();
+
+//    switch (ret) {
+//      case QMessageBox::Save:
+//         // Save was clicked
+//         CB_WritePipeButton();
+//         break;
+//      case QMessageBox::Discard:
+//         // Don't Save was clicked
+//         break;
+//      case QMessageBox::Cancel:
+//         // Cancel was clicked
+//        return;
+//        break;
+//      default:
+//         // should never be reached
+//         break;
+//    }
 
   }
   // clean up the input file if we got just a temp file
@@ -4334,6 +4309,10 @@ void CB_OpenSettingsFile(QString SettingsFileName) {
 }
 
 void CB_OpenSettingsFileButton() {
+  if (!ptConfirmRequest::loadConfig(lcmGeneralCfg)) {
+    return;
+  }
+
   QString SettingsFilePattern =
     QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
   QString SettingsFileName =

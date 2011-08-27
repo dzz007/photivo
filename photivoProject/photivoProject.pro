@@ -135,7 +135,8 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/imagespot/ptRepairSpotEditor.h \
     ../Sources/imagespot/ptRepairSpotModel.h \
     ../Sources/imagespot/ptRepairSpotListView.h \
-    ../Sources/imagespot/ptRepairSpotShape.h
+    ../Sources/imagespot/ptRepairSpotShape.h \
+    ../Sources/ptConfirmRequest.h
 HEADERS += ../Sources/ptParseCli.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
@@ -199,7 +200,8 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/imagespot/ptRepairSpotEditor.cpp \
     ../Sources/imagespot/ptRepairSpotModel.cpp \
     ../Sources/imagespot/ptRepairSpotListView.cpp \
-    ../Sources/imagespot/ptRepairSpotShape.cpp
+    ../Sources/imagespot/ptRepairSpotShape.cpp \
+    ../Sources/ptConfirmRequest.cpp
 SOURCES += ../Sources/ptParseCli.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
