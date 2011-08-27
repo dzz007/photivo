@@ -21,25 +21,25 @@
 **
 *******************************************************************************/
 
-#include "ptMainWindow.h"
-#include "ptViewWindow.h"
-#include "ptWhiteBalances.h"
+#include <iomanip>
+#include <iostream>
+
+#include "imagespot/ptImageSpotList.h"
+#include "imagespot/ptRepairSpot.h"
 #include "ptChannelMixer.h"
+#include "ptConfirmRequest.h"
+#include "ptConstants.h"
+#include "ptDefines.h"
 #include "ptError.h"
 #include "ptGuiOptions.h"
 //#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
-#include "ptSettings.h"
-#include "ptConstants.h"
-#include "ptDefines.h"
-#include "ptTheme.h"
-#include "imagespot/ptRepairSpot.h"
-#include "imagespot/ptImageSpotList.h"
-
-#include <iostream>
-#include <iomanip>
-
-#include <iostream>
+#include "ptMainWindow.h"
 #include "ptMessageBox.h"
+#include "ptSettings.h"
+#include "ptTheme.h"
+#include "ptViewWindow.h"
+#include "ptWhiteBalances.h"
+
 using namespace std;
 
 extern ptImageSpotList* RepairSpotList;
@@ -47,11 +47,9 @@ extern ptTheme* Theme;
 extern ptViewWindow* ViewWindow;
 extern QString ImageFileToOpen;
 extern QString PtsFileToOpen;
+
 void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
-
-
-
 void CB_OpenFileButton();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -880,12 +878,18 @@ void ptMainWindow::ShowToolsOnTab() {
 // Added slot for messages to the single instance
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 void ptMainWindow::OtherInstanceMessage(const QString &msg) {
+  // Settings file loaded via cli
   if (msg.startsWith("::pts::")) {
     PtsFileToOpen = msg;
     PtsFileToOpen.remove(0,7);
-    CB_OpenSettingsFile(PtsFileToOpen);
+
+    if (ptConfirmRequest::loadConfig(lcmSettingsFile, PtsFileToOpen)) {
+      CB_OpenSettingsFile(PtsFileToOpen);
+    }
+
+
+  // Image file loaded via cli
   } else if (msg.startsWith("::img::")) {
     ImageFileToOpen = msg;
     ImageFileToOpen.remove(0,7);
@@ -1643,22 +1647,10 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
             DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj") {
           ImageFileToOpen = DropName;
           CB_MenuFileOpen(1);
+
         } else {
-          if ( Settings->GetInt("ResetSettingsConfirmation") == 0 ) {
+          if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
             CB_OpenSettingsFile(DropName);
-          } else {
-            #ifdef Q_OS_WIN32
-              DropName = DropName.replace(QString("/"), QString("\\"));
-            #endif
-            ptMessageBox msgBox;
-            msgBox.setIcon(QMessageBox::Question);
-            msgBox.setWindowTitle(tr("Settings file dropped!"));
-            msgBox.setText(tr("Do you really want to open\n")+DropName);
-            msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-            msgBox.setDefaultButton(QMessageBox::Ok);
-            if (msgBox.exec()==QMessageBox::Ok){
-              CB_OpenSettingsFile(DropName);
-            }
           }
         }
       }
