@@ -3180,7 +3180,7 @@ void CB_MenuFileOpen(const short HaveFile) {
             // clean up the input file if we got just a temp file
             QFile::remove(OldInputFileNameList.at(0));
           }
-          return;
+          break;
         case QMessageBox::Discard:
           // Don't Save was clicked
           if (ImageCleanUp == 1) {
