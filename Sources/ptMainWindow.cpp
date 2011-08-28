@@ -47,6 +47,7 @@ extern ptTheme* Theme;
 extern ptViewWindow* ViewWindow;
 extern QString ImageFileToOpen;
 extern QString PtsFileToOpen;
+extern short ImageCleanUp;
 
 void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
@@ -888,11 +889,17 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
       CB_OpenSettingsFile(PtsFileToOpen);
     }
 
-
   // Image file loaded via cli
   } else if (msg.startsWith("::img::")) {
     ImageFileToOpen = msg;
     ImageFileToOpen.remove(0,7);
+    CB_MenuFileOpen(1);
+
+  // image incoming from Gimp
+  } else if (msg.startsWith("::tmp::")) {
+    ImageFileToOpen = msg;
+    ImageFileToOpen.remove(0,7);
+    ImageCleanUp++;
     CB_MenuFileOpen(1);
   }
 }

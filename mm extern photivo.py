@@ -86,7 +86,7 @@ def plugin_main(image, drawable, visible):
             )
             dummy = pdb.gimp_gimprc_set("photivo-executable", cmdWindows)
         
-        command = '"%s" -g "%s"' % (cmdWindows, tempfilename)    
+        command = '"%s" --load-and-delete "%s"' % (cmdWindows, tempfilename)    
 
 
     # Invoke Photivo.

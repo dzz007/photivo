@@ -44,7 +44,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
   }
 
   QStringList params;
-  params << "-i" << "-j" << "-g" << "--pts" << "--new-instance" << "-h";
+  params << "-i" << "-j" << "--load-and-delete" << "--pts" << "--new-instance" << "-h";
 
   int i = 1;
   bool MustBeFilename = false;
