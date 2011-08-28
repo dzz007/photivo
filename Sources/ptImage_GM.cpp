@@ -355,10 +355,25 @@ ptImage* ptImage::ptGMSimpleOpen(const char* FileName) {
 }
 
 // Resize
-ptImage* ptImage::ptGMResize(uint16_t Size, const short Filter) {
+ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const short Mode) {
 
   uint16_t Width  = m_Width;
   uint16_t Height = m_Height;
+
+  uint16_t NewWidth  = 0;
+  uint16_t NewHeight = 0;
+
+  bool WidthLonger = Width > Height;
+
+  if (Mode == ptResizeDimension_Width ||
+      (Mode == ptResizeDimension_LongerEdge && WidthLonger)) {
+    NewHeight = Height/(double)Width*Size+0.5;
+    NewWidth  = Width;
+  } else if (Mode == ptResizeDimension_Height ||
+             (Mode == ptResizeDimension_LongerEdge && !WidthLonger)) {
+    NewWidth  = Width/(double)Height*Size+0.5;
+    NewHeight = Height;
+  } else return this;
 
   Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
   FREE(m_Image);
@@ -413,15 +428,7 @@ ptImage* ptImage::ptGMResize(uint16_t Size, const short Filter) {
       assert(0);
   }
 
-  QString TempString = QString::number(Size);
-  TempString += "x";
-
-  // Leftover from ImageMagick
-  // if (Width <= Height)  {
-    // TempString.prepend("x");
-  // }
-
-  image.zoom(TempString.toStdString());
+  image.zoom(Magick::Geometry(NewWidth, NewHeight));
   image.modifyImage();
 
   m_Width  = image.columns();
@@ -433,7 +440,9 @@ ptImage* ptImage::ptGMResize(uint16_t Size, const short Filter) {
   return this;
 }
 
-ptImage* ptImage::ptGMResize(uint16_t NewWidth, uint16_t NewHeight, const short Filter) {
+ptImage* ptImage::ptGMResizeWH(const uint16_t NewWidth,
+                               const uint16_t NewHeight,
+                               const short Filter) {
 
   uint16_t Width  = m_Width;
   uint16_t Height = m_Height;
@@ -493,9 +502,7 @@ ptImage* ptImage::ptGMResize(uint16_t NewWidth, uint16_t NewHeight, const short 
       assert(0);
   }
 
-  QString TempString = QString::number(NewWidth) + "x" + QString::number(NewHeight) + "!";
-
-  image.zoom(TempString.toStdString());
+  image.zoom(Magick::Geometry(NewWidth, NewHeight));
   image.modifyImage();
 
   m_Width  = image.columns();

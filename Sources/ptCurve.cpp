@@ -329,6 +329,7 @@ short ptCurve::ReadCurve(const char *FileName) {
         case ptCurveChannel_Denoise2 :
         case ptCurveChannel_Base :
         case ptCurveChannel_Base2 :
+        case ptCurveChannel_Outline :
           m_IntendedChannel = IntendedChannel;
           break;
         default :

@@ -271,6 +271,8 @@ private slots:
   void OnCurveaSaveButtonClicked();
   void OnCurvebOpenButtonClicked();
   void OnCurvebSaveButtonClicked();
+  void OnCurveOutlineOpenButtonClicked();
+  void OnCurveOutlineSaveButtonClicked();
   void OnCurveLByHueOpenButtonClicked();
   void OnCurveLByHueSaveButtonClicked();
   void OnCurveHueOpenButtonClicked();
