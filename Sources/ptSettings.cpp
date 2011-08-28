@@ -112,7 +112,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LqrVertScale"                  ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.2  ,2.0   ,0.02 ,3 ,tr("Vertical scale")     ,tr("Vertical scale")},
     {"LqrWidth"                      ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Width")              ,tr("Width")},
     {"LqrHeight"                     ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Height")},
-    {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Size")               ,tr("Image size")},
+    {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("pixels")               ,tr("Image size")},
     {"LevelsBlackPoint"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.002,3 ,tr("Blackpoint")         ,tr("Levels Blackpoint")},
     {"LevelsWhitePoint"              ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.002,3 ,tr("Whitepoint")         ,tr("Levels Whitepoint")},
     {"LabLevelsBlackPoint"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.002,3 ,tr("Blackpoint")         ,tr("Levels Blackpoint")},
@@ -313,6 +313,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Grain2Opacity"                 ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity for film grain")},
     {"Grain2LowerLimit"              ,ptGT_InputSlider     ,2,1,1 ,0.1  ,0.0  ,1.0   ,0.002,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"Grain2UpperLimit"              ,ptGT_InputSlider     ,2,1,1 ,0.4  ,0.0  ,1.0   ,0.002,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
+    {"OutlineWeight"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,5.0   ,0.5  ,2 ,tr("Color Weight")       ,tr("Use AB channels for the outline")},
+    {"OutlineBlurRadius"             ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,20.0  ,0.2  ,2 ,tr("Radius")             ,tr("Blur radius")},
     {"LABToneAdjust1Saturation"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0   ,4.0   ,0.1 ,2  ,tr("Saturation")        ,tr("Saturation")},
     {"LABToneAdjust1Amount"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05,2  ,tr("Amount")            ,tr("Amount")},
     {"LABToneAdjust1Hue"             ,ptGT_InputSliderHue  ,2,1,1 ,60.0 ,0.0  ,360.0  ,10.0,0  ,tr("Hue")               ,tr("Hue")},
@@ -437,7 +439,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"OutputLinearity"               ,ptGT_InputSlider     ,1,1,1 ,0.06  ,0.0  ,1.0   ,0.01 ,3 ,tr("Linearity")          ,tr("Linearity")},
     {"RGBContrast3Amount"            ,ptGT_InputSlider     ,1,1,1 ,0.0  ,-20.0,20.0  ,0.5  ,1 ,tr("Contrast")           ,tr("Contrast")},
     {"RGBContrast3Threshold"         ,ptGT_InputSlider     ,1,1,1 ,0.50 ,0.05 ,0.95  ,0.05 ,2 ,tr("Threshold")          ,tr("Threshold")},
-    {"WebResizeScale"                ,ptGT_Input           ,1,1,1 ,1200  ,200 ,2000  ,100  ,0 ,tr("Size")         ,tr("Image size")},
+    {"WebResizeScale"                ,ptGT_Input           ,1,1,1 ,1200  ,200 ,2600  ,100  ,0 ,tr("pixels")             ,tr("Image size")},
     {"WienerFilter2Amount"           ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0 ,0.05   ,2 ,tr("Amount")               ,tr("Amount")},
     {"WienerFilter2Gaussian"         ,ptGT_InputSlider     ,2,1,1 ,0.6    ,0.0 ,5.0 ,0.05   ,2 ,tr("Gaussian")             ,tr("Gaussian")},
     {"WienerFilter2Box"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,5.0 ,0.05   ,2 ,tr("Box")                  ,tr("Box")},
@@ -492,6 +494,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LqrEnergy"                   ,ptGT_Choice       ,2,1,1 ,ptLqr_Disabled              ,GuiOptions->LqrEnergy                 ,tr("Energy method for liquid rescale")},
     {"LqrScaling"                  ,ptGT_Choice       ,1,1,1 ,ptLqr_ScaleRelative         ,GuiOptions->LqrScaling                ,tr("Scaling method for liquid rescale")},
     {"ResizeFilter"                ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Mitchell         ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
+    {"ResizeDimension"             ,ptGT_Choice       ,2,1,1 ,ptResizeDimension_LongerEdge,GuiOptions->ResizeDimension           ,tr("Image dimension the resize value applies to")},
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatioW              ,tr("Aspect width")},
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatioH              ,tr("Aspect height")},
@@ -524,6 +527,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveL"                      ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("L curve")},
     {"CurveLa"                     ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("a curve")},
     {"CurveLb"                     ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("b curve")},
+    {"CurveOutline"                ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Outline curve")},
     {"CurveLByHue"                 ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("L by hue curve")},
     {"CurveHue"                    ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Hue curve")},
     {"CurveTexture"                ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Texture curve")},
@@ -535,6 +539,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveDenoise2"               ,ptGT_Choice       ,9,1,1 ,ptCurveChoice_None          ,GuiOptions->Curve                     ,tr("Denoise curve")},
     //{"GREYCInterpolation"        ,ptGT_Choice       ,2,1,1 ,ptGREYCInterpolation_NearestNeighbour,GuiOptions->GREYCInterpolation, tr("GREYC Interpolation")},
     {"ViewLAB"                     ,ptGT_Choice       ,2,1,1 ,ptViewLAB_LAB               ,GuiOptions->ViewLAB                   ,tr("View seperate LAB channels")},
+    {"OutlineMode"                 ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OutlineMode               ,tr("Mode for Outline Overlay")},
+    {"OutlineGradientMode"         ,ptGT_Choice       ,2,1,1 ,ptGradientMode_RotInv       ,GuiOptions->OutlineGradientMode       ,tr("Method for the Outlines")},
     {"LABToneAdjust1MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for tone adjustment")},
     {"LABToneAdjust2MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for tone adjustment")},
     {"BWStylerFilmType"            ,ptGT_Choice       ,2,1,1 ,ptFilmType_Luminance        ,GuiOptions->FilmType                  ,tr("Film emulation")},
@@ -551,6 +557,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradBlur2"                   ,ptGT_Choice       ,1,1,1 ,ptGradualBlur_Linear        ,GuiOptions->GradualBlurMode           ,tr("Mode for the gradual blur")},
     {"SoftglowMode"                ,ptGT_Choice       ,2,1,1 ,ptSoftglowMode_None         ,GuiOptions->SoftglowMode              ,tr("Mode for Softglow")},
     {"WebResize"                   ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable web resizing")},
+    {"WebResizeDimension"          ,ptGT_Choice       ,2,1,1 ,ptResizeDimension_LongerEdge,GuiOptions->ResizeDimension           ,tr("Image dimension the resize value applies to")},
     {"WebResizeFilter"             ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Lanczos          ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
     {"SaveFormat"                  ,ptGT_Choice       ,1,1,1 ,ptSaveFormat_JPEG           ,GuiOptions->SaveFormat                ,tr("Output format")},
     {"SaveSampling"                ,ptGT_Choice       ,1,1,1 ,ptSaveSampling_211          ,GuiOptions->SaveSampling              ,tr("JPEG color sampling")},
@@ -599,6 +606,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"InverseDiffusionUseEdgeMask",ptGT_Check ,2,1,1,tr("Only edges")      ,tr("Sharpen only edges")},
     //{"GREYC"                    ,ptGT_Check ,2,1,0,tr("Enable")          ,tr("Enable GREYC restoration")},
     //{"GREYCFast"                ,ptGT_Check ,2,1,1,tr("Enable 'fast'")   ,tr("Enable GREYC 'fast'")},
+    {"OutlineSwitchLayer"         ,ptGT_Check ,2,1,0,tr("Switch layers")   ,tr("Outlines or image on top")},
     {"WebResizeBeforeGamma"       ,ptGT_Check ,1,1,0,tr("before gamma")    ,tr("Webresizing before gamma compensation")},
     {"OutputGammaCompensation"    ,ptGT_Check ,1,1,0,tr("sRGB gamma compensation")    ,tr("sRGB gamma compensation")},
     {"WienerFilter2"              ,ptGT_Check ,2,1,0,tr("Enable")          ,tr("Enable wiener filter")},
@@ -670,6 +678,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CurveFileNamesL"                      ,0    ,QStringList()                         ,1},
     {"CurveFileNamesLa"                     ,0    ,QStringList()                         ,1},
     {"CurveFileNamesLb"                     ,0    ,QStringList()                         ,1},
+    {"CurveFileNamesOutline"                ,0    ,QStringList()                         ,1},
     {"CurveFileNamesLByHue"                 ,0    ,QStringList()                         ,1},
     {"CurveFileNamesHue"                    ,0    ,QStringList()                         ,1},
     {"CurveFileNamesTexture"                ,0    ,QStringList()                         ,1},
@@ -1869,7 +1878,10 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetInt("ViewLAB")!=0?1:0;
   }
   // Tab Lab EyeCandy
-  else if (GuiName == "TabLbyHue") {
+  else if (GuiName == "TabOutline") {
+      Info.Name = "Outline";
+      Info.IsActive = Settings->GetInt("OutlineMode")!=0?1:0;
+  } else if (GuiName == "TabLbyHue") {
       Info.Name = "Lab luminance by hue curve";
       Info.IsActive = Settings->GetInt("CurveLByHue")!=0?1:0;
   } else if (GuiName == "TabSaturationCurve") {

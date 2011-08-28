@@ -82,8 +82,8 @@ ptCurve*  RGBContrastCurve  = NULL;
 ptCurve*  ExposureCurve     = NULL;
 ptCurve*  ContrastCurve     = NULL;
 // RGB,R,G,B,L,a,b,Base
-ptCurve*  Curve[16]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-ptCurve*  BackupCurve[16]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  Curve[17]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  BackupCurve[17]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 // I don't manage to init statically following ones. Done in InitCurves.
 QStringList CurveKeys, CurveToolNameKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
@@ -119,7 +119,7 @@ ptImage*  HistogramImage   = NULL;
 ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
-ptCurveWindow*     CurveWindow[16] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurveWindow*     CurveWindow[17] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 // Error dialog for segfaults
 ptMessageBox* SegfaultErrorBox;
@@ -264,7 +264,7 @@ void Update(short Phase,
             short SubPhase      = -1,
             short WithIdentify  = 1,
             short ProcessorMode = ptProcessorMode_Preview);
-int CalculatePipeSize();
+int CalculatePipeSize(const bool NewImage = false);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void SaveButtonToolTip(const short mode);
 
@@ -539,7 +539,8 @@ int photivoMain(int Argc, char *Argv[]) {
             << "CurveShadowsHighlights"
             << "CurveDenoise"
             << "CurveHue"
-            << "CurveDenoise2";
+            << "CurveDenoise2"
+            << "CurveOutline";
 
   CurveToolNameKeys << "TabRGBCurve"
                     << "TabRToneCurve"
@@ -556,7 +557,8 @@ int photivoMain(int Argc, char *Argv[]) {
                     << "TabLABShadowsHighlights"
                     << "TabDetailCurve"
                     << "TabHueCurve"
-                    << "TabDenoiseCurve";
+                    << "TabDenoiseCurve"
+                    << "TabOutline";
 
   CurveFileNamesKeys << "CurveFileNamesRGB"
                      << "CurveFileNamesR"
@@ -573,7 +575,8 @@ int photivoMain(int Argc, char *Argv[]) {
                      << "CurveFileNamesShadowsHighlights"
                      << "CurveFileNamesDenoise"
                      << "CurveFileNamesHue"
-                     << "CurveFileNamesDenoise2";
+                     << "CurveFileNamesDenoise2"
+                     << "CurveFileNamesOutline";
 
   CurveBackupKeys = CurveKeys;
 
@@ -836,7 +839,8 @@ int photivoMain(int Argc, char *Argv[]) {
       MainWindow->ShadowsHighlightsCurveCentralWidget,
       MainWindow->DenoiseCurveCentralWidget,
       MainWindow->HueCurveCentralWidget,
-      MainWindow->Denoise2CurveCentralWidget};
+      MainWindow->Denoise2CurveCentralWidget,
+      MainWindow->OutlineCurveCentralWidget};
 
   for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
       Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
@@ -1535,7 +1539,9 @@ void BeforeGamma(ptImage* Image, const short FinalRun = 0, const short Resize = 
     if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
       //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
-      Image->ptGMResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
+      Image->ptGMResize(Settings->GetInt("WebResizeScale"),
+                        Settings->GetInt("WebResizeFilter"),
+                        Settings->GetInt("WebResizeDimension"));
     }
     if (FinalRun == 1) Settings->SetValue("FullOutput",0);
   }
@@ -1588,8 +1594,9 @@ void AfterAll(ptImage* Image, const short FinalRun = 0, const short Resize = 1) 
     if (FinalRun == 1) Settings->SetValue("FullOutput",1);
     if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
-      //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
-      Image->ptGMResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
+      Image->ptGMResize(Settings->GetInt("WebResizeScale"),
+                        Settings->GetInt("WebResizeFilter"),
+                        Settings->GetInt("WebResizeDimension"));
     }
     if (FinalRun == 1) Settings->SetValue("FullOutput",0);
   }
@@ -1726,8 +1733,6 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     // Convert from working space to screen space.
     // Using lcms and a standard sRGB or custom profile.
-
-
     ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
     if (!ReturnValue) {
       ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
@@ -3175,7 +3180,7 @@ void CB_MenuFileOpen(const short HaveFile) {
             // clean up the input file if we got just a temp file
             QFile::remove(OldInputFileNameList.at(0));
           }
-          return;
+          break;
         case QMessageBox::Discard:
           // Don't Save was clicked
           if (ImageCleanUp == 1) {
@@ -3260,11 +3265,10 @@ void CB_MenuFileOpen(const short HaveFile) {
 
 
   if (Settings->GetInt("AutomaticPipeSize") && Settings->ToolIsActive("TabResize")) {
-    if (!CalculatePipeSize())
-      Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
-  } else {
-    Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+    CalculatePipeSize(true);
   }
+
+  Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
 
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   Settings->SetValue("PerspectiveFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
@@ -3602,7 +3606,7 @@ void GimpExport(const short UsePipe) {
   long lSize = ftell (pFile);
   rewind (pFile);
 
-  char* pchBuffer = (char*) CALLOC(lSize,sizeof(uint8_t));
+  char* pchBuffer = (char*) CALLOC2(lSize,sizeof(uint8_t));
   ptMemoryError(pchBuffer,__FILE__,__LINE__);
 
   size_t RV = fread (pchBuffer, 1, lSize, pFile);
@@ -3948,7 +3952,7 @@ void CB_MemoryTestInput(const QVariant Value) {
         QObject::tr("If you don't stop me, I will waste %1 MB of memory.").arg(Value.toInt()),
         QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
       // allocate orphaned memory for testing
-      char (*Test) = (char (*)) CALLOC(Value.toInt()*1024*1024,1);
+      char (*Test) = (char (*)) CALLOC2(Value.toInt()*1024*1024,1);
       memset(Test, '\0', Value.toInt()*1024*1024);
       ptMessageBox::critical(0,"Feedback","Memory wasted ;-)");
     }
@@ -5325,8 +5329,16 @@ void CB_LqrVertFirstCheck(const QVariant Check) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void CalculatePipeSizeHelper(const short Size, const bool NewImage) {
+  if (NewImage) {
+    Settings->SetValue("PipeSize",Size);
+  } else {
+    CB_PipeSizeChoice(Size);
+  }
+}
+
 // returns 1 if pipe was updated
-int CalculatePipeSize() {
+int CalculatePipeSize(const bool NewImage /* = False */) {
   uint16_t InSize = 0;
   if (Settings->GetInt("HaveImage")==0) return 0;
   if (Settings->GetInt("Crop")==0) {
@@ -5338,19 +5350,19 @@ int CalculatePipeSize() {
   if (s < Settings->GetInt("PipeSize")) {
     if (Settings->GetInt("RunMode") != 1) {// not manual mode
       ImageSaved = 1; // bad hack to check what happens in the next step
-      CB_PipeSizeChoice(s);
-      if (ImageSaved == 1) {
+      CalculatePipeSizeHelper(s, NewImage);
+      if (ImageSaved == 1 && !NewImage) {
         if (Settings->GetInt("PipeSize")==1) {
           ptMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill stay on half size instead!");
           ImageSaved = 0;
           return 0;
         } else {
           ptMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill run on half size instead!");
-          CB_PipeSizeChoice(1);
+          CalculatePipeSizeHelper(1, NewImage);
         }
       }
     } else {
-      CB_PipeSizeChoice(s);
+      CalculatePipeSizeHelper(s, NewImage);
     }
     return 1;
   }
@@ -5366,6 +5378,19 @@ void CB_ResizeCheck(const QVariant Check) {
     Update(ptProcessorPhase_Geometry);
   }
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+}
+
+void CB_ResizeDimensionChoice(const QVariant Choice) {
+  Settings->SetValue("ResizeDimension",Choice);
+  if (Settings->GetInt("Resize")) {
+    if (Settings->GetInt("AutomaticPipeSize")) {
+      if (!CalculatePipeSize())
+        Update(ptProcessorPhase_Geometry);
+    } else {
+      Update(ptProcessorPhase_Geometry);
+    }
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  }
 }
 
 void CB_ResizeScaleInput(const QVariant Value) {
@@ -5888,9 +5913,9 @@ void CB_CurveOpenButton(const int Channel) {
     return;
   }
   if (Curve[Channel]->m_IntendedChannel != Channel) {
-    const QString IntendedChannel[16] = {"RGB","R","G","B","L","a","b",
+    const QString IntendedChannel[17] = {"RGB","R","G","B","L","a","b",
       "Saturation","Base","After gamma","L by hue","Texture",
-      "Shadows / Highlights","Denoise","Denoise 2","Hue"};
+                                         "Shadows / Highlights","Denoise","Denoise 2","Hue","Outline"};
     QString Message = QObject::tr("This curve is meant for channel ") +
                         IntendedChannel[Curve[Channel]->m_IntendedChannel] +
                         QObject::tr(". Continue anyway ?");
@@ -5951,6 +5976,10 @@ void CB_CurveaOpenButton() {
 
 void CB_CurvebOpenButton() {
   CB_CurveOpenButton(ptCurveChannel_b);
+}
+
+void CB_CurveOutlineOpenButton() {
+  CB_CurveOpenButton(ptCurveChannel_Outline);
 }
 
 void CB_CurveLByHueOpenButton() {
@@ -6046,6 +6075,10 @@ void CB_CurveaSaveButton() {
 
 void CB_CurvebSaveButton() {
   CB_CurveSaveButton(ptCurveChannel_b);
+}
+
+void CB_CurveOutlineSaveButton() {
+  CB_CurveSaveButton(ptCurveChannel_Outline);
 }
 
 void CB_CurveLByHueSaveButton() {
@@ -6158,6 +6191,10 @@ void CB_CurveLaChoice(const QVariant Choice) {
 
 void CB_CurveLbChoice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_b,Choice.toInt());
+}
+
+void CB_CurveOutlineChoice(const QVariant Choice) {
+  CB_CurveChoice(ptCurveChannel_Outline,Choice.toInt());
 }
 
 void CB_CurveLByHueChoice(const QVariant Choice) {
@@ -8380,6 +8417,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LqrVertFirstCheck)
 
   M_Dispatch(ResizeCheck)
+  M_Dispatch(ResizeDimensionChoice)
   M_Dispatch(ResizeScaleInput)
   M_Dispatch(ResizeFilterChoice)
   M_Dispatch(AutomaticPipeSizeCheck)
@@ -8491,6 +8529,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(CurveSaturationChoice)
   M_Dispatch(BaseCurveChoice)
   M_Dispatch(BaseCurve2Choice)
+  M_Dispatch(CurveOutlineChoice)
 
   M_Dispatch(LABTransformChoice)
 
@@ -8676,6 +8715,12 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(ViewLABChoice)
 
+  M_SetAndRunDispatch(OutlineModeChoice)
+  M_SetAndRunDispatch(OutlineSwitchLayerCheck)
+  M_SetAndRunDispatch(OutlineGradientModeChoice)
+  M_SetAndRunDispatch(OutlineWeightInput)
+  M_SetAndRunDispatch(OutlineBlurRadiusInput)
+
   M_Dispatch(ColorcontrastRadiusInput)
   M_Dispatch(ColorcontrastAmountInput)
   M_Dispatch(ColorcontrastOpacityInput)
@@ -8842,6 +8887,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(RGBContrast3ThresholdInput)
 
   M_SetAndRunDispatch(WebResizeChoice)
+  M_SetAndRunDispatch(WebResizeDimensionChoice)
   M_SetAndRunDispatch(WebResizeBeforeGammaCheck)
   M_SetAndRunDispatch(WebResizeScaleInput)
   M_SetAndRunDispatch(WebResizeFilterChoice)

@@ -235,6 +235,8 @@ void ptCurveWindow::SetCurveState(const short state) {
       Settings->SetValue("CurveLa",state); break;
     case ptCurveChannel_b :
       Settings->SetValue("CurveLb",state); break;
+    case ptCurveChannel_Outline :
+      Settings->SetValue("CurveOutline",state); break;
     case ptCurveChannel_LByHue :
       Settings->SetValue("CurveLByHue",state); break;
     case ptCurveChannel_Hue :
@@ -281,6 +283,8 @@ short ptCurveWindow::GetCurveState() {
       State = Settings->GetInt("CurveLa"); break;
     case ptCurveChannel_b :
       State = Settings->GetInt("CurveLb"); break;
+    case ptCurveChannel_Outline :
+      State = Settings->GetInt("CurveOutline"); break;
     case ptCurveChannel_LByHue :
       State = Settings->GetInt("CurveLByHue"); break;
     case ptCurveChannel_Hue :

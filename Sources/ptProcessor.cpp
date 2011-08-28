@@ -1730,6 +1730,29 @@ void ptProcessor::Run(short Phase,
         m_Image_AfterLabEyeCandy->Set(m_Image_AfterLabSN);
       }
 
+      //***************************************************************************
+      // Outline
+
+      if (Settings->ToolIsActive("TabOutline")) {
+        m_ReportProgress(tr("Applying Outline"));
+
+        //Postponed RGBToLab for performance.
+        if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
+          m_Image_AfterLabEyeCandy->RGBToLab();
+
+          TRACEMAIN("Done conversion to LAB at %d ms.",
+                    m_RunTimer.elapsed());
+        }
+
+        m_Image_AfterLabEyeCandy->Outline(Settings->GetInt("OutlineMode"),
+                                          Settings->GetInt("OutlineGradientMode"),
+                                          Curve[ptCurveChannel_Outline],
+                                          Settings->GetDouble("OutlineWeight"),
+                                          Settings->GetDouble("OutlineBlurRadius"),
+                                          Settings->GetInt("OutlineSwitchLayer"));
+
+        TRACEMAIN("Done Outline at %d ms.",m_RunTimer.elapsed());
+      }
 
       //***************************************************************************
       // LByHue Curve
@@ -2886,7 +2909,8 @@ void ptProcessor::RunGeometry(const short StopBefore) {
     float WidthIn = m_Image_AfterGeometry->m_Width;
 
     m_Image_AfterGeometry->ptGMResize(Settings->GetInt("ResizeScale"),
-                                     Settings->GetInt("ResizeFilter"));
+                                      Settings->GetInt("ResizeFilter"),
+                                      Settings->GetInt("ResizeDimension"));
 
     m_ScaleFactor = (float) m_Image_AfterGeometry->m_Width/WidthIn/powf(2.0, Settings->GetInt("Scaled"));
 
