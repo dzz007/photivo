@@ -8039,6 +8039,10 @@ short CLASS Identify() {
 
   identify();
 
+  if (!m_IsRaw) {
+    FCLOSE(m_InputFile);
+  }
+
   return !m_IsRaw;
 }
 

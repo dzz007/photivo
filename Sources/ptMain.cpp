@@ -387,25 +387,29 @@ int photivoMain(int Argc, char *Argv[]) {
 
 // Handle cli arguments
   QString PhotivoCliUsageMsg = QObject::tr(
-    "Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
-    "                [-h] [--new-instance]\n"
-    "Options:\n"
-    "inputfile         Specify the image or settings file to load. Works like -i"
-    "                  for image files and like --pts for settings files."
-    "-i imagefile      Specify image file to load.\n"
-    "-j jobfile        Specify jobfile for batch processing. Job files are created\n"
-    "                  in Photivo and then executed with this option.\n"
-    "-g imagefile      Specify temporary file used for Gimp-to-Photivo export.\n"
-    "                  Internal option, not intended for general use.\n"
-    "                  BEWARE! This option deletes imagefile!\n"
-    "--pts ptsfile     Specify settings file to load with the image. Must be used\n"
-    "                  together with -i."
-    "--new-instance    Allow opening another Photivo instance instead of using a\n"
-    "                  currently running Photivo. Job files are always opened in a\n"
-    "                  new instance.\n"
-    "-h                Display this usage information.\n\n"
-    "For more documentation visit the wiki:\n"
-    "http://photivo.org/photivo/start\n"
+"Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
+"                [-h] [--new-instance]\n"
+"Options:\n"
+"inputfile\n"
+"      Specify the image or settings file to load. Works like -i for image files\n"
+"      and like --pts for settings files.\n"
+"-i imagefile\n"
+"      Specify image file to load.\n"
+"-j jobfile\n"
+"      Specify jobfile for batch processing. Job files are created\n in Photivo\n"
+"      and then executed with this option.\n"
+"--load-and-delete imagefile\n"
+"      Specify temporary file used for Gimp-to-Photivo export. Internal option,\n"
+"      not intended for general use. BEWARE! This option deletes imagefile!\n"
+"--pts ptsfile\n"
+"      Specify settings file to load with the image. Must be used together\n"
+"      with -i.\n"
+"--new-instance\n"
+"      Allow opening another Photivo instance instead of using a currently\n"
+"      running Photivo. Job files are always opened in a new instance.\n"
+"-h\n"
+"      Display this usage information.\n\n"
+"For more documentation visit the wiki: http://photivo.org/photivo/start\n"
   );
 
 #ifdef Q_OS_MAC
@@ -449,7 +453,11 @@ int photivoMain(int Argc, char *Argv[]) {
         TheApplication->sendMessage("::pts::" + PtsFileToOpen);
       }
       if (ImageFileToOpen != "") {
-        TheApplication->sendMessage("::img::" + ImageFileToOpen);
+        if (ImageCleanUp > 0) {
+          TheApplication->sendMessage("::img::" + ImageFileToOpen);
+        } else {
+          TheApplication->sendMessage("::tmp::" + ImageFileToOpen);
+        }
       }
       TheApplication->activateWindow();
       exit(0);
@@ -3334,38 +3342,17 @@ void CB_MenuFileExit(const short) {
     if (!ptConfirmRequest::saveImage()) {
       return;
     }
-//    ptMessageBox msgBox;
-//    msgBox.setIcon(QMessageBox::Question);
-//    msgBox.setWindowTitle("Close Photivo");
-//    msgBox.setText("Do you want to save the current image?");
-//    msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-//    msgBox.setDefaultButton(QMessageBox::Save);
-//    msgBox.move((MainWindow->pos()).x()+(MainWindow->size()).width()/2-msgBox.size().width()/4,
-//                (MainWindow->pos()).y()+(MainWindow->size()).height()/2-msgBox.size().height()/4);
-//    int ret = msgBox.exec();
-
-//    switch (ret) {
-//      case QMessageBox::Save:
-//         // Save was clicked
-//         CB_WritePipeButton();
-//         break;
-//      case QMessageBox::Discard:
-//         // Don't Save was clicked
-//         break;
-//      case QMessageBox::Cancel:
-//         // Cancel was clicked
-//        return;
-//        break;
-//      default:
-//         // should never be reached
-//         break;
-//    }
-
   }
   // clean up the input file if we got just a temp file
   if (Settings->GetInt("HaveImage")==1 && ImageCleanUp == 1) {
     QString OldInputFileName = Settings->GetStringList("InputFileNameList")[0];
-    QFile::remove(OldInputFileName);
+    //DelAndNull(TheDcRaw);
+    bool success = QFile::remove(OldInputFileName);
+    ImageCleanUp--;
+    ptMessageBox::information(0, "TEST",
+      QString("fname: %1\nsuccess %2\niclup: %3")
+      .arg(OldInputFileName).arg(success).arg(ImageCleanUp)
+                              );
   }
 
   // Delete backup settingsfile
