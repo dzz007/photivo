@@ -9,6 +9,7 @@ Michael Munzert (mike photivo org)
 Bernd Schoeler (brother.john photivo org)
 
 Version:
+2011.08.28 Brother John: Adjust Photivo cli
 2011.01.29 Brother John: Ask user for photivo.exe and store in gimprc
 2011.01.27 Brother John: Fixed failing execution of Photivo on Windows.
 2011.01.02 mike: Initial version.
@@ -64,7 +65,7 @@ def plugin_main(image, drawable, visible):
     # Platform dependent full command string for Photivo.
     if system() == "Linux":
         # We can assume Photivo can be called with a simple photivo.
-        command = 'photivo -g "%s"' % (tempfilename)
+        command = 'photivo --load-and-delete "%s"' % (tempfilename)
     
     elif system() == "Windows":
         # There is no way to call Photivo without knowing exactly where it is installed.
