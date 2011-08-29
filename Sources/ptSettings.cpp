@@ -27,6 +27,9 @@
 #include "ptError.h"
 #include "ptRGBTemperature.h"
 #include "ptGuiOptions.h"
+#include "imagespot/ptImageSpotList.h"
+
+extern ptImageSpotList* RepairSpotList;
 
 // Macro for inserting a key into the hash and checking it is a new one.
 #define M_InsertKeyIntoHash(Key,Item)                      \
@@ -1643,7 +1646,10 @@ struct sToolInfo {
 sToolInfo ToolInfo (const QString GuiName) {
   sToolInfo Info = {"N.N.",0,0,0,0};
   // Tab Geometry
-  if (GuiName == "TabLensfunCA") {
+  if (GuiName == "TabSpotRepair") {
+    Info.Name = "Spot Repair";
+    Info.IsActive = RepairSpotList->count() > 0;
+  } else if (GuiName == "TabLensfunCA") {
     Info.Name = "Chromatic Aberration (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunCAModel") != 0;
   } else if (GuiName == "TabLensfunVignette") {

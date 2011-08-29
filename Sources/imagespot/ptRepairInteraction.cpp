@@ -46,7 +46,7 @@ ptRepairInteraction::ptRepairInteraction(QGraphicsView* View, ptRepairSpotListVi
   connect(m_View, SIGNAL(mouseChanged(QMouseEvent*)), this, SLOT(mouseAction(QMouseEvent*)));
   connect(m_View, SIGNAL(keyChanged(QKeyEvent*)), this, SLOT(keyAction(QKeyEvent*)));
 
-  connect(m_ListView, SIGNAL(activated(QModelIndex)), this, SLOT(changeSpot(QModelIndex)));
+  connect(m_ListView, SIGNAL(rowChanged(QModelIndex)), this, SLOT(changeSpot(QModelIndex)));
   changeSpot(m_ListView->currentIndex());
 }
 

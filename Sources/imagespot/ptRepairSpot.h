@@ -24,8 +24,8 @@
 
   \brief Class for storing repair spot data.
 
-  This class stores the data for a single repair spot. The same rules as for ptImageSpot apply,
-  i.e. values you pass to a ptRepairSpot object as well as return values are in current pipe
+  This class stores the data for a single repair spot. The same rules as for \c ptImageSpot apply,
+  i.e. values you pass to a \c ptRepairSpot object as well as return values are in current pipe
   size scale.
 */
 
@@ -60,8 +60,8 @@ public:
   ptRepairSpot(const short isEnabled,
                const uint spotX,
                const uint spotY,
-               const uint radiusW,
-               const uint radiusH,
+               const uint radiusY,
+               const uint radiusX,
                const float angle,
                const uint edgeRadius,
                const float edgeBlur,
@@ -90,15 +90,21 @@ public:
   /*! Sets the repair algorithm. */
   void setAlgorithm(const ptSpotRepairAlgo algorithm) { m_Algorithm = algorithm;printf("#######algo: %d\n",m_Algorithm); }
 
-  /*! Moves the complete spot (including a repairer) to a new position. */
+  /*! Moves the complete spot (including a repairer) to a new position.
+      Coordinates are the topleft position of the spot’s (not the complete shape’s!)
+      bounding rectangle.
+  */
   void setPos(uint x, uint y);
 
   /*! Moves only the repairer to a new position. The spot stays at its original location.
-    Use this function for setting the repairer’s initial position as well.
+      Use this function for setting the repairer’s initial position as well.
+      Coordinates are the topleft position of the repairer’s bounding rectangle.
   */
   void setRepairerPos(const uint x, const uint y);
 
-  /*! Moves only the spot to a new position. The repairer stays at its original location. */
+  /*! Moves only the spot to a new position. The repairer stays at its original location.
+      Coordinates are the topleft position of the spot’s bounding rectangle.
+  */
   void setSpotPos(const uint x, const uint y);
 
   /*! Writes all data to the currently opened ini file.

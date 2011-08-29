@@ -3346,13 +3346,8 @@ void CB_MenuFileExit(const short) {
   // clean up the input file if we got just a temp file
   if (Settings->GetInt("HaveImage")==1 && ImageCleanUp == 1) {
     QString OldInputFileName = Settings->GetStringList("InputFileNameList")[0];
-    //DelAndNull(TheDcRaw);
-    bool success = QFile::remove(OldInputFileName);
+    QFile::remove(OldInputFileName);
     ImageCleanUp--;
-    ptMessageBox::information(0, "TEST",
-      QString("fname: %1\nsuccess %2\niclup: %3")
-      .arg(OldInputFileName).arg(success).arg(ImageCleanUp)
-                              );
   }
 
   // Delete backup settingsfile

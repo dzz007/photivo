@@ -25,10 +25,10 @@
   \brief Base class for storing image spot data.
 
   This class stores the data for a single image spot. Values you pass to a
-  ptImageSpot object must always be in current pipe size scale. Similarly
-  ptImageSpot always return values in current pipe size scale.
+  \c ptImageSpot object must always be in current pipe size scale. Similarly
+  \c ptImageSpot always return values in current pipe size scale.
 
-  Internally (and in the ini file) everything is stored in 1:1 pipe size scale.
+  However, internally (and in the ini file) everything is stored in 1:1 pipe size scale.
 */
 
 #ifndef PTIMAGESPOT_H
@@ -61,21 +61,21 @@ public:
   ptImageSpot(const short isEnabled,
               const uint spotX,
               const uint spotY,
-              const uint radiusW,
-              const uint radiusH,
+              const uint radiusX,
+              const uint radiusY,
               const float angle,
               const uint edgeRadius,
               const float edgeBlur,
               const float opacity);
 
   /*! Returns the spot's rotation angle in degrees clockwise. */
-  inline float angle() const { return m_Angle * (1 >> Settings->GetInt("PipeSize")); }
+  inline float angle() const { return m_Angle; }
 
   /*! Returns the edge blur value. */
-  inline float edgeBlur() const { return m_EdgeBlur; }
+  inline float edgeBlur() const { return m_EdgeSoftness; }
 
   /*! Returns the radius of the blurred outer edge. */
-  inline uint edgeRadius() const { return m_EdgeRadius * (1 >> Settings->GetInt("PipeSize")); }
+  inline uint edgeRadius() const { return m_EdgeRadius >> Settings->GetInt("Scaled"); }
 
   /*! Returns the spot's enabled status. */
   inline short isEnabled() const { return m_IsEnabled; }
@@ -86,12 +86,12 @@ public:
   inline float opactiy() const { return m_Opacity; }
 
   /*! Returns the horizontal radius. */
-  inline uint radiusH() const { return m_RadiusH * (1 >> Settings->GetInt("PipeSize")); }
+  inline uint radiusX() const { return m_RadiusY >> Settings->GetInt("Scaled"); }
 
   /*! Returns the vertical radius. */
-  inline uint radiusW() const { return m_RadiusW * (1 >> Settings->GetInt("PipeSize")); }
+  inline uint radiusY() const { return m_RadiusX >> Settings->GetInt("Scaled"); }
 
-  /*! Returns the spot's center position. */
+  /*! Returns the topleft position of the spot’s bounding rectangle. */
   QPoint pos() const;
 
   /*! Sets the spot's rotation angle in degrees clockwise. */
@@ -103,11 +103,11 @@ public:
   /*! Sets the size of the blurred edge. */
   void setEdgeRadius(uint radius);
 
-  /*! Enables or disables the spot. Disabled spots are ignored when running
-      the pipe. Values are 0 (disabled) or 2 (enabled), corresponding to what QListView
+  /*! Enables or disables the spot. Disabled spots are ignored when running the pipe.
+      Values are \c 0 (disabled) or \c 2 (enabled), corresponding to what \c QListView
       checkboxes use.
   */
-  inline void setEnabled(const short state) { m_IsEnabled = state; printf("######en: %d\n",isEnabled());}
+  inline void setEnabled(const short state) { m_IsEnabled = state; }
 
   /*! Sets the spot's global opacity.
       \param opacity
@@ -117,18 +117,19 @@ public:
   void setOpacity(const float opacity);
 
   /*! Moves the spot to a new position.
+      Coordinates are the topleft position of the spot’s bounding rectangle.
 
       Derived classes should re-implement \c setPos() to move the complete spot including repairers
-      or any other additional elements. The default ptImageSpot implementation moves only spot
-      itself.
+      or any other additional elements. The default \c ptImageSpot implementation moves only the
+      spot itself.
   */
   virtual void setPos(uint x, uint y);
 
   /*! Sets the horizontal radius in pixels. */
-  void setRadiusH(uint radius);
+  void setRadiusX(uint radius);
 
   /*! Sets the vertical radius in pixels. */
-  void setRadiusW(uint radius);
+  void setRadiusY(uint radius);
 
   /*! Writes the spot’s data to the currently opened ini file.
     The ini’s \c WriteArray() must be set appropriately before you use this.
@@ -143,12 +144,12 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 protected:
   float m_Angle;
-  float m_EdgeBlur;
+  float m_EdgeSoftness;
   uint m_EdgeRadius;
   short m_IsEnabled;
   float m_Opacity;  // global transparency percentage
-  uint m_RadiusW;
-  uint m_RadiusH;
+  uint m_RadiusX;
+  uint m_RadiusY;
   QPoint m_Pos;  // Position is the center of the spot
   uint16_t* m_WeightMatrix;
 
