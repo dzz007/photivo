@@ -53,8 +53,8 @@ ptRepairSpot::ptRepairSpot(QSettings* Ini /*= NULL*/)
 ptRepairSpot::ptRepairSpot(const short isEnabled,
                            const uint spotX,
                            const uint spotY,
-                           const uint radiusW,
-                           const uint radiusH,
+                           const uint radiusX,
+                           const uint radiusY,
                            const float angle,
                            const uint edgeRadius,
                            const float edgeBlur,
@@ -63,7 +63,7 @@ ptRepairSpot::ptRepairSpot(const short isEnabled,
                            const short hasRepairer /*= 0*/,
                            const uint repairerX /*= 0*/,
                            const uint repairerY /*= 0*/)
-: ptImageSpot(isEnabled, spotX, spotY, radiusW, radiusH, angle, edgeRadius, edgeBlur, opacity),
+: ptImageSpot(isEnabled, spotX, spotY, radiusX, radiusY, angle, edgeRadius, edgeBlur, opacity),
   m_HasRepairer(hasRepairer),
   m_Algorithm(algorithm)
 {

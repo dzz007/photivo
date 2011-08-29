@@ -36,46 +36,52 @@ extern ptSettings* Settings;
 
 ptImageSpot::ptImageSpot(QSettings* Ini /*= NULL*/)
 : m_Angle(0.0),
-  m_EdgeBlur(0.0),
+  m_EdgeSoftness(0.0),
   m_EdgeRadius(0),
   m_IsEnabled(0),
   m_Opacity(1.0),
-  m_RadiusW(0),
-  m_RadiusH(0),
+  m_RadiusX(0),
+  m_RadiusY(0),
   m_WeightMatrix(NULL)
 {
   m_Pos = QPoint();
 
   if (Ini != NULL) {
     m_Angle = Ini->value("Angle", 0.0).toFloat();
-    m_EdgeBlur = Ini->value("EdgeBlur", 0.0).toFloat();
+    m_EdgeSoftness = Ini->value("EdgeBlur", 0.0).toFloat();
     m_EdgeRadius = Ini->value("EdgeRadius", 0).toUInt();
     m_IsEnabled = Ini->value("IsEnabled", 0).toInt();
     m_Opacity = Ini->value("Opacity", 1.0).toFloat();
-    m_RadiusW = Ini->value("RadiusW", 0).toUInt();
-    m_RadiusH = Ini->value("RadiusH", 0.).toUInt();
+    m_RadiusX = Ini->value("RadiusX", 0).toUInt();
+    m_RadiusY = Ini->value("RadiusY", 0.).toUInt();
     m_Pos.setX(Ini->value("SpotPosX", 0).toInt());
     m_Pos.setY(Ini->value("SpotPosY", 0).toInt());
   }
+  printf("=========spotdata at spot ini constructor===========\n"
+         "x %d  y %d\n"
+         "w %d  h %d\n"
+         "angle %f\n==========================\n",
+         m_Pos.x(), m_Pos.y(), m_RadiusY, m_RadiusX, m_Angle
+         );
 }
 
 ptImageSpot::ptImageSpot(const short isEnabled,
                          const uint spotX,
                          const uint spotY,
-                         const uint radiusW,
-                         const uint radiusH,
+                         const uint radiusX,
+                         const uint radiusY,
                          const float angle,
                          const uint edgeRadius,
                          const float edgeBlur,
                          const float opacity)
 {
   int toFullPipe = 1 << Settings->GetInt("PipeSize");
+  m_EdgeRadius = edgeRadius * toFullPipe;
 
   m_Angle = angle * toFullPipe;
-  m_EdgeRadius = edgeRadius * toFullPipe;
   m_IsEnabled = isEnabled * toFullPipe;
-  m_RadiusW = radiusW * toFullPipe;
-  m_RadiusH = radiusH * toFullPipe;
+  m_RadiusX = radiusX * toFullPipe;
+  m_RadiusY = radiusY * toFullPipe;
 
   m_init = 1;
   m_Pos = QPoint(spotX * toFullPipe, spotY * toFullPipe);
@@ -83,6 +89,13 @@ ptImageSpot::ptImageSpot(const short isEnabled,
   setOpacity(opacity);
   UpdateWeight();
   m_init = 0;
+
+//  printf("=========spotdata at spot normal constructor===========\n"
+//         "x %d  y %d\n"
+//         "w %d  h %d\n"
+//         "angle %f\n==========================\n",
+//         m_Pos.x(), m_Pos.y(), m_RadiusY, m_RadiusX, m_Angle
+//         );
 }
 
 
@@ -93,8 +106,8 @@ ptImageSpot::ptImageSpot(const short isEnabled,
 ///////////////////////////////////////////////////////////////////////////
 
 QPoint ptImageSpot::pos() const {
-  return QPoint(m_Pos.x() * (1 >> Settings->GetInt("PipeSize")),
-                m_Pos.y() * (1 >> Settings->GetInt("PipeSize")) );
+  return QPoint(m_Pos.x() >> Settings->GetInt("Scaled"),
+                m_Pos.y() >> Settings->GetInt("Scaled") );
 }
 
 
@@ -111,11 +124,11 @@ void ptImageSpot::setAngle(float angle) {
 
 void ptImageSpot::setEdgeBlur(const float blur) {
   if (blur > 1.0f) {
-    m_EdgeBlur = 1.0;
+    m_EdgeSoftness = 1.0;
   } else if (blur < 0.0f){
-    m_EdgeBlur = 0.0;
+    m_EdgeSoftness = 0.0;
   } else {
-    m_EdgeBlur = blur;
+    m_EdgeSoftness = blur;
   }
   if (!m_init) {
     UpdateWeight();
@@ -123,17 +136,17 @@ void ptImageSpot::setEdgeBlur(const float blur) {
 }
 
 void ptImageSpot::setEdgeRadius(uint radius) {
-  m_EdgeRadius = radius * (1 << Settings->GetInt("PipeSize"));
+  m_EdgeRadius = radius << Settings->GetInt("Scaled");
   UpdateWeight();
 }
 
-void ptImageSpot::setRadiusH(uint radius) {
-  m_RadiusH = radius * (1 << Settings->GetInt("PipeSize"));
+void ptImageSpot::setRadiusY(uint radius) {
+  m_RadiusY = radius << Settings->GetInt("Scaled");
   UpdateWeight();
 }
 
-void ptImageSpot::setRadiusW(uint radius) {
-  m_RadiusW = radius * (1 << Settings->GetInt("PipeSize"));
+void ptImageSpot::setRadiusX(uint radius) {
+  m_RadiusX = radius << Settings->GetInt("Scaled");
   UpdateWeight();
 }
 
@@ -180,12 +193,12 @@ void ptImageSpot::UpdateWeight() {
 
 void ptImageSpot::WriteToIni(QSettings* Ini) {
   Ini->setValue("Angle", m_Angle);
-  Ini->setValue("EdgeBlur", m_EdgeBlur);
+  Ini->setValue("EdgeBlur", m_EdgeSoftness);
   Ini->setValue("EdgeRadius", m_EdgeRadius);
   Ini->setValue("IsEnabled", m_IsEnabled);
   Ini->setValue("Opacity", m_Opacity);
-  Ini->setValue("RadiusW", m_RadiusW);
-  Ini->setValue("RadiusH", m_RadiusH);
+  Ini->setValue("RadiusX", m_RadiusX);
+  Ini->setValue("RadiusY", m_RadiusY);
   Ini->setValue("SpotPosX", m_Pos.x());
   Ini->setValue("SpotPosY", m_Pos.y());
 }

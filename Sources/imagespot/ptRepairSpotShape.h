@@ -31,6 +31,8 @@
 #include "ptRepairSpot.h"
 
 class ptRepairSpotShape : public QGraphicsItemGroup {
+  friend class ptRepairInteraction;
+
 public:
   explicit ptRepairSpotShape(QGraphicsItem *parent = 0);
   ~ptRepairSpotShape();
@@ -39,9 +41,13 @@ public:
 private:
   QGraphicsItemGroup*   m_SpotGroup;        // container for the spot
   QGraphicsItemGroup*   m_RepairerGroup;    // container for repairer and connector line to spot
+
   QGraphicsEllipseItem* m_Spot;
   QGraphicsEllipseItem* m_SpotBorder;
   QGraphicsRectItem*    m_RadiusHandle;
+  QGraphicsRectItem*    m_PositionHandle;
+  QGraphicsEllipseItem* m_RotationHandle;
+
   QGraphicsEllipseItem* m_Repairer;
   QGraphicsLineItem*    m_Connector;
 

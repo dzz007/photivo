@@ -43,6 +43,9 @@ public:
     */
     explicit ptRepairSpotListView(QWidget *parent = 0);
 
+signals:
+  void rowChanged(const QModelIndex &newRow);
+
 public slots:
   /*! This slot gets called when the delete button of a spot is pressed. */
   void deleteSpot();

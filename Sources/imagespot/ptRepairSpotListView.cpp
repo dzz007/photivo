@@ -47,10 +47,12 @@ void ptRepairSpotListView::currentChanged(const QModelIndex &current, const QMod
 
   MainWindow->UpdateSpotRepairUI();
   QListView::currentChanged(current, previous);
+  emit rowChanged(current);
 }
 
 
 void ptRepairSpotListView::deleteSpot() {
   static_cast<ptRepairSpotModel*>(model())
       ->removeRows(currentIndex().row(), 1, QModelIndex());
+  emit rowChanged(currentIndex());
 }
