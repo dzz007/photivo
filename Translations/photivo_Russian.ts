@@ -1027,13 +1027,13 @@
         <location filename="../Sources/ptGuiOptions.cpp" line="390"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="405"/>
         <source>Color burn</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Затемнение</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="391"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="406"/>
         <source>Color dodge</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Осветление</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="393"/>
@@ -1049,47 +1049,47 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="407"/>
         <source>Darken only</source>
-        <translation type="unfinished"></translation>
+        <translation>Только тёмное</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="408"/>
         <source>Lighten only</source>
-        <translation type="unfinished"></translation>
+        <translation>Только светлое</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="409"/>
         <source>Show outlines</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Показать эскиз</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="414"/>
         <source>Backward finite differences</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Конечные разности назад</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="415"/>
         <source>Centered finite differences</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Центральные конечные разности</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="416"/>
         <source>Forward finite differences</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Конечные разности вперёд</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="417"/>
         <source>Sobel masks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Собел</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="418"/>
         <source>Rotation invariant masks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Инвариантная при вращениях маска</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="419"/>
         <source>Deriche recursive filter</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Рекурсивный фильтр Дерише</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="423"/>
@@ -5190,7 +5190,7 @@ Are you sure?</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="6090"/>
         <source>Outline</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Эскиз</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="6402"/>
@@ -6470,7 +6470,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1737"/>
         <source>Applying Outline</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Эскиз</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1761"/>
@@ -7920,17 +7920,17 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="316"/>
         <source>Color Weight</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Цветовой вес</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="316"/>
         <source>Use AB channels for the outline</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Использовать AB каналы для эскиза</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="317"/>
         <source>Blur radius</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Радиус размытия</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="318"/>
@@ -8427,7 +8427,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="530"/>
         <source>Outline curve</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Кривая для эскиза</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="531"/>
@@ -8482,12 +8482,12 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="542"/>
         <source>Mode for Outline Overlay</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Режим наложения эскиза</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="543"/>
         <source>Method for the Outlines</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Метод получения эскиза</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="544"/>
@@ -8996,12 +8996,12 @@ Useful to avoid losing content through the distortion/geometry tools.
     <message>
         <location filename="../Sources/ptSettings.cpp" line="609"/>
         <source>Switch layers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Поменять слои</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="609"/>
         <source>Outlines or image on top</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Эскиз или изображение сверху</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="610"/>
