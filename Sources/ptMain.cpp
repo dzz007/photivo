@@ -205,6 +205,7 @@ void InitStrings() {
                                                  "*.rw2 *.RW2 *.Rw2 "
                                                  "*.sr2 *.SR2 *.Sr2 "
                                                  "*.srf *.SRF *.Srf "
+                                                 "*.srw *.SRW *.Srw "
                                                  "*.sti *.STI *.Sti "
                                                  "*.tif *.TIF *.Tif "
                                                  "*.x3f *.X3F *.X3f)"
