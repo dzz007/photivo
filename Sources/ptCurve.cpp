@@ -320,6 +320,8 @@ short ptCurve::ReadCurve(const char *FileName) {
         case ptCurveChannel_G :
         case ptCurveChannel_B :
         case ptCurveChannel_L :
+        case ptCurveChannel_a :
+        case ptCurveChannel_b :
         case ptCurveChannel_LByHue :
         case ptCurveChannel_Hue :
         case ptCurveChannel_Texture :
