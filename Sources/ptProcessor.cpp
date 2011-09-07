@@ -2258,7 +2258,7 @@ void ptProcessor::Run(short Phase,
           TempImage->Set(m_Image_TextureOverlay);
 
           // Resize, original sized image in cache
-          TempImage->ptGMResize(m_Image_AfterEyeCandy->m_Width,
+          TempImage->ptGMResizeWH(m_Image_AfterEyeCandy->m_Width,
                                 m_Image_AfterEyeCandy->m_Height,
                                 ptIMFilter_Catrom);
 

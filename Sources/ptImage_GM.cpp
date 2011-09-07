@@ -502,7 +502,9 @@ ptImage* ptImage::ptGMResizeWH(const uint16_t NewWidth,
       assert(0);
   }
 
-  image.zoom(Magick::Geometry(NewWidth, NewHeight));
+//  image.zoom(Magick::Geometry(NewWidth, NewHeight));
+  QString TempString = QString::number(NewWidth) + "x" + QString::number(NewHeight) + "!";
+  image.zoom(TempString.toStdString());
   image.modifyImage();
 
   m_Width  = image.columns();
