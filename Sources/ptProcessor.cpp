@@ -2259,8 +2259,8 @@ void ptProcessor::Run(short Phase,
 
           // Resize, original sized image in cache
           TempImage->ptGMResizeWH(m_Image_AfterEyeCandy->m_Width,
-                                m_Image_AfterEyeCandy->m_Height,
-                                ptIMFilter_Catrom);
+                                  m_Image_AfterEyeCandy->m_Height,
+                                  ptIMFilter_Catrom);
 
           double Value = ((Settings->GetDouble("TextureOverlaySaturation")-1.0)*100);
           double VibranceMixer[3][3];

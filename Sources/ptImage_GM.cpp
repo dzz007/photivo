@@ -368,11 +368,11 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
   if (Mode == ptResizeDimension_Width ||
       (Mode == ptResizeDimension_LongerEdge && WidthLonger)) {
     NewHeight = Height/(double)Width*Size+0.5;
-    NewWidth  = Width;
+    NewWidth  = Size;
   } else if (Mode == ptResizeDimension_Height ||
              (Mode == ptResizeDimension_LongerEdge && !WidthLonger)) {
     NewWidth  = Width/(double)Height*Size+0.5;
-    NewHeight = Height;
+    NewHeight = Size;
   } else return this;
 
   Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
@@ -428,7 +428,9 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
       assert(0);
   }
 
-  image.zoom(Magick::Geometry(NewWidth, NewHeight));
+//  image.zoom(Magick::Geometry(NewWidth, NewHeight));
+  QString TempString = QString::number(NewWidth) + "x" + QString::number(NewHeight) + "!";
+  image.zoom(TempString.toStdString());
   image.modifyImage();
 
   m_Width  = image.columns();
