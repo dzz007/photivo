@@ -3128,7 +3128,7 @@ void CB_MenuFileOpen(const short HaveFile) {
   int OpenError = 0;
   uint16_t InputWidth = 0;
   uint16_t InputHeight = 0;
-  if (TestDcRaw->Identify()){ // Bitmap
+  if (TestDcRaw->Identify() != 0){ // Bitmap
     try {
       Magick::Image image;
 

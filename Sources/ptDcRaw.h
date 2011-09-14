@@ -119,6 +119,10 @@ typedef unsigned long long UINT64;
 #define LONG_BIT (8 * sizeof (long))
 #endif
 
+#include <QDataStream>
+#include <QByteArray>
+#include <QPixmap>
+
 #include "ptDefines.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -307,6 +311,7 @@ public:
   void  ptRebuildHighlights(const short Effort);
   void  ptBlendHighlights();
   void  ptCrop();
+  QPixmap* thumbnail();
 
 
   /*************************************************************************
@@ -316,6 +321,9 @@ public:
   Most of them are useful to be *read* by the user. Don't change them.
   The lower ones are questionable if they should be of interest to the user.
   *************************************************************************/
+
+  QDataStream* m_ThumbStream;
+  QByteArray*  m_ThumbData;
 
   // The image !
   uint16_t    (*m_Image)[4];
