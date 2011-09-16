@@ -171,6 +171,8 @@ private :
   QAction* m_AtnShowTools;
 
   ptVisibleToolsModel* m_VisibleToolsModel;
+  QFileSystemModel*    m_FileSystemModel;
+  QFileSystemModel*    m_FileSystemModel2;
 
   void AnalyzeToolBoxStructure();
   void ShowMovedTools(const QString Title);
@@ -184,6 +186,7 @@ private :
 ////////////////////////////////////////////////////////////////////////////////
 
 private slots:
+  void TreeTest(QModelIndex Index);
   void ResizeTimerExpired();
   void Event0TimerExpired();
   void SaveMenuPipe();
