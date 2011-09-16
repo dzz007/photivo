@@ -120,6 +120,22 @@ ptMainWindow::ptMainWindow(const QString Title)
   //~ ControlsDockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
   //~ addDockWidget(Qt::LeftDockWidgetArea, ControlsDockWidget);
 
+  MainStack->setCurrentWidget(ProcessingPage);
+
+  m_FileSystemModel = new QFileSystemModel;
+  m_FileSystemModel->setRootPath("");
+  m_FileSystemModel->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
+  TreeView->setModel(m_FileSystemModel);
+  TreeView->installEventFilter(this);
+  TreeView->setColumnHidden(1, true);
+  TreeView->setColumnHidden(2, true);
+  TreeView->setColumnHidden(3, true);
+  m_FileSystemModel2 = new QFileSystemModel;
+  m_FileSystemModel2->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
+  m_FileSystemModel2->setRootPath("");
+  ListView->setModel(m_FileSystemModel2);
+  connect(TreeView, SIGNAL(clicked(QModelIndex)), this, SLOT(TreeTest(QModelIndex)));
+
   MainSplitter->setStretchFactor(1,1);
   ViewSplitter->setStretchFactor(0,1);
 
@@ -692,6 +708,11 @@ void ptMainWindow::OnTranslationChoiceChanged(int idx) {
 // Event filter
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::TreeTest(QModelIndex Index) {
+  QString Test = m_FileSystemModel->filePath(TreeView->currentIndex());
+  ListView->setRootIndex(m_FileSystemModel2->index(Test));
+}
 
 bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
 {
@@ -1664,6 +1685,10 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         return;
       }
     }
+  } else if (Event->key()==Qt::Key_Z && Event->modifiers()==Qt::ControlModifier) {
+    MainStack->setCurrentWidget(ThumbnailPage);
+  } else if (Event->key()==Qt::Key_Z && Event->modifiers()==Qt::AltModifier) {
+    MainStack->setCurrentWidget(ProcessingPage);
   }
 
   if (SearchInputWidget->hasFocus() &&
