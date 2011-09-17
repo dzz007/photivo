@@ -70,6 +70,7 @@ private:
 
 
 signals:
+  void newThumbsNotify(const bool isCompleted);
 
 
 public slots:

@@ -77,6 +77,11 @@ public:
   */
   void StartThumbnailer(const QModelIndex index);
 
+  /*! Returns a pointer to the thumbnailer.
+      Use this to connect to the thumbnailer’s \c newThumbsNotify signal
+  */
+  ptFileMgrThumbnailer* thumbnailer() const { return m_Thumbnailer; }
+
   /*! Returns a pointer to the FIFO buffer containing image thumbnails. */
   QQueue<QGraphicsItem>* thumbQueue() { return m_ThumbQueue; }
 

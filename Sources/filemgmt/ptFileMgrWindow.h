@@ -27,6 +27,7 @@
 //==============================================================================
 
 #include <QWidget>
+#include <QGraphicsScene>
 
 #include "ui_ptFileMgrWindow.h"
 #include "ptFileMgrDM.h"
@@ -43,9 +44,11 @@ public:
 
 private:
   ptFileMgrDM*      m_DataModel;
+  QGraphicsScene*   m_FilesScene;
 
 private slots:
   void changeTreeDir(const QModelIndex& index);
+  void fetchNewThumbs(const bool isCompleted);
 
 };
 //==============================================================================

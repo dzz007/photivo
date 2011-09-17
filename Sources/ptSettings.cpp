@@ -1325,7 +1325,7 @@ QWidget* ptSettings::GetGuiWidget(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptSettings::ToDcRaw(DcRaw* TheDcRaw) {
+void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
 
   if (!TheDcRaw) return;
 
@@ -1542,7 +1542,7 @@ void ptSettings::ToDcRaw(DcRaw* TheDcRaw) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptSettings::FromDcRaw(DcRaw* TheDcRaw) {
+void ptSettings::FromDcRaw(ptDcRaw* TheDcRaw) {
 
   if (!TheDcRaw) return;
 
