@@ -20,6 +20,7 @@
 **
 *******************************************************************************/
 
+#include "../ptDefines.h"
 #include "ptFileMgrDM.h"
 
 //==============================================================================
@@ -36,10 +37,10 @@ ptFileMgrDM* ptFileMgrDM::m_Instance = 0;
 
 //==============================================================================
 
-ptFileMgrDM& ptFileMgrDM::Instance_GoC() {
+ptFileMgrDM* ptFileMgrDM::Instance_GoC() {
   if ( m_Instance == 0 ) m_Instance = new ptFileMgrDM();
 
-  return *m_Instance;
+  return m_Instance;
 }
 
 //==============================================================================
@@ -51,7 +52,7 @@ void ptFileMgrDM::Clear() {
 //==============================================================================
 
 void ptFileMgrDM::Instance_Destroy() {
-  if ( m_Instance != 0 ) delete m_Instance;
+  if (m_Instance != 0) delete m_Instance;
 
   m_Instance = 0;
 }

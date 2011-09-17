@@ -23,20 +23,31 @@
 #include "../ptDefines.h"
 #include "ptFileMgrWindow.h"
 
+//==============================================================================
+
 ptFileMgrWindow::ptFileMgrWindow(QWidget *parent): QWidget(parent) {
   setupUi(this);
 
-  FSModel = new QFileSystemModel();
-  FSModel->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
-  FSModel->setRootPath(FSModel->myComputer().toString());
+  // We create our data module
+  m_FileMgrDM = ptFileMgrDM::Instance_GoC();
 
-  DirTree->setModel(FSModel);
-  DirTree->setRootIndex(FSModel->index(FSModel->rootPath()));
+  m_FSModel = new QFileSystemModel();
+  m_FSModel->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
+  m_FSModel->setRootPath(m_FSModel->myComputer().toString());
+
+  DirTree->setModel(m_FSModel);
+  DirTree->setRootIndex(m_FSModel->index(m_FSModel->rootPath()));
   DirTree->setColumnHidden(1, true);
   DirTree->setColumnHidden(2, true);
   DirTree->setColumnHidden(3, true);
 }
 
+//==============================================================================
+
 ptFileMgrWindow::~ptFileMgrWindow() {
-  DelAndNull(FSModel);
+  DelAndNull(m_FSModel);
+
+  ptFileMgrDM::Instance_Destroy();
 }
+
+//==============================================================================
