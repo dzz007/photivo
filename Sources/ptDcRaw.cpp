@@ -65,7 +65,7 @@ assert (RV);                    \
 
 // The class.
 #define CLASS DcRaw::
-CLASS DcRaw() {  
+CLASS ptDcRaw() {  
   printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
 
   // This were the original global variables initialized.
@@ -136,7 +136,7 @@ m_ThumbStream = new QDataStream(m_ThumbData, QIODevice::ReadWrite);
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-CLASS ~DcRaw() {
+CLASS ~ptDcRaw() {
 
 printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
 
@@ -1991,6 +1991,7 @@ void CLASS nokia_load_raw()
 unsigned CLASS pana_bits (int nbits)
 {
   int byte;
+
 
   if (!nbits) return m_pana_bits_vbits=0;
   if (!m_pana_bits_vbits) {
@@ -8263,19 +8264,26 @@ void CLASS jpeg_thumb ()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-short CLASS Identify() {
+short CLASS Identify(const QString NewInputFile = "") {
 
   // This is here to support multiple calls.
   ResetNonUserSettings();
-
   FCLOSE(m_InputFile);
+
+  if (NewInputFile != "") {
+    FREE(m_UserSetting_InputFileName);
+    m_UserSetting_InputFileName =
+      (char*) MALLOC(1+strlen(NewInputFileName.toAscii().data()));
+    ptMemoryError(m_UserSetting_InputFileName,__FILE__,__LINE__);
+    strcpy(m_UserSetting_InputFileName,NewInputFileName.toAscii().data());
+  }
+
   if (!(m_InputFile = fopen (m_UserSetting_InputFileName, "rb"))) {
     perror (m_UserSetting_InputFileName);
     return -1;
   }
 
   identify();
-
   return !m_IsRaw;
 }
 

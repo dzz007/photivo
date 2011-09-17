@@ -76,7 +76,7 @@ using namespace std;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-DcRaw*       TheDcRaw        = NULL;
+ptDcRaw*       TheDcRaw        = NULL;
 ptProcessor* TheProcessor    = NULL;
 
 ptCurve*  RGBGammaCurve     = NULL;
@@ -89,6 +89,8 @@ ptCurve*  BackupCurve[17]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
 // I don't manage to init statically following ones. Done in InitCurves.
 QStringList CurveKeys, CurveToolNameKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
+QStringList FileExtsRaw;
+QStringList FileExtsBitmap;
 
 ptChannelMixer* ChannelMixer = NULL;
 
@@ -583,6 +585,50 @@ int photivoMain(int Argc, char *Argv[]) {
                      << "CurveFileNamesOutline";
 
   CurveBackupKeys = CurveKeys;
+
+  FileExtsRaw << "*.arw" << "*.ARW" << " *.Arw"
+              << "*.bay" << "*.BAY" << "*.Bay"
+              << "*.bmq" << "*.BMQ" << "*.Bmq"
+              << "*.cr2" << "*.CR2" << "*.Cr2"
+              << "*.crw" << "*.CRW" << "*.Crw"
+              << "*.cs1" << "*.CS1" << "*.Cs1"
+              << "*.dc2" << "*.DC2" << "*.Dc2"
+              << "*.dcr" << "*.DCR" << "*.Dcr"
+              << "*.dng" << "*.DNG" << "*.Dng"
+              << "*.erf" << "*.ERF" << "*.Erf"
+              << "*.fff" << "*.FFF" << "*.Fff"
+              << "*.hdr" << "*.HDR" << "*.Hdr"
+              << "*.ia " << "*.IA" << "*.Ia"
+              << "*.k25" << "*.K25"
+              << "*.kc2" << "*.KC2" << "*.Kc2"
+              << "*.kdc" << "*.KDC" << "*.Kdc"
+              << "*.mdc" << "*.MDC" << "*.Mdc"
+              << "*.mef" << "*.MEF" << "*.Mef"
+              << "*.mos" << "*.MOS" << "*.Mos"
+              << "*.mrw" << "*.MRW" << "*.Mrw"
+              << "*.nef" << "*.NEF" << "*.Nef"
+              << "*.orf" << "*.ORF" << "*.Orf"
+              << "*.pef" << "*.PEF" << "*.Pef"
+              << "*.pxn" << "*.PXN" << "*.Pxn"
+              << "*.qtk" << "*.QTK" << "*.Qtk"
+              << "*.raf" << "*.RAF" << "*.Raf"
+              << "*.raw" << "*.RAW" << "*.Raw"
+              << "*.rdc" << "*.RDC" << "*.Rdc"
+              << "*.rw2" << "*.RW2" << "*.Rw2"
+              << "*.sr2" << "*.SR2" << "*.Sr2"
+              << "*.srf" << "*.SRF" << "*.Srf"
+              << "*.srw" << "*.SRW" << "*.Srw"
+              << "*.sti" << "*.STI" << "*.Sti"
+              << "*.tif" << "*.TIF" << "*.Tif"
+              << "*.x3f" << "*.X3F" << "*.X3f";
+
+  FileExtsBitmap << "*.jpeg" << "*.JPEG" << "*.Jpeg "
+                 << "*.jpg" << "*.JPG" << "*.Jpg"
+                 << "*.tiff" << "*.TIFF" << "*.Tiff"
+                 << "*.tif" << "*.TIF" << "*.Tif"
+                 << "*.bmp" << "*.BMP" << "*.Bmp"
+                 << "*.ppm" << "*.PPm" << "*.Ppm";
+
 
   // User home folder, where Photivo stores its ini and all Presets, Curves etc
   // %appdata%\Photivo on Windows, ~/.photivo on Linux or the program folder for the
@@ -2181,7 +2227,7 @@ void RunJob(const QString JobFileName) {
 
   do {
     // Test if we can handle the file
-    DcRaw* TestDcRaw = new(DcRaw);
+    ptDcRaw* TestDcRaw = new(ptDcRaw);
     Settings->ToDcRaw(TestDcRaw);
     int OpenError = 0;
     uint16_t InputWidth = 0;
@@ -3131,7 +3177,7 @@ void CB_MenuFileOpen(const short HaveFile) {
   ReportProgress(QObject::tr("Reading file"));
 
   // Test if we can handle the file
-  DcRaw* TestDcRaw = new(DcRaw);
+  ptDcRaw* TestDcRaw = new(ptDcRaw);
   Settings->ToDcRaw(TestDcRaw);
   int OpenError = 0;
   uint16_t InputWidth = 0;
@@ -3343,7 +3389,7 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
   // Processing the job.
   delete TheDcRaw;
   delete TheProcessor;
-  TheDcRaw = new(DcRaw);
+  TheDcRaw = new(ptDcRaw);
   TheProcessor = new ptProcessor(ReportProgress);
   Settings->SetValue("JobMode",1); // Disable caching to save memory
   TheProcessor->m_DcRaw = TheDcRaw;
@@ -3358,7 +3404,7 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
 
   delete TheDcRaw;
   delete TheProcessor;
-  TheDcRaw = new(DcRaw);
+  TheDcRaw = new(ptDcRaw);
   TheProcessor = new ptProcessor(ReportProgress);
   Settings->SetValue("JobMode",0);
   TheProcessor->m_DcRaw = TheDcRaw;
@@ -3528,7 +3574,7 @@ void GimpExport(const short UsePipe) {
     // Processing the job.
     delete TheDcRaw;
     delete TheProcessor;
-    TheDcRaw = new(DcRaw);
+    TheDcRaw = new(ptDcRaw);
     TheProcessor = new ptProcessor(ReportProgress);
     Settings->SetValue("JobMode",1); // Disable caching to save memory
     TheProcessor->m_DcRaw = TheDcRaw;
@@ -3656,7 +3702,7 @@ void GimpExport(const short UsePipe) {
   } else {
     delete TheDcRaw;
     delete TheProcessor;
-    TheDcRaw = new(DcRaw);
+    TheDcRaw = new(ptDcRaw);
     TheProcessor = new ptProcessor(ReportProgress);
     Settings->SetValue("JobMode",0);
     TheProcessor->m_DcRaw = TheDcRaw;

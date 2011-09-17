@@ -43,6 +43,12 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent): QWidget(parent) {
   DirTree->setColumnHidden(2, true);
   DirTree->setColumnHidden(3, true);
   connect(DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
+
+  // Setup the graphics scene
+  m_FilesScene = new QGraphicsScene;
+  FilesView->setScene(m_FilesScene);
+  connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify(bool)),
+          this, SLOT(fetchNewThumbs(bool)));
 }
 
 //==============================================================================
@@ -57,6 +63,15 @@ ptFileMgrWindow::~ptFileMgrWindow() {
 //==============================================================================
 
 void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
+  m_FilesScene->clear();
+  m_DataModel->thumbQueue()->clear();
+  m_DataModel->StartThumbnailer(DirTree->currentIndex());
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::fetchNewThumbs(const bool isCompleted) {
+  // TODO: (re)fill graphics scene
 }
 
 //==============================================================================

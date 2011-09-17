@@ -26,7 +26,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QTreeView" name="DirTree"/>
-     <widget class="QGraphicsView" name="graphicsView"/>
+     <widget class="QGraphicsView" name="FilesView"/>
     </widget>
    </item>
   </layout>

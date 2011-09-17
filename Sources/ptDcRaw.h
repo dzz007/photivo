@@ -145,7 +145,7 @@ typedef unsigned long long UINT64;
 #endif
 
 
-class DcRaw {
+class ptDcRaw {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // PUBLIC members
@@ -277,17 +277,17 @@ public:
   **************************************************************************/
 
   // Constructor.
-  DcRaw();
+  ptDcRaw();
 
   // Destructor.
-  ~DcRaw();
+  ~ptDcRaw();
 
   // ResetNonUserSettings. (For second entry from Identify on).
   void ResetNonUserSettings();
 
   // Identify the input file, the camera parameters etc.
   // See further for stuff that can be read afterwards.
-  short  Identify();
+  short  Identify(const QString NewInputFile = "");
 
   // Do the raw processing up to the image available.
   short  RunDcRaw_Phase1(); //Load,bad pxs,darkframe.
@@ -480,10 +480,10 @@ public:
   float     m_cmatrix[3][4];
   float     m_MatrixCamRGBToSRGB[3][4];
   double    m_MatrixSRGBToCamRGB[4][3]; // addon photivo
-  void      (DcRaw::*m_WriteThumb)();
-  void      (DcRaw::*m_WriteFunction)();
-  void      (DcRaw::*m_LoadRawFunction)();
-  void      (DcRaw::*m_ThumbLoadRawFunction)();
+  void      (ptDcRaw::*m_WriteThumb)();
+  void      (ptDcRaw::*m_WriteFunction)();
+  void      (ptDcRaw::*m_LoadRawFunction)();
+  void      (ptDcRaw::*m_ThumbLoadRawFunction)();
 
   jmp_buf   m_Failure;
 

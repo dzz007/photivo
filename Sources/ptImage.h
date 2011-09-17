@@ -71,13 +71,13 @@ ptImage();
 // Initialize it via dcraw (from a DcRawObject).
 // By the way , the copying is always deep (and
 // might involve 4->3 color reduction.
-ptImage* Set(const DcRaw*  DcRawObject,
+ptImage* Set(const ptDcRaw*  DcRawObject,
              const short   TargetSpace,
              const char*   ProfileName,
              const int     Intent,
              const int     ProfileGamma);
 // Through connect variant of above (DcRawObject->m_Image as RGB)
-ptImage* Set(const DcRaw*  DcRawObject,
+ptImage* Set(const ptDcRaw*  DcRawObject,
              const short   TargetSpace);
 
 // Just allocation
