@@ -131,7 +131,8 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/ptRichRectInteraction.h \
     ../Sources/ptGridInteraction.h \
     ../Sources/filemgmt/ptFileMgrWindow.h \
-    ../Sources/filemgmt/ptFileMgrDM.h
+    ../Sources/filemgmt/ptFileMgrDM.h \
+    ../Sources/filemgmt/ptFileMgrThumbnailer.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
 HEADERS += ../Sources/ptCheck.h
@@ -187,7 +188,8 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptRichRectInteraction.cpp \
     ../Sources/ptGridInteraction.cpp \
     ../Sources/filemgmt/ptFileMgrWindow.cpp \
-    ../Sources/filemgmt/ptFileMgrDM.cpp
+    ../Sources/filemgmt/ptFileMgrDM.cpp \
+    ../Sources/filemgmt/ptFileMgrThumbnailer.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
 SOURCES += ../Sources/ptChoice.cpp
@@ -289,6 +291,8 @@ TRANSLATIONS += ../Translations/photivo_French.ts
 
 
 ###############################################################################
+
+
 
 
 

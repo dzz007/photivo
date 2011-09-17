@@ -2,6 +2,7 @@
 **
 ** Photivo
 **
+** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
@@ -27,6 +28,11 @@
 
 #include <QObject>
 #include <QPixmap>
+#include <QFileSystemModel>
+#include <QGraphicsItemGroup>
+#include <QQueue>
+
+#include "ptFileMgrThumbnailer.h"
 
 //==============================================================================
 
@@ -55,21 +61,40 @@ void ClearThumbnailData( ptThumbnailData &Data);
 class ptFileMgrDM: public QObject {
 Q_OBJECT
 
-private:
-  static ptFileMgrDM* m_Instance;
-
-  ptFileMgrDM() {}
-  ptFileMgrDM(const ptFileMgrDM&) : QObject() {}
-  ~ptFileMgrDM() {}
-
 public:
   /*! Get or create the singleton instance of \c ptFileMgrDM */
-  static ptFileMgrDM* Instance_GoC();
+  static ptFileMgrDM* GetInstance();
+
   /*! Destroy the singleton instance of \c ptFileMgrDM */
-  static void         Instance_Destroy();
+  static void         DestroyInstance();
 
   /*! Clear the data cache of \c ptFileMgrDM */
   void Clear();
+
+  /*! Starts image thumbnail generation.
+    \param index
+      The QModelIndex corresponding to the directory with the image files.
+  */
+  void StartThumbnailer(const QModelIndex index);
+
+  /*! Returns a pointer to the FIFO buffer containing image thumbnails. */
+  QQueue<QGraphicsItem>* thumbQueue() { return m_ThumbQueue; }
+
+  /*! Returns a pointer to the model with the data for the tree view. */
+  QAbstractItemModel* treeModel() { return m_TreeModel; }
+
+
+private:
+  static ptFileMgrDM* m_Instance;
+
+  ptFileMgrDM();
+  ptFileMgrDM(const ptFileMgrDM&): QObject() {}
+  ~ptFileMgrDM();
+
+  ptFileMgrThumbnailer*   m_Thumbnailer;
+  QQueue<QGraphicsItem>*  m_ThumbQueue;
+  QFileSystemModel*       m_TreeModel;
+
 
 };
 

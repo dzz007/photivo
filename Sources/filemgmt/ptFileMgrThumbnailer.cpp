@@ -21,32 +21,33 @@
 **
 *******************************************************************************/
 
-#ifndef PTFILEMGRWINDOW_h
-#define PTFILEMGRWINDOW_h
+#include "ptFileMgrThumbnailer.h"
 
 //==============================================================================
 
-#include <QWidget>
-
-#include "ui_ptFileMgrWindow.h"
-#include "ptFileMgrDM.h"
+ptFileMgrThumbnailer::ptFileMgrThumbnailer()
+: QThread(),
+  m_Dir(""),
+  m_Queue(NULL)
+{}
 
 //==============================================================================
 
-class ptFileMgrWindow: public QWidget, public Ui::ptFileMgrWindow {
-Q_OBJECT
+void ptFileMgrThumbnailer::setDir(const QString dir) {
+  if (!this->isRunning()) {
+    m_Dir = dir;
+  }
+}
 
-public:
-  explicit ptFileMgrWindow(QWidget *parent = 0);
-  ~ptFileMgrWindow();
-
-
-private:
-  ptFileMgrDM*      m_DataModel;
-
-private slots:
-  void changeTreeDir(const QModelIndex& index);
-
-};
 //==============================================================================
-#endif // PTFILEMGRWINDOW_h
+
+void ptFileMgrThumbnailer::setQueue(QQueue<QGraphicsItem>* queue) {
+  if (!this->isRunning() && queue != NULL) {
+    m_Queue = queue;
+  }
+}
+
+//==============================================================================
+
+ptFileMgrThumbnailer::run() {
+}
