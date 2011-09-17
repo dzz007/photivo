@@ -3,6 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -20,8 +21,13 @@
 **
 *******************************************************************************/
 
+#include <QFileSystemModel>
+
 #include "../ptDefines.h"
+#include "../ptSettings.h"
 #include "ptFileMgrWindow.h"
+
+extern ptSettings* Settings;
 
 //==============================================================================
 
@@ -29,25 +35,28 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent): QWidget(parent) {
   setupUi(this);
 
   // We create our data module
-  m_FileMgrDM = ptFileMgrDM::Instance_GoC();
+  m_DataModel = ptFileMgrDM::GetInstance();
 
-  m_FSModel = new QFileSystemModel();
-  m_FSModel->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
-  m_FSModel->setRootPath(m_FSModel->myComputer().toString());
-
-  DirTree->setModel(m_FSModel);
-  DirTree->setRootIndex(m_FSModel->index(m_FSModel->rootPath()));
+  DirTree->setModel(m_DataModel->treeModel());
+  DirTree->setRootIndex(m_DataModel->treeModel()->index(m_DataModel->treeModel()->rootPath()));
   DirTree->setColumnHidden(1, true);
   DirTree->setColumnHidden(2, true);
   DirTree->setColumnHidden(3, true);
+  connect(DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
 }
 
 //==============================================================================
 
 ptFileMgrWindow::~ptFileMgrWindow() {
-  DelAndNull(m_FSModel);
+  Settings->SetValue("LastFileMgrLocation",
+      qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->filePath(index) );
 
-  ptFileMgrDM::Instance_Destroy();
+  ptFileMgrDM::DestroyInstance();
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
 }
 
 //==============================================================================

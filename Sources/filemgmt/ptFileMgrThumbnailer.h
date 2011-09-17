@@ -21,32 +21,60 @@
 **
 *******************************************************************************/
 
-#ifndef PTFILEMGRWINDOW_h
-#define PTFILEMGRWINDOW_h
+#ifndef PTFILEMGRTHUMBNAILER_H
+#define PTFILEMGRTHUMBNAILER_H
 
 //==============================================================================
 
-#include <QWidget>
-
-#include "ui_ptFileMgrWindow.h"
-#include "ptFileMgrDM.h"
+#include <QThread>
+#include <QQueue>
+#include <QGraphicsItem>
 
 //==============================================================================
 
-class ptFileMgrWindow: public QWidget, public Ui::ptFileMgrWindow {
+/*!
+  \class ptFileMgrThumbnailer
+
+  \brief Generates image thumbnails in a separate thread.
+
+  This class is used by \c ptFileMgrDM to generate image thumbnails in a separate
+  thread. It fills a FIFO buffer with \c QGraphicsItem objects containing the
+  thumbnails.
+*/
+class ptFileMgrThumbnailer: public QThread {
 Q_OBJECT
 
 public:
-  explicit ptFileMgrWindow(QWidget *parent = 0);
-  ~ptFileMgrWindow();
+  explicit ptFileMgrThumbnailer();
+
+  /*! Sets the directory for thumbnail generation.
+      Actual file system query don’t happen until \c run() is called.
+  */
+  void setDir(const QString dir);
+
+  /*! Sets the FIFO buffer where the thumbnails are written to.
+      Note that the buffer is taken as is, i.e. it is not cleared by the
+      thumbnailer.
+  */
+  void setQueue(QQueue<QGraphicsItem>* queue);
+
+
+protected:
+  /*! This function does the actual thumbnail generating. */
+  void run();
 
 
 private:
-  ptFileMgrDM*      m_DataModel;
+  QString m_Dir;
+  QQueue<QGraphicsItem>* m_Queue;
 
-private slots:
-  void changeTreeDir(const QModelIndex& index);
+
+signals:
+
+
+public slots:
+
+
 
 };
-//==============================================================================
-#endif // PTFILEMGRWINDOW_h
+#endif // PTFILEMGRTHUMBNAILER_H
