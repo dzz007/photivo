@@ -63,67 +63,66 @@ assert (RV);                    \
 
 // The class.
 #define CLASS DcRaw::
-CLASS DcRaw() {
+CLASS DcRaw() {  
+  printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
 
-printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
-
-// This were the original global variables initialized.
-// Now moved into constructor.
-// All m_UserSetting* are obviously ,uh, usersettings
-// that were done via the command line parameters.
-m_UserSetting_ShotSelect=0;
-m_UserSetting_MaxMultiplier=0;
-m_UserSetting_Multiplier[0]=0;
-m_UserSetting_Multiplier[1]=0;
-m_UserSetting_Multiplier[2]=0;
-m_UserSetting_Multiplier[3]=0;
-m_UserSetting_HalfSize=0;
-m_UserSetting_HotpixelReduction=0;
-m_UserSetting_BayerDenoise=0;
-m_UserSetting_CfaLineDn=0;
-m_UserSetting_GreenEquil=0;
-m_UserSetting_CaCorrect=0;
-m_UserSetting_CaRed=0;
-m_UserSetting_CaBlue=0;
-m_UserSetting_AutoWb=0;
-m_UserSetting_CameraWb=0;
-m_UserSetting_CameraMatrix=-1;
-m_UserSetting_GreyBox[0] = 0;
-m_UserSetting_GreyBox[1] = 0;
-m_UserSetting_GreyBox[2] = 0xFFFF;
-m_UserSetting_GreyBox[3] = 0xFFFF;
-m_UserSetting_photivo_ClipMode = ptClipMode_Clip;
-m_UserSetting_photivo_ClipParameter = 0;
-m_UserSetting_Quality = 3;
-m_UserSetting_BlackPoint = -1;
-m_UserSetting_Saturation = -1;
-m_UserSetting_InputFileName       = NULL;
-m_UserSetting_DetailView          = 0;
-m_UserSetting_DetailViewCropX     = 0;
-m_UserSetting_DetailViewCropY     = 0;
-m_UserSetting_DetailViewCropW     = 0;
-m_UserSetting_DetailViewCropH     = 0;
-m_UserSetting_BadPixelsFileName   = NULL;
-m_UserSetting_DarkFrameFileName   = NULL;
-m_UserSetting_AdjustMaximum       = 0;
-m_UserSetting_DenoiseThreshold    = 0;
-m_UserSetting_InterpolationPasses = 0;
-m_UserSetting_MedianPasses        = 0;
-m_UserSetting_ESMedianPasses      = 0;
+  // This were the original global variables initialized.
+  // Now moved into constructor.
+  // All m_UserSetting* are obviously ,uh, usersettings
+  // that were done via the command line parameters.
+  m_UserSetting_ShotSelect=0;
+  m_UserSetting_MaxMultiplier=0;
+  m_UserSetting_Multiplier[0]=0;
+  m_UserSetting_Multiplier[1]=0;
+  m_UserSetting_Multiplier[2]=0;
+  m_UserSetting_Multiplier[3]=0;
+  m_UserSetting_HalfSize=0;
+  m_UserSetting_HotpixelReduction=0;
+  m_UserSetting_BayerDenoise=0;
+  m_UserSetting_CfaLineDn=0;
+  m_UserSetting_GreenEquil=0;
+  m_UserSetting_CaCorrect=0;
+  m_UserSetting_CaRed=0;
+  m_UserSetting_CaBlue=0;
+  m_UserSetting_AutoWb=0;
+  m_UserSetting_CameraWb=0;
+  m_UserSetting_CameraMatrix=-1;
+  m_UserSetting_GreyBox[0] = 0;
+  m_UserSetting_GreyBox[1] = 0;
+  m_UserSetting_GreyBox[2] = 0xFFFF;
+  m_UserSetting_GreyBox[3] = 0xFFFF;
+  m_UserSetting_photivo_ClipMode = ptClipMode_Clip;
+  m_UserSetting_photivo_ClipParameter = 0;
+  m_UserSetting_Quality = 3;
+  m_UserSetting_BlackPoint = -1;
+  m_UserSetting_Saturation = -1;
+  m_UserSetting_InputFileName       = NULL;
+  m_UserSetting_DetailView          = 0;
+  m_UserSetting_DetailViewCropX     = 0;
+  m_UserSetting_DetailViewCropY     = 0;
+  m_UserSetting_DetailViewCropW     = 0;
+  m_UserSetting_DetailViewCropH     = 0;
+  m_UserSetting_BadPixelsFileName   = NULL;
+  m_UserSetting_DarkFrameFileName   = NULL;
+  m_UserSetting_AdjustMaximum       = 0;
+  m_UserSetting_DenoiseThreshold    = 0;
+  m_UserSetting_InterpolationPasses = 0;
+  m_UserSetting_MedianPasses        = 0;
+  m_UserSetting_ESMedianPasses      = 0;
 
 
-// Safety settings to have NULL on uninitialized images.
-m_Image = NULL;
-m_Image_AfterPhase1 = NULL;
-m_Image_AfterPhase2 = NULL;
-m_Image_AfterPhase3 = NULL;
-m_Image_AfterPhase4 = NULL;
+  // Safety settings to have NULL on uninitialized images.
+  m_Image = NULL;
+  m_Image_AfterPhase1 = NULL;
+  m_Image_AfterPhase2 = NULL;
+  m_Image_AfterPhase3 = NULL;
+  m_Image_AfterPhase4 = NULL;
 
-// Some other pointers that are in a dynamic environment better NULL.
-m_MetaData    = NULL;
-m_InputFile   = NULL;
+  // Some other pointers that are in a dynamic environment better NULL.
+  m_MetaData    = NULL;
+  m_InputFile   = NULL;
 
-ResetNonUserSettings();
+  ResetNonUserSettings();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,62 +156,90 @@ printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
 ////////////////////////////////////////////////////////////////////////////////
 
 void CLASS ResetNonUserSettings() {
+  // Safety settings to have NULL on uninitialized images.
+  // And freeing the underlying memory (which was long time a leak !)
+  // FREE(NULL) is safe, so the beginsituation is fine too.
+  // FREE implies setting of the pointer to NULL
+  FREE(m_Image);
+  FREE(m_Image_AfterPhase1);
+  FREE(m_Image_AfterPhase2);
+  FREE(m_Image_AfterPhase3);
+  FREE(m_Image_AfterPhase4);
 
-// Safety settings to have NULL on uninitialized images.
-// And freeing the underlying memory (which was long time a leak !)
-// FREE(NULL) is safe, so the beginsituation is fine too.
-// FREE implies setting of the pointer to NULL
-FREE(m_Image);
-FREE(m_Image_AfterPhase1);
-FREE(m_Image_AfterPhase2);
-FREE(m_Image_AfterPhase3);
-FREE(m_Image_AfterPhase4);
+  // Some other pointers that are in a dynamic environment better NULL.
+  // Same remarks as above.
+  FREE(m_MetaData);
+  FCLOSE(m_InputFile);
 
-// Some other pointers that are in a dynamic environment better NULL.
-// Same remarks as above.
-FREE(m_MetaData);
-FCLOSE(m_InputFile);
+  // This was originally in the identify code, but which is called
+  // anyway in the beginning. So this is simply global initialization like
+  // anything else.
 
-// This was originally in the identify code, but which is called
-// anyway in the beginning. So this is simply global initialization like
-// anything else.
+  m_Tiff_Flip = m_Flip = -1; /* 0 is valid, so -1 is unknown */
+  m_Filters = (unsigned)(-1); // hack not to change dcraw.
+  m_RawHeight = m_RawWidth = m_Fuji_Width = m_IsFuji = fuji_layout = cr2_slice[0] = 0;
+  m_WhiteLevel = m_Height = m_Width = m_TopMargin = m_LeftMargin = 0;
+  m_ColorDescriptor[0] = m_Description[0] = m_Artist[0] = m_CameraMake[0] = m_CameraModel[0] = m_CameraModelBis[0] = 0;
+  m_IsoSpeed = m_Shutter = m_Aperture = m_FocalLength = unique_id = 0;
+  m_Tiff_NrIFDs = 0;
+  memset (m_Tiff_IFD, 0, sizeof m_Tiff_IFD);
+  memset (white, 0, sizeof white);
+  m_ThumbOffset = m_ThumbLength = m_ThumbWidth = m_ThumbHeight = 0;
+  m_LoadRawFunction = m_ThumbLoadRawFunction = 0;
+  m_WriteThumb = &CLASS jpeg_thumb;
+  m_Data_Offset = m_MetaLength = m_Tiff_bps = m_Tiff_Compress = 0;
+  m_Kodak_cbpp = zero_after_ff = m_DNG_Version = m_Load_Flags = 0;
+  m_TimeStamp = m_ShotOrder = m_Tiff_Samples = m_BlackLevel = m_IsFoveon = 0;
+  for (int k=0; k<8; k++) m_CBlackLevel[k] = 0;
+  m_MixGreen = m_ProfileLength = data_error = m_ZeroIsBad = 0;
+  m_PixelAspect = m_IsRaw = m_RawColor = 1; m_RawColorPhotivo = 0;
+  m_TileWidth = m_TileLength = INT_MAX;
+  for (int i=0; i < 4; i++) {
+    short c;
+    ASSIGN(m_CameraMultipliers[i], i == 1);
+    ASSIGN(m_PreMultipliers[i], i < 3);
+    ASSIGN(m_D65Multipliers[i], i < 3);
+    for (c=0; c<3; c++) m_cmatrix[c][i] = 0;
+    for (c=0; c<3; c++) m_MatrixCamRGBToSRGB[c][i] = c == i;
+  }
+  m_Colors = 3;
+  for (int i=0; i < 0x4000; i++) m_Curve[i] = i;
 
-m_Tiff_Flip = m_Flip = -1; /* 0 is valid, so -1 is unknown */
-m_Filters = (unsigned)(-1); // hack not to change dcraw.
-m_RawHeight = m_RawWidth = m_Fuji_Width = m_IsFuji = fuji_layout = cr2_slice[0] = 0;
-m_WhiteLevel = m_Height = m_Width = m_TopMargin = m_LeftMargin = 0;
-m_ColorDescriptor[0] = m_Description[0] = m_Artist[0] = m_CameraMake[0] = m_CameraModel[0] = m_CameraModelBis[0] = 0;
-m_IsoSpeed = m_Shutter = m_Aperture = m_FocalLength = unique_id = 0;
-m_Tiff_NrIFDs = 0;
-memset (m_Tiff_IFD, 0, sizeof m_Tiff_IFD);
-memset (white, 0, sizeof white);
-m_ThumbOffset = m_ThumbLength = m_ThumbWidth = m_ThumbHeight = 0;
-m_LoadRawFunction = m_ThumbLoadRawFunction = 0;
-m_WriteThumb = &CLASS jpeg_thumb;
-m_Data_Offset = m_MetaLength = m_Tiff_bps = m_Tiff_Compress = 0;
-m_Kodak_cbpp = zero_after_ff = m_DNG_Version = m_Load_Flags = 0;
-m_TimeStamp = m_ShotOrder = m_Tiff_Samples = m_BlackLevel = m_IsFoveon = 0;
-for (int k=0; k<8; k++) m_CBlackLevel[k] = 0;
-m_MixGreen = m_ProfileLength = data_error = m_ZeroIsBad = 0;
-m_PixelAspect = m_IsRaw = m_RawColor = 1; m_RawColorPhotivo = 0;
-m_TileWidth = m_TileLength = INT_MAX;
-for (int i=0; i < 4; i++) {
-  short c;
-  ASSIGN(m_CameraMultipliers[i], i == 1);
-  ASSIGN(m_PreMultipliers[i], i < 3);
-  ASSIGN(m_D65Multipliers[i], i < 3);
-  for (c=0; c<3; c++) m_cmatrix[c][i] = 0;
-  for (c=0; c<3; c++) m_MatrixCamRGBToSRGB[c][i] = c == i;
-}
-m_Colors = 3;
-for (int i=0; i < 0x4000; i++) m_Curve[i] = i;
+  m_Gamma[0] = 0.45;
+  m_Gamma[1] = 4.50;
+  m_Gamma[2] = 0;
+  m_Gamma[3] = 0;
+  m_Gamma[4] = 0;
+  m_Gamma[5] = 0;
 
-m_Gamma[0] = 0.45;
-m_Gamma[1] = 4.50;
-m_Gamma[2] = 0;
-m_Gamma[3] = 0;
-m_Gamma[4] = 0;
-m_Gamma[5] = 0;
+  m_getbithuff_bitbuf=0;
+  m_getbithuff_reset=0;
+  m_getbithuff_vbits=0;
+  m_ph1_bithuffbitbuf=0;
+  m_ph1_bithuffvbits=0;
+  for (int i = 0; i < 0x4000; i++) m_pana_bits_buf[i] = 0;
+  m_pana_bits_vbits = 0;
+  for (int i = 0; i < 4096; i++) jpeg_buffer[i] = 0;
+  for (int i = 0; i < 128; i++) m_sony_decrypt_pad[i] = 0;
+  m_sony_decrypt_p = 0;
+  for (int i = 0; i < 1024; i++) m_foveon_decoder_huff[i] = 0;
+
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 3; j++) {
+      MatrixXYZToCam[i][j] = 0.0;
+    }
+  }
+
+  ToCamFunctionInited = 0;
+  for (int i = 0; i < 0x20000; i++) ToLABFunctionTable[i] = 0.0;
+  ToLABFunctionInited = 0;
+
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 4; j++) {
+      MatrixCamToXYZ[i][j] = 0.0;
+    }
+  }
+
 }
 
 /*
@@ -624,26 +651,24 @@ int CLASS canon_s2is()
  */
 unsigned CLASS getbithuff(int nbits,uint16_t *huff)
 {
-  static unsigned bitbuf=0;
-  static int vbits=0, reset=0;
   // unsigned c;
   int c;
 
   if (nbits == -1)
-    return bitbuf = vbits = reset = 0;
-  if (nbits == 0 || vbits < 0) return 0;
-  while (!reset && vbits < nbits && (c = fgetc(m_InputFile)) != EOF &&
-    !(reset = zero_after_ff && c == 0xff && fgetc(m_InputFile))) {
-    bitbuf = (bitbuf << 8) + (uint8_t) c;
-    vbits += 8;
+    return m_getbithuff_bitbuf = m_getbithuff_vbits = m_getbithuff_reset = 0;
+  if (nbits == 0 || m_getbithuff_vbits < 0) return 0;
+  while (!m_getbithuff_reset && m_getbithuff_vbits < nbits && (c = fgetc(m_InputFile)) != EOF &&
+    !(m_getbithuff_reset = zero_after_ff && c == 0xff && fgetc(m_InputFile))) {
+    m_getbithuff_bitbuf = (m_getbithuff_bitbuf << 8) + (uint8_t) c;
+    m_getbithuff_vbits += 8;
   }
-  c = bitbuf << (32-vbits) >> (32-nbits);
+  c = m_getbithuff_bitbuf << (32-m_getbithuff_vbits) >> (32-nbits);
   if (huff) {
-    vbits -= huff[c] >> 8;
+    m_getbithuff_vbits -= huff[c] >> 8;
     c = (uint8_t) huff[c];
   } else
-    vbits -= nbits;
-  if (vbits < 0) derror();
+    m_getbithuff_vbits -= nbits;
+  if (m_getbithuff_vbits < 0) derror();
   return c;
 }
 
@@ -1661,23 +1686,21 @@ void CLASS phase_one_load_raw()
 
 unsigned CLASS ph1_bithuff (int nbits, uint16_t *huff)
 {
-  static uint64_t bitbuf=0;
-  static int vbits=0;
   unsigned c;
 
   if (nbits == -1)
-    return bitbuf = vbits = 0;
+    return m_ph1_bithuffbitbuf = m_ph1_bithuffvbits = 0;
   if (nbits == 0) return 0;
-  if (vbits < nbits) {
-    bitbuf = bitbuf << 32 | get4();
-    vbits += 32;
+  if (m_ph1_bithuffvbits < nbits) {
+    m_ph1_bithuffbitbuf = m_ph1_bithuffbitbuf << 32 | get4();
+    m_ph1_bithuffvbits += 32;
   }
-  c = bitbuf << (64-vbits) >> (64-nbits);
+  c = m_ph1_bithuffbitbuf << (64-m_ph1_bithuffvbits) >> (64-nbits);
   if (huff) {
-    vbits -= huff[c] >> 8;
+    m_ph1_bithuffvbits -= huff[c] >> 8;
     return (unsigned char) huff[c];
   }
-  vbits -= nbits;
+  m_ph1_bithuffvbits -= nbits;
   return c;
 }
 #define ph1_bits(n) ph1_bithuff(n,0)
@@ -1933,18 +1956,16 @@ void CLASS nokia_load_raw()
 
 unsigned CLASS pana_bits (int nbits)
 {
-  static uint8_t buf[0x4000];
-  static int vbits;
   int byte;
 
-  if (!nbits) return vbits=0;
-  if (!vbits) {
-    ptfread (buf+m_Load_Flags, 1, 0x4000-m_Load_Flags, m_InputFile);
-    ptfread (buf, 1, m_Load_Flags, m_InputFile);
+  if (!nbits) return m_pana_bits_vbits=0;
+  if (!m_pana_bits_vbits) {
+    ptfread (m_pana_bits_buf+m_Load_Flags, 1, 0x4000-m_Load_Flags, m_InputFile);
+    ptfread (m_pana_bits_buf, 1, m_Load_Flags, m_InputFile);
   }
-  vbits = (vbits - nbits) & 0x1ffff;
-  byte = vbits >> 3 ^ 0x3ff0;
-  return (buf[byte] | buf[byte+1] << 8) >> (vbits & 7) & ~(-1 << nbits);
+  m_pana_bits_vbits = (m_pana_bits_vbits - nbits) & 0x1ffff;
+  byte = m_pana_bits_vbits >> 3 ^ 0x3ff0;
+  return (m_pana_bits_buf[byte] | m_pana_bits_buf[byte+1] << 8) >> (m_pana_bits_vbits & 7) & ~(-1 << nbits);
 }
 
 void CLASS panasonic_load_raw()
@@ -2522,19 +2543,17 @@ void CLASS kodak_thumb_load_raw()
 
 void CLASS sony_decrypt (unsigned *data, int len, int start, int key)
 {
-  static unsigned pad[128], p;
-
   if (start) {
-    for (p=0; p < 4; p++)
-      pad[p] = key = key * 48828125 + 1;
-    pad[3] = pad[3] << 1 | (pad[0]^pad[2]) >> 31;
-    for (p=4; p < 127; p++)
-      pad[p] = (pad[p-4]^pad[p-2]) << 1 | (pad[p-3]^pad[p-1]) >> 31;
-    for (p=0; p < 127; p++)
-      pad[p] = htonl(pad[p]);
+    for (m_sony_decrypt_p=0; m_sony_decrypt_p < 4; m_sony_decrypt_p++)
+      m_sony_decrypt_pad[m_sony_decrypt_p] = key = key * 48828125 + 1;
+    m_sony_decrypt_pad[3] = m_sony_decrypt_pad[3] << 1 | (m_sony_decrypt_pad[0]^m_sony_decrypt_pad[2]) >> 31;
+    for (m_sony_decrypt_p=4; m_sony_decrypt_p < 127; m_sony_decrypt_p++)
+      m_sony_decrypt_pad[m_sony_decrypt_p] = (m_sony_decrypt_pad[m_sony_decrypt_p-4]^m_sony_decrypt_pad[m_sony_decrypt_p-2]) << 1 | (m_sony_decrypt_pad[m_sony_decrypt_p-3]^m_sony_decrypt_pad[m_sony_decrypt_p-1]) >> 31;
+    for (m_sony_decrypt_p=0; m_sony_decrypt_p < 127; m_sony_decrypt_p++)
+      m_sony_decrypt_pad[m_sony_decrypt_p] = htonl(m_sony_decrypt_pad[m_sony_decrypt_p]);
   }
   while (len--)
-    *data++ ^= pad[p++ & 127] = pad[(p+1) & 127] ^ pad[(p+65) & 127];
+    *data++ ^= m_sony_decrypt_pad[m_sony_decrypt_p++ & 127] = m_sony_decrypt_pad[(m_sony_decrypt_p+1) & 127] ^ m_sony_decrypt_pad[(m_sony_decrypt_p+65) & 127];
 }
 
 void CLASS sony_load_raw()
@@ -2823,14 +2842,13 @@ void CLASS redcine_load_raw()
 
 void CLASS foveon_decoder (unsigned size, unsigned code)
 {
-  static unsigned huff[1024];
   struct decode *cur;
   // int i, len;
   unsigned i,len;
 
   if (!code) {
     for (unsigned i=0; i < size; i++)
-      huff[i] = get4();
+      m_foveon_decoder_huff[i] = get4();
     memset (first_decode, 0, sizeof first_decode);
     free_decode = first_decode;
   }
@@ -2841,7 +2859,7 @@ void CLASS foveon_decoder (unsigned size, unsigned code)
   }
   if (code)
     for (i=0; i < size; i++)
-      if (huff[i] == code) {
+      if (m_foveon_decoder_huff[i] == code) {
   cur->leaf = i;
   return;
       }
@@ -9181,8 +9199,6 @@ void CLASS ptRebuildHighlights(const short highlight) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-static double MatrixXYZToCam[4][3];
-static short  ToCamFunctionInited = 0;
 
 void CLASS LabToCam(double Lab[3],uint16_t Cam[4]) {
 
@@ -9241,11 +9257,6 @@ void CLASS LabToCam(double Lab[3],uint16_t Cam[4]) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-// A lookup table used for this purpose.
-// Initialized at the first call.
-static double ToLABFunctionTable[0x20000];
-static short  ToLABFunctionInited = 0;
-static double MatrixCamToXYZ[3][4];
 
 void CLASS CamToLab(uint16_t Cam[4], double Lab[3]) {
 
