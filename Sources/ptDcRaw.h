@@ -504,6 +504,27 @@ public:
   uint16_t  cr2_slice[3];
   uint16_t  sraw_mul[4];
 
+  unsigned    m_getbithuff_bitbuf;
+  int         m_getbithuff_reset;
+  int         m_getbithuff_vbits;
+  uint64_t    m_ph1_bithuffbitbuf;
+  int         m_ph1_bithuffvbits;
+  uint8_t     m_pana_bits_buf[0x4000];
+  int         m_pana_bits_vbits;
+  uint8_t     jpeg_buffer[4096];
+  unsigned    m_sony_decrypt_pad[128];
+  unsigned    m_sony_decrypt_p;
+  unsigned    m_foveon_decoder_huff[1024];
+  double      MatrixXYZToCam[4][3];
+  short       ToCamFunctionInited;
+
+  // A lookup table used for this purpose.
+  // Initialized at the first call.
+  double      ToLABFunctionTable[0x20000];
+  short       ToLABFunctionInited;
+  double      MatrixCamToXYZ[3][4];
+
+
   struct decode {
     struct decode *branch[2];
     int leaf;
