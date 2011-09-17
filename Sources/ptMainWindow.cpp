@@ -1654,15 +1654,16 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (SearchInputWidget->hasFocus()) {
       OnTabProcessingButtonClicked();
       return;
-    } else {
-      if (Settings->GetInt("ShowToolContainer") == 0) {
+    } else if (Settings->GetInt("ShowToolContainer") == 0) {
         Settings->SetValue("ShowToolContainer", 1);
         UpdateSettings();
         return;
-      } else {
-        ::CB_FullScreenButton(0);
-        return;
-      }
+    } else if (Settings->GetInt("FullscreenActive") == 1) {
+      ::CB_FullScreenButton(0);
+      return;
+    } else {
+      ::CB_MenuFileExit(1);
+      return;
     }
   }
 
