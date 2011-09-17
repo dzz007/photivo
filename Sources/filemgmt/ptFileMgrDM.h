@@ -20,30 +20,56 @@
 **
 *******************************************************************************/
 
-/*!
-  \class ptFileMgrDM
-
-  \brief Data module for file management.
-
-*/
-
-//==============================================================================
-
 #ifndef PTFILEMGRDM_h
 #define PTFILEMGRDM_h
 
 //==============================================================================
 
 #include <QObject>
+#include <QPixmap>
 
 //==============================================================================
+
+/*! This \c struct carries all valuable information for each thumbnail. */
+struct ptThumbnailData {
+  QPixmap* Thumbnail;
+  QString  Location;
+};
+
+//==============================================================================
+
+/*! Clear for \c ptThumbnailData. */
+void ClearThumbnailData( ptThumbnailData &Data);
+
+//==============================================================================
+
+/*!
+  \class ptFileMgrDM
+
+  \brief Data module for file management.
+
+  This data module will handle the thumbnail creation and manage the corresponding
+  memory. It's designed as a singleton.
+*/
 
 class ptFileMgrDM: public QObject {
 Q_OBJECT
 
-public:
-
 private:
+  static ptFileMgrDM* m_Instance;
+
+  ptFileMgrDM() {}
+  ptFileMgrDM(const ptFileMgrDM&) : QObject() {}
+  ~ptFileMgrDM() {}
+
+public:
+  /*! Get or create the singleton instance of \c ptFileMgrDM */
+  static ptFileMgrDM& Instance_GoC();
+  /*! Destroy the singleton instance of \c ptFileMgrDM */
+  static void         Instance_Destroy();
+
+  /*! Clear the data cache of \c ptFileMgrDM */
+  void Clear();
 
 };
 
