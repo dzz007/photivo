@@ -21,3 +21,39 @@
 *******************************************************************************/
 
 #include "ptFileMgrDM.h"
+
+//==============================================================================
+
+void ClearThumbnailData( ptThumbnailData &Data) {
+  if (Data.Thumbnail) delete Data.Thumbnail;
+  Data.Thumbnail = 0;
+  Data.Location  = "";
+}
+
+//==============================================================================
+
+ptFileMgrDM* ptFileMgrDM::m_Instance = 0;
+
+//==============================================================================
+
+ptFileMgrDM& ptFileMgrDM::Instance_GoC() {
+  if ( m_Instance == 0 ) m_Instance = new ptFileMgrDM();
+
+  return *m_Instance;
+}
+
+//==============================================================================
+
+void ptFileMgrDM::Clear() {
+  // Dummy
+}
+
+//==============================================================================
+
+void ptFileMgrDM::Instance_Destroy() {
+  if ( m_Instance != 0 ) delete m_Instance;
+
+  m_Instance = 0;
+}
+
+//==============================================================================
