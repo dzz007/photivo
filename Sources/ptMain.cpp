@@ -3423,9 +3423,12 @@ void CB_MenuFileWriteSettings() {
   WriteSettingsFile(FileName);
 }
 
+//==============================================================================
 
 void CB_MenuFileExit(const short) {
-  if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0 && Settings->GetInt("SaveConfirmation")==1) {
+  if (Settings->GetInt("HaveImage") == 1     &&
+      ImageSaved == 0                        &&
+      Settings->GetInt("SaveConfirmation") == 1) {
     ptMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Question);
     msgBox.setWindowTitle("Close Photivo");
@@ -3437,15 +3440,16 @@ void CB_MenuFileExit(const short) {
     int ret = msgBox.exec();
     switch (ret) {
       case QMessageBox::Save:
-         // Save was clicked
+         // "Save" was clicked
          CB_WritePipeButton();
+         // if the image was not saved
+         if (ImageSaved == 0) return;
          break;
       case QMessageBox::Discard:
-         // Don't Save was clicked
+         // "Don't Save" was clicked
          break;
       case QMessageBox::Cancel:
-         // Cancel was clicked
-
+         // "Cancel" was clicked
         return;
         break;
       default:
@@ -3454,13 +3458,14 @@ void CB_MenuFileExit(const short) {
     }
   }
   // clean up the input file if we got just a temp file
-  if (Settings->GetInt("HaveImage")==1 && ImageCleanUp == 1) {
+  if (Settings->GetInt("HaveImage") == 1 &&
+      ImageCleanUp == 1) {
     QString OldInputFileName = Settings->GetStringList("InputFileNameList")[0];
     QFile::remove(OldInputFileName);
   }
 
   // Delete backup settingsfile
-  if (Settings->GetInt("WriteBackupSettings"))
+  if (Settings->GetInt("WriteBackupSettings") == 1)
     QFile::remove(Settings->GetString("UserDirectory")+"/backup.pts");
 
   // Disable manual curves when closing
@@ -3484,8 +3489,6 @@ void CB_MenuFileExit(const short) {
 
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
-
-
 
   ALLOCATED(10000000);
   printf("Exiting Photivo.\n");
