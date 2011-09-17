@@ -49,6 +49,8 @@
 #include "ptTheme.h"
 #include "ptWiener.h"
 #include "qtsingleapplication/qtsingleapplication.h"
+#include "filemgmt/ptFileMgrWindow.h"
+
 #ifdef Q_OS_MAC
     #include <QFileOpenEvent>
 #endif
@@ -120,6 +122,7 @@ ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
 ptCurveWindow*     CurveWindow[17] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptFileMgrWindow*   FileMgrWindow   = NULL;
 
 // Error dialog for segfaults
 ptMessageBox* SegfaultErrorBox;
@@ -800,17 +803,22 @@ int photivoMain(int Argc, char *Argv[]) {
       return ptError_FileOpen;
   }
 
+
+  // Construct windows
   MainWindow =
       new ptMainWindow(QObject::tr("Photivo"));
   QObject::connect(TheApplication, SIGNAL(messageReceived(const QString &)),
           MainWindow,   SLOT(OtherInstanceMessage(const QString &)));
-
 
   ViewWindow =
       new ptViewWindow(MainWindow->ViewFrameCentralWidget, MainWindow);
 
   HistogramWindow =
       new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
+
+  FileMgrWindow = new ptFileMgrWindow(MainWindow->FileManagerPage);
+  MainWindow->FileManagerLayout->addWidget(FileMgrWindow);
+
 
   // Populate Translations combobox
   MainWindow->PopulateTranslationsCombobox(UiLanguages, LangIdx);
