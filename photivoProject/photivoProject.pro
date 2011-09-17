@@ -129,7 +129,8 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/ptLineInteraction.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptRichRectInteraction.h \
-    ../Sources/ptGridInteraction.h
+    ../Sources/ptGridInteraction.h \
+    ../Sources/filemgmt/ptFileMgrWindow.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
 HEADERS += ../Sources/ptCheck.h
@@ -183,7 +184,8 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptLineInteraction.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptRichRectInteraction.cpp \
-    ../Sources/ptGridInteraction.cpp
+    ../Sources/ptGridInteraction.cpp \
+    ../Sources/filemgmt/ptFileMgrWindow.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
 SOURCES += ../Sources/ptChoice.cpp
@@ -270,7 +272,8 @@ SOURCES += ../Sources/vcd/median_filter_new.c
 SOURCES += ../Sources/vcd/refinement.c
 SOURCES += ../Sources/vcd/vcd_interpolate.c
 
-FORMS += ../Sources/ptMainWindow.ui
+FORMS += ../Sources/ptMainWindow.ui \
+    ../Sources/filemgmt/ptFileMgrWindow.ui
 
 RESOURCES += ../photivo.qrc
 
@@ -284,3 +287,6 @@ TRANSLATIONS += ../Translations/photivo_French.ts
 
 
 ###############################################################################
+
+
+

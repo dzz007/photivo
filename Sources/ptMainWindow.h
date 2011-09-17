@@ -105,6 +105,11 @@ public:
   void LoadUISettings(const QString &fileName);
   void SaveUISettings(const QString &fileName) const;
 
+  // Toggle file manager window
+  void OpenFileMgrWindow();
+  void CloseFileMgrWindow();
+
+
   // Make and model are remembered because in
   // case of change the choice of white balances must be redone.
   QString              m_CameraMake;
@@ -171,8 +176,6 @@ private :
   QAction* m_AtnShowTools;
 
   ptVisibleToolsModel* m_VisibleToolsModel;
-  QFileSystemModel*    m_FileSystemModel;
-  QFileSystemModel*    m_FileSystemModel2;
 
   void AnalyzeToolBoxStructure();
   void ShowMovedTools(const QString Title);
@@ -186,7 +189,6 @@ private :
 ////////////////////////////////////////////////////////////////////////////////
 
 private slots:
-  void TreeTest(QModelIndex Index);
   void ResizeTimerExpired();
   void Event0TimerExpired();
   void SaveMenuPipe();
@@ -310,6 +312,7 @@ private slots:
   void OnVisibleToolsLoadButtonClicked();
   void OnVisibleToolsSaveButtonClicked();
 
+  void on_FileManagerButton_clicked();
 };
 
 #endif

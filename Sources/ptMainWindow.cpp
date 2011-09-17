@@ -120,22 +120,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   //~ ControlsDockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
   //~ addDockWidget(Qt::LeftDockWidgetArea, ControlsDockWidget);
 
-  MainStack->setCurrentWidget(ProcessingPage);
-
-  m_FileSystemModel = new QFileSystemModel;
-  m_FileSystemModel->setRootPath("");
-  m_FileSystemModel->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
-  TreeView->setModel(m_FileSystemModel);
-  TreeView->installEventFilter(this);
-  TreeView->setColumnHidden(1, true);
-  TreeView->setColumnHidden(2, true);
-  TreeView->setColumnHidden(3, true);
-  m_FileSystemModel2 = new QFileSystemModel;
-  m_FileSystemModel2->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
-  m_FileSystemModel2->setRootPath("");
-  ListView->setModel(m_FileSystemModel2);
-  connect(TreeView, SIGNAL(clicked(QModelIndex)), this, SLOT(TreeTest(QModelIndex)));
-
   MainSplitter->setStretchFactor(1,1);
   ViewSplitter->setStretchFactor(0,1);
 
@@ -709,11 +693,6 @@ void ptMainWindow::OnTranslationChoiceChanged(int idx) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptMainWindow::TreeTest(QModelIndex Index) {
-  QString Test = m_FileSystemModel->filePath(TreeView->currentIndex());
-  ListView->setRootIndex(m_FileSystemModel2->index(Test));
-}
-
 bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
 {
   if (event->type() == QEvent::ContextMenu) {
@@ -910,6 +889,25 @@ short ptMainWindow::GetCurrentTab() {
 // Translated back to a CB_ function into ptMain
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+//
+// Show/hide file manager window
+//
+
+void ptMainWindow::on_FileManagerButton_clicked() {
+  OpenFileMgrWindow();
+}
+
+void ptMainWindow::OpenFileMgrWindow() {
+  MainStack->setCurrentWidget(FileManagerPage);
+  Settings->SetValue("FileMgrIsOpen", 1);
+}
+
+void ptMainWindow::CloseFileMgrWindow() {
+  MainStack->setCurrentWidget(ProcessingPage);
+  Settings->SetValue("FileMgrIsOpen", 0);
+}
+
 
 //
 // Tabbook switching
@@ -1668,6 +1666,12 @@ void CB_SearchBarEnableCheck(const QVariant State);
 
 // Catch keyboard shortcuts
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
+  if (Settings->GetInt("FileMgrIsOpen") && Event->key() == Qt::Key_Escape) {
+    CloseFileMgrWindow();
+    return;
+  }
+
+
   if (Event->key()==Qt::Key_Escape) {// back to used view
     if (Settings->GetInt("SpecialPreview") != ptSpecialPreview_RGB) {
         CB_SpecialPreviewChoice(ptSpecialPreview_RGB);
@@ -1685,10 +1689,6 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         return;
       }
     }
-  } else if (Event->key()==Qt::Key_Z && Event->modifiers()==Qt::ControlModifier) {
-    MainStack->setCurrentWidget(ThumbnailPage);
-  } else if (Event->key()==Qt::Key_Z && Event->modifiers()==Qt::AltModifier) {
-    MainStack->setCurrentWidget(ProcessingPage);
   }
 
   if (SearchInputWidget->hasFocus() &&
@@ -1739,6 +1739,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         SearchInputWidget->setText("");
         SearchInputWidget->setFocus();
       }
+    } else if (Event->key() == Qt::Key_M && Event->modifiers() == Qt::ControlModifier) {
+      OpenFileMgrWindow();
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::ControlModifier) {
       CB_OpenPresetFileButton();
     } else if (Event->key()==Qt::Key_Q && Event->modifiers()==Qt::ControlModifier) {
