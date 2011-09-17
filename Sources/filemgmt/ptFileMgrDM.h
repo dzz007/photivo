@@ -64,7 +64,7 @@ private:
 
 public:
   /*! Get or create the singleton instance of \c ptFileMgrDM */
-  static ptFileMgrDM& Instance_GoC();
+  static ptFileMgrDM* Instance_GoC();
   /*! Destroy the singleton instance of \c ptFileMgrDM */
   static void         Instance_Destroy();
 

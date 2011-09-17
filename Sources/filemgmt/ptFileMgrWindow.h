@@ -23,12 +23,16 @@
 #ifndef PTFILEMGRWINDOW_h
 #define PTFILEMGRWINDOW_h
 
+//==============================================================================
+
 #include <QWidget>
 //#include <QTreeView>
 #include <QFileSystemModel>
 
 #include "ui_ptFileMgrWindow.h"
+#include "ptFileMgrDM.h"
 
+//==============================================================================
 
 class ptFileMgrWindow: public QWidget, public Ui::ptFileMgrWindow {
 Q_OBJECT
@@ -39,7 +43,11 @@ public:
 
 
 private:
-  QFileSystemModel* FSModel;
+  QFileSystemModel* m_FSModel;
+  ptFileMgrDM*      m_FileMgrDM;
 
 };
+
+//==============================================================================
+
 #endif // PTFILEMGRWINDOW_h
