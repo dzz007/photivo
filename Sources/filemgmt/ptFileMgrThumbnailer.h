@@ -56,7 +56,7 @@ public:
       Note that the buffer is taken as is, i.e. it is not cleared by the
       thumbnailer.
   */
-  void setQueue(QQueue<QGraphicsItem>* queue);
+  void setQueue(QQueue<QGraphicsPixmapItem>* queue);
 
 
 protected:
@@ -66,7 +66,7 @@ protected:
 
 private:
   QString m_Dir;
-  QQueue<QGraphicsItem>* m_Queue;
+  QQueue<QGraphicsPixmapItem>* m_Queue;
 
 
 signals:
