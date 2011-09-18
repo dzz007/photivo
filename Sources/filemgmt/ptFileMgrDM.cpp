@@ -86,6 +86,8 @@ ptFileMgrDM::ptFileMgrDM(): QObject() {
   // Init stuff for thumbnail generation
   m_ThumbQueue = new QQueue;
   m_Thumbnailer = new ptFileMgrThumbnailer;
+  m_Thumbnailer->setQueue(m_ThumbQueue);
+  connect(m_Thumbnailer, SIGNAL(newThumbsNotify(bool)), this, SLOT(fetchNewThumbs(bool)));
 }
 
 //==============================================================================
@@ -95,3 +97,12 @@ ptFileMgrDM::~ptFileMgrDM() {
   DelAndNull(m_ThumbQueue);
   DelAndNull(m_Thumbnailer);
 }
+
+//==============================================================================
+
+void ptFileMgrDM::StartThumbnailer(const QModelIndex index) {
+  m_Thumbnailer->setDir(m_TreeModel->filePath(index));
+  m_Thumbnailer->start();
+}
+
+//==============================================================================

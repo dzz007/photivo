@@ -71,7 +71,17 @@ void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
 //==============================================================================
 
 void ptFileMgrWindow::fetchNewThumbs(const bool isCompleted) {
-  // TODO: (re)fill graphics scene
+  if (m_DataModel->thumbQueue()->isEmpty()) {
+    return;
+  }
+
+  for (int i = 0; i < 4; i++) {
+    m_FilesScene->addItem(m_DataModel->thumbQueue()->dequeue());
+
+    if (m_DataModel->thumbQueue()->isEmpty()) {
+      break;
+    }
+  }
 }
 
 //==============================================================================

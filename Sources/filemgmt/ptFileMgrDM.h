@@ -83,7 +83,7 @@ public:
   ptFileMgrThumbnailer* thumbnailer() const { return m_Thumbnailer; }
 
   /*! Returns a pointer to the FIFO buffer containing image thumbnails. */
-  QQueue<QGraphicsItem>* thumbQueue() { return m_ThumbQueue; }
+  QQueue<QGraphicsPixmapItem>* thumbQueue() { return m_ThumbQueue; }
 
   /*! Returns a pointer to the model with the data for the tree view. */
   QAbstractItemModel* treeModel() { return m_TreeModel; }
@@ -97,7 +97,7 @@ private:
   ~ptFileMgrDM();
 
   ptFileMgrThumbnailer*   m_Thumbnailer;
-  QQueue<QGraphicsItem>*  m_ThumbQueue;
+  QQueue<QGraphicsPixmapItem>*  m_ThumbQueue;
   QFileSystemModel*       m_TreeModel;
 
 

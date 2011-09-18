@@ -27,6 +27,7 @@
 #include <Magick++.h>
 
 #include "../ptDcRaw.h"
+#include "../ptError.h"
 #include "ptFileMgrThumbnailer.h"
 
 extern QStringList FileExtsRaw;
@@ -50,7 +51,7 @@ void ptFileMgrThumbnailer::setDir(const QString dir) {
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::setQueue(QQueue<QGraphicsItem>* queue) {
+void ptFileMgrThumbnailer::setQueue(QQueue<QGraphicsPixmapItem>* queue) {
   if (!this->isRunning() && queue != NULL) {
     m_Queue = queue;
   }
@@ -58,7 +59,7 @@ void ptFileMgrThumbnailer::setQueue(QQueue<QGraphicsItem>* queue) {
 
 //==============================================================================
 
-ptFileMgrThumbnailer::run() {
+void ptFileMgrThumbnailer::run() {
   QDir thumbsDir = QDir(m_Dir);
 
   // Check for properly set directory and buffer
@@ -69,30 +70,48 @@ ptFileMgrThumbnailer::run() {
   thumbsDir.setSorting(QDir::DirsFirst | QDir::Name);
   thumbsDir.setFilter(QDir::AllDirs | QDir::NoDot | QDir::Files);
   thumbsDir.setNameFilters(FileExtsRaw + FileExtsBitmap);
-  QFileInfoList files = QDir::entryInfoList();
+  QFileInfoList files = thumbsDir.entryInfoList();
 
   ptDcRaw dcRaw;
   for (uint i = 0; i < files.count(); i++) {
     QGraphicsPixmapItem* thumbItem = new QGraphicsPixmapItem;
-    QPixmap thumb = NULL;
 
-    if(dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {    // we have a raw image
-      thumb = *dcRaw.thumbnail();
+    // we have a raw image ...
+    if(dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
+      QPixmap* thumb = dcRaw.thumbnail();
+      thumbItem->setPixmap(thumb->scaled(150,150));
+      DelAndNull(thumb);
 
-    } else {    // or we might have a bitmap
+    // ... or a bitmap ...
+    } else {
       try {
-        Magick::Image image;
-        image.ping(files.at(i).absoluteFilePath().toAscii().data());
-        // TODO: load bitmap
+        Magick::Image image(files.at(i).absoluteFilePath().toAscii().data());
 
-      } catch (Magick::Exception &Error) {}   // no supported image file
+        // We want 8bit RGB data without alpha channel, scaled to thumbnail size
+        image.type(Magick::TrueColorType);
+        image.magick("RGB");
+        image.depth(8);
+        image.zoom(Magick::Geometry(150,150));
+
+        // Get the raw image data from GM.
+        uint w = image.columns();
+        uint h = image.rows();
+        uchar (*ImgBuffer)[3] =
+            (uchar (*)[3]) CALLOC(w*h, sizeof(*ImgBuffer));
+        ptMemoryError(ImgBuffer,__FILE__,__LINE__);
+        image.write(0, 0, w, h, "RGB", Magick::CharPixel, ImgBuffer);
+        QPixmap thumb;
+        // Detour via QImage necessary because QPixmap does not allow direct
+        // access to the pixel data.
+        thumb.convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB888));
+        FREE(ImgBuffer);
+        thumbItem->setPixmap(thumb);
+
+      // ... or not a supported image file at all
+      } catch (Magick::Exception &Error) {}
     }
 
-    // scale to thumbnail size and update graphicsitem
-    if (thumb) {
-      thumb = thumb.scaled(150, 150);
-      thumbItem->setPixmap(thumb);
-    }
+    m_Queue->enqueue(thumbItem);
 
     // notification signal that new thumbs are in the queue
     if (i % 5 == 0) {
