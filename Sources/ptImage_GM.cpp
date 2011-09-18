@@ -25,6 +25,7 @@
 #include "ptConstants.h"
 #include "ptError.h"
 #include "ptSettings.h"
+#include "ptCalloc.h"
 
 #include <Magick++.h>
 

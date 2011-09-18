@@ -8,6 +8,7 @@
 
 #include "ptImage.h"
 #include "ptError.h"
+#include "ptCalloc.h"
 
 #ifdef _OPENMP
   #include <omp.h>
@@ -62,7 +63,7 @@ void wtf_channel(float *buf, float **weight_a, const int l, const int width, con
       gbuf(buf, i, j) += (tmp[i-st]*gbuf(buf, i-st, j) + tmp[i]*gbuf(buf, i+st, j))
         /(2.0*(tmp[i-st] + tmp[i]));
     if(i < width) gbuf(buf, i, j) += gbuf(buf, i-st, j)*.5f;
-    FREE(tmp);
+    FREE2(tmp);
   }
 #ifdef _OPENMP
 #pragma omp parallel for default(none) shared(weight_a,buf) schedule(static) //private(ch)
@@ -85,7 +86,7 @@ void wtf_channel(float *buf, float **weight_a, const int l, const int width, con
       gbuf(buf, i, j) += (tmp[j-st]*gbuf(buf, i, j-st) + tmp[j]*gbuf(buf, i, j+st))
         /(2.0*(tmp[j-st] + tmp[j]));
     if(j < height) gbuf(buf, i, j) += gbuf(buf, i, j-st)*.5f;
-    FREE(tmp);
+    FREE2(tmp);
   }
 }
 
@@ -116,7 +117,7 @@ void iwtf_channel(float *buf, float **weight_a, const int l, const int width, co
       gbuf(buf, i, j) += (tmp[j-st]*gbuf(buf, i, j-st) + tmp[j]*gbuf(buf, i, j+st))
         /(tmp[j-st] + tmp[j]);
     if(j < height) gbuf(buf, i, j) += gbuf(buf, i, j-st);
-    FREE(tmp);
+    FREE2(tmp);
   }
 #ifdef _OPENMP
 #pragma omp parallel for default(none) shared(weight_a,buf) schedule(static) //private(ch)
@@ -138,7 +139,7 @@ void iwtf_channel(float *buf, float **weight_a, const int l, const int width, co
       gbuf(buf, i, j) += (tmp[i-st]*gbuf(buf, i-st, j) + tmp[i]*gbuf(buf, i+st, j))
         /(tmp[i-st] + tmp[i]);
     if(i < width) gbuf(buf, i, j) += gbuf(buf, i-st, j);
-    FREE(tmp);
+    FREE2(tmp);
   }
 }
 
@@ -174,7 +175,7 @@ void dt_iop_equalizer_wtf(float *buf, float **weight_a, const int l, const int w
       gbuf(buf, i, j) += (tmp[i-st]*gbuf(buf, i-st, j) + tmp[i]*gbuf(buf, i+st, j))
         /(2.0*(tmp[i-st] + tmp[i]));
     if(i < width) for(ch=0;ch<3;ch++) gbuf(buf, i, j) += gbuf(buf, i-st, j)*.5f;
-    FREE(tmp);
+    FREE2(tmp);
   }
 #ifdef _OPENMP
 #pragma omp parallel for default(none) shared(weight_a,buf) private(ch) schedule(static)
@@ -197,7 +198,7 @@ void dt_iop_equalizer_wtf(float *buf, float **weight_a, const int l, const int w
       gbuf(buf, i, j) += (tmp[j-st]*gbuf(buf, i, j-st) + tmp[j]*gbuf(buf, i, j+st))
         /(2.0*(tmp[j-st] + tmp[j]));
     if(j < height) for(int ch=0;ch<3;ch++) gbuf(buf, i, j) += gbuf(buf, i, j-st)*.5f;
-    FREE(tmp);
+    FREE2(tmp);
   }
 }
 
@@ -227,7 +228,7 @@ void dt_iop_equalizer_iwtf(float *buf, float **weight_a, const int l, const int 
       gbuf(buf, i, j) += (tmp[j-st]*gbuf(buf, i, j-st) + tmp[j]*gbuf(buf, i, j+st))
         /(tmp[j-st] + tmp[j]);
     if(j < height) for(int ch=0;ch<3;ch++) gbuf(buf, i, j) += gbuf(buf, i, j-st);
-    FREE(tmp);
+    FREE2(tmp);
   }
 #ifdef _OPENMP
 #pragma omp parallel for default(none) shared(weight_a,buf) schedule(static)
@@ -249,7 +250,7 @@ void dt_iop_equalizer_iwtf(float *buf, float **weight_a, const int l, const int 
       gbuf(buf, i, j) += (tmp[i-st]*gbuf(buf, i-st, j) + tmp[i]*gbuf(buf, i+st, j))
         /(tmp[i-st] + tmp[i]);
     if(i < width) for(int ch=0;ch<3;ch++) gbuf(buf, i, j) += gbuf(buf, i-st, j);
-    FREE(tmp);
+    FREE2(tmp);
   }
 }
 

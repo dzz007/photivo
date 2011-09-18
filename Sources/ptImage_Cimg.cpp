@@ -25,6 +25,7 @@
 #include "ptImage.h"
 #include "ptConstants.h"
 #include "ptError.h"
+#include "ptCalloc.h"
 #include "ptSettings.h"
 
 #ifdef _OPENMP
