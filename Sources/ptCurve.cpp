@@ -28,6 +28,7 @@
 #include <cmath>
 
 #include "ptDefines.h"
+#include "ptCalloc.h"
 #include "ptCurve.h"
 #include "ptImage.h"
 #include "ptError.h"

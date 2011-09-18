@@ -256,7 +256,7 @@ void ptWienerFilterChannel(ptImage* Image,
                             Mask[i+j*w]*Image->m_Image[i + j * w][0]));
       }
 #pragma omp single
-    FREE (Mask);
+    FREE2(Mask);
   } else {
 #pragma omp for private(i,j) schedule(static)
   for (j = 0; j < h; j++)

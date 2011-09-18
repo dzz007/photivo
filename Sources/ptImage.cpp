@@ -25,7 +25,6 @@
 // which seems a bug in the jpeglib header ?
 #include <cstdlib>
 #include <cstdio>
-#include "ptMessageBox.h"
 #include <QString>
 #include <QTime>
 
@@ -52,9 +51,11 @@
 #endif
 #endif
 
+#include "ptCalloc.h"
 #include "ptConstants.h"
 #include "ptError.h"
 #include "ptImage.h"
+#include "ptMessageBox.h"
 #include "ptResizeFilters.h"
 #include "ptCurve.h"
 #include "ptKernel.h"

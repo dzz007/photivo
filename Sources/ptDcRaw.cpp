@@ -33,6 +33,7 @@
 #include "ptDefines.h"
 #include "ptError.h"
 #include "ptConstants.h"
+#include "ptCalloc.h"
 
 #define NO_JASPER
 #ifndef NO_JASPER
@@ -63,7 +64,7 @@ assert (RV);                    \
 
 // The class.
 #define CLASS DcRaw::
-CLASS DcRaw() {  
+CLASS DcRaw() {
   printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
 
   // This were the original global variables initialized.
