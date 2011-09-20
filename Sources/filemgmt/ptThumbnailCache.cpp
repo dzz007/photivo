@@ -21,14 +21,15 @@
 **
 *******************************************************************************/
 
+#include <QMap>
+
 #include "../ptDefines.h"
 #include "ptThumbnailCache.h"
 
 //==============================================================================
 
 ptThumbnailCache::ptThumbnailCache(const int capacity) {
-  m_Lookup = new QHash<QString, QGraphicsItemGroup*>;
-  m_Queue = new QQueue<QGraphicsItemGroup*>;
+  m_Data = new QHash<QString, ptThumbnailCacheObject*>;
   m_Capacity = capacity;
 }
 
@@ -36,47 +37,85 @@ ptThumbnailCache::ptThumbnailCache(const int capacity) {
 
 ptThumbnailCache::~ptThumbnailCache() {
   Clear();
-  DelAndNull(m_Lookup);
-  DelAndNull(m_Queue);
+  DelAndNull(m_Data);
 }
 
 //==============================================================================
 
 void ptThumbnailCache::Clear() {
-  QGraphicsItemGroup* thumb;
-  foreach(thumb, m_Queue) {
-    delete thumb;
+  QHashIterator<QString, ptThumbnailCacheObject*> i(*m_Data);
+  while (i.hasNext()) {
+    i.next();
+    delete i.value();
   }
-  m_Queue->clear();
-  m_Lookup->clear();
+
+  m_Data->clear();
 }
 
 //==============================================================================
 
-void ptThumbnailCache::EnqueueObject(const QString key, QGraphicsItemGroup* object) {
-  if (m_Queue->count() == m_Capacity) {
-    m_Lookup->remove(m_Lookup->keys(m_Queue->dequeue()).at(0));
-  }
-
-  m_Lookup->insert(key, object);
+void ptThumbnailCache::CacheThumbnail(const QString key, QGraphicsItemGroup* thumbnail) {
+  // TODO: Do we need a deep copy of the ItemGroup to avoid problems with groups that
+  // are still displayed in the scene but might get removed from cache? I.e. how do we
+  // ensure that no ItemGroup can avoid deletion at some point in time?
+  ptThumbnailCacheObject* obj = new ptThumbnailCacheObject;
+  obj->key = key;
+  obj->lastHit = QDateTime::currentDateTime();
+  obj->Thumbnail = thumbnail;
+  m_Data->insert(key, obj);
 }
 
 //==============================================================================
 
-QGraphicsItemGroup* ptThumbnailCache::RequestObject(const QString key) {
-  QGraphicsItemGroup* result = m_Lookup->value(key, NULL);
+QGraphicsItemGroup* ptThumbnailCache::RequestThumbnail(const QString key) {
+  // TODO: same deep copy question as above ;)
+  ptThumbnailCacheObject* co = m_Data->value(key, NULL);
+  QGraphicsItemGroup* result = NULL;
 
-  // if we have a cache hit move that object to first pos in cache queue
-  if (result) {
-    // Search from queue’s end asuming newer entries get requested again more often
-    for (int i = m_Queue->count() - 1; i >= 0 ; i--) {
-      if (m_Queue->at(i) == result) {
-        m_Queue->enqueue(m_Queue->takeAt(i));
+  if (co) {
+    result = co->Thumbnail;
+    co->lastHit = QDateTime::currentDateTime();
+  }
+
+  return result;
+}
+
+//==============================================================================
+
+void ptThumbnailCache::Consolidate() {
+  int overflow = m_Data->size() - m_Capacity;
+
+  // abort when cache is not too full
+  if (overflow <= 0) {
+    return;
+  }
+
+  QMap<QDateTime, QString> killList;
+
+  // We iterate through m_Data and add its items to the kill list until that
+  // list is full. Then we compare the current m_Data item with the last
+  // (i.e. youngest) killList entry to determine if it must be added.
+  QHashIterator<QString, ptThumbnailCacheObject*> i(*m_Data);
+  while (i.hasNext()) {
+    i.next();
+    if (killList.size() < overflow) {
+      killList.insert(i.value()->lastHit, i.value()->key);
+    } else {
+      if (i.value()->lastHit < killList.end().key()) {
+        killList.erase(killList.end());
+        killList.insert(i.value()->lastHit, i.value()->key);
       }
     }
   }
 
-  return result;
+
+  // remove the actual "too old" cache entries
+  QMapIterator<QDateTime, QString> j(killList);
+  while (j.hasNext()) {
+    j.next();
+    ptThumbnailCacheObject* t = m_Data->take(j.value());
+    delete t;
+  }
 }
 
 //==============================================================================
