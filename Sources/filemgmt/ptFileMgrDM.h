@@ -31,21 +31,32 @@
 #include <QFileSystemModel>
 #include <QGraphicsItemGroup>
 #include <QQueue>
+#include <QHash>
 
 #include "ptFileMgrThumbnailer.h"
 
 //==============================================================================
 
-/*! This \c struct carries all valuable information for each thumbnail. */
-struct ptThumbnailData {
-  QPixmap* Thumbnail;
-  QString  Location;
-};
+///*! This \c struct carries all valuable information for each thumbnail. */
+//struct ptThumbnailData {
+//  QString             Path;
+//  QGraphicsItemGroup* Thumbnail;
+//};
+
+///*! This \c struct contains all the necessary information for the thumbnail cache.
+//  The QString key for the hash consists of the full path to the file with its
+//  last modified date attached at the end.
+//*/
+//struct ptThumbnailCache {
+//  QHash<QString, QGraphicsItemGroup*>* Lookup;
+//  QQueue<QGraphicsItemGroup*>* Queue;
+//  uint Capacity;
+//};
 
 //==============================================================================
 
-/*! Clear for \c ptThumbnailData. */
-void ClearThumbnailData( ptThumbnailData &Data);
+///*! Clear for \c ptThumbnailData. */
+//void ClearThumbnailData(ptThumbnailData &Data);
 
 //==============================================================================
 
@@ -57,7 +68,6 @@ void ClearThumbnailData( ptThumbnailData &Data);
   This data module will handle the thumbnail creation and manage the corresponding
   memory. It's designed as a singleton.
 */
-
 class ptFileMgrDM: public QObject {
 Q_OBJECT
 
@@ -66,10 +76,10 @@ public:
   static ptFileMgrDM* GetInstance();
 
   /*! Destroy the singleton instance of \c ptFileMgrDM */
-  static void         DestroyInstance();
+  static void DestroyInstance();
 
-  /*! Clear the data cache of \c ptFileMgrDM */
-  void Clear();
+//  /*! Clear the data cache of \c ptFileMgrDM */
+//  void Clear();
 
   /*! Starts image thumbnail generation.
     \param index
@@ -77,13 +87,19 @@ public:
   */
   void StartThumbnailer(const QModelIndex index);
 
+  /*! Aborts a running thumbnailer thread.
+    Calling this function when the thumbnailer is not currently running
+    does not do any harm. The funtion will then essentially do nothing.
+  */
+  void StopThumbnailer();
+
   /*! Returns a pointer to the thumbnailer.
       Use this to connect to the thumbnailer’s \c newThumbsNotify signal
   */
   ptFileMgrThumbnailer* thumbnailer() const { return m_Thumbnailer; }
 
   /*! Returns a pointer to the FIFO buffer containing image thumbnails. */
-  QQueue<QGraphicsPixmapItem>* thumbQueue() { return m_ThumbQueue; }
+  QQueue<QGraphicsItemGroup*>* thumbQueue() { return m_ThumbQueue; }
 
   /*! Returns a pointer to the model with the data for the tree view. */
   QAbstractItemModel* treeModel() { return m_TreeModel; }
@@ -96,9 +112,10 @@ private:
   ptFileMgrDM(const ptFileMgrDM&): QObject() {}
   ~ptFileMgrDM();
 
-  ptFileMgrThumbnailer*   m_Thumbnailer;
-  QQueue<QGraphicsPixmapItem>*  m_ThumbQueue;
-  QFileSystemModel*       m_TreeModel;
+//  ptThumbnailCache              m_Cache;
+  ptFileMgrThumbnailer*         m_Thumbnailer;
+  QQueue<QGraphicsItemGroup*>*  m_ThumbQueue;
+  QFileSystemModel*             m_TreeModel;
 
 
 };

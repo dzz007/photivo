@@ -21,35 +21,32 @@
 **
 *******************************************************************************/
 
-#ifndef PTFILEMGRWINDOW_h
-#define PTFILEMGRWINDOW_h
+#ifndef PTTHUMBNAILCACHE_H
+#define PTTHUMBNAILCACHE_H
 
 //==============================================================================
 
-#include <QWidget>
-#include <QGraphicsScene>
-
-#include "ui_ptFileMgrWindow.h"
-#include "ptFileMgrDM.h"
+#include <QGraphicsItemGroup>
+#include <QQueue>
+#include <QHash>
 
 //==============================================================================
 
-class ptFileMgrWindow: public QWidget, public Ui::ptFileMgrWindow {
-Q_OBJECT
-
+class ptThumbnailCache {
 public:
-  explicit ptFileMgrWindow(QWidget *parent = 0);
-  ~ptFileMgrWindow();
-
+  ptThumbnailCache(const int capacity);
+  ~ptThumbnailCache();
+  void Clear();
+  void EnqueueObject(const QString key, QGraphicsItemGroup* object);
+  QGraphicsItemGroup* RequestObject(const QString key);
 
 private:
-  ptFileMgrDM*      m_DataModel;
-  QGraphicsScene*   m_FilesScene;
-
-private slots:
-  void changeTreeDir(const QModelIndex& index);
-  void fetchNewThumbs();
+  QHash<QString, QGraphicsItemGroup*>* m_Lookup;
+  QQueue<QGraphicsItemGroup*>* m_Queue;
+  int m_Capacity;
 
 };
+
 //==============================================================================
-#endif // PTFILEMGRWINDOW_h
+
+#endif // PTTHUMBNAILCACHE_H
