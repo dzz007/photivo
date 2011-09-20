@@ -57,10 +57,9 @@ ptFileMgrDM* ptFileMgrDM::GetInstance() {
 
 //==============================================================================
 
-//void ptFileMgrDM::Clear() {
-//  m_Cache.Lookup->clear();
-//  m_Cache.Queue->clear();
-//}
+void ptFileMgrDM::Clear() {
+  m_Cache->Clear();
+}
 
 //==============================================================================
 
@@ -97,11 +96,9 @@ ptFileMgrDM::ptFileMgrDM()
   m_Thumbnailer = new ptFileMgrThumbnailer;
   m_Thumbnailer->setQueue(m_ThumbQueue);
 
-//  // Init thumbnail cache
-//  m_Cache.Lookup = new QHash<QString, QGraphicsItemGroup*>;
-//  m_Cache.Queue = new QQueue<QGraphicsItemGroup*>;
-//  m_Cache.Capacity = 5000;
-//  m_Thumbnailer->setCache(&m_Cache);
+  // Init thumbnail cache
+  m_Cache = new ptThumbnailCache(1000);
+  m_Thumbnailer->setCache(m_Cache);
 }
 
 //==============================================================================
@@ -110,8 +107,7 @@ ptFileMgrDM::~ptFileMgrDM() {
   DelAndNull(m_TreeModel);
   DelAndNull(m_ThumbQueue);
   DelAndNull(m_Thumbnailer);
-//  DelAndNull(m_Cache.Lookup);
-//  DelAndNull(m_Cache.Queue);
+  DelAndNull(m_Cache);
 }
 
 //==============================================================================

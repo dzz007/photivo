@@ -30,7 +30,7 @@
 #include <QQueue>
 #include <QGraphicsItemGroup>
 
-//#include "ptFileMgrDM.h"
+#include "ptThumbnailCache.h"
 
 //==============================================================================
 
@@ -50,8 +50,8 @@ public:
   /*! Creates an empty ptFileMgrThumbnailer object. */
   explicit ptFileMgrThumbnailer();
 
-//  /*! Sets the cache for thumbnail objects. */
-//  void setCache(ptThumbnailCache* cache);
+  /*! Sets the cache for thumbnail objects. */
+  void setCache(ptThumbnailCache* cache);
 
   /*! Sets the directory for thumbnail generation.
       Actual file system query don’t happen until \c run() is called.
@@ -71,7 +71,7 @@ protected:
 
 
 private:
-//  ptThumbnailCache* m_Cache;
+  ptThumbnailCache* m_Cache;
   QString m_Dir;
   QQueue<QGraphicsItemGroup*>* m_Queue;
 

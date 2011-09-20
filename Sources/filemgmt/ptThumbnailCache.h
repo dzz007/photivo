@@ -27,22 +27,58 @@
 //==============================================================================
 
 #include <QGraphicsItemGroup>
-#include <QQueue>
 #include <QHash>
+#include <QDateTime>
+
+//==============================================================================
+
+struct ptThumbnailCacheObject {
+  QGraphicsItemGroup* Thumbnail;
+  QDateTime           lastHit;
+  QString             key;    // full path + last modified time
+};
 
 //==============================================================================
 
 class ptThumbnailCache {
 public:
+  /*! Creates a \c ptThumbnailCache instance.
+    \param capacity
+      The maximum number of entries in the cache. When the cache is full, objects
+      that have not been hit the longest are removed first.
+  */
   ptThumbnailCache(const int capacity);
+
+  /*! Destroys a \c ptThumbnailCache object. */
   ~ptThumbnailCache();
+
+  /*! Removes all entries from the cache. */
   void Clear();
-  void EnqueueObject(const QString key, QGraphicsItemGroup* object);
-  QGraphicsItemGroup* RequestObject(const QString key);
+
+  /*! Adds a new entry to the cache.
+    \param key
+      A unique identifier for this entry. You should use the full path name of the
+      resp. image file immediately followed by its last modified date. The date is
+      necessary to catch changed/replaced files with the same path.
+    \param thumbnail
+      A pointer to the \c QGraphicsItemGroup object that should be cached.
+  */
+  void CacheThumbnail(const QString key, QGraphicsItemGroup* thumbnail);
+
+  /*! Removes the oldest (i.e. least recently hit) entries from the cache,
+      if there are more entries than the capacity.
+  */
+  void Consolidate();
+
+  /*! Request a cache entry for the given \c key.
+      If a corresponding entry is found a pointer to the appropriate
+      \c QGraphicsItemGroup object is returned, otherwise a NULL pointer.
+  */
+  QGraphicsItemGroup* RequestThumbnail(const QString key);
+
 
 private:
-  QHash<QString, QGraphicsItemGroup*>* m_Lookup;
-  QQueue<QGraphicsItemGroup*>* m_Queue;
+  QHash<QString, ptThumbnailCacheObject*>* m_Data;
   int m_Capacity;
 
 };

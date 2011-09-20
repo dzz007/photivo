@@ -34,6 +34,7 @@
 #include <QHash>
 
 #include "ptFileMgrThumbnailer.h"
+#include "ptThumbnailCache.h"
 
 //==============================================================================
 
@@ -78,8 +79,8 @@ public:
   /*! Destroy the singleton instance of \c ptFileMgrDM */
   static void DestroyInstance();
 
-//  /*! Clear the data cache of \c ptFileMgrDM */
-//  void Clear();
+  /*! Clear the data cache of \c ptFileMgrDM */
+  void Clear();
 
   /*! Starts image thumbnail generation.
     \param index
@@ -112,7 +113,7 @@ private:
   ptFileMgrDM(const ptFileMgrDM&): QObject() {}
   ~ptFileMgrDM();
 
-//  ptThumbnailCache              m_Cache;
+  ptThumbnailCache*             m_Cache;
   ptFileMgrThumbnailer*         m_Thumbnailer;
   QQueue<QGraphicsItemGroup*>*  m_ThumbQueue;
   QFileSystemModel*             m_TreeModel;

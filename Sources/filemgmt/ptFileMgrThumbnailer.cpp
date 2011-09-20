@@ -45,14 +45,12 @@ ptFileMgrThumbnailer::ptFileMgrThumbnailer()
 
 //==============================================================================
 
-//void ptFileMgrThumbnailer::setCache(ptThumbnailCache* cache) {
-//  if (!this->isRunning() &&
-//      cache->Lookup != NULL &&
-//      cache->Queue != NULL)
-//  {
-//    m_Cache = cache;
-//  }
-//}
+void ptFileMgrThumbnailer::setCache(ptThumbnailCache* cache) {
+  if (!this->isRunning() && cache != NULL)
+  {
+    m_Cache = cache;
+  }
+}
 
 //==============================================================================
 
