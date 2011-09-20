@@ -45,6 +45,7 @@ ptRepairSpotModel::ptRepairSpotModel(ptImageSpotList* SpotList, const QSize Size
   }
 }
 
+
 bool ptRepairSpotModel::setData(const QModelIndex &index, const QVariant &value, int role) {
   return QStandardItemModel::setData(index, value, role);
 
@@ -73,4 +74,25 @@ bool ptRepairSpotModel::removeRows(int row, int count, const QModelIndex &parent
   bool success = QStandardItemModel::removeRows(row, count, parent);
   endRemoveRows();
   return success;
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Drag & Drop
+//
+///////////////////////////////////////////////////////////////////////////
+
+Qt::ItemFlags ptRepairSpotModel::flags(const QModelIndex &index) const {
+  Qt::ItemFlags defaultFlags = QStandardItemModel::flags(index);
+
+  if (index.isValid())
+    return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
+  else
+    return Qt::ItemIsDropEnabled | defaultFlags;
+}
+
+
+Qt::DropActions ptRepairSpotModel::supportedDropActions() const {
+  return Qt::MoveAction;
 }

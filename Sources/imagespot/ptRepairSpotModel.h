@@ -45,11 +45,15 @@ public:
   */
   explicit ptRepairSpotModel(ptImageSpotList* SpotList, const QSize SizeHint);
 
+  Qt::ItemFlags flags(const QModelIndex &index) const;
+
   /*! Update an item and the underlying spot repair data.  */
   bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
   /*! Returns a pointer to the \c ptImageSpotList associated with the model. */
   inline ptImageSpotList* spotList() { return m_SpotList; }
+
+  Qt::DropActions supportedDropActions() const;
 
   /*! Remove one or more items from the model and delete the underlying repair spots. */
   bool removeRows(int row, int count, const QModelIndex &parent);
