@@ -28,6 +28,7 @@
 
 #include "../ptDcRaw.h"
 #include "../ptError.h"
+#include "../ptDefines.h"
 #include "ptFileMgrThumbnailer.h"
 
 extern QStringList FileExtsRaw;
@@ -38,8 +39,20 @@ extern QStringList FileExtsBitmap;
 ptFileMgrThumbnailer::ptFileMgrThumbnailer()
 : QThread(),
   m_Dir(""),
+  m_Cache(NULL),
   m_Queue(NULL)
 {}
+
+//==============================================================================
+
+//void ptFileMgrThumbnailer::setCache(ptThumbnailCache* cache) {
+//  if (!this->isRunning() &&
+//      cache->Lookup != NULL &&
+//      cache->Queue != NULL)
+//  {
+//    m_Cache = cache;
+//  }
+//}
 
 //==============================================================================
 
@@ -51,7 +64,7 @@ void ptFileMgrThumbnailer::setDir(const QString dir) {
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::setQueue(QQueue<QGraphicsPixmapItem>* queue) {
+void ptFileMgrThumbnailer::setQueue(QQueue<QGraphicsItemGroup*>* queue) {
   if (!this->isRunning() && queue != NULL) {
     m_Queue = queue;
   }
@@ -62,8 +75,8 @@ void ptFileMgrThumbnailer::setQueue(QQueue<QGraphicsPixmapItem>* queue) {
 void ptFileMgrThumbnailer::run() {
   QDir thumbsDir = QDir(m_Dir);
 
-  // Check for properly set directory and buffer
-  if (!thumbsDir.exists() || m_Queue == NULL) {
+  // Check for properly set directory, cache and buffer
+  if (!thumbsDir.exists() || m_Queue == NULL /*|| m_Cache == NULL*/) {
     return;
   }
 
@@ -73,14 +86,17 @@ void ptFileMgrThumbnailer::run() {
   QFileInfoList files = thumbsDir.entryInfoList();
 
   ptDcRaw dcRaw;
-  for (uint i = 0; i < files.count(); i++) {
-    QGraphicsPixmapItem* thumbItem = new QGraphicsPixmapItem;
+  for (uint i = 0; i < (uint)files.count(); i++) {
+    QGraphicsItemGroup* thumbGroup = new QGraphicsItemGroup;
+    QGraphicsPixmapItem* thumbPixmap = new QGraphicsPixmapItem;
+
 
     // we have a raw image ...
     if(dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
-      QPixmap* thumb = dcRaw.thumbnail();
-      thumbItem->setPixmap(thumb->scaled(150,150));
-      DelAndNull(thumb);
+      QPixmap* px = dcRaw.thumbnail();
+      thumbPixmap->setPixmap(px->scaled(150,150));
+      DelAndNull(px);
+
 
     // ... or a bitmap ...
     } else {
@@ -88,36 +104,46 @@ void ptFileMgrThumbnailer::run() {
         Magick::Image image(files.at(i).absoluteFilePath().toAscii().data());
 
         // We want 8bit RGB data without alpha channel, scaled to thumbnail size
-        image.type(Magick::TrueColorType);
-        image.magick("RGB");
         image.depth(8);
+        image.magick("RGB");
+        image.type(Magick::TrueColorType);
         image.zoom(Magick::Geometry(150,150));
 
         // Get the raw image data from GM.
         uint w = image.columns();
         uint h = image.rows();
-        uchar (*ImgBuffer)[3] =
-            (uchar (*)[3]) CALLOC(w*h, sizeof(*ImgBuffer));
+        uchar* ImgBuffer = (uchar*)MALLOC(w * h * 3);
         ptMemoryError(ImgBuffer,__FILE__,__LINE__);
         image.write(0, 0, w, h, "RGB", Magick::CharPixel, ImgBuffer);
-        QPixmap thumb;
+        QPixmap px;
         // Detour via QImage necessary because QPixmap does not allow direct
         // access to the pixel data.
-        thumb.convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB888));
+        px.convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB888));
         FREE(ImgBuffer);
-        thumbItem->setPixmap(thumb);
+        thumbPixmap->setPixmap(px);
+
 
       // ... or not a supported image file at all
-      } catch (Magick::Exception &Error) {}
+      } catch (Magick::Exception &Error) {
+        DelAndNull(thumbPixmap);
+        DelAndNull(thumbGroup);
+      }
     }
 
-    m_Queue->enqueue(thumbItem);
 
-    // notification signal that new thumbs are in the queue
+    if (thumbGroup) {
+      m_Queue->enqueue(thumbGroup);
+    }
+
+    // Notification signal that new thumbs are in the queue. Emitted every
+    // five images. ptFileMgrWindow also reads in five image blocks.
     if (i % 5 == 0) {
-      emit newThumbsNotify(false);
+      emit newThumbsNotify();
     }
   }
 
-  emit newThumbsNotify(true);
+  // final notification to make sure the queue gets completely emptied
+  emit newThumbsNotify();
 }
+
+//==============================================================================

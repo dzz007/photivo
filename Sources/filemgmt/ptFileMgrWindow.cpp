@@ -36,9 +36,10 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent): QWidget(parent) {
 
   // We create our data module
   m_DataModel = ptFileMgrDM::GetInstance();
+  QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
 
-  DirTree->setModel(m_DataModel->treeModel());
-  DirTree->setRootIndex(m_DataModel->treeModel()->index(m_DataModel->treeModel()->rootPath()));
+  DirTree->setModel(fsmodel);
+  DirTree->setRootIndex(fsmodel->index(fsmodel->rootPath()));
   DirTree->setColumnHidden(1, true);
   DirTree->setColumnHidden(2, true);
   DirTree->setColumnHidden(3, true);
@@ -55,7 +56,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent): QWidget(parent) {
 
 ptFileMgrWindow::~ptFileMgrWindow() {
   Settings->SetValue("LastFileMgrLocation",
-      qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->filePath(index) );
+      qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->filePath(DirTree->currentIndex()) );
 
   ptFileMgrDM::DestroyInstance();
 }
@@ -63,6 +64,7 @@ ptFileMgrWindow::~ptFileMgrWindow() {
 //==============================================================================
 
 void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
+  m_DataModel->StopThumbnailer();
   m_FilesScene->clear();
   m_DataModel->thumbQueue()->clear();
   m_DataModel->StartThumbnailer(DirTree->currentIndex());
@@ -70,7 +72,7 @@ void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
 
 //==============================================================================
 
-void ptFileMgrWindow::fetchNewThumbs(const bool isCompleted) {
+void ptFileMgrWindow::fetchNewThumbs() {
   if (m_DataModel->thumbQueue()->isEmpty()) {
     return;
   }

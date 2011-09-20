@@ -29,11 +29,17 @@ extern ptSettings* Settings;
 
 //==============================================================================
 
-void ClearThumbnailData( ptThumbnailData &Data) {
-  if (Data.Thumbnail) delete Data.Thumbnail;
-  Data.Thumbnail = 0;
-  Data.Location  = "";
-}
+//void ClearThumbnailData(ptThumbnailData &Data) {
+//  if (Data.Thumbnail) {
+//    QGraphicsItem* child;
+//    foreach(child, Data.Thumbnail->childItems()) {
+//      delete child;
+//    }
+//    delete Data.Thumbnail;
+//    Data.Thumbnail = NULL;
+//  }
+//  Data.Path = "";
+//}
 
 //==============================================================================
 
@@ -51,9 +57,10 @@ ptFileMgrDM* ptFileMgrDM::GetInstance() {
 
 //==============================================================================
 
-void ptFileMgrDM::Clear() {
-  // Dummy
-}
+//void ptFileMgrDM::Clear() {
+//  m_Cache.Lookup->clear();
+//  m_Cache.Queue->clear();
+//}
 
 //==============================================================================
 
@@ -67,13 +74,15 @@ void ptFileMgrDM::DestroyInstance() {
 
 //==============================================================================
 
-ptFileMgrDM::ptFileMgrDM(): QObject() {
+ptFileMgrDM::ptFileMgrDM()
+: QObject()
+{
   m_TreeModel = new QFileSystemModel;
   m_TreeModel->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
 
   // Set inital directory from settings (if available)
   QString lastDir = Settings->GetString("LastFileMgrLocation");
-  if (lastDir == "" || !QDir::exists("LastFileMgrLocation")) {
+  if (lastDir == "" || !QDir(lastDir).exists()) {
     #ifdef Q_OS_WIN32
       m_TreeModel->setRootPath(m_TreeModel->myComputer().toString());
     #else
@@ -84,10 +93,15 @@ ptFileMgrDM::ptFileMgrDM(): QObject() {
   }
 
   // Init stuff for thumbnail generation
-  m_ThumbQueue = new QQueue;
+  m_ThumbQueue = new QQueue<QGraphicsItemGroup*>;
   m_Thumbnailer = new ptFileMgrThumbnailer;
   m_Thumbnailer->setQueue(m_ThumbQueue);
-  connect(m_Thumbnailer, SIGNAL(newThumbsNotify(bool)), this, SLOT(fetchNewThumbs(bool)));
+
+//  // Init thumbnail cache
+//  m_Cache.Lookup = new QHash<QString, QGraphicsItemGroup*>;
+//  m_Cache.Queue = new QQueue<QGraphicsItemGroup*>;
+//  m_Cache.Capacity = 5000;
+//  m_Thumbnailer->setCache(&m_Cache);
 }
 
 //==============================================================================
@@ -96,6 +110,8 @@ ptFileMgrDM::~ptFileMgrDM() {
   DelAndNull(m_TreeModel);
   DelAndNull(m_ThumbQueue);
   DelAndNull(m_Thumbnailer);
+//  DelAndNull(m_Cache.Lookup);
+//  DelAndNull(m_Cache.Queue);
 }
 
 //==============================================================================
@@ -103,6 +119,19 @@ ptFileMgrDM::~ptFileMgrDM() {
 void ptFileMgrDM::StartThumbnailer(const QModelIndex index) {
   m_Thumbnailer->setDir(m_TreeModel->filePath(index));
   m_Thumbnailer->start();
+}
+
+//==============================================================================
+
+void ptFileMgrDM::StopThumbnailer() {
+  if (m_Thumbnailer->isRunning()) {
+    m_Thumbnailer->exit();
+
+    // TODO: quick&dirty. Probably more elegantly solved via the thread's finished() signal.
+    while (!m_Thumbnailer->isFinished()) {
+      QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+    }
+  }
 }
 
 //==============================================================================

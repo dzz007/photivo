@@ -28,7 +28,9 @@
 
 #include <QThread>
 #include <QQueue>
-#include <QGraphicsItem>
+#include <QGraphicsItemGroup>
+
+//#include "ptFileMgrDM.h"
 
 //==============================================================================
 
@@ -45,7 +47,11 @@ class ptFileMgrThumbnailer: public QThread {
 Q_OBJECT
 
 public:
+  /*! Creates an empty ptFileMgrThumbnailer object. */
   explicit ptFileMgrThumbnailer();
+
+//  /*! Sets the cache for thumbnail objects. */
+//  void setCache(ptThumbnailCache* cache);
 
   /*! Sets the directory for thumbnail generation.
       Actual file system query don’t happen until \c run() is called.
@@ -56,7 +62,7 @@ public:
       Note that the buffer is taken as is, i.e. it is not cleared by the
       thumbnailer.
   */
-  void setQueue(QQueue<QGraphicsPixmapItem>* queue);
+  void setQueue(QQueue<QGraphicsItemGroup*>* queue);
 
 
 protected:
@@ -65,12 +71,13 @@ protected:
 
 
 private:
+//  ptThumbnailCache* m_Cache;
   QString m_Dir;
-  QQueue<QGraphicsPixmapItem>* m_Queue;
+  QQueue<QGraphicsItemGroup*>* m_Queue;
 
 
 signals:
-  void newThumbsNotify(const bool isCompleted);
+  void newThumbsNotify();
 
 
 public slots:

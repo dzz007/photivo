@@ -64,7 +64,7 @@ assert (RV);                    \
 }
 
 // The class.
-#define CLASS DcRaw::
+#define CLASS ptDcRaw::
 CLASS ptDcRaw() {  
   printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
 
@@ -1991,6 +1991,7 @@ void CLASS nokia_load_raw()
 unsigned CLASS pana_bits (int nbits)
 {
   int byte;
+
 
 
   if (!nbits) return m_pana_bits_vbits=0;
@@ -8264,7 +8265,7 @@ void CLASS jpeg_thumb ()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-short CLASS Identify(const QString NewInputFile = "") {
+short CLASS Identify(const QString NewInputFile) {
 
   // This is here to support multiple calls.
   ResetNonUserSettings();
@@ -8272,10 +8273,9 @@ short CLASS Identify(const QString NewInputFile = "") {
 
   if (NewInputFile != "") {
     FREE(m_UserSetting_InputFileName);
-    m_UserSetting_InputFileName =
-      (char*) MALLOC(1+strlen(NewInputFileName.toAscii().data()));
+    m_UserSetting_InputFileName = (char*) MALLOC(1 + strlen(NewInputFile.toAscii().data()));
     ptMemoryError(m_UserSetting_InputFileName,__FILE__,__LINE__);
-    strcpy(m_UserSetting_InputFileName,NewInputFileName.toAscii().data());
+    strcpy(m_UserSetting_InputFileName, NewInputFile.toAscii().data());
   }
 
   if (!(m_InputFile = fopen (m_UserSetting_InputFileName, "rb"))) {
