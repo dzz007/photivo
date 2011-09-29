@@ -1536,19 +1536,19 @@ When you post there make sure to describe your last actions before the crash occ
         <location filename="../Sources/ptMain.cpp" line="2637"/>
         <location filename="../Sources/ptMain.cpp" line="3334"/>
         <source>PNG images(*.png);;All files (*.*)</source>
-        <translation>Изображения PNG (*.jpg *.jpeg);;Все файлы (*.*)</translation>
+        <translation>Изображения PNG (*.png);;Все файлы (*.*)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="2642"/>
         <location filename="../Sources/ptMain.cpp" line="3339"/>
         <source>Tiff images (*.tif *.tiff);;All files (*.*)</source>
-        <translation>Изображения TIFF (*.jpg *.jpeg);;Все файлы (*.*)</translation>
+        <translation>Изображения TIFF (*.tif *.tiff);;Все файлы (*.*)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="2646"/>
         <location filename="../Sources/ptMain.cpp" line="3343"/>
         <source>Ppm images (*.ppm);;All files (*.*)</source>
-        <translation>Изображения PPM (*.jpg *.jpeg);;Все файлы (*.*)</translation>
+        <translation>Изображения PPM (*.ppm);;Все файлы (*.*)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="2653"/>
