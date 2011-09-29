@@ -88,16 +88,15 @@ void ptFileMgrThumbnailer::run() {
     QGraphicsItemGroup* thumbGroup = new QGraphicsItemGroup;
     QGraphicsPixmapItem* thumbPixmap = new QGraphicsPixmapItem;
 
+    if (files.at(i).isDir()) continue;
 
-    // we have a raw image ...
-    if(dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
+    if (dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
+      // we have a raw image ...
       QPixmap* px = dcRaw.thumbnail();
       thumbPixmap->setPixmap(px->scaled(150,150));
       DelAndNull(px);
-
-
-    // ... or a bitmap ...
     } else {
+      // ... or a bitmap ...
       try {
         Magick::Image image(files.at(i).absoluteFilePath().toAscii().data());
 

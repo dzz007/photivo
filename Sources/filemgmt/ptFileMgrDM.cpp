@@ -77,7 +77,7 @@ ptFileMgrDM::ptFileMgrDM()
 : QObject()
 {
   m_TreeModel = new QFileSystemModel;
-  m_TreeModel->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
+  m_TreeModel->setFilter(QDir::AllDirs);
 
   // Set inital directory from settings (if available)
   QString lastDir = Settings->GetString("LastFileMgrLocation");
