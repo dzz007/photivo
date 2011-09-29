@@ -3525,6 +3525,9 @@ void CB_MenuFileExit(const short) {
 
   printf("Saving settings ...\n");
 
+  // this also writes settings.
+  delete FileMgrWindow;
+
   // Store the position of the splitter and main window
   Settings->m_IniSettings->
     setValue("MainSplitter",MainWindow->MainSplitter->saveState());
