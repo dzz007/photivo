@@ -83,18 +83,16 @@ void ptFileMgrThumbnailer::run() {
   thumbsDir.setNameFilters(FileExtsRaw + FileExtsBitmap);
   QFileInfoList files = thumbsDir.entryInfoList();
 
-  ptDcRaw dcRaw;
   for (uint i = 0; i < (uint)files.count(); i++) {
     QGraphicsItemGroup* thumbGroup = new QGraphicsItemGroup;
     QGraphicsPixmapItem* thumbPixmap = new QGraphicsPixmapItem;
 
     if (files.at(i).isDir()) continue;
 
+    ptDcRaw dcRaw;
     if (dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
       // we have a raw image ...
-      QPixmap* px = dcRaw.thumbnail();
-      thumbPixmap->setPixmap(px->scaled(150,150));
-      DelAndNull(px);
+      thumbPixmap->setPixmap(dcRaw.thumbnail()->scaled(150,150));
     } else {
       // ... or a bitmap ...
       try {
