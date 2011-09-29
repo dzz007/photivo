@@ -48,7 +48,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent): QWidget(parent) {
   // Setup the graphics scene
   m_FilesScene = new QGraphicsScene;
   FilesView->setScene(m_FilesScene);
-  connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify(bool)),
+  connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify()),
           this, SLOT(fetchNewThumbs(bool)));
 }
 
