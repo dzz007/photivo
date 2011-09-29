@@ -114,7 +114,7 @@ ptFileMgrDM::~ptFileMgrDM() {
 
 void ptFileMgrDM::StartThumbnailer(const QModelIndex index) {
   m_Thumbnailer->setDir(m_TreeModel->filePath(index));
-  m_Thumbnailer->start();
+  m_Thumbnailer->run();
 }
 
 //==============================================================================

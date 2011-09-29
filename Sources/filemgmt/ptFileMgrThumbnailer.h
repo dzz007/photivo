@@ -64,10 +64,12 @@ public:
   */
   void setQueue(QQueue<QGraphicsItemGroup*>* queue);
 
-
-protected:
   /*! This function does the actual thumbnail generating. */
   void run();
+
+
+protected:
+
 
 
 private:
