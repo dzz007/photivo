@@ -65,7 +65,7 @@ assert (RV);                    \
 
 // The class.
 #define CLASS ptDcRaw::
-CLASS ptDcRaw() {  
+CLASS ptDcRaw() {
   printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
 
   // This were the original global variables initialized.
@@ -2300,7 +2300,7 @@ fill_input_buffer (j_decompress_ptr cinfo)
 {
   static uint8_t jpeg_buffer[4096];
   size_t nbytes;
-  DcRaw *data = (DcRaw*) cinfo->client_data;
+  ptDcRaw *data = (ptDcRaw*) cinfo->client_data;
 
   nbytes = fread (jpeg_buffer, 1, 4096, data->m_InputFile);
   swab ((char *)jpeg_buffer, (char *)jpeg_buffer, nbytes);
