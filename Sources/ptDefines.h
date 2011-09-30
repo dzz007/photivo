@@ -81,16 +81,20 @@ inline void DelAndNull(T*& p) {
   #define CALLOC(Num,Size)  ptCalloc(Num,Size,__FILE__,__LINE__,this)
   #define CALLOC2(Num,Size) ptCalloc(Num,Size,__FILE__,__LINE__,NULL)
   #define MALLOC(Size)      ptCalloc(1,Size,__FILE__,__LINE__,this)
+  #define MALLOC2(Size)     ptCalloc(1,Size,__FILE__,__LINE__,NULL)
   #define FREE(x)           {ptFree(x,__FILE__,__LINE__,this); x=NULL;}
+  #define FREE2(x)          {ptFree(x,__FILE__,__LINE__,NULL); x=NULL;}
   #define ALLOCATED(x)      ptAllocated(x,__FILE__,__LINE__)
 
 #else
 
-  #define CALLOC(Num,Size)  calloc(Num,Size)
-  #define CALLOC2(Num,Size) calloc(Num,Size)
+  #define CALLOC(Num,Size)  ptCalloc_Ex(Num,Size)
+  #define CALLOC2(Num,Size) ptCalloc_Ex(Num,Size)
   #define MALLOC(Size) malloc(Size)
+  #define MALLOC2(Size) malloc(Size)
   // Remark free(NULL) is valid nop !
   #define FREE(x) {free(x); x=NULL; }
+  #define FREE2(x) {free(x); x=NULL; }
   #define ALLOCATED(x) ;
 
 #endif

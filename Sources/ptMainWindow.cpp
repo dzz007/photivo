@@ -21,27 +21,33 @@
 **
 *******************************************************************************/
 
-#include "ptMainWindow.h"
-#include "ptViewWindow.h"
-#include "ptWhiteBalances.h"
+#include <iomanip>
+#include <iostream>
+
 #include "ptChannelMixer.h"
+#include "ptConfirmRequest.h"
+#include "ptConstants.h"
+#include "ptDefines.h"
 #include "ptError.h"
 #include "ptGuiOptions.h"
 //#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
-#include "ptSettings.h"
-#include "ptConstants.h"
-#include "ptDefines.h"
-#include "ptTheme.h"
-
-#include <iostream>
-#include <iomanip>
-
-#include <iostream>
+#include "ptMainWindow.h"
 #include "ptMessageBox.h"
+#include "ptSettings.h"
+#include "ptTheme.h"
+#include "ptViewWindow.h"
+#include "ptWhiteBalances.h"
+
 using namespace std;
 
 extern ptTheme* Theme;
 extern ptViewWindow* ViewWindow;
+extern QString ImageFileToOpen;
+extern QString PtsFileToOpen;
+extern short ImageCleanUp;
+
+void CB_MenuFileOpen(const short HaveFile);
+void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -856,6 +862,39 @@ void ptMainWindow::ShowToolsOnTab() {
   if (ActiveTool != "") Update(ActiveTool);
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Added slot for messages to the single instance
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::OtherInstanceMessage(const QString &msg) {
+  // Settings file loaded via cli
+  if (msg.startsWith("::pts::")) {
+    PtsFileToOpen = msg;
+    PtsFileToOpen.remove(0,7);
+
+    if (ptConfirmRequest::loadConfig(lcmSettingsFile, PtsFileToOpen)) {
+      CB_OpenSettingsFile(PtsFileToOpen);
+    }
+
+  // Image file loaded via cli
+  } else if (msg.startsWith("::img::")) {
+    ImageFileToOpen = msg;
+    ImageFileToOpen.remove(0,7);
+    CB_MenuFileOpen(1);
+
+  // image incoming from Gimp
+  } else if (msg.startsWith("::tmp::")) {
+    ImageFileToOpen = msg;
+    ImageFileToOpen.remove(0,7);
+    ImageCleanUp++;
+    CB_MenuFileOpen(1);
+  }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // GetCurrentTab
@@ -1601,10 +1640,6 @@ void ptMainWindow::dragEnterEvent(QDragEnterEvent* Event) {
 //
 ////////////////////////////////////////////////////////////////////////
 
-void CB_MenuFileOpen(const short HaveFile);
-void CB_OpenSettingsFile(QString SettingsFileName);
-extern QString ImageFileToOpen;
-
 void ptMainWindow::dropEvent(QDropEvent* Event) {
   if (ViewWindow->interaction() != iaNone) {
     return;
@@ -1629,21 +1664,8 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
           ImageFileToOpen = DropName;
           CB_MenuFileOpen(1);
         } else {
-          if ( Settings->GetInt("ResetSettingsConfirmation") == 0 ) {
+          if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
             CB_OpenSettingsFile(DropName);
-          } else {
-            #ifdef Q_OS_WIN32
-              DropName = DropName.replace(QString("/"), QString("\\"));
-            #endif
-            ptMessageBox msgBox;
-            msgBox.setIcon(QMessageBox::Question);
-            msgBox.setWindowTitle(tr("Settings file dropped!"));
-            msgBox.setText(tr("Do you really want to open\n")+DropName);
-            msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-            msgBox.setDefaultButton(QMessageBox::Ok);
-            if (msgBox.exec()==QMessageBox::Ok){
-              CB_OpenSettingsFile(DropName);
-            }
           }
         }
       }
@@ -1679,15 +1701,16 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (SearchInputWidget->hasFocus()) {
       OnTabProcessingButtonClicked();
       return;
-    } else {
-      if (Settings->GetInt("ShowToolContainer") == 0) {
+    } else if (Settings->GetInt("ShowToolContainer") == 0) {
         Settings->SetValue("ShowToolContainer", 1);
         UpdateSettings();
         return;
-      } else {
-        ::CB_FullScreenButton(0);
-        return;
-      }
+    } else if (Settings->GetInt("FullscreenActive") == 1) {
+      ::CB_FullScreenButton(0);
+      return;
+    } else {
+      ::CB_MenuFileExit(1);
+      return;
     }
   }
 
@@ -3028,10 +3051,6 @@ void ptMainWindow::UpdateLfunCAUI() {
 void ptMainWindow::UpdateLfunVignetteUI() {
   short VignetteModel = Settings->GetInt("LfunVignetteModel");
   LfunVignettePoly6Container->setVisible(VignetteModel == ptLfunVignetteModel_Poly6);
-}
-void ptMainWindow::OtherInstanceMessage(const QString &msg) { // Added slot for messages to the single instance
-    ImageFileToOpen = msg;
-    CB_MenuFileOpen(1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

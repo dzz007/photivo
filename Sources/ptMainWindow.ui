@@ -687,40 +687,76 @@
                                   <layout class="QVBoxLayout" name="verticalLayout_57">
                                    <item>
                                     <widget class="QWidget" name="widget_94" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_190">
-                                      <item>
-                                       <widget class="QWidget" name="widget_5" native="true">
-                                        <layout class="QHBoxLayout" name="horizontalLayout_38">
-                                         <property name="sizeConstraint">
-                                          <enum>QLayout::SetFixedSize</enum>
-                                         </property>
-                                         <property name="margin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <widget class="QWidget" name="DarkFrameWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="BadPixelsWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <spacer name="horizontalSpacer_40">
-                                           <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                           </property>
-                                           <property name="sizeHint" stdset="0">
-                                            <size>
-                                             <width>40</width>
-                                             <height>20</height>
-                                            </size>
-                                           </property>
-                                          </spacer>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                     </layout>
-                                    </widget>
+                                 <layout class="QVBoxLayout" name="verticalLayout_190">
+                                  <item>
+                                   <widget class="QWidget" name="widget_5" native="true">
+                                    <layout class="QHBoxLayout" name="horizontalLayout_38">
+                                     <property name="sizeConstraint">
+                                      <enum>QLayout::SetFixedSize</enum>
+                                     </property>
+                                     <property name="margin">
+                                      <number>0</number>
+                                     </property>
+                                     <item>
+                                      <widget class="QLabel" name="darkframeLabel">
+                                       <property name="text">
+                                        <string>Darkframe image</string>
+                                       </property>
+                                      </widget>
+                                     </item>
+                                     <item>
+                                      <widget class="QWidget" name="DarkFrameWidget" native="true"/>
+                                     </item>
+                                     <item>
+                                      <spacer name="horizontalSpacer_40">
+                                       <property name="orientation">
+                                        <enum>Qt::Horizontal</enum>
+                                       </property>
+                                       <property name="sizeHint" stdset="0">
+                                        <size>
+                                         <width>40</width>
+                                         <height>20</height>
+                                        </size>
+                                       </property>
+                                      </spacer>
+                                     </item>
+                                    </layout>
+                                   </widget>
+                                  </item>
+                                  <item>
+                                   <widget class="QWidget" name="widget_177" native="true">
+                                    <layout class="QHBoxLayout" name="horizontalLayout_831">
+                                     <property name="margin">
+                                      <number>0</number>
+                                     </property>
+                                     <item>
+                                      <widget class="QLabel" name="label_16">
+                                       <property name="text">
+                                        <string>DcRaw bad pixel file</string>
+                                       </property>
+                                      </widget>
+                                     </item>
+                                     <item>
+                                      <widget class="QWidget" name="BadPixelsWidget" native="true"/>
+                                     </item>
+                                     <item>
+                                      <spacer name="horizontalSpacer_81">
+                                       <property name="orientation">
+                                        <enum>Qt::Horizontal</enum>
+                                       </property>
+                                       <property name="sizeHint" stdset="0">
+                                        <size>
+                                         <width>562</width>
+                                         <height>20</height>
+                                        </size>
+                                       </property>
+                                      </spacer>
+                                     </item>
+                                    </layout>
+                                   </widget>
+                                  </item>
+                                 </layout>
+                                </widget>
                                    </item>
                                    <item>
                                     <spacer name="verticalSpacer">

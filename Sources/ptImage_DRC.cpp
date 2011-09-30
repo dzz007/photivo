@@ -44,6 +44,7 @@ So for example a pixel at (-1, y) is equal to a pixel at (0, y) by definition.
 
 #include "ptImage.h"
 #include "ptError.h"
+#include "ptCalloc.h"
 
 #ifdef _OPENMP
   #include <omp.h>
