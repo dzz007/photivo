@@ -92,7 +92,9 @@ void ptFileMgrThumbnailer::run() {
     ptDcRaw dcRaw;
     if (dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
       // we have a raw image ...
-      thumbPixmap->setPixmap(dcRaw.thumbnail()->scaled(150,150));
+      QPixmap* px = dcRaw.thumbnail();
+      thumbPixmap->setPixmap(px->scaled(150,150));
+      DelAndNull(px);
     } else {
       // ... or a bitmap ...
       try {
