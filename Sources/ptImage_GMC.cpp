@@ -25,6 +25,7 @@
 
 #include "ptImage.h"
 #include "ptError.h"
+#include "ptCalloc.h"
 #include <wand/magick_wand.h>
 
 #ifdef _OPENMP

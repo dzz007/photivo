@@ -42,6 +42,8 @@ class Allocation {
 QList <Allocation*> Allocations;
 static int Allocated = 0;
 
+//==============================================================================
+
 void* ptCalloc(size_t num,
                size_t size,
                const char*  FileName,
@@ -74,6 +76,19 @@ void* ptCalloc(size_t num,
   fprintf(CallocDebugFile,"Total allocated : %d\n",Allocated);
   return RV;
 }
+
+//==============================================================================
+
+void* ptCalloc_Ex(size_t num,
+                  size_t size) {
+  void* RV = calloc(num,size);
+  if (RV == 0) {
+    throw std::bad_alloc();
+  }
+  return RV;
+}
+
+//==============================================================================
 
 void  ptFree(void* Ptr,
              const char* FileName,
@@ -113,6 +128,8 @@ void  ptFree(void* Ptr,
   fprintf(CallocDebugFile,"Total allocated : %d\n\n",Allocated);
 }
 
+//==============================================================================
+
 void ptAllocated(const int   MinimumToShow,
                  const char* FileName,
                  const int   LineNumber) {
@@ -142,3 +159,5 @@ void ptAllocated(const int   MinimumToShow,
     }
   }
 }
+
+//==============================================================================

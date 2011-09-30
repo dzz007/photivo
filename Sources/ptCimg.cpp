@@ -34,6 +34,7 @@
 #include "ptCimg.h"
 #include "ptImage.h"
 #include "ptError.h"
+#include "ptCalloc.h"
 #include "ptCurve.h"
 
 // Lut
@@ -253,7 +254,7 @@ void ptGreycStorationLab(ptImage* Image,
         (1-Opacity)*Image->m_Image[Row*Width+Col][0]));
       }
     }
-    FREE(Mask);
+    FREE2(Mask);
   }
 //~ #pragma omp parallel for default(shared) schedule(static)
   //~ for (uint32_t i=0; i<(uint32_t) Image->m_Height*Image->m_Width; i++) {
@@ -350,7 +351,7 @@ void ptCimgEdgeTensors(ptImage* Image,
             CLIP((int32_t) (Mask[Row*FullWidth+Col+Threads*Width]*0xffff*CImage[Threads](Col,Row)));
         }
       }
-      FREE(Mask);
+      FREE2(Mask);
     } else {
       for (uint16_t Col=0; Col<PrivateWidth[Threads]; Col++) {
         for (uint16_t Row=0; Row<Image->m_Height; Row++) {
@@ -832,7 +833,7 @@ void ptCimgRotate(ptImage* Image, const double Angle, const short Interpolation)
 
   CImage.rotate(Angle, 0, Interpolation);
 
-  FREE(Image->m_Image);
+  FREE2(Image->m_Image);
   Image->m_Width  = CImage.width();
   Image->m_Height = CImage.height();
   Width  = Image->m_Width;

@@ -35,6 +35,7 @@
 #include "ptDefines.h"
 #include "ptError.h"
 #include "ptConstants.h"
+#include "ptCalloc.h"
 
 #define NO_JASPER
 #ifndef NO_JASPER
@@ -8284,6 +8285,10 @@ short CLASS Identify(const QString NewInputFile) {
   }
 
   identify();
+
+  if (!m_IsRaw) {
+    FCLOSE(m_InputFile);
+  }
   return !m_IsRaw;
 }
 
