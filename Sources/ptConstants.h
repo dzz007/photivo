@@ -761,12 +761,30 @@ enum ptToolState {
   tsFavourite = 2
 };
 
-// General status.
-// More states can be added with values >= 2
+/*! General status return values.
+  If you add more states make sure to use values >= 2. */
 enum ptStatus {
   stUndetermined = -1,
   stSuccess = 0,
   stFailure = 1
+};
+
+/*! This enum defines the available methods for blocking and unblocking tools. */
+enum ptBlockToolsMode {
+  btmUnblock             = 0,
+  btmBlockAll            = 1,
+  btmBlockForCrop        = 2,
+  btmBlockForSpotRepair  = 3
+};
+
+/*! This enum defines the different modes for loading a pipe configuration
+  (preset or settings file). */
+enum ptLoadCfgMode {
+  lcmGeneralCfg     = 0,
+  lcmNeutralPreset  = 1,
+  lcmStartupPreset  = 2,
+  lcmPresetFile     = 3,
+  lcmSettingsFile   = 4
 };
 
 #endif
