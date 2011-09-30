@@ -25,18 +25,32 @@
 
 #include <cstddef>
 
+//==============================================================================
+
 void* ptCalloc(size_t num,
                size_t size,
                const char*  FileName,
                const int    LineNumber,
                const void*  ObjectPointer);
 
+//==============================================================================
+
+void* ptCalloc_Ex(size_t num,
+                  size_t size);
+
+//==============================================================================
+
 void  ptFree(void* Ptr,
              const char* FileName,
              const int   LineNumber,
              const void* ObjectPointer);
 
+//==============================================================================
+
 void  ptAllocated(const int   MinimumToShow,
                   const char* FileName,
                   const int   LineNumber);
+
+//==============================================================================
+
 #endif

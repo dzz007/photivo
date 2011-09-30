@@ -255,30 +255,12 @@ void ptHistogramWindow::CalculateHistogram() {
   const uint16_t Height = m_RelatedImage->m_Height;
   const int32_t Size   = Width*Height;
   const short HistogramGamma = Settings->GetInt("HistogramMode");
-#pragma omp parallel default(shared)
-    {
-#ifdef _OPENMP
-      // We need a thread-private copy.
-      int TpHistogram[3][HistogramWidth];
-      memset (TpHistogram, 0, sizeof Histogram);
-#endif
-#pragma omp for
-    for (int32_t i=0; i<(int32_t) Size; i++) {
-      for (short c=0;c<MaxColor;c++) {
-#ifdef _OPENMP
-          TpHistogram[c][m_LookUp[m_RelatedImage->m_Image[i][c]]]++;
-#else
-          Histogram[c][m_LookUp[m_RelatedImage->m_Image[i][c]]]++;
-#endif
-      }
+
+  for (int32_t i=0; i<(int32_t) Size; i++) {
+    for (short c=0;c<MaxColor;c++) {
+      Histogram[c][m_LookUp[m_RelatedImage->m_Image[i][c]]]++;
     }
-#ifdef _OPENMP
-#pragma omp critical
-      for(int c=0; c<3*HistogramWidth; c++) {
-        Histogram[0][c]+=TpHistogram[0][c];
-      }
-#endif
-    } // End omp parallel zone.
+  }
 
   // Logaritmic variants.
   const short HistogramLogX = Settings->GetInt("HistogramLogX");

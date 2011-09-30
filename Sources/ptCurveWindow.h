@@ -84,6 +84,9 @@ void SetInterpolationType();
 
 private:
 void UpdateCurve();
+void SetBWGradient(ptImage8* Image);
+void SetBWGammaGradient(ptImage8* Image);
+void SetColorGradient(ptImage8* Image);
 void SetCurveState(const short state);
 short GetCurveState();
 

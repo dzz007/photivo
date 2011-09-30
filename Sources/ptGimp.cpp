@@ -35,6 +35,7 @@ extern "C"
 #include <cstdio>
 
 #include "ptError.h"
+#include "ptCalloc.h"
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -152,10 +153,10 @@ void ptRun(const gchar*     Name,
     Colors = 3;
 
     unsigned short (* ImageForGimp)[3] =
-      (unsigned short (*)[3]) CALLOC(Width*Height,sizeof(*ImageForGimp));
+      (unsigned short (*)[3]) CALLOC2(Width*Height,sizeof(*ImageForGimp));
     ptMemoryError(ImageForGimp,__FILE__,__LINE__);
 
-    unsigned short*  PpmRow = (unsigned short *) CALLOC(Width*Height,sizeof(*PpmRow));
+    unsigned short*  PpmRow = (unsigned short *) CALLOC2(Width*Height,sizeof(*PpmRow));
     ptMemoryError(PpmRow,__FILE__,__LINE__);
 
     for (unsigned short Row=0; Row<Height; Row++) {
@@ -174,14 +175,14 @@ void ptRun(const gchar*     Name,
       }
     }
 
-    FREE(PpmRow);
+    FREE2(PpmRow);
     FCLOSE(InputFile);
 
     QFile ExifFile(ExifFileName);
     assert(ExifFile.open(QIODevice::ReadOnly));
     qint64 FileSize = ExifFile.size();
     QDataStream ExifIn(&ExifFile);
-    char* ExifBuffer = (char *) MALLOC(FileSize);
+    char* ExifBuffer = (char *) MALLOC2(FileSize);
     ptMemoryError(ExifBuffer,__FILE__,__LINE__);
     unsigned ExifBufferLength = ExifIn.readRawData(ExifBuffer,FileSize);
     ExifFile.close();
@@ -190,7 +191,7 @@ void ptRun(const gchar*     Name,
     assert(ICCFile.open(QIODevice::ReadOnly));
     qint64 FileSize2 = ICCFile.size();
     QDataStream ICCIn(&ICCFile);
-    char* ICCBuffer = (char *) MALLOC(FileSize2);
+    char* ICCBuffer = (char *) MALLOC2(FileSize2);
     ptMemoryError(ICCBuffer,__FILE__,__LINE__);
     unsigned ICCBufferLength = ICCIn.readRawData(ICCBuffer,FileSize2);
     ICCFile.close();
@@ -244,14 +245,14 @@ void ptRun(const gchar*     Name,
     }
     gimp_drawable_flush(Drawable);
     gimp_drawable_detach(Drawable);
-    FREE(ImageForGimp);
+    FREE2(ImageForGimp);
     GimpParasite* GimpExifData = gimp_parasite_new("exif-data",
                                                    GIMP_PARASITE_PERSISTENT,
                                                    ExifBufferLength,
                                                    ExifBuffer);
     gimp_image_parasite_attach(GimpImage,GimpExifData);
     gimp_parasite_free(GimpExifData);
-    FREE(ExifBuffer);
+    FREE2(ExifBuffer);
 
     GimpParasite* GimpICCData = gimp_parasite_new("icc-profile",
                                                    GIMP_PARASITE_PERSISTENT,
@@ -259,7 +260,7 @@ void ptRun(const gchar*     Name,
                                                    ICCBuffer);
     gimp_image_parasite_attach(GimpImage,GimpICCData);
     gimp_parasite_free(GimpICCData);
-    FREE(ICCBuffer);
+    FREE2(ICCBuffer);
 
     static GimpParam Values[2];
     *nreturn_vals = 2;

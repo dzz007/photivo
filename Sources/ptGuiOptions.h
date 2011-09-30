@@ -70,6 +70,7 @@ public:
   static const ptGuiOptionsItem CropGuidelines[];
   static const ptGuiOptionsItem LightsOutMode[];
   static const ptGuiOptionsItem ResizeFilter[];
+  static const ptGuiOptionsItem ResizeDimension[];
   static const ptGuiOptionsItem IMResizeFilter[];
   static const ptGuiOptionsItem LqrEnergy[];
   static const ptGuiOptionsItem LqrScaling[];
@@ -98,6 +99,8 @@ public:
   static const ptGuiOptionsItem MaskType[];
   static const ptGuiOptionsItem GrainMaskType[];
   static const ptGuiOptionsItem OverlayMode[];
+  static const ptGuiOptionsItem OutlineMode[];
+  static const ptGuiOptionsItem OutlineGradientMode[];
   static const ptGuiOptionsItem OverlayMaskMode[];
   static const ptGuiOptionsItem CrossprocessMode[];
   static const ptGuiOptionsItem VignetteMode[];

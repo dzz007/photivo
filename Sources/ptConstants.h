@@ -280,6 +280,7 @@ const short ptCurveChannel_ShadowsHighlights = 12;
 const short ptCurveChannel_Denoise           = 13;
 const short ptCurveChannel_Hue               = 14;
 const short ptCurveChannel_Denoise2          = 15;
+const short ptCurveChannel_Outline           = 16;
 
 const short ptCurveType_Full         = 0;
 const short ptCurveType_Anchor       = 1;
@@ -332,6 +333,15 @@ const short ptGrainMode_SoftSaltPepper = 2;
 const short ptGrainMode_HardGaussian   = 3;
 const short ptGrainMode_HardUniform    = 4;
 const short ptGrainMode_HardSaltPepper = 5;
+
+// GradientModes
+
+const short ptGradientMode_Backward    = 0;
+const short ptGradientMode_Centered    = 1;
+const short ptGradientMode_Forward     = 2;
+const short ptGradientMode_Sobel       = 3;
+const short ptGradientMode_RotInv      = 4;
+const short ptGradientMode_Deriche     = 5;
 
 // MaskTypes
 
@@ -425,6 +435,7 @@ const short ptOverlayMode_ColorDodge   = 10;
 const short ptOverlayMode_ColorBurn    = 11;
 const short ptOverlayMode_GammaDark    = 12;
 const short ptOverlayMode_GammaBright  = 13;
+const short ptOverlayMode_Darken       = 14;
 
 // OverlayMaskMode
 
@@ -528,6 +539,11 @@ const short ptIMFilter_Mitchell  = 11;
 const short ptIMFilter_Lanczos   = 12;
 //const short ptIMFilter_Bessel    = 13;
 //const short ptIMFilter_Sinc      = 14;
+
+// Resize modes
+const short ptResizeDimension_LongerEdge = 0;
+const short ptResizeDimension_Width      = 1;
+const short ptResizeDimension_Height     = 2;
 
 // Liquid rescale energies
 const short ptLqr_Disabled         = 0;
