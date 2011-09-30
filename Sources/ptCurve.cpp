@@ -28,6 +28,7 @@
 #include <cmath>
 
 #include "ptDefines.h"
+#include "ptCalloc.h"
 #include "ptCurve.h"
 #include "ptImage.h"
 #include "ptError.h"
@@ -320,6 +321,8 @@ short ptCurve::ReadCurve(const char *FileName) {
         case ptCurveChannel_G :
         case ptCurveChannel_B :
         case ptCurveChannel_L :
+        case ptCurveChannel_a :
+        case ptCurveChannel_b :
         case ptCurveChannel_LByHue :
         case ptCurveChannel_Hue :
         case ptCurveChannel_Texture :
@@ -329,6 +332,7 @@ short ptCurve::ReadCurve(const char *FileName) {
         case ptCurveChannel_Denoise2 :
         case ptCurveChannel_Base :
         case ptCurveChannel_Base2 :
+        case ptCurveChannel_Outline :
           m_IntendedChannel = IntendedChannel;
           break;
         default :

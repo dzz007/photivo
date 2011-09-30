@@ -410,6 +410,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(CurveaSave);
   Macro_ConnectSomeButton(CurvebOpen);
   Macro_ConnectSomeButton(CurvebSave);
+  Macro_ConnectSomeButton(CurveOutlineOpen);
+  Macro_ConnectSomeButton(CurveOutlineSave);
   Macro_ConnectSomeButton(CurveLByHueOpen);
   Macro_ConnectSomeButton(CurveLByHueSave);
   Macro_ConnectSomeButton(CurveHueOpen);
@@ -879,6 +881,7 @@ void ptMainWindow::ShowToolsOnTab() {
 // Added slot for messages to the single instance
 //
 ////////////////////////////////////////////////////////////////////////////////
+
 void ptMainWindow::OtherInstanceMessage(const QString &msg) {
   // Settings file loaded via cli
   if (msg.startsWith("::pts::")) {
@@ -1450,6 +1453,16 @@ void ptMainWindow::OnCurvebSaveButtonClicked() {
   ::CB_CurvebSaveButton();
 }
 
+void CB_CurveOutlineOpenButton();
+void ptMainWindow::OnCurveOutlineOpenButtonClicked() {
+  ::CB_CurveOutlineOpenButton();
+}
+
+void CB_CurveOutlineSaveButton();
+void ptMainWindow::OnCurveOutlineSaveButtonClicked() {
+  ::CB_CurveOutlineSaveButton();
+}
+
 void CB_CurveLByHueOpenButton();
 void ptMainWindow::OnCurveLByHueOpenButtonClicked() {
   ::CB_CurveLByHueOpenButton();
@@ -1687,15 +1700,16 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (SearchInputWidget->hasFocus()) {
       OnTabProcessingButtonClicked();
       return;
-    } else {
-      if (Settings->GetInt("ShowToolContainer") == 0) {
+    } else if (Settings->GetInt("ShowToolContainer") == 0) {
         Settings->SetValue("ShowToolContainer", 1);
         UpdateSettings();
         return;
-      } else {
-        ::CB_FullScreenButton(0);
-        return;
-      }
+    } else if (Settings->GetInt("FullscreenActive") == 1) {
+      ::CB_FullScreenButton(0);
+      return;
+    } else {
+      ::CB_MenuFileExit(1);
+      return;
     }
   }
 

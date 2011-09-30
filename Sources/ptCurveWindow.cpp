@@ -235,6 +235,8 @@ void ptCurveWindow::SetCurveState(const short state) {
       Settings->SetValue("CurveLa",state); break;
     case ptCurveChannel_b :
       Settings->SetValue("CurveLb",state); break;
+    case ptCurveChannel_Outline :
+      Settings->SetValue("CurveOutline",state); break;
     case ptCurveChannel_LByHue :
       Settings->SetValue("CurveLByHue",state); break;
     case ptCurveChannel_Hue :
@@ -281,6 +283,8 @@ short ptCurveWindow::GetCurveState() {
       State = Settings->GetInt("CurveLa"); break;
     case ptCurveChannel_b :
       State = Settings->GetInt("CurveLb"); break;
+    case ptCurveChannel_Outline :
+      State = Settings->GetInt("CurveOutline"); break;
     case ptCurveChannel_LByHue :
       State = Settings->GetInt("CurveLByHue"); break;
     case ptCurveChannel_Hue :
@@ -463,6 +467,70 @@ void ptCurveWindow::SetInterpolationType() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void ptCurveWindow::SetBWGradient(ptImage8* Image) {
+  int Width  = width();
+  int Height = height();
+
+  for (uint16_t i=0;i<Width;i++) {
+    int Value = (int)(i/(float)Width*255);
+    for (uint16_t Row = Height-Height/20;
+         Row <= Height-2;
+         Row++) {
+      Image->m_Image[Row*Width+i][0] = Value;
+      Image->m_Image[Row*Width+i][1] = Value;
+      Image->m_Image[Row*Width+i][2] = Value;
+    }
+  }
+}
+
+void ptCurveWindow::SetBWGammaGradient(ptImage8* Image) {
+  int Width  = width();
+  int Height = height();
+
+  for (uint16_t i=0;i<Width;i++) {
+    int Value = (int)(powf(i/(float)Width,0.45f)*255);
+    for (uint16_t Row = Height-Height/20;
+         Row <= Height-2;
+         Row++) {
+      Image->m_Image[Row*Width+i][0] = Value;
+      Image->m_Image[Row*Width+i][1] = Value;
+      Image->m_Image[Row*Width+i][2] = Value;
+    }
+  }
+}
+
+void ptCurveWindow::SetColorGradient(ptImage8* Image) {
+  int Width  = width();
+  int Height = height();
+
+  for (uint16_t i=0;i<Width;i++) {
+    int ValueR = 0;
+    int ValueG = 0;
+    int ValueB = 0;
+    if (i < Width/4) {
+      ValueR = 255;
+      ValueG = (int) (255*i/(Width/4));
+    } else if (i < Width/2) {
+      ValueR = 255-(int) (255*(i-Width/4)/(Width/4));
+      ValueG = 255;
+    } else if (i < 3*Width/4) {
+      ValueG = 255-(int) (255*(i-Width/2)/(Width/4));
+      ValueB = (int) (255*(i-Width/2)/(Width/4));
+    } else if (i < Width) {
+      ValueR = (int) (255*(i-3*Width/4)/(Width/4));
+      ValueB = 255-(int) (255*(i-3*Width/4)/(Width/4));
+    }
+    for (uint16_t Row = Height-Height/20;
+         Row <= Height-2;
+         Row++) {
+      Image->m_Image[Row*Width+i][0] = ValueB;
+      Image->m_Image[Row*Width+i][1] = ValueG;
+      Image->m_Image[Row*Width+i][2] = ValueR;
+    }
+  }
+}
+
+
 void ptCurveWindow::CalculateCurve() {
 
   if (!m_RelatedCurve) return;
@@ -510,111 +578,21 @@ void ptCurveWindow::CalculateCurve() {
   // Gradient for saturation curve
   if (m_Channel == ptCurveChannel_Saturation) {
     if ((int)m_AtnByLuma->isChecked() == 1) {
-      for (uint16_t i=0;i<Width;i++) {
-        int Value = (int)(i/(float)Width*255);
-        for (uint16_t Row = Height-Height/20;
-             Row <= Height-2;
-             Row++) {
-          m_Image8->m_Image[Row*Width+i][0] = Value;
-          m_Image8->m_Image[Row*Width+i][1] = Value;
-          m_Image8->m_Image[Row*Width+i][2] = Value;
-        }
-      }
+      SetBWGradient(m_Image8);
     } else {
-      for (uint16_t i=0;i<Width;i++) {
-        int ValueR = 0;
-        int ValueG = 0;
-        int ValueB = 0;
-        if (i < Width/4) {
-          ValueR = 255;
-          ValueG = (int) (255*i/(Width/4));
-        } else if (i < Width/2) {
-          ValueR = 255-(int) (255*(i-Width/4)/(Width/4));
-          ValueG = 255;
-        } else if (i < 3*Width/4) {
-          ValueG = 255-(int) (255*(i-Width/2)/(Width/4));
-          ValueB = (int) (255*(i-Width/2)/(Width/4));
-        } else if (i < Width) {
-          ValueR = (int) (255*(i-3*Width/4)/(Width/4));
-          ValueB = 255-(int) (255*(i-3*Width/4)/(Width/4));
-        }
-        for (uint16_t Row = Height-Height/20;
-             Row <= Height-2;
-             Row++) {
-          m_Image8->m_Image[Row*Width+i][0] = ValueB;
-          m_Image8->m_Image[Row*Width+i][1] = ValueG;
-          m_Image8->m_Image[Row*Width+i][2] = ValueR;
-        }
-      }
+      SetColorGradient(m_Image8);
     }
   } else if (m_Channel == ptCurveChannel_Texture ||
              m_Channel == ptCurveChannel_Denoise ||
              m_Channel == ptCurveChannel_Denoise2 ||
              m_Channel == ptCurveChannel_Hue) {
     if ((int)m_AtnByLuma->isChecked() == 1) {
-      for (uint16_t i=0;i<Width;i++) {
-        int Value = (int)(i/(float)Width*255);
-        for (uint16_t Row = Height-Height/20;
-             Row <= Height-2;
-             Row++) {
-          m_Image8->m_Image[Row*Width+i][0] = Value;
-          m_Image8->m_Image[Row*Width+i][1] = Value;
-          m_Image8->m_Image[Row*Width+i][2] = Value;
-        }
-      }
+      SetBWGradient(m_Image8);
     } else {
-      for (uint16_t i=0;i<Width;i++) {
-        int ValueR = 0;
-        int ValueG = 0;
-        int ValueB = 0;
-        if (i < Width/4) {
-          ValueR = 255;
-          ValueG = (int) (255*i/(Width/4));
-        } else if (i < Width/2) {
-          ValueR = 255-(int) (255*(i-Width/4)/(Width/4));
-          ValueG = 255;
-        } else if (i < 3*Width/4) {
-          ValueG = 255-(int) (255*(i-Width/2)/(Width/4));
-          ValueB = (int) (255*(i-Width/2)/(Width/4));
-        } else if (i < Width) {
-          ValueR = (int) (255*(i-3*Width/4)/(Width/4));
-          ValueB = 255-(int) (255*(i-3*Width/4)/(Width/4));
-        }
-        for (uint16_t Row = Height-Height/20;
-             Row <= Height-2;
-             Row++) {
-          m_Image8->m_Image[Row*Width+i][0] = ValueB;
-          m_Image8->m_Image[Row*Width+i][1] = ValueG;
-          m_Image8->m_Image[Row*Width+i][2] = ValueR;
-        }
-      }
+      SetColorGradient(m_Image8);
     }
   } else if (m_Channel == ptCurveChannel_LByHue) {
-    for (uint16_t i=0;i<Width;i++) {
-      int ValueR = 0;
-      int ValueG = 0;
-      int ValueB = 0;
-      if (i < Width/4) {
-        ValueR = 255;
-        ValueG = (int) (255*i/(Width/4));
-      } else if (i < Width/2) {
-        ValueR = 255-(int) (255*(i-Width/4)/(Width/4));
-        ValueG = 255;
-      } else if (i < 3*Width/4) {
-        ValueG = 255-(int) (255*(i-Width/2)/(Width/4));
-        ValueB = (int) (255*(i-Width/2)/(Width/4));
-      } else if (i < Width) {
-        ValueR = (int) (255*(i-3*Width/4)/(Width/4));
-        ValueB = 255-(int) (255*(i-3*Width/4)/(Width/4));
-      }
-      for (uint16_t Row = Height-Height/20;
-           Row <= Height-2;
-           Row++) {
-        m_Image8->m_Image[Row*Width+i][0] = ValueB;
-        m_Image8->m_Image[Row*Width+i][1] = ValueG;
-        m_Image8->m_Image[Row*Width+i][2] = ValueR;
-      }
-    }
+    SetColorGradient(m_Image8);
   } else if (m_Channel == ptCurveChannel_a) {
     for (uint16_t i=1;i < 3*(Height-1)/10;i++) {
       for (uint16_t Row = 1;
@@ -653,6 +631,13 @@ void ptCurveWindow::CalculateCurve() {
         m_Image8->m_Image[Row*Width+i][2] = 50;
       }
     }
+  } else if (m_Channel == ptCurveChannel_L ||
+             m_Channel == ptCurveChannel_Outline ||
+             m_Channel == ptCurveChannel_Base2) {
+    SetBWGradient(m_Image8);
+  } else if (m_Channel == ptCurveChannel_RGB ||
+             m_Channel == ptCurveChannel_Base) {
+    SetBWGammaGradient(m_Image8);
   }
 
 

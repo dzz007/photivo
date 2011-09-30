@@ -125,7 +125,7 @@ ptImage* lcmsRGBToRGB(const short To,
 ptImage* lcmsRGBToRGB(cmsHPROFILE OutProfile, //with ICC profile
                       const int   Intent = INTENT_PERCEPTUAL,
                       const short Quality = ptCMQuality_HighResPreCalc);
-ptImage* lcmsRGBToPreviewRGB();
+ptImage* lcmsRGBToPreviewRGB(const bool Fast = false);
 
 ptImage* RGBToXYZ();
 ptImage* lcmsRGBToXYZ(const int Intent = INTENT_PERCEPTUAL);
@@ -192,6 +192,14 @@ ptImage* LAdjust(const double LC1, // 8 colors for L
                  const double SC6,
                  const double SC7,
                  const double SC8);
+
+// Outline
+ptImage* Outline(const short Mode,
+                 const short GradientMode,
+                 const ptCurve *Curve,
+                 const double Weight,
+                 const double Radius,
+                 const short SwitchLayer);
 
 // Color Enhance
 ptImage* ColorEnhance(const double Shadows,
@@ -578,8 +586,12 @@ ptImage* ptGMWriteImage(const char* FileName,
                         const char* ColorProfileFileName,
                         const int Intent);
 
-ptImage* ptGMResize(uint16_t Size, const short Filter);
-ptImage* ptGMResize(uint16_t NewWidth, uint16_t NewHeight, const short Filter);
+ptImage* ptGMResize(const uint16_t Size,
+                    const short Filter,
+                    const short Mode);
+ptImage* ptGMResizeWH(const uint16_t NewWidth,
+                      const uint16_t NewHeight,
+                      const short Filter);
 
 ptImage* ptGMBlur(const double Radius);
 

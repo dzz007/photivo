@@ -25,7 +25,6 @@
 // which seems a bug in the jpeglib header ?
 #include <cstdlib>
 #include <cstdio>
-#include "ptMessageBox.h"
 #include <QString>
 #include <QTime>
 
@@ -52,9 +51,11 @@
 #endif
 #endif
 
+#include "ptCalloc.h"
 #include "ptConstants.h"
 #include "ptError.h"
 #include "ptImage.h"
+#include "ptMessageBox.h"
 #include "ptResizeFilters.h"
 #include "ptCurve.h"
 #include "ptKernel.h"
@@ -72,7 +73,8 @@ extern cmsHPROFILE PreviewColorProfile;
 extern cmsHTRANSFORM ToPreviewTransform;
 
 // Lut
-extern float ToFloatTable[0x10000];
+extern float    ToFloatTable[0x10000];
+extern uint16_t ToSRGBTable[0x10000];
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -317,23 +319,33 @@ ptImage* ptImage::lcmsRGBToRGB(cmsHPROFILE OutProfile,
   return this;
 }
 
-ptImage* ptImage::lcmsRGBToPreviewRGB(){
-  // assert ((m_ColorSpace>0) && (m_ColorSpace<5));
-  if (!((m_ColorSpace>0) && (m_ColorSpace<5))) {
-    ptMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
-    return this;
-  }
-  assert (3 == m_Colors);
-
-  int32_t Size = m_Width*m_Height;
-  int32_t Step = 10000;
+ptImage* ptImage::lcmsRGBToPreviewRGB(const bool Fast /* = false */){
+  if (Fast) {
+    // Fast transform to sRGB by lookup
+    RGBToRGB(ptSpace_sRGB_D65);
 #pragma omp parallel for schedule(static)
-  for (int32_t i = 0; i < Size; i+=Step) {
-    int32_t Length = (i+Step)<Size ? Step : Size - i;
-    uint16_t* Image = &m_Image[i][0];
-    cmsDoTransform(ToPreviewTransform,Image,Image,Length);
-  }
+    for (uint32_t i=0; i<(uint32_t)m_Height*m_Width; i++) {
+      m_Image[i][0] = ToSRGBTable[m_Image[i][0]];
+      m_Image[i][1] = ToSRGBTable[m_Image[i][1]];
+      m_Image[i][2] = ToSRGBTable[m_Image[i][2]];
+    }
+  } else {
+    // assert ((m_ColorSpace>0) && (m_ColorSpace<5));
+    if (!((m_ColorSpace>0) && (m_ColorSpace<5))) {
+      ptMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
+      return this;
+    }
+    assert (3 == m_Colors);
 
+    int32_t Size = m_Width*m_Height;
+    int32_t Step = 10000;
+  #pragma omp parallel for schedule(static)
+    for (int32_t i = 0; i < Size; i+=Step) {
+      int32_t Length = (i+Step)<Size ? Step : Size - i;
+      uint16_t* Image = &m_Image[i][0];
+      cmsDoTransform(ToPreviewTransform,Image,Image,Length);
+    }
+  }
   m_ColorSpace = ptSpace_Profiled;
 
   return this;
@@ -2377,6 +2389,32 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
       }
       break;
 
+  case ptOverlayMode_Darken:
+    if (!Mask) {
+      for (short Ch=0; Ch<3; Ch++) {
+        // Is it a channel we are supposed to handle ?
+        if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+        for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+          Source   = SourceImage[i][Ch];
+          Blend    = BlendImage[i][Ch];
+          m_Image[i][Ch] = CLIP((int32_t) (MIN(Blend*Amount, Source)));
+        }
+      }
+    } else {
+      for (short Ch=0; Ch<3; Ch++) {
+        // Is it a channel we are supposed to handle ?
+        if  (! (ChannelMask & (1<<Ch))) continue;
+#pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
+        for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+          Source   = SourceImage[i][Ch];
+          Blend    = BlendImage[i][Ch];
+          m_Image[i][Ch] = CLIP((int32_t)(MIN(Blend*Mask[i]+Source*(1-Mask[i])*Amount,Source)));
+        }
+      }
+    }
+    break;
+
     case ptOverlayMode_Overlay:
       if (!Mask) {
         for (short Ch=0; Ch<3; Ch++) {
@@ -3112,6 +3150,43 @@ ptImage* ptImage::LAdjust(const double LC1, // 8 colors for L
       m_Image[i][2] = CLIP((int32_t)(m_Image[i][2] * m + WPH * (1. - m)));
     }
   }
+
+  return this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Outline
+//
+////////////////////////////////////////////////////////////////////////////////
+
+ptImage* ptImage::Outline(const short Mode,
+                          const short GradientMode,
+                          const ptCurve *Curve,
+                          const double Weight,
+                          const double Radius,
+                          const short SwitchLayer) {
+
+  assert (m_ColorSpace == ptSpace_Lab);
+
+  if (Mode == ptOverlayMode_None) return this;
+
+  ptImage *Gradient = new ptImage;
+
+  Gradient->Set(this);
+
+  ptCimgEdgeDetectionSum(Gradient, Weight, GradientMode);
+
+  Gradient->ptCIBlur(Radius, 1);
+
+  Gradient->ApplyCurve(Curve, 1);
+
+  if (Mode != ptOverlayMode_Replace)
+    Overlay(Gradient->m_Image, 1.0f, NULL, Mode, SwitchLayer);
+  else
+    Overlay(Gradient->m_Image, 1.0f, NULL, Mode);
+
+  delete Gradient;
 
   return this;
 }

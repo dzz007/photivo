@@ -25,6 +25,7 @@
 #include "ptImage.h"
 #include "ptConstants.h"
 #include "ptError.h"
+#include "ptCalloc.h"
 #include "ptSettings.h"
 
 #ifdef _OPENMP
@@ -151,6 +152,7 @@ ptImage* ptImage::ptCIDeriche(const float sigma,
 
 // Blur (Deriche of order 0)
 ptImage* ptImage::ptCIBlur(const double Sigma, const short ChannelMask /*=7*/) {
+  if (Sigma == 0.0) return this;
   ptCIDeriche(Sigma,0,'x',1,ChannelMask);
   ptCIDeriche(Sigma,0,'y',1,ChannelMask);
   return this;

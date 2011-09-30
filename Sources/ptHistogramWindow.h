@@ -57,9 +57,9 @@ void Init();
 protected:
 void resizeEvent(QResizeEvent*);
 void paintEvent(QPaintEvent*);
-QSize sizeHint() const { return QSize(200,200); };
-QSize minimumSizeHint() const { return QSize(100,100); };
-int  heightForWidth(int w) const { return MIN(150,w);};
+QSize sizeHint() const { return QSize(200,200); }
+QSize minimumSizeHint() const { return QSize(100,100); }
+int  heightForWidth(int w) const { return MIN(150,w);}
 void contextMenuEvent(QContextMenuEvent *event);
 
 private slots:

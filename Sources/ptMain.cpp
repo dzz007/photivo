@@ -28,7 +28,9 @@
 #include <QtCore>
 //#include <QtNetwork>
 #include <string>
+#include <csignal>
 
+#include "ptCalloc.h"
 #include "ptConfirmRequest.h"
 #include "ptMessageBox.h"
 #include "ptDcRaw.h"
@@ -86,8 +88,8 @@ ptCurve*  RGBContrastCurve  = NULL;
 ptCurve*  ExposureCurve     = NULL;
 ptCurve*  ContrastCurve     = NULL;
 // RGB,R,G,B,L,a,b,Base
-ptCurve*  Curve[16]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-ptCurve*  BackupCurve[16]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  Curve[17]         = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurve*  BackupCurve[17]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 // I don't manage to init statically following ones. Done in InitCurves.
 QStringList CurveKeys, CurveToolNameKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
@@ -124,7 +126,10 @@ ptImage*  HistogramImage   = NULL;
 ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
-ptCurveWindow*     CurveWindow[16] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptCurveWindow*     CurveWindow[17] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+
+// Error dialog for segfaults
+ptMessageBox* SegfaultErrorBox;
 
 // Theming
 ptTheme* Theme = NULL;
@@ -207,6 +212,7 @@ void InitStrings() {
                                                  "*.rw2 *.RW2 *.Rw2 "
                                                  "*.sr2 *.SR2 *.Sr2 "
                                                  "*.srf *.SRF *.Srf "
+                                                 "*.srw *.SRW *.Srw "
                                                  "*.sti *.STI *.Sti "
                                                  "*.tif *.TIF *.Tif "
                                                  "*.x3f *.X3F *.X3f)"
@@ -266,13 +272,14 @@ void Update(short Phase,
             short SubPhase      = -1,
             short WithIdentify  = 1,
             short ProcessorMode = ptProcessorMode_Preview);
-int CalculatePipeSize();
+int CalculatePipeSize(const bool NewImage = false);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void SaveButtonToolTip(const short mode);
 
 int    photivoMain(int Argc, char *Argv[]);
 void   CleanupResources();
 void copyFolder(QString sourceFolder, QString destFolder);
+bool GBusy = false;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -308,13 +315,25 @@ QString PtsFileToOpen = "";
 #endif
 QRect DetailViewRect;
 
+
 #ifndef DLRAW_GIMP_PLUGIN
+void SegfaultAbort(int) {
+  // prevent infinite recursion if SegfaultAbort() causes another segfault
+  std::signal(SIGSEGV, SIG_DFL);
+  std::signal(SIGABRT, SIG_DFL);
+  SegfaultErrorBox->exec();
+  std::abort();
+}
+
 int main(int Argc, char *Argv[]) {
   int RV = photivoMain(Argc,Argv);
+  DelAndNull(SegfaultErrorBox);
   CleanupResources(); // Not necessary , for debug.
   return RV;
 }
 #endif
+
+
 //class QtSingleApplication with redefined event to handle QFileOpenEvent
 #ifdef Q_OS_MAC
   class MyQApplication : public QtSingleApplication {
@@ -384,8 +403,18 @@ int photivoMain(int Argc, char *Argv[]) {
   //close on last window closed, seems to be unneeded
   TheApplication->connect(TheApplication, SIGNAL(lastWindowClosed()), TheApplication, SLOT(quit()));
 
+  // Error handling for segfaults (to prevent silent crashes)
+  SegfaultErrorBox = new ptMessageBox(QMessageBox::Critical,
+                                      QObject::tr("Photivo crashed"),
+                                      QObject::tr("Photivo crashed. You can get help on our flickr forum at\n"
+                                      "<a href=\"http://www.flickr.com/groups/photivo/discuss/\">http://www.flickr.com/groups/photivo/discuss/</a>"
+                                      "\nWhen you post there make sure to describe your last actions before the crash occurred."),
+                                      QMessageBox::Ok);
+  SegfaultErrorBox->setTextFormat(Qt::RichText);
+  std::signal(SIGSEGV, SegfaultAbort);
+  std::signal(SIGABRT, SegfaultAbort);
 
-// Handle cli arguments
+  // Handle cli arguments
   QString PhotivoCliUsageMsg = QObject::tr(
 "Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
 "                [-h] [--new-instance]\n"
@@ -487,7 +516,8 @@ int photivoMain(int Argc, char *Argv[]) {
             << "CurveShadowsHighlights"
             << "CurveDenoise"
             << "CurveHue"
-            << "CurveDenoise2";
+            << "CurveDenoise2"
+            << "CurveOutline";
 
   CurveToolNameKeys << "TabRGBCurve"
                     << "TabRToneCurve"
@@ -504,7 +534,8 @@ int photivoMain(int Argc, char *Argv[]) {
                     << "TabLABShadowsHighlights"
                     << "TabDetailCurve"
                     << "TabHueCurve"
-                    << "TabDenoiseCurve";
+                    << "TabDenoiseCurve"
+                    << "TabOutline";
 
   CurveFileNamesKeys << "CurveFileNamesRGB"
                      << "CurveFileNamesR"
@@ -521,7 +552,8 @@ int photivoMain(int Argc, char *Argv[]) {
                      << "CurveFileNamesShadowsHighlights"
                      << "CurveFileNamesDenoise"
                      << "CurveFileNamesHue"
-                     << "CurveFileNamesDenoise2";
+                     << "CurveFileNamesDenoise2"
+                     << "CurveFileNamesOutline";
 
   CurveBackupKeys = CurveKeys;
 
@@ -786,7 +818,8 @@ int photivoMain(int Argc, char *Argv[]) {
       MainWindow->ShadowsHighlightsCurveCentralWidget,
       MainWindow->DenoiseCurveCentralWidget,
       MainWindow->HueCurveCentralWidget,
-      MainWindow->Denoise2CurveCentralWidget};
+      MainWindow->Denoise2CurveCentralWidget,
+      MainWindow->OutlineCurveCentralWidget};
 
   for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
       Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
@@ -1233,16 +1266,31 @@ void Update(short Phase,
       // we're in manual mode!
       MainWindow->UpdateSettings();
     } else {
-      // run processor!
-      ImageSaved = 0;
-      MainWindow->UpdateSettings();
-      if(Settings->GetInt("HaveImage")==1) {
-        if (NextPhase < ptProcessorPhase_Output)
-          TheProcessor->Run(NextPhase, NextSubPhase, WithIdentify, ProcessorMode);
-        UpdatePreviewImage();
+      try {
+        // run processor!
+        ImageSaved = 0;
+        MainWindow->UpdateSettings();
+        if(Settings->GetInt("HaveImage")==1) {
+          if (NextPhase < ptProcessorPhase_Output)
+            TheProcessor->Run(NextPhase, NextSubPhase, WithIdentify, ProcessorMode);
+          UpdatePreviewImage();
+        }
+        NextPhase = ptProcessorPhase_Output;
+        NextSubPhase = ptProcessorPhase_Highlights;
+      } catch (std::bad_alloc) {
+        // make sure we image gets processed again
+        NextPhase = ptProcessorPhase_Raw;
+        NextSubPhase = ptProcessorPhase_Load;
+        ViewWindow->ShowStatus(ptStatus_Done);
+        ReportProgress(QObject::tr("Ready"));
+        if (Settings->GetInt("PipeSize") == 0) {
+          ptMessageBox::critical(NULL, "Memory error", "Processing aborted, memory error.\nReverting to 1:2 pipe. Reprocess with F5.");
+
+          Settings->SetValue("PipeSize",1);
+        } else {
+          ptMessageBox::critical(NULL, "Memory error", "Processing aborted, memory error.");
+        }
       }
-      NextPhase = ptProcessorPhase_Output;
-      NextSubPhase = ptProcessorPhase_Highlights;
     }
   } else if (Phase == ptProcessorPhase_OnlyHistogram) {
     // only histogram update, don't care about manual mode
@@ -1447,7 +1495,9 @@ void BeforeGamma(ptImage* Image, const short FinalRun = 0, const short Resize = 
     if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
       //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
-      Image->ptGMResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
+      Image->ptGMResize(Settings->GetInt("WebResizeScale"),
+                        Settings->GetInt("WebResizeFilter"),
+                        Settings->GetInt("WebResizeDimension"));
     }
     if (FinalRun == 1) Settings->SetValue("FullOutput",0);
   }
@@ -1500,8 +1550,9 @@ void AfterAll(ptImage* Image, const short FinalRun = 0, const short Resize = 1) 
     if (FinalRun == 1) Settings->SetValue("FullOutput",1);
     if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
-      //~ Image->FilteredResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
-      Image->ptGMResize(Settings->GetInt("WebResizeScale"),Settings->GetInt("WebResizeFilter"));
+      Image->ptGMResize(Settings->GetInt("WebResizeScale"),
+                        Settings->GetInt("WebResizeFilter"),
+                        Settings->GetInt("WebResizeDimension"));
     }
     if (FinalRun == 1) Settings->SetValue("FullOutput",0);
   }
@@ -1638,7 +1689,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     // Convert from working space to screen space.
     // Using lcms and a standard sRGB or custom profile.
-    ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB();
+    ptImage* ReturnValue = PreviewImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
     if (!ReturnValue) {
       ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
       assert(ReturnValue);
@@ -1877,19 +1928,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   ReportProgress(QObject::tr("Converting to screen space"));
 
   // Convert from working space to screen space.
-  if (Settings->GetInt("CMQuality") != ptCMQuality_FastSRGB) {
-    // Using lcms and a standard sRGB or custom profile.
-    PreviewImage->lcmsRGBToPreviewRGB();
-  } else {
-    PreviewImage->RGBToRGB(ptSpace_sRGB_D65);
-    uint16_t (*Image)[3] = PreviewImage->m_Image;
-#pragma omp parallel for schedule(static)
-    for (uint32_t i=0; i<(uint32_t)PreviewImage->m_Height*PreviewImage->m_Width; i++) {
-      Image[i][0] = ToSRGBTable[Image[i][0]];
-      Image[i][1] = ToSRGBTable[Image[i][1]];
-      Image[i][2] = ToSRGBTable[Image[i][2]];
-    }
-  }
+  // Using lcms and a standard sRGB or custom profile.
+  PreviewImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
 
   if (!ForcedImage) {
     AfterAll(PreviewImage);
@@ -1904,7 +1944,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     } else if (Settings->GetInt("HistogramCrop")) {
       BeforeGamma(HistogramImage,0,0);
 
-      ptImage* ReturnValue = HistogramImage->lcmsRGBToPreviewRGB();
+      ptImage* ReturnValue = HistogramImage->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
       if (!ReturnValue) {
         ptLogError(ptError_lcms,"lcmsRGBToPreviewRGB");
         assert(ReturnValue);
@@ -1974,7 +2014,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   if (!OnlyHistogram)
     if (Settings->GetInt("WriteBackupSettings"))
       WriteSettingsFile(Settings->GetString("UserDirectory")+"backup.pts");
-}
+} // UpdatePreviewImage
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -2089,95 +2129,103 @@ void RunJob(const QString JobFileName) {
   assert(InputFileNameList.size());
 
   do {
-    // Test if we can handle the file
-    DcRaw* TestDcRaw = new(DcRaw);
-    Settings->ToDcRaw(TestDcRaw);
-    int OpenError = 0;
-    uint16_t InputWidth = 0;
-    uint16_t InputHeight = 0;
-    if (TestDcRaw->Identify()) { // Bitmap
-      try {
-        Magick::Image image;
+    try {
+      // Test if we can handle the file
+      DcRaw* TestDcRaw = new(DcRaw);
+      Settings->ToDcRaw(TestDcRaw);
+      int OpenError = 0;
+      uint16_t InputWidth = 0;
+      uint16_t InputHeight = 0;
+      if (TestDcRaw->Identify()) { // Bitmap
+        try {
+          Magick::Image image;
 
-        image.ping(InputFileNameList[0].toAscii().data());
+          image.ping(InputFileNameList[0].toAscii().data());
 
-        InputWidth = image.columns();
-        InputHeight = image.rows();
-      } catch (Magick::Exception &Error) {
-        OpenError = 1;
+          InputWidth = image.columns();
+          InputHeight = image.rows();
+        } catch (Magick::Exception &Error) {
+          OpenError = 1;
+        }
+        if (OpenError == 0) {
+          Settings->SetValue("IsRAW",0);
+          Settings->SetValue("ExposureNormalization",0.0);
+        }
+      } else {
+        Settings->SetValue("IsRAW",1);
       }
-      if (OpenError == 0) {
-        Settings->SetValue("IsRAW",0);
-        Settings->SetValue("ExposureNormalization",0.0);
+      if (OpenError == 1) {
+        // We don't have a RAW or a bitmap!
+        QString ErrorMessage = QObject::tr("Cannot decode")
+                             + " '"
+                             + InputFileNameList[0]
+                             + "'" ;
+        printf("%s\n",ErrorMessage.toAscii().data());
+        delete TestDcRaw;
+      } else { // process
+        QFileInfo PathInfo(InputFileNameList[0]);
+        if (!Settings->GetString("OutputDirectory").isEmpty()) {
+          Settings->SetValue("OutputFileName",
+            Settings->GetString("OutputDirectory") + "/" + PathInfo.baseName());
+        } else {
+          Settings->SetValue("OutputFileName",
+            PathInfo.dir().path() + "/" + PathInfo.baseName());
+        }
+        if (!Settings->GetInt("IsRAW")) {
+          Settings->SetValue("OutputFileName",
+                             Settings->GetString("OutputFileName") + "-new");
+        }
+
+        // Here we have the OutputFileName, but extension still to add.
+        switch(Settings->GetInt("SaveFormat")) {
+          case ptSaveFormat_JPEG :
+            Settings->SetValue("OutputFileName",
+                               Settings->GetString("OutputFileName") + ".jpg");
+            break;
+          case ptSaveFormat_PNG :
+          case ptSaveFormat_PNG16 :
+            Settings->SetValue("OutputFileName",
+                               Settings->GetString("OutputFileName") + ".png");
+            break;
+          case ptSaveFormat_TIFF8 :
+          case ptSaveFormat_TIFF16 :
+            Settings->SetValue("OutputFileName",
+                               Settings->GetString("OutputFileName") + ".tif");
+            break;
+          default :
+            Settings->SetValue("OutputFileName",
+                               Settings->GetString("OutputFileName") + ".ppm");
+            break;
+        }
+
+        // Processing the job.
+        delete TheDcRaw;
+        delete TheProcessor;
+        TheProcessor = new ptProcessor(ReportProgress);
+        TheDcRaw = TestDcRaw;
+        if (Settings->GetInt("IsRAW")==0) {
+          Settings->SetValue("ImageW",InputWidth);
+          Settings->SetValue("ImageH",InputHeight);
+        } else {
+          Settings->SetValue("ImageW",TheDcRaw->m_Width);
+          Settings->SetValue("ImageH",TheDcRaw->m_Height);
+        }
+
+        TheProcessor->m_DcRaw = TheDcRaw;
+
+        Settings->SetValue("RunMode",0);
+        Settings->SetValue("FullOutput",1);
+        TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,0,1);
+        Settings->SetValue("FullOutput",0);
+        // And write result.
+        Update(ptProcessorPhase_WriteOut);
       }
-    } else {
-      Settings->SetValue("IsRAW",1);
-    }
-    if (OpenError == 1) {
-      // We don't have a RAW or a bitmap!
-      QString ErrorMessage = QObject::tr("Cannot decode")
+    } catch (std::bad_alloc) {
+      QString ErrorMessage = QObject::tr("Memory error, no conversion for file:")
                            + " '"
                            + InputFileNameList[0]
                            + "'" ;
       printf("%s\n",ErrorMessage.toAscii().data());
-      delete TestDcRaw;
-    } else { // process
-      QFileInfo PathInfo(InputFileNameList[0]);
-      if (!Settings->GetString("OutputDirectory").isEmpty()) {
-        Settings->SetValue("OutputFileName",
-          Settings->GetString("OutputDirectory") + "/" + PathInfo.baseName());
-      } else {
-        Settings->SetValue("OutputFileName",
-          PathInfo.dir().path() + "/" + PathInfo.baseName());
-      }
-      if (!Settings->GetInt("IsRAW")) {
-        Settings->SetValue("OutputFileName",
-                           Settings->GetString("OutputFileName") + "-new");
-      }
-
-      // Here we have the OutputFileName, but extension still to add.
-      switch(Settings->GetInt("SaveFormat")) {
-        case ptSaveFormat_JPEG :
-          Settings->SetValue("OutputFileName",
-                             Settings->GetString("OutputFileName") + ".jpg");
-          break;
-        case ptSaveFormat_PNG :
-        case ptSaveFormat_PNG16 :
-          Settings->SetValue("OutputFileName",
-                             Settings->GetString("OutputFileName") + ".png");
-          break;
-        case ptSaveFormat_TIFF8 :
-        case ptSaveFormat_TIFF16 :
-          Settings->SetValue("OutputFileName",
-                             Settings->GetString("OutputFileName") + ".tif");
-          break;
-        default :
-          Settings->SetValue("OutputFileName",
-                             Settings->GetString("OutputFileName") + ".ppm");
-          break;
-      }
-
-      // Processing the job.
-      delete TheDcRaw;
-      delete TheProcessor;
-      TheProcessor = new ptProcessor(ReportProgress);
-      TheDcRaw = TestDcRaw;
-      if (Settings->GetInt("IsRAW")==0) {
-        Settings->SetValue("ImageW",InputWidth);
-        Settings->SetValue("ImageH",InputHeight);
-      } else {
-        Settings->SetValue("ImageW",TheDcRaw->m_Width);
-        Settings->SetValue("ImageH",TheDcRaw->m_Height);
-      }
-
-      TheProcessor->m_DcRaw = TheDcRaw;
-
-      Settings->SetValue("RunMode",0);
-      Settings->SetValue("FullOutput",1);
-      TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,0,1);
-      Settings->SetValue("FullOutput",0);
-      // And write result.
-      Update(ptProcessorPhase_WriteOut);
     }
 
     // Loop over the inputfiles by shifting the next one to index 0
@@ -2189,7 +2237,7 @@ void RunJob(const QString JobFileName) {
     Settings->SetValue("InputFileNameList",InputFileNameList);
 
   } while (InputFileNameList.size());
-}
+} // RunJob
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -2272,7 +2320,7 @@ void WriteExif(const QString FileName, uint8_t* ExifBuffer, const unsigned ExifB
 
       BufferLength = ExifBufferLength-sizeof(ExifHeader);
 
-      Buffer = (unsigned char*) MALLOC(BufferLength);
+      Buffer = (unsigned char*) MALLOC2(BufferLength);
       ptMemoryError(Buffer,__FILE__,__LINE__);
 
       Exiv2::ExifData exifData;
@@ -3171,11 +3219,10 @@ void CB_MenuFileOpen(const short HaveFile) {
 
 
   if (Settings->GetInt("AutomaticPipeSize") && Settings->ToolIsActive("TabResize")) {
-    if (!CalculatePipeSize())
-      Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
-  } else {
-    Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+    CalculatePipeSize(true);
   }
+
+  Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
 
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   Settings->SetValue("PerspectiveFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
@@ -3193,79 +3240,86 @@ void CB_MenuFileOpen(const short HaveFile) {
   Settings->SetValue("RunMode",OldRunMode);
 }
 
+//==============================================================================
+
 void CB_MenuFileSaveOutput(QString OutputName = "") {
+  try {
+    if (Settings->GetInt("HaveImage")==0) return;
 
-  if (Settings->GetInt("HaveImage")==0) return;
+    QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+    QFileInfo PathInfo(InputFileNameList[0]);
+    QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.baseName();
+    if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
+    QString Pattern;
 
-  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
-  QFileInfo PathInfo(InputFileNameList[0]);
-  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.baseName();
-  if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
-  QString Pattern;
+    switch(Settings->GetInt("SaveFormat")) {
+      case ptSaveFormat_JPEG :
+        SuggestedFileName += ".jpg";
+        Pattern = QObject::tr("Jpg images (*.jpg *.jpeg);;All files (*.*)");
+        break;
+      case ptSaveFormat_PNG :
+      case ptSaveFormat_PNG16 :
+        SuggestedFileName += ".png";
+        Pattern = QObject::tr("PNG images(*.png);;All files (*.*)");
+        break;
+      case ptSaveFormat_TIFF8 :
+      case ptSaveFormat_TIFF16 :
+        SuggestedFileName += ".tif";
+        Pattern = QObject::tr("Tiff images (*.tif *.tiff);;All files (*.*)");
+        break;
+      default :
+        SuggestedFileName += ".ppm";
+        Pattern = QObject::tr("Ppm images (*.ppm);;All files (*.*)");
+        break;
+    }
 
-  switch(Settings->GetInt("SaveFormat")) {
-    case ptSaveFormat_JPEG :
-      SuggestedFileName += ".jpg";
-      Pattern = QObject::tr("Jpg images (*.jpg *.jpeg);;All files (*.*)");
-      break;
-    case ptSaveFormat_PNG :
-    case ptSaveFormat_PNG16 :
-      SuggestedFileName += ".png";
-      Pattern = QObject::tr("PNG images(*.png);;All files (*.*)");
-      break;
-    case ptSaveFormat_TIFF8 :
-    case ptSaveFormat_TIFF16 :
-      SuggestedFileName += ".tif";
-      Pattern = QObject::tr("Tiff images (*.tif *.tiff);;All files (*.*)");
-      break;
-    default :
-      SuggestedFileName += ".ppm";
-      Pattern = QObject::tr("Ppm images (*.ppm);;All files (*.*)");
-      break;
+    QString FileName = OutputName;
+    if (FileName == "")
+      FileName = QFileDialog::getSaveFileName(NULL,
+                                              QObject::tr("Save File"),
+                                              SuggestedFileName,
+                                              Pattern);
+
+    if (0 == FileName.size()) return; // Operation cancelled.
+
+    Settings->SetValue("OutputFileName",FileName);
+
+    short OldRunMode = Settings->GetInt("RunMode");
+    Settings->SetValue("RunMode",0);
+
+    // Processing the job.
+    delete TheDcRaw;
+    delete TheProcessor;
+    TheDcRaw = new(DcRaw);
+    TheProcessor = new ptProcessor(ReportProgress);
+    Settings->SetValue("JobMode",1); // Disable caching to save memory
+    TheProcessor->m_DcRaw = TheDcRaw;
+    Settings->ToDcRaw(TheDcRaw);
+    // Run the graphical pipe in full format mode to recreate the image.
+    Settings->SetValue("FullOutput",1);
+    TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
+    Settings->SetValue("FullOutput",0);
+
+    // Write out (maybe after applying gamma).
+    Update(ptProcessorPhase_WriteOut);
+
+    delete TheDcRaw;
+    delete TheProcessor;
+    TheDcRaw = new(DcRaw);
+    TheProcessor = new ptProcessor(ReportProgress);
+    Settings->SetValue("JobMode",0);
+    TheProcessor->m_DcRaw = TheDcRaw;
+    Settings->ToDcRaw(TheDcRaw);
+    Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+    Settings->SetValue("RunMode",OldRunMode);
+    ImageSaved = 1;
+  } catch (std::bad_alloc) {
+    ptMessageBox::critical(NULL, "Memory error", "No file written, memory error.");
   }
+} // CB_MenuFileSaveOutput
 
-  QString FileName = OutputName;
-  if (FileName == "")
-    FileName = QFileDialog::getSaveFileName(NULL,
-                                            QObject::tr("Save File"),
-                                            SuggestedFileName,
-                                            Pattern);
-
-  if (0 == FileName.size()) return; // Operation cancelled.
-
-  Settings->SetValue("OutputFileName",FileName);
-
-  short OldRunMode = Settings->GetInt("RunMode");
-  Settings->SetValue("RunMode",0);
-
-  // Processing the job.
-  delete TheDcRaw;
-  delete TheProcessor;
-  TheDcRaw = new(DcRaw);
-  TheProcessor = new ptProcessor(ReportProgress);
-  Settings->SetValue("JobMode",1); // Disable caching to save memory
-  TheProcessor->m_DcRaw = TheDcRaw;
-  Settings->ToDcRaw(TheDcRaw);
-  // Run the graphical pipe in full format mode to recreate the image.
-  Settings->SetValue("FullOutput",1);
-  TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
-  Settings->SetValue("FullOutput",0);
-
-  // Write out (maybe after applying gamma).
-  Update(ptProcessorPhase_WriteOut);
-
-  delete TheDcRaw;
-  delete TheProcessor;
-  TheDcRaw = new(DcRaw);
-  TheProcessor = new ptProcessor(ReportProgress);
-  Settings->SetValue("JobMode",0);
-  TheProcessor->m_DcRaw = TheDcRaw;
-  Settings->ToDcRaw(TheDcRaw);
-  Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
-  MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-  Settings->SetValue("RunMode",OldRunMode);
-  ImageSaved = 1;
-}
+//==============================================================================
 
 void CB_MenuFileWriteJob(const short) {
   if (Settings->GetInt("HaveImage")==0) return;
@@ -3329,15 +3383,9 @@ void CB_MenuFileWriteSettings() {
   WriteSettingsFile(FileName);
 }
 
+//==============================================================================
 
 void CB_MenuFileExit(const short) {
-  if (ViewWindow->interaction() != iaNone) {
-    ptMessageBox::warning(MainWindow,
-                     QObject::tr("Cannot exit"),
-                     QObject::tr("Please finish your crop before closing Photivo."));
-    return;
-  }
-
   if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0 && Settings->GetInt("SaveConfirmation")==1) {
     if (!ptConfirmRequest::saveImage()) {
       return;
@@ -3351,7 +3399,7 @@ void CB_MenuFileExit(const short) {
   }
 
   // Delete backup settingsfile
-  if (Settings->GetInt("WriteBackupSettings"))
+  if (Settings->GetInt("WriteBackupSettings") == 1)
     QFile::remove(Settings->GetString("UserDirectory")+"/backup.pts");
 
   // Disable manual curves when closing
@@ -3376,8 +3424,6 @@ void CB_MenuFileExit(const short) {
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
   delete RepairSpotList;
-
-
   ALLOCATED(10000000);
   printf("Exiting Photivo.\n");
   QCoreApplication::exit(EXIT_SUCCESS);
@@ -3394,161 +3440,164 @@ void CB_ExportToGimpCheck(const QVariant Check) {
 }
 
 void GimpExport(const short UsePipe) {
+  try {
+    if (Settings->GetInt("HaveImage")==0) return;
 
-  if (Settings->GetInt("HaveImage")==0) return;
+    ReportProgress(QObject::tr("Writing tmp image for gimp"));
 
-  ReportProgress(QObject::tr("Writing tmp image for gimp"));
+    short OldRunMode = Settings->GetInt("RunMode");
 
-  short OldRunMode = Settings->GetInt("RunMode");
+    ptImage* ImageForGimp = new ptImage;
 
-  ptImage* ImageForGimp = new ptImage;
+    if (UsePipe == 1)
+      ImageForGimp->Set(TheProcessor->m_Image_AfterEyeCandy);
+    else {
+      Settings->SetValue("RunMode",0);
 
-  if (UsePipe == 1)
-    ImageForGimp->Set(TheProcessor->m_Image_AfterEyeCandy);
-  else {
-    Settings->SetValue("RunMode",0);
+      // Processing the job.
+      delete TheDcRaw;
+      delete TheProcessor;
+      TheDcRaw = new(DcRaw);
+      TheProcessor = new ptProcessor(ReportProgress);
+      Settings->SetValue("JobMode",1); // Disable caching to save memory
+      TheProcessor->m_DcRaw = TheDcRaw;
+      Settings->ToDcRaw(TheDcRaw);
+      // Run the graphical pipe in full format mode to recreate the image.
+      Settings->SetValue("FullOutput",1);
+      TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
+      Settings->SetValue("FullOutput",0);
 
-    // Processing the job.
-    delete TheDcRaw;
-    delete TheProcessor;
-    TheDcRaw = new(DcRaw);
-    TheProcessor = new ptProcessor(ReportProgress);
-    Settings->SetValue("JobMode",1); // Disable caching to save memory
-    TheProcessor->m_DcRaw = TheDcRaw;
-    Settings->ToDcRaw(TheDcRaw);
-    // Run the graphical pipe in full format mode to recreate the image.
-    Settings->SetValue("FullOutput",1);
-    TheProcessor->Run(ptProcessorPhase_Raw,ptProcessorPhase_Load,1,1);
-    Settings->SetValue("FullOutput",0);
+      ImageForGimp = TheProcessor->m_Image_AfterEyeCandy; // no cache
+    }
 
-    ImageForGimp = TheProcessor->m_Image_AfterEyeCandy; // no cache
+    BeforeGamma(ImageForGimp);
+
+    cmsHPROFILE OutputColorProfile = NULL;
+
+    ReportProgress(QObject::tr("Converting to output space"));
+
+    // Prepare and open an output profile.
+    OutputColorProfile = cmsOpenProfileFromFile(
+      Settings->GetString("OutputColorProfile").toAscii().data(),
+      "r");
+    if (!OutputColorProfile) {
+      ptLogError(ptError_FileOpen,
+     Settings->GetString("OutputColorProfile").toAscii().data());
+      assert(OutputColorProfile);
+    }
+
+    // Color space conversion
+    ptImage* ReturnValue = ImageForGimp->lcmsRGBToRGB(
+      OutputColorProfile,
+      Settings->GetInt("OutputColorProfileIntent"),
+      Settings->GetInt("CMQuality"));
+    if (!ReturnValue) {
+      ptLogError(ptError_lcms,"lcmsRGBToRGB(OutputColorProfile)");
+      assert(ReturnValue);
+    }
+
+    AfterAll(ImageForGimp);
+
+    if (Settings->ToolIsActive("TabOutWiener"))
+      EndSharpen(ImageForGimp, OutputColorProfile, Settings->GetInt("OutputColorProfileIntent"));
+    // Close the output profile.
+    cmsCloseProfile(OutputColorProfile);
+
+    QTemporaryFile ImageFile;
+    ImageFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.ppm");
+    assert (ImageFile.open());
+    QString ImageFileName = ImageFile.fileName();
+    ImageFile.setAutoRemove(false);
+    ImageFile.close();
+    printf("(%s,%d) '%s'\n",
+           __FILE__,__LINE__,ImageFileName.toAscii().data());
+    ImageForGimp->WriteAsPpm(ImageFileName.toAscii().data(),16);
+
+    ReportProgress(QObject::tr("Writing tmp exif for gimp"));
+
+    QTemporaryFile ExifFile;
+    assert (ExifFile.open());
+    QString ExifFileName = ExifFile.fileName();
+    ExifFile.setAutoRemove(false);
+    printf("(%s,%d) '%s'\n",
+           __FILE__,__LINE__,ExifFileName.toAscii().data());
+    QDataStream ExifOut(&ExifFile);
+    ExifOut.writeRawData((char *) TheProcessor->m_ExifBuffer,
+                         TheProcessor->m_ExifBufferLength);
+    ExifFile.close();
+
+    ReportProgress(QObject::tr("Writing tmp icc for gimp"));
+
+    QTemporaryFile ICCFile;
+    assert (ICCFile.open());
+    QString ICCFileName = ICCFile.fileName();
+    ICCFile.setAutoRemove(false);
+    printf("(%s,%d) '%s'\n",
+           __FILE__,__LINE__,ICCFileName.toAscii().data());
+    QDataStream ICCOut(&ICCFile);
+    FILE* pFile = fopen ( Settings->GetString("OutputColorProfile").toAscii().data(), "rb" );
+    if (pFile==NULL) {
+      ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toAscii().data());
+      exit(EXIT_FAILURE);
+    }
+    fseek (pFile , 0 , SEEK_END);
+    long lSize = ftell (pFile);
+    rewind (pFile);
+
+    char* pchBuffer = (char*) CALLOC2(lSize,sizeof(uint8_t));
+    ptMemoryError(pchBuffer,__FILE__,__LINE__);
+
+    size_t RV = fread (pchBuffer, 1, lSize, pFile);
+    if (RV != (size_t) lSize) {
+      ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toAscii().data());
+      exit(EXIT_FAILURE);
+    }
+    ICCOut.writeRawData(pchBuffer, lSize);
+
+    FCLOSE (pFile);
+    FREE2 (pchBuffer);
+    ICCFile.close();
+
+    ReportProgress(QObject::tr("Writing gimp interface file"));
+
+    QTemporaryFile GimpFile;
+    GimpFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.ptg");
+    assert (GimpFile.open());
+    QString GimpFileName = GimpFile.fileName();
+    GimpFile.setAutoRemove(false);
+    printf("(%s,%d) '%s'\n",
+           __FILE__,__LINE__,GimpFileName.toAscii().data());
+    QTextStream Out(&GimpFile);
+    Out << ImageFileName << "\n";
+    Out << ExifFileName << "\n";
+    Out << ICCFileName << "\n";
+    GimpFile.close();
+
+    QString GimpExeCommand = Settings->GetString("GimpExecCommand");
+    QStringList GimpArguments;
+    GimpArguments << GimpFileName;
+    QProcess* GimpProcess = new QProcess();
+    GimpProcess->startDetached(GimpExeCommand,GimpArguments);
+
+    // clean up
+    if (UsePipe == 1) {
+      delete ImageForGimp;
+    } else {
+      delete TheDcRaw;
+      delete TheProcessor;
+      TheDcRaw = new(DcRaw);
+      TheProcessor = new ptProcessor(ReportProgress);
+      Settings->SetValue("JobMode",0);
+      TheProcessor->m_DcRaw = TheDcRaw;
+      Settings->ToDcRaw(TheDcRaw);
+      Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+      MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+      Settings->SetValue("RunMode",OldRunMode);
+    }
+    ReportProgress(QObject::tr("Ready"));
+  } catch (std::bad_alloc) {
+    ptMessageBox::critical(NULL, "Memory error", "No export, memory error.");
   }
-
-  BeforeGamma(ImageForGimp);
-
-  cmsHPROFILE OutputColorProfile = NULL;
-
-  ReportProgress(QObject::tr("Converting to output space"));
-
-  // Prepare and open an output profile.
-  OutputColorProfile = cmsOpenProfileFromFile(
-    Settings->GetString("OutputColorProfile").toAscii().data(),
-    "r");
-  if (!OutputColorProfile) {
-    ptLogError(ptError_FileOpen,
-   Settings->GetString("OutputColorProfile").toAscii().data());
-    assert(OutputColorProfile);
-  }
-
-  // Color space conversion
-  ptImage* ReturnValue = ImageForGimp->lcmsRGBToRGB(
-    OutputColorProfile,
-    Settings->GetInt("OutputColorProfileIntent"),
-    Settings->GetInt("CMQuality"));
-  if (!ReturnValue) {
-    ptLogError(ptError_lcms,"lcmsRGBToRGB(OutputColorProfile)");
-    assert(ReturnValue);
-  }
-
-  AfterAll(ImageForGimp);
-
-  if (Settings->ToolIsActive("TabOutWiener"))
-    EndSharpen(ImageForGimp, OutputColorProfile, Settings->GetInt("OutputColorProfileIntent"));
-  // Close the output profile.
-  cmsCloseProfile(OutputColorProfile);
-
-  QTemporaryFile ImageFile;
-  ImageFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.ppm");
-  assert (ImageFile.open());
-  QString ImageFileName = ImageFile.fileName();
-  ImageFile.setAutoRemove(false);
-  ImageFile.close();
-  printf("(%s,%d) '%s'\n",
-         __FILE__,__LINE__,ImageFileName.toAscii().data());
-  ImageForGimp->WriteAsPpm(ImageFileName.toAscii().data(),16);
-
-  ReportProgress(QObject::tr("Writing tmp exif for gimp"));
-
-  QTemporaryFile ExifFile;
-  assert (ExifFile.open());
-  QString ExifFileName = ExifFile.fileName();
-  ExifFile.setAutoRemove(false);
-  printf("(%s,%d) '%s'\n",
-         __FILE__,__LINE__,ExifFileName.toAscii().data());
-  QDataStream ExifOut(&ExifFile);
-  ExifOut.writeRawData((char *) TheProcessor->m_ExifBuffer,
-                       TheProcessor->m_ExifBufferLength);
-  ExifFile.close();
-
-  ReportProgress(QObject::tr("Writing tmp icc for gimp"));
-
-  QTemporaryFile ICCFile;
-  assert (ICCFile.open());
-  QString ICCFileName = ICCFile.fileName();
-  ICCFile.setAutoRemove(false);
-  printf("(%s,%d) '%s'\n",
-         __FILE__,__LINE__,ICCFileName.toAscii().data());
-  QDataStream ICCOut(&ICCFile);
-  FILE* pFile = fopen ( Settings->GetString("OutputColorProfile").toAscii().data(), "rb" );
-  if (pFile==NULL) {
-    ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toAscii().data());
-    exit(EXIT_FAILURE);
-  }
-  fseek (pFile , 0 , SEEK_END);
-  long lSize = ftell (pFile);
-  rewind (pFile);
-
-  char* pchBuffer = (char*) CALLOC(lSize,sizeof(uint8_t));
-  ptMemoryError(pchBuffer,__FILE__,__LINE__);
-
-  size_t RV = fread (pchBuffer, 1, lSize, pFile);
-  if (RV != (size_t) lSize) {
-    ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toAscii().data());
-    exit(EXIT_FAILURE);
-  }
-  ICCOut.writeRawData(pchBuffer, lSize);
-
-  FCLOSE (pFile);
-  FREE (pchBuffer);
-  ICCFile.close();
-
-  ReportProgress(QObject::tr("Writing gimp interface file"));
-
-  QTemporaryFile GimpFile;
-  GimpFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.ptg");
-  assert (GimpFile.open());
-  QString GimpFileName = GimpFile.fileName();
-  GimpFile.setAutoRemove(false);
-  printf("(%s,%d) '%s'\n",
-         __FILE__,__LINE__,GimpFileName.toAscii().data());
-  QTextStream Out(&GimpFile);
-  Out << ImageFileName << "\n";
-  Out << ExifFileName << "\n";
-  Out << ICCFileName << "\n";
-  GimpFile.close();
-
-  QString GimpExeCommand = Settings->GetString("GimpExecCommand");
-  QStringList GimpArguments;
-  GimpArguments << GimpFileName;
-  QProcess* GimpProcess = new QProcess();
-  GimpProcess->startDetached(GimpExeCommand,GimpArguments);
-
-  // clean up
-  if (UsePipe == 1) {
-    delete ImageForGimp;
-  } else {
-    delete TheDcRaw;
-    delete TheProcessor;
-    TheDcRaw = new(DcRaw);
-    TheProcessor = new ptProcessor(ReportProgress);
-    Settings->SetValue("JobMode",0);
-    TheProcessor->m_DcRaw = TheDcRaw;
-    Settings->ToDcRaw(TheDcRaw);
-    Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
-    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-    Settings->SetValue("RunMode",OldRunMode);
-  }
-  ReportProgress(QObject::tr("Ready"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3844,7 +3893,7 @@ void CB_MemoryTestInput(const QVariant Value) {
         QObject::tr("If you don't stop me, I will waste %1 MB of memory.").arg(Value.toInt()),
         QMessageBox::Ok,QMessageBox::Cancel)==QMessageBox::Ok){
       // allocate orphaned memory for testing
-      char (*Test) = (char (*)) CALLOC(Value.toInt()*1024*1024,1);
+      char (*Test) = (char (*)) CALLOC2(Value.toInt()*1024*1024,1);
       memset(Test, '\0', Value.toInt()*1024*1024);
       ptMessageBox::critical(0,"Feedback","Memory wasted ;-)");
     }
@@ -5050,14 +5099,10 @@ void CB_CropExposureInput(const QVariant Value) {
   Settings->SetValue("CropExposure", Value);
 
   if (ViewWindow->interaction() == iaCrop) {
-    ViewWindow->ShowStatus(QObject::tr("Prepare"));
-    ReportProgress(QObject::tr("Prepare for cropping"));
-
+    if (GBusy) return;
+    else GBusy = true;
     UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
-
-    // Allow to be selected in the view window. And deactivate main.
-    ViewWindow->ShowStatus(QObject::tr("Crop"));
-    ReportProgress(QObject::tr("Crop"));
+    GBusy = false;
   }
 }
 
@@ -5286,8 +5331,16 @@ void CB_LqrVertFirstCheck(const QVariant Check) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void CalculatePipeSizeHelper(const short Size, const bool NewImage) {
+  if (NewImage) {
+    Settings->SetValue("PipeSize",Size);
+  } else {
+    CB_PipeSizeChoice(Size);
+  }
+}
+
 // returns 1 if pipe was updated
-int CalculatePipeSize() {
+int CalculatePipeSize(const bool NewImage /* = False */) {
   uint16_t InSize = 0;
   if (Settings->GetInt("HaveImage")==0) return 0;
   if (Settings->GetInt("Crop")==0) {
@@ -5299,19 +5352,19 @@ int CalculatePipeSize() {
   if (s < Settings->GetInt("PipeSize")) {
     if (Settings->GetInt("RunMode") != 1) {// not manual mode
       ImageSaved = 1; // bad hack to check what happens in the next step
-      CB_PipeSizeChoice(s);
-      if (ImageSaved == 1) {
+      CalculatePipeSizeHelper(s, NewImage);
+      if (ImageSaved == 1 && !NewImage) {
         if (Settings->GetInt("PipeSize")==1) {
           ptMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill stay on half size instead!");
           ImageSaved = 0;
           return 0;
         } else {
           ptMessageBox::information(NULL,"Failure!","Could not run on full size!\nWill run on half size instead!");
-          CB_PipeSizeChoice(1);
+          CalculatePipeSizeHelper(1, NewImage);
         }
       }
     } else {
-      CB_PipeSizeChoice(s);
+      CalculatePipeSizeHelper(s, NewImage);
     }
     return 1;
   }
@@ -5327,6 +5380,19 @@ void CB_ResizeCheck(const QVariant Check) {
     Update(ptProcessorPhase_Geometry);
   }
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+}
+
+void CB_ResizeDimensionChoice(const QVariant Choice) {
+  Settings->SetValue("ResizeDimension",Choice);
+  if (Settings->GetInt("Resize")) {
+    if (Settings->GetInt("AutomaticPipeSize")) {
+      if (!CalculatePipeSize())
+        Update(ptProcessorPhase_Geometry);
+    } else {
+      Update(ptProcessorPhase_Geometry);
+    }
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  }
 }
 
 void CB_ResizeScaleInput(const QVariant Value) {
@@ -5457,8 +5523,7 @@ void CB_ChannelMixerSaveButton() {
     "; photivo Channelmixer File\n"
     ";\n"
     "; This curve was written from within photivo\n"
-    ";\n"
-    "; ";
+    ";\n";
 
   bool Success;
   QString Explanation =
@@ -5469,7 +5534,7 @@ void CB_ChannelMixerSaveButton() {
                           NULL,
                           &Success);
   if (Success && !Explanation.isEmpty()) {
-    Header += Explanation + "\n;\n";
+    Header += "; " + Explanation + "\n;\n";
   }
 
   ChannelMixer->WriteChannelMixer(ChannelMixerFileName.toAscii().data(),
@@ -5850,9 +5915,9 @@ void CB_CurveOpenButton(const int Channel) {
     return;
   }
   if (Curve[Channel]->m_IntendedChannel != Channel) {
-    const QString IntendedChannel[16] = {"RGB","R","G","B","L","a","b",
+    const QString IntendedChannel[17] = {"RGB","R","G","B","L","a","b",
       "Saturation","Base","After gamma","L by hue","Texture",
-      "Shadows / Highlights","Denoise","Denoise 2","Hue"};
+                                         "Shadows / Highlights","Denoise","Denoise 2","Hue","Outline"};
     QString Message = QObject::tr("This curve is meant for channel ") +
                         IntendedChannel[Curve[Channel]->m_IntendedChannel] +
                         QObject::tr(". Continue anyway ?");
@@ -5915,6 +5980,10 @@ void CB_CurvebOpenButton() {
   CB_CurveOpenButton(ptCurveChannel_b);
 }
 
+void CB_CurveOutlineOpenButton() {
+  CB_CurveOpenButton(ptCurveChannel_Outline);
+}
+
 void CB_CurveLByHueOpenButton() {
   CB_CurveOpenButton(ptCurveChannel_LByHue);
 }
@@ -5964,8 +6033,7 @@ void CB_CurveSaveButton(const int Channel) {
     "; photivo Curve File\n"
     ";\n"
     "; This curve was written from within photivo\n"
-    ";\n"
-    "; ";
+    ";\n";
 
   bool Success;
   QString Explanation =
@@ -5976,7 +6044,7 @@ void CB_CurveSaveButton(const int Channel) {
                           NULL,
                           &Success);
   if (Success && !Explanation.isEmpty()) {
-    Header += Explanation + "\n;\n";
+    Header += "; " + Explanation + "\n;\n";
   }
 
   Curve[Channel]->WriteCurve(CurveFileName.toAscii().data(),
@@ -6009,6 +6077,10 @@ void CB_CurveaSaveButton() {
 
 void CB_CurvebSaveButton() {
   CB_CurveSaveButton(ptCurveChannel_b);
+}
+
+void CB_CurveOutlineSaveButton() {
+  CB_CurveSaveButton(ptCurveChannel_Outline);
 }
 
 void CB_CurveLByHueSaveButton() {
@@ -6121,6 +6193,10 @@ void CB_CurveLaChoice(const QVariant Choice) {
 
 void CB_CurveLbChoice(const QVariant Choice) {
   CB_CurveChoice(ptCurveChannel_b,Choice.toInt());
+}
+
+void CB_CurveOutlineChoice(const QVariant Choice) {
+  CB_CurveChoice(ptCurveChannel_Outline,Choice.toInt());
 }
 
 void CB_CurveLByHueChoice(const QVariant Choice) {
@@ -8346,6 +8422,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LqrVertFirstCheck)
 
   M_Dispatch(ResizeCheck)
+  M_Dispatch(ResizeDimensionChoice)
   M_Dispatch(ResizeScaleInput)
   M_Dispatch(ResizeFilterChoice)
   M_Dispatch(AutomaticPipeSizeCheck)
@@ -8457,6 +8534,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(CurveSaturationChoice)
   M_Dispatch(BaseCurveChoice)
   M_Dispatch(BaseCurve2Choice)
+  M_Dispatch(CurveOutlineChoice)
 
   M_Dispatch(LABTransformChoice)
 
@@ -8642,6 +8720,12 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(ViewLABChoice)
 
+  M_SetAndRunDispatch(OutlineModeChoice)
+  M_SetAndRunDispatch(OutlineSwitchLayerCheck)
+  M_SetAndRunDispatch(OutlineGradientModeChoice)
+  M_SetAndRunDispatch(OutlineWeightInput)
+  M_SetAndRunDispatch(OutlineBlurRadiusInput)
+
   M_Dispatch(ColorcontrastRadiusInput)
   M_Dispatch(ColorcontrastAmountInput)
   M_Dispatch(ColorcontrastOpacityInput)
@@ -8808,6 +8892,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(RGBContrast3ThresholdInput)
 
   M_SetAndRunDispatch(WebResizeChoice)
+  M_SetAndRunDispatch(WebResizeDimensionChoice)
   M_SetAndRunDispatch(WebResizeBeforeGammaCheck)
   M_SetAndRunDispatch(WebResizeScaleInput)
   M_SetAndRunDispatch(WebResizeFilterChoice)

@@ -33,7 +33,7 @@
 extern ptTheme* Theme;
 extern QStringList CurveKeys;
 extern QString SettingsFilePattern;
-extern ptCurve* Curve[16];
+extern ptCurve* Curve[17];
 extern ptViewWindow* ViewWindow;
 
 // Prototypes
