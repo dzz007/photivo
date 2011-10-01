@@ -37,11 +37,12 @@ extern QStringList FileExtsBitmap;
 //==============================================================================
 
 ptFileMgrThumbnailer::ptFileMgrThumbnailer()
-: QThread(),
-  m_Dir(""),
-  m_Cache(NULL),
-  m_Queue(NULL)
-{}
+: QThread()
+{
+  m_Cache = NULL;
+  m_Queue = NULL;
+  m_Dir = "";
+}
 
 //==============================================================================
 
@@ -82,7 +83,6 @@ void ptFileMgrThumbnailer::run() {
   thumbsDir.setFilter(QDir::AllDirs | QDir::NoDot | QDir::Files);
   thumbsDir.setNameFilters(FileExtsRaw + FileExtsBitmap);
   QFileInfoList files = thumbsDir.entryInfoList();
-
   for (uint i = 0; i < (uint)files.count(); i++) {
     QGraphicsItemGroup* thumbGroup = new QGraphicsItemGroup;
     QGraphicsPixmapItem* thumbPixmap = new QGraphicsPixmapItem;
@@ -91,9 +91,12 @@ void ptFileMgrThumbnailer::run() {
 
     ptDcRaw dcRaw;
     if (dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
+
       // we have a raw image ...
-      QPixmap* px = dcRaw.thumbnail();
-      thumbPixmap->setPixmap(px->scaled(150,150));
+      QPixmap* px = new QPixmap;
+      if (dcRaw.thumbnail(px)) {
+        thumbPixmap->setPixmap(px->scaled(150,150));
+      }
       DelAndNull(px);
     } else {
       // ... or a bitmap ...
