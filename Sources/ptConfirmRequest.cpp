@@ -123,7 +123,7 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
                  #ifdef Q_OS_WIN32
                    newFilename.replace(QString("/"), QString("\\"))
                  #else
-                   filename
+                   newFilename
                  #endif
                    + "\n\n" +
                    QObject::tr("Do you want to save the current image?"));
