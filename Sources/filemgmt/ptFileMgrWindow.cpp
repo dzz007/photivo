@@ -31,7 +31,10 @@ extern ptSettings* Settings;
 
 //==============================================================================
 
-ptFileMgrWindow::ptFileMgrWindow(QWidget *parent): QWidget(parent) {
+ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
+: QWidget(parent),
+  m_IsFirstShow(true)
+{
   setupUi(this);
 
   // We create our data module
@@ -84,6 +87,26 @@ void ptFileMgrWindow::fetchNewThumbs() {
       break;
     }
   }
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::showEvent(QShowEvent* event) {
+  // When the file manager is opened for the first time set initally selected directory
+  if (m_IsFirstShow) {
+    QString lastDir = Settings->GetString("LastFileMgrLocation");
+    QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
+
+    if (lastDir != "" && QDir(lastDir).exists()) {
+      DirTree->setCurrentIndex(fsmodel->index(lastDir));
+    } else {
+      DirTree->setCurrentIndex(fsmodel->index(QDir::homePath()));
+    }
+
+    m_IsFirstShow = false;
+  }
+
+  QWidget::showEvent(event);
 }
 
 //==============================================================================

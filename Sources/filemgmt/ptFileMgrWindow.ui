@@ -25,7 +25,11 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QTreeView" name="DirTree"/>
+     <widget class="QTreeView" name="DirTree">
+      <property name="headerHidden">
+       <bool>true</bool>
+      </property>
+     </widget>
      <widget class="QGraphicsView" name="FilesView"/>
     </widget>
    </item>
