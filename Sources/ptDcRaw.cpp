@@ -28,6 +28,8 @@
 **
 *******************************************************************************/
 
+#pragma GCC diagnostic ignored "-Wwrite-strings"
+
 #include "ptDcRaw.h"
 
 #include "ptDefines.h"
@@ -365,7 +367,8 @@ void CLASS derror()
     if (feof(m_InputFile))
       fprintf (stderr,_("Unexpected end of file\n"));
     else
-      fprintf (stderr,_("Corrupt data near 0x%lx\n"), (int64_t) ftell(m_InputFile));
+      //fprintf (stderr,_("Corrupt data near 0x%lx\n"), (int64_t) ftell(m_InputFile));
+      fprintf (stderr,_("Corrupt data near 0x%lx\n"), (long unsigned int) ftell(m_InputFile));
   }
   data_error++;
 }
@@ -1372,7 +1375,7 @@ int CLASS minolta_z2()
   unsigned i,nz;
   char tail[424];
 
-  fseek (m_InputFile, -sizeof tail, SEEK_END);
+  fseek (m_InputFile, (long)(-sizeof tail), SEEK_END);
   ptfread (tail, 1, sizeof tail, m_InputFile);
   for (nz=i=0; i < sizeof tail; i++)
     if (tail[i]) nz++;
