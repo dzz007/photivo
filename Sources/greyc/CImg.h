@@ -52,6 +52,8 @@
  #
 */
 
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+
 // Define version number of the library file.
 #ifndef cimg_version
 #define cimg_version 147

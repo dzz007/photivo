@@ -24,6 +24,8 @@
 //
 ////////////////////////////////////////////////////////////////
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
 // adaptions for photivo
 // width -> m_Width
 // height -> m_Height
