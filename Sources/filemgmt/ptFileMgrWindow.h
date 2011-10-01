@@ -42,9 +42,15 @@ public:
   ~ptFileMgrWindow();
 
 
+protected:
+  void showEvent(QShowEvent* event);
+
+
 private:
   ptFileMgrDM*      m_DataModel;
   QGraphicsScene*   m_FilesScene;
+  bool              m_IsFirstShow;
+
 
 private slots:
   void changeTreeDir(const QModelIndex& index);

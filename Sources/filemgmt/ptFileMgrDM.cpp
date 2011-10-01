@@ -79,17 +79,12 @@ ptFileMgrDM::ptFileMgrDM()
   m_TreeModel = new QFileSystemModel;
   m_TreeModel->setFilter(QDir::AllDirs);
 
-  // Set inital directory from settings (if available)
-  QString lastDir = Settings->GetString("LastFileMgrLocation");
-  if (lastDir == "" || !QDir(lastDir).exists()) {
-    #ifdef Q_OS_WIN32
-      m_TreeModel->setRootPath(m_TreeModel->myComputer().toString());
-    #else
-      m_TreeModel->setRootPath(QDir::homePath());
-    #endif
-  } else {
-    m_TreeModel->setRootPath(lastDir);
-  }
+  // Set root dir for the file system watcher
+  #ifdef Q_OS_WIN32
+    m_TreeModel->setRootPath(m_TreeModel->myComputer().toString());
+  #else
+    m_TreeModel->setRootPath("/");
+  #endif
 
   // Init stuff for thumbnail generation
   m_ThumbQueue = new QQueue<QGraphicsItemGroup*>;
