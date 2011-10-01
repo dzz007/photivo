@@ -39888,3 +39888,5 @@ namespace cimg {
 // Local Variables:
 // mode: c++
 // End:
+
+#pragma GCC diagnostic warning "-Wstrict-aliasing"
