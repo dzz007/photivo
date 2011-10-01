@@ -311,7 +311,7 @@ public:
   void  ptRebuildHighlights(const short Effort);
   void  ptBlendHighlights();
   void  ptCrop();
-  QPixmap* thumbnail();
+  bool  thumbnail(QPixmap* thumbnail);
 
 
   /*************************************************************************

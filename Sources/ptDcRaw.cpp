@@ -32,6 +32,8 @@
 
 #include "ptDcRaw.h"
 
+#include <cassert>
+
 #include "ptDefines.h"
 #include "ptError.h"
 #include "ptConstants.h"
@@ -67,7 +69,7 @@ assert (RV);                    \
 // The class.
 #define CLASS ptDcRaw::
 CLASS ptDcRaw() {
-  printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
+  //printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
 
   // This were the original global variables initialized.
   // Now moved into constructor.
@@ -139,7 +141,7 @@ m_ThumbStream = new QDataStream(m_ThumbData, QIODevice::ReadWrite);
 
 CLASS ~ptDcRaw() {
 
-printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
+//printf("(%s,%d) '%s'\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
 
   FREE(m_UserSetting_InputFileName);
   FREE(m_UserSetting_BadPixelsFileName);
@@ -8241,6 +8243,7 @@ void CLASS jpeg_thumb ()
 //  fputc (0xff, m_OutputFile);
 //  fputc (0xd8, m_OutputFile);
   m_ThumbStream->writeRawData("\xff\xd8", 2);
+
   if (strcmp (thumb+6, "Exif")) {
     memcpy (exif, "\xff\xe1  Exif\0\0", 10);
     exif[1] = htons (8 + sizeof th);
@@ -9373,21 +9376,20 @@ void CLASS CamToLab(uint16_t Cam[4], double Lab[3]) {
 }
 
 
-QPixmap* CLASS thumbnail() {
+bool CLASS thumbnail(QPixmap* thumbnail) {
+  assert(thumbnail != NULL);
+
   if(!m_InputFile || !m_LoadRawFunction) {
-    return NULL;
+    return false;
   }
 
   fseek (m_InputFile, m_ThumbOffset, SEEK_SET);
   (*this.*m_WriteThumb)();
 
-  QPixmap* result = new QPixmap();
-  if (!result->loadFromData(*m_ThumbData)) {
-    DelAndNull(result);
-  }
-
+  bool result = thumbnail->loadFromData(*m_ThumbData);
   m_ThumbData->clear();
   m_ThumbStream->resetStatus();
+
   return result;
 }
 
