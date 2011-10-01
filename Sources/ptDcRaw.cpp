@@ -9318,3 +9318,4 @@ void CLASS CamToLab(uint16_t Cam[4], double Lab[3]) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma GCC diagnostic warning "-Wwrite-strings"

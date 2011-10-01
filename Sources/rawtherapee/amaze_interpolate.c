@@ -981,3 +981,5 @@ void CLASS amaze_demosaic() {
 #undef TS
 
 }
+
+#pragma GCC diagnostic warning "-Wunused-variable"
