@@ -31,6 +31,7 @@
 
 #include "ui_ptFileMgrWindow.h"
 #include "ptFileMgrDM.h"
+#include "../ptReportOverlay.h"
 
 //==============================================================================
 
@@ -50,6 +51,7 @@ private:
   ptFileMgrDM*      m_DataModel;
   QGraphicsScene*   m_FilesScene;
   bool              m_IsFirstShow;
+  ptReportOverlay*  m_StatusOverlay;
 
 
 private slots:

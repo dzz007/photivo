@@ -23,6 +23,7 @@
 
 #include <QDir>
 #include <QStringList>
+#include <QApplication>
 
 #include <Magick++.h>
 
@@ -132,14 +133,16 @@ void ptFileMgrThumbnailer::run() {
 
 
     if (thumbGroup) {
+      thumbGroup->addToGroup(thumbPixmap);
       m_Queue->enqueue(thumbGroup);
     }
+    QApplication::processEvents();
 
     // Notification signal that new thumbs are in the queue. Emitted every
     // five images. ptFileMgrWindow also reads in five image blocks.
-    if (i % 5 == 0) {
-      emit newThumbsNotify();
-    }
+//    if (i % 5 == 0) {
+//      emit newThumbsNotify();
+//    }
   }
 
   // final notification to make sure the queue gets completely emptied

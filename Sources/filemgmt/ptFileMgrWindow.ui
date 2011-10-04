@@ -10,6 +10,12 @@
     <height>790</height>
    </rect>
   </property>
+  <property name="baseSize">
+   <size>
+    <width>200</width>
+    <height>0</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -26,6 +32,18 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QTreeView" name="DirTree">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>200</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="headerHidden">
        <bool>true</bool>
       </property>
