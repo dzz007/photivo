@@ -29,6 +29,7 @@
 
 #include "../ptDcRaw.h"
 #include "../ptError.h"
+#include "../ptCalloc.h"
 #include "../ptDefines.h"
 #include "ptFileMgrThumbnailer.h"
 
@@ -110,19 +111,28 @@ void ptFileMgrThumbnailer::run() {
         image.type(Magick::TrueColorType);
         image.zoom(Magick::Geometry(150,150));
 
+        // TODO: read EXIF orientation and correct image
+
         // Get the raw image data from GM.
         uint w = image.columns();
         uint h = image.rows();
-        uchar* ImgBuffer = (uchar*)MALLOC(w * h * 3);
+        uint8_t* ImgBuffer = NULL;
+        try {
+          ImgBuffer = (uint8_t*)CALLOC(w * h * 4, sizeof(ImgBuffer));
+        } catch (std::bad_alloc) {
+          // TODO: merge with following catch???
+          printf("\n********************\n\nMemory error in thumbnail generator\n\n********************\n\n");
+          fflush(stdout);
+          throw std::bad_alloc();
+        }
         ptMemoryError(ImgBuffer,__FILE__,__LINE__);
-        image.write(0, 0, w, h, "RGB", Magick::CharPixel, ImgBuffer);
+        image.write(0, 0, w, h, "BGRA", Magick::CharPixel, ImgBuffer);
         QPixmap px;
         // Detour via QImage necessary because QPixmap does not allow direct
         // access to the pixel data.
-        px.convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB888));
+        px.convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB32));
         FREE(ImgBuffer);
         thumbPixmap->setPixmap(px);
-
 
       // ... or not a supported image file at all
       } catch (Magick::Exception &Error) {
