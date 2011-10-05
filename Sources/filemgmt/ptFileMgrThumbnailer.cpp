@@ -31,8 +31,10 @@
 #include "../ptError.h"
 #include "../ptCalloc.h"
 #include "../ptDefines.h"
+#include "../ptSettings.h"
 #include "ptFileMgrThumbnailer.h"
 
+extern ptSettings* Settings;
 extern QStringList FileExtsRaw;
 extern QStringList FileExtsBitmap;
 
@@ -81,6 +83,7 @@ void ptFileMgrThumbnailer::run() {
     return;
   }
 
+  int thumbsSize = Settings->GetInt("ThumbnailSize");
   thumbsDir.setSorting(QDir::DirsFirst | QDir::Name);
   thumbsDir.setFilter(QDir::AllDirs | QDir::NoDot | QDir::Files);
   thumbsDir.setNameFilters(FileExtsRaw + FileExtsBitmap);
@@ -97,7 +100,7 @@ void ptFileMgrThumbnailer::run() {
       // we have a raw image ...
       QPixmap* px = new QPixmap;
       if (dcRaw.thumbnail(px)) {
-        thumbPixmap->setPixmap(px->scaled(150,150));
+        thumbPixmap->setPixmap(px->scaled(thumbsSize, thumbsSize));
       }
       DelAndNull(px);
     } else {

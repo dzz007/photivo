@@ -755,6 +755,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FullscreenActive"                     ,9    ,0                                     ,0},
     {"FileMgrIsOpen"                        ,9    ,0                                     ,0},
     {"LastFileMgrLocation"                  ,1    ,""                                    ,0},
+    {"ThumbnailSize"                        ,1    ,150                                   ,0},  // in pixels
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.

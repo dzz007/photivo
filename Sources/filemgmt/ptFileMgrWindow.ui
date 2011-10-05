@@ -31,7 +31,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QTreeView" name="DirTree">
+     <widget class="QTreeView" name="m_DirTree">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -48,7 +48,7 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QGraphicsView" name="FilesView"/>
+     <widget class="QGraphicsView" name="m_FilesView"/>
     </widget>
    </item>
   </layout>

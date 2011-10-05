@@ -48,6 +48,18 @@ protected:
 
 
 private:
+  void ArrangeThumbnail(QGraphicsItemGroup* thumb);
+  void ArrangeThumbnails();
+  void ThumbMetricsReset();
+
+  struct {
+    int Row;
+    int Col;
+    int CellSize;
+    int PicsInCol;
+    int Padding;
+  } m_ThumbMetrics;
+
   ptFileMgrDM*      m_DataModel;
   QGraphicsScene*   m_FilesScene;
   bool              m_IsFirstShow;

@@ -82,8 +82,6 @@ public:
   /*! Clear the data cache of \c ptFileMgrDM */
   void Clear();
 
-  void setThumbSize(const int size) { m_ThumbSize = size; }
-
   /*! Starts image thumbnail generation.
     \param index
       The QModelIndex corresponding to the directory with the image files.
@@ -104,8 +102,6 @@ public:
   /*! Returns a pointer to the FIFO buffer containing image thumbnails. */
   QQueue<QGraphicsItemGroup*>* thumbQueue() { return m_ThumbQueue; }
 
-  int thumbSize() { return m_ThumbSize; }
-
   /*! Returns a pointer to the model with the data for the tree view. */
   QAbstractItemModel* treeModel() { return m_TreeModel; }
 
@@ -120,7 +116,6 @@ private:
   ptThumbnailCache*             m_Cache;
   ptFileMgrThumbnailer*         m_Thumbnailer;
   QQueue<QGraphicsItemGroup*>*  m_ThumbQueue;
-  int                           m_ThumbSize;
   QFileSystemModel*             m_TreeModel;
 
 
