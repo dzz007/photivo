@@ -39,25 +39,25 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
 
   // We create our data module
   m_DataModel = ptFileMgrDM::GetInstance();
-  m_DataModel->setThumbSize(150);   //TODO: only temporarily hardcoded
   QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
 
-  DirTree->setModel(fsmodel);
-  DirTree->setRootIndex(fsmodel->index(fsmodel->rootPath()));
-  DirTree->setColumnHidden(1, true);
-  DirTree->setColumnHidden(2, true);
-  DirTree->setColumnHidden(3, true);
-  connect(DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
+  m_DirTree->setModel(fsmodel);
+  m_DirTree->setRootIndex(fsmodel->index(fsmodel->rootPath()));
+  m_DirTree->setColumnHidden(1, true);
+  m_DirTree->setColumnHidden(2, true);
+  m_DirTree->setColumnHidden(3, true);
+  connect(m_DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
 
-  DirTree->setFixedWidth(300);  //TODO: temporary
+  m_DirTree->setFixedWidth(300);  //TODO: temporary
+  m_FilesView->setContentsMargins(10, 10, 10, 10);
 
   // Setup the graphics scene
   m_FilesScene = new QGraphicsScene(0, 0, 0, 0, parent);
-  FilesView->setScene(m_FilesScene);
+  m_FilesView->setScene(m_FilesScene);
   connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify()),
           this, SLOT(fetchNewThumbs()));
 
-  m_StatusOverlay = new ptReportOverlay(FilesView, "Reading thumbnails",
+  m_StatusOverlay = new ptReportOverlay(m_FilesView, "Reading thumbnails",
                                         QColor(255,75,75), QColor(255,190,190),
                                         0, Qt::AlignLeft, 20);
 
@@ -67,7 +67,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
 
 ptFileMgrWindow::~ptFileMgrWindow() {
   Settings->SetValue("LastFileMgrLocation",
-      qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->filePath(DirTree->currentIndex()) );
+      qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->filePath(m_DirTree->currentIndex()) );
 
   ptFileMgrDM::DestroyInstance();
   DelAndNull(m_StatusOverlay);
@@ -80,7 +80,8 @@ void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
   m_FilesScene->clear();
   m_DataModel->thumbQueue()->clear();
   m_StatusOverlay->exec();
-  m_DataModel->StartThumbnailer(DirTree->currentIndex());
+  ThumbMetricsReset();
+  m_DataModel->StartThumbnailer(m_DirTree->currentIndex());
 }
 
 //==============================================================================
@@ -99,24 +100,10 @@ void ptFileMgrWindow::fetchNewThumbs() {
 //    }
 //  }
 
-  //m_FilesScene->setSceneRect(0, 0, FilesView->width(), FilesView->height());
-  int Row = -1;
-  int Col = 0;
-  int CellSize = m_DataModel->thumbSize() + 10;
-  int PicsInCol = (FilesView->height() / CellSize) - 1;
-
   while (!m_DataModel->thumbQueue()->isEmpty()) {
-    QGraphicsItemGroup* ig = m_DataModel->thumbQueue()->dequeue();
-
-    if (Row >= PicsInCol) {
-      Row = 0;
-      Col++;
-    } else {
-      Row++;
-    }
-
-    ig->setPos(Col * CellSize, Row * CellSize);
-    m_FilesScene->addItem(ig);
+    QGraphicsItemGroup* thumb = m_DataModel->thumbQueue()->dequeue();
+    ArrangeThumbnail(thumb);
+    m_FilesScene->addItem(thumb);
   }
 }
 
@@ -129,15 +116,57 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
 
     if (lastDir != "" && QDir(lastDir).exists()) {
-      DirTree->setCurrentIndex(fsmodel->index(lastDir));
+      m_DirTree->setCurrentIndex(fsmodel->index(lastDir));
     } else {
-      DirTree->setCurrentIndex(fsmodel->index(QDir::homePath()));
+      m_DirTree->setCurrentIndex(fsmodel->index(QDir::homePath()));
     }
 
     m_IsFirstShow = false;
   }
 
   QWidget::showEvent(event);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::ArrangeThumbnail(QGraphicsItemGroup* thumb) {
+  if (m_ThumbMetrics.Row >= m_ThumbMetrics.PicsInCol) {
+    m_ThumbMetrics.Row = 0;
+    m_ThumbMetrics.Col++;
+  } else {
+    m_ThumbMetrics.Row++;
+  }
+
+  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellSize,
+                m_ThumbMetrics.Row * m_ThumbMetrics.CellSize);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::ArrangeThumbnails() {
+  QList<QGraphicsItem*> thumbList = m_FilesScene->items(Qt::AscendingOrder);
+  QListIterator<QGraphicsItem*> i(thumbList);
+  ThumbMetricsReset();
+
+  while (i.hasNext()) {
+    if (i.peekNext()->type() == 10) {   // check for item group
+      ArrangeThumbnail((QGraphicsItemGroup*)i.next());
+    } else {
+      i.next();
+    }
+  }
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::ThumbMetricsReset() {
+  m_ThumbMetrics.Row = -1;
+  m_ThumbMetrics.Col = 0;
+  m_ThumbMetrics.Padding = 10;   // TODO: maybe this doesn’t have to be a fixed num of pixels
+  m_ThumbMetrics.CellSize = Settings->GetInt("ThumbnailSize") + m_ThumbMetrics.Padding;
+  // +Padding because we only take care of padding *between* thumbnails here.
+  // -1 because we start at row 0
+  m_ThumbMetrics.PicsInCol = (m_FilesView->height() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellSize - 1;
 }
 
 //==============================================================================
