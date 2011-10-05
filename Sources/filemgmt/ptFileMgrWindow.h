@@ -44,6 +44,7 @@ public:
 
 
 protected:
+  bool eventFilter(QObject* obj, QEvent* event);
   void showEvent(QShowEvent* event);
 
 

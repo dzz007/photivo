@@ -50,6 +50,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
 
   m_DirTree->setFixedWidth(300);  //TODO: temporary
   m_FilesView->setContentsMargins(10, 10, 10, 10);
+  m_FilesView->installEventFilter(this);
 
   // Setup the graphics scene
   m_FilesScene = new QGraphicsScene(0, 0, 0, 0, parent);
@@ -109,26 +110,6 @@ void ptFileMgrWindow::fetchNewThumbs() {
 
 //==============================================================================
 
-void ptFileMgrWindow::showEvent(QShowEvent* event) {
-  // When the file manager is opened for the first time set initally selected directory
-  if (m_IsFirstShow) {
-    QString lastDir = Settings->GetString("LastFileMgrLocation");
-    QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
-
-    if (lastDir != "" && QDir(lastDir).exists()) {
-      m_DirTree->setCurrentIndex(fsmodel->index(lastDir));
-    } else {
-      m_DirTree->setCurrentIndex(fsmodel->index(QDir::homePath()));
-    }
-
-    m_IsFirstShow = false;
-  }
-
-  QWidget::showEvent(event);
-}
-
-//==============================================================================
-
 void ptFileMgrWindow::ArrangeThumbnail(QGraphicsItemGroup* thumb) {
   if (m_ThumbMetrics.Row >= m_ThumbMetrics.PicsInCol) {
     m_ThumbMetrics.Row = 0;
@@ -167,6 +148,38 @@ void ptFileMgrWindow::ThumbMetricsReset() {
   // +Padding because we only take care of padding *between* thumbnails here.
   // -1 because we start at row 0
   m_ThumbMetrics.PicsInCol = (m_FilesView->height() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellSize - 1;
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::showEvent(QShowEvent* event) {
+  // When the file manager is opened for the first time set initally selected directory
+  if (m_IsFirstShow) {
+    QString lastDir = Settings->GetString("LastFileMgrLocation");
+    QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
+
+    if (lastDir != "" && QDir(lastDir).exists()) {
+      m_DirTree->setCurrentIndex(fsmodel->index(lastDir));
+    } else {
+      m_DirTree->setCurrentIndex(fsmodel->index(QDir::homePath()));
+    }
+
+    m_IsFirstShow = false;
+  }
+
+  QWidget::showEvent(event);
+}
+
+//==============================================================================
+
+bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
+  // Rearrange thumbnails when size of viewport changes
+  if (obj == m_FilesView && event->type() == QEvent::Resize) {
+    ArrangeThumbnails();
+    return true;
+  } else {
+    return QWidget::eventFilter(obj, event);
+  }
 }
 
 //==============================================================================
