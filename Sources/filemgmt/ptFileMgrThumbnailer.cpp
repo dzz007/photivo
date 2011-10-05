@@ -23,6 +23,7 @@
 
 #include <QDir>
 #include <QStringList>
+#include <QGraphicsTextItem>
 #include <QApplication>
 
 #include <Magick++.h>
@@ -112,7 +113,7 @@ void ptFileMgrThumbnailer::run() {
         image.depth(8);
         image.magick("RGB");
         image.type(Magick::TrueColorType);
-        image.zoom(Magick::Geometry(150,150));
+        image.zoom(Magick::Geometry(thumbsSize, thumbsSize));
 
         // TODO: read EXIF orientation and correct image
 
@@ -144,11 +145,16 @@ void ptFileMgrThumbnailer::run() {
       }
     }
 
+    if (thumbGroup && thumbPixmap) {
+      QGraphicsTextItem* thumbFilename = new QGraphicsTextItem(files.at(i).fileName());
+      thumbFilename->setY(thumbsSize);
 
-    if (thumbGroup) {
       thumbGroup->addToGroup(thumbPixmap);
+      thumbGroup->addToGroup(thumbFilename);
+
       m_Queue->enqueue(thumbGroup);
     }
+
     QApplication::processEvents();
 
     // Notification signal that new thumbs are in the queue. Emitted every
