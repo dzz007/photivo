@@ -8275,6 +8275,8 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(WriteBackupSettingsCheck)
 
+  M_JustSetDispatch(ThumbnailSizeInput)
+
   M_Dispatch(MemoryTestInput)
 
   M_Dispatch(ExportToGimpCheck)

@@ -144,7 +144,7 @@ void ptFileMgrThumbnailer::run() {
     // Notification signal that new thumbs are in the queue. Emitted every
     // five images. ptFileMgrWindow also reads in five image blocks.
 //    if (i % 5 == 0) {
-//      emit newThumbsNotify();
+      emit newThumbsNotify();
 //    }
   }
 
