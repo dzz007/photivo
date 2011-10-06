@@ -163,7 +163,15 @@ void ptFileMgrThumbnailer::GenerateThumbnail(Magick::Image& image,
   image.type(Magick::TrueColorType);
   image.scale(Magick::Geometry(thumbSize, thumbSize));
 
-  // TODO: read EXIF orientation and correct image
+  // read EXIF orientation and correct image
+  QString orientation = QString::fromStdString(image.attribute("EXIF:Orientation"));
+  if (orientation == "2") image.flop();
+  else if (orientation == "3") image.rotate(180);
+  else if (orientation == "4") image.flip();
+  else if (orientation == "5") {image.flop(); image.rotate(270);}
+  else if (orientation == "6") image.rotate(90);
+  else if (orientation == "7") {image.flip(); image.rotate(270);}
+  else if (orientation == "8") image.rotate(270);
 
   // Get the raw image data from GM.
   uint w = image.columns();

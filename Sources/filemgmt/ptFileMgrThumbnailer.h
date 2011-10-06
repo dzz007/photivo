@@ -76,6 +76,7 @@ protected:
 
 
 private:
+  /*! Resizes the image to the specified size and writes it to the pixmap */
   void GenerateThumbnail(Magick::Image& image,
                          QGraphicsPixmapItem*& thumbPixmap,
                          const int thumbSize);
