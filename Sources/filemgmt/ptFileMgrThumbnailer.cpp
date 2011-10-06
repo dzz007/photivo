@@ -91,49 +91,60 @@ void ptFileMgrThumbnailer::run() {
     ptGraphicsThumbGroup* thumbGroup = new ptGraphicsThumbGroup;
     QGraphicsPixmapItem* thumbPixmap = new QGraphicsPixmapItem;
 
-    if (files.at(i).isDir()) continue;
 //    QTime Timer;
 //    Timer.start();
+    if (files.at(i).isDir()) {
+      // we have a directory
+      if (files.at(i).fileName() == "..") {
+        thumbPixmap->setPixmap(QPixmap(QString::fromUtf8(":/photivo/FileManager/up.png")));
+      } else {
+        thumbPixmap->setPixmap(QPixmap(QString::fromUtf8(":/photivo/FileManager/folder.png")));
+      }
 
-    ptDcRaw dcRaw;
-    if (dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
-      // we have a raw image ...
-      QByteArray* ba = NULL;
-      if (dcRaw.thumbnail(ba)) {
+    } else {
+      // we have a file, see if we can get a thumbnail image
+      ptDcRaw dcRaw;
+
+      if (dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
+        // we have a raw image ...
+        QByteArray* ba = NULL;
+        if (dcRaw.thumbnail(ba)) {
+          try {
+  //          printf("DcRaw: %d\n", Timer.elapsed());
+            Magick::Blob  blob( ba->data(), ba->length());
+            Magick::Image image;
+            image.size(Magick::Geometry(2*thumbsSize, 2*thumbsSize));
+            image.read(blob);
+
+            GenerateThumbnail(image, thumbPixmap, thumbsSize);
+  //          printf("Thumbnail Raw: %d\n", Timer.elapsed());
+          } catch (Magick::Exception &Error) {
+            // ... not supported
+            DelAndNull(thumbPixmap);
+            DelAndNull(thumbGroup);
+          }
+        }
+        DelAndNull(ba);
+      } else {
+        // ... or a bitmap ...
         try {
-//          printf("DcRaw: %d\n", Timer.elapsed());
-          Magick::Blob  blob( ba->data(), ba->length());
           Magick::Image image;
           image.size(Magick::Geometry(2*thumbsSize, 2*thumbsSize));
-          image.read(blob);
+          image.read(files.at(i).absoluteFilePath().toAscii().data());
 
           GenerateThumbnail(image, thumbPixmap, thumbsSize);
-//          printf("Thumbnail Raw: %d\n", Timer.elapsed());
+  //        printf("Thumbnail Bitmap: %d\n", Timer.elapsed());
         } catch (Magick::Exception &Error) {
-          // ... not supported
+          // ... or not a supported image file at all
           DelAndNull(thumbPixmap);
           DelAndNull(thumbGroup);
         }
       }
-      DelAndNull(ba);
-    } else {
-      // ... or a bitmap ...
-      try {
-        Magick::Image image;
-        image.size(Magick::Geometry(2*thumbsSize, 2*thumbsSize));
-        image.read(files.at(i).absoluteFilePath().toAscii().data());
-
-        GenerateThumbnail(image, thumbPixmap, thumbsSize);
-//        printf("Thumbnail Bitmap: %d\n", Timer.elapsed());
-      } catch (Magick::Exception &Error) {
-        // ... or not a supported image file at all
-        DelAndNull(thumbPixmap);
-        DelAndNull(thumbGroup);
-      }
     }
 
     if (thumbGroup && thumbPixmap) {
-      thumbGroup->addItems(thumbPixmap, new QGraphicsTextItem(files.at(i).fileName()));
+      thumbGroup->addItems(thumbPixmap,
+                           new QGraphicsTextItem(files.at(i).fileName());
       m_Queue->enqueue(thumbGroup);
     }
 
