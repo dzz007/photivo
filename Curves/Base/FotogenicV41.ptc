@@ -1,0 +1,15 @@
+;
+; photivo Curve File
+;
+; This is an experimental base curve (Fotogenetic - Point and shoot v4.1).
+; Original values are from the darktable project.
+;
+Magic FLOSSCurveFile
+IntendedChannel 8
+CurveType 1
+0 0
+87 125
+175 250
+353 501
+612 749
+1000 876
