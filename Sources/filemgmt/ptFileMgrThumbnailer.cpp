@@ -110,14 +110,14 @@ void ptFileMgrThumbnailer::run() {
         QByteArray* ba = NULL;
         if (dcRaw.thumbnail(ba)) {
           try {
-  //          printf("DcRaw: %d\n", Timer.elapsed());
+//            printf("DcRaw: %d\n", Timer.elapsed());
             Magick::Blob  blob( ba->data(), ba->length());
             Magick::Image image;
             image.size(Magick::Geometry(2*thumbsSize, 2*thumbsSize));
             image.read(blob);
 
             GenerateThumbnail(image, thumbPixmap, thumbsSize);
-  //          printf("Thumbnail Raw: %d\n", Timer.elapsed());
+//            printf("Thumbnail Raw: %d\n", Timer.elapsed());
           } catch (Magick::Exception &Error) {
             // ... not supported
             DelAndNull(thumbPixmap);
@@ -133,7 +133,7 @@ void ptFileMgrThumbnailer::run() {
           image.read(files.at(i).absoluteFilePath().toAscii().data());
 
           GenerateThumbnail(image, thumbPixmap, thumbsSize);
-  //        printf("Thumbnail Bitmap: %d\n", Timer.elapsed());
+//          printf("Thumbnail Bitmap: %d\n", Timer.elapsed());
         } catch (Magick::Exception &Error) {
           // ... or not a supported image file at all
           DelAndNull(thumbPixmap);
@@ -144,7 +144,7 @@ void ptFileMgrThumbnailer::run() {
 
     if (thumbGroup && thumbPixmap) {
       thumbGroup->addItems(thumbPixmap,
-                           new QGraphicsTextItem(files.at(i).fileName());
+                           new QGraphicsTextItem(files.at(i).fileName()));
       m_Queue->enqueue(thumbGroup);
     }
 
