@@ -4,37 +4,41 @@
 <context>
     <name>Global Strings</name>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="164"/>
+        <location filename="../Sources/ptMain.cpp" line="167"/>
         <source>Photivo channelmixer file (*.ptm);;All files (*.*)</source>
         <translation>File miscelatore canale Photivo (*.ptm);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="166"/>
+        <location filename="../Sources/ptMain.cpp" line="169"/>
         <source>Photivo curve file (*.ptc);;All files (*.*)</source>
         <translation>File curva Photivo (*.ptc);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="168"/>
+        <location filename="../Sources/ptMain.cpp" line="171"/>
         <source>Photivo job file (*.ptj);;All files (*.*)</source>
         <translation>File di lavorazione Photivo (*.ptj);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="170"/>
+        <location filename="../Sources/ptMain.cpp" line="173"/>
         <source>Photivo settings file (*.pts);;All files (*.*)</source>
         <translation>File impostazioni Photivo (*.pts);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="172"/>
+        <location filename="../Sources/ptMain.cpp" line="175"/>
         <source>ICC colour profiles (*.icc *.icm);;All files (*.*)</source>
         <translation>Profili colore ICC (*.icc *.icm);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="176"/>
-        <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
-        <translation>File Raw (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;Tutti i file (*.*)</translation>
+        <location filename="../Sources/ptMain.cpp" line="179"/>
+        <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
+        <translation>File Raw (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="221"/>
+        <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
+        <translation type="obsolete">File Raw (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;Tutti i file (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="225"/>
         <source>Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
         <translation>Bitmap (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;Tutti i file (*.*)</translation>
     </message>
@@ -42,7 +46,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../Sources/ptCimg.cpp" line="88"/>
+        <location filename="../Sources/ptCimg.cpp" line="89"/>
         <source>GreycStoration iteration </source>
         <translation>Iterazione GreycStoration</translation>
     </message>
@@ -1349,7 +1353,7 @@
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="564"/>
-        <location filename="../Sources/ptMain.cpp" line="4418"/>
+        <location filename="../Sources/ptMain.cpp" line="4339"/>
         <source>Open preset</source>
         <translation>Apri preset</translation>
     </message>
@@ -1369,87 +1373,89 @@
         <translation type="obsolete">Utilizzo: Photivo  [-i Immagine] [-j File di lavorazione] [-g Immagine (con pulitura, non per uso normale!)]</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="803"/>
+        <location filename="../Sources/ptMain.cpp" line="451"/>
+        <location filename="../Sources/ptMain.cpp" line="776"/>
         <source>Photivo</source>
         <translation>Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1054"/>
+        <location filename="../Sources/ptMain.cpp" line="1031"/>
         <source>Loading curves (</source>
         <translation>Caricamento Curve (</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1060"/>
-        <location filename="../Sources/ptMain.cpp" line="2110"/>
-        <location filename="../Sources/ptMain.cpp" line="5902"/>
+        <location filename="../Sources/ptMain.cpp" line="1037"/>
+        <location filename="../Sources/ptMain.cpp" line="2062"/>
+        <location filename="../Sources/ptMain.cpp" line="5823"/>
         <source>Cannot read curve </source>
         <translation>Non posso leggere la curva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1066"/>
-        <location filename="../Sources/ptMain.cpp" line="2109"/>
-        <location filename="../Sources/ptMain.cpp" line="5907"/>
+        <location filename="../Sources/ptMain.cpp" line="1043"/>
+        <location filename="../Sources/ptMain.cpp" line="2061"/>
+        <location filename="../Sources/ptMain.cpp" line="5828"/>
         <source>Curve read error</source>
         <translation>Errore lettura curva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1098"/>
-        <location filename="../Sources/ptMain.cpp" line="1163"/>
-        <location filename="../Sources/ptMain.cpp" line="1473"/>
-        <location filename="../Sources/ptMain.cpp" line="1511"/>
-        <location filename="../Sources/ptMain.cpp" line="1744"/>
-        <location filename="../Sources/ptMain.cpp" line="2054"/>
-        <location filename="../Sources/ptMain.cpp" line="2591"/>
-        <location filename="../Sources/ptMain.cpp" line="3659"/>
+        <location filename="../Sources/ptMain.cpp" line="1075"/>
+        <location filename="../Sources/ptMain.cpp" line="1140"/>
+        <location filename="../Sources/ptMain.cpp" line="1280"/>
+        <location filename="../Sources/ptMain.cpp" line="1425"/>
+        <location filename="../Sources/ptMain.cpp" line="1463"/>
+        <location filename="../Sources/ptMain.cpp" line="1696"/>
+        <location filename="../Sources/ptMain.cpp" line="2006"/>
+        <location filename="../Sources/ptMain.cpp" line="2551"/>
+        <location filename="../Sources/ptMain.cpp" line="3573"/>
         <source>Ready</source>
         <translation>Pronto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1114"/>
+        <location filename="../Sources/ptMain.cpp" line="1091"/>
         <source>Loading channelmixers</source>
         <translation>Caricamento Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1124"/>
-        <location filename="../Sources/ptMain.cpp" line="2097"/>
-        <location filename="../Sources/ptMain.cpp" line="5481"/>
+        <location filename="../Sources/ptMain.cpp" line="1101"/>
+        <location filename="../Sources/ptMain.cpp" line="2049"/>
+        <location filename="../Sources/ptMain.cpp" line="5402"/>
         <source>Cannot read channelmixer </source>
         <translation>Non posso leggere miscelatore canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1130"/>
-        <location filename="../Sources/ptMain.cpp" line="2096"/>
-        <location filename="../Sources/ptMain.cpp" line="5486"/>
+        <location filename="../Sources/ptMain.cpp" line="1107"/>
+        <location filename="../Sources/ptMain.cpp" line="2048"/>
+        <location filename="../Sources/ptMain.cpp" line="5407"/>
         <source>Channelmixer read error</source>
         <translation>Errore lettura miscelatore canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1500"/>
+        <location filename="../Sources/ptMain.cpp" line="1452"/>
         <source>Selection too small</source>
         <translation>Selezione troppo piccola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1501"/>
+        <location filename="../Sources/ptMain.cpp" line="1453"/>
         <source>Selection rectangle needs to be at least 50x50 pixels in size.
 No crop, try again.</source>
         <translation>La selezione rettangolare deve avere una dimensione di almeno 50x50 pixels.
 Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1471"/>
-        <location filename="../Sources/ptMain.cpp" line="1509"/>
-        <location filename="../Sources/ptMain.cpp" line="1828"/>
-        <location filename="../Sources/ptMain.cpp" line="1899"/>
+        <location filename="../Sources/ptMain.cpp" line="1423"/>
+        <location filename="../Sources/ptMain.cpp" line="1461"/>
+        <location filename="../Sources/ptMain.cpp" line="1780"/>
+        <location filename="../Sources/ptMain.cpp" line="1851"/>
         <source>Updating histogram</source>
         <translation>Aggiornamento istogramma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="398"/>
+        <location filename="../Sources/ptMain.cpp" line="404"/>
         <source>Photivo crashed</source>
         <translation>Photivo è andato in crash</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="399"/>
+        <location filename="../Sources/ptMain.cpp" line="405"/>
         <source>Photivo crashed. You can get help on our flickr forum at
 &lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;http://www.flickr.com/groups/photivo/discuss/&lt;/a&gt;
 When you post there make sure to describe your last actions before the crash occurred.</source>
@@ -1458,38 +1464,68 @@ When you post there make sure to describe your last actions before the crash occ
 Nel tuo post ricordati di descrivere le ultime azioni che hai compiuto prima del crash.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1540"/>
-        <location filename="../Sources/ptMain.cpp" line="1596"/>
+        <location filename="../Sources/ptMain.cpp" line="415"/>
+        <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
+                [-h] [--new-instance]
+Options:
+inputfile
+      Specify the image or settings file to load. Works like -i for image files
+      and like --pts for settings files.
+-i imagefile
+      Specify image file to load.
+-j jobfile
+      Specify jobfile for batch processing. Job files are created
+ in Photivo
+      and then executed with this option.
+--load-and-delete imagefile
+      Specify temporary file used for Gimp-to-Photivo export. Internal option,
+      not intended for general use. BEWARE! This option deletes imagefile!
+--pts ptsfile
+      Specify settings file to load with the image. Must be used together
+      with -i.
+--new-instance
+      Allow opening another Photivo instance instead of using a currently
+      running Photivo. Job files are always opened in a new instance.
+-h
+      Display this usage information.
+
+For more documentation visit the wiki: http://photivo.org/photivo/start
+</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="1492"/>
+        <location filename="../Sources/ptMain.cpp" line="1548"/>
         <source>WebResizing</source>
         <translation>Ridimensionamento Web</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1553"/>
+        <location filename="../Sources/ptMain.cpp" line="1505"/>
         <source>Applying base curve</source>
         <translation>Applicazione curva base</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1559"/>
+        <location filename="../Sources/ptMain.cpp" line="1511"/>
         <source>Applying gamma compensation</source>
         <translation>Applicazione compensazione del gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1581"/>
+        <location filename="../Sources/ptMain.cpp" line="1533"/>
         <source>Applying RGB Contrast</source>
         <translation>Applicazione contrasto RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1588"/>
+        <location filename="../Sources/ptMain.cpp" line="1540"/>
         <source>Applying after gamma curve</source>
         <translation>Applicazione curva dopo gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1606"/>
+        <location filename="../Sources/ptMain.cpp" line="1558"/>
         <source>Wiener Filter</source>
         <translation>Filtro Wiener</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1749"/>
+        <location filename="../Sources/ptMain.cpp" line="1701"/>
         <source>Updating preview image</source>
         <translation>Aggiornamento anteprima immagine</translation>
     </message>
@@ -1503,116 +1539,116 @@ No crop, try again.</source>
         <translation type="obsolete">Rettangolo di ritaglio troppo largo. Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1841"/>
-        <location filename="../Sources/ptMain.cpp" line="1953"/>
-        <location filename="../Sources/ptMain.cpp" line="2011"/>
+        <location filename="../Sources/ptMain.cpp" line="1793"/>
+        <location filename="../Sources/ptMain.cpp" line="1905"/>
+        <location filename="../Sources/ptMain.cpp" line="1963"/>
         <source>Histogram selection outside the image</source>
         <translation>Selezione istogramma al di fuori dell&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1842"/>
-        <location filename="../Sources/ptMain.cpp" line="1954"/>
-        <location filename="../Sources/ptMain.cpp" line="2012"/>
+        <location filename="../Sources/ptMain.cpp" line="1794"/>
+        <location filename="../Sources/ptMain.cpp" line="1906"/>
+        <location filename="../Sources/ptMain.cpp" line="1964"/>
         <source>Histogram selection rectangle too large.
 No crop, try again.</source>
         <translation>Rettangolo selezione istogramma troppo largo.
 Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1864"/>
+        <location filename="../Sources/ptMain.cpp" line="1816"/>
         <source>Indicating exposure</source>
         <translation>Indicazione esposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1906"/>
-        <location filename="../Sources/ptMain.cpp" line="2526"/>
-        <location filename="../Sources/ptMain.cpp" line="3539"/>
+        <location filename="../Sources/ptMain.cpp" line="1858"/>
+        <location filename="../Sources/ptMain.cpp" line="2486"/>
+        <location filename="../Sources/ptMain.cpp" line="3453"/>
         <source>Converting to output space</source>
         <translation>Conversione a spazio colore di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1970"/>
+        <location filename="../Sources/ptMain.cpp" line="1922"/>
         <source>Converting to screen space</source>
         <translation>Conversione a spazio colore schermo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2200"/>
-        <location filename="../Sources/ptMain.cpp" line="3150"/>
+        <location filename="../Sources/ptMain.cpp" line="2153"/>
+        <location filename="../Sources/ptMain.cpp" line="3121"/>
         <source>Cannot decode</source>
         <translation>Impossibile decodificare</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2554"/>
+        <location filename="../Sources/ptMain.cpp" line="2514"/>
         <source>Writing output</source>
         <translation>Scrittura output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2568"/>
+        <location filename="../Sources/ptMain.cpp" line="2528"/>
         <source>Writing output (exif)</source>
         <translation>Scrittura output (exif)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2583"/>
+        <location filename="../Sources/ptMain.cpp" line="2543"/>
         <source>Writing output (settings)</source>
         <translation>Scrittura output (impostazioni)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2607"/>
-        <location filename="../Sources/ptMain.cpp" line="3302"/>
+        <location filename="../Sources/ptMain.cpp" line="2567"/>
+        <location filename="../Sources/ptMain.cpp" line="3234"/>
         <source>Jpg images (*.jpg *.jpeg);;All files (*.*)</source>
         <translation>immagini jpg (*.jpg *.jpeg);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2612"/>
-        <location filename="../Sources/ptMain.cpp" line="3307"/>
+        <location filename="../Sources/ptMain.cpp" line="2572"/>
+        <location filename="../Sources/ptMain.cpp" line="3239"/>
         <source>PNG images(*.png);;All files (*.*)</source>
         <translation>immagini PNG(*.png);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2617"/>
-        <location filename="../Sources/ptMain.cpp" line="3312"/>
+        <location filename="../Sources/ptMain.cpp" line="2577"/>
+        <location filename="../Sources/ptMain.cpp" line="3244"/>
         <source>Tiff images (*.tif *.tiff);;All files (*.*)</source>
         <translation>immagini Tiff (*.tif *.tiff);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2621"/>
-        <location filename="../Sources/ptMain.cpp" line="3316"/>
+        <location filename="../Sources/ptMain.cpp" line="2581"/>
+        <location filename="../Sources/ptMain.cpp" line="3248"/>
         <source>Ppm images (*.ppm);;All files (*.*)</source>
         <translation>Immagini Ppm (*.ppm);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2628"/>
-        <location filename="../Sources/ptMain.cpp" line="3323"/>
+        <location filename="../Sources/ptMain.cpp" line="2588"/>
+        <location filename="../Sources/ptMain.cpp" line="3255"/>
         <source>Save File</source>
         <translation>Salva file</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3098"/>
+        <location filename="../Sources/ptMain.cpp" line="3068"/>
         <source>Open Raw</source>
         <translation>Apri Raw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3122"/>
+        <location filename="../Sources/ptMain.cpp" line="3093"/>
         <source>Reading file</source>
         <translation>Lettura file</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3369"/>
+        <location filename="../Sources/ptMain.cpp" line="3306"/>
         <source>Select input file(s)</source>
         <translation>Seleziona file di input</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3382"/>
+        <location filename="../Sources/ptMain.cpp" line="3319"/>
         <source>Select output directory</source>
         <translation>Selezione cartella di destinazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3397"/>
+        <location filename="../Sources/ptMain.cpp" line="3334"/>
         <source>Select job file</source>
         <translation>Seleziona file di lavorazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3417"/>
+        <location filename="../Sources/ptMain.cpp" line="3354"/>
         <source>Settings File</source>
         <translation>File impostazioni</translation>
     </message>
@@ -1625,55 +1661,55 @@ Nessun ritaglio, prova di nuovo.</translation>
         <translation type="obsolete">Per favore finisci il ritaglio prima di chiudere Photivo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3508"/>
+        <location filename="../Sources/ptMain.cpp" line="3422"/>
         <source>Writing tmp image for gimp</source>
         <translation>Scrittura immagine tmp per gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3578"/>
+        <location filename="../Sources/ptMain.cpp" line="3492"/>
         <source>Writing tmp exif for gimp</source>
         <translation>Scrittura exif tmp per gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3591"/>
+        <location filename="../Sources/ptMain.cpp" line="3505"/>
         <source>Writing tmp icc for gimp</source>
         <translation>Scrittura icc tmp per gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3623"/>
+        <location filename="../Sources/ptMain.cpp" line="3537"/>
         <source>Writing gimp interface file</source>
         <translation>Scrittura file interfaccia gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3707"/>
-        <location filename="../Sources/ptMain.cpp" line="3708"/>
+        <location filename="../Sources/ptMain.cpp" line="3624"/>
+        <location filename="../Sources/ptMain.cpp" line="3625"/>
         <source>Please load a profile first</source>
         <translation>Per favore, carica prima un profilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3716"/>
+        <location filename="../Sources/ptMain.cpp" line="3633"/>
         <source>Not yet implemented</source>
         <translation>Non ancora implementato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3717"/>
+        <location filename="../Sources/ptMain.cpp" line="3634"/>
         <source>Not yet implemented. Reverting to Adobe.</source>
         <translation>Non ancora implementato. Riconverti ad Adobe.</translation>
     </message>
     <message>
+        <location filename="../Sources/ptMain.cpp" line="3644"/>
+        <location filename="../Sources/ptMain.cpp" line="3687"/>
         <location filename="../Sources/ptMain.cpp" line="3727"/>
-        <location filename="../Sources/ptMain.cpp" line="3770"/>
-        <location filename="../Sources/ptMain.cpp" line="3810"/>
         <source>Open Profile</source>
         <translation>Apri profilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3915"/>
+        <location filename="../Sources/ptMain.cpp" line="3832"/>
         <source>Open Image</source>
         <translation>Apri immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3917"/>
+        <location filename="../Sources/ptMain.cpp" line="3834"/>
         <source>CSS files (*.css *.qss);;All files(*.*)</source>
         <translation>File CSS (*.css *.qss);;Tutti i file(*.*)</translation>
     </message>
@@ -1722,17 +1758,15 @@ Per maggiore documentazione visita il wiki:
 http://photivo.org/photivo/start</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="443"/>
         <source>Photivo command line options</source>
-        <translation>Opzioni Photivo linea di comando</translation>
+        <translation type="obsolete">Opzioni Photivo linea di comando</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="497"/>
         <source>Unrecognized command line options</source>
-        <translation>Opzioni linea di comando non riconosciute</translation>
+        <translation type="obsolete">Opzioni linea di comando non riconosciute</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3108"/>
+        <location filename="../Sources/ptMain.cpp" line="3079"/>
         <source>File not found</source>
         <translation>File non trovato</translation>
     </message>
@@ -1741,7 +1775,6 @@ http://photivo.org/photivo/start</translation>
         <translation type="obsolete">Il file che hai chiesto non esiste.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="413"/>
         <source>Syntax: photivo [-i imagefile | -j jobfile | -g imagefile] [h] [--new-instance]
 Options:
 -i imagefile      Specify image file to load. The -i is optional. Starting
@@ -1759,7 +1792,7 @@ Options:
 For more documentation visit the wiki:
 http://photivo.org/photivo/start
 </source>
-        <translation>Sintassi: photivo [-i file_immagine | -j file_di_lavoro | -g file_immagine] [h] [--new-instance]
+        <translation type="obsolete">Sintassi: photivo [-i file_immagine | -j file_di_lavoro | -g file_immagine] [h] [--new-instance]
 
 Opzioni:
 -i file_immagine   Specifica il file immagine da caricare. Il comando -i è                 
@@ -1780,190 +1813,195 @@ Per maggiore documentazione visita il wiki:
 http://photivo.org/photivo/start</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1467"/>
+        <location filename="../Sources/ptMain.cpp" line="1419"/>
         <source>Selection</source>
         <translation>Selezione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3109"/>
+        <location filename="../Sources/ptMain.cpp" line="2218"/>
+        <source>Memory error, no conversion for file:</source>
+        <translation>Errore di memoria, nessuna conversione per il file:</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="3080"/>
         <source>Input file does not exist.</source>
         <translation>Il file di input non esiste.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3951"/>
+        <location filename="../Sources/ptMain.cpp" line="3868"/>
         <source>Are you sure?</source>
         <translation>Sei sicuro?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3952"/>
+        <location filename="../Sources/ptMain.cpp" line="3869"/>
         <source>If you don&apos;t stop me, I will waste %1 MB of memory.</source>
         <translation>Se non mi fermi sprecherò %1 MB di memoria.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3973"/>
+        <location filename="../Sources/ptMain.cpp" line="3890"/>
         <source>Really switch to 1:1 pipe?</source>
         <translation>Voui veramente cambiare il formato di lavoro in 1:1?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3974"/>
+        <location filename="../Sources/ptMain.cpp" line="3891"/>
         <source>Switching to 1:1 pipe will increase memory usage and processing time greatly.
 Are you sure?</source>
         <translation>Cambiare il formato di lavoro in 1:1 aumenterà notevolmente l&apos;uso della memoria ed il tempo necessario. Sei sicuro?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3976"/>
-        <location filename="../Sources/ptMain.cpp" line="4019"/>
+        <location filename="../Sources/ptMain.cpp" line="3893"/>
+        <location filename="../Sources/ptMain.cpp" line="3936"/>
         <source>Detail view</source>
         <translation>Vista dettaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4151"/>
-        <location filename="../Sources/ptMain.cpp" line="4166"/>
+        <location filename="../Sources/ptMain.cpp" line="4068"/>
+        <location filename="../Sources/ptMain.cpp" line="4083"/>
         <source>Reset?</source>
         <translation>Vuoi resettare?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4152"/>
+        <location filename="../Sources/ptMain.cpp" line="4069"/>
         <source>Reset to neutral values?
 </source>
         <translation>Resetto a valori neutri?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4167"/>
+        <location filename="../Sources/ptMain.cpp" line="4084"/>
         <source>Reset to start up settings?
 </source>
         <translation>Resetto a impostazioni di avvio?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4196"/>
+        <location filename="../Sources/ptMain.cpp" line="4113"/>
         <source>Get Gimp command</source>
         <translation>Ottieni comando Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4227"/>
+        <location filename="../Sources/ptMain.cpp" line="4144"/>
         <source>Get preset file</source>
         <translation>Ottieni file di preset</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4355"/>
+        <location filename="../Sources/ptMain.cpp" line="4272"/>
         <source>Save full size image</source>
         <translation>Salva immagine in pieno formato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4357"/>
+        <location filename="../Sources/ptMain.cpp" line="4274"/>
         <source>Save current pipe</source>
         <translation>Salva immagine nel formato di lavoro corrente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4359"/>
+        <location filename="../Sources/ptMain.cpp" line="4276"/>
         <source>Save job file</source>
         <translation>Salva file di lavorazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4361"/>
+        <location filename="../Sources/ptMain.cpp" line="4278"/>
         <source>Save settings file</source>
         <translation>Salva file impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4403"/>
-        <location filename="../Sources/ptMain.cpp" line="4415"/>
+        <location filename="../Sources/ptMain.cpp" line="4324"/>
+        <location filename="../Sources/ptMain.cpp" line="4336"/>
         <source>Settings files (*.pts *.ptj);;All files (*.*)</source>
         <translation>File impostazioni (*.pts *.ptj);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4406"/>
+        <location filename="../Sources/ptMain.cpp" line="4327"/>
         <source>Open setting file</source>
         <translation>Apri file impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4432"/>
+        <location filename="../Sources/ptMain.cpp" line="4353"/>
         <source>Open &apos;bad pixels&apos; file</source>
         <translation>Apri file &apos;bad pixel&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4456"/>
+        <location filename="../Sources/ptMain.cpp" line="4377"/>
         <source>Open &apos;dark frame&apos; file</source>
         <translation>Apri file &apos;dark frame&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4504"/>
-        <location filename="../Sources/ptMain.cpp" line="4505"/>
+        <location filename="../Sources/ptMain.cpp" line="4425"/>
+        <location filename="../Sources/ptMain.cpp" line="4426"/>
         <source>Spot WB</source>
         <translation>Bilanciamento Bianco Spot</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4956"/>
+        <location filename="../Sources/ptMain.cpp" line="4877"/>
         <source>No selection</source>
         <translation>Nessuna selezione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4957"/>
-        <location filename="../Sources/ptMain.cpp" line="5156"/>
+        <location filename="../Sources/ptMain.cpp" line="4878"/>
+        <location filename="../Sources/ptMain.cpp" line="5077"/>
         <source>Open an image first.</source>
         <translation>Apri prima un&apos;immagine.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4969"/>
-        <location filename="../Sources/ptMain.cpp" line="4970"/>
+        <location filename="../Sources/ptMain.cpp" line="4890"/>
+        <location filename="../Sources/ptMain.cpp" line="4891"/>
         <source>Get angle</source>
         <translation>Imposta l&apos;angolo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5155"/>
+        <location filename="../Sources/ptMain.cpp" line="5076"/>
         <source>No crop possible</source>
         <translation>Impossibile effettuare il ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5160"/>
+        <location filename="../Sources/ptMain.cpp" line="5081"/>
         <source>Prepare</source>
         <translation>Preparazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5161"/>
+        <location filename="../Sources/ptMain.cpp" line="5082"/>
         <source>Prepare for cropping</source>
         <translation>Preparazione per il ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5169"/>
-        <location filename="../Sources/ptMain.cpp" line="5170"/>
+        <location filename="../Sources/ptMain.cpp" line="5090"/>
+        <location filename="../Sources/ptMain.cpp" line="5091"/>
         <source>Crop</source>
         <translation>Ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5204"/>
+        <location filename="../Sources/ptMain.cpp" line="5125"/>
         <source>Crop too small</source>
         <translation>Ritaglio troppo piccolo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5205"/>
+        <location filename="../Sources/ptMain.cpp" line="5126"/>
         <source>Crop rectangle needs to be at least 4x4 pixels in size.
 No crop, try again.</source>
         <translation>La selezione rettangolare deve avere una dimensione di almeno 4x4 pixels. Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5265"/>
+        <location filename="../Sources/ptMain.cpp" line="5186"/>
         <source>No previous crop found</source>
         <translation>Nessun ritaglio precedente trovato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5266"/>
+        <location filename="../Sources/ptMain.cpp" line="5187"/>
         <source>Set a crop rectangle now.</source>
         <translation>Imposta ora un rettangolo di ritaglio.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5467"/>
+        <location filename="../Sources/ptMain.cpp" line="5388"/>
         <source>Open Channelmixer</source>
         <translation>Apri Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5514"/>
-        <location filename="../Sources/ptMain.cpp" line="5529"/>
+        <location filename="../Sources/ptMain.cpp" line="5435"/>
+        <location filename="../Sources/ptMain.cpp" line="5450"/>
         <source>Save Channelmixer</source>
         <translation>Salva Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5530"/>
-        <location filename="../Sources/ptMain.cpp" line="6040"/>
+        <location filename="../Sources/ptMain.cpp" line="5451"/>
+        <location filename="../Sources/ptMain.cpp" line="5961"/>
         <source>Give a description</source>
         <translation>Dai una descrizione</translation>
     </message>
@@ -1972,33 +2010,33 @@ No crop, try again.</source>
         <translation type="obsolete">Dai una descrizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5889"/>
+        <location filename="../Sources/ptMain.cpp" line="5810"/>
         <source>Open Curve</source>
         <translation>Apri Curva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5919"/>
+        <location filename="../Sources/ptMain.cpp" line="5840"/>
         <source>This curve is meant for channel </source>
         <translation>Questa curva è da usare con un canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5921"/>
+        <location filename="../Sources/ptMain.cpp" line="5842"/>
         <source>. Continue anyway ?</source>
         <translation>. Continuare comunque?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5924"/>
+        <location filename="../Sources/ptMain.cpp" line="5845"/>
         <source>Incompatible curve</source>
         <translation>Curva incompatibile</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="6024"/>
-        <location filename="../Sources/ptMain.cpp" line="6039"/>
+        <location filename="../Sources/ptMain.cpp" line="5945"/>
+        <location filename="../Sources/ptMain.cpp" line="5960"/>
         <source>Save Curve</source>
         <translation>Salva Curva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="7949"/>
+        <location filename="../Sources/ptMain.cpp" line="7870"/>
         <source>Get texture bitmap file</source>
         <translation>Seleziona file texture bitmap</translation>
     </message>
@@ -4431,6 +4469,61 @@ No crop, try again.</source>
         <source>Processing</source>
         <translation>Elaborazione</translation>
     </message>
+    <message>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="45"/>
+        <source>Photivo: Load configuration</source>
+        <translation>Photivo: Caricamento configurazione</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="49"/>
+        <source>Discard current configuration and load new settings?</source>
+        <translation>Elimino configurazione attuale e carico nuove impostazioni?</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="57"/>
+        <source>Discard current configuration and reset to startup preset?
+</source>
+        <translation>Elimino configurazione attuale e ripristino al preset di avvio?</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="62"/>
+        <source>Discard current configuration and reset to neutral preset?</source>
+        <translation>Elimino configurazione attuale e ripristino al preset neutro?</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="66"/>
+        <source>Discard current configuration and load preset file?
+</source>
+        <translation>Elimino configurazione attuale e carico un file di preset?</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="75"/>
+        <source>Discard current configuration and load settings file?
+</source>
+        <translation>Elimino configurazione attuale e carico un file impostazioni?</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="116"/>
+        <source>Photivo: Save image</source>
+        <translation>Photivo: Salva immagine</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="117"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="129"/>
+        <source>Do you want to save the current image?</source>
+        <translation>Vuoi salvare l&apos;immagine corrente?</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="121"/>
+        <source>Photivo: Open image</source>
+        <translation>Photivo: Apri immagine</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="122"/>
+        <source>Before opening the image:
+</source>
+        <translation>Prima di aprire l&apos;immagine:</translation>
+    </message>
 </context>
 <context>
     <name>ptCurveWindow</name>
@@ -4680,7 +4773,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="225"/>
         <location filename="../Sources/ptMainWindow.ui" line="228"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="1934"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1957"/>
         <source>Favourite tools</source>
         <translation>Strumenti preferiti</translation>
     </message>
@@ -4696,8 +4789,8 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="347"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1215"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10607"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1251"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10643"/>
         <source>Camera</source>
         <translation>Camera</translation>
     </message>
@@ -4716,8 +4809,8 @@ No crop, try again.</source>
         <location filename="../Sources/ptMainWindow.ui" line="407"/>
         <location filename="../Sources/ptMainWindow.ui" line="459"/>
         <location filename="../Sources/ptMainWindow.ui" line="511"/>
-        <location filename="../Sources/ptMainWindow.ui" line="773"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10184"/>
+        <location filename="../Sources/ptMainWindow.ui" line="809"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10220"/>
         <source>WP</source>
         <translation>Punto di Bianco</translation>
     </message>
@@ -4730,7 +4823,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="528"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="592"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="598"/>
         <source>Open preset</source>
         <translation>Apri Preset</translation>
     </message>
@@ -4741,19 +4834,19 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="596"/>
-        <location filename="../Sources/ptMainWindow.ui" line="11361"/>
-        <location filename="../Sources/ptMainWindow.ui" line="11513"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11397"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11549"/>
         <source>Load a camera profile</source>
         <translation>Carica un profilo colore Camera</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="599"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8059"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9446"/>
-        <location filename="../Sources/ptMainWindow.ui" line="11150"/>
-        <location filename="../Sources/ptMainWindow.ui" line="11244"/>
-        <location filename="../Sources/ptMainWindow.ui" line="11364"/>
-        <location filename="../Sources/ptMainWindow.ui" line="11516"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8095"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9482"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11186"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11280"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11400"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11552"/>
         <source>Load</source>
         <translation>Carica</translation>
     </message>
@@ -4763,27 +4856,27 @@ No crop, try again.</source>
         <translation>Correzioni generiche</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="743"/>
+        <location filename="../Sources/ptMainWindow.ui" line="779"/>
         <source>White Balance</source>
         <translation>Bilanciamento del Bianco</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="770"/>
+        <location filename="../Sources/ptMainWindow.ui" line="806"/>
         <source>Spot white balance</source>
         <translation>Bilanciamento del Bianco Spot</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="967"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1003"/>
         <source>Demosaicing</source>
         <translation>Demosaicizzazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1115"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1151"/>
         <source>Highlight recovery</source>
         <translation>Recupero Alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1161"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1197"/>
         <source>Geometry</source>
         <translation>Geometria</translation>
     </message>
@@ -4824,494 +4917,504 @@ No crop, try again.</source>
         <translation type="obsolete">Rotazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1357"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1465"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1549"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1393"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1501"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1585"/>
         <source>Model</source>
         <translation>Modello</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1816"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1819"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1852"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1855"/>
         <source>Rotate left</source>
         <translation>Ruota a sinistra</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1836"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1839"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1872"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1875"/>
         <source>Rotate right</source>
         <translation>Ruota a destra</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1872"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1908"/>
         <source>Get rotate angle</source>
         <translation>Imposta angolo di rotazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1875"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1911"/>
         <source>Rotate angle</source>
         <translation>Angolo di rotazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2046"/>
-        <location filename="../Sources/ptMainWindow.ui" line="11660"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2082"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11696"/>
         <source>Crop</source>
         <translation>Ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2083"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2119"/>
         <source>Make a crop</source>
         <translation>Fai un ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2086"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2122"/>
         <source>Crop area</source>
         <translation>Area di ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2106"/>
-        <location filename="../Sources/ptMainWindow.ui" line="2109"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2142"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2145"/>
         <source>Confirm crop</source>
         <translation>Conferma ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2126"/>
-        <location filename="../Sources/ptMainWindow.ui" line="2129"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2162"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2165"/>
         <source>Cancel crop</source>
         <translation>Cancella ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2248"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2284"/>
         <source>W</source>
         <translation>L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2280"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2316"/>
         <source>H </source>
         <translation>A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2162"/>
-        <location filename="../Sources/ptMainWindow.ui" line="2165"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2198"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2201"/>
         <source>Switch crop between portrait/landscape</source>
         <translation>Cambia ritaglio tra ritratto/panorama</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2176"/>
-        <location filename="../Sources/ptMainWindow.ui" line="2179"/>
+        <location filename="../Sources/ptMainWindow.ui" line="696"/>
+        <source>Darkframe image</source>
+        <translation>Immagine Darkframe</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="728"/>
+        <source>DcRaw bad pixel file</source>
+        <translation>File bad pixel DcRaw</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="2212"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2215"/>
         <source>Center horizontally</source>
         <translation>Centra orizzontalmente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2190"/>
-        <location filename="../Sources/ptMainWindow.ui" line="2193"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2226"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2229"/>
         <source>Center vertically</source>
         <translation>Centra verticalmente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2314"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2350"/>
         <source>Guidelines</source>
         <translation>Linee guida</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2324"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2360"/>
         <source>Lights Out</source>
         <translation>Luci spente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2377"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2413"/>
         <source>Seam carving (*)</source>
         <translation>Ridimensionamento liquido (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2398"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2434"/>
         <source>Scaling</source>
         <translation>Ridimensionamento</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2505"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2541"/>
         <source>Resize</source>
         <translation>Ridimensiona</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2580"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2616"/>
         <source>Flip</source>
         <translation>Rifletti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2617"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2653"/>
         <source>Block</source>
         <translation>Blocca</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2654"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2690"/>
         <source>RGB</source>
         <translation>RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2696"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2732"/>
         <source>Channel  Mixer</source>
         <translation>Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2713"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3674"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3677"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3892"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3895"/>
-        <location filename="../Sources/ptMainWindow.ui" line="4151"/>
-        <location filename="../Sources/ptMainWindow.ui" line="4154"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5218"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5221"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5449"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5452"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6176"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6179"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6312"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6315"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6451"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6454"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6590"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6593"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6729"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6732"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6865"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6868"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6964"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6967"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8810"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8813"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8946"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8949"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9082"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9085"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9260"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9263"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9552"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9555"/>
-        <location filename="../Sources/ptMainWindow.ui" line="13169"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2749"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3710"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3713"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3928"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3931"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4187"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4190"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5254"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5257"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5485"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5488"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6212"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6215"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6348"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6351"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6487"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6490"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6626"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6629"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6765"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6768"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6901"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6904"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7000"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7003"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8846"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8849"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8982"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8985"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9118"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9121"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9296"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9299"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9588"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9591"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13205"/>
         <source>Open</source>
         <translation>Apri</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2730"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3697"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3700"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3915"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3918"/>
-        <location filename="../Sources/ptMainWindow.ui" line="4174"/>
-        <location filename="../Sources/ptMainWindow.ui" line="4177"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5241"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5244"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5472"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5475"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6199"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6202"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6335"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6338"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6474"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6477"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6613"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6616"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6752"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6755"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6888"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6891"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6987"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6990"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8833"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8836"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8969"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8972"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9105"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9108"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9283"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9286"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9575"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9578"/>
-        <location filename="../Sources/ptMainWindow.ui" line="11264"/>
-        <location filename="../Sources/ptMainWindow.ui" line="12528"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2766"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3733"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3736"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3951"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3954"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4210"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4213"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5277"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5280"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5508"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5511"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6235"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6238"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6371"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6374"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6510"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6513"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6649"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6652"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6788"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6791"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6924"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6927"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7023"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7026"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8869"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8872"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9005"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9008"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9141"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9144"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9319"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9322"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9611"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9614"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11300"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12564"/>
         <source>Save</source>
         <translation>Salva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2883"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2919"/>
         <source>Highlights</source>
         <translation>Alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2926"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8699"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2962"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8735"/>
         <source>Color Intensity</source>
         <translation>Intensità Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2988"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3024"/>
         <source>Brightness</source>
         <translation>Luminosità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3031"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10547"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3067"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10583"/>
         <source>Exposure</source>
         <translation>Esposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3128"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3164"/>
         <source>Brighten</source>
         <translation>Schiarisci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3174"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3210"/>
         <source>GammaTool</source>
         <translation>Strumento Gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3214"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3250"/>
         <source>Normalization</source>
         <translation>Normalizzazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3251"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3287"/>
         <source>Color Enhancement</source>
         <translation>Miglioramento Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3291"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3979"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3327"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4015"/>
         <source>Low/Mid/Highlight Recovery</source>
         <translation>Recupero Basse/Medie/Alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3371"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3407"/>
         <source>Texture Contrast</source>
         <translation>Contrasto Texture</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3423"/>
-        <location filename="../Sources/ptMainWindow.ui" line="4345"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3459"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4381"/>
         <source>Local Contrast I</source>
         <translation>Contrasto Locale I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3481"/>
-        <location filename="../Sources/ptMainWindow.ui" line="4390"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3517"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4426"/>
         <source>Local Contrast II</source>
         <translation>Contrasto Locale II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3539"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3575"/>
         <source>RGB Contrast</source>
         <translation>Contrasto RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3542"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3578"/>
         <source>Increase RGB contrast by a sigmoidal curve</source>
         <translation>Aumenta il contrasto RGB tramite una curva sigmoidale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3582"/>
-        <location filename="../Sources/ptMainWindow.ui" line="4663"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3618"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4699"/>
         <source>Levels</source>
         <translation>Livelli</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3622"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3658"/>
         <source>RGB Curve</source>
         <translation>Curva RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3761"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3797"/>
         <source>Lab Color/Contrast</source>
         <translation>Colore/Contrasto Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3800"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3836"/>
         <source>LAB Transform</source>
         <translation>Trasformazione Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3837"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3873"/>
         <source>Shadows / Highlights</source>
         <translation>Ombre / Alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4059"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4095"/>
         <source>Dynamic Range Compression (*)</source>
         <translation>Compressione Estensione Dinamica (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4102"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4138"/>
         <source>Texture curve (*)</source>
         <translation>Curva Texture (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4241"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4277"/>
         <source>Texture Contrast I</source>
         <translation>Contrasto Texture I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4293"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4329"/>
         <source>Texture Contrast II</source>
         <translation>Contrasto Texture II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4448"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4484"/>
         <source>Local Contrast Stretch I (*)</source>
         <translation>Estendi Contrasto Locale I (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4494"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4530"/>
         <source>Local Contrast Stretch II (*)</source>
         <translation>Estendi Contrasto Locale II (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4540"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4576"/>
         <source>Lightness Contrast</source>
         <translation>Contrasto Luminosità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4543"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4579"/>
         <source>Increase contrast on L by a sigmoidal curve</source>
         <translation>Aumenta il contrasto su L tramite curva sigmoidale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4583"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4619"/>
         <source>Saturation</source>
         <translation>Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4586"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4622"/>
         <source>Increase saturation by a sigmoidal curve</source>
         <translation>Aumenta saturazione mediante una curva sigmoidale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4623"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4659"/>
         <source>Color Boost</source>
         <translation>Accentua colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4703"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4739"/>
         <source>Lab Sharpen/Noise</source>
         <translation>Nitidezza/Rumore Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4742"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4778"/>
         <source>Impulse noise reduction</source>
         <translation>Riduzione rumore Impulse</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4782"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4818"/>
         <source>Edge avoiding wavelets</source>
         <translation>Wavelets Evita Margini</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4853"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4889"/>
         <source>GreyCStoration on L (*)</source>
         <translation>GreyCStoration su L (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4954"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4990"/>
         <source>Defringe</source>
         <translation>Elimina margine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5046"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5082"/>
         <source>Wavelet Denoising</source>
         <translation>Riduzione rumore Wavelet</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5126"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5162"/>
         <source>Luminance Denoising (*)</source>
         <translation>Riduzione rumore Luminanza (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5172"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5208"/>
         <source>Luminance Denoise Curve (*)</source>
         <translation>Curva riduzione rumore Luminanza (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5311"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5347"/>
         <source>Pyramid Denoising</source>
         <translation>Riduzione rumore Piramide</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5357"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5393"/>
         <source>Color Denoising (*)</source>
         <translation>Riduzione rumore Colore (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5403"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5439"/>
         <source>Detail curve</source>
         <translation>Curva di dettaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5545"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5581"/>
         <source>Gradient Sharpen</source>
         <translation>Nitidezza Gradiente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5629"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5665"/>
         <source>Wiener Filter (Sharpen) (*)</source>
         <translation>Filtro Wiener (Nitidezza) (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5706"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5742"/>
         <source>Inverse Diffusion Sharpen</source>
         <translation>Nitidezza Diffusione Inversa</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5777"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5813"/>
         <source>Unsharp Mask (USM)</source>
         <translation>Maschera di Contrasto (USM)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5823"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5859"/>
         <source>Highpass Sharpen</source>
         <translation>Nitidezza Accentua Passaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5869"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5905"/>
         <source>Film grain simulation</source>
         <translation>Simulazione grana pellicola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6011"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6047"/>
         <source>View LAB</source>
         <translation>Visualizza LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6048"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6084"/>
         <source>Lab EyeCandy</source>
         <translation>Miglioramenti LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6090"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6126"/>
         <source>Outline</source>
         <translation>Outline</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7690"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7726"/>
         <source>Tone I</source>
         <translation>Tonalità I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7792"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7828"/>
         <source>Tone II</source>
         <translation>Tonalità II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8440"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8476"/>
         <source>Gradual Blur I (*)</source>
         <translation>Sfocatura graduale I (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8545"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8581"/>
         <source>Gradual Blur II (*)</source>
         <translation>Sfocatura graduale II (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11344"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11380"/>
         <source>Export command</source>
         <translation>Comando Esporta</translation>
     </message>
@@ -5320,311 +5423,311 @@ No crop, try again.</source>
         <translation type="obsolete">Luminanza tramite saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6402"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6438"/>
         <source>Saturation curve</source>
         <translation>Curva Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6541"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6577"/>
         <source>Hue curve</source>
         <translation>Curva Tonalità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6680"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6716"/>
         <source>L* curve</source>
         <translation>Curva L*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6816"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6852"/>
         <source>a* b* curves</source>
         <translation>Curve a* b*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7051"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7087"/>
         <source>Color contrast</source>
         <translation>Contrasto Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7097"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7133"/>
         <source>Tone adjustment I</source>
         <translation>Regolazione Tono I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7152"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7188"/>
         <source>Tone adjustment II</source>
         <translation>Regolazione Tono II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7207"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7243"/>
         <source>Luminance adjustment</source>
         <translation>Regolazione Luminanza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7265"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7301"/>
         <source>Saturation adjustment</source>
         <translation>Regolazione Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7323"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7359"/>
         <source>Tone</source>
         <translation>Tono</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7338"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7374"/>
         <source>All values</source>
         <translation>Tutti i valori</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7360"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7396"/>
         <source>Shadows</source>
         <translation>Ombre</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7382"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7418"/>
         <source>Midtones</source>
         <translation>Mezzitoni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7404"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7440"/>
         <source>Lights</source>
         <translation>Luci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7445"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8354"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7481"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8390"/>
         <source>Vignette</source>
         <translation>Vignettatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7531"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7567"/>
         <source>EyeCandy</source>
         <translation>Miglioramenti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7570"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7606"/>
         <source>Black and White</source>
         <translation>Bianco e Nero</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7647"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7683"/>
         <source>Simple tone</source>
         <translation>Tono semplice</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7726"/>
-        <location filename="../Sources/ptMainWindow.ui" line="7828"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8180"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8285"/>
-        <location filename="../Sources/ptMainWindow.ui" line="11907"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7762"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7864"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8216"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8321"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11943"/>
         <source>Color</source>
         <translation>Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7894"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7930"/>
         <source>Cross processing</source>
         <translation>Cross processing</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7937"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7973"/>
         <source>Contrast</source>
         <translation>Contrasto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7977"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8013"/>
         <source>Texture overlay</source>
         <translation>Sovrapposizione Texture</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8023"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8059"/>
         <source>Clear image</source>
         <translation>Cancella immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8026"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8062"/>
         <source>Clear</source>
         <translation>Cancella</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8056"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8092"/>
         <source>Load image</source>
         <translation>Carica immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8144"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8180"/>
         <source>Gradual overlay I</source>
         <translation>Sovrapposizione Filtro Graduato I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8249"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8285"/>
         <source>Gradual overlay II</source>
         <translation>Sovrapposizione Filtro Graduato II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8650"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8686"/>
         <source>Softglow / Orton</source>
         <translation>Chiarore sfumato / Orton</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8761"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8797"/>
         <source>R tone curve</source>
         <translation>Curva tono R</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8897"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8933"/>
         <source>G tone curve</source>
         <translation>Curva tono G</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9033"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9069"/>
         <source>B tone curve</source>
         <translation>Curva tono B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9169"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10160"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9205"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10196"/>
         <source>Output</source>
         <translation>Output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9211"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9247"/>
         <source>Basecurve</source>
         <translation>Curva base</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9347"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9383"/>
         <source>sRGB gamma compensation</source>
         <translation>Compensazione gamma sRGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9390"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9426"/>
         <source>Output Colorspace</source>
         <translation>Spazio colore di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9410"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9446"/>
         <source>Reset profile</source>
         <translation>Resetta profilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9413"/>
-        <location filename="../Sources/ptMainWindow.ui" line="13087"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9449"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13123"/>
         <source>Full</source>
         <translation>Pieno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9433"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9469"/>
         <source>Embedded profile</source>
         <translation>Profilo incorporato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9443"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9479"/>
         <source>Load icc profile</source>
         <translation>Carica profilo ICC</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9506"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9542"/>
         <source>After gamma curve</source>
         <translation>Curva dopo gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9639"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9675"/>
         <source>Sigmoidal contrast</source>
         <translation>Contrasto sigmoidale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9679"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9715"/>
         <source>Resize for web</source>
         <translation>Ridimensiona per il web</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9781"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9817"/>
         <source>Wiener Filter (Sharpen)</source>
         <translation>Filtro Wiener (Nitidezza)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9858"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9894"/>
         <source>Output Parameters</source>
         <translation>Parametri di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10001"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10037"/>
         <source>Title</source>
         <translation>Titolo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10078"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10114"/>
         <source>Tags</source>
         <translation>Etichette</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10122"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10158"/>
         <source>Tags for the photo (IPTC and XMP)</source>
         <translation>Etichette per la foto (IPTC e XMP)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10181"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10217"/>
         <source>Write the output file</source>
         <translation>Salva il file di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10273"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10309"/>
         <source>About Photivo</source>
         <translation>Info su Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10348"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10384"/>
         <source>Photivo photo processor</source>
         <translation>Photivo Elaboratore Fotografico</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10358"/>
-        <location filename="../Sources/ptMainWindow.ui" line="12925"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10394"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12961"/>
         <source>Rev:</source>
         <translation>Versione:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10368"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10404"/>
         <source>&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10422"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10458"/>
         <source>File info</source>
         <translation>Informazioni File</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10449"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10485"/>
         <source>File name:</source>
         <translation>Nome File:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10456"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10492"/>
         <source>File name of the currently loaded image</source>
         <translation>Nome dell&apos;immagine correntemente caricata</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10487"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10523"/>
         <source>Path:</source>
         <translation>Percorso:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10494"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10530"/>
         <source>Path of the currently loaded image</source>
         <translation>percorso dell&apos;immagine correntemente caricata</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10532"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10568"/>
         <source>Exif info</source>
         <translation>Informazioni Exif</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10578"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10614"/>
         <source>Focal length</source>
         <translation>Lunghezza focale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1238"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10656"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1274"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10692"/>
         <source>Lens</source>
         <translation>Obiettivo</translation>
     </message>
@@ -5636,7 +5739,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="271"/>
         <location filename="../Sources/ptMainWindow.ui" line="274"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="1892"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1915"/>
         <source>Active tools</source>
         <translation>Strumenti attivi</translation>
     </message>
@@ -5661,12 +5764,12 @@ No crop, try again.</source>
         <translation type="obsolete">Lensfun - Correzione obiettivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1672"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1708"/>
         <source>Source geometry</source>
         <translation>Geometria di origine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1704"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1740"/>
         <source>Target geometry</source>
         <translation>Geometria di riferimento</translation>
     </message>
@@ -5675,12 +5778,12 @@ No crop, try again.</source>
         <translation type="obsolete">Modello di distorsione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1200"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1236"/>
         <source>Lens Parameters (Lensfun)</source>
         <translation>Parametri obiettivo (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1342"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1378"/>
         <source>Chromatic Aberration (Lensfun)</source>
         <translation>Aberrazione cromatica (Lensfun)</translation>
     </message>
@@ -5689,7 +5792,7 @@ No crop, try again.</source>
         <translation type="obsolete">Modello correzione AC</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1450"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1486"/>
         <source>Vignetting (Lensfun)</source>
         <translation>Vignettatura (Lensfun)</translation>
     </message>
@@ -5698,127 +5801,127 @@ No crop, try again.</source>
         <translation type="obsolete">Modello correzione vignettatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1534"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1570"/>
         <source>Lens Distortion (Lensfun)</source>
         <translation>Distorsione obiettivo (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1657"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1693"/>
         <source>Geometry Conversion (Lensfun)</source>
         <translation>Conversione geometria (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1755"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1791"/>
         <source>Defish</source>
         <translation>Defish</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1801"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1837"/>
         <source>Rotation and Perspective</source>
         <translation>Rotazione e prospettiva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6263"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6299"/>
         <source>Luminance by hue curve</source>
         <translation>Luminanza tramite curva di tono</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10687"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10723"/>
         <source>Time of original</source>
         <translation>Data del file originale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10715"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10751"/>
         <source>Flash</source>
         <translation>Flash</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10743"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10779"/>
         <source>Whitebalance</source>
         <translation>Bilanciamento del bianco</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10771"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10807"/>
         <source>dcraw info</source>
         <translation>Informazioni dcraw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10818"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10854"/>
         <source>Size info</source>
         <translation>Informazioni dimensione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10845"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10881"/>
         <source>Input:</source>
         <translation>Input:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10857"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10893"/>
         <source>Size of the image at the beginning</source>
         <translation>Dimensioni originali dell&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10888"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10924"/>
         <source>1:1 pipe:</source>
         <translation>1:1 flusso di lavoro:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10900"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10936"/>
         <source>Size of the image at the end of the full pipe (without webresize)</source>
         <translation>Dimensione dell&apos;immagine alla fine dell&apos;intero flusso di lavoro (senza ridimensionamento web)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10931"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10967"/>
         <source>Current:</source>
         <translation>Attuale:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10943"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10979"/>
         <source>Size of the image at the end of the current pipe (without webresize)</source>
         <translation>Dimensione dell&apos;immagine alla fine del corrente flusso di lavoro (senza ridimensionamento web)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11006"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11042"/>
         <source>TextLabel</source>
         <translation>Etichetta di testo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11086"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11122"/>
         <source>Work Colorspace</source>
         <translation>Spazio Colore di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11123"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11159"/>
         <source>Preview Colorspace</source>
         <translation>Anteprima Spazio Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11147"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11183"/>
         <source>Load an icc profile</source>
         <translation>Carica un profilo icc</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11230"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11266"/>
         <source>UI settings</source>
         <translation>Impostazioni interfaccia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11241"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11277"/>
         <source>Load UI settings from file</source>
         <translation>Carica impostazioni interfaccia da file</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11261"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11297"/>
         <source>Save UI settings to file</source>
         <translation>Salva impostazioni interfaccia in un file</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11294"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11330"/>
         <source>Discard all changes</source>
         <translation>Elimina tutte le modifiche</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11297"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11333"/>
         <source>Discard</source>
         <translation>Elimina</translation>
     </message>
@@ -5827,135 +5930,135 @@ No crop, try again.</source>
         <translation type="obsolete">Comando Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11440"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11476"/>
         <source>Remember settings</source>
         <translation>Ricorda impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11477"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11513"/>
         <source>Startup settings</source>
         <translation>Impostazioni all&apos;avvio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11573"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11609"/>
         <source>Tool pane mode</source>
         <translation>Modalità strumento riquadro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11603"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11639"/>
         <source>Pipe size</source>
         <translation>Formato in lavorazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11675"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11711"/>
         <source>Initial zoom</source>
         <translation>Zoom iniziale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11726"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11762"/>
         <source>Inputs</source>
         <translation>Inputs</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11763"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11799"/>
         <source>ToolBoxes</source>
         <translation>Riquadro strumenti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11800"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11836"/>
         <source>Tab status indicator</source>
         <translation>Scheda indicatore stato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11837"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11873"/>
         <source>Preview</source>
         <translation>Anteprima</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11874"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11910"/>
         <source>Theming</source>
         <translation>Tema</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11948"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11984"/>
         <source>Set new CSS style</source>
         <translation>Imposta nuovo stile CSS</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11951"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11987"/>
         <source>CSS</source>
         <translation>CSS</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12018"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12054"/>
         <source>Button modes</source>
         <translation>Modalità pulsanti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12057"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12093"/>
         <source>Save button:</source>
         <translation>Salva:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12100"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12136"/>
         <source>Reset button:</source>
         <translation>Ripristina:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12138"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12174"/>
         <source>Searchbar</source>
         <translation>Barra di ricerca</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12175"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12211"/>
         <source>Show confirmation dialogs</source>
         <translation>Mostra finestra di conferma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12218"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12254"/>
         <source>Backup settings</source>
         <translation>Backup impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12255"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12291"/>
         <source>Translation</source>
         <translation>Traduzione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12273"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12309"/>
         <source>Switch Photivo&apos;s language</source>
         <translation>Cambia la lingua di Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12334"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12370"/>
         <source>Memory test</source>
         <translation>Test della memoria</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12408"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12444"/>
         <source>Change preview mode</source>
         <translation>Cambia modalità anteprima</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12411"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12447"/>
         <source>Preview mode</source>
         <translation>Modalità anteprima</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12466"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12502"/>
         <source>Run pipe</source>
         <translation>Esegui flusso di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12469"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12505"/>
         <source>Run</source>
         <translation>Esegui</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="189"/>
         <location filename="../Sources/ptMainWindow.ui" line="192"/>
-        <location filename="../Sources/ptMainWindow.ui" line="12505"/>
-        <location filename="../Sources/ptMainWindow.ui" line="12508"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12541"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12544"/>
         <source>Reset</source>
         <translation>Ripristina</translation>
     </message>
@@ -5964,279 +6067,277 @@ No crop, try again.</source>
         <translation type="obsolete">Rotazione e prospettiva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12525"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12561"/>
         <source>Write output to a file</source>
         <translation>Salva output in un file</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12545"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12581"/>
         <source>Send to Gimp</source>
         <translation>Invia a Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12548"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12584"/>
         <source>Export</source>
         <translation>Esporta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12613"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12649"/>
         <source>Status</source>
         <translation>Stato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12639"/>
-        <location filename="../Sources/ptMainWindow.ui" line="12642"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12675"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12678"/>
         <source>Show processing</source>
         <translation>Mostra strumenti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12662"/>
-        <location filename="../Sources/ptMainWindow.ui" line="12665"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12698"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12701"/>
         <source>Show settings</source>
         <translation>Mostra impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12685"/>
-        <location filename="../Sources/ptMainWindow.ui" line="12688"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12721"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12724"/>
         <source>Show info</source>
         <translation>Mostra informazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12877"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12913"/>
         <source>Open image</source>
         <translation>Apri immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12915"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12951"/>
         <source>&lt;p align=&quot;center&quot;&gt;Photivo photo processor&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;Photivo photo processor&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12935"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12971"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12948"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12984"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Forum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Issues&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Forum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Problemi&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13064"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13100"/>
         <source>Zoom Fit</source>
         <translation>Adatta allo spazio di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13067"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13103"/>
         <source>Fit</source>
         <translation>Adatta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13084"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13120"/>
         <source>Zoom Full</source>
         <translation>Dimensione 1:1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13126"/>
-        <location filename="../Sources/ptMainWindow.ui" line="13129"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13162"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13165"/>
         <source>Fullscreen</source>
         <translation>Schermo intero</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13174"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13210"/>
         <source>Exit</source>
         <translation>Esci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13182"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13218"/>
         <source>TabMode</source>
         <translation>Modalità schede</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13187"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13223"/>
         <source>Save Output</source>
         <translation>Salva output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13192"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13228"/>
         <source>Write Job</source>
         <translation>Scrivi file di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13200"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13236"/>
         <source>Enabled</source>
         <translation>Abilitato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13211"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13247"/>
         <source>Add power law</source>
         <translation>Aggiungi &quot;Power law&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="572"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="578"/>
         <source>Save current pipe</source>
         <translation>Salva flusso di lavoro corrente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="574"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="580"/>
         <source>Save full size</source>
         <translation>Salva pieno formato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="576"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="582"/>
         <source>Save settings file</source>
         <translation>Salva file impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="578"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="584"/>
         <source>Save job file</source>
         <translation>Salva file di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="582"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="588"/>
         <source>Export current pipe</source>
         <translation>Esporta flusso di lavoro corrente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="584"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="590"/>
         <source>Export full size</source>
         <translation>Esporta a dimensione intera</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="588"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="594"/>
         <source>Neutral reset</source>
         <translation>Resetta a Neutro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="590"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="596"/>
         <source>User reset</source>
         <translation>Resetta a impostazioni utente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="594"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="600"/>
         <source>Open settings</source>
         <translation>Apri impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="598"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="604"/>
         <source>Show hidden tools</source>
         <translation>Mostra strumenti nascosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="611"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="617"/>
         <source>Search</source>
         <translation>Cerca</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="673"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="679"/>
         <source>English (Default)</source>
         <translation>Inglese (Default)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="680"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="686"/>
         <source>Restart Photivo to change the language.</source>
         <translation>Riavvia Photivo per cambiare la lingua.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1621"/>
         <source>Settings file dropped!</source>
-        <translation>Impostazioni file perse!</translation>
+        <translation type="obsolete">Impostazioni file perse!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1622"/>
         <source>Do you really want to open
 </source>
-        <translation>Vuoi veramente aprire
+        <translation type="obsolete">Vuoi veramente aprire
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1790"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1813"/>
         <source>No tools hidden!</source>
         <translation>Nessuno strumento nascosto!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1791"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1814"/>
         <source>Hidden tools</source>
         <translation>Strumenti nascosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1809"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1832"/>
         <source>No tools blocked!</source>
         <translation>Nessuno strumento bloccato!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1810"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1833"/>
         <source>Blocked tools</source>
         <translation>Strumenti bloccati</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1874"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1897"/>
         <source>Search results:</source>
         <translation>Risultati di ricerca:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1892"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1915"/>
         <source>No tools active!</source>
         <translation>Nessuno strumento attivo!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1896"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1919"/>
         <source>Active tools:</source>
         <translation>Strumenti attivi:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1912"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1935"/>
         <source>All tools hidden</source>
         <translation>Tutti gli strumenti nascosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1912"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1935"/>
         <source>No visible tools!</source>
         <translation>Nessuno strumento visibile!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1915"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1938"/>
         <source>All visible tools:</source>
         <translation>Tutti gli strumenti visibili:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1934"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1957"/>
         <source>No favourite tools!</source>
         <translation>Nessuno strumento preferito!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1938"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1961"/>
         <source>Favourite tools:</source>
         <translation>Strumenti preferiti:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2532"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2555"/>
         <source> at </source>
         <translation> a </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2551"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2574"/>
         <source> with ISO </source>
         <translation> con ISO </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2592"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2615"/>
         <source> (35mm equiv.: </source>
         <translation> (35mm equiv.: </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2942"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="2966"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2965"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2989"/>
         <source>Photivo UI file (*.ptu);;All files (*.*)</source>
         <translation>File interfaccia Photivo (*.ptu);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2944"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2967"/>
         <source>Open UI</source>
         <translation>Apri interfaccia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2968"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2991"/>
         <source>Save UI</source>
         <translation>Salva interfaccia</translation>
     </message>
@@ -6244,40 +6345,40 @@ No crop, try again.</source>
 <context>
     <name>ptProcessor</name>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="201"/>
+        <location filename="../Sources/ptProcessor.cpp" line="202"/>
         <source>Loading Bitmap</source>
         <translation>Caricamento Bitmap</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="222"/>
-        <location filename="../Sources/ptProcessor.cpp" line="253"/>
+        <location filename="../Sources/ptProcessor.cpp" line="223"/>
+        <location filename="../Sources/ptProcessor.cpp" line="254"/>
         <source>Reading exif info</source>
         <translation>Lettura informazioni exif</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="236"/>
+        <location filename="../Sources/ptProcessor.cpp" line="237"/>
         <source>Reading RAW file</source>
         <translation>Lettura file RAW</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="264"/>
+        <location filename="../Sources/ptProcessor.cpp" line="265"/>
         <source>Demosaicing</source>
         <translation>Demosaicizzazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="274"/>
+        <location filename="../Sources/ptProcessor.cpp" line="275"/>
         <source>Recovering highlights</source>
         <translation>Recupero alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="309"/>
-        <location filename="../Sources/ptProcessor.cpp" line="321"/>
+        <location filename="../Sources/ptProcessor.cpp" line="310"/>
+        <location filename="../Sources/ptProcessor.cpp" line="322"/>
         <source>Profile not found</source>
         <translation>Profilo non trovato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="310"/>
-        <location filename="../Sources/ptProcessor.cpp" line="322"/>
+        <location filename="../Sources/ptProcessor.cpp" line="311"/>
+        <location filename="../Sources/ptProcessor.cpp" line="323"/>
         <source>Profile not found. Reverting to Adobe Matrix.
 You could try an external profile.</source>
         <translation>Profilo non trovato. Riconversione ad Adobe Matrix. Puoi provare con un profilo esterno.</translation>
@@ -6291,7 +6392,7 @@ You could try an external profile.</source>
         <translation type="obsolete">da RGB a RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2542"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2548"/>
         <source>Transfer Bitmap</source>
         <translation>Trasferisci Bitmap</translation>
     </message>
@@ -6300,48 +6401,48 @@ You could try an external profile.</source>
         <translation type="obsolete">Rotazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2593"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2599"/>
         <source>Lensfun corrections</source>
         <translation>Correzioni Lensfun</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2743"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2749"/>
         <source>Defish correction</source>
         <translation>Correzione defish</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2802"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2808"/>
         <source>Perspective transform</source>
         <translation>Trasformazione prospettica</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2845"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2851"/>
         <source>Crop outside the image</source>
         <translation>Ritaglio al di fuori dell&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2846"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2852"/>
         <source>Crop rectangle too large.
 No crop, try again.</source>
         <translation>Rettangolo di ritaglio troppo largo. Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2856"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2862"/>
         <source>Cropping</source>
         <translation>Ritaglio in corso</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2906"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2912"/>
         <source>Resize image</source>
         <translation>Ridimensiona immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2926"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2932"/>
         <source>Flip image</source>
         <translation>Rifletti immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="405"/>
+        <location filename="../Sources/ptProcessor.cpp" line="406"/>
         <source>Calculate auto exposure</source>
         <translation>Calcolo esposizione auto</translation>
     </message>
@@ -6350,376 +6451,376 @@ No crop, try again.</source>
         <translation type="obsolete">Prossimo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2883"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2889"/>
         <source>Seam carving</source>
         <translation>Ridimensionamento liquido</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="418"/>
+        <location filename="../Sources/ptProcessor.cpp" line="419"/>
         <source>Channel Mixing</source>
         <translation>Miscelazione canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="480"/>
+        <location filename="../Sources/ptProcessor.cpp" line="481"/>
         <source>Vibrance</source>
         <translation>Vibranza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="502"/>
+        <location filename="../Sources/ptProcessor.cpp" line="503"/>
         <source>IntensityRGB</source>
         <translation>Intensità RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="525"/>
+        <location filename="../Sources/ptProcessor.cpp" line="526"/>
         <source>Brightness</source>
         <translation>Luminosità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="576"/>
+        <location filename="../Sources/ptProcessor.cpp" line="577"/>
         <source>Correcting Exposure</source>
         <translation>Correzione esposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="602"/>
+        <location filename="../Sources/ptProcessor.cpp" line="603"/>
         <source>Brighten</source>
         <translation>Schiarisci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="615"/>
+        <location filename="../Sources/ptProcessor.cpp" line="616"/>
         <source>Applying RGB Gamma</source>
         <translation>Applicazione Gamma RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="631"/>
+        <location filename="../Sources/ptProcessor.cpp" line="632"/>
         <source>Normalization</source>
         <translation>Normalizzazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="646"/>
+        <location filename="../Sources/ptProcessor.cpp" line="647"/>
         <source>Color enhance</source>
         <translation>Migliora colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="659"/>
-        <location filename="../Sources/ptProcessor.cpp" line="674"/>
+        <location filename="../Sources/ptProcessor.cpp" line="660"/>
+        <location filename="../Sources/ptProcessor.cpp" line="675"/>
         <source>Local Exposure</source>
         <translation>Esposizione locale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="692"/>
+        <location filename="../Sources/ptProcessor.cpp" line="693"/>
         <source>RGB Texture contrast</source>
         <translation>Contrasto Texture RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="709"/>
+        <location filename="../Sources/ptProcessor.cpp" line="710"/>
         <source>Microcontrast 1</source>
         <translation>Microcontrasto 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="724"/>
+        <location filename="../Sources/ptProcessor.cpp" line="725"/>
         <source>Microcontrast 2</source>
         <translation>Microcontrasto 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="743"/>
-        <location filename="../Sources/ptProcessor.cpp" line="2221"/>
+        <location filename="../Sources/ptProcessor.cpp" line="744"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2222"/>
         <source>Applying RGB Contrast</source>
         <translation>Applicazione Contrasto RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="754"/>
+        <location filename="../Sources/ptProcessor.cpp" line="755"/>
         <source>Levels</source>
         <translation>Livelli</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="770"/>
+        <location filename="../Sources/ptProcessor.cpp" line="771"/>
         <source>Applying RGB curve</source>
         <translation>Applicazione curva RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="794"/>
+        <location filename="../Sources/ptProcessor.cpp" line="795"/>
         <source>Lab transform</source>
         <translation>Trasformazione LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="805"/>
+        <location filename="../Sources/ptProcessor.cpp" line="806"/>
         <source>Shadows and Highlights</source>
         <translation>Ombre e alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="828"/>
-        <location filename="../Sources/ptProcessor.cpp" line="849"/>
+        <location filename="../Sources/ptProcessor.cpp" line="829"/>
+        <location filename="../Sources/ptProcessor.cpp" line="850"/>
         <source>LabLocal Exposure</source>
         <translation>Esposizione locale LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="873"/>
+        <location filename="../Sources/ptProcessor.cpp" line="874"/>
         <source>Dynamic Range Compression</source>
         <translation>Compressione Estensione Dinamica</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="894"/>
+        <location filename="../Sources/ptProcessor.cpp" line="895"/>
         <source>Texture curve</source>
         <translation>Curva Texture</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="916"/>
+        <location filename="../Sources/ptProcessor.cpp" line="917"/>
         <source>Texture contrast 1</source>
         <translation>Contrasto Texture 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="937"/>
+        <location filename="../Sources/ptProcessor.cpp" line="938"/>
         <source>Texture contrast 2</source>
         <translation>Contrasto Texture 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="962"/>
+        <location filename="../Sources/ptProcessor.cpp" line="963"/>
         <source>LabMicrocontrast 1</source>
         <translation>Microcontrasto Lab 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="985"/>
+        <location filename="../Sources/ptProcessor.cpp" line="986"/>
         <source>LabMicrocontrast 2</source>
         <translation>Microcontrasto Lab 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1012"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1013"/>
         <source>Local Contrast 1</source>
         <translation>Contrasto Locale 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1030"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1031"/>
         <source>Local Contrast 2</source>
         <translation>Contrasto Locale 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1052"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1053"/>
         <source>Applying Lab contrast</source>
         <translation>Applicazione contrasto Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1073"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1074"/>
         <source>Applying Lab saturation</source>
         <translation>Applicazione saturazione Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1092"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1093"/>
         <source>Applying Color Boost</source>
         <translation>Applicazione Accentua Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1110"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1111"/>
         <source>LabLevels</source>
         <translation>Livelli Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1144"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1145"/>
         <source>Impulse denoise</source>
         <translation>Riduzione rumore Impulse</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1165"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1166"/>
         <source>Edge avoiding wavelets</source>
         <translation>Wavelets Evita Margini</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1193"/>
-        <location filename="../Sources/ptProcessor.cpp" line="1224"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1194"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1225"/>
         <source>GreyCStoration on L</source>
         <translation>GreyCStoration su L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1249"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1250"/>
         <source>Defringe</source>
         <translation>Elimina margine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1278"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1279"/>
         <source>Wavelet L denoising</source>
         <translation>Riduzione rumore Wavelet L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1304"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1305"/>
         <source>Wavelet A denoising</source>
         <translation>Riduzione rumore Wavelet A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1326"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1327"/>
         <source>Wavelet B denoising</source>
         <translation>Riduzione rumore Wavelet B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1348"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1349"/>
         <source>Luminance denoising</source>
         <translation>Riduzione rumore Luminanza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1372"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1373"/>
         <source>Denoise curve</source>
         <translation>Curva riduzione rumore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1395"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1396"/>
         <source>Pyramid denoising</source>
         <translation>Riduzione rumore Piramide</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1419"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1420"/>
         <source>Color A denoising</source>
         <translation>Riduzione rumore Colore A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1441"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1442"/>
         <source>Color B denoising</source>
         <translation>Riduzione rumore Colore B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1466"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1467"/>
         <source>Detail curve</source>
         <translation>Curva Dettaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1494"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1495"/>
         <source>Gradient Sharpen</source>
         <translation>Nitidezza gradiente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1522"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1523"/>
         <source>Wiener Filter</source>
         <translation>Filtro Wiener</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1548"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1549"/>
         <source>Inverse Diffusion Sharpen</source>
         <translation>Nitidezza Diffusione Inversa</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1573"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1574"/>
         <source>USM sharpening</source>
         <translation>Nitidezza USM</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1603"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1604"/>
         <source>Highpass</source>
         <translation>Accentua Passaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1630"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1631"/>
         <source>Film grain 1</source>
         <translation>Grana pellicola 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1654"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1655"/>
         <source>Film grain 2</source>
         <translation>Grana pellicola 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1688"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1689"/>
         <source>View LAB</source>
         <translation>Visualizza LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1737"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1738"/>
         <source>Applying Outline</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1761"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1762"/>
         <source>Applying L by Hue curve</source>
         <translation>Applicazione L mediante curva di Tonalità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1781"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1782"/>
         <source>Applying saturation curve</source>
         <translation>Applicazione curva di saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1803"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1804"/>
         <source>Applying hue curve</source>
         <translation>Applicazione curva di tono</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1825"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1826"/>
         <source>Applying L curve</source>
         <translation>Applicazione curva L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1849"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1850"/>
         <source>Applying a curve</source>
         <translation>Applicazione curva a</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1873"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1874"/>
         <source>Applying b curve</source>
         <translation>Applicazione curva b</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1897"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1898"/>
         <source>Colorcontrast</source>
         <translation>Contrasto colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1928"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1929"/>
         <source>LAB tone adjustments 1</source>
         <translation>Regolazione tono LAB 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1950"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1951"/>
         <source>LAB tone adjustments 2</source>
         <translation>Regolazione tono LAB 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1976"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1977"/>
         <source>Luminance and saturation adjustment</source>
         <translation>Regolazione Luminanza e Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2012"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2013"/>
         <source>LAB toning</source>
         <translation>Tonalità LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2031"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2032"/>
         <source>LAB shadows toning</source>
         <translation>Tonalità ombre LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2051"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2052"/>
         <source>LAB midtones toning</source>
         <translation>Tonalità mezzitoni LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2071"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2072"/>
         <source>LAB highlights toning</source>
         <translation>Tonalità alteluci LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2093"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2094"/>
         <source>Lab Vignette</source>
         <translation>Vignettatura LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2119"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2120"/>
         <source>Lab to RGB</source>
         <translation>Da Lab a RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2130"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2131"/>
         <source>Black and White</source>
         <translation>Bianco e Nero</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2146"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2147"/>
         <source>Simple Toning</source>
         <translation>Tonalità singola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2159"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2160"/>
         <source>Toning 1</source>
         <translation>Tonalità 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2182"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2183"/>
         <source>Toning 2</source>
         <translation>Tonalità 2</translation>
     </message>
@@ -6728,72 +6829,72 @@ No crop, try again.</source>
         <translation type="obsolete">Tonalità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2208"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2209"/>
         <source>Crossprocessing</source>
         <translation>Crossprocessing</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2233"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2234"/>
         <source>Texture Overlay</source>
         <translation>Sovrapposizione Texture</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2314"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2315"/>
         <source>Gradual Overlay 1</source>
         <translation>Filtro Graduato 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2337"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2338"/>
         <source>Gradual Overlay 2</source>
         <translation>Filtro Graduato 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2364"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2365"/>
         <source>Vignette</source>
         <translation>Vignettatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2381"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2382"/>
         <source>Gradual Blur 1</source>
         <translation>Sfocatura graduale 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2400"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2401"/>
         <source>Gradual Blur 2</source>
         <translation>Sfocatura graduale 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2422"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2423"/>
         <source>Softglow</source>
         <translation>Chiarore sfumato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2439"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2440"/>
         <source>Vibrance 2</source>
         <translation>Vibranza 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2461"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2462"/>
         <source>Intensity RGB 2</source>
         <translation>Intensità RGB 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2484"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2485"/>
         <source>Applying R curve</source>
         <translation>Applicazione curva R</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2494"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2495"/>
         <source>Applying G curve</source>
         <translation>Applicazione curva G</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2504"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2505"/>
         <source>Applying B curve</source>
         <translation>Applicazione curva B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2529"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2530"/>
         <source>Ready</source>
         <translation>Pronto</translation>
     </message>
