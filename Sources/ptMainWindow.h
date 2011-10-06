@@ -105,11 +105,6 @@ public:
   void LoadUISettings(const QString &fileName);
   void SaveUISettings(const QString &fileName) const;
 
-  // Toggle file manager window
-  void OpenFileMgrWindow();
-  void CloseFileMgrWindow();
-
-
   // Make and model are remembered because in
   // case of change the choice of white balances must be redone.
   QString              m_CameraMake;
@@ -184,9 +179,15 @@ private :
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// PRIVATE slots
+// slots
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+public slots:
+  // Toggle file manager window
+  void OpenFileMgrWindow();
+  void CloseFileMgrWindow();
+
 
 private slots:
   void ResizeTimerExpired();

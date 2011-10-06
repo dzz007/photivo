@@ -21,6 +21,8 @@
 **
 *******************************************************************************/
 
+#include <cassert>
+
 #include <QFileSystemModel>
 #include <QFontMetrics>
 
@@ -29,6 +31,8 @@
 #include "ptFileMgrWindow.h"
 
 extern ptSettings* Settings;
+extern void CB_MenuFileOpen(const short HaveFile);
+extern QString ImageFileToOpen;
 
 //==============================================================================
 
@@ -87,12 +91,11 @@ void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
 }
 
 //==============================================================================
+void test(const ptThumbnailAction action, const QString location) {}
 
 void ptFileMgrWindow::fetchNewThumbs() {
   m_StatusOverlay->stop();
-  if (m_DataModel->thumbQueue()->isEmpty()) {
-    return;
-  }
+
 
 //  for (int i = 0; i < 4; i++) {
 //    m_FilesScene->addItem(m_DataModel->thumbQueue()->dequeue());
@@ -106,6 +109,9 @@ void ptFileMgrWindow::fetchNewThumbs() {
     ptGraphicsThumbGroup* thumb = m_DataModel->thumbQueue()->dequeue();
     ArrangeThumbnail(thumb);
     m_FilesScene->addItem(thumb);
+
+    thumb->setActionCallback(&ptFileMgrWindow::execThumbnailAction);   // geht nicht
+    //thumb->setActionCallback(test);     // geht
   }
 }
 
@@ -191,6 +197,19 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
     return true;
   } else {
     return QWidget::eventFilter(obj, event);
+  }
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const QString location) {
+  if (action == tnaLoadImage) {
+    emit FileMgrWindowClosed();
+    ImageFileToOpen =
+        qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->fileName(m_DirTree->currentIndex()) +
+        QString("/%1").arg(location);
+    printf("########## %s\n", ImageFileToOpen.toAscii().data());
+    //CB_MenuFileOpen(1);
   }
 }
 

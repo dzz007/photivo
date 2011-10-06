@@ -29,10 +29,11 @@
 #include <QWidget>
 #include <QGraphicsScene>
 
+#include "../ptReportOverlay.h"
+#include "../ptConstants.h"
 #include "ui_ptFileMgrWindow.h"
 #include "ptFileMgrDM.h"
 #include "ptGraphicsThumbGroup.h"
-#include "../ptReportOverlay.h"
 
 //==============================================================================
 
@@ -42,6 +43,7 @@ Q_OBJECT
 public:
   explicit ptFileMgrWindow(QWidget *parent = 0);
   ~ptFileMgrWindow();
+  void execThumbnailAction(const ptThumbnailAction action, const QString location);
 
 
 protected:
@@ -73,6 +75,8 @@ private slots:
   void changeTreeDir(const QModelIndex& index);
   void fetchNewThumbs();
 
+signals:
+  void FileMgrWindowClosed();
 };
 //==============================================================================
 #endif // PTFILEMGRWINDOW_h
