@@ -144,7 +144,8 @@ void ptFileMgrThumbnailer::run() {
 
     if (thumbGroup && thumbPixmap) {
       thumbGroup->addItems(thumbPixmap,
-                           new QGraphicsTextItem(files.at(i).fileName()));
+                           new QGraphicsTextItem(files.at(i).fileName()),
+                           files.at(i).isDir());
       m_Queue->enqueue(thumbGroup);
     }
 

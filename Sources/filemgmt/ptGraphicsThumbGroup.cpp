@@ -35,7 +35,14 @@ extern ptTheme* Theme;
 ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
 : QGraphicsRectItem(parent)
 {
+  m_isDir = false;
+  m_Pixmap = NULL;
+  m_Description = NULL;
+  m_actionCB = NULL;
+
   setAcceptHoverEvents(true);
+  setAcceptedMouseButtons(Qt::LeftButton);
+  setFiltersChildEvents(true);
   setCursor(QCursor(Qt::PointingHandCursor));
   setPen(QPen(Qt::NoPen));
   setBrush(QBrush(Qt::NoBrush));
@@ -43,19 +50,23 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
 
 //==============================================================================
 
-void ptGraphicsThumbGroup::addItems(QGraphicsPixmapItem* pixmap, QGraphicsTextItem* description) {
+void ptGraphicsThumbGroup::addItems(QGraphicsPixmapItem* pixmap,
+                                    QGraphicsTextItem* description,
+                                    bool isDir)
+{
+  m_isDir = isDir;
   qreal ThumbSize = (qreal)Settings->GetInt("ThumbnailSize");
 
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
   pixmap->setPos(ThumbSize / 2 - pixmap->pixmap().width() / 2 + 2,
                  ThumbSize / 2- pixmap->pixmap().height() / 2 + 2);
-  pixmap->setAcceptHoverEvents(false);
   pixmap->setParentItem(this);
+  m_Pixmap = pixmap;
 
-  description->setAcceptHoverEvents(false);
   description->setPos(2, ThumbSize + 2);
   description->setParentItem(this);
+  m_Description = description;
 
   // set rectangle size for the hover border
   this->setRect(0,
@@ -66,14 +77,34 @@ void ptGraphicsThumbGroup::addItems(QGraphicsPixmapItem* pixmap, QGraphicsTextIt
 
 //==============================================================================
 
-void ptGraphicsThumbGroup::hoverEnterEvent(QGraphicsSceneHoverEvent* event) {
-  event->accept();
-  this->setPen(QPen(Theme->ptHighLight));
-}
+bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
+  switch (event->type()) {
+    case QEvent::GraphicsSceneHoverEnter: {
+      event->accept();
+      this->setPen(QPen(Theme->ptHighLight));
+      return true;
+    }
 
-//==============================================================================
+    case QEvent::GraphicsSceneHoverLeave: {
+      event->accept();
+      this->setPen(QPen(Qt::NoPen));
+      return true;
+    }
 
-void ptGraphicsThumbGroup::hoverLeaveEvent(QGraphicsSceneHoverEvent* event) {
-  event->accept();
-  this->setPen(QPen(Qt::NoPen));
+    case QEvent::GraphicsSceneMouseRelease: {
+      event->accept();
+      if (m_Description && m_actionCB) {
+        if (m_isDir) {
+          m_actionCB(tnaChangeDir, m_Description->toPlainText());
+        } else {
+          m_actionCB(tnaLoadImage, m_Description->toPlainText());
+        }
+      }
+      return true;
+    }
+
+    default: {
+      return false;
+    }
+  }
 }

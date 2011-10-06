@@ -787,6 +787,13 @@ enum ptLoadCfgMode {
   lcmSettingsFile   = 4
 };
 
+/*! This enum defines the possible actions when you click on a thumbnail
+    in the file manager. */
+enum ptThumbnailAction {
+  tnaChangeDir = 0,
+  tnaLoadImage = 1
+};
+
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
