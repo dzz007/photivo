@@ -59,8 +59,8 @@ void ptGraphicsThumbGroup::addItems(QGraphicsPixmapItem* pixmap,
 
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
-  pixmap->setPos(ThumbSize / 2 - pixmap->pixmap().width() / 2 + 2,
-                 ThumbSize / 2- pixmap->pixmap().height() / 2 + 2);
+  pixmap->setPos(ThumbSize/2 - pixmap->pixmap().width()/2  + 2 + .5,
+                 ThumbSize/2 - pixmap->pixmap().height()/2 + 2 + .5);
   pixmap->setParentItem(this);
   m_Pixmap = pixmap;
 
@@ -71,8 +71,8 @@ void ptGraphicsThumbGroup::addItems(QGraphicsPixmapItem* pixmap,
   // set rectangle size for the hover border
   this->setRect(0,
                 0,
-                ThumbSize + 4,
-                ThumbSize + description->boundingRect().height() + 4);
+                ThumbSize + 5,
+                ThumbSize + description->boundingRect().height() + 5);
 }
 
 //==============================================================================

@@ -153,7 +153,7 @@ void ptFileMgrWindow::ThumbMetricsReset() {
   m_ThumbMetrics.Col = 0;
 
   // Padding between thumbnails
-  m_ThumbMetrics.Padding = 16;   // TODO: maybe this doesn’t have to be a fixed num of pixels
+  m_ThumbMetrics.Padding = Settings->GetInt("ThumbnailPadding");
 
   // Width of a cell, i.e. thumb width + padding
   m_ThumbMetrics.CellWidth = Settings->GetInt("ThumbnailSize") + m_ThumbMetrics.Padding;
