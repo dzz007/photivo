@@ -77,7 +77,7 @@ ptFileMgrDM::ptFileMgrDM()
 : QObject()
 {
   m_TreeModel = new QFileSystemModel;
-  m_TreeModel->setFilter(QDir::AllDirs);
+  m_TreeModel->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Drives);
 
   // Set root dir for the file system watcher
   #ifdef Q_OS_WIN32
