@@ -144,7 +144,8 @@ void ptFileMgrThumbnailer::run() {
 
     if (thumbGroup && thumbPixmap) {
       thumbGroup->addItems(thumbPixmap,
-                           new QGraphicsTextItem(files.at(i).fileName()));
+                           new QGraphicsTextItem(CutFileName(files.at(i).baseName(),
+                                                             files.at(i).suffix())));
       m_Queue->enqueue(thumbGroup);
     }
 
@@ -204,6 +205,25 @@ void ptFileMgrThumbnailer::GenerateThumbnail(Magick::Image& image,
   px.convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB32));
   FREE(ImgBuffer);
   thumbPixmap->setPixmap(px);
+}
+
+//==============================================================================
+
+QString ptFileMgrThumbnailer::CutFileName(const QString BaseName,
+                                          const QString Suffix) {
+  QString Temp;
+  if (BaseName.size() > 16) {
+    Temp = BaseName.left(13);
+    Temp += "...";
+  } else {
+    Temp = BaseName;
+  }
+  if (Suffix.size() > 0) {
+    Temp += ".";
+    Temp += Suffix;
+  }
+
+  return Temp;
 }
 
 //==============================================================================
