@@ -73,6 +73,7 @@ public:
   QPixmap*    ptIconStarGrey;
 
   QColor      ptBackground;
+  QColor      ptHighLight;
 
   // Methods
   void Reset();
@@ -90,7 +91,6 @@ public:
 //
 ///////////////////////////////////////////////////////////////////////////
 private:
-  QColor ptHighLight;
   QColor ptGradient;
   QColor ptText;
   QColor ptDark;

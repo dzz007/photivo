@@ -68,7 +68,7 @@ void ptFileMgrThumbnailer::setDir(const QString dir) {
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::setQueue(QQueue<QGraphicsItemGroup*>* queue) {
+void ptFileMgrThumbnailer::setQueue(QQueue<ptGraphicsThumbGroup*>* queue) {
   if (!this->isRunning() && queue != NULL) {
     m_Queue = queue;
   }
@@ -90,7 +90,7 @@ void ptFileMgrThumbnailer::run() {
   thumbsDir.setNameFilters(FileExtsRaw + FileExtsBitmap);
   QFileInfoList files = thumbsDir.entryInfoList();
   for (uint i = 0; i < (uint)files.count(); i++) {
-    QGraphicsItemGroup* thumbGroup = new QGraphicsItemGroup;
+    ptGraphicsThumbGroup* thumbGroup = new ptGraphicsThumbGroup;
     QGraphicsPixmapItem* thumbPixmap = new QGraphicsPixmapItem;
 
     if (files.at(i).isDir()) continue;
@@ -101,7 +101,8 @@ void ptFileMgrThumbnailer::run() {
       // we have a raw image ...
       QPixmap* px = new QPixmap;
       if (dcRaw.thumbnail(px)) {
-        thumbPixmap->setPixmap(px->scaled(thumbsSize, thumbsSize));
+        thumbPixmap->setPixmap(px->scaled(thumbsSize, thumbsSize,
+                                          Qt::KeepAspectRatio, Qt::SmoothTransformation));
       }
       DelAndNull(px);
     } else {
@@ -146,12 +147,7 @@ void ptFileMgrThumbnailer::run() {
     }
 
     if (thumbGroup && thumbPixmap) {
-      QGraphicsTextItem* thumbFilename = new QGraphicsTextItem(files.at(i).fileName());
-      thumbFilename->setY(thumbsSize);
-
-      thumbGroup->addToGroup(thumbPixmap);
-      thumbGroup->addToGroup(thumbFilename);
-
+      thumbGroup->addItems(thumbPixmap, new QGraphicsTextItem(files.at(i).fileName()));
       m_Queue->enqueue(thumbGroup);
     }
 
