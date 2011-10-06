@@ -93,56 +93,65 @@ void ptFileMgrThumbnailer::run() {
     ptGraphicsThumbGroup* thumbGroup = new ptGraphicsThumbGroup;
     QGraphicsPixmapItem* thumbPixmap = new QGraphicsPixmapItem;
 
-    if (files.at(i).isDir()) continue;
-
-    ptDcRaw dcRaw;
-    if (dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
-
-      // we have a raw image ...
-      QPixmap* px = new QPixmap;
-      if (dcRaw.thumbnail(px)) {
-        thumbPixmap->setPixmap(px->scaled(thumbsSize, thumbsSize,
-                                          Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    // we have a directory
+    if (files.at(i).isDir()) {
+      if (files.at(i).fileName() == "..") {
+        thumbPixmap->setPixmap(QPixmap(QString::fromUtf8(":/photivo/FileManager/up.png")));
+      } else {
+        thumbPixmap->setPixmap(QPixmap(QString::fromUtf8(":/photivo/FileManager/folder.png")));
       }
-      DelAndNull(px);
+
+    // we have a file, see if we can get a thumbnail image
     } else {
-      // ... or a bitmap ...
-      try {
-        Magick::Image image(files.at(i).absoluteFilePath().toAscii().data());
+      ptDcRaw dcRaw;
+      if (dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
 
-        // We want 8bit RGB data without alpha channel, scaled to thumbnail size
-        image.depth(8);
-        image.magick("RGB");
-        image.type(Magick::TrueColorType);
-        image.zoom(Magick::Geometry(thumbsSize, thumbsSize));
-
-        // TODO: read EXIF orientation and correct image
-
-        // Get the raw image data from GM.
-        uint w = image.columns();
-        uint h = image.rows();
-        uint8_t* ImgBuffer = NULL;
-        try {
-          ImgBuffer = (uint8_t*)CALLOC(w * h * 4, sizeof(ImgBuffer));
-        } catch (std::bad_alloc) {
-          // TODO: merge with following catch???
-          printf("\n********************\n\nMemory error in thumbnail generator\n\n********************\n\n");
-          fflush(stdout);
-          throw std::bad_alloc();
+        // we have a raw image ...
+        QPixmap* px = new QPixmap;
+        if (dcRaw.thumbnail(px)) {
+          thumbPixmap->setPixmap(px->scaled(thumbsSize, thumbsSize,
+                                            Qt::KeepAspectRatio, Qt::SmoothTransformation));
         }
-        ptMemoryError(ImgBuffer,__FILE__,__LINE__);
-        image.write(0, 0, w, h, "BGRA", Magick::CharPixel, ImgBuffer);
-        QPixmap px;
-        // Detour via QImage necessary because QPixmap does not allow direct
-        // access to the pixel data.
-        px.convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB32));
-        FREE(ImgBuffer);
-        thumbPixmap->setPixmap(px);
+        DelAndNull(px);
+      } else {
+        // ... or a bitmap ...
+        try {
+          Magick::Image image(files.at(i).absoluteFilePath().toAscii().data());
 
-      // ... or not a supported image file at all
-      } catch (Magick::Exception &Error) {
-        DelAndNull(thumbPixmap);
-        DelAndNull(thumbGroup);
+          // We want 8bit RGB data without alpha channel, scaled to thumbnail size
+          image.depth(8);
+          image.magick("RGB");
+          image.type(Magick::TrueColorType);
+          image.zoom(Magick::Geometry(thumbsSize, thumbsSize));
+
+          // TODO: read EXIF orientation and correct image
+
+          // Get the raw image data from GM.
+          uint w = image.columns();
+          uint h = image.rows();
+          uint8_t* ImgBuffer = NULL;
+          try {
+            ImgBuffer = (uint8_t*)CALLOC(w * h * 4, sizeof(ImgBuffer));
+          } catch (std::bad_alloc) {
+            // TODO: merge with following catch???
+            printf("\n********************\n\nMemory error in thumbnail generator\n\n********************\n\n");
+            fflush(stdout);
+            throw std::bad_alloc();
+          }
+          ptMemoryError(ImgBuffer,__FILE__,__LINE__);
+          image.write(0, 0, w, h, "BGRA", Magick::CharPixel, ImgBuffer);
+          QPixmap px;
+          // Detour via QImage necessary because QPixmap does not allow direct
+          // access to the pixel data.
+          px.convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB32));
+          FREE(ImgBuffer);
+          thumbPixmap->setPixmap(px);
+
+        // ... or not a supported image file at all
+        } catch (Magick::Exception &Error) {
+          DelAndNull(thumbPixmap);
+          DelAndNull(thumbGroup);
+        }
       }
     }
 
