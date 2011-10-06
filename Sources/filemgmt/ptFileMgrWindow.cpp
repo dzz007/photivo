@@ -22,10 +22,11 @@
 *******************************************************************************/
 
 #include <QFileSystemModel>
+#include <QFontMetrics>
 
-#include "ptFileMgrWindow.h"
 #include "../ptDefines.h"
 #include "../ptSettings.h"
+#include "ptFileMgrWindow.h"
 
 extern ptSettings* Settings;
 
@@ -36,6 +37,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
   m_IsFirstShow(true)
 {
   setupUi(this);
+  setMouseTracking(true);
 
   // We create our data module
   m_DataModel = ptFileMgrDM::GetInstance();
@@ -53,7 +55,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
   m_FilesView->installEventFilter(this);
 
   // Setup the graphics scene
-  m_FilesScene = new QGraphicsScene(0, 0, 0, 0, parent);
+  m_FilesScene = new QGraphicsScene(0, 0, 0, 0, m_FilesView);
   m_FilesView->setScene(m_FilesScene);
   connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify()),
           this, SLOT(fetchNewThumbs()));
@@ -61,7 +63,6 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
   m_StatusOverlay = new ptReportOverlay(m_FilesView, "Reading thumbnails",
                                         QColor(255,75,75), QColor(255,190,190),
                                         0, Qt::AlignLeft, 20);
-
 }
 
 //==============================================================================
@@ -102,7 +103,7 @@ void ptFileMgrWindow::fetchNewThumbs() {
 //  }
 
   while (!m_DataModel->thumbQueue()->isEmpty()) {
-    QGraphicsItemGroup* thumb = m_DataModel->thumbQueue()->dequeue();
+    ptGraphicsThumbGroup* thumb = m_DataModel->thumbQueue()->dequeue();
     ArrangeThumbnail(thumb);
     m_FilesScene->addItem(thumb);
   }
@@ -110,7 +111,7 @@ void ptFileMgrWindow::fetchNewThumbs() {
 
 //==============================================================================
 
-void ptFileMgrWindow::ArrangeThumbnail(QGraphicsItemGroup* thumb) {
+void ptFileMgrWindow::ArrangeThumbnail(ptGraphicsThumbGroup* thumb) {
   if (m_ThumbMetrics.Row >= m_ThumbMetrics.PicsInCol) {
     m_ThumbMetrics.Row = 0;
     m_ThumbMetrics.Col++;
@@ -118,8 +119,8 @@ void ptFileMgrWindow::ArrangeThumbnail(QGraphicsItemGroup* thumb) {
     m_ThumbMetrics.Row++;
   }
 
-  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellSize,
-                m_ThumbMetrics.Row * m_ThumbMetrics.CellSize);
+  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellHeight,
+                m_ThumbMetrics.Row * m_ThumbMetrics.CellHeight);
 }
 
 //==============================================================================
@@ -130,8 +131,8 @@ void ptFileMgrWindow::ArrangeThumbnails() {
   ThumbMetricsReset();
 
   while (i.hasNext()) {
-    if (i.peekNext()->type() == 10) {   // check for item group
-      ArrangeThumbnail((QGraphicsItemGroup*)i.next());
+    if (i.peekNext()->type() == ptGraphicsThumbGroup::Type) {   // check for thumb item group
+      ArrangeThumbnail((ptGraphicsThumbGroup*)i.next());
     } else {
       i.next();
     }
@@ -141,13 +142,24 @@ void ptFileMgrWindow::ArrangeThumbnails() {
 //==============================================================================
 
 void ptFileMgrWindow::ThumbMetricsReset() {
+  // Current row and column
   m_ThumbMetrics.Row = -1;
   m_ThumbMetrics.Col = 0;
-  m_ThumbMetrics.Padding = 10;   // TODO: maybe this doesn’t have to be a fixed num of pixels
-  m_ThumbMetrics.CellSize = Settings->GetInt("ThumbnailSize") + m_ThumbMetrics.Padding;
+
+  // Padding between thumbnails
+  m_ThumbMetrics.Padding = 16;   // TODO: maybe this doesn’t have to be a fixed num of pixels
+
+  // Width of a cell, i.e. thumb width + padding
+  m_ThumbMetrics.CellWidth = Settings->GetInt("ThumbnailSize") + m_ThumbMetrics.Padding;
+
+  // Height of a cell, i.e. thumb height + height of text line with the filename + padding
+  m_ThumbMetrics.CellHeight =
+      m_ThumbMetrics.CellWidth + QFontMetrics(this->font()).lineSpacing();
+
   // +Padding because we only take care of padding *between* thumbnails here.
   // -1 because we start at row 0
-  m_ThumbMetrics.PicsInCol = (m_FilesView->height() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellSize - 1;
+  m_ThumbMetrics.PicsInCol = (m_FilesView->height() + m_ThumbMetrics.Padding)
+                             / m_ThumbMetrics.CellHeight - 1;
 }
 
 //==============================================================================

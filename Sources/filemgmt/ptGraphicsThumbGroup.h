@@ -3,7 +3,6 @@
 ** Photivo
 **
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -21,58 +20,31 @@
 **
 *******************************************************************************/
 
-#ifndef PTFILEMGRWINDOW_h
-#define PTFILEMGRWINDOW_h
+#ifndef PTGRAPHICSTHUMBGROUP_H
+#define PTGRAPHICSTHUMBGROUP_H
 
 //==============================================================================
 
-#include <QWidget>
-#include <QGraphicsScene>
-
-#include "ui_ptFileMgrWindow.h"
-#include "ptFileMgrDM.h"
-#include "ptGraphicsThumbGroup.h"
-#include "../ptReportOverlay.h"
+#include <QGraphicsRectItem>
 
 //==============================================================================
 
-class ptFileMgrWindow: public QWidget, public Ui::ptFileMgrWindow {
-Q_OBJECT
-
+class ptGraphicsThumbGroup: public QGraphicsRectItem {
 public:
-  explicit ptFileMgrWindow(QWidget *parent = 0);
-  ~ptFileMgrWindow();
+  ptGraphicsThumbGroup(QGraphicsItem* parent = 0);
+  void addItems(QGraphicsPixmapItem* pixmap,
+                QGraphicsTextItem* description);
+  int type() const { return Type; }
 
+  enum { Type = UserType + 1 };
 
 protected:
-  bool eventFilter(QObject* obj, QEvent* event);
-  void showEvent(QShowEvent* event);
-
+  void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
+  void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
 
 private:
-  void ArrangeThumbnail(ptGraphicsThumbGroup* thumb);
-  void ArrangeThumbnails();
-  void ThumbMetricsReset();
-
-  struct {
-    int Row;
-    int Col;
-    int CellHeight;
-    int CellWidth;
-    int PicsInCol;
-    int Padding;
-  } m_ThumbMetrics;
-
-  ptFileMgrDM*      m_DataModel;
-  QGraphicsScene*   m_FilesScene;
-  bool              m_IsFirstShow;
-  ptReportOverlay*  m_StatusOverlay;
-
-
-private slots:
-  void changeTreeDir(const QModelIndex& index);
-  void fetchNewThumbs();
-
 };
+
 //==============================================================================
-#endif // PTFILEMGRWINDOW_h
+
+#endif // PTGRAPHICSTHUMBGROUP_H

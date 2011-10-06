@@ -87,7 +87,7 @@ ptFileMgrDM::ptFileMgrDM()
   #endif
 
   // Init stuff for thumbnail generation
-  m_ThumbQueue = new QQueue<QGraphicsItemGroup*>;
+  m_ThumbQueue = new QQueue<ptGraphicsThumbGroup*>;
   m_Thumbnailer = new ptFileMgrThumbnailer;
   m_Thumbnailer->setQueue(m_ThumbQueue);
 

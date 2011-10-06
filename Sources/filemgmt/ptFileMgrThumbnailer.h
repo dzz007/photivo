@@ -31,6 +31,7 @@
 #include <QGraphicsItemGroup>
 
 #include "ptThumbnailCache.h"
+#include "ptGraphicsThumbGroup.h"
 
 //==============================================================================
 
@@ -62,7 +63,7 @@ public:
       Note that the buffer is taken as is, i.e. it is not cleared by the
       thumbnailer.
   */
-  void setQueue(QQueue<QGraphicsItemGroup*>* queue);
+  void setQueue(QQueue<ptGraphicsThumbGroup*>* queue);
 
   /*! This function does the actual thumbnail generating. */
   void run();
@@ -75,7 +76,7 @@ protected:
 private:
   ptThumbnailCache* m_Cache;
   QString m_Dir;
-  QQueue<QGraphicsItemGroup*>* m_Queue;
+  QQueue<ptGraphicsThumbGroup*>* m_Queue;
 
 
 signals:
