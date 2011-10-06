@@ -127,8 +127,8 @@ CLASS ptDcRaw() {
   m_MetaData    = NULL;
   m_InputFile   = NULL;
 
-m_ThumbData = new QByteArray();
-m_ThumbStream = new QDataStream(m_ThumbData, QIODevice::ReadWrite);
+  m_ThumbData   = new QByteArray();
+  m_ThumbStream = new QDataStream(m_ThumbData, QIODevice::ReadWrite);
   ResetNonUserSettings();
 }
 
@@ -9377,19 +9377,20 @@ void CLASS CamToLab(uint16_t Cam[4], double Lab[3]) {
 }
 
 
-bool CLASS thumbnail(QPixmap* thumbnail) {
-  assert(thumbnail != NULL);
-
+bool CLASS thumbnail(QByteArray*& thumbnail) {
   if(!m_InputFile || !m_LoadRawFunction) {
     return false;
   }
 
+  m_ThumbData->clear();
+  m_ThumbStream->resetStatus();
+
   fseek (m_InputFile, m_ThumbOffset, SEEK_SET);
   (*this.*m_WriteThumb)();
 
-  bool result = thumbnail->loadFromData(*m_ThumbData);
-  m_ThumbData->clear();
-  m_ThumbStream->resetStatus();
+  bool result = (!m_ThumbData->isEmpty());
+
+  if (result) thumbnail = new QByteArray(*m_ThumbData);
 
   return result;
 }

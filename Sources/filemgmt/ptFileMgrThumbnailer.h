@@ -30,6 +30,8 @@
 #include <QQueue>
 #include <QGraphicsItemGroup>
 
+#include <Magick++.h>
+
 #include "ptThumbnailCache.h"
 #include "ptGraphicsThumbGroup.h"
 
@@ -74,6 +76,10 @@ protected:
 
 
 private:
+  void GenerateThumbnail(Magick::Image& image,
+                         QGraphicsPixmapItem*& thumbPixmap,
+                         const int thumbSize);
+
   ptThumbnailCache* m_Cache;
   QString m_Dir;
   QQueue<ptGraphicsThumbGroup*>* m_Queue;
