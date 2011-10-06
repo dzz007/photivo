@@ -46,5 +46,7 @@
         <file>Patterns/slider-stripe-grey.png</file>
         <file>Patterns/slider-stripe-darkgrey.png</file>
         <file>Patterns/slider-stripe-midgrey.png</file>
+        <file>FileManager/folder.png</file>
+        <file>FileManager/up.png</file>
     </qresource>
 </RCC>
