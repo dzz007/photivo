@@ -81,6 +81,8 @@ private:
                          QGraphicsPixmapItem*& thumbPixmap,
                          const int thumbSize);
 
+  QString CutFileName(const QString BaseName, const QString Suffix);
+
   ptThumbnailCache* m_Cache;
   QString m_Dir;
   QQueue<ptGraphicsThumbGroup*>* m_Queue;
