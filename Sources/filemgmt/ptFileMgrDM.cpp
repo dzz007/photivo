@@ -43,12 +43,12 @@ extern ptSettings* Settings;
 
 //==============================================================================
 
-ptFileMgrDM* ptFileMgrDM::m_Instance = 0;
+ptFileMgrDM* ptFileMgrDM::m_Instance = NULL;
 
 //==============================================================================
 
 ptFileMgrDM* ptFileMgrDM::GetInstance() {
-  if (m_Instance == 0) {
+  if (m_Instance == NULL) {
     m_Instance = new ptFileMgrDM();
   }
 
@@ -64,11 +64,8 @@ void ptFileMgrDM::Clear() {
 //==============================================================================
 
 void ptFileMgrDM::DestroyInstance() {
-  if (m_Instance != 0) {
-    delete m_Instance;
-  }
-
-  m_Instance = 0;
+  delete m_Instance;
+  m_Instance = NULL;
 }
 
 //==============================================================================

@@ -29,6 +29,7 @@
 #include "../ptDefines.h"
 #include "../ptSettings.h"
 #include "ptFileMgrWindow.h"
+#include "ptGraphicsSceneEmitter.h"
 
 extern ptSettings* Settings;
 extern void CB_MenuFileOpen(const short HaveFile);
@@ -42,6 +43,8 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
 {
   setupUi(this);
   setMouseTracking(true);
+  ptGraphicsSceneEmitter::ConnectThumbnailAction(
+      this, SLOT(execThumbnailAction(ptThumbnailAction,QString)) );
 
   // We create our data module
   m_DataModel = ptFileMgrDM::GetInstance();
@@ -76,6 +79,7 @@ ptFileMgrWindow::~ptFileMgrWindow() {
       qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->filePath(m_DirTree->currentIndex()) );
 
   ptFileMgrDM::DestroyInstance();
+  ptGraphicsSceneEmitter::DestroyInstance();
   DelAndNull(m_StatusOverlay);
 }
 
@@ -87,7 +91,7 @@ void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
   m_DataModel->thumbQueue()->clear();
   m_StatusOverlay->exec();
   ThumbMetricsReset();
-  m_DataModel->StartThumbnailer(m_DirTree->currentIndex());
+  m_DataModel->StartThumbnailer(index);
 }
 
 //==============================================================================
@@ -107,8 +111,6 @@ void ptFileMgrWindow::fetchNewThumbs() {
     ptGraphicsThumbGroup* thumb = m_DataModel->thumbQueue()->dequeue();
     ArrangeThumbnail(thumb);
     m_FilesScene->addItem(thumb);
-    connect(thumb, SIGNAL(thumbnailActionRequested(ptThumbnailAction,QString)),
-            this, SLOT(execThumbnailAction(ptThumbnailAction,QString)));
   }
 }
 
@@ -202,10 +204,14 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const QString location) {
   if (action == tnaLoadImage) {
     emit FileMgrWindowClosed();
-    ImageFileToOpen =
-        qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->fileName(m_DirTree->currentIndex()) +
-        QString("/%1").arg(location);
+    m_FilesScene->clear();
+    ImageFileToOpen = location;
     CB_MenuFileOpen(1);
+
+  } else if (action == tnaChangeDir) {
+    m_DirTree->setCurrentIndex(
+        qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->index(location) );
+    changeTreeDir(m_DirTree->currentIndex());
   }
 }
 

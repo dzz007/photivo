@@ -26,6 +26,7 @@
 #include "../ptTheme.h"
 #include "../ptSettings.h"
 #include "ptGraphicsThumbGroup.h"
+#include "ptGraphicsSceneEmitter.h"
 
 extern ptSettings* Settings;
 extern ptTheme* Theme;
@@ -33,11 +34,12 @@ extern ptTheme* Theme;
 //==============================================================================
 
 ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
-: QObject(0), QGraphicsRectItem(parent)
+: QGraphicsRectItem(parent)
 {
   m_isDir = false;
+  m_FullPath = "";
   m_Pixmap = NULL;
-  m_Description = NULL;
+  m_InfoText = NULL;
 
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::LeftButton);
@@ -50,28 +52,32 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
 //==============================================================================
 
 void ptGraphicsThumbGroup::addItems(QGraphicsPixmapItem* pixmap,
-                                    QGraphicsTextItem* description,
-                                    bool isDir)
+                                    const QString fullPath,
+                                    const QString description,
+                                    const bool isDir)
 {
+  if (m_Pixmap) DelAndNull(m_Pixmap);
+  if (m_InfoText == NULL) m_InfoText = new QGraphicsTextItem;
   m_isDir = isDir;
+  m_FullPath = fullPath;
   qreal ThumbSize = (qreal)Settings->GetInt("ThumbnailSize");
 
+  m_Pixmap = pixmap;
+  m_Pixmap->setParentItem(this);
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
-  pixmap->setPos(ThumbSize/2 - pixmap->pixmap().width()/2  + 2 + .5,
-                 ThumbSize/2 - pixmap->pixmap().height()/2 + 2 + .5);
-  pixmap->setParentItem(this);
-  m_Pixmap = pixmap;
+  m_Pixmap->setPos(ThumbSize/2 - pixmap->pixmap().width()/2  + 2 + 0.5,
+                   ThumbSize/2 - pixmap->pixmap().height()/2 + 2 + 0.5);
 
-  description->setPos(2, ThumbSize + 2);
-  description->setParentItem(this);
-  m_Description = description;
+  m_InfoText->setPlainText(CutFileName(description));
+  m_InfoText->setParentItem(this);
+  m_InfoText->setPos(2, ThumbSize + 2);
 
   // set rectangle size for the hover border
   this->setRect(0,
                 0,
                 ThumbSize + 5,
-                ThumbSize + description->boundingRect().height() + 5);
+                ThumbSize + m_InfoText->boundingRect().height() + 5);
 }
 
 //==============================================================================
@@ -92,11 +98,11 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
 
     case QEvent::GraphicsSceneMouseRelease: {
       event->accept();
-      if (m_Description) {
+      if (m_InfoText) {
         if (m_isDir) {
-          emit thumbnailActionRequested(tnaChangeDir, m_Description->toPlainText());
+          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
         } else {
-          emit thumbnailActionRequested(tnaLoadImage, m_Description->toPlainText());
+          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
         }
       }
       return true;
@@ -107,3 +113,19 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
     }
   }
 }
+
+//==============================================================================
+
+QString ptGraphicsThumbGroup::CutFileName(const QString FileName) {
+  int SuffixStart = FileName.lastIndexOf(".");
+  QString BaseName = FileName.left(SuffixStart);
+  QString Suffix = SuffixStart == -1 ? "" : FileName.mid(SuffixStart);
+
+  if (BaseName.size() > 16) {
+    BaseName = QString("%1...").arg(BaseName.left(13));
+  }
+
+  return BaseName + Suffix;
+}
+
+//==============================================================================

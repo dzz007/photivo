@@ -135,7 +135,8 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/filemgmt/ptFileMgrThumbnailer.h \
     ../Sources/filemgmt/ptThumbnailCache.h \
     ../Sources/ptConfirmRequest.h \
-    ../Sources/filemgmt/ptGraphicsThumbGroup.h
+    ../Sources/filemgmt/ptGraphicsThumbGroup.h \
+    ../Sources/filemgmt/ptGraphicsSceneEmitter.h
 HEADERS += ../Sources/ptParseCli.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
@@ -196,7 +197,8 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/filemgmt/ptFileMgrThumbnailer.cpp \
     ../Sources/filemgmt/ptThumbnailCache.cpp \
     ../Sources/ptConfirmRequest.cpp \
-    ../Sources/filemgmt/ptGraphicsThumbGroup.cpp
+    ../Sources/filemgmt/ptGraphicsThumbGroup.cpp \
+    ../Sources/filemgmt/ptGraphicsSceneEmitter.cpp
 SOURCES += ../Sources/ptParseCli.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
@@ -299,6 +301,8 @@ TRANSLATIONS += ../Translations/photivo_French.ts
 
 
 ###############################################################################
+
+
 
 
 
