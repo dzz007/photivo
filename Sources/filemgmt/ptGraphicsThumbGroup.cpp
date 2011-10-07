@@ -33,12 +33,11 @@ extern ptTheme* Theme;
 //==============================================================================
 
 ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
-: QGraphicsRectItem(parent)
+: QObject(0), QGraphicsRectItem(parent)
 {
   m_isDir = false;
   m_Pixmap = NULL;
   m_Description = NULL;
-  m_actionCB = NULL;
 
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::LeftButton);
@@ -93,11 +92,11 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
 
     case QEvent::GraphicsSceneMouseRelease: {
       event->accept();
-      if (m_Description && m_actionCB) {
+      if (m_Description) {
         if (m_isDir) {
-          m_actionCB(tnaChangeDir, m_Description->toPlainText());
+          emit thumbnailActionRequested(tnaChangeDir, m_Description->toPlainText());
         } else {
-          m_actionCB(tnaLoadImage, m_Description->toPlainText());
+          emit thumbnailActionRequested(tnaLoadImage, m_Description->toPlainText());
         }
       }
       return true;

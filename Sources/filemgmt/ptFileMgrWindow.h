@@ -43,7 +43,6 @@ Q_OBJECT
 public:
   explicit ptFileMgrWindow(QWidget *parent = 0);
   ~ptFileMgrWindow();
-  void execThumbnailAction(const ptThumbnailAction action, const QString location);
 
 
 protected:
@@ -73,6 +72,7 @@ private:
 
 private slots:
   void changeTreeDir(const QModelIndex& index);
+  void execThumbnailAction(const ptThumbnailAction action, const QString location);
   void fetchNewThumbs();
 
 signals:

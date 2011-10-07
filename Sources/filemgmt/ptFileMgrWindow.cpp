@@ -91,8 +91,6 @@ void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
 }
 
 //==============================================================================
-void test(const ptThumbnailAction action, const QString location) {}
-
 void ptFileMgrWindow::fetchNewThumbs() {
   m_StatusOverlay->stop();
 
@@ -109,9 +107,8 @@ void ptFileMgrWindow::fetchNewThumbs() {
     ptGraphicsThumbGroup* thumb = m_DataModel->thumbQueue()->dequeue();
     ArrangeThumbnail(thumb);
     m_FilesScene->addItem(thumb);
-
-    thumb->setActionCallback(&ptFileMgrWindow::execThumbnailAction);   // geht nicht
-    //thumb->setActionCallback(test);     // geht
+    connect(thumb, SIGNAL(thumbnailActionRequested(ptThumbnailAction,QString)),
+            this, SLOT(execThumbnailAction(ptThumbnailAction,QString)));
   }
 }
 
@@ -208,8 +205,7 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     ImageFileToOpen =
         qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->fileName(m_DirTree->currentIndex()) +
         QString("/%1").arg(location);
-    printf("########## %s\n", ImageFileToOpen.toAscii().data());
-    //CB_MenuFileOpen(1);
+    CB_MenuFileOpen(1);
   }
 }
 

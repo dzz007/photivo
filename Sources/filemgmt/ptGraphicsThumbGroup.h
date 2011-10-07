@@ -25,22 +25,21 @@
 
 //==============================================================================
 
+#include <QObject>
 #include <QGraphicsRectItem>
 
 #include "../ptConstants.h"
-#include "ptFileMgrWindow.h"
 
 //==============================================================================
 
-class ptGraphicsThumbGroup: public QGraphicsRectItem {
+class ptGraphicsThumbGroup: public QObject, public QGraphicsRectItem {
+Q_OBJECT
+
 public:
   ptGraphicsThumbGroup(QGraphicsItem* parent = 0);
   void addItems(QGraphicsPixmapItem* pixmap,
                 QGraphicsTextItem* description,
                 bool isDir);
-  void setActionCallback(void (*ptFileMgrWindow::actionCB)(const ptThumbnailAction, const QString)) {
-    ptFileMgrWindow::m_actionCB = ptFileMgrWindow::actionCB;
-  }
   int type() const { return Type; }
 
   enum { Type = UserType + 1 };
@@ -51,13 +50,16 @@ protected:
 
 
 private:
-  void (*ptFileMgrWindow::m_actionCB)(const ptThumbnailAction, const QString);
   bool m_isDir;
 
   // These two objects don’t need to be destroyed explicitely in the destructor.
   // Because they are children that happens automatically.
   QGraphicsPixmapItem* m_Pixmap;
   QGraphicsTextItem*   m_Description;
+
+
+signals:
+  void thumbnailActionRequested(const ptThumbnailAction action, const QString location);
 };
 
 //==============================================================================
