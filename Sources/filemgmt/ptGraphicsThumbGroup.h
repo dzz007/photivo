@@ -32,14 +32,15 @@
 
 //==============================================================================
 
-class ptGraphicsThumbGroup: public QObject, public QGraphicsRectItem {
-Q_OBJECT
+class ptGraphicsThumbGroup: public QGraphicsRectItem {
 
 public:
   ptGraphicsThumbGroup(QGraphicsItem* parent = 0);
   void addItems(QGraphicsPixmapItem* pixmap,
-                QGraphicsTextItem* description,
-                bool isDir);
+                const QString fullPath,
+                const QString description,
+                const bool isDir);
+  QString fullPath() { return m_FullPath; }
   int type() const { return Type; }
 
   enum { Type = UserType + 1 };
@@ -50,16 +51,15 @@ protected:
 
 
 private:
-  bool m_isDir;
+  QString CutFileName(const QString FileName);
+
+  QString   m_FullPath;
+  bool      m_isDir;
 
   // These two objects don’t need to be destroyed explicitely in the destructor.
   // Because they are children that happens automatically.
   QGraphicsPixmapItem* m_Pixmap;
-  QGraphicsTextItem*   m_Description;
-
-
-signals:
-  void thumbnailActionRequested(const ptThumbnailAction action, const QString location);
+  QGraphicsTextItem*   m_InfoText;
 };
 
 //==============================================================================
