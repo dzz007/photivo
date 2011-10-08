@@ -21,10 +21,9 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
 #include <QFileSystemModel>
 #include <QFontMetrics>
+#include <QList>
 
 #include "../ptDefines.h"
 #include "../ptSettings.h"
@@ -58,18 +57,22 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
   connect(m_DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
 
   m_DirTree->setFixedWidth(300);  //TODO: temporary
-  m_FilesView->setContentsMargins(10, 10, 10, 10);
   m_FilesView->installEventFilter(this);
 
   // Setup the graphics scene
-  m_FilesScene = new QGraphicsScene(0, 0, 0, 0, m_FilesView);
+  m_FilesScene = new QGraphicsScene(m_FilesView);
   m_FilesView->setScene(m_FilesScene);
   connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify()),
           this, SLOT(fetchNewThumbs()));
 
-  m_StatusOverlay = new ptReportOverlay(m_FilesView, "Reading thumbnails",
-                                        QColor(255,75,75), QColor(255,190,190),
-                                        0, Qt::AlignLeft, 20);
+//  m_StatusOverlay = new ptReportOverlay(m_FilesView, "Reading thumbnails",
+//                                        QColor(255,75,75), QColor(255,190,190),
+//                                        0, Qt::AlignLeft, 20);
+
+//  QList <int> SizesList;
+//  SizesList.append(250);
+//  SizesList.append(1000); // Value obtained to avoid resizing at startup.
+//  m_MainSplitter->setSizes(SizesList);
 }
 
 //==============================================================================
@@ -88,44 +91,39 @@ ptFileMgrWindow::~ptFileMgrWindow() {
 void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
   m_DataModel->StopThumbnailer();
   m_FilesScene->clear();
+  //m_FilesView->update();
   m_DataModel->thumbQueue()->clear();
-  m_StatusOverlay->exec();
+  //m_StatusOverlay->exec();
   ThumbMetricsReset();
   m_DataModel->StartThumbnailer(index);
 }
 
 //==============================================================================
 void ptFileMgrWindow::fetchNewThumbs() {
-  m_StatusOverlay->stop();
-
-
-//  for (int i = 0; i < 4; i++) {
-//    m_FilesScene->addItem(m_DataModel->thumbQueue()->dequeue());
-
-//    if (m_DataModel->thumbQueue()->isEmpty()) {
-//      break;
-//    }
-//  }
+  //m_StatusOverlay->stop();
 
   while (!m_DataModel->thumbQueue()->isEmpty()) {
     ptGraphicsThumbGroup* thumb = m_DataModel->thumbQueue()->dequeue();
     ArrangeThumbnail(thumb);
     m_FilesScene->addItem(thumb);
   }
+
+  //m_FilesView->update();
 }
 
 //==============================================================================
 
 void ptFileMgrWindow::ArrangeThumbnail(ptGraphicsThumbGroup* thumb) {
-  if (m_ThumbMetrics.Row >= m_ThumbMetrics.PicsInCol) {
-    m_ThumbMetrics.Row = 0;
-    m_ThumbMetrics.Col++;
-  } else {
-    m_ThumbMetrics.Row++;
-  }
-
-  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellHeight,
+  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth,
                 m_ThumbMetrics.Row * m_ThumbMetrics.CellHeight);
+
+  // arrange thumbs in rows
+  if (m_ThumbMetrics.Col >= m_ThumbMetrics.MaxCol) {
+    m_ThumbMetrics.Col = 0;
+    m_ThumbMetrics.Row++;
+  } else {
+    m_ThumbMetrics.Col++;
+  }
 }
 
 //==============================================================================
@@ -148,7 +146,7 @@ void ptFileMgrWindow::ArrangeThumbnails() {
 
 void ptFileMgrWindow::ThumbMetricsReset() {
   // Current row and column
-  m_ThumbMetrics.Row = -1;
+  m_ThumbMetrics.Row = 0;
   m_ThumbMetrics.Col = 0;
 
   // Padding between thumbnails
@@ -159,12 +157,15 @@ void ptFileMgrWindow::ThumbMetricsReset() {
 
   // Height of a cell, i.e. thumb height + height of text line with the filename + padding
   m_ThumbMetrics.CellHeight =
-      m_ThumbMetrics.CellWidth + QFontMetrics(this->font()).lineSpacing();
+      m_ThumbMetrics.CellWidth + QFontMetrics(this->font()).lineSpacing() + m_ThumbMetrics.Padding;
 
   // +Padding because we only take care of padding *between* thumbnails here.
   // -1 because we start at row 0
-  m_ThumbMetrics.PicsInCol = (m_FilesView->height() + m_ThumbMetrics.Padding)
+  m_ThumbMetrics.MaxRow = (m_FilesView->height() + m_ThumbMetrics.Padding)
                              / m_ThumbMetrics.CellHeight - 1;
+
+  m_ThumbMetrics.MaxCol = (m_FilesView->width() + m_ThumbMetrics.Padding)
+                             / m_ThumbMetrics.CellWidth - 1;
 }
 
 //==============================================================================
@@ -190,10 +191,11 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 //==============================================================================
 
 bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
+  // Resize event
   // Rearrange thumbnails when size of viewport changes
   if (obj == m_FilesView && event->type() == QEvent::Resize) {
     ArrangeThumbnails();
-    return true;
+    return false;
   } else {
     return QWidget::eventFilter(obj, event);
   }

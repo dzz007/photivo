@@ -96,7 +96,13 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
       return true;
     }
 
-    case QEvent::GraphicsSceneMouseRelease: {
+    case QEvent::GraphicsSceneMousePress: {
+      // Must accept mouse press to get mouse release as well.
+      event->accept();
+      return true;
+    }
+
+  case QEvent::GraphicsSceneMouseRelease: {
       event->accept();
       if (m_InfoText) {
         if (m_isDir) {
@@ -109,7 +115,7 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
     }
 
     default: {
-      return false;
+      return QGraphicsRectItem::sceneEvent(event);
     }
   }
 }

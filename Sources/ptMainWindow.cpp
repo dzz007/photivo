@@ -620,14 +620,12 @@ ptMainWindow::ptMainWindow(const QString Title)
   m_SearchInputTimer->setSingleShot(1);
   connect(m_SearchInputTimer, SIGNAL(timeout()), this, SLOT(Search()));
 
-  // Set us in the beginning of the tabbook and show mainwindow.
-  // But we do not want to generate events for this during setup
+  // Set the toolpane to show the pipe controls ...
   MainTabBook->blockSignals(1);
-  MainTabBook->setCurrentIndex(0);
+  MainTabBook->setCurrentWidget(TabProcessing);
   MainTabBook->blockSignals(0);
 
-  MainTabBook->setCurrentWidget(TabProcessing);
-
+  // ... and open the first pipe controls tab
   ProcessingTabBook->blockSignals(1);
   ProcessingTabBook->setCurrentIndex(0);
   ProcessingTabBook->blockSignals(0);
@@ -664,6 +662,14 @@ ptMainWindow::ptMainWindow(const QString Title)
     ShowFavouriteTools();
   if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_AllTools)
     ShowAllTools();
+
+  // Show the file manager if no image loaded at startup, the image editor otherwise.
+  // Do this last in the constructor because it triggers thumbnail reading.
+  if (ImageFileToOpen == "") {
+    OpenFileMgrWindow();
+  } else {
+    MainStack->setCurrentWidget(ProcessingPage);
+  }
 }
 
 void CB_Event0();
