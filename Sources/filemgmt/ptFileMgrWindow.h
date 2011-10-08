@@ -56,12 +56,13 @@ private:
   void ThumbMetricsReset();
 
   struct {
-    int Row;
     int Col;
+    int Row;
+    int MaxCol;
+    int MaxRow;
+    int Padding;
     int CellHeight;
     int CellWidth;
-    int PicsInCol;
-    int Padding;
   } m_ThumbMetrics;
 
   ptFileMgrDM*      m_DataModel;
