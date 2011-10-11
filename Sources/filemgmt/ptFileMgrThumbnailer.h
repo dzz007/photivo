@@ -29,6 +29,7 @@
 #include <QThread>
 #include <QQueue>
 #include <QGraphicsItemGroup>
+#include <QDir>
 
 #include <Magick++.h>
 
@@ -53,13 +54,18 @@ public:
   /*! Creates an empty ptFileMgrThumbnailer object. */
   explicit ptFileMgrThumbnailer();
 
+  /*! Destroys a \c ptFileMgrThumbnailer object. */
+  ~ptFileMgrThumbnailer();
+
   /*! Sets the cache for thumbnail objects. */
   void setCache(ptThumbnailCache* cache);
 
   /*! Sets the directory for thumbnail generation.
-      Actual file system query don’t happen until \c run() is called.
+    Returns the total number of applicable entries in that directory.
+    Returns \c -1 and does not set the directory if the thumbnailer is
+    currently running.
   */
-  void setDir(const QString dir);
+  int setDir(const QString dir);
 
   /*! Sets the FIFO buffer where the thumbnails are written to.
       Note that the buffer is taken as is, i.e. it is not cleared by the
@@ -81,9 +87,9 @@ private:
                          QGraphicsPixmapItem*& thumbPixmap,
                          const int thumbSize);
 
-  ptThumbnailCache* m_Cache;
-  QString m_Dir;
-  QQueue<ptGraphicsThumbGroup*>* m_Queue;
+  ptThumbnailCache*               m_Cache;
+  QDir*                           m_Dir;
+  QQueue<ptGraphicsThumbGroup*>*  m_Queue;
 
 
 signals:

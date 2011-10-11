@@ -21,10 +21,10 @@
 **
 *******************************************************************************/
 
-#include <QDir>
 #include <QStringList>
 #include <QGraphicsTextItem>
 #include <QApplication>
+#include <QFileInfoList>
 
 #include "../ptDcRaw.h"
 #include "../ptError.h"
@@ -44,7 +44,17 @@ ptFileMgrThumbnailer::ptFileMgrThumbnailer()
 {
   m_Cache = NULL;
   m_Queue = NULL;
-  m_Dir = "";
+
+  m_Dir = new QDir("");
+  m_Dir->setSorting(QDir::DirsFirst | QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
+  m_Dir->setFilter(QDir::AllDirs | QDir::NoDot | QDir::Files);
+  m_Dir->setNameFilters(FileExtsRaw + FileExtsBitmap);
+}
+
+//==============================================================================
+
+ptFileMgrThumbnailer::~ptFileMgrThumbnailer() {
+  DelAndNull(m_Dir);
 }
 
 //==============================================================================
@@ -58,10 +68,13 @@ void ptFileMgrThumbnailer::setCache(ptThumbnailCache* cache) {
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::setDir(const QString dir) {
-  if (!this->isRunning()) {
-    m_Dir = dir;
+int ptFileMgrThumbnailer::setDir(const QString dir) {
+  if (this->isRunning()) {
+    return -1;
   }
+
+  m_Dir->setPath(dir);
+  return m_Dir->count();
 }
 
 //==============================================================================
@@ -75,18 +88,13 @@ void ptFileMgrThumbnailer::setQueue(QQueue<ptGraphicsThumbGroup*>* queue) {
 //==============================================================================
 
 void ptFileMgrThumbnailer::run() {
-  QDir thumbsDir = QDir(m_Dir);
-
   // Check for properly set directory, cache and buffer
-  if (!thumbsDir.exists() || m_Queue == NULL /*|| m_Cache == NULL*/) {
+  if (!m_Dir->exists() || m_Queue == NULL /*|| m_Cache == NULL*/) {
     return;
   }
 
   int thumbsSize = Settings->GetInt("ThumbnailSize");
-  thumbsDir.setSorting(QDir::DirsFirst | QDir::Name);
-  thumbsDir.setFilter(QDir::AllDirs | QDir::NoDot | QDir::Files);
-  thumbsDir.setNameFilters(FileExtsRaw + FileExtsBitmap);
-  QFileInfoList files = thumbsDir.entryInfoList();
+  QFileInfoList files = m_Dir->entryInfoList();
   for (uint i = 0; i < (uint)files.count(); i++) {
     ptGraphicsThumbGroup* thumbGroup = new ptGraphicsThumbGroup;
     QGraphicsPixmapItem* thumbPixmap = new QGraphicsPixmapItem;

@@ -24,13 +24,16 @@
 #include <QFileSystemModel>
 #include <QFontMetrics>
 #include <QList>
+#include <QDir>
 
 #include "../ptDefines.h"
 #include "../ptSettings.h"
+#include "../ptTheme.h"
 #include "ptFileMgrWindow.h"
 #include "ptGraphicsSceneEmitter.h"
 
 extern ptSettings* Settings;
+extern ptTheme* Theme;
 extern void CB_MenuFileOpen(const short HaveFile);
 extern QString ImageFileToOpen;
 
@@ -38,7 +41,8 @@ extern QString ImageFileToOpen;
 
 ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
 : QWidget(parent),
-  m_IsFirstShow(true)
+  m_IsFirstShow(true),
+  m_ThumbnailCount(-1)
 {
   setupUi(this);
   setMouseTracking(true);
@@ -65,6 +69,8 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
   connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify()),
           this, SLOT(fetchNewThumbs()));
 
+  m_Progressbar->hide();
+
 //  m_StatusOverlay = new ptReportOverlay(m_FilesView, "Reading thumbnails",
 //                                        QColor(255,75,75), QColor(255,190,190),
 //                                        0, Qt::AlignLeft, 20);
@@ -89,26 +95,41 @@ ptFileMgrWindow::~ptFileMgrWindow() {
 //==============================================================================
 
 void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
+  m_PathInput->setText(
+      QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(m_DirTree->currentIndex())));
+
   m_DataModel->StopThumbnailer();
   m_FilesScene->clear();
-  //m_FilesView->update();
   m_DataModel->thumbQueue()->clear();
-  //m_StatusOverlay->exec();
   ThumbMetricsReset();
-  m_DataModel->StartThumbnailer(index);
+  m_ThumbnailCount = m_DataModel->setThumbnailDir(index);
+
+  if (m_ThumbnailCount > -1) {
+    m_Progressbar->setValue(0);
+    m_Progressbar->setMaximum(m_ThumbnailCount);
+    m_Progressbar->show();
+    m_PathInput->hide();
+
+    m_DataModel->StartThumbnailer();
+  }
 }
 
 //==============================================================================
-void ptFileMgrWindow::fetchNewThumbs() {
-  //m_StatusOverlay->stop();
 
+void ptFileMgrWindow::fetchNewThumbs() {
   while (!m_DataModel->thumbQueue()->isEmpty()) {
+    m_Progressbar->setValue(m_Progressbar->value() + 1);
     ptGraphicsThumbGroup* thumb = m_DataModel->thumbQueue()->dequeue();
     ArrangeThumbnail(thumb);
     m_FilesScene->addItem(thumb);
   }
 
-  //m_FilesView->update();
+  if (m_Progressbar->value() >= m_ThumbnailCount) {
+    m_Progressbar->hide();
+    m_PathInput->show();
+  }
+
+  m_FilesScene->setSceneRect(m_FilesScene->itemsBoundingRect());
 }
 
 //==============================================================================
@@ -173,6 +194,13 @@ void ptFileMgrWindow::ThumbMetricsReset() {
 void ptFileMgrWindow::showEvent(QShowEvent* event) {
   // When the file manager is opened for the first time set initally selected directory
   if (m_IsFirstShow) {
+    setStyle(Theme->ptStyle);
+    setStyleSheet(Theme->ptStyleSheet);
+    m_FileListLayout->setContentsMargins(10,10,10,10);
+    m_FileListLayout->setSpacing(5);
+
+    m_Progressbar->setFixedHeight(m_PathInput->height());
+
     QString lastDir = Settings->GetString("LastFileMgrLocation");
     QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
 
@@ -182,6 +210,8 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
       m_DirTree->setCurrentIndex(fsmodel->index(QDir::homePath()));
     }
 
+    m_PathInput->setText(
+        QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(m_DirTree->currentIndex())));
     m_IsFirstShow = false;
   }
 

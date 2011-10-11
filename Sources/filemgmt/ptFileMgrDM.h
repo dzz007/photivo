@@ -83,11 +83,17 @@ public:
   /*! Clear the data cache of \c ptFileMgrDM */
   void Clear();
 
-  /*! Starts image thumbnail generation.
+  /*! Sets the directory for thumbnail generation.
+    Returns the total number of applicable entries in that directory.
+    Returns \c -1 and does not set the directory if the thumbnailer is
+    currently running.
     \param index
       The QModelIndex corresponding to the directory with the image files.
   */
-  void StartThumbnailer(const QModelIndex index);
+  int setThumbnailDir(const QModelIndex index);
+
+  /*! Starts image thumbnail generation. */
+  void StartThumbnailer();
 
   /*! Aborts a running thumbnailer thread.
     Calling this function when the thumbnailer is not currently running
@@ -104,7 +110,7 @@ public:
   QQueue<ptGraphicsThumbGroup*>* thumbQueue() { return m_ThumbQueue; }
 
   /*! Returns a pointer to the model with the data for the tree view. */
-  QAbstractItemModel* treeModel() { return m_TreeModel; }
+  QFileSystemModel* treeModel() { return m_TreeModel; }
 
 
 private:

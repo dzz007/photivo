@@ -69,6 +69,7 @@ private:
   QGraphicsScene*   m_FilesScene;
   bool              m_IsFirstShow;
   ptReportOverlay*  m_StatusOverlay;
+  int               m_ThumbnailCount;
 
 
 private slots:
