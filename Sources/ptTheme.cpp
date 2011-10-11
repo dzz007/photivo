@@ -23,6 +23,8 @@
 
 // Copyright for the original CSS is 2010 Bernd Schoeler
 
+#include <QStringBuilder>
+
 #include "ptTheme.h"
 #include "ptConstants.h"
 
@@ -332,42 +334,42 @@ void ptTheme::VeryDark(const short Color) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptTheme::CSS() {
-  QString HighLight = "rgb(" + QString::number(ptHighLight.red()) + "," +
-                               QString::number(ptHighLight.green()) + "," +
-                               QString::number(ptHighLight.blue()) + ")";
-  QString Text = "rgb(" + QString::number(ptText.red()) + "," +
-                          QString::number(ptText.green()) + "," +
-                          QString::number(ptText.blue()) + ")";
-  QString BackGround = "rgb(" + QString::number(ptBackground.red()) + "," +
-                                QString::number(ptBackground.green()) + "," +
-                                QString::number(ptBackground.blue()) + ")";
-  QString Dark = "rgb(" + QString::number(ptDark.red()) + "," +
-                          QString::number(ptDark.green()) + "," +
-                          QString::number(ptDark.blue()) + ")";
-  QString Gradient = "rgb(" + QString::number(ptGradient.red()) + "," +
-                              QString::number(ptGradient.green()) + "," +
-                              QString::number(ptGradient.blue()) + ")";
-  QString Bright = "rgb(" + QString::number(ptBright.red()) + "," +
-                            QString::number(ptBright.green()) + "," +
-                            QString::number(ptBright.blue()) + ")";
-  QString VeryBright = "rgb(" + QString::number(ptVeryBright.red()) + "," +
-                                QString::number(ptVeryBright.green()) + "," +
-                                QString::number(ptVeryBright.blue()) + ")";
-  QString Disabled = "rgb(" + QString::number(ptDisabled.red()) + "," +
-                                QString::number(ptDisabled.green()) + "," +
-                                QString::number(ptDisabled.blue()) + ")";
-  QString SliderStart = "rgb(" + QString::number(ptSliderStart.red()) + "," +
-                                QString::number(ptSliderStart.green()) + "," +
-                                QString::number(ptSliderStart.blue()) + ")";
-  QString SliderStop = "rgb(" + QString::number(ptSliderStop.red()) + "," +
-                                QString::number(ptSliderStop.green()) + "," +
-                                QString::number(ptSliderStop.blue()) + ")";
-  QString SliderStartDisabled = "rgb(" + QString::number(ptSliderStartDisabled.red()) + "," +
-                                         QString::number(ptSliderStartDisabled.green()) + "," +
-                                         QString::number(ptSliderStartDisabled.blue()) + ")";
-  QString SliderStopDisabled = "rgb(" + QString::number(ptSliderStopDisabled.red()) + "," +
-                                        QString::number(ptSliderStopDisabled.green()) + "," +
-                                        QString::number(ptSliderStopDisabled.blue()) + ")";
+  QString HighLight = "rgb(" % QString::number(ptHighLight.red()) % "," %
+                               QString::number(ptHighLight.green()) % "," %
+                               QString::number(ptHighLight.blue()) % ")";
+  QString Text = "rgb(" % QString::number(ptText.red()) % "," %
+                          QString::number(ptText.green()) % "," %
+                          QString::number(ptText.blue()) % ")";
+  QString BackGround = "rgb(" % QString::number(ptBackground.red()) % "," %
+                                QString::number(ptBackground.green()) % "," %
+                                QString::number(ptBackground.blue()) % ")";
+  QString Dark = "rgb(" % QString::number(ptDark.red()) % "," %
+                          QString::number(ptDark.green()) % "," %
+                          QString::number(ptDark.blue()) % ")";
+  QString Gradient = "rgb(" % QString::number(ptGradient.red()) % "," %
+                              QString::number(ptGradient.green()) % "," %
+                              QString::number(ptGradient.blue()) % ")";
+  QString Bright = "rgb(" % QString::number(ptBright.red()) % "," %
+                            QString::number(ptBright.green()) % "," %
+                            QString::number(ptBright.blue()) % ")";
+  QString VeryBright = "rgb(" % QString::number(ptVeryBright.red()) % "," %
+                                QString::number(ptVeryBright.green()) % "," %
+                                QString::number(ptVeryBright.blue()) % ")";
+  QString Disabled = "rgb(" % QString::number(ptDisabled.red()) % "," %
+                                QString::number(ptDisabled.green()) % "," %
+                                QString::number(ptDisabled.blue()) % ")";
+  QString SliderStart = "rgb(" % QString::number(ptSliderStart.red()) % "," %
+                                QString::number(ptSliderStart.green()) % "," %
+                                QString::number(ptSliderStart.blue()) % ")";
+  QString SliderStop = "rgb(" % QString::number(ptSliderStop.red()) % "," %
+                                QString::number(ptSliderStop.green()) % "," %
+                                QString::number(ptSliderStop.blue()) % ")";
+  QString SliderStartDisabled = "rgb(" % QString::number(ptSliderStartDisabled.red()) % "," %
+                                         QString::number(ptSliderStartDisabled.green()) % "," %
+                                         QString::number(ptSliderStartDisabled.blue()) % ")";
+  QString SliderStopDisabled = "rgb(" % QString::number(ptSliderStopDisabled.red()) % "," %
+                                        QString::number(ptSliderStopDisabled.green()) % "," %
+                                        QString::number(ptSliderStopDisabled.blue()) % ")";
 #ifdef Q_OS_MAC
   MacBackGround=BackGround;
 #endif
@@ -376,12 +378,12 @@ void ptTheme::CSS() {
 Global colour definitions. Not needed for normal.css
 ************************************************************************************/
     "* {"
-    "  background-color: " + BackGround + ";"
-    "  color: " + Text + ";"
+    "  background-color: " % BackGround % ";"
+    "  color: " % Text % ";"
     "}"
 
     "*#ToolHeader {"
-    "  background: " + Dark + ";"
+    "  background: " % Dark % ";"
     "}"
 
 /************************************************************************************
@@ -390,10 +392,10 @@ Following stuff is also needed for normal.css
 
 /** Spinbox ****************************************/
     "QAbstractSpinBox {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + Gradient + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % Gradient % ", stop: 1 " % BackGround % ");"
     "  border: 1px solid black;"
-    "  selection-background-color: " + Dark + ";"
-    "  selection-color: " + Text + ";"
+    "  selection-background-color: " % Dark % ";"
+    "  selection-color: " % Text % ";"
 
     "  border-radius: 3px;"
     "  padding-left: 2px;"
@@ -405,11 +407,11 @@ Following stuff is also needed for normal.css
     "}"
 
     "QAbstractSpinBox:disabled {"
-    "  color: " + Disabled + ";"
+    "  color: " % Disabled % ";"
     "}"
 
     "QAbstractSpinBox:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
     "}"
 
     "QAbstractSpinBox::down-button {"
@@ -434,22 +436,22 @@ Following stuff is also needed for normal.css
 
 /** Checkbox ****************************************/
     "QCheckBox {"
-    "  border: 1px solid " + BackGround + ";"
+    "  border: 1px solid " % BackGround % ";"
 
     "  border-radius: 3px;"
     "  padding: 2px;"
     "}"
 
     "QCheckBox:disabled {"
-    "  color: " + Disabled + ";"
+    "  color: " % Disabled % ";"
     "}"
 
     "QCheckBox:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
     "}"
 
     "QCheckBox::indicator {"
-    "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 " + Gradient + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 " % Gradient % ", stop: 1 " % BackGround % ");"
     "  border: 1px solid #000;"
 
     "  border-radius: 3px;"
@@ -458,13 +460,13 @@ Following stuff is also needed for normal.css
     "}"
 
     "QCheckBox::indicator:checked {"
-    "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #555, stop:1 " + HighLight + ");"
+    "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #555, stop:1 " % HighLight % ");"
     "}"
 
 
 /** Combobox ****************************************/
     "QComboBox {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + Gradient + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % Gradient % ", stop: 1 " % BackGround % ");"
     "  border: 1px solid #000;"
 
     "  border-radius: 3px;"
@@ -475,16 +477,16 @@ Following stuff is also needed for normal.css
     "}"
 
     "QComboBox:disabled {"
-    "  color: " + Disabled + ";"
+    "  color: " % Disabled % ";"
     "}"
 
     "QComboBox:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
     "}"
 
     "QComboBox::drop-down {"
     "  border: none;"
-    "  border-left: 1px solid " + Bright + ";"
+    "  border-left: 1px solid " % Bright % ";"
 
     "  border-bottom-right-radius: 3px;"
     "  border-top-right-radius: 3px;"
@@ -492,9 +494,9 @@ Following stuff is also needed for normal.css
     "}"
 
     "QComboBox QAbstractItemView {"
-    "  border: 1px solid " + VeryBright + ";"
-    "  selection-background-color: " + Dark + ";"
-    "  selection-color: " + Text + ";"
+    "  border: 1px solid " % VeryBright % ";"
+    "  selection-background-color: " % Dark % ";"
+    "  selection-color: " % Text % ";"
 
     "  border-radius: 3px;"
     "}"
@@ -502,7 +504,7 @@ Following stuff is also needed for normal.css
 
 /** Textedits ****************************************/
     "QLineEdit, QPlainTextEdit {"
-    "  border: 1px solid " + VeryBright + ";"
+    "  border: 1px solid " % VeryBright % ";"
 
     "  border-radius: 3px;"
     "  padding-left: 2px;"
@@ -515,11 +517,11 @@ Following stuff is also needed for normal.css
     "}"
 
     "QLineEdit:disabled, QPlainTextEdit:disabled {"
-    "  color: " + Disabled + ";"
+    "  color: " % Disabled % ";"
     "}"
 
     "QLineEdit:hover, QPlainTextEdit:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
     "}"
 
     "QLineEdit#SearchInputWidget {"
@@ -534,13 +536,13 @@ Following stuff is also needed for normal.css
 
 /** tree view ****************************************/
     "QTreeView {"
-    "  border: 1px solid " + Dark + ";"
+    "  border: 1px solid " % Dark % ";"
     "}"
 
 /** Slider ****************************************/
     "QSlider {"
     "  background: none;"
-    "  border: 1px solid " + BackGround + ";"
+    "  border: 1px solid " % BackGround % ";"
 
     "  padding: 2px;"
     "  max-height: 8px;"
@@ -548,20 +550,20 @@ Following stuff is also needed for normal.css
     "}"
 
     "QSlider:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
 
     "  border-radius: 3px;"
     "}"
 
     "QSlider::groove:horizontal {"
-    "  background: " + VeryBright + ";"
+    "  background: " % VeryBright % ";"
     "  border: 1px solid #000;"
 
     "  border-radius: 3px;"
     "}"
 
     "QSlider::handle:horizontal {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + Gradient + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % Gradient % ", stop: 1 " % BackGround % ");"
 
     "  width: 12px;"
     "}"
@@ -588,7 +590,7 @@ Following stuff is also needed for normal.css
     "}"
 
     "ptSlider:disabled {"
-    "  color: " + Disabled + ";"
+    "  color: " % Disabled % ";"
     "}"
 
     "QWidget#HueWidget:disabled {"
@@ -599,18 +601,18 @@ Following stuff is also needed for normal.css
     "}"
 
     "ptSlider::chunk {"
-    "  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + SliderStart + ", stop: 1 " + SliderStop + ");"
-    "  background-image: url(" + SliderStripe + ");"
+    "  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % SliderStart % ", stop: 1 " % SliderStop % ");"
+    "  background-image: url(" % SliderStripe % ");"
     "  border-radius: 2px;"
-    "  border: 1px solid " + ptSliderStart.darker(200).name() + ";"
+    "  border: 1px solid " % ptSliderStart.darker(200).name() % ";"
 #ifdef Q_OS_UNIX
     "  margin: 1px;"
 #endif
     "}"
 
     "ptSlider::chunk:disabled {"
-    "  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + SliderStartDisabled + ", stop: 1 " + SliderStopDisabled + ");"
-    "  background-image: url(" + SliderStripeDisabled + ");"
+    "  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % SliderStartDisabled % ", stop: 1 " % SliderStopDisabled % ");"
+    "  background-image: url(" % SliderStripeDisabled % ");"
     "}"
 
 /** Button ****************************************/
@@ -621,7 +623,7 @@ Following stuff is also needed for normal.css
     "}"
 
     "QToolButton:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
 
     "  border-radius: 3px;"
     "}"
@@ -634,12 +636,12 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 
 /** Menu ****************************************/
     "QMenu {"
-    "  background-color: " + BackGround + ";"
+    "  background-color: " % BackGround % ";"
     "}"
 
     "QMenu::item:selected {"
-    "  background-color: " + Bright + ";"
-    "  color: " + Dark + ";"
+    "  background-color: " % Bright % ";"
+    "  color: " % Dark % ";"
     "}"
 
     "QMenu::separator {"
@@ -649,14 +651,14 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QMenu::indicator, QMenu::indicator:non-exclusive:unchecked, QMenu::indicator:non-exclusive:checked {"
-    "  background: " + BackGround + ";"
-    "  border: 0px solid " + BackGround + ";"
+    "  background: " % BackGround % ";"
+    "  border: 0px solid " % BackGround % ";"
     "}"
 
 
 /** Scrollbar ****************************************/
     "QScrollBar:horizontal {"
-    "  background: " + Dark + ";"
+    "  background: " % Dark % ";"
 
     "  border: none;"
     "  border-radius: 3px;"
@@ -664,7 +666,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QScrollBar:vertical {"
-    "  background: " + Dark + ";"
+    "  background: " % Dark % ";"
 
     "  border: none;"
     "  border-radius: 3px;"
@@ -672,7 +674,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QScrollBar::handle:horizontal {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + Gradient + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % Gradient % ", stop: 1 " % BackGround % ");"
     "  border: 1px solid #000;"
 
     "  border-radius: 4px;"
@@ -680,7 +682,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QScrollBar::handle:vertical {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 " + Gradient + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 " % Gradient % ", stop: 1 " % BackGround % ");"
     "  border: 1px solid #000;"
 
     "  border-radius: 4px;"
@@ -690,11 +692,11 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "QScrollBar::handle:horizontal:hover, QScrollBar::handle:vertical:hover,"
     "QScrollBar::add-line:horizontal:hover, QScrollBar::add-line:vertical:hover,"
     "QScrollBar::sub-line:horizontal:hover, QScrollBar::sub-line:vertical:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
     "}"
 
     "QScrollBar::add-line:horizontal {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + Gradient + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % Gradient % ", stop: 1 " % BackGround % ");"
     "  border: 1px solid #000;"
 
     "  border-top-right-radius: 7px;"
@@ -705,7 +707,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QScrollBar::add-line:vertical {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 " + Gradient + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 " % Gradient % ", stop: 1 " % BackGround % ");"
     "  border: 1px solid #000;"
 
     "  border-bottom-left-radius: 7px;"
@@ -716,7 +718,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QScrollBar::sub-line:horizontal {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + Gradient + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % Gradient % ", stop: 1 " % BackGround % ");"
     "  border: 1px solid #000;"
 
     "  border-top-left-radius: 7px;"
@@ -729,7 +731,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QScrollBar::sub-line:vertical {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 " + Gradient + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 " % Gradient % ", stop: 1 " % BackGround % ");"
     "  border: 1px solid #000;"
 
     "  border-top-left-radius: 7px;"
@@ -754,7 +756,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QSplitter::handle:horizontal {"
-    "  background-color: " + Dark + ";"
+    "  background-color: " % Dark % ";"
     "  border: 1px solid #000;"
     "  color: #000;"
 
@@ -762,7 +764,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QSplitter::handle:vertical {"
-    "  background-color: " + Dark + ";"
+    "  background-color: " % Dark % ";"
     "  border: 1px solid #000;"
     "  color: #000;"
 
@@ -772,7 +774,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 
 /** Tabs ****************************************/
     "QTabWidget::pane {"
-    "  border-top: 0px solid qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 " + BackGround + ");"
+    "  border-top: 0px solid qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 " % BackGround % ");"
     "}"
 
     "QTabWidget::tab-bar {"
@@ -780,7 +782,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QTabBar::tab {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + Bright + ", stop: 1 " + BackGround + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % Bright % ", stop: 1 " % BackGround % ");"
     "  border: 1px solid #000;"
 
     "  border-radius: 4px;"
@@ -789,11 +791,11 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QTabBar::tab:selected, QTabBar::tab:hover {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " + Bright + ", stop: 1 " + Dark + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % Bright % ", stop: 1 " % Dark % ");"
     "}"
 
     "QTabBar::tab:selected {"
-    "  border-color: " + HighLight + ";"
+    "  border-color: " % HighLight % ";"
     "}"
 
     "QTabBar::tab:!selected {"
@@ -802,7 +804,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 
     /* Scrolling of tabs when not enough space */
     "QTabBar::tear {"
-    "  background: " + BackGround + ";"
+    "  background: " % BackGround % ";"
     "}"
 
     /* Special treatment for vertical tabs */
@@ -815,12 +817,12 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "}"
 
     "QTabWidget QTabBar::tab {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 " + Bright + ", stop: 1 " + Gradient + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 " % Bright % ", stop: 1 " % Gradient % ");"
     "  margin: 1px 5px 1px 5px;"
     "}"
 
     "QTabWidget QTabBar::tab:selected, QTabWidget QTabBar::tab:hover {"
-    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 " + Gradient + ", stop: 1 " + Dark + ");"
+    "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 " % Gradient % ", stop: 1 " % Dark % ");"
     "}"
 
     "QTabWidget QTabBar::tab:!selected {"
@@ -831,17 +833,17 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 /** Tooltips ****************************************/
     "QToolTip {"
     "  border: none;"   // needed to enable proper styling
-    "  color: " + Text + ";"
+    "  color: " % Text % ";"
     "}"
 
 /******************************************/
     "*#StatusFrame {  /* status text bottom left without border */"
-    "  border: 1px solid " + Dark + ";"
+    "  border: 1px solid " % Dark % ";"
     "}"
 
     "*#StatusLabel {"
-    "  color: " + Text + ";"
-    "}" + m_CustomCSS;
+    "  color: " % Text % ";"
+    "}" % m_CustomCSS;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -851,9 +853,9 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptTheme::JustTools() {
-  QString HighLight = "rgb(" + QString::number(ptHighLight.red()) + "," +
-                               QString::number(ptHighLight.green()) + "," +
-                               QString::number(ptHighLight.blue()) + ")";
+  QString HighLight = "rgb(" % QString::number(ptHighLight.red()) % "," %
+                               QString::number(ptHighLight.green()) % "," %
+                               QString::number(ptHighLight.blue()) % ")";
   QString Disabled = "#888";
   ptStyleSheet =
 /** Spinbox ****************************************/
@@ -872,7 +874,7 @@ void ptTheme::JustTools() {
     "}"
 
     "QAbstractSpinBox:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
     "}"
 
     "QAbstractSpinBox::down-button {"
@@ -905,7 +907,7 @@ void ptTheme::JustTools() {
     "}"
 
     "QCheckBox:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
     "  padding: 1px;"
     "}"
 
@@ -921,11 +923,11 @@ void ptTheme::JustTools() {
     "}"
 
     "QComboBox:disabled {"
-    "  color: " + Disabled + ";"
+    "  color: " % Disabled % ";"
     "}"
 
     "QComboBox:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
     "}"
 
     "QComboBox::drop-down {"
@@ -967,7 +969,7 @@ void ptTheme::JustTools() {
     "}"
 
     "QLineEdit:hover, QPlainTextEdit:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
     "}"
 
 
@@ -987,7 +989,7 @@ void ptTheme::JustTools() {
     "}"
 
     "QSlider:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
     "  padding: 2px;"
     "  border-radius: 3px;"
     "}"
@@ -1027,7 +1029,7 @@ void ptTheme::JustTools() {
     "}"
 
     "ptSlider:disabled {"
-    "  color: " + Disabled + ";"
+    "  color: " % Disabled % ";"
     "  border: 1px none"
     "}"
 
@@ -1047,7 +1049,7 @@ void ptTheme::JustTools() {
     "}"
 
     "QToolButton:hover {"
-    "  border: 1px solid " + HighLight + ";"
+    "  border: 1px solid " % HighLight % ";"
 
     "  border-radius: 3px;"
     "}"
@@ -1056,7 +1058,7 @@ void ptTheme::JustTools() {
 /** Frame ****************************************/
     "#StatusFrame {  /* status text bottom left without border */"
     "  border: none;"
-    "}" + m_CustomCSS;
+    "}" % m_CustomCSS;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
