@@ -61,13 +61,30 @@
       </property>
      </widget>
      <widget class="QWidget" name="verticalLayoutWidget">
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="m_FileListLayout">
        <property name="spacing">
-        <number>20</number>
+        <number>5</number>
        </property>
        <property name="margin">
-        <number>20</number>
+        <number>10</number>
        </property>
+       <item>
+        <widget class="QLineEdit" name="m_PathInput">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="m_Progressbar">
+         <property name="value">
+          <number>0</number>
+         </property>
+         <property name="textVisible">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QGraphicsView" name="m_FilesView">
          <property name="frameShape">
