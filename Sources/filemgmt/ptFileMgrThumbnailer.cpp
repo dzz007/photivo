@@ -21,6 +21,8 @@
 **
 *******************************************************************************/
 
+#include <cassert>
+
 #include <QStringList>
 #include <QGraphicsTextItem>
 #include <QApplication>
@@ -42,8 +44,8 @@ extern QStringList FileExtsBitmap;
 ptFileMgrThumbnailer::ptFileMgrThumbnailer()
 : QThread()
 {
-  m_Cache = NULL;
-  m_Queue = NULL;
+  m_Cache     = NULL;
+  m_ThumbList     = NULL;
 
   m_Dir = new QDir("");
   m_Dir->setSorting(QDir::DirsFirst | QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
@@ -79,41 +81,80 @@ int ptFileMgrThumbnailer::setDir(const QString dir) {
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::setQueue(QQueue<ptGraphicsThumbGroup*>* queue) {
-  if (!this->isRunning() && queue != NULL) {
-    m_Queue = queue;
+void ptFileMgrThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList) {
+  if (!this->isRunning() && ThumbList != NULL) {
+    m_ThumbList = ThumbList;
   }
 }
 
 //==============================================================================
 
+
 void ptFileMgrThumbnailer::run() {
   // Check for properly set directory, cache and buffer
-  if (!m_Dir->exists() || m_Queue == NULL /*|| m_Cache == NULL*/) {
+  if (!m_Dir->exists() || m_ThumbList == NULL /*|| m_Cache == NULL*/) {
     return;
   }
 
-  int thumbsSize = Settings->GetInt("ThumbnailSize");
   QFileInfoList files = m_Dir->entryInfoList();
+  int thumbsSize = Settings->GetInt("ThumbnailSize");
+
+  /***
+    Step 1: Generate thumb groups without the thumbnail images
+  ***/
+
   for (uint i = 0; i < (uint)files.count(); i++) {
     ptGraphicsThumbGroup* thumbGroup = new ptGraphicsThumbGroup;
+    ptFSOType type;
+
+    if (files.at(i).isDir()) {
+      if (files.at(i).fileName() == "..")
+        type = fsoParentDir;
+      else
+        type = fsoDir;
+    } else {
+      type = fsoFile;
+    }
+
+    thumbGroup->addInfoItems(files.at(i).canonicalFilePath(),
+                             files.at(i).fileName(),
+                             type);
+    m_ThumbList->append(thumbGroup);
+    QApplication::processEvents();
+
+    // Notification signal that new thumbs are in the queue. Emitted every
+    // five images. ptFileMgrWindow also reads in five image blocks.
+//    if (i % 5 == 0) {
+      emit newThumbsNotify(false);
+//    }
+  }
+
+  // final notification to make sure the queue gets completely emptied
+  emit newThumbsNotify(true);
+
+/***
+  Step 2: Add the images to the thumbnail groups
+***/
+
+  for (uint i = 0; i < (uint)m_ThumbList->count(); i++) {
     QGraphicsPixmapItem* thumbPixmap = new QGraphicsPixmapItem;
+    ptGraphicsThumbGroup* currentGroup = m_ThumbList->at(i);
 
 //    QTime Timer;
 //    Timer.start();
-    if (files.at(i).isDir()) {
-      // we have a directory
-      if (files.at(i).fileName() == "..") {
-        thumbPixmap->setPixmap(QPixmap(QString::fromUtf8(":/photivo/FileManager/up.png")));
-      } else {
-        thumbPixmap->setPixmap(QPixmap(QString::fromUtf8(":/photivo/FileManager/folder.png")));
-      }
+    if (currentGroup->fsoType() == fsoParentDir) {
+      // we have a parent directory
+      thumbPixmap->setPixmap(QPixmap(QString::fromUtf8(":/photivo/FileManager/up.png")));
+
+    } else if (currentGroup->fsoType() == fsoDir) {
+      // we have a subdirectory
+      thumbPixmap->setPixmap(QPixmap(QString::fromUtf8(":/photivo/FileManager/folder.png")));
 
     } else {
       // we have a file, see if we can get a thumbnail image
       ptDcRaw dcRaw;
 
-      if (dcRaw.Identify(files.at(i).absoluteFilePath()) == 0 ) {
+      if (dcRaw.Identify(currentGroup->fullPath()) == 0 ) {
         // we have a raw image ...
         QByteArray* ba = NULL;
         if (dcRaw.thumbnail(ba)) {
@@ -129,7 +170,6 @@ void ptFileMgrThumbnailer::run() {
           } catch (Magick::Exception &Error) {
             // ... not supported
             DelAndNull(thumbPixmap);
-            DelAndNull(thumbGroup);
           }
         }
         DelAndNull(ba);
@@ -138,45 +178,34 @@ void ptFileMgrThumbnailer::run() {
         try {
           Magick::Image image;
           image.size(Magick::Geometry(2*thumbsSize, 2*thumbsSize));
-          image.read(files.at(i).absoluteFilePath().toAscii().data());
+          image.read(currentGroup->fullPath().toAscii().data());
 
           GenerateThumbnail(image, thumbPixmap, thumbsSize);
 //          printf("Thumbnail Bitmap: %d\n", Timer.elapsed());
         } catch (Magick::Exception &Error) {
           // ... or not a supported image file at all
           DelAndNull(thumbPixmap);
-          DelAndNull(thumbGroup);
         }
       }
     }
 
-    if (thumbGroup && thumbPixmap) {
-      thumbGroup->addItems(thumbPixmap,
-                           files.at(i).canonicalFilePath(),
-                           files.at(i).fileName(),
-                           files.at(i).isDir());
-      m_Queue->enqueue(thumbGroup);
+    if (thumbPixmap) {
+      currentGroup->addPixmap(thumbPixmap);
     }
 
     QApplication::processEvents();
 
 //    printf("Done: %d\n\n", Timer.elapsed());
 
-    // Notification signal that new thumbs are in the queue. Emitted every
-    // five images. ptFileMgrWindow also reads in five image blocks.
-//    if (i % 5 == 0) {
-      emit newThumbsNotify();
-//    }
+    // Notification signal for each finished thumb image.
+    emit newPixmapsNotify();
   }
-
-  // final notification to make sure the queue gets completely emptied
-  emit newThumbsNotify();
 }
 
 //==============================================================================
 
 void ptFileMgrThumbnailer::GenerateThumbnail(Magick::Image& image,
-                                             QGraphicsPixmapItem*& thumbPixmap,
+                                             QGraphicsPixmapItem* thumbPixmap,
                                              const int thumbSize) {
   // We want 8bit RGB data without alpha channel, scaled to thumbnail size
   image.depth(8);

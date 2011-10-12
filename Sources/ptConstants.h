@@ -794,6 +794,20 @@ enum ptThumbnailAction {
   tnaLoadImage = 1
 };
 
+/*! This enum defines how thumbnails are arranged in the file manager. */
+enum ptThumbnailArrangeMode {
+  tamVerticalByRow = 0,
+  tamHorizontalByColumn = 1
+};
+
+/*! This enum defines the type of a file system object. */
+enum ptFSOType {
+  fsoUnknown = 0,
+  fsoFile = 1,
+  fsoDir = 2,
+  fsoParentDir = 3
+};
+
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////

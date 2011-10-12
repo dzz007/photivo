@@ -756,7 +756,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CustomCSSFile"                        ,1    ,""                                    ,0},
     {"FullscreenActive"                     ,9    ,0                                     ,0},
     {"FileMgrIsOpen"                        ,9    ,0                                     ,0},
-    {"LastFileMgrLocation"                  ,1    ,""                                    ,0}
+    {"LastFileMgrLocation"                  ,1    ,""                                    ,0},
+    {"FileMgrThumbArrangeMode"              ,1    ,tamVerticalByRow                      ,0},
+    {"FileMgrThumbMaxRowCol"                ,1    ,INT_MAX                               ,0}
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.

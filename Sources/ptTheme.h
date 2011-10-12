@@ -74,6 +74,8 @@ public:
 
   QColor      ptBackground;
   QColor      ptHighLight;
+  QColor ptBright;
+  QColor ptDark;
 
   // Methods
   void Reset();
@@ -93,8 +95,6 @@ public:
 private:
   QColor ptGradient;
   QColor ptText;
-  QColor ptDark;
-  QColor ptBright;
   QColor ptVeryBright;
   QColor ptDisabled;
   QColor ptSliderStart;
