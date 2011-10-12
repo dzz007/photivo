@@ -24,6 +24,7 @@
 
 #define QT_CLEAN_NAMESPACE
 
+#include <QFileInfo>
 #include <QtGui>
 #include <QtCore>
 //#include <QtNetwork>
@@ -3208,11 +3209,11 @@ void CB_MenuFileOpen(const short HaveFile) {
   Settings->SetValue("LfunAperture", (TmpAprt==0.0) ? 8.0 : TmpAprt);
   MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
 
-  #ifdef Q_OS_WIN32
-    MainWindow->setWindowTitle(QString((Settings->GetStringList("InputFileNameList"))[0]).replace(QString("/"), QString("\\")) + " - Photivo");
-  #else
-    MainWindow->setWindowTitle((Settings->GetStringList("InputFileNameList"))[0]+ " - Photivo");
-  #endif
+  QFileInfo finfo = QFileInfo((Settings->GetStringList("InputFileNameList"))[0]);
+  MainWindow->setWindowTitle(
+      QString("%1 - %2 - Photivo").arg(finfo.fileName())
+                                  .arg(QDir::toNativeSeparators(finfo.absolutePath())) );
+
   Settings->SetValue("RunMode",OldRunMode);
 }
 
