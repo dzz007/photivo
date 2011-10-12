@@ -27,6 +27,7 @@
 
 #include <QObject>
 #include <QGraphicsRectItem>
+#include <QPen>
 
 #include "../ptConstants.h"
 
@@ -35,18 +36,62 @@
 class ptGraphicsThumbGroup: public QGraphicsRectItem {
 
 public:
+  /*! Creates a \c ptGraphicsThumbGroup object. */
   ptGraphicsThumbGroup(QGraphicsItem* parent = 0);
-  void addItems(QGraphicsPixmapItem* pixmap,
-                const QString fullPath,
-                const QString description,
-                const bool isDir);
+
+  /*! Adds informative items to the thumbnail group.
+    \param fullPath
+      The path to the file or directory that this thumbnail group refers to.
+    \param description
+      The text appearing below the thumbnail image.
+    \param isDir
+      Defines if this thumbnail group refers to a directory.
+    \param
+      Defines if this thumbnail group refers to the parent directory.
+      When you set this to \c true also set \c isDir to \c true.
+  */
+  void addInfoItems(const QString fullPath,
+                    const QString description,
+                    const ptFSOType fsoType);
+
+  /*! Adds the thumbnail image to the thumbnail group.
+      \param pixmap
+        A pointer to the \c QPixmap thumnail image.
+  */
+  void addPixmap(QGraphicsPixmapItem* pixmap);
+
+  /*! Return the type of file system object this thumbnail group refers to. */
+  ptFSOType fsoType() { return m_FSOType; }
+
+  /*! Returns the full path of the file or directory this thumbnail group refers to. */
   QString fullPath() { return m_FullPath; }
+
+  /*! Returns \c true if a pixmap is part of the thumbnail group. */
+  bool hasPixmap() { return m_Pixmap != NULL; }
+
+  /*! Paints the thumbnail group.
+    Reimplements \c QGraphicsRectItem::paint()
+  */
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*);
+
+  /*! Returns that type that identifies \c ptGraphicsThumbGroup objects
+      within the graphics view framework.
+  */
   int type() const { return Type; }
 
+  /*! Defines the padding in pixels between the items in the thumbnail group and the group’s border. */
+  static const int InnerPadding = 8;
+
+  /*! Defines the ID that identifies \c ptGraphicsThumbGroup objects
+      within the graphics view framework.
+  */
   enum { Type = UserType + 1 };
 
 
 protected:
+  /*! Event handler for the thumbnail group.
+      Reimplements \c QGraphicsRectItem::sceneEvent().
+  */
   bool sceneEvent(QEvent* event);
 
 
@@ -54,7 +99,7 @@ private:
   QString CutFileName(const QString FileName);
 
   QString   m_FullPath;
-  bool      m_isDir;
+  ptFSOType m_FSOType;
 
   // These two objects don’t need to be destroyed explicitely in the destructor.
   // Because they are children that happens automatically.

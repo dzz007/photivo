@@ -27,7 +27,7 @@
 //==============================================================================
 
 #include <QThread>
-#include <QQueue>
+#include <QList>
 #include <QGraphicsItemGroup>
 #include <QDir>
 
@@ -71,7 +71,7 @@ public:
       Note that the buffer is taken as is, i.e. it is not cleared by the
       thumbnailer.
   */
-  void setQueue(QQueue<ptGraphicsThumbGroup*>* queue);
+  void setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList);
 
   /*! This function does the actual thumbnail generating. */
   void run();
@@ -84,16 +84,17 @@ protected:
 private:
   // Resizes the image to the specified size and writes it to the pixmap
   void GenerateThumbnail(Magick::Image& image,
-                         QGraphicsPixmapItem*& thumbPixmap,
+                         QGraphicsPixmapItem* thumbPixmap,
                          const int thumbSize);
 
   ptThumbnailCache*               m_Cache;
   QDir*                           m_Dir;
-  QQueue<ptGraphicsThumbGroup*>*  m_Queue;
+  QList<ptGraphicsThumbGroup*>*   m_ThumbList;
 
 
 signals:
-  void newThumbsNotify();
+  void newThumbsNotify(const bool isLast);
+  void newPixmapsNotify();
 
 
 public slots:

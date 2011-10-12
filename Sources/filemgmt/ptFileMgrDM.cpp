@@ -84,9 +84,9 @@ ptFileMgrDM::ptFileMgrDM()
   #endif
 
   // Init stuff for thumbnail generation
-  m_ThumbQueue = new QQueue<ptGraphicsThumbGroup*>;
+  m_ThumbList = new QList<ptGraphicsThumbGroup*>;
   m_Thumbnailer = new ptFileMgrThumbnailer;
-  m_Thumbnailer->setQueue(m_ThumbQueue);
+  m_Thumbnailer->setThumbList(m_ThumbList);
 
   // Init thumbnail cache
   m_Cache = new ptThumbnailCache(1000);
@@ -97,7 +97,7 @@ ptFileMgrDM::ptFileMgrDM()
 
 ptFileMgrDM::~ptFileMgrDM() {
   DelAndNull(m_TreeModel);
-  DelAndNull(m_ThumbQueue);
+  DelAndNull(m_ThumbList);
   DelAndNull(m_Thumbnailer);
   DelAndNull(m_Cache);
 }

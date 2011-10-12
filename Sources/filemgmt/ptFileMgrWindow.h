@@ -29,6 +29,7 @@
 #include <QWidget>
 #include <QGraphicsScene>
 
+#include "../ptConstants.h"
 #include "../ptReportOverlay.h"
 #include "../ptConstants.h"
 #include "ui_ptFileMgrWindow.h"
@@ -53,7 +54,7 @@ protected:
 private:
   void ArrangeThumbnail(ptGraphicsThumbGroup* thumb);
   void ArrangeThumbnails();
-  void ThumbMetricsReset();
+  void CalcThumbMetrics();
 
   struct {
     int Col;
@@ -65,17 +66,21 @@ private:
     int CellWidth;
   } m_ThumbMetrics;
 
-  ptFileMgrDM*      m_DataModel;
-  QGraphicsScene*   m_FilesScene;
-  bool              m_IsFirstShow;
-  ptReportOverlay*  m_StatusOverlay;
-  int               m_ThumbnailCount;
+
+  ptThumbnailArrangeMode  m_ArrangeMode;
+  ptFileMgrDM*            m_DataModel;
+  QGraphicsScene*         m_FilesScene;
+  bool                    m_IsFirstShow;
+  ptReportOverlay*        m_StatusOverlay;
+  int                     m_ThumbCount;
+  int                     m_ThumbListIdx;
 
 
 private slots:
   void changeTreeDir(const QModelIndex& index);
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
-  void fetchNewThumbs();
+  void fetchNewPixmaps();
+  void fetchNewThumbs(const bool isLast);
 
 signals:
   void FileMgrWindowClosed();

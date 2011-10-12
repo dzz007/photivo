@@ -21,6 +21,8 @@
 **
 *******************************************************************************/
 
+#include <cassert>
+
 #include <QFileSystemModel>
 #include <QFontMetrics>
 #include <QList>
@@ -41,33 +43,34 @@ extern QString ImageFileToOpen;
 
 ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
 : QWidget(parent),
+  m_ArrangeMode(tamVerticalByRow),
   m_IsFirstShow(true),
-  m_ThumbnailCount(-1)
+  m_ThumbCount(-1),
+  m_ThumbListIdx(0)
 {
   setupUi(this);
   setMouseTracking(true);
   ptGraphicsSceneEmitter::ConnectThumbnailAction(
       this, SLOT(execThumbnailAction(ptThumbnailAction,QString)) );
 
-  // We create our data module
+  // We setup our data module
   m_DataModel = ptFileMgrDM::GetInstance();
-  QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
 
-  m_DirTree->setModel(fsmodel);
-  m_DirTree->setRootIndex(fsmodel->index(fsmodel->rootPath()));
+  m_DirTree->setModel(m_DataModel->treeModel());
+  m_DirTree->setRootIndex(m_DataModel->treeModel()->index(m_DataModel->treeModel()->rootPath()));
   m_DirTree->setColumnHidden(1, true);
   m_DirTree->setColumnHidden(2, true);
   m_DirTree->setColumnHidden(3, true);
   connect(m_DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
 
-  m_DirTree->setFixedWidth(300);  //TODO: temporary
-  m_FilesView->installEventFilter(this);
-
-  // Setup the graphics scene
+  // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
+  m_FilesView->installEventFilter(this);
   m_FilesView->setScene(m_FilesScene);
-  connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify()),
-          this, SLOT(fetchNewThumbs()));
+  connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify(const bool)),
+          this, SLOT(fetchNewThumbs(const bool)));
+  connect(m_DataModel->thumbnailer(), SIGNAL(newPixmapsNotify()),
+          this, SLOT(fetchNewPixmaps()));
 
   m_Progressbar->hide();
 
@@ -75,21 +78,23 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
 //                                        QColor(255,75,75), QColor(255,190,190),
 //                                        0, Qt::AlignLeft, 20);
 
-//  QList <int> SizesList;
-//  SizesList.append(250);
-//  SizesList.append(1000); // Value obtained to avoid resizing at startup.
-//  m_MainSplitter->setSizes(SizesList);
+  QList <int> SizesList;
+  SizesList.append(250);
+  SizesList.append(1000); // Value obtained to avoid resizing at startup.
+  m_MainSplitter->setSizes(SizesList);
 }
 
 //==============================================================================
 
 ptFileMgrWindow::~ptFileMgrWindow() {
   Settings->SetValue("LastFileMgrLocation",
-      qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->filePath(m_DirTree->currentIndex()) );
+      m_DataModel->treeModel()->filePath(m_DirTree->currentIndex()) );
 
+  DelAndNull(m_StatusOverlay);
+
+  // To avoid dangling pointers destroy singletons last.
   ptFileMgrDM::DestroyInstance();
   ptGraphicsSceneEmitter::DestroyInstance();
-  DelAndNull(m_StatusOverlay);
 }
 
 //==============================================================================
@@ -100,36 +105,48 @@ void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
 
   m_DataModel->StopThumbnailer();
   m_FilesScene->clear();
-  m_DataModel->thumbQueue()->clear();
-  ThumbMetricsReset();
-  m_ThumbnailCount = m_DataModel->setThumbnailDir(index);
+  m_DataModel->thumbList()->clear();
+  m_ThumbListIdx = 0;
+  m_ThumbCount = m_DataModel->setThumbnailDir(index);
+  CalcThumbMetrics();
 
-  if (m_ThumbnailCount > -1) {
+  if (m_ThumbCount > -1) {
     m_Progressbar->setValue(0);
-    m_Progressbar->setMaximum(m_ThumbnailCount);
-    m_Progressbar->show();
-    m_PathInput->hide();
-
+    m_Progressbar->setMaximum(m_ThumbCount);
     m_DataModel->StartThumbnailer();
   }
 }
 
 //==============================================================================
 
-void ptFileMgrWindow::fetchNewThumbs() {
-  while (!m_DataModel->thumbQueue()->isEmpty()) {
-    m_Progressbar->setValue(m_Progressbar->value() + 1);
-    ptGraphicsThumbGroup* thumb = m_DataModel->thumbQueue()->dequeue();
+void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
+  while (m_ThumbListIdx < m_DataModel->thumbList()->count()) {
+    ptGraphicsThumbGroup* thumb = m_DataModel->thumbList()->at(m_ThumbListIdx);
+    m_ThumbListIdx++;
     ArrangeThumbnail(thumb);
     m_FilesScene->addItem(thumb);
   }
 
-  if (m_Progressbar->value() >= m_ThumbnailCount) {
-    m_Progressbar->hide();
-    m_PathInput->show();
+  if (isLast) {
+    m_ThumbListIdx = 0;
+    m_Progressbar->show();
+    m_PathInput->hide();
   }
 
   m_FilesScene->setSceneRect(m_FilesScene->itemsBoundingRect());
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::fetchNewPixmaps() {
+  // We don’t actually need to fetch anything. Adding the QPixmap to the thumb group
+  // automatically updates the viewport. So only the progress bar is left.
+  m_Progressbar->setValue(m_Progressbar->value() + 1);
+
+  if (m_Progressbar->value() >= m_ThumbCount) {
+    m_Progressbar->hide();
+    m_PathInput->show();
+  }
 }
 
 //==============================================================================
@@ -138,12 +155,28 @@ void ptFileMgrWindow::ArrangeThumbnail(ptGraphicsThumbGroup* thumb) {
   thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth,
                 m_ThumbMetrics.Row * m_ThumbMetrics.CellHeight);
 
-  // arrange thumbs in rows
-  if (m_ThumbMetrics.Col >= m_ThumbMetrics.MaxCol) {
-    m_ThumbMetrics.Col = 0;
-    m_ThumbMetrics.Row++;
-  } else {
-    m_ThumbMetrics.Col++;
+  switch (m_ArrangeMode) {
+    case tamVerticalByRow:
+      if (m_ThumbMetrics.Col >= m_ThumbMetrics.MaxCol) {
+        m_ThumbMetrics.Col = 0;
+        m_ThumbMetrics.Row++;
+      } else {
+        m_ThumbMetrics.Col++;
+      }
+      break;
+
+    case tamHorizontalByColumn:
+      if (m_ThumbMetrics.Row >= m_ThumbMetrics.MaxRow) {
+        m_ThumbMetrics.Row = 0;
+        m_ThumbMetrics.Col++;
+      } else {
+        m_ThumbMetrics.Row++;
+      }
+      break;
+
+    default:
+      assert(!"Unhandled ptArrangeMode");
+      break;
   }
 }
 
@@ -152,7 +185,7 @@ void ptFileMgrWindow::ArrangeThumbnail(ptGraphicsThumbGroup* thumb) {
 void ptFileMgrWindow::ArrangeThumbnails() {
   QList<QGraphicsItem*> thumbList = m_FilesScene->items(Qt::AscendingOrder);
   QListIterator<QGraphicsItem*> i(thumbList);
-  ThumbMetricsReset();
+  CalcThumbMetrics();
 
   while (i.hasNext()) {
     if (i.peekNext()->type() == ptGraphicsThumbGroup::Type) {   // check for thumb item group
@@ -165,7 +198,7 @@ void ptFileMgrWindow::ArrangeThumbnails() {
 
 //==============================================================================
 
-void ptFileMgrWindow::ThumbMetricsReset() {
+void ptFileMgrWindow::CalcThumbMetrics() {
   // Current row and column
   m_ThumbMetrics.Row = 0;
   m_ThumbMetrics.Col = 0;
@@ -174,19 +207,58 @@ void ptFileMgrWindow::ThumbMetricsReset() {
   m_ThumbMetrics.Padding = Settings->GetInt("ThumbnailPadding");
 
   // Width of a cell, i.e. thumb width + padding
-  m_ThumbMetrics.CellWidth = Settings->GetInt("ThumbnailSize") + m_ThumbMetrics.Padding;
+  m_ThumbMetrics.CellWidth = Settings->GetInt("ThumbnailSize") +
+                             m_ThumbMetrics.Padding +
+                             ptGraphicsThumbGroup::InnerPadding*2;
 
   // Height of a cell, i.e. thumb height + height of text line with the filename + padding
-  m_ThumbMetrics.CellHeight =
-      m_ThumbMetrics.CellWidth + QFontMetrics(this->font()).lineSpacing() + m_ThumbMetrics.Padding;
+  m_ThumbMetrics.CellHeight = m_ThumbMetrics.CellWidth +
+                              QFontMetrics(this->font()).lineSpacing() +
+                              m_ThumbMetrics.Padding*2;
 
-  // +Padding because we only take care of padding *between* thumbnails here.
-  // -1 because we start at row 0
-  m_ThumbMetrics.MaxRow = (m_FilesView->height() + m_ThumbMetrics.Padding)
-                             / m_ThumbMetrics.CellHeight - 1;
 
-  m_ThumbMetrics.MaxCol = (m_FilesView->width() + m_ThumbMetrics.Padding)
-                             / m_ThumbMetrics.CellWidth - 1;
+  switch (m_ArrangeMode) {
+    case tamVerticalByRow: {
+      // +Padding because we only take care of padding *between* thumbnails here.
+      // -1 because we start at row 0
+      // This calculation does not take scrollbar width/height into account
+      m_ThumbMetrics.MaxCol =
+          qMin(Settings->GetInt("FileMgrThumbMaxRowCol"),
+               (m_FilesView->width() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellWidth - 1);
+
+      // Test if enough thumbs for scrollbar to appear. If yes check if enough empty space
+      // for scrollbar and if not, put one thumb less into row/column.
+      if((m_FilesView->height() - m_ThumbCount*m_ThumbMetrics.MaxCol) <
+         (m_FilesView->horizontalScrollBar()->height() + m_ThumbMetrics.Padding))
+      {
+        int cols = (int)((float)m_ThumbCount / (float)m_ThumbMetrics.MaxCol + 0.5);
+        if (cols > m_ThumbMetrics.MaxCol) {
+          m_ThumbMetrics.MaxCol--;
+        }
+      }
+      break;
+    }
+
+    case tamHorizontalByColumn: {
+      m_ThumbMetrics.MaxRow =
+          qMin(Settings->GetInt("FileMgrThumbMaxRowCol"),
+               (m_FilesView->height() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellHeight - 1);
+
+      if ((m_FilesView->width() - m_ThumbCount*m_ThumbMetrics.MaxRow) <
+          (m_FilesView->verticalScrollBar()->width() + m_ThumbMetrics.Padding))
+      {
+        int rows = (int)((float)m_ThumbCount / (float)m_ThumbMetrics.MaxRow + 0.5);
+        if (rows > m_ThumbMetrics.MaxRow) {
+          m_ThumbMetrics.MaxRow--;
+        }
+      }
+      break;
+    }
+
+    default:
+      assert(!"Unhandled ptArrangeMode");
+      break;
+  }
 }
 
 //==============================================================================

@@ -36,7 +36,7 @@ extern ptTheme* Theme;
 ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
 : QGraphicsRectItem(parent)
 {
-  m_isDir = false;
+  m_FSOType = fsoUnknown;
   m_FullPath = "";
   m_Pixmap = NULL;
   m_InfoText = NULL;
@@ -45,39 +45,42 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
   setAcceptedMouseButtons(Qt::LeftButton);
   setFiltersChildEvents(true);
   setCursor(QCursor(Qt::PointingHandCursor));
-  setPen(QPen(Qt::NoPen));
-  setBrush(QBrush(Qt::NoBrush));
+  setPen(QPen(Theme->ptBright, 0, Qt::DashLine, Qt::RoundCap, Qt::RoundJoin));
 }
 
 //==============================================================================
 
-void ptGraphicsThumbGroup::addItems(QGraphicsPixmapItem* pixmap,
-                                    const QString fullPath,
-                                    const QString description,
-                                    const bool isDir)
+void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
+                                        const QString description,
+                                        const ptFSOType fsoType)
 {
-  if (m_Pixmap) DelAndNull(m_Pixmap);
-  if (m_InfoText == NULL) m_InfoText = new QGraphicsTextItem;
-  m_isDir = isDir;
+  m_FSOType = fsoType;
   m_FullPath = fullPath;
   qreal ThumbSize = (qreal)Settings->GetInt("ThumbnailSize");
 
-  m_Pixmap = pixmap;
-  m_Pixmap->setParentItem(this);
-  // center pixmap in the cell if it is not square
-  // the +2 offset is for the hover border
-  m_Pixmap->setPos(ThumbSize/2 - pixmap->pixmap().width()/2  + 2 + 0.5,
-                   ThumbSize/2 - pixmap->pixmap().height()/2 + 2 + 0.5);
-
+  if (m_InfoText == NULL) m_InfoText = new QGraphicsTextItem;
   m_InfoText->setPlainText(CutFileName(description));
   m_InfoText->setParentItem(this);
-  m_InfoText->setPos(2, ThumbSize + 2);
+  m_InfoText->setPos(InnerPadding, ThumbSize + InnerPadding*2);
 
   // set rectangle size for the hover border
   this->setRect(0,
                 0,
-                ThumbSize + 5,
-                ThumbSize + m_InfoText->boundingRect().height() + 5);
+                ThumbSize + InnerPadding*2,
+                ThumbSize + InnerPadding*2 + m_InfoText->boundingRect().height());
+}
+
+//==============================================================================
+
+void ptGraphicsThumbGroup::addPixmap(QGraphicsPixmapItem* pixmap) {
+  if (m_Pixmap) DelAndNull(m_Pixmap);
+  qreal ThumbSize = (qreal)Settings->GetInt("ThumbnailSize");
+  m_Pixmap = pixmap;
+  m_Pixmap->setParentItem(this);
+  // center pixmap in the cell if it is not square
+  // the +2 offset is for the hover border
+  m_Pixmap->setPos(ThumbSize/2 - pixmap->pixmap().width()/2  + InnerPadding + 0.5,
+                   ThumbSize/2 - pixmap->pixmap().height()/2 + InnerPadding + 0.5);
 }
 
 //==============================================================================
@@ -86,13 +89,13 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
   switch (event->type()) {
     case QEvent::GraphicsSceneHoverEnter: {
       event->accept();
-      this->setPen(QPen(Theme->ptHighLight));
+      this->setPen(QPen(Theme->ptHighLight, 0, Qt::DashLine));
       return true;
     }
 
     case QEvent::GraphicsSceneHoverLeave: {
       event->accept();
-      this->setPen(QPen(Qt::NoPen));
+      setPen(QPen(Theme->ptBright, 0, Qt::DashLine));
       return true;
     }
 
@@ -105,10 +108,10 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
   case QEvent::GraphicsSceneMouseRelease: {
       event->accept();
       if (m_InfoText) {
-        if (m_isDir) {
-          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
-        } else {
+        if (m_FSOType == fsoFile) {
           ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
+        } else {
+          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
         }
       }
       return true;
@@ -118,6 +121,14 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
       return QGraphicsRectItem::sceneEvent(event);
     }
   }
+}
+
+//==============================================================================
+
+void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
+  painter->setPen(this->pen());
+  painter->setBrush(QBrush(Theme->ptDark));
+  painter->drawRoundedRect(this->rect(), 5, 5);
 }
 
 //==============================================================================

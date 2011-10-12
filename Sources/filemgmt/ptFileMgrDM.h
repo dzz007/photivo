@@ -30,7 +30,7 @@
 #include <QPixmap>
 #include <QFileSystemModel>
 #include <QGraphicsItemGroup>
-#include <QQueue>
+#include <QList>
 #include <QHash>
 
 #include "ptFileMgrThumbnailer.h"
@@ -107,7 +107,7 @@ public:
   ptFileMgrThumbnailer* thumbnailer() const { return m_Thumbnailer; }
 
   /*! Returns a pointer to the FIFO buffer containing image thumbnails. */
-  QQueue<ptGraphicsThumbGroup*>* thumbQueue() { return m_ThumbQueue; }
+  QList<ptGraphicsThumbGroup*>* thumbList() { return m_ThumbList; }
 
   /*! Returns a pointer to the model with the data for the tree view. */
   QFileSystemModel* treeModel() { return m_TreeModel; }
@@ -122,7 +122,7 @@ private:
 
   ptThumbnailCache*               m_Cache;
   ptFileMgrThumbnailer*           m_Thumbnailer;
-  QQueue<ptGraphicsThumbGroup*>*  m_ThumbQueue;
+  QList<ptGraphicsThumbGroup*>*   m_ThumbList;
   QFileSystemModel*               m_TreeModel;
 
 
