@@ -57,12 +57,12 @@ private:
   void CalcThumbMetrics();
 
   struct {
-    int Col;
-    int Row;
-    int MaxCol;
-    int MaxRow;
+    int Col;      // zero based index
+    int Row;      // zero based index
+    int MaxCol;   // max column index
+    int MaxRow;   // max row index
     int Padding;
-    int CellHeight;
+    int CellHeight;   // cell dimensions include padding
     int CellWidth;
   } m_ThumbMetrics;
 
@@ -71,7 +71,6 @@ private:
   ptFileMgrDM*            m_DataModel;
   QGraphicsScene*         m_FilesScene;
   bool                    m_IsFirstShow;
-  ptReportOverlay*        m_StatusOverlay;
   int                     m_ThumbCount;
   int                     m_ThumbListIdx;
 

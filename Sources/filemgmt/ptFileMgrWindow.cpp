@@ -20,7 +20,7 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
+// TODO: make m_PathInput editable
 #include <cassert>
 
 #include <QFileSystemModel>
@@ -43,7 +43,6 @@ extern QString ImageFileToOpen;
 
 ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
 : QWidget(parent),
-  m_ArrangeMode(tamVerticalByRow),
   m_IsFirstShow(true),
   m_ThumbCount(-1),
   m_ThumbListIdx(0)
@@ -73,15 +72,18 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
           this, SLOT(fetchNewPixmaps()));
 
   m_Progressbar->hide();
+  m_ArrangeMode = (ptThumbnailArrangeMode)Settings->GetInt("FileMgrThumbArrangeMode");
 
-//  m_StatusOverlay = new ptReportOverlay(m_FilesView, "Reading thumbnails",
-//                                        QColor(255,75,75), QColor(255,190,190),
-//                                        0, Qt::AlignLeft, 20);
-
-  QList <int> SizesList;
-  SizesList.append(250);
-  SizesList.append(1000); // Value obtained to avoid resizing at startup.
-  m_MainSplitter->setSizes(SizesList);
+  if (Settings->m_IniSettings->contains("FileMgrMainSplitter")) {
+    m_MainSplitter->restoreState(
+        Settings->m_IniSettings->value("FileMgrMainSplitter").toByteArray());
+  } else {
+    QList <int> SizesList;
+    SizesList.append(250);
+    SizesList.append(1000); // Value obtained to avoid resizing at startup.
+    m_MainSplitter->setSizes(SizesList);
+  }
+  m_MainSplitter->setStretchFactor(1,1);
 }
 
 //==============================================================================
@@ -89,10 +91,10 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
 ptFileMgrWindow::~ptFileMgrWindow() {
   Settings->SetValue("LastFileMgrLocation",
       m_DataModel->treeModel()->filePath(m_DirTree->currentIndex()) );
+  Settings->m_IniSettings->
+      setValue("FileMgrMainSplitter", m_MainSplitter->saveState());
 
-  DelAndNull(m_StatusOverlay);
-
-  // To avoid dangling pointers destroy singletons last.
+  // To avoid dangling pointers while executing the destroctor destroy singletons last.
   ptFileMgrDM::DestroyInstance();
   ptGraphicsSceneEmitter::DestroyInstance();
 }
@@ -132,8 +134,6 @@ void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
     m_Progressbar->show();
     m_PathInput->hide();
   }
-
-  m_FilesScene->setSceneRect(m_FilesScene->itemsBoundingRect());
 }
 
 //==============================================================================
@@ -216,42 +216,67 @@ void ptFileMgrWindow::CalcThumbMetrics() {
                               QFontMetrics(this->font()).lineSpacing() +
                               m_ThumbMetrics.Padding*2;
 
-
   switch (m_ArrangeMode) {
     case tamVerticalByRow: {
+      m_FilesView->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+
       // +Padding because we only take care of padding *between* thumbnails here.
       // -1 because we start at row 0
       // This calculation does not take scrollbar width/height into account
+      int RestrictedMax = Settings->GetInt("FileMgrRestrictThumbMaxRowCol") == 0 ?
+                          INT_MAX : Settings->GetInt("FileMgrRestrictThumbMaxRowCol");
       m_ThumbMetrics.MaxCol =
-          qMin(Settings->GetInt("FileMgrThumbMaxRowCol"),
+          qMin(RestrictedMax,
                (m_FilesView->width() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellWidth - 1);
 
-      // Test if enough thumbs for scrollbar to appear. If yes check if enough empty space
-      // for scrollbar and if not, put one thumb less into row/column.
-      if((m_FilesView->height() - m_ThumbCount*m_ThumbMetrics.MaxCol) <
-         (m_FilesView->horizontalScrollBar()->height() + m_ThumbMetrics.Padding))
-      {
-        int cols = (int)((float)m_ThumbCount / (float)m_ThumbMetrics.MaxCol + 0.5);
-        if (cols > m_ThumbMetrics.MaxCol) {
+      int FullHeight = qCeil((qreal)m_ThumbCount / (qreal)(m_ThumbMetrics.MaxCol + 1)) *
+                       m_ThumbMetrics.CellHeight;
+
+      if (FullHeight >= m_FilesView->height()) {
+        // we have enough thumbs to produce a vertical scrollbar
+        if((m_FilesView->width() - (m_ThumbMetrics.MaxCol + 1)*m_ThumbMetrics.CellWidth) <
+           m_FilesView->verticalScrollBar()->width())
+        { // empty space on the right is not wide enough for scrollbar
           m_ThumbMetrics.MaxCol--;
+          FullHeight = qCeil((qreal)m_ThumbCount / (qreal)(m_ThumbMetrics.MaxCol + 1)) *
+                       m_ThumbMetrics.CellHeight;
         }
       }
+
+      m_FilesScene->setSceneRect(
+          0, 0,
+          m_ThumbMetrics.CellWidth*(m_ThumbMetrics.MaxCol + 1) - m_ThumbMetrics.Padding,
+          FullHeight);
       break;
     }
 
     case tamHorizontalByColumn: {
+      m_FilesView->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+      int RestrictedMax = Settings->GetInt("FileMgrRestrictThumbMaxRowCol") == 0 ?
+                          INT_MAX : Settings->GetInt("FileMgrRestrictThumbMaxRowCol");
       m_ThumbMetrics.MaxRow =
-          qMin(Settings->GetInt("FileMgrThumbMaxRowCol"),
+          qMin(RestrictedMax - 1,
                (m_FilesView->height() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellHeight - 1);
 
-      if ((m_FilesView->width() - m_ThumbCount*m_ThumbMetrics.MaxRow) <
-          (m_FilesView->verticalScrollBar()->width() + m_ThumbMetrics.Padding))
-      {
-        int rows = (int)((float)m_ThumbCount / (float)m_ThumbMetrics.MaxRow + 0.5);
-        if (rows > m_ThumbMetrics.MaxRow) {
+      int FullWidth = qCeil((qreal)m_ThumbCount / (qreal)(m_ThumbMetrics.MaxRow + 1)) *
+                      m_ThumbMetrics.CellWidth;
+
+      if (FullWidth >= m_FilesView->width()) {
+        // we have enough thumbs to produce a vertical scrollbar
+        if((m_FilesView->height() - (m_ThumbMetrics.MaxRow + 1)*m_ThumbMetrics.CellHeight) <
+           m_FilesView->horizontalScrollBar()->height())
+        { // empty space on the bottom is not tall enough for scrollbar
           m_ThumbMetrics.MaxRow--;
+          FullWidth = qCeil((qreal)m_ThumbCount / (qreal)(m_ThumbMetrics.MaxRow + 1)) *
+                       m_ThumbMetrics.CellWidth;
         }
       }
+
+      m_FilesScene->setSceneRect(
+          0, 0,
+          FullWidth,
+          m_ThumbMetrics.CellHeight*(m_ThumbMetrics.MaxRow + 1) - m_ThumbMetrics.Padding);
       break;
     }
 
@@ -264,15 +289,16 @@ void ptFileMgrWindow::CalcThumbMetrics() {
 //==============================================================================
 
 void ptFileMgrWindow::showEvent(QShowEvent* event) {
-  // When the file manager is opened for the first time set initally selected directory
+  // Execute only when the file manager is opened for the first time
   if (m_IsFirstShow) {
+    // Theme and layout stuff
     setStyle(Theme->ptStyle);
     setStyleSheet(Theme->ptStyleSheet);
     m_FileListLayout->setContentsMargins(10,10,10,10);
     m_FileListLayout->setSpacing(5);
-
     m_Progressbar->setFixedHeight(m_PathInput->height());
 
+    // set initally selected directory
     QString lastDir = Settings->GetString("LastFileMgrLocation");
     QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
 
@@ -284,6 +310,7 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 
     m_PathInput->setText(
         QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(m_DirTree->currentIndex())));
+
     m_IsFirstShow = false;
   }
 
