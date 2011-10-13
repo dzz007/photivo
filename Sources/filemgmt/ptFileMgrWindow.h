@@ -42,7 +42,7 @@ class ptFileMgrWindow: public QWidget, public Ui::ptFileMgrWindow {
 Q_OBJECT
 
 public:
-  explicit ptFileMgrWindow(QWidget *parent = 0);
+  explicit ptFileMgrWindow(QWidget* parent = 0);
   ~ptFileMgrWindow();
 
 
@@ -75,11 +75,14 @@ private:
   int                     m_ThumbListIdx;
 
 
-private slots:
+public slots:
   void changeTreeDir(const QModelIndex& index);
+
+private slots:
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
   void fetchNewPixmaps();
   void fetchNewThumbs(const bool isLast);
+  void on_m_PathInput_returnPressed();
 
 signals:
   void FileMgrWindowClosed();

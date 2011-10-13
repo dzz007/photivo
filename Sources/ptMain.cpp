@@ -1051,6 +1051,11 @@ void CB_Event0() {
   }
 
   InStartup = 0;
+
+  if (Settings->GetInt("FileMgrIsOpen")) {
+    FileMgrWindow->changeTreeDir(FileMgrWindow->m_DirTree->currentIndex());
+  }
+
 //prepare for further QFileOpenEvent(s)
 #ifdef Q_OS_MAC
   TheApplication->macinit();

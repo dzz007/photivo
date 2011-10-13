@@ -41,7 +41,7 @@ extern QString ImageFileToOpen;
 
 //==============================================================================
 
-ptFileMgrWindow::ptFileMgrWindow(QWidget *parent)
+ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 : QWidget(parent),
   m_IsFirstShow(true),
   m_ThumbCount(-1),
@@ -343,6 +343,22 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     m_DirTree->setCurrentIndex(
         qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->index(location) );
     changeTreeDir(m_DirTree->currentIndex());
+  }
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::on_m_PathInput_returnPressed() {
+  QDir dir = QDir(m_PathInput->text());
+  QString treeDir = m_DataModel->treeModel()->filePath(m_DirTree->currentIndex());
+
+  if (dir.exists() && (dir != QDir(treeDir))) {
+    m_PathInput->setText(dir.absolutePath());
+    m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(dir.absolutePath()));
+    changeTreeDir(m_DirTree->currentIndex());
+
+  } else {
+    m_PathInput->setText(QDir::toNativeSeparators(treeDir));
   }
 }
 
