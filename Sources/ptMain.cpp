@@ -3601,6 +3601,7 @@ void CB_ZoomFullButton() {
 
 void CB_FullScreenButton(const int State) {
   if (State == 1) {
+    MainWindow->raise();
     MainWindow->showFullScreen();
     Settings->SetValue("FullscreenActive", 1);
   } else {
