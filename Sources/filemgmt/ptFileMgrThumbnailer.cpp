@@ -237,12 +237,13 @@ void ptFileMgrThumbnailer::GenerateThumbnail(Magick::Image& image,
   }
   ptMemoryError(ImgBuffer,__FILE__,__LINE__);
   image.write(0, 0, w, h, "BGRA", Magick::CharPixel, ImgBuffer);
+
   QPixmap px;
   // Detour via QImage necessary because QPixmap does not allow direct
   // access to the pixel data.
   px.convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB32));
+  thumbPixmap->setPixmap(px.copy());
   FREE(ImgBuffer);
-  thumbPixmap->setPixmap(px);
 }
 
 //==============================================================================
