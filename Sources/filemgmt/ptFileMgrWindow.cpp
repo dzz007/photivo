@@ -103,6 +103,16 @@ ptFileMgrWindow::~ptFileMgrWindow() {
 //==============================================================================
 
 void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
+  DisplayThumbnails(index, false);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::DisplayThumbnails(const QModelIndex& index, bool clearCache /*= false*/) {
+  if (clearCache) {
+    //TODO: clear the cache
+  }
+
   m_PathInput->setText(
       QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(m_DirTree->currentIndex())));
 
@@ -291,13 +301,13 @@ void ptFileMgrWindow::CalcThumbMetrics() {
 //==============================================================================
 
 void ptFileMgrWindow::showEvent(QShowEvent* event) {
-  // Execute only when the file manager is opened for the first time
   if (m_IsFirstShow) {
+    // Execute only when the file manager is opened for the first time
     // Theme and layout stuff
     setStyle(Theme->ptStyle);
     setStyleSheet(Theme->ptStyleSheet);
     m_FileListLayout->setContentsMargins(10,10,10,10);
-    m_FileListLayout->setSpacing(5);
+    m_FileListLayout->setSpacing(10);
     m_Progressbar->setFixedHeight(m_PathInput->height());
 
     // set initally selected directory
@@ -313,22 +323,50 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     m_PathInput->setText(
         QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(m_DirTree->currentIndex())));
 
+    QWidget::showEvent(event);
     m_IsFirstShow = false;
+    return;
   }
 
   QWidget::showEvent(event);
+
+  // Thumbnails are cleared to free memory when the fm window is closed,
+  // i.e. we need to refresh the display when opening it again.
+  DisplayThumbnails(m_DirTree->currentIndex());
 }
 
 //==============================================================================
 
 bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
-  // Resize event
-  // Rearrange thumbnails when size of viewport changes
   if (obj == m_FilesView && event->type() == QEvent::Resize) {
+    // Resize event: Rearrange thumbnails when size of viewport changes
     ArrangeThumbnails();
     return false;
+
   } else {
+    // make sure parent event filters are executed
     return QWidget::eventFilter(obj, event);
+  }
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
+  // Esc: close file manager
+  if (event->key() == Qt::Key_Escape && event->modifiers() == Qt::NoModifier) {
+    CloseWindow();
+
+  // Ctrl+M: close file manager
+  } else if (event->key() == Qt::Key_M && event->modifiers() == Qt::ControlModifier) {
+    CloseWindow();
+
+  // F5: refresh thumbnails
+  } else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::NoModifier) {
+    DisplayThumbnails(m_DirTree->currentIndex());
+
+  // Shift+F5: clear cache and refresh thumbnails
+  } else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::ShiftModifier) {
+    DisplayThumbnails(m_DirTree->currentIndex(), true);
   }
 }
 
@@ -336,15 +374,13 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 
 void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const QString location) {
   if (action == tnaLoadImage) {
-    emit FileMgrWindowClosed();
-    m_FilesScene->clear();
+    CloseWindow();
     ImageFileToOpen = location;
     CB_MenuFileOpen(1);
 
   } else if (action == tnaChangeDir) {
-    m_DirTree->setCurrentIndex(
-        qobject_cast<QFileSystemModel*>(m_DataModel->treeModel())->index(location) );
-    changeTreeDir(m_DirTree->currentIndex());
+    m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(location));
+    DisplayThumbnails(m_DirTree->currentIndex());
   }
 }
 
@@ -357,11 +393,34 @@ void ptFileMgrWindow::on_m_PathInput_returnPressed() {
   if (dir.exists() && (dir != QDir(treeDir))) {
     m_PathInput->setText(dir.absolutePath());
     m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(dir.absolutePath()));
-    changeTreeDir(m_DirTree->currentIndex());
+    DisplayThumbnails(m_DirTree->currentIndex());
 
   } else {
     m_PathInput->setText(QDir::toNativeSeparators(treeDir));
   }
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::UpdateTheme() {
+  // Update file manager window appearance
+  setStyle(Theme->ptStyle);
+  setStyleSheet(Theme->ptStyleSheet);
+  m_Progressbar->setFixedHeight(m_PathInput->height());
+
+  // Thumbgroups don’t need to be updated because Photivo theme can only be changed
+  // while fm is closed = thumbnail display cleared
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::CloseWindow() {
+  // File manager can’t close its window itself. That’s handled by the main window.
+  // Signal tells main window to perform necessary closing actions.
+  emit FileMgrWindowClosed();
+
+  // free memory occupied by thumbnails
+  m_FilesScene->clear();
 }
 
 //==============================================================================
