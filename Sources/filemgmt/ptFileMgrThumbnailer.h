@@ -57,6 +57,11 @@ public:
   /*! Destroys a \c ptFileMgrThumbnailer object. */
   ~ptFileMgrThumbnailer();
 
+  /*! Sends an abort request to the thread and waits until the thread has stopped
+    before returning. Calling \c Abort() on a not running thread does nothing.
+  */
+  void Abort();
+
   /*! Sets the cache for thumbnail objects. */
   void setCache(ptThumbnailCache* cache);
 
@@ -73,20 +78,19 @@ public:
   */
   void setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList);
 
-  /*! This function does the actual thumbnail generating. */
-  void run();
-
 
 protected:
-
+  /*! This function does the actual thumbnail generating. */
+  void run();
 
 
 private:
   // Resizes the image to the specified size and writes it to the pixmap
   void GenerateThumbnail(Magick::Image& image,
-                         QGraphicsPixmapItem* thumbPixmap,
+                         QPixmap* thumbPixmap,
                          const int thumbSize);
 
+  bool                            m_AbortRequested;
   ptThumbnailCache*               m_Cache;
   QDir*                           m_Dir;
   QList<ptGraphicsThumbGroup*>*   m_ThumbList;
@@ -94,7 +98,7 @@ private:
 
 signals:
   void newThumbsNotify(const bool isLast);
-  void newPixmapsNotify();
+  void newPixmapNotify(ptGraphicsThumbGroup* group, QPixmap* pix);
 
 
 public slots:

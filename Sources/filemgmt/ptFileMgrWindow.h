@@ -80,7 +80,7 @@ public slots:
 
 private slots:
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
-  void fetchNewPixmaps();
+  void fetchNewPixmaps(ptGraphicsThumbGroup* group, QPixmap* pix);
   void fetchNewThumbs(const bool isLast);
   void on_m_PathInput_returnPressed();
 

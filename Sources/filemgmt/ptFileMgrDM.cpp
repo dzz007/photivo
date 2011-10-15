@@ -111,20 +111,13 @@ int ptFileMgrDM::setThumbnailDir(const QModelIndex index) {
 //==============================================================================
 
 void ptFileMgrDM::StartThumbnailer() {
-  m_Thumbnailer->run();
+  m_Thumbnailer->start();
 }
 
 //==============================================================================
 
 void ptFileMgrDM::StopThumbnailer() {
-  if (m_Thumbnailer->isRunning()) {
-    m_Thumbnailer->exit();
-
-    // TODO: quick&dirty. Probably more elegantly solved via the thread's finished() signal.
-    while (!m_Thumbnailer->isFinished()) {
-      QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-    }
-  }
+  m_Thumbnailer->Abort();
 }
 
 //==============================================================================
