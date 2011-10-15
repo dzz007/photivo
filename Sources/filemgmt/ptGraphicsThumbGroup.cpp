@@ -21,6 +21,7 @@
 *******************************************************************************/
 
 #include <QCursor>
+#include <QFontMetrics>
 
 #include "../ptDefines.h"
 #include "../ptTheme.h"
@@ -39,13 +40,14 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
   m_FSOType = fsoUnknown;
   m_FullPath = "";
   m_Pixmap = NULL;
+  m_ImgTypeText = NULL;
   m_InfoText = NULL;
 
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::LeftButton);
   setFiltersChildEvents(true);
   setCursor(QCursor(Qt::PointingHandCursor));
-  setPen(QPen(Theme->ptBright, 0, Qt::DashLine, Qt::RoundCap, Qt::RoundJoin));
+  setPen(QPen(Theme->ptBright, 0, Qt::DashLine));
 }
 
 //==============================================================================
@@ -58,10 +60,33 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
   m_FullPath = fullPath;
   qreal ThumbSize = (qreal)Settings->GetInt("ThumbnailSize");
 
-  if (m_InfoText == NULL) m_InfoText = new QGraphicsTextItem;
-  m_InfoText->setPlainText(CutFileName(description));
-  m_InfoText->setParentItem(this);
+  // main description text: currently just the filename
+  if (m_InfoText == NULL) {
+    m_InfoText = new QGraphicsTextItem;
+    m_InfoText->setParentItem(this);
+  }
+  m_InfoText->setPlainText(QFontMetrics(m_InfoText->font()).elidedText(description,
+                                                                       Qt::ElideRight,
+                                                                       (int)ThumbSize));
   m_InfoText->setPos(InnerPadding, ThumbSize + InnerPadding*2);
+
+  // file type display in topleft corner (images only)
+  if (fsoType == fsoFile) {
+    int SuffixStart = fullPath.lastIndexOf(".");
+    QString Suffix = SuffixStart == -1 ? "" : fullPath.mid(SuffixStart + 1);
+
+    if (m_ImgTypeText == NULL) {
+      m_ImgTypeText = new QGraphicsSimpleTextItem;
+      QFont tempFont = m_InfoText->font();
+      tempFont.setBold(true);
+      m_ImgTypeText->setFont(tempFont);
+      m_ImgTypeText->setBrush(QBrush(Theme->ptText));
+      m_ImgTypeText->setPos(InnerPadding, InnerPadding);
+      m_ImgTypeText->setParentItem(this);
+    }
+
+    m_ImgTypeText->setText(Suffix.toUpper());
+  }
 
   // set rectangle size for the hover border
   this->setRect(0,
@@ -72,15 +97,15 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 
 //==============================================================================
 
-void ptGraphicsThumbGroup::addPixmap(QGraphicsPixmapItem* pixmap) {
-  if (m_Pixmap) DelAndNull(m_Pixmap);
+void ptGraphicsThumbGroup::addPixmap(QPixmap* pixmap) {
   qreal ThumbSize = (qreal)Settings->GetInt("ThumbnailSize");
-  m_Pixmap = pixmap;
-  m_Pixmap->setParentItem(this);
+  if (!m_Pixmap) m_Pixmap = new QGraphicsPixmapItem;
+  m_Pixmap->setPixmap(pixmap->copy());
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
-  m_Pixmap->setPos(ThumbSize/2 - pixmap->pixmap().width()/2  + InnerPadding + 0.5,
-                   ThumbSize/2 - pixmap->pixmap().height()/2 + InnerPadding + 0.5);
+  m_Pixmap->setPos(ThumbSize/2 - pixmap->width()/2  + InnerPadding + 0.5,
+                   ThumbSize/2 - pixmap->height()/2 + InnerPadding + 0.5);
+  m_Pixmap->setParentItem(this);
 }
 
 //==============================================================================
@@ -129,20 +154,6 @@ void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsIt
   painter->setPen(this->pen());
   painter->setBrush(QBrush(Theme->ptDark));
   painter->drawRoundedRect(this->rect(), 5, 5);
-}
-
-//==============================================================================
-
-QString ptGraphicsThumbGroup::CutFileName(const QString FileName) {
-  int SuffixStart = FileName.lastIndexOf(".");
-  QString BaseName = FileName.left(SuffixStart);
-  QString Suffix = SuffixStart == -1 ? "" : FileName.mid(SuffixStart);
-
-  if (BaseName.size() > 16) {
-    BaseName = QString("%1...").arg(BaseName.left(13));
-  }
-
-  return BaseName + Suffix;
 }
 
 //==============================================================================

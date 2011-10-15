@@ -58,7 +58,7 @@ public:
       \param pixmap
         A pointer to the \c QPixmap thumnail image.
   */
-  void addPixmap(QGraphicsPixmapItem* pixmap);
+  void addPixmap(QPixmap* pixmap);
 
   /*! Return the type of file system object this thumbnail group refers to. */
   ptFSOType fsoType() { return m_FSOType; }
@@ -96,15 +96,14 @@ protected:
 
 
 private:
-  QString CutFileName(const QString FileName);
-
   QString   m_FullPath;
   ptFSOType m_FSOType;
 
-  // These two objects don’t need to be destroyed explicitely in the destructor.
+  // Following objects don’t need to be destroyed explicitely in the destructor.
   // Because they are children that happens automatically.
-  QGraphicsPixmapItem* m_Pixmap;
-  QGraphicsTextItem*   m_InfoText;
+  QGraphicsPixmapItem*      m_Pixmap;
+  QGraphicsSimpleTextItem*  m_ImgTypeText;
+  QGraphicsTextItem*        m_InfoText;
 };
 
 //==============================================================================

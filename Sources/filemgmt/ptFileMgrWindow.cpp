@@ -20,7 +20,7 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-// TODO: make m_PathInput editable
+
 #include <cassert>
 
 #include <QFileSystemModel>
@@ -61,6 +61,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_DirTree->setColumnHidden(2, true);
   m_DirTree->setColumnHidden(3, true);
   connect(m_DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
+  connect(m_DirTree, SIGNAL(activated(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
 
   // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
@@ -68,8 +69,8 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_FilesView->setScene(m_FilesScene);
   connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify(const bool)),
           this, SLOT(fetchNewThumbs(const bool)));
-  connect(m_DataModel->thumbnailer(), SIGNAL(newPixmapsNotify()),
-          this, SLOT(fetchNewPixmaps()));
+  connect(m_DataModel->thumbnailer(), SIGNAL(newPixmapNotify(ptGraphicsThumbGroup*,QPixmap*)),
+          this, SLOT(fetchNewPixmaps(ptGraphicsThumbGroup*,QPixmap*)));
 
   m_Progressbar->hide();
   m_ArrangeMode = (ptThumbnailArrangeMode)Settings->GetInt("FileMgrThumbArrangeMode");
@@ -138,10 +139,11 @@ void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
 
 //==============================================================================
 
-void ptFileMgrWindow::fetchNewPixmaps() {
-  // We don’t actually need to fetch anything. Adding the QPixmap to the thumb group
-  // automatically updates the viewport. So only the progress bar is left.
+void ptFileMgrWindow::fetchNewPixmaps(ptGraphicsThumbGroup* group, QPixmap* pix) {
   m_Progressbar->setValue(m_Progressbar->value() + 1);
+
+  // Adding the image to the group must be done from the main GUI thread.
+  group->addPixmap(pix);
 
   if (m_Progressbar->value() >= m_ThumbCount) {
     m_Progressbar->hide();
