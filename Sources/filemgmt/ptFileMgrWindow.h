@@ -42,12 +42,41 @@ class ptFileMgrWindow: public QWidget, public Ui::ptFileMgrWindow {
 Q_OBJECT
 
 public:
+  /*! Creates a \c ptFileMgrWindow instance.
+    \param parent
+      The file manager’s parent window.
+  */
   explicit ptFileMgrWindow(QWidget* parent = 0);
+
+  /*! Destroys a \c ptFileMgrWindow instance. */
   ~ptFileMgrWindow();
+
+  /*! Creates or refreshes the thumbnail display.
+    \param index
+      The model index corresponding to the desired directory.
+    \param clearCache
+      Set this flag to \c true if you want to clear the thumbnail cache.
+      Default is \c false.
+  */
+  void DisplayThumbnails(const QModelIndex& index, bool clearCache = false);
+
+  /*! Updates the file manager’s visual appearance.
+      Call this once every time Photivo’s theme changes.
+  */
+  void UpdateTheme();
 
 
 protected:
+  /*! Reimplemented from QObject::eventFilter() */
   bool eventFilter(QObject* obj, QEvent* event);
+
+  /*! Reimplemented from QWidget::keyPressEvent().
+    The file manager handles its keys completely on its own. The main window
+    is only responsible for the Ctrl+M shortcut to open the manager window.
+  */
+  void keyPressEvent(QKeyEvent* event);
+
+  /*! Reimplemented from QWidget::showEvent() */
   void showEvent(QShowEvent* event);
 
 
@@ -55,6 +84,7 @@ private:
   void ArrangeThumbnail(ptGraphicsThumbGroup* thumb);
   void ArrangeThumbnails();
   void CalcThumbMetrics();
+  void CloseWindow();
 
   struct {
     int Col;      // zero based index
@@ -63,9 +93,8 @@ private:
     int MaxRow;   // max row index
     int Padding;
     int CellHeight;   // cell dimensions include padding
-    int CellWidth;
+    int CellWidth;    //
   } m_ThumbMetrics;
-
 
   ptThumbnailArrangeMode  m_ArrangeMode;
   ptFileMgrDM*            m_DataModel;
@@ -76,9 +105,9 @@ private:
 
 
 public slots:
-  void changeTreeDir(const QModelIndex& index);
 
 private slots:
+  void changeTreeDir(const QModelIndex& index);
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
   void fetchNewPixmaps(ptGraphicsThumbGroup* group, QPixmap* pix);
   void fetchNewThumbs(const bool isLast);

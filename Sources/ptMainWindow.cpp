@@ -1694,12 +1694,6 @@ void CB_SearchBarEnableCheck(const QVariant State);
 
 // Catch keyboard shortcuts
 void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
-  if (Settings->GetInt("FileMgrIsOpen") && Event->key() == Qt::Key_Escape) {
-    CloseFileMgrWindow();
-    return;
-  }
-
-
   if (Event->key()==Qt::Key_Escape) {// back to used view
     if (Settings->GetInt("SpecialPreview") != ptSpecialPreview_RGB) {
         CB_SpecialPreviewChoice(ptSpecialPreview_RGB);

@@ -1053,7 +1053,8 @@ void CB_Event0() {
   InStartup = 0;
 
   if (Settings->GetInt("FileMgrIsOpen")) {
-    FileMgrWindow->changeTreeDir(FileMgrWindow->m_DirTree->currentIndex());
+    FileMgrWindow->DisplayThumbnails(FileMgrWindow->m_DirTree->currentIndex());
+    FileMgrWindow->m_FilesView->setFocus(Qt::OtherFocusReason);
   }
 
 //prepare for further QFileOpenEvent(s)
@@ -3882,6 +3883,7 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
   CB_SliderWidthInput(Settings->GetInt("SliderWidth"));
+  FileMgrWindow->UpdateTheme();
 }
 
 void CB_StyleHighLightChoice(const QVariant Choice) {
