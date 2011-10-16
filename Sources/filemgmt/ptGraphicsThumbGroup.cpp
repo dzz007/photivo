@@ -62,12 +62,13 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 
   // main description text: currently just the filename
   if (m_InfoText == NULL) {
-    m_InfoText = new QGraphicsTextItem;
+    m_InfoText = new QGraphicsSimpleTextItem;
     m_InfoText->setParentItem(this);
   }
-  m_InfoText->setPlainText(QFontMetrics(m_InfoText->font()).elidedText(description,
-                                                                       Qt::ElideRight,
-                                                                       (int)ThumbSize));
+  m_InfoText->setText(QFontMetrics(m_InfoText->font()).elidedText(description,
+                                                                  Qt::ElideRight,
+                                                                  (int)ThumbSize));
+  m_ImgTypeText->setBrush(QBrush(Theme->ptText));
   m_InfoText->setPos(InnerPadding, ThumbSize + InnerPadding*2);
 
   // file type display in topleft corner (images only)
@@ -77,7 +78,7 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 
     if (m_ImgTypeText == NULL) {
       m_ImgTypeText = new QGraphicsSimpleTextItem;
-      QFont tempFont = m_InfoText->font();
+      QFont tempFont = m_ImgTypeText->font();
       tempFont.setBold(true);
       m_ImgTypeText->setFont(tempFont);
       m_ImgTypeText->setBrush(QBrush(Theme->ptText));

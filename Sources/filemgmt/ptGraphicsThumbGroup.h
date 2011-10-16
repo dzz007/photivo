@@ -104,7 +104,7 @@ private:
   // Because they are children that happens automatically.
   QGraphicsPixmapItem*      m_Pixmap;
   QGraphicsSimpleTextItem*  m_ImgTypeText;
-  QGraphicsTextItem*        m_InfoText;
+  QGraphicsSimpleTextItem*  m_InfoText;
 };
 
 //==============================================================================
