@@ -109,7 +109,7 @@ public slots:
 private slots:
   void changeTreeDir(const QModelIndex& index);
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
-  void fetchNewPixmaps(ptGraphicsThumbGroup* group, QPixmap* pix);
+  void fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix);
   void fetchNewThumbs(const bool isLast);
   void on_m_PathInput_returnPressed();
 

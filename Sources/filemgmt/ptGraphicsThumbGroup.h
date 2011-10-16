@@ -58,7 +58,7 @@ public:
       \param pixmap
         A pointer to the \c QPixmap thumnail image.
   */
-  void addPixmap(QPixmap* pixmap);
+  void addImage(QImage* image);
 
   /*! Return the type of file system object this thumbnail group refers to. */
   ptFSOType fsoType() { return m_FSOType; }

@@ -67,10 +67,10 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_FilesScene = new QGraphicsScene(m_FilesView);
   m_FilesView->installEventFilter(this);
   m_FilesView->setScene(m_FilesScene);
-  connect(m_DataModel->thumbnailer(), SIGNAL(newThumbsNotify(const bool)),
+  connect(m_DataModel->thumbnailer(), SIGNAL(newThumbNotify(const bool)),
           this, SLOT(fetchNewThumbs(const bool)));
-  connect(m_DataModel->thumbnailer(), SIGNAL(newPixmapNotify(ptGraphicsThumbGroup*,QPixmap*)),
-          this, SLOT(fetchNewPixmaps(ptGraphicsThumbGroup*,QPixmap*)));
+  connect(m_DataModel->thumbnailer(), SIGNAL(newImageNotify(ptGraphicsThumbGroup*,QImage*)),
+          this, SLOT(fetchNewImages(ptGraphicsThumbGroup*,QImage*)));
 
   m_Progressbar->hide();
   m_ArrangeMode = (ptThumbnailArrangeMode)Settings->GetInt("FileMgrThumbArrangeMode");
@@ -149,11 +149,11 @@ void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
 
 //==============================================================================
 
-void ptFileMgrWindow::fetchNewPixmaps(ptGraphicsThumbGroup* group, QPixmap* pix) {
+void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
   m_Progressbar->setValue(m_Progressbar->value() + 1);
 
   // Adding the image to the group must be done from the main GUI thread.
-  group->addPixmap(pix);
+  group->addImage(pix);
 
   if (m_Progressbar->value() >= m_ThumbCount) {
     m_Progressbar->hide();

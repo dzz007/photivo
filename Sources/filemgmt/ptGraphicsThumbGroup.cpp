@@ -97,14 +97,16 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 
 //==============================================================================
 
-void ptGraphicsThumbGroup::addPixmap(QPixmap* pixmap) {
+void ptGraphicsThumbGroup::addImage(QImage* image) {
   qreal ThumbSize = (qreal)Settings->GetInt("ThumbnailSize");
   if (!m_Pixmap) m_Pixmap = new QGraphicsPixmapItem;
-  m_Pixmap->setPixmap(pixmap->copy());
+
+  m_Pixmap->setPixmap(QPixmap::fromImage(*image));
+  //DelAndNull(image);
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
-  m_Pixmap->setPos(ThumbSize/2 - pixmap->width()/2  + InnerPadding + 0.5,
-                   ThumbSize/2 - pixmap->height()/2 + InnerPadding + 0.5);
+  m_Pixmap->setPos(ThumbSize/2 - image->width()/2  + InnerPadding + 0.5,
+                   ThumbSize/2 - image->height()/2 + InnerPadding + 0.5);
   m_Pixmap->setParentItem(this);
 }
 
