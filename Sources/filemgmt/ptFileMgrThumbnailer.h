@@ -86,9 +86,7 @@ protected:
 
 private:
   // Resizes the image to the specified size and writes it to the pixmap
-  void GenerateThumbnail(Magick::Image& image,
-                         QPixmap* thumbPixmap,
-                         const int thumbSize);
+  QImage* GenerateThumbnail(Magick::Image& image, const int thumbSize);
 
   bool                            m_AbortRequested;
   ptThumbnailCache*               m_Cache;
@@ -97,8 +95,8 @@ private:
 
 
 signals:
-  void newThumbsNotify(const bool isLast);
-  void newPixmapNotify(ptGraphicsThumbGroup* group, QPixmap* pix);
+  void newThumbNotify(const bool isLast);
+  void newImageNotify(ptGraphicsThumbGroup* group, QImage* pix);
 
 
 public slots:

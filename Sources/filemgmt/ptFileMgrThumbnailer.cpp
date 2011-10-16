@@ -127,11 +127,11 @@ void ptFileMgrThumbnailer::run() {
                              type);
     m_ThumbList->append(thumbGroup);
 
-    emit newThumbsNotify(false);
+    emit newThumbNotify(false);
   }
 
   // final notification: signals end of step 1 to GUI thread
-  emit newThumbsNotify(true);
+  emit newThumbNotify(true);
 
 
 /***
@@ -144,16 +144,16 @@ void ptFileMgrThumbnailer::run() {
       return;
     }
 
-    QPixmap* thumbPixmap = new QPixmap;
+    QImage* thumbImage = NULL;
     ptGraphicsThumbGroup* currentGroup = m_ThumbList->at(i);
 
     if (currentGroup->fsoType() == fsoParentDir) {
       // we have a parent directory
-      thumbPixmap->load(QString::fromUtf8(":/photivo/FileManager/up.png"));
+      thumbImage = new QImage(QString::fromUtf8(":/photivo/FileManager/up.png"));
 
     } else if (currentGroup->fsoType() == fsoDir) {
       // we have a subdirectory
-      thumbPixmap->load(QString::fromUtf8(":/photivo/FileManager/folder.png"));
+      thumbImage = new QImage(QString::fromUtf8(":/photivo/FileManager/folder.png"));
 
     } else {
       // we have a file, see if we can get a thumbnail image
@@ -169,10 +169,10 @@ void ptFileMgrThumbnailer::run() {
             image.size(Magick::Geometry(2*thumbsSize, 2*thumbsSize));
             image.read(blob);
 
-            GenerateThumbnail(image, thumbPixmap, thumbsSize);
+            thumbImage = GenerateThumbnail(image, thumbsSize);
           } catch (Magick::Exception &Error) {
             // ... not supported
-            DelAndNull(thumbPixmap);
+            DelAndNull(thumbImage);
           }
         }
         DelAndNull(ba);
@@ -184,24 +184,24 @@ void ptFileMgrThumbnailer::run() {
           image.size(Magick::Geometry(2*thumbsSize, 2*thumbsSize));
           image.read(currentGroup->fullPath().toAscii().data());
 
-          GenerateThumbnail(image, thumbPixmap, thumbsSize);
+          thumbImage = GenerateThumbnail(image, thumbsSize);
         } catch (Magick::Exception &Error) {
           // ... or not a supported image file at all
-          DelAndNull(thumbPixmap);
+          DelAndNull(thumbImage);
         }
       }
     }
 
     // Notification signal for each finished thumb image.
-    emit newPixmapNotify(m_ThumbList->at(i), thumbPixmap);
+    emit newImageNotify(m_ThumbList->at(i), thumbImage);
   }
 }
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::GenerateThumbnail(Magick::Image& image,
-                                             QPixmap* thumbPixmap,
-                                             const int thumbSize) {
+QImage* ptFileMgrThumbnailer::GenerateThumbnail(Magick::Image& image, const int thumbSize)
+{
+//  if (thumbImage != NULL) DelAndNull(thumbImage);
   // We want 8bit RGB data without alpha channel, scaled to thumbnail size
   image.depth(8);
   image.magick("RGB");
@@ -221,22 +221,27 @@ void ptFileMgrThumbnailer::GenerateThumbnail(Magick::Image& image,
   // Get the raw image data from GM.
   uint w = image.columns();
   uint h = image.rows();
-  uint8_t* ImgBuffer = NULL;
-  try {
-    ImgBuffer = (uint8_t*)CALLOC(w * h * 4, sizeof(ImgBuffer));
-  } catch (std::bad_alloc) {
-    // TODO: Cleanup!
-    printf("\n********************\n\nMemory error in thumbnail generator\n\n********************\n\n");
-    fflush(stdout);
-    throw std::bad_alloc();
-  }
-  ptMemoryError(ImgBuffer,__FILE__,__LINE__);
-  image.write(0, 0, w, h, "BGRA", Magick::CharPixel, ImgBuffer);
 
-  // Detour via QImage necessary because QPixmap does not allow direct
-  // access to the pixel data.
-  thumbPixmap->convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB32));
-  FREE(ImgBuffer);
+  QImage* thumbImage = new QImage(w, h, QImage::Format_RGB32);
+  image.write(0, 0, w, h, "BGRA", Magick::CharPixel, (uchar*)thumbImage->scanLine(0));
+  return thumbImage;
+
+//  uint8_t* ImgBuffer = NULL;
+//  try {
+//    ImgBuffer = (uint8_t*)CALLOC(w * h * 4, sizeof(ImgBuffer));
+//  } catch (std::bad_alloc) {
+//    // TODO: Cleanup!
+//    printf("\n********************\n\nMemory error in thumbnail generator\n\n********************\n\n");
+//    fflush(stdout);
+//    throw std::bad_alloc();
+//  }
+//  ptMemoryError(ImgBuffer,__FILE__,__LINE__);
+//  image.write(0, 0, w, h, "BGRA", Magick::CharPixel, ImgBuffer);
+
+//  // Detour via QImage necessary because QPixmap does not allow direct
+//  // access to the pixel data.
+//  thumbImage->convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB32));
+//  FREE(ImgBuffer);
 }
 
 //==============================================================================
