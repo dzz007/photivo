@@ -54,7 +54,7 @@ public:
                     const QString description,
                     const ptFSOType fsoType);
 
-  /*! Adds the thumbnail image to the thumbnail group.
+  /*! Adds the thumbnail image to the thumbnail group. Warning: \c addImage() deletes \c image.
       \param pixmap
         A pointer to the \c QPixmap thumnail image.
   */
