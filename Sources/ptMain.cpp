@@ -53,18 +53,19 @@
 #include "ptWiener.h"
 #include "ptParseCli.h"
 #include "qtsingleapplication/qtsingleapplication.h"
-#ifdef Q_OS_MAC
-    #include <QFileOpenEvent>
-#endif
-
 #include <Magick++.h>
 
-#ifdef Q_OS_WIN32
-#include "qt_windows.h"
-#include "qlibrary.h"
-#ifndef CSIDL_APPDATA
-#define CSIDL_APPDATA 0x001a
+#ifdef Q_OS_MAC
+  #include <QFileOpenEvent>
 #endif
+
+#ifdef Q_WS_WIN
+  #include "qt_windows.h"
+  #include "qlibrary.h"
+  #include "ptEcWin7.h"
+  #ifndef CSIDL_APPDATA
+    #define CSIDL_APPDATA 0x001a
+  #endif
 #endif
 
 using namespace std;
@@ -1244,7 +1245,12 @@ void copyFolder(QString sourceFolder, QString destFolder)
 void Update(short Phase,
             short SubPhase      /* = -1 */,
             short WithIdentify  /* = 1 */,
-            short ProcessorMode /* = ptProcessorMode_Preview */) {
+            short ProcessorMode /* = ptProcessorMode_Preview */)
+{
+#ifdef Q_WS_WIN
+  ptEcWin7* Win7Taskbar = ptEcWin7::GetInstance();
+  Win7Taskbar->setProgressState(ptEcWin7::Indeterminate);
+#endif
 
   if (Settings->GetInt("BlockUpdate") == 1) return; // hard block
   if (Settings->GetInt("PipeIsRunning") == 1) {
@@ -1305,6 +1311,10 @@ void Update(short Phase,
     assert(0);
   }
   Settings->SetValue("PipeIsRunning",0);
+
+#ifdef Q_WS_WIN
+  Win7Taskbar->setProgressState(ptEcWin7::NoProgress);
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3384,6 +3394,10 @@ void CB_MenuFileExit(const short) {
     if (Settings->GetInt(CurveKeys.at(i))==ptCurveChoice_Manual)
       Settings->SetValue(CurveKeys.at(i),ptCurveChoice_None);
   }
+
+#ifdef Q_WS_WIN
+  ptEcWin7::DestroyInstance();
+#endif
 
   printf("Saving settings ...\n");
 
