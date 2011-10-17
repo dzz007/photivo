@@ -56,6 +56,14 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
                                         const QString description,
                                         const ptFSOType fsoType)
 {
+// A thumbnail’s geometry:
+// Height:                                  Width:
+//   InnerPadding                             InnerPadding
+//   m_Pixmap->pixmap().height()              m_Pixmap->pixmap().width()
+//   InnerPadding                             InnerPadding
+//   m_InfoText->boundingRect().height()
+//   InnerPadding
+//
   m_FSOType = fsoType;
   m_FullPath = fullPath;
   qreal ThumbSize = (qreal)Settings->GetInt("ThumbnailSize");
@@ -68,7 +76,7 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
   m_InfoText->setText(QFontMetrics(m_InfoText->font()).elidedText(description,
                                                                   Qt::ElideRight,
                                                                   (int)ThumbSize));
-  m_ImgTypeText->setBrush(QBrush(Theme->ptText));
+  m_InfoText->setBrush(QBrush(Theme->ptText));
   m_InfoText->setPos(InnerPadding, ThumbSize + InnerPadding*2);
 
   // file type display in topleft corner (images only)
@@ -93,7 +101,7 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
   this->setRect(0,
                 0,
                 ThumbSize + InnerPadding*2,
-                ThumbSize + InnerPadding*2 + m_InfoText->boundingRect().height());
+                ThumbSize + InnerPadding*3 + m_InfoText->boundingRect().height());
 }
 
 //==============================================================================
@@ -110,6 +118,9 @@ void ptGraphicsThumbGroup::addImage(QImage* image) {
 
   m_Pixmap->setParentItem(this);
   DelAndNull(image);
+#ifdef DEBUG
+  printf("%s: added image to thumb group for %s\n", __FILE__, m_FullPath.toAscii().data());
+#endif
 }
 
 //==============================================================================
