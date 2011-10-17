@@ -108,6 +108,9 @@ win32 {
   QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
   LIBS += -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick
   LIBS += -lwsock32 -lexpat -lregex -lgdi32 -liconv
+  #for EcWin7
+  LIBS += libole32
+  
   RC_FILE = photivo.rc
   #CONFIG += console
   QT += network
@@ -130,7 +133,8 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptRichRectInteraction.h \
     ../Sources/ptGridInteraction.h \
-    ../Sources/ptConfirmRequest.h
+    ../Sources/ptConfirmRequest.h \
+    ../Sources/ptEcWin7.h
 HEADERS += ../Sources/ptParseCli.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
@@ -186,7 +190,8 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptRichRectInteraction.cpp \
     ../Sources/ptGridInteraction.cpp \
-    ../Sources/ptConfirmRequest.cpp
+    ../Sources/ptConfirmRequest.cpp \
+    ../Sources/ptEcWin7.cpp
 SOURCES += ../Sources/ptParseCli.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
@@ -288,3 +293,5 @@ TRANSLATIONS += ../Translations/photivo_French.ts
 
 
 ###############################################################################
+
+
