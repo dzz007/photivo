@@ -193,6 +193,9 @@ void ptFileMgrThumbnailer::run() {
     }
 
     // Notification signal for each finished thumb image.
+#ifdef DEBUG
+  printf("%s: generated thumb image for %s\n", __FILE__, m_ThumbList->at(i)->fullPath().toAscii().data());
+#endif
     emit newImageNotify(m_ThumbList->at(i), thumbImage);
   }
 }

@@ -96,6 +96,7 @@ ptFileMgrDM::ptFileMgrDM()
 //==============================================================================
 
 ptFileMgrDM::~ptFileMgrDM() {
+  StopThumbnailer();
   DelAndNull(m_TreeModel);
   DelAndNull(m_ThumbList);
   DelAndNull(m_Thumbnailer);
@@ -117,7 +118,9 @@ void ptFileMgrDM::StartThumbnailer() {
 //==============================================================================
 
 void ptFileMgrDM::StopThumbnailer() {
+  m_Thumbnailer->blockSignals(true);
   m_Thumbnailer->Abort();
+  m_Thumbnailer->blockSignals(false);
 }
 
 //==============================================================================

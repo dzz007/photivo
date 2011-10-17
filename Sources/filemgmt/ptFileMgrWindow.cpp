@@ -419,6 +419,7 @@ void ptFileMgrWindow::CloseWindow() {
   // Signal tells main window to perform necessary closing actions.
   emit FileMgrWindowClosed();
 
+  m_DataModel->StopThumbnailer();
   // free memory occupied by thumbnails
   m_FilesScene->clear();
 }
