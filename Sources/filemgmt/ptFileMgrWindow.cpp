@@ -152,8 +152,10 @@ void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
 void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
   m_Progressbar->setValue(m_Progressbar->value() + 1);
 
-  // Adding the image to the group must be done from the main GUI thread.
-  group->addImage(pix);
+  if (pix != NULL) {
+    // Adding the image to the group must be done from the main GUI thread.
+    group->addImage(pix);
+  }
 
   if (m_Progressbar->value() >= m_ThumbCount) {
     m_Progressbar->hide();
