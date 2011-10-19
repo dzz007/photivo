@@ -209,6 +209,7 @@ SOURCES += ../Sources/ptImage.cpp
 SOURCES += ../Sources/ptImage_Cimg.cpp
 SOURCES += ../Sources/ptImage_DRC.cpp
 SOURCES += ../Sources/ptImage_EAW.cpp
+SOURCES += ../Sources/ptImage_GM.cpp
 SOURCES += ../Sources/ptImage_GMC.cpp
 SOURCES += ../Sources/ptImage_Lensfun.cpp
 SOURCES += ../Sources/ptImage_Lqr.cpp

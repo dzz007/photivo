@@ -787,6 +787,17 @@ enum ptLoadCfgMode {
   lcmSettingsFile   = 4
 };
 
+/*! This enum defines the possible types of images.
+    When you add new types make sure that error types have negative values and
+    valid types have positive values.
+*/
+enum ptImageType {
+  itNotSupported  = -1,
+  itUndetermined  = 0,
+  itRaw           = 1,
+  itBitmap        = 2
+};
+
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
