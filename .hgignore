@@ -1,4 +1,5 @@
 ^build
+^local-system-specific.pro
 install_prefix$
 Makefile
 \.Debug
@@ -6,3 +7,4 @@ Makefile
 ^_bin-win32
 ^_bin-win64
 \.user$
+.autosave$

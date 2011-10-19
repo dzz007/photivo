@@ -209,7 +209,6 @@ SOURCES += ../Sources/ptImage.cpp
 SOURCES += ../Sources/ptImage_Cimg.cpp
 SOURCES += ../Sources/ptImage_DRC.cpp
 SOURCES += ../Sources/ptImage_EAW.cpp
-SOURCES += ../Sources/ptImage_GM.cpp
 SOURCES += ../Sources/ptImage_GMC.cpp
 SOURCES += ../Sources/ptImage_Lensfun.cpp
 SOURCES += ../Sources/ptImage_Lqr.cpp
@@ -291,6 +290,11 @@ TRANSLATIONS += ../Translations/photivo_Italian.ts
 TRANSLATIONS += ../Translations/photivo_Russian.ts
 TRANSLATIONS += ../Translations/photivo_French.ts
 
+# Include PRO file for special local system specific settings, e.g.
+# additional include paths for MinGW installations on Windows.
+# These settings are only valid for one individual computer.
+# Because of that local-system-specific.pro is not version controlled.
+include(../local-system-specific.pro)
 
 ###############################################################################
 
