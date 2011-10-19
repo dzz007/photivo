@@ -33,6 +33,7 @@
 
 #include "ptCalloc.h"
 #include "ptConfirmRequest.h"
+#include "ptConstants.h"
 #include "ptMessageBox.h"
 #include "ptDcRaw.h"
 #include "ptProcessor.h"
@@ -53,7 +54,7 @@
 #include "ptWiener.h"
 #include "ptParseCli.h"
 #include "qtsingleapplication/qtsingleapplication.h"
-#include <Magick++.h>
+#include <wand/magick_wand.h>
 
 #ifdef Q_OS_MAC
   #include <QFileOpenEvent>
@@ -240,6 +241,9 @@ void InitStrings() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+ptImageType CheckImageType(QString filename,
+                           uint16_t* width, uint16_t* height,
+                           DcRaw* dcRaw = NULL);
 void   RunJob(const QString FileName);
 short  ReadJobFile(const QString FileName);
 short  ReadSettingsFile(const QString FileName, short& NextPhase);
@@ -325,6 +329,7 @@ void SegfaultAbort(int) {
 
 int main(int Argc, char *Argv[]) {
   int RV = photivoMain(Argc,Argv);
+  DestroyMagick();
   DelAndNull(SegfaultErrorBox);
   CleanupResources(); // Not necessary , for debug.
   return RV;
@@ -379,7 +384,7 @@ int photivoMain(int Argc, char *Argv[]) {
   QString VerTemp(TOSTRING(APPVERSION));    //also used for the cli syntax error msg below!
   printf("Photivo version %s\n", VerTemp.toAscii().data());
 
-  Magick::InitializeMagick(*Argv);
+  InitializeMagick(*Argv);
 
   // TextCodec
   QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
@@ -2138,36 +2143,31 @@ void RunJob(const QString JobFileName) {
       // Test if we can handle the file
       DcRaw* TestDcRaw = new(DcRaw);
       Settings->ToDcRaw(TestDcRaw);
-      int OpenError = 0;
       uint16_t InputWidth = 0;
       uint16_t InputHeight = 0;
-      if (TestDcRaw->Identify()) { // Bitmap
-        try {
-          Magick::Image image;
+      ptImageType InputType = CheckImageType(InputFileNameList[0],
+                                             &InputWidth, &InputHeight,
+                                             TestDcRaw);
 
-          image.ping(InputFileNameList[0].toAscii().data());
-
-          InputWidth = image.columns();
-          InputHeight = image.rows();
-        } catch (Magick::Exception &Error) {
-          OpenError = 1;
-        }
-        if (OpenError == 0) {
-          Settings->SetValue("IsRAW",0);
-          Settings->SetValue("ExposureNormalization",0.0);
-        }
-      } else {
-        Settings->SetValue("IsRAW",1);
-      }
-      if (OpenError == 1) {
-        // We don't have a RAW or a bitmap!
+      if (InputType <= itUndetermined) {
+        // not a supported image type or error reading the file
         QString ErrorMessage = QObject::tr("Cannot decode")
                              + " '"
                              + InputFileNameList[0]
                              + "'" ;
         printf("%s\n",ErrorMessage.toAscii().data());
         delete TestDcRaw;
-      } else { // process
+
+
+      } else {
+        // process the image
+        if (InputType == itRaw) {
+          Settings->SetValue("IsRAW",1);
+        } else {
+          Settings->SetValue("IsRAW",0);
+          Settings->SetValue("ExposureNormalization",0.0);
+        }
+
         QFileInfo PathInfo(InputFileNameList[0]);
         if (!Settings->GetString("OutputDirectory").isEmpty()) {
           Settings->SetValue("OutputFileName",
@@ -2208,13 +2208,8 @@ void RunJob(const QString JobFileName) {
         delete TheProcessor;
         TheProcessor = new ptProcessor(ReportProgress);
         TheDcRaw = TestDcRaw;
-        if (Settings->GetInt("IsRAW")==0) {
-          Settings->SetValue("ImageW",InputWidth);
-          Settings->SetValue("ImageH",InputHeight);
-        } else {
-          Settings->SetValue("ImageW",TheDcRaw->m_Width);
-          Settings->SetValue("ImageH",TheDcRaw->m_Height);
-        }
+        Settings->SetValue("ImageW",InputWidth);
+        Settings->SetValue("ImageH",InputHeight);
 
         TheProcessor->m_DcRaw = TheDcRaw;
 
@@ -3106,29 +3101,14 @@ void CB_MenuFileOpen(const short HaveFile) {
   // Test if we can handle the file
   DcRaw* TestDcRaw = new(DcRaw);
   Settings->ToDcRaw(TestDcRaw);
-  int OpenError = 0;
   uint16_t InputWidth = 0;
   uint16_t InputHeight = 0;
-  if (TestDcRaw->Identify()){ // Bitmap
-    try {
-      Magick::Image image;
+  ptImageType InputType = CheckImageType(InputFileNameList[0],
+                                         &InputWidth, &InputHeight,
+                                         TestDcRaw);
 
-      image.ping(InputFileNameList[0].toAscii().data());
-
-      InputWidth = image.columns();
-      InputHeight = image.rows();
-    } catch (Magick::Exception &Error) {
-      OpenError = 1;
-    }
-    if (OpenError == 0) {
-      Settings->SetValue("IsRAW",0);
-      Settings->SetValue("ExposureNormalization",0.0);
-    }
-  } else {
-    Settings->SetValue("IsRAW",1);
-  }
-  if (OpenError == 1) {
-    // We don't have a RAW or a bitmap!
+  if (InputType <= itUndetermined) {
+    // not a supported image type or error reading the file
     QString ErrorMessage = QObject::tr("Cannot decode")
                          + " '"
                          + InputFileNameList[0]
@@ -3137,6 +3117,15 @@ void CB_MenuFileOpen(const short HaveFile) {
     Settings->SetValue("InputFileNameList",OldInputFileNameList);
     delete TestDcRaw;
     return;
+  }
+
+
+  // Image type is supported: process the image
+  if (InputType == itRaw) {
+    Settings->SetValue("IsRAW",1);
+  } else {
+    Settings->SetValue("IsRAW",0);
+    Settings->SetValue("ExposureNormalization",0.0);
   }
 
   if (Settings->GetInt("HaveImage") == 1) {
@@ -3171,13 +3160,8 @@ void CB_MenuFileOpen(const short HaveFile) {
   }
 
   TheDcRaw = TestDcRaw;
-  if (Settings->GetInt("IsRAW")==0) {
-    Settings->SetValue("ImageW",InputWidth);
-    Settings->SetValue("ImageH",InputHeight);
-  } else {
-    Settings->SetValue("ImageW",TheDcRaw->m_Width);
-    Settings->SetValue("ImageH",TheDcRaw->m_Height);
-  }
+  Settings->SetValue("ImageW",InputWidth);
+  Settings->SetValue("ImageH",InputHeight);
 
   if (Settings->GetInt("StartupSwitchAR")) {
     // portrait image
@@ -8867,4 +8851,88 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
+/*! Returns the type of an image file.
+  \param filename
+    path/filename of the image. An empty string is interpreted as the current global
+    input file, i.e. InputFileNameList[0]. Note that \c CheckImageType never changes
+    the value of InputFileNameList[0].
+  \param width
+    A pointer to a variable that holds the width of the image. Pass NULL if you
+    do not need to know the width. If the width of the file cannot be determined,
+    \c CheckImageType sets this variable to \c 0.
+  \param height
+    Same as \c width, but for the image height.
+  \param dcRaw
+    An optional pointer to an existing and properly initialized ptDcRaw object that the
+    function should use. Note that the file associated with that dcraw gets changed to
+    \c filename.
+*/
+ptImageType CheckImageType(QString filename,
+                           uint16_t* width, uint16_t* height,
+                           DcRaw* dcRaw /*= NULL*/)
+{
+  ptImageType result = itUndetermined;
+  DcRaw* LocalDcRaw = NULL;
+  bool UseLocalDcRaw = dcRaw == NULL;
+
+  // Setup dcraw
+  if (UseLocalDcRaw) {
+    LocalDcRaw = new DcRaw;
+    Settings->ToDcRaw(LocalDcRaw);
+  } else {
+    LocalDcRaw = dcRaw;
+  }
+
+  // Setup file name
+  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+  if (filename.isEmpty())
+    filename = InputFileNameList[0];
+
+  if (filename != InputFileNameList[0]) {
+    FREE(LocalDcRaw->m_UserSetting_InputFileName);
+    LocalDcRaw->m_UserSetting_InputFileName =
+      (char*) MALLOC(1+strlen(filename.toAscii().data()));
+    ptMemoryError(LocalDcRaw->m_UserSetting_InputFileName,__FILE__,__LINE__);
+    strcpy(LocalDcRaw->m_UserSetting_InputFileName,filename.toAscii().data());
+  }
+
+  if (LocalDcRaw->Identify() == 0) {
+    // we have a raw file
+    result = itRaw;
+    if (width != NULL) *width = LocalDcRaw->m_Width;
+    if (height != NULL) *height = LocalDcRaw->m_Height;
+
+  } else {
+    // Not a raw image. We use GraphicsMagick to check for valid Bitmaps.
+    MagickWand* image = NewMagickWand();
+    MagickPingImage(image, filename.toAscii().data());
+
+    ExceptionType MagickExcept;
+    const char* MagickErrorMsg = MagickGetException(image, &MagickExcept);
+
+    if (MagickExcept == UndefinedException) {
+      // image could be pinged without problems: we have a bitmap
+      result = itBitmap;
+      if (width != NULL) *width = MagickGetImageWidth(image);
+      if (height != NULL) *height = MagickGetImageHeight(image);
+
+    } else {
+      // not a supported image format
+      printf(MagickErrorMsg);
+      result = itNotSupported;
+      if (width != NULL) *width = 0;
+      if (height != NULL) *height = 0;
+    }
+
+    DestroyMagickWand(image);
+  }
+
+  if (UseLocalDcRaw)
+    DelAndNull(LocalDcRaw);
+
+  return result;
+}
+
+//==============================================================================
