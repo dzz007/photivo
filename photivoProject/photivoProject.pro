@@ -295,7 +295,9 @@ TRANSLATIONS += ../Translations/photivo_French.ts
 # additional include paths for MinGW installations on Windows.
 # These settings are only valid for one individual computer.
 # Because of that local-system-specific.pro is not version controlled.
-include(../local-system-specific.pro)
+exists(../local-system-specific.pro) {
+  include(../local-system-specific.pro)
+}
 
 ###############################################################################
 
