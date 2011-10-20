@@ -418,6 +418,36 @@ int photivoMain(int Argc, char *Argv[]) {
   std::signal(SIGABRT, SegfaultAbort);
 
 
+  // Check for wrong GM quantum depth. We need the 16bit GraphicsMagick.
+  ulong QDepth = 0;
+  MagickGetQuantumDepth(&QDepth);
+  if (QDepth != 16) {
+    QString WrongQDepthMsg = QString(QObject::tr(
+        "Fatal error: Wrong GraphicsMagick quantum depth!\n"
+        "Your GraphicsMagick installation has quantum depth %1, but Photivo needs 16.\n")
+        .arg(QDepth));
+  #ifdef Q_OS_WIN32
+    ptMessageBox::critical(0, QObject::tr("Photivo: Fatal Error"), WrongQDepthMsg);
+  #else
+    fprintf(stderr,"%s", WrongQDepthMsg.toAscii().data());
+  #endif
+    exit(EXIT_FAILURE);
+  }
+
+
+  // Check for compatible Qt version
+  if (QT_VERSION < 0x040600) {
+    QString WrongQtMsg = QObject::tr(
+        "Fatal error: Your version of Qt is too old!\n"
+        "Photivo requires at least Qt") + " 4.6.\n";
+  #ifdef Q_OS_WIN32
+    ptMessageBox::critical(0, QObject::tr("Photivo: Fatal Error"), WrongQtMsg);
+  #else
+    fprintf(stderr,"%s", WrongQtMsg.toAscii().data());
+  #endif
+    exit(EXIT_FAILURE);
+  }
+
   // Handle cli arguments
   QString PhotivoCliUsageMsg = QObject::tr(
 "Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
