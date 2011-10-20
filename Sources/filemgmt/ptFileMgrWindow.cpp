@@ -110,15 +110,14 @@ void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
 
 void ptFileMgrWindow::DisplayThumbnails(const QModelIndex& index, bool clearCache /*= false*/) {
   if (clearCache) {
-    //TODO: clear the cache
+    m_DataModel->Clear();
   }
 
   m_PathInput->setText(
       QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(m_DirTree->currentIndex())));
 
   m_DataModel->StopThumbnailer();
-  m_FilesScene->clear();
-  m_DataModel->thumbList()->clear();
+  ClearScene();
   m_ThumbListIdx = 0;
   m_ThumbCount = m_DataModel->setThumbnailDir(index);
   CalcThumbMetrics();
@@ -423,7 +422,19 @@ void ptFileMgrWindow::CloseWindow() {
 
   m_DataModel->StopThumbnailer();
   // free memory occupied by thumbnails
-  m_FilesScene->clear();
+  ClearScene();
+  m_DataModel->Clear();
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::ClearScene() {
+  for (int i = 0; i < m_DataModel->thumbList()->count(); i++) {
+    m_FilesScene->removeItem(m_DataModel->thumbList()->at(i));
+    ptGraphicsThumbGroup::RemoveRef(m_DataModel->thumbList()->at(i));
+  }
+
+  m_DataModel->thumbList()->clear();
 }
 
 //==============================================================================

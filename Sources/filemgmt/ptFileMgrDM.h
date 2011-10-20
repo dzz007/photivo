@@ -80,6 +80,8 @@ public:
   /*! Destroy the singleton instance of \c ptFileMgrDM */
   static void DestroyInstance();
 
+//------------------------------------------------------------------------------
+
   /*! Clear the data cache of \c ptFileMgrDM */
   void Clear();
 
@@ -106,7 +108,7 @@ public:
   */
   ptFileMgrThumbnailer* thumbnailer() const { return m_Thumbnailer; }
 
-  /*! Returns a pointer to the FIFO buffer containing image thumbnails. */
+  /*! Returns a pointer to the list of currently displayed thumbnail images. */
   QList<ptGraphicsThumbGroup*>* thumbList() { return m_ThumbList; }
 
   /*! Returns a pointer to the model with the data for the tree view. */

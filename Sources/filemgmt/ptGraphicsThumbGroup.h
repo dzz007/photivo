@@ -34,10 +34,25 @@
 //==============================================================================
 
 class ptGraphicsThumbGroup: public QGraphicsRectItem {
-
 public:
-  /*! Creates a \c ptGraphicsThumbGroup object. */
-  ptGraphicsThumbGroup(QGraphicsItem* parent = 0);
+  /*! Creates a new \c ptGraphicsThumbGroup instance or increases the reference counter
+    of an existing one. Returns the pointer to that instance.
+    \param group
+      A pointer to the \c ptGraphicsThumbGroup instance. If you omit this parameter
+      the function creates and returns a new \c ptGraphicsThumbGroup object with ref
+      count \c 1.
+  */
+  static ptGraphicsThumbGroup* AddRef(ptGraphicsThumbGroup* group = NULL);
+
+  /*! Decrease the reference counter of a \c ptGraphicsThumbGroup instance.
+    Returns the reference count \b after decreasing. If the counter becomes
+    \c 0 the function deletes the \c ptGraphicsThumbGroup object.
+    \param group
+      A pointer to the \c ptGraphicsThumbGroup instance.
+  */
+  static int RemoveRef(ptGraphicsThumbGroup* group);
+
+//------------------------------------------------------------------------------
 
   /*! Adds informative items to the thumbnail group.
     \param fullPath
@@ -66,14 +81,13 @@ public:
   /*! Returns the full path of the file or directory this thumbnail group refers to. */
   QString fullPath() { return m_FullPath; }
 
-  /*! Returns \c true if a pixmap is part of the thumbnail group. */
-  bool hasPixmap() { return m_Pixmap != NULL; }
+  /*! Returns \c true if a pixmap image is part of the thumbnail group. */
+  bool hasImage() { return m_Pixmap != NULL; }
 
   /*! Paints the thumbnail group.
     Reimplements \c QGraphicsRectItem::paint()
   */
   void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*);
-
 
   /*! Returns that type that identifies \c ptGraphicsThumbGroup objects
       within the graphics view framework.
@@ -97,8 +111,12 @@ protected:
 
 
 private:
+  ptGraphicsThumbGroup(QGraphicsItem* parent = 0);
+  ~ptGraphicsThumbGroup();
+
   QString   m_FullPath;
   ptFSOType m_FSOType;
+  int       m_RefCount;
 
   // Following objects don’t need to be destroyed explicitely in the destructor.
   // Because they are children that happens automatically.

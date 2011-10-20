@@ -26,22 +26,30 @@
 
 //==============================================================================
 
-#include <QGraphicsItemGroup>
 #include <QHash>
 #include <QDateTime>
 
+#include "ptGraphicsThumbGroup.h"
+
 //==============================================================================
 
+typedef QString ptThumbnailCacheKey;
+
 struct ptThumbnailCacheObject {
-  QGraphicsItemGroup* Thumbnail;
-  QDateTime           lastHit;
-  QString             key;    // full path + last modified time
+  ptGraphicsThumbGroup*   Thumbnail;
+  QDateTime               lastHit;
+  ptThumbnailCacheKey     key;
 };
 
 //==============================================================================
 
 class ptThumbnailCache {
 public:
+  /*! Returns a hash key for the given \c file. */
+  static ptThumbnailCacheKey GetKey(const QString fileName);
+
+//------------------------------------------------------------------------------
+
   /*! Creates a \c ptThumbnailCache instance.
     \param capacity
       The maximum number of entries in the cache. When the cache is full, objects
@@ -63,23 +71,29 @@ public:
     \param thumbnail
       A pointer to the \c QGraphicsItemGroup object that should be cached.
   */
-  void CacheThumbnail(const QString key, QGraphicsItemGroup* thumbnail);
+  void CacheThumbnail(ptGraphicsThumbGroup* thumbnail);
 
   /*! Removes the oldest (i.e. least recently hit) entries from the cache,
       if there are more entries than the capacity.
   */
   void Consolidate();
 
+  /*! Returns the current number of cached objects. */
+  int Count() { return m_Data->count(); }
+
+  /*! Removes an entry from the cache. Does nothing if the entry is not found. */
+  void RemoveThumbnail(const ptThumbnailCacheKey key);
+
   /*! Request a cache entry for the given \c key.
       If a corresponding entry is found a pointer to the appropriate
       \c QGraphicsItemGroup object is returned, otherwise a NULL pointer.
   */
-  QGraphicsItemGroup* RequestThumbnail(const QString key);
+  ptGraphicsThumbGroup* RequestThumbnail(const ptThumbnailCacheKey key);
 
 
 private:
-  QHash<QString, ptThumbnailCacheObject*>* m_Data;
-  int m_Capacity;
+  QHash<ptThumbnailCacheKey, ptThumbnailCacheObject*>* m_Data;
+  int m_Capacity;   // max number of cached thumb groups
 
 };
 

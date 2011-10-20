@@ -84,6 +84,7 @@ private:
   void ArrangeThumbnail(ptGraphicsThumbGroup* thumb);
   void ArrangeThumbnails();
   void CalcThumbMetrics();
+  void ClearScene();
   void CloseWindow();
 
   struct {
