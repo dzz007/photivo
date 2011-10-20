@@ -565,6 +565,7 @@ ptImage* EAWChannel(const double scaling,
                     const double level5,
                     const double level6);
 
+/* not used atm
 // ptImage_GM.cpp
 ptImage* ptGMRotate(const double Angle);
 
@@ -585,19 +586,20 @@ ptImage* ptGMWriteImage(const char* FileName,
                         const int Quality,
                         const char* ColorProfileFileName,
                         const int Intent);
-
+*/
 ptImage* ptGMResize(const uint16_t Size,
                     const short Filter,
                     const short Mode);
 ptImage* ptGMResizeWH(const uint16_t NewWidth,
                       const uint16_t NewHeight,
                       const short Filter);
-
+/* not used atm
 ptImage* ptGMBlur(const double Radius);
-
+*/
 ptImage* ptGMUnsharp(const double Radius, const double Amount, const double Threshold);
 
 ptImage* ptGMNormalize(const double Opacity);
+
 
 // ptImage_GMC.cpp
 bool ptGMCWriteImage(const char* FileName,
@@ -607,6 +609,13 @@ bool ptGMCWriteImage(const char* FileName,
                      const int Resolution,
                      const char* ColorProfileFileName,
                      const int Intent);
+
+ptImage* ptGMCOpenImage(const char* FileName,
+                       const short ColorSpace,
+                       const short Intent,
+                       const short ScaleFactor,
+                       int& Success);
+
 
 // ptImage_Pyramid.cpp
 ptImage* dirpyrLab_denoise(const int luma,

@@ -98,7 +98,8 @@ void ptFileMgrThumbnailer::run() {
   }
 
   QFileInfoList files = m_Dir->entryInfoList();
-  int thumbsSize = Settings->GetInt("ThumbnailSize");
+  int thumbMaxSize = Settings->GetInt("ThumbnailSize");
+  QSize thumbSize = QSize(thumbMaxSize, thumbMaxSize);
 
   /***
     Step 1: Generate thumb groups without the thumbnail images
@@ -158,93 +159,104 @@ void ptFileMgrThumbnailer::run() {
     } else {
       // we have a file, see if we can get a thumbnail image
       ptDcRaw dcRaw;
+      bool isRaw = false;
+      MagickWand* image = NewMagickWand();
 
       if (dcRaw.Identify(currentGroup->fullPath()) == 0 ) {
-        // we have a raw image ...
-        QByteArray* ba = NULL;
-        if (dcRaw.thumbnail(ba)) {
-          try {
-            Magick::Blob  blob( ba->data(), ba->length());
-            Magick::Image image;
-            image.size(Magick::Geometry(2*thumbsSize, 2*thumbsSize));
-            image.read(blob);
-
-            thumbImage = GenerateThumbnail(image, thumbsSize);
-          } catch (Magick::Exception &Error) {
-            // ... not supported
-            DelAndNull(thumbImage);
-          }
+        // we have a raw image
+        isRaw = true;
+        QByteArray* ImgData = NULL;
+        if (dcRaw.thumbnail(ImgData)) {
+          // raw thumbnail read successfully
+          thumbSize.setWidth(dcRaw.m_Width);
+          thumbSize.setHeight(dcRaw.m_Height);
+          ScaleThumbSize(&thumbSize, thumbMaxSize);
+          MagickSetSize(image, 2*thumbSize.width(), 2*thumbSize.height());
+          MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->length());
         }
-        DelAndNull(ba);
+        DelAndNull(ImgData);
+      }
+
+      if (!isRaw) {
+        // no raw, try for bitmap
+        MagickPingImage(image, currentGroup->fullPath().toAscii().data());
+        thumbSize.setWidth(MagickGetImageWidth(image));
+        thumbSize.setHeight(MagickGetImageHeight(image));
+        ScaleThumbSize(&thumbSize, thumbMaxSize);
+        MagickSetSize(image, 2*thumbSize.width(), 2*thumbSize.height());
+        MagickReadImage(image, currentGroup->fullPath().toAscii().data());
+      }
+
+      ExceptionType MagickExcept;
+      char* MagickErrMsg = MagickGetException(image, &MagickExcept);
+      if (MagickExcept != UndefinedException) {
+        // error occurred: no raw thumbnail, no supported image type, any other GM error
+        printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
+        DelAndNull(thumbImage);
 
       } else {
-        // ... or a bitmap ...
-        try {
-          Magick::Image image;
-          image.size(Magick::Geometry(2*thumbsSize, 2*thumbsSize));
-          image.read(currentGroup->fullPath().toAscii().data());
-
-          thumbImage = GenerateThumbnail(image, thumbsSize);
-        } catch (Magick::Exception &Error) {
-          // ... or not a supported image file at all
-          DelAndNull(thumbImage);
-        }
+        // no error: scale and rotate thumbnail
+        thumbImage = GenerateThumbnail(image, thumbSize);
       }
+
+      DestroyMagickWand(image);
     }
 
-    // Notification signal for each finished thumb image.
 #ifdef DEBUG
   printf("%s: generated thumb image for %s\n", __FILE__, m_ThumbList->at(i)->fullPath().toAscii().data());
 #endif
+  // Notification signal for each finished thumb image.
     emit newImageNotify(m_ThumbList->at(i), thumbImage);
   }
 }
 
 //==============================================================================
 
-QImage* ptFileMgrThumbnailer::GenerateThumbnail(Magick::Image& image, const int thumbSize)
+QImage* ptFileMgrThumbnailer::GenerateThumbnail(MagickWand* image, const QSize tSize)
 {
-//  if (thumbImage != NULL) DelAndNull(thumbImage);
   // We want 8bit RGB data without alpha channel, scaled to thumbnail size
-  image.depth(8);
-  image.magick("RGB");
-  image.type(Magick::TrueColorType);
-  image.scale(Magick::Geometry(thumbSize, thumbSize));
+  MagickSetImageDepth(image, 8);
+  MagickSetImageFormat(image, "RGB");
+  MagickSetImageType(image, TrueColorType);
+  MagickScaleImage(image, tSize.width(), tSize.height());
 
   // read EXIF orientation and correct image
-  QString orientation = QString::fromStdString(image.attribute("EXIF:Orientation"));
-  if (orientation == "2") image.flop();
-  else if (orientation == "3") image.rotate(180);
-  else if (orientation == "4") image.flip();
-  else if (orientation == "5") {image.flop(); image.rotate(270);}
-  else if (orientation == "6") image.rotate(90);
-  else if (orientation == "7") {image.flip(); image.rotate(270);}
-  else if (orientation == "8") image.rotate(270);
+  int orientation = QString::fromAscii(MagickGetImageAttribute(image, "EXIF:Orientation")).toInt();
+  PixelWand* pxWand = NewPixelWand();
+  switch (orientation) {
+    case 2: MagickFlopImage(image); break;
+    case 3: MagickRotateImage(image, pxWand, 180); break;
+    case 4: MagickFlipImage(image); break;
+    case 5: MagickFlopImage(image); MagickRotateImage(image, pxWand, 270); break;
+    case 6: MagickRotateImage(image, pxWand, 90); break;
+    case 7: MagickFlipImage(image); MagickRotateImage(image, pxWand, 270); break;
+    case 8: MagickRotateImage(image, pxWand, 270); break;
+    default: break;
+  }
+  DestroyPixelWand(pxWand);
 
   // Get the raw image data from GM.
-  uint w = image.columns();
-  uint h = image.rows();
+  uint w = MagickGetImageWidth(image);
+  uint h = MagickGetImageHeight(image);
 
   QImage* thumbImage = new QImage(w, h, QImage::Format_RGB32);
-  image.write(0, 0, w, h, "BGRA", Magick::CharPixel, (uchar*)thumbImage->scanLine(0));
+  MagickGetImagePixels(image, 0, 0, w, h, "BGRA", CharPixel, (uchar*)thumbImage->scanLine(0));
   return thumbImage;
+}
 
-//  uint8_t* ImgBuffer = NULL;
-//  try {
-//    ImgBuffer = (uint8_t*)CALLOC(w * h * 4, sizeof(ImgBuffer));
-//  } catch (std::bad_alloc) {
-//    // TODO: Cleanup!
-//    printf("\n********************\n\nMemory error in thumbnail generator\n\n********************\n\n");
-//    fflush(stdout);
-//    throw std::bad_alloc();
-//  }
-//  ptMemoryError(ImgBuffer,__FILE__,__LINE__);
-//  image.write(0, 0, w, h, "BGRA", Magick::CharPixel, ImgBuffer);
+//==============================================================================
 
-//  // Detour via QImage necessary because QPixmap does not allow direct
-//  // access to the pixel data.
-//  thumbImage->convertFromImage(QImage(ImgBuffer, w, h, QImage::Format_RGB32));
-//  FREE(ImgBuffer);
+void ptFileMgrThumbnailer::ScaleThumbSize(QSize* tSize, const int max) {
+  if (tSize->width() == tSize->height()) {    // square image
+    tSize->setWidth(max);
+    tSize->setHeight(max);
+  } else if (tSize->width() > tSize->height()) {    // landscape image
+    tSize->setHeight(tSize->height()/(double)tSize->width() * max + 0.5);
+    tSize->setWidth(max);
+  } else if (tSize->width() < tSize->height()) {    // portrait image
+    tSize->setWidth(tSize->width()/(double)tSize->height() * max + 0.5);
+    tSize->setHeight(max);
+  }
 }
 
 //==============================================================================

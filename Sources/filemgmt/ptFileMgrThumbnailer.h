@@ -31,7 +31,7 @@
 #include <QGraphicsItemGroup>
 #include <QDir>
 
-#include <Magick++.h>
+#include <wand/magick_wand.h>
 
 #include "ptThumbnailCache.h"
 #include "ptGraphicsThumbGroup.h"
@@ -86,7 +86,8 @@ protected:
 
 private:
   // Resizes the image to the specified size and writes it to the pixmap
-  QImage* GenerateThumbnail(Magick::Image& image, const int thumbSize);
+  QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
+  void ScaleThumbSize(QSize* tSize, const int max);
 
   bool                            m_AbortRequested;
   ptThumbnailCache*               m_Cache;

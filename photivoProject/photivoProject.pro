@@ -108,6 +108,9 @@ win32 {
   QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
   LIBS += -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick
   LIBS += -lwsock32 -lexpat -lregex -lgdi32 -liconv
+  #for EcWin7
+  LIBS += libole32
+  
   RC_FILE = photivo.rc
   #CONFIG += console
   QT += network
@@ -130,6 +133,7 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptRichRectInteraction.h \
     ../Sources/ptGridInteraction.h \
+    ../Sources/ptEcWin7.h \
     ../Sources/filemgmt/ptFileMgrWindow.h \
     ../Sources/filemgmt/ptFileMgrDM.h \
     ../Sources/filemgmt/ptFileMgrThumbnailer.h \
@@ -192,6 +196,7 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptRichRectInteraction.cpp \
     ../Sources/ptGridInteraction.cpp \
+    ../Sources/ptEcWin7.cpp \
     ../Sources/filemgmt/ptFileMgrWindow.cpp \
     ../Sources/filemgmt/ptFileMgrDM.cpp \
     ../Sources/filemgmt/ptFileMgrThumbnailer.cpp \
@@ -299,6 +304,13 @@ TRANSLATIONS += ../Translations/photivo_Italian.ts
 TRANSLATIONS += ../Translations/photivo_Russian.ts
 TRANSLATIONS += ../Translations/photivo_French.ts
 
+# Include PRO file for special local system specific settings, e.g.
+# additional include paths for MinGW installations on Windows.
+# These settings are only valid for one individual computer.
+# Because of that local-system-specific.pro is not version controlled.
+exists(../local-system-specific.pro) {
+  include(../local-system-specific.pro)
+}
 
 ###############################################################################
 
