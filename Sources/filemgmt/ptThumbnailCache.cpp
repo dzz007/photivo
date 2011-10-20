@@ -29,6 +29,7 @@
 
 //==============================================================================
 
+/*static*/
 ptThumbnailCacheKey ptThumbnailCache::GetKey(const QString fileName) {
   QFileInfo file = QFileInfo(fileName);
 
@@ -45,6 +46,7 @@ ptThumbnailCacheKey ptThumbnailCache::GetKey(const QString fileName) {
 ptThumbnailCache::ptThumbnailCache(const int capacity) {
   m_Data = new QHash<QString, ptThumbnailCacheObject*>;
   m_Capacity = capacity;
+  m_NextIdx = 0;
 }
 
 //==============================================================================
@@ -69,12 +71,30 @@ void ptThumbnailCache::Clear() {
 
 void ptThumbnailCache::CacheThumbnail(ptGraphicsThumbGroup* thumbnail) {
   // Checking for existing cache entry is not necessary here because
-  // the thumbnailer takes care of that.
+  // the thumbnailer takes care of that and QHash does not allow duplicate
+  // keys anyway.
   ptThumbnailCacheObject* obj = new ptThumbnailCacheObject;
   obj->key = GetKey(thumbnail->fullPath());
-  obj->lastHit = QDateTime::currentDateTime();
+  obj->lastHit = GetIdx();
   obj->Thumbnail = ptGraphicsThumbGroup::AddRef(thumbnail);
   m_Data->insert(obj->key, obj);
+
+  //
+  if (m_Data->count() > m_Capacity) {
+//printf("### count %d\n", m_Data->count());
+    uint age = UINT_MAX;
+    ptThumbnailCacheKey killKey = "";
+    QHashIterator<ptThumbnailCacheKey, ptThumbnailCacheObject*> i(*m_Data);
+    while (i.hasNext()) {
+      i.next();
+      if (i.value()->lastHit < age) {
+        killKey = i.value()->key;
+        age = i.value()->lastHit;
+      }
+    }
+//    printf("%d\n", age);
+    RemoveThumbnail(killKey);
+  }
 }
 
 //==============================================================================
@@ -85,7 +105,7 @@ ptGraphicsThumbGroup* ptThumbnailCache::RequestThumbnail(const ptThumbnailCacheK
 
   if (obj) {
     result = obj->Thumbnail;
-    obj->lastHit = QDateTime::currentDateTime();
+    obj->lastHit = GetIdx();
   }
 
   return result;
@@ -104,32 +124,37 @@ printf("######## Cache not yet full (%d of %d)\n", m_Data->size(), m_Capacity);
 
 printf("######## CONSOLIDATING (%d of %d, overflow %d)\n", m_Data->size(), m_Capacity, overflow);
   // We iterate through m_Data and add its items to the kill list until that
-  // list is full. Then we compare the current m_Data item with the first
+  // list is full. Then we compare the current m_Data item with the last
   // (i.e. youngest) killList entry to determine if it must be added.
   // QMap is always sorted by key. We use lastHit timestamp converted to
   // milliseconds elapsed since start of Unix time to ensure that the kill list
   // is sorted from youngest to oldest entry.
-  QMap<qint64, ptThumbnailCacheKey> killList;
+  QMap<uint, ptThumbnailCacheKey> killList;
   QHashIterator<ptThumbnailCacheKey, ptThumbnailCacheObject*> i(*m_Data);
+//  QTime timer;
+//  timer.start();
   while (i.hasNext()) {
     i.next();
     if (killList.size() < overflow) {
       // kill list not yet full: simply add cache item
-      killList.insert(i.value()->lastHit.toMSecsSinceEpoch(), i.value()->key);
+      killList.insert(i.value()->lastHit, i.value()->key);
 
     } else {
-      if (i.value()->lastHit.toMSecsSinceEpoch() > killList.begin().key()) {
+      if (i.value()->lastHit > killList.end().key()) {
         // current cache item is older than youngest one in killLis
-        killList.erase(killList.begin());
-        killList.insert(i.value()->lastHit.toMSecsSinceEpoch(), i.value()->key);
+        killList.erase(killList.end());
+        killList.insert(i.value()->lastHit, i.value()->key);
       }
     }
+//printf("%d(%d)\n", killList.count(), i.value()->lastHit);
   }
+//  printf("********** %d\n", timer.elapsed());
 printf("######## size of killList: %d\n", killList.count());
   // remove the actual "too old" cache entries
-  QMapIterator<qint64, ptThumbnailCacheKey> j(killList);
+  QMapIterator<uint, ptThumbnailCacheKey> j(killList);
   while (j.hasNext()) {
     ptThumbnailCacheObject* t = m_Data->take(j.next().value());
+printf("%d  ", t->lastHit);
     ptGraphicsThumbGroup::RemoveRef(t->Thumbnail);
     delete t;
   }
@@ -144,6 +169,22 @@ void ptThumbnailCache::RemoveThumbnail(const ptThumbnailCacheKey key) {
   if (obj) {
     ptGraphicsThumbGroup::RemoveRef(obj->Thumbnail);
     delete obj;
+  }
+}
+
+//==============================================================================
+
+uint ptThumbnailCache::GetIdx() {
+  // Prevent last hit counter from overflowing, even if that is extremely unlikely
+  // to happen before Photivo is restarted.
+  if (m_NextIdx == UINT_MAX) {
+    m_NextIdx = 0;
+    Clear();
+    return m_NextIdx;
+
+  } else {
+//    printf("%d\n", m_NextIdx);
+    return m_NextIdx++;
   }
 }
 

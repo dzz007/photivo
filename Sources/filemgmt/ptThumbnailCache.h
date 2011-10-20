@@ -37,7 +37,7 @@ typedef QString ptThumbnailCacheKey;
 
 struct ptThumbnailCacheObject {
   ptGraphicsThumbGroup*   Thumbnail;
-  QDateTime               lastHit;
+  uint                    lastHit;
   ptThumbnailCacheKey     key;
 };
 
@@ -92,8 +92,11 @@ public:
 
 
 private:
+  uint GetIdx();
+
   QHash<ptThumbnailCacheKey, ptThumbnailCacheObject*>* m_Data;
-  int m_Capacity;   // max number of cached thumb groups
+  int   m_Capacity;   // max number of cached thumb groups
+  uint  m_NextIdx;
 
 };
 
