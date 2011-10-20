@@ -208,7 +208,7 @@ void ptProcessor::Run(short Phase,
 
           int Success = 0;
 
-          m_Image_AfterDcRaw->ptGMOpenImage(
+          m_Image_AfterDcRaw->ptGMCOpenImage(
             (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
             Settings->GetInt("WorkColor"),
             Settings->GetInt("PreviewColorProfileIntent"),
@@ -2239,7 +2239,7 @@ void ptProcessor::Run(short Phase,
             // No image in cache!
             int Success = 0;
 
-            m_Image_TextureOverlay->ptGMOpenImage(
+            m_Image_TextureOverlay->ptGMCOpenImage(
               (Settings->GetString("TextureOverlayFile")).toAscii().data(),
               Settings->GetInt("WorkColor"),
               Settings->GetInt("PreviewColorProfileIntent"),

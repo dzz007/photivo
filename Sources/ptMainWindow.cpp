@@ -38,6 +38,10 @@
 #include "ptViewWindow.h"
 #include "ptWhiteBalances.h"
 
+#ifdef Q_WS_WIN
+  #include "ptEcWin7.h"
+#endif
+
 using namespace std;
 
 extern ptTheme* Theme;
@@ -97,11 +101,16 @@ void Update(const QString GuiName);
 ////////////////////////////////////////////////////////////////////////////////
 
 ptMainWindow::ptMainWindow(const QString Title)
-  : QMainWindow(NULL) {
-
+: QMainWindow(NULL)
+{
   // Setup from the Gui builder.
   setupUi(this);
   setWindowTitle(Title);
+
+  // Initialize Win 7 taskbar features
+  #ifdef Q_WS_WIN
+    ptEcWin7::CreateInstance(this);
+  #endif
 
   // Move the fullscreen button in the zoom bar a bit to the left
   // to make space for the Mac window resize handle
@@ -3105,3 +3114,11 @@ ptMainWindow::~ptMainWindow() {
     ToolBoxStructureList.removeAt(0);
   }
 }
+
+//==============================================================================
+
+#ifdef Q_OS_WIN32
+bool ptMainWindow::winEvent(MSG *message, long *result) {
+  return ptEcWin7::GetInstance()->winEvent(message, result);
+}
+#endif
