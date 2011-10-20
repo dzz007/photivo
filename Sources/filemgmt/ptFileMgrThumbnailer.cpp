@@ -93,7 +93,7 @@ void ptFileMgrThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList)
 
 void ptFileMgrThumbnailer::run() {
   // Check for properly set directory, cache and buffer
-  if (!m_Dir->exists() || m_ThumbList == NULL /*|| m_Cache == NULL*/) {
+  if (!m_Dir->exists() || m_ThumbList == NULL || m_Cache == NULL) {
     return;
   }
 
@@ -111,33 +111,47 @@ void ptFileMgrThumbnailer::run() {
       return;
     }
 
-    ptGraphicsThumbGroup* thumbGroup = new ptGraphicsThumbGroup;
-    ptFSOType type;
+    // query cache (returns NULL on miss, valid pointer on hit)
+    ptGraphicsThumbGroup* thumbGroup =
+        m_Cache->RequestThumbnail(ptThumbnailCache::GetKey(files.at(i).filePath()));
 
-    if (files.at(i).isDir()) {
-      if (files.at(i).fileName() == "..")
-        type = fsoParentDir;
-      else
-        type = fsoDir;
+    if (thumbGroup) {
+      //cache hit
+      thumbGroup = ptGraphicsThumbGroup::AddRef(thumbGroup);
+
     } else {
-      type = fsoFile;
+      // cache miss: first create and setup thumb group object ...
+      thumbGroup = ptGraphicsThumbGroup::AddRef();
+      ptFSOType type;
+
+      if (files.at(i).isDir()) {
+        if (files.at(i).fileName() == "..")
+          type = fsoParentDir;
+        else
+          type = fsoDir;
+      } else {
+        type = fsoFile;
+      }
+
+      thumbGroup->addInfoItems(files.at(i).canonicalFilePath(),
+                               files.at(i).fileName(),
+                               type);
+
+      // ... then add the group to the cache. Directories are not cached because
+      // they load very quickly anyway.
+      if (thumbGroup->fsoType() == fsoFile) {
+        m_Cache->CacheThumbnail(thumbGroup);
+      }
     }
 
-    thumbGroup->addInfoItems(files.at(i).canonicalFilePath(),
-                             files.at(i).fileName(),
-                             type);
     m_ThumbList->append(thumbGroup);
-
-    emit newThumbNotify(false);
-  }
-
-  // final notification: signals end of step 1 to GUI thread
-  emit newThumbNotify(true);
+    emit newThumbNotify(i == (uint)files.count()-1);
+  } // main FOR loop step 1
 
 
-/***
-  Step 2: Add the images to the thumbnail groups
-***/
+  /***
+    Step 2: Add the images to the thumbnail groups
+  ***/
 
   for (uint i = 0; i < (uint)m_ThumbList->count(); i++) {
     if (m_AbortRequested) {
@@ -149,57 +163,60 @@ void ptFileMgrThumbnailer::run() {
     ptGraphicsThumbGroup* currentGroup = m_ThumbList->at(i);
 
     if (currentGroup->fsoType() == fsoParentDir) {
-      // we have a parent directory
+      // we have a parent directory (dirs are not cached!)
       thumbImage = new QImage(QString::fromUtf8(":/photivo/FileManager/up.png"));
 
     } else if (currentGroup->fsoType() == fsoDir) {
-      // we have a subdirectory
+      // we have a subdirectory (dirs are not cached!)
       thumbImage = new QImage(QString::fromUtf8(":/photivo/FileManager/folder.png"));
 
     } else {
-      // we have a file, see if we can get a thumbnail image
-      ptDcRaw dcRaw;
-      bool isRaw = false;
-      MagickWand* image = NewMagickWand();
+      if (!currentGroup->hasImage()) {
+        // we have a file and no image in the thumb group == cache miss.
+        // See if we can get a thumbnail image
+        ptDcRaw dcRaw;
+        bool isRaw = false;
+        MagickWand* image = NewMagickWand();
 
-      if (dcRaw.Identify(currentGroup->fullPath()) == 0 ) {
-        // we have a raw image
-        isRaw = true;
-        QByteArray* ImgData = NULL;
-        if (dcRaw.thumbnail(ImgData)) {
-          // raw thumbnail read successfully
-          thumbSize.setWidth(dcRaw.m_Width);
-          thumbSize.setHeight(dcRaw.m_Height);
+        if (dcRaw.Identify(currentGroup->fullPath()) == 0 ) {
+          // we have a raw image
+          isRaw = true;
+          QByteArray* ImgData = NULL;
+          if (dcRaw.thumbnail(ImgData)) {
+            // raw thumbnail read successfully
+            thumbSize.setWidth(dcRaw.m_Width);
+            thumbSize.setHeight(dcRaw.m_Height);
+            ScaleThumbSize(&thumbSize, thumbMaxSize);
+            MagickSetSize(image, 2*thumbSize.width(), 2*thumbSize.height());
+            MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->length());
+          }
+          DelAndNull(ImgData);
+        }
+
+        if (!isRaw) {
+          // no raw, try for bitmap
+          MagickPingImage(image, currentGroup->fullPath().toAscii().data());
+          thumbSize.setWidth(MagickGetImageWidth(image));
+          thumbSize.setHeight(MagickGetImageHeight(image));
           ScaleThumbSize(&thumbSize, thumbMaxSize);
           MagickSetSize(image, 2*thumbSize.width(), 2*thumbSize.height());
-          MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->length());
+          MagickReadImage(image, currentGroup->fullPath().toAscii().data());
         }
-        DelAndNull(ImgData);
+
+        ExceptionType MagickExcept;
+        char* MagickErrMsg = MagickGetException(image, &MagickExcept);
+        if (MagickExcept != UndefinedException) {
+          // error occurred: no raw thumbnail, no supported image type, any other GM error
+          printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
+          DelAndNull(thumbImage);
+
+        } else {
+          // no error: scale and rotate thumbnail
+          thumbImage = GenerateThumbnail(image, thumbSize);
+        }
+
+        DestroyMagickWand(image);
       }
-
-      if (!isRaw) {
-        // no raw, try for bitmap
-        MagickPingImage(image, currentGroup->fullPath().toAscii().data());
-        thumbSize.setWidth(MagickGetImageWidth(image));
-        thumbSize.setHeight(MagickGetImageHeight(image));
-        ScaleThumbSize(&thumbSize, thumbMaxSize);
-        MagickSetSize(image, 2*thumbSize.width(), 2*thumbSize.height());
-        MagickReadImage(image, currentGroup->fullPath().toAscii().data());
-      }
-
-      ExceptionType MagickExcept;
-      char* MagickErrMsg = MagickGetException(image, &MagickExcept);
-      if (MagickExcept != UndefinedException) {
-        // error occurred: no raw thumbnail, no supported image type, any other GM error
-        printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
-        DelAndNull(thumbImage);
-
-      } else {
-        // no error: scale and rotate thumbnail
-        thumbImage = GenerateThumbnail(image, thumbSize);
-      }
-
-      DestroyMagickWand(image);
     }
 
 #ifdef DEBUG
@@ -207,7 +224,9 @@ void ptFileMgrThumbnailer::run() {
 #endif
   // Notification signal for each finished thumb image.
     emit newImageNotify(m_ThumbList->at(i), thumbImage);
-  }
+  } // main FOR loop step 2
+
+  m_Cache->Consolidate();
 }
 
 //==============================================================================

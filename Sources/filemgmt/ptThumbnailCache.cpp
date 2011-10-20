@@ -22,9 +22,23 @@
 *******************************************************************************/
 
 #include <QMap>
+#include <QFileInfo>
 
 #include "../ptDefines.h"
 #include "ptThumbnailCache.h"
+
+//==============================================================================
+
+ptThumbnailCacheKey ptThumbnailCache::GetKey(const QString fileName) {
+  QFileInfo file = QFileInfo(fileName);
+
+  if (file.exists() && file.isFile()) {
+    // full path + last modified time ensure uniqueness
+    return file.canonicalFilePath() + file.lastModified().toString(Qt::ISODate);
+  } else {
+    return "";
+  }
+}
 
 //==============================================================================
 
@@ -43,38 +57,35 @@ ptThumbnailCache::~ptThumbnailCache() {
 //==============================================================================
 
 void ptThumbnailCache::Clear() {
-  QHashIterator<QString, ptThumbnailCacheObject*> i(*m_Data);
+  QHashIterator<ptThumbnailCacheKey, ptThumbnailCacheObject*> i(*m_Data);
   while (i.hasNext()) {
-    i.next();
+    ptGraphicsThumbGroup::RemoveRef(i.next().value()->Thumbnail);
     delete i.value();
   }
-
   m_Data->clear();
 }
 
 //==============================================================================
 
-void ptThumbnailCache::CacheThumbnail(const QString key, QGraphicsItemGroup* thumbnail) {
-  // TODO: Do we need a deep copy of the ItemGroup to avoid problems with groups that
-  // are still displayed in the scene but might get removed from cache? I.e. how do we
-  // ensure that no ItemGroup can avoid deletion at some point in time?
+void ptThumbnailCache::CacheThumbnail(ptGraphicsThumbGroup* thumbnail) {
+  // Checking for existing cache entry is not necessary here because
+  // the thumbnailer takes care of that.
   ptThumbnailCacheObject* obj = new ptThumbnailCacheObject;
-  obj->key = key;
+  obj->key = GetKey(thumbnail->fullPath());
   obj->lastHit = QDateTime::currentDateTime();
-  obj->Thumbnail = thumbnail;
-  m_Data->insert(key, obj);
+  obj->Thumbnail = ptGraphicsThumbGroup::AddRef(thumbnail);
+  m_Data->insert(obj->key, obj);
 }
 
 //==============================================================================
 
-QGraphicsItemGroup* ptThumbnailCache::RequestThumbnail(const QString key) {
-  // TODO: same deep copy question as above ;)
-  ptThumbnailCacheObject* co = m_Data->value(key, NULL);
-  QGraphicsItemGroup* result = NULL;
+ptGraphicsThumbGroup* ptThumbnailCache::RequestThumbnail(const ptThumbnailCacheKey key) {
+  ptGraphicsThumbGroup* result = NULL;
+  ptThumbnailCacheObject* obj = m_Data->value(key, NULL);
 
-  if (co) {
-    result = co->Thumbnail;
-    co->lastHit = QDateTime::currentDateTime();
+  if (obj) {
+    result = obj->Thumbnail;
+    obj->lastHit = QDateTime::currentDateTime();
   }
 
   return result;
@@ -87,34 +98,52 @@ void ptThumbnailCache::Consolidate() {
 
   // abort when cache is not too full
   if (overflow <= 0) {
+printf("######## Cache not yet full (%d of %d)\n", m_Data->size(), m_Capacity);
     return;
   }
 
-  QMap<QDateTime, QString> killList;
-
+printf("######## CONSOLIDATING (%d of %d, overflow %d)\n", m_Data->size(), m_Capacity, overflow);
   // We iterate through m_Data and add its items to the kill list until that
-  // list is full. Then we compare the current m_Data item with the last
+  // list is full. Then we compare the current m_Data item with the first
   // (i.e. youngest) killList entry to determine if it must be added.
-  QHashIterator<QString, ptThumbnailCacheObject*> i(*m_Data);
+  // QMap is always sorted by key. We use lastHit timestamp converted to
+  // milliseconds elapsed since start of Unix time to ensure that the kill list
+  // is sorted from youngest to oldest entry.
+  QMap<qint64, ptThumbnailCacheKey> killList;
+  QHashIterator<ptThumbnailCacheKey, ptThumbnailCacheObject*> i(*m_Data);
   while (i.hasNext()) {
     i.next();
     if (killList.size() < overflow) {
-      killList.insert(i.value()->lastHit, i.value()->key);
+      // kill list not yet full: simply add cache item
+      killList.insert(i.value()->lastHit.toMSecsSinceEpoch(), i.value()->key);
+
     } else {
-      if (i.value()->lastHit < killList.end().key()) {
-        killList.erase(killList.end());
-        killList.insert(i.value()->lastHit, i.value()->key);
+      if (i.value()->lastHit.toMSecsSinceEpoch() > killList.begin().key()) {
+        // current cache item is older than youngest one in killLis
+        killList.erase(killList.begin());
+        killList.insert(i.value()->lastHit.toMSecsSinceEpoch(), i.value()->key);
       }
     }
   }
-
-
+printf("######## size of killList: %d\n", killList.count());
   // remove the actual "too old" cache entries
-  QMapIterator<QDateTime, QString> j(killList);
+  QMapIterator<qint64, ptThumbnailCacheKey> j(killList);
   while (j.hasNext()) {
-    j.next();
-    ptThumbnailCacheObject* t = m_Data->take(j.value());
+    ptThumbnailCacheObject* t = m_Data->take(j.next().value());
+    ptGraphicsThumbGroup::RemoveRef(t->Thumbnail);
     delete t;
+  }
+
+printf("######## DONE (%d of %d)\n", m_Data->size(), m_Capacity);
+}
+
+//==============================================================================
+
+void ptThumbnailCache::RemoveThumbnail(const ptThumbnailCacheKey key) {
+  ptThumbnailCacheObject* obj = m_Data->take(key);
+  if (obj) {
+    ptGraphicsThumbGroup::RemoveRef(obj->Thumbnail);
+    delete obj;
   }
 }
 

@@ -47,6 +47,7 @@ ptFileMgrDM* ptFileMgrDM::m_Instance = NULL;
 
 //==============================================================================
 
+/*static*/
 ptFileMgrDM* ptFileMgrDM::GetInstance() {
   if (m_Instance == NULL) {
     m_Instance = new ptFileMgrDM();
@@ -57,12 +58,7 @@ ptFileMgrDM* ptFileMgrDM::GetInstance() {
 
 //==============================================================================
 
-void ptFileMgrDM::Clear() {
-  m_Cache->Clear();
-}
-
-//==============================================================================
-
+/*static*/
 void ptFileMgrDM::DestroyInstance() {
   delete m_Instance;
   m_Instance = NULL;
@@ -89,7 +85,7 @@ ptFileMgrDM::ptFileMgrDM()
   m_Thumbnailer->setThumbList(m_ThumbList);
 
   // Init thumbnail cache
-  m_Cache = new ptThumbnailCache(1000);
+  m_Cache = new ptThumbnailCache(100);
   m_Thumbnailer->setCache(m_Cache);
 }
 
@@ -101,6 +97,12 @@ ptFileMgrDM::~ptFileMgrDM() {
   DelAndNull(m_ThumbList);
   DelAndNull(m_Thumbnailer);
   DelAndNull(m_Cache);
+}
+
+//==============================================================================
+
+void ptFileMgrDM::Clear() {
+  m_Cache->Clear();
 }
 
 //==============================================================================

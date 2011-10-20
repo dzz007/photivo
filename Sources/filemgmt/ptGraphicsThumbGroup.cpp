@@ -34,6 +34,30 @@ extern ptTheme* Theme;
 
 //==============================================================================
 
+ptGraphicsThumbGroup* ptGraphicsThumbGroup::AddRef(ptGraphicsThumbGroup* group /*== NULL*/) {
+  if (group == NULL) {
+    return new ptGraphicsThumbGroup;
+  } else {
+    group->m_RefCount++;
+
+    return group;
+  }
+}
+
+//==============================================================================
+
+int ptGraphicsThumbGroup::RemoveRef(ptGraphicsThumbGroup* group) {
+  int result = --group->m_RefCount;
+
+  if (group->m_RefCount == 0) {
+    delete group;
+    group = NULL;
+  }
+  return result;
+}
+
+//==============================================================================
+
 ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
 : QGraphicsRectItem(parent)
 {
@@ -42,6 +66,7 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
   m_Pixmap = NULL;
   m_ImgTypeText = NULL;
   m_InfoText = NULL;
+  m_RefCount = 1;
 
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::LeftButton);
@@ -49,6 +74,10 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
   setCursor(QCursor(Qt::PointingHandCursor));
   setPen(QPen(Theme->ptBright, 0, Qt::DashLine));
 }
+
+//==============================================================================
+
+ptGraphicsThumbGroup::~ptGraphicsThumbGroup() {}
 
 //==============================================================================
 
