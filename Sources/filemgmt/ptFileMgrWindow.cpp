@@ -118,6 +118,8 @@ void ptFileMgrWindow::DisplayThumbnails(const QModelIndex& index, bool clearCach
 
   m_DataModel->StopThumbnailer();
   ClearScene();
+  m_FilesView->horizontalScrollBar()->setValue(0);
+  m_FilesView->verticalScrollBar()->setValue(0);
   m_ThumbListIdx = 0;
   m_ThumbCount = m_DataModel->setThumbnailDir(index);
   CalcThumbMetrics();

@@ -81,7 +81,6 @@ void ptThumbnailCache::CacheThumbnail(ptGraphicsThumbGroup* thumbnail) {
 
   //
   if (m_Data->count() > m_Capacity) {
-//printf("### count %d\n", m_Data->count());
     uint age = UINT_MAX;
     ptThumbnailCacheKey killKey = "";
     QHashIterator<ptThumbnailCacheKey, ptThumbnailCacheObject*> i(*m_Data);
@@ -92,7 +91,6 @@ void ptThumbnailCache::CacheThumbnail(ptGraphicsThumbGroup* thumbnail) {
         age = i.value()->lastHit;
       }
     }
-//    printf("%d\n", age);
     RemoveThumbnail(killKey);
   }
 }
@@ -113,56 +111,59 @@ ptGraphicsThumbGroup* ptThumbnailCache::RequestThumbnail(const ptThumbnailCacheK
 
 //==============================================================================
 
-void ptThumbnailCache::Consolidate() {
-  int overflow = m_Data->size() - m_Capacity;
+// Not used atm. Keeping it for easy access should we need it again. Is probably
+// not fully functional in current form.
+//
+//void ptThumbnailCache::Consolidate() {
+//  int overflow = m_Data->size() - m_Capacity;
 
-  // abort when cache is not too full
-  if (overflow <= 0) {
-printf("######## Cache not yet full (%d of %d)\n", m_Data->size(), m_Capacity);
-    return;
-  }
+//  // abort when cache is not too full
+//  if (overflow <= 0) {
+//printf("######## Cache not yet full (%d of %d)\n", m_Data->size(), m_Capacity);
+//    return;
+//  }
 
-printf("######## CONSOLIDATING (%d of %d, overflow %d)\n", m_Data->size(), m_Capacity, overflow);
-  // We iterate through m_Data and add its items to the kill list until that
-  // list is full. Then we compare the current m_Data item with the last
-  // (i.e. youngest) killList entry to determine if it must be added.
-  // QMap is always sorted by key. We use lastHit timestamp converted to
-  // milliseconds elapsed since start of Unix time to ensure that the kill list
-  // is sorted from youngest to oldest entry.
-  QMap<uint, ptThumbnailCacheKey> killList;
-  QHashIterator<ptThumbnailCacheKey, ptThumbnailCacheObject*> i(*m_Data);
-//  QTime timer;
-//  timer.start();
-  while (i.hasNext()) {
-    i.next();
-    if (killList.size() < overflow) {
-      // kill list not yet full: simply add cache item
-      killList.insert(i.value()->lastHit, i.value()->key);
+//printf("######## CONSOLIDATING (%d of %d, overflow %d)\n", m_Data->size(), m_Capacity, overflow);
+//  // We iterate through m_Data and add its items to the kill list until that
+//  // list is full. Then we compare the current m_Data item with the last
+//  // (i.e. youngest) killList entry to determine if it must be added.
+//  // QMap is always sorted by key. We use lastHit timestamp converted to
+//  // milliseconds elapsed since start of Unix time to ensure that the kill list
+//  // is sorted from youngest to oldest entry.
+//  QMap<uint, ptThumbnailCacheKey> killList;
+//  QHashIterator<ptThumbnailCacheKey, ptThumbnailCacheObject*> i(*m_Data);
+////  QTime timer;
+////  timer.start();
+//  while (i.hasNext()) {
+//    i.next();
+//    if (killList.size() < overflow) {
+//      // kill list not yet full: simply add cache item
+//      killList.insert(i.value()->lastHit, i.value()->key);
 
-    } else {
-      if (i.value()->lastHit > killList.end().key()) {
-        // current cache item is older than youngest one in killLis
-        killList.erase(killList.end());
-        killList.insert(i.value()->lastHit, i.value()->key);
-      }
-    }
-//printf("%d(%d)\n", killList.count(), i.value()->lastHit);
-  }
-//  printf("********** %d\n", timer.elapsed());
-printf("######## size of killList: %d\n", killList.count());
-  // remove the actual "too old" cache entries
-  QMapIterator<uint, ptThumbnailCacheKey> j(killList);
-  while (j.hasNext()) {
-    ptThumbnailCacheObject* t = m_Data->take(j.next().value());
-printf("%d  ", t->lastHit);
-    ptGraphicsThumbGroup::RemoveRef(t->Thumbnail);
-    delete t;
-  }
+//    } else {
+//      if (i.value()->lastHit > killList.end().key()) {
+//        // current cache item is older than youngest one in killLis
+//        killList.erase(killList.end());
+//        killList.insert(i.value()->lastHit, i.value()->key);
+//      }
+//    }
+////printf("%d(%d)\n", killList.count(), i.value()->lastHit);
+//  }
+////  printf("********** %d\n", timer.elapsed());
+//printf("######## size of killList: %d\n", killList.count());
+//  // remove the actual "too old" cache entries
+//  QMapIterator<uint, ptThumbnailCacheKey> j(killList);
+//  while (j.hasNext()) {
+//    ptThumbnailCacheObject* t = m_Data->take(j.next().value());
+//printf("%d  ", t->lastHit);
+//    ptGraphicsThumbGroup::RemoveRef(t->Thumbnail);
+//    delete t;
+//  }
 
-printf("######## DONE (%d of %d)\n", m_Data->size(), m_Capacity);
-}
+//printf("######## DONE (%d of %d)\n", m_Data->size(), m_Capacity);
+//}
 
-//==============================================================================
+////==============================================================================
 
 void ptThumbnailCache::RemoveThumbnail(const ptThumbnailCacheKey key) {
   ptThumbnailCacheObject* obj = m_Data->take(key);
@@ -183,7 +184,6 @@ uint ptThumbnailCache::GetIdx() {
     return m_NextIdx;
 
   } else {
-//    printf("%d\n", m_NextIdx);
     return m_NextIdx++;
   }
 }

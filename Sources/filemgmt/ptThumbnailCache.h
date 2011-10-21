@@ -73,10 +73,10 @@ public:
   */
   void CacheThumbnail(ptGraphicsThumbGroup* thumbnail);
 
-  /*! Removes the oldest (i.e. least recently hit) entries from the cache,
-      if there are more entries than the capacity.
-  */
-  void Consolidate();
+//  /*! Removes the oldest (i.e. least recently hit) entries from the cache,
+//      if there are more entries than the capacity.
+//  */
+//  void Consolidate();
 
   /*! Returns the current number of cached objects. */
   int Count() { return m_Data->count(); }
