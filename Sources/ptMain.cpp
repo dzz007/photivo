@@ -8935,7 +8935,7 @@ ptImageType CheckImageType(QString filename,
 
     } else {
       // not a supported image format
-      printf(MagickErrorMsg);
+      printf("%s", MagickErrorMsg);
       result = itNotSupported;
       if (width != NULL) *width = 0;
       if (height != NULL) *height = 0;
