@@ -92,9 +92,8 @@ void ptFileMgrThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList)
 
 
 void ptFileMgrThumbnailer::run() {
-  QTime timer;
-  timer.start();
-
+//  QTime timer;
+//  timer.start();
   // Check for properly set directory, cache and buffer
   if (!m_Dir->exists() || m_ThumbList == NULL || m_Cache == NULL) {
     return;
@@ -229,9 +228,7 @@ void ptFileMgrThumbnailer::run() {
     emit newImageNotify(m_ThumbList->at(i), thumbImage);
   } // main FOR loop step 2
 
-//  m_Cache->Consolidate();
-
-  printf("elapsed %d, cache size %d\n", timer.elapsed(), m_Cache->Count());
+//  printf("elapsed %d, cache size %d\n", timer.elapsed(), m_Cache->Count());
 }
 
 //==============================================================================
