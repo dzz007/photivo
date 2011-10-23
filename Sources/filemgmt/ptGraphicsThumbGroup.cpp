@@ -137,7 +137,10 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 
 void ptGraphicsThumbGroup::addImage(QImage* image) {
   qreal ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
-  if (!m_Pixmap) m_Pixmap = new QGraphicsPixmapItem;
+  if (!m_Pixmap) {
+    m_Pixmap = new QGraphicsPixmapItem();
+    m_Pixmap->setZValue(-1);
+  }
   m_Pixmap->setPixmap(QPixmap::fromImage(*image));
 
   // center pixmap in the cell if it is not square

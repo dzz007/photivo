@@ -265,9 +265,14 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
         QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(m_DirTree->currentIndex())));
 
     QWidget::showEvent(event);
+
+    if (!InStartup)
+      DisplayThumbnails(m_DirTree->currentIndex());
+
     m_IsFirstShow = false;
     return;
   }
+
 
   QWidget::showEvent(event);
 

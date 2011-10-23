@@ -618,37 +618,37 @@ int photivoMain(int Argc, char *Argv[]) {
 #ifdef Q_OS_WIN32
   IsPortableProfile = QFile::exists("use-portable-profile");
   if (IsPortableProfile != 0) {
-      printf("Photivo running in portable mode.\n");
-      AppDataFolder = QCoreApplication::applicationDirPath();
-      Folder = "";
+    printf("Photivo running in portable mode.\n");
+    AppDataFolder = QCoreApplication::applicationDirPath();
+    Folder = "";
   } else {
-      // Get %appdata% via WinAPI call
-      QLibrary library(QLatin1String("shell32"));
-      QT_WA(
-              {
-              typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
-              GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
-              if (SHGetSpecialFolderPath) {
-              TCHAR path[MAX_PATH];
-              SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-              AppDataFolder = QString::fromUtf16((ushort*)path);
-              }
-              },
-              {
-              typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
-              GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
-              if (SHGetSpecialFolderPath) {
-              char path[MAX_PATH];
-              SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-              AppDataFolder = QString::fromLocal8Bit(path);
-              }
-              }
-           );
+    // Get %appdata% via WinAPI call
+    QLibrary library(QLatin1String("shell32"));
+    QT_WA(
+      {
+        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
+        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
+        if (SHGetSpecialFolderPath) {
+          TCHAR path[MAX_PATH];
+          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+          AppDataFolder = QString::fromUtf16((ushort*)path);
+        }
+      },
+      {
+        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
+        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
+        if (SHGetSpecialFolderPath) {
+          char path[MAX_PATH];
+          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+          AppDataFolder = QString::fromLocal8Bit(path);
+        }
+      }
+    );
 
-      // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
-      AppDataFolder.replace(QString("\\"), QString("/"));
-      // Keeping the leading "/" separate here is important or mkdir will fail.
-      Folder = "Photivo/";
+    // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
+    AppDataFolder.replace(QString("\\"), QString("/"));
+    // Keeping the leading "/" separate here is important or mkdir will fail.
+    Folder = "Photivo/";
   }
 #else
   Folder = ".photivo/";
@@ -826,6 +826,12 @@ int photivoMain(int Argc, char *Argv[]) {
       ptLogError(ptError_FileOpen,
               Settings->GetString("PreviewColorProfile").toAscii().data());
       return ptError_FileOpen;
+  }
+
+  // When loading a file via cli, set file manager directory to that path.
+  // Chances are good the user want to work with other files from that dir as well
+  if (cli.Mode == cliLoadImage) {
+    Settings->SetValue("LastFileMgrLocation", QFileInfo(ImageFileToOpen).absolutePath());
   }
 
 
@@ -1056,8 +1062,6 @@ void CB_Event0() {
     Settings->SetValue("FavouriteTools", Temp);
   }
 
-  InStartup = 0;
-
   if (Settings->GetInt("FileMgrIsOpen")) {
     FileMgrWindow->DisplayThumbnails(FileMgrWindow->m_DirTree->currentIndex());
     FileMgrWindow->m_FilesView->setFocus(Qt::OtherFocusReason);
@@ -1067,6 +1071,8 @@ void CB_Event0() {
 #ifdef Q_OS_MAC
   TheApplication->macinit();
 #endif
+
+  InStartup = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
