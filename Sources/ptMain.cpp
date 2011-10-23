@@ -8197,6 +8197,12 @@ void CB_WritePipeButton() {
   SaveOutput(Settings->GetInt("SaveButtonMode"));
 }
 
+void CB_FileMgrUseThumbMaxRowColCheck(const QVariant checked) {
+  Settings->SetValue("FileMgrUseThumbMaxRowCol", checked);
+  MainWindow->FileMgrThumbMaxRowColWidget->setEnabled(checked.toBool());
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callback dispatcher
@@ -8283,8 +8289,10 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(WriteBackupSettingsCheck)
 
-  M_JustSetDispatch(ThumbnailSizeInput)
-  M_JustSetDispatch(ThumbnailPaddingInput)
+  M_JustSetDispatch(FileMgrThumbnailSizeInput)
+  M_JustSetDispatch(FileMgrThumbnailPaddingInput)
+  M_Dispatch(FileMgrUseThumbMaxRowColCheck)
+  M_JustSetDispatch(FileMgrThumbMaxRowColInput)
 
   M_Dispatch(MemoryTestInput)
 

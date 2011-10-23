@@ -140,7 +140,11 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/filemgmt/ptThumbnailCache.h \
     ../Sources/ptConfirmRequest.h \
     ../Sources/filemgmt/ptGraphicsThumbGroup.h \
-    ../Sources/filemgmt/ptGraphicsSceneEmitter.h
+    ../Sources/filemgmt/ptGraphicsSceneEmitter.h \
+    ../Sources/filemgmt/ptAbstractThumbnailLayouter.h \
+    ../Sources/filemgmt/ptGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptRowGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h
 HEADERS += ../Sources/ptParseCli.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
@@ -203,7 +207,10 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/filemgmt/ptThumbnailCache.cpp \
     ../Sources/ptConfirmRequest.cpp \
     ../Sources/filemgmt/ptGraphicsThumbGroup.cpp \
-    ../Sources/filemgmt/ptGraphicsSceneEmitter.cpp
+    ../Sources/filemgmt/ptGraphicsSceneEmitter.cpp \
+    ../Sources/filemgmt/ptGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptRowGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp
 SOURCES += ../Sources/ptParseCli.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
@@ -313,3 +320,12 @@ exists(../local-system-specific.pro) {
 }
 
 ###############################################################################
+
+
+
+
+
+
+
+
+

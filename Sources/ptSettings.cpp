@@ -52,8 +52,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   const ptGuiInputItem GuiInputItems[] = {
     // Attention : Default,Min,Max,Step should be consistent int or double. Double *always* in X.Y notation to indicate so.
     // Unique Name,GuiElement,InitLevel,InJobFile,HasDefault (causes button too !),Default,Min,Max,Step,NrDecimals,Label,ToolTip
-    {"ThumbnailSize"                 ,ptGT_InputSlider     ,1,0,1 ,150  ,50   ,500   ,25   ,0 ,tr("Thumbnail size")     ,tr("Thumbnail size in pixel")},
-    {"ThumbnailPadding"              ,ptGT_InputSlider     ,1,0,1 ,16   ,0    ,50    ,2    ,0 ,tr("Thumbnail padding")  ,tr("Thumbnail padding in pixel")},
+    {"FileMgrThumbnailSize"          ,ptGT_InputSlider     ,1,0,1 ,150  ,50   ,500   ,25   ,0 ,tr("Thumbnail size")     ,tr("Thumbnail size in pixel")},
+    {"FileMgrThumbnailPadding"       ,ptGT_InputSlider     ,1,0,1 ,8    ,0    ,50    ,2    ,0 ,tr("Thumbnail padding")  ,tr("Thumbnail padding in pixel")},
+    {"FileMgrThumbMaxRowCol"         ,ptGT_Input           ,1,0,1 ,3    ,1    ,1000  ,1    ,0 ,tr("thumbnails in a row/column"), tr("Maximum number of thumbnails that should be placed in a row or column.")},
     {"MemoryTest"                    ,ptGT_InputSlider     ,9,0,1 ,0    ,0    ,500   ,50   ,0 ,tr("MB")                 ,tr("MB to waste")},
     {"TabStatusIndicator"            ,ptGT_Input           ,1,0,1 ,8    ,0    ,16    ,1    ,0 ,tr("Pixel")              ,tr("Size of the LED")},
     {"SliderWidth"                   ,ptGT_Input           ,1,0,1 ,0    ,0    ,500   ,50   ,0 ,tr("Maximum slider width") ,tr("Maximum slider width. Enter 0 to remove restriction")},
@@ -570,6 +571,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   // Load in the gui check elements
   const ptGuiCheckItem GuiCheckItems[] = {
     // Name, GuiType,InitLevel,InJobFile,Default,Label,Tip
+    {"FileMgrUseThumbMaxRowCol"   ,ptGT_Check ,1,0,0,tr("At most")         ,tr("Maximum number of thumbnails that should be placed in a row or column.")},
     {"StartupSettings"            ,ptGT_Check ,1,0,1,tr("User settings")   ,tr("Load user settings on startup")},
     {"StartupSettingsReset"       ,ptGT_Check ,1,0,0,tr("Reset on new image") ,tr("Reset to user settings when new image is opened")},
     {"StartupSwitchAR"            ,ptGT_Check ,1,0,1,tr("Adjust aspect ratio") ,tr("Adjust crop aspect ratio to image aspect ratio")},
@@ -757,9 +759,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FullscreenActive"                     ,9    ,0                                     ,0},
     {"FileMgrIsOpen"                        ,9    ,0                                     ,0},
     {"LastFileMgrLocation"                  ,1    ,""                                    ,0},
-    {"FileMgrThumbArrangeMode"              ,1    ,tamVerticalByRow                      ,0},   // TODO: needs GUI
-    {"FileMgrRestrictThumbMaxRowCol"        ,1    ,0                                     ,0},   // TODO: needs GUI
-    {"FileMgrThumbMaxRowCol"                ,1    ,3                                     ,0},   // TODO: needs GUI
+    {"FileMgrShowTreePane"                  ,1    ,1                                     ,0},
+    {"FileMgrThumbLayoutType"               ,1    ,tlVerticalByRow                       ,0},
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.

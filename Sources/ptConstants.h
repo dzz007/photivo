@@ -795,9 +795,10 @@ enum ptThumbnailAction {
 };
 
 /*! This enum defines how thumbnails are arranged in the file manager. */
-enum ptThumbnailArrangeMode {
-  tamVerticalByRow = 0,
-  tamHorizontalByColumn = 1
+enum ptThumbnailLayout {
+  tlVerticalByRow       = 0,
+  tlHorizontalByColumn  = 1,
+  tlDetailedList        = 2
 };
 
 /*! This enum defines the possible types of images.

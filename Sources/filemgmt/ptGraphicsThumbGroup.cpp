@@ -95,7 +95,7 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 //
   m_FSOType = fsoType;
   m_FullPath = fullPath;
-  qreal ThumbSize = (qreal)Settings->GetInt("ThumbnailSize");
+  qreal ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
 
   // main description text: currently just the filename
   if (m_InfoText == NULL) {
@@ -136,7 +136,7 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 //==============================================================================
 
 void ptGraphicsThumbGroup::addImage(QImage* image) {
-  qreal ThumbSize = (qreal)Settings->GetInt("ThumbnailSize");
+  qreal ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
   if (!m_Pixmap) m_Pixmap = new QGraphicsPixmapItem;
   m_Pixmap->setPixmap(QPixmap::fromImage(*image));
 
@@ -198,6 +198,16 @@ void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsIt
   painter->setPen(this->pen());
   painter->setBrush(QBrush(Theme->ptDark));
   painter->drawRoundedRect(this->rect(), 5, 5);
+}
+
+//==============================================================================
+
+QFont ptGraphicsThumbGroup::font() const {
+  if (m_InfoText == NULL) {
+    return QApplication::font();
+  } else {
+    return m_InfoText->font();
+  }
 }
 
 //==============================================================================

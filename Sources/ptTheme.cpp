@@ -643,6 +643,20 @@ Following stuff is also needed for normal.css
 Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 ************************************************************************************/
 
+      "#m_MainSplitter {"
+      "  background-color: " % Dark % ";"
+      "  padding: 10px;"
+      "}"
+
+      "#FMTreePane, #FMThumbPane {"
+      "  border-radius: 5px;"
+      "}"
+
+      "QTreeView {"
+      "  border-radius: 5px;"
+      "  padding: 5px;"
+      "}"
+
 
 /** Menu ****************************************/
     "QMenu {"
@@ -767,16 +781,16 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 
     "QSplitter::handle:horizontal {"
     "  background-color: " % Dark % ";"
-    "  border: 1px solid #000;"
-    "  color: #000;"
+//    "  border: 1px solid #000;"
+//    "  color: #000;"
 
     "  width: 4px;"
     "}"
 
     "QSplitter::handle:vertical {"
     "  background-color: " % Dark % ";"
-    "  border: 1px solid #000;"
-    "  color: #000;"
+//    "  border: 1px solid #000;"
+//    "  color: #000;"
 
     "  height: 4px;"
     "}"

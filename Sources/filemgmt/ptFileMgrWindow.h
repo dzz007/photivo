@@ -35,6 +35,7 @@
 #include "ui_ptFileMgrWindow.h"
 #include "ptFileMgrDM.h"
 #include "ptGraphicsThumbGroup.h"
+#include "ptAbstractThumbnailLayouter.h"
 
 //==============================================================================
 
@@ -67,6 +68,8 @@ public:
 
 
 protected:
+  void contextMenuEvent(QContextMenuEvent* event);
+
   /*! Reimplemented from QObject::eventFilter() */
   bool eventFilter(QObject* obj, QEvent* event);
 
@@ -81,28 +84,25 @@ protected:
 
 
 private:
-  void ArrangeThumbnail(ptGraphicsThumbGroup* thumb);
-  void ArrangeThumbnails();
-  void CalcThumbMetrics();
   void ClearScene();
   void CloseWindow();
+  void LayoutAll();
+  void setLayouter(const ptThumbnailLayout layout);
+  void ConstructContextMenu();
 
-  struct {
-    int Col;      // zero based index
-    int Row;      // zero based index
-    int MaxCol;   // max column index
-    int MaxRow;   // max row index
-    int Padding;
-    int CellHeight;   // cell dimensions include padding
-    int CellWidth;    //
-  } m_ThumbMetrics;
-
-  ptThumbnailArrangeMode  m_ArrangeMode;
   ptFileMgrDM*            m_DataModel;
   QGraphicsScene*         m_FilesScene;
   bool                    m_IsFirstShow;
+  ptAbstractThumbnailLayouter* m_Layouter;
   int                     m_ThumbCount;
   int                     m_ThumbListIdx;
+
+  // context menu actions
+  QAction* ac_VerticalThumbs;
+  QAction* ac_HorizontalThumbs;
+  QAction* ac_DetailedThumbs;
+  QActionGroup* ac_ThumbLayoutGroup;
+  QAction* ac_ToggleNaviPane;
 
 
 public slots:
@@ -113,6 +113,12 @@ private slots:
   void fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix);
   void fetchNewThumbs(const bool isLast);
   void on_m_PathInput_returnPressed();
+
+  // context menu slots
+  void verticalThumbs();
+  void horizontalThumbs();
+  void detailedThumbs();
+  void toggleNaviPane();
 
 signals:
   void FileMgrWindowClosed();

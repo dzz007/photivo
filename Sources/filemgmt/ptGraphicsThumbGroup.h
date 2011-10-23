@@ -75,6 +75,9 @@ public:
   */
   void addImage(QImage* image);
 
+  /*! Returns the main font used in the thumbnail. */
+  QFont font() const;
+
   /*! Return the type of file system object this thumbnail group refers to. */
   ptFSOType fsoType() { return m_FSOType; }
 
