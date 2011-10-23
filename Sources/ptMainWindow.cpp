@@ -659,6 +659,7 @@ ptMainWindow::ptMainWindow(const QString Title)
           this,
           SLOT(Event0TimerExpired()));
 
+  FileMgrThumbMaxRowColWidget->setEnabled(Settings->GetInt("FileMgrUseThumbMaxRowCol"));
   UpdateCropToolUI();
   UpdateLfunDistUI();
   UpdateLfunCAUI();

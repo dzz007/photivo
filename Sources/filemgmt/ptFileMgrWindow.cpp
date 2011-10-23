@@ -27,17 +27,23 @@
 #include <QFontMetrics>
 #include <QList>
 #include <QDir>
+#include <QMenu>
+#include <QAction>
 
 #include "../ptDefines.h"
 #include "../ptSettings.h"
 #include "../ptTheme.h"
 #include "ptFileMgrWindow.h"
 #include "ptGraphicsSceneEmitter.h"
+#include "ptRowGridThumbnailLayouter.h"
+#include "ptColumnGridThumbnailLayouter.h"
 
-extern ptSettings* Settings;
-extern ptTheme* Theme;
 extern void CB_MenuFileOpen(const short HaveFile);
-extern QString ImageFileToOpen;
+
+extern ptSettings*  Settings;
+extern ptTheme*     Theme;
+extern QString      ImageFileToOpen;
+extern short        InStartup;
 
 //==============================================================================
 
@@ -51,6 +57,8 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   setMouseTracking(true);
   ptGraphicsSceneEmitter::ConnectThumbnailAction(
       this, SLOT(execThumbnailAction(ptThumbnailAction,QString)) );
+  m_Progressbar->hide();
+  FMTreePane->setVisible(Settings->GetInt("FileMgrShowTreePane"));
 
   // We setup our data module
   m_DataModel = ptFileMgrDM::GetInstance();
@@ -66,15 +74,18 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
   m_FilesView->installEventFilter(this);
+  m_FilesView->verticalScrollBar()->installEventFilter(this);
+  m_FilesView->horizontalScrollBar()->installEventFilter(this);
   m_FilesView->setScene(m_FilesScene);
   connect(m_DataModel->thumbnailer(), SIGNAL(newThumbNotify(const bool)),
           this, SLOT(fetchNewThumbs(const bool)));
   connect(m_DataModel->thumbnailer(), SIGNAL(newImageNotify(ptGraphicsThumbGroup*,QImage*)),
           this, SLOT(fetchNewImages(ptGraphicsThumbGroup*,QImage*)));
 
-  m_Progressbar->hide();
-  m_ArrangeMode = (ptThumbnailArrangeMode)Settings->GetInt("FileMgrThumbArrangeMode");
+  // Layouter must be set after the data model is created!
+  setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
 
+  // Filemgr windwow layout
   if (Settings->m_IniSettings->contains("FileMgrMainSplitter")) {
     m_MainSplitter->restoreState(
         Settings->m_IniSettings->value("FileMgrMainSplitter").toByteArray());
@@ -85,6 +96,8 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
     m_MainSplitter->setSizes(SizesList);
   }
   m_MainSplitter->setStretchFactor(1,1);
+
+  ConstructContextMenu();
 }
 
 //==============================================================================
@@ -95,9 +108,59 @@ ptFileMgrWindow::~ptFileMgrWindow() {
   Settings->m_IniSettings->
       setValue("FileMgrMainSplitter", m_MainSplitter->saveState());
 
-  // To avoid dangling pointers while executing the destroctor destroy singletons last.
+  DelAndNull(m_Layouter);
+
+  // Make sure to destroy all thumbnail related things before the singletons!
   ptFileMgrDM::DestroyInstance();
   ptGraphicsSceneEmitter::DestroyInstance();
+
+  // context menu actions
+  DelAndNull(ac_VerticalThumbs);
+  DelAndNull(ac_HorizontalThumbs);
+  DelAndNull(ac_DetailedThumbs);
+  DelAndNull(ac_ThumbLayoutGroup);
+  DelAndNull(ac_ToggleNaviPane);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::setLayouter(const ptThumbnailLayout layout) {
+  bool RestartThumbnailer = false;
+  if (!InStartup) {
+    if ((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType") == layout)
+      return;
+    RestartThumbnailer = m_DataModel->thumbnailer()->isRunning();
+    m_DataModel->StopThumbnailer();
+    DelAndNull(m_Layouter);
+    Settings->SetValue("FileMgrThumbLayoutType", layout);
+  }
+
+  switch (layout) {
+    case tlVerticalByRow:
+      m_FilesView->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+      m_Layouter = new ptRowGridThumbnailLayouter(m_FilesView);
+      break;
+
+    case tlHorizontalByColumn:
+      m_FilesView->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+      m_Layouter = new ptColumnGridThumbnailLayouter(m_FilesView);
+      break;
+
+    case tlDetailedList:
+      m_FilesView->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+//TODO: re-enable      m_Layouter = new ptDetailedThumbnailLayouter(m_FilesView);
+      break;
+
+    default:
+      assert(!"Unhandled thumbnail layouter type!");
+      break;
+  }
+
+  if (RestartThumbnailer) {
+    DisplayThumbnails(m_DirTree->currentIndex());
+  } else {
+    LayoutAll();
+  }
 }
 
 //==============================================================================
@@ -122,9 +185,9 @@ void ptFileMgrWindow::DisplayThumbnails(const QModelIndex& index, bool clearCach
   m_FilesView->verticalScrollBar()->setValue(0);
   m_ThumbListIdx = 0;
   m_ThumbCount = m_DataModel->setThumbnailDir(index);
-  CalcThumbMetrics();
 
   if (m_ThumbCount > -1) {
+    m_Layouter->LazyInit(m_ThumbCount);
     m_Progressbar->setValue(0);
     m_Progressbar->setMaximum(m_ThumbCount);
     m_DataModel->StartThumbnailer();
@@ -137,7 +200,7 @@ void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
   while (m_ThumbListIdx < m_DataModel->thumbList()->count()) {
     ptGraphicsThumbGroup* thumb = m_DataModel->thumbList()->at(m_ThumbListIdx);
     m_ThumbListIdx++;
-    ArrangeThumbnail(thumb);
+    m_Layouter->Layout(thumb);
     m_FilesScene->addItem(thumb);
   }
 
@@ -166,138 +229,12 @@ void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
 
 //==============================================================================
 
-void ptFileMgrWindow::ArrangeThumbnail(ptGraphicsThumbGroup* thumb) {
-  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth,
-                m_ThumbMetrics.Row * m_ThumbMetrics.CellHeight);
-
-  switch (m_ArrangeMode) {
-    case tamVerticalByRow:
-      if (m_ThumbMetrics.Col >= m_ThumbMetrics.MaxCol) {
-        m_ThumbMetrics.Col = 0;
-        m_ThumbMetrics.Row++;
-      } else {
-        m_ThumbMetrics.Col++;
-      }
-      break;
-
-    case tamHorizontalByColumn:
-      if (m_ThumbMetrics.Row >= m_ThumbMetrics.MaxRow) {
-        m_ThumbMetrics.Row = 0;
-        m_ThumbMetrics.Col++;
-      } else {
-        m_ThumbMetrics.Row++;
-      }
-      break;
-
-    default:
-      assert(!"Unhandled ptArrangeMode");
-      break;
-  }
-}
-
-//==============================================================================
-
-void ptFileMgrWindow::ArrangeThumbnails() {
-  QList<QGraphicsItem*> thumbList = m_FilesScene->items(Qt::AscendingOrder);
-  QListIterator<QGraphicsItem*> i(thumbList);
-  CalcThumbMetrics();
+void ptFileMgrWindow::LayoutAll() {
+  m_Layouter->Init(m_DataModel->thumbList()->count(), m_FilesView->font());
+  QListIterator<ptGraphicsThumbGroup*> i(*m_DataModel->thumbList());
 
   while (i.hasNext()) {
-    if (i.peekNext()->type() == ptGraphicsThumbGroup::Type) {   // check for thumb item group
-      ArrangeThumbnail((ptGraphicsThumbGroup*)i.next());
-    } else {
-      i.next();
-    }
-  }
-}
-
-//==============================================================================
-
-void ptFileMgrWindow::CalcThumbMetrics() {
-  // Current row and column
-  m_ThumbMetrics.Row = 0;
-  m_ThumbMetrics.Col = 0;
-
-  // Padding between thumbnails
-  m_ThumbMetrics.Padding = Settings->GetInt("ThumbnailPadding");
-
-  // Width of a cell, i.e. thumb width + padding
-  m_ThumbMetrics.CellWidth = Settings->GetInt("ThumbnailSize") +
-                             m_ThumbMetrics.Padding +
-                             ptGraphicsThumbGroup::InnerPadding*2;
-
-  // Height of a cell, i.e. thumb height + height of text line with the filename + padding
-  m_ThumbMetrics.CellHeight = m_ThumbMetrics.CellWidth +
-                              QFontMetrics(this->font()).lineSpacing() +
-                              m_ThumbMetrics.Padding*2;
-
-  switch (m_ArrangeMode) {
-    case tamVerticalByRow: {
-      m_FilesView->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-
-      // +Padding because we only take care of padding *between* thumbnails here.
-      // -1 because we start at row 0
-      // This calculation does not take scrollbar width/height into account
-      int RestrictedMax = Settings->GetInt("FileMgrRestrictThumbMaxRowCol") == 0 ?
-                          INT_MAX : Settings->GetInt("FileMgrRestrictThumbMaxRowCol");
-      m_ThumbMetrics.MaxCol =
-          qMin(RestrictedMax,
-               (m_FilesView->width() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellWidth - 1);
-
-      int FullHeight = qCeil((qreal)m_ThumbCount / (qreal)(m_ThumbMetrics.MaxCol + 1)) *
-                       m_ThumbMetrics.CellHeight;
-
-      if (FullHeight >= m_FilesView->height()) {
-        // we have enough thumbs to produce a vertical scrollbar
-        if((m_FilesView->width() - (m_ThumbMetrics.MaxCol + 1)*m_ThumbMetrics.CellWidth) <
-           m_FilesView->verticalScrollBar()->width())
-        { // empty space on the right is not wide enough for scrollbar
-          m_ThumbMetrics.MaxCol--;
-          FullHeight = qCeil((qreal)m_ThumbCount / (qreal)(m_ThumbMetrics.MaxCol + 1)) *
-                       m_ThumbMetrics.CellHeight;
-        }
-      }
-
-      m_FilesScene->setSceneRect(
-          0, 0,
-          m_ThumbMetrics.CellWidth*(m_ThumbMetrics.MaxCol + 1) - m_ThumbMetrics.Padding,
-          FullHeight);
-      break;
-    }
-
-    case tamHorizontalByColumn: {
-      m_FilesView->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
-      int RestrictedMax = Settings->GetInt("FileMgrRestrictThumbMaxRowCol") == 0 ?
-                          INT_MAX : Settings->GetInt("FileMgrRestrictThumbMaxRowCol");
-      m_ThumbMetrics.MaxRow =
-          qMin(RestrictedMax - 1,
-               (m_FilesView->height() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellHeight - 1);
-
-      int FullWidth = qCeil((qreal)m_ThumbCount / (qreal)(m_ThumbMetrics.MaxRow + 1)) *
-                      m_ThumbMetrics.CellWidth;
-
-      if (FullWidth >= m_FilesView->width()) {
-        // we have enough thumbs to produce a vertical scrollbar
-        if((m_FilesView->height() - (m_ThumbMetrics.MaxRow + 1)*m_ThumbMetrics.CellHeight) <
-           m_FilesView->horizontalScrollBar()->height())
-        { // empty space on the bottom is not tall enough for scrollbar
-          m_ThumbMetrics.MaxRow--;
-          FullWidth = qCeil((qreal)m_ThumbCount / (qreal)(m_ThumbMetrics.MaxRow + 1)) *
-                       m_ThumbMetrics.CellWidth;
-        }
-      }
-
-      m_FilesScene->setSceneRect(
-          0, 0,
-          FullWidth,
-          m_ThumbMetrics.CellHeight*(m_ThumbMetrics.MaxRow + 1) - m_ThumbMetrics.Padding);
-      break;
-    }
-
-    default:
-      assert(!"Unhandled ptArrangeMode");
-      break;
+    m_Layouter->Layout(i.next());
   }
 }
 
@@ -309,6 +246,7 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     // Theme and layout stuff
     setStyle(Theme->ptStyle);
     setStyleSheet(Theme->ptStyleSheet);
+    m_TreePaneLayout->setContentsMargins(0,0,0,0);
     m_FileListLayout->setContentsMargins(10,10,10,10);
     m_FileListLayout->setSpacing(10);
     m_Progressbar->setFixedHeight(m_PathInput->height());
@@ -343,33 +281,30 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
   if (obj == m_FilesView && event->type() == QEvent::Resize) {
     // Resize event: Rearrange thumbnails when size of viewport changes
-    ArrangeThumbnails();
-    return false;
+    LayoutAll();
+    return false;   // handle event further
+
+
+  } else if ((obj == m_FilesView->verticalScrollBar() ||
+              obj == m_FilesView->horizontalScrollBar()) &&
+              event->type() == QEvent::Wheel)
+  {
+    // Wheel event
+    int dir = ((QWheelEvent*)event)->delta() > 0 ? -1 : 1;
+    if (m_FilesView->verticalScrollBar()->isVisible()) {
+      m_FilesView->verticalScrollBar()->setValue(
+            m_FilesView->verticalScrollBar()->value() + m_Layouter->Step()*dir);
+
+    } else if (m_FilesView->horizontalScrollBar()->isVisible()) {
+      m_FilesView->horizontalScrollBar()->setValue(
+            m_FilesView->horizontalScrollBar()->value() + m_Layouter->Step()*dir);
+    }
+    return true;    // prevent further event handling
+
 
   } else {
     // make sure parent event filters are executed
     return QWidget::eventFilter(obj, event);
-  }
-}
-
-//==============================================================================
-
-void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
-  // Esc: close file manager
-  if (event->key() == Qt::Key_Escape && event->modifiers() == Qt::NoModifier) {
-    CloseWindow();
-
-  // Ctrl+M: close file manager
-  } else if (event->key() == Qt::Key_M && event->modifiers() == Qt::ControlModifier) {
-    CloseWindow();
-
-  // F5: refresh thumbnails
-  } else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::NoModifier) {
-    DisplayThumbnails(m_DirTree->currentIndex());
-
-  // Shift+F5: clear cache and refresh thumbnails
-  } else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::ShiftModifier) {
-    DisplayThumbnails(m_DirTree->currentIndex(), true);
   }
 }
 
@@ -437,6 +372,122 @@ void ptFileMgrWindow::ClearScene() {
   }
 
   m_DataModel->thumbList()->clear();
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
+  // Esc: close file manager
+  if (event->key() == Qt::Key_Escape && event->modifiers() == Qt::NoModifier) {
+    CloseWindow();
+  }
+  // Ctrl+M: close file manager
+  else if (event->key() == Qt::Key_M && event->modifiers() == Qt::ControlModifier) {
+    CloseWindow();
+  }
+  // F5: refresh thumbnails
+  else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::NoModifier) {
+    DisplayThumbnails(m_DirTree->currentIndex());
+  }
+  // Shift+F5: clear cache and refresh thumbnails
+  else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::ShiftModifier) {
+    DisplayThumbnails(m_DirTree->currentIndex(), true);
+  }
+  // F11: toggles fullscreen (handled by main window)
+  else if (event->key() == Qt::Key_F11 && event->modifiers() == Qt::NoModifier) {
+    event->ignore();
+  }
+  // Alt+1: vertical thumbnail view
+  else if (event->key() == Qt::Key_1 && event->modifiers() == Qt::AltModifier) {
+    setLayouter(tlVerticalByRow);
+  }
+  // Alt+2: horizontal thumbnail view
+  else if (event->key() == Qt::Key_2 && event->modifiers() == Qt::AltModifier) {
+    setLayouter(tlHorizontalByColumn);
+  }
+  // Alt+3: detailed thumbnail view
+//TODO: re-enable  else if (event->key() == Qt::Key_3 && event->modifiers() == Qt::AltModifier) {
+//    setLayouter(tlDetailedList);
+//  }
+  // Space: toggles tree pane
+  else if (event->key() == Qt::Key_Space && event->modifiers() == Qt::NoModifier) {
+    toggleNaviPane();
+  }
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::ConstructContextMenu() {
+  // Actions for thumbnail view submenu
+  ptThumbnailLayout currLayout = (ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType");
+  ac_VerticalThumbs = new QAction(tr("&Vertical") + "\t" + tr("Alt+1"), this);
+  ac_VerticalThumbs->setCheckable(true);
+  ac_VerticalThumbs->setChecked(currLayout == tlVerticalByRow);
+  connect(ac_VerticalThumbs, SIGNAL(triggered()), this, SLOT(verticalThumbs()));
+
+  ac_HorizontalThumbs = new QAction(tr("&Horizontal") + "\t" + tr("Alt+2"), this);
+  ac_HorizontalThumbs->setCheckable(true);
+  ac_HorizontalThumbs->setChecked(currLayout == tlHorizontalByColumn);
+  connect(ac_HorizontalThumbs, SIGNAL(triggered()), this, SLOT(horizontalThumbs()));
+
+  ac_DetailedThumbs = new QAction(tr("&Details") + "\t" + tr("Alt+3"), this);
+  ac_DetailedThumbs->setCheckable(true);
+  ac_DetailedThumbs->setChecked(currLayout == tlDetailedList);
+  connect(ac_DetailedThumbs, SIGNAL(triggered()), this, SLOT(detailedThumbs()));
+
+  ac_ThumbLayoutGroup = new QActionGroup(this);
+  ac_ThumbLayoutGroup->setExclusive(true);
+  ac_ThumbLayoutGroup->addAction(ac_VerticalThumbs);
+  ac_ThumbLayoutGroup->addAction(ac_HorizontalThumbs);
+//TODO: re-enable  ac_ThumbLayoutGroup->addAction(ac_DetailedThumbs);
+
+  // actions for main context menu
+  ac_ToggleNaviPane = new QAction(tr("Show &navigation pane") + "\t" + tr("Space"), this);
+  ac_ToggleNaviPane->setCheckable(true);
+  connect(ac_ToggleNaviPane, SIGNAL(triggered()), this, SLOT(toggleNaviPane()));
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
+  // thumbnail view submenu
+  QMenu MenuThumbLayout(tr("Thumbnail &view"), this);
+  MenuThumbLayout.addActions(ac_ThumbLayoutGroup->actions());
+
+  // main context menu
+  QMenu Menu(this);
+  Menu.setPalette(Theme->ptMenuPalette);
+  Menu.setStyle(Theme->ptStyle);
+  Menu.addMenu(&MenuThumbLayout);
+  Menu.addSeparator();
+  Menu.addAction(ac_ToggleNaviPane);
+
+  Menu.exec(((QMouseEvent*)event)->globalPos());
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::verticalThumbs() {
+  setLayouter(tlVerticalByRow);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::horizontalThumbs() {
+  setLayouter(tlHorizontalByColumn);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::detailedThumbs() {
+  setLayouter(tlDetailedList);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::toggleNaviPane() {
+  FMTreePane->setVisible(!FMTreePane->isVisible());
+  Settings->SetValue("FileMgrShowTreePane", (int)FMTreePane->isVisible());
 }
 
 //==============================================================================

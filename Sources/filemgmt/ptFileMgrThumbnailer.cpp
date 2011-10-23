@@ -100,7 +100,7 @@ void ptFileMgrThumbnailer::run() {
   }
 
   QFileInfoList files = m_Dir->entryInfoList();
-  int thumbMaxSize = Settings->GetInt("ThumbnailSize");
+  int thumbMaxSize = Settings->GetInt("FileMgrThumbnailSize");
   QSize thumbSize = QSize(thumbMaxSize, thumbMaxSize);
 
   /***
