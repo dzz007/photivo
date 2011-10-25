@@ -20,8 +20,8 @@
    <string>photivo</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../qrc/photivo.qrc">
-    <normaloff>:/photivo/photivo.png</normaloff>:/photivo/photivo.png</iconset>
+   <iconset>
+    <normaloff>:/photivo-appicon.png</normaloff>:/photivo-appicon.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -184,16 +184,29 @@
                    </widget>
                   </item>
                   <item>
+                   <spacer name="horizontalSpacer_82">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>4</width>
+                      <height>10</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
                    <widget class="QToolButton" name="SearchResetButton">
                     <property name="toolTip">
                      <string>Reset</string>
                     </property>
-                    <property name="text">
-                     <string>Reset</string>
-                    </property>
                     <property name="icon">
                      <iconset resource="../qrc/photivo.qrc">
-                      <normaloff>:/photivo/Icons/reload.png</normaloff>:/photivo/Icons/reload.png</iconset>
+                      <normaloff>:/dark/icons/edit-clear.png</normaloff>:/dark/icons/edit-clear.png</iconset>
                     </property>
                     <property name="iconSize">
                      <size>
@@ -224,12 +237,9 @@
                     <property name="toolTip">
                      <string>Favourite tools</string>
                     </property>
-                    <property name="text">
-                     <string>Favourite tools</string>
-                    </property>
                     <property name="icon">
                      <iconset resource="../qrc/photivo.qrc">
-                      <normaloff>:/photivo/Icons/star.png</normaloff>:/photivo/Icons/star.png</iconset>
+                      <normaloff>:/dark/icons/bookmarked-tools.png</normaloff>:/dark/icons/bookmarked-tools.png</iconset>
                     </property>
                     <property name="iconSize">
                      <size>
@@ -247,12 +257,9 @@
                     <property name="toolTip">
                      <string>All visible tools</string>
                     </property>
-                    <property name="text">
-                     <string>All tools</string>
-                    </property>
                     <property name="icon">
                      <iconset resource="../qrc/photivo.qrc">
-                      <normaloff>:/photivo/Icons/lines.png</normaloff>:/photivo/Icons/lines.png</iconset>
+                      <normaloff>:/dark/icons/visible-tools.png</normaloff>:/dark/icons/visible-tools.png</iconset>
                     </property>
                     <property name="iconSize">
                      <size>
@@ -270,12 +277,9 @@
                     <property name="toolTip">
                      <string>Active tools</string>
                     </property>
-                    <property name="text">
-                     <string>Active tools</string>
-                    </property>
                     <property name="icon">
                      <iconset resource="../qrc/photivo.qrc">
-                      <normaloff>:/photivo/Icons/exec.png</normaloff>:/photivo/Icons/exec.png</iconset>
+                      <normaloff>:/dark/icons/active-tools.png</normaloff>:/dark/icons/active-tools.png</iconset>
                     </property>
                     <property name="iconSize">
                      <size>
@@ -371,7 +375,7 @@
                            <item>
                             <widget class="QToolBox" name="toolBox_2">
                              <property name="currentIndex">
-                              <number>2</number>
+                              <number>0</number>
                              </property>
                              <widget class="QWidget" name="TabInput">
                               <property name="geometry">
@@ -401,14 +405,11 @@
                                      <item>
                                       <widget class="QToolButton" name="OpenFileButton">
                                        <property name="toolTip">
-                                        <string>Open file</string>
-                                       </property>
-                                       <property name="text">
-                                        <string>WP</string>
+                                        <string>Load image</string>
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/load-image.png</normaloff>:/dark/icons/load-image.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -455,12 +456,9 @@
                                        <property name="toolTip">
                                         <string>Open settings file</string>
                                        </property>
-                                       <property name="text">
-                                        <string>WP</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/load-config.png</normaloff>:/dark/icons/load-config.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -507,12 +505,9 @@
                                        <property name="toolTip">
                                         <string>Open settings file</string>
                                        </property>
-                                       <property name="text">
-                                        <string>WP</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/load-config.png</normaloff>:/dark/icons/load-config.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -595,12 +590,9 @@
                                       <property name="toolTip">
                                        <string>Load a camera profile</string>
                                       </property>
-                                      <property name="text">
-                                       <string>Load</string>
-                                      </property>
                                       <property name="icon">
                                        <iconset resource="../qrc/photivo.qrc">
-                                        <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                        <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                       </property>
                                       <property name="iconSize">
                                        <size>
@@ -805,12 +797,9 @@
                                        <property name="toolTip">
                                         <string>Spot white balance</string>
                                        </property>
-                                       <property name="text">
-                                        <string>WP</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/target.png</normaloff>:/photivo/Icons/target.png</iconset>
+                                         <normaloff>:/dark/icons/spot-wb.png</normaloff>:/dark/icons/spot-wb.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -1221,14 +1210,14 @@
                            <item>
                             <widget class="QToolBox" name="GeometryToolbox">
                              <property name="currentIndex">
-                              <number>9</number>
+                              <number>6</number>
                              </property>
                              <widget class="QWidget" name="TabLensfunLensParameters">
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>97</width>
+                                <width>98</width>
                                 <height>150</height>
                                </rect>
                               </property>
@@ -1370,7 +1359,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
+                                <width>98</width>
                                 <height>183</height>
                                </rect>
                               </property>
@@ -1478,7 +1467,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
+                                <width>98</width>
                                 <height>103</height>
                                </rect>
                               </property>
@@ -1562,7 +1551,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>86</width>
+                                <width>98</width>
                                 <height>167</height>
                                </rect>
                               </property>
@@ -1783,7 +1772,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -1829,8 +1818,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>165</width>
-                                <height>208</height>
+                                <width>719</width>
+                                <height>259</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -1851,12 +1840,9 @@
                                        <property name="toolTip">
                                         <string>Rotate left</string>
                                        </property>
-                                       <property name="text">
-                                        <string>Rotate left</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/rotateleft.png</normaloff>:/photivo/Icons/rotateleft.png</iconset>
+                                         <normaloff>:/dark/icons/rotate-left.png</normaloff>:/dark/icons/rotate-left.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -1871,12 +1857,9 @@
                                        <property name="toolTip">
                                         <string>Rotate right</string>
                                        </property>
-                                       <property name="text">
-                                        <string>Rotate right</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/rotateright.png</normaloff>:/photivo/Icons/rotateright.png</iconset>
+                                         <normaloff>:/dark/icons/rotate-right.png</normaloff>:/dark/icons/rotate-right.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -1907,12 +1890,9 @@
                                        <property name="toolTip">
                                         <string>Get rotate angle</string>
                                        </property>
-                                       <property name="text">
-                                        <string>Rotate angle</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/angle.png</normaloff>:/photivo/Icons/angle.png</iconset>
+                                         <normaloff>:/dark/icons/rotate-angle.png</normaloff>:/dark/icons/rotate-angle.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -2118,12 +2098,9 @@
                                        <property name="toolTip">
                                         <string>Make a crop</string>
                                        </property>
-                                       <property name="text">
-                                        <string>Crop area</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/rectangle.png</normaloff>:/photivo/Icons/rectangle.png</iconset>
+                                         <normaloff>:/dark/icons/crop.png</normaloff>:/dark/icons/crop.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -2141,12 +2118,9 @@
                                        <property name="toolTip">
                                         <string>Confirm crop</string>
                                        </property>
-                                       <property name="text">
-                                        <string>Confirm crop</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/checkgreen.png</normaloff>:/photivo/Icons/checkgreen.png</iconset>
+                                         <normaloff>:/dark/icons/dialog-ok.png</normaloff>:/dark/icons/dialog-ok.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -2161,12 +2135,9 @@
                                        <property name="toolTip">
                                         <string>Cancel crop</string>
                                        </property>
-                                       <property name="text">
-                                        <string>Cancel crop</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/cancel.png</normaloff>:/photivo/Icons/cancel.png</iconset>
+                                         <normaloff>:/dark/icons/dialog-cancel.png</normaloff>:/dark/icons/dialog-cancel.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -2197,12 +2168,9 @@
                                        <property name="toolTip">
                                         <string>Switch crop between portrait/landscape</string>
                                        </property>
-                                       <property name="text">
-                                        <string>Switch crop between portrait/landscape</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/PortraitLandscape.png</normaloff>:/photivo/Icons/PortraitLandscape.png</iconset>
+                                         <normaloff>:/dark/icons/switch-orientation.png</normaloff>:/dark/icons/switch-orientation.png</iconset>
                                        </property>
                                       </widget>
                                      </item>
@@ -2211,12 +2179,9 @@
                                        <property name="toolTip">
                                         <string>Center horizontally</string>
                                        </property>
-                                       <property name="text">
-                                        <string>Center horizontally</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/center-hor.png</normaloff>:/photivo/Icons/center-hor.png</iconset>
+                                         <normaloff>:/dark/icons/image-center-hor.png</normaloff>:/dark/icons/image-center-hor.png</iconset>
                                        </property>
                                       </widget>
                                      </item>
@@ -2225,12 +2190,9 @@
                                        <property name="toolTip">
                                         <string>Center vertically</string>
                                        </property>
-                                       <property name="text">
-                                        <string>Center vertically</string>
-                                       </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/center-vert.png</normaloff>:/photivo/Icons/center-vert.png</iconset>
+                                         <normaloff>:/dark/icons/image-center-vert.png</normaloff>:/dark/icons/image-center-vert.png</iconset>
                                        </property>
                                       </widget>
                                      </item>
@@ -2405,7 +2367,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>91</width>
+                                <width>98</width>
                                 <height>152</height>
                                </rect>
                               </property>
@@ -2533,8 +2495,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>719</width>
-                                <height>259</height>
+                                <width>98</width>
+                                <height>86</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -2608,7 +2570,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>52</height>
                                </rect>
                               </property>
@@ -2645,7 +2607,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>52</height>
                                </rect>
                               </property>
@@ -2717,7 +2679,7 @@
                               <number>-2</number>
                              </property>
                              <property name="currentIndex">
-                              <number>4</number>
+                              <number>15</number>
                              </property>
                              <widget class="QWidget" name="TabChannelMixer">
                               <property name="geometry">
@@ -2750,7 +2712,7 @@
                                       </property>
                                       <property name="icon">
                                        <iconset resource="../qrc/photivo.qrc">
-                                        <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                        <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                       </property>
                                       <property name="iconSize">
                                        <size>
@@ -2767,7 +2729,7 @@
                                       </property>
                                       <property name="icon">
                                        <iconset resource="../qrc/photivo.qrc">
-                                        <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                        <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                       </property>
                                       <property name="iconSize">
                                        <size>
@@ -2911,7 +2873,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>84</height>
                                </rect>
                               </property>
@@ -2954,7 +2916,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>116</height>
                                </rect>
                               </property>
@@ -3016,7 +2978,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>84</height>
                                </rect>
                               </property>
@@ -3059,8 +3021,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>719</width>
-                                <height>151</height>
+                                <width>98</width>
+                                <height>110</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3156,7 +3118,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -3202,7 +3164,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>68</height>
                                </rect>
                               </property>
@@ -3242,7 +3204,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>52</height>
                                </rect>
                               </property>
@@ -3279,7 +3241,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>68</height>
                                </rect>
                               </property>
@@ -3319,7 +3281,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>212</height>
                                </rect>
                               </property>
@@ -3399,7 +3361,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>132</height>
                                </rect>
                               </property>
@@ -3451,7 +3413,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>164</height>
                                </rect>
                               </property>
@@ -3509,7 +3471,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>164</height>
                                </rect>
                               </property>
@@ -3567,7 +3529,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>68</height>
                                </rect>
                               </property>
@@ -3610,7 +3572,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>68</height>
                                </rect>
                               </property>
@@ -3650,8 +3612,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
-                                <height>76</height>
+                                <width>719</width>
+                                <height>151</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3714,7 +3676,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -3737,7 +3699,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -3821,15 +3783,15 @@
                            <item>
                             <widget class="QToolBox" name="toolBox_5">
                              <property name="currentIndex">
-                              <number>0</number>
+                              <number>4</number>
                              </property>
                              <widget class="QWidget" name="TabLABTransform">
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>719</width>
-                                <height>178</height>
+                                <width>98</width>
+                                <height>52</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -3932,7 +3894,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -3955,7 +3917,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -4007,7 +3969,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>212</height>
                                </rect>
                               </property>
@@ -4087,7 +4049,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>84</height>
                                </rect>
                               </property>
@@ -4130,8 +4092,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
-                                <height>76</height>
+                                <width>719</width>
+                                <height>178</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -4191,7 +4153,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -4214,7 +4176,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -4269,7 +4231,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>132</height>
                                </rect>
                               </property>
@@ -4321,7 +4283,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>132</height>
                                </rect>
                               </property>
@@ -4373,7 +4335,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>158</height>
                                </rect>
                               </property>
@@ -4418,7 +4380,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>164</height>
                                </rect>
                               </property>
@@ -4476,7 +4438,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -4522,7 +4484,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -4568,7 +4530,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>68</height>
                                </rect>
                               </property>
@@ -4611,7 +4573,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>52</height>
                                </rect>
                               </property>
@@ -4651,7 +4613,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>68</height>
                                </rect>
                               </property>
@@ -4691,7 +4653,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>68</height>
                                </rect>
                               </property>
@@ -4763,14 +4725,14 @@
                            <item>
                             <widget class="QToolBox" name="toolBox_4">
                              <property name="currentIndex">
-                              <number>6</number>
+                              <number>12</number>
                              </property>
                              <widget class="QWidget" name="TabLABImpulseDenoise">
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>68</height>
                                </rect>
                               </property>
@@ -4810,7 +4772,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>164</height>
                                </rect>
                               </property>
@@ -4881,7 +4843,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>254</height>
                                </rect>
                               </property>
@@ -4982,7 +4944,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>93</width>
+                                <width>98</width>
                                 <height>126</height>
                                </rect>
                               </property>
@@ -5074,7 +5036,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>212</height>
                                </rect>
                               </property>
@@ -5154,7 +5116,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -5200,8 +5162,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>719</width>
-                                <height>124</height>
+                                <width>110</width>
+                                <height>122</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5258,7 +5220,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -5281,7 +5243,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -5339,7 +5301,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -5385,7 +5347,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -5489,7 +5451,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -5512,7 +5474,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -5573,7 +5535,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>164</height>
                                </rect>
                               </property>
@@ -5657,7 +5619,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>126</height>
                                </rect>
                               </property>
@@ -5734,8 +5696,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>78</height>
+                                <width>719</width>
+                                <height>124</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -5805,7 +5767,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -5851,7 +5813,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -5897,7 +5859,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>269</height>
                                </rect>
                               </property>
@@ -6039,7 +6001,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>52</height>
                                </rect>
                               </property>
@@ -6111,15 +6073,15 @@
                            <item>
                             <widget class="QToolBox" name="toolBox_6">
                              <property name="currentIndex">
-                              <number>0</number>
+                              <number>12</number>
                              </property>
                              <widget class="QWidget" name="TabOutline">
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>719</width>
-                                <height>232</height>
+                                <width>110</width>
+                                <height>164</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -6216,7 +6178,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6239,7 +6201,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6291,7 +6253,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
+                                <width>98</width>
                                 <height>76</height>
                                </rect>
                               </property>
@@ -6352,7 +6314,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6375,7 +6337,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6430,7 +6392,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
+                                <width>98</width>
                                 <height>76</height>
                                </rect>
                               </property>
@@ -6491,7 +6453,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6514,7 +6476,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6569,7 +6531,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
+                                <width>98</width>
                                 <height>76</height>
                                </rect>
                               </property>
@@ -6630,7 +6592,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6653,7 +6615,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6708,7 +6670,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
+                                <width>98</width>
                                 <height>76</height>
                                </rect>
                               </property>
@@ -6769,7 +6731,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6792,7 +6754,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6844,7 +6806,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
+                                <width>98</width>
                                 <height>130</height>
                                </rect>
                               </property>
@@ -6905,7 +6867,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -6928,7 +6890,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -7004,7 +6966,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -7027,7 +6989,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -7079,7 +7041,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>100</height>
                                </rect>
                               </property>
@@ -7125,7 +7087,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>148</height>
                                </rect>
                               </property>
@@ -7180,7 +7142,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>148</height>
                                </rect>
                               </property>
@@ -7235,7 +7197,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>164</height>
                                </rect>
                               </property>
@@ -7293,7 +7255,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>164</height>
                                </rect>
                               </property>
@@ -7351,7 +7313,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>90</width>
+                                <width>98</width>
                                 <height>304</height>
                                </rect>
                               </property>
@@ -7473,8 +7435,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
-                                <height>174</height>
+                                <width>719</width>
+                                <height>232</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -7591,14 +7553,14 @@
                            <item>
                             <widget class="QToolBox" name="ToolBoxEyeCandy">
                              <property name="currentIndex">
-                              <number>10</number>
+                              <number>6</number>
                              </property>
                              <widget class="QWidget" name="TabBW">
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>126</height>
                                </rect>
                               </property>
@@ -7675,7 +7637,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>84</height>
                                </rect>
                               </property>
@@ -7922,7 +7884,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>84</height>
                                </rect>
                               </property>
@@ -7965,7 +7927,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>68</height>
                                </rect>
                               </property>
@@ -8005,7 +7967,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>146</width>
+                                <width>702</width>
                                 <height>232</height>
                                </rect>
                               </property>
@@ -8063,7 +8025,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/reload.png</normaloff>:/photivo/Icons/reload.png</iconset>
+                                         <normaloff>:/dark/icons/reset.png</normaloff>:/dark/icons/reset.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -8096,7 +8058,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -8382,7 +8344,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>174</height>
                                </rect>
                               </property>
@@ -8468,7 +8430,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>702</width>
+                                <width>98</width>
                                 <height>190</height>
                                </rect>
                               </property>
@@ -8573,7 +8535,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>94</width>
+                                <width>98</width>
                                 <height>190</height>
                                </rect>
                               </property>
@@ -8678,7 +8640,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>116</height>
                                </rect>
                               </property>
@@ -8727,7 +8689,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>116</height>
                                </rect>
                               </property>
@@ -8789,8 +8751,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
-                                <height>76</height>
+                                <width>719</width>
+                                <height>124</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8850,7 +8812,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -8873,7 +8835,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -8925,7 +8887,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
+                                <width>98</width>
                                 <height>76</height>
                                </rect>
                               </property>
@@ -8986,7 +8948,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -9009,7 +8971,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -9061,7 +9023,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
+                                <width>98</width>
                                 <height>76</height>
                                </rect>
                               </property>
@@ -9122,7 +9084,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -9145,7 +9107,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -9232,15 +9194,15 @@
                               <enum>Qt::DefaultContextMenu</enum>
                              </property>
                              <property name="currentIndex">
-                              <number>5</number>
+                              <number>0</number>
                              </property>
                              <widget class="QWidget" name="TabBaseCurve">
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>96</width>
-                                <height>76</height>
+                                <width>719</width>
+                                <height>340</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9300,7 +9262,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -9323,7 +9285,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -9375,7 +9337,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>84</height>
                                </rect>
                               </property>
@@ -9450,7 +9412,7 @@
                                       </property>
                                       <property name="icon">
                                        <iconset resource="../qrc/photivo.qrc">
-                                        <normaloff>:/photivo/Icons/reload.png</normaloff>:/photivo/Icons/reload.png</iconset>
+                                        <normaloff>:/dark/icons/reset.png</normaloff>:/dark/icons/reset.png</iconset>
                                       </property>
                                       <property name="iconSize">
                                        <size>
@@ -9483,7 +9445,7 @@
                                       </property>
                                       <property name="icon">
                                        <iconset resource="../qrc/photivo.qrc">
-                                        <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                        <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                       </property>
                                       <property name="iconSize">
                                        <size>
@@ -9592,7 +9554,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -9615,7 +9577,7 @@
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../qrc/photivo.qrc">
-                                         <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                         <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                        </property>
                                        <property name="iconSize">
                                         <size>
@@ -9667,7 +9629,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>68</height>
                                </rect>
                               </property>
@@ -9707,8 +9669,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>719</width>
-                                <height>340</height>
+                                <width>98</width>
+                                <height>104</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9809,7 +9771,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>126</height>
                                </rect>
                               </property>
@@ -10188,7 +10150,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>83</width>
+                                <width>98</width>
                                 <height>50</height>
                                </rect>
                               </property>
@@ -10221,7 +10183,7 @@
                                     </property>
                                     <property name="icon">
                                      <iconset resource="../qrc/photivo.qrc">
-                                      <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                      <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                     </property>
                                     <property name="iconSize">
                                      <size>
@@ -10286,7 +10248,7 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>87</width>
+                        <width>98</width>
                         <height>195</height>
                        </rect>
                       </property>
@@ -10349,7 +10311,7 @@
                                  <string/>
                                 </property>
                                 <property name="pixmap">
-                                 <pixmap resource="../qrc/photivo.qrc">:/photivo/photivo.png</pixmap>
+                                 <pixmap>:/photivo-appicon.png</pixmap>
                                 </property>
                                </widget>
                               </item>
@@ -11053,8 +11015,8 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>63</width>
-                        <height>18</height>
+                        <width>98</width>
+                        <height>28</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_248"/>
@@ -11087,7 +11049,7 @@
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>87</width>
+                        <width>98</width>
                         <height>573</height>
                        </rect>
                       </property>
@@ -11114,7 +11076,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
+                            <width>98</width>
                             <height>52</height>
                            </rect>
                           </property>
@@ -11187,7 +11149,7 @@
                                    </property>
                                    <property name="icon">
                                     <iconset resource="../qrc/photivo.qrc">
-                                     <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                     <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                    </property>
                                    <property name="iconSize">
                                     <size>
@@ -11281,7 +11243,7 @@
                                   </property>
                                   <property name="icon">
                                    <iconset resource="../qrc/photivo.qrc">
-                                    <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                    <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                   </property>
                                   <property name="iconSize">
                                    <size>
@@ -11301,7 +11263,7 @@
                                   </property>
                                   <property name="icon">
                                    <iconset resource="../qrc/photivo.qrc">
-                                    <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+                                    <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
                                   </property>
                                   <property name="iconSize">
                                    <size>
@@ -11334,7 +11296,7 @@
                                   </property>
                                   <property name="icon">
                                    <iconset resource="../qrc/photivo.qrc">
-                                    <normaloff>:/photivo/Icons/cancel.png</normaloff>:/photivo/Icons/cancel.png</iconset>
+                                    <normaloff>:/dark/icons/dialog-cancel.png</normaloff>:/dark/icons/dialog-cancel.png</iconset>
                                   </property>
                                   <property name="iconSize">
                                    <size>
@@ -11401,7 +11363,7 @@
                                   </property>
                                   <property name="icon">
                                    <iconset resource="../qrc/photivo.qrc">
-                                    <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                    <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                   </property>
                                   <property name="iconSize">
                                    <size>
@@ -11468,7 +11430,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
+                            <width>98</width>
                             <height>52</height>
                            </rect>
                           </property>
@@ -11553,7 +11515,7 @@
                                    </property>
                                    <property name="icon">
                                     <iconset resource="../qrc/photivo.qrc">
-                                     <normaloff>:/photivo/Icons/folder_grey_open.png</normaloff>:/photivo/Icons/folder_grey_open.png</iconset>
+                                     <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                    </property>
                                    <property name="iconSize">
                                     <size>
@@ -11754,7 +11716,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
+                            <width>98</width>
                             <height>52</height>
                            </rect>
                           </property>
@@ -11791,7 +11753,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
+                            <width>98</width>
                             <height>52</height>
                            </rect>
                           </property>
@@ -11828,7 +11790,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
+                            <width>98</width>
                             <height>52</height>
                            </rect>
                           </property>
@@ -11865,7 +11827,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
+                            <width>98</width>
                             <height>52</height>
                            </rect>
                           </property>
@@ -11988,7 +11950,7 @@
                                    </property>
                                    <property name="icon">
                                     <iconset resource="../qrc/photivo.qrc">
-                                     <normaloff>:/photivo/Icons/style.png</normaloff>:/photivo/Icons/style.png</iconset>
+                                     <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
                                    </property>
                                    <property name="iconSize">
                                     <size>
@@ -12166,7 +12128,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
+                            <width>98</width>
                             <height>52</height>
                            </rect>
                           </property>
@@ -12203,7 +12165,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
+                            <width>98</width>
                             <height>84</height>
                            </rect>
                           </property>
@@ -12246,7 +12208,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
+                            <width>98</width>
                             <height>52</height>
                            </rect>
                           </property>
@@ -12362,7 +12324,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>83</width>
+                            <width>98</width>
                             <height>52</height>
                            </rect>
                           </property>
@@ -12444,12 +12406,12 @@
                  <string>Change preview mode</string>
                 </property>
                 <property name="text">
-                 <string>Preview mode</string>
+                 <string/>
                 </property>
                 <property name="icon">
                  <iconset resource="../qrc/photivo.qrc">
-                  <normaloff>:/photivo/Icons/arrow.png</normaloff>
-                  <normalon>:/photivo/Icons/arrow-stop.png</normalon>:/photivo/Icons/arrow.png</iconset>
+                  <normaloff>:/dark/icons/preview-mode-full.png</normaloff>
+                  <normalon>:/dark/icons/preview-mode-tabs.png</normalon>:/dark/icons/preview-mode-full.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -12502,11 +12464,11 @@
                  <string>Run pipe</string>
                 </property>
                 <property name="text">
-                 <string>Run</string>
+                 <string/>
                 </property>
                 <property name="icon">
                  <iconset resource="../qrc/photivo.qrc">
-                  <normaloff>:/photivo/Icons/play.png</normaloff>:/photivo/Icons/play.png</iconset>
+                  <normaloff>:/dark/icons/run-pipe.png</normaloff>:/dark/icons/run-pipe.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -12538,14 +12500,14 @@
            <item>
             <widget class="QToolButton" name="ResetButton">
              <property name="toolTip">
-              <string>Reset</string>
+              <string>Load template</string>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string/>
              </property>
              <property name="icon">
               <iconset resource="../qrc/photivo.qrc">
-               <normaloff>:/photivo/Icons/reload.png</normaloff>:/photivo/Icons/reload.png</iconset>
+               <normaloff>:/dark/icons/load-config.png</normaloff>:/dark/icons/load-config.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -12558,14 +12520,14 @@
            <item>
             <widget class="QToolButton" name="WritePipeButton">
              <property name="toolTip">
-              <string>Write output to a file</string>
+              <string>Save image</string>
              </property>
              <property name="text">
-              <string>Save</string>
+              <string/>
              </property>
              <property name="icon">
               <iconset resource="../qrc/photivo.qrc">
-               <normaloff>:/photivo/Icons/filesave.png</normaloff>:/photivo/Icons/filesave.png</iconset>
+               <normaloff>:/dark/icons/save-image.png</normaloff>:/dark/icons/save-image.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -12578,14 +12540,14 @@
            <item>
             <widget class="QToolButton" name="ToGimpButton">
              <property name="toolTip">
-              <string>Send to Gimp</string>
+              <string>Send image to external editor</string>
              </property>
              <property name="text">
-              <string>Export</string>
+              <string/>
              </property>
              <property name="icon">
               <iconset resource="../qrc/photivo.qrc">
-               <normaloff>:/photivo/Icons/wilber.png</normaloff>:/photivo/Icons/wilber.png</iconset>
+               <normaloff>:/dark/icons/export-image.png</normaloff>:/dark/icons/export-image.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -12672,37 +12634,14 @@
            <item>
             <widget class="QToolButton" name="TabProcessingButton">
              <property name="toolTip">
-              <string>Show processing</string>
+              <string>Processing pane</string>
              </property>
              <property name="text">
-              <string>Show processing</string>
+              <string/>
              </property>
              <property name="icon">
               <iconset resource="../qrc/photivo.qrc">
-               <normaloff>:/photivo/Icons/exec.png</normaloff>:/photivo/Icons/exec.png</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>16</width>
-               <height>16</height>
-              </size>
-             </property>
-             <property name="toolButtonStyle">
-              <enum>Qt::ToolButtonIconOnly</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="TabSettingsButton">
-             <property name="toolTip">
-              <string>Show settings</string>
-             </property>
-             <property name="text">
-              <string>Show settings</string>
-             </property>
-             <property name="icon">
-              <iconset resource="../qrc/photivo.qrc">
-               <normaloff>:/photivo/Icons/configure.png</normaloff>:/photivo/Icons/configure.png</iconset>
+               <normaloff>:/dark/icons/processing-pane.png</normaloff>:/dark/icons/processing-pane.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -12718,14 +12657,37 @@
            <item>
             <widget class="QToolButton" name="TabInfoButton">
              <property name="toolTip">
-              <string>Show info</string>
+              <string>Info pane</string>
              </property>
              <property name="text">
-              <string>Show info</string>
+              <string/>
              </property>
              <property name="icon">
               <iconset resource="../qrc/photivo.qrc">
-               <normaloff>:/photivo/Icons/info.png</normaloff>:/photivo/Icons/info.png</iconset>
+               <normaloff>:/dark/icons/info-pane.png</normaloff>:/dark/icons/info-pane.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>16</width>
+               <height>16</height>
+              </size>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonIconOnly</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="TabSettingsButton">
+             <property name="toolTip">
+              <string>Photivo settings</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../qrc/photivo.qrc">
+               <normaloff>:/dark/icons/settings-pane.png</normaloff>:/dark/icons/settings-pane.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -12806,8 +12768,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>543</width>
-                  <height>856</height>
+                  <width>498</width>
+                  <height>873</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_240">
@@ -12916,7 +12878,7 @@
                              <string/>
                             </property>
                             <property name="pixmap">
-                             <pixmap resource="../qrc/photivo.qrc">:/photivo/Logo.png</pixmap>
+                             <pixmap>:/photivo-splash.png</pixmap>
                             </property>
                            </widget>
                           </item>
@@ -13097,14 +13059,14 @@
                <item>
                 <widget class="QToolButton" name="ZoomFitButton">
                  <property name="toolTip">
-                  <string>Zoom Fit</string>
+                  <string>Zoom fit</string>
                  </property>
                  <property name="text">
-                  <string>Fit</string>
+                  <string/>
                  </property>
                  <property name="icon">
                   <iconset resource="../qrc/photivo.qrc">
-                   <normaloff>:/photivo/Icons/viewmag_h.png</normaloff>:/photivo/Icons/viewmag_h.png</iconset>
+                   <normaloff>:/dark/icons/zoom-fit.png</normaloff>:/dark/icons/zoom-fit.png</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -13124,7 +13086,7 @@
                  </property>
                  <property name="icon">
                   <iconset resource="../qrc/photivo.qrc">
-                   <normaloff>:/photivo/Icons/viewmag1.png</normaloff>:/photivo/Icons/viewmag1.png</iconset>
+                   <normaloff>:/dark/icons/zoom-original.png</normaloff>:/dark/icons/zoom-original.png</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -13161,13 +13123,10 @@
               <property name="toolTip">
                <string>Fullscreen</string>
               </property>
-              <property name="text">
-               <string>Fullscreen</string>
-              </property>
               <property name="icon">
                <iconset resource="../qrc/photivo.qrc">
-                <normaloff>:/photivo/Icons/FullScreen.png</normaloff>
-                <normalon>:/photivo/Icons/NormalScreen.png</normalon>:/photivo/Icons/FullScreen.png</iconset>
+                <normaloff>:/dark/icons/view-fullscreen.png</normaloff>
+                <normalon>:/dark/icons/view-restore.png</normalon>:/dark/icons/view-fullscreen.png</iconset>
               </property>
               <property name="iconSize">
                <size>

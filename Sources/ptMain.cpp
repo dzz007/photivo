@@ -420,33 +420,18 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Check for wrong GM quantum depth. We need the 16bit GraphicsMagick.
   ulong QDepth = 0;
+  const ulong MinQD = 16;
   MagickGetQuantumDepth(&QDepth);
-  if (QDepth != 16) {
-    QString WrongQDepthMsg = QString(QObject::tr(
+  if (QDepth < MinQD) {
+    QString WrongQDepthMsg = QObject::tr(
         "Fatal error: Wrong GraphicsMagick quantum depth!\n"
-        "Your GraphicsMagick installation has quantum depth %1, but Photivo needs 16.\n")
-        .arg(QDepth));
-  #ifdef Q_OS_WIN32
-    ptMessageBox::critical(0, QObject::tr("Photivo: Fatal Error"), WrongQDepthMsg);
-  #else
+        "Found quantum depth %1. Photivo needs at least %2.\n")
+        .arg(QDepth).arg(MinQD);
     fprintf(stderr,"%s", WrongQDepthMsg.toAscii().data());
-  #endif
+    ptMessageBox::critical(0, QObject::tr("Photivo: Fatal Error"), WrongQDepthMsg);
     exit(EXIT_FAILURE);
   }
 
-
-  // Check for compatible Qt version
-  if (QT_VERSION < 0x040600) {
-    QString WrongQtMsg = QObject::tr(
-        "Fatal error: Your version of Qt is too old!\n"
-        "Photivo requires at least Qt") + " 4.6.\n";
-  #ifdef Q_OS_WIN32
-    ptMessageBox::critical(0, QObject::tr("Photivo: Fatal Error"), WrongQtMsg);
-  #else
-    fprintf(stderr,"%s", WrongQtMsg.toAscii().data());
-  #endif
-    exit(EXIT_FAILURE);
-  }
 
   // Handle cli arguments
   QString PhotivoCliUsageMsg = QObject::tr(
@@ -686,9 +671,9 @@ int photivoMain(int Argc, char *Argv[]) {
       QFile::remove(UserDirectory + "photivo.png");
       QFile::copy(NewShareDirectory + "photivo.png",
               UserDirectory + "photivo.png");
-      QFile::remove(UserDirectory + "photivoLogo.png");
-      QFile::copy(NewShareDirectory + "photivoLogo.png",
-              UserDirectory + "photivoLogo.png");
+//      QFile::remove(UserDirectory + "photivoLogo.png");
+//      QFile::copy(NewShareDirectory + "photivoLogo.png",
+//              UserDirectory + "photivoLogo.png");
       QFile::remove(UserDirectory + "photivoPreview.jpg");
       QFile::copy(NewShareDirectory + "photivoPreview.jpg",
               UserDirectory + "photivoPreview.jpg");
@@ -8950,7 +8935,7 @@ ptImageType CheckImageType(QString filename,
 
     } else {
       // not a supported image format
-      printf(MagickErrorMsg);
+      printf("%s", MagickErrorMsg);
       result = itNotSupported;
       if (width != NULL) *width = 0;
       if (height != NULL) *height = 0;
