@@ -36,23 +36,21 @@ extern QString SettingsFilePattern;
 extern ptCurve* Curve[17];
 extern ptViewWindow* ViewWindow;
 
+//==============================================================================
+
 // Prototypes
 void Update(const QString GuiName);
 int GetProcessorPhase(const QString GuiName);
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptGroupBox::ptGroupBox(const QString Title,
-           QWidget* Parent,
-           const QString Name,
-           const QString TabName,
-           const short TabNumber,
-           const short IndexInTab) {
-
+                       QWidget* Parent,
+                       const QString Name,
+                       const QString TabName,
+                       const short TabNumber,
+                       const short IndexInTab)
+{
   QVBoxLayout *Layout = new QVBoxLayout(this);
 
   setParent(Parent);
@@ -78,19 +76,27 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_Icon = new QLabel();
   m_Icon->setPixmap(DownArrow);
 
-  m_Symbol = new QLabel();
-  m_Symbol->setPixmap(QPixmap(QString::fromUtf8(":/dark/ui-graphics/bubble-attention.png")));
-  m_Symbol->setToolTip(tr("Complex filter. Might be slow."));
+
+  m_SlowIcon = new QLabel();
+  m_SlowIcon->setPixmap(QPixmap(QString::fromUtf8(":/dark/ui-graphics/bubble-attention.png")));
+  m_SlowIcon->setToolTip(tr("Complex filter. Might be slow."));
+  m_SlowIcon->hide();
+  m_SlowIcon->setEnabled(false);
+
+  m_Title = Title;
+  if (m_Title.contains("(*)")) {
+    m_Title.replace("(*)","");
+    m_Title = m_Title.trimmed();
+    m_SlowIcon->setEnabled(true);
+  }
 
   m_HelpIcon = new QLabel();
   m_HelpIcon->setPixmap(*Theme->ptIconQuestion);
+  m_HelpIcon->setCursor(QCursor(Qt::PointingHandCursor));
   m_HelpIcon->setToolTip(tr("Open help page in web browser."));
-  m_HelpIcon->setVisible(0);
+  m_HelpIcon->hide();
+  m_HelpIcon->setEnabled(false);
   m_HelpUri = "";
-
-  m_Title = Title;
-  m_Title.replace("(*)","");
-  m_Title.trimmed();
 
   m_TitleLabel = new QLabel();
   m_TitleLabel->setObjectName("Title");
@@ -102,12 +108,10 @@ ptGroupBox::ptGroupBox(const QString Title,
 
   ButtonLayout->addWidget(m_Icon);
   ButtonLayout->addWidget(m_TitleLabel);
-  ButtonLayout->addWidget(m_HelpIcon);
-  if (m_Title!=Title) {
-    ButtonLayout->addWidget(m_Symbol);
-  }
   ButtonLayout->addStretch();
-  ButtonLayout->setContentsMargins(-3,0,0,0);
+  ButtonLayout->addWidget(m_HelpIcon);
+  ButtonLayout->addWidget(m_SlowIcon);
+  ButtonLayout->setContentsMargins(-3,0,3,0);
   ButtonLayout->setSpacing(4);
   ButtonLayout->setMargin(3);
 
@@ -162,11 +166,8 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_NeedPipeUpdate = 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
 // Information about position in tabs
-//
-////////////////////////////////////////////////////////////////////////////////
 
 QString ptGroupBox::GetTitle() {
   return m_Title;
@@ -184,22 +185,14 @@ short ptGroupBox::GetIndexInTab() {
   return m_IndexInTab;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Update
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::Update() {
   m_IsBlocked = Settings->ToolIsBlocked(m_Name)?1:0;
   UpdateView();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// UpdateView
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::UpdateView() {
   if (m_IsBlocked == 1 || m_IsEnabled == 0) {
@@ -211,12 +204,16 @@ void ptGroupBox::UpdateView() {
 
   if (m_Folded==1) {
     m_Widget->setVisible(false);
+    m_SlowIcon->hide();
+    m_HelpIcon->hide();
     m_Icon->clear();
     if (m_IsBlocked) m_Icon->setPixmap(BlockedRightArrow);
     else if (m_IsActive) m_Icon->setPixmap(ActiveRightArrow);
     else m_Icon->setPixmap(RightArrow);
   } else {
     m_Widget->setVisible(true);
+    if (m_HelpIcon->isEnabled()) m_HelpIcon->show();
+    if (m_SlowIcon->isEnabled()) m_SlowIcon->show();
     m_Icon->clear();
     if (m_IsBlocked) m_Icon->setPixmap(BlockedDownArrow);
     else if (m_IsActive) m_Icon->setPixmap(ActiveDownArrow);
@@ -226,24 +223,20 @@ void ptGroupBox::UpdateView() {
   if (m_Folded!=1) {
     m_Header->setObjectName("ToolHeader");
     m_TitleLabel->setObjectName("ToolHeader");
-    m_Symbol->setObjectName("ToolHeader");
+    m_SlowIcon->setObjectName("ToolHeader");
     m_HelpIcon->setObjectName("ToolHeader");
     m_Icon->setObjectName("ToolHeader");
   } else {
     m_Header->setObjectName("");
     m_TitleLabel->setObjectName("");
-    m_Symbol->setObjectName("");
+    m_SlowIcon->setObjectName("");
     m_HelpIcon->setObjectName("");
     m_Icon->setObjectName("");
   }
   m_Header->setStyleSheet(Theme->ptStyleSheet);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Active
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SetActive(const short IsActive) {
   if (IsActive == m_IsActive)
@@ -253,11 +246,7 @@ void ptGroupBox::SetActive(const short IsActive) {
   UpdateView();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// PipeUpdate
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::PipeUpdate() {
   Settings->SetValue("BlockUpdate",0);
@@ -267,11 +256,7 @@ void ptGroupBox::PipeUpdate() {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Reset
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::Reset() {
   // immediate response
@@ -296,11 +281,7 @@ void ptGroupBox::Reset() {
   m_Timer->start(ptTimeout_Input+100);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Save Settings
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SaveSettings() {
   WriteSettings(0);
@@ -435,11 +416,7 @@ void ptGroupBox::WriteSettings(const short Append) {
     ptMessageBox::critical(0,"Error","Error while writing preset file!");
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Enabled
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SetEnabled(const short Enabled) {
   QStringList Temp = Settings->GetStringList("DisabledTools");
@@ -455,11 +432,7 @@ void ptGroupBox::SetEnabled(const short Enabled) {
   UpdateView();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Blocked
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SetBlocked() {
   m_IsBlocked = 1 - m_IsBlocked;
@@ -480,11 +453,7 @@ void ptGroupBox::SetBlocked() {
     ::Update(m_Name);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Hide
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::Hide() {
   int Active = Settings->ToolIsActive(m_Name);
@@ -496,11 +465,7 @@ void ptGroupBox::Hide() {
   if (Active) ::Update(m_Name);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Set Favourite
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SetFavourite() {
   QStringList Temp = Settings->GetStringList("FavouriteTools");
@@ -512,32 +477,21 @@ void ptGroupBox::SetFavourite() {
   Settings->SetValue("FavouriteTools", Temp);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Set help
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SetHelpUri(const QString Uri) {
   m_HelpUri = Uri;
-  m_HelpIcon->setVisible(true);
+  m_HelpIcon->setEnabled(true);
+  if (!m_Folded)
+    m_HelpIcon->show();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// changeEvent handler.
-// To react on enable/disable
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::changeEvent(QEvent *) {
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// MousePress
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::mousePressEvent(QMouseEvent *event) {
   QPoint Position = event->pos()-m_HelpIcon->pos();
@@ -630,23 +584,9 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
   }
 }
 
- void ptGroupBox::paintEvent(QPaintEvent *)
- {
-   //~ QStyleOption opt;
-   //~ opt.init(this);
-   //~ QPainter p(this);
-   //~ style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
- }
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+void ptGroupBox::paintEvent(QPaintEvent *)
+{}
 
-ptGroupBox::~ptGroupBox() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-
+//==============================================================================
