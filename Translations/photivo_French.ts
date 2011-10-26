@@ -4163,7 +4163,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     <name>ptCurveWindow</name>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="100"/>
-        <source>Adaptive</source>
+        <source>A&amp;daptive</source>
         <translation>Adaptatif</translation>
     </message>
     <message>
@@ -4173,7 +4173,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="104"/>
-        <source>Absolute</source>
+        <source>A&amp;bsolute</source>
         <translation>Absolu</translation>
     </message>
     <message>
@@ -4183,7 +4183,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="115"/>
-        <source>By luminance</source>
+        <source>By l&amp;uminance</source>
         <translation>Par luminance</translation>
     </message>
     <message>
@@ -4193,7 +4193,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="119"/>
-        <source>By color</source>
+        <source>By c&amp;olor</source>
         <translation>Par couleur</translation>
     </message>
     <message>
@@ -4203,7 +4203,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="147"/>
-        <source>Linear</source>
+        <source>&amp;Linear</source>
         <translation>Linéaire</translation>
     </message>
     <message>
@@ -4213,7 +4213,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="151"/>
-        <source>Spline</source>
+        <source>&amp;Spline</source>
         <translation>Spline</translation>
     </message>
     <message>
@@ -4223,7 +4223,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="155"/>
-        <source>Cosine</source>
+        <source>&amp;Cosine</source>
         <translation>Cosinus</translation>
     </message>
     <message>
@@ -4251,28 +4251,28 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="130"/>
-        <source>Hide</source>
+        <source>&amp;Hide</source>
         <translation>Masquer</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="135"/>
         <location filename="../Sources/ptGroupBox.cpp" line="565"/>
-        <source>Block</source>
+        <source>Bl&amp;ock</source>
         <translation>Bloquer</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="140"/>
-        <source>Reset</source>
+        <source>&amp;Reset</source>
         <translation>Remettre à zéro</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="145"/>
-        <source>Save preset</source>
+        <source>&amp;Save preset</source>
         <translation>Enregistrer un préréglage</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="150"/>
-        <source>Append preset</source>
+        <source>&amp;Append preset</source>
         <translation>Ajouter un préréglage</translation>
     </message>
     <message>
@@ -4282,7 +4282,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="562"/>
-        <source>Allow</source>
+        <source>All&amp;ow</source>
         <translation>Autoriser</translation>
     </message>
     <message>
@@ -4324,7 +4324,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="100"/>
-        <source>Selection</source>
+        <source>&amp;Selection</source>
         <translation>Sélection</translation>
     </message>
     <message>
@@ -4334,7 +4334,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="109"/>
-        <source>Linear</source>
+        <source>&amp;Linear</source>
         <translation>Linéaire</translation>
     </message>
     <message>
@@ -4344,7 +4344,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="114"/>
-        <source>Preview</source>
+        <source>&amp;Preview</source>
         <translation>Aperçu</translation>
     </message>
     <message>
@@ -4354,7 +4354,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="119"/>
-        <source>Output</source>
+        <source>&amp;Output</source>
         <translation>Sortie</translation>
     </message>
     <message>
@@ -4377,8 +4377,8 @@ Découpage non effectué. Essayez à nouveau.</translation>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="146"/>
         <location filename="../Sources/ptHistogramWindow.cpp" line="147"/>
-        <source>G</source>
-        <translation>V</translation>
+        <source>&amp;G</source>
+        <translation>&amp;V</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="151"/>
@@ -4388,12 +4388,12 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="499"/>
-        <source>Channel</source>
+        <source>Display &amp;channels</source>
         <translation>Canal</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="511"/>
-        <source>Mode</source>
+        <source>Display &amp;mode</source>
         <translation></translation>
     </message>
 </context>
@@ -5626,7 +5626,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="12511"/>
-        <source>Zoom Fit</source>
+        <source>Zoom fit</source>
         <translation>Zoom adapté</translation>
     </message>
     <message>
@@ -5722,7 +5722,7 @@ Découpage non effectué. Essayez à nouveau.</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="592"/>
-        <source>Show hidden tools</source>
+        <source>&amp;Show hidden tools</source>
         <translation>Afficher les outils masqués</translation>
     </message>
     <message>
@@ -8680,12 +8680,12 @@ Utile pour éviter la perte de contenu à cause des outils de distorsion/géomé
     <name>ptViewWindow</name>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="148"/>
-        <source>Zoom fit</source>
+        <source>Zoom &amp;fit</source>
         <translation>Zoom adapté</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="156"/>
-        <source>Zoom 100%</source>
+        <source>Zoom &amp;100%</source>
         <translation></translation>
     </message>
     <message>
@@ -8700,12 +8700,12 @@ Utile pour éviter la perte de contenu à cause des outils de distorsion/géomé
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="170"/>
-        <source>Over exposure</source>
+        <source>&amp;Over exposure</source>
         <translation>Surexposition</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="175"/>
-        <source>Under exposure</source>
+        <source>&amp;Under exposure</source>
         <translation>Sous-exposition</translation>
     </message>
     <message>
@@ -8715,8 +8715,8 @@ Utile pour éviter la perte de contenu à cause des outils de distorsion/géomé
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="185"/>
-        <source>G</source>
-        <translation>V</translation>
+        <source>&amp;G</source>
+        <translation>&amp;V</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="190"/>
@@ -8735,17 +8735,17 @@ Utile pour éviter la perte de contenu à cause des outils de distorsion/géomé
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="205"/>
-        <source>Show tools</source>
+        <source>Show &amp;tool pane</source>
         <translation>Afficher les outils</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="210"/>
-        <source>Full screen</source>
+        <source>Full&amp;screen</source>
         <translation>Plein écran</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="215"/>
-        <source>RGB</source>
+        <source>&amp;RGB</source>
         <translation>RVB</translation>
     </message>
     <message>
@@ -8765,12 +8765,12 @@ Utile pour éviter la perte de contenu à cause des outils de distorsion/géomé
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="231"/>
-        <source>Gradient</source>
+        <source>&amp;Gradient</source>
         <translation>Gradient</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="235"/>
-        <source>Structure</source>
+        <source>&amp;Structure</source>
         <translation>Structure</translation>
     </message>
     <message>
@@ -8790,12 +8790,12 @@ Utile pour éviter la perte de contenu à cause des outils de distorsion/géomé
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="1782"/>
-        <source>Clipping</source>
+        <source>Show &amp;clipping</source>
         <translation>Sous/Sur-exposition</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="1792"/>
-        <source>Mode</source>
+        <source>Display &amp;mode</source>
         <translation></translation>
     </message>
 </context>

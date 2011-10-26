@@ -63,12 +63,12 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_TabNumber = TabNumber;
   m_IndexInTab = IndexInTab;
 
-  RightArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/rightarrow.png"));
-  DownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/downarrow.png"));
-  ActiveRightArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/activerightarrow.png"));
-  ActiveDownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/activedownarrow.png"));
-  BlockedRightArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/blockedrightarrow.png"));
-  BlockedDownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/blockeddownarrow.png"));
+  RightArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-folded-normal.png"));
+  DownArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-expanded-normal.png"));
+  ActiveRightArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-folded-active.png"));
+  ActiveDownArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-expanded-active.png"));
+  BlockedRightArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-folded-blocked.png"));
+  BlockedDownArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-expanded-blocked.png"));
 
   m_Widget = new QWidget();
   m_Widget->setContentsMargins(8,5,0,5);
@@ -79,7 +79,7 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_Icon->setPixmap(DownArrow);
 
   m_Symbol = new QLabel();
-  m_Symbol->setPixmap(QPixmap(QString::fromUtf8(":/photivo/Icons/attention.png")));
+  m_Symbol->setPixmap(QPixmap(QString::fromUtf8(":/dark/ui-graphics/bubble-attention.png")));
   m_Symbol->setToolTip(tr("Complex filter. Might be slow."));
 
   m_HelpIcon = new QLabel();
@@ -123,33 +123,33 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_IsBlocked = Settings->ToolIsBlocked(m_Name)?1:0;
   m_IsEnabled = 1;
 
-  m_AtnFav = new QAction(tr("Favourite"), this);
+  m_AtnFav = new QAction(this);
   connect(m_AtnFav, SIGNAL(triggered()), this, SLOT(SetFavourite()));
   m_AtnFav->setIconVisibleInMenu(true);
 
-  m_AtnHide = new QAction(tr("Hide"), this);
+  m_AtnHide = new QAction(tr("&Hide"), this);
   connect(m_AtnHide, SIGNAL(triggered()), this, SLOT(Hide()));
   m_AtnHide->setIcon(QIcon(*Theme->ptIconCrossRed));
   m_AtnHide->setIconVisibleInMenu(true);
 
-  m_AtnBlock = new QAction(tr("Block"), this);
+  m_AtnBlock = new QAction(this);
   connect(m_AtnBlock, SIGNAL(triggered()), this, SLOT(SetBlocked()));
   m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleRed));
   m_AtnBlock->setIconVisibleInMenu(true);
 
-  m_AtnReset = new QAction(tr("Reset"), this);
+  m_AtnReset = new QAction(tr("&Reset"), this);
   connect(m_AtnReset, SIGNAL(triggered()), this, SLOT(Reset()));
   m_AtnReset->setIcon(QIcon(*Theme->ptIconReset));
   m_AtnReset->setIconVisibleInMenu(true);
 
-  m_AtnSavePreset = new QAction(tr("Save preset"), this);
+  m_AtnSavePreset = new QAction(tr("&Save preset"), this);
   connect(m_AtnSavePreset, SIGNAL(triggered()), this, SLOT(SaveSettings()));
-  m_AtnSavePreset->setIcon(QIcon(*Theme->ptIconDisk));
+  m_AtnSavePreset->setIcon(QIcon(*Theme->ptIconSavePreset));
   m_AtnSavePreset->setIconVisibleInMenu(true);
 
-  m_AtnAppendPreset = new QAction(tr("Append preset"), this);
+  m_AtnAppendPreset = new QAction(tr("&Append preset"), this);
   connect(m_AtnAppendPreset, SIGNAL(triggered()), this, SLOT(AppendSettings()));
-  m_AtnAppendPreset->setIcon(QIcon(*Theme->ptIconDisk));
+  m_AtnAppendPreset->setIcon(QIcon(*Theme->ptIconAppendPreset));
   m_AtnAppendPreset->setIconVisibleInMenu(true);
 
   UpdateView();
@@ -160,11 +160,6 @@ ptGroupBox::ptGroupBox(const QString Title,
           this,SLOT(PipeUpdate()));
 
   m_NeedPipeUpdate = 0;
-
-  //~ if (i==1 && j==1) this->setVisible(false);
-  //~ test = new QLabel();
-  //~ test->setText("Hallo");
-  //~ Layout->addWidget(test);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,11 +246,10 @@ void ptGroupBox::UpdateView() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptGroupBox::SetActive(const short IsActive) {
-
-  if (IsActive == m_IsActive) return;
+  if (IsActive == m_IsActive)
+    return;
 
   m_IsActive = IsActive;
-
   UpdateView();
 }
 
@@ -564,10 +558,10 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
       if (!Settings->ToolAlwaysVisible(m_Name)) {
         if (m_IsBlocked == 1) {
           m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleGreen));
-          m_AtnBlock->setText(tr("Allow"));
+          m_AtnBlock->setText(tr("All&ow"));
         } else {
           m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleRed));
-          m_AtnBlock->setText(tr("Block"));
+          m_AtnBlock->setText(tr("Bl&ock"));
         }
         QMenu Menu(NULL);
         Menu.setPalette(Theme->ptMenuPalette);
@@ -582,10 +576,10 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
         QStringList Temp = Settings->GetStringList("FavouriteTools");
         if (!Temp.contains(m_Name)) {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));
-          m_AtnFav->setText(tr("Favourite tool"));
+          m_AtnFav->setText(tr("Add to &favourites"));
         } else {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStarGrey));
-          m_AtnFav->setText(tr("Normal tool"));
+          m_AtnFav->setText(tr("Remove from &favourites"));
         }
         Menu.addAction(m_AtnFav);
         Menu.addSeparator();
@@ -604,10 +598,10 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
         QStringList Temp = Settings->GetStringList("FavouriteTools");
         if (!Temp.contains(m_Name)) {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));
-          m_AtnFav->setText(tr("Favourite tool"));
+          m_AtnFav->setText(tr("Add to &favourites"));
         } else {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStarGrey));
-          m_AtnFav->setText(tr("Normal tool"));
+          m_AtnFav->setText(tr("Remove from &favourites"));
         }
         Menu.addAction(m_AtnFav);
         Menu.exec(event->globalPos());
@@ -619,10 +613,10 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
         QStringList Temp = Settings->GetStringList("FavouriteTools");
         if (!Temp.contains(m_Name)) {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));
-          m_AtnFav->setText(tr("Favourite tool"));
+          m_AtnFav->setText(tr("Add to &favourites"));
         } else {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStarGrey));
-          m_AtnFav->setText(tr("Normal tool"));
+          m_AtnFav->setText(tr("Remove from &favourites"));
         }
         Menu.addAction(m_AtnFav);
         Menu.exec(event->globalPos());

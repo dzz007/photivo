@@ -637,44 +637,44 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
 
 void ptViewWindow::ConstructContextMenu() {
   // Create actions for context menu
-  ac_ZoomFit = new QAction(tr("Zoom fit"), this);
+  ac_ZoomFit = new QAction(tr("Zoom &fit"), this);
   connect(ac_ZoomFit, SIGNAL(triggered()), this, SLOT(Menu_ZoomFit()));
   QIcon ZoomFitIcon;
   ZoomFitIcon.addPixmap(QPixmap(
-    QString::fromUtf8(":/photivo/Icons/viewmag_h.png")));
+    QString::fromUtf8(":/dark/icons/zoom-fit.png")));
   ac_ZoomFit->setIcon(ZoomFitIcon);
   ac_ZoomFit->setIconVisibleInMenu(true);
 
-  ac_Zoom100 = new QAction(tr("Zoom 100%"), this);
+  ac_Zoom100 = new QAction(tr("Zoom &100%"), this);
   connect(ac_Zoom100, SIGNAL(triggered()), this, SLOT(Menu_Zoom100()));
   QIcon Zoom100Icon;
   Zoom100Icon.addPixmap(QPixmap(
-    QString::fromUtf8(":/photivo/Icons/viewmag1.png")));
+    QString::fromUtf8(":/dark/icons/zoom-original.png")));
   ac_Zoom100->setIcon(Zoom100Icon);
   ac_Zoom100->setIconVisibleInMenu(true);
 
 
-  ac_Mode_RGB = new QAction(tr("RGB"), this);
+  ac_Mode_RGB = new QAction(tr("&RGB"), this);
   ac_Mode_RGB->setCheckable(true);
   connect(ac_Mode_RGB, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_Structure = new QAction(tr("Structure"), this);
+  ac_Mode_Structure = new QAction(tr("&Structure"), this);
   ac_Mode_Structure->setCheckable(true);
   connect(ac_Mode_Structure, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_L = new QAction(tr("L*"), this);
+  ac_Mode_L = new QAction(tr("&L*"), this);
   ac_Mode_L->setCheckable(true);
   connect(ac_Mode_L, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_A = new QAction(tr("a*"), this);
+  ac_Mode_A = new QAction(tr("&a*"), this);
   ac_Mode_A->setCheckable(true);
   connect(ac_Mode_A, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_B = new QAction(tr("b*"), this);
+  ac_Mode_B = new QAction(tr("&b*"), this);
   ac_Mode_B->setCheckable(true);
   connect(ac_Mode_B, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_Gradient = new QAction(tr("Gradient"), this);
+  ac_Mode_Gradient = new QAction(tr("&Gradient"), this);
   ac_Mode_Gradient->setCheckable(true);
   connect(ac_Mode_Gradient, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
@@ -687,55 +687,54 @@ void ptViewWindow::ConstructContextMenu() {
   ac_ModeGroup->addAction(ac_Mode_Structure);
 
 
-  ac_Clip_Indicate = new QAction(tr("Indicate"), this);
-  ac_Clip_Indicate->setStatusTip(tr("Indicate clipping"));
+  ac_Clip_Indicate = new QAction(tr("Highlight &clipped pixels"), this);
   ac_Clip_Indicate->setCheckable(true);
   ac_Clip_Indicate->setChecked(Settings->GetInt("ExposureIndicator"));
   connect(ac_Clip_Indicate, SIGNAL(triggered()), this, SLOT(Menu_Clip_Indicate()));
 
-  ac_Clip_Over = new QAction(tr("Over exposure"), this);
+  ac_Clip_Over = new QAction(tr("&Over exposure"), this);
   ac_Clip_Over->setCheckable(true);
   ac_Clip_Over->setChecked(Settings->GetInt("ExposureIndicatorOver"));
   connect(ac_Clip_Over, SIGNAL(triggered()), this, SLOT(Menu_Clip_Over()));
 
-  ac_Clip_Under = new QAction(tr("Under exposure"), this);
+  ac_Clip_Under = new QAction(tr("&Under exposure"), this);
   ac_Clip_Under->setCheckable(true);
   ac_Clip_Under->setChecked(Settings->GetInt("ExposureIndicatorUnder"));
   connect(ac_Clip_Under, SIGNAL(triggered()), this, SLOT(Menu_Clip_Under()));
 
-  ac_Clip_R = new QAction(tr("R"), this);
+  ac_Clip_R = new QAction(tr("&R"), this);
   ac_Clip_R->setCheckable(true);
   ac_Clip_R->setChecked(Settings->GetInt("ExposureIndicatorR"));
   connect(ac_Clip_R, SIGNAL(triggered()), this, SLOT(Menu_Clip_R()));
 
-  ac_Clip_G = new QAction(tr("G"), this);
+  ac_Clip_G = new QAction(tr("&G"), this);
   ac_Clip_G->setCheckable(true);
   ac_Clip_G->setChecked(Settings->GetInt("ExposureIndicatorG"));
   connect(ac_Clip_G, SIGNAL(triggered()), this, SLOT(Menu_Clip_G()));
 
-  ac_Clip_B = new QAction(tr("B"), this);
+  ac_Clip_B = new QAction(tr("&B"), this);
   ac_Clip_B->setCheckable(true);
   ac_Clip_B->setChecked(Settings->GetInt("ExposureIndicatorB"));
   connect(ac_Clip_B, SIGNAL(triggered()), this, SLOT(Menu_Clip_B()));
 
-  ac_SensorClip = new QAction(tr("Sensor"), this);
+  ac_SensorClip = new QAction(tr("&Sensor"), this);
   ac_SensorClip->setCheckable(true);
   ac_SensorClip->setChecked(Settings->GetInt("ExposureIndicatorSensor"));
   connect(ac_SensorClip, SIGNAL(triggered()), this, SLOT(Menu_SensorClip()));
   ac_SensorClipSep = new QAction(this);
   ac_SensorClipSep->setSeparator(true);
 
-  ac_ShowZoomBar = new QAction(tr("Show zoom bar"), this);
+  ac_ShowZoomBar = new QAction(tr("Show &bottom bar"), this);
   ac_ShowZoomBar->setCheckable(true);
   ac_ShowZoomBar->setChecked(Settings->GetInt("ShowBottomContainer"));
   connect(ac_ShowZoomBar, SIGNAL(triggered()), this, SLOT(Menu_ShowZoomBar()));
 
-  ac_ShowTools = new QAction(tr("Show tools"), this);
+  ac_ShowTools = new QAction(tr("Show &tool pane"), this);
   ac_ShowTools->setCheckable(true);
   ac_ShowTools->setChecked(Settings->GetInt("ShowToolContainer"));
   connect(ac_ShowTools, SIGNAL(triggered()), this, SLOT(Menu_ShowTools()));
 
-  ac_Fullscreen = new QAction(tr("Full screen"), this);
+  ac_Fullscreen = new QAction(tr("Full&screen"), this);
   ac_Fullscreen->setCheckable(true);
   ac_Fullscreen->setChecked(0);
   connect(ac_Fullscreen, SIGNAL(triggered()), this, SLOT(Menu_Fullscreen()));
@@ -755,7 +754,7 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
 
   // Create the menus themselves
   // Note: Menus cannot be created with new. That breaks the theming.
-  QMenu Menu_Mode(tr("Mode"), this);
+  QMenu Menu_Mode(tr("Display &mode"), this);
   Menu_Mode.setPalette(Theme->ptMenuPalette);
   Menu_Mode.setStyle(Theme->ptStyle);
   Menu_Mode.addAction(ac_Mode_RGB);
@@ -765,7 +764,7 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu_Mode.addAction(ac_Mode_B);
   Menu_Mode.addAction(ac_Mode_Gradient);
 
-  QMenu Menu_Clip(tr("Clipping"), this);
+  QMenu Menu_Clip(tr("Show &clipping"), this);
   Menu_Clip.setPalette(Theme->ptMenuPalette);
   Menu_Clip.setStyle(Theme->ptStyle);
   Menu_Clip.addAction(ac_Clip_Indicate);

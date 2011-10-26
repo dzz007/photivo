@@ -167,11 +167,11 @@ void ptFileMgrThumbnailer::run() {
 
     if (currentGroup->fsoType() == fsoParentDir) {
       // we have a parent directory (dirs are not cached!)
-      thumbImage = new QImage(QString::fromUtf8(":/photivo/FileManager/go-up.png"));
+      thumbImage = new QImage(QString::fromUtf8(":/dark/icons/go-up-48px.png"));
 
     } else if (currentGroup->fsoType() == fsoDir) {
       // we have a subdirectory (dirs are not cached!)
-      thumbImage = new QImage(QString::fromUtf8(":/photivo/FileManager/folder.png"));
+      thumbImage = new QImage(QString::fromUtf8(":/dark/icons/folder-48px.png"));
 
     } else {
       if (!currentGroup->hasImage()) {

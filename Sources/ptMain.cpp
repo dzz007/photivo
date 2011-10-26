@@ -422,6 +422,21 @@ int photivoMain(int Argc, char *Argv[]) {
   std::signal(SIGABRT, SegfaultAbort);
 
 
+  // Check for wrong GM quantum depth. We need the 16bit GraphicsMagick.
+  ulong QDepth = 0;
+  const ulong MinQD = 16;
+  MagickGetQuantumDepth(&QDepth);
+  if (QDepth < MinQD) {
+    QString WrongQDepthMsg = QObject::tr(
+        "Fatal error: Wrong GraphicsMagick quantum depth!\n"
+        "Found quantum depth %1. Photivo needs at least %2.\n")
+        .arg(QDepth).arg(MinQD);
+    fprintf(stderr,"%s", WrongQDepthMsg.toAscii().data());
+    ptMessageBox::critical(0, QObject::tr("Photivo: Fatal Error"), WrongQDepthMsg);
+    exit(EXIT_FAILURE);
+  }
+
+
   // Handle cli arguments
   QString PhotivoCliUsageMsg = QObject::tr(
 "Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
@@ -476,11 +491,6 @@ int photivoMain(int Argc, char *Argv[]) {
     ImageFileToOpen = cli.Filename;
   }
 
-#ifdef Q_OS_MAC
-  } // !MacGotFileEvent
-#endif
-
-
   // QtSingleInstance, add CLI-Switch to skip and allow multiple instances
   // JobMode is always run in a new instance
   // Sent messages are handled by ptMainWindow::OtherInstanceMessage
@@ -503,6 +513,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
 
 #ifdef Q_OS_MAC
+  } // !MacGotFileEvent
   QDir dir(QApplication::applicationDirPath());
   QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
 #endif
@@ -704,9 +715,9 @@ int photivoMain(int Argc, char *Argv[]) {
       QFile::remove(UserDirectory + "photivo.png");
       QFile::copy(NewShareDirectory + "photivo.png",
               UserDirectory + "photivo.png");
-      QFile::remove(UserDirectory + "photivoLogo.png");
-      QFile::copy(NewShareDirectory + "photivoLogo.png",
-              UserDirectory + "photivoLogo.png");
+//      QFile::remove(UserDirectory + "photivoLogo.png");
+//      QFile::copy(NewShareDirectory + "photivoLogo.png",
+//              UserDirectory + "photivoLogo.png");
       QFile::remove(UserDirectory + "photivoPreview.jpg");
       QFile::copy(NewShareDirectory + "photivoPreview.jpg",
               UserDirectory + "photivoPreview.jpg");
@@ -3505,6 +3516,7 @@ void GimpExport(const short UsePipe) {
     TheDcRaw = new(ptDcRaw);
       TheProcessor = new ptProcessor(ReportProgress);
       Settings->SetValue("JobMode",1); // Disable caching to save memory
+
       TheProcessor->m_DcRaw = TheDcRaw;
       Settings->ToDcRaw(TheDcRaw);
       // Run the graphical pipe in full format mode to recreate the image.
@@ -9002,7 +9014,7 @@ ptImageType CheckImageType(QString filename,
 
     } else {
       // not a supported image format
-      printf(MagickErrorMsg);
+      printf("%s", MagickErrorMsg);
       result = itNotSupported;
       if (width != NULL) *width = 0;
       if (height != NULL) *height = 0;

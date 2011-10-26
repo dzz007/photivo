@@ -4,32 +4,32 @@
 <context>
     <name>Global Strings</name>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="167"/>
+        <location filename="../Sources/ptMain.cpp" line="170"/>
         <source>Photivo channelmixer file (*.ptm);;All files (*.*)</source>
         <translation>File miscelatore canale Photivo (*.ptm);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="169"/>
+        <location filename="../Sources/ptMain.cpp" line="172"/>
         <source>Photivo curve file (*.ptc);;All files (*.*)</source>
         <translation>File curva Photivo (*.ptc);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="171"/>
+        <location filename="../Sources/ptMain.cpp" line="174"/>
         <source>Photivo job file (*.ptj);;All files (*.*)</source>
         <translation>File di lavorazione Photivo (*.ptj);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="173"/>
+        <location filename="../Sources/ptMain.cpp" line="176"/>
         <source>Photivo settings file (*.pts);;All files (*.*)</source>
         <translation>File impostazioni Photivo (*.pts);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="175"/>
+        <location filename="../Sources/ptMain.cpp" line="178"/>
         <source>ICC colour profiles (*.icc *.icm);;All files (*.*)</source>
         <translation>Profili colore ICC (*.icc *.icm);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="179"/>
+        <location filename="../Sources/ptMain.cpp" line="182"/>
         <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
         <translation>File Raw (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;Tutti i file (*.*)</translation>
     </message>
@@ -38,7 +38,7 @@
         <translation type="obsolete">File Raw (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="225"/>
+        <location filename="../Sources/ptMain.cpp" line="228"/>
         <source>Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
         <translation>Bitmap (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;Tutti i file (*.*)</translation>
     </message>
@@ -1353,7 +1353,7 @@
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="564"/>
-        <location filename="../Sources/ptMain.cpp" line="4339"/>
+        <location filename="../Sources/ptMain.cpp" line="4354"/>
         <source>Open preset</source>
         <translation>Apri preset</translation>
     </message>
@@ -1373,89 +1373,89 @@
         <translation type="obsolete">Utilizzo: Photivo  [-i Immagine] [-j File di lavorazione] [-g Immagine (con pulitura, non per uso normale!)]</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="451"/>
-        <location filename="../Sources/ptMain.cpp" line="776"/>
+        <location filename="../Sources/ptMain.cpp" line="473"/>
+        <location filename="../Sources/ptMain.cpp" line="798"/>
         <source>Photivo</source>
         <translation>Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1031"/>
+        <location filename="../Sources/ptMain.cpp" line="1053"/>
         <source>Loading curves (</source>
         <translation>Caricamento Curve (</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1037"/>
-        <location filename="../Sources/ptMain.cpp" line="2062"/>
-        <location filename="../Sources/ptMain.cpp" line="5823"/>
+        <location filename="../Sources/ptMain.cpp" line="1059"/>
+        <location filename="../Sources/ptMain.cpp" line="2093"/>
+        <location filename="../Sources/ptMain.cpp" line="5838"/>
         <source>Cannot read curve </source>
         <translation>Non posso leggere la curva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1043"/>
-        <location filename="../Sources/ptMain.cpp" line="2061"/>
-        <location filename="../Sources/ptMain.cpp" line="5828"/>
+        <location filename="../Sources/ptMain.cpp" line="1065"/>
+        <location filename="../Sources/ptMain.cpp" line="2092"/>
+        <location filename="../Sources/ptMain.cpp" line="5843"/>
         <source>Curve read error</source>
         <translation>Errore lettura curva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1075"/>
-        <location filename="../Sources/ptMain.cpp" line="1140"/>
-        <location filename="../Sources/ptMain.cpp" line="1280"/>
-        <location filename="../Sources/ptMain.cpp" line="1425"/>
-        <location filename="../Sources/ptMain.cpp" line="1463"/>
-        <location filename="../Sources/ptMain.cpp" line="1696"/>
-        <location filename="../Sources/ptMain.cpp" line="2006"/>
-        <location filename="../Sources/ptMain.cpp" line="2551"/>
-        <location filename="../Sources/ptMain.cpp" line="3573"/>
+        <location filename="../Sources/ptMain.cpp" line="1097"/>
+        <location filename="../Sources/ptMain.cpp" line="1162"/>
+        <location filename="../Sources/ptMain.cpp" line="1307"/>
+        <location filename="../Sources/ptMain.cpp" line="1456"/>
+        <location filename="../Sources/ptMain.cpp" line="1494"/>
+        <location filename="../Sources/ptMain.cpp" line="1727"/>
+        <location filename="../Sources/ptMain.cpp" line="2037"/>
+        <location filename="../Sources/ptMain.cpp" line="2572"/>
+        <location filename="../Sources/ptMain.cpp" line="3587"/>
         <source>Ready</source>
         <translation>Pronto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1091"/>
+        <location filename="../Sources/ptMain.cpp" line="1113"/>
         <source>Loading channelmixers</source>
         <translation>Caricamento Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1101"/>
-        <location filename="../Sources/ptMain.cpp" line="2049"/>
-        <location filename="../Sources/ptMain.cpp" line="5402"/>
+        <location filename="../Sources/ptMain.cpp" line="1123"/>
+        <location filename="../Sources/ptMain.cpp" line="2080"/>
+        <location filename="../Sources/ptMain.cpp" line="5417"/>
         <source>Cannot read channelmixer </source>
         <translation>Non posso leggere miscelatore canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1107"/>
-        <location filename="../Sources/ptMain.cpp" line="2048"/>
-        <location filename="../Sources/ptMain.cpp" line="5407"/>
+        <location filename="../Sources/ptMain.cpp" line="1129"/>
+        <location filename="../Sources/ptMain.cpp" line="2079"/>
+        <location filename="../Sources/ptMain.cpp" line="5422"/>
         <source>Channelmixer read error</source>
         <translation>Errore lettura miscelatore canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1452"/>
+        <location filename="../Sources/ptMain.cpp" line="1483"/>
         <source>Selection too small</source>
         <translation>Selezione troppo piccola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1453"/>
+        <location filename="../Sources/ptMain.cpp" line="1484"/>
         <source>Selection rectangle needs to be at least 50x50 pixels in size.
 No crop, try again.</source>
         <translation>La selezione rettangolare deve avere una dimensione di almeno 50x50 pixels.
 Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1423"/>
-        <location filename="../Sources/ptMain.cpp" line="1461"/>
-        <location filename="../Sources/ptMain.cpp" line="1780"/>
-        <location filename="../Sources/ptMain.cpp" line="1851"/>
+        <location filename="../Sources/ptMain.cpp" line="1454"/>
+        <location filename="../Sources/ptMain.cpp" line="1492"/>
+        <location filename="../Sources/ptMain.cpp" line="1811"/>
+        <location filename="../Sources/ptMain.cpp" line="1882"/>
         <source>Updating histogram</source>
         <translation>Aggiornamento istogramma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="404"/>
+        <location filename="../Sources/ptMain.cpp" line="411"/>
         <source>Photivo crashed</source>
         <translation>Photivo è andato in crash</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="405"/>
+        <location filename="../Sources/ptMain.cpp" line="412"/>
         <source>Photivo crashed. You can get help on our flickr forum at
 &lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;http://www.flickr.com/groups/photivo/discuss/&lt;/a&gt;
 When you post there make sure to describe your last actions before the crash occurred.</source>
@@ -1464,7 +1464,20 @@ When you post there make sure to describe your last actions before the crash occ
 Nel tuo post ricordati di descrivere le ultime azioni che hai compiuto prima del crash.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="415"/>
+        <location filename="../Sources/ptMain.cpp" line="426"/>
+        <source>Fatal error: Wrong GraphicsMagick quantum depth!
+Found quantum depth %1. Photivo needs at least %2.
+</source>
+        <translation>Errore Fatale: GraphicsMagick quantum depth errato!
+Trovato quantum depth %1. Photivo necessita almeno di %2.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="431"/>
+        <source>Photivo: Fatal Error</source>
+        <translation>Photivo: Errore Fatale</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="437"/>
         <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
                 [-h] [--new-instance]
 Options:
@@ -1494,38 +1507,38 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1492"/>
-        <location filename="../Sources/ptMain.cpp" line="1548"/>
+        <location filename="../Sources/ptMain.cpp" line="1523"/>
+        <location filename="../Sources/ptMain.cpp" line="1579"/>
         <source>WebResizing</source>
         <translation>Ridimensionamento Web</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1505"/>
+        <location filename="../Sources/ptMain.cpp" line="1536"/>
         <source>Applying base curve</source>
         <translation>Applicazione curva base</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1511"/>
+        <location filename="../Sources/ptMain.cpp" line="1542"/>
         <source>Applying gamma compensation</source>
         <translation>Applicazione compensazione del gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1533"/>
+        <location filename="../Sources/ptMain.cpp" line="1564"/>
         <source>Applying RGB Contrast</source>
         <translation>Applicazione contrasto RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1540"/>
+        <location filename="../Sources/ptMain.cpp" line="1571"/>
         <source>Applying after gamma curve</source>
         <translation>Applicazione curva dopo gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1558"/>
+        <location filename="../Sources/ptMain.cpp" line="1589"/>
         <source>Wiener Filter</source>
         <translation>Filtro Wiener</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1701"/>
+        <location filename="../Sources/ptMain.cpp" line="1732"/>
         <source>Updating preview image</source>
         <translation>Aggiornamento anteprima immagine</translation>
     </message>
@@ -1539,116 +1552,116 @@ No crop, try again.</source>
         <translation type="obsolete">Rettangolo di ritaglio troppo largo. Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1793"/>
-        <location filename="../Sources/ptMain.cpp" line="1905"/>
-        <location filename="../Sources/ptMain.cpp" line="1963"/>
+        <location filename="../Sources/ptMain.cpp" line="1824"/>
+        <location filename="../Sources/ptMain.cpp" line="1936"/>
+        <location filename="../Sources/ptMain.cpp" line="1994"/>
         <source>Histogram selection outside the image</source>
         <translation>Selezione istogramma al di fuori dell&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1794"/>
-        <location filename="../Sources/ptMain.cpp" line="1906"/>
-        <location filename="../Sources/ptMain.cpp" line="1964"/>
+        <location filename="../Sources/ptMain.cpp" line="1825"/>
+        <location filename="../Sources/ptMain.cpp" line="1937"/>
+        <location filename="../Sources/ptMain.cpp" line="1995"/>
         <source>Histogram selection rectangle too large.
 No crop, try again.</source>
         <translation>Rettangolo selezione istogramma troppo largo.
 Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1816"/>
+        <location filename="../Sources/ptMain.cpp" line="1847"/>
         <source>Indicating exposure</source>
         <translation>Indicazione esposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1858"/>
-        <location filename="../Sources/ptMain.cpp" line="2486"/>
-        <location filename="../Sources/ptMain.cpp" line="3453"/>
+        <location filename="../Sources/ptMain.cpp" line="1889"/>
+        <location filename="../Sources/ptMain.cpp" line="2507"/>
+        <location filename="../Sources/ptMain.cpp" line="3467"/>
         <source>Converting to output space</source>
         <translation>Conversione a spazio colore di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1922"/>
+        <location filename="../Sources/ptMain.cpp" line="1953"/>
         <source>Converting to screen space</source>
         <translation>Conversione a spazio colore schermo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2153"/>
-        <location filename="../Sources/ptMain.cpp" line="3121"/>
+        <location filename="../Sources/ptMain.cpp" line="2169"/>
+        <location filename="../Sources/ptMain.cpp" line="3127"/>
         <source>Cannot decode</source>
         <translation>Impossibile decodificare</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2514"/>
+        <location filename="../Sources/ptMain.cpp" line="2535"/>
         <source>Writing output</source>
         <translation>Scrittura output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2528"/>
+        <location filename="../Sources/ptMain.cpp" line="2549"/>
         <source>Writing output (exif)</source>
         <translation>Scrittura output (exif)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2543"/>
+        <location filename="../Sources/ptMain.cpp" line="2564"/>
         <source>Writing output (settings)</source>
         <translation>Scrittura output (impostazioni)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2567"/>
-        <location filename="../Sources/ptMain.cpp" line="3234"/>
+        <location filename="../Sources/ptMain.cpp" line="2588"/>
+        <location filename="../Sources/ptMain.cpp" line="3244"/>
         <source>Jpg images (*.jpg *.jpeg);;All files (*.*)</source>
         <translation>immagini jpg (*.jpg *.jpeg);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2572"/>
-        <location filename="../Sources/ptMain.cpp" line="3239"/>
+        <location filename="../Sources/ptMain.cpp" line="2593"/>
+        <location filename="../Sources/ptMain.cpp" line="3249"/>
         <source>PNG images(*.png);;All files (*.*)</source>
         <translation>immagini PNG(*.png);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2577"/>
-        <location filename="../Sources/ptMain.cpp" line="3244"/>
+        <location filename="../Sources/ptMain.cpp" line="2598"/>
+        <location filename="../Sources/ptMain.cpp" line="3254"/>
         <source>Tiff images (*.tif *.tiff);;All files (*.*)</source>
         <translation>immagini Tiff (*.tif *.tiff);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2581"/>
-        <location filename="../Sources/ptMain.cpp" line="3248"/>
+        <location filename="../Sources/ptMain.cpp" line="2602"/>
+        <location filename="../Sources/ptMain.cpp" line="3258"/>
         <source>Ppm images (*.ppm);;All files (*.*)</source>
         <translation>Immagini Ppm (*.ppm);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2588"/>
-        <location filename="../Sources/ptMain.cpp" line="3255"/>
+        <location filename="../Sources/ptMain.cpp" line="2609"/>
+        <location filename="../Sources/ptMain.cpp" line="3265"/>
         <source>Save File</source>
         <translation>Salva file</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3068"/>
+        <location filename="../Sources/ptMain.cpp" line="3089"/>
         <source>Open Raw</source>
         <translation>Apri Raw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3093"/>
+        <location filename="../Sources/ptMain.cpp" line="3114"/>
         <source>Reading file</source>
         <translation>Lettura file</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3306"/>
+        <location filename="../Sources/ptMain.cpp" line="3316"/>
         <source>Select input file(s)</source>
         <translation>Seleziona file di input</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3319"/>
+        <location filename="../Sources/ptMain.cpp" line="3329"/>
         <source>Select output directory</source>
         <translation>Selezione cartella di destinazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3334"/>
+        <location filename="../Sources/ptMain.cpp" line="3344"/>
         <source>Select job file</source>
         <translation>Seleziona file di lavorazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3354"/>
+        <location filename="../Sources/ptMain.cpp" line="3364"/>
         <source>Settings File</source>
         <translation>File impostazioni</translation>
     </message>
@@ -1661,55 +1674,55 @@ Nessun ritaglio, prova di nuovo.</translation>
         <translation type="obsolete">Per favore finisci il ritaglio prima di chiudere Photivo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3422"/>
+        <location filename="../Sources/ptMain.cpp" line="3436"/>
         <source>Writing tmp image for gimp</source>
         <translation>Scrittura immagine tmp per gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3492"/>
+        <location filename="../Sources/ptMain.cpp" line="3506"/>
         <source>Writing tmp exif for gimp</source>
         <translation>Scrittura exif tmp per gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3505"/>
+        <location filename="../Sources/ptMain.cpp" line="3519"/>
         <source>Writing tmp icc for gimp</source>
         <translation>Scrittura icc tmp per gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3537"/>
+        <location filename="../Sources/ptMain.cpp" line="3551"/>
         <source>Writing gimp interface file</source>
         <translation>Scrittura file interfaccia gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3624"/>
-        <location filename="../Sources/ptMain.cpp" line="3625"/>
+        <location filename="../Sources/ptMain.cpp" line="3639"/>
+        <location filename="../Sources/ptMain.cpp" line="3640"/>
         <source>Please load a profile first</source>
         <translation>Per favore, carica prima un profilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3633"/>
+        <location filename="../Sources/ptMain.cpp" line="3648"/>
         <source>Not yet implemented</source>
         <translation>Non ancora implementato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3634"/>
+        <location filename="../Sources/ptMain.cpp" line="3649"/>
         <source>Not yet implemented. Reverting to Adobe.</source>
         <translation>Non ancora implementato. Riconverti ad Adobe.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3644"/>
-        <location filename="../Sources/ptMain.cpp" line="3687"/>
-        <location filename="../Sources/ptMain.cpp" line="3727"/>
+        <location filename="../Sources/ptMain.cpp" line="3659"/>
+        <location filename="../Sources/ptMain.cpp" line="3702"/>
+        <location filename="../Sources/ptMain.cpp" line="3742"/>
         <source>Open Profile</source>
         <translation>Apri profilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3832"/>
+        <location filename="../Sources/ptMain.cpp" line="3847"/>
         <source>Open Image</source>
         <translation>Apri immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3834"/>
+        <location filename="../Sources/ptMain.cpp" line="3849"/>
         <source>CSS files (*.css *.qss);;All files(*.*)</source>
         <translation>File CSS (*.css *.qss);;Tutti i file(*.*)</translation>
     </message>
@@ -1766,7 +1779,7 @@ http://photivo.org/photivo/start</translation>
         <translation type="obsolete">Opzioni linea di comando non riconosciute</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3079"/>
+        <location filename="../Sources/ptMain.cpp" line="3100"/>
         <source>File not found</source>
         <translation>File non trovato</translation>
     </message>
@@ -1813,195 +1826,195 @@ Per maggiore documentazione visita il wiki:
 http://photivo.org/photivo/start</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1419"/>
+        <location filename="../Sources/ptMain.cpp" line="1450"/>
         <source>Selection</source>
         <translation>Selezione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2218"/>
+        <location filename="../Sources/ptMain.cpp" line="2239"/>
         <source>Memory error, no conversion for file:</source>
         <translation>Errore di memoria, nessuna conversione per il file:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3080"/>
+        <location filename="../Sources/ptMain.cpp" line="3101"/>
         <source>Input file does not exist.</source>
         <translation>Il file di input non esiste.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3868"/>
+        <location filename="../Sources/ptMain.cpp" line="3883"/>
         <source>Are you sure?</source>
         <translation>Sei sicuro?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3869"/>
+        <location filename="../Sources/ptMain.cpp" line="3884"/>
         <source>If you don&apos;t stop me, I will waste %1 MB of memory.</source>
         <translation>Se non mi fermi sprecherò %1 MB di memoria.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3890"/>
+        <location filename="../Sources/ptMain.cpp" line="3905"/>
         <source>Really switch to 1:1 pipe?</source>
         <translation>Voui veramente cambiare il formato di lavoro in 1:1?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3891"/>
+        <location filename="../Sources/ptMain.cpp" line="3906"/>
         <source>Switching to 1:1 pipe will increase memory usage and processing time greatly.
 Are you sure?</source>
         <translation>Cambiare il formato di lavoro in 1:1 aumenterà notevolmente l&apos;uso della memoria ed il tempo necessario. Sei sicuro?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3893"/>
-        <location filename="../Sources/ptMain.cpp" line="3936"/>
+        <location filename="../Sources/ptMain.cpp" line="3908"/>
+        <location filename="../Sources/ptMain.cpp" line="3951"/>
         <source>Detail view</source>
         <translation>Vista dettaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4068"/>
         <location filename="../Sources/ptMain.cpp" line="4083"/>
+        <location filename="../Sources/ptMain.cpp" line="4098"/>
         <source>Reset?</source>
         <translation>Vuoi resettare?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4069"/>
+        <location filename="../Sources/ptMain.cpp" line="4084"/>
         <source>Reset to neutral values?
 </source>
         <translation>Resetto a valori neutri?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4084"/>
+        <location filename="../Sources/ptMain.cpp" line="4099"/>
         <source>Reset to start up settings?
 </source>
         <translation>Resetto a impostazioni di avvio?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4113"/>
+        <location filename="../Sources/ptMain.cpp" line="4128"/>
         <source>Get Gimp command</source>
         <translation>Ottieni comando Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4144"/>
+        <location filename="../Sources/ptMain.cpp" line="4159"/>
         <source>Get preset file</source>
         <translation>Ottieni file di preset</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4272"/>
+        <location filename="../Sources/ptMain.cpp" line="4287"/>
         <source>Save full size image</source>
         <translation>Salva immagine in pieno formato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4274"/>
+        <location filename="../Sources/ptMain.cpp" line="4289"/>
         <source>Save current pipe</source>
         <translation>Salva immagine nel formato di lavoro corrente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4276"/>
+        <location filename="../Sources/ptMain.cpp" line="4291"/>
         <source>Save job file</source>
         <translation>Salva file di lavorazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4278"/>
+        <location filename="../Sources/ptMain.cpp" line="4293"/>
         <source>Save settings file</source>
         <translation>Salva file impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4324"/>
-        <location filename="../Sources/ptMain.cpp" line="4336"/>
+        <location filename="../Sources/ptMain.cpp" line="4339"/>
+        <location filename="../Sources/ptMain.cpp" line="4351"/>
         <source>Settings files (*.pts *.ptj);;All files (*.*)</source>
         <translation>File impostazioni (*.pts *.ptj);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4327"/>
+        <location filename="../Sources/ptMain.cpp" line="4342"/>
         <source>Open setting file</source>
         <translation>Apri file impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4353"/>
+        <location filename="../Sources/ptMain.cpp" line="4368"/>
         <source>Open &apos;bad pixels&apos; file</source>
         <translation>Apri file &apos;bad pixel&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4377"/>
+        <location filename="../Sources/ptMain.cpp" line="4392"/>
         <source>Open &apos;dark frame&apos; file</source>
         <translation>Apri file &apos;dark frame&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4425"/>
-        <location filename="../Sources/ptMain.cpp" line="4426"/>
+        <location filename="../Sources/ptMain.cpp" line="4440"/>
+        <location filename="../Sources/ptMain.cpp" line="4441"/>
         <source>Spot WB</source>
         <translation>Bilanciamento Bianco Spot</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4877"/>
+        <location filename="../Sources/ptMain.cpp" line="4892"/>
         <source>No selection</source>
         <translation>Nessuna selezione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4878"/>
-        <location filename="../Sources/ptMain.cpp" line="5077"/>
+        <location filename="../Sources/ptMain.cpp" line="4893"/>
+        <location filename="../Sources/ptMain.cpp" line="5092"/>
         <source>Open an image first.</source>
         <translation>Apri prima un&apos;immagine.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4890"/>
-        <location filename="../Sources/ptMain.cpp" line="4891"/>
+        <location filename="../Sources/ptMain.cpp" line="4905"/>
+        <location filename="../Sources/ptMain.cpp" line="4906"/>
         <source>Get angle</source>
         <translation>Imposta l&apos;angolo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5076"/>
+        <location filename="../Sources/ptMain.cpp" line="5091"/>
         <source>No crop possible</source>
         <translation>Impossibile effettuare il ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5081"/>
+        <location filename="../Sources/ptMain.cpp" line="5096"/>
         <source>Prepare</source>
         <translation>Preparazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5082"/>
+        <location filename="../Sources/ptMain.cpp" line="5097"/>
         <source>Prepare for cropping</source>
         <translation>Preparazione per il ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5090"/>
-        <location filename="../Sources/ptMain.cpp" line="5091"/>
+        <location filename="../Sources/ptMain.cpp" line="5105"/>
+        <location filename="../Sources/ptMain.cpp" line="5106"/>
         <source>Crop</source>
         <translation>Ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5125"/>
+        <location filename="../Sources/ptMain.cpp" line="5140"/>
         <source>Crop too small</source>
         <translation>Ritaglio troppo piccolo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5126"/>
+        <location filename="../Sources/ptMain.cpp" line="5141"/>
         <source>Crop rectangle needs to be at least 4x4 pixels in size.
 No crop, try again.</source>
         <translation>La selezione rettangolare deve avere una dimensione di almeno 4x4 pixels. Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5186"/>
+        <location filename="../Sources/ptMain.cpp" line="5201"/>
         <source>No previous crop found</source>
         <translation>Nessun ritaglio precedente trovato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5187"/>
+        <location filename="../Sources/ptMain.cpp" line="5202"/>
         <source>Set a crop rectangle now.</source>
         <translation>Imposta ora un rettangolo di ritaglio.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5388"/>
+        <location filename="../Sources/ptMain.cpp" line="5403"/>
         <source>Open Channelmixer</source>
         <translation>Apri Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5435"/>
         <location filename="../Sources/ptMain.cpp" line="5450"/>
+        <location filename="../Sources/ptMain.cpp" line="5465"/>
         <source>Save Channelmixer</source>
         <translation>Salva Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5451"/>
-        <location filename="../Sources/ptMain.cpp" line="5961"/>
+        <location filename="../Sources/ptMain.cpp" line="5466"/>
+        <location filename="../Sources/ptMain.cpp" line="5976"/>
         <source>Give a description</source>
         <translation>Dai una descrizione</translation>
     </message>
@@ -2010,33 +2023,33 @@ No crop, try again.</source>
         <translation type="obsolete">Dai una descrizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5810"/>
+        <location filename="../Sources/ptMain.cpp" line="5825"/>
         <source>Open Curve</source>
         <translation>Apri Curva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5840"/>
+        <location filename="../Sources/ptMain.cpp" line="5855"/>
         <source>This curve is meant for channel </source>
         <translation>Questa curva è da usare con un canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5842"/>
+        <location filename="../Sources/ptMain.cpp" line="5857"/>
         <source>. Continue anyway ?</source>
         <translation>. Continuare comunque?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5845"/>
+        <location filename="../Sources/ptMain.cpp" line="5860"/>
         <source>Incompatible curve</source>
         <translation>Curva incompatibile</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="5945"/>
         <location filename="../Sources/ptMain.cpp" line="5960"/>
+        <location filename="../Sources/ptMain.cpp" line="5975"/>
         <source>Save Curve</source>
         <translation>Salva Curva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="7870"/>
+        <location filename="../Sources/ptMain.cpp" line="7885"/>
         <source>Get texture bitmap file</source>
         <translation>Seleziona file texture bitmap</translation>
     </message>
@@ -4529,7 +4542,7 @@ No crop, try again.</source>
     <name>ptCurveWindow</name>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="100"/>
-        <source>Adaptive</source>
+        <source>A&amp;daptive</source>
         <translation>Adattiva</translation>
     </message>
     <message>
@@ -4539,7 +4552,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="104"/>
-        <source>Absolute</source>
+        <source>A&amp;bsolute</source>
         <translation>Assoluta</translation>
     </message>
     <message>
@@ -4549,7 +4562,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="115"/>
-        <source>By luminance</source>
+        <source>By l&amp;uminance</source>
         <translation>Per luminanza</translation>
     </message>
     <message>
@@ -4559,7 +4572,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="119"/>
-        <source>By color</source>
+        <source>By c&amp;olor</source>
         <translation>Per colore</translation>
     </message>
     <message>
@@ -4569,7 +4582,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="147"/>
-        <source>Linear</source>
+        <source>&amp;Linear</source>
         <translation>Lineare</translation>
     </message>
     <message>
@@ -4579,7 +4592,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="151"/>
-        <source>Spline</source>
+        <source>&amp;Spline</source>
         <translation>Spline</translation>
     </message>
     <message>
@@ -4589,7 +4602,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="155"/>
-        <source>Cosine</source>
+        <source>&amp;Cosine</source>
         <translation>Coseno</translation>
     </message>
     <message>
@@ -4617,28 +4630,28 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="130"/>
-        <source>Hide</source>
+        <source>&amp;Hide</source>
         <translation>Nascondi</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="135"/>
         <location filename="../Sources/ptGroupBox.cpp" line="570"/>
-        <source>Block</source>
+        <source>Bl&amp;ock</source>
         <translation>Blocca</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="140"/>
-        <source>Reset</source>
+        <source>&amp;Reset</source>
         <translation>Resetta</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="145"/>
-        <source>Save preset</source>
+        <source>&amp;Save preset</source>
         <translation>Salva preset</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="150"/>
-        <source>Append preset</source>
+        <source>&amp;Append preset</source>
         <translation>Aggiungi a preset</translation>
     </message>
     <message>
@@ -4648,7 +4661,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="567"/>
-        <source>Allow</source>
+        <source>All&amp;ow</source>
         <translation>Consenti</translation>
     </message>
     <message>
@@ -4690,7 +4703,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="100"/>
-        <source>Selection</source>
+        <source>&amp;Selection</source>
         <translation>Selezione</translation>
     </message>
     <message>
@@ -4700,7 +4713,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="109"/>
-        <source>Linear</source>
+        <source>&amp;Linear</source>
         <translation>Lineare</translation>
     </message>
     <message>
@@ -4710,7 +4723,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="114"/>
-        <source>Preview</source>
+        <source>&amp;Preview</source>
         <translation>Anteprima</translation>
     </message>
     <message>
@@ -4720,7 +4733,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="119"/>
-        <source>Output</source>
+        <source>&amp;Output</source>
         <translation>Uscita</translation>
     </message>
     <message>
@@ -4754,12 +4767,12 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="502"/>
-        <source>Channel</source>
+        <source>Display &amp;channels</source>
         <translation>Canale</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="514"/>
-        <source>Mode</source>
+        <source>Display &amp;mode</source>
         <translation>Modalità</translation>
     </message>
 </context>
@@ -4773,7 +4786,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="225"/>
         <location filename="../Sources/ptMainWindow.ui" line="228"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="1957"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1966"/>
         <source>Favourite tools</source>
         <translation>Strumenti preferiti</translation>
     </message>
@@ -4823,7 +4836,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="528"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="598"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="607"/>
         <source>Open preset</source>
         <translation>Apri Preset</translation>
     </message>
@@ -5739,7 +5752,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="271"/>
         <location filename="../Sources/ptMainWindow.ui" line="274"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="1915"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1924"/>
         <source>Active tools</source>
         <translation>Strumenti attivi</translation>
     </message>
@@ -6126,7 +6139,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="13100"/>
-        <source>Zoom Fit</source>
+        <source>Zoom fit</source>
         <translation>Adatta allo spazio di lavoro</translation>
     </message>
     <message>
@@ -6176,67 +6189,67 @@ No crop, try again.</source>
         <translation>Aggiungi &quot;Power law&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="578"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="587"/>
         <source>Save current pipe</source>
         <translation>Salva flusso di lavoro corrente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="580"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="589"/>
         <source>Save full size</source>
         <translation>Salva pieno formato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="582"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="591"/>
         <source>Save settings file</source>
         <translation>Salva file impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="584"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="593"/>
         <source>Save job file</source>
         <translation>Salva file di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="588"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="597"/>
         <source>Export current pipe</source>
         <translation>Esporta flusso di lavoro corrente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="590"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="599"/>
         <source>Export full size</source>
         <translation>Esporta a dimensione intera</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="594"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="603"/>
         <source>Neutral reset</source>
         <translation>Resetta a Neutro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="596"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="605"/>
         <source>User reset</source>
         <translation>Resetta a impostazioni utente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="600"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="609"/>
         <source>Open settings</source>
         <translation>Apri impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="604"/>
-        <source>Show hidden tools</source>
+        <location filename="../Sources/ptMainWindow.cpp" line="613"/>
+        <source>&amp;Show hidden tools</source>
         <translation>Mostra strumenti nascosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="617"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="626"/>
         <source>Search</source>
         <translation>Cerca</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="679"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="688"/>
         <source>English (Default)</source>
         <translation>Inglese (Default)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="686"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="695"/>
         <source>Restart Photivo to change the language.</source>
         <translation>Riavvia Photivo per cambiare la lingua.</translation>
     </message>
@@ -6251,93 +6264,93 @@ No crop, try again.</source>
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1813"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1822"/>
         <source>No tools hidden!</source>
         <translation>Nessuno strumento nascosto!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1814"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1823"/>
         <source>Hidden tools</source>
         <translation>Strumenti nascosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1832"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1841"/>
         <source>No tools blocked!</source>
         <translation>Nessuno strumento bloccato!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1833"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1842"/>
         <source>Blocked tools</source>
         <translation>Strumenti bloccati</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1897"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1906"/>
         <source>Search results:</source>
         <translation>Risultati di ricerca:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1915"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1924"/>
         <source>No tools active!</source>
         <translation>Nessuno strumento attivo!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1919"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1928"/>
         <source>Active tools:</source>
         <translation>Strumenti attivi:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1935"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1944"/>
         <source>All tools hidden</source>
         <translation>Tutti gli strumenti nascosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1935"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1944"/>
         <source>No visible tools!</source>
         <translation>Nessuno strumento visibile!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1938"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1947"/>
         <source>All visible tools:</source>
         <translation>Tutti gli strumenti visibili:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1957"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1966"/>
         <source>No favourite tools!</source>
         <translation>Nessuno strumento preferito!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1961"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1970"/>
         <source>Favourite tools:</source>
         <translation>Strumenti preferiti:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2555"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2564"/>
         <source> at </source>
         <translation> a </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2574"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2583"/>
         <source> with ISO </source>
         <translation> con ISO </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2615"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2624"/>
         <source> (35mm equiv.: </source>
         <translation> (35mm equiv.: </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2965"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="2989"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2974"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2998"/>
         <source>Photivo UI file (*.ptu);;All files (*.*)</source>
         <translation>File interfaccia Photivo (*.ptu);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2967"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2976"/>
         <source>Open UI</source>
         <translation>Apri interfaccia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2991"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3000"/>
         <source>Save UI</source>
         <translation>Salva interfaccia</translation>
     </message>
@@ -9427,12 +9440,12 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
     <name>ptViewWindow</name>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="640"/>
-        <source>Zoom fit</source>
+        <source>Zoom &amp;fit</source>
         <translation>Adatta alla pagina</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="648"/>
-        <source>Zoom 100%</source>
+        <source>Zoom &amp;100%</source>
         <translation>Zoom 100%</translation>
     </message>
     <message>
@@ -9447,12 +9460,12 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="696"/>
-        <source>Over exposure</source>
+        <source>&amp;Over exposure</source>
         <translation>Sovraesposizione</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="701"/>
-        <source>Under exposure</source>
+        <source>&amp;Under exposure</source>
         <translation>Sottoesposizione</translation>
     </message>
     <message>
@@ -9482,12 +9495,12 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="733"/>
-        <source>Show tools</source>
+        <source>Show &amp;tool pane</source>
         <translation>Mostra strumenti</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="738"/>
-        <source>Full screen</source>
+        <source>Full&amp;screen</source>
         <translation>Schermo intero</translation>
     </message>
     <message>
@@ -9517,12 +9530,12 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="677"/>
-        <source>Gradient</source>
+        <source>&amp;Gradient</source>
         <translation>Gradiente</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="661"/>
-        <source>Structure</source>
+        <source>&amp;Structure</source>
         <translation>Struttura</translation>
     </message>
     <message>
@@ -9549,12 +9562,12 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="768"/>
-        <source>Clipping</source>
+        <source>Show &amp;clipping</source>
         <translation>Tosaggio</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="758"/>
-        <source>Mode</source>
+        <source>Display &amp;mode</source>
         <translation>Modo</translation>
     </message>
 </context>

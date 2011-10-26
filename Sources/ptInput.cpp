@@ -122,17 +122,6 @@ ptInput::ptInput(const QWidget* MainWindow,
   m_Slider->installEventFilter(this);
   m_Slider->setFocusPolicy(Qt::ClickFocus);
 
-  //~ m_Button  = new QToolButton(Parent);
-  //~ QIcon ButtonIcon;
-  //~ ButtonIcon.addPixmap(QPixmap(
-    //~ QString::fromUtf8(":/photivo/Icons/reload.png")),
-    //~ QIcon::Normal, QIcon::Off);
-  //~ m_Button->setIcon(ButtonIcon);
-  //~ m_Button->setIconSize(QSize(14,14));
-  //~ m_Button->setText(QObject::tr("Reset"));
-  //~ m_Button->setToolTip(QObject::tr("Reset to defaults"));
-  //~ if (!m_HaveDefault) m_Button->hide();
-
   m_Label = new QLabel(m_Parent);
   m_Label->setText(LabelText);
   m_Label->setToolTip(ToolTip);
