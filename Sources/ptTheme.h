@@ -23,30 +23,25 @@
 #ifndef DLTHEME_H
 #define DLTHEME_H
 
+//==============================================================================
+
 #include <QtCore>
 #include <QtGui>
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ptTheme
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 class ptTheme {
-
-
-
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
-  // Constructor
   ptTheme(QApplication* Application);
-
-  // Destructor
   ~ptTheme();
+
+  void      Reset();
+  void      Normal(const short Color);
+  void      MidGrey(const short Color);
+  void      DarkGrey(const short Color);
+  void      VeryDark(const short Color);
+  void      SetHighLightColor(const short Color);
+  void      SetCustomCSS(const QString CSSFileName);
 
   // Variables
   QStyle*     ptThemeStyle;
@@ -54,10 +49,11 @@ public:
   QPalette    ptPalette;
   QPalette    ptMenuPalette;
   QString     ptStyleSheet;
-#ifdef Q_OS_MAC
-  QString     MacBackGround;
-  bool        MacStyleFlag;
-#endif
+
+  #ifdef Q_OS_MAC
+    QString     MacBackGround;
+    bool        MacStyleFlag;
+  #endif
 
   QPalette    ptSystemPalette;
   QStyle*     ptSystemStyle;
@@ -67,7 +63,8 @@ public:
   QPixmap*    ptIconCrossRed;
   QPixmap*    ptIconCheckGreen;
   QPixmap*    ptIconReset;
-  QPixmap*    ptIconDisk;
+  QPixmap*    ptIconSavePreset;
+  QPixmap*    ptIconAppendPreset;
   QPixmap*    ptIconQuestion;
   QPixmap*    ptIconStar;
   QPixmap*    ptIconStarGrey;
@@ -78,22 +75,10 @@ public:
   QColor ptDark;
   QColor ptText;
 
-  // Methods
-  void Reset();
-  void Normal(const short Color);
-  void MidGrey(const short Color);
-  void DarkGrey(const short Color);
-  void VeryDark(const short Color);
-  void SetHighLightColor(const short Color);
-  void SetCustomCSS(const QString CSSFileName);
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
 private:
+  void CSS();
+  void JustTools();
   QColor ptGradient;
   QColor ptVeryBright;
   QColor ptDisabled;
@@ -107,11 +92,6 @@ private:
 
   QString m_CustomCSS;
 
-  void CSS();
-  void JustTools();
+//==============================================================================
 };
-
 #endif
-
-////////////////////////////////////////////////////////////////////////////////
-

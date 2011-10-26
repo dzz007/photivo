@@ -548,7 +548,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   m_ActiveTabs.append(EyeCandyTab);
   m_ActiveTabs.append(OutTab);
 
-  m_StatusIcon = QIcon(QString::fromUtf8(":/photivo/Icons/circleactive.png"));
+  m_StatusIcon = QIcon(QString::fromUtf8(":/dark/ui-graphics/indicator-active-tab.png"));
 
   // Profiles
   QFileInfo PathInfo(Settings->GetString("CameraColorProfile"));
@@ -610,7 +610,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnMenuOpenSettings, SIGNAL(triggered()), this, SLOT(MenuOpenSettings()));
 
   // context menu to show tools
-  m_AtnShowTools = new QAction(tr("Show hidden tools"), this);
+  m_AtnShowTools = new QAction(tr("&Show hidden tools"), this);
   connect(m_AtnShowTools, SIGNAL(triggered()), this, SLOT(ShowToolsOnTab()));
   m_AtnShowTools->setIcon(QIcon(*Theme->ptIconCheckGreen));
   m_AtnShowTools->setIconVisibleInMenu(true);

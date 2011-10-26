@@ -54,15 +54,16 @@ ptTheme::ptTheme(QApplication* Application) {
   m_CustomCSS = "";
 
   // Icons
-  ptIconCircleGreen = new QPixmap(QString::fromUtf8(":/photivo/Icons/circlegreen.png"));
-  ptIconCircleRed = new QPixmap(QString::fromUtf8(":/photivo/Icons/circlered.png"));
-  ptIconCrossRed = new QPixmap(QString::fromUtf8(":/photivo/Icons/crossred.png"));
-  ptIconCheckGreen = new QPixmap(QString::fromUtf8(":/photivo/Icons/checkgreen.png"));
-  ptIconReset =  new QPixmap(QString::fromUtf8(":/photivo/Icons/reload.png"));
-  ptIconDisk =  new QPixmap(QString::fromUtf8(":/photivo/Icons/filesave.png"));
-  ptIconQuestion =  new QPixmap(QString::fromUtf8(":/photivo/Icons/question.png"));
-  ptIconStar =  new QPixmap(QString::fromUtf8(":/photivo/Icons/star.png"));
-  ptIconStarGrey =  new QPixmap(QString::fromUtf8(":/photivo/Icons/star-grey.png"));
+  ptIconCircleGreen = new QPixmap(QString::fromUtf8(":/dark/icons/indicator-allow.png"));
+  ptIconCircleRed = new QPixmap(QString::fromUtf8(":/dark/icons/indicator-block.png"));
+  ptIconCrossRed = new QPixmap(QString::fromUtf8(":/dark/icons/tool-hide.png"));
+  ptIconCheckGreen = new QPixmap(QString::fromUtf8(":/dark/icons/tool-show.png"));
+  ptIconReset =  new QPixmap(QString::fromUtf8(":/dark/icons/reset.png"));
+  ptIconSavePreset =  new QPixmap(QString::fromUtf8(":/dark/icons/document-save.png"));
+  ptIconAppendPreset =  new QPixmap(QString::fromUtf8(":/dark/icons/template-append.png"));
+  ptIconQuestion =  new QPixmap(QString::fromUtf8(":/dark/ui-graphics/bubble-question.png"));
+  ptIconStar =  new QPixmap(QString::fromUtf8(":/dark/icons/bookmark-new.png"));
+  ptIconStarGrey =  new QPixmap(QString::fromUtf8(":/dark/icons/bookmark-remove.png"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +119,7 @@ void ptTheme::MidGrey(const short Color) {
   ptSliderStop = QColor(145,145,145);
   ptSliderStartDisabled = QColor(150,150,150);
   ptSliderStopDisabled = QColor(150,150,150);
-  SliderStripe = ":/photivo/Patterns/slider-stripe-midgrey.png";
+  SliderStripe = ":/patterns/slider-stripe-midgrey.png";
   SliderStripeDisabled = "";
 #ifdef Q_OS_MAC
   MacStyleFlag=true;
@@ -194,8 +195,8 @@ void ptTheme::DarkGrey(const short Color) {
   ptSliderStop = QColor(80,80,80);
   ptSliderStartDisabled = QColor(70,70,70);
   ptSliderStopDisabled = QColor(60,60,60);
-  SliderStripe = ":/photivo/Patterns/slider-stripe-grey.png";
-  SliderStripeDisabled = ":/photivo/Patterns/slider-stripe-darkgrey.png";
+  SliderStripe = ":/patterns/slider-stripe-grey.png";
+  SliderStripeDisabled = ":/patterns/slider-stripe-darkgrey.png";
 #ifdef Q_OS_MAC
   MacStyleFlag=true;
 #endif
@@ -270,8 +271,8 @@ void ptTheme::VeryDark(const short Color) {
   ptSliderStop = QColor(60,60,60);
   ptSliderStartDisabled = QColor(60,60,60);
   ptSliderStopDisabled = QColor(50,50,50);
-  SliderStripe = ":/photivo/Patterns/slider-stripe-darkgrey.png";
-  SliderStripeDisabled = ":/photivo/Patterns/slider-stripe-dark.png";
+  SliderStripe = ":/patterns/slider-stripe-darkgrey.png";
+  SliderStripeDisabled = ":/patterns/slider-stripe-dark.png";
 #ifdef Q_OS_MAC
   MacStyleFlag=true;
 #endif
