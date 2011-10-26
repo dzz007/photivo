@@ -487,11 +487,6 @@ int photivoMain(int Argc, char *Argv[]) {
     ImageFileToOpen = cli.Filename;
   }
 
-#ifdef Q_OS_MAC
-  } // !MacGotFileEvent
-#endif
-
-
   // QtSingleInstance, add CLI-Switch to skip and allow multiple instances
   // JobMode is always run in a new instance
   // Sent messages are handled by ptMainWindow::OtherInstanceMessage
@@ -514,6 +509,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
 
 #ifdef Q_OS_MAC
+  } // !MacGotFileEvent
   QDir dir(QApplication::applicationDirPath());
   QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
 #endif
@@ -3450,6 +3446,7 @@ void GimpExport(const short UsePipe) {
       TheDcRaw = new(DcRaw);
       TheProcessor = new ptProcessor(ReportProgress);
       Settings->SetValue("JobMode",1); // Disable caching to save memory
+
       TheProcessor->m_DcRaw = TheDcRaw;
       Settings->ToDcRaw(TheDcRaw);
       // Run the graphical pipe in full format mode to recreate the image.
