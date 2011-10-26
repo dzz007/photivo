@@ -126,18 +126,19 @@ void ptFileMgrThumbnailer::run() {
       thumbGroup = ptGraphicsThumbGroup::AddRef();
       ptFSOType type;
 
+      QString descr = files.at(i).fileName();
       if (files.at(i).isDir()) {
-        if (files.at(i).fileName() == "..")
+        if (descr == "..") {
           type = fsoParentDir;
-        else
+          descr = QDir(files.at(i).canonicalPath()).dirName();
+        } else {
           type = fsoDir;
+        }
       } else {
         type = fsoFile;
       }
 
-      thumbGroup->addInfoItems(files.at(i).canonicalFilePath(),
-                               files.at(i).fileName(),
-                               type);
+      thumbGroup->addInfoItems(files.at(i).canonicalFilePath(), descr, type);
 
       // ... then add the group to the cache. Directories are not cached because
       // they load very quickly anyway.
@@ -166,7 +167,7 @@ void ptFileMgrThumbnailer::run() {
 
     if (currentGroup->fsoType() == fsoParentDir) {
       // we have a parent directory (dirs are not cached!)
-      thumbImage = new QImage(QString::fromUtf8(":/photivo/FileManager/up.png"));
+      thumbImage = new QImage(QString::fromUtf8(":/photivo/FileManager/go-up.png"));
 
     } else if (currentGroup->fsoType() == fsoDir) {
       // we have a subdirectory (dirs are not cached!)
