@@ -183,9 +183,15 @@ private :
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// PRIVATE slots
+// slots
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+public slots:
+  // Toggle file manager window
+  void OpenFileMgrWindow();
+  void CloseFileMgrWindow();
+
 
 private slots:
   void ResizeTimerExpired();
@@ -310,7 +316,6 @@ private slots:
   void OnVisibleToolsDiscardButtonClicked();
   void OnVisibleToolsLoadButtonClicked();
   void OnVisibleToolsSaveButtonClicked();
-
 };
 
 #endif

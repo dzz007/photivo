@@ -171,6 +171,7 @@ private:
   QAction* ac_SensorClipSep;
   QAction* ac_ShowTools;
   QAction* ac_ShowZoomBar;
+  QAction* ac_OpenFileMgr;
   QAction* ac_Fullscreen;
   QActionGroup* ac_ModeGroup;
 
@@ -199,6 +200,7 @@ private slots:
   void Menu_ZoomFit();
   void Menu_Zoom100();
   void Menu_Mode();
+  void Menu_OpenFileMgr();
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -209,6 +211,7 @@ private slots:
 signals:
   void keyChanged(QKeyEvent* event);
   void mouseChanged(QMouseEvent* event);
+  void openFileMgr();
 
 };
 

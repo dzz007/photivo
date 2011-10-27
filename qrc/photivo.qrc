@@ -53,5 +53,7 @@
         <file>patterns/slider-stripe-midgrey.png</file>
         <file>photivo-appicon.png</file>
         <file>photivo-splash.png</file>
+        <file>dark/icons/folder-48px.png</file>
+        <file>dark/icons/go-up-48px.png</file>
     </qresource>
 </RCC>

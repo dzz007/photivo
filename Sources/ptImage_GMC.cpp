@@ -162,6 +162,7 @@ ptImage* ptImage::ptGMCOpenImage(const char* FileName,
 
   MagickWand* image = NewMagickWand();
   ExceptionType MagickExcept;
+printf("%s\n", FileName);
   MagickReadImage(image, FileName);
   MagickGetException(image, &MagickExcept);
 

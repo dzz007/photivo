@@ -505,8 +505,9 @@ Following stuff is also needed for normal.css
 
 /** Textedits ****************************************/
     "QLineEdit, QPlainTextEdit {"
+    "  background-color: " % BackGround % ";"
+    "  color: " % Text % ";"
     "  border: 1px solid " % VeryBright % ";"
-
     "  border-radius: 3px;"
     "  padding-left: 2px;"
     "  padding-right: 2px;"
@@ -529,6 +530,11 @@ Following stuff is also needed for normal.css
     "  margin-left: 5px;"
     "}"
 
+    "QLineEdit#m_PathInput {"
+    "  padding-bottom: 2px;"
+    "  padding-top: 2px;"
+    "}"
+
 
 /** QScrollArea ****************************************/
     "QScrollArea {"
@@ -540,7 +546,7 @@ Following stuff is also needed for normal.css
     "  border: 1px solid " % Dark % ";"
     "}"
 
-/** Slider ****************************************/
+/** Slider, Progressbar ****************************************/
     "QSlider {"
     "  background: none;"
     "  border: 1px solid " % BackGround % ";"
@@ -556,7 +562,7 @@ Following stuff is also needed for normal.css
     "  border-radius: 3px;"
     "}"
 
-    "QSlider::groove:horizontal {"
+    "QSlider::groove:horizontal, QProgressBar::groove:horizontal {"
     "  background: " % VeryBright % ";"
     "  border: 1px solid #000;"
 
@@ -573,7 +579,7 @@ Following stuff is also needed for normal.css
     "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 red, stop: 0.25 yellow, stop: 0.5 green, stop: 0.75 blue, stop: 1 red);"
     "}"
 
-    "ptSlider {"
+    "ptSlider, QProgressBar {"
     "  background: none;"
     "  border: 1px solid #000;"
 
@@ -582,6 +588,10 @@ Following stuff is also needed for normal.css
     "  min-height: 16px;"
     "  border-radius: 3px;"
     "}"
+
+      "QProgressBar {"
+      "  border-color: " % VeryBright % ";"
+      "}"
 
     "QWidget#HueWidget {"
     "  max-height: 6px;"
@@ -601,7 +611,7 @@ Following stuff is also needed for normal.css
     "  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 darkred, stop: 0.25 #808000, stop: 0.5 darkgreen, stop: 0.75 darkblue, stop: 1 darkred);"
     "}"
 
-    "ptSlider::chunk {"
+    "ptSlider::chunk, QProgressBar::chunk {"
     "  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 " % SliderStart % ", stop: 1 " % SliderStop % ");"
     "  background-image: url(" % SliderStripe % ");"
     "  border-radius: 2px;"
@@ -633,6 +643,20 @@ Following stuff is also needed for normal.css
 /************************************************************************************
 Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 ************************************************************************************/
+
+      "#m_MainSplitter {"
+      "  background-color: " % Dark % ";"
+      "  padding: 10px;"
+      "}"
+
+      "#FMTreePane, #FMThumbPane {"
+      "  border-radius: 5px;"
+      "}"
+
+      "QTreeView {"
+      "  border-radius: 5px;"
+      "  padding: 5px;"
+      "}"
 
 
 /** Menu ****************************************/
@@ -758,16 +782,16 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 
     "QSplitter::handle:horizontal {"
     "  background-color: " % Dark % ";"
-    "  border: 1px solid #000;"
-    "  color: #000;"
+//    "  border: 1px solid #000;"
+//    "  color: #000;"
 
     "  width: 4px;"
     "}"
 
     "QSplitter::handle:vertical {"
     "  background-color: " % Dark % ";"
-    "  border: 1px solid #000;"
-    "  color: #000;"
+//    "  border: 1px solid #000;"
+//    "  color: #000;"
 
     "  height: 4px;"
     "}"

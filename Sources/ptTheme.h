@@ -70,16 +70,16 @@ public:
   QPixmap*    ptIconStarGrey;
 
   QColor      ptBackground;
+  QColor      ptHighLight;
+  QColor ptBright;
+  QColor ptDark;
+  QColor ptText;
 
 
 private:
   void CSS();
   void JustTools();
-  QColor ptHighLight;
   QColor ptGradient;
-  QColor ptText;
-  QColor ptDark;
-  QColor ptBright;
   QColor ptVeryBright;
   QColor ptDisabled;
   QColor ptSliderStart;

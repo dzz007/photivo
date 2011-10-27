@@ -68,7 +68,7 @@ public:
   ~ptProcessor();
 
   // The associated DcRaw.
-  DcRaw* m_DcRaw;
+  ptDcRaw* m_DcRaw;
 
   // The real processing.
   void Run(short Phase,
