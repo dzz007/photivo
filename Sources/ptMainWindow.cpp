@@ -945,13 +945,8 @@ short ptMainWindow::GetCurrentTab() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-//
+//==============================================================================
 // Show/hide file manager window
-//
-
-void ptMainWindow::on_FileManagerButton_clicked() {
-  OpenFileMgrWindow();
-}
 
 void ptMainWindow::OpenFileMgrWindow() {
   MainStack->setCurrentWidget(FileManagerPage);
@@ -963,10 +958,8 @@ void ptMainWindow::CloseFileMgrWindow() {
   Settings->SetValue("FileMgrIsOpen", 0);
 }
 
-
-//
+//==============================================================================
 // Tabbook switching
-//
 
 void CB_Tabs(const short Index);
 void ptMainWindow::on_ProcessingTabBook_currentChanged(const int Index) {
@@ -1676,12 +1669,17 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
       DropInfo.setFile( DropName ); // information about file
       if ( DropInfo.isFile() ) { // if is file
         if (DropInfo.completeSuffix()!="pts" && DropInfo.completeSuffix()!="ptj" &&
-            DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj") {
+            DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj")
+        {
+          if (Settings->GetInt("FileMgrIsOpen"))
+            CloseFileMgrWindow();
           ImageFileToOpen = DropName;
           CB_MenuFileOpen(1);
         } else {
-          if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
-            CB_OpenSettingsFile(DropName);
+          if (!Settings->GetInt("FileMgrIsOpen")) {
+            if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
+              CB_OpenSettingsFile(DropName);
+            }
           }
         }
       }

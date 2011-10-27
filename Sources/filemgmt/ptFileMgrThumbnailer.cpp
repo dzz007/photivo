@@ -130,7 +130,7 @@ void ptFileMgrThumbnailer::run() {
       if (files.at(i).isDir()) {
         if (descr == "..") {
           type = fsoParentDir;
-          descr = QDir(files.at(i).canonicalPath()).dirName();
+          descr = QDir(files.at(i).canonicalFilePath()).dirName();
         } else {
           type = fsoDir;
         }

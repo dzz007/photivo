@@ -316,8 +316,6 @@ private slots:
   void OnVisibleToolsDiscardButtonClicked();
   void OnVisibleToolsLoadButtonClicked();
   void OnVisibleToolsSaveButtonClicked();
-
-  void on_FileManagerButton_clicked();
 };
 
 #endif

@@ -862,6 +862,7 @@ int photivoMain(int Argc, char *Argv[]) {
   MainWindow->FileManagerLayout->addWidget(FileMgrWindow);
   QObject::connect(FileMgrWindow, SIGNAL(FileMgrWindowClosed()),
                    MainWindow, SLOT(CloseFileMgrWindow()));
+  QObject::connect(ViewWindow, SIGNAL(openFileMgr()), MainWindow, SLOT(OpenFileMgrWindow()));
 
 
   // Populate Translations combobox

@@ -70,6 +70,7 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
 
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::LeftButton);
+  setAcceptDrops(false);
   setFiltersChildEvents(true);
   setCursor(QCursor(Qt::PointingHandCursor));
   setPen(QPen(Theme->ptBright, 0, Qt::DashLine));

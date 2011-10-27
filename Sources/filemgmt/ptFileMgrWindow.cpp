@@ -73,6 +73,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 
   // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
+  m_FilesScene->installEventFilter(this);
   m_FilesView->installEventFilter(this);
   m_FilesView->verticalScrollBar()->installEventFilter(this);
   m_FilesView->horizontalScrollBar()->installEventFilter(this);
@@ -269,6 +270,7 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     if (!InStartup)
       DisplayThumbnails(m_DirTree->currentIndex());
 
+    ConstructContextMenu();
     m_IsFirstShow = false;
     return;
   }
@@ -289,6 +291,7 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
     LayoutAll();
     return false;   // handle event further
 
+//------------------------------------------------------------------------------
 
   } else if ((obj == m_FilesView->verticalScrollBar() ||
               obj == m_FilesView->horizontalScrollBar()) &&
@@ -306,6 +309,15 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
     }
     return true;    // prevent further event handling
 
+//------------------------------------------------------------------------------
+
+  } else if (obj == m_FilesScene && (event->type() == QEvent::GraphicsSceneDragEnter ||
+                                     event->type() == QEvent::GraphicsSceneDrop))
+  {
+    event->ignore();
+    return true;
+
+//------------------------------------------------------------------------------
 
   } else {
     // make sure parent event filters are executed
@@ -317,7 +329,7 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 
 void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const QString location) {
   if (action == tnaLoadImage) {
-    CloseWindow();
+    closeWindow();
     ImageFileToOpen = location;
     CB_MenuFileOpen(1);
 
@@ -357,15 +369,21 @@ void ptFileMgrWindow::UpdateTheme() {
 
 //==============================================================================
 
-void ptFileMgrWindow::CloseWindow() {
+void ptFileMgrWindow::closeWindow() {
   // File manager can’t close its window itself. That’s handled by the main window.
   // Signal tells main window to perform necessary closing actions.
+  // FM internal cleanup is done in ptFileMgrWindow::hideEvent().
   emit FileMgrWindowClosed();
+}
 
+//==============================================================================
+
+void ptFileMgrWindow::hideEvent(QHideEvent* event) {
   m_DataModel->StopThumbnailer();
   // free memory occupied by thumbnails
   ClearScene();
   m_DataModel->Clear();
+  event->accept();
 }
 
 //==============================================================================
@@ -384,11 +402,11 @@ void ptFileMgrWindow::ClearScene() {
 void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
   // Esc: close file manager
   if (event->key() == Qt::Key_Escape && event->modifiers() == Qt::NoModifier) {
-    CloseWindow();
+    closeWindow();
   }
   // Ctrl+M: close file manager
   else if (event->key() == Qt::Key_M && event->modifiers() == Qt::ControlModifier) {
-    CloseWindow();
+    closeWindow();
   }
   // F5: refresh thumbnails
   else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::NoModifier) {
@@ -424,20 +442,16 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
 
 void ptFileMgrWindow::ConstructContextMenu() {
   // Actions for thumbnail view submenu
-  ptThumbnailLayout currLayout = (ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType");
   ac_VerticalThumbs = new QAction(tr("&Vertical") + "\t" + tr("Alt+1"), this);
   ac_VerticalThumbs->setCheckable(true);
-  ac_VerticalThumbs->setChecked(currLayout == tlVerticalByRow);
   connect(ac_VerticalThumbs, SIGNAL(triggered()), this, SLOT(verticalThumbs()));
 
   ac_HorizontalThumbs = new QAction(tr("&Horizontal") + "\t" + tr("Alt+2"), this);
   ac_HorizontalThumbs->setCheckable(true);
-  ac_HorizontalThumbs->setChecked(currLayout == tlHorizontalByColumn);
   connect(ac_HorizontalThumbs, SIGNAL(triggered()), this, SLOT(horizontalThumbs()));
 
   ac_DetailedThumbs = new QAction(tr("&Details") + "\t" + tr("Alt+3"), this);
   ac_DetailedThumbs->setCheckable(true);
-  ac_DetailedThumbs->setChecked(currLayout == tlDetailedList);
   connect(ac_DetailedThumbs, SIGNAL(triggered()), this, SLOT(detailedThumbs()));
 
   ac_ThumbLayoutGroup = new QActionGroup(this);
@@ -450,22 +464,33 @@ void ptFileMgrWindow::ConstructContextMenu() {
   ac_ToggleNaviPane = new QAction(tr("Show &navigation pane") + "\t" + tr("Space"), this);
   ac_ToggleNaviPane->setCheckable(true);
   connect(ac_ToggleNaviPane, SIGNAL(triggered()), this, SLOT(toggleNaviPane()));
+
+  ac_CloseFileMgr = new QAction(tr("&Close file manager") + "\t" + tr("Esc"), this);
+  connect(ac_CloseFileMgr, SIGNAL(triggered()), this, SLOT(closeWindow()));
 }
 
 //==============================================================================
 
 void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
+  ptThumbnailLayout currLayout = (ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType");
+
   // thumbnail view submenu
-  QMenu MenuThumbLayout(tr("Thumbnail &view"), this);
+  QMenu MenuThumbLayout(tr("Thumbnail &view"));
+  MenuThumbLayout.setPalette(Theme->ptMenuPalette);
+  MenuThumbLayout.setStyle(Theme->ptStyle);
   MenuThumbLayout.addActions(ac_ThumbLayoutGroup->actions());
+  ac_VerticalThumbs->setChecked(currLayout == tlVerticalByRow);
+  ac_HorizontalThumbs->setChecked(currLayout == tlHorizontalByColumn);
+  ac_DetailedThumbs->setChecked(currLayout == tlDetailedList);
 
   // main context menu
-  QMenu Menu(this);
+  QMenu Menu(NULL);
   Menu.setPalette(Theme->ptMenuPalette);
   Menu.setStyle(Theme->ptStyle);
   Menu.addMenu(&MenuThumbLayout);
   Menu.addSeparator();
   Menu.addAction(ac_ToggleNaviPane);
+  ac_ToggleNaviPane->setChecked(FMTreePane->isVisible());
 
   Menu.exec(((QMouseEvent*)event)->globalPos());
 }
