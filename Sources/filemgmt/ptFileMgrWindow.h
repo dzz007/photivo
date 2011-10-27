@@ -69,23 +69,14 @@ public:
 
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
-
-  /*! Reimplemented from QObject::eventFilter() */
   bool eventFilter(QObject* obj, QEvent* event);
-
-  /*! Reimplemented from QWidget::keyPressEvent().
-    The file manager handles its keys completely on its own. The main window
-    is only responsible for the Ctrl+M shortcut to open the manager window.
-  */
+  void hideEvent(QHideEvent* event);
   void keyPressEvent(QKeyEvent* event);
-
-  /*! Reimplemented from QWidget::showEvent() */
   void showEvent(QShowEvent* event);
 
 
 private:
   void ClearScene();
-  void CloseWindow();
   void LayoutAll();
   void setLayouter(const ptThumbnailLayout layout);
   void ConstructContextMenu();
@@ -103,12 +94,14 @@ private:
   QAction* ac_DetailedThumbs;
   QActionGroup* ac_ThumbLayoutGroup;
   QAction* ac_ToggleNaviPane;
+  QAction* ac_CloseFileMgr;
 
 
 public slots:
 
 private slots:
   void changeTreeDir(const QModelIndex& index);
+  void closeWindow();
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
   void fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix);
   void fetchNewThumbs(const bool isLast);

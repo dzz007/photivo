@@ -46,7 +46,7 @@ void ptColumnGridThumbnailLayouter::Init(const int thumbCount, const QFont& font
   int RestrictedMax = Settings->GetInt("FileMgrUseThumbMaxRowCol") == 0 ?
                       INT_MAX-1 : Settings->GetInt("FileMgrThumbMaxRowCol")-1;
   m_ThumbMetrics.MaxRow =
-      qMin(RestrictedMax - 1,
+      qMin(RestrictedMax,
            (m_View->height() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellHeight - 1);
 
   int FullWidth = qCeil((qreal)thumbCount / (qreal)(m_ThumbMetrics.MaxRow + 1)) *
