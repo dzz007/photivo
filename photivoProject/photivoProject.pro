@@ -133,8 +133,18 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptRichRectInteraction.h \
     ../Sources/ptGridInteraction.h \
+    ../Sources/ptEcWin7.h \
+    ../Sources/filemgmt/ptFileMgrWindow.h \
+    ../Sources/filemgmt/ptFileMgrDM.h \
+    ../Sources/filemgmt/ptFileMgrThumbnailer.h \
+    ../Sources/filemgmt/ptThumbnailCache.h \
     ../Sources/ptConfirmRequest.h \
-    ../Sources/ptEcWin7.h
+    ../Sources/filemgmt/ptGraphicsThumbGroup.h \
+    ../Sources/filemgmt/ptGraphicsSceneEmitter.h \
+    ../Sources/filemgmt/ptAbstractThumbnailLayouter.h \
+    ../Sources/filemgmt/ptGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptRowGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h
 HEADERS += ../Sources/ptParseCli.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
@@ -190,8 +200,17 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptRichRectInteraction.cpp \
     ../Sources/ptGridInteraction.cpp \
+    ../Sources/ptEcWin7.cpp \
+    ../Sources/filemgmt/ptFileMgrWindow.cpp \
+    ../Sources/filemgmt/ptFileMgrDM.cpp \
+    ../Sources/filemgmt/ptFileMgrThumbnailer.cpp \
+    ../Sources/filemgmt/ptThumbnailCache.cpp \
     ../Sources/ptConfirmRequest.cpp \
-    ../Sources/ptEcWin7.cpp
+    ../Sources/filemgmt/ptGraphicsThumbGroup.cpp \
+    ../Sources/filemgmt/ptGraphicsSceneEmitter.cpp \
+    ../Sources/filemgmt/ptGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptRowGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp
 SOURCES += ../Sources/ptParseCli.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
@@ -279,7 +298,8 @@ SOURCES += ../Sources/vcd/median_filter_new.c
 SOURCES += ../Sources/vcd/refinement.c
 SOURCES += ../Sources/vcd/vcd_interpolate.c
 
-FORMS += ../Sources/ptMainWindow.ui
+FORMS   += ../Sources/ptMainWindow.ui \
+           ../Sources/filemgmt/ptFileMgrWindow.ui
 
 RESOURCES += ../photivo.qrc
 
@@ -300,5 +320,12 @@ exists(../local-system-specific.pro) {
 }
 
 ###############################################################################
+
+
+
+
+
+
+
 
 

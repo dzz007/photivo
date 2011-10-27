@@ -629,14 +629,12 @@ ptMainWindow::ptMainWindow(const QString Title)
   m_SearchInputTimer->setSingleShot(1);
   connect(m_SearchInputTimer, SIGNAL(timeout()), this, SLOT(Search()));
 
-  // Set us in the beginning of the tabbook and show mainwindow.
-  // But we do not want to generate events for this during setup
+  // Set the toolpane to show the pipe controls ...
   MainTabBook->blockSignals(1);
-  MainTabBook->setCurrentIndex(0);
+  MainTabBook->setCurrentWidget(TabProcessing);
   MainTabBook->blockSignals(0);
 
-  MainTabBook->setCurrentWidget(TabProcessing);
-
+  // ... and open the first pipe controls tab
   ProcessingTabBook->blockSignals(1);
   ProcessingTabBook->setCurrentIndex(0);
   ProcessingTabBook->blockSignals(0);
@@ -661,6 +659,7 @@ ptMainWindow::ptMainWindow(const QString Title)
           this,
           SLOT(Event0TimerExpired()));
 
+  FileMgrThumbMaxRowColWidget->setEnabled(Settings->GetInt("FileMgrUseThumbMaxRowCol"));
   UpdateCropToolUI();
   UpdateLfunDistUI();
   UpdateLfunCAUI();
@@ -673,6 +672,14 @@ ptMainWindow::ptMainWindow(const QString Title)
     ShowFavouriteTools();
   if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_AllTools)
     ShowAllTools();
+
+  // Show the file manager if no image loaded at startup, the image editor otherwise.
+  // Do this last in the constructor because it triggers thumbnail reading.
+  if (ImageFileToOpen == "") {
+    OpenFileMgrWindow();
+  } else {
+    MainStack->setCurrentWidget(ProcessingPage);
+  }
 }
 
 void CB_Event0();
@@ -938,9 +945,21 @@ short ptMainWindow::GetCurrentTab() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-//
+//==============================================================================
+// Show/hide file manager window
+
+void ptMainWindow::OpenFileMgrWindow() {
+  MainStack->setCurrentWidget(FileManagerPage);
+  Settings->SetValue("FileMgrIsOpen", 1);
+}
+
+void ptMainWindow::CloseFileMgrWindow() {
+  MainStack->setCurrentWidget(ProcessingPage);
+  Settings->SetValue("FileMgrIsOpen", 0);
+}
+
+//==============================================================================
 // Tabbook switching
-//
 
 void CB_Tabs(const short Index);
 void ptMainWindow::on_ProcessingTabBook_currentChanged(const int Index) {
@@ -1650,12 +1669,17 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
       DropInfo.setFile( DropName ); // information about file
       if ( DropInfo.isFile() ) { // if is file
         if (DropInfo.completeSuffix()!="pts" && DropInfo.completeSuffix()!="ptj" &&
-            DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj") {
+            DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj")
+        {
+          if (Settings->GetInt("FileMgrIsOpen"))
+            CloseFileMgrWindow();
           ImageFileToOpen = DropName;
           CB_MenuFileOpen(1);
         } else {
-          if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
-            CB_OpenSettingsFile(DropName);
+          if (!Settings->GetInt("FileMgrIsOpen")) {
+            if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
+              CB_OpenSettingsFile(DropName);
+            }
           }
         }
       }
@@ -1746,6 +1770,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         SearchInputWidget->setText("");
         SearchInputWidget->setFocus();
       }
+    } else if (Event->key() == Qt::Key_M && Event->modifiers() == Qt::ControlModifier) {
+      OpenFileMgrWindow();
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::ControlModifier) {
       CB_OpenPresetFileButton();
     } else if (Event->key()==Qt::Key_Q && Event->modifiers()==Qt::ControlModifier) {

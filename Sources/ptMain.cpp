@@ -54,6 +54,7 @@
 #include "ptWiener.h"
 #include "ptParseCli.h"
 #include "qtsingleapplication/qtsingleapplication.h"
+#include "filemgmt/ptFileMgrWindow.h"
 #include <wand/magick_wand.h>
 
 #ifdef Q_OS_MAC
@@ -80,7 +81,7 @@ using namespace std;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-DcRaw*       TheDcRaw        = NULL;
+ptDcRaw*       TheDcRaw        = NULL;
 ptProcessor* TheProcessor    = NULL;
 
 ptCurve*  RGBGammaCurve     = NULL;
@@ -93,6 +94,8 @@ ptCurve*  BackupCurve[17]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
 // I don't manage to init statically following ones. Done in InitCurves.
 QStringList CurveKeys, CurveToolNameKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
+QStringList FileExtsRaw;
+QStringList FileExtsBitmap;
 
 ptChannelMixer* ChannelMixer = NULL;
 
@@ -126,6 +129,7 @@ ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
 ptCurveWindow*     CurveWindow[17] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptFileMgrWindow*   FileMgrWindow   = NULL;
 
 // Error dialog for segfaults
 ptMessageBox* SegfaultErrorBox;
@@ -243,7 +247,7 @@ void InitStrings() {
 
 ptImageType CheckImageType(QString filename,
                            uint16_t* width, uint16_t* height,
-                           DcRaw* dcRaw = NULL);
+                           ptDcRaw* dcRaw = NULL);
 void   RunJob(const QString FileName);
 short  ReadJobFile(const QString FileName);
 short  ReadSettingsFile(const QString FileName, short& NextPhase);
@@ -572,6 +576,50 @@ int photivoMain(int Argc, char *Argv[]) {
 
   CurveBackupKeys = CurveKeys;
 
+  FileExtsRaw << "*.arw" << "*.ARW" << " *.Arw"
+              << "*.bay" << "*.BAY" << "*.Bay"
+              << "*.bmq" << "*.BMQ" << "*.Bmq"
+              << "*.cr2" << "*.CR2" << "*.Cr2"
+              << "*.crw" << "*.CRW" << "*.Crw"
+              << "*.cs1" << "*.CS1" << "*.Cs1"
+              << "*.dc2" << "*.DC2" << "*.Dc2"
+              << "*.dcr" << "*.DCR" << "*.Dcr"
+              << "*.dng" << "*.DNG" << "*.Dng"
+              << "*.erf" << "*.ERF" << "*.Erf"
+              << "*.fff" << "*.FFF" << "*.Fff"
+              << "*.hdr" << "*.HDR" << "*.Hdr"
+              << "*.ia " << "*.IA" << "*.Ia"
+              << "*.k25" << "*.K25"
+              << "*.kc2" << "*.KC2" << "*.Kc2"
+              << "*.kdc" << "*.KDC" << "*.Kdc"
+              << "*.mdc" << "*.MDC" << "*.Mdc"
+              << "*.mef" << "*.MEF" << "*.Mef"
+              << "*.mos" << "*.MOS" << "*.Mos"
+              << "*.mrw" << "*.MRW" << "*.Mrw"
+              << "*.nef" << "*.NEF" << "*.Nef"
+              << "*.orf" << "*.ORF" << "*.Orf"
+              << "*.pef" << "*.PEF" << "*.Pef"
+              << "*.pxn" << "*.PXN" << "*.Pxn"
+              << "*.qtk" << "*.QTK" << "*.Qtk"
+              << "*.raf" << "*.RAF" << "*.Raf"
+              << "*.raw" << "*.RAW" << "*.Raw"
+              << "*.rdc" << "*.RDC" << "*.Rdc"
+              << "*.rw2" << "*.RW2" << "*.Rw2"
+              << "*.sr2" << "*.SR2" << "*.Sr2"
+              << "*.srf" << "*.SRF" << "*.Srf"
+              << "*.srw" << "*.SRW" << "*.Srw"
+              << "*.sti" << "*.STI" << "*.Sti"
+              << "*.tif" << "*.TIF" << "*.Tif"
+              << "*.x3f" << "*.X3F" << "*.X3f";
+
+  FileExtsBitmap << "*.jpeg" << "*.JPEG" << "*.Jpeg "
+                 << "*.jpg" << "*.JPG" << "*.Jpg"
+                 << "*.tiff" << "*.TIFF" << "*.Tiff"
+                 << "*.tif" << "*.TIF" << "*.Tif"
+                 << "*.bmp" << "*.BMP" << "*.Bmp"
+                 << "*.ppm" << "*.PPm" << "*.Ppm";
+
+
   // User home folder, where Photivo stores its ini and all Presets, Curves etc
   // %appdata%\Photivo on Windows, ~/.photivo on Linux or the program folder for the
   // portable Windows version.
@@ -581,37 +629,37 @@ int photivoMain(int Argc, char *Argv[]) {
 #ifdef Q_OS_WIN32
   IsPortableProfile = QFile::exists("use-portable-profile");
   if (IsPortableProfile != 0) {
-      printf("Photivo running in portable mode.\n");
-      AppDataFolder = QCoreApplication::applicationDirPath();
-      Folder = "";
+    printf("Photivo running in portable mode.\n");
+    AppDataFolder = QCoreApplication::applicationDirPath();
+    Folder = "";
   } else {
-      // Get %appdata% via WinAPI call
-      QLibrary library(QLatin1String("shell32"));
-      QT_WA(
-              {
-              typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
-              GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
-              if (SHGetSpecialFolderPath) {
-              TCHAR path[MAX_PATH];
-              SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-              AppDataFolder = QString::fromUtf16((ushort*)path);
-              }
-              },
-              {
-              typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
-              GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
-              if (SHGetSpecialFolderPath) {
-              char path[MAX_PATH];
-              SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-              AppDataFolder = QString::fromLocal8Bit(path);
-              }
-              }
-           );
+    // Get %appdata% via WinAPI call
+    QLibrary library(QLatin1String("shell32"));
+    QT_WA(
+      {
+        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
+        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
+        if (SHGetSpecialFolderPath) {
+          TCHAR path[MAX_PATH];
+          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+          AppDataFolder = QString::fromUtf16((ushort*)path);
+        }
+      },
+      {
+        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
+        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
+        if (SHGetSpecialFolderPath) {
+          char path[MAX_PATH];
+          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
+          AppDataFolder = QString::fromLocal8Bit(path);
+        }
+      }
+    );
 
-      // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
-      AppDataFolder.replace(QString("\\"), QString("/"));
-      // Keeping the leading "/" separate here is important or mkdir will fail.
-      Folder = "Photivo/";
+    // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
+    AppDataFolder.replace(QString("\\"), QString("/"));
+    // Keeping the leading "/" separate here is important or mkdir will fail.
+    Folder = "Photivo/";
   }
 #else
   Folder = ".photivo/";
@@ -791,17 +839,31 @@ int photivoMain(int Argc, char *Argv[]) {
       return ptError_FileOpen;
   }
 
+  // When loading a file via cli, set file manager directory to that path.
+  // Chances are good the user want to work with other files from that dir as well
+  if (cli.Mode == cliLoadImage) {
+    Settings->SetValue("LastFileMgrLocation", QFileInfo(ImageFileToOpen).absolutePath());
+  }
+
+
+  // Construct windows
   MainWindow = new ptMainWindow(QObject::tr("Photivo"));
   QObject::connect(TheApplication, SIGNAL(messageReceived(const QString &)),
                    MainWindow, SLOT(OtherInstanceMessage(const QString &)));
   TheApplication->setActivationWindow(MainWindow);
-
 
   ViewWindow =
       new ptViewWindow(MainWindow->ViewFrameCentralWidget, MainWindow);
 
   HistogramWindow =
       new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
+
+  FileMgrWindow = new ptFileMgrWindow(MainWindow->FileManagerPage);
+  MainWindow->FileManagerLayout->addWidget(FileMgrWindow);
+  QObject::connect(FileMgrWindow, SIGNAL(FileMgrWindowClosed()),
+                   MainWindow, SLOT(CloseFileMgrWindow()));
+  QObject::connect(ViewWindow, SIGNAL(openFileMgr()), MainWindow, SLOT(OpenFileMgrWindow()));
+
 
   // Populate Translations combobox
   MainWindow->PopulateTranslationsCombobox(UiLanguages, LangIdx);
@@ -1012,11 +1074,17 @@ void CB_Event0() {
     Settings->SetValue("FavouriteTools", Temp);
   }
 
-  InStartup = 0;
+  if (Settings->GetInt("FileMgrIsOpen")) {
+    FileMgrWindow->DisplayThumbnails(FileMgrWindow->m_DirTree->currentIndex());
+    FileMgrWindow->m_FilesView->setFocus(Qt::OtherFocusReason);
+  }
+
 //prepare for further QFileOpenEvent(s)
 #ifdef Q_OS_MAC
   TheApplication->macinit();
 #endif
+
+  InStartup = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2152,7 +2220,7 @@ void RunJob(const QString JobFileName) {
   do {
     try {
       // Test if we can handle the file
-      DcRaw* TestDcRaw = new(DcRaw);
+      ptDcRaw* TestDcRaw = new(ptDcRaw);
       Settings->ToDcRaw(TestDcRaw);
       uint16_t InputWidth = 0;
       uint16_t InputHeight = 0;
@@ -3110,7 +3178,7 @@ void CB_MenuFileOpen(const short HaveFile) {
   ReportProgress(QObject::tr("Reading file"));
 
   // Test if we can handle the file
-  DcRaw* TestDcRaw = new(DcRaw);
+  ptDcRaw* TestDcRaw = new(ptDcRaw);
   Settings->ToDcRaw(TestDcRaw);
   uint16_t InputWidth = 0;
   uint16_t InputHeight = 0;
@@ -3272,7 +3340,7 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
     // Processing the job.
     delete TheDcRaw;
     delete TheProcessor;
-    TheDcRaw = new(DcRaw);
+  TheDcRaw = new(ptDcRaw);
     TheProcessor = new ptProcessor(ReportProgress);
     Settings->SetValue("JobMode",1); // Disable caching to save memory
     TheProcessor->m_DcRaw = TheDcRaw;
@@ -3287,7 +3355,7 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
 
     delete TheDcRaw;
     delete TheProcessor;
-    TheDcRaw = new(DcRaw);
+  TheDcRaw = new(ptDcRaw);
     TheProcessor = new ptProcessor(ReportProgress);
     Settings->SetValue("JobMode",0);
     TheProcessor->m_DcRaw = TheDcRaw;
@@ -3396,6 +3464,9 @@ void CB_MenuFileExit(const short) {
 
   printf("Saving settings ...\n");
 
+  // this also writes settings.
+  delete FileMgrWindow;
+
   // Store the position of the splitter and main window
   Settings->m_IniSettings->
     setValue("MainSplitter",MainWindow->MainSplitter->saveState());
@@ -3443,7 +3514,7 @@ void GimpExport(const short UsePipe) {
       // Processing the job.
       delete TheDcRaw;
       delete TheProcessor;
-      TheDcRaw = new(DcRaw);
+    TheDcRaw = new(ptDcRaw);
       TheProcessor = new ptProcessor(ReportProgress);
       Settings->SetValue("JobMode",1); // Disable caching to save memory
 
@@ -3572,7 +3643,7 @@ void GimpExport(const short UsePipe) {
     } else {
       delete TheDcRaw;
       delete TheProcessor;
-      TheDcRaw = new(DcRaw);
+    TheDcRaw = new(ptDcRaw);
       TheProcessor = new ptProcessor(ReportProgress);
       Settings->SetValue("JobMode",0);
       TheProcessor->m_DcRaw = TheDcRaw;
@@ -3830,6 +3901,7 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
   CB_SliderWidthInput(Settings->GetInt("SliderWidth"));
+  FileMgrWindow->UpdateTheme();
 }
 
 void CB_StyleHighLightChoice(const QVariant Choice) {
@@ -8144,6 +8216,12 @@ void CB_WritePipeButton() {
   SaveOutput(Settings->GetInt("SaveButtonMode"));
 }
 
+void CB_FileMgrUseThumbMaxRowColCheck(const QVariant checked) {
+  Settings->SetValue("FileMgrUseThumbMaxRowCol", checked);
+  MainWindow->FileMgrThumbMaxRowColWidget->setEnabled(checked.toBool());
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callback dispatcher
@@ -8229,6 +8307,11 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FullPipeConfirmationCheck)
 
   M_Dispatch(WriteBackupSettingsCheck)
+
+  M_JustSetDispatch(FileMgrThumbnailSizeInput)
+  M_JustSetDispatch(FileMgrThumbnailPaddingInput)
+  M_Dispatch(FileMgrUseThumbMaxRowColCheck)
+  M_JustSetDispatch(FileMgrThumbMaxRowColInput)
 
   M_Dispatch(MemoryTestInput)
 
@@ -8883,15 +8966,15 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 */
 ptImageType CheckImageType(QString filename,
                            uint16_t* width, uint16_t* height,
-                           DcRaw* dcRaw /*= NULL*/)
+                           ptDcRaw* dcRaw /*= NULL*/)
 {
   ptImageType result = itUndetermined;
-  DcRaw* LocalDcRaw = NULL;
+  ptDcRaw* LocalDcRaw = NULL;
   bool UseLocalDcRaw = dcRaw == NULL;
 
   // Setup dcraw
   if (UseLocalDcRaw) {
-    LocalDcRaw = new DcRaw;
+    LocalDcRaw = new ptDcRaw;
     Settings->ToDcRaw(LocalDcRaw);
   } else {
     LocalDcRaw = dcRaw;

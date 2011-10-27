@@ -637,7 +637,7 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
 
 void ptViewWindow::ConstructContextMenu() {
   // Create actions for context menu
-  ac_ZoomFit = new QAction(tr("Zoom &fit"), this);
+  ac_ZoomFit = new QAction(tr("Zoom &fit") + "\t" + tr("4"), this);
   connect(ac_ZoomFit, SIGNAL(triggered()), this, SLOT(Menu_ZoomFit()));
   QIcon ZoomFitIcon;
   ZoomFitIcon.addPixmap(QPixmap(
@@ -645,7 +645,7 @@ void ptViewWindow::ConstructContextMenu() {
   ac_ZoomFit->setIcon(ZoomFitIcon);
   ac_ZoomFit->setIconVisibleInMenu(true);
 
-  ac_Zoom100 = new QAction(tr("Zoom &100%"), this);
+  ac_Zoom100 = new QAction(tr("Zoom &100%") + "\t" + tr("2"), this);
   connect(ac_Zoom100, SIGNAL(triggered()), this, SLOT(Menu_Zoom100()));
   QIcon Zoom100Icon;
   Zoom100Icon.addPixmap(QPixmap(
@@ -654,27 +654,27 @@ void ptViewWindow::ConstructContextMenu() {
   ac_Zoom100->setIconVisibleInMenu(true);
 
 
-  ac_Mode_RGB = new QAction(tr("&RGB"), this);
+  ac_Mode_RGB = new QAction(tr("&RGB") + "\t" + tr("0"), this);
   ac_Mode_RGB->setCheckable(true);
   connect(ac_Mode_RGB, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_Structure = new QAction(tr("&Structure"), this);
+  ac_Mode_Structure = new QAction(tr("&Structure") + "\t" + tr("9"), this);
   ac_Mode_Structure->setCheckable(true);
   connect(ac_Mode_Structure, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_L = new QAction(tr("&L*"), this);
+  ac_Mode_L = new QAction(tr("&L*") + "\t" + tr("8"), this);
   ac_Mode_L->setCheckable(true);
   connect(ac_Mode_L, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_A = new QAction(tr("&a*"), this);
+  ac_Mode_A = new QAction(tr("&a*") + "\t" + tr("7"), this);
   ac_Mode_A->setCheckable(true);
   connect(ac_Mode_A, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_B = new QAction(tr("&b*"), this);
+  ac_Mode_B = new QAction(tr("&b*") + "\t" + tr("6"), this);
   ac_Mode_B->setCheckable(true);
   connect(ac_Mode_B, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_Gradient = new QAction(tr("&Gradient"), this);
+  ac_Mode_Gradient = new QAction(tr("&Gradient") + "\t" + tr("5"), this);
   ac_Mode_Gradient->setCheckable(true);
   connect(ac_Mode_Gradient, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
@@ -687,7 +687,7 @@ void ptViewWindow::ConstructContextMenu() {
   ac_ModeGroup->addAction(ac_Mode_Structure);
 
 
-  ac_Clip_Indicate = new QAction(tr("Highlight &clipped pixels"), this);
+  ac_Clip_Indicate = new QAction(tr("Highlight &clipped pixels") + "\t" + tr("C"), this);
   ac_Clip_Indicate->setCheckable(true);
   ac_Clip_Indicate->setChecked(Settings->GetInt("ExposureIndicator"));
   connect(ac_Clip_Indicate, SIGNAL(triggered()), this, SLOT(Menu_Clip_Indicate()));
@@ -729,12 +729,15 @@ void ptViewWindow::ConstructContextMenu() {
   ac_ShowZoomBar->setChecked(Settings->GetInt("ShowBottomContainer"));
   connect(ac_ShowZoomBar, SIGNAL(triggered()), this, SLOT(Menu_ShowZoomBar()));
 
-  ac_ShowTools = new QAction(tr("Show &tool pane"), this);
+  ac_ShowTools = new QAction(tr("Show &tool pane") + "\t" + tr("Space"), this);
   ac_ShowTools->setCheckable(true);
   ac_ShowTools->setChecked(Settings->GetInt("ShowToolContainer"));
   connect(ac_ShowTools, SIGNAL(triggered()), this, SLOT(Menu_ShowTools()));
 
-  ac_Fullscreen = new QAction(tr("Full&screen"), this);
+  ac_OpenFileMgr = new QAction(tr("Open file m&anager") + "\t" + tr("Ctrl+M"), this);
+  connect(ac_OpenFileMgr, SIGNAL(triggered()), this, SLOT(Menu_OpenFileMgr()));
+
+  ac_Fullscreen = new QAction(tr("Full&screen") + "\t" + tr("F11"), this);
   ac_Fullscreen->setCheckable(true);
   ac_Fullscreen->setChecked(0);
   connect(ac_Fullscreen, SIGNAL(triggered()), this, SLOT(Menu_Fullscreen()));
@@ -791,6 +794,7 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   }
   Menu.addAction(ac_ShowTools);
   Menu.addAction(ac_ShowZoomBar);
+  Menu.addAction(ac_OpenFileMgr);
   Menu.addSeparator();
   Menu.addAction(ac_Fullscreen);
 
@@ -881,6 +885,10 @@ void ptViewWindow::Menu_ShowZoomBar() {
 void ptViewWindow::Menu_ShowTools() {
   Settings->SetValue("ShowToolContainer",(int)ac_ShowTools->isChecked());
   MainWindow->UpdateSettings();
+}
+
+void ptViewWindow::Menu_OpenFileMgr() {
+  emit openFileMgr();
 }
 
 void CB_FullScreenButton(const int State);

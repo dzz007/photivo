@@ -942,7 +942,7 @@ ptImage::~ptImage() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Set(const DcRaw*  DcRawObject,
+ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
                       const short   TargetSpace,
                       const char*   ProfileName,
                       const int     Intent,
@@ -1194,7 +1194,7 @@ ptImage* ptImage::Set(const DcRaw*  DcRawObject,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Set(const DcRaw*  DcRawObject,
+ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
                       const short   TargetSpace) {
 
   assert(NULL != DcRawObject);
