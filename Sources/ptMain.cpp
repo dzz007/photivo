@@ -841,7 +841,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // When loading a file via cli, set file manager directory to that path.
   // Chances are good the user want to work with other files from that dir as well
-  if (cli.Mode == cliLoadImage) {
+  if (!JobMode && !ImageCleanUp && (ImageFileToOpen != "")) {
     Settings->SetValue("LastFileMgrLocation", QFileInfo(ImageFileToOpen).absolutePath());
   }
 
