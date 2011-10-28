@@ -1,0 +1,17 @@
+;
+; photivo Curve File
+;
+; Contrasty curve by nature, more geared for ptatter lighting types
+; and will enhance colour rendition, contrast whilst optimising 
+; dynamic range. Good to use if you want bold images straight out 
+; of the camera.
+;
+Magic FLOSSCurveFile
+IntendedChannel 0
+CurveType 1
+0 0
+149 141
+294 333
+691 761
+868 871
+1000 1000
