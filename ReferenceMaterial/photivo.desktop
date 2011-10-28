@@ -10,7 +10,7 @@ Categories=Graphics;Photography;
 
 Exec=photivo %F
 TryExec=photivo
-Icon=photivo
+Icon=photivo-appicon
 
 Terminal=false
 StartupNotify=true
