@@ -90,7 +90,7 @@ unix {
   shortcut2.path = ~/.local/share/applications
   shortcut2.files = ./ReferenceMaterial/photivo.desktop
   icon.path = $${PREFIX}/share/pixmaps
-  icon.files = ./qrc/photivo.png
+  icon.files = ./qrc/photivo-appicon.png
   curves.path = $${PREFIX}/share/photivo/Curves
   curves.files = ./Curves/*
   mixer.path = $${PREFIX}/share/photivo/ChannelMixers
