@@ -287,7 +287,9 @@ void ptFileMgrThumbnailer::Abort() {
   if (isRunning()) {
     m_AbortRequested = true;
 
-    while (isRunning()) {
+    QTime timer;
+    timer.start();
+    while (isRunning() && timer.elapsed() < 500) {
       QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
   }
