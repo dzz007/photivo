@@ -21,17 +21,22 @@
 **
 *******************************************************************************/
 
-#ifndef DLCONSTANTS_H
-#define DLCONSTANTS_H
+#ifndef PTCONSTANTS_H
+#define PTCONSTANTS_H
+
+//==============================================================================
 
 #include <lcms2.h>
 #include <lensfun.h>
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Program wide constants definition
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
+/* !!!
+  IMPORTANT: Photivo uses groups of const short for historical reasons.
+  They are deprecated for new constants groups! Use enums insteads.
+!!! */
+
+//==============================================================================
 
 const char ProgramName[] = "Photivo";
 const char CompanyName[] = "http://photivo.org/";
@@ -814,12 +819,14 @@ enum ptImageType {
 
 /*! This enum defines the type of a file system object. */
 enum ptFSOType {
-  fsoUnknown = 0,
-  fsoFile = 1,
-  fsoDir = 2,
-  fsoParentDir = 3
+  fsoUnknown    = 0,
+  fsoFile       = 1,
+  fsoDir        = 2,
+  fsoParentDir  = 3,
+  fsoRoot       = 4,   // "My Computer" on Windows, "/" on Linux
+  fsoDrive      = 5    // A drive with an assigned letter, only relevant on Windows
 };
 
-#endif
 
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+#endif

@@ -33,32 +33,10 @@
 #include <QList>
 #include <QHash>
 
-#include "ptFileMgrThumbnailer.h"
+#include "ptThumbnailer.h"
 #include "ptThumbnailCache.h"
 #include "ptGraphicsThumbGroup.h"
-
-//==============================================================================
-
-///*! This \c struct carries all valuable information for each thumbnail. */
-//struct ptThumbnailData {
-//  QString             Path;
-//  QGraphicsItemGroup* Thumbnail;
-//};
-
-///*! This \c struct contains all the necessary information for the thumbnail cache.
-//  The QString key for the hash consists of the full path to the file with its
-//  last modified date attached at the end.
-//*/
-//struct ptThumbnailCache {
-//  QHash<QString, QGraphicsItemGroup*>* Lookup;
-//  QQueue<QGraphicsItemGroup*>* Queue;
-//  uint Capacity;
-//};
-
-//==============================================================================
-
-///*! Clear for \c ptThumbnailData. */
-//void ClearThumbnailData(ptThumbnailData &Data);
+#include "ptSingleDirModel.h"
 
 //==============================================================================
 
@@ -85,6 +63,9 @@ public:
   /*! Clear the data cache of \c ptFileMgrDM */
   void Clear();
 
+  QString currentImgDir() { return m_CurrentImgDir; }
+  ptSingleDirModel* dirModel() { return m_DirModel; }
+
   /*! Sets the directory for thumbnail generation.
     Returns the total number of applicable entries in that directory.
     Returns \c -1 and does not set the directory if the thumbnailer is
@@ -106,7 +87,7 @@ public:
   /*! Returns a pointer to the thumbnailer.
       Use this to connect to the thumbnailer’s \c newThumbsNotify signal
   */
-  ptFileMgrThumbnailer* thumbnailer() const { return m_Thumbnailer; }
+  ptThumbnailer* thumbnailer() const { return m_Thumbnailer; }
 
   /*! Returns a pointer to the list of currently displayed thumbnail images. */
   QList<ptGraphicsThumbGroup*>* thumbList() { return m_ThumbList; }
@@ -122,10 +103,12 @@ private:
   ptFileMgrDM(const ptFileMgrDM&): QObject() {}
   ~ptFileMgrDM();
 
-  ptThumbnailCache*               m_Cache;
-  ptFileMgrThumbnailer*           m_Thumbnailer;
+  ptThumbnailCache*         m_Cache;
+  QString                   m_CurrentImgDir;
+  ptSingleDirModel*         m_DirModel;
+  ptThumbnailer*            m_Thumbnailer;
   QList<ptGraphicsThumbGroup*>*   m_ThumbList;
-  QFileSystemModel*               m_TreeModel;
+  QFileSystemModel*         m_TreeModel;
 
 
 };

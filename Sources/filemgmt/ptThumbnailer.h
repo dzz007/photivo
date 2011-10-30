@@ -39,7 +39,7 @@
 //==============================================================================
 
 /*!
-  \class ptFileMgrThumbnailer
+  \class ptThumbnailer
 
   \brief Generates image thumbnails in a separate thread.
 
@@ -47,15 +47,15 @@
   thread. It fills a FIFO buffer with \c QGraphicsItem objects containing the
   thumbnails.
 */
-class ptFileMgrThumbnailer: public QThread {
+class ptThumbnailer: public QThread {
 Q_OBJECT
 
 public:
-  /*! Creates an empty ptFileMgrThumbnailer object. */
-  explicit ptFileMgrThumbnailer();
+  /*! Creates an empty ptThumbnailer object. */
+  explicit ptThumbnailer();
 
-  /*! Destroys a \c ptFileMgrThumbnailer object. */
-  ~ptFileMgrThumbnailer();
+  /*! Destroys a \c ptThumbnailer object. */
+  ~ptThumbnailer();
 
   /*! Sends an abort request to the thread and waits until the thread has stopped
     before returning. Calling \c Abort() on a not running thread does nothing.

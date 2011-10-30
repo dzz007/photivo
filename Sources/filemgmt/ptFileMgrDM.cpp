@@ -29,20 +29,6 @@ extern ptSettings* Settings;
 
 //==============================================================================
 
-//void ClearThumbnailData(ptThumbnailData &Data) {
-//  if (Data.Thumbnail) {
-//    QGraphicsItem* child;
-//    foreach(child, Data.Thumbnail->childItems()) {
-//      delete child;
-//    }
-//    delete Data.Thumbnail;
-//    Data.Thumbnail = NULL;
-//  }
-//  Data.Path = "";
-//}
-
-//==============================================================================
-
 ptFileMgrDM* ptFileMgrDM::m_Instance = NULL;
 
 //==============================================================================
@@ -79,9 +65,11 @@ ptFileMgrDM::ptFileMgrDM()
     m_TreeModel->setRootPath("/");
   #endif
 
+  m_DirModel = new ptSingleDirModel;
+
   // Init stuff for thumbnail generation
   m_ThumbList = new QList<ptGraphicsThumbGroup*>;
-  m_Thumbnailer = new ptFileMgrThumbnailer;
+  m_Thumbnailer = new ptThumbnailer;
   m_Thumbnailer->setThumbList(m_ThumbList);
 
   // Init thumbnail cache
@@ -102,13 +90,20 @@ ptFileMgrDM::~ptFileMgrDM() {
 //==============================================================================
 
 void ptFileMgrDM::Clear() {
+  StopThumbnailer();
   m_Cache->Clear();
 }
 
 //==============================================================================
 
 int ptFileMgrDM::setThumbnailDir(const QModelIndex index) {
-  return m_Thumbnailer->setDir(m_TreeModel->filePath(index));
+  int result = m_Thumbnailer->setDir(m_TreeModel->filePath(index));
+  if (result > -1) {
+    m_CurrentImgDir = m_TreeModel->filePath(index);
+  } else {
+    m_CurrentImgDir.clear();
+  }
+  return result;
 }
 
 //==============================================================================

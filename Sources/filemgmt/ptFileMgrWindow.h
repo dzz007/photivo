@@ -39,7 +39,7 @@
 
 //==============================================================================
 
-class ptFileMgrWindow: public QWidget, public Ui::ptFileMgrWindow {
+class ptFileMgrWindow: public QWidget, private Ui::ptFileMgrWindow {
 Q_OBJECT
 
 public:
@@ -59,7 +59,7 @@ public:
       Set this flag to \c true if you want to clear the thumbnail cache.
       Default is \c false.
   */
-  void DisplayThumbnails(const QModelIndex& index, bool clearCache = false);
+  void DisplayThumbnails(const QString& path);
 
   /*! Updates the file manager’s visual appearance.
       Call this once every time Photivo’s theme changes.
@@ -92,6 +92,7 @@ private:
   QAction* ac_VerticalThumbs;
   QAction* ac_HorizontalThumbs;
   QAction* ac_DetailedThumbs;
+  QAction* ac_DirThumbs;
   QActionGroup* ac_ThumbLayoutGroup;
   QAction* ac_ToggleNaviPane;
   QAction* ac_CloseFileMgr;
@@ -100,6 +101,7 @@ private:
 public slots:
 
 private slots:
+  void changeListDir(const QModelIndex& index);
   void changeTreeDir(const QModelIndex& index);
   void closeWindow();
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
@@ -111,6 +113,7 @@ private slots:
   void verticalThumbs();
   void horizontalThumbs();
   void detailedThumbs();
+  void toggleDirThumbs();
   void toggleNaviPane();
 
 signals:

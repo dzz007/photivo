@@ -53,15 +53,15 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_ThumbCount(-1),
   m_ThumbListIdx(0)
 {
+  // Setup data model first because several UI elements need it.
+  m_DataModel = ptFileMgrDM::GetInstance();
+
   setupUi(this);
   setMouseTracking(true);
   ptGraphicsSceneEmitter::ConnectThumbnailAction(
       this, SLOT(execThumbnailAction(ptThumbnailAction,QString)) );
   m_Progressbar->hide();
-  FMTreePane->setVisible(Settings->GetInt("FileMgrShowTreePane"));
-
-  // We setup our data module
-  m_DataModel = ptFileMgrDM::GetInstance();
+  FMTreePane->setVisible(Settings->GetInt("FileMgrShowSidebar"));
 
   m_DirTree->setModel(m_DataModel->treeModel());
   m_DirTree->setRootIndex(m_DataModel->treeModel()->index(m_DataModel->treeModel()->rootPath()));
@@ -70,6 +70,9 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_DirTree->setColumnHidden(3, true);
   connect(m_DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
   connect(m_DirTree, SIGNAL(activated(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
+
+  m_DirList->setModel(m_DataModel->dirModel());
+  connect(m_DirList, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(changeListDir(QModelIndex)));
 
   // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
@@ -83,7 +86,6 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   connect(m_DataModel->thumbnailer(), SIGNAL(newImageNotify(ptGraphicsThumbGroup*,QImage*)),
           this, SLOT(fetchNewImages(ptGraphicsThumbGroup*,QImage*)));
 
-  // Layouter must be set after the data model is created!
   setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
 
   // Filemgr windwow layout
@@ -119,6 +121,7 @@ ptFileMgrWindow::~ptFileMgrWindow() {
   DelAndNull(ac_VerticalThumbs);
   DelAndNull(ac_HorizontalThumbs);
   DelAndNull(ac_DetailedThumbs);
+  DelAndNull(ac_DirThumbs);
   DelAndNull(ac_ThumbLayoutGroup);
   DelAndNull(ac_ToggleNaviPane);
 }
@@ -166,19 +169,31 @@ void ptFileMgrWindow::setLayouter(const ptThumbnailLayout layout) {
 
 //==============================================================================
 
-void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
-  DisplayThumbnails(index, false);
+void ptFileMgrWindow::changeListDir(const QModelIndex& index) {
+  m_DataModel->dirModel()->ChangeDir(index);
+  m_DirTree->setCurrentIndex(
+      m_DataModel->treeModel()->index(m_DataModel->dirModel()->currentDir()) );
+  DisplayThumbnails(m_DirTree->currentIndex());
 }
 
 //==============================================================================
 
-void ptFileMgrWindow::DisplayThumbnails(const QModelIndex& index, bool clearCache /*= false*/) {
-  if (clearCache) {
-    m_DataModel->Clear();
+void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
+  m_DataModel->dirModel()->ChangeDir(
+      m_DataModel->treeModel()->filePath(m_DirTree->currentIndex()) );
+  DisplayThumbnails(index);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::DisplayThumbnails(const QString& path)
+{
+  if (!index.isValid()) {
+    index = m_DirTree->currentIndex();
   }
 
   m_PathInput->setText(
-      QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(m_DirTree->currentIndex())));
+      QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(index)));
 
   m_DataModel->StopThumbnailer();
   ClearScene();
@@ -254,12 +269,13 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 
     // set initally selected directory
     QString lastDir = Settings->GetString("LastFileMgrLocation");
-    QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
 
     if (lastDir != "" && QDir(lastDir).exists()) {
-      m_DirTree->setCurrentIndex(fsmodel->index(lastDir));
+      m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(lastDir));
+      m_DataModel->dirModel()->ChangeDir(lastDir);
     } else {
-      m_DirTree->setCurrentIndex(fsmodel->index(QDir::homePath()));
+      m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(QDir::homePath()));
+      m_DataModel->dirModel()->ChangeDir(QDir::homePath());
     }
 
     m_PathInput->setText(
@@ -414,7 +430,8 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
   }
   // Shift+F5: clear cache and refresh thumbnails
   else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::ShiftModifier) {
-    DisplayThumbnails(m_DirTree->currentIndex(), true);
+    m_DataModel->Clear();
+    DisplayThumbnails(m_DirTree->currentIndex());
   }
   // F11: toggles fullscreen (handled by main window)
   else if (event->key() == Qt::Key_F11 && event->modifiers() == Qt::NoModifier) {
@@ -454,6 +471,14 @@ void ptFileMgrWindow::ConstructContextMenu() {
   ac_DetailedThumbs->setCheckable(true);
   connect(ac_DetailedThumbs, SIGNAL(triggered()), this, SLOT(detailedThumbs()));
 
+#ifdef Q_OS_WIN
+  ac_DirThumbs = new QAction(tr("Show &folder thumbnails"), this);
+#else
+  ac_DirThumbs = new QAction(tr("Show &directory thumbnails"), this);
+#endif
+  ac_DirThumbs->setCheckable(true);
+  connect(ac_DirThumbs, SIGNAL(triggered()), this, SLOT(toggleDirThumbs()));
+
   ac_ThumbLayoutGroup = new QActionGroup(this);
   ac_ThumbLayoutGroup->setExclusive(true);
   ac_ThumbLayoutGroup->addAction(ac_VerticalThumbs);
@@ -479,9 +504,12 @@ void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
   MenuThumbLayout.setPalette(Theme->ptMenuPalette);
   MenuThumbLayout.setStyle(Theme->ptStyle);
   MenuThumbLayout.addActions(ac_ThumbLayoutGroup->actions());
+  MenuThumbLayout.addSeparator();
+  MenuThumbLayout.addAction(ac_DirThumbs);
   ac_VerticalThumbs->setChecked(currLayout == tlVerticalByRow);
   ac_HorizontalThumbs->setChecked(currLayout == tlHorizontalByColumn);
   ac_DetailedThumbs->setChecked(currLayout == tlDetailedList);
+  ac_DirThumbs->setChecked(Settings->GetInt("FileMgrShowDirThumbs"));
 
   // main context menu
   QMenu Menu(NULL);
@@ -517,7 +545,14 @@ void ptFileMgrWindow::detailedThumbs() {
 
 void ptFileMgrWindow::toggleNaviPane() {
   FMTreePane->setVisible(!FMTreePane->isVisible());
-  Settings->SetValue("FileMgrShowTreePane", (int)FMTreePane->isVisible());
+  Settings->SetValue("FileMgrShowSidebar", (int)FMTreePane->isVisible());
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::toggleDirThumbs() {
+  Settings->SetValue("FileMgrShowDirThumbs", 1 - Settings->GetInt("FileMgrShowDirThumbs"));
+  DisplayThumbnails(m_DirTree->currentIndex());
 }
 
 //==============================================================================

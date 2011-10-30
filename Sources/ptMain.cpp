@@ -62,12 +62,8 @@
 #endif
 
 #ifdef Q_WS_WIN
-  #include "qt_windows.h"
-  #include "qlibrary.h"
   #include "ptEcWin7.h"
-  #ifndef CSIDL_APPDATA
-    #define CSIDL_APPDATA 0x001a
-  #endif
+  #include "WinApi.h"
 #endif
 
 using namespace std;
@@ -633,31 +629,8 @@ int photivoMain(int Argc, char *Argv[]) {
     AppDataFolder = QCoreApplication::applicationDirPath();
     Folder = "";
   } else {
-    // Get %appdata% via WinAPI call
-    QLibrary library(QLatin1String("shell32"));
-    QT_WA(
-      {
-        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
-        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
-        if (SHGetSpecialFolderPath) {
-          TCHAR path[MAX_PATH];
-          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-          AppDataFolder = QString::fromUtf16((ushort*)path);
-        }
-      },
-      {
-        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
-        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
-        if (SHGetSpecialFolderPath) {
-          char path[MAX_PATH];
-          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-          AppDataFolder = QString::fromLocal8Bit(path);
-        }
-      }
-    );
-
     // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
-    AppDataFolder.replace(QString("\\"), QString("/"));
+    AppDataFolder = WinApi::AppdataFolder();
     // Keeping the leading "/" separate here is important or mkdir will fail.
     Folder = "Photivo/";
   }
@@ -1086,8 +1059,8 @@ void CB_Event0() {
   }
 
   if (Settings->GetInt("FileMgrIsOpen")) {
-    FileMgrWindow->DisplayThumbnails(FileMgrWindow->m_DirTree->currentIndex());
-    FileMgrWindow->m_FilesView->setFocus(Qt::OtherFocusReason);
+    FileMgrWindow->DisplayThumbnails();
+    FileMgrWindow->setFocus(Qt::OtherFocusReason);
   }
 
 //prepare for further QFileOpenEvent(s)
