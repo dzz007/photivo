@@ -39,7 +39,6 @@ ptGraphicsThumbGroup* ptGraphicsThumbGroup::AddRef(ptGraphicsThumbGroup* group /
     return new ptGraphicsThumbGroup;
   } else {
     group->m_RefCount++;
-
     return group;
   }
 }
@@ -63,10 +62,11 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
 {
   m_FSOType = fsoUnknown;
   m_FullPath = "";
-  m_Pixmap = NULL;
+//  m_Pixmap = NULL;
   m_ImgTypeText = NULL;
   m_InfoText = NULL;
   m_RefCount = 1;
+  m_Thumbnail = NULL;
 
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::LeftButton);
@@ -77,7 +77,9 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
 
 //==============================================================================
 
-ptGraphicsThumbGroup::~ptGraphicsThumbGroup() {}
+ptGraphicsThumbGroup::~ptGraphicsThumbGroup() {
+  DelAndNull(m_Thumbnail);
+}
 
 //==============================================================================
 
@@ -137,22 +139,38 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 
 void ptGraphicsThumbGroup::addImage(QImage* image) {
   qreal ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
-  if (!m_Pixmap) {
-    m_Pixmap = new QGraphicsPixmapItem();
-    m_Pixmap->setZValue(-1);
+  if (m_Thumbnail) {
+    delete m_Thumbnail;
   }
-  m_Pixmap->setPixmap(QPixmap::fromImage(*image));
+  m_Thumbnail = image;
 
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
-  m_Pixmap->setPos(ThumbSize/2 - image->width()/2  + InnerPadding + 0.5,
-                   ThumbSize/2 - image->height()/2 + InnerPadding + 0.5);
+  m_ThumbPos.setX(ThumbSize/2 - image->width()/2  + InnerPadding + 0.5);
+  m_ThumbPos.setY(ThumbSize/2 - image->height()/2 + InnerPadding + 0.5);
+  this->update();
 
-  m_Pixmap->setParentItem(this);
-  DelAndNull(image);
-#ifdef DEBUG
-  printf("%s: added image to thumb group for %s\n", __FILE__, m_FullPath.toAscii().data());
-#endif
+/*
+  When working with QPixmap/QPixmapItem Photivo hangs on Linux as soon as the
+  pixmap item is parented to the group and the thumbnail cache is full. Why?
+  Very good question! As a workaround we keep the QImage from the thumbnailer
+  and paint it manually in the paint() method, see below.
+*/
+
+//  qreal ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
+//  if (!m_Pixmap) {
+//    m_Pixmap = new QGraphicsPixmapItem();
+//    m_Pixmap->setZValue(-1);
+//  }
+//  m_Pixmap->setPixmap(QPixmap::fromImage(*image));
+
+//  // center pixmap in the cell if it is not square
+//  // the +2 offset is for the hover border
+//  m_Pixmap->setPos(ThumbSize/2 - image->width()/2  + InnerPadding + 0.5,
+//                   ThumbSize/2 - image->height()/2 + InnerPadding + 0.5);
+
+//  m_Pixmap->setParentItem(this);
+//  DelAndNull(image);
 }
 
 //==============================================================================
@@ -201,6 +219,9 @@ void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsIt
   painter->setPen(this->pen());
   painter->setBrush(QBrush(Theme->ptDark));
   painter->drawRoundedRect(this->rect(), 5, 5);
+  if (m_Thumbnail) {
+    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), *m_Thumbnail);
+  }
 }
 
 //==============================================================================

@@ -85,7 +85,7 @@ ptFileMgrDM::ptFileMgrDM()
   m_Thumbnailer->setThumbList(m_ThumbList);
 
   // Init thumbnail cache
-  m_Cache = new ptThumbnailCache(100);
+  m_Cache = new ptThumbnailCache(1000);
   m_Thumbnailer->setCache(m_Cache);
 }
 
@@ -114,7 +114,7 @@ int ptFileMgrDM::setThumbnailDir(const QModelIndex index) {
 //==============================================================================
 
 void ptFileMgrDM::StartThumbnailer() {
-  m_Thumbnailer->run();
+  m_Thumbnailer->start();
 }
 
 //==============================================================================
