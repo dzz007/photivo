@@ -28,6 +28,7 @@
 #include <QObject>
 #include <QGraphicsRectItem>
 #include <QPen>
+#include <QPoint>
 
 #include "../ptConstants.h"
 
@@ -85,7 +86,8 @@ public:
   QString fullPath() { return m_FullPath; }
 
   /*! Returns \c true if a pixmap image is part of the thumbnail group. */
-  bool hasImage() { return m_Pixmap != NULL; }
+//  bool hasImage() { return m_Pixmap != NULL; }
+  bool hasImage() { return m_Thumbnail != NULL; }
 
   /*! Paints the thumbnail group.
     Reimplements \c QGraphicsRectItem::paint()
@@ -120,10 +122,12 @@ private:
   QString   m_FullPath;
   ptFSOType m_FSOType;
   int       m_RefCount;
+  QImage*   m_Thumbnail;
+  QPoint    m_ThumbPos;
 
   // Following objects don’t need to be destroyed explicitely in the destructor.
   // Because they are children that happens automatically.
-  QGraphicsPixmapItem*      m_Pixmap;
+//  QGraphicsPixmapItem*      m_Pixmap;
   QGraphicsSimpleTextItem*  m_ImgTypeText;
   QGraphicsSimpleTextItem*  m_InfoText;
 };
