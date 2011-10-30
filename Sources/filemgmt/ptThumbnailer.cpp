@@ -33,7 +33,7 @@
 #include "../ptCalloc.h"
 #include "../ptDefines.h"
 #include "../ptSettings.h"
-#include "ptFileMgrThumbnailer.h"
+#include "ptThumbnailer.h"
 
 extern ptSettings* Settings;
 extern QStringList FileExtsRaw;
@@ -41,7 +41,7 @@ extern QStringList FileExtsBitmap;
 
 //==============================================================================
 
-ptFileMgrThumbnailer::ptFileMgrThumbnailer()
+ptThumbnailer::ptThumbnailer()
 : QThread()
 {
   m_AbortRequested = false;
@@ -50,19 +50,18 @@ ptFileMgrThumbnailer::ptFileMgrThumbnailer()
 
   m_Dir = new QDir("");
   m_Dir->setSorting(QDir::DirsFirst | QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
-  m_Dir->setFilter(QDir::AllDirs | QDir::NoDot | QDir::Files);
   m_Dir->setNameFilters(FileExtsRaw + FileExtsBitmap);
 }
 
 //==============================================================================
 
-ptFileMgrThumbnailer::~ptFileMgrThumbnailer() {
+ptThumbnailer::~ptThumbnailer() {
   DelAndNull(m_Dir);
 }
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::setCache(ptThumbnailCache* cache) {
+void ptThumbnailer::setCache(ptThumbnailCache* cache) {
   if (!this->isRunning() && cache != NULL)
   {
     m_Cache = cache;
@@ -71,18 +70,25 @@ void ptFileMgrThumbnailer::setCache(ptThumbnailCache* cache) {
 
 //==============================================================================
 
-int ptFileMgrThumbnailer::setDir(const QString dir) {
+int ptThumbnailer::setDir(const QString dir) {
   if (this->isRunning()) {
     return -1;
   }
 
   m_Dir->setPath(dir);
+
+  QDir::Filters filters = QDir::Files;
+  if (Settings->GetInt("FileMgrShowDirThumbs")) {
+    filters = filters | QDir::AllDirs | QDir::NoDot;
+  }
+  m_Dir->setFilter(filters);
+
   return m_Dir->count();
 }
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList) {
+void ptThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList) {
   if (!this->isRunning() && ThumbList != NULL) {
     m_ThumbList = ThumbList;
   }
@@ -91,7 +97,7 @@ void ptFileMgrThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList)
 //==============================================================================
 
 
-void ptFileMgrThumbnailer::run() {
+void ptThumbnailer::run() {
 //  QTime timer;
 //  timer.start();
   // Check for properly set directory, cache and buffer
@@ -212,6 +218,7 @@ void ptFileMgrThumbnailer::run() {
           // error occurred: no raw thumbnail, no supported image type, any other GM error
           printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
           DelAndNull(thumbImage);
+          thumbImage = new QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png"));
 
         } else {
           // no error: scale and rotate thumbnail
@@ -234,7 +241,7 @@ void ptFileMgrThumbnailer::run() {
 
 //==============================================================================
 
-QImage* ptFileMgrThumbnailer::GenerateThumbnail(MagickWand* image, const QSize tSize)
+QImage* ptThumbnailer::GenerateThumbnail(MagickWand* image, const QSize tSize)
 {
   // We want 8bit RGB data without alpha channel, scaled to thumbnail size
   MagickSetImageDepth(image, 8);
@@ -268,7 +275,7 @@ QImage* ptFileMgrThumbnailer::GenerateThumbnail(MagickWand* image, const QSize t
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::ScaleThumbSize(QSize* tSize, const int max) {
+void ptThumbnailer::ScaleThumbSize(QSize* tSize, const int max) {
   if (tSize->width() == tSize->height()) {    // square image
     tSize->setWidth(max);
     tSize->setHeight(max);
@@ -283,7 +290,7 @@ void ptFileMgrThumbnailer::ScaleThumbSize(QSize* tSize, const int max) {
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::Abort() {
+void ptThumbnailer::Abort() {
   if (isRunning()) {
     m_AbortRequested = true;
 

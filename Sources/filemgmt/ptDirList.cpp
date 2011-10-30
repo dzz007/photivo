@@ -20,8 +20,20 @@
 **
 *******************************************************************************/
 
-#include "ptAbstractThumbnailLayouter.h"
+#include "ptDirList.h"
 
-ptAbstractThumbnailLayouter::ptAbstractThumbnailLayouter()
-{
+//==============================================================================
+
+ptDirList::ptDirList(QWidget* parent /*= NULL*/)
+: QListView(parent),
+  m_Model(NULL)
+{}
+
+//==============================================================================
+
+void ptDirList::setModel(QFileSystemModel* model) {
+  QListView::setModel(model);
+  m_Model = model;
 }
+
+//==============================================================================

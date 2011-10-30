@@ -136,7 +136,7 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/ptEcWin7.h \
     ../Sources/filemgmt/ptFileMgrWindow.h \
     ../Sources/filemgmt/ptFileMgrDM.h \
-    ../Sources/filemgmt/ptFileMgrThumbnailer.h \
+    ../Sources/filemgmt/ptThumbnailer.h \
     ../Sources/filemgmt/ptThumbnailCache.h \
     ../Sources/ptConfirmRequest.h \
     ../Sources/filemgmt/ptGraphicsThumbGroup.h \
@@ -144,7 +144,9 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/filemgmt/ptAbstractThumbnailLayouter.h \
     ../Sources/filemgmt/ptGridThumbnailLayouter.h \
     ../Sources/filemgmt/ptRowGridThumbnailLayouter.h \
-    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h
+    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptSingleDirModel.h \
+    ../Sources/ptWinApi.h
 HEADERS += ../Sources/ptParseCli.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
@@ -203,14 +205,16 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptEcWin7.cpp \
     ../Sources/filemgmt/ptFileMgrWindow.cpp \
     ../Sources/filemgmt/ptFileMgrDM.cpp \
-    ../Sources/filemgmt/ptFileMgrThumbnailer.cpp \
+    ../Sources/filemgmt/ptThumbnailer.cpp \
     ../Sources/filemgmt/ptThumbnailCache.cpp \
     ../Sources/ptConfirmRequest.cpp \
     ../Sources/filemgmt/ptGraphicsThumbGroup.cpp \
     ../Sources/filemgmt/ptGraphicsSceneEmitter.cpp \
     ../Sources/filemgmt/ptGridThumbnailLayouter.cpp \
     ../Sources/filemgmt/ptRowGridThumbnailLayouter.cpp \
-    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp
+    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptSingleDirModel.cpp \
+    ../Sources/ptWinApi.cpp
 SOURCES += ../Sources/ptParseCli.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
@@ -320,6 +324,12 @@ exists(../local-system-specific.pro) {
 }
 
 ###############################################################################
+
+
+
+
+
+
 
 
 

@@ -55,5 +55,8 @@
         <file>photivo-splash.png</file>
         <file>dark/icons/folder-48px.png</file>
         <file>dark/icons/go-up-48px.png</file>
+        <file>dark/icons/broken-image-48px.png</file>
+        <file>dark/icons/folder.png</file>
+        <file>dark/icons/go-up.png</file>
     </qresource>
 </RCC>
