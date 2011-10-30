@@ -247,8 +247,8 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     // Theme and layout stuff
     setStyle(Theme->ptStyle);
     setStyleSheet(Theme->ptStyleSheet);
-    m_TreePaneLayout->setContentsMargins(0,0,0,0);
-    m_FileListLayout->setContentsMargins(10,10,10,10);
+    m_TreePaneLayout->setContentsMargins(5, 5, 5, 5);
+    m_FileListLayout->setContentsMargins(5, 5, 5, 5);
     m_FileListLayout->setSpacing(10);
     m_Progressbar->setFixedHeight(m_PathInput->height());
 

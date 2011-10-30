@@ -649,13 +649,13 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
       "  padding: 10px;"
       "}"
 
-      "#FMTreePane, #FMThumbPane {"
-      "  border-radius: 5px;"
-      "}"
-
       "QTreeView {"
       "  border-radius: 5px;"
-      "  padding: 5px;"
+      "  border: none;"
+      "}"
+
+      "#FMTreePane, #FMThumbPane {"
+      "  border-radius: 5px;"
       "}"
 
 
