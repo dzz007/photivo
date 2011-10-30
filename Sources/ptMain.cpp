@@ -814,7 +814,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // When loading a file via cli, set file manager directory to that path.
   // Chances are good the user want to work with other files from that dir as well
-  if (cli.Mode == cliLoadImage) {
+  if (!JobMode && !ImageCleanUp && (ImageFileToOpen != "")) {
     Settings->SetValue("LastFileMgrLocation", QFileInfo(ImageFileToOpen).absolutePath());
   }
 
@@ -970,6 +970,17 @@ void   ExtFileOpen(const QString file){
     CB_MenuFileOpen(1);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+void ptRemoveFile( const QString FileName) {
+  if (QMessageBox::Yes == ptMessageBox::question(
+                 MainWindow,
+                 QObject::tr("Clean up input file"),
+                 "As requested, Photivo will delete the input file " + FileName + ". Proceed?",
+                 QMessageBox::No|QMessageBox::Yes)) {
+    QFile::remove(FileName);
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -3417,7 +3428,7 @@ void CB_MenuFileExit(const short) {
   // clean up the input file if we got just a temp file
   if (Settings->GetInt("HaveImage")==1 && ImageCleanUp == 1) {
     QString OldInputFileName = Settings->GetStringList("InputFileNameList")[0];
-    QFile::remove(OldInputFileName);
+    ptRemoveFile(OldInputFileName);
     ImageCleanUp--;
   }
 
@@ -3960,9 +3971,6 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       return;
     } else if (msgBox.clickedButton() == DetailButton &&
                Settings->GetInt("HaveImage")==1) {
-      uint16_t Width = 0;
-      uint16_t Height = 0;
-      short OldZoom = 0;
       short OldZoomMode = 0;
       if (Settings->GetInt("DetailViewActive")==0) {
         Settings->SetValue("DetailViewScale", PreviousPipeSize);
@@ -3981,9 +3989,6 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       // First : make sure we have Image_AfterDcRaw in the view window.
       // Anything else might have undergone geometric transformations that are
       // impossible to calculate reverse to a spot in dcraw.
-      Width = TheProcessor->m_Image_DetailPreview->m_Width;
-      Height = TheProcessor->m_Image_DetailPreview->m_Height;
-      OldZoom = Settings->GetInt("Zoom");
       OldZoomMode = Settings->GetInt("ZoomMode");
       ViewWindow->ZoomToFit();
       UpdatePreviewImage(TheProcessor->m_Image_DetailPreview);

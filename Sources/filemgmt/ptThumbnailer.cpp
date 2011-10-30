@@ -229,9 +229,6 @@ void ptThumbnailer::run() {
       }
     }
 
-#ifdef DEBUG
-  printf("%s: generated thumb image for %s\n", __FILE__, m_ThumbList->at(i)->fullPath().toAscii().data());
-#endif
   // Notification signal for each finished thumb image.
     emit newImageNotify(m_ThumbList->at(i), thumbImage);
   } // main FOR loop step 2
@@ -294,7 +291,9 @@ void ptThumbnailer::Abort() {
   if (isRunning()) {
     m_AbortRequested = true;
 
-    while (isRunning()) {
+    QTime timer;
+    timer.start();
+    while (isRunning() && timer.elapsed() < 500) {
       QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
   }
