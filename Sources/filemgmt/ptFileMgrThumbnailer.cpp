@@ -227,6 +227,7 @@ void ptFileMgrThumbnailer::run() {
 #endif
   // Notification signal for each finished thumb image.
     emit newImageNotify(m_ThumbList->at(i), thumbImage);
+    QApplication::processEvents();
   } // main FOR loop step 2
 
 //  printf("elapsed %d, cache size %d\n", timer.elapsed(), m_Cache->Count());
