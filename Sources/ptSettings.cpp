@@ -757,10 +757,16 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"UiLanguage"                           ,1    ,""                                    ,0},  // Language name to load from qm file, e.g. "Deutsch"
     {"CustomCSSFile"                        ,1    ,""                                    ,0},
     {"FullscreenActive"                     ,9    ,0                                     ,0},
+
+    // stuff for the file manager
     {"FileMgrIsOpen"                        ,9    ,0                                     ,0},
     {"LastFileMgrLocation"                  ,1    ,""                                    ,0},
-    {"FileMgrShowTreePane"                  ,1    ,1                                     ,0},
+    {"FileMgrShowSidebar"                   ,1    ,1                                     ,0},
+    {"FileMgrShowDirTree"                   ,1    ,1                                     ,0},
+    {"FileMgrShowDirList"                   ,1    ,1                                     ,0},
+    {"FileMgrShowBookmarks"                 ,1    ,1                                     ,0},
     {"FileMgrThumbLayoutType"               ,1    ,tlVerticalByRow                       ,0},
+    {"FileMgrShowDirThumbs"                 ,1    ,0                                     ,0},
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.
