@@ -99,6 +99,9 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
   m_Progressbar->hide();
 
+  // construct the image view
+  m_ImageView = new ptImageView(ImageView, m_DataModel);
+
   // Filemgr windwow layout
   if (Settings->m_IniSettings->contains("FileMgrMainSplitter")) {
     m_MainSplitter->restoreState(
@@ -134,6 +137,8 @@ ptFileMgrWindow::~ptFileMgrWindow() {
   DelAndNull(ac_DirThumbs);
   DelAndNull(ac_ThumbLayoutGroup);
   DelAndNull(ac_ToggleNaviPane);
+
+  DelAndNull(m_ImageView);
 }
 
 //==============================================================================
@@ -284,8 +289,8 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     setStyle(Theme->ptStyle);
     setStyleSheet(Theme->ptStyleSheet);
     m_TreePaneLayout->setContentsMargins(10, 10, 10, 10);
-    m_FileListLayout->setContentsMargins(10, 10, 10, 10);
-    m_FileListLayout->setSpacing(10);
+//    m_FileListLayout->setContentsMargins(10, 10, 10, 10);
+//    m_FileListLayout->setSpacing(10);
     m_Progressbar->setFixedHeight(m_PathInput->height());
 
     // set initally selected directory
@@ -365,6 +370,8 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 
 void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const QString location) {
   if (action == tnaLoadImage) {
+    m_ImageView->Display( location);
+    return;
     closeWindow();
     ImageFileToOpen = location;
     CB_MenuFileOpen(1);

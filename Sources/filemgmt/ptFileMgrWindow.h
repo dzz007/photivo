@@ -37,6 +37,7 @@
 #include "ptGraphicsThumbGroup.h"
 #include "ptAbstractThumbnailLayouter.h"
 #include "ptFileMgrConstants.h"
+#include "ptImageView.h"
 
 //==============================================================================
 
@@ -90,6 +91,7 @@ private:
   ptAbstractThumbnailLayouter* m_Layouter;
   int                     m_ThumbCount;
   int                     m_ThumbListIdx;
+  ptImageView*            m_ImageView;
 
   // context menu actions
   QAction* ac_VerticalThumbs;
