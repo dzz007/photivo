@@ -792,20 +792,6 @@ enum ptLoadCfgMode {
   lcmSettingsFile   = 4
 };
 
-/*! This enum defines the possible actions when you click on a thumbnail
-    in the file manager. */
-enum ptThumbnailAction {
-  tnaChangeDir = 0,
-  tnaLoadImage = 1
-};
-
-/*! This enum defines how thumbnails are arranged in the file manager. */
-enum ptThumbnailLayout {
-  tlVerticalByRow       = 0,
-  tlHorizontalByColumn  = 1,
-  tlDetailedList        = 2
-};
-
 /*! This enum defines the possible types of images.
     When you add new types make sure that error types have negative values and
     valid types have positive values.

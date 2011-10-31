@@ -41,9 +41,10 @@ public:
   explicit ptSingleDirModel(QObject* parent = NULL);
   ~ptSingleDirModel();
 
+  QString absolutePath();
   void ChangeAbsoluteDir(const QString& path);
   void ChangeDir(const QModelIndex& index);
-  QString currentDir() { return m_CurrentDir->absolutePath(); }
+  ptFSOType pathType() const;
 
 private:
   void UpdateModel();
@@ -56,7 +57,7 @@ private:
 /*
   Windows needs special handling. We need a parent above the level of drives to make
   changing of drives possible from the directory ListView.
-  In the Windows virtual file system hierarchy "My Computer" is that parent (basically
+  In the Windows virtual file system hierarchy “My Computer” is that parent (basically
   the same as / on *nix), but Qt has no built-in support for it. So we extend the
   model ourselfs to add support for "My Computer".
 */

@@ -146,7 +146,8 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/filemgmt/ptRowGridThumbnailLayouter.h \
     ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h \
     ../Sources/filemgmt/ptSingleDirModel.h \
-    ../Sources/ptWinApi.h
+    ../Sources/ptWinApi.h \
+    ../Sources/filemgmt/ptFileMgrConstants.h
 HEADERS += ../Sources/ptParseCli.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
@@ -324,6 +325,7 @@ exists(../local-system-specific.pro) {
 }
 
 ###############################################################################
+
 
 
 

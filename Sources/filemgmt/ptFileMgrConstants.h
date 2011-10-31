@@ -20,20 +20,31 @@
 **
 *******************************************************************************/
 
-#include "ptDirList.h"
+#ifndef PTFILEMGRCONSTANTS_H
+#define PTFILEMGRCONSTANTS_H
 
 //==============================================================================
 
-ptDirList::ptDirList(QWidget* parent /*= NULL*/)
-: QListView(parent),
-  m_Model(NULL)
-{}
+#include <QString>
 
 //==============================================================================
 
-void ptDirList::setModel(QFileSystemModel* model) {
-  QListView::setModel(model);
-  m_Model = model;
-}
+const QString MyComputerIniString = "{{MyComputer}}";
 
 //==============================================================================
+
+/*! This enum defines the possible actions when you click on a thumbnail
+    in the file manager. */
+enum ptThumbnailAction {
+  tnaChangeDir = 0,
+  tnaLoadImage = 1
+};
+
+/*! This enum defines how thumbnails are arranged in the file manager. */
+enum ptThumbnailLayout {
+  tlVerticalByRow       = 0,
+  tlHorizontalByColumn  = 1,
+  tlDetailedList        = 2
+};
+
+#endif // PTFILEMGRCONSTANTS_H

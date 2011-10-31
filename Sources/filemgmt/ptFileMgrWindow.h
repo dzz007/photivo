@@ -36,6 +36,7 @@
 #include "ptFileMgrDM.h"
 #include "ptGraphicsThumbGroup.h"
 #include "ptAbstractThumbnailLayouter.h"
+#include "ptFileMgrConstants.h"
 
 //==============================================================================
 
@@ -53,13 +54,15 @@ public:
   ~ptFileMgrWindow();
 
   /*! Creates or refreshes the thumbnail display.
-    \param index
-      The model index corresponding to the desired directory.
-    \param clearCache
-      Set this flag to \c true if you want to clear the thumbnail cache.
-      Default is \c false.
+    \param path
+      The path to the desired directory. Must be an absolute path. \c path can be
+      empty. Then it defaults to the currently set thumbnail directory.
+    \param fsoType
+      Only relevant on Windows to indicate if the folder is “My Computer”. If that is
+      the case, set to \c fsoRoot. Then \c path will be ignored and no thumbnails
+      displayed. Do \b not use as a general flag to prevent thumbnail display!
   */
-  void DisplayThumbnails(const QString& path);
+  void DisplayThumbnails(QString path = "", const ptFSOType fsoType = fsoDir);
 
   /*! Updates the file manager’s visual appearance.
       Call this once every time Photivo’s theme changes.

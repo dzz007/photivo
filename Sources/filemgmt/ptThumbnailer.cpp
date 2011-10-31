@@ -62,8 +62,7 @@ ptThumbnailer::~ptThumbnailer() {
 //==============================================================================
 
 void ptThumbnailer::setCache(ptThumbnailCache* cache) {
-  if (!this->isRunning() && cache != NULL)
-  {
+  if (!this->isRunning() && cache != NULL) {
     m_Cache = cache;
   }
 }
@@ -77,12 +76,16 @@ int ptThumbnailer::setDir(const QString dir) {
 
   m_Dir->setPath(dir);
 
+  if (dir.isEmpty()) {
+    // Empty paths are valid. They tell the thumbnailer to do nothing.
+    return -1;
+  }
+
   QDir::Filters filters = QDir::Files;
   if (Settings->GetInt("FileMgrShowDirThumbs")) {
     filters = filters | QDir::AllDirs | QDir::NoDot;
   }
   m_Dir->setFilter(filters);
-
   return m_Dir->count();
 }
 
@@ -98,10 +101,8 @@ void ptThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList) {
 
 
 void ptThumbnailer::run() {
-//  QTime timer;
-//  timer.start();
   // Check for properly set directory, cache and buffer
-  if (!m_Dir->exists() || m_ThumbList == NULL || m_Cache == NULL) {
+  if (m_Dir->path().isEmpty() || !m_Dir->exists() || m_ThumbList == NULL || m_Cache == NULL) {
     return;
   }
 
@@ -232,8 +233,6 @@ void ptThumbnailer::run() {
   // Notification signal for each finished thumb image.
     emit newImageNotify(m_ThumbList->at(i), thumbImage);
   } // main FOR loop step 2
-
-//  printf("elapsed %d, cache size %d\n", timer.elapsed(), m_Cache->Count());
 }
 
 //==============================================================================
