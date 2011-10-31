@@ -61,7 +61,7 @@
   #include <QFileOpenEvent>
 #endif
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
   #include "ptEcWin7.h"
   #include "ptWinApi.h"
 #endif
@@ -1315,7 +1315,7 @@ void Update(short Phase,
             short WithIdentify  /* = 1 */,
             short ProcessorMode /* = ptProcessorMode_Preview */)
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32
   ptEcWin7* Win7Taskbar = ptEcWin7::GetInstance();
   Win7Taskbar->setProgressState(ptEcWin7::Indeterminate);
 #endif
@@ -1380,7 +1380,7 @@ void Update(short Phase,
   }
   Settings->SetValue("PipeIsRunning",0);
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32
   Win7Taskbar->setProgressState(ptEcWin7::NoProgress);
 #endif
 }
@@ -3442,7 +3442,7 @@ void CB_MenuFileExit(const short) {
       Settings->SetValue(CurveKeys.at(i),ptCurveChoice_None);
   }
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32
   ptEcWin7::DestroyInstance();
 #endif
 

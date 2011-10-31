@@ -38,7 +38,7 @@
 #include "ptViewWindow.h"
 #include "ptWhiteBalances.h"
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32
   #include "ptEcWin7.h"
 #endif
 
@@ -108,7 +108,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   setWindowTitle(Title);
 
   // Initialize Win 7 taskbar features
-  #ifdef Q_WS_WIN
+  #ifdef Q_OS_WIN32
     ptEcWin7::CreateInstance(this);
   #endif
 

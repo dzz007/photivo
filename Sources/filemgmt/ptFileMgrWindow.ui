@@ -145,35 +145,47 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="FMThumbPane" native="true">
-      <layout class="QVBoxLayout" name="m_FileListLayout">
-       <property name="spacing">
-        <number>10</number>
-       </property>
+     <widget class="QWidget" name="Views" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <property name="margin">
         <number>0</number>
        </property>
        <item>
-        <widget class="QLineEdit" name="m_PathInput"/>
-       </item>
-       <item>
-        <widget class="QProgressBar" name="m_Progressbar">
-         <property name="value">
-          <number>0</number>
+        <widget class="QSplitter" name="ViewSplitter">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-         <property name="textVisible">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGraphicsView" name="m_FilesView">
-         <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-         </property>
+         <widget class="QWidget" name="FMThumbPane" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="margin">
+            <number>9</number>
+           </property>
+           <item>
+            <widget class="QProgressBar" name="m_Progressbar">
+             <property name="value">
+              <number>0</number>
+             </property>
+             <property name="textVisible">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="m_PathInput"/>
+           </item>
+           <item>
+            <widget class="QGraphicsView" name="m_FilesView">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="ImageView" native="true"/>
         </widget>
        </item>
       </layout>

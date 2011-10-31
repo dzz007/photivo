@@ -36,7 +36,7 @@ http://dukto.googlecode.com/
 #include <QWidget>
 
 // Windows only data definitions
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32
 
 #include <windows.h>
 #include <initguid.h>
@@ -130,7 +130,7 @@ public:
 //------------------------------------------------------------------------------
 
   void init(WId wid);
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32
   bool winEvent(MSG * message, long * result);
 #endif
   // Overlay icon handling
@@ -155,7 +155,7 @@ private:
   ~ptEcWin7();
 
   WId mWindowId;
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32
   UINT mTaskbarMessageId;
   ITaskbarList3 *mTaskbar;
   HICON mOverlayIcon;

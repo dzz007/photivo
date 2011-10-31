@@ -37,7 +37,7 @@
 ptTheme::ptTheme(QApplication* Application) {
   ptSystemStyle = (QStyle*)(Application->style()->metaObject()->newInstance());
   ptSystemPalette = Application->palette();
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   ptThemeStyle = new QWindowsXPStyle;
 #else
   ptThemeStyle = new QCleanlooksStyle;
@@ -649,8 +649,9 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
       "  border: none;"
       "}"
 
-      "#FMTreePane, #FMThumbPane {"
+      "#FMTreePane, #FMThumbPane, #ImageView {"
       "  border-radius: 5px;"
+      "  background: red;"
       "}"
 
 

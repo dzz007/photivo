@@ -31,8 +31,6 @@
 #include <QGraphicsItemGroup>
 #include <QDir>
 
-#include <wand/magick_wand.h>
-
 #include "ptThumbnailCache.h"
 #include "ptGraphicsThumbGroup.h"
 
@@ -85,8 +83,6 @@ protected:
 
 
 private:
-  QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
-  void ScaleThumbSize(QSize* tSize, const int max);
 
   bool                            m_AbortRequested;
   ptThumbnailCache*               m_Cache;
