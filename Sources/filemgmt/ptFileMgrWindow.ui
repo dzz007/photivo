@@ -39,30 +39,21 @@
           <enum>Qt::Vertical</enum>
          </property>
          <widget class="QWidget" name="FMTreePane" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>250</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>250</width>
+            <height>0</height>
+           </size>
+          </property>
           <layout class="QVBoxLayout" name="m_TreePaneLayout">
-           <property name="spacing">
-            <number>0</number>
-           </property>
            <item>
             <widget class="QTreeView" name="m_DirTree">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>250</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="baseSize">
-              <size>
-               <width>250</width>
-               <height>0</height>
-              </size>
-             </property>
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
              </property>
@@ -81,6 +72,25 @@
          </widget>
          <widget class="QWidget" name="FMDirListPane" native="true">
           <layout class="QVBoxLayout" name="m_DirListPaneLayout">
+           <item>
+            <widget class="QLabel" name="DirListLabel">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
            <item>
             <widget class="QListView" name="m_DirList">
              <property name="frameShape">
@@ -109,6 +119,27 @@
             <height>20</height>
            </size>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QLabel" name="BookmarksLabel">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Bookmarks</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </widget>
        </item>

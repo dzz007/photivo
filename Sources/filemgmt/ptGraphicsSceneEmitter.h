@@ -27,7 +27,7 @@
 
 #include <QObject>
 
-#include "../ptConstants.h"
+#include "ptFileMgrConstants.h"
 
 //==============================================================================
 

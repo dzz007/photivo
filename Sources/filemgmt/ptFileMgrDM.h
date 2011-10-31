@@ -63,24 +63,31 @@ public:
   /*! Clear the data cache of \c ptFileMgrDM */
   void Clear();
 
-  QString currentImgDir() { return m_CurrentImgDir; }
-  ptSingleDirModel* dirModel() { return m_DirModel; }
+  /*! Returns the current folder for thumbnail display. */
+  QString currentDir() { return m_CurrentDir; }
+
+  /*! Returns a pointer to the model for the folder ListView. */
+  ptSingleDirModel* dirModel() const { return m_DirModel; }
+
+  /*! Sets the folder for thumbnail display. Does not trigger the thumbnailer.
+      You probably need this only once to init the folder. */
+  void setCurrentDir(const QString absolutePath) { m_CurrentDir = absolutePath; }
 
   /*! Sets the directory for thumbnail generation.
     Returns the total number of applicable entries in that directory.
     Returns \c -1 and does not set the directory if the thumbnailer is
     currently running.
-    \param index
-      The QModelIndex corresponding to the directory with the image files.
+    \param path
+      Sets the directory for thumbnail generation. Must be an absolute path.
   */
-  int setThumbnailDir(const QModelIndex index);
+  int setThumbnailDir(const QString path);
 
   /*! Starts image thumbnail generation. */
   void StartThumbnailer();
 
   /*! Aborts a running thumbnailer thread.
     Calling this function when the thumbnailer is not currently running
-    does not do any harm. The funtion will then essentially do nothing.
+    does not do any harm. The function will then essentially do nothing.
   */
   void StopThumbnailer();
 
@@ -104,7 +111,7 @@ private:
   ~ptFileMgrDM();
 
   ptThumbnailCache*         m_Cache;
-  QString                   m_CurrentImgDir;
+  QString                   m_CurrentDir;
   ptSingleDirModel*         m_DirModel;
   ptThumbnailer*            m_Thumbnailer;
   QList<ptGraphicsThumbGroup*>*   m_ThumbList;

@@ -63,7 +63,7 @@
 
 #ifdef Q_WS_WIN
   #include "ptEcWin7.h"
-  #include "WinApi.h"
+  #include "ptWinApi.h"
 #endif
 
 using namespace std;

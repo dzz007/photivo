@@ -24,6 +24,7 @@
 #include "../ptDefines.h"
 #include "../ptSettings.h"
 #include "ptFileMgrDM.h"
+#include "ptFileMgrConstants.h"
 
 extern ptSettings* Settings;
 
@@ -85,6 +86,7 @@ ptFileMgrDM::~ptFileMgrDM() {
   DelAndNull(m_ThumbList);
   DelAndNull(m_Thumbnailer);
   DelAndNull(m_Cache);
+  DelAndNull(m_DirModel);
 }
 
 //==============================================================================
@@ -96,14 +98,15 @@ void ptFileMgrDM::Clear() {
 
 //==============================================================================
 
-int ptFileMgrDM::setThumbnailDir(const QModelIndex index) {
-  int result = m_Thumbnailer->setDir(m_TreeModel->filePath(index));
-  if (result > -1) {
-    m_CurrentImgDir = m_TreeModel->filePath(index);
-  } else {
-    m_CurrentImgDir.clear();
+int ptFileMgrDM::setThumbnailDir(const QString path) {
+  m_CurrentDir = path;
+#ifdef Q_OS_WIN
+  if (path == MyComputerIniString) {
+    return m_Thumbnailer->setDir("");
   }
-  return result;
+#endif
+
+  return m_Thumbnailer->setDir(path);
 }
 
 //==============================================================================

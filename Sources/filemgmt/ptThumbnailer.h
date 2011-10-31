@@ -80,12 +80,11 @@ public:
 
 
 protected:
-  /*! This function does the actual thumbnail generating. */
+  /*! This function performs the actual thumbnail generation. */
   void run();
 
 
 private:
-  // Resizes the image to the specified size and writes it to the pixmap
   QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
   void ScaleThumbSize(QSize* tSize, const int max);
 

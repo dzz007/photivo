@@ -35,6 +35,7 @@
 //==============================================================================
 
 QString WinApi::AppdataFolder() {
+  QString result;
   QLibrary library(QLatin1String("shell32"));
   typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
   GetSpecialFolderPath SHGetSpecialFolderPath =

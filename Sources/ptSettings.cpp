@@ -27,6 +27,7 @@
 #include "ptError.h"
 #include "ptRGBTemperature.h"
 #include "ptGuiOptions.h"
+#include "filemgmt/ptFileMgrConstants.h"
 
 // Macro for inserting a key into the hash and checking it is a new one.
 #define M_InsertKeyIntoHash(Key,Item)                      \
@@ -762,8 +763,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FileMgrIsOpen"                        ,9    ,0                                     ,0},
     {"LastFileMgrLocation"                  ,1    ,""                                    ,0},
     {"FileMgrShowSidebar"                   ,1    ,1                                     ,0},
-    {"FileMgrShowDirTree"                   ,1    ,1                                     ,0},
-    {"FileMgrShowDirList"                   ,1    ,1                                     ,0},
+    {"FileMgrShowDirTree"                   ,1    ,0                                     ,0},
     {"FileMgrShowBookmarks"                 ,1    ,1                                     ,0},
     {"FileMgrThumbLayoutType"               ,1    ,tlVerticalByRow                       ,0},
     {"FileMgrShowDirThumbs"                 ,1    ,0                                     ,0},
