@@ -119,12 +119,12 @@ private:
   QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
   void ScaleThumbSize(QSize* tSize, const int max);
 
-  ptThumbnailCache*         m_Cache;
-  QString                   m_CurrentDir;
-  ptSingleDirModel*         m_DirModel;
-  ptThumbnailer*            m_Thumbnailer;
-  QList<ptGraphicsThumbGroup*>*   m_ThumbList;
-  QFileSystemModel*         m_TreeModel;
+  ptThumbnailCache*             m_Cache;
+  QString                       m_CurrentDir;
+  ptSingleDirModel*             m_DirModel;
+  ptThumbnailer*                m_Thumbnailer;
+  QList<ptGraphicsThumbGroup*>* m_ThumbList;
+  QFileSystemModel*             m_TreeModel;
 
 
 };
