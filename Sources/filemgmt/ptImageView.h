@@ -32,6 +32,7 @@
 #include <QGridLayout>
 
 #include "ptFileMgrDM.h"
+#include "../ptReportOverlay.h"
 
 //==============================================================================
 
@@ -51,14 +52,32 @@ class ptImageView : public QGraphicsView
 
   public slots:
 
+    void resizeEvent(QResizeEvent* event);
+    void mouseDoubleClickEvent(QMouseEvent* event);
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
+    void wheelEvent(QWheelEvent* event);
+    void contextMenuEvent(QContextMenuEvent* event);
+
   private:
-    ptFileMgrDM*         m_DataModule;
-    const float          MinZoom;
-    const float          MaxZoom;
-    QList<float>         ZoomFactors;   // steps for wheel zoom
-    QGridLayout*         m_parentLayout;
-    QGraphicsScene*      m_Scene;
-    QGraphicsPixmapItem* m_PixmapItem;
+    void ZoomTo(float factor);  // 1.0 means 100%
+    int  ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
+
+    ptFileMgrDM*          m_DataModule;
+    const float           MinZoom;
+    const float           MaxZoom;
+    QList<float>          ZoomFactors;   // steps for wheel zoom
+    QGridLayout*          m_parentLayout;
+    QGraphicsScene*       m_Scene;
+    QGraphicsPixmapItem*  m_PixmapItem;
+    QString               m_FileName;
+    int                   m_ZoomMode;
+    float                 m_ZoomFactor;
+    int                   m_Zoom;
+    QLine*                m_DragDelta;
+    bool                  m_LeftMousePressed;
+    ptReportOverlay*      m_ZoomSizeOverlay;
 };
 
 #endif // PTIMAGEVIEW_H

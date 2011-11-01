@@ -37,7 +37,8 @@ const QString MyComputerIniString = "{{MyComputer}}";
     in the file manager. */
 enum ptThumbnailAction {
   tnaChangeDir = 0,
-  tnaLoadImage = 1
+  tnaLoadImage = 1,
+  tnaViewImage = 2
 };
 
 /*! This enum defines how thumbnails are arranged in the file manager. */

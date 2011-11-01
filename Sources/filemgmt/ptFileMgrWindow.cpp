@@ -385,15 +385,14 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 
 void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const QString location) {
   if (action == tnaLoadImage) {
-    m_ImageView->Display( location);
-    return;
     closeWindow();
     ImageFileToOpen = location;
     CB_MenuFileOpen(1);
-
   } else if (action == tnaChangeDir) {
     m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(location));
     DisplayThumbnails();
+  } else if (action == tnaViewImage) {
+    m_ImageView->Display( location);
   }
 }
 
@@ -588,8 +587,8 @@ void ptFileMgrWindow::detailedThumbs() {
 //==============================================================================
 
 void ptFileMgrWindow::toggleNaviPane() {
-  FMTreePane->setVisible(!FMTreePane->isVisible());
-  Settings->SetValue("FileMgrShowSidebar", (int)FMTreePane->isVisible());
+  FMSidebar->setVisible(!FMSidebar->isVisible());
+  Settings->SetValue("FileMgrShowSidebar", (int)FMSidebar->isVisible());
 }
 
 //==============================================================================
