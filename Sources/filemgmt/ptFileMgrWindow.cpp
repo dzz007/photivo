@@ -65,7 +65,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   // Panels setup (only folder tree *or* list can be visible)
   FMSidebar->setVisible(Settings->GetInt("FileMgrShowSidebar"));
   FMTreePane->setVisible(Settings->GetInt("FileMgrShowDirTree"));
-  FMDirListPane->setVisible(!FMTreePane->isVisible());
+  FMDirListPane->setVisible(!Settings->GetInt("FileMgrShowDirTree"));
 #ifdef Q_OS_WIN
   DirListLabel->setText(tr("Folders"));
 #else
@@ -83,7 +83,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 
   // Folder list
   m_DirList->setModel(m_DataModel->dirModel());
-  connect(m_DirList, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(changeListDir(QModelIndex)));
+  connect(m_DirList, SIGNAL(activated(QModelIndex)), this, SLOT(changeListDir(QModelIndex)));
 
   // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
@@ -197,14 +197,13 @@ void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
 
 //==============================================================================
 
-void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/,
-                                        const ptFSOType fsoType /*= fsoDir*/)
-{
+void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/, ptFSOType fsoType /*= fsoDir*/) {
   if (path.isEmpty()) {
     if (Settings->GetInt("FileMgrShowDirTree")) {
       path = m_DataModel->treeModel()->filePath(m_DirTree->currentIndex());
     } else {
       path = m_DataModel->dirModel()->absolutePath();
+      fsoType = m_DataModel->dirModel()->pathType();
     }
   }
 
@@ -213,6 +212,8 @@ void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/,
     // We are in “My Computer”
     path = MyComputerIniString;
     m_PathInput->setText(tr("My Computer"));
+  } else if (fsoType == fsoDrive) {
+    m_PathInput->setText(path + "\\");
   } else {
     m_PathInput->setText(QDir::toNativeSeparators(path));
   }
@@ -227,7 +228,7 @@ void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/,
   m_ThumbListIdx = 0;
   m_ThumbCount = m_DataModel->setThumbnailDir(path);
 
-  if (m_ThumbCount > -1) {
+  if (m_ThumbCount > 0) {
     m_Layouter->LazyInit(m_ThumbCount);
     m_Progressbar->setValue(0);
     m_Progressbar->setMaximum(m_ThumbCount);
@@ -295,22 +296,36 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 
     // set initally selected directory
     QString lastDir = Settings->GetString("LastFileMgrLocation");
-    if (lastDir.isEmpty() || !QDir(lastDir).exists()) {
-      // dir from ini is broken, default to homePath
-      lastDir = QDir::homePath();
+    ptFSOType lastDirType = fsoDir;
+#ifdef Q_OS_WIN
+    if (lastDir == MyComputerIniString) {
+      lastDirType = fsoRoot;
+      // Folder tree does not support “My Computer”
+      if (m_DirTree->isVisible()) {
+        lastDir = QDir::homePath();
+        lastDirType = fsoDir;
+      }
+    } else {
+#endif
+      if (lastDir.isEmpty() || !QDir(lastDir).exists()) {
+        // dir from ini is broken, default to homePath
+        lastDir = QDir::homePath();
+      }
+#ifdef Q_OS_WIN
     }
+#endif
     if (m_DirTree->isVisible())
       m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(lastDir));
     if (m_DirList->isVisible())
       m_DataModel->dirModel()->ChangeAbsoluteDir(lastDir);
-    m_PathInput->setText(QDir::toNativeSeparators(lastDir));
+//    m_PathInput->setText(QDir::toNativeSeparators(lastDir));
     m_DataModel->setCurrentDir(lastDir);
 
     // First call base class showEvent, then start thumbnail loading to ensure
     // the file manager is visible before ressource heavy actions begin.
     QWidget::showEvent(event);
     if (!InStartup)
-      DisplayThumbnails();
+      DisplayThumbnails(lastDir, lastDirType);
 
     m_IsFirstShow = false;
     return;
@@ -385,20 +400,18 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
 //==============================================================================
 
 void ptFileMgrWindow::on_m_PathInput_returnPressed() {
-  QDir dir = QDir(m_PathInput->text());
-  QString treeDir;
-  if (Settings->GetInt("FileMgrShowDirTree")) {
-    treeDir = m_DataModel->treeModel()->filePath(m_DirTree->currentIndex());
-  }
-
-
-  if (dir.exists() && (dir != QDir(treeDir))) {
+  QDir dir = QDir(QDir::fromNativeSeparators(m_PathInput->text()));
+  if (dir.exists() && !QDir::match(m_DataModel->currentDir(), dir.path())) {
     m_PathInput->setText(dir.absolutePath());
-    m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(dir.absolutePath()));
+    if (Settings->GetInt("FileMgrShowDirTree")) {
+      m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(dir.absolutePath()));
+    } else {
+      m_DataModel->dirModel()->ChangeAbsoluteDir(dir.absolutePath());
+    }
     DisplayThumbnails();
 
   } else {
-    m_PathInput->setText(QDir::toNativeSeparators(treeDir));
+    m_PathInput->setText(QDir::toNativeSeparators(m_DataModel->currentDir()));
   }
 }
 

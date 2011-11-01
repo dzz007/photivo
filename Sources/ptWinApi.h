@@ -29,10 +29,12 @@
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
 namespace WinApi {
   QString AppdataFolder();
-  QString VolumeName(QString& driveLetter);
+  QString VolumeName(QString driveLetter);
 }
+#endif
 
 //==============================================================================
 #endif // PTWINAPI_H

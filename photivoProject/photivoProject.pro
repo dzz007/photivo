@@ -114,6 +114,11 @@ win32 {
   RC_FILE = photivo.rc
   #CONFIG += console
   QT += network
+
+  HEADERS +=  ../Sources/ptEcWin7.h \
+              ../Sources/ptWinApi.h
+  SOURCES +=  ../Sources/ptEcWin7.cpp \
+              ../Sources/ptWinApi.cpp
 }
 macx {
   PKGCONFIG += lcms2
@@ -133,7 +138,6 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptRichRectInteraction.h \
     ../Sources/ptGridInteraction.h \
-    ../Sources/ptEcWin7.h \
     ../Sources/filemgmt/ptFileMgrWindow.h \
     ../Sources/filemgmt/ptFileMgrDM.h \
     ../Sources/filemgmt/ptThumbnailer.h \
@@ -146,7 +150,6 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/filemgmt/ptRowGridThumbnailLayouter.h \
     ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h \
     ../Sources/filemgmt/ptSingleDirModel.h \
-    ../Sources/ptWinApi.h \
     ../Sources/filemgmt/ptFileMgrConstants.h \
     ../Sources/filemgmt/ptImageView.h
 HEADERS += ../Sources/ptParseCli.h
@@ -204,7 +207,6 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptRichRectInteraction.cpp \
     ../Sources/ptGridInteraction.cpp \
-    ../Sources/ptEcWin7.cpp \
     ../Sources/filemgmt/ptFileMgrWindow.cpp \
     ../Sources/filemgmt/ptFileMgrDM.cpp \
     ../Sources/filemgmt/ptThumbnailer.cpp \
@@ -216,7 +218,6 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/filemgmt/ptRowGridThumbnailLayouter.cpp \
     ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp \
     ../Sources/filemgmt/ptSingleDirModel.cpp \
-    ../Sources/ptWinApi.cpp \
     ../Sources/filemgmt/ptImageView.cpp
 SOURCES += ../Sources/ptParseCli.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp

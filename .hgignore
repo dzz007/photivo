@@ -8,3 +8,5 @@ Makefile
 ^_bin-win64
 \.user$
 .autosave$
+^Objects
+^photivo.exe$

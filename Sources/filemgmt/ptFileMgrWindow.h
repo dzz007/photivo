@@ -63,7 +63,7 @@ public:
       the case, set to \c fsoRoot. Then \c path will be ignored and no thumbnails
       displayed. Do \b not use as a general flag to prevent thumbnail display!
   */
-  void DisplayThumbnails(QString path = "", const ptFSOType fsoType = fsoDir);
+  void DisplayThumbnails(QString path = "", ptFSOType fsoType = fsoDir);
 
   /*! Updates the file manager’s visual appearance.
       Call this once every time Photivo’s theme changes.

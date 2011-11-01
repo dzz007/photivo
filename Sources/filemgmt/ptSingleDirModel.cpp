@@ -104,11 +104,12 @@ void ptSingleDirModel::ChangeAbsoluteDir(const QString& path) {
   if (path == MyComputerIniString) {
     m_CurrentDirType = fsoRoot;
     FillListWithDrives();
-  } else if (path.length() == 2 && path.mid(1,1) == ":") {
+  } else if ((path.length() == 2 || path.length() == 3) && path.mid(1,1) == ":") {
     // we have a drive
     m_CurrentDirType = fsoDrive;
     m_CurrentDir->setPath(path);
     m_EntryList = m_CurrentDir->entryList();
+    m_EntryList.insert(0, "..");
   } else {
     m_CurrentDirType = fsoDir;
     m_CurrentDir->setPath(path);
@@ -128,12 +129,6 @@ void ptSingleDirModel::ChangeAbsoluteDir(const QString& path) {
 void ptSingleDirModel::UpdateModel() {
   this->removeRows(0, this->rowCount());
 
-#ifdef Q_OS_WIN
-  if (m_CurrentDirType == fsoDrive) {
-    appendRow(new QStandardItem(QIcon(":/dark/icons/go-up.png"), tr("My Computer")));
-  }
-#endif
-
   for (int i = 0; i < m_EntryList.count(); i++) {
     QStandardItem* item = new QStandardItem();
 
@@ -143,7 +138,16 @@ void ptSingleDirModel::UpdateModel() {
       if (m_CurrentDirType == fsoDrive) {
         item->setText(tr("My Computer"));
       } else {
-        item->setText(QDir(QFileInfo(m_CurrentDir->absolutePath()).path()).dirName());
+        QString displayName = QDir(QFileInfo(m_CurrentDir->absolutePath()).path()).dirName();
+        if (displayName.isEmpty()) {
+          // Parent folder is a drive
+          displayName = m_CurrentDir->absolutePath().left(2);
+          item->setText(QString("%1 (%2)").arg(WinApi::VolumeName(displayName))
+                                          .arg(displayName)
+                                          .trimmed());
+        } else {
+          item->setText(displayName);
+        }
       }
 #else
       item->setText(QDir(QFileInfo(m_CurrentDir->absolutePath()).path()).dirName());
@@ -164,6 +168,8 @@ QString ptSingleDirModel::absolutePath() {
 #ifdef Q_OS_WIN
   if (m_CurrentDirType == fsoRoot) {
     return MyComputerIniString;
+  } else if (m_CurrentDirType == fsoDrive) {
+    return m_CurrentDir->absolutePath().left(2);
   }
 #endif
 
@@ -186,10 +192,10 @@ ptFSOType ptSingleDirModel::pathType() const {
 void ptSingleDirModel::FillListWithDrives() {
   QFileInfoList list = QDir::drives();
   m_EntryList.clear();
-  m_EntryList.append("..");
   for (int i = 0; i < list.count(); i++) {
-    QString drive = list.at(i).canonicalFilePath();
-    drive = QString("%1 (%2)").arg(WinApi::VolumeName(drive)).arg(drive);
+    // Drives are displayed as "VolumeName (X:)"
+    QString drive = list.at(i).filePath().left(2);
+    drive = QString("%1 (%2)").arg(WinApi::VolumeName(drive)).arg(drive).trimmed();
     m_EntryList.append(drive);
   }
 }

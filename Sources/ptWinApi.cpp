@@ -59,7 +59,7 @@ QString WinApi::AppdataFolder() {
 
 //==============================================================================
 
-QString WinApi::VolumeName(QString& drive) {
+QString WinApi::VolumeName(QString drive) {
 #ifdef Q_OS_WIN
   drive = drive.toUpper() + "\\";
 
