@@ -33,6 +33,7 @@
 #include "../ptDefines.h"
 #include "../ptSettings.h"
 #include "ptThumbnailer.h"
+#include "ptFileMgrDM.h"
 
 extern ptSettings* Settings;
 extern QStringList FileExtsRaw;
@@ -104,6 +105,8 @@ void ptThumbnailer::run() {
   if (m_Dir->path().isEmpty() || !m_Dir->exists() || m_ThumbList == NULL || m_Cache == NULL) {
     return;
   }
+
+  ptFileMgrDM* DataModule = ptFileMgrDM::GetInstance();
 
   QFileInfoList files = m_Dir->entryInfoList();
   int thumbMaxSize = Settings->GetInt("FileMgrThumbnailSize");
@@ -183,20 +186,13 @@ void ptThumbnailer::run() {
         // we have a file and no image in the thumb group == cache miss.
         // See if we can get a thumbnail image
 
-        thumbImage = (*m_getThumbnail)(currentGroup->fullPath(), thumbMaxSize);
+        thumbImage = DataModule->getThumbnail(currentGroup->fullPath(), thumbMaxSize);
       }
     }
 
   // Notification signal for each finished thumb image.
     emit newImageNotify(m_ThumbList->at(i), thumbImage);
   } // main FOR loop step 2
-}
-
-//==============================================================================
-
-void ptThumbnailer::setWorker(getThumbnail_ptr Worker) {
-  assert(Worker != NULL);
-  m_getThumbnail = Worker;
 }
 
 //==============================================================================

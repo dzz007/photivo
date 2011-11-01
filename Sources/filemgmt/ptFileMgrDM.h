@@ -105,8 +105,8 @@ public:
   QFileSystemModel* treeModel() { return m_TreeModel; }
 
   /*! Returns a pointer to the thumbnail.*/
-  static QImage* getThumbnail(const QString FileName,
-                              const int     MaxSize);
+  QImage* getThumbnail(const QString FileName,
+                       const int     MaxSize);
 
 private:
   static ptFileMgrDM* m_Instance;
@@ -116,15 +116,15 @@ private:
   ~ptFileMgrDM();
 
   // for thumbnails
-  static QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
-  static void ScaleThumbSize(QSize* tSize, const int max);
+  QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
+  void ScaleThumbSize(QSize* tSize, const int max);
 
-  ptThumbnailCache*         m_Cache;
-  QString                   m_CurrentDir;
-  ptSingleDirModel*         m_DirModel;
-  ptThumbnailer*            m_Thumbnailer;
-  QList<ptGraphicsThumbGroup*>*   m_ThumbList;
-  QFileSystemModel*         m_TreeModel;
+  ptThumbnailCache*             m_Cache;
+  QString                       m_CurrentDir;
+  ptSingleDirModel*             m_DirModel;
+  ptThumbnailer*                m_Thumbnailer;
+  QList<ptGraphicsThumbGroup*>* m_ThumbList;
+  QFileSystemModel*             m_TreeModel;
 
 
 };

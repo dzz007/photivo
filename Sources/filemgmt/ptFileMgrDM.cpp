@@ -77,9 +77,6 @@ ptFileMgrDM::ptFileMgrDM()
   // Init thumbnail cache
   m_Cache = new ptThumbnailCache(1000);
   m_Thumbnailer->setCache(m_Cache);
-
-  // Link worker function to thumbnailer
-  m_Thumbnailer->setWorker(getThumbnail);
 }
 
 //==============================================================================
@@ -129,7 +126,6 @@ void ptFileMgrDM::StopThumbnailer() {
 
 //==============================================================================
 
-/*static*/
 QImage* ptFileMgrDM::getThumbnail(const QString FileName,
                                   const int     MaxSize) {
 
@@ -181,7 +177,6 @@ QImage* ptFileMgrDM::getThumbnail(const QString FileName,
 
 //==============================================================================
 
-/*static*/
 QImage* ptFileMgrDM::GenerateThumbnail(MagickWand* image, const QSize tSize)
 {
   // We want 8bit RGB data without alpha channel, scaled to thumbnail size
@@ -218,7 +213,6 @@ QImage* ptFileMgrDM::GenerateThumbnail(MagickWand* image, const QSize tSize)
 
 //==============================================================================
 
-/*static*/
 void ptFileMgrDM::ScaleThumbSize(QSize* tSize, const int max) {
   if (tSize->width() == tSize->height()) {    // square image
     tSize->setWidth(max);
