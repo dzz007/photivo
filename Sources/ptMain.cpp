@@ -469,7 +469,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Show help message and exit Photivo
   if (cli.Mode == cliShowHelp) {
-  #ifdef Q_OS_WIN32
+  #ifdef Q_OS_WIN
     ptMessageBox::critical(0, QObject::tr("Photivo"), PhotivoCliUsageMsg);
   #else
     fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
@@ -622,7 +622,7 @@ int photivoMain(int Argc, char *Argv[]) {
   short IsPortableProfile = 0;
   QString AppDataFolder = "";
   QString Folder = "";
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   IsPortableProfile = QFile::exists("use-portable-profile");
   if (IsPortableProfile != 0) {
     printf("Photivo running in portable mode.\n");
@@ -1315,7 +1315,7 @@ void Update(short Phase,
             short WithIdentify  /* = 1 */,
             short ProcessorMode /* = ptProcessorMode_Preview */)
 {
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   ptEcWin7* Win7Taskbar = ptEcWin7::GetInstance();
   Win7Taskbar->setProgressState(ptEcWin7::Indeterminate);
 #endif
@@ -1380,7 +1380,7 @@ void Update(short Phase,
   }
   Settings->SetValue("PipeIsRunning",0);
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   Win7Taskbar->setProgressState(ptEcWin7::NoProgress);
 #endif
 }
@@ -3442,7 +3442,7 @@ void CB_MenuFileExit(const short) {
       Settings->SetValue(CurveKeys.at(i),ptCurveChoice_None);
   }
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   ptEcWin7::DestroyInstance();
 #endif
 

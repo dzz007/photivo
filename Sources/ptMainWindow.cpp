@@ -38,7 +38,7 @@
 #include "ptViewWindow.h"
 #include "ptWhiteBalances.h"
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   #include "ptEcWin7.h"
 #endif
 
@@ -108,7 +108,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   setWindowTitle(Title);
 
   // Initialize Win 7 taskbar features
-  #ifdef Q_OS_WIN32
+  #ifdef Q_OS_WIN
     ptEcWin7::CreateInstance(this);
   #endif
 
@@ -2463,7 +2463,7 @@ void ptMainWindow::UpdateFilenameInfo(const QStringList FileNameList) {
   QFileInfo fn(FileNameList[0]);
   if (FileNameList.length() > 0 ) {
     FileNameLabel->setText(fn.fileName());
-    #ifdef Q_OS_WIN32
+    #ifdef Q_OS_WIN
       FilePathLabel->setText(fn.canonicalPath().replace(QString("/"), QString("\\")));
     #else
       FilePathLabel->setText(fn.canonicalPath());
@@ -3116,7 +3116,7 @@ ptMainWindow::~ptMainWindow() {
 
 //==============================================================================
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
 bool ptMainWindow::winEvent(MSG *message, long *result) {
   return ptEcWin7::GetInstance()->winEvent(message, result);
 }
