@@ -32,6 +32,7 @@
 #include "../ptCalloc.h"
 #include "../ptDefines.h"
 #include "../ptSettings.h"
+#include "../ptImageLoader.h"
 #include "ptThumbnailer.h"
 
 extern ptSettings* Settings;
@@ -182,8 +183,7 @@ void ptThumbnailer::run() {
       if (!currentGroup->hasImage()) {
         // we have a file and no image in the thumb group == cache miss.
         // See if we can get a thumbnail image
-
-        thumbImage = NULL;//m_DataModule->getThumbnail(currentGroup->fullPath(), thumbMaxSize);
+        thumbImage = ptImageLoader::getThumbnail(currentGroup->fullPath(), thumbMaxSize);
       }
     }
 

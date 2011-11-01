@@ -33,8 +33,6 @@
 #include <QList>
 #include <QHash>
 
-#include <wand/magick_wand.h>
-
 #include "ptThumbnailer.h"
 #include "ptThumbnailCache.h"
 #include "ptGraphicsThumbGroup.h"
@@ -104,20 +102,12 @@ public:
   /*! Returns a pointer to the model with the data for the tree view. */
   QFileSystemModel* treeModel() { return m_TreeModel; }
 
-  /*! Returns a pointer to the thumbnail.*/
-  QImage* getThumbnail(const QString FileName,
-                       const int     MaxSize);
-
 private:
   static ptFileMgrDM* m_Instance;
 
   ptFileMgrDM();
   ptFileMgrDM(const ptFileMgrDM&): QObject() {}
   ~ptFileMgrDM();
-
-  // for thumbnails
-  QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
-  void ScaleThumbSize(QSize* tSize, const int max);
 
   ptThumbnailCache*         m_Cache;
   QString                   m_CurrentDir;

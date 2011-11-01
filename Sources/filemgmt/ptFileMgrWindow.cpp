@@ -100,7 +100,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_Progressbar->hide();
 
   // construct the image view
-  m_ImageView = new ptImageView(ImageView, m_DataModel);
+//  m_ImageView = new ptImageView(ImageView, m_DataModel);
 
   // Filemgr windwow layout
   if (Settings->m_IniSettings->contains("FileMgrMainSplitter")) {
@@ -138,7 +138,7 @@ ptFileMgrWindow::~ptFileMgrWindow() {
   DelAndNull(ac_ThumbLayoutGroup);
   DelAndNull(ac_ToggleNaviPane);
 
-  DelAndNull(m_ImageView);
+//  DelAndNull(m_ImageView);
 }
 
 //==============================================================================
@@ -385,8 +385,8 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 
 void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const QString location) {
   if (action == tnaLoadImage) {
-    m_ImageView->Display( location);
-    return;
+//    m_ImageView->Display(location);
+//    return;
     closeWindow();
     ImageFileToOpen = location;
     CB_MenuFileOpen(1);

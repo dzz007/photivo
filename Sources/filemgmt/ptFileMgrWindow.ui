@@ -185,7 +185,9 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="ImageView" native="true"/>
+         <widget class="QWidget" name="FMImagePane" native="true">
+          <layout class="QVBoxLayout" name="m_ImagePaneLayout"/>
+         </widget>
         </widget>
        </item>
       </layout>
