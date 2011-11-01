@@ -68,6 +68,9 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   // We create a Graphicsscene and connect it.
   m_Scene = new QGraphicsScene;
   setScene(m_Scene);
+
+  // Init
+  m_PixmapItem = NULL;
 }
 
 //==============================================================================
@@ -81,8 +84,13 @@ ptImageView::~ptImageView() {
 
 void ptImageView::Display(const QString FileName) {
   QImage* Image = m_DataModule->getThumbnail(FileName, 0);
-  if (Image != NULL)
-    m_Scene->addPixmap(QPixmap::fromImage(*Image));
+  if (Image != NULL) {
+    if (m_PixmapItem != NULL) {
+      m_Scene->removeItem(m_PixmapItem);
+      DelAndNull(m_PixmapItem);
+    }
+    m_PixmapItem = m_Scene->addPixmap(QPixmap::fromImage(*Image));
+  }
 }
 
 //==============================================================================
