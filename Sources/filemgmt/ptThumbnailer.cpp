@@ -183,13 +183,20 @@ void ptThumbnailer::run() {
         // we have a file and no image in the thumb group == cache miss.
         // See if we can get a thumbnail image
 
-        thumbImage = NULL;//m_DataModule->getThumbnail(currentGroup->fullPath(), thumbMaxSize);
+        thumbImage = (*m_getThumbnail)(currentGroup->fullPath(), thumbMaxSize);
       }
     }
 
   // Notification signal for each finished thumb image.
     emit newImageNotify(m_ThumbList->at(i), thumbImage);
   } // main FOR loop step 2
+}
+
+//==============================================================================
+
+void ptThumbnailer::setWorker(getThumbnail_ptr Worker) {
+  assert(Worker != NULL);
+  m_getThumbnail = Worker;
 }
 
 //==============================================================================

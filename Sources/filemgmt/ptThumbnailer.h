@@ -36,6 +36,10 @@
 
 //==============================================================================
 
+typedef QImage* (*getThumbnail_ptr)(const QString, const int);
+
+//==============================================================================
+
 /*!
   \class ptThumbnailer
 
@@ -76,6 +80,9 @@ public:
   */
   void setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList);
 
+  /*! Sets the working function */
+  void setWorker(getThumbnail_ptr Worker);
+
 
 protected:
   /*! This function performs the actual thumbnail generation. */
@@ -88,6 +95,7 @@ private:
   ptThumbnailCache*               m_Cache;
   QDir*                           m_Dir;
   QList<ptGraphicsThumbGroup*>*   m_ThumbList;
+  getThumbnail_ptr                m_getThumbnail;
 
 
 signals:
