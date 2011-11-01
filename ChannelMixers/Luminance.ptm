@@ -1,0 +1,17 @@
+;
+; photivo Channelmixer File
+;
+; This curve was written from within photivo
+;
+; Luminance
+;
+Magic photivoChannelMixerFile
+0 300
+1 590
+2 110
+3 300
+4 590
+5 110
+6 300
+7 590
+8 110
