@@ -3124,7 +3124,7 @@ void CB_MenuFileOpen(const short HaveFile) {
   }
 
   // Ask user confirmation
-  if (!InStartup) {
+  if (Settings->GetInt("HaveImage") == 1) {
     if (!ptConfirmRequest::saveImage(InputFileName)) {
       return;
     }
