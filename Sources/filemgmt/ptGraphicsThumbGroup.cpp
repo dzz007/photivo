@@ -189,17 +189,32 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
       return true;
     }
 
+    case QEvent::GraphicsSceneMouseDoubleClick: {
+      if (m_InfoText) {
+        if (m_FSOType == fsoFile) {
+          event->accept();
+          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
+          return true;
+        } else {
+          event->accept();
+          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
+          return true;
+        }
+      }
+      return QGraphicsRectItem::sceneEvent(event);
+    }
+
     case QEvent::GraphicsSceneMousePress: {
       // Must accept mouse press to get mouse release as well.
       event->accept();
       return true;
     }
 
-  case QEvent::GraphicsSceneMouseRelease: {
+    case QEvent::GraphicsSceneMouseRelease: {
       event->accept();
       if (m_InfoText) {
         if (m_FSOType == fsoFile) {
-          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
+          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaViewImage, m_FullPath);
         } else {
           ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
         }

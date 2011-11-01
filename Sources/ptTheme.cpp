@@ -651,7 +651,6 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
 
       "#FMTreePane, #FMThumbPane, #ImageView {"
       "  border-radius: 5px;"
-      "  background: red;"
       "}"
 
 
@@ -774,6 +773,7 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "QSplitter {"
     "  max-width: 4px;"
     "  min-width: 4px;"
+    "  background-color: " % Dark % ";"
     "}"
 
     "QSplitter::handle:horizontal {"
@@ -792,14 +792,14 @@ Everything from here on shouldn't be relevant for normal.css (I think ;) ...)
     "  height: 4px;"
     "}"
 
-    "#m_MainSplitter {"
+    "#m_MainSplitter #ViewSplitter {"
     "  background-color: " % Dark % ";"
     "  padding: 10px;"
     "  max-width: 10px;"
     "  min-width: 10px;"
     "}"
 
-    "QSplitter::handle:horizontal#m_MainSplitter {"
+    "QSplitter::handle:horizontal#m_MainSplitter QSplitter::handle:horizontal#ViewSplitter{"
     "  width:     10px;"
     "}"
 
