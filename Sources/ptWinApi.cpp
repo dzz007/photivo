@@ -20,9 +20,7 @@
 **
 *******************************************************************************/
 
-#ifdef Q_OS_WIN
-  #include <qt_windows.h>
-#endif
+#include <qt_windows.h>
 #include <QLibrary>
 #include <QDir>
 
@@ -37,7 +35,6 @@
 //==============================================================================
 
 QString WinApi::AppdataFolder() {
-#ifdef Q_OS_WIN
   QString result;
   QLibrary library(QLatin1String("shell32"));
   typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
@@ -52,15 +49,11 @@ QString WinApi::AppdataFolder() {
 
   // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
   return QDir::fromNativeSeparators(result);
-#else
-  return QString();
-#endif
 }
 
 //==============================================================================
 
 QString WinApi::VolumeName(QString drive) {
-#ifdef Q_OS_WIN
   drive = drive.toUpper() + "\\";
 
   WCHAR szVolumeName[256] ;
@@ -84,9 +77,6 @@ QString WinApi::VolumeName(QString drive) {
   QString vName = QString::fromUtf16((const ushort*)szVolumeName);
   vName.trimmed();
   return vName;
-#else
-  return drive;
-#endif
 }
 
 //==============================================================================
