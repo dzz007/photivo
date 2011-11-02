@@ -396,6 +396,8 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
       m_DataModel->dirModel()->ChangeAbsoluteDir(location);
       DisplayThumbnails(location, m_DataModel->dirModel()->pathType());
     }
+  } else if (action == tnaViewImage) {
+    m_ImageView->Display( location);
   }
 }
 
