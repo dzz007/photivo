@@ -65,17 +65,19 @@ class ptImageView : public QGraphicsView
     void wheelEvent(QWheelEvent* event);
     void contextMenuEvent(QContextMenuEvent* event);
 
-    void drawForeground(QPainter* painter, const QRectF& rect);
-
   private:
-    void ZoomTo(float factor);  // 1.0 means 100%
+    void ZoomTo(float factor, const bool withMsg);  // 1.0 means 100%
     int  ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
+
+    /*! Put the QImage in the scene */
+    void ImageToScene(const double Factor);
 
     /*! This function performs the actual thumbnail generation. */
     void updateView();
 
   private slots:
     void startWorker();
+    void ResizeTimerExpired();
 
   private:
     ptFileMgrDM*          m_DataModule;
@@ -96,6 +98,9 @@ class ptImageView : public QGraphicsView
     bool                  m_NeedRun;
     bool                  m_RunAllowed;
     MyWorker*             m_Worker;
+    QGraphicsPixmapItem*  m_PixmapItem;
+    int                   m_ResizeTimeOut;
+    QTimer*               m_ResizeTimer;
 };
 
 //==============================================================================
