@@ -41,7 +41,7 @@ extern ptTheme*     Theme;
 //==============================================================================
 
 void MyWorker::run() {
-  (my_ImageView->*myFct)();
+  (m_ImageView->*m_Fct)();
 }
 
 //==============================================================================
@@ -77,7 +77,7 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   setScene(m_Scene);
 
   // Init
-  m_PixmapItem        = NULL;
+  m_Image             = NULL;
   m_FileName          = "";
   m_ZoomMode          = ptZoomMode_Fit;
   m_ZoomFactor        = 1.0;
@@ -85,12 +85,15 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   m_DragDelta         = new QLine();
   m_LeftMousePressed  = false;
   m_NeedRun           = false;
+  m_RunAllowed        = true;
   m_ZoomSizeOverlay   = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
                                             1000, Qt::AlignRight, 20);
+  m_StatusOverlay     = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
 
   m_Worker = new MyWorker();
-  m_Worker->my_ImageView = this;
-  m_Worker->myFct = &ptImageView::updateView;
+  m_Worker->m_ImageView = this;
+  m_Worker->m_Fct       = &ptImageView::updateView;
+  m_Worker->m_FileName  = "";
 
   connect(m_Worker, SIGNAL(finished()), this, SLOT(startWorker()));
 }
@@ -102,6 +105,7 @@ ptImageView::~ptImageView() {
   DelAndNull(m_Worker);
   DelAndNull(m_DragDelta);
   DelAndNull(m_ZoomSizeOverlay);
+  DelAndNull(m_StatusOverlay);
   DelAndNull(m_Scene);
   DelAndNull(m_parentLayout);
 }
@@ -109,9 +113,11 @@ ptImageView::~ptImageView() {
 //==============================================================================
 
 void ptImageView::Display(const QString FileName) {
+  if (m_FileName == FileName) return;
+
   m_FileName = FileName;
   m_NeedRun  = true;
-  startWorker();
+  if (m_RunAllowed) startWorker();
 }
 
 //==============================================================================
@@ -215,18 +221,18 @@ void ptImageView::contextMenuEvent(QContextMenuEvent* event) {
 
 // ZoomTo() is also called by wheelEvent() for mouse wheel zoom.
 void ptImageView::ZoomTo(float factor) {
-  if (m_PixmapItem == NULL) return;
+  if (m_Image == NULL) return;
 
   m_ZoomMode = ptZoomMode_NonFit;
   factor = qBound(MinZoom, factor, MaxZoom);
 
-  if(((uint)(factor * 10000) % 10000) < 1) {
-    // nearest neighbour resize for 200%, 300%, 400% zoom
-    m_PixmapItem->setTransformationMode(Qt::FastTransformation);
-  } else {
-    // bilinear resize for all others
-    m_PixmapItem->setTransformationMode(Qt::SmoothTransformation);
-  }
+//  if(((uint)(factor * 10000) % 10000) < 1) {
+//    // nearest neighbour resize for 200%, 300%, 400% zoom
+//    m_PixmapItem->setTransformationMode(Qt::FastTransformation);
+//  } else {
+//    // bilinear resize for all others
+//    m_PixmapItem->setTransformationMode(Qt::SmoothTransformation);
+//  }
   setTransform(QTransform(factor, 0, 0, factor, 0, 0));
 
   m_ZoomFactor = transform().m11();
@@ -238,14 +244,12 @@ void ptImageView::ZoomTo(float factor) {
 //==============================================================================
 
 int ptImageView::ZoomToFit(const short withMsg /*= 1*/) {
-  if (m_PixmapItem == NULL) return m_ZoomFactor;
+  if (m_Image == NULL) return m_ZoomFactor;
 
   m_ZoomMode = ptZoomMode_Fit;
 
-  if (!m_PixmapItem->pixmap().isNull()) {
-    // Always smooth scaling because we don't know the zoom factor in advance.
-    m_PixmapItem->setTransformationMode(Qt::SmoothTransformation);
-    fitInView(m_PixmapItem, Qt::KeepAspectRatio);
+  if (!m_Image->isNull()) {
+    fitInView(m_Scene->sceneRect(), Qt::KeepAspectRatio);
     m_ZoomFactor = transform().m11();
 
     if (withMsg) {
@@ -262,15 +266,15 @@ int ptImageView::ZoomToFit(const short withMsg /*= 1*/) {
 void ptImageView::updateView() {
   QImage* Image = m_DataModule->getThumbnail(m_FileName, 0);
   if (Image != NULL) {
-    if (m_PixmapItem != NULL) {
-      m_Scene->removeItem(m_PixmapItem);
-      DelAndNull(m_PixmapItem);
+    if (m_Image != NULL) {
+      DelAndNull( m_Image);
     }
-    m_Scene->setSceneRect(0, 0, Image->width(), Image->height());
-    m_PixmapItem = m_Scene->addPixmap(QPixmap::fromImage(*Image));
-    m_PixmapItem->setPos(0, 0);
+    if (m_FileName == m_Worker->m_FileName) {
+      m_Image = Image;
+      m_Scene->setSceneRect(0, 0, m_Image->width(), m_Image->height());
 
-    if (m_ZoomMode == ptZoomMode_Fit) ZoomToFit(0);
+      if (m_ZoomMode == ptZoomMode_Fit) ZoomToFit(0);
+    }
   }
 }
 
@@ -278,10 +282,26 @@ void ptImageView::updateView() {
 
 void ptImageView::startWorker() {
   if (!m_Worker->isRunning() && m_NeedRun) {
-    m_NeedRun = false;
+    m_NeedRun    = false;
+    m_RunAllowed = false;
+    m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255));    // blue
+    m_StatusOverlay->setDuration(0);
+    m_StatusOverlay->exec(QObject::tr("Loading"));
+    m_Worker->m_FileName = m_FileName;
     m_Worker->start();
   } else {
-    repaint();
+    m_StatusOverlay->stop();
+    m_RunAllowed = true;
+    update();
+  }
+}
+
+//==============================================================================
+
+void ptImageView::drawForeground(QPainter* painter, const QRectF& rect) {
+  if (m_Image) {
+    if (!m_RunAllowed) m_StatusOverlay->exec(QObject::tr("Loading"));
+    painter->drawImage(0, 0, *m_Image);
   }
 }
 

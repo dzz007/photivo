@@ -65,6 +65,8 @@ class ptImageView : public QGraphicsView
     void wheelEvent(QWheelEvent* event);
     void contextMenuEvent(QContextMenuEvent* event);
 
+    void drawForeground(QPainter* painter, const QRectF& rect);
+
   private:
     void ZoomTo(float factor);  // 1.0 means 100%
     int  ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
@@ -82,7 +84,7 @@ class ptImageView : public QGraphicsView
     QList<float>          ZoomFactors;   // steps for wheel zoom
     QGridLayout*          m_parentLayout;
     QGraphicsScene*       m_Scene;
-    QGraphicsPixmapItem*  m_PixmapItem;
+    QImage*               m_Image;
     QString               m_FileName;
     int                   m_ZoomMode;
     float                 m_ZoomFactor;
@@ -90,7 +92,9 @@ class ptImageView : public QGraphicsView
     QLine*                m_DragDelta;
     bool                  m_LeftMousePressed;
     ptReportOverlay*      m_ZoomSizeOverlay;
+    ptReportOverlay*      m_StatusOverlay;
     bool                  m_NeedRun;
+    bool                  m_RunAllowed;
     MyWorker*             m_Worker;
 };
 
@@ -102,8 +106,9 @@ class MyWorker: public QThread {
   public:
     void run();
 
-    updateView_ptr myFct;
-    ptImageView*   my_ImageView;
+    QString        m_FileName;
+    updateView_ptr m_Fct;
+    ptImageView*   m_ImageView;
 };
 
 #endif // PTIMAGEVIEW_H
