@@ -58,5 +58,6 @@
         <file>dark/icons/broken-image-48px.png</file>
         <file>dark/icons/folder.png</file>
         <file>dark/icons/go-up.png</file>
+        <file>dark/ui-graphics/path-separator-normal.png</file>
     </qresource>
 </RCC>

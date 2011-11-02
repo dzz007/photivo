@@ -38,6 +38,7 @@
 #include "ptAbstractThumbnailLayouter.h"
 #include "ptFileMgrConstants.h"
 #include "ptImageView.h"
+#include "ptPathBar.h"
 
 //==============================================================================
 
@@ -89,6 +90,7 @@ private:
   QGraphicsScene*         m_FilesScene;
   bool                    m_IsFirstShow;
   ptAbstractThumbnailLayouter* m_Layouter;
+  ptPathBar*              m_PathBar;
   int                     m_ThumbCount;
   int                     m_ThumbListIdx;
   ptImageView*            m_ImageView;
@@ -112,7 +114,7 @@ private slots:
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
   void fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix);
   void fetchNewThumbs(const bool isLast);
-  void on_m_PathInput_returnPressed();
+//  void on_m_PathInput_returnPressed();
 
   // context menu slots
   void verticalThumbs();

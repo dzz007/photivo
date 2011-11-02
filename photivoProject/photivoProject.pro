@@ -151,7 +151,8 @@ HEADERS += ../Sources/ptAdobeTable.h \
     ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h \
     ../Sources/filemgmt/ptSingleDirModel.h \
     ../Sources/filemgmt/ptFileMgrConstants.h \
-    ../Sources/filemgmt/ptImageView.h
+    ../Sources/filemgmt/ptImageView.h \
+    ../Sources/filemgmt/ptPathBar.h
 HEADERS += ../Sources/ptParseCli.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
@@ -218,7 +219,8 @@ SOURCES += ../Sources/ptCalloc.cpp \
     ../Sources/filemgmt/ptRowGridThumbnailLayouter.cpp \
     ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp \
     ../Sources/filemgmt/ptSingleDirModel.cpp \
-    ../Sources/filemgmt/ptImageView.cpp
+    ../Sources/filemgmt/ptImageView.cpp \
+    ../Sources/filemgmt/ptPathBar.cpp
 SOURCES += ../Sources/ptParseCli.cpp
 SOURCES += ../Sources/ptChannelMixer.cpp
 SOURCES += ../Sources/ptCheck.cpp
@@ -328,6 +330,8 @@ exists(../local-system-specific.pro) {
 }
 
 ###############################################################################
+
+
 
 
 

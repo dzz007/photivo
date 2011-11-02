@@ -35,6 +35,10 @@
 #include "ptThumbnailer.h"
 #include "ptFileMgrDM.h"
 
+#ifdef Q_OS_WIN
+  #include "../ptWinApi.h"
+#endif
+
 extern ptSettings* Settings;
 extern QStringList FileExtsRaw;
 extern QStringList FileExtsBitmap;
@@ -139,6 +143,13 @@ void ptThumbnailer::run() {
         if (descr == "..") {
           type = fsoParentDir;
           descr = QDir(files.at(i).canonicalFilePath()).dirName();
+#ifdef Q_OS_WIN
+          if (descr.isEmpty()) {
+            // parent folder is a drive
+            QString drive = files.at(i).canonicalFilePath().left(2);
+            descr = QString("%1 (%2)").arg(WinApi::VolumeName(drive)).arg(drive).trimmed();
+          }
+#endif
         } else {
           type = fsoDir;
         }

@@ -97,7 +97,11 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   connect(m_DataModel->thumbnailer(), SIGNAL(newImageNotify(ptGraphicsThumbGroup*,QImage*)),
           this, SLOT(fetchNewImages(ptGraphicsThumbGroup*,QImage*)));
   setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
+
+  m_PathBar = new ptPathBar(this);
+  m_ThumbPaneLayout->insertWidget(0, m_PathBar);
   m_Progressbar->hide();
+
 
   // construct the image view
   m_ImageView = new ptImageView(ImageView, m_DataModel);
@@ -210,17 +214,11 @@ void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/, ptFSOType fsoType
 #ifdef Q_OS_WIN
   if (fsoType == fsoRoot) {
     // We are in “My Computer”
-    path = MyComputerIniString;
-    m_PathInput->setText(tr("My Computer"));
-  } else if (fsoType == fsoDrive) {
-    m_PathInput->setText(path + "\\");
-  } else {
-    m_PathInput->setText(QDir::toNativeSeparators(path));
+    path = MyComputerIdString;
   }
-#else
-  m_PathInput->setText(QDir::toNativeSeparators(path));
 #endif
 
+  m_PathBar->setPath(path);
   m_DataModel->StopThumbnailer();
   ClearScene();
   m_FilesView->horizontalScrollBar()->setValue(0);
@@ -233,6 +231,9 @@ void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/, ptFSOType fsoType
     m_Progressbar->setValue(0);
     m_Progressbar->setMaximum(m_ThumbCount);
     m_DataModel->StartThumbnailer();
+  } else {
+    // setting scene to null dimensions disappears unneeded scrollbars
+    m_FilesScene->setSceneRect(0,0,0,0);
   }
 }
 
@@ -249,7 +250,7 @@ void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
   if (isLast) {
     m_ThumbListIdx = 0;
     m_Progressbar->show();
-    m_PathInput->hide();
+    m_PathBar->hide();
   }
 }
 
@@ -265,7 +266,7 @@ void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
 
   if (m_Progressbar->value() >= m_ThumbCount) {
     m_Progressbar->hide();
-    m_PathInput->show();
+    m_PathBar->show();
   }
 }
 
@@ -292,13 +293,13 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     m_TreePaneLayout->setContentsMargins(10, 10, 10, 10);
 //    m_FileListLayout->setContentsMargins(10, 10, 10, 10);
 //    m_FileListLayout->setSpacing(10);
-    m_Progressbar->setFixedHeight(m_PathInput->height());
+    m_Progressbar->setFixedHeight(m_PathBar->height());
 
     // set initally selected directory
     QString lastDir = Settings->GetString("LastFileMgrLocation");
     ptFSOType lastDirType = fsoDir;
 #ifdef Q_OS_WIN
-    if (lastDir == MyComputerIniString) {
+    if (lastDir == MyComputerIdString) {
       lastDirType = fsoRoot;
       // Folder tree does not support “My Computer”
       if (m_DirTree->isVisible()) {
@@ -318,7 +319,6 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
       m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(lastDir));
     if (m_DirList->isVisible())
       m_DataModel->dirModel()->ChangeAbsoluteDir(lastDir);
-//    m_PathInput->setText(QDir::toNativeSeparators(lastDir));
     m_DataModel->setCurrentDir(lastDir);
 
     // First call base class showEvent, then start thumbnail loading to ensure
@@ -389,30 +389,33 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     ImageFileToOpen = location;
     CB_MenuFileOpen(1);
   } else if (action == tnaChangeDir) {
-    m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(location));
-    DisplayThumbnails();
-  } else if (action == tnaViewImage) {
-    m_ImageView->Display( location);
+    if (m_DirTree->isVisible()) {
+      m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(location));
+      DisplayThumbnails(location);
+    } else {
+      m_DataModel->dirModel()->ChangeAbsoluteDir(location);
+      DisplayThumbnails(location, m_DataModel->dirModel()->pathType());
+    }
   }
 }
 
 //==============================================================================
 
-void ptFileMgrWindow::on_m_PathInput_returnPressed() {
-  QDir dir = QDir(QDir::fromNativeSeparators(m_PathInput->text()));
-  if (dir.exists() && !QDir::match(m_DataModel->currentDir(), dir.path())) {
-    m_PathInput->setText(dir.absolutePath());
-    if (Settings->GetInt("FileMgrShowDirTree")) {
-      m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(dir.absolutePath()));
-    } else {
-      m_DataModel->dirModel()->ChangeAbsoluteDir(dir.absolutePath());
-    }
-    DisplayThumbnails();
+//void ptFileMgrWindow::on_m_PathInput_returnPressed() {
+//  QDir dir = QDir(QDir::fromNativeSeparators(m_PathInput->text()));
+//  if (dir.exists() && !QDir::match(m_DataModel->currentDir(), dir.path())) {
+//    m_PathInput->setText(dir.absolutePath());
+//    if (Settings->GetInt("FileMgrShowDirTree")) {
+//      m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(dir.absolutePath()));
+//    } else {
+//      m_DataModel->dirModel()->ChangeAbsoluteDir(dir.absolutePath());
+//    }
+//    DisplayThumbnails();
 
-  } else {
-    m_PathInput->setText(QDir::toNativeSeparators(m_DataModel->currentDir()));
-  }
-}
+//  } else {
+//    m_PathInput->setText(QDir::toNativeSeparators(m_DataModel->currentDir()));
+//  }
+//}
 
 //==============================================================================
 
@@ -420,7 +423,7 @@ void ptFileMgrWindow::UpdateTheme() {
   // Update file manager window appearance
   setStyle(Theme->ptStyle);
   setStyleSheet(Theme->ptStyleSheet);
-  m_Progressbar->setFixedHeight(m_PathInput->height());
+  m_Progressbar->setFixedHeight(m_PathBar->height());
 
   // Thumbgroups don’t need to be updated because Photivo theme can only be changed
   // while fm is closed = thumbnail display cleared
@@ -561,7 +564,7 @@ void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu.addMenu(&MenuThumbLayout);
   Menu.addSeparator();
   Menu.addAction(ac_ToggleNaviPane);
-  ac_ToggleNaviPane->setChecked(FMTreePane->isVisible());
+  ac_ToggleNaviPane->setChecked(FMSidebar->isVisible());
 
   Menu.exec(((QMouseEvent*)event)->globalPos());
 }

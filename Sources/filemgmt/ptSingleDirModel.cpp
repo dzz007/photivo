@@ -101,7 +101,7 @@ void ptSingleDirModel::ChangeDir(const QModelIndex& index) {
 
 void ptSingleDirModel::ChangeAbsoluteDir(const QString& path) {
 #ifdef Q_OS_WIN
-  if (path == MyComputerIniString) {
+  if (path == MyComputerIdString) {
     m_CurrentDirType = fsoRoot;
     FillListWithDrives();
   } else if ((path.length() == 2 || path.length() == 3) && path.mid(1,1) == ":") {
@@ -167,7 +167,7 @@ void ptSingleDirModel::UpdateModel() {
 QString ptSingleDirModel::absolutePath() {
 #ifdef Q_OS_WIN
   if (m_CurrentDirType == fsoRoot) {
-    return MyComputerIniString;
+    return MyComputerIdString;
   } else if (m_CurrentDirType == fsoDrive) {
     return m_CurrentDir->absolutePath().left(2);
   }

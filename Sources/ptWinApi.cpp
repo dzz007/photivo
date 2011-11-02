@@ -54,7 +54,7 @@ QString WinApi::AppdataFolder() {
 //==============================================================================
 
 QString WinApi::VolumeName(QString drive) {
-  drive = drive.toUpper() + "\\";
+  drive = drive.left(2) + "\\";
 
   WCHAR szVolumeName[256] ;
   WCHAR szFileSystemName[256];
@@ -77,6 +77,16 @@ QString WinApi::VolumeName(QString drive) {
   QString vName = QString::fromUtf16((const ushort*)szVolumeName);
   vName.trimmed();
   return vName;
+}
+
+//==============================================================================
+
+/*! Return volume name and drive letter formatted as "Name (D:)" */
+QString WinApi::VolumeNamePretty(QString drive) {
+  drive = drive.left(2).toUpper();
+  QString vname = VolumeName(drive);
+  if (vname.isEmpty()) vname = QObject::tr("Drive");
+  return QString("%1 (%2)").arg(vname).arg(drive);
 }
 
 //==============================================================================

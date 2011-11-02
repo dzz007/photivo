@@ -156,7 +156,7 @@
           <enum>Qt::Horizontal</enum>
          </property>
          <widget class="QWidget" name="FMThumbPane" native="true">
-          <layout class="QVBoxLayout" name="verticalLayout_4">
+          <layout class="QVBoxLayout" name="m_ThumbPaneLayout">
            <property name="margin">
             <number>9</number>
            </property>
@@ -169,9 +169,6 @@
               <bool>false</bool>
              </property>
             </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="m_PathInput"/>
            </item>
            <item>
             <widget class="QGraphicsView" name="m_FilesView">

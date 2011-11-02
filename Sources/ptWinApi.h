@@ -33,6 +33,7 @@
 namespace WinApi {
   QString AppdataFolder();
   QString VolumeName(QString driveLetter);
+  QString VolumeNamePretty(QString drive);
 }
 #endif
 
