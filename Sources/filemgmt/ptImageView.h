@@ -77,6 +77,7 @@ class ptImageView : public QGraphicsView
 
   private slots:
     void startWorker();
+    void afterWorker();
     void ResizeTimerExpired();
 
   private:
@@ -96,7 +97,6 @@ class ptImageView : public QGraphicsView
     ptReportOverlay*      m_ZoomSizeOverlay;
     ptReportOverlay*      m_StatusOverlay;
     bool                  m_NeedRun;
-    bool                  m_RunAllowed;
     MyWorker*             m_Worker;
     QGraphicsPixmapItem*  m_PixmapItem;
     int                   m_ResizeTimeOut;

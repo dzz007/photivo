@@ -29,6 +29,7 @@
 #include "../ptDefines.h"
 #include "../ptSettings.h"
 #include "../ptTheme.h"
+#include "../ptMessageBox.h"
 #include "ptImageView.h"
 #include "ptFileMgrWindow.h"
 #include "ptGraphicsSceneEmitter.h"
@@ -86,7 +87,6 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   m_DragDelta         = new QLine();
   m_LeftMousePressed  = false;
   m_NeedRun           = false;
-  m_RunAllowed        = true;
   m_ZoomSizeOverlay   = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
                                             1000, Qt::AlignRight, 20);
   m_StatusOverlay     = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
@@ -96,7 +96,7 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   m_Worker->m_ImageView = this;
   m_Worker->m_Fct       = &ptImageView::updateView;
   m_Worker->m_FileName  = "";
-  connect(m_Worker, SIGNAL(finished()), this, SLOT(startWorker()));
+  connect(m_Worker, SIGNAL(finished()), this, SLOT(afterWorker()));
 
   // timer for decoupling the mouse wheel
   m_ResizeTimeOut = 300;
@@ -124,7 +124,8 @@ void ptImageView::Display(const QString FileName) {
 
   m_FileName = FileName;
   m_NeedRun  = true;
-  if (m_RunAllowed) startWorker();
+
+  startWorker();
 }
 
 //==============================================================================
@@ -314,18 +315,27 @@ void ptImageView::updateView() {
 //==============================================================================
 
 void ptImageView::startWorker() {
-  if (!m_Worker->isRunning() && m_NeedRun) {
-    m_NeedRun    = false;
-    m_RunAllowed = false;
-    m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255));    // blue
+  if (m_Worker->isRunning()) {
+    if (m_Worker->m_FileName == m_FileName) m_NeedRun = false;
+  } else {
+    m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255)); // blue
     m_StatusOverlay->setDuration(0);
     m_StatusOverlay->exec(QObject::tr("Loading"));
+    m_NeedRun = false;
     m_Worker->m_FileName = m_FileName;
     m_Worker->start();
+    if (!m_Worker->isRunning())
+      ptMessageBox::critical(NULL, "Thread error", "Could not start thread for parallel image loading.");
+  }
+}
+
+//==============================================================================
+
+void ptImageView::afterWorker() {
+  if (m_NeedRun) {
+    startWorker();
   } else {
     m_StatusOverlay->stop();
-    m_RunAllowed = true;
-
     if (m_Image != NULL) {
       if (m_ZoomMode == ptZoomMode_Fit)
         ZoomToFit(0);
