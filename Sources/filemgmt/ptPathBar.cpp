@@ -44,6 +44,7 @@ ptPathBar::ptPathBar(QWidget *parent): QWidget(parent) {
 //==============================================================================
 
 ptPathBar::~ptPathBar() {
+  Clear();
   DelAndNull(m_Stretch);
 }
 
