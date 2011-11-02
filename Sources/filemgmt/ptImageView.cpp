@@ -73,10 +73,11 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   this->setStyleSheet("QGraphicsView { border: none; }");
 
   // We create a Graphicsscene and connect it.
-  m_Scene = new QGraphicsScene(0, 0, 0, 0, this);
+  m_Scene      = new QGraphicsScene(0, 0, 0, 0, this);
   setScene(m_Scene);
 
   // Init
+  m_PixmapItem        = NULL;
   m_Image             = NULL;
   m_FileName          = "";
   m_ZoomMode          = ptZoomMode_Fit;
@@ -90,12 +91,18 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
                                             1000, Qt::AlignRight, 20);
   m_StatusOverlay     = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
 
+  // parallel worker
   m_Worker = new MyWorker();
   m_Worker->m_ImageView = this;
   m_Worker->m_Fct       = &ptImageView::updateView;
   m_Worker->m_FileName  = "";
-
   connect(m_Worker, SIGNAL(finished()), this, SLOT(startWorker()));
+
+  // timer for decoupling the mouse wheel
+  m_ResizeTimeOut = 300;
+  m_ResizeTimer   = new QTimer(this);
+  m_ResizeTimer->setSingleShot(1);
+  connect(m_ResizeTimer,SIGNAL(timeout()), this,SLOT(ResizeTimerExpired()));
 }
 
 //==============================================================================
@@ -206,7 +213,10 @@ void ptImageView::wheelEvent(QWheelEvent* event) {
   }
 
   if (ZoomIdx != -1) {
-    ZoomTo(ZoomFactors[ZoomIdx]);
+    m_ZoomFactor = ZoomFactors[ZoomIdx];
+    m_Zoom = qRound(m_ZoomFactor * 100);
+    m_ResizeTimer->start(m_ResizeTimeOut);
+    m_ZoomSizeOverlay->exec(QString::number(m_Zoom) + "%");
   }
 }
 
@@ -220,45 +230,69 @@ void ptImageView::contextMenuEvent(QContextMenuEvent* event) {
 //==============================================================================
 
 // ZoomTo() is also called by wheelEvent() for mouse wheel zoom.
-void ptImageView::ZoomTo(float factor) {
-  if (m_Image == NULL) return;
-
+void ptImageView::ZoomTo(float factor, const bool withMsg) {
   m_ZoomMode = ptZoomMode_NonFit;
   factor = qBound(MinZoom, factor, MaxZoom);
 
-//  if(((uint)(factor * 10000) % 10000) < 1) {
-//    // nearest neighbour resize for 200%, 300%, 400% zoom
-//    m_PixmapItem->setTransformationMode(Qt::FastTransformation);
-//  } else {
-//    // bilinear resize for all others
-//    m_PixmapItem->setTransformationMode(Qt::SmoothTransformation);
-//  }
-  setTransform(QTransform(factor, 0, 0, factor, 0, 0));
+  ImageToScene(factor);
 
-  m_ZoomFactor = transform().m11();
-  int z = qRound(m_ZoomFactor * 100);
-  m_Zoom = z;
-  m_ZoomSizeOverlay->exec(QString::number(z) + "%");
+  m_ZoomFactor = factor;//transform().m11();
+  m_Zoom = qRound(m_ZoomFactor * 100);
+  if (withMsg)
+    m_ZoomSizeOverlay->exec(QString::number(m_Zoom) + "%");
 }
 
 //==============================================================================
 
 int ptImageView::ZoomToFit(const short withMsg /*= 1*/) {
-  if (m_Image == NULL) return m_ZoomFactor;
-
   m_ZoomMode = ptZoomMode_Fit;
 
-  if (!m_Image->isNull()) {
-    fitInView(m_Scene->sceneRect(), Qt::KeepAspectRatio);
-    m_ZoomFactor = transform().m11();
+  if (m_Image != NULL) {
+    m_Scene->setSceneRect(0, 0, m_Image->width(), m_Image->height());
+  }
 
-    if (withMsg) {
-      m_ZoomSizeOverlay->exec(tr("Fit"));
-    }
+  fitInView(m_Scene->sceneRect(), Qt::KeepAspectRatio);
+  m_ZoomFactor = transform().m11();
+
+  // we will reset the transform in the next step!
+  ImageToScene(m_ZoomFactor);
+
+  if (withMsg) {
+    m_ZoomSizeOverlay->exec(tr("Fit"));
   }
 
   m_Zoom = qRound(m_ZoomFactor * 100);
   return m_ZoomFactor;
+}
+
+//==============================================================================
+
+void ptImageView::ImageToScene(const double Factor) {
+  if (m_Image != NULL) {
+    resetTransform();
+
+    if (m_PixmapItem != NULL) {
+      m_Scene->removeItem(m_PixmapItem);
+      DelAndNull(m_PixmapItem);
+    }
+
+    Qt::TransformationMode Mode;
+
+    if(((uint)(Factor * 10000) % 10000) < 1) {
+      // nearest neighbour resize for 200%, 300%, 400% zoom
+      Mode = Qt::FastTransformation;
+    } else {
+      // bilinear resize for all others
+      Mode = Qt::SmoothTransformation;
+    }
+    m_Scene->setSceneRect(0, 0, m_Image->width()*Factor, m_Image->height()*Factor);
+    m_PixmapItem = m_Scene->addPixmap(
+                     QPixmap::fromImage(*m_Image).scaled(m_Image->width()*Factor,
+                                                         m_Image->height()*Factor,
+                                                         Qt::IgnoreAspectRatio,
+                                                         Mode));
+    m_PixmapItem->setTransformationMode(Mode);
+  }
 }
 
 //==============================================================================
@@ -271,9 +305,8 @@ void ptImageView::updateView() {
     }
     if (m_FileName == m_Worker->m_FileName) {
       m_Image = Image;
-      m_Scene->setSceneRect(0, 0, m_Image->width(), m_Image->height());
-
-      if (m_ZoomMode == ptZoomMode_Fit) ZoomToFit(0);
+    } else {
+      DelAndNull(Image);
     }
   }
 }
@@ -292,17 +325,20 @@ void ptImageView::startWorker() {
   } else {
     m_StatusOverlay->stop();
     m_RunAllowed = true;
-    update();
+
+    if (m_Image != NULL) {
+      if (m_ZoomMode == ptZoomMode_Fit)
+        ZoomToFit(0);
+      else
+        ZoomTo(m_ZoomFactor, true);
+    }
   }
 }
 
 //==============================================================================
 
-void ptImageView::drawForeground(QPainter* painter, const QRectF& rect) {
-  if (m_Image) {
-    if (!m_RunAllowed) m_StatusOverlay->exec(QObject::tr("Loading"));
-    painter->drawImage(0, 0, *m_Image);
-  }
+void ptImageView::ResizeTimerExpired() {
+  ZoomTo(m_ZoomFactor, false);
 }
 
 //==============================================================================
