@@ -40,6 +40,12 @@ extern ptTheme*     Theme;
 
 //==============================================================================
 
+void MyWorker::run() {
+  (my_ImageView->*myFct)();
+}
+
+//==============================================================================
+
 ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   QGraphicsView(parent),
   // constants
@@ -78,13 +84,22 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   m_Zoom              = 100;
   m_DragDelta         = new QLine();
   m_LeftMousePressed  = false;
+  m_NeedRun           = false;
   m_ZoomSizeOverlay   = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
                                             1000, Qt::AlignRight, 20);
+
+  m_Worker = new MyWorker();
+  m_Worker->my_ImageView = this;
+  m_Worker->myFct = &ptImageView::updateView;
+
+  connect(m_Worker, SIGNAL(finished()), this, SLOT(startWorker()));
 }
 
 //==============================================================================
 
 ptImageView::~ptImageView() {
+  m_Worker->terminate();
+  DelAndNull(m_Worker);
   DelAndNull(m_DragDelta);
   DelAndNull(m_ZoomSizeOverlay);
   DelAndNull(m_Scene);
@@ -95,19 +110,8 @@ ptImageView::~ptImageView() {
 
 void ptImageView::Display(const QString FileName) {
   m_FileName = FileName;
-
-  QImage* Image = m_DataModule->getThumbnail(m_FileName, 0);
-  if (Image != NULL) {
-    if (m_PixmapItem != NULL) {
-      m_Scene->removeItem(m_PixmapItem);
-      DelAndNull(m_PixmapItem);
-    }
-    m_Scene->setSceneRect(0, 0, Image->width(), Image->height());
-    m_PixmapItem = m_Scene->addPixmap(QPixmap::fromImage(*Image));
-    m_PixmapItem->setPos(0, 0);
-
-    if (m_ZoomMode == ptZoomMode_Fit) ZoomToFit(0);
-  }
+  m_NeedRun  = true;
+  startWorker();
 }
 
 //==============================================================================
@@ -251,6 +255,34 @@ int ptImageView::ZoomToFit(const short withMsg /*= 1*/) {
 
   m_Zoom = qRound(m_ZoomFactor * 100);
   return m_ZoomFactor;
+}
+
+//==============================================================================
+
+void ptImageView::updateView() {
+  QImage* Image = m_DataModule->getThumbnail(m_FileName, 0);
+  if (Image != NULL) {
+    if (m_PixmapItem != NULL) {
+      m_Scene->removeItem(m_PixmapItem);
+      DelAndNull(m_PixmapItem);
+    }
+    m_Scene->setSceneRect(0, 0, Image->width(), Image->height());
+    m_PixmapItem = m_Scene->addPixmap(QPixmap::fromImage(*Image));
+    m_PixmapItem->setPos(0, 0);
+
+    if (m_ZoomMode == ptZoomMode_Fit) ZoomToFit(0);
+  }
+}
+
+//==============================================================================
+
+void ptImageView::startWorker() {
+  if (!m_Worker->isRunning() && m_NeedRun) {
+    m_NeedRun = false;
+    m_Worker->start();
+  } else {
+    repaint();
+  }
 }
 
 //==============================================================================
