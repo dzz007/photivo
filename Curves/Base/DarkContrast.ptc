@@ -1,0 +1,15 @@
+;
+; photivo Curve File
+;
+; This is an experimental base curve (dark contrast).
+; Original values are from the darktable project.
+;
+Magic FLOSSCurveFile
+IntendedChannel 8
+CurveType 1
+0 0
+72 40
+157 138
+491 491
+758 758
+1000 1000
