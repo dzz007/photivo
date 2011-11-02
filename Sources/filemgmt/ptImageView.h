@@ -30,9 +30,14 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGridLayout>
+#include <QThread>
 
 #include "ptFileMgrDM.h"
 #include "../ptReportOverlay.h"
+
+//==============================================================================
+
+class MyWorker;
 
 //==============================================================================
 
@@ -64,6 +69,13 @@ class ptImageView : public QGraphicsView
     void ZoomTo(float factor);  // 1.0 means 100%
     int  ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
 
+    /*! This function performs the actual thumbnail generation. */
+    void updateView();
+
+  private slots:
+    void startWorker();
+
+  private:
     ptFileMgrDM*          m_DataModule;
     const float           MinZoom;
     const float           MaxZoom;
@@ -78,6 +90,20 @@ class ptImageView : public QGraphicsView
     QLine*                m_DragDelta;
     bool                  m_LeftMousePressed;
     ptReportOverlay*      m_ZoomSizeOverlay;
+    bool                  m_NeedRun;
+    MyWorker*             m_Worker;
+};
+
+//==============================================================================
+
+typedef void (ptImageView::*updateView_ptr)();
+
+class MyWorker: public QThread {
+  public:
+    void run();
+
+    updateView_ptr myFct;
+    ptImageView*   my_ImageView;
 };
 
 #endif // PTIMAGEVIEW_H
