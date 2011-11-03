@@ -1,0 +1,16 @@
+;
+; photivo Curve File
+;
+; Popular custom curve which improves underexposure and improves
+; highlight detail. Colour rendition is brighter and more prominent
+; whilst maintaining the default level of contrast.
+;
+Magic FLOSSCurveFile
+IntendedChannel 0
+CurveType 1
+0 0
+109 144
+242 299
+690 776
+867 867
+1000 1000
