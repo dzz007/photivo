@@ -30,6 +30,8 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QSpacerItem>
+#include <QEvent>
+#include <QPoint>
 
 //==============================================================================
 /*!
@@ -71,32 +73,45 @@ public:
   bool setPath(const QString& path);
 
 
+protected:
+  bool eventFilter(QObject* obj, QEvent* event);
+
+
 private:
+  /* slight extension of QLabel to include the index for the QVectors. */
+  class pbItem: public QLabel {
+  public:
+    pbItem(QWidget* parent, const int index, const bool isToken)
+      : QLabel(parent), m_IsDrive(false), m_IsToken(isToken), m_Index(index) {}
+    int index() { return m_Index; }
+    bool isDrive() { return m_IsDrive; }
+    bool isToken() { return m_IsToken; }
+    void setDrive(const bool isDrive) { m_IsDrive = isDrive; }
+  private:
+    bool m_IsDrive;
+    bool m_IsToken;
+    int  m_Index;
+  };
+
+  QString BuildPath(const int untilIdx);
   void BuildWidgets();
   void Clear();
-  QLabel* CreateSeparator();
-  QLabel* CreateToken(const QString& text);
-  /* Returns true if the path exists and could be parsed. */
-  bool Parse(QString path);
-
-  struct TokenItem {
-    QLabel*   Token;
-    int       Idx;
-  };
+  pbItem* CreateSeparator(const int index);
+  pbItem* CreateToken(const QString& text, const int index);
+  bool Parse(QString path);  // returns true if path exists and could be parsed
+  void ShowSubdirMenu(const QPoint& pos, int idx);
 
   bool                m_IsMyComputer;
   QHBoxLayout         m_Layout;
   int                 m_SeparatorCount;
-  QVector<QLabel*>    m_Separators;
+  QVector<pbItem*>    m_Separators;
   QSpacerItem*        m_Stretch;
   int                 m_TokenCount;
-  QVector<TokenItem>  m_Tokens;
+  QVector<pbItem*>    m_Tokens;
 
 
 signals:
   void changedPath(const QString& newPath);
-
-public slots:
 
 
 //==============================================================================

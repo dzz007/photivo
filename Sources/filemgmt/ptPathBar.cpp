@@ -21,6 +21,9 @@
 *******************************************************************************/
 
 #include <QDir>
+#include <QMouseEvent>
+#include <QAction>
+#include <QMenu>
 
 #include "../ptDefines.h"
 #include "ptPathBar.h"
@@ -37,6 +40,7 @@ ptPathBar::ptPathBar(QWidget *parent): QWidget(parent) {
   m_TokenCount = 0;
   m_SeparatorCount = 0;
   this->setLayout(&m_Layout);
+  this->setObjectName("PathBar");   // for CSS theme support
 
   m_Stretch = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 }
@@ -60,8 +64,7 @@ bool ptPathBar::Parse(QString path) {
   if (path == MyComputerIdString) {
     m_IsMyComputer = true;
     Clear();
-    TokenItem item = { CreateToken(QObject::tr("My Computer")), 0 };
-    m_Tokens.append(item);
+    m_Tokens.append(CreateToken(QObject::tr("My Computer"), 0));
 
   } else {
     m_IsMyComputer = false;
@@ -70,15 +73,14 @@ bool ptPathBar::Parse(QString path) {
     Clear();
 
     // Extract drive
-    TokenItem item = { CreateToken(WinApi::VolumeNamePretty(path.left(2))), 0 };
-    m_Tokens.append(item);
+    m_Tokens.append(CreateToken(WinApi::VolumeNamePretty(path.left(2)), 0));
+    m_Tokens.at(0)->setDrive(true);
     path.remove(0, 3);
   }
 #else
   if (path.left(1) != "/") return false;  // paths must be absolute, i.e. start with "/"
   Clear();
-  TokenItem item = { CreateToken("/"), 0 };
-  m_Tokens.append(item);
+  m_Tokens.append(CreateToken("/", 0));
   path.remove(0, 1);
 #endif
 
@@ -87,9 +89,8 @@ bool ptPathBar::Parse(QString path) {
     while (path.length() > 0) {
       int p = path.indexOf("/");
 
-      m_Separators.append(CreateSeparator());
-      TokenItem item = { CreateToken(path.mid(0, p)), i };
-      m_Tokens.append(item);
+      m_Separators.append(CreateSeparator(i-1));
+      m_Tokens.append(CreateToken(path.mid(0, p), i));
 
       if (p == -1) {
         path.clear();
@@ -99,11 +100,11 @@ bool ptPathBar::Parse(QString path) {
 
       i++;
     }
+    m_Separators.append(CreateSeparator(i-1));
   }
 
-  // after the loop i is 1 higher than the last token index
-  m_SeparatorCount = i-1;
-  m_TokenCount = i;
+  m_SeparatorCount = m_Separators.count();
+  m_TokenCount = m_Tokens.count();
 
   return true;
 }
@@ -112,7 +113,7 @@ bool ptPathBar::Parse(QString path) {
 
 void ptPathBar::BuildWidgets() {
   for (int i = 0; i < m_TokenCount; i++) {
-    m_Layout.addWidget(m_Tokens.at(i).Token);
+    m_Layout.addWidget(m_Tokens.at(i));
     if (i < m_SeparatorCount) {
       m_Layout.addWidget(m_Separators.at(i));
     }
@@ -131,32 +132,48 @@ bool ptPathBar::setPath(const QString& path) {
 //==============================================================================
 
 void ptPathBar::Clear() {
+  // kill separators
   for (int i = 0; i < m_Separators.count(); i++) {
     delete m_Separators.at(i);
   }
   m_Separators.clear();
 
+  // kill tokens
   for (int i = 0; i < m_Tokens.count(); i++) {
-    delete m_Tokens.at(i).Token;
+    delete m_Tokens.at(i);
   }
   m_Tokens.clear();
 
+  // remove stretch from layout, makes re-building the layout easier
   m_Layout.removeItem(m_Stretch);
 }
 
 //==============================================================================
 
 QString ptPathBar::path(const bool nativeSeparators /*= false*/) {
+  if (nativeSeparators) {
+    return QDir::fromNativeSeparators(BuildPath(m_TokenCount));
+  } else {
+    return BuildPath(m_TokenCount);
+  }
+}
+
+//==============================================================================
+
+QString ptPathBar::BuildPath(const int untilIdx) {
 #ifdef Q_OS_WIN
   if (m_IsMyComputer) return MyComputerIdString;
 #endif
 
   QString p;
-  QString sep = "/";
-  if (nativeSeparators) sep = QDir::separator();
-
-  for (int i = 0; i < m_TokenCount; i++) {
-    p.append(m_Tokens.at(i).Token->text()).append(sep);
+  for (int i = 0; i <= untilIdx; i++) {
+    if (m_Tokens.at(i)->isDrive()) {
+      QString d = m_Tokens.at(i)->text().right(3);
+      d.chop(1);
+      p.append(d).append("/");
+    } else {
+      p.append(m_Tokens.at(i)->text()).append("/");
+    }
   }
 
   p.chop(1);    // remove separator at the end
@@ -165,22 +182,85 @@ QString ptPathBar::path(const bool nativeSeparators /*= false*/) {
 
 //==============================================================================
 
-QLabel* ptPathBar::CreateSeparator() {
-  QLabel* sep = new QLabel(this);
+ptPathBar::pbItem* ptPathBar::CreateSeparator(const int index) {
+  pbItem* sep = new pbItem(this, index, false);
   sep->setTextFormat(Qt::PlainText);
   sep->setTextInteractionFlags(Qt::NoTextInteraction);
   sep->setPixmap(QString::fromUtf8(":/dark/ui-graphics/path-separator-normal.png"));
-  sep->setContentsMargins(5, 0, 5, 0);
+  sep->setContentsMargins(0, 0, 0, 0);
+  sep->setObjectName("PathBarSeparator");
+  sep->installEventFilter(this);
   return sep;
 }
 
 //==============================================================================
 
-QLabel* ptPathBar::CreateToken(const QString& text) {
-  QLabel* token = new QLabel(text, this);
+ptPathBar::pbItem* ptPathBar::CreateToken(const QString& text, const int index) {
+  pbItem* token = new pbItem(this, index, true);
+  token->setText(text);
   token->setTextFormat(Qt::PlainText);
   token->setContentsMargins(2, 0, 2, 0);
+  token->setObjectName("PathBarToken");
+  token->installEventFilter(this);
   return token;
+}
+
+//==============================================================================
+
+void ptPathBar::ShowSubdirMenu(const QPoint& pos, int idx) {
+  QString path = BuildPath(idx);
+  QDir dir = QDir(path);
+  dir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Drives);
+  dir.setSorting(QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
+  QStringList subdirs = dir.entryList();
+  QList<QAction*> actions;
+  actions.reserve(subdirs.count());
+
+  for (int i = 0; i < subdirs.count(); i++) {
+    actions.append(new QAction(QPixmap(QString::fromUtf8(":/dark/icons/folder.png")),
+                               subdirs.at(i),
+                               this) );
+  }
+
+  QMenu Menu;
+  Menu.addActions(actions);
+  QAction* clicked = Menu.exec(pos);
+
+  if (clicked) {
+    path += "/" + clicked->text();
+
+    for (int i = 0; i < actions.count(); i++) {
+      delete actions.at(i);
+    }
+
+    emit changedPath(path);
+  }
+}
+
+//==============================================================================
+
+bool ptPathBar::eventFilter(QObject* obj, QEvent* event) {
+  pbItem* sender = dynamic_cast<pbItem*>(obj);
+  if (sender == NULL) {
+    event->ignore();
+    return QWidget::eventFilter(obj, event);
+  }
+
+  if (sender->isToken() && event->type() == QEvent::MouseButtonRelease) {
+    if (((QMouseEvent*)event)->button() == Qt::LeftButton) {
+      emit changedPath(BuildPath(sender->index()));
+      return true;
+    }
+  }
+
+  else if (!sender->isToken() && event->type() == QEvent::MouseButtonPress) {
+    if (((QMouseEvent*)event)->button() == Qt::LeftButton) {
+      ShowSubdirMenu(sender->mapToGlobal(sender->pos()), sender->index());
+    }
+  }
+
+  event->ignore();
+  return QWidget::eventFilter(obj, event);
 }
 
 //==============================================================================
