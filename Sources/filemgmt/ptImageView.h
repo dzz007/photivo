@@ -32,8 +32,8 @@
 #include <QGridLayout>
 #include <QThread>
 
-#include "ptFileMgrDM.h"
 #include "../ptReportOverlay.h"
+#include "ptFileMgrDM.h"
 
 //==============================================================================
 
@@ -41,66 +41,65 @@ class MyWorker;
 
 //==============================================================================
 
-class ptImageView : public QGraphicsView
-{
-  Q_OBJECT
-  public:
-    /*! Creates a \c ptImageView instance.
-      \param parent
-        The image view’s parent widget.
-    */
-    explicit ptImageView(QWidget *parent = 0, ptFileMgrDM* DataModule = 0);
-    ~ptImageView();
+class ptImageView: public QGraphicsView {
+Q_OBJECT
+public:
+  /*! Creates a \c ptImageView instance.
+    \param parent
+      The image view’s parent widget.
+  */
+  explicit ptImageView(QWidget *parent = 0, ptFileMgrDM* DataModule = 0);
+  ~ptImageView();
 
-    void Display(const QString FileName);
-  signals:
+  void Display(const QString FileName);
 
-  public slots:
 
-    void resizeEvent(QResizeEvent* event);
-    void mouseDoubleClickEvent(QMouseEvent* event);
-    void mousePressEvent(QMouseEvent* event);
-    void mouseReleaseEvent(QMouseEvent* event);
-    void mouseMoveEvent(QMouseEvent* event);
-    void wheelEvent(QWheelEvent* event);
-    void contextMenuEvent(QContextMenuEvent* event);
+protected:
+  void resizeEvent(QResizeEvent* event);
+  void mouseDoubleClickEvent(QMouseEvent* event);
+  void mousePressEvent(QMouseEvent* event);
+  void mouseReleaseEvent(QMouseEvent* event);
+  void mouseMoveEvent(QMouseEvent* event);
+  void wheelEvent(QWheelEvent* event);
+  void contextMenuEvent(QContextMenuEvent* event);
 
-  private:
-    void ZoomTo(float factor, const bool withMsg);  // 1.0 means 100%
-    int  ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
 
-    /*! Put the QImage in the scene */
-    void ImageToScene(const double Factor);
+private:
+  void ZoomTo(float factor, const bool withMsg);  // 1.0 means 100%
+  int  ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
 
-    /*! This function performs the actual thumbnail generation. */
-    void updateView();
+  /*! Put the QImage in the scene */
+  void ImageToScene(const double Factor);
 
-  private slots:
-    void startWorker();
-    void afterWorker();
-    void ResizeTimerExpired();
+  /*! This function performs the actual thumbnail generation. */
+  void updateView();
 
-  private:
-    ptFileMgrDM*          m_DataModule;
-    const float           MinZoom;
-    const float           MaxZoom;
-    QList<float>          ZoomFactors;   // steps for wheel zoom
-    QGridLayout*          m_parentLayout;
-    QGraphicsScene*       m_Scene;
-    QImage*               m_Image;
-    QString               m_FileName;
-    int                   m_ZoomMode;
-    float                 m_ZoomFactor;
-    int                   m_Zoom;
-    QLine*                m_DragDelta;
-    bool                  m_LeftMousePressed;
-    ptReportOverlay*      m_ZoomSizeOverlay;
-    ptReportOverlay*      m_StatusOverlay;
-    bool                  m_NeedRun;
-    MyWorker*             m_Worker;
-    QGraphicsPixmapItem*  m_PixmapItem;
-    int                   m_ResizeTimeOut;
-    QTimer*               m_ResizeTimer;
+  ptFileMgrDM*          m_DataModule;
+  const float           MinZoom;
+  const float           MaxZoom;
+  QList<float>          ZoomFactors;   // steps for wheel zoom
+  QGridLayout*          m_parentLayout;
+  QGraphicsScene*       m_Scene;
+  QImage*               m_Image;
+  QString               m_FileName;
+  int                   m_ZoomMode;
+  float                 m_ZoomFactor;
+  int                   m_Zoom;
+  QLine*                m_DragDelta;
+  bool                  m_LeftMousePressed;
+  ptReportOverlay*      m_ZoomSizeOverlay;
+  ptReportOverlay*      m_StatusOverlay;
+  bool                  m_NeedRun;
+  MyWorker*             m_Worker;
+  QGraphicsPixmapItem*  m_PixmapItem;
+  int                   m_ResizeTimeOut;
+  QTimer*               m_ResizeTimer;
+
+
+private slots:
+  void startWorker();
+  void afterWorker();
+  void ResizeTimerExpired();
 };
 
 //==============================================================================
@@ -108,12 +107,13 @@ class ptImageView : public QGraphicsView
 typedef void (ptImageView::*updateView_ptr)();
 
 class MyWorker: public QThread {
-  public:
-    void run();
+public:
+  QString        m_FileName;
+  updateView_ptr m_Fct;
+  ptImageView*   m_ImageView;
 
-    QString        m_FileName;
-    updateView_ptr m_Fct;
-    ptImageView*   m_ImageView;
+protected:
+  void run();
 };
 
 #endif // PTIMAGEVIEW_H
