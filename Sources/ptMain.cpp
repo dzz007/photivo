@@ -3442,10 +3442,6 @@ void CB_MenuFileExit(const short) {
       Settings->SetValue(CurveKeys.at(i),ptCurveChoice_None);
   }
 
-#ifdef Q_OS_WIN
-  ptEcWin7::DestroyInstance();
-#endif
-
   printf("Saving settings ...\n");
 
   // this also writes settings.
@@ -3464,6 +3460,10 @@ void CB_MenuFileExit(const short) {
 
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
+
+#ifdef Q_OS_WIN
+  ptEcWin7::DestroyInstance();
+#endif
 
   ALLOCATED(10000000);
   printf("Exiting Photivo.\n");

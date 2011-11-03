@@ -99,6 +99,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
 
   m_PathBar = new ptPathBar(this);
+  connect(m_PathBar, SIGNAL(changedPath(QString)), this, SLOT(changeDir(QString)));
   m_ThumbPaneLayout->insertWidget(0, m_PathBar);
   m_Progressbar->hide();
 
@@ -129,6 +130,7 @@ ptFileMgrWindow::~ptFileMgrWindow() {
       setValue("FileMgrMainSplitter", m_MainSplitter->saveState());
 
   DelAndNull(m_Layouter);
+  DelAndNull(m_PathBar);
 
   // Make sure to destroy all thumbnail related things before the singletons!
   ptFileMgrDM::DestroyInstance();
@@ -197,6 +199,18 @@ void ptFileMgrWindow::changeListDir(const QModelIndex& index) {
 
 void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
   DisplayThumbnails(m_DataModel->treeModel()->filePath(index));
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::changeDir(const QString& path) {
+  if (m_DirTree->isVisible()) {
+    m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(path));
+    DisplayThumbnails(path);
+  } else {
+    m_DataModel->dirModel()->ChangeAbsoluteDir(path);
+    DisplayThumbnails(path, m_DataModel->dirModel()->pathType());
+  }
 }
 
 //==============================================================================
