@@ -22,10 +22,12 @@
 
 #include <QDir>
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include <QAction>
 #include <QMenu>
 
 #include "../ptDefines.h"
+#include "../ptTheme.h"
 #include "ptPathBar.h"
 #include "ptFileMgrConstants.h"
 
@@ -33,14 +35,30 @@
   #include "../ptWinApi.h"
 #endif
 
+extern ptTheme* Theme;
+
 //==============================================================================
 
 ptPathBar::ptPathBar(QWidget *parent): QWidget(parent) {
   m_IsMyComputer = false;
   m_TokenCount = 0;
   m_SeparatorCount = 0;
-  this->setLayout(&m_Layout);
   this->setObjectName("PathBar");   // for CSS theme support
+
+  // Editor and pretty display widgets are arranged in a vertical layout
+  // but only one of them is ever shown at the same time, depending on
+  // which mode is active (interactive display or text edit)
+  m_Display = new QWidget(this);
+  m_Display->setLayout(&m_Layout);
+  m_Editor = new QLineEdit(this);
+  m_Editor->installEventFilter(this);
+  m_Editor->hide();
+  QVBoxLayout* MainLayout = new QVBoxLayout(this);
+  MainLayout->setContentsMargins(0,0,0,0);
+  MainLayout->setSpacing(0);
+  this->setLayout(MainLayout);
+  MainLayout->addWidget(m_Display);
+  MainLayout->addWidget(m_Editor);
 
   m_Stretch = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 }
@@ -207,12 +225,33 @@ ptPathBar::pbItem* ptPathBar::CreateToken(const QString& text, const int index) 
 
 //==============================================================================
 
+void ptPathBar::afterEditor() {
+  if (Parse(m_Editor->text())) {
+    BuildWidgets();
+  }
+  m_Editor->hide();
+  m_Display->show();
+}
+
+//==============================================================================
+
 void ptPathBar::ShowSubdirMenu(const QPoint& pos, int idx) {
   QString path = BuildPath(idx);
-  QDir dir = QDir(path);
-  dir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Drives);
-  dir.setSorting(QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
-  QStringList subdirs = dir.entryList();
+  QStringList subdirs;
+
+#ifdef Q_OS_WIN
+  if (path == MyComputerIdString) {
+    subdirs = WinApi::DrivesListPretty();
+  } else {
+#endif
+    QDir dir = QDir(path);
+    dir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Drives);
+    dir.setSorting(QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
+    subdirs = dir.entryList();
+#ifdef Q_OS_WIN
+  }
+#endif
+
   QList<QAction*> actions;
   actions.reserve(subdirs.count());
 
@@ -222,16 +261,28 @@ void ptPathBar::ShowSubdirMenu(const QPoint& pos, int idx) {
                                this) );
   }
 
-  QMenu Menu;
-  Menu.addActions(actions);
-  QAction* clicked = Menu.exec(pos);
+  QMenu* Menu = QMenu(m_Separators.at(idx));
+  Menu->setPalette(Theme->ptMenuPalette);
+  Menu->setStyle(Theme->ptStyle);
+  Menu->addActions(actions);
+  QAction* clicked = Menu->exec(pos);
 
   if (clicked) {
-    path += "/" + clicked->text();
+#ifdef Q_OS_WIN
+    if (path == MyComputerIdString) {
+      path = clicked->text().right(3);
+      path.chop(1);
+    } else {
+#endif
+      path += "/" + clicked->text();
+#ifdef Q_OS_WIN
+    }
+#endif
 
     for (int i = 0; i < actions.count(); i++) {
       delete actions.at(i);
     }
+    DelAndNull(Menu);
 
     emit changedPath(path);
   }
@@ -240,6 +291,22 @@ void ptPathBar::ShowSubdirMenu(const QPoint& pos, int idx) {
 //==============================================================================
 
 bool ptPathBar::eventFilter(QObject* obj, QEvent* event) {
+  if (obj == m_Editor && event->type() == QEvent::KeyPress) {
+    if (((QKeyEvent*)event)->key() == Qt::Key_Escape &&
+        ((QKeyEvent*)event)->modifiers() == Qt::NoModifier)
+    {
+      // ESC pressed: abort path text editing
+      m_Editor->hide();
+      m_Display->show();
+      return true;
+    } else {
+      event->ignore();
+      return QWidget::eventFilter(ob, event);
+    }
+  }
+
+
+  // from here on, only token and separator events
   pbItem* sender = dynamic_cast<pbItem*>(obj);
   if (sender == NULL) {
     event->ignore();
@@ -255,12 +322,23 @@ bool ptPathBar::eventFilter(QObject* obj, QEvent* event) {
 
   else if (!sender->isToken() && event->type() == QEvent::MouseButtonPress) {
     if (((QMouseEvent*)event)->button() == Qt::LeftButton) {
-      ShowSubdirMenu(sender->mapToGlobal(sender->pos()), sender->index());
+      ShowSubdirMenu(sender->pos(), sender->index());
     }
   }
 
   event->ignore();
   return QWidget::eventFilter(obj, event);
+}
+
+//==============================================================================
+
+void ptPathBar::mouseReleaseEvent(QMouseEvent* event) {
+  if (event->button() == Qt::RightButton) {
+    event->accept();
+    m_Editor->setText(BuildPath(m_TokenCount));
+    m_Editor->show();
+    m_Display->hide();
+  }
 }
 
 //==============================================================================

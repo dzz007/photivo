@@ -32,6 +32,7 @@
 #include <QSpacerItem>
 #include <QEvent>
 #include <QPoint>
+#include <QLineEdit>
 
 //==============================================================================
 /*!
@@ -58,7 +59,8 @@ public:
   */
   QString path(const bool nativeSeparators = false);
 
-  /*! Sets the path. Returns \c true if the path actually exists in the file system
+  /*! Sets the path. You can use native as well as Qt separators.
+    Returns \c true if the path actually exists in the file system
     and could be parsed by the PathBar.
     \param path
       The path. Must be an absolute path corresponding to an existing file system
@@ -75,6 +77,7 @@ public:
 
 protected:
   bool eventFilter(QObject* obj, QEvent* event);
+  void mouseReleaseEvent(QMouseEvent* event);
 
 
 private:
@@ -101,6 +104,8 @@ private:
   bool Parse(QString path);  // returns true if path exists and could be parsed
   void ShowSubdirMenu(const QPoint& pos, int idx);
 
+  QWidget*            m_Display;
+  QLineEdit*          m_Editor;
   bool                m_IsMyComputer;
   QHBoxLayout         m_Layout;
   int                 m_SeparatorCount;
@@ -108,6 +113,10 @@ private:
   QSpacerItem*        m_Stretch;
   int                 m_TokenCount;
   QVector<pbItem*>    m_Tokens;
+
+
+private slots:
+  void afterEditor();
 
 
 signals:

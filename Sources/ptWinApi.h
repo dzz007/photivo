@@ -26,12 +26,14 @@
 //==============================================================================
 
 #include <QString>
+#include <QStringList>
 
 //==============================================================================
 
 #ifdef Q_OS_WIN
 namespace WinApi {
   QString AppdataFolder();
+  QStringList DrivesListPretty();
   QString VolumeName(QString driveLetter);
   QString VolumeNamePretty(QString drive);
 }
