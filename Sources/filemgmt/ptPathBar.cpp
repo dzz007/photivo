@@ -25,6 +25,8 @@
 #include <QAction>
 #include <QMenu>
 
+#include <cassert>
+
 #include "../ptDefines.h"
 #include "../ptTheme.h"
 #include "ptPathBar.h"
@@ -135,7 +137,12 @@ ptPathBar::pbParseResult ptPathBar::Parse(QString path) {
 
     subdirs = m_DirInfo.entryList();
   } else {
+#ifdef Q_OS_WIN
     subdirs = WinApi::DrivesListPretty();
+#else
+    // should not happen on linux
+    assert(!"Unhandled subdirs!");
+#endif
   }
 
   if (subdirs.count() > 0) {
