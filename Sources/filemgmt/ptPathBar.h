@@ -33,6 +33,7 @@
 #include <QEvent>
 #include <QPoint>
 #include <QLineEdit>
+#include <QDir>
 
 //==============================================================================
 /*!
@@ -61,7 +62,8 @@ public:
 
   /*! Sets the path. You can use native as well as Qt separators.
     Returns \c true if the path actually exists in the file system
-    and could be parsed by the PathBar.
+    and could be parsed by the PathBar. Also returns \c true if the current and
+    new path are same.
     \param path
       The path. Must be an absolute path corresponding to an existing file system
       location.
@@ -77,6 +79,7 @@ public:
 
 protected:
   bool eventFilter(QObject* obj, QEvent* event);
+  void mousePressEvent(QMouseEvent* event);
   void mouseReleaseEvent(QMouseEvent* event);
 
 
@@ -96,13 +99,20 @@ private:
     int  m_Index;
   };
 
+  // successes must be >=0, failures <0
+  enum pbParseResult {
+    prSamePath  = -2,
+    prFail      = -1,
+    prSuccess   = 0
+  };
+
   QString BuildPath(const int untilIdx);
   void BuildWidgets();
   void Clear();
   pbItem* CreateSeparator(const int index);
   pbItem* CreateToken(const QString& text, const int index);
-  bool Parse(QString path);  // returns true if path exists and could be parsed
-  void ShowSubdirMenu(const QPoint& pos, int idx);
+  pbParseResult Parse(QString path);  // returns true if path exists and could be parsed
+  void ShowSubdirMenu(int idx);
 
   QWidget*            m_Display;
   QLineEdit*          m_Editor;
@@ -110,6 +120,7 @@ private:
   QHBoxLayout         m_Layout;
   int                 m_SeparatorCount;
   QVector<pbItem*>    m_Separators;
+  QDir                m_DirInfo;
   QSpacerItem*        m_Stretch;
   int                 m_TokenCount;
   QVector<pbItem*>    m_Tokens;
