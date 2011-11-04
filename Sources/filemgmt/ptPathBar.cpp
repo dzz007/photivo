@@ -20,7 +20,6 @@
 **
 *******************************************************************************/
 
-#include <QDir>
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QAction>
@@ -41,18 +40,21 @@ extern ptTheme* Theme;
 
 ptPathBar::ptPathBar(QWidget *parent): QWidget(parent) {
   m_IsMyComputer = false;
-  m_TokenCount = 0;
-  m_SeparatorCount = 0;
   this->setObjectName("PathBar");   // for CSS theme support
+  this->setContextMenuPolicy(Qt::PreventContextMenu);
 
   // Editor and pretty display widgets are arranged in a vertical layout
   // but only one of them is ever shown at the same time, depending on
   // which mode is active (interactive display or text edit)
   m_Display = new QWidget(this);
   m_Display->setLayout(&m_Layout);
+  m_Display->installEventFilter(this);
+
   m_Editor = new QLineEdit(this);
-  m_Editor->installEventFilter(this);
   m_Editor->hide();
+  m_Editor->installEventFilter(this);
+  connect(m_Editor, SIGNAL(editingFinished()), this, SLOT(afterEditor()));
+
   QVBoxLayout* MainLayout = new QVBoxLayout(this);
   MainLayout->setContentsMargins(0,0,0,0);
   MainLayout->setSpacing(0);
@@ -60,7 +62,12 @@ ptPathBar::ptPathBar(QWidget *parent): QWidget(parent) {
   MainLayout->addWidget(m_Display);
   MainLayout->addWidget(m_Editor);
 
+  // stretch for the pretty display layout to keep left alignment
   m_Stretch = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+  // Init QDir for generating subdirs lists
+  m_DirInfo.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Drives);
+  m_DirInfo.setSorting(QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
 }
 
 //==============================================================================
@@ -72,11 +79,17 @@ ptPathBar::~ptPathBar() {
 
 //==============================================================================
 
-bool ptPathBar::Parse(QString path) {
+ptPathBar::pbParseResult ptPathBar::Parse(QString path) {
   // Cleanup path and ensure "/" as directory separator
   path = QDir::cleanPath(QDir::fromNativeSeparators(path));
+
+  if (QDir::match(BuildPath(m_Tokens.count()-1), path)) {
+    return prSamePath;
+  }
+
   // PathBar is for navigation through existing paths
-  if (!QDir().exists(path)) return false;
+  if (!QDir().exists(path)) return prFail;
+  m_DirInfo.setPath(path);
 
 #ifdef Q_OS_WIN
   if (path == MyComputerIdString) {
@@ -87,7 +100,7 @@ bool ptPathBar::Parse(QString path) {
   } else {
     m_IsMyComputer = false;
     // Paths that include a folder must start with "D:/" where D is a drive letter
-    if (path.length() > 2 && path.mid(1,2) != ":/") return false;
+    if (path.length() > 2 && path.mid(1,2) != ":/") return prFail;
     Clear();
 
     // Extract drive
@@ -96,13 +109,14 @@ bool ptPathBar::Parse(QString path) {
     path.remove(0, 3);
   }
 #else
-  if (path.left(1) != "/") return false;  // paths must be absolute, i.e. start with "/"
+  if (path.left(1) != "/") return prFail;  // paths must be absolute, i.e. start with "/"
   Clear();
   m_Tokens.append(CreateToken("/", 0));
   path.remove(0, 1);
 #endif
 
   int i = 1;
+  QStringList subdirs;
   if (!m_IsMyComputer) {
     while (path.length() > 0) {
       int p = path.indexOf("/");
@@ -118,21 +132,25 @@ bool ptPathBar::Parse(QString path) {
 
       i++;
     }
+
+    subdirs = m_DirInfo.entryList();
+  } else {
+    subdirs = WinApi::DrivesListPretty();
+  }
+
+  if (subdirs.count() > 0) {
     m_Separators.append(CreateSeparator(i-1));
   }
 
-  m_SeparatorCount = m_Separators.count();
-  m_TokenCount = m_Tokens.count();
-
-  return true;
+  return prSuccess;
 }
 
 //==============================================================================
 
 void ptPathBar::BuildWidgets() {
-  for (int i = 0; i < m_TokenCount; i++) {
+  for (int i = 0; i < m_Tokens.count(); i++) {
     m_Layout.addWidget(m_Tokens.at(i));
-    if (i < m_SeparatorCount) {
+    if (i < m_Separators.count()) {
       m_Layout.addWidget(m_Separators.at(i));
     }
   }
@@ -142,9 +160,11 @@ void ptPathBar::BuildWidgets() {
 //==============================================================================
 
 bool ptPathBar::setPath(const QString& path) {
-  bool result = Parse(path);
-  if (result) BuildWidgets();
-  return result;
+  pbParseResult result = Parse(path);
+  if (result >= prSuccess) {
+    BuildWidgets();
+  }
+  return result >= prSuccess || result == prSamePath;
 }
 
 //==============================================================================
@@ -170,9 +190,9 @@ void ptPathBar::Clear() {
 
 QString ptPathBar::path(const bool nativeSeparators /*= false*/) {
   if (nativeSeparators) {
-    return QDir::fromNativeSeparators(BuildPath(m_TokenCount));
+    return QDir::fromNativeSeparators(BuildPath(m_Tokens.count()-1));
   } else {
-    return BuildPath(m_TokenCount);
+    return BuildPath(m_Tokens.count()-1);
   }
 }
 
@@ -226,8 +246,9 @@ ptPathBar::pbItem* ptPathBar::CreateToken(const QString& text, const int index) 
 //==============================================================================
 
 void ptPathBar::afterEditor() {
-  if (Parse(m_Editor->text())) {
+  if (Parse(m_Editor->text()) >= prSuccess) {
     BuildWidgets();
+    emit changedPath(BuildPath(m_Tokens.count()-1));
   }
   m_Editor->hide();
   m_Display->show();
@@ -235,94 +256,90 @@ void ptPathBar::afterEditor() {
 
 //==============================================================================
 
-void ptPathBar::ShowSubdirMenu(const QPoint& pos, int idx) {
+void ptPathBar::ShowSubdirMenu(int idx) {
+  pbItem* sender = m_Separators.at(idx);
   QString path = BuildPath(idx);
-  QStringList subdirs;
+  m_DirInfo.setPath(path);
+  QStringList subdirs = m_DirInfo.entryList();
+  sender->setPixmap(QString::fromUtf8(":/dark/ui-graphics/path-separator-menuopen.png"));
 
-#ifdef Q_OS_WIN
-  if (path == MyComputerIdString) {
-    subdirs = WinApi::DrivesListPretty();
-  } else {
-#endif
-    QDir dir = QDir(path);
-    dir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Drives);
-    dir.setSorting(QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
-    subdirs = dir.entryList();
-#ifdef Q_OS_WIN
-  }
-#endif
-
+  // build a list of menu actions from the subdirs list
   QList<QAction*> actions;
   actions.reserve(subdirs.count());
 
   for (int i = 0; i < subdirs.count(); i++) {
     actions.append(new QAction(QPixmap(QString::fromUtf8(":/dark/icons/folder.png")),
                                subdirs.at(i),
-                               this) );
+                               NULL) );
   }
 
-  QMenu* Menu = QMenu(m_Separators.at(idx));
+  // show subdirs menu directly below the clicked separator icon
+  QMenu* Menu = new QMenu(NULL);
   Menu->setPalette(Theme->ptMenuPalette);
   Menu->setStyle(Theme->ptStyle);
   Menu->addActions(actions);
-  QAction* clicked = Menu->exec(pos);
+  QAction* clicked = Menu->exec(sender->mapToGlobal(QPoint(0, sender->height())));
 
+  // determine new path and signal FileMgrWindow
   if (clicked) {
 #ifdef Q_OS_WIN
     if (path == MyComputerIdString) {
       path = clicked->text().right(3);
       path.chop(1);
     } else {
-#endif
       path += "/" + clicked->text();
-#ifdef Q_OS_WIN
     }
+#else
+    path += "/" + clicked->text();
 #endif
-
-    for (int i = 0; i < actions.count(); i++) {
-      delete actions.at(i);
-    }
-    DelAndNull(Menu);
-
     emit changedPath(path);
+  } else {
+    sender->setPixmap(QString::fromUtf8(":/dark/ui-graphics/path-separator-normal.png"));
   }
+
+  DelAndNull(Menu);
+  for (int i = 0; i < actions.count(); i++) {
+    delete actions.at(i);
+  }
+  actions.clear();
 }
 
 //==============================================================================
 
 bool ptPathBar::eventFilter(QObject* obj, QEvent* event) {
-  if (obj == m_Editor && event->type() == QEvent::KeyPress) {
-    if (((QKeyEvent*)event)->key() == Qt::Key_Escape &&
-        ((QKeyEvent*)event)->modifiers() == Qt::NoModifier)
-    {
-      // ESC pressed: abort path text editing
-      m_Editor->hide();
-      m_Display->show();
-      return true;
-    } else {
+  if (obj == m_Editor) {
+    if(event->type() == QEvent::KeyPress) {
+      if (((QKeyEvent*)event)->key() == Qt::Key_Escape &&
+          ((QKeyEvent*)event)->modifiers() == Qt::NoModifier)
+      {
+        // ESC pressed: abort path text editing
+        m_Editor->hide();
+        m_Display->show();
+        return true;
+      }
+    }
+  }
+
+  else {
+    // from here on, only token and separator events
+    pbItem* sender = dynamic_cast<pbItem*>(obj);
+    if (sender == NULL) {
       event->ignore();
-      return QWidget::eventFilter(ob, event);
+      return QWidget::eventFilter(obj, event);
     }
-  }
 
-
-  // from here on, only token and separator events
-  pbItem* sender = dynamic_cast<pbItem*>(obj);
-  if (sender == NULL) {
-    event->ignore();
-    return QWidget::eventFilter(obj, event);
-  }
-
-  if (sender->isToken() && event->type() == QEvent::MouseButtonRelease) {
-    if (((QMouseEvent*)event)->button() == Qt::LeftButton) {
-      emit changedPath(BuildPath(sender->index()));
-      return true;
+    if (sender->isToken() && event->type() == QEvent::MouseButtonRelease) {
+      if (((QMouseEvent*)event)->button() == Qt::LeftButton) {
+        emit changedPath(BuildPath(sender->index()));
+        return true;
+      }
     }
-  }
 
-  else if (!sender->isToken() && event->type() == QEvent::MouseButtonPress) {
-    if (((QMouseEvent*)event)->button() == Qt::LeftButton) {
-      ShowSubdirMenu(sender->pos(), sender->index());
+    else if (!sender->isToken() && event->type() == QEvent::MouseButtonPress) {
+      if (((QMouseEvent*)event)->button() == Qt::LeftButton) {
+        ShowSubdirMenu(sender->index());
+        return true;
+      }
     }
   }
 
@@ -332,11 +349,22 @@ bool ptPathBar::eventFilter(QObject* obj, QEvent* event) {
 
 //==============================================================================
 
+void ptPathBar::mousePressEvent(QMouseEvent* event) {
+  event->accept();
+}
+
+//==============================================================================
+
 void ptPathBar::mouseReleaseEvent(QMouseEvent* event) {
+  event->accept();
   if (event->button() == Qt::RightButton) {
-    event->accept();
-    m_Editor->setText(BuildPath(m_TokenCount));
+    m_Editor->blockSignals(true);
+    m_Editor->setText(BuildPath(m_Tokens.count()-1));
+    m_Editor->end(false);
+    m_Editor->selectAll();
     m_Editor->show();
+    m_Editor->setFocus(Qt::MouseFocusReason);
+    m_Editor->blockSignals(false);
     m_Display->hide();
   }
 }

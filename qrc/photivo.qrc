@@ -59,5 +59,6 @@
         <file>dark/icons/folder.png</file>
         <file>dark/icons/go-up.png</file>
         <file>dark/ui-graphics/path-separator-normal.png</file>
+        <file>dark/ui-graphics/path-separator-menuopen.png</file>
     </qresource>
 </RCC>
