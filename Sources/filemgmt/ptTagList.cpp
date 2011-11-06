@@ -31,18 +31,28 @@ ptTagList::ptTagList(QWidget* parent)
 {
   this->setFrameShape(QFrame::NoFrame);
   this->setFrameShadow(QFrame::Plain);
+  this->setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
+  this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 //==============================================================================
 
 void ptTagList::keyPressEvent(QKeyEvent* event) {
-  if (currentIndex().row() >= 0) {
-    if (event->key() == Qt::Key_Delete && event->modifiers() == Qt::NoModifier) {
-      dynamic_cast<QStandardItemModel*>(this->model())->removeRow(currentIndex().row());
-    }
+  if (event->key() == Qt::Key_Delete && event->modifiers() == Qt::NoModifier) {
+    if (currentIndex().isValid()) {
+      int row = currentIndex().row();
+      dynamic_cast<QStandardItemModel*>(this->model())->removeRow(row);
 
-  } else {
-    event->ignore();
+      // if possible keep the same row selected
+      if (this->model()->rowCount() > 0) {
+        setCurrentIndex(this->model()->index(qBound(0, row, this->model()->rowCount()), 0));
+      }
+    }
+  }
+
+  // call base class to handle default key actions
+  else {
+    QListView::keyPressEvent(event);
   }
 }
 
