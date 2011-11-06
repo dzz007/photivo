@@ -29,6 +29,8 @@
 #include <lcms2.h>
 #include <lensfun.h>
 
+#include <QString>
+
 //==============================================================================
 
 /* !!!
@@ -42,6 +44,15 @@ const char ProgramName[] = "Photivo";
 const char CompanyName[] = "http://photivo.org/";
 
 const int PhotivoSettingsVersion = 1;
+
+struct ptFiles {
+  QString GlobalIni;
+  QString TagsIni;
+};
+const ptFiles PhotivoFile = { "photivo.ini",
+                              "tags.ini"};
+
+//==============================================================================
 
 // Mathematical constants.
 const double ptPI     = 3.14159265358979323846264338327950288419716939937510;

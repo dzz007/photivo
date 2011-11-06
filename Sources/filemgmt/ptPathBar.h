@@ -63,7 +63,7 @@ public:
   /*! Sets the path. You can use native as well as Qt separators.
     Returns \c true if the path actually exists in the file system
     and could be parsed by the PathBar. Also returns \c true if the current and
-    new path are same.
+    new path are same, but the PathBar is not updated in that case.
     \param path
       The path. Must be an absolute path corresponding to an existing file system
       location.
@@ -84,7 +84,7 @@ protected:
 
 
 private:
-  /* slight extension of QLabel to include the index for the QVectors. */
+  // slight extension of QLabel to include some special flags
   class pbItem: public QLabel {
   public:
     pbItem(QWidget* parent, const int index, const bool isToken)
@@ -95,8 +95,8 @@ private:
     void setDrive(const bool isDrive) { m_IsDrive = isDrive; }
   private:
     bool m_IsDrive;
-    bool m_IsToken;
-    int  m_Index;
+    bool m_IsToken;  // if it’s not a token it’s a separator
+    int  m_Index;    // index in the m_Tokens or m_Separators QVector
   };
 
   // successes must be >=0, failures <0
@@ -111,7 +111,7 @@ private:
   void Clear();
   pbItem* CreateSeparator(const int index);
   pbItem* CreateToken(const QString& text, const int index);
-  pbParseResult Parse(QString path);  // returns true if path exists and could be parsed
+  pbParseResult Parse(QString path);
   void ShowSubdirMenu(int idx);
 
   QWidget*            m_Display;

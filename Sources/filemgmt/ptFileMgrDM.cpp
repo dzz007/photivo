@@ -68,6 +68,7 @@ ptFileMgrDM::ptFileMgrDM()
   #endif
 
   m_DirModel    = new ptSingleDirModel;
+  m_TagModel    = new ptTagModel;
 
   // Init stuff for thumbnail generation
   m_ThumbList   = new QList<ptGraphicsThumbGroup*>;
@@ -88,6 +89,7 @@ ptFileMgrDM::~ptFileMgrDM() {
   DelAndNull(m_Thumbnailer);
   DelAndNull(m_Cache);
   DelAndNull(m_DirModel);
+  DelAndNull(m_TagModel);
 }
 
 //==============================================================================
