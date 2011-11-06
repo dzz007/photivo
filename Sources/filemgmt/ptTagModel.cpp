@@ -21,6 +21,7 @@
 *******************************************************************************/
 
 #include <QSettings>
+#include <QDir>
 
 #include "../ptDefines.h"
 #include "../ptConstants.h"
@@ -70,7 +71,7 @@ bool ptTagModel::setData(const QModelIndex& index,
                          const QVariant& value,
                          int role /*= Qt::EditRole*/)
 {
-  if (role == Qt::DisplayRole) {
+  if (role == Qt::DisplayRole || role == Qt::EditRole) {
     TagItem item = m_TagList->at(index.row());
     item.Caption = value.toString();
     m_TagList->replace(index.row(), item);
@@ -88,7 +89,7 @@ void ptTagModel::appendRow(QString caption, QString dirPath) {
 
   // create new model entry
   QStandardItem* ModelItem = new QStandardItem(item.Caption);
-  ModelItem->setToolTip(item.Directory);
+  ModelItem->setToolTip(QDir::toNativeSeparators(item.Directory));
   ModelItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled);
   QStandardItemModel::appendRow(ModelItem);
 }
