@@ -39,6 +39,7 @@
 #include "ptThumbnailCache.h"
 #include "ptGraphicsThumbGroup.h"
 #include "ptSingleDirModel.h"
+#include "ptTagModel.h"
 
 //==============================================================================
 
@@ -93,6 +94,9 @@ public:
   */
   void StopThumbnailer();
 
+  /*! Returns a pointer to the tag model. */
+  ptTagModel* tagModel() { return m_TagModel; }
+
   /*! Returns a pointer to the thumbnailer.
       Use this to connect to the thumbnailer’s \c newThumbsNotify signal
   */
@@ -119,6 +123,7 @@ private:
   QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
   void ScaleThumbSize(QSize* tSize, const int max);
 
+  ptTagModel*                   m_TagModel;
   ptThumbnailCache*             m_Cache;
   QString                       m_CurrentDir;
   ptSingleDirModel*             m_DirModel;

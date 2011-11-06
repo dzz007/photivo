@@ -131,29 +131,42 @@ macx {
 }
 
 # Input
-HEADERS += ../Sources/ptAdobeTable.h \
-    ../Sources/ptReportOverlay.h \
+HEADERS += \
+    ../Sources/filemgmt/ptAbstractThumbnailLayouter.h \
+    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptFileMgrConstants.h \
+    ../Sources/filemgmt/ptFileMgrDM.h \
+    ../Sources/filemgmt/ptFileMgrWindow.h \
+    ../Sources/filemgmt/ptGraphicsSceneEmitter.h \
+    ../Sources/filemgmt/ptGraphicsThumbGroup.h \
+    ../Sources/filemgmt/ptGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptImageView.h \
+    ../Sources/filemgmt/ptPathBar.h \
+    ../Sources/filemgmt/ptRowGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptSingleDirModel.h \
+    ../Sources/filemgmt/ptTagModel.h \
+    ../Sources/filemgmt/ptThumbnailCache.h \
+    ../Sources/filemgmt/ptThumbnailer.h \
+    ../Sources/ptAdobeTable.h \
+    ../Sources/ptConfirmRequest.h \
+    ../Sources/ptGridInteraction.h \
     ../Sources/ptImageInteraction.h \
     ../Sources/ptLineInteraction.h \
-    ../Sources/ptSimpleRectInteraction.h \
+    ../Sources/ptReportOverlay.h \
     ../Sources/ptRichRectInteraction.h \
-    ../Sources/ptGridInteraction.h \
-    ../Sources/filemgmt/ptFileMgrWindow.h \
-    ../Sources/filemgmt/ptFileMgrDM.h \
-    ../Sources/filemgmt/ptThumbnailer.h \
-    ../Sources/filemgmt/ptThumbnailCache.h \
-    ../Sources/ptConfirmRequest.h \
-    ../Sources/filemgmt/ptGraphicsThumbGroup.h \
-    ../Sources/filemgmt/ptGraphicsSceneEmitter.h \
-    ../Sources/filemgmt/ptAbstractThumbnailLayouter.h \
-    ../Sources/filemgmt/ptGridThumbnailLayouter.h \
-    ../Sources/filemgmt/ptRowGridThumbnailLayouter.h \
-    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h \
-    ../Sources/filemgmt/ptSingleDirModel.h \
-    ../Sources/filemgmt/ptFileMgrConstants.h \
-    ../Sources/filemgmt/ptImageView.h \
-    ../Sources/filemgmt/ptPathBar.h
-HEADERS += ../Sources/ptParseCli.h
+    ../Sources/ptSimpleRectInteraction.h \
+    ../Sources/filemgmt/ptTagList.h
+#HEADERS += ../Sources/ptLensfun.h
+HEADERS += ../Sources/clapack/blaswrap.h
+HEADERS += ../Sources/clapack/clapack.h
+HEADERS += ../Sources/clapack/fio.h
+HEADERS += ../Sources/clapack/fmt.h
+HEADERS += ../Sources/clapack/fp.h
+HEADERS += ../Sources/fastbilateral/array.h
+HEADERS += ../Sources/fastbilateral/fast_lbf.h
+HEADERS += ../Sources/fastbilateral/math_tools.h
+HEADERS += ../Sources/fastbilateral/mixed_vector.h
+HEADERS += ../Sources/greyc/CImg.h
 HEADERS += ../Sources/ptCalloc.h
 HEADERS += ../Sources/ptChannelMixer.h
 HEADERS += ../Sources/ptCheck.h
@@ -173,96 +186,48 @@ HEADERS += ../Sources/ptImage.h
 HEADERS += ../Sources/ptImage8.h
 HEADERS += ../Sources/ptInput.h
 HEADERS += ../Sources/ptKernel.h
-#HEADERS += ../Sources/ptLensfun.h
 HEADERS += ../Sources/ptMainWindow.h
+HEADERS += ../Sources/ptMessageBox.h
+HEADERS += ../Sources/ptParseCli.h
 HEADERS += ../Sources/ptProcessor.h
 HEADERS += ../Sources/ptRefocusMatrix.h
 HEADERS += ../Sources/ptResizeFilters.h
 HEADERS += ../Sources/ptRGBTemperature.h
 HEADERS += ../Sources/ptSettings.h
+HEADERS += ../Sources/ptSlider.h
 HEADERS += ../Sources/ptTheme.h
 HEADERS += ../Sources/ptViewWindow.h
 HEADERS += ../Sources/ptVisibleToolsView.h
 HEADERS += ../Sources/ptWhiteBalances.h
 HEADERS += ../Sources/ptWiener.h
-HEADERS += ../Sources/clapack/blaswrap.h
-HEADERS += ../Sources/ptSlider.h
-HEADERS += ../Sources/qtsingleapplication/qtsingleapplication.h
 HEADERS += ../Sources/qtsingleapplication/qtlocalpeer.h
 HEADERS += ../Sources/qtsingleapplication/qtlockedfile.h
-HEADERS += ../Sources/clapack/clapack.h
-HEADERS += ../Sources/clapack/fio.h
-HEADERS += ../Sources/clapack/fmt.h
-HEADERS += ../Sources/clapack/fp.h
-HEADERS += ../Sources/fastbilateral/array.h
-HEADERS += ../Sources/fastbilateral/fast_lbf.h
-HEADERS += ../Sources/fastbilateral/math_tools.h
-HEADERS += ../Sources/fastbilateral/mixed_vector.h
-HEADERS += ../Sources/greyc/CImg.h
-HEADERS += ../Sources/ptMessageBox.h
+HEADERS += ../Sources/qtsingleapplication/qtsingleapplication.h
 
-SOURCES += ../Sources/ptCalloc.cpp \
-    ../Sources/ptReportOverlay.cpp \
+SOURCES += \
+    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptFileMgrDM.cpp \
+    ../Sources/filemgmt/ptFileMgrWindow.cpp \
+    ../Sources/filemgmt/ptGraphicsSceneEmitter.cpp \
+    ../Sources/filemgmt/ptGraphicsThumbGroup.cpp \
+    ../Sources/filemgmt/ptGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptImageView.cpp \
+    ../Sources/filemgmt/ptPathBar.cpp \
+    ../Sources/filemgmt/ptRowGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptSingleDirModel.cpp \
+    ../Sources/filemgmt/ptTagModel.cpp \
+    ../Sources/filemgmt/ptThumbnailCache.cpp \
+    ../Sources/filemgmt/ptThumbnailer.cpp \
+    ../Sources/ptCalloc.cpp \
+    ../Sources/ptConfirmRequest.cpp \
+    ../Sources/ptGridInteraction.cpp \
     ../Sources/ptImageInteraction.cpp \
     ../Sources/ptLineInteraction.cpp \
-    ../Sources/ptSimpleRectInteraction.cpp \
+    ../Sources/ptReportOverlay.cpp \
     ../Sources/ptRichRectInteraction.cpp \
-    ../Sources/ptGridInteraction.cpp \
-    ../Sources/filemgmt/ptFileMgrWindow.cpp \
-    ../Sources/filemgmt/ptFileMgrDM.cpp \
-    ../Sources/filemgmt/ptThumbnailer.cpp \
-    ../Sources/filemgmt/ptThumbnailCache.cpp \
-    ../Sources/ptConfirmRequest.cpp \
-    ../Sources/filemgmt/ptGraphicsThumbGroup.cpp \
-    ../Sources/filemgmt/ptGraphicsSceneEmitter.cpp \
-    ../Sources/filemgmt/ptGridThumbnailLayouter.cpp \
-    ../Sources/filemgmt/ptRowGridThumbnailLayouter.cpp \
-    ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp \
-    ../Sources/filemgmt/ptSingleDirModel.cpp \
-    ../Sources/filemgmt/ptImageView.cpp \
-    ../Sources/filemgmt/ptPathBar.cpp
-SOURCES += ../Sources/ptParseCli.cpp
-SOURCES += ../Sources/ptChannelMixer.cpp
-SOURCES += ../Sources/ptCheck.cpp
-SOURCES += ../Sources/ptChoice.cpp
-SOURCES += ../Sources/ptCimg.cpp
-SOURCES += ../Sources/ptCurve.cpp
-SOURCES += ../Sources/ptCurveWindow.cpp
-SOURCES += ../Sources/ptDcRaw.cpp
-SOURCES += ../Sources/ptError.cpp
-SOURCES += ../Sources/ptFastBilateral.cpp
-SOURCES += ../Sources/ptGroupBox.cpp
-SOURCES += ../Sources/ptGuiOptions.cpp
-SOURCES += ../Sources/ptHistogramWindow.cpp
-SOURCES += ../Sources/ptImage.cpp
-SOURCES += ../Sources/ptImage_Cimg.cpp
-SOURCES += ../Sources/ptImage_DRC.cpp
-SOURCES += ../Sources/ptImage_EAW.cpp
-SOURCES += ../Sources/ptImage_GM.cpp
-SOURCES += ../Sources/ptImage_GMC.cpp
-SOURCES += ../Sources/ptImage_Lensfun.cpp
-SOURCES += ../Sources/ptImage_Lqr.cpp
-SOURCES += ../Sources/ptImage_Pyramid.cpp
-SOURCES += ../Sources/ptImage8.cpp
-SOURCES += ../Sources/ptInput.cpp
-SOURCES += ../Sources/ptKernel.cpp
+    ../Sources/ptSimpleRectInteraction.cpp \
+    ../Sources/filemgmt/ptTagList.cpp
 #SOURCES += ../Sources/ptLensfun.cpp
-SOURCES += ../Sources/ptMain.cpp
-SOURCES += ../Sources/ptMainWindow.cpp
-SOURCES += ../Sources/ptProcessor.cpp
-SOURCES += ../Sources/ptRefocusMatrix.cpp
-SOURCES += ../Sources/ptResizeFilters.cpp
-SOURCES += ../Sources/ptRGBTemperature.cpp
-SOURCES += ../Sources/ptSettings.cpp
-SOURCES += ../Sources/ptTheme.cpp
-SOURCES += ../Sources/ptViewWindow.cpp
-SOURCES += ../Sources/ptVisibleToolsView.cpp
-SOURCES += ../Sources/ptWhiteBalances.cpp
-SOURCES += ../Sources/ptWiener.cpp
-SOURCES += ../Sources/ptSlider.cpp
-SOURCES += ../Sources/qtsingleapplication/qtsingleapplication.cpp
-SOURCES += ../Sources/qtsingleapplication/qtlocalpeer.cpp
-SOURCES += ../Sources/qtsingleapplication/qtlockedfile.cpp
 SOURCES += ../Sources/clapack/abort_.c
 SOURCES += ../Sources/clapack/close.c
 SOURCES += ../Sources/clapack/dgemm.c
@@ -294,9 +259,51 @@ SOURCES += ../Sources/clapack/wref.c
 SOURCES += ../Sources/clapack/wrtfmt.c
 SOURCES += ../Sources/clapack/wsfe.c
 SOURCES += ../Sources/clapack/xerbla.c
-SOURCES += ../Sources/dcb/dcb_demosaicing_old.c
 SOURCES += ../Sources/dcb/dcb_demosaicing.c
+SOURCES += ../Sources/dcb/dcb_demosaicing_old.c
 SOURCES += ../Sources/perfectraw/lmmse_interpolate.c
+SOURCES += ../Sources/ptChannelMixer.cpp
+SOURCES += ../Sources/ptCheck.cpp
+SOURCES += ../Sources/ptChoice.cpp
+SOURCES += ../Sources/ptCimg.cpp
+SOURCES += ../Sources/ptCurve.cpp
+SOURCES += ../Sources/ptCurveWindow.cpp
+SOURCES += ../Sources/ptDcRaw.cpp
+SOURCES += ../Sources/ptError.cpp
+SOURCES += ../Sources/ptFastBilateral.cpp
+SOURCES += ../Sources/ptGroupBox.cpp
+SOURCES += ../Sources/ptGuiOptions.cpp
+SOURCES += ../Sources/ptHistogramWindow.cpp
+SOURCES += ../Sources/ptImage.cpp
+SOURCES += ../Sources/ptImage_Cimg.cpp
+SOURCES += ../Sources/ptImage_DRC.cpp
+SOURCES += ../Sources/ptImage_EAW.cpp
+SOURCES += ../Sources/ptImage_GM.cpp
+SOURCES += ../Sources/ptImage_GMC.cpp
+SOURCES += ../Sources/ptImage_Lensfun.cpp
+SOURCES += ../Sources/ptImage_Lqr.cpp
+SOURCES += ../Sources/ptImage_Pyramid.cpp
+SOURCES += ../Sources/ptImage8.cpp
+SOURCES += ../Sources/ptInput.cpp
+SOURCES += ../Sources/ptKernel.cpp
+SOURCES += ../Sources/ptMain.cpp
+SOURCES += ../Sources/ptMainWindow.cpp
+SOURCES += ../Sources/ptMessageBox.cpp
+SOURCES += ../Sources/ptParseCli.cpp
+SOURCES += ../Sources/ptProcessor.cpp
+SOURCES += ../Sources/ptRefocusMatrix.cpp
+SOURCES += ../Sources/ptResizeFilters.cpp
+SOURCES += ../Sources/ptRGBTemperature.cpp
+SOURCES += ../Sources/ptSettings.cpp
+SOURCES += ../Sources/ptSlider.cpp
+SOURCES += ../Sources/ptTheme.cpp
+SOURCES += ../Sources/ptViewWindow.cpp
+SOURCES += ../Sources/ptVisibleToolsView.cpp
+SOURCES += ../Sources/ptWhiteBalances.cpp
+SOURCES += ../Sources/ptWiener.cpp
+SOURCES += ../Sources/qtsingleapplication/qtlocalpeer.cpp
+SOURCES += ../Sources/qtsingleapplication/qtlockedfile.cpp
+SOURCES += ../Sources/qtsingleapplication/qtsingleapplication.cpp
 SOURCES += ../Sources/rawtherapee/amaze_interpolate.c
 SOURCES += ../Sources/rawtherapee/ca_correct.c
 SOURCES += ../Sources/rawtherapee/cfa_line_dn.c
@@ -311,10 +318,8 @@ SOURCES += ../Sources/vcd/vcd_interpolate.c
 FORMS   += ../Sources/ptMainWindow.ui \
            ../Sources/filemgmt/ptFileMgrWindow.ui
 
-RESOURCES += ../photivo.qrc
+RESOURCES += ../qrc/photivo.qrc
 
-SOURCES += ../Sources/ptMessageBox.cpp
-RESOURCES = ../qrc/photivo.qrc
 TRANSLATIONS += ../Translations/photivo_Dutch.ts
 TRANSLATIONS += ../Translations/photivo_German.ts
 TRANSLATIONS += ../Translations/photivo_Italian.ts
@@ -330,6 +335,8 @@ exists(../local-system-specific.pro) {
 }
 
 ###############################################################################
+
+
 
 
 

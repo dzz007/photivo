@@ -112,14 +112,14 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="FMBookmarkPane" native="true">
+         <widget class="QWidget" name="FMTagPane" native="true">
           <property name="minimumSize">
            <size>
             <width>0</width>
             <height>20</height>
            </size>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
+          <layout class="QVBoxLayout" name="m_TagPaneLayout">
            <item>
             <widget class="QLabel" name="BookmarksLabel">
              <property name="font">

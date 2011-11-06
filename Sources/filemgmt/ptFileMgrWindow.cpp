@@ -85,6 +85,12 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_DirList->setModel(m_DataModel->dirModel());
   connect(m_DirList, SIGNAL(activated(QModelIndex)), this, SLOT(changeListDir(QModelIndex)));
 
+  // bookmark list
+  m_TagList = new ptTagList(this);
+  m_TagList->setModel(m_DataModel->tagModel());
+  m_TagPaneLayout->addWidget(m_TagList);
+  connect(m_TagList, SIGNAL(activated(QModelIndex)), this, SLOT(changeToBookmark(QModelIndex)));
+
   // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
   m_FilesScene->installEventFilter(this);
@@ -199,6 +205,12 @@ void ptFileMgrWindow::changeListDir(const QModelIndex& index) {
 
 void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
   DisplayThumbnails(m_DataModel->treeModel()->filePath(index));
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::changeToBookmark(const QModelIndex& index) {
+  changeDir(m_DataModel->tagModel()->path(index));
 }
 
 //==============================================================================
@@ -495,6 +507,10 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
     m_DataModel->Clear();
     DisplayThumbnails();
   }
+  // Ctrl+B: bookmark current folder
+  else if (event->key() == Qt::Key_B && event->modifiers() == Qt::ControlModifier) {
+    bookmarkCurrentDir();
+  }
   // F11: toggles fullscreen (handled by main window)
   else if (event->key() == Qt::Key_F11 && event->modifiers() == Qt::NoModifier) {
     event->ignore();
@@ -615,6 +631,13 @@ void ptFileMgrWindow::toggleNaviPane() {
 void ptFileMgrWindow::toggleDirThumbs() {
   Settings->SetValue("FileMgrShowDirThumbs", 1 - Settings->GetInt("FileMgrShowDirThumbs"));
   DisplayThumbnails();
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::bookmarkCurrentDir() {
+  m_DataModel->tagModel()->appendRow(QDir::toNativeSeparators(m_DataModel->currentDir()),
+                                     m_DataModel->currentDir());
 }
 
 //==============================================================================

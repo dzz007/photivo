@@ -39,6 +39,7 @@
 #include "ptFileMgrConstants.h"
 #include "ptImageView.h"
 #include "ptPathBar.h"
+#include "ptTagList.h"
 
 //==============================================================================
 
@@ -91,24 +92,27 @@ private:
   bool                    m_IsFirstShow;
   ptAbstractThumbnailLayouter* m_Layouter;
   ptPathBar*              m_PathBar;
+  ptTagList*              m_TagList;
   int                     m_ThumbCount;
   int                     m_ThumbListIdx;
   ptImageView*            m_ImageView;
 
   // context menu actions
-  QAction* ac_VerticalThumbs;
-  QAction* ac_HorizontalThumbs;
-  QAction* ac_DetailedThumbs;
-  QAction* ac_DirThumbs;
+  QAction*      ac_VerticalThumbs;
+  QAction*      ac_HorizontalThumbs;
+  QAction*      ac_DetailedThumbs;
+  QAction*      ac_DirThumbs;
   QActionGroup* ac_ThumbLayoutGroup;
-  QAction* ac_ToggleNaviPane;
-  QAction* ac_CloseFileMgr;
+  QAction*      ac_ToggleNaviPane;
+  QAction*      ac_CloseFileMgr;
 
 
 public slots:
 
 private slots:
+  void bookmarkCurrentDir();
   void changeListDir(const QModelIndex& index);
+  void changeToBookmark(const QModelIndex& index);
   void changeTreeDir(const QModelIndex& index);
   void changeDir(const QString& path);
   void closeWindow();

@@ -92,6 +92,7 @@ QStringList CurveKeys, CurveToolNameKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
 QStringList FileExtsRaw;
 QStringList FileExtsBitmap;
+QString     UserDirectory;
 
 ptChannelMixer* ChannelMixer = NULL;
 
@@ -639,7 +640,7 @@ int photivoMain(int Argc, char *Argv[]) {
   AppDataFolder = QDir::homePath();
 #endif
 
-  QString UserDirectory = AppDataFolder + "/" + Folder;
+  UserDirectory = AppDataFolder + "/" + Folder;
 
   if (IsPortableProfile == 0) {
       QDir home(AppDataFolder);
