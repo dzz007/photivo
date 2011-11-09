@@ -34,6 +34,7 @@
 #include "ptSettings.h"
 
 extern ptSettings* Settings;
+extern QString     ShareDirectory;
 
 //==============================================================================
 
@@ -111,7 +112,7 @@ bool ptTheme::SwitchTo(Theme newTheme, Highlight newHighlight /*= hlBlue*/) {
   }
 
   // determine theme file name
-  QString ThemeFileName = QApplication::applicationDirPath() + "/Themes/";
+  QString ThemeFileName = ShareDirectory + "Themes/";
   switch (newTheme) {
     case thNone:      Reset(); return true;   // Intentional! No theme, no more processing.
     case thShapeOnly: ThemeFileName += "ShapeOnly.ptheme"; break;
@@ -374,9 +375,7 @@ bool ptTheme::ReplaceColorVars(QString& data, QMap<QString, QString>* vars) {
   int start = data.indexOf("\"", 7);
   if (start <= 0) return false;
   int end = data.indexOf("\"", start+1);
-  QString FileBase = QApplication::applicationDirPath() %
-                     "/Themes/" %
-                     data.mid(start+1, end-start-1);
+  QString FileBase = ShareDirectory % "Themes/" % data.mid(start+1, end-start-1);
 
   data = ReadUTF8TextFile(FileBase % ".qss");
   if (data.isEmpty()) return false;

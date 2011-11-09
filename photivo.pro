@@ -105,6 +105,8 @@ unix {
   lensfun.files = ./LensfunDatabase/*
   uisettings.path = $${PREFIX}/share/photivo/UISettings
   uisettings.files = ./UISettings/*
+  themes.path = $${PREFIX}/share/photivo/Themes
+  themes.files = ./Themes/*
   images.path = $${PREFIX}/share/photivo/
   images.files = ./qrc/photivo.png
   images.files += ./photivoLogo.png
@@ -119,6 +121,7 @@ unix {
   INSTALLS += translations
   INSTALLS += lensfun
   INSTALLS += uisettings
+  INSTALLS += themes
   INSTALLS += images
 }
 

@@ -93,6 +93,7 @@ QStringList CurveFileNamesKeys;
 QStringList FileExtsRaw;
 QStringList FileExtsBitmap;
 QString     UserDirectory;
+QString     ShareDirectory;
 
 ptChannelMixer* ChannelMixer = NULL;
 
@@ -657,6 +658,7 @@ int photivoMain(int Argc, char *Argv[]) {
 #else
   QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
 #endif
+  ShareDirectory = NewShareDirectory;
 
   QFileInfo SettingsFileInfo(SettingsFileName);
   short NeedInitialization = 1;
