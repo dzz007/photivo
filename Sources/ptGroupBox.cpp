@@ -233,7 +233,7 @@ void ptGroupBox::UpdateView() {
     m_HelpIcon->setObjectName("");
     m_Icon->setObjectName("");
   }
-  m_Header->setStyleSheet(Theme->ptStyleSheet);
+  m_Header->setStyleSheet(Theme->stylesheet());
 }
 
 //==============================================================================
@@ -518,8 +518,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
           m_AtnBlock->setText(tr("Bl&ock"));
         }
         QMenu Menu(NULL);
-        Menu.setPalette(Theme->ptMenuPalette);
-        Menu.setStyle(Theme->ptStyle);
+        Menu.setPalette(Theme->menuPalette());
+        Menu.setStyle(Theme->style());
         Menu.addAction(m_AtnBlock);
         Menu.addSeparator();
         Menu.addAction(m_AtnReset);
@@ -544,8 +544,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
                  m_Name == "TabDemosaicing" ||
                  m_Name == "TabHighlightRecovery") {
         QMenu Menu(NULL);
-        Menu.setPalette(Theme->ptMenuPalette);
-        Menu.setStyle(Theme->ptStyle);
+        Menu.setPalette(Theme->menuPalette());
+        Menu.setStyle(Theme->style());
         Menu.addAction(m_AtnSavePreset);
         Menu.addAction(m_AtnAppendPreset);
         Menu.addSeparator();
@@ -562,8 +562,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
       } else if (parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName() != "TabSetting" &&
                  parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName() != "TabInfo") {
         QMenu Menu(NULL);
-        Menu.setPalette(Theme->ptMenuPalette);
-        Menu.setStyle(Theme->ptStyle);
+        Menu.setPalette(Theme->menuPalette());
+        Menu.setStyle(Theme->style());
         QStringList Temp = Settings->GetStringList("FavouriteTools");
         if (!Temp.contains(m_Name)) {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));

@@ -314,8 +314,8 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     // Execute once when the file manager is opened for the first time.
 
     // Theme and layout stuff (wouldn’t work in constructor)
-    setStyle(Theme->ptStyle);
-    setStyleSheet(Theme->ptStyleSheet);
+    setStyle(Theme->style());
+    setStyleSheet(Theme->stylesheet());
     m_TreePaneLayout->setContentsMargins(10, 10, 10, 10);
 //    m_FileListLayout->setContentsMargins(10, 10, 10, 10);
 //    m_FileListLayout->setSpacing(10);
@@ -449,8 +449,8 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
 
 void ptFileMgrWindow::UpdateTheme() {
   // Update file manager window appearance
-  setStyle(Theme->ptStyle);
-  setStyleSheet(Theme->ptStyleSheet);
+  setStyle(Theme->style());
+  setStyleSheet(Theme->stylesheet());
   m_Progressbar->setFixedHeight(m_PathBar->height());
 
   // Thumbgroups don’t need to be updated because Photivo theme can only be changed
@@ -579,8 +579,8 @@ void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
 
   // thumbnail view submenu
   QMenu MenuThumbLayout(tr("Thumbnail &view"));
-  MenuThumbLayout.setPalette(Theme->ptMenuPalette);
-  MenuThumbLayout.setStyle(Theme->ptStyle);
+  MenuThumbLayout.setPalette(Theme->menuPalette());
+  MenuThumbLayout.setStyle(Theme->style());
   MenuThumbLayout.addActions(ac_ThumbLayoutGroup->actions());
   MenuThumbLayout.addSeparator();
   MenuThumbLayout.addAction(ac_DirThumbs);
@@ -591,8 +591,8 @@ void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
 
   // main context menu
   QMenu Menu(NULL);
-  Menu.setPalette(Theme->ptMenuPalette);
-  Menu.setStyle(Theme->ptStyle);
+  Menu.setPalette(Theme->menuPalette());
+  Menu.setStyle(Theme->style());
   Menu.addMenu(&MenuThumbLayout);
   Menu.addSeparator();
   Menu.addAction(ac_ToggleNaviPane);

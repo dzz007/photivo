@@ -798,8 +798,10 @@ int photivoMain(int Argc, char *Argv[]) {
   // Start op the Gui stuff.
 
   // Start the theme class
-  Theme = new ptTheme(TheApplication);
-  Theme->SetCustomCSS(Settings->GetString("CustomCSSFile"));
+  Theme = new ptTheme(TheApplication,
+                      (ptTheme::Theme)Settings->GetInt("Style"),
+                      (ptTheme::Highlight)Settings->GetInt("StyleHighLight"));
+  Theme->setCustomCSS(Settings->GetString("CustomCSSFile"));
 
   GuiOptions = new ptGuiOptions();
 
@@ -3842,41 +3844,38 @@ void CB_OutputColorProfileIntentChoice(const QVariant Choice) {
 }
 
 void CB_StyleChoice(const QVariant Choice) {
-  Settings->SetValue("Style",Choice);
-  if (Settings->GetInt("Style") == ptStyle_None) {
+  Settings->SetValue("Style", Choice);
+  ptTheme::Theme newTheme = (ptTheme::Theme)Choice.toInt();
+
+  if (newTheme == ptTheme::thNone) {
     Settings->SetValue("CustomCSSFile","");
-    Theme->Reset();
-  } else if (Settings->GetInt("Style") == ptStyle_Normal) {
-    Theme->Normal(Settings->GetInt("StyleHighLight"));
-  } else if (Settings->GetInt("Style") == ptStyle_50Grey) {
-    Theme->MidGrey(Settings->GetInt("StyleHighLight"));
-  } else if (Settings->GetInt("Style") == ptStyle_VeryDark) {
-    Theme->VeryDark(Settings->GetInt("StyleHighLight"));
-  } else {
-    Theme->DarkGrey(Settings->GetInt("StyleHighLight"));
+    Theme->setCustomCSS("");
   }
+
+  Theme->SwitchTo(newTheme, (ptTheme::Highlight)Settings->GetInt("StyleHighLight"));
+
 #ifdef Q_OS_MAC
 //dirty hack to make theming work
   MainWindow->MainSplitter->setStyleSheet("");
 #endif
 
-  MainWindow->MainTabBook->setStyle(Theme->ptStyle);
-  MainWindow->ProcessingTabBook->setStyle(Theme->ptStyle);
-  MainWindow->BottomContainer->setStyle(Theme->ptStyle);
-  MainWindow->PipeControlWidget->setStyle(Theme->ptStyle);
-  MainWindow->MainSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ControlSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ViewSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ViewStartPage->setStyle(Theme->ptStyle);
+  MainWindow->MainTabBook->setStyle(Theme->style());
+  MainWindow->ProcessingTabBook->setStyle(Theme->style());
+  MainWindow->BottomContainer->setStyle(Theme->style());
+  MainWindow->PipeControlWidget->setStyle(Theme->style());
+  MainWindow->MainSplitter->setStyle(Theme->style());
+  MainWindow->ControlSplitter->setStyle(Theme->style());
+  MainWindow->ViewSplitter->setStyle(Theme->style());
+  MainWindow->ViewStartPage->setStyle(Theme->style());
 
-  TheApplication->setPalette(Theme->ptPalette);
+  TheApplication->setPalette(Theme->palette());
 
-  MainWindow->MainTabBook->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->BottomContainer->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->PipeControlWidget->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->StatusWidget->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->SearchWidget->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->ViewStartPageFrame->setStyleSheet(Theme->ptStyleSheet);
+  MainWindow->MainTabBook->setStyleSheet(Theme->stylesheet());
+  MainWindow->BottomContainer->setStyleSheet(Theme->stylesheet());
+  MainWindow->PipeControlWidget->setStyleSheet(Theme->stylesheet());
+  MainWindow->StatusWidget->setStyleSheet(Theme->stylesheet());
+  MainWindow->SearchWidget->setStyleSheet(Theme->stylesheet());
+  MainWindow->ViewStartPageFrame->setStyleSheet(Theme->stylesheet());
 #ifdef Q_OS_MAC
 //dirty hack to make theming work
   if(Theme->MacStyleFlag){
@@ -3907,7 +3906,7 @@ void CB_LoadStyleButton() {
     return;
   } else {
     Settings->SetValue("CustomCSSFile", FileName);
-    Theme->SetCustomCSS(FileName);
+    Theme->setCustomCSS(FileName);
     CB_StyleChoice(Settings->GetInt("Style"));
   }
 }
@@ -4275,8 +4274,8 @@ void CB_BackgroundColorButton() {
   Color.setGreen(Settings->GetInt("BackgroundGreen"));
   Color.setBlue(Settings->GetInt("BackgroundBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -4301,8 +4300,8 @@ void SetBackgroundColor(int SetIt) {
     ViewWindow->setPalette(BGPal);
     MainWindow->ViewStartPage->setPalette(BGPal);
   } else {
-    ViewWindow->setPalette(Theme->ptPalette);
-    MainWindow->ViewStartPage->setPalette(Theme->ptPalette);
+    ViewWindow->setPalette(Theme->palette());
+    MainWindow->ViewStartPage->setPalette(Theme->palette());
   }
 }
 
@@ -7835,8 +7834,8 @@ void CB_Tone1ColorButton() {
   Color.setGreen(Settings->GetInt("Tone1ColorGreen"));
   Color.setBlue(Settings->GetInt("Tone1ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -7873,8 +7872,8 @@ void CB_Tone2ColorButton() {
   Color.setGreen(Settings->GetInt("Tone2ColorGreen"));
   Color.setBlue(Settings->GetInt("Tone2ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -7997,8 +7996,8 @@ void CB_GradualOverlay1ColorButton() {
   Color.setGreen(Settings->GetInt("GradualOverlay1ColorGreen"));
   Color.setBlue(Settings->GetInt("GradualOverlay1ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -8036,8 +8035,8 @@ void CB_GradualOverlay2ColorButton() {
   Color.setGreen(Settings->GetInt("GradualOverlay2ColorGreen"));
   Color.setBlue(Settings->GetInt("GradualOverlay2ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {

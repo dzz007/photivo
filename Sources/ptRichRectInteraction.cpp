@@ -63,7 +63,7 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
                                               Settings->GetInt("BackgroundGreen"),
                                               Settings->GetInt("BackgroundBlue")));
   } else {
-    m_LightsOutBrushes[2] = new QBrush(Theme->ptBackground);
+    m_LightsOutBrushes[2] = new QBrush(Theme->baseColor());
   }
 
   // initial rectangles for LightsOut
