@@ -32,7 +32,7 @@ ptMessageBox::ptMessageBox(QWidget *parent)
   : QMessageBox(parent)
 {
   if (Theme != NULL) {
-    this->setPalette(Theme->ptSystemPalette);
+    this->setPalette(Theme->systemPalette());
   }
 }
 
@@ -42,7 +42,7 @@ ptMessageBox::ptMessageBox(Icon icon, const QString &title, const QString &text,
   : QMessageBox(icon, title, text, buttons, parent, flags)
 {
   if (Theme != NULL) {
-    this->setPalette(Theme->ptSystemPalette);
+    this->setPalette(Theme->systemPalette());
   }
 }
 
@@ -53,7 +53,7 @@ QMessageBox::StandardButton ptMessageBox::information(QWidget *parent, const QSt
 {
   QMessageBox* msgBox = new QMessageBox(Information, title, text, buttons, parent);
   if (Theme != NULL) {
-    msgBox->setPalette(Theme->ptSystemPalette);
+    msgBox->setPalette(Theme->systemPalette());
   }
   msgBox->setDefaultButton(defaultButton);
   int result = msgBox->exec();
@@ -67,7 +67,7 @@ QMessageBox::StandardButton ptMessageBox::question(QWidget *parent, const QStrin
 {
   QMessageBox* msgBox = new QMessageBox(Question, title, text, buttons, parent);
   if (Theme != NULL) {
-    msgBox->setPalette(Theme->ptSystemPalette);
+    msgBox->setPalette(Theme->systemPalette());
   }
   msgBox->setDefaultButton(defaultButton);
   int result = msgBox->exec();
@@ -81,7 +81,7 @@ QMessageBox::StandardButton ptMessageBox::warning(QWidget *parent, const QString
 {
   QMessageBox* msgBox = new QMessageBox(Warning, title, text, buttons, parent);
   if (Theme != NULL) {
-    msgBox->setPalette(Theme->ptSystemPalette);
+    msgBox->setPalette(Theme->systemPalette());
   }
   msgBox->setDefaultButton(defaultButton);
   int result = msgBox->exec();
@@ -95,7 +95,7 @@ QMessageBox::StandardButton ptMessageBox::critical(QWidget *parent, const QStrin
 {
   QMessageBox* msgBox = new QMessageBox(Critical, title, text, buttons, parent);
   if (Theme != NULL) {
-    msgBox->setPalette(Theme->ptSystemPalette);
+    msgBox->setPalette(Theme->systemPalette());
   }
   msgBox->setDefaultButton(defaultButton);
   int result = msgBox->exec();

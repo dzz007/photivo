@@ -282,8 +282,8 @@ void ptPathBar::ShowSubdirMenu(int idx) {
 
   // show subdirs menu directly below the clicked separator icon
   QMenu* Menu = new QMenu(NULL);
-  Menu->setPalette(Theme->ptMenuPalette);
-  Menu->setStyle(Theme->ptStyle);
+  Menu->setPalette(Theme->menuPalette());
+  Menu->setStyle(Theme->style());
   Menu->addActions(actions);
   QAction* clicked = Menu->exec(sender->mapToGlobal(QPoint(0, sender->height())));
 

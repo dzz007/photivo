@@ -758,8 +758,8 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   // Create the menus themselves
   // Note: Menus cannot be created with new. That breaks the theming.
   QMenu Menu_Mode(tr("Display &mode"), this);
-  Menu_Mode.setPalette(Theme->ptMenuPalette);
-  Menu_Mode.setStyle(Theme->ptStyle);
+  Menu_Mode.setPalette(Theme->menuPalette());
+  Menu_Mode.setStyle(Theme->style());
   Menu_Mode.addAction(ac_Mode_RGB);
   Menu_Mode.addAction(ac_Mode_Structure);
   Menu_Mode.addAction(ac_Mode_L);
@@ -768,8 +768,8 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu_Mode.addAction(ac_Mode_Gradient);
 
   QMenu Menu_Clip(tr("Show &clipping"), this);
-  Menu_Clip.setPalette(Theme->ptMenuPalette);
-  Menu_Clip.setStyle(Theme->ptStyle);
+  Menu_Clip.setPalette(Theme->menuPalette());
+  Menu_Clip.setStyle(Theme->style());
   Menu_Clip.addAction(ac_Clip_Indicate);
   Menu_Clip.addSeparator();
   Menu_Clip.addAction(ac_Clip_Over);
@@ -780,8 +780,8 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu_Clip.addAction(ac_Clip_B);
 
   QMenu Menu(this);
-  Menu.setPalette(Theme->ptMenuPalette);
-  Menu.setStyle(Theme->ptStyle);
+  Menu.setPalette(Theme->menuPalette());
+  Menu.setStyle(Theme->style());
   Menu.addAction(ac_ZoomFit);
   Menu.addAction(ac_Zoom100);
   Menu.addSeparator();

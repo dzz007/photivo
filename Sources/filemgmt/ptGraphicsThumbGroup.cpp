@@ -72,7 +72,7 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
   setAcceptedMouseButtons(Qt::LeftButton);
   setFiltersChildEvents(true);
   setCursor(QCursor(Qt::PointingHandCursor));
-  setPen(QPen(Theme->ptBright, 0, Qt::DashLine));
+  setPen(QPen(Theme->emphasizedColor(), 0, Qt::DashLine));
 }
 
 //==============================================================================
@@ -107,7 +107,7 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
   m_InfoText->setText(QFontMetrics(m_InfoText->font()).elidedText(description,
                                                                   Qt::ElideRight,
                                                                   (int)ThumbSize));
-  m_InfoText->setBrush(QBrush(Theme->ptText));
+  m_InfoText->setBrush(QBrush(Theme->textColor()));
   m_InfoText->setPos(InnerPadding, ThumbSize + InnerPadding*2);
 
   // file type display in topleft corner (images only)
@@ -120,7 +120,7 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
       QFont tempFont = m_ImgTypeText->font();
       tempFont.setBold(true);
       m_ImgTypeText->setFont(tempFont);
-      m_ImgTypeText->setBrush(QBrush(Theme->ptText));
+      m_ImgTypeText->setBrush(QBrush(Theme->textColor()));
       m_ImgTypeText->setPos(InnerPadding, InnerPadding);
       m_ImgTypeText->setParentItem(this);
     }
@@ -179,13 +179,13 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
   switch (event->type()) {
     case QEvent::GraphicsSceneHoverEnter: {
       event->accept();
-      this->setPen(QPen(Theme->ptHighLight, 0, Qt::DashLine));
+      this->setPen(QPen(Theme->highlightColor(), 0, Qt::DashLine));
       return true;
     }
 
     case QEvent::GraphicsSceneHoverLeave: {
       event->accept();
-      setPen(QPen(Theme->ptBright, 0, Qt::DashLine));
+      setPen(QPen(Theme->emphasizedColor(), 0, Qt::DashLine));
       return true;
     }
 
@@ -232,7 +232,7 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
 
 void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
   painter->setPen(this->pen());
-  painter->setBrush(QBrush(Theme->ptDark));
+  painter->setBrush(QBrush(Theme->altBaseColor()));
   painter->drawRoundedRect(this->rect(), 5, 5);
   if (m_Thumbnail) {
     painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), *m_Thumbnail);
