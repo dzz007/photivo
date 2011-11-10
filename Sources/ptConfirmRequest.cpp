@@ -102,7 +102,7 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
 
   if (Settings->GetInt("SaveConfirmation") == 0) {
-    if (ImageCleanUp == 1) { // clean up the input file if we got just a temp file
+    if (ImageCleanUp > 1) { // clean up the input file if we got just a temp file
       ptRemoveFile(InputFileNameList[0]);
       ImageCleanUp--;
     }
@@ -138,7 +138,7 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
     case QMessageBox::Save:
       // Save was clicked
       CB_WritePipeButton();
-      if (ImageCleanUp == 1) { // clean up the input file if we got just a temp file
+      if (ImageCleanUp > 1) { // clean up the input file if we got just a temp file
         ptRemoveFile(InputFileNameList[0]);
         ImageCleanUp--;
       }
@@ -146,7 +146,7 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
 
     case QMessageBox::Discard:
       // Don't Save was clicked
-      if (ImageCleanUp == 1) {  // clean up the input file if we got just a temp file
+      if (ImageCleanUp > 1) {  // clean up the input file if we got just a temp file
         ptRemoveFile(InputFileNameList[0]);
         ImageCleanUp--;
       }

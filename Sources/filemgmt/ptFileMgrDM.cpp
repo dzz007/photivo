@@ -115,7 +115,11 @@ int ptFileMgrDM::setThumbnailDir(const QString path) {
 //==============================================================================
 
 void ptFileMgrDM::StartThumbnailer() {
+#ifdef Q_OS_MAC
+  m_Thumbnailer->run();
+#else
   m_Thumbnailer->start();
+#endif
 }
 
 //==============================================================================
