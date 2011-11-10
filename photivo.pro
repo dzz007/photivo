@@ -114,7 +114,7 @@ unix {
   uisettings.path     = $${PREFIX}/share/photivo/UISettings
   uisettings.files    = UISettings/*
   themes.path         = $${PREFIX}/share/photivo/Themes
-  themes.files        = ./Themes/*
+  themes.files        = Themes/*
   
   INSTALLS += binaries
   INSTALLS += shortcut
@@ -127,4 +127,5 @@ unix {
   INSTALLS += translations
   INSTALLS += lensfun
   INSTALLS += uisettings
+  INSTALLS += themes
 }
