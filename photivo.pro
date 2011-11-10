@@ -1,35 +1,35 @@
 ################################################################################
 ##
-## photivo
+## Photivo
 ##
 ## Copyright (C) 2008 Jos De Laender
 ## Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
+## Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
 ##
-## This file is part of photivo.
+## This file is part of Photivo.
 ##
-## photivo is free software: you can redistribute it and/or modify
+## Photivo is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License version 3
 ## as published by the Free Software Foundation.
 ##
-## photivo is distributed in the hope that it will be useful,
+## Photivo is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with photivo.  If not, see <http://www.gnu.org/licenses/>.
+## along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 ##
 ################################################################################
+#
+# This is a Qt project file for Photivo.
+# All Photivo project files are heavily tuned.
+# Do not overwrite any with "qmake -project"!
+#
+################################################################################
 
-######################################################################
-#
-# This is the Qt project file for photivo.
-# Don't let it overwrite by qmake -project !
-# A number of settings is tuned.
-#
-# qmake will make a platform dependent makefile of it.
-#
-######################################################################
+TEMPLATE = subdirs
+CONFIG += silent
 
 # Check for qmake version
 contains($$[QMAKE_VERSION],^2*) {
@@ -43,73 +43,79 @@ contains(QT_VERSION, ^4\\.[0-5]\\..*) {
   error("Use at least Qt 4.6.")
 }
 
-CONFIG += silent
-#CONFIG += release
-#CONFIG += debug
-TEMPLATE = subdirs
+# Hack to clean old makefiles
+unix {
+  RETURN = $$system(rm ./photivoProject/Makefile 2> /dev/null)
+  RETURN = $$system(rm ./ptClearProject/Makefile 2> /dev/null)
+  RETURN = $$system(rm ./ptGimpProject/Makefile 2> /dev/null)
+}
+
+###############################################################################
+
+# Configure subprojects to build. Photivo itself is always included.
+BUILD_ADOBE=no
+BUILD_CURVES=no
+BUILD_GIMP=no
+BUILD_CLEAR=no
+CONFIG(WithAdobeProfiles) {
+  SUBDIRS += ptCreateAdobeProfilesProject
+  BUILD_ADOBE=yes
+}
+CONFIG(WithCurves) {
+  SUBDIRS += ptCreateCurvesProject
+  BUILD_CURVES=yes
+}
+!CONFIG(WithoutGimp) {
+  SUBDIRS += ptGimpProject
+  BUILD_GIMP=yes
+}
+!CONFIG(WithoutClear) {
+  SUBDIRS += ptClearProject
+  BUILD_CLEAR=yes
+}
+SUBDIRS += photivoProject
+
+system(echo "Build Photivo                : yes")
+system(echo "Build ptClear                : $${BUILD_CLEAR}")
+system(echo "Build Gimp plugin            : $${BUILD_GIMP}")
+system(echo "Build curves creator         : $${BUILD_CURVES}")
+system(echo "Build Adobe profiles creator : $${BUILD_ADOBE}")
+
+###############################################################################
 
 isEmpty(PREFIX) {
   PREFIX = $$[QT_INSTALL_PREFIX]
 }
 
-# Folder where all created object and binary files are put
-# If user defined, no dot use spaces in the name!
-win32 {
-  isEmpty(BUILDDIR) {
-    BUILDDIR = build
-  }
-  !exists( $${BUILDDIR} ) {
-    RETURN = $$system(mkdir $${BUILDDIR})
-  }
-  RETURN = $$system(touch ./builddir && rm ./builddir && echo $${BUILDDIR} >> ./builddir)
-}
-
-# Hack to clean old makefiles
-unix {
-  RETURN = $$system(touch ./photivoProject/Makefile && rm ./photivoProject/Makefile)
-  RETURN = $$system(touch ./ptClearProject/Makefile && rm ./ptClearProject/Makefile)
-  RETURN = $$system(touch ./ptGimpProject/Makefile && rm ./ptGimpProject/Makefile)
-}
-
-SUBDIRS += photivoProject
-SUBDIRS += ptCreateAdobeProfilesProject
-SUBDIRS += ptCreateCurvesProject
-SUBDIRS += ptGimpProject
-SUBDIRS += ptClearProject
-
-RETURN = $$system(touch ./photivoProject/install_prefix && rm ./photivoProject/install_prefix && echo $${PREFIX} >> ./photivoProject/install_prefix)
-
-# Install
+# setup for "make install"
 unix {
   QMAKE_STRIP = echo
-  binaries.path = $${PREFIX}/bin
-  binaries.files = photivo
-  binaries.files += ptClear
-  shortcut.path = $${PREFIX}/share/applications
-  shortcut.files = ./ReferenceMaterial/photivo.desktop
-  shortcut2.path = ~/.local/share/applications
-  shortcut2.files = ./ReferenceMaterial/photivo.desktop
-  icon.path = $${PREFIX}/share/pixmaps
-  icon.files = ./qrc/photivo-appicon.png
-  curves.path = $${PREFIX}/share/photivo/Curves
-  curves.files = ./Curves/*
-  mixer.path = $${PREFIX}/share/photivo/ChannelMixers
-  mixer.files = ./ChannelMixers/*
-  presets.path = $${PREFIX}/share/photivo/Presets
-  presets.files = ./Presets/*
-  profiles.path = $${PREFIX}/share/photivo/Profiles
-  profiles.files = ./Profiles/*
-  translations.path = $${PREFIX}/share/photivo/Translations
-  translations.files = ./Translations/*
-  lensfun.path = $${PREFIX}/share/photivo/LensfunDatabase
-  lensfun.files = ./LensfunDatabase/*
-  uisettings.path = $${PREFIX}/share/photivo/UISettings
-  uisettings.files = ./UISettings/*
-  themes.path = $${PREFIX}/share/photivo/Themes
-  themes.files = ./Themes/*
-  images.path = $${PREFIX}/share/photivo/
-  images.files = ./qrc/photivo.png
-  images.files += ./photivoLogo.png
+
+  binaries.path       = $${PREFIX}/bin
+  binaries.files      = photivo ptClear
+  shortcut.path       = $${PREFIX}/share/applications
+  shortcut.files      = ReferenceMaterial/photivo.desktop
+  shortcut2.path      = ~/.local/share/applications
+  shortcut2.files     = ReferenceMaterial/photivo.desktop
+  icon.path           = $${PREFIX}/share/pixmaps
+  icon.files          = qrc/photivo-appicon.png
+  curves.path         = $${PREFIX}/share/photivo/Curves
+  curves.files        = Curves/*
+  mixer.path          = $${PREFIX}/share/photivo/ChannelMixers
+  mixer.files         = ChannelMixers/*
+  presets.path        = $${PREFIX}/share/photivo/Presets
+  presets.files       = Presets/*
+  profiles.path       = $${PREFIX}/share/photivo/Profiles
+  profiles.files      = Profiles/*
+  translations.path   = $${PREFIX}/share/photivo/Translations
+  translations.files  = Translations/*
+  lensfun.path        = $${PREFIX}/share/photivo/LensfunDatabase
+  lensfun.files       = LensfunDatabase/*
+  uisettings.path     = $${PREFIX}/share/photivo/UISettings
+  uisettings.files    = UISettings/*
+  themes.path         = $${PREFIX}/share/photivo/Themes
+  themes.files        = ./Themes/*
+  
   INSTALLS += binaries
   INSTALLS += shortcut
   INSTALLS += shortcut2
@@ -121,8 +127,4 @@ unix {
   INSTALLS += translations
   INSTALLS += lensfun
   INSTALLS += uisettings
-  INSTALLS += themes
-  INSTALLS += images
 }
-
-###############################################################################

@@ -76,8 +76,9 @@ public:
   */
   void setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList);
 
+#ifndef Q_OS_MAC
 protected:
-  /*! This function performs the actual thumbnail generation. */
+#endif
   void run();
 
 

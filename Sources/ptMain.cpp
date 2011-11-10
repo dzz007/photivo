@@ -499,9 +499,9 @@ int photivoMain(int Argc, char *Argv[]) {
       }
       if (ImageFileToOpen != "") {
         if (ImageCleanUp > 0) {
-          TheApplication->sendMessage("::img::" + ImageFileToOpen);
-        } else {
           TheApplication->sendMessage("::tmp::" + ImageFileToOpen);
+        } else {
+          TheApplication->sendMessage("::img::" + ImageFileToOpen);
         }
       }
       TheApplication->activateWindow();
