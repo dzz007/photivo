@@ -1,54 +1,47 @@
 ################################################################################
 ##
-## photivo
+## Photivo
 ##
 ## Copyright (C) 2008 Jos De Laender
+## Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
 ##
-## This file is part of photivo.
+## This file is part of Photivo.
 ##
-## photivo is free software: you can redistribute it and/or modify
+## Photivo is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License version 3
 ## as published by the Free Software Foundation.
 ##
-## photivo is distributed in the hope that it will be useful,
+## Photivo is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with photivo.  If not, see <http://www.gnu.org/licenses/>.
+## along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 ##
 ################################################################################
+#
+# This is a Qt project file for Photivo.
+# All Photivo project files are heavily tuned.
+# Do not overwrite any with "qmake -project"!
+#
+################################################################################
 
-######################################################################
-#
-# This is the Qt project file for photivo.
-# Don't let it overwrite by qmake -project !
-# A number of settings is tuned.
-#
-# qmake will make a platform dependent makefile of it.
-#
-######################################################################
+isEmpty(PREFIX) {
+  PREFIX = $$[QT_INSTALL_PREFIX]
+}
 
-CONFIG += release silent
+CONFIG += silent
 TEMPLATE = app
 TARGET = ptCreateCurves
-DEPENDPATH += .
-INCLUDEPATH += $${PREFIX}/include .
 
-win32 {
-  BUILDDIR = $$system(cat ../builddir)
-  DESTDIR = ../$${BUILDDIR}
-  OBJECTS_DIR = ../$${BUILDDIR}/Objects
-  MOC_DIR = ../$${BUILDDIR}/Objects
-  UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
-}
-unix {
-  DESTDIR = ..
-  OBJECTS_DIR = ../Objects
-  MOC_DIR = ../Objects
-  UI_HEADERS_DIR = ../Objects
-}
+DEPENDPATH     += .
+INCLUDEPATH    += $${PREFIX}/include
+DESTDIR         = ..
+OBJECTS_DIR     = ../Objects
+MOC_DIR         = ../Objects
+UI_HEADERS_DIR  = ../Objects
+
 #prevent qmake from adding -arch flags
 macx{
   QMAKE_CFLAGS_X86_64 =-m64
