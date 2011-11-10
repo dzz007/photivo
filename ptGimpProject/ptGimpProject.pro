@@ -39,10 +39,10 @@ TARGET = ptGimp
 DEPENDPATH     += .
 INCLUDEPATH    += $${PREFIX}/include
 DESTDIR         = ..
-OBJECTS_DIR     = ../Objects
-MOC_DIR         = ../Objects
-UI_HEADERS_DIR  = ../Objects
-RCC_DIR         = ../Objects
+OBJECTS_DIR     = ../Objects_Gimp
+MOC_DIR         = ../Objects_Gimp
+UI_HEADERS_DIR  = ../Objects_Gimp
+RCC_DIR         = ../Objects_Gimp
 
 #prevent qmake from adding -arch flags
 macx{
