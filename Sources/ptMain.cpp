@@ -223,6 +223,7 @@ void InitStrings() {
                                                  "*.tiff *.TIFF *.Tiff "
                                                  "*.tif *.TIF *.Tif "
                                                  "*.bmp *.BMP *.Bmp "
+                                                 "*.png *.PNG *.Png "
                                                  "*.ppm *.PPm *.Ppm "
                                                  ";;All files (*.*)");
 
@@ -233,6 +234,7 @@ void InitStrings() {
                                                  "*.tiff *.TIFF *.Tiff "
                                                  "*.tif *.TIF *.Tif "
                                                  "*.bmp *.BMP *.Bmp "
+                                                 "*.png *.PNG *.Png "
                                                  "*.ppm *.PPm *.Ppm "
                                                  ";;All files (*.*)");
 }
@@ -615,6 +617,7 @@ int photivoMain(int Argc, char *Argv[]) {
                  << "*.tiff" << "*.TIFF" << "*.Tiff"
                  << "*.tif" << "*.TIF" << "*.Tif"
                  << "*.bmp" << "*.BMP" << "*.Bmp"
+                 << "*.png" << "*.PNG" << "*.Png"
                  << "*.ppm" << "*.PPm" << "*.Ppm";
 
 
