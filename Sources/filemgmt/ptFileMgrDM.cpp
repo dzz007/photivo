@@ -57,16 +57,6 @@ void ptFileMgrDM::DestroyInstance() {
 ptFileMgrDM::ptFileMgrDM()
 : QObject()
 {
-  m_TreeModel = new QFileSystemModel;
-  m_TreeModel->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Drives);
-
-  // Set root dir for the file system watcher
-  #ifdef Q_OS_WIN
-    m_TreeModel->setRootPath(m_TreeModel->myComputer().toString());
-  #else
-    m_TreeModel->setRootPath("/");
-  #endif
-
   m_DirModel    = new ptSingleDirModel;
   m_TagModel    = new ptTagModel;
 
@@ -84,7 +74,6 @@ ptFileMgrDM::ptFileMgrDM()
 
 ptFileMgrDM::~ptFileMgrDM() {
   StopThumbnailer();
-  DelAndNull(m_TreeModel);
   DelAndNull(m_ThumbList);
   DelAndNull(m_Thumbnailer);
   DelAndNull(m_Cache);

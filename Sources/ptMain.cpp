@@ -614,6 +614,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
   FileExtsBitmap << "*.jpeg" << "*.JPEG" << "*.Jpeg "
                  << "*.jpg" << "*.JPG" << "*.Jpg"
+                 << "*.png" << ".PNG" << "*.Png"
                  << "*.tiff" << "*.TIFF" << "*.Tiff"
                  << "*.tif" << "*.TIF" << "*.Tif"
                  << "*.bmp" << "*.BMP" << "*.Bmp"

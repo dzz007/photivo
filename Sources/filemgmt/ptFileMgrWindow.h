@@ -113,13 +113,11 @@ private slots:
   void bookmarkCurrentDir();
   void changeListDir(const QModelIndex& index);
   void changeToBookmark(const QModelIndex& index);
-  void changeTreeDir(const QModelIndex& index);
   void changeDir(const QString& path);
   void closeWindow();
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
   void fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix);
   void fetchNewThumbs(const bool isLast);
-//  void on_m_PathInput_returnPressed();
 
   // context menu slots
   void verticalThumbs();

@@ -251,7 +251,7 @@ ptSlider::chunk, QProgressBar::chunk {
   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $SliderStart$, stop: 1 $SliderStop$);
   background-image: url($SliderStripe$);
   border-radius: 2px;
-  border: 1px solid $SliderStop$; /*TODO: ptSliderStart.darker(200).name() */
+  border: 1px solid $SliderStop$;
 }
 
 ptSlider::chunk:disabled {
@@ -269,18 +269,6 @@ QToolButton {
 QToolButton:hover {
   border: 1px solid $Highlight$;
   border-radius: 3px;
-}
-
-
-/************************************************************************************/
-
-QTreeView {
-  border-radius: 5px;
-  border: none;
-}
-
-#FMTreePane, #FMThumbPane, #ImageView {
-  border-radius: 5px;
 }
 
 
@@ -416,17 +404,6 @@ QSplitter::handle:vertical {
   height: 4px;
 }
 
-#m_MainSplitter #ViewSplitter {
-  background-color: $AltBase$;
-  padding: 10px;
-  max-width: 10px;
-  min-width: 10px;
-}
-
-QSplitter::handle:horizontal#m_MainSplitter QSplitter::handle:horizontal#ViewSplitter{
-  width: 10px;
-}
-
 
 /** Tabs ****************************************/
 QTabWidget::pane {
@@ -499,4 +476,25 @@ QToolTip {
 
 *#StatusLabel {
   color: $Text$;
+}
+
+
+/** File Manager **********************************************/
+
+#FMDirListPane, #FMTagPane, #FMThumbPane, #FMImageViewPane {
+  border-radius: 5px;
+}
+
+#FMMainSplitter {
+  padding: 10px;
+}
+
+#FMMainSplitter, #FMSidebarSplitter {
+  background-color: $AltBase$;
+  max-width : 10px;
+  min-width : 10px;
+  width     : 10px;
+  max-height: 10px;
+  min-height: 10px;
+  height    : 10px;
 }
