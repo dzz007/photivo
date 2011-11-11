@@ -105,9 +105,6 @@ public:
   /*! Returns a pointer to the list of currently displayed thumbnail images. */
   QList<ptGraphicsThumbGroup*>* thumbList() { return m_ThumbList; }
 
-  /*! Returns a pointer to the model with the data for the tree view. */
-  QFileSystemModel* treeModel() { return m_TreeModel; }
-
   /*! Returns a pointer to the thumbnail.*/
   QImage* getThumbnail(const QString FileName,
                        const int     MaxSize);
@@ -129,7 +126,6 @@ private:
   ptSingleDirModel*             m_DirModel;
   ptThumbnailer*                m_Thumbnailer;
   QList<ptGraphicsThumbGroup*>* m_ThumbList;
-  QFileSystemModel*             m_TreeModel;
 
 
 };

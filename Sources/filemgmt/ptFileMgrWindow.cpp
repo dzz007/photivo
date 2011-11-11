@@ -62,26 +62,13 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   ptGraphicsSceneEmitter::ConnectThumbnailAction(
       this, SLOT(execThumbnailAction(ptThumbnailAction,QString)) );
 
-  // Panels setup (only folder tree *or* list can be visible)
+  // Folder list
   FMSidebar->setVisible(Settings->GetInt("FileMgrShowSidebar"));
-  FMTreePane->setVisible(Settings->GetInt("FileMgrShowDirTree"));
-  FMDirListPane->setVisible(!Settings->GetInt("FileMgrShowDirTree"));
 #ifdef Q_OS_WIN
   DirListLabel->setText(tr("Folders"));
 #else
   DirListLabel->setText(tr("Directories"));
 #endif
-
-  // Folder tree
-  m_DirTree->setModel(m_DataModel->treeModel());
-  m_DirTree->setRootIndex(m_DataModel->treeModel()->index(m_DataModel->treeModel()->rootPath()));
-  m_DirTree->setColumnHidden(1, true);
-  m_DirTree->setColumnHidden(2, true);
-  m_DirTree->setColumnHidden(3, true);
-  connect(m_DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
-  connect(m_DirTree, SIGNAL(activated(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
-
-  // Folder list
   m_DirList->setModel(m_DataModel->dirModel());
   connect(m_DirList, SIGNAL(activated(QModelIndex)), this, SLOT(changeListDir(QModelIndex)));
 
@@ -109,21 +96,33 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_ThumbPaneLayout->insertWidget(0, m_PathBar);
   m_Progressbar->hide();
 
-
   // construct the image view
-  m_ImageView = new ptImageView(ImageView, m_DataModel);
+  m_ImageView = new ptImageView(FMImageViewPane, m_DataModel);
 
-  // Filemgr windwow layout
+  // Filemgr main splitter layout
   if (Settings->m_IniSettings->contains("FileMgrMainSplitter")) {
-    m_MainSplitter->restoreState(
+    FMMainSplitter->restoreState(
         Settings->m_IniSettings->value("FileMgrMainSplitter").toByteArray());
   } else {
     QList <int> SizesList;
     SizesList.append(250);
-    SizesList.append(1000); // Value obtained to avoid resizing at startup.
-    m_MainSplitter->setSizes(SizesList);
+    SizesList.append(500);
+    SizesList.append(500);
+    FMMainSplitter->setSizes(SizesList);
   }
-  m_MainSplitter->setStretchFactor(1,1);
+  FMMainSplitter->setStretchFactor(1,1);
+
+  // sidebar splitter layout
+  if (Settings->m_IniSettings->contains("FileMgrSidebarSplitter")) {
+    FMSidebarSplitter->restoreState(
+        Settings->m_IniSettings->value("FileMgrSidebarSplitter").toByteArray());
+  } else {
+    QList <int> SizesList;
+    SizesList.append(500);
+    SizesList.append(500);
+    FMSidebarSplitter->setSizes(SizesList);
+  }
+  FMSidebarSplitter->setStretchFactor(1,1);
 
   ConstructContextMenu();
 }
@@ -133,7 +132,9 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 ptFileMgrWindow::~ptFileMgrWindow() {
   Settings->SetValue("LastFileMgrLocation", m_DataModel->currentDir());
   Settings->m_IniSettings->
-      setValue("FileMgrMainSplitter", m_MainSplitter->saveState());
+      setValue("FileMgrMainSplitter", FMMainSplitter->saveState());
+  Settings->m_IniSettings->
+      setValue("FileMgrSidebarSplitter", FMSidebarSplitter->saveState());
 
   DelAndNull(m_Layouter);
   DelAndNull(m_PathBar);
@@ -203,12 +204,6 @@ void ptFileMgrWindow::changeListDir(const QModelIndex& index) {
 
 //==============================================================================
 
-void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
-  DisplayThumbnails(m_DataModel->treeModel()->filePath(index));
-}
-
-//==============================================================================
-
 void ptFileMgrWindow::changeToBookmark(const QModelIndex& index) {
   changeDir(m_DataModel->tagModel()->path(index));
 }
@@ -216,25 +211,16 @@ void ptFileMgrWindow::changeToBookmark(const QModelIndex& index) {
 //==============================================================================
 
 void ptFileMgrWindow::changeDir(const QString& path) {
-  if (m_DirTree->isVisible()) {
-    m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(path));
-    DisplayThumbnails(path);
-  } else {
-    m_DataModel->dirModel()->ChangeAbsoluteDir(path);
-    DisplayThumbnails(path, m_DataModel->dirModel()->pathType());
-  }
+  m_DataModel->dirModel()->ChangeAbsoluteDir(path);
+  DisplayThumbnails(path, m_DataModel->dirModel()->pathType());
 }
 
 //==============================================================================
 
 void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/, ptFSOType fsoType /*= fsoDir*/) {
   if (path.isEmpty()) {
-    if (Settings->GetInt("FileMgrShowDirTree")) {
-      path = m_DataModel->treeModel()->filePath(m_DirTree->currentIndex());
-    } else {
-      path = m_DataModel->dirModel()->absolutePath();
-      fsoType = m_DataModel->dirModel()->pathType();
-    }
+    path = m_DataModel->dirModel()->absolutePath();
+    fsoType = m_DataModel->dirModel()->pathType();
   }
 
 #ifdef Q_OS_WIN
@@ -314,12 +300,7 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     // Execute once when the file manager is opened for the first time.
 
     // Theme and layout stuff (wouldn’t work in constructor)
-    setStyle(Theme->style());
-    setStyleSheet(Theme->stylesheet());
-    m_TreePaneLayout->setContentsMargins(10, 10, 10, 10);
-//    m_FileListLayout->setContentsMargins(10, 10, 10, 10);
-//    m_FileListLayout->setSpacing(10);
-    m_Progressbar->setFixedHeight(m_PathBar->height());
+    UpdateTheme();
 
     // set initally selected directory
     QString lastDir = Settings->GetString("LastFileMgrLocation");
@@ -327,11 +308,6 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 #ifdef Q_OS_WIN
     if (lastDir == MyComputerIdString) {
       lastDirType = fsoRoot;
-      // Folder tree does not support “My Computer”
-      if (m_DirTree->isVisible()) {
-        lastDir = QDir::homePath();
-        lastDirType = fsoDir;
-      }
     } else {
 #endif
       if (lastDir.isEmpty() || !QDir(lastDir).exists()) {
@@ -341,10 +317,7 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 #ifdef Q_OS_WIN
     }
 #endif
-    if (m_DirTree->isVisible())
-      m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(lastDir));
-    if (m_DirList->isVisible())
-      m_DataModel->dirModel()->ChangeAbsoluteDir(lastDir);
+    m_DataModel->dirModel()->ChangeAbsoluteDir(lastDir);
     m_DataModel->setCurrentDir(lastDir);
 
     // First call base class showEvent, then start thumbnail loading to ensure
@@ -415,35 +388,12 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     ImageFileToOpen = location;
     CB_MenuFileOpen(1);
   } else if (action == tnaChangeDir) {
-    if (m_DirTree->isVisible()) {
-      m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(location));
-      DisplayThumbnails(location);
-    } else {
-      m_DataModel->dirModel()->ChangeAbsoluteDir(location);
-      DisplayThumbnails(location, m_DataModel->dirModel()->pathType());
-    }
+    m_DataModel->dirModel()->ChangeAbsoluteDir(location);
+    DisplayThumbnails(location, m_DataModel->dirModel()->pathType());
   } else if (action == tnaViewImage) {
     m_ImageView->Display( location);
   }
 }
-
-//==============================================================================
-
-//void ptFileMgrWindow::on_m_PathInput_returnPressed() {
-//  QDir dir = QDir(QDir::fromNativeSeparators(m_PathInput->text()));
-//  if (dir.exists() && !QDir::match(m_DataModel->currentDir(), dir.path())) {
-//    m_PathInput->setText(dir.absolutePath());
-//    if (Settings->GetInt("FileMgrShowDirTree")) {
-//      m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(dir.absolutePath()));
-//    } else {
-//      m_DataModel->dirModel()->ChangeAbsoluteDir(dir.absolutePath());
-//    }
-//    DisplayThumbnails();
-
-//  } else {
-//    m_PathInput->setText(QDir::toNativeSeparators(m_DataModel->currentDir()));
-//  }
-//}
 
 //==============================================================================
 

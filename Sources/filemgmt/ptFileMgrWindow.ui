@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string/>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -21,7 +21,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QSplitter" name="m_MainSplitter">
+    <widget class="QSplitter" name="FMMainSplitter">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -34,42 +34,10 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QSplitter" name="splitter">
+        <widget class="QSplitter" name="FMSidebarSplitter">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <widget class="QWidget" name="FMTreePane" native="true">
-          <property name="minimumSize">
-           <size>
-            <width>250</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="baseSize">
-           <size>
-            <width>250</width>
-            <height>0</height>
-           </size>
-          </property>
-          <layout class="QVBoxLayout" name="m_TreePaneLayout">
-           <item>
-            <widget class="QTreeView" name="m_DirTree">
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Plain</enum>
-             </property>
-             <property name="editTriggers">
-              <set>QAbstractItemView::NoEditTriggers</set>
-             </property>
-             <property name="headerHidden">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
          <widget class="QWidget" name="FMDirListPane" native="true">
           <layout class="QVBoxLayout" name="m_DirListPaneLayout">
            <item>
@@ -145,48 +113,34 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="Views" native="true">
-      <layout class="QVBoxLayout" name="verticalLayout_5">
+     <widget class="QWidget" name="FMThumbPane" native="true">
+      <layout class="QVBoxLayout" name="m_ThumbPaneLayout">
        <property name="margin">
-        <number>0</number>
+        <number>9</number>
        </property>
        <item>
-        <widget class="QSplitter" name="ViewSplitter">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+        <widget class="QProgressBar" name="m_Progressbar">
+         <property name="value">
+          <number>0</number>
          </property>
-         <widget class="QWidget" name="FMThumbPane" native="true">
-          <layout class="QVBoxLayout" name="m_ThumbPaneLayout">
-           <property name="margin">
-            <number>9</number>
-           </property>
-           <item>
-            <widget class="QProgressBar" name="m_Progressbar">
-             <property name="value">
-              <number>0</number>
-             </property>
-             <property name="textVisible">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGraphicsView" name="m_FilesView">
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="ImageView" native="true"/>
+         <property name="textVisible">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGraphicsView" name="m_FilesView">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
         </widget>
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="FMImageViewPane" native="true"/>
     </widget>
    </item>
   </layout>
