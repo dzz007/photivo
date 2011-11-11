@@ -29,7 +29,7 @@
 ################################################################################
 
 APPVERSION = $$system(sh ./get_appversion)
-!build_pass:system(echo "Photivo $${APPVERSION}")
+!build_pass:message("Photivo $${APPVERSION}")
 
 isEmpty(PREFIX) {
   PREFIX = $$[QT_INSTALL_PREFIX]
