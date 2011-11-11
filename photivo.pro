@@ -43,12 +43,13 @@ contains(QT_VERSION, ^4\\.[0-5]\\..*) {
   error("Use at least Qt 4.6.")
 }
 
-# Hack to clean old makefiles
-unix {
-  RETURN = $$system(rm ./photivoProject/Makefile 2> /dev/null)
-  RETURN = $$system(rm ./ptClearProject/Makefile 2> /dev/null)
-  RETURN = $$system(rm ./ptGimpProject/Makefile 2> /dev/null)
-}
+# Remove subproject makefiles to make sure they are created again with current settings
+system(rm -f $$OUT_PWD/Makefile)
+system(rm -f $$OUT_PWD/photivoProject/Makefile)
+system(rm -f $$OUT_PWD/ptClearProject/Makefile)
+system(rm -f $$OUT_PWD/ptCreateAdobeProfilesProject/Makefile)
+system(rm -f $$OUT_PWD/ptCreateCurvesProject/Makefile)
+system(rm -f $$OUT_PWD/ptGimpProject/Makefile)
 
 ###############################################################################
 
@@ -91,38 +92,60 @@ isEmpty(PREFIX) {
 unix {
   QMAKE_STRIP = echo
 
-  binaries.path       = $${PREFIX}/bin
-  binaries.files      = photivo ptClear
+  # Did I mention that sometimes i *HATE* qmake!? Especially building out of source
+  # on Linux can be a PITA!
+  # Qmake checks for the existence of files before creating the rules for make install.
+  # Obviously in a fresh build folder there are no binaries present. So the rules
+  # are not created and the binaries not installed. Great! Let's hack around it
+  # and create dummy "binaries" when the files are not present. Now qmake is happy
+  # and we get our binaries installed properly in any case.
+  !exists($$OUT_PWD/photivo) {
+    system(touch $$OUT_PWD/photivo)
+  }
+  !exists($$OUT_PWD/ptClear) {
+    system(touch $$OUT_PWD/ptClear)
+  }
+  binaries.path       = $${PREFIX}/bin  
+  binaries.files      = $$OUT_PWD/photivo $$OUT_PWD/ptClear
+  INSTALLS           += binaries
+  
   shortcut.path       = $${PREFIX}/share/applications
   shortcut.files      = ReferenceMaterial/photivo.desktop
+  INSTALLS           += shortcut
+
   shortcut2.path      = ~/.local/share/applications
   shortcut2.files     = ReferenceMaterial/photivo.desktop
+  INSTALLS           += shortcut2
+
   icon.path           = $${PREFIX}/share/pixmaps
   icon.files          = qrc/photivo-appicon.png
+  INSTALLS           += icon
+  
   curves.path         = $${PREFIX}/share/photivo/Curves
   curves.files        = Curves/*
+  INSTALLS           += curves
+  
   mixer.path          = $${PREFIX}/share/photivo/ChannelMixers
   mixer.files         = ChannelMixers/*
+  INSTALLS           += mixer
+  
   presets.path        = $${PREFIX}/share/photivo/Presets
   presets.files       = Presets/*
+  INSTALLS           += presets
+  
   profiles.path       = $${PREFIX}/share/photivo/Profiles
   profiles.files      = Profiles/*
+  INSTALLS           += profiles
+  
   translations.path   = $${PREFIX}/share/photivo/Translations
   translations.files  = Translations/*
+  INSTALLS           += translations
+  
   lensfun.path        = $${PREFIX}/share/photivo/LensfunDatabase
   lensfun.files       = LensfunDatabase/*
+  INSTALLS           += lensfun
+  
   uisettings.path     = $${PREFIX}/share/photivo/UISettings
   uisettings.files    = UISettings/*
-  
-  INSTALLS += binaries
-  INSTALLS += shortcut
-  INSTALLS += shortcut2
-  INSTALLS += icon
-  INSTALLS += curves
-  INSTALLS += mixer
-  INSTALLS += presets
-  INSTALLS += profiles
-  INSTALLS += translations
-  INSTALLS += lensfun
-  INSTALLS += uisettings
+  INSTALLS           += uisettings
 }
