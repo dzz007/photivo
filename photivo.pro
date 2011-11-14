@@ -38,9 +38,9 @@ contains($$[QMAKE_VERSION],^2*) {
 }
 
 # Check for Qt version
-contains(QT_VERSION, ^4\\.[0-5]\\..*) {
+contains(QT_VERSION, ^4\\.[0-6]\\..*) {
   message("Cannot build Photivo with Qt version $${QT_VERSION}.")
-  error("Use at least Qt 4.6.")
+  error("Use at least Qt 4.7.")
 }
 
 # Remove subproject makefiles to make sure they are created again with current settings
