@@ -60,5 +60,9 @@
         <file>dark/icons/go-up.png</file>
         <file>dark/ui-graphics/path-separator-normal.png</file>
         <file>dark/ui-graphics/path-separator-menuopen.png</file>
+        <file>dark/icons/go-next.png</file>
+        <file>dark/icons/go-previous.png</file>
+        <file>dark/icons/my-computer.png</file>
+        <file>dark/icons/folder-bookmarks.png</file>
     </qresource>
 </RCC>

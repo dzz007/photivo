@@ -41,9 +41,21 @@ extern QString     ShareDirectory;
 ptTheme::ptTheme(const QApplication* app,
                  Theme newTheme /*= thDarkGrey*/,
                  Highlight newHighlight /*= hlBlue*/)
-: ColorNames(QStringList() << "AltBase" << "Base" << "Emphasized" << "Gradient" << "SliderStart"
-             << "SliderStartDisabled" << "SliderStop" << "SliderStopDisabled" << "Strong"
-             << "Text" << "TextDisabled"),
+: IconAddBookmark (QPixmap(QString::fromUtf8(":/dark/icons/bookmark-new.png"))),
+  IconGoNext      (QPixmap(QString::fromUtf8(":/dark/icons/go-next.png"))),
+  IconGoPrevious  (QPixmap(QString::fromUtf8(":/dark/icons/go-previous.png"))),
+  ColorNames(QStringList()
+             << "AltBase"
+             << "Base"
+             << "Emphasized"
+             << "Gradient"
+             << "SliderStart"
+             << "SliderStartDisabled"
+             << "SliderStop"
+             << "SliderStopDisabled"
+             << "Strong"
+             << "Text"
+             << "TextDisabled"),
   GraphicsNames(QStringList() << "SliderStripe" << "SliderStripeDisabled"),
   m_CurrentHighlight(hlInvalid),
   m_CurrentTheme(thInvalid)

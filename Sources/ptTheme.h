@@ -70,6 +70,9 @@ public:
   QPixmap*    ptIconQuestion;
   QPixmap*    ptIconStar;
   QPixmap*    ptIconStarGrey;
+  const QPixmap IconAddBookmark;
+  const QPixmap IconGoNext;
+  const QPixmap IconGoPrevious;
 
   QColor baseColor()                { return c_Base; }
   QColor altBaseColor()             { return c_AltBase; }

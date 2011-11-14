@@ -59,4 +59,6 @@ tool-show           <modified dialog-ok>
 FILE MANAGER
 broken-image-48px   <process-stop in greyscale>
 folder-48px         <folder-new without plus sign>
-go-up-48px          go-up
+go-up               <rotated dialog-apply>
+go-up-48px          <modified dialog-apply>
+my-computer         go-home
