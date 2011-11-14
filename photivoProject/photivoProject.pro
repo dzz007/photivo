@@ -339,3 +339,5 @@ TRANSLATIONS += ../Translations/photivo_Russian.ts
 exists(../local-system-specific.pro) {
   include(../local-system-specific.pro)
 }
+
+

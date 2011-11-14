@@ -23,12 +23,13 @@
 
 #include <cassert>
 
-#include <QFileSystemModel>
+#include <QVBoxLayout>
 #include <QFontMetrics>
 #include <QList>
 #include <QDir>
 #include <QMenu>
 #include <QAction>
+#include <QLabel>
 
 #include "../ptDefines.h"
 #include "../ptSettings.h"
@@ -62,6 +63,8 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   ptGraphicsSceneEmitter::ConnectThumbnailAction(
       this, SLOT(execThumbnailAction(ptThumbnailAction,QString)) );
 
+  //------------------------------------------------------------------------------
+
   // Folder list
   FMSidebar->setVisible(Settings->GetInt("FileMgrShowSidebar"));
 #ifdef Q_OS_WIN
@@ -72,11 +75,53 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_DirList->setModel(m_DataModel->dirModel());
   connect(m_DirList, SIGNAL(activated(QModelIndex)), this, SLOT(changeListDir(QModelIndex)));
 
-  // bookmark list
+  //------------------------------------------------------------------------------
+
+#ifdef Q_OS_WIN
+  QString BookmarkTooltip = tr("Bookmark current folder");
+#else
+  QString BookmarkTooltip = tr("Bookmark current directory");
+#endif
+
+  // bookmark list in sidebar
   m_TagList = new ptTagList(this);
   m_TagList->setModel(m_DataModel->tagModel());
   m_TagPaneLayout->addWidget(m_TagList);
   connect(m_TagList, SIGNAL(activated(QModelIndex)), this, SLOT(changeToBookmark(QModelIndex)));
+  m_AddBookmarkButton->setToolTip(BookmarkTooltip);
+  connect(m_AddBookmarkButton, SIGNAL(clicked()), this, SLOT(bookmarkCurrentDir()));
+
+  //------------------------------------------------------------------------------
+
+  //bookmark menu
+  m_TagMenu = new QMenu(this);
+  m_TagMenu->hide();
+  m_TagMenu->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  m_TagMenu->setObjectName("FMTagMenu");
+
+  QLabel* label = new QLabel("<b>" + tr("Bookmarks") + "</b>", m_TagMenu);
+  QToolButton* addButton = new QToolButton(m_TagMenu);
+  addButton->setIcon(QIcon(Theme->IconAddBookmark));
+  addButton->setToolTip(BookmarkTooltip);
+  connect(addButton, SIGNAL(clicked()), this, SLOT(bookmarkCurrentDir()));
+
+  QHBoxLayout* headerLayout = new QHBoxLayout();
+  headerLayout->setContentsMargins(0,0,0,0);
+  headerLayout->addWidget(addButton);
+  headerLayout->addWidget(label);
+
+  m_TagMenuList = new ptTagList(m_TagMenu);
+  m_TagMenuList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  m_TagMenuList->setModel(m_DataModel->tagModel());
+  connect(m_TagMenuList, SIGNAL(activated(QModelIndex)),
+          this, SLOT(changeToBookmarkFromMenu(QModelIndex)));
+
+  QVBoxLayout* layout = new QVBoxLayout(m_TagMenu);
+  layout->addLayout(headerLayout);
+  layout->addWidget(m_TagMenuList);
+  m_TagMenu->setLayout(layout);
+
+  //------------------------------------------------------------------------------
 
   // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
@@ -91,13 +136,18 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
           this, SLOT(fetchNewImages(ptGraphicsThumbGroup*,QImage*)));
   setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
 
-  m_PathBar = new ptPathBar(this);
+  m_PathBar = new ptPathBar(m_PathContainer);
+  m_PathBar->setObjectName("FMPathBar");
   connect(m_PathBar, SIGNAL(changedPath(QString)), this, SLOT(changeDir(QString)));
-  m_ThumbPaneLayout->insertWidget(0, m_PathBar);
+  m_PathLayout->addWidget(m_PathBar);
   m_Progressbar->hide();
+
+  //------------------------------------------------------------------------------
 
   // construct the image view
   m_ImageView = new ptImageView(FMImageViewPane, m_DataModel);
+
+  //------------------------------------------------------------------------------
 
   // Filemgr main splitter layout
   if (Settings->m_IniSettings->contains("FileMgrMainSplitter")) {
@@ -123,6 +173,8 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
     FMSidebarSplitter->setSizes(SizesList);
   }
   FMSidebarSplitter->setStretchFactor(1,1);
+
+  //------------------------------------------------------------------------------
 
   ConstructContextMenu();
 }
@@ -210,6 +262,13 @@ void ptFileMgrWindow::changeToBookmark(const QModelIndex& index) {
 
 //==============================================================================
 
+void ptFileMgrWindow::changeToBookmarkFromMenu(const QModelIndex& index) {
+  m_TagMenu->hide();
+  changeToBookmark(index);
+}
+
+//==============================================================================
+
 void ptFileMgrWindow::changeDir(const QString& path) {
   m_DataModel->dirModel()->ChangeAbsoluteDir(path);
   DisplayThumbnails(path, m_DataModel->dirModel()->pathType());
@@ -262,7 +321,7 @@ void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
   if (isLast) {
     m_ThumbListIdx = 0;
     m_Progressbar->show();
-    m_PathBar->hide();
+    m_PathContainer->hide();
   }
 }
 
@@ -278,7 +337,7 @@ void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
 
   if (m_Progressbar->value() >= m_ThumbCount) {
     m_Progressbar->hide();
-    m_PathBar->show();
+    m_PathContainer->show();
   }
 }
 
@@ -391,7 +450,7 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     m_DataModel->dirModel()->ChangeAbsoluteDir(location);
     DisplayThumbnails(location, m_DataModel->dirModel()->pathType());
   } else if (action == tnaViewImage) {
-    m_ImageView->Display( location);
+    m_ImageView->Display(location);
   }
 }
 
@@ -401,7 +460,6 @@ void ptFileMgrWindow::UpdateTheme() {
   // Update file manager window appearance
   setStyle(Theme->style());
   setStyleSheet(Theme->stylesheet());
-  m_Progressbar->setFixedHeight(m_PathBar->height());
 
   // Thumbgroups don’t need to be updated because Photivo theme can only be changed
   // while fm is closed = thumbnail display cleared
@@ -588,6 +646,29 @@ void ptFileMgrWindow::toggleDirThumbs() {
 void ptFileMgrWindow::bookmarkCurrentDir() {
   m_DataModel->tagModel()->appendRow(QDir::toNativeSeparators(m_DataModel->currentDir()),
                                      m_DataModel->currentDir());
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::on_m_BookmarkButton_clicked() {
+  m_TagMenu->show();
+
+  int desiredWidth = 0;
+  if (m_TagMenuList->horizontalScrollBar()) {
+    desiredWidth = m_TagMenuList->width() + m_TagMenuList->horizontalScrollBar()->maximum();
+  }
+  int desiredHeight = 0;
+  if (m_TagMenuList->verticalScrollBar()) {
+    desiredHeight = m_TagMenuList->height() +
+                    m_TagMenuList->verticalScrollBar()->maximum() *
+                    QFontMetrics(m_TagMenuList->font()).lineSpacing();
+  }
+
+  m_TagMenuList->setFixedSize(qMax(100, desiredWidth),
+                              qBound(50, desiredHeight, m_FilesView->height()-20) );
+  m_TagMenu->move(m_BookmarkButton->mapToGlobal(QPoint(0, m_BookmarkButton->height())));
+  m_TagMenu->setPalette(Theme->menuPalette());
+  m_TagMenu->setStyle(Theme->style());
 }
 
 //==============================================================================

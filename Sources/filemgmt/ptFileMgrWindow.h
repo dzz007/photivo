@@ -92,7 +92,9 @@ private:
   bool                    m_IsFirstShow;
   ptAbstractThumbnailLayouter* m_Layouter;
   ptPathBar*              m_PathBar;
-  ptTagList*              m_TagList;
+  ptTagList*              m_TagList;      // bookmarks in sidebar
+  ptTagList*              m_TagMenuList;  // bookmarks in popup menu
+  QMenu*                  m_TagMenu;
   int                     m_ThumbCount;
   int                     m_ThumbListIdx;
   ptImageView*            m_ImageView;
@@ -113,11 +115,13 @@ private slots:
   void bookmarkCurrentDir();
   void changeListDir(const QModelIndex& index);
   void changeToBookmark(const QModelIndex& index);
+  void changeToBookmarkFromMenu(const QModelIndex& index);
   void changeDir(const QString& path);
   void closeWindow();
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
   void fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix);
   void fetchNewThumbs(const bool isLast);
+  void on_m_BookmarkButton_clicked();
 
   // context menu slots
   void verticalThumbs();
@@ -125,6 +129,7 @@ private slots:
   void detailedThumbs();
   void toggleDirThumbs();
   void toggleNaviPane();
+
 
 signals:
   void FileMgrWindowClosed();

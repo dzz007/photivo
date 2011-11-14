@@ -27,13 +27,14 @@
 
 #include <QWidget>
 #include <QVector>
-#include <QLabel>
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include <QEvent>
 #include <QPoint>
 #include <QLineEdit>
 #include <QDir>
+#include <QToolButton>
+#include <QStackedLayout>
 
 //==============================================================================
 /*!
@@ -81,22 +82,25 @@ protected:
   bool eventFilter(QObject* obj, QEvent* event);
   void mousePressEvent(QMouseEvent* event);
   void mouseReleaseEvent(QMouseEvent* event);
+  void resizeEvent(QResizeEvent* event);
+  void showEvent(QShowEvent* event);
 
 
 private:
-  // slight extension of QLabel to include some special flags
-  class pbItem: public QLabel {
+  class pbToken: public QWidget {
   public:
-    pbItem(QWidget* parent, const int index, const bool isToken)
-      : QLabel(parent), m_IsDrive(false), m_IsToken(isToken), m_Index(index) {}
-    int index() { return m_Index; }
-    bool isDrive() { return m_IsDrive; }
-    bool isToken() { return m_IsToken; }
-    void setDrive(const bool isDrive) { m_IsDrive = isDrive; }
+    pbToken(QWidget* parent, QString path): QWidget(parent), m_Path(path) {}
+    QString path() { return m_Path; }
   private:
-    bool m_IsDrive;
-    bool m_IsToken;  // if it’s not a token it’s a separator
-    int  m_Index;    // index in the m_Tokens or m_Separators QVector
+    QString m_Path;
+  };
+
+  class pbButton: public QToolButton {
+  public:
+    pbButton(QWidget* parent, int idx): QToolButton(parent), m_Index(idx) {}
+    int index() { return m_Index; }
+  private:
+    int m_Index;
   };
 
   // successes must be >=0, failures <0
@@ -106,28 +110,43 @@ private:
     prSuccess   = 0
   };
 
-  QString BuildPath(const int untilIdx);
-  void BuildWidgets();
-  void Clear();
-  pbItem* CreateSeparator(const int index);
-  pbItem* CreateToken(const QString& text, const int index);
-  pbParseResult Parse(QString path);
-  void ShowSubdirMenu(int idx);
+  enum pbWidgetPos {
+    wpLeftMost  = -1,
+    wpRightMost = 1
+  };
 
-  QWidget*            m_Display;
-  QLineEdit*          m_Editor;
-  bool                m_IsMyComputer;
-  QHBoxLayout         m_Layout;
-  int                 m_SeparatorCount;
-  QVector<pbItem*>    m_Separators;
+  struct pbRange {
+    int begin;
+    int end;
+  };
+
+  QString       BuildPath           (const int untilIdx);
+  void          Clear               ();
+  pbToken*      CreateToken         (int idx, const QString& fullPath, QString dirName);
+  pbParseResult Parse               (QString path);
+  void          ShowSubdirMenu      (int idx);
+  void          ShowVisibleWidgets  (int startIdx, pbWidgetPos pos);
+
   QDir                m_DirInfo;
-  QSpacerItem*        m_Stretch;
-  int                 m_TokenCount;
-  QVector<pbItem*>    m_Tokens;
+  QWidget*            m_PrettyDisplay;
+  QLineEdit*          m_Editor;
+  QToolButton*        m_GoLeftButton;
+  QToolButton*        m_GoRightButton;
+  QWidget*            m_InnerContainer;
+  bool                m_IsMyComputer;
+  QWidget*            m_Tokens;
+  QHBoxLayout*        m_TokenLayout;
+  QVector<pbToken*>   m_TokenList;
+  pbRange             m_VisibleRange;   // refers to the resp. m_Tokens indexes
+  QStackedLayout*     m_WidgetStack;
 
 
 private slots:
   void afterEditor();
+  void buttonClicked();
+  void goLeftClicked();
+  void goRightClicked();
+  void separatorClicked(bool checked);
 
 
 signals:
