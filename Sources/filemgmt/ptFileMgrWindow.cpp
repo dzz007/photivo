@@ -65,8 +65,10 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 
   //------------------------------------------------------------------------------
 
-  // Folder list
+  // sidebar
   FMSidebar->setVisible(Settings->GetInt("FileMgrShowSidebar"));
+
+  // Folder list
 #ifdef Q_OS_WIN
   DirListLabel->setText(tr("Folders"));
 #else
@@ -75,7 +77,6 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_DirList->setModel(m_DataModel->dirModel());
   connect(m_DirList, SIGNAL(activated(QModelIndex)), this, SLOT(changeListDir(QModelIndex)));
 
-  //------------------------------------------------------------------------------
 
 #ifdef Q_OS_WIN
   QString BookmarkTooltip = tr("Bookmark current folder");
@@ -201,7 +202,9 @@ ptFileMgrWindow::~ptFileMgrWindow() {
   DelAndNull(ac_DetailedThumbs);
   DelAndNull(ac_DirThumbs);
   DelAndNull(ac_ThumbLayoutGroup);
-  DelAndNull(ac_ToggleNaviPane);
+  DelAndNull(ac_ToggleSidebar);
+  DelAndNull(ac_ToggleImageView);
+  DelAndNull(ac_CloseFileMgr);
 
   DelAndNull(m_ImageView);
 }
@@ -535,9 +538,13 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
 //TODO: re-enable  else if (event->key() == Qt::Key_3 && event->modifiers() == Qt::AltModifier) {
 //    setLayouter(tlDetailedList);
 //  }
-  // Space: toggles tree pane
-  else if (event->key() == Qt::Key_Space && event->modifiers() == Qt::NoModifier) {
-    toggleNaviPane();
+  // F3: toggles: ImageView
+  else if (event->key() == Qt::Key_F3 && event->modifiers() == Qt::NoModifier) {
+    toggleImageView();
+  }
+  // F4: toggles sidebar
+  else if (event->key() == Qt::Key_F4 && event->modifiers() == Qt::NoModifier) {
+    toggleSidebar();
   }
 }
 
@@ -572,9 +579,13 @@ void ptFileMgrWindow::ConstructContextMenu() {
 //TODO: re-enable  ac_ThumbLayoutGroup->addAction(ac_DetailedThumbs);
 
   // actions for main context menu
-  ac_ToggleNaviPane = new QAction(tr("Show &navigation pane") + "\t" + tr("Space"), this);
-  ac_ToggleNaviPane->setCheckable(true);
-  connect(ac_ToggleNaviPane, SIGNAL(triggered()), this, SLOT(toggleNaviPane()));
+  ac_ToggleImageView = new QAction(tr("Show &image preview") + "\t" + tr("F3"), this);
+  ac_ToggleImageView->setCheckable(true);
+  connect(ac_ToggleImageView, SIGNAL(triggered()), this, SLOT(toggleImageView()));
+
+  ac_ToggleSidebar = new QAction(tr("Show &sidebar") + "\t" + tr("F4"), this);
+  ac_ToggleSidebar->setCheckable(true);
+  connect(ac_ToggleSidebar, SIGNAL(triggered()), this, SLOT(toggleSidebar()));
 
   ac_CloseFileMgr = new QAction(tr("&Close file manager") + "\t" + tr("Esc"), this);
   connect(ac_CloseFileMgr, SIGNAL(triggered()), this, SLOT(closeWindow()));
@@ -602,9 +613,15 @@ void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu.setPalette(Theme->menuPalette());
   Menu.setStyle(Theme->style());
   Menu.addMenu(&MenuThumbLayout);
+
   Menu.addSeparator();
-  Menu.addAction(ac_ToggleNaviPane);
-  ac_ToggleNaviPane->setChecked(FMSidebar->isVisible());
+  Menu.addAction(ac_ToggleImageView);
+  ac_ToggleImageView->setChecked(FMImageViewPane->isVisible());
+  Menu.addAction(ac_ToggleSidebar);
+  ac_ToggleSidebar->setChecked(FMSidebar->isVisible());
+
+  Menu.addSeparator();
+  Menu.addAction(ac_CloseFileMgr);
 
   Menu.exec(((QMouseEvent*)event)->globalPos());
 }
@@ -629,9 +646,16 @@ void ptFileMgrWindow::detailedThumbs() {
 
 //==============================================================================
 
-void ptFileMgrWindow::toggleNaviPane() {
+void ptFileMgrWindow::toggleSidebar() {
   FMSidebar->setVisible(!FMSidebar->isVisible());
   Settings->SetValue("FileMgrShowSidebar", (int)FMSidebar->isVisible());
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::toggleImageView() {
+  FMImageViewPane->setVisible(!FMImageViewPane->isVisible());
+  Settings->SetValue("FileMgrShowImageView", (int)FMImageViewPane->isVisible());
 }
 
 //==============================================================================
@@ -651,6 +675,7 @@ void ptFileMgrWindow::bookmarkCurrentDir() {
 //==============================================================================
 
 void ptFileMgrWindow::on_m_BookmarkButton_clicked() {
+  m_TagMenuList->setFixedSize(100, 50);
   m_TagMenu->show();
 
   int desiredWidth = 0;
