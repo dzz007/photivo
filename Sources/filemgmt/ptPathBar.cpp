@@ -86,10 +86,11 @@ ptPathBar::ptPathBar(QWidget* parent)
 
   // this is the actual display area for the interactive path
   m_InnerContainer = new QWidget(m_PrettyDisplay);
+  m_InnerContainer->setObjectName("PBInnerContainer");
 
   QHBoxLayout* l = new QHBoxLayout(m_PrettyDisplay);
   l->setContentsMargins(0,0,0,0);
-  l->setSpacing(0);
+  l->setSpacing(3);
   l->addWidget(m_GoLeftButton);
   l->addWidget(m_InnerContainer);
   l->addWidget(m_GoRightButton);
@@ -352,8 +353,7 @@ void ptPathBar::resizeEvent(QResizeEvent* event) {
 
 void ptPathBar::showEvent(QShowEvent *event) {
   this->setStyleSheet(Theme->stylesheet());
-  m_PrettyDisplay->setStyleSheet(Theme->stylesheet());
-  m_Editor->setStyleSheet(Theme->stylesheet());
+  m_InnerContainer->setStyleSheet(Theme->stylesheet());
   QWidget::showEvent(event);
 }
 
@@ -376,7 +376,7 @@ ptPathBar::pbToken* ptPathBar::CreateToken(int idx, const QString& fullPath, QSt
   }
 #endif
   caption->setText(dirName);
-  caption->setObjectName("PathBarDirCaption");
+  caption->setObjectName("PBDirCaption");
   connect(caption, SIGNAL(clicked()), this, SLOT(buttonClicked()));
   layout->addWidget(caption);
 
@@ -387,7 +387,7 @@ ptPathBar::pbToken* ptPathBar::CreateToken(int idx, const QString& fullPath, QSt
     separator->setCheckable(true);
     separator->setIconSize(QSize(16, 16));
     separator->setIcon(QIcon(QString::fromUtf8(":/dark/ui-graphics/path-separator-normal.png")));
-    separator->setObjectName("PathBarDirSeparator");
+    separator->setObjectName("PBDirSeparator");
     connect(separator, SIGNAL(clicked(bool)), this, SLOT(separatorClicked(bool)));
     layout->addWidget(separator);
   }

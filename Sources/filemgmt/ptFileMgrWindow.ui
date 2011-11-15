@@ -26,6 +26,12 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QWidget" name="FMSidebar" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>150</width>
+        <height>0</height>
+       </size>
+      </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
         <number>0</number>
@@ -126,6 +132,12 @@
       </layout>
      </widget>
      <widget class="QWidget" name="FMThumbPane" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>220</width>
+        <height>0</height>
+       </size>
+      </property>
       <layout class="QVBoxLayout" name="m_ThumbPaneLayout">
        <property name="margin">
         <number>9</number>

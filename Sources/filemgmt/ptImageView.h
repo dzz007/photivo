@@ -55,13 +55,14 @@ public:
 
 
 protected:
-  void resizeEvent(QResizeEvent* event);
+  void contextMenuEvent(QContextMenuEvent* event);
   void mouseDoubleClickEvent(QMouseEvent* event);
+  void mouseMoveEvent(QMouseEvent* event);
   void mousePressEvent(QMouseEvent* event);
   void mouseReleaseEvent(QMouseEvent* event);
-  void mouseMoveEvent(QMouseEvent* event);
+  void resizeEvent(QResizeEvent* event);
+  void showEvent(QShowEvent* event);
   void wheelEvent(QWheelEvent* event);
-  void contextMenuEvent(QContextMenuEvent* event);
 
 
 private:

@@ -498,3 +498,37 @@ QToolTip {
   min-height: 10px;
   height    : 10px;
 }
+
+#FMTagMenu {
+  border: 1px solid $AltBase$;
+}
+
+ptFileMgrWindow QProgressBar {
+  border-color: $AltBase$;
+}
+
+/* PathBar */
+#PBInnerContainer { 
+  background-color: $AltBase$;
+  border: 1px solid $AltBase$;
+  border-radius: 3px;
+}
+
+#PBInnerContainer QWidget {
+  background-color: transparent;
+  border: none;
+}
+
+#PBInnerContainer QWidget QWidget:hover {
+  border: 1px solid $Highlight$;
+  border-radius: 3px;
+}
+
+#PBInnerContainer QWidget QWidget QWidget:hover {
+  border: none;
+}
+
+#PBInnerContainer QWidget QWidget QWidget#PBDirSeparator:hover {
+  border: 1px solid $Highlight$;
+  border-radius: 3px;
+}

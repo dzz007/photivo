@@ -121,11 +121,13 @@ ptImageView::~ptImageView() {
 
 void ptImageView::Display(const QString FileName) {
   if (m_FileName == FileName) return;
-
   m_FileName = FileName;
-  m_NeedRun  = true;
 
-  startWorker();
+  if (this->isVisible()) {
+    // only process image when the ImageView is visible
+    m_NeedRun  = true;
+    startWorker();
+  }
 }
 
 //==============================================================================
@@ -301,9 +303,7 @@ void ptImageView::ImageToScene(const double Factor) {
 void ptImageView::updateView() {
   QImage* Image = m_DataModule->getThumbnail(m_FileName, 0);
   if (Image != NULL) {
-    if (m_Image != NULL) {
-      DelAndNull( m_Image);
-    }
+    DelAndNull(m_Image);
     if (m_FileName == m_Worker->m_FileName) {
       m_Image = Image;
     } else {
@@ -349,6 +349,18 @@ void ptImageView::afterWorker() {
 
 void ptImageView::ResizeTimerExpired() {
   ZoomTo(m_ZoomFactor, false);
+}
+
+//==============================================================================
+
+void ptImageView::showEvent(QShowEvent* event) {
+  QGraphicsView::showEvent(event);
+
+  if (!m_FileName.isEmpty()) {
+    // Re-process on becoming visible. Filename might have changed while we were hidden.
+    m_NeedRun  = true;
+    startWorker();
+  }
 }
 
 //==============================================================================

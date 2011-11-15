@@ -175,8 +175,6 @@ HEADERS += \
     ../Sources/ptImage.h \
     ../Sources/ptImage8.h \
     ../Sources/ptImageInteraction.h \
-    ../Sources/ptImageMagick.h \
-    ../Sources/ptImageMagickC.h \
     ../Sources/ptInput.h \
     ../Sources/ptKernel.h \
     ../Sources/ptLensfun.h \
@@ -277,8 +275,6 @@ SOURCES += \
     ../Sources/ptImage_Pyramid.cpp \
     ../Sources/ptImage8.cpp \
     ../Sources/ptImageInteraction.cpp \
-    ../Sources/ptImageMagick.cpp \
-    ../Sources/ptImageMagickC.cpp \
     ../Sources/ptInput.cpp \
     ../Sources/ptKernel.cpp \
     ../Sources/ptLensfun.cpp \

@@ -105,7 +105,8 @@ private:
   QAction*      ac_DetailedThumbs;
   QAction*      ac_DirThumbs;
   QActionGroup* ac_ThumbLayoutGroup;
-  QAction*      ac_ToggleNaviPane;
+  QAction*      ac_ToggleSidebar;
+  QAction*      ac_ToggleImageView;
   QAction*      ac_CloseFileMgr;
 
 
@@ -128,7 +129,8 @@ private slots:
   void horizontalThumbs();
   void detailedThumbs();
   void toggleDirThumbs();
-  void toggleNaviPane();
+  void toggleSidebar();
+  void toggleImageView();
 
 
 signals:

@@ -41,6 +41,9 @@
   \class ptPathBar
 
   \brief Provides an interactive display widget for file system paths.
+
+  ptPathBar’s widget structure is a bit complex. For a graphical overview see
+  ReferenceMaterial/ptPathbar widget structure.svg
 */
 class ptPathBar: public QWidget {
 Q_OBJECT
