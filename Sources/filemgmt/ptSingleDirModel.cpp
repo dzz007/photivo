@@ -34,8 +34,15 @@ ptSingleDirModel::ptSingleDirModel(QObject* parent /*= NULL*/)
 : QStandardItemModel(parent)
 {
   m_CurrentDir = new QDir;
-  m_CurrentDir->setFilter(QDir::AllDirs | QDir::NoDot);
   m_CurrentDir->setSorting(QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
+
+#if (QT_VERSION < 0x40700)
+  // hack for lack of QDir::NoDot in Qt < 4.7
+  m_CurrentDir->setFilter(QDir::AllDirs);
+#else
+  m_CurrentDir->setFilter(QDir::AllDirs | QDir::NoDot);
+#endif
+
 #ifdef Q_OS_WIN
   m_CurrentDirType = fsoUnknown;
 #endif
@@ -94,6 +101,12 @@ void ptSingleDirModel::ChangeDir(const QModelIndex& index) {
   m_EntryList = m_CurrentDir->entryList();
 #endif
 
+#if (QT_VERSION < 0x40700)
+  // hack for lack of QDir::NoDot in Qt < 4.7
+  int dot = m_EntryList.indexOf(".");
+  if (dot > -1) m_EntryList.removeAt(dot);
+#endif
+
   UpdateModel();
 }
 
@@ -119,6 +132,12 @@ void ptSingleDirModel::ChangeAbsoluteDir(const QString& path) {
 #else
   m_CurrentDir->setPath(path);
   m_EntryList = m_CurrentDir->entryList();
+#endif
+
+#if (QT_VERSION < 0x40700)
+  // hack for lack of QDir::NoDot in Qt < 4.7
+  int dot = m_EntryList.indexOf(".");
+  if (dot > -1) m_EntryList.removeAt(dot);
 #endif
 
   UpdateModel();
