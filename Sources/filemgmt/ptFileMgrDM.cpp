@@ -222,3 +222,10 @@ void ptFileMgrDM::ScaleThumbSize(QSize* tSize, const int max) {
 }
 
 //==============================================================================
+
+ptGraphicsThumbGroup* ptFileMgrDM::MoveFocus(const int index) {
+  m_FocusedThumb = index;
+  return m_ThumbList->at(index);
+}
+
+//==============================================================================

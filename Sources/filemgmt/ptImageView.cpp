@@ -119,7 +119,7 @@ ptImageView::~ptImageView() {
 
 //==============================================================================
 
-void ptImageView::Display(const QString FileName) {
+void ptImageView::ShowImage(const QString FileName) {
   if (m_FileName == FileName) return;
   m_FileName = FileName;
 

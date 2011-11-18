@@ -34,6 +34,7 @@ extern ptTheme* Theme;
 
 //==============================================================================
 
+/*static*/
 ptGraphicsThumbGroup* ptGraphicsThumbGroup::AddRef(ptGraphicsThumbGroup* group /*== NULL*/) {
   if (group == NULL) {
     return new ptGraphicsThumbGroup;
@@ -45,6 +46,7 @@ ptGraphicsThumbGroup* ptGraphicsThumbGroup::AddRef(ptGraphicsThumbGroup* group /
 
 //==============================================================================
 
+/*static*/
 int ptGraphicsThumbGroup::RemoveRef(ptGraphicsThumbGroup* group) {
   int result = --group->m_RefCount;
 
@@ -68,6 +70,7 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
   m_RefCount = 1;
   m_Thumbnail = NULL;
 
+  setFlags(QGraphicsItem::ItemIsFocusable);
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::LeftButton);
   setFiltersChildEvents(true);
@@ -231,8 +234,12 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
 //==============================================================================
 
 void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
+  if (this->hasFocus()) {
+    painter->setBrush(QBrush(QColor(200,0,0)));
+  } else {
+    painter->setBrush(QBrush(Theme->altBaseColor()));
+  }
   painter->setPen(this->pen());
-  painter->setBrush(QBrush(Theme->altBaseColor()));
   painter->drawRoundedRect(this->rect(), 5, 5);
   if (m_Thumbnail) {
     painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), *m_Thumbnail);
