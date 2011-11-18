@@ -83,6 +83,7 @@ protected:
 
 private:
   void ClearScene();
+  void FocusThumbnail(int index);
   void LayoutAll();
   void setLayouter(const ptThumbnailLayout layout);
   void ConstructContextMenu();
@@ -135,6 +136,7 @@ private slots:
 
 signals:
   void FileMgrWindowClosed();
+
 };
 //==============================================================================
 #endif // PTFILEMGRWINDOW_h

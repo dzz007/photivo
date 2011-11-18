@@ -341,6 +341,8 @@ void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
   if (m_Progressbar->value() >= m_ThumbCount) {
     m_Progressbar->hide();
     m_PathContainer->show();
+    m_FilesScene->setFocus();
+    FocusThumbnail(0);
   }
 }
 
@@ -406,12 +408,13 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
     // Resize event: Rearrange thumbnails when size of viewport changes
     LayoutAll();
     return false;   // handle event further
+  }
 
 //------------------------------------------------------------------------------
 
-  } else if ((obj == m_FilesView->verticalScrollBar() ||
-              obj == m_FilesView->horizontalScrollBar()) &&
-              event->type() == QEvent::Wheel)
+  else if ((obj == m_FilesView->verticalScrollBar() ||
+            obj == m_FilesView->horizontalScrollBar()) &&
+            event->type() == QEvent::Wheel)
   {
     // Wheel event
     int dir = ((QWheelEvent*)event)->delta() > 0 ? -1 : 1;
@@ -424,21 +427,48 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
             m_FilesView->horizontalScrollBar()->value() + m_Layouter->Step()*dir);
     }
     return true;    // prevent further event handling
+  }
 
 //------------------------------------------------------------------------------
 
-  } else if (obj == m_FilesScene && (event->type() == QEvent::GraphicsSceneDragEnter ||
-                                     event->type() == QEvent::GraphicsSceneDrop))
+  else if (obj == m_FilesScene && (event->type() == QEvent::GraphicsSceneDragEnter ||
+                                   event->type() == QEvent::GraphicsSceneDrop))
   {
     // Make sure drag&drop events are passed on to MainWindow
     event->ignore();
     return true;
+  }
 
 //------------------------------------------------------------------------------
 
+  if (obj == m_FilesScene && event->type() == QEvent::KeyPress) {
+    int newIdx = m_Layouter->MoveIndex(m_DataModel->focusedThumb(), (QKeyEvent*)event);
+    if (newIdx >= 0) {
+      FocusThumbnail(newIdx);
+      return true;
+    }
+  }
+
+//------------------------------------------------------------------------------
+
+  // unhandled events fall through to here
+  // make sure parent event filters are executed
+  return QWidget::eventFilter(obj, event);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::FocusThumbnail(int index) {
+  if (index >= 0) {
+    // focus new thumb
+    ptGraphicsThumbGroup* thumb = m_DataModel->MoveFocus(index);
+    m_FilesScene->setFocusItem(thumb);
+    if (thumb->fsoType() == fsoFile) {
+      m_ImageView->ShowImage(thumb->fullPath());
+    }
+
   } else {
-    // make sure parent event filters are executed
-    return QWidget::eventFilter(obj, event);
+    m_FilesScene->clearFocus();
   }
 }
 
@@ -453,7 +483,7 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     m_DataModel->dirModel()->ChangeAbsoluteDir(location);
     DisplayThumbnails(location, m_DataModel->dirModel()->pathType());
   } else if (action == tnaViewImage) {
-    m_ImageView->Display(location);
+    m_ImageView->ShowImage(location);
   }
 }
 

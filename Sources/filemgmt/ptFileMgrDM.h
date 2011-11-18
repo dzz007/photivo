@@ -72,6 +72,10 @@ public:
   /*! Returns a pointer to the model for the folder ListView. */
   ptSingleDirModel* dirModel() const { return m_DirModel; }
 
+  int focusedThumb() { return m_FocusedThumb; }
+
+  ptGraphicsThumbGroup* MoveFocus(const int index);
+
   /*! Sets the folder for thumbnail display. Does not trigger the thumbnailer.
       You probably need this only once to init the folder. */
   void setCurrentDir(const QString absolutePath) { m_CurrentDir = absolutePath; }
@@ -120,10 +124,11 @@ private:
   QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
   void ScaleThumbSize(QSize* tSize, const int max);
 
-  ptTagModel*                   m_TagModel;
+  int                           m_FocusedThumb;
   ptThumbnailCache*             m_Cache;
   QString                       m_CurrentDir;
   ptSingleDirModel*             m_DirModel;
+  ptTagModel*                   m_TagModel;
   ptThumbnailer*                m_Thumbnailer;
   QList<ptGraphicsThumbGroup*>* m_ThumbList;
 

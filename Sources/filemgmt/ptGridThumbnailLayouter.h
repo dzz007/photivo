@@ -37,7 +37,7 @@ public:
   /*! Reimplemented from ptAbstractThumbnailLayouter::Init().
     Initializes Col, Row and Padding. Calculates default cell width and height.
   */
-  virtual void Init(const int, const QFont& font);
+  virtual void Init(const int thumbCount, const QFont& font);
 
 
 protected:

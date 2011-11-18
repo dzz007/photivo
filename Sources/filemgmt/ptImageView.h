@@ -51,7 +51,7 @@ public:
   explicit ptImageView(QWidget *parent = 0, ptFileMgrDM* DataModule = 0);
   ~ptImageView();
 
-  void Display(const QString FileName);
+  void ShowImage(const QString FileName);
 
 
 protected:

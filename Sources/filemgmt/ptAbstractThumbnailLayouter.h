@@ -27,7 +27,6 @@
 
 #include <QGraphicsView>
 
-#include "../ptConstants.h"
 #include "ptGraphicsThumbGroup.h"
 
 //==============================================================================
@@ -59,6 +58,18 @@ public:
       A pointer to the thumbnail.
   */
   virtual void Layout(ptGraphicsThumbGroup* thumb) = 0;
+
+  /*! Handles navigation key events and returns the index of the \c ptGraphicsThumbGroup
+    that should be focused after the event. Returns \c -1 if the event could not be processed –
+    e.g. because the key (combination) pressed was not a recognised navigation key. Recognized
+    navigation keys depend on the implementation in the subclasses. As a general rule at least
+    the four cursor keys should be implemented.
+    \param currentIdx
+      List index of the currently focused thumb group. Pass \c -1 if none is focused.
+    \param event
+      The \c QKeyEvent that triggered calling the function.
+  */
+  virtual int MoveIndex(const int currentIdx, QKeyEvent* event) = 0;
 
   /*! Returns the scroll step, i.e. the amount of pixels that need to be scrolled
       to advance by one thumbnail.
