@@ -40,8 +40,8 @@ extern ptTheme* Theme;
 
 ptPathBar::ptPathBar(QWidget* parent)
 : QWidget(parent),
-  m_IsMyComputer(false),
-  m_VisibleRange()    // member is POD, i.e. init to zero
+  m_IsMyComputer(false),  // always stays at false on non-Windows OSes
+  m_VisibleRange()        // member is POD, i.e. init to zero
 {
   this->setContextMenuPolicy(Qt::PreventContextMenu);
 
@@ -116,32 +116,42 @@ ptPathBar::~ptPathBar() {
 //==============================================================================
 
 ptPathBar::pbParseResult ptPathBar::Parse(QString path) {
-  // Cleanup path and ensure "/" as directory separator
-  path = QDir::cleanPath(QDir::fromNativeSeparators(path));
+#ifdef Q_OS_WIN
+  m_IsMyComputer = (path == MyComputerIdString);
+#endif
 
-  if (QDir::match(BuildPath(m_TokenList.count()-1), path)) {
-    return prSamePath;
+  if (!m_IsMyComputer) {
+    // Cleanup path and ensure "/" as directory separator
+    path = QDir::cleanPath(QDir::fromNativeSeparators(path));
+
+    if (QDir::match(BuildPath(m_TokenList.count()-1), path)) {
+      return prSamePath;
+    }
+
+    // PathBar is for navigation through existing paths
+    if (!QDir().exists(path)) return prFail;
+    m_DirInfo.setPath(path);
   }
 
-  // PathBar is for navigation through existing paths
-  if (!QDir().exists(path)) return prFail;
-  m_DirInfo.setPath(path);
   QString pathSoFar;
 
 #ifdef Q_OS_WIN
-  // Paths that include a folder must start with "D:/" where D is a drive letter
-  if (path.length() > 2 && path.mid(1,2) != ":/") return prFail;
+  if (!m_IsMyComputer) {
+    // Paths that include a folder must start with "D:/" where D is a drive letter
+    if (path.length() > 2 && path.mid(1,2) != ":/") return prFail;
+  }
 
   Clear();
-  m_IsMyComputer = (path == MyComputerIdString);
 
   // “My Computer” is always the first entry
   m_TokenList.append(CreateToken(0, MyComputerIdString, ""));
 
   // drive name/letter
-  pathSoFar = path.left(2);
-  m_TokenList.append(CreateToken(m_TokenList.count(), pathSoFar, WinApi::VolumeNamePretty(pathSoFar)));
-  path.remove(0, 3);
+  if (!m_IsMyComputer) {
+    pathSoFar = path.left(2);
+    m_TokenList.append(CreateToken(m_TokenList.count(), pathSoFar, WinApi::VolumeNamePretty(pathSoFar)));
+    path.remove(0, 3);
+  }
 
 #else
   if (path.left(1) != "/") return prFail;  // paths must be absolute, i.e. start with "/"

@@ -70,7 +70,7 @@ public:
   */
   int setDir(const QString dir);
 
-  /*! Sets the FIFO buffer where the thumbnails are written to.
+  /*! Sets the list where the thumbnails are written to.
       Note that the buffer is taken as is, i.e. it is not cleared by the
       thumbnailer.
   */
@@ -87,6 +87,7 @@ private:
   bool                            m_AbortRequested;
   ptThumbnailCache*               m_Cache;
   QDir*                           m_Dir;
+  bool                            m_IsMyComputer;
   QList<ptGraphicsThumbGroup*>*   m_ThumbList;
 
 

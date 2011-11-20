@@ -92,12 +92,6 @@ void ptFileMgrDM::Clear() {
 
 int ptFileMgrDM::setThumbnailDir(const QString path) {
   m_CurrentDir = path;
-#ifdef Q_OS_WIN
-  if (path == MyComputerIdString) {
-    return m_Thumbnailer->setDir("");
-  }
-#endif
-
   return m_Thumbnailer->setDir(path);
 }
 

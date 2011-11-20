@@ -32,6 +32,7 @@
 #include "../ptCalloc.h"
 #include "../ptDefines.h"
 #include "../ptSettings.h"
+#include "ptFileMgrConstants.h"
 #include "ptThumbnailer.h"
 #include "ptFileMgrDM.h"
 
@@ -46,7 +47,8 @@ extern QStringList FileExtsBitmap;
 //==============================================================================
 
 ptThumbnailer::ptThumbnailer()
-: QThread()
+: QThread(),
+  m_IsMyComputer(false)
 {
   m_AbortRequested = false;
   m_Cache          = NULL;
@@ -78,19 +80,28 @@ int ptThumbnailer::setDir(const QString dir) {
     return -1;
   }
 
-  m_Dir->setPath(dir);
+#ifdef Q_OS_WIN
+  m_IsMyComputer = (dir == MyComputerIdString);
+#endif
 
-  if (dir.isEmpty()) {
-    // Empty paths are valid. They tell the thumbnailer to do nothing.
-    return -1;
-  }
+  if (m_IsMyComputer) {
+    return m_Dir->drives().count();
 
-  QDir::Filters filters = QDir::Files;
-  if (Settings->GetInt("FileMgrShowDirThumbs")) {
-    filters = filters | QDir::AllDirs | QDir::NoDot;
+  } else {
+    m_Dir->setPath(dir);
+
+    if (dir.isEmpty()) {
+      // Empty paths are valid. They tell the thumbnailer to do nothing.
+      return -1;
+    }
+
+    QDir::Filters filters = QDir::Files;
+    if (Settings->GetInt("FileMgrShowDirThumbs")) {
+      filters = filters | QDir::AllDirs | QDir::NoDot;
+    }
+    m_Dir->setFilter(filters);
+    return m_Dir->count();
   }
-  m_Dir->setFilter(filters);
-  return m_Dir->count();
 }
 
 //==============================================================================
@@ -106,14 +117,19 @@ void ptThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList) {
 
 void ptThumbnailer::run() {
   // Check for properly set directory, cache and buffer
-  if (m_Dir->path().isEmpty() || !m_Dir->exists() || m_ThumbList == NULL || m_Cache == NULL) {
-    return;
-  }
+  if (m_ThumbList == NULL || m_Cache == NULL) return;
+  if (!m_IsMyComputer && (m_Dir->path().isEmpty() || !m_Dir->exists())) return;
 
   ptFileMgrDM* DataModule = ptFileMgrDM::GetInstance();
-
-  QFileInfoList files = m_Dir->entryInfoList();
   int thumbMaxSize = Settings->GetInt("FileMgrThumbnailSize");
+  QFileInfoList files;
+
+#ifdef Q_OS_WIN
+  if (m_IsMyComputer)
+    files = m_Dir->drives();
+  else
+#endif
+    files = m_Dir->entryInfoList();
 
   /***
     Step 1: Generate thumb groups without the thumbnail images
@@ -138,26 +154,33 @@ void ptThumbnailer::run() {
       thumbGroup = ptGraphicsThumbGroup::AddRef();
       ptFSOType type;
 
-      QString descr = files.at(i).fileName();
-      if (files.at(i).isDir()) {
-        if (descr == "..") {
-          type = fsoParentDir;
-          descr = QDir(files.at(i).canonicalFilePath()).dirName();
-#ifdef Q_OS_WIN
-          if (descr.isEmpty()) {
-            // parent folder is a drive
-            QString drive = files.at(i).canonicalFilePath().left(2);
-            descr = QString("%1 (%2)").arg(WinApi::VolumeName(drive)).arg(drive).trimmed();
-          }
-#endif
-        } else {
-          type = fsoDir;
-        }
-      } else {
-        type = fsoFile;
-      }
+      QString descr;
+      if (m_IsMyComputer) {
+        type = fsoDir;
+        descr = WinApi::VolumeNamePretty(files.at(i).absoluteFilePath());
+        thumbGroup->addInfoItems(files.at(i).absoluteFilePath(), descr, type);
 
-      thumbGroup->addInfoItems(files.at(i).canonicalFilePath(), descr, type);
+      } else {
+        descr = files.at(i).fileName();
+        if (files.at(i).isDir()) {
+          if (descr == "..") {
+            type = fsoParentDir;
+            descr = QDir(files.at(i).canonicalFilePath()).dirName();
+#ifdef Q_OS_WIN
+            if (descr.isEmpty()) {
+              // parent folder is a drive
+              QString drive = files.at(i).canonicalFilePath().left(2);
+              descr = QString("%1 (%2)").arg(WinApi::VolumeName(drive)).arg(drive).trimmed();
+            }
+#endif
+          } else {
+            type = fsoDir;
+          }
+        } else {
+          type = fsoFile;
+        }
+        thumbGroup->addInfoItems(files.at(i).canonicalFilePath(), descr, type);
+      }
 
       // ... then add the group to the cache. Directories are not cached because
       // they load very quickly anyway.
