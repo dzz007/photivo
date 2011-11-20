@@ -193,18 +193,8 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
     }
 
     case QEvent::GraphicsSceneMouseDoubleClick: {
-      if (m_InfoText) {
-        if (m_FSOType == fsoFile) {
-          event->accept();
-          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
-          return true;
-        } else {
-          event->accept();
-          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
-          return true;
-        }
-      }
-      return QGraphicsRectItem::sceneEvent(event);
+      exec();
+      return true;
     }
 
     case QEvent::GraphicsSceneMousePress: {
@@ -214,28 +204,33 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
     }
 
     case QEvent::GraphicsSceneMouseRelease: {
-      event->accept();
-      if (m_InfoText) {
-        if (m_FSOType == fsoFile) {
-          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaViewImage, m_FullPath);
-        } else {
-          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
-        }
-      }
+      // set focus, FM window takes care of showing image in the viewer if necessary
+      this->setFocus(Qt::MouseFocusReason);
+      ptGraphicsSceneEmitter::EmitFocusChanged();
       return true;
     }
 
-    default: {
-      return QGraphicsRectItem::sceneEvent(event);
+    case QEvent::KeyPress: {
+      QKeyEvent* e = (QKeyEvent*)event;
+      if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) {
+        exec();
+        return true;
+      }
+      break;
     }
+
+    default:
+      break;
   }
+
+  return QGraphicsRectItem::sceneEvent(event);
 }
 
 //==============================================================================
 
 void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
   if (this->hasFocus()) {
-    painter->setBrush(QBrush(QColor(200,0,0)));
+    painter->setBrush(QBrush(Theme->gradientColor()));
   } else {
     painter->setBrush(QBrush(Theme->altBaseColor()));
   }
@@ -253,6 +248,18 @@ QFont ptGraphicsThumbGroup::font() const {
     return QApplication::font();
   } else {
     return m_InfoText->font();
+  }
+}
+
+//==============================================================================
+
+void ptGraphicsThumbGroup::exec() {
+  if (m_InfoText) {
+    if (m_FSOType == fsoFile) {
+      ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
+    } else {
+      ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
+    }
   }
 }
 

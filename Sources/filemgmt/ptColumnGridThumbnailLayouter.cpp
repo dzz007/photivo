@@ -103,9 +103,7 @@ int ptColumnGridThumbnailLayouter::MoveIndex(const int currentIdx, QKeyEvent* ev
           idx = idx - m_ThumbMetrics.MaxRow - 1;
         return idx;
       case Qt::Key_Right:
-        if (idx < m_ThumbCount-1 - m_ThumbMetrics.MaxRow)
-          idx = qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxRow + 1);
-        return idx;
+        return qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxCol + 1);
       case Qt::Key_Up:
         return qMax(0, idx-1);
       case Qt::Key_Down:

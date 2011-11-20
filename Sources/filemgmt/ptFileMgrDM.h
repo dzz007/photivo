@@ -73,6 +73,7 @@ public:
   ptSingleDirModel* dirModel() const { return m_DirModel; }
 
   int focusedThumb() { return m_FocusedThumb; }
+  int focusedThumb(QGraphicsItem* group);
 
   ptGraphicsThumbGroup* MoveFocus(const int index);
 

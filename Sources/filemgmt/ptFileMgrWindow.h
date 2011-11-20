@@ -124,6 +124,7 @@ private slots:
   void fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix);
   void fetchNewThumbs(const bool isLast);
   void on_m_BookmarkButton_clicked();
+  void thumbFocusChanged();
 
   // context menu slots
   void verticalThumbs();

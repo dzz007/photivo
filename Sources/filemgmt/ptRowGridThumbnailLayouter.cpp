@@ -108,9 +108,7 @@ int ptRowGridThumbnailLayouter::MoveIndex(const int currentIdx, QKeyEvent* event
           idx = idx - m_ThumbMetrics.MaxCol - 1;
         return idx;
       case Qt::Key_Down:
-        if (idx < m_ThumbCount-1 - m_ThumbMetrics.MaxCol)
-          idx = qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxCol + 1);
-        return idx;
+        return qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxCol + 1);
       case Qt::Key_Home:  // start of line
         return qMax(0, idx - offset);
       case Qt::Key_End:   // end of line
