@@ -45,7 +45,7 @@ enum ptThumbnailAction {
 enum ptThumbnailLayout {
   tlVerticalByRow       = 0,
   tlHorizontalByColumn  = 1,
-  tlDetailedList        = 2
+  tlDetailedList        = 2   // TODO: not implemented yet
 };
 
 #endif // PTFILEMGRCONSTANTS_H
