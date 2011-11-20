@@ -119,6 +119,8 @@ private:
   ptGraphicsThumbGroup(QGraphicsItem* parent = 0);
   ~ptGraphicsThumbGroup();
 
+  void exec();
+
   QString   m_FullPath;
   ptFSOType m_FSOType;
   int       m_RefCount;

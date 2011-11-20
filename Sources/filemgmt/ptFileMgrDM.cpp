@@ -229,3 +229,15 @@ ptGraphicsThumbGroup* ptFileMgrDM::MoveFocus(const int index) {
 }
 
 //==============================================================================
+
+int ptFileMgrDM::focusedThumb(QGraphicsItem* group) {
+  for (int i = 0; i < m_ThumbList->count(); i++) {
+    if (m_ThumbList->at(i) == group) {
+      m_FocusedThumb = i;
+      return i;
+    }
+  }
+  return -1;
+}
+
+//==============================================================================

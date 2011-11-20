@@ -60,8 +60,10 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   // Main UI init
   setupUi(this);
   setMouseTracking(true);
+
   ptGraphicsSceneEmitter::ConnectThumbnailAction(
-      this, SLOT(execThumbnailAction(ptThumbnailAction,QString)) );
+      this, SLOT(execThumbnailAction(ptThumbnailAction,QString)));
+  ptGraphicsSceneEmitter::ConnectFocusChanged(this, SLOT(thumbFocusChanged()));
 
   //------------------------------------------------------------------------------
 
@@ -126,6 +128,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 
   // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
+  m_FilesScene->setStickyFocus(true);
   m_FilesScene->installEventFilter(this);
   m_FilesView->installEventFilter(this);
   m_FilesView->verticalScrollBar()->installEventFilter(this);
@@ -463,6 +466,9 @@ void ptFileMgrWindow::FocusThumbnail(int index) {
     // focus new thumb
     ptGraphicsThumbGroup* thumb = m_DataModel->MoveFocus(index);
     m_FilesScene->setFocusItem(thumb);
+    int margins = Settings->GetInt("FileMgrThumbnailPadding");
+    m_FilesView->ensureVisible(thumb, margins, margins);
+    m_FilesView->setFocus();
     if (thumb->fsoType() == fsoFile) {
       m_ImageView->ShowImage(thumb->fullPath());
     }
@@ -470,6 +476,12 @@ void ptFileMgrWindow::FocusThumbnail(int index) {
   } else {
     m_FilesScene->clearFocus();
   }
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::thumbFocusChanged() {
+  FocusThumbnail(m_DataModel->focusedThumb(m_FilesScene->focusItem()));
 }
 
 //==============================================================================

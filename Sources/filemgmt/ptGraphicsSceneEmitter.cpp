@@ -45,20 +45,25 @@ void ptGraphicsSceneEmitter::DestroyInstance() {
 
 //==============================================================================
 
-ptGraphicsSceneEmitter::ptGraphicsSceneEmitter()
-: QObject(NULL)
-{}
+ptGraphicsSceneEmitter::ptGraphicsSceneEmitter(): QObject(NULL) {}
+ptGraphicsSceneEmitter::~ptGraphicsSceneEmitter() {}
 
 //==============================================================================
 
-ptGraphicsSceneEmitter::~ptGraphicsSceneEmitter()
-{}
+bool ptGraphicsSceneEmitter::ConnectFocusChanged(const QObject* receiver, const char *method) {
+  ptGraphicsSceneEmitter* Instance = GetInstance();
+  return Instance->connect(Instance, SIGNAL(focusChanged()), receiver, method);
+}
 
 //==============================================================================
 
-bool ptGraphicsSceneEmitter::ConnectThumbnailAction(const QObject* receiver,
-                                                    const char *method)
-{
+void ptGraphicsSceneEmitter::EmitFocusChanged() {
+  emit GetInstance()->focusChanged();
+}
+
+//==============================================================================
+
+bool ptGraphicsSceneEmitter::ConnectThumbnailAction(const QObject* receiver, const char *method) {
   ptGraphicsSceneEmitter* Instance = GetInstance();
   return Instance->connect(Instance, SIGNAL(thumbnailAction(ptThumbnailAction,QString)),
                            receiver, method);
