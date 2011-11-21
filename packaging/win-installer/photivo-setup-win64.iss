@@ -19,6 +19,14 @@
 ;; along with photivo.  If not, see <http:;;www.gnu.org;licenses;>.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; !!! IMPORTANT !!!
+;;
+;; The {{name}} placeholders are for the photivo-release-package script.
+;; If you package Photivo manually replace them with the appropriate values,
+;; but DO NOT commit these changed scripts!
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -26,15 +34,15 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppID={{9B7CEA17-E1CC-43E1-A2F6-F36A34051539}
 AppName=Photivo
-AppVersion=DD MMM 20YY (rev ???)
+AppVersion={{versionstring}}
 AppPublisherURL=http://photivo.org/
 AppSupportURL=http://photivo.org/
 AppUpdatesURL=http://code.google.com/p/photivo/downloads/list
 DefaultDirName={pf}\Photivo
 DefaultGroupName=Photivo
 AllowNoIcons=yes
-InfoBeforeFile=..\..\_bin-win64\Changelog.txt
-OutputBaseFilename=photivo-setup--win64
+InfoBeforeFile={{changelogfile}}
+OutputBaseFilename={{outputbasename}}
 Compression=lzma/Max
 SolidCompression=false
 ArchitecturesInstallIn64BitMode=x64
@@ -52,7 +60,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "..\..\_bin-win64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{{bindir}}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\Photivo"; Filename: "{app}\photivo.exe"

@@ -1,0 +1,16 @@
+#!/bin/bash
+if [ "$1" = "" ]; then
+  echo "Unset PT_REPO_PATH."
+  unset PT_REPO_PATH
+  export PT_REPO_ID=none
+
+else
+  if [ "$1" = "def" ]; then
+    export PT_REPO_PATH=/photivo/repository
+  else
+    export PT_REPO_PATH=/photivo/branch-$1
+  fi
+
+  export PT_REPO_ID=$1
+  echo "PT_REPO_PATH is now \"$PT_REPO_PATH\""
+fi
