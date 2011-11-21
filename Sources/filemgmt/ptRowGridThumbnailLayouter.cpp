@@ -80,8 +80,10 @@ void ptRowGridThumbnailLayouter::Layout(ptGraphicsThumbGroup* thumb) {
     Init(m_ThumbCount, thumb->font());
   }
 
+  // The +1 y position accounts for the 2px wide mouse hover border.
+  // Without it that wouldn’t be shown completely on the first row.
   thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth,
-                m_ThumbMetrics.Row * m_ThumbMetrics.CellHeight);
+                (m_ThumbMetrics.Row * m_ThumbMetrics.CellHeight) + 1);
 
   if (m_ThumbMetrics.Col >= m_ThumbMetrics.MaxCol) {
     m_ThumbMetrics.Col = 0;

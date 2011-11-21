@@ -60,7 +60,10 @@ int ptGraphicsThumbGroup::RemoveRef(ptGraphicsThumbGroup* group) {
 //==============================================================================
 
 ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
-: QGraphicsRectItem(parent)
+: QGraphicsRectItem(parent),
+  m_Brush(Qt::SolidPattern),
+  m_hasHover(false),
+  m_Pen(Qt::DashLine)
 {
   m_FSOType = fsoUnknown;
   m_FullPath = "";
@@ -75,7 +78,9 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
   setAcceptedMouseButtons(Qt::LeftButton);
   setFiltersChildEvents(true);
   setCursor(QCursor(Qt::PointingHandCursor));
-  setPen(QPen(Theme->emphasizedColor(), 0, Qt::DashLine));
+
+  m_Pen.setCosmetic(true);
+  SetupPenAndBrush();
 }
 
 //==============================================================================
@@ -181,14 +186,14 @@ void ptGraphicsThumbGroup::addImage(QImage* image) {
 bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
   switch (event->type()) {
     case QEvent::GraphicsSceneHoverEnter: {
-      event->accept();
-      this->setPen(QPen(Theme->highlightColor(), 0, Qt::DashLine));
+      m_hasHover = true;
+      this->update();
       return true;
     }
 
     case QEvent::GraphicsSceneHoverLeave: {
-      event->accept();
-      setPen(QPen(Theme->emphasizedColor(), 0, Qt::DashLine));
+      m_hasHover = false;
+      this->update();
       return true;
     }
 
@@ -229,12 +234,9 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
 //==============================================================================
 
 void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
-  if (this->hasFocus()) {
-    painter->setBrush(QBrush(Theme->gradientColor()));
-  } else {
-    painter->setBrush(QBrush(Theme->altBaseColor()));
-  }
-  painter->setPen(this->pen());
+  SetupPenAndBrush();
+  painter->setPen(m_Pen);
+  painter->setBrush(m_Brush);
   painter->drawRoundedRect(this->rect(), 5, 5);
   if (m_Thumbnail) {
     painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), *m_Thumbnail);
@@ -260,6 +262,23 @@ void ptGraphicsThumbGroup::exec() {
     } else {
       ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
     }
+  }
+}
+
+//==============================================================================
+
+void ptGraphicsThumbGroup::SetupPenAndBrush() {
+  int PenWidth = m_hasHover ? 2 : 1;
+
+  if (this->hasFocus()) {
+    m_Pen.setColor(Theme->highlightColor());
+    m_Pen.setWidth(PenWidth);
+    m_Brush.setColor(Theme->gradientColor());
+
+  } else {
+    m_Pen.setColor(Theme->emphasizedColor());
+    m_Pen.setWidth(PenWidth);
+    m_Brush.setColor(Theme->altBaseColor());
   }
 }
 

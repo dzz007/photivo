@@ -79,7 +79,9 @@ void ptColumnGridThumbnailLayouter::Layout(ptGraphicsThumbGroup* thumb) {
     Init(m_ThumbCount, thumb->font());
   }
 
-  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth,
+  // The +1 y position accounts for the 2px wide mouse hover border.
+  // Without it that wouldn’t be shown completely on the first column.
+  thumb->setPos((m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth) + 1,
                 m_ThumbMetrics.Row * m_ThumbMetrics.CellHeight);
 
   if (m_ThumbMetrics.Row >= m_ThumbMetrics.MaxRow) {
@@ -103,7 +105,7 @@ int ptColumnGridThumbnailLayouter::MoveIndex(const int currentIdx, QKeyEvent* ev
           idx = idx - m_ThumbMetrics.MaxRow - 1;
         return idx;
       case Qt::Key_Right:
-        return qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxCol + 1);
+        return qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxRow + 1);
       case Qt::Key_Up:
         return qMax(0, idx-1);
       case Qt::Key_Down:
