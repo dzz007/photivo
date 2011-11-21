@@ -38,7 +38,7 @@
 #include "ptViewWindow.h"
 #include "ptWhiteBalances.h"
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
   #include "ptEcWin7.h"
 #endif
 
@@ -108,7 +108,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   setWindowTitle(Title);
 
   // Initialize Win 7 taskbar features
-  #ifdef Q_WS_WIN
+  #ifdef Q_OS_WIN
     ptEcWin7::CreateInstance(this);
   #endif
 
@@ -743,15 +743,15 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       if (clickedItem !=0 && HaveHiddenTools == 1) { // no hidden tools on camera tab
         m_ContextMenuOnTab = clickedItem;
         QMenu Menu(NULL);
-        Menu.setStyle(Theme->ptStyle);
-        Menu.setPalette(Theme->ptMenuPalette);
+        Menu.setStyle(Theme->style());
+        Menu.setPalette(Theme->menuPalette());
         Menu.addAction(m_AtnShowTools);
         Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
       }
     } else if (obj == WritePipeButton) {
       QMenu Menu(NULL);
-      Menu.setStyle(Theme->ptStyle);
-      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.setStyle(Theme->style());
+      Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnSavePipe);
       Menu.addAction(m_AtnSaveFull);
       Menu.addAction(m_AtnSaveSettings);
@@ -759,15 +759,15 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     } else if (obj == ToGimpButton) {
       QMenu Menu(NULL);
-      Menu.setStyle(Theme->ptStyle);
-      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.setStyle(Theme->style());
+      Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnGimpSavePipe);
       Menu.addAction(m_AtnGimpSaveFull);
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     } else if (obj == ResetButton) {
       QMenu Menu(NULL);
-      Menu.setStyle(Theme->ptStyle);
-      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.setStyle(Theme->style());
+      Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnMenuUserReset);
       Menu.addAction(m_AtnMenuFullReset);
       Menu.addSeparator();
@@ -2463,7 +2463,7 @@ void ptMainWindow::UpdateFilenameInfo(const QStringList FileNameList) {
   QFileInfo fn(FileNameList[0]);
   if (FileNameList.length() > 0 ) {
     FileNameLabel->setText(fn.fileName());
-    #ifdef Q_OS_WIN32
+    #ifdef Q_OS_WIN
       FilePathLabel->setText(fn.canonicalPath().replace(QString("/"), QString("\\")));
     #else
       FilePathLabel->setText(fn.canonicalPath());
@@ -3116,7 +3116,7 @@ ptMainWindow::~ptMainWindow() {
 
 //==============================================================================
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
 bool ptMainWindow::winEvent(MSG *message, long *result) {
   return ptEcWin7::GetInstance()->winEvent(message, result);
 }

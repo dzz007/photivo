@@ -79,6 +79,11 @@ win32 {
   LIBS += \
       -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick \
       libole32 -lwsock32 -lexpat -lregex -lgdi32 -liconv \
+
+  HEADERS +=  ../Sources/ptEcWin7.h \
+              ../Sources/ptWinApi.h
+  SOURCES +=  ../Sources/ptEcWin7.cpp \
+              ../Sources/ptWinApi.cpp
 }
 
 macx{
@@ -120,23 +125,34 @@ QMAKE_CXXFLAGS_DEBUG   += $${COMMON_FLAGS} $${DEBUG_SPECIFIC}
 HEADERS += \
     ../Sources/clapack/blaswrap.h \
     ../Sources/clapack/clapack.h \
+    ../Sources/clapack/f2c.h \
     ../Sources/clapack/fio.h \
     ../Sources/clapack/fmt.h \
     ../Sources/clapack/fp.h \
     ../Sources/fastbilateral/array.h \
+    ../Sources/fastbilateral/array_n.h \
+    ../Sources/fastbilateral/chrono.h \
     ../Sources/fastbilateral/fast_lbf.h \
+    ../Sources/fastbilateral/geom.h \
     ../Sources/fastbilateral/math_tools.h \
     ../Sources/fastbilateral/mixed_vector.h \
+    ../Sources/fastbilateral/msg_stream.h \
     ../Sources/filemgmt/ptAbstractThumbnailLayouter.h \
     ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptFileMgrConstants.h \
     ../Sources/filemgmt/ptFileMgrDM.h \
-    ../Sources/filemgmt/ptFileMgrThumbnailer.h \
     ../Sources/filemgmt/ptFileMgrWindow.h \
     ../Sources/filemgmt/ptGraphicsSceneEmitter.h \
     ../Sources/filemgmt/ptGraphicsThumbGroup.h \
     ../Sources/filemgmt/ptGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptImageView.h \
+    ../Sources/filemgmt/ptPathBar.h \
     ../Sources/filemgmt/ptRowGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptSingleDirModel.h \
+    ../Sources/filemgmt/ptTagList.h \
+    ../Sources/filemgmt/ptTagModel.h \
     ../Sources/filemgmt/ptThumbnailCache.h \
+    ../Sources/filemgmt/ptThumbnailer.h \
     ../Sources/greyc/CImg.h \
     ../Sources/ptAdobeTable.h \
     ../Sources/ptCalloc.h \
@@ -150,7 +166,6 @@ HEADERS += \
     ../Sources/ptCurveWindow.h \
     ../Sources/ptDcRaw.h \
     ../Sources/ptDefines.h \
-    ../Sources/ptEcWin7.h \
     ../Sources/ptError.h \
     ../Sources/ptFastBilateral.h \
     ../Sources/ptGridInteraction.h \
@@ -162,6 +177,7 @@ HEADERS += \
     ../Sources/ptImageInteraction.h \
     ../Sources/ptInput.h \
     ../Sources/ptKernel.h \
+    ../Sources/ptLensfun.h \
     ../Sources/ptLineInteraction.h \
     ../Sources/ptMainWindow.h \
     ../Sources/ptMessageBox.h \
@@ -183,6 +199,7 @@ HEADERS += \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
     ../Sources/qtsingleapplication/qtsingleapplication.h
+
 
 SOURCES += \
     ../Sources/clapack/abort_.c \
@@ -217,16 +234,20 @@ SOURCES += \
     ../Sources/clapack/wsfe.c \
     ../Sources/clapack/xerbla.c \
     ../Sources/dcb/dcb_demosaicing.c \
-    ../Sources/dcb/dcb_demosaicing_old.c \
     ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp \
     ../Sources/filemgmt/ptFileMgrDM.cpp \
-    ../Sources/filemgmt/ptFileMgrThumbnailer.cpp \
     ../Sources/filemgmt/ptFileMgrWindow.cpp \
     ../Sources/filemgmt/ptGraphicsSceneEmitter.cpp \
     ../Sources/filemgmt/ptGraphicsThumbGroup.cpp \
     ../Sources/filemgmt/ptGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptImageView.cpp \
+    ../Sources/filemgmt/ptPathBar.cpp \
     ../Sources/filemgmt/ptRowGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptSingleDirModel.cpp \
+    ../Sources/filemgmt/ptTagList.cpp \
+    ../Sources/filemgmt/ptTagModel.cpp \
     ../Sources/filemgmt/ptThumbnailCache.cpp \
+    ../Sources/filemgmt/ptThumbnailer.cpp \
     ../Sources/perfectraw/lmmse_interpolate.c \
     ../Sources/ptCalloc.cpp \
     ../Sources/ptChannelMixer.cpp \
@@ -237,7 +258,6 @@ SOURCES += \
     ../Sources/ptCurve.cpp \
     ../Sources/ptCurveWindow.cpp \
     ../Sources/ptDcRaw.cpp \
-    ../Sources/ptEcWin7.cpp \
     ../Sources/ptError.cpp \
     ../Sources/ptFastBilateral.cpp \
     ../Sources/ptGridInteraction.cpp \
@@ -257,6 +277,7 @@ SOURCES += \
     ../Sources/ptImageInteraction.cpp \
     ../Sources/ptInput.cpp \
     ../Sources/ptKernel.cpp \
+    ../Sources/ptLensfun.cpp \
     ../Sources/ptLineInteraction.cpp \
     ../Sources/ptMain.cpp \
     ../Sources/ptMainWindow.cpp \
@@ -278,6 +299,8 @@ SOURCES += \
     ../Sources/ptWiener.cpp \
     ../Sources/qtsingleapplication/qtlocalpeer.cpp \
     ../Sources/qtsingleapplication/qtlockedfile.cpp \
+    ../Sources/qtsingleapplication/qtlockedfile_unix.cpp \
+    ../Sources/qtsingleapplication/qtlockedfile_win.cpp \
     ../Sources/qtsingleapplication/qtsingleapplication.cpp \
     ../Sources/rawtherapee/amaze_interpolate.c \
     ../Sources/rawtherapee/ca_correct.c \
@@ -289,6 +312,7 @@ SOURCES += \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
     ../Sources/vcd/vcd_interpolate.c
+
 
 FORMS += \
     ../Sources/filemgmt/ptFileMgrWindow.ui \
@@ -311,3 +335,5 @@ TRANSLATIONS += ../Translations/photivo_Russian.ts
 exists(../local-system-specific.pro) {
   include(../local-system-specific.pro)
 }
+
+

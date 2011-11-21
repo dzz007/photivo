@@ -31,15 +31,13 @@
 #include <QGraphicsItemGroup>
 #include <QDir>
 
-#include <wand/magick_wand.h>
-
 #include "ptThumbnailCache.h"
 #include "ptGraphicsThumbGroup.h"
 
 //==============================================================================
 
 /*!
-  \class ptFileMgrThumbnailer
+  \class ptThumbnailer
 
   \brief Generates image thumbnails in a separate thread.
 
@@ -47,15 +45,15 @@
   thread. It fills a FIFO buffer with \c QGraphicsItem objects containing the
   thumbnails.
 */
-class ptFileMgrThumbnailer: public QThread {
+class ptThumbnailer: public QThread {
 Q_OBJECT
 
 public:
-  /*! Creates an empty ptFileMgrThumbnailer object. */
-  explicit ptFileMgrThumbnailer();
+  /*! Creates an empty ptThumbnailer object. */
+  explicit ptThumbnailer();
 
-  /*! Destroys a \c ptFileMgrThumbnailer object. */
-  ~ptFileMgrThumbnailer();
+  /*! Destroys a \c ptThumbnailer object. */
+  ~ptThumbnailer();
 
   /*! Sends an abort request to the thread and waits until the thread has stopped
     before returning. Calling \c Abort() on a not running thread does nothing.
@@ -72,7 +70,7 @@ public:
   */
   int setDir(const QString dir);
 
-  /*! Sets the FIFO buffer where the thumbnails are written to.
+  /*! Sets the list where the thumbnails are written to.
       Note that the buffer is taken as is, i.e. it is not cleared by the
       thumbnailer.
   */
@@ -81,18 +79,15 @@ public:
 #ifndef Q_OS_MAC
 protected:
 #endif
-  /*! This function does the actual thumbnail generating. */
   void run();
 
 
 private:
-  // Resizes the image to the specified size and writes it to the pixmap
-  QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
-  void ScaleThumbSize(QSize* tSize, const int max);
 
   bool                            m_AbortRequested;
   ptThumbnailCache*               m_Cache;
   QDir*                           m_Dir;
+  bool                            m_IsMyComputer;
   QList<ptGraphicsThumbGroup*>*   m_ThumbList;
 
 

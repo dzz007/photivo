@@ -28,12 +28,17 @@
 #include <QCoreApplication>
 #include <QFileInfoList>
 
-#include "../ptDcRaw.h"
 #include "../ptError.h"
 #include "../ptCalloc.h"
 #include "../ptDefines.h"
 #include "../ptSettings.h"
-#include "ptFileMgrThumbnailer.h"
+#include "ptFileMgrConstants.h"
+#include "ptThumbnailer.h"
+#include "ptFileMgrDM.h"
+
+#ifdef Q_OS_WIN
+  #include "../ptWinApi.h"
+#endif
 
 extern ptSettings* Settings;
 extern QStringList FileExtsRaw;
@@ -41,12 +46,13 @@ extern QStringList FileExtsBitmap;
 
 //==============================================================================
 
-ptFileMgrThumbnailer::ptFileMgrThumbnailer()
-: QThread()
+ptThumbnailer::ptThumbnailer()
+: QThread(),
+  m_IsMyComputer(false)
 {
   m_AbortRequested = false;
-  m_Cache     = NULL;
-  m_ThumbList = NULL;
+  m_Cache          = NULL;
+  m_ThumbList      = NULL;
 
   m_Dir = new QDir("");
   m_Dir->setSorting(QDir::DirsFirst | QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
@@ -62,38 +68,57 @@ ptFileMgrThumbnailer::ptFileMgrThumbnailer()
 
 //==============================================================================
 
-ptFileMgrThumbnailer::~ptFileMgrThumbnailer() {
+ptThumbnailer::~ptThumbnailer() {
   DelAndNull(m_Dir);
 }
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::setCache(ptThumbnailCache* cache) {
-  if (!this->isRunning() && cache != NULL)
-  {
+void ptThumbnailer::setCache(ptThumbnailCache* cache) {
+  if (!this->isRunning() && cache != NULL) {
     m_Cache = cache;
   }
 }
 
 //==============================================================================
 
-int ptFileMgrThumbnailer::setDir(const QString dir) {
+int ptThumbnailer::setDir(const QString dir) {
   if (this->isRunning()) {
     return -1;
   }
-  m_Dir->setPath(dir);
 
-#if (QT_VERSION < 0x40700)
-  // hack for lack of QDir::NoDot in Qt < 4.7
-  return m_Dir->count() - 1;
-#else
-  return m_Dir->count();
+#ifdef Q_OS_WIN
+  m_IsMyComputer = (dir == MyComputerIdString);
 #endif
+
+  if (m_IsMyComputer) {
+    return m_Dir->drives().count();
+
+  } else {
+    m_Dir->setPath(dir);
+
+    if (dir.isEmpty()) {
+      // Empty paths are valid. They tell the thumbnailer to do nothing.
+      return -1;
+    }
+
+    QDir::Filters filters = QDir::Files;
+    if (Settings->GetInt("FileMgrShowDirThumbs")) {
+      filters = filters | QDir::AllDirs | QDir::NoDot;
+    }
+    m_Dir->setFilter(filters);
+#if (QT_VERSION < 0x40700)
+    // hack for lack of QDir::NoDot in Qt < 4.7
+    return m_Dir->count() - 1;
+#else
+    return m_Dir->count();
+#endif
+  }
 }
 
 //==============================================================================
 
-void ptFileMgrThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList) {
+void ptThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList) {
   if (!this->isRunning() && ThumbList != NULL) {
     m_ThumbList = ThumbList;
   }
@@ -102,15 +127,12 @@ void ptFileMgrThumbnailer::setThumbList(QList<ptGraphicsThumbGroup*>* ThumbList)
 //==============================================================================
 
 
-void ptFileMgrThumbnailer::run() {
-//  QTime timer;
-//  timer.start();
+void ptThumbnailer::run() {
   // Check for properly set directory, cache and buffer
-  if (!m_Dir->exists() || m_ThumbList == NULL || m_Cache == NULL) {
-    return;
-  }
+  if (m_ThumbList == NULL || m_Cache == NULL) return;
+  if (!m_IsMyComputer && (m_Dir->path().isEmpty() || !m_Dir->exists())) return;
 
-  QFileInfoList files = m_Dir->entryInfoList();
+  ptFileMgrDM* DataModule = ptFileMgrDM::GetInstance();
 
 #if (QT_VERSION < 0x40700)
   // hack for lack of QDir::NoDot in Qt < 4.7
@@ -124,7 +146,14 @@ void ptFileMgrThumbnailer::run() {
 #endif
 
   int thumbMaxSize = Settings->GetInt("FileMgrThumbnailSize");
-  QSize thumbSize = QSize(thumbMaxSize, thumbMaxSize);
+  QFileInfoList files;
+
+#ifdef Q_OS_WIN
+  if (m_IsMyComputer)
+    files = m_Dir->drives();
+  else
+#endif
+    files = m_Dir->entryInfoList();
 
   /***
     Step 1: Generate thumb groups without the thumbnail images
@@ -149,19 +178,33 @@ void ptFileMgrThumbnailer::run() {
       thumbGroup = ptGraphicsThumbGroup::AddRef();
       ptFSOType type;
 
-      QString descr = files.at(i).fileName();
-      if (files.at(i).isDir()) {
-        if (descr == "..") {
-          type = fsoParentDir;
-          descr = QDir(files.at(i).canonicalFilePath()).dirName();
-        } else {
-          type = fsoDir;
-        }
-      } else {
-        type = fsoFile;
-      }
+      QString descr;
+      if (m_IsMyComputer) {
+        type = fsoDir;
+        descr = WinApi::VolumeNamePretty(files.at(i).absoluteFilePath());
+        thumbGroup->addInfoItems(files.at(i).absoluteFilePath(), descr, type);
 
-      thumbGroup->addInfoItems(files.at(i).canonicalFilePath(), descr, type);
+      } else {
+        descr = files.at(i).fileName();
+        if (files.at(i).isDir()) {
+          if (descr == "..") {
+            type = fsoParentDir;
+            descr = QDir(files.at(i).canonicalFilePath()).dirName();
+#ifdef Q_OS_WIN
+            if (descr.isEmpty()) {
+              // parent folder is a drive
+              QString drive = files.at(i).canonicalFilePath().left(2);
+              descr = QString("%1 (%2)").arg(WinApi::VolumeName(drive)).arg(drive).trimmed();
+            }
+#endif
+          } else {
+            type = fsoDir;
+          }
+        } else {
+          type = fsoFile;
+        }
+        thumbGroup->addInfoItems(files.at(i).canonicalFilePath(), descr, type);
+      }
 
       // ... then add the group to the cache. Directories are not cached because
       // they load very quickly anyway.
@@ -200,48 +243,8 @@ void ptFileMgrThumbnailer::run() {
       if (!currentGroup->hasImage()) {
         // we have a file and no image in the thumb group == cache miss.
         // See if we can get a thumbnail image
-        ptDcRaw dcRaw;
-        bool isRaw = false;
-        MagickWand* image = NewMagickWand();
 
-        if (dcRaw.Identify(currentGroup->fullPath()) == 0 ) {
-          // we have a raw image
-          isRaw = true;
-          QByteArray* ImgData = NULL;
-          if (dcRaw.thumbnail(ImgData)) {
-            // raw thumbnail read successfully
-            thumbSize.setWidth(dcRaw.m_Width);
-            thumbSize.setHeight(dcRaw.m_Height);
-            ScaleThumbSize(&thumbSize, thumbMaxSize);
-            MagickSetSize(image, 2*thumbSize.width(), 2*thumbSize.height());
-            MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->length());
-          }
-          DelAndNull(ImgData);
-        }
-
-        if (!isRaw) {
-          // no raw, try for bitmap
-          MagickPingImage(image, currentGroup->fullPath().toAscii().data());
-          thumbSize.setWidth(MagickGetImageWidth(image));
-          thumbSize.setHeight(MagickGetImageHeight(image));
-          ScaleThumbSize(&thumbSize, thumbMaxSize);
-          MagickSetSize(image, 2*thumbSize.width(), 2*thumbSize.height());
-          MagickReadImage(image, currentGroup->fullPath().toAscii().data());
-        }
-
-        ExceptionType MagickExcept;
-        char* MagickErrMsg = MagickGetException(image, &MagickExcept);
-        if (MagickExcept != UndefinedException) {
-          // error occurred: no raw thumbnail, no supported image type, any other GM error
-          printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
-          DelAndNull(thumbImage);
-
-        } else {
-          // no error: scale and rotate thumbnail
-          thumbImage = GenerateThumbnail(image, thumbSize);
-        }
-
-        DestroyMagickWand(image);
+        thumbImage = DataModule->getThumbnail(currentGroup->fullPath(), thumbMaxSize);
       }
     }
 
@@ -251,62 +254,11 @@ void ptFileMgrThumbnailer::run() {
     QApplication::processEvents();
 #endif
   } // main FOR loop step 2
-
-//  printf("elapsed %d, cache size %d\n", timer.elapsed(), m_Cache->Count());
 }
 
 //==============================================================================
 
-QImage* ptFileMgrThumbnailer::GenerateThumbnail(MagickWand* image, const QSize tSize)
-{
-  // We want 8bit RGB data without alpha channel, scaled to thumbnail size
-  MagickSetImageDepth(image, 8);
-  MagickSetImageFormat(image, "RGB");
-  MagickSetImageType(image, TrueColorType);
-  MagickScaleImage(image, tSize.width(), tSize.height());
-
-  // read EXIF orientation and correct image
-  int orientation = QString::fromAscii(MagickGetImageAttribute(image, "EXIF:Orientation")).toInt();
-  PixelWand* pxWand = NewPixelWand();
-  switch (orientation) {
-    case 2: MagickFlopImage(image); break;
-    case 3: MagickRotateImage(image, pxWand, 180); break;
-    case 4: MagickFlipImage(image); break;
-    case 5: MagickFlopImage(image); MagickRotateImage(image, pxWand, 270); break;
-    case 6: MagickRotateImage(image, pxWand, 90); break;
-    case 7: MagickFlipImage(image); MagickRotateImage(image, pxWand, 270); break;
-    case 8: MagickRotateImage(image, pxWand, 270); break;
-    default: break;
-  }
-  DestroyPixelWand(pxWand);
-
-  // Get the raw image data from GM.
-  uint w = MagickGetImageWidth(image);
-  uint h = MagickGetImageHeight(image);
-
-  QImage* thumbImage = new QImage(w, h, QImage::Format_RGB32);
-  MagickGetImagePixels(image, 0, 0, w, h, "BGRA", CharPixel, (uchar*)thumbImage->scanLine(0));
-  return thumbImage;
-}
-
-//==============================================================================
-
-void ptFileMgrThumbnailer::ScaleThumbSize(QSize* tSize, const int max) {
-  if (tSize->width() == tSize->height()) {    // square image
-    tSize->setWidth(max);
-    tSize->setHeight(max);
-  } else if (tSize->width() > tSize->height()) {    // landscape image
-    tSize->setHeight(tSize->height()/(double)tSize->width() * max + 0.5);
-    tSize->setWidth(max);
-  } else if (tSize->width() < tSize->height()) {    // portrait image
-    tSize->setWidth(tSize->width()/(double)tSize->height() * max + 0.5);
-    tSize->setHeight(max);
-  }
-}
-
-//==============================================================================
-
-void ptFileMgrThumbnailer::Abort() {
+void ptThumbnailer::Abort() {
   if (isRunning()) {
     m_AbortRequested = true;
 

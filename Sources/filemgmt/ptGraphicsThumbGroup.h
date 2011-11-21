@@ -28,6 +28,7 @@
 #include <QObject>
 #include <QGraphicsRectItem>
 #include <QPen>
+#include <QBrush>
 #include <QPoint>
 
 #include "../ptConstants.h"
@@ -119,8 +120,14 @@ private:
   ptGraphicsThumbGroup(QGraphicsItem* parent = 0);
   ~ptGraphicsThumbGroup();
 
+  void exec();
+  void SetupPenAndBrush();
+
+  QBrush    m_Brush;
   QString   m_FullPath;
   ptFSOType m_FSOType;
+  bool      m_hasHover;
+  QPen      m_Pen;
   int       m_RefCount;
   QImage*   m_Thumbnail;
   QPoint    m_ThumbPos;

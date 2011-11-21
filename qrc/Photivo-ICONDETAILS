@@ -27,9 +27,6 @@ image-center-hor      <bits and pieces>
 image-center-vert     <bits and pieces>
 dialog-cancel         window-close
 
-Clear image (tex overlay)
-Reset colourspace
-
 TOOL PANE BOTTOM CONTROLS
 preview-mode-tabs     go-bottom
 preview-mode-full     go-down
@@ -58,3 +55,10 @@ reset               view-refresh
 bookmark-remove     <modified bookmark-new>
 tool-hide           <modified window-close>
 tool-show           <modified dialog-ok>
+
+FILE MANAGER
+broken-image-48px   <process-stop in greyscale>
+folder-48px         <folder-new without plus sign>
+go-up               <rotated dialog-apply>
+go-up-48px          <modified dialog-apply>
+my-computer         go-home

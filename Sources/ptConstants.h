@@ -21,22 +21,38 @@
 **
 *******************************************************************************/
 
-#ifndef DLCONSTANTS_H
-#define DLCONSTANTS_H
+#ifndef PTCONSTANTS_H
+#define PTCONSTANTS_H
+
+//==============================================================================
 
 #include <lcms2.h>
 #include <lensfun.h>
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Program wide constants definition
-//
-////////////////////////////////////////////////////////////////////////////////
+#include <QString>
+
+//==============================================================================
+
+/* !!!
+  IMPORTANT: Photivo uses groups of const short for historical reasons.
+  They are deprecated for new constants groups! Use enums insteads.
+!!! */
+
+//==============================================================================
 
 const char ProgramName[] = "Photivo";
 const char CompanyName[] = "http://photivo.org/";
 
 const int PhotivoSettingsVersion = 1;
+
+struct ptFiles {
+  QString GlobalIni;
+  QString TagsIni;
+};
+const ptFiles PhotivoFile = { "photivo.ini",
+                              "tags.ini"};
+
+//==============================================================================
 
 // Mathematical constants.
 const double ptPI     = 3.14159265358979323846264338327950288419716939937510;
@@ -787,20 +803,6 @@ enum ptLoadCfgMode {
   lcmSettingsFile   = 4
 };
 
-/*! This enum defines the possible actions when you click on a thumbnail
-    in the file manager. */
-enum ptThumbnailAction {
-  tnaChangeDir = 0,
-  tnaLoadImage = 1
-};
-
-/*! This enum defines how thumbnails are arranged in the file manager. */
-enum ptThumbnailLayout {
-  tlVerticalByRow       = 0,
-  tlHorizontalByColumn  = 1,
-  tlDetailedList        = 2
-};
-
 /*! This enum defines the possible types of images.
     When you add new types make sure that error types have negative values and
     valid types have positive values.
@@ -814,12 +816,14 @@ enum ptImageType {
 
 /*! This enum defines the type of a file system object. */
 enum ptFSOType {
-  fsoUnknown = 0,
-  fsoFile = 1,
-  fsoDir = 2,
-  fsoParentDir = 3
+  fsoUnknown    = 0,
+  fsoFile       = 1,
+  fsoDir        = 2,
+  fsoParentDir  = 3,
+  fsoRoot       = 4,   // "My Computer" on Windows, "/" on Linux
+  fsoDrive      = 5    // A drive with an assigned letter, only relevant on Windows
 };
 
-#endif
 
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+#endif

@@ -147,7 +147,7 @@ protected:
   void dragEnterEvent(QDragEnterEvent* Event);
   void dropEvent(QDropEvent* Event);
   bool eventFilter(QObject *obj, QEvent *event);
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   // reimplementation needed for Win 7 taskbar features
   virtual bool winEvent(MSG *message, long *result);
 #endif

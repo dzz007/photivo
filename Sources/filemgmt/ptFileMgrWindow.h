@@ -36,10 +36,14 @@
 #include "ptFileMgrDM.h"
 #include "ptGraphicsThumbGroup.h"
 #include "ptAbstractThumbnailLayouter.h"
+#include "ptFileMgrConstants.h"
+#include "ptImageView.h"
+#include "ptPathBar.h"
+#include "ptTagList.h"
 
 //==============================================================================
 
-class ptFileMgrWindow: public QWidget, public Ui::ptFileMgrWindow {
+class ptFileMgrWindow: public QWidget, private Ui::ptFileMgrWindow {
 Q_OBJECT
 
 public:
@@ -53,13 +57,15 @@ public:
   ~ptFileMgrWindow();
 
   /*! Creates or refreshes the thumbnail display.
-    \param index
-      The model index corresponding to the desired directory.
-    \param clearCache
-      Set this flag to \c true if you want to clear the thumbnail cache.
-      Default is \c false.
+    \param path
+      The path to the desired directory. Must be an absolute path. \c path can be
+      empty. Then it defaults to the currently set thumbnail directory.
+    \param fsoType
+      Only relevant on Windows to indicate if the folder is “My Computer”. If that is
+      the case, set to \c fsoRoot. Then \c path will be ignored and no thumbnails
+      displayed. Do \b not use as a general flag to prevent thumbnail display!
   */
-  void DisplayThumbnails(const QModelIndex& index, bool clearCache = false);
+  void DisplayThumbnails(QString path = "", ptFSOType fsoType = fsoDir);
 
   /*! Updates the file manager’s visual appearance.
       Call this once every time Photivo’s theme changes.
@@ -77,6 +83,7 @@ protected:
 
 private:
   void ClearScene();
+  void FocusThumbnail(int index);
   void LayoutAll();
   void setLayouter(const ptThumbnailLayout layout);
   void ConstructContextMenu();
@@ -85,36 +92,52 @@ private:
   QGraphicsScene*         m_FilesScene;
   bool                    m_IsFirstShow;
   ptAbstractThumbnailLayouter* m_Layouter;
+  ptPathBar*              m_PathBar;
+  ptTagList*              m_TagList;      // bookmarks in sidebar
+  ptTagList*              m_TagMenuList;  // bookmarks in popup menu
+  QMenu*                  m_TagMenu;
   int                     m_ThumbCount;
   int                     m_ThumbListIdx;
+  ptImageView*            m_ImageView;
 
   // context menu actions
-  QAction* ac_VerticalThumbs;
-  QAction* ac_HorizontalThumbs;
-  QAction* ac_DetailedThumbs;
+  QAction*      ac_VerticalThumbs;
+  QAction*      ac_HorizontalThumbs;
+  QAction*      ac_DetailedThumbs;
+  QAction*      ac_DirThumbs;
   QActionGroup* ac_ThumbLayoutGroup;
-  QAction* ac_ToggleNaviPane;
-  QAction* ac_CloseFileMgr;
+  QAction*      ac_ToggleSidebar;
+  QAction*      ac_ToggleImageView;
+  QAction*      ac_CloseFileMgr;
 
 
 public slots:
 
 private slots:
-  void changeTreeDir(const QModelIndex& index);
+  void bookmarkCurrentDir();
+  void changeListDir(const QModelIndex& index);
+  void changeToBookmark(const QModelIndex& index);
+  void changeToBookmarkFromMenu(const QModelIndex& index);
+  void changeDir(const QString& path);
   void closeWindow();
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
   void fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix);
   void fetchNewThumbs(const bool isLast);
-  void on_m_PathInput_returnPressed();
+  void on_m_BookmarkButton_clicked();
+  void thumbFocusChanged();
 
   // context menu slots
   void verticalThumbs();
   void horizontalThumbs();
   void detailedThumbs();
-  void toggleNaviPane();
+  void toggleDirThumbs();
+  void toggleSidebar();
+  void toggleImageView();
+
 
 signals:
   void FileMgrWindowClosed();
+
 };
 //==============================================================================
 #endif // PTFILEMGRWINDOW_h

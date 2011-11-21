@@ -23,12 +23,13 @@
 
 #include <cassert>
 
-#include <QFileSystemModel>
+#include <QVBoxLayout>
 #include <QFontMetrics>
 #include <QList>
 #include <QDir>
 #include <QMenu>
 #include <QAction>
+#include <QLabel>
 
 #include "../ptDefines.h"
 #include "../ptSettings.h"
@@ -53,26 +54,81 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_ThumbCount(-1),
   m_ThumbListIdx(0)
 {
-  setupUi(this);
-  setMouseTracking(true);
-  ptGraphicsSceneEmitter::ConnectThumbnailAction(
-      this, SLOT(execThumbnailAction(ptThumbnailAction,QString)) );
-  m_Progressbar->hide();
-  FMTreePane->setVisible(Settings->GetInt("FileMgrShowTreePane"));
-
-  // We setup our data module
+  // Setup data model first because several UI elements need it.
   m_DataModel = ptFileMgrDM::GetInstance();
 
-  m_DirTree->setModel(m_DataModel->treeModel());
-  m_DirTree->setRootIndex(m_DataModel->treeModel()->index(m_DataModel->treeModel()->rootPath()));
-  m_DirTree->setColumnHidden(1, true);
-  m_DirTree->setColumnHidden(2, true);
-  m_DirTree->setColumnHidden(3, true);
-  connect(m_DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
-  connect(m_DirTree, SIGNAL(activated(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
+  // Main UI init
+  setupUi(this);
+  setMouseTracking(true);
+
+  ptGraphicsSceneEmitter::ConnectThumbnailAction(
+      this, SLOT(execThumbnailAction(ptThumbnailAction,QString)));
+  ptGraphicsSceneEmitter::ConnectFocusChanged(this, SLOT(thumbFocusChanged()));
+
+  //------------------------------------------------------------------------------
+
+  // sidebar
+  FMSidebar->setVisible(Settings->GetInt("FileMgrShowSidebar"));
+
+  // Folder list
+#ifdef Q_OS_WIN
+  DirListLabel->setText(tr("Folders"));
+#else
+  DirListLabel->setText(tr("Directories"));
+#endif
+  m_DirList->setModel(m_DataModel->dirModel());
+  connect(m_DirList, SIGNAL(activated(QModelIndex)), this, SLOT(changeListDir(QModelIndex)));
+
+
+#ifdef Q_OS_WIN
+  QString BookmarkTooltip = tr("Bookmark current folder");
+#else
+  QString BookmarkTooltip = tr("Bookmark current directory");
+#endif
+
+  // bookmark list in sidebar
+  m_TagList = new ptTagList(this);
+  m_TagList->setModel(m_DataModel->tagModel());
+  m_TagPaneLayout->addWidget(m_TagList);
+  connect(m_TagList, SIGNAL(activated(QModelIndex)), this, SLOT(changeToBookmark(QModelIndex)));
+  m_AddBookmarkButton->setToolTip(BookmarkTooltip);
+  connect(m_AddBookmarkButton, SIGNAL(clicked()), this, SLOT(bookmarkCurrentDir()));
+
+  //------------------------------------------------------------------------------
+
+  //bookmark menu
+  m_TagMenu = new QMenu(this);
+  m_TagMenu->hide();
+  m_TagMenu->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  m_TagMenu->setObjectName("FMTagMenu");
+
+  QLabel* label = new QLabel("<b>" + tr("Bookmarks") + "</b>", m_TagMenu);
+  QToolButton* addButton = new QToolButton(m_TagMenu);
+  addButton->setIcon(QIcon(Theme->IconAddBookmark));
+  addButton->setToolTip(BookmarkTooltip);
+  connect(addButton, SIGNAL(clicked()), this, SLOT(bookmarkCurrentDir()));
+
+  QHBoxLayout* headerLayout = new QHBoxLayout();
+  headerLayout->setContentsMargins(0,0,0,0);
+  headerLayout->addWidget(addButton);
+  headerLayout->addWidget(label);
+
+  m_TagMenuList = new ptTagList(m_TagMenu);
+  m_TagMenuList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  m_TagMenuList->setModel(m_DataModel->tagModel());
+  connect(m_TagMenuList, SIGNAL(activated(QModelIndex)),
+          this, SLOT(changeToBookmarkFromMenu(QModelIndex)));
+
+  QVBoxLayout* layout = new QVBoxLayout(m_TagMenu);
+  layout->addLayout(headerLayout);
+  layout->addWidget(m_TagMenuList);
+  m_TagMenu->setLayout(layout);
+
+  //------------------------------------------------------------------------------
 
   // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
+  m_FilesScene->setStickyFocus(true);
   m_FilesScene->installEventFilter(this);
   m_FilesView->installEventFilter(this);
   m_FilesView->verticalScrollBar()->installEventFilter(this);
@@ -82,21 +138,48 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
           this, SLOT(fetchNewThumbs(const bool)));
   connect(m_DataModel->thumbnailer(), SIGNAL(newImageNotify(ptGraphicsThumbGroup*,QImage*)),
           this, SLOT(fetchNewImages(ptGraphicsThumbGroup*,QImage*)));
-
-  // Layouter must be set after the data model is created!
   setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
 
-  // Filemgr windwow layout
+  m_PathBar = new ptPathBar(m_PathContainer);
+  m_PathBar->setObjectName("FMPathBar");
+  connect(m_PathBar, SIGNAL(changedPath(QString)), this, SLOT(changeDir(QString)));
+  m_PathLayout->addWidget(m_PathBar);
+  m_Progressbar->hide();
+
+  //------------------------------------------------------------------------------
+
+  // construct the image view
+  m_ImageView = new ptImageView(FMImageViewPane, m_DataModel);
+  FMImageViewPane->setVisible((bool)Settings->GetInt("FileMgrShowImageView"));
+
+  //------------------------------------------------------------------------------
+
+  // Filemgr main splitter layout
   if (Settings->m_IniSettings->contains("FileMgrMainSplitter")) {
-    m_MainSplitter->restoreState(
+    FMMainSplitter->restoreState(
         Settings->m_IniSettings->value("FileMgrMainSplitter").toByteArray());
   } else {
     QList <int> SizesList;
     SizesList.append(250);
-    SizesList.append(1000); // Value obtained to avoid resizing at startup.
-    m_MainSplitter->setSizes(SizesList);
+    SizesList.append(500);
+    SizesList.append(500);
+    FMMainSplitter->setSizes(SizesList);
   }
-  m_MainSplitter->setStretchFactor(1,1);
+  FMMainSplitter->setStretchFactor(1,1);
+
+  // sidebar splitter layout
+  if (Settings->m_IniSettings->contains("FileMgrSidebarSplitter")) {
+    FMSidebarSplitter->restoreState(
+        Settings->m_IniSettings->value("FileMgrSidebarSplitter").toByteArray());
+  } else {
+    QList <int> SizesList;
+    SizesList.append(500);
+    SizesList.append(500);
+    FMSidebarSplitter->setSizes(SizesList);
+  }
+  FMSidebarSplitter->setStretchFactor(1,1);
+
+  //------------------------------------------------------------------------------
 
   ConstructContextMenu();
 }
@@ -104,12 +187,14 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 //==============================================================================
 
 ptFileMgrWindow::~ptFileMgrWindow() {
-  Settings->SetValue("LastFileMgrLocation",
-      m_DataModel->treeModel()->filePath(m_DirTree->currentIndex()) );
+  Settings->SetValue("LastFileMgrLocation", m_DataModel->currentDir());
   Settings->m_IniSettings->
-      setValue("FileMgrMainSplitter", m_MainSplitter->saveState());
+      setValue("FileMgrMainSplitter", FMMainSplitter->saveState());
+  Settings->m_IniSettings->
+      setValue("FileMgrSidebarSplitter", FMSidebarSplitter->saveState());
 
   DelAndNull(m_Layouter);
+  DelAndNull(m_PathBar);
 
   // Make sure to destroy all thumbnail related things before the singletons!
   ptFileMgrDM::DestroyInstance();
@@ -119,8 +204,13 @@ ptFileMgrWindow::~ptFileMgrWindow() {
   DelAndNull(ac_VerticalThumbs);
   DelAndNull(ac_HorizontalThumbs);
   DelAndNull(ac_DetailedThumbs);
+  DelAndNull(ac_DirThumbs);
   DelAndNull(ac_ThumbLayoutGroup);
-  DelAndNull(ac_ToggleNaviPane);
+  DelAndNull(ac_ToggleSidebar);
+  DelAndNull(ac_ToggleImageView);
+  DelAndNull(ac_CloseFileMgr);
+
+  DelAndNull(m_ImageView);
 }
 
 //==============================================================================
@@ -158,7 +248,7 @@ void ptFileMgrWindow::setLayouter(const ptThumbnailLayout layout) {
   }
 
   if (RestartThumbnailer) {
-    DisplayThumbnails(m_DirTree->currentIndex());
+    DisplayThumbnails();
   } else {
     LayoutAll();
   }
@@ -166,32 +256,62 @@ void ptFileMgrWindow::setLayouter(const ptThumbnailLayout layout) {
 
 //==============================================================================
 
-void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
-  DisplayThumbnails(index, false);
+void ptFileMgrWindow::changeListDir(const QModelIndex& index) {
+  m_DataModel->dirModel()->ChangeDir(index);
+  DisplayThumbnails(m_DataModel->dirModel()->absolutePath(), m_DataModel->dirModel()->pathType());
 }
 
 //==============================================================================
 
-void ptFileMgrWindow::DisplayThumbnails(const QModelIndex& index, bool clearCache /*= false*/) {
-  if (clearCache) {
-    m_DataModel->Clear();
+void ptFileMgrWindow::changeToBookmark(const QModelIndex& index) {
+  changeDir(m_DataModel->tagModel()->path(index));
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::changeToBookmarkFromMenu(const QModelIndex& index) {
+  m_TagMenu->hide();
+  changeToBookmark(index);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::changeDir(const QString& path) {
+  m_DataModel->dirModel()->ChangeAbsoluteDir(path);
+  DisplayThumbnails(path, m_DataModel->dirModel()->pathType());
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/, ptFSOType fsoType /*= fsoDir*/) {
+  if (path.isEmpty()) {
+    path = m_DataModel->dirModel()->absolutePath();
+    fsoType = m_DataModel->dirModel()->pathType();
   }
 
-  m_PathInput->setText(
-      QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(m_DirTree->currentIndex())));
+#ifdef Q_OS_WIN
+  if (fsoType == fsoRoot) {
+    // We are in “My Computer”
+    path = MyComputerIdString;
+  }
+#endif
 
+  m_PathBar->setPath(path);
   m_DataModel->StopThumbnailer();
   ClearScene();
   m_FilesView->horizontalScrollBar()->setValue(0);
   m_FilesView->verticalScrollBar()->setValue(0);
   m_ThumbListIdx = 0;
-  m_ThumbCount = m_DataModel->setThumbnailDir(index);
+  m_ThumbCount = m_DataModel->setThumbnailDir(path);
 
-  if (m_ThumbCount > -1) {
+  if (m_ThumbCount > 0) {
     m_Layouter->LazyInit(m_ThumbCount);
     m_Progressbar->setValue(0);
     m_Progressbar->setMaximum(m_ThumbCount);
     m_DataModel->StartThumbnailer();
+  } else {
+    // setting scene to null dimensions disappears unneeded scrollbars
+    m_FilesScene->setSceneRect(0,0,0,0);
   }
 }
 
@@ -208,7 +328,7 @@ void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
   if (isLast) {
     m_ThumbListIdx = 0;
     m_Progressbar->show();
-    m_PathInput->hide();
+    m_PathContainer->hide();
   }
 }
 
@@ -224,7 +344,11 @@ void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
 
   if (m_Progressbar->value() >= m_ThumbCount) {
     m_Progressbar->hide();
-    m_PathInput->show();
+    m_PathContainer->show();
+    m_FilesScene->setFocus();
+    if (m_FilesScene->focusItem() == NULL) {
+      FocusThumbnail(0);
+    }
   }
 }
 
@@ -243,44 +367,44 @@ void ptFileMgrWindow::LayoutAll() {
 
 void ptFileMgrWindow::showEvent(QShowEvent* event) {
   if (m_IsFirstShow) {
-    // Execute only when the file manager is opened for the first time
-    // Theme and layout stuff
-    setStyle(Theme->ptStyle);
-    setStyleSheet(Theme->ptStyleSheet);
-    m_TreePaneLayout->setContentsMargins(10, 10, 10, 10);
-    m_FileListLayout->setContentsMargins(10, 10, 10, 10);
-    m_FileListLayout->setSpacing(10);
-    m_Progressbar->setFixedHeight(m_PathInput->height());
+    // Execute once when the file manager is opened for the first time.
+
+    // Theme and layout stuff (wouldn’t work in constructor)
+    UpdateTheme();
 
     // set initally selected directory
     QString lastDir = Settings->GetString("LastFileMgrLocation");
-    QFileSystemModel* fsmodel = qobject_cast<QFileSystemModel*>(m_DataModel->treeModel());
-
-    if (lastDir != "" && QDir(lastDir).exists()) {
-      m_DirTree->setCurrentIndex(fsmodel->index(lastDir));
+    ptFSOType lastDirType = fsoDir;
+#ifdef Q_OS_WIN
+    if (lastDir == MyComputerIdString) {
+      lastDirType = fsoRoot;
     } else {
-      m_DirTree->setCurrentIndex(fsmodel->index(QDir::homePath()));
+#endif
+      if (lastDir.isEmpty() || !QDir(lastDir).exists()) {
+        // dir from ini is broken, default to homePath
+        lastDir = QDir::homePath();
+      }
+#ifdef Q_OS_WIN
     }
+#endif
+    m_DataModel->dirModel()->ChangeAbsoluteDir(lastDir);
+    m_DataModel->setCurrentDir(lastDir);
 
-    m_PathInput->setText(
-        QDir::toNativeSeparators(m_DataModel->treeModel()->filePath(m_DirTree->currentIndex())));
-
+    // First call base class showEvent, then start thumbnail loading to ensure
+    // the file manager is visible before ressource heavy actions begin.
     QWidget::showEvent(event);
-
     if (!InStartup)
-      DisplayThumbnails(m_DirTree->currentIndex());
+      DisplayThumbnails(lastDir, lastDirType);
 
-    ConstructContextMenu();
     m_IsFirstShow = false;
     return;
   }
-
 
   QWidget::showEvent(event);
 
   // Thumbnails are cleared to free memory when the fm window is closed,
   // i.e. we need to refresh the display when opening it again.
-  DisplayThumbnails(m_DirTree->currentIndex());
+  DisplayThumbnails();
 }
 
 //==============================================================================
@@ -290,12 +414,13 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
     // Resize event: Rearrange thumbnails when size of viewport changes
     LayoutAll();
     return false;   // handle event further
+  }
 
 //------------------------------------------------------------------------------
 
-  } else if ((obj == m_FilesView->verticalScrollBar() ||
-              obj == m_FilesView->horizontalScrollBar()) &&
-              event->type() == QEvent::Wheel)
+  else if ((obj == m_FilesView->verticalScrollBar() ||
+            obj == m_FilesView->horizontalScrollBar()) &&
+            event->type() == QEvent::Wheel)
   {
     // Wheel event
     int dir = ((QWheelEvent*)event)->delta() > 0 ? -1 : 1;
@@ -308,21 +433,57 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
             m_FilesView->horizontalScrollBar()->value() + m_Layouter->Step()*dir);
     }
     return true;    // prevent further event handling
+  }
 
 //------------------------------------------------------------------------------
 
-  } else if (obj == m_FilesScene && (event->type() == QEvent::GraphicsSceneDragEnter ||
-                                     event->type() == QEvent::GraphicsSceneDrop))
+  else if (obj == m_FilesScene && (event->type() == QEvent::GraphicsSceneDragEnter ||
+                                   event->type() == QEvent::GraphicsSceneDrop))
   {
+    // Make sure drag&drop events are passed on to MainWindow
     event->ignore();
     return true;
+  }
 
 //------------------------------------------------------------------------------
 
-  } else {
-    // make sure parent event filters are executed
-    return QWidget::eventFilter(obj, event);
+  if (obj == m_FilesScene && event->type() == QEvent::KeyPress) {
+    int newIdx = m_Layouter->MoveIndex(m_DataModel->focusedThumb(), (QKeyEvent*)event);
+    if (newIdx >= 0) {
+      FocusThumbnail(newIdx);
+      return true;
+    }
   }
+
+//------------------------------------------------------------------------------
+
+  // unhandled events fall through to here
+  // make sure parent event filters are executed
+  return QWidget::eventFilter(obj, event);
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::FocusThumbnail(int index) {
+  if (index >= 0) {
+    // focus new thumb
+    ptGraphicsThumbGroup* thumb = m_DataModel->MoveFocus(index);
+    m_FilesScene->setFocusItem(thumb);
+    m_FilesView->ensureVisible(thumb, 0, 0);
+    m_FilesView->setFocus();
+    if (thumb->fsoType() == fsoFile) {
+      m_ImageView->ShowImage(thumb->fullPath());
+    }
+
+  } else {
+    m_FilesScene->clearFocus();
+  }
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::thumbFocusChanged() {
+  FocusThumbnail(m_DataModel->focusedThumb(m_FilesScene->focusItem()));
 }
 
 //==============================================================================
@@ -332,26 +493,11 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     closeWindow();
     ImageFileToOpen = location;
     CB_MenuFileOpen(1);
-
   } else if (action == tnaChangeDir) {
-    m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(location));
-    DisplayThumbnails(m_DirTree->currentIndex());
-  }
-}
-
-//==============================================================================
-
-void ptFileMgrWindow::on_m_PathInput_returnPressed() {
-  QDir dir = QDir(m_PathInput->text());
-  QString treeDir = m_DataModel->treeModel()->filePath(m_DirTree->currentIndex());
-
-  if (dir.exists() && (dir != QDir(treeDir))) {
-    m_PathInput->setText(dir.absolutePath());
-    m_DirTree->setCurrentIndex(m_DataModel->treeModel()->index(dir.absolutePath()));
-    DisplayThumbnails(m_DirTree->currentIndex());
-
-  } else {
-    m_PathInput->setText(QDir::toNativeSeparators(treeDir));
+    m_DataModel->dirModel()->ChangeAbsoluteDir(location);
+    DisplayThumbnails(location, m_DataModel->dirModel()->pathType());
+  } else if (action == tnaViewImage) {
+    m_ImageView->ShowImage(location);
   }
 }
 
@@ -359,9 +505,8 @@ void ptFileMgrWindow::on_m_PathInput_returnPressed() {
 
 void ptFileMgrWindow::UpdateTheme() {
   // Update file manager window appearance
-  setStyle(Theme->ptStyle);
-  setStyleSheet(Theme->ptStyleSheet);
-  m_Progressbar->setFixedHeight(m_PathInput->height());
+  setStyle(Theme->style());
+  setStyleSheet(Theme->stylesheet());
 
   // Thumbgroups don’t need to be updated because Photivo theme can only be changed
   // while fm is closed = thumbnail display cleared
@@ -410,11 +555,16 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
   }
   // F5: refresh thumbnails
   else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::NoModifier) {
-    DisplayThumbnails(m_DirTree->currentIndex());
+    DisplayThumbnails();
   }
   // Shift+F5: clear cache and refresh thumbnails
   else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::ShiftModifier) {
-    DisplayThumbnails(m_DirTree->currentIndex(), true);
+    m_DataModel->Clear();
+    DisplayThumbnails();
+  }
+  // Ctrl+B: bookmark current folder
+  else if (event->key() == Qt::Key_B && event->modifiers() == Qt::ControlModifier) {
+    bookmarkCurrentDir();
   }
   // F11: toggles fullscreen (handled by main window)
   else if (event->key() == Qt::Key_F11 && event->modifiers() == Qt::NoModifier) {
@@ -432,9 +582,13 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
 //TODO: re-enable  else if (event->key() == Qt::Key_3 && event->modifiers() == Qt::AltModifier) {
 //    setLayouter(tlDetailedList);
 //  }
-  // Space: toggles tree pane
-  else if (event->key() == Qt::Key_Space && event->modifiers() == Qt::NoModifier) {
-    toggleNaviPane();
+  // F3: toggles: ImageView
+  else if (event->key() == Qt::Key_F3 && event->modifiers() == Qt::NoModifier) {
+    toggleImageView();
+  }
+  // F4: toggles sidebar
+  else if (event->key() == Qt::Key_F4 && event->modifiers() == Qt::NoModifier) {
+    toggleSidebar();
   }
 }
 
@@ -454,6 +608,14 @@ void ptFileMgrWindow::ConstructContextMenu() {
   ac_DetailedThumbs->setCheckable(true);
   connect(ac_DetailedThumbs, SIGNAL(triggered()), this, SLOT(detailedThumbs()));
 
+#ifdef Q_OS_WIN
+  ac_DirThumbs = new QAction(tr("Show &folder thumbnails"), this);
+#else
+  ac_DirThumbs = new QAction(tr("Show &directory thumbnails"), this);
+#endif
+  ac_DirThumbs->setCheckable(true);
+  connect(ac_DirThumbs, SIGNAL(triggered()), this, SLOT(toggleDirThumbs()));
+
   ac_ThumbLayoutGroup = new QActionGroup(this);
   ac_ThumbLayoutGroup->setExclusive(true);
   ac_ThumbLayoutGroup->addAction(ac_VerticalThumbs);
@@ -461,9 +623,13 @@ void ptFileMgrWindow::ConstructContextMenu() {
 //TODO: re-enable  ac_ThumbLayoutGroup->addAction(ac_DetailedThumbs);
 
   // actions for main context menu
-  ac_ToggleNaviPane = new QAction(tr("Show &navigation pane") + "\t" + tr("Space"), this);
-  ac_ToggleNaviPane->setCheckable(true);
-  connect(ac_ToggleNaviPane, SIGNAL(triggered()), this, SLOT(toggleNaviPane()));
+  ac_ToggleImageView = new QAction(tr("Show &image preview") + "\t" + tr("F3"), this);
+  ac_ToggleImageView->setCheckable(true);
+  connect(ac_ToggleImageView, SIGNAL(triggered()), this, SLOT(toggleImageView()));
+
+  ac_ToggleSidebar = new QAction(tr("Show &sidebar") + "\t" + tr("F4"), this);
+  ac_ToggleSidebar->setCheckable(true);
+  connect(ac_ToggleSidebar, SIGNAL(triggered()), this, SLOT(toggleSidebar()));
 
   ac_CloseFileMgr = new QAction(tr("&Close file manager") + "\t" + tr("Esc"), this);
   connect(ac_CloseFileMgr, SIGNAL(triggered()), this, SLOT(closeWindow()));
@@ -476,21 +642,30 @@ void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
 
   // thumbnail view submenu
   QMenu MenuThumbLayout(tr("Thumbnail &view"));
-  MenuThumbLayout.setPalette(Theme->ptMenuPalette);
-  MenuThumbLayout.setStyle(Theme->ptStyle);
+  MenuThumbLayout.setPalette(Theme->menuPalette());
+  MenuThumbLayout.setStyle(Theme->style());
   MenuThumbLayout.addActions(ac_ThumbLayoutGroup->actions());
+  MenuThumbLayout.addSeparator();
+  MenuThumbLayout.addAction(ac_DirThumbs);
   ac_VerticalThumbs->setChecked(currLayout == tlVerticalByRow);
   ac_HorizontalThumbs->setChecked(currLayout == tlHorizontalByColumn);
   ac_DetailedThumbs->setChecked(currLayout == tlDetailedList);
+  ac_DirThumbs->setChecked(Settings->GetInt("FileMgrShowDirThumbs"));
 
   // main context menu
   QMenu Menu(NULL);
-  Menu.setPalette(Theme->ptMenuPalette);
-  Menu.setStyle(Theme->ptStyle);
+  Menu.setPalette(Theme->menuPalette());
+  Menu.setStyle(Theme->style());
   Menu.addMenu(&MenuThumbLayout);
+
   Menu.addSeparator();
-  Menu.addAction(ac_ToggleNaviPane);
-  ac_ToggleNaviPane->setChecked(FMTreePane->isVisible());
+  Menu.addAction(ac_ToggleImageView);
+  ac_ToggleImageView->setChecked(FMImageViewPane->isVisible());
+  Menu.addAction(ac_ToggleSidebar);
+  ac_ToggleSidebar->setChecked(FMSidebar->isVisible());
+
+  Menu.addSeparator();
+  Menu.addAction(ac_CloseFileMgr);
 
   Menu.exec(((QMouseEvent*)event)->globalPos());
 }
@@ -515,9 +690,54 @@ void ptFileMgrWindow::detailedThumbs() {
 
 //==============================================================================
 
-void ptFileMgrWindow::toggleNaviPane() {
-  FMTreePane->setVisible(!FMTreePane->isVisible());
-  Settings->SetValue("FileMgrShowTreePane", (int)FMTreePane->isVisible());
+void ptFileMgrWindow::toggleSidebar() {
+  FMSidebar->setVisible(!FMSidebar->isVisible());
+  Settings->SetValue("FileMgrShowSidebar", (int)FMSidebar->isVisible());
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::toggleImageView() {
+  FMImageViewPane->setVisible(!FMImageViewPane->isVisible());
+  Settings->SetValue("FileMgrShowImageView", (int)FMImageViewPane->isVisible());
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::toggleDirThumbs() {
+  Settings->SetValue("FileMgrShowDirThumbs", 1 - Settings->GetInt("FileMgrShowDirThumbs"));
+  DisplayThumbnails();
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::bookmarkCurrentDir() {
+  m_DataModel->tagModel()->appendRow(QDir::toNativeSeparators(m_DataModel->currentDir()),
+                                     m_DataModel->currentDir());
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::on_m_BookmarkButton_clicked() {
+  m_TagMenuList->setFixedSize(100, 50);
+  m_TagMenu->show();
+
+  int desiredWidth = 0;
+  if (m_TagMenuList->horizontalScrollBar()) {
+    desiredWidth = m_TagMenuList->width() + m_TagMenuList->horizontalScrollBar()->maximum();
+  }
+  int desiredHeight = 0;
+  if (m_TagMenuList->verticalScrollBar()) {
+    desiredHeight = m_TagMenuList->height() +
+                    m_TagMenuList->verticalScrollBar()->maximum() *
+                    QFontMetrics(m_TagMenuList->font()).lineSpacing();
+  }
+
+  m_TagMenuList->setFixedSize(qMax(100, desiredWidth),
+                              qBound(50, desiredHeight, m_FilesView->height()-20) );
+  m_TagMenu->move(m_BookmarkButton->mapToGlobal(QPoint(0, m_BookmarkButton->height())));
+  m_TagMenu->setPalette(Theme->menuPalette());
+  m_TagMenu->setStyle(Theme->style());
 }
 
 //==============================================================================

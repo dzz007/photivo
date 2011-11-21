@@ -147,5 +147,8 @@ unix {
   
   uisettings.path     = $${PREFIX}/share/photivo/UISettings
   uisettings.files    = UISettings/*
+  themes.path         = $${PREFIX}/share/photivo/Themes
+  themes.files        = Themes/*
   INSTALLS           += uisettings
+  INSTALLS += themes
 }

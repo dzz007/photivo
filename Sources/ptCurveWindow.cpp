@@ -324,8 +324,8 @@ void ptCurveWindow::ContextMenu(QMouseEvent* event) {
     return;
 
   QMenu Menu(NULL);
-  Menu.setStyle(Theme->ptStyle);
-  Menu.setPalette(Theme->ptMenuPalette);
+  Menu.setStyle(Theme->style());
+  Menu.setPalette(Theme->menuPalette());
   if ((TempSetting==ptCurveChoice_Manual ||
         TempSetting==ptCurveChoice_None)) {
     m_AtnITLinear->setChecked(

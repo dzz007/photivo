@@ -489,11 +489,11 @@ void ptHistogramWindow::paintEvent(QPaintEvent*) {
 void ptHistogramWindow::contextMenuEvent(QContextMenuEvent *event)
 {
   QMenu Menu(this);
-  Menu.setPalette(Theme->ptMenuPalette);
-  Menu.setStyle(Theme->ptStyle);
+  Menu.setPalette(Theme->menuPalette());
+  Menu.setStyle(Theme->style());
   QMenu ChannelMenu(this);
-  ChannelMenu.setPalette(Theme->ptMenuPalette);
-  ChannelMenu.setStyle(Theme->ptStyle);
+  ChannelMenu.setPalette(Theme->menuPalette());
+  ChannelMenu.setStyle(Theme->style());
   ChannelMenu.addAction(m_AtnRGB);
   ChannelMenu.addAction(m_AtnR);
   ChannelMenu.addAction(m_AtnG);
@@ -505,8 +505,8 @@ void ptHistogramWindow::contextMenuEvent(QContextMenuEvent *event)
   //~ else
     //~ ChannelMenu.setEnabled(1);
   QMenu ModeMenu(this);
-  ModeMenu.setPalette(Theme->ptMenuPalette);
-  ModeMenu.setStyle(Theme->ptStyle);
+  ModeMenu.setPalette(Theme->menuPalette());
+  ModeMenu.setStyle(Theme->style());
   ModeMenu.addAction(m_AtnLinear);
   ModeMenu.addAction(m_AtnPreview);
   ModeMenu.addAction(m_AtnOutput);

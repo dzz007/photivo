@@ -36,7 +36,9 @@ ptGridThumbnailLayouter::ptGridThumbnailLayouter(QGraphicsView* view)
 //==============================================================================
 
 /*virtual*/
-void ptGridThumbnailLayouter::Init(const int, const QFont& font) {
+void ptGridThumbnailLayouter::Init(const int thumbCount, const QFont& font) {
+  m_ThumbCount = thumbCount;
+
   // Current row and column
   m_ThumbMetrics.Row = 0;
   m_ThumbMetrics.Col = 0;

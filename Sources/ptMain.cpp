@@ -61,13 +61,9 @@
   #include <QFileOpenEvent>
 #endif
 
-#ifdef Q_WS_WIN
-  #include "qt_windows.h"
-  #include "qlibrary.h"
+#ifdef Q_OS_WIN
   #include "ptEcWin7.h"
-  #ifndef CSIDL_APPDATA
-    #define CSIDL_APPDATA 0x001a
-  #endif
+  #include "ptWinApi.h"
 #endif
 
 using namespace std;
@@ -96,6 +92,8 @@ QStringList CurveKeys, CurveToolNameKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
 QStringList FileExtsRaw;
 QStringList FileExtsBitmap;
+QString     UserDirectory;
+QString     ShareDirectory;
 
 ptChannelMixer* ChannelMixer = NULL;
 
@@ -225,6 +223,7 @@ void InitStrings() {
                                                  "*.tiff *.TIFF *.Tiff "
                                                  "*.tif *.TIF *.Tif "
                                                  "*.bmp *.BMP *.Bmp "
+                                                 "*.png *.PNG *.Png "
                                                  "*.ppm *.PPm *.Ppm "
                                                  ";;All files (*.*)");
 
@@ -235,6 +234,7 @@ void InitStrings() {
                                                  "*.tiff *.TIFF *.Tiff "
                                                  "*.tif *.TIF *.Tif "
                                                  "*.bmp *.BMP *.Bmp "
+                                                 "*.png *.PNG *.Png "
                                                  "*.ppm *.PPm *.Ppm "
                                                  ";;All files (*.*)");
 }
@@ -473,7 +473,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Show help message and exit Photivo
   if (cli.Mode == cliShowHelp) {
-  #ifdef Q_OS_WIN32
+  #ifdef Q_OS_WIN
     ptMessageBox::critical(0, QObject::tr("Photivo"), PhotivoCliUsageMsg);
   #else
     fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
@@ -614,9 +614,11 @@ int photivoMain(int Argc, char *Argv[]) {
 
   FileExtsBitmap << "*.jpeg" << "*.JPEG" << "*.Jpeg "
                  << "*.jpg" << "*.JPG" << "*.Jpg"
+                 << "*.png" << ".PNG" << "*.Png"
                  << "*.tiff" << "*.TIFF" << "*.Tiff"
                  << "*.tif" << "*.TIF" << "*.Tif"
                  << "*.bmp" << "*.BMP" << "*.Bmp"
+                 << "*.png" << "*.PNG" << "*.Png"
                  << "*.ppm" << "*.PPm" << "*.Ppm";
 
 
@@ -626,38 +628,15 @@ int photivoMain(int Argc, char *Argv[]) {
   short IsPortableProfile = 0;
   QString AppDataFolder = "";
   QString Folder = "";
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   IsPortableProfile = QFile::exists("use-portable-profile");
   if (IsPortableProfile != 0) {
     printf("Photivo running in portable mode.\n");
     AppDataFolder = QCoreApplication::applicationDirPath();
     Folder = "";
   } else {
-    // Get %appdata% via WinAPI call
-    QLibrary library(QLatin1String("shell32"));
-    QT_WA(
-      {
-        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
-        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
-        if (SHGetSpecialFolderPath) {
-          TCHAR path[MAX_PATH];
-          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-          AppDataFolder = QString::fromUtf16((ushort*)path);
-        }
-      },
-      {
-        typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
-        GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
-        if (SHGetSpecialFolderPath) {
-          char path[MAX_PATH];
-          SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-          AppDataFolder = QString::fromLocal8Bit(path);
-        }
-      }
-    );
-
     // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
-    AppDataFolder.replace(QString("\\"), QString("/"));
+    AppDataFolder = WinApi::AppdataFolder();
     // Keeping the leading "/" separate here is important or mkdir will fail.
     Folder = "Photivo/";
   }
@@ -666,7 +645,7 @@ int photivoMain(int Argc, char *Argv[]) {
   AppDataFolder = QDir::homePath();
 #endif
 
-  QString UserDirectory = AppDataFolder + "/" + Folder;
+  UserDirectory = AppDataFolder + "/" + Folder;
 
   if (IsPortableProfile == 0) {
       QDir home(AppDataFolder);
@@ -683,6 +662,7 @@ int photivoMain(int Argc, char *Argv[]) {
 #else
   QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
 #endif
+  ShareDirectory = NewShareDirectory;
 
   QFileInfo SettingsFileInfo(SettingsFileName);
   short NeedInitialization = 1;
@@ -824,8 +804,10 @@ int photivoMain(int Argc, char *Argv[]) {
   // Start op the Gui stuff.
 
   // Start the theme class
-  Theme = new ptTheme(TheApplication);
-  Theme->SetCustomCSS(Settings->GetString("CustomCSSFile"));
+  Theme = new ptTheme(TheApplication,
+                      (ptTheme::Theme)Settings->GetInt("Style"),
+                      (ptTheme::Highlight)Settings->GetInt("StyleHighLight"));
+  Theme->setCustomCSS(Settings->GetString("CustomCSSFile"));
 
   GuiOptions = new ptGuiOptions();
 
@@ -1086,8 +1068,8 @@ void CB_Event0() {
   }
 
   if (Settings->GetInt("FileMgrIsOpen")) {
-    FileMgrWindow->DisplayThumbnails(FileMgrWindow->m_DirTree->currentIndex());
-    FileMgrWindow->m_FilesView->setFocus(Qt::OtherFocusReason);
+    FileMgrWindow->DisplayThumbnails();
+    FileMgrWindow->setFocus(Qt::OtherFocusReason);
   }
 
 //prepare for further QFileOpenEvent(s)
@@ -1342,7 +1324,7 @@ void Update(short Phase,
             short WithIdentify  /* = 1 */,
             short ProcessorMode /* = ptProcessorMode_Preview */)
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
   ptEcWin7* Win7Taskbar = ptEcWin7::GetInstance();
   Win7Taskbar->setProgressState(ptEcWin7::Indeterminate);
 #endif
@@ -1407,7 +1389,7 @@ void Update(short Phase,
   }
   Settings->SetValue("PipeIsRunning",0);
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
   Win7Taskbar->setProgressState(ptEcWin7::NoProgress);
 #endif
 }
@@ -3151,7 +3133,7 @@ void CB_MenuFileOpen(const short HaveFile) {
   }
 
   // Ask user confirmation
-  if (!InStartup) {
+  if (Settings->GetInt("HaveImage") == 1) {
     if (!ptConfirmRequest::saveImage(InputFileName)) {
       return;
     }
@@ -3469,10 +3451,6 @@ void CB_MenuFileExit(const short) {
       Settings->SetValue(CurveKeys.at(i),ptCurveChoice_None);
   }
 
-#ifdef Q_WS_WIN
-  ptEcWin7::DestroyInstance();
-#endif
-
   printf("Saving settings ...\n");
 
   // this also writes settings.
@@ -3491,6 +3469,10 @@ void CB_MenuFileExit(const short) {
 
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
+
+#ifdef Q_OS_WIN
+  ptEcWin7::DestroyInstance();
+#endif
 
   ALLOCATED(10000000);
   printf("Exiting Photivo.\n");
@@ -3868,41 +3850,38 @@ void CB_OutputColorProfileIntentChoice(const QVariant Choice) {
 }
 
 void CB_StyleChoice(const QVariant Choice) {
-  Settings->SetValue("Style",Choice);
-  if (Settings->GetInt("Style") == ptStyle_None) {
+  Settings->SetValue("Style", Choice);
+  ptTheme::Theme newTheme = (ptTheme::Theme)Choice.toInt();
+
+  if (newTheme == ptTheme::thNone) {
     Settings->SetValue("CustomCSSFile","");
-    Theme->Reset();
-  } else if (Settings->GetInt("Style") == ptStyle_Normal) {
-    Theme->Normal(Settings->GetInt("StyleHighLight"));
-  } else if (Settings->GetInt("Style") == ptStyle_50Grey) {
-    Theme->MidGrey(Settings->GetInt("StyleHighLight"));
-  } else if (Settings->GetInt("Style") == ptStyle_VeryDark) {
-    Theme->VeryDark(Settings->GetInt("StyleHighLight"));
-  } else {
-    Theme->DarkGrey(Settings->GetInt("StyleHighLight"));
+    Theme->setCustomCSS("");
   }
+
+  Theme->SwitchTo(newTheme, (ptTheme::Highlight)Settings->GetInt("StyleHighLight"));
+
 #ifdef Q_OS_MAC
 //dirty hack to make theming work
   MainWindow->MainSplitter->setStyleSheet("");
 #endif
 
-  MainWindow->MainTabBook->setStyle(Theme->ptStyle);
-  MainWindow->ProcessingTabBook->setStyle(Theme->ptStyle);
-  MainWindow->BottomContainer->setStyle(Theme->ptStyle);
-  MainWindow->PipeControlWidget->setStyle(Theme->ptStyle);
-  MainWindow->MainSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ControlSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ViewSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ViewStartPage->setStyle(Theme->ptStyle);
+  MainWindow->MainTabBook->setStyle(Theme->style());
+  MainWindow->ProcessingTabBook->setStyle(Theme->style());
+  MainWindow->BottomContainer->setStyle(Theme->style());
+  MainWindow->PipeControlWidget->setStyle(Theme->style());
+  MainWindow->MainSplitter->setStyle(Theme->style());
+  MainWindow->ControlSplitter->setStyle(Theme->style());
+  MainWindow->ViewSplitter->setStyle(Theme->style());
+  MainWindow->ViewStartPage->setStyle(Theme->style());
 
-  TheApplication->setPalette(Theme->ptPalette);
+  TheApplication->setPalette(Theme->palette());
 
-  MainWindow->MainTabBook->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->BottomContainer->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->PipeControlWidget->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->StatusWidget->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->SearchWidget->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->ViewStartPageFrame->setStyleSheet(Theme->ptStyleSheet);
+  MainWindow->MainTabBook->setStyleSheet(Theme->stylesheet());
+  MainWindow->BottomContainer->setStyleSheet(Theme->stylesheet());
+  MainWindow->PipeControlWidget->setStyleSheet(Theme->stylesheet());
+  MainWindow->StatusWidget->setStyleSheet(Theme->stylesheet());
+  MainWindow->SearchWidget->setStyleSheet(Theme->stylesheet());
+  MainWindow->ViewStartPageFrame->setStyleSheet(Theme->stylesheet());
 #ifdef Q_OS_MAC
 //dirty hack to make theming work
   if(Theme->MacStyleFlag){
@@ -3933,7 +3912,7 @@ void CB_LoadStyleButton() {
     return;
   } else {
     Settings->SetValue("CustomCSSFile", FileName);
-    Theme->SetCustomCSS(FileName);
+    Theme->setCustomCSS(FileName);
     CB_StyleChoice(Settings->GetInt("Style"));
   }
 }
@@ -4301,8 +4280,8 @@ void CB_BackgroundColorButton() {
   Color.setGreen(Settings->GetInt("BackgroundGreen"));
   Color.setBlue(Settings->GetInt("BackgroundBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -4327,8 +4306,8 @@ void SetBackgroundColor(int SetIt) {
     ViewWindow->setPalette(BGPal);
     MainWindow->ViewStartPage->setPalette(BGPal);
   } else {
-    ViewWindow->setPalette(Theme->ptPalette);
-    MainWindow->ViewStartPage->setPalette(Theme->ptPalette);
+    ViewWindow->setPalette(Theme->palette());
+    MainWindow->ViewStartPage->setPalette(Theme->palette());
   }
 }
 
@@ -7861,8 +7840,8 @@ void CB_Tone1ColorButton() {
   Color.setGreen(Settings->GetInt("Tone1ColorGreen"));
   Color.setBlue(Settings->GetInt("Tone1ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -7899,8 +7878,8 @@ void CB_Tone2ColorButton() {
   Color.setGreen(Settings->GetInt("Tone2ColorGreen"));
   Color.setBlue(Settings->GetInt("Tone2ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -8023,8 +8002,8 @@ void CB_GradualOverlay1ColorButton() {
   Color.setGreen(Settings->GetInt("GradualOverlay1ColorGreen"));
   Color.setBlue(Settings->GetInt("GradualOverlay1ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -8062,8 +8041,8 @@ void CB_GradualOverlay2ColorButton() {
   Color.setGreen(Settings->GetInt("GradualOverlay2ColorGreen"));
   Color.setBlue(Settings->GetInt("GradualOverlay2ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
