@@ -150,6 +150,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 
   // construct the image view
   m_ImageView = new ptImageView(FMImageViewPane, m_DataModel);
+  FMImageViewPane->setVisible((bool)Settings->GetInt("FileMgrShowImageView"));
 
   //------------------------------------------------------------------------------
 
@@ -345,7 +346,9 @@ void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
     m_Progressbar->hide();
     m_PathContainer->show();
     m_FilesScene->setFocus();
-    FocusThumbnail(0);
+    if (m_FilesScene->focusItem() == NULL) {
+      FocusThumbnail(0);
+    }
   }
 }
 
@@ -466,8 +469,7 @@ void ptFileMgrWindow::FocusThumbnail(int index) {
     // focus new thumb
     ptGraphicsThumbGroup* thumb = m_DataModel->MoveFocus(index);
     m_FilesScene->setFocusItem(thumb);
-    int margins = Settings->GetInt("FileMgrThumbnailPadding");
-    m_FilesView->ensureVisible(thumb, margins, margins);
+    m_FilesView->ensureVisible(thumb, 0, 0);
     m_FilesView->setFocus();
     if (thumb->fsoType() == fsoFile) {
       m_ImageView->ShowImage(thumb->fullPath());
