@@ -1,0 +1,277 @@
+#!/bin/bash
+
+# number of threads for make's -j option
+MAKE_THREADS=4
+
+# Qmake, Mercurial and Inno Setup compiler commands
+QMAKECMD=qmake
+HGCMD=hg
+ISSCMD=/c/bin32/InnoSetup/ISCC
+
+# Zip program for creating the troubleshooter. If you do not use 7-Zip you should
+# take a look at the actual command line below, might need changes.
+ZIPCMD=/c/bin32/7-Zip/7z
+
+# Path where the finished setup.exes should go during the cleanup stage
+ARCHIVEDIR=/d/Software/Anwendungen/Photivo
+
+# Real location of /photivo. We could read this from fstab. But since it’s unlikely
+# to change too soon/often, setting it here is enough. Use forward slashes.
+REALBASEDIR="D:/Projekte/Photivo"
+
+#===============================================================================
+
+SCRIPTVERSION=1.0
+COLOR_RED='\e[1;31m'
+COLOR_GREEN='\e[0;32m'
+COLOR_NONE='\e[00m'
+
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+#===============================================================================
+
+AbortOrNot() {
+  read -n 1 -p "$1 (y/n)" PT_CONT
+  if [ $PT_CONT = y ] || [ $PT_CONT = Y ]; then
+    echo ""
+    PT_CONT=
+  else
+    exit 1
+  fi
+}
+
+FileYesNo() {
+  if [ -s "$1" ]; then
+    echo -e "${COLOR_GREEN}Yes${COLOR_NONE}"
+  else
+    echo -e "${COLOR_RED}No${COLOR_NONE}"
+  fi
+}
+
+Error() {
+  echo -e "${COLOR_RED}$1${COLOR_NONE}"
+}
+
+Cleanup() {
+  echo -e "\nMoving setups ..."
+  cp $PKGDIR/photivo-setup-${RELEASEDATE}-win64.exe \
+     $PKGDIR/photivo-setup-${RELEASEDATE}-win32.exe \
+     $ARCHIVEDIR
+  if [ ! $? -eq 0 ]; then
+    Error "Copying setups failed. Aborting cleanup."
+    echo "To clean up delete \"build-win-installer*\" folders manually."
+    exit 1
+  fi
+
+  echo "Deleting temporary stuff ..."
+  rm -rf $PT_REPO_PATH/build-win-installer-64 && \
+  rm -rf $PT_REPO_PATH/build-win-installer-32 && \
+  rm -rf $TSHOOTDIR && \
+  rm -rf $PKGDIR
+  if [ $? -eq 0 ]; then
+    echo -e "${COLOR_GREEN}All done.${COLOR_NONE}"
+    exit 0
+  else
+    Error "Cleanup failed."
+    echo "To clean up delete \"build-win-installer*\" folders manually."
+    exit 1
+  fi
+}
+
+#===============================================================================
+
+echo "Create Photivo for Windows release package v$SCRIPTVERSION"
+echo "---------------------------------------------------------------------------"
+
+if [ "$PT_REPO_PATH" = "" ]; then echo "PT_REPO_PATH not set!" ; exit 1 ; fi
+if [ "$PT_BINDIR" = "" ]; then echo "PT_BINDIR not set!" ; exit 1 ; fi
+if [ "$PT_BIT" != "64" ] && [ "$PT_BIT" != "32" ]; then echo "Wrong PT_BIT (${PT_BIT})!" ; exit 1 ; fi
+
+cd $PT_REPO_PATH
+HGBRANCH=$($HGCMD branch)
+if [ ! "$HGBRANCH" = "default" ]; then
+  echo -e "\nWorking copy is set to branch \"${HGBRANCH}\" instead of \"default\"."
+  AbortOrNot "Continue anyway?"
+fi
+
+$HGCMD summary|grep "commit: (clean)" > /dev/null
+if [ ! $? -eq 0 ]; then
+  echo -e "\nWorking copy has uncommitted changes."
+  AbortOrNot "Continue anyway?"
+fi
+
+RELEASEDATE=$( $HGCMD log -b ${HGBRANCH} -l 1 --style ${SCRIPTDIR}/hg-shortdate.style )
+
+#===============================================================================
+
+# Prepare folders
+BUILDDIR=$PT_REPO_PATH/build-win-installer-$PT_BIT
+BINDIR=$BUILDDIR/bin
+TSHOOTDIR=$PT_REPO_PATH/build-win-installer-tshoot
+PKGDIR=$PT_REPO_PATH/build-win-installer-pkg
+
+if [ -d $BUILDDIR ]; then
+  rm -rf $BUILDDIR/*
+else
+  mkdir $BUILDDIR
+fi
+
+mkdir -p $BINDIR
+mkdir -p $TSHOOTDIR
+mkdir -p $PKGDIR
+cd $BUILDDIR
+
+# check for installer script
+ISSFILE=$PT_REPO_PATH/packaging/win-installer/photivo-setup-win${PT_BIT}.iss
+if [ ! -s $ISSFILE ]; then
+  Error "$ISSFILE is missing/corrupted!"
+  exit 1
+fi
+
+#===============================================================================
+
+# build Photivo
+echo "Building Photivo and ptClear ..."
+$QMAKECMD ../photivo.pro CONFIG+=WithoutGimp CONFIG-=debug && \
+make -j${MAKE_THREADS}
+
+if [ ! $? -eq 0 ] || [ ! -s $BUILDDIR/photivo.exe ] || [ ! -s $BUILDDIR/ptClear.exe ]
+then
+  Error "Building Photivo failed!"
+  exit 1
+fi
+
+#===============================================================================
+
+# Build successful, fill binary folder
+echo "Copying binaries ..."
+cp $BUILDDIR/photivo.exe $BUILDDIR/ptClear.exe $BINDIR
+
+photivo-update-libs $BINDIR
+if [ ! $? -eq 0 ]; then
+  Error "Updating DLLs failed!"
+  exit 1
+fi
+
+echo "Stripping debug symbols ..."
+strip $BINDIR/*.dll $BINDIR/*.exe
+
+photivo-update-datafiles $BINDIR
+if [ ! $? -eq 0 ]; then
+  Error "Copying data files failed!"
+  exit 1
+fi
+
+cp $PT_REPO_PATH/COPYING $BINDIR/License.txt && \
+ln $PT_REPO_PATH/../Changelog.txt $BINDIR
+if [ ! $? -eq 0 ]; then
+  Error "Copying License.txt or linking Changelog.txt failed!"
+  exit 1
+fi
+
+#===============================================================================
+
+# test for current changelog
+while :
+do
+  PT_CHLOG_DATE=$(stat -c %y $PT_REPO_PATH/../Changelog.txt)
+  PT_CHLOG_DATE=${PT_CHLOG_DATE%% *}
+  if [ "$(date +%Y-%m-%d)" == "$PT_CHLOG_DATE" ]; then
+    break
+  else
+    Error "\nChangelog not edited today, but on ${PT_CHLOG_DATE}."
+    read -n 1 -p "(R)etry, (c)ontinue or (a)bort?" PT_CONT
+    if [ "$PT_CONT" = "c" ] || [ "$PT_CONT" = "C" ]; then
+     break
+    elif [ "$PT_CONT" = "a" ] || [ "$PT_CONT" = "A" ]; then
+      exit 1
+    fi
+  fi
+done
+
+# Create installer
+VERSTRING=$( $HGCMD log -b ${HGBRANCH} -l 1 --style ${SCRIPTDIR}/hg-revdatenum.style )
+NATIVECHLOGPATH=$( echo $REALBASEDIR/Changelog.txt | sed 's|/|\\\\|g' )
+SETUPNAME=photivo-setup-${RELEASEDATE}-win$PT_BIT
+NATIVEBINDIR=$( echo $BINDIR | sed "s|/photivo|${REALBASEDIR}|" | sed 's|/|\\\\|g' )
+NATIVEPKGDIR=$( echo $PKGDIR | sed "s|/photivo|${REALBASEDIR}|" | sed 's|/|\\\\|g' )
+
+cat $PT_REPO_PATH/packaging/win-installer/photivo-setup-win${PT_BIT}.iss | \
+sed "s/{{versionstring}}/${VERSTRING}/" | \
+sed "s/{{changelogfile}}/${NATIVECHLOGPATH}/" | \
+sed "s/{{outputbasename}}/${SETUPNAME}/" | \
+sed "s/{{bindir}}/${NATIVEBINDIR}/" | \
+/c/bin32/InnoSetup/ISCC /O$NATIVEPKGDIR -
+
+if [ ! $? -eq 0 ] || [ ! -s ${PKGDIR}/${SETUPNAME}.exe ]; then
+  Error "Creating installer failed!"
+  exit 1
+fi
+
+#===============================================================================
+
+# Build troubleshooter
+echo "Building ${PT_BIT}bit troubleshooter ..."
+cd $BUILDDIR
+rm -f ./photivo.exe ./Objects/ptMain.o
+$QMAKECMD ../photivo.pro "CONFIG+=WithoutGimp WithoutClear console" CONFIG-=debug && \
+make -j${MAKE_THREADS}
+
+if [ ! $? -eq 0 ] || [ ! -s $BUILDDIR/photivo.exe ]
+then
+  Error "Building troubleshooter failed!"
+  exit 1
+fi
+
+cd $TSHOOTDIR
+cp $BUILDDIR/photivo.exe ./ptConsole${PT_BIT}.exe
+cp "$PT_REPO_PATH/packaging/troubleshooter/How to use.txt" \
+   "$PT_REPO_PATH/packaging/troubleshooter/ptTroubleshoot.bat" .
+
+rm -f $PKGDIR/photivo-win3264-troubleshooter*
+'ls' -1 "How to use.txt" ptTroubleshoot.bat ptConsole32.exe ptConsole64.exe > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+  $ZIPCMD a $PKGDIR/photivo-win3264-troubleshooter-${RELEASEDATE}.zip \
+            "How to use.txt" ptTroubleshoot.bat ptConsole32.exe ptConsole64.exe
+  if [ ! $? -eq 0 ]; then
+    Error "Creating troubleshooter archive failed!"
+    exit 1
+  fi
+fi
+
+#===============================================================================
+
+cd $PT_REPO_PATH
+echo    "---------------------------------------------------------------------------"
+echo    "Final status"
+echo    "---------------------------------------------------------------------------"
+echo -e "Photivo setup 64bit   : \c"
+FileYesNo $PKGDIR/photivo-setup-${RELEASEDATE}-win64.exe
+echo -e "Photivo setup 32bit   : \c"
+FileYesNo $PKGDIR/photivo-setup-${RELEASEDATE}-win32.exe
+echo -e "Troubleshooter archive: \c"
+FileYesNo $PKGDIR/photivo-win3264-troubleshooter-${RELEASEDATE}.zip
+echo -e "\nChangeset info:"
+$HGCMD log -b ${HGBRANCH} -l 1
+echo    "---------------------------------------------------------------------------"
+
+if [ -s $PKGDIR/photivo-setup-${RELEASEDATE}-win64.exe ] && \
+   [ -s $PKGDIR/photivo-setup-${RELEASEDATE}-win32.exe ] && \
+   [ -s $PKGDIR/photivo-win3264-troubleshooter-${RELEASEDATE}.zip ]
+then
+  echo -e "\nEverything looks fine. You can test and upload the release now."
+  echo    "Afterwards I can clean up automatically, i.e.:"
+  echo    "* move installers to software archive,"
+  echo -e "* delete everything else created in the build process.\n"
+  read -n 1 -p "Shall I clean up now? (y/n)" ptcleanup
+
+  if [ "$ptcleanup" = "y" ] || [ "$ptcleanup" = "Y" ]; then
+    Cleanup
+  else
+    echo -e "\nOK. The mess stays!"
+    echo -e "${COLOR_GREEN}All done.${COLOR_NONE}"
+  fi
+
+else
+  exit 1
+fi

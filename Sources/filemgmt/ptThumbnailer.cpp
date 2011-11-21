@@ -57,6 +57,13 @@ ptThumbnailer::ptThumbnailer()
   m_Dir = new QDir("");
   m_Dir->setSorting(QDir::DirsFirst | QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
   m_Dir->setNameFilters(FileExtsRaw + FileExtsBitmap);
+
+#if (QT_VERSION < 0x40700)
+  // hack for lack of QDir::NoDot in Qt < 4.7
+  m_Dir->setFilter(QDir::AllDirs | QDir::Files);
+#else
+  m_Dir->setFilter(QDir::AllDirs | QDir::NoDot | QDir::Files);
+#endif
 }
 
 //==============================================================================
@@ -100,7 +107,12 @@ int ptThumbnailer::setDir(const QString dir) {
       filters = filters | QDir::AllDirs | QDir::NoDot;
     }
     m_Dir->setFilter(filters);
+#if (QT_VERSION < 0x40700)
+    // hack for lack of QDir::NoDot in Qt < 4.7
+    return m_Dir->count() - 1;
+#else
     return m_Dir->count();
+#endif
   }
 }
 
@@ -121,6 +133,18 @@ void ptThumbnailer::run() {
   if (!m_IsMyComputer && (m_Dir->path().isEmpty() || !m_Dir->exists())) return;
 
   ptFileMgrDM* DataModule = ptFileMgrDM::GetInstance();
+
+#if (QT_VERSION < 0x40700)
+  // hack for lack of QDir::NoDot in Qt < 4.7
+  QMutableListIterator<QFileInfo> i(files);
+  while(i.hasNext()) {
+    if (i.next().fileName() == ".") {
+      i.remove();
+      break;
+    }
+  }
+#endif
+
   int thumbMaxSize = Settings->GetInt("FileMgrThumbnailSize");
   QFileInfoList files;
 
