@@ -14,21 +14,18 @@ if [ ! -d $THEBINDIR ]; then mkdir $THEBINDIR ; fi
 echo "Updating data files in \"$THEBINDIR\" ..."
 
 cd $THEBINDIR && \
-rm -rf ChannelMixers Curves LensfunDatabase Presets Profiles Translations UISettings && \
-mkdir  ChannelMixers Curves LensfunDatabase Presets Profiles Translations UISettings && \
+rm -rf ChannelMixers Curves LensfunDatabase Presets Profiles Themes Translations UISettings && \
+mkdir  ChannelMixers Curves LensfunDatabase Presets Profiles Themes Translations UISettings && \
 cd $PT_REPO_PATH && \
 cp -r ./ChannelMixers/*    $THEBINDIR/ChannelMixers && \
 cp -r ./Curves/*           $THEBINDIR/Curves && \
 cp -r ./LensfunDatabase/*  $THEBINDIR/LensfunDatabase && \
 cp -r ./Presets/*          $THEBINDIR/Presets && \
 cp -r ./Profiles/*         $THEBINDIR/Profiles && \
+cp -r ./Themes/*           $THEBINDIR/Themes && \
 cp -r ./Translations/*.qm  $THEBINDIR/Translations && \
 cp -r ./UISettings/*       $THEBINDIR/UISettings
 
 exitstatus=$?
 if [ ! ${exitstatus} -eq 0 ] && [ "$1" == "" ]; then echo "Failed!" ; fi
 exit ${exitstatus}
-
-#rm Themes
-#mkdir Themes
-#cp -r ../Themes/*           ./Themes &&

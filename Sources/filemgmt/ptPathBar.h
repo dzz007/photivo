@@ -35,6 +35,8 @@
 #include <QDir>
 #include <QToolButton>
 #include <QStackedLayout>
+#include <QPropertyAnimation>
+#include <QEasingCurve>
 
 //==============================================================================
 /*!
@@ -113,23 +115,24 @@ private:
     prSuccess   = 0
   };
 
-  enum pbWidgetPos {
-    wpLeftMost  = -1,
-    wpRightMost = 1
-  };
-
-  struct pbRange {
-    int begin;
-    int end;
+  enum pbMovement {
+    mvLeftMost  = 0,
+    mvRightMost = 1,
+    mvToLeft    = 2,
+    mvToRight   = 3,
+    mvResizeCheck = 4
   };
 
   QString       BuildPath           (const int untilIdx);
   void          Clear               ();
   pbToken*      CreateToken         (int idx, const QString& fullPath, QString dirName);
+  int           FindNextTokenPos    (int pos, pbMovement dir);   // m_Tokens coordinates!
   pbParseResult Parse               (QString path);
   void          ShowSubdirMenu      (int idx);
-  void          ShowVisibleWidgets  (int startIdx, pbWidgetPos pos);
+  void          MoveVisibleArea     (pbMovement dir, bool fromButton = false);
 
+  QPropertyAnimation  m_Animation;
+  QEasingCurve        m_AniCurve;
   QDir                m_DirInfo;
   QWidget*            m_PrettyDisplay;
   QLineEdit*          m_Editor;
@@ -140,7 +143,6 @@ private:
   QWidget*            m_Tokens;
   QHBoxLayout*        m_TokenLayout;
   QVector<pbToken*>   m_TokenList;
-  pbRange             m_VisibleRange;   // refers to the resp. m_Tokens indexes
   QStackedLayout*     m_WidgetStack;
 
 
