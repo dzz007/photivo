@@ -20,6 +20,8 @@
 **
 *******************************************************************************/
 
+#include <cassert>
+
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QAction>
@@ -40,8 +42,8 @@ extern ptTheme* Theme;
 
 ptPathBar::ptPathBar(QWidget* parent)
 : QWidget(parent),
-  m_IsMyComputer(false),  // always stays at false on non-Windows OSes
-  m_VisibleRange()        // member is POD, i.e. init to zero
+  m_AniCurve(QEasingCurve::InOutQuad),
+  m_IsMyComputer(false)  // always stays at false on non-Windows OSes
 {
   this->setContextMenuPolicy(Qt::PreventContextMenu);
 
@@ -105,6 +107,13 @@ ptPathBar::ptPathBar(QWidget* parent)
   m_TokenLayout->setSpacing(0);
   m_TokenLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
   m_Tokens->setLayout(m_TokenLayout);
+
+  //------------------------------------------------------------------------------
+
+  m_Animation.setTargetObject(m_Tokens);
+  m_Animation.setPropertyName("pos");
+  m_Animation.setDuration(100);
+//  m_Animation.setEasingCurve(m_AniCurve);
 }
 
 //==============================================================================
@@ -188,57 +197,94 @@ ptPathBar::pbParseResult ptPathBar::Parse(QString path) {
 
 //==============================================================================
 
-void ptPathBar::ShowVisibleWidgets(int startIdx, pbWidgetPos pos) {
+void ptPathBar::MoveVisibleArea(pbMovement dir, bool fromButton /*= false*/) {
   if (m_TokenList.count() <= 0) return;
+  int newLeft = 0;
 
   if (m_Tokens->width() <= m_PrettyDisplay->width()) {
     // path is short enough to be displayed completely
     m_GoLeftButton->hide();
     m_GoRightButton->hide();
-    m_VisibleRange.begin = 0;
-    m_VisibleRange.end = m_TokenList.count()-1;
-    m_Tokens->move(0,0);
-    return;
-  }
+    newLeft = 0;
 
-  m_GoLeftButton->show();
-  m_GoRightButton->show();
+  } else {
+    m_GoLeftButton->show();
+    m_GoRightButton->show();
+    int maxLeft = m_InnerContainer->width() - m_Tokens->width();
 
-  int availableWidth = m_InnerContainer->width();
-  int usedWidth = 0;
-  if (pos == wpLeftMost) {
-    if (m_Tokens->width()-m_TokenList.at(startIdx)->x() > availableWidth) {
-      // Tokens to the right and including startIdx need more than the available space.
-      // I.e. startIdx is indeed our ideal leftmost token.
-      m_VisibleRange.begin = startIdx;
-      // find rightmost token
-      for (int i = startIdx; i < m_TokenList.count()-1; i++) {
-        usedWidth += m_TokenList.at(i)->width();
-        if (usedWidth > availableWidth) {
-          m_VisibleRange.end = i;
-          break;
+    switch (dir) {
+      case mvResizeCheck:
+        if (maxLeft - m_Tokens->x() > 0) {
+          // resize produced free space on the right
+          newLeft = maxLeft;
+        } else {
+          newLeft = m_Tokens->x();
         }
+        break;
+
+      case mvLeftMost:
+        newLeft = 0;
+        break;
+
+      case mvRightMost:
+        newLeft = maxLeft;
+        break;
+
+      case mvToLeft: {
+        newLeft = qMin(0, m_Tokens->x() + m_InnerContainer->width());
+        // negatives because FindNextTokenPos needs and returns m_Tokens coordinates.
+        int clamped = 0-FindNextTokenPos(0-newLeft, dir);
+        if (clamped > m_Tokens->x()) newLeft = clamped;
+        break;
       }
-      m_Tokens->move(-m_TokenList.at(m_VisibleRange.begin)->x(), 0);
-      return;
-    } else {
-      // Otherwise right justify the whole path
-      startIdx = m_TokenList.count()-1;
+
+      case mvToRight: {
+        newLeft = qMax(maxLeft, m_Tokens->x() - m_InnerContainer->width());
+        int clamped = 0-FindNextTokenPos(0-newLeft, dir);
+        if (clamped < m_Tokens->x()) newLeft = clamped;
+        break;
+      }
+
+      default:
+        assert(!"Unknown pbWidgetPos!");
+        break;
     }
   }
 
-  // Start with the rightmost token and iterate backwards till we find the
-  // first token that does not fit the available space.
-  usedWidth = 0;
-  int leftMostIdx = startIdx;
-  for (; leftMostIdx >= 0; leftMostIdx--) {
-    usedWidth += m_TokenList.at(leftMostIdx)->width();
-    if (usedWidth > availableWidth) break;
+  if (fromButton) {
+    m_Animation.setStartValue(m_Tokens->pos());
+    m_Animation.setEndValue(QPoint(newLeft, 0));
+    m_Animation.start();
+  } else {
+    m_Tokens->move(newLeft, 0);
   }
-  if (leftMostIdx != startIdx) leftMostIdx++;
-  m_VisibleRange.begin = leftMostIdx;
-  m_VisibleRange.end = startIdx;
-  m_Tokens->move(-m_TokenList.at(leftMostIdx)->x(), 0);
+}
+
+//==============================================================================
+
+int ptPathBar::FindNextTokenPos(int pos, pbMovement dir) {
+  if (dir == mvRightMost) {
+    return m_TokenList.last()->x();
+  } else if (dir == mvLeftMost) {
+    return 0;
+  }
+
+  int x = pos;
+  QVectorIterator<pbToken*> i(m_TokenList);
+  while (i.hasNext()) {
+    if ((i.peekNext()->x() <= x) &&
+        (i.peekNext()->x() + i.peekNext()->width() >= x))
+    { // we found the token containing x
+      if (dir == mvToLeft) {
+        x = i.peekNext()->x() + i.peekNext()->width() + 1;
+      } else if (dir == mvToRight) {
+        x = i.peekNext()->x();
+      }
+    }
+    i.next();
+  }
+
+  return x;
 }
 
 //==============================================================================
@@ -246,7 +292,7 @@ void ptPathBar::ShowVisibleWidgets(int startIdx, pbWidgetPos pos) {
 bool ptPathBar::setPath(const QString& path) {
   pbParseResult result = Parse(path);
   if (result >= prSuccess) {
-    ShowVisibleWidgets(m_TokenList.count()-1, wpRightMost);
+    MoveVisibleArea(mvRightMost);
   }
   return result >= prSuccess || result == prSamePath;
 }
@@ -289,7 +335,8 @@ QString ptPathBar::BuildPath(const int untilIdx) {
 
 void ptPathBar::afterEditor() {
   if (Parse(m_Editor->text()) >= prSuccess) {
-    ShowVisibleWidgets(m_TokenList.count()-1, wpRightMost);
+//    ShowVisibleWidgets(m_TokenList.count()-1, wpRightMost);
+    MoveVisibleArea(mvRightMost);
     emit changedPath(BuildPath(m_TokenList.count()-1));
   }
   m_WidgetStack->setCurrentWidget(m_PrettyDisplay);
@@ -298,16 +345,16 @@ void ptPathBar::afterEditor() {
 //==============================================================================
 
 void ptPathBar::goLeftClicked() {
-  if (m_VisibleRange.begin > 0) {
-    ShowVisibleWidgets(m_VisibleRange.begin, wpRightMost);
+  if (m_Tokens->x() != 0) {
+    MoveVisibleArea(mvToLeft, true);
   }
 }
 
 //==============================================================================
 
 void ptPathBar::goRightClicked() {
-  if (m_VisibleRange.end < m_TokenList.count()-1) {
-    ShowVisibleWidgets(m_VisibleRange.end, wpLeftMost);
+  if (m_Tokens->x() != (m_InnerContainer->width() - m_Tokens->width())) {
+    MoveVisibleArea(mvToRight, true);
   }
 }
 
@@ -356,7 +403,7 @@ void ptPathBar::mouseReleaseEvent(QMouseEvent* event) {
 
 void ptPathBar::resizeEvent(QResizeEvent* event) {
   QWidget::resizeEvent(event);
-  ShowVisibleWidgets(m_VisibleRange.begin, wpLeftMost);
+  MoveVisibleArea(mvResizeCheck);
 }
 
 //==============================================================================
@@ -412,7 +459,7 @@ void ptPathBar::buttonClicked() {
   if (button == NULL) return;
 
   if (Parse(BuildPath(button->index())) >= prSuccess) {
-    ShowVisibleWidgets(m_TokenList.count()-1, wpRightMost);
+    MoveVisibleArea(mvRightMost);
     emit changedPath(BuildPath(m_TokenList.count()-1));
   }
 }
@@ -467,7 +514,7 @@ void ptPathBar::separatorClicked(bool checked) {
     activatedPath = BuildPath(button->index()) + "/" + clicked->text();
 #endif
     if (Parse(activatedPath) >= prSuccess) {
-      ShowVisibleWidgets(m_TokenList.count()-1, wpRightMost);
+      MoveVisibleArea(mvRightMost);
       emit changedPath(activatedPath);
     }
   } else {
