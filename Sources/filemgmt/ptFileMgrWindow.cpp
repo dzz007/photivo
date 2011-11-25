@@ -130,6 +130,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_FilesScene = new QGraphicsScene(m_FilesView);
   m_FilesScene->setStickyFocus(true);
   m_FilesScene->installEventFilter(this);
+  m_FilesView->setOptimizationFlags(QGraphicsView::DontSavePainterState);
   m_FilesView->installEventFilter(this);
   m_FilesView->verticalScrollBar()->installEventFilter(this);
   m_FilesView->horizontalScrollBar()->installEventFilter(this);
@@ -160,11 +161,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
     FMMainSplitter->restoreState(
         Settings->m_IniSettings->value("FileMgrMainSplitter").toByteArray());
   } else {
-    QList <int> SizesList;
-    SizesList.append(150);
-    SizesList.append(500);
-    SizesList.append(1000);
-    FMMainSplitter->setSizes(SizesList);
+    FMMainSplitter->setSizes(QList<int>() << 150 << 500 << 500);
   }
   FMMainSplitter->setStretchFactor(1,1);
 
@@ -173,10 +170,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
     FMSidebarSplitter->restoreState(
         Settings->m_IniSettings->value("FileMgrSidebarSplitter").toByteArray());
   } else {
-    QList <int> SizesList;
-    SizesList.append(500);
-    SizesList.append(500);
-    FMSidebarSplitter->setSizes(SizesList);
+    FMSidebarSplitter->setSizes(QList<int>() << 400 << 400);
   }
   FMSidebarSplitter->setStretchFactor(1,1);
 
