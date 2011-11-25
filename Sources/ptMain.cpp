@@ -3672,6 +3672,14 @@ void CB_ZoomFullButton() {
   CB_ZoomInput(100);
 }
 
+void CB_ZoomStep(int direction) {
+  ViewWindow->ZoomStep(direction);
+}
+
+
+void CB_FileMgrButton() {
+  MainWindow->OpenFileMgrWindow();
+}
 
 void CB_FullScreenButton(const int State) {
   if (State == 1) {

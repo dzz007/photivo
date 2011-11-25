@@ -101,6 +101,7 @@ public:
   void UpdateImage(const ptImage* relatedImage);
   void ZoomTo(float factor);  // 1.0 means 100%
   int ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
+  void ZoomStep(int direction);
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -155,6 +156,8 @@ private:
   void ConstructContextMenu();
   QAction* ac_ZoomFit;
   QAction* ac_Zoom100;
+  QAction* ac_ZoomIn;
+  QAction* ac_ZoomOut;
   QAction* ac_Mode_RGB;
   QAction* ac_Mode_Structure;
   QAction* ac_Mode_L;
@@ -197,8 +200,10 @@ private slots:
   void Menu_ShowZoomBar();
   void Menu_ShowTools();
   void Menu_Fullscreen();
+  void Menu_ZoomIn();
   void Menu_ZoomFit();
   void Menu_Zoom100();
+  void Menu_ZoomOut();
   void Menu_Mode();
   void Menu_OpenFileMgr();
 

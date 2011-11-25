@@ -42,7 +42,6 @@ extern ptTheme* Theme;
 
 ptPathBar::ptPathBar(QWidget* parent)
 : QWidget(parent),
-  m_AniCurve(QEasingCurve::InOutQuad),
   m_IsMyComputer(false)  // always stays at false on non-Windows OSes
 {
   this->setContextMenuPolicy(Qt::PreventContextMenu);
@@ -65,6 +64,7 @@ ptPathBar::ptPathBar(QWidget* parent)
   m_WidgetStack = new QStackedLayout(this);
   m_WidgetStack->setContentsMargins(0,0,0,0);
   m_WidgetStack->setSpacing(0);
+  m_WidgetStack->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
   m_WidgetStack->addWidget(m_PrettyDisplay);
   m_WidgetStack->addWidget(m_Editor);
   m_WidgetStack->setCurrentIndex(0);
@@ -113,7 +113,6 @@ ptPathBar::ptPathBar(QWidget* parent)
   m_Animation.setTargetObject(m_Tokens);
   m_Animation.setPropertyName("pos");
   m_Animation.setDuration(100);
-//  m_Animation.setEasingCurve(m_AniCurve);
 }
 
 //==============================================================================
@@ -133,7 +132,8 @@ ptPathBar::pbParseResult ptPathBar::Parse(QString path) {
     // Cleanup path and ensure "/" as directory separator
     path = QDir::cleanPath(QDir::fromNativeSeparators(path));
 
-    if (QDir::match(BuildPath(m_TokenList.count()-1), path)) {
+    if (QDir(BuildPath(m_TokenList.count()-1)) == QDir(path)) {
+    //if (QDir::match(BuildPath(m_TokenList.count()-1), path)) {
       return prSamePath;
     }
 
@@ -158,16 +158,18 @@ ptPathBar::pbParseResult ptPathBar::Parse(QString path) {
   // drive name/letter
   if (!m_IsMyComputer) {
     pathSoFar = path.left(2);
-    m_TokenList.append(CreateToken(m_TokenList.count(), pathSoFar, WinApi::VolumeNamePretty(pathSoFar)));
+    m_TokenList.append(CreateToken(m_TokenList.count(),
+                                   pathSoFar,
+                                   WinApi::VolumeNamePretty(pathSoFar)));
     path.remove(0, 3);
   }
 
 #else
   if (path.left(1) != "/") return prFail;  // paths must be absolute, i.e. start with "/"
   Clear();
-  pathSoFar = "/";
   m_TokenList.append(CreateToken(0, "/", "/"));
   path.remove(0, 1);
+  // pathSoFar must stay empty here, otherwise we’ll end up with a double slash at its beginning.
 #endif
 
   // build widget lists for tokens and separators
@@ -335,7 +337,6 @@ QString ptPathBar::BuildPath(const int untilIdx) {
 
 void ptPathBar::afterEditor() {
   if (Parse(m_Editor->text()) >= prSuccess) {
-//    ShowVisibleWidgets(m_TokenList.count()-1, wpRightMost);
     MoveVisibleArea(mvRightMost);
     emit changedPath(BuildPath(m_TokenList.count()-1));
   }
@@ -390,7 +391,7 @@ void ptPathBar::mouseReleaseEvent(QMouseEvent* event) {
   event->accept();
   if (event->button() == Qt::RightButton) {
     m_Editor->blockSignals(true);
-    m_Editor->setText(BuildPath(m_TokenList.count()-1));
+    m_Editor->setText(QDir::toNativeSeparators(BuildPath(m_TokenList.count()-1)));
     m_Editor->end(false);
     m_Editor->selectAll();
     m_Editor->setFocus(Qt::MouseFocusReason);
@@ -446,6 +447,7 @@ ptPathBar::pbToken* ptPathBar::CreateToken(int idx, const QString& fullPath, QSt
     separator->setIcon(QIcon(QString::fromUtf8(":/dark/ui-graphics/path-separator-normal.png")));
     separator->setObjectName("PBDirSeparator");
     connect(separator, SIGNAL(clicked(bool)), this, SLOT(separatorClicked(bool)));
+    separator->setFixedHeight(this->height());
     layout->addWidget(separator);
   }
 

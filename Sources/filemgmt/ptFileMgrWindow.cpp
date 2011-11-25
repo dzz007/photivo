@@ -150,6 +150,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 
   // construct the image view
   m_ImageView = new ptImageView(FMImageViewPane, m_DataModel);
+  m_ImageView->installEventFilter(this);
   FMImageViewPane->setVisible((bool)Settings->GetInt("FileMgrShowImageView"));
 
   //------------------------------------------------------------------------------
@@ -160,9 +161,9 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
         Settings->m_IniSettings->value("FileMgrMainSplitter").toByteArray());
   } else {
     QList <int> SizesList;
-    SizesList.append(250);
+    SizesList.append(150);
     SizesList.append(500);
-    SizesList.append(500);
+    SizesList.append(1000);
     FMMainSplitter->setSizes(SizesList);
   }
   FMMainSplitter->setStretchFactor(1,1);
@@ -376,7 +377,8 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     QString lastDir = Settings->GetString("LastFileMgrLocation");
     ptFSOType lastDirType = fsoDir;
 #ifdef Q_OS_WIN
-    if (lastDir == MyComputerIdString) {
+    if (lastDir == MyComputerIdString || lastDir.isEmpty()) {
+      lastDir = MyComputerIdString;
       lastDirType = fsoRoot;
     } else {
 #endif
@@ -400,11 +402,13 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     return;
   }
 
-  QWidget::showEvent(event);
+  if (!event->spontaneous()) {
+    QWidget::showEvent(event);
 
-  // Thumbnails are cleared to free memory when the fm window is closed,
-  // i.e. we need to refresh the display when opening it again.
-  DisplayThumbnails();
+    // Thumbnails are cleared to free memory when the fm window is closed,
+    // i.e. we need to refresh the display when opening it again.
+    DisplayThumbnails();
+  }
 }
 
 //==============================================================================
@@ -421,8 +425,7 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
   else if ((obj == m_FilesView->verticalScrollBar() ||
             obj == m_FilesView->horizontalScrollBar()) &&
             event->type() == QEvent::Wheel)
-  {
-    // Wheel event
+  { // Wheel event
     int dir = ((QWheelEvent*)event)->delta() > 0 ? -1 : 1;
     if (m_FilesView->verticalScrollBar()->isVisible()) {
       m_FilesView->verticalScrollBar()->setValue(
@@ -439,15 +442,15 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 
   else if (obj == m_FilesScene && (event->type() == QEvent::GraphicsSceneDragEnter ||
                                    event->type() == QEvent::GraphicsSceneDrop))
-  {
-    // Make sure drag&drop events are passed on to MainWindow
+  { // Make sure drag&drop events are passed on to MainWindow
     event->ignore();
     return true;
   }
 
 //------------------------------------------------------------------------------
 
-  if (obj == m_FilesScene && event->type() == QEvent::KeyPress) {
+  else if (obj == m_FilesScene && event->type() == QEvent::KeyPress) {
+    // Keyboard navigation in thumbnail list
     int newIdx = m_Layouter->MoveIndex(m_DataModel->focusedThumb(), (QKeyEvent*)event);
     if (newIdx >= 0) {
       FocusThumbnail(newIdx);
@@ -524,11 +527,15 @@ void ptFileMgrWindow::closeWindow() {
 //==============================================================================
 
 void ptFileMgrWindow::hideEvent(QHideEvent* event) {
-  m_DataModel->StopThumbnailer();
-  // free memory occupied by thumbnails
-  ClearScene();
-  m_DataModel->Clear();
-  event->accept();
+  if (!event->spontaneous()) {
+    event->accept();
+    m_DataModel->StopThumbnailer();
+    // free memory occupied by thumbnails
+    ClearScene();
+    m_DataModel->Clear();
+  } else {
+    event->ignore();
+  }
 }
 
 //==============================================================================
@@ -589,6 +596,19 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
   // F4: toggles sidebar
   else if (event->key() == Qt::Key_F4 && event->modifiers() == Qt::NoModifier) {
     toggleSidebar();
+  }
+
+  //------------------------------------------------------------------------------
+
+  else if (event->modifiers() == Qt::NoModifier) {
+    // Keyboard actions for image viewer
+    switch (event->key()) {
+      case Qt::Key_1: m_ImageView->zoomIn();  break;
+      case Qt::Key_2: m_ImageView->zoom100(); break;
+      case Qt::Key_3: m_ImageView->zoomOut(); break;
+      case Qt::Key_4: m_ImageView->zoomFit(); break;
+      default: break;
+    }
   }
 }
 
@@ -738,6 +758,8 @@ void ptFileMgrWindow::on_m_BookmarkButton_clicked() {
   m_TagMenu->move(m_BookmarkButton->mapToGlobal(QPoint(0, m_BookmarkButton->height())));
   m_TagMenu->setPalette(Theme->menuPalette());
   m_TagMenu->setStyle(Theme->style());
+
+  m_TagMenuList->setFocus();
 }
 
 //==============================================================================

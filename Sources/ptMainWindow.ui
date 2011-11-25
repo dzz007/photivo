@@ -11084,7 +11084,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>478</width>
-                                <height>70</height>
+                                <height>71</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11438,7 +11438,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>478</width>
-                                <height>70</height>
+                                <height>71</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11658,7 +11658,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>478</width>
-                                <height>70</height>
+                                <height>71</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11724,7 +11724,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>478</width>
-                                <height>70</height>
+                                <height>71</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11761,7 +11761,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>478</width>
-                                <height>70</height>
+                                <height>71</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11798,7 +11798,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>478</width>
-                                <height>70</height>
+                                <height>71</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11835,7 +11835,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>478</width>
-                                <height>70</height>
+                                <height>71</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12136,7 +12136,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>478</width>
-                                <height>70</height>
+                                <height>71</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12216,7 +12216,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>478</width>
-                                <height>70</height>
+                                <height>71</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12332,7 +12332,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>478</width>
-                                <height>70</height>
+                                <height>71</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -13115,6 +13115,28 @@
                  </spacer>
                 </item>
                 <item>
+                 <widget class="QToolButton" name="ZoomInButton">
+                  <property name="toolTip">
+                   <string>Zoom in</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../qrc/photivo.qrc">
+                    <normaloff>:/dark/icons/zoom-in.png</normaloff>:/dark/icons/zoom-in.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="ZoomOutButton">
+                  <property name="toolTip">
+                   <string>Zoom out</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../qrc/photivo.qrc">
+                    <normaloff>:/dark/icons/zoom-out.png</normaloff>:/dark/icons/zoom-out.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QWidget" name="widget_102" native="true">
                   <layout class="QHBoxLayout" name="horizontalLayout_83">
                    <property name="spacing">
@@ -13187,6 +13209,17 @@
                    </size>
                   </property>
                  </spacer>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="FileMgrButton">
+                  <property name="toolTip">
+                   <string>File manager</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../qrc/photivo.qrc">
+                    <normaloff>:/dark/icons/file-manager.png</normaloff>:/dark/icons/file-manager.png</iconset>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <widget class="QToolButton" name="FullScreenButton">

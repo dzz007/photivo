@@ -56,6 +56,9 @@ bookmark-remove     <modified bookmark-new>
 tool-hide           <modified window-close>
 tool-show           <modified dialog-ok>
 
+BOTTOM BAR
+file-manager        folder-copy
+
 FILE MANAGER
 broken-image-48px   <process-stop in greyscale>
 folder-48px         <folder-new without plus sign>

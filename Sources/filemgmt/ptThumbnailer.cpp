@@ -103,14 +103,19 @@ int ptThumbnailer::setDir(const QString dir) {
     }
 
     QDir::Filters filters = QDir::Files;
+
+#if (QT_VERSION < 0x40700)
+    // hack for lack of QDir::NoDot in Qt < 4.7
+    if (Settings->GetInt("FileMgrShowDirThumbs")) {
+      filters = filters | QDir::AllDirs;
+    }
+    m_Dir->setFilter(filters);
+    return m_Dir->count() - 1;
+#else
     if (Settings->GetInt("FileMgrShowDirThumbs")) {
       filters = filters | QDir::AllDirs | QDir::NoDot;
     }
     m_Dir->setFilter(filters);
-#if (QT_VERSION < 0x40700)
-    // hack for lack of QDir::NoDot in Qt < 4.7
-    return m_Dir->count() - 1;
-#else
     return m_Dir->count();
 #endif
   }
@@ -149,11 +154,18 @@ void ptThumbnailer::run() {
   QFileInfoList files;
 
 #ifdef Q_OS_WIN
-  if (m_IsMyComputer)
-    files = m_Dir->drives();
-  else
-#endif
+  if (m_IsMyComputer) {
+    if (Settings->GetInt("FileMgrShowDirThumbs")) {
+      files = m_Dir->drives();
+    } else {
+      files.clear();
+    }
+  } else {
     files = m_Dir->entryInfoList();
+  }
+#else
+  files = m_Dir->entryInfoList();
+#endif
 
   /***
     Step 1: Generate thumb groups without the thumbnail images
@@ -180,9 +192,13 @@ void ptThumbnailer::run() {
 
       QString descr;
       if (m_IsMyComputer) {
+#ifdef Q_OS_WIN
         type = fsoDir;
         descr = WinApi::VolumeNamePretty(files.at(i).absoluteFilePath());
         thumbGroup->addInfoItems(files.at(i).absoluteFilePath(), descr, type);
+#else
+        assert(!"Folder MyComputer must not happen on non-Windows systems!");
+#endif
 
       } else {
         descr = files.at(i).fileName();
