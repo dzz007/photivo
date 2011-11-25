@@ -64,5 +64,8 @@
         <file>dark/icons/go-previous.png</file>
         <file>dark/icons/my-computer.png</file>
         <file>dark/icons/folder-bookmarks.png</file>
+        <file>dark/icons/file-manager.png</file>
+        <file>dark/icons/zoom-in.png</file>
+        <file>dark/icons/zoom-out.png</file>
     </qresource>
 </RCC>

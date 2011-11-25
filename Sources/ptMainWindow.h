@@ -238,7 +238,10 @@ private slots:
   void OnSpotWBButtonClicked();
 
   void OnZoomFitButtonClicked();
+  void OnZoomInButtonClicked();
+  void OnZoomOutButtonClicked();
   void OnZoomFullButtonClicked();
+  void OnFileMgrButtonClicked();
   void OnFullScreenButtonClicked();
   void OnLoadStyleButtonClicked();
 

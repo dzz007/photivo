@@ -132,7 +132,6 @@ private:
   void          MoveVisibleArea     (pbMovement dir, bool fromButton = false);
 
   QPropertyAnimation  m_Animation;
-  QEasingCurve        m_AniCurve;
   QDir                m_DirInfo;
   QWidget*            m_PrettyDisplay;
   QLineEdit*          m_Editor;

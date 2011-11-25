@@ -63,8 +63,9 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   ZoomFactors << MinZoom << 0.08 << 0.10 << 0.15 << 0.20 << 0.25 << 0.33 << 0.50 << 0.66 << 1.00
               << 1.50 << 2.00 << 3.00 << MaxZoom;
 
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  this->setFocusPolicy(Qt::NoFocus);
 
   // Layout to always fill the complete image pane with ViewWindow
   m_parentLayout = new QGridLayout(parent);
@@ -99,10 +100,33 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   connect(m_Worker, SIGNAL(finished()), this, SLOT(afterWorker()));
 
   // timer for decoupling the mouse wheel
-  m_ResizeTimeOut = 300;
+  m_ResizeTimeOut = 50;
   m_ResizeTimer   = new QTimer(this);
   m_ResizeTimer->setSingleShot(1);
   connect(m_ResizeTimer,SIGNAL(timeout()), this,SLOT(ResizeTimerExpired()));
+
+  m_ResizeEventTimer.setSingleShot(true);
+  m_ResizeEventTimer.setInterval(100);
+  connect(&m_ResizeEventTimer, SIGNAL(timeout()), this, SLOT(zoomFit()));
+
+  //------------------------------------------------------------------------------
+
+  // Create actions for context menu
+  ac_ZoomIn = new QAction(tr("Zoom &in") + "\t" + tr("1"), this);
+  ac_ZoomIn->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-in.png")));
+  connect(ac_ZoomIn, SIGNAL(triggered()), this, SLOT(zoomIn()));
+
+  ac_Zoom100 = new QAction(tr("Zoom &100%") + "\t" + tr("2"), this);
+  ac_Zoom100->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-original.png")));
+  connect(ac_Zoom100, SIGNAL(triggered()), this, SLOT(zoom100()));
+
+  ac_ZoomOut = new QAction(tr("Zoom &out") + "\t" + tr("3"), this);
+  ac_ZoomOut->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-out.png")));
+  connect(ac_ZoomOut, SIGNAL(triggered()), this, SLOT(zoomOut()));
+
+  ac_ZoomFit = new QAction(tr("Zoom &fit") + "\t" + tr("4"), this);
+  ac_ZoomFit->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-fit.png")));
+  connect(ac_ZoomFit, SIGNAL(triggered()), this, SLOT(zoomFit()));
 }
 
 //==============================================================================
@@ -134,8 +158,10 @@ void ptImageView::ShowImage(const QString FileName) {
 
 void ptImageView::resizeEvent(QResizeEvent* event) {
   if (m_ZoomMode == ptZoomMode_Fit) {
-    event->accept();
-    ZoomToFit(0);
+    // Only zoom fit after timer expires to avoid constant image resizing while
+    // changing widget geometry. Prevents jerky UI response at the cost of
+    // the image not being resized while the geometry change is ongoing.
+    m_ResizeEventTimer.start();
   } else {
     // takes care of positioning the scene inside the viewport on non-fit zooms
     QGraphicsView::resizeEvent(event);
@@ -149,9 +175,6 @@ void ptImageView::mousePressEvent(QMouseEvent* event) {
     event->accept();
     m_LeftMousePressed = true;
     m_DragDelta->setPoints(event->pos(), event->pos());
-  } else if (event->button() == Qt::RightButton) {
-    event->accept();
-    ZoomToFit(1);
   }
 }
 
@@ -194,10 +217,29 @@ void ptImageView::mouseMoveEvent(QMouseEvent* event) {
 //==============================================================================
 
 void ptImageView::wheelEvent(QWheelEvent* event) {
+  ZoomStep(event->delta());
+}
+
+//==============================================================================
+
+void ptImageView::contextMenuEvent(QContextMenuEvent* event) {
+  QMenu Menu(this);
+  Menu.setPalette(Theme->menuPalette());
+  Menu.setStyle(Theme->style());
+  Menu.addAction(ac_ZoomIn);
+  Menu.addAction(ac_Zoom100);
+  Menu.addAction(ac_ZoomOut);
+  Menu.addAction(ac_ZoomFit);
+  Menu.exec(((QMouseEvent*)event)->globalPos());
+}
+
+//==============================================================================
+
+void ptImageView::ZoomStep(int direction) {
   int ZoomIdx = -1;
 
   // zoom larger
-  if (event->delta() > 0) {
+  if (direction > 0) {
     for (int i = 0; i < ZoomFactors.size(); i++) {
       if (ZoomFactors[i] > m_ZoomFactor) {
         ZoomIdx = i;
@@ -206,7 +248,7 @@ void ptImageView::wheelEvent(QWheelEvent* event) {
     }
 
   // zoom smaller
-  } else if (event->delta() < 0) {
+  } else if (direction < 0) {
     for (int i = ZoomFactors.size() - 1; i >= 0; i--) {
       if (ZoomFactors[i] < m_ZoomFactor) {
         ZoomIdx = i;
@@ -225,9 +267,20 @@ void ptImageView::wheelEvent(QWheelEvent* event) {
 
 //==============================================================================
 
-void ptImageView::contextMenuEvent(QContextMenuEvent* event) {
-  event->accept();
-  // todo
+void ptImageView::zoomIn() {
+  ZoomStep(1);
+}
+
+//==============================================================================
+
+void ptImageView::zoomOut() {
+  ZoomStep(-1);
+}
+
+//==============================================================================
+
+void ptImageView::zoom100() {
+  ZoomTo(1.0, true);
 }
 
 //==============================================================================
@@ -247,7 +300,7 @@ void ptImageView::ZoomTo(float factor, const bool withMsg) {
 
 //==============================================================================
 
-int ptImageView::ZoomToFit(const short withMsg /*= 1*/) {
+int ptImageView::zoomFit(const bool withMsg /*= true*/) {
   m_ZoomMode = ptZoomMode_Fit;
 
   if (m_Image != NULL) {
@@ -338,7 +391,7 @@ void ptImageView::afterWorker() {
     m_StatusOverlay->stop();
     if (m_Image != NULL) {
       if (m_ZoomMode == ptZoomMode_Fit)
-        ZoomToFit(0);
+        zoomFit(false);
       else
         ZoomTo(m_ZoomFactor, true);
     }

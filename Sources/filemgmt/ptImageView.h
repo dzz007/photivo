@@ -66,8 +66,8 @@ protected:
 
 
 private:
+  void ZoomStep(int direction);
   void ZoomTo(float factor, const bool withMsg);  // 1.0 means 100%
-  int  ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
 
   /*! Put the QImage in the scene */
   void ImageToScene(const double Factor);
@@ -95,6 +95,20 @@ private:
   QGraphicsPixmapItem*  m_PixmapItem;
   int                   m_ResizeTimeOut;
   QTimer*               m_ResizeTimer;
+  QTimer                m_ResizeEventTimer;  // to avoid jerky UI during widget resize
+                                             // in zoom fit mode
+
+  QAction* ac_Zoom100;
+  QAction* ac_ZoomIn;
+  QAction* ac_ZoomFit;
+  QAction* ac_ZoomOut;
+
+
+public slots:
+  int  zoomFit(const bool withMsg = true);  // fit complete image into viewport
+  void zoom100();
+  void zoomIn();
+  void zoomOut();
 
 
 private slots:

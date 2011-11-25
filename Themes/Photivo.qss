@@ -34,8 +34,8 @@
 QAbstractSpinBox {
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $Gradient$, stop: 1 $Base$);
   border: 1px solid black;
-  selection-background-color: $AltBase$;
-  selection-color: $Text$;
+  selection-background-color: $Strong$;
+  selection-color: $AltBase$;
 
   border-radius: 3px;
   padding-left: 2px;
@@ -134,8 +134,8 @@ QComboBox::drop-down {
 
 QComboBox QAbstractItemView {
   border: 1px solid $Strong$;
-  selection-background-color: $AltBase$;
-  selection-color: $Text$;
+  selection-background-color: $Strong$;
+  selection-color: $AltBase$;
 
   border-radius: 3px;
 }
@@ -149,6 +149,8 @@ QLineEdit, QPlainTextEdit {
   border-radius: 3px;
   padding-left: 2px;
   padding-right: 2px;
+  selection-background-color: $Strong$;
+  selection-color: $AltBase$;
 }
 
 QLineEdit {

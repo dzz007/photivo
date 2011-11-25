@@ -201,6 +201,33 @@ int ptViewWindow::ZoomToFit(const short withMsg /*= 1*/) {
 }
 
 
+void ptViewWindow::ZoomStep(int direction) {
+  int ZoomIdx = -1;
+
+  // zoom larger
+  if (direction > 0) {
+    for (int i = 0; i < ZoomFactors.size(); i++) {
+      if (ZoomFactors[i] > m_ZoomFactor) {
+        ZoomIdx = i;
+        break;
+      }
+    }
+
+  // zoom smaller
+  } else if (direction < 0) {
+    for (int i = ZoomFactors.size() - 1; i >= 0; i--) {
+      if (ZoomFactors[i] < m_ZoomFactor) {
+        ZoomIdx = i;
+        break;
+      }
+    }
+  }
+
+  if (ZoomIdx != -1) {
+    ZoomTo(ZoomFactors[ZoomIdx]);
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Save and restore current zoom
@@ -346,30 +373,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::wheelEvent(QWheelEvent* event) {
-  int ZoomIdx = -1;
-
-  // zoom larger
-  if (event->delta() > 0) {
-    for (int i = 0; i < ZoomFactors.size(); i++) {
-      if (ZoomFactors[i] > m_ZoomFactor) {
-        ZoomIdx = i;
-        break;
-      }
-    }
-
-  // zoom smaller
-  } else if (event->delta() < 0) {
-    for (int i = ZoomFactors.size() - 1; i >= 0; i--) {
-      if (ZoomFactors[i] < m_ZoomFactor) {
-        ZoomIdx = i;
-        break;
-      }
-    }
-  }
-
-  if (ZoomIdx != -1) {
-    ZoomTo(ZoomFactors[ZoomIdx]);
-  }
+  ZoomStep(event->delta());
 }
 
 
@@ -637,21 +641,21 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
 
 void ptViewWindow::ConstructContextMenu() {
   // Create actions for context menu
-  ac_ZoomFit = new QAction(tr("Zoom &fit") + "\t" + tr("4"), this);
-  connect(ac_ZoomFit, SIGNAL(triggered()), this, SLOT(Menu_ZoomFit()));
-  QIcon ZoomFitIcon;
-  ZoomFitIcon.addPixmap(QPixmap(
-    QString::fromUtf8(":/dark/icons/zoom-fit.png")));
-  ac_ZoomFit->setIcon(ZoomFitIcon);
-  ac_ZoomFit->setIconVisibleInMenu(true);
+  ac_ZoomIn = new QAction(tr("Zoom &in") + "\t" + tr("1"), this);
+  ac_ZoomIn->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-in.png")));
+  connect(ac_ZoomIn, SIGNAL(triggered()), this, SLOT(Menu_ZoomIn()));
 
   ac_Zoom100 = new QAction(tr("Zoom &100%") + "\t" + tr("2"), this);
   connect(ac_Zoom100, SIGNAL(triggered()), this, SLOT(Menu_Zoom100()));
-  QIcon Zoom100Icon;
-  Zoom100Icon.addPixmap(QPixmap(
-    QString::fromUtf8(":/dark/icons/zoom-original.png")));
-  ac_Zoom100->setIcon(Zoom100Icon);
-  ac_Zoom100->setIconVisibleInMenu(true);
+  ac_Zoom100->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-original.png")));
+
+  ac_ZoomOut = new QAction(tr("Zoom &out") + "\t" + tr("3"), this);
+  ac_ZoomOut->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-out.png")));
+  connect(ac_ZoomOut, SIGNAL(triggered()), this, SLOT(Menu_ZoomOut()));
+
+  ac_ZoomFit = new QAction(tr("Zoom &fit") + "\t" + tr("4"), this);
+  connect(ac_ZoomFit, SIGNAL(triggered()), this, SLOT(Menu_ZoomFit()));
+  ac_ZoomFit->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-fit.png")));
 
 
   ac_Mode_RGB = new QAction(tr("&RGB") + "\t" + tr("0"), this);
@@ -782,8 +786,10 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   QMenu Menu(this);
   Menu.setPalette(Theme->menuPalette());
   Menu.setStyle(Theme->style());
-  Menu.addAction(ac_ZoomFit);
+  Menu.addAction(ac_ZoomIn);
   Menu.addAction(ac_Zoom100);
+  Menu.addAction(ac_ZoomOut);
+  Menu.addAction(ac_ZoomFit);
   Menu.addSeparator();
   if (m_Interaction == iaNone) {
     Menu.addMenu(&Menu_Mode);
@@ -902,6 +908,14 @@ void ptViewWindow::Menu_ZoomFit() {
 
 void ptViewWindow::Menu_Zoom100() {
   ZoomTo(1.0);
+}
+
+void ptViewWindow::Menu_ZoomIn() {
+  ZoomStep(1);
+}
+
+void ptViewWindow::Menu_ZoomOut() {
+  ZoomStep(-1);
 }
 
 void ptViewWindow::Menu_Mode() {

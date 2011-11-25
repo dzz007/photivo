@@ -762,7 +762,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     // stuff for the file manager
     {"FileMgrIsOpen"                        ,9    ,0                                     ,0},
     {"LastFileMgrLocation"                  ,1    ,""                                    ,0},
-    {"FileMgrShowDirThumbs"                 ,1    ,0                                     ,0},
+    {"FileMgrShowDirThumbs"                 ,1    ,1                                     ,0},
     {"FileMgrShowImageView"                 ,1    ,1                                     ,0},
     {"FileMgrShowSidebar"                   ,1    ,1                                     ,0},
     {"FileMgrThumbLayoutType"               ,1    ,tlVerticalByRow                       ,0},

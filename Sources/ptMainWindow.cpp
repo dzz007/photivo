@@ -53,6 +53,7 @@ extern short ImageCleanUp;
 void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
+void CB_ZoomStep(int direction);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -304,7 +305,10 @@ ptMainWindow::ptMainWindow(const QString Title)
   BottomContainer->setVisible(Settings->GetInt("ShowBottomContainer"));
 
   Macro_ConnectSomeButton(ZoomFit);
+  Macro_ConnectSomeButton(ZoomIn);
+  Macro_ConnectSomeButton(ZoomOut);
   Macro_ConnectSomeButton(ZoomFull);
+  Macro_ConnectSomeButton(FileMgr);
   Macro_ConnectSomeButton(FullScreen);
   FullScreenButton->setChecked(0);
   Macro_ConnectSomeButton(LoadStyle);
@@ -1194,6 +1198,15 @@ void ptMainWindow::OnZoomFullButtonClicked() {
   ::CB_ZoomFullButton();
 }
 
+void ptMainWindow::OnZoomInButtonClicked() {
+  ViewWindow->ZoomStep(1);
+}
+
+void ptMainWindow::OnZoomOutButtonClicked() {
+  ViewWindow->ZoomStep(-1);
+}
+
+
 void CB_InputChanged(const QString ObjectName, const QVariant Value);
 void ptMainWindow::OnInputChanged(const QVariant Value) {
   QObject* Sender = sender();
@@ -1201,6 +1214,11 @@ void ptMainWindow::OnInputChanged(const QVariant Value) {
          __FILE__,__LINE__,Sender->objectName().toAscii().data());
   CB_InputChanged(Sender->objectName(),Value);
 
+}
+
+void CB_FileMgrButton();
+void ptMainWindow::OnFileMgrButtonClicked() {
+  ::CB_FileMgrButton();
 }
 
 void CB_FullScreenButton(const int State);
@@ -1734,11 +1752,11 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     if (Event->key()==Qt::Key_F11) { // toggle full screen
       ::CB_FullScreenButton(!isFullScreen());
     } else if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::NoModifier) {
-      CB_InputChanged("ZoomInput",50);
+      CB_ZoomStep(1);
     } else if (Event->key()==Qt::Key_2 && Event->modifiers()==Qt::NoModifier) {
       CB_InputChanged("ZoomInput",100);
     } else if (Event->key()==Qt::Key_3 && Event->modifiers()==Qt::NoModifier) {
-      CB_InputChanged("ZoomInput",200);
+      CB_ZoomStep(-1);
     } else if (Event->key()==Qt::Key_4 && Event->modifiers()==Qt::NoModifier) {
       CB_ZoomFitButton();
     } else if (Event->key()==Qt::Key_Space) {
@@ -1930,6 +1948,7 @@ void ptMainWindow::Search() {
   }
 
   ShowMovedTools(tr("Search results:"));
+
 }
 
 void ptMainWindow::ShowActiveTools() {
