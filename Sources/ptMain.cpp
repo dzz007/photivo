@@ -886,50 +886,50 @@ int photivoMain(int Argc, char *Argv[]) {
   Settings->SetValue("BlockedTools",Temp);
   MainWindow->UpdateToolBoxes();
 
-  // Calculate a nice position.
-  // Persistent settings.
 
-  QRect DesktopRect = (QApplication::desktop())->screenGeometry(MainWindow);
+  //------------------------------------------------------------------------------
+  // Initialize main window geometry and position
 
-  if (RememberSettingLevel == 0) {
-      MainWindowPos  = QPoint(DesktopRect.width()/20,DesktopRect.height()/20);
-      MainWindowSize = QSize(DesktopRect.width()*9/10,DesktopRect.height()*9/10);
+  QRect DesktopRect = (QApplication::desktop())->availableGeometry(MainWindow);
+  MainWindowPos = Settings->m_IniSettings->value("MainWindowPos", DesktopRect.topLeft()).toPoint();
+
+  QVariant WinSize = Settings->m_IniSettings->value("MainWindowSize");
+  if(!WinSize.isValid()) {
+    // ensure a reasonable size if we don’t get one from Settings
+    MainWindowSize = QSize(qMin(1200, (int)(DesktopRect.width() * 0.8)),
+                           qMin(900, (int)(DesktopRect.height() * 0.8)) );
   } else {
-      MainWindowPos = Settings->m_IniSettings->
-          value("MainWindowPos",
-                  QPoint(DesktopRect.width()/20,
-                      DesktopRect.height()/20)
-               ).toPoint();
-      MainWindowSize = Settings->m_IniSettings->
-          value("MainWindowSize",
-                  QSize(DesktopRect.width()*9/10,
-                      DesktopRect.height()*9/10)
-               ).toSize();
-  }
-
-  if (RememberSettingLevel) {
-      MainWindow->MainSplitter->
-          restoreState(Settings->m_IniSettings->
-                  value("MainSplitter").toByteArray());
-      MainWindow->ControlSplitter->
-          restoreState(Settings->m_IniSettings->
-                  value("ControlSplitter").toByteArray());
-  } else {
-      // Initial value of splitter.
-      QList <int> SizesList;
-      SizesList.append(250);
-      SizesList.append(1000); // Value obtained to avoid resizing at startup.
-      MainWindow->MainSplitter->setSizes(SizesList);
+    MainWindowSize = WinSize.toSize();
   }
 
   MainWindow->resize(MainWindowSize);
   MainWindow->move(MainWindowPos);
+
+  // MainSplitter is the one between tool pane and image pane.
+  // ControlSplitter is the one between histogram and tools tabwidget.
+  QVariant splitterState = Settings->m_IniSettings->value("MainSplitter");
+  if (splitterState.isValid()) {
+    MainWindow->MainSplitter->restoreState(splitterState.toByteArray());
+  } else {
+    // 10000 width for image pane to ensure the 300 for tool pane
+    MainWindow->MainSplitter->setSizes(QList<int>() << 300 << 10000);
+  }
+
+  splitterState = Settings->m_IniSettings->value("ControlSplitter");
+  if (splitterState.isValid()) {
+    MainWindow->ControlSplitter->restoreState(splitterState.toByteArray());
+  } else {
+    MainWindow->ControlSplitter->setSizes(QList<int>() << 100 << 10000);
+  }
 
   if (Settings->m_IniSettings->value("IsMaximized",0).toBool()) {
       MainWindow->showMaximized();
   } else {
       MainWindow->show();
   }
+
+  //------------------------------------------------------------------------------
+
 
   // Update the preview image will result in displaying the splash.
   Update(ptProcessorPhase_NULL);
