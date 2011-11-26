@@ -2664,7 +2664,7 @@ void CLASS sony_arw2_load_raw()
   merror (data, "sony_arw2_load_raw()");
   for (row=0; row < m_Height; row++) {
     ptfread (data, 1, m_RawWidth, m_InputFile);
-    for (dp=data, col=0; col < m_Width-30; dp+=16) {
+    for (dp=data, col=0; col < m_RawWidth-30; dp+=16) {
       max = 0x7ff & (val = sget4(dp));
       min = 0x7ff & val >> 11;
       imax = 0x0f & val >> 22;
@@ -2679,7 +2679,7 @@ void CLASS sony_arw2_load_raw()
     bit += 7;
   }
       for (i=0; i < 16; i++, col+=2)
-  BAYER(row,col) = m_Curve[pix[i] << 1] >> 2;
+  if (col < m_Width) BAYER(row,col) = m_Curve[pix[i] << 1] >> 2;
       col -= col & 1 ? 1:31;
     }
   }
@@ -4676,6 +4676,7 @@ void CLASS parse_makernote (int base, int uptag)
    The MakerNote might have its own TIFF header (possibly with
    its own byte-order!), or it might just be a table.
  */
+  if (!strcmp(m_CameraMake,"Nokia")) return;
   ptfread (buf, 1, 10, m_InputFile);
   if (!strncmp (buf,"KDK" ,3) ||  /* these aren't TIFF tables */
       !strncmp (buf,"VER" ,3) ||
@@ -6843,13 +6844,13 @@ void CLASS identify() {
     { m_Height  = 2616;   m_Width  = 3896; }
   if (m_Height == 3136 && m_Width == 4864)  /* Pentax K20D and Samsung GX20 */
     { m_Height  = 3124;   m_Width  = 4688; m_Filters = 0x16161616; }
-  if (!strcmp(m_CameraModel,"K-r") || !strcmp(m_CameraModel,"K-x"))
+  if (m_Width == 4352 && (!strcmp(m_CameraModel,"K-r") || !strcmp(m_CameraModel,"K-x")))
     { m_Width  = 4309; m_Filters = 0x16161616; }
-  if (!strcmp(m_CameraModel,"K-5"))
+  if (m_Width == 4960 && !strcmp(m_CameraModel,"K-5"))
     { m_LeftMargin = 10; m_Width  = 4950; m_Filters = 0x16161616; }
-  if (!strcmp(m_CameraModel,"K-7"))
+  if (m_Width == 4736 && !strcmp(m_CameraModel,"K-7"))
     { m_Height  = 3122;   m_Width  = 4684; m_Filters = 0x16161616; m_TopMargin = 2; }
-  if (!strcmp(m_CameraModel,"645D"))
+  if (m_Width == 7424 && !strcmp(m_CameraModel,"645D"))
     { m_Height  = 5502;   m_Width  = 7328; m_Filters = 0x61616161; m_TopMargin = 29;
       m_LeftMargin = 48; }
   if (m_Height == 3014 && m_Width == 4096)  /* Ricoh GX200 */
@@ -7742,6 +7743,8 @@ wb550:
     adobe_coeff ("SONY","DSC-R1");
     m_Width = 3925;
     m_ByteOrder = 0x4d4d;
+  } else if (!strcmp(m_CameraMake,"SONY") && m_RawWidth == 6048) {
+    m_Width -= 24;
   } else if (!strcmp(m_CameraModel,"DSLR-A100")) {
     if (m_Width == 3880) {
       m_Height--;
