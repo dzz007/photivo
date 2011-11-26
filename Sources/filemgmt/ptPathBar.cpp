@@ -129,11 +129,14 @@ ptPathBar::pbParseResult ptPathBar::Parse(QString path) {
 #endif
 
   if (!m_IsMyComputer) {
-    // Cleanup path and ensure "/" as directory separator
-    path = QDir::cleanPath(QDir::fromNativeSeparators(path));
+    // Clean up path, ensure / separators and expand leading ~
+    path = QDir::fromNativeSeparators(path);
+    if (path == "~" || path.leftRef(2) == "~/") {
+      path = QDir::homePath() + path.mid(1);
+    }
+    path = QDir::cleanPath(path);
 
     if (QDir(BuildPath(m_TokenList.count()-1)) == QDir(path)) {
-    //if (QDir::match(BuildPath(m_TokenList.count()-1), path)) {
       return prSamePath;
     }
 
