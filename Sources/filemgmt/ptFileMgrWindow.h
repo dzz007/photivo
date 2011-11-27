@@ -82,6 +82,7 @@ protected:
 
 
 private:
+  void AdjustBookmarkMenuSize();
   void ClearScene();
   void FocusThumbnail(int index);
   void LayoutAll();
@@ -115,6 +116,7 @@ public slots:
 
 private slots:
   void bookmarkCurrentDir();
+  void bookmarkDataChanged(QStandardItem*);
   void changeListDir(const QModelIndex& index);
   void changeToBookmark(const QModelIndex& index);
   void changeToBookmarkFromMenu(const QModelIndex& index);
