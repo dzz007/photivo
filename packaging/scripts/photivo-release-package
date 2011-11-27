@@ -147,9 +147,8 @@ fi
 echo "Copying binaries ..."
 cp $BUILDDIR/photivo.exe $BUILDDIR/ptClear.exe $BINDIR
 
-photivo-update-libs $BINDIR
-if [ ! $? -eq 0 ]; then
-  Error "Updating DLLs failed!"
+if ! photivo-update-libs $BINDIR ; then
+  # Success/failure message is handled by the update libs script
   exit 1
 fi
 
