@@ -81,14 +81,16 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 
 
 #ifdef Q_OS_WIN
-  QString BookmarkTooltip = tr("Bookmark current folder");
+  QString BookmarkTooltip = tr("Bookmark current folder (Ctrl+B)");
 #else
-  QString BookmarkTooltip = tr("Bookmark current directory");
+  QString BookmarkTooltip = tr("Bookmark current directory (Ctrl+B)");
 #endif
 
   // bookmark list in sidebar
   m_TagList = new ptTagList(this);
   m_TagList->setModel(m_DataModel->tagModel());
+  connect(m_DataModel->tagModel(), SIGNAL(itemChanged(QStandardItem*)),
+          this, SLOT(bookmarkDataChanged(QStandardItem*)));
   m_TagPaneLayout->addWidget(m_TagList);
   connect(m_TagList, SIGNAL(activated(QModelIndex)), this, SLOT(changeToBookmark(QModelIndex)));
   m_AddBookmarkButton->setToolTip(BookmarkTooltip);
@@ -728,32 +730,53 @@ void ptFileMgrWindow::toggleDirThumbs() {
 void ptFileMgrWindow::bookmarkCurrentDir() {
   m_DataModel->tagModel()->appendRow(QDir::toNativeSeparators(m_DataModel->currentDir()),
                                      m_DataModel->currentDir());
+  if (m_TagMenu->isVisible()) {
+    AdjustBookmarkMenuSize();
+  }
 }
 
 //==============================================================================
 
 void ptFileMgrWindow::on_m_BookmarkButton_clicked() {
-  m_TagMenuList->setFixedSize(100, 50);
-  m_TagMenu->show();
-
-  int desiredWidth = 0;
-  if (m_TagMenuList->horizontalScrollBar()) {
-    desiredWidth = m_TagMenuList->width() + m_TagMenuList->horizontalScrollBar()->maximum();
-  }
-  int desiredHeight = 0;
-  if (m_TagMenuList->verticalScrollBar()) {
-    desiredHeight = m_TagMenuList->height() +
-                    m_TagMenuList->verticalScrollBar()->maximum() *
-                    QFontMetrics(m_TagMenuList->font()).lineSpacing();
-  }
-
-  m_TagMenuList->setFixedSize(qMax(100, desiredWidth),
-                              qBound(50, desiredHeight, m_FilesView->height()-20) );
   m_TagMenu->move(m_BookmarkButton->mapToGlobal(QPoint(0, m_BookmarkButton->height())));
   m_TagMenu->setPalette(Theme->menuPalette());
   m_TagMenu->setStyle(Theme->style());
+  m_TagMenu->show();  // must be first or adjust size won’t work correctly
+  AdjustBookmarkMenuSize();
 
   m_TagMenuList->setFocus();
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::AdjustBookmarkMenuSize() {
+  QSize MenuSize(0, 0);
+  QPoint MenuTopleft = m_BookmarkButton->mapTo(this, QPoint(0, m_BookmarkButton->height()));
+  QSize MaxSize((this->width() - MenuTopleft.x()) * 0.85,
+                (this->height() - MenuTopleft.y()) * 0.85);
+
+  QFontMetrics metrics(m_TagMenuList->font());
+  for (int i = 0; i < m_DataModel->tagModel()->rowCount(); i++) {
+    QModelIndex curIndex = m_DataModel->tagModel()->index(i, 0);
+    int width = metrics.width(curIndex.data().toString());
+    if (width > MenuSize.width()) MenuSize.setWidth(width);
+    MenuSize.setHeight(MenuSize.height() + m_TagMenuList->visualRect(curIndex).height());
+  }
+
+  m_TagMenu->setFixedSize(qBound(150,
+                                 MenuSize.width() + 20 + m_TagMenuList->verticalScrollBar()->width(),
+                                 MaxSize.width()),
+                          qBound(m_TagMenuList->y() + 50,
+                                 MenuSize.height() + m_TagMenuList->y() + 30,
+                                 MaxSize.height()) );
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::bookmarkDataChanged(QStandardItem*) {
+  if (m_TagMenu->isVisible()) {
+    AdjustBookmarkMenuSize();
+  }
 }
 
 //==============================================================================

@@ -53,7 +53,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   const ptGuiInputItem GuiInputItems[] = {
     // Attention : Default,Min,Max,Step should be consistent int or double. Double *always* in X.Y notation to indicate so.
     // Unique Name,GuiElement,InitLevel,InJobFile,HasDefault (causes button too !),Default,Min,Max,Step,NrDecimals,Label,ToolTip
-    {"FileMgrThumbnailSize"          ,ptGT_InputSlider     ,1,0,1 ,150  ,50   ,500   ,25   ,0 ,tr("Thumbnail size")     ,tr("Thumbnail size in pixel")},
+    {"FileMgrThumbnailSize"          ,ptGT_InputSlider     ,1,0,1 ,100  ,50   ,500   ,25   ,0 ,tr("Thumbnail size")     ,tr("Thumbnail size in pixel")},
     {"FileMgrThumbnailPadding"       ,ptGT_InputSlider     ,1,0,1 ,8    ,0    ,50    ,2    ,0 ,tr("Thumbnail padding")  ,tr("Thumbnail padding in pixel")},
     {"FileMgrThumbMaxRowCol"         ,ptGT_Input           ,1,0,1 ,3    ,1    ,1000  ,1    ,0 ,tr("thumbnails in a row/column"), tr("Maximum number of thumbnails that should be placed in a row or column.")},
     {"MemoryTest"                    ,ptGT_InputSlider     ,9,0,1 ,0    ,0    ,500   ,50   ,0 ,tr("MB")                 ,tr("MB to waste")},
