@@ -11,10 +11,10 @@ if [[ ($PT_BIT != 64) && ($PT_BIT != 32) ]]; then printf "Wrong PT_BIT (${PT_BIT
 Result () {
   if [[ $1 == 0 ]]; then
     printf "\e[0;32mUpdating DLLs succeeded!\e[00m\n"
-    exit 1
+    exit 0
   else
     printf "\e[1;31mUpdating DLLs failed!\e[00m\n"
-    exit 0
+    exit 1
   fi
 }
 
