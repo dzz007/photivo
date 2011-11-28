@@ -123,12 +123,6 @@ QMAKE_CXXFLAGS_DEBUG   += $${COMMON_FLAGS} $${DEBUG_SPECIFIC}
 ################################################################################
 
 HEADERS += \
-    ../Sources/clapack/blaswrap.h \
-    ../Sources/clapack/clapack.h \
-    ../Sources/clapack/f2c.h \
-    ../Sources/clapack/fio.h \
-    ../Sources/clapack/fmt.h \
-    ../Sources/clapack/fp.h \
     ../Sources/fastbilateral/array.h \
     ../Sources/fastbilateral/array_n.h \
     ../Sources/fastbilateral/chrono.h \
@@ -201,37 +195,6 @@ HEADERS += \
 
 
 SOURCES += \
-    ../Sources/clapack/abort_.c \
-    ../Sources/clapack/close.c \
-    ../Sources/clapack/dgemm.c \
-    ../Sources/clapack/dger.c \
-    ../Sources/clapack/dgesv.c \
-    ../Sources/clapack/dgetf2.c \
-    ../Sources/clapack/dgetrf.c \
-    ../Sources/clapack/dgetrs.c \
-    ../Sources/clapack/dscal.c \
-    ../Sources/clapack/dswap.c \
-    ../Sources/clapack/dtrsm.c \
-    ../Sources/clapack/endfile.c \
-    ../Sources/clapack/err.c \
-    ../Sources/clapack/fmt.c \
-    ../Sources/clapack/fmtlib.c \
-    ../Sources/clapack/idamax.c \
-    ../Sources/clapack/ieeeck.c \
-    ../Sources/clapack/ilaenv.c \
-    ../Sources/clapack/lsame.c \
-    ../Sources/clapack/open.c \
-    ../Sources/clapack/ptaswp.c \
-    ../Sources/clapack/s_cmp.c \
-    ../Sources/clapack/s_copy.c \
-    ../Sources/clapack/s_stop.c \
-    ../Sources/clapack/sfe.c \
-    ../Sources/clapack/sig_die.c \
-    ../Sources/clapack/util.c \
-    ../Sources/clapack/wref.c \
-    ../Sources/clapack/wrtfmt.c \
-    ../Sources/clapack/wsfe.c \
-    ../Sources/clapack/xerbla.c \
     ../Sources/dcb/dcb_demosaicing.c \
     ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp \
     ../Sources/filemgmt/ptFileMgrDM.cpp \
