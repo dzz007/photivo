@@ -445,12 +445,15 @@ ptImage* USM(const uint8_t ChannelMask,
              const double  Threshold);
 
 // Apply Refocus sharpening
+/* TODO: Filter needs work to make it useful. Disabled for now to remove
+  dependency on clapack.
 ptImage* Refocus(const uint8_t ChannelMask,
                  const short   MatrixSize,
                  const double  Radius,
                  const double  Gauss,
                  const double  Correlation,
                  const double  Noise);
+*/
 
 // Wavelet denoise
 ptImage* WaveletDenoise(const uint8_t  ChannelMask,

@@ -6604,7 +6604,7 @@ ptImage* ptImage::Rotate45(double Angle) {
 // (which in turn took it from http://refocus.sourceforge.net/)
 //
 ////////////////////////////////////////////////////////////////////////////////
-
+/*
 ptImage* ptImage::Refocus(const uint8_t ChannelMask,
                           const short   MatrixRadius,
                           const double  Radius,
@@ -6681,6 +6681,7 @@ ptImage* ptImage::Refocus(const uint8_t ChannelMask,
 
   return this;
 }
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //

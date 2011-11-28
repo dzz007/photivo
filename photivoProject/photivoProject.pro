@@ -183,7 +183,6 @@ HEADERS += \
     ../Sources/ptMessageBox.h \
     ../Sources/ptParseCli.h \
     ../Sources/ptProcessor.h \
-    ../Sources/ptRefocusMatrix.h \
     ../Sources/ptReportOverlay.h \
     ../Sources/ptResizeFilters.h \
     ../Sources/ptRGBTemperature.h \
@@ -284,7 +283,6 @@ SOURCES += \
     ../Sources/ptMessageBox.cpp \
     ../Sources/ptParseCli.cpp \
     ../Sources/ptProcessor.cpp \
-    ../Sources/ptRefocusMatrix.cpp \
     ../Sources/ptReportOverlay.cpp \
     ../Sources/ptResizeFilters.cpp \
     ../Sources/ptRGBTemperature.cpp \
