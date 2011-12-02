@@ -126,8 +126,9 @@ public:
   QString        m_FileName;
   updateView_ptr m_Fct;
   ptImageView*   m_ImageView;
-
+#ifndef Q_OS_MAC
 protected:
+#endif
   void run();
 };
 
