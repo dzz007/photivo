@@ -363,6 +363,9 @@ void ptImageView::updateView() {
       DelAndNull(Image);
     }
   }
+#ifdef Q_OS_MAC
+  QApplication::processEvents();
+#endif
 }
 
 //==============================================================================
@@ -376,7 +379,11 @@ void ptImageView::startWorker() {
     m_StatusOverlay->exec(QObject::tr("Loading"));
     m_NeedRun = false;
     m_Worker->m_FileName = m_FileName;
+#ifdef Q_OS_MAC
+    m_Worker->run();
+#else
     m_Worker->start();
+#endif
     if (!m_Worker->isRunning())
       ptMessageBox::critical(NULL, "Thread error", "Could not start thread for parallel image loading.");
   }
