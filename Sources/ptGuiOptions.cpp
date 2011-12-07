@@ -466,24 +466,11 @@ const ptGuiOptionsItem ptGuiOptions::EnableGreyC[] = {
   {ptEnable_ShowMask,          QObject::tr("Show mask") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::AspectRatioW[] = {
+const ptGuiOptionsItem ptGuiOptions::AspectRatio[] = {
   {21,   "21"    },
+  {18,   "18"    },
   {16,   "16"    },
-  {10,   "10"    },
-  {9,    "9"     },
-  {8,    "8"     },
-  {7,    "7"     },
-  {6,    "6"     },
-  {5,    "5"     },
-  {4,    "4"     },
-  {3,    "3"     },
-  {2,    "2"     },
-  {1,    "1"     },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::AspectRatioH[] = {
-  {21,   "21"    },
-  {16,   "16"    },
+  {13,   "13"    },
   {10,   "10"    },
   {9,    "9"     },
   {8,    "8"     },

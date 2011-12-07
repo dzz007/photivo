@@ -79,8 +79,7 @@ public:
   static const ptGuiOptionsItem Interpolation[];
   static const ptGuiOptionsItem BayerDenoise[];
   static const ptGuiOptionsItem ClipMode[];
-  static const ptGuiOptionsItem AspectRatioW[];
-  static const ptGuiOptionsItem AspectRatioH[];
+  static const ptGuiOptionsItem AspectRatio[];
   static const ptGuiOptionsItem ExposureClipMode[];
   static const ptGuiOptionsItem AutoExposureMode[];
   static const ptGuiOptionsItem LMHLightRecoveryMaskType[];
