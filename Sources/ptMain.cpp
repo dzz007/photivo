@@ -3255,11 +3255,8 @@ void CB_MenuFileOpen(const short HaveFile) {
   TheProcessor->m_DcRaw = TheDcRaw;
 
   Settings->SetValue("HaveImage", 1);
-  if(Settings->GetInt("CameraColor")==ptCameraColor_Adobe_Matrix)
-    Settings->SetValue("CameraColor",ptCameraColor_Adobe_Profile);
   short OldRunMode = Settings->GetInt("RunMode");
   Settings->SetValue("RunMode",0);
-
 
   if (Settings->GetInt("AutomaticPipeSize") && Settings->ToolIsActive("TabResize")) {
     CalculatePipeSize(true);
