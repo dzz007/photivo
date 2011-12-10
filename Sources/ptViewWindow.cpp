@@ -30,11 +30,11 @@
 
 #include <cassert>
 
+#include "ptDefines.h"
 #include "ptSettings.h"
 #include "ptTheme.h"
 #include "ptViewWindow.h"
 #include "ptConstants.h"
-#include "ptDefines.h"
 
 extern ptTheme* Theme;
 extern ptSettings* Settings;
@@ -738,8 +738,10 @@ void ptViewWindow::ConstructContextMenu() {
   ac_ShowTools->setChecked(Settings->GetInt("ShowToolContainer"));
   connect(ac_ShowTools, SIGNAL(triggered()), this, SLOT(Menu_ShowTools()));
 
+#ifndef PT_WITHOUT_FILEMGR
   ac_OpenFileMgr = new QAction(tr("Open file m&anager") + "\t" + tr("Ctrl+M"), this);
   connect(ac_OpenFileMgr, SIGNAL(triggered()), this, SLOT(Menu_OpenFileMgr()));
+#endif
 
   ac_Fullscreen = new QAction(tr("Full&screen") + "\t" + tr("F11"), this);
   ac_Fullscreen->setCheckable(true);
@@ -800,7 +802,9 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   }
   Menu.addAction(ac_ShowTools);
   Menu.addAction(ac_ShowZoomBar);
+#ifndef PT_WITHOUT_FILEMGR
   Menu.addAction(ac_OpenFileMgr);
+#endif
   Menu.addSeparator();
   Menu.addAction(ac_Fullscreen);
 

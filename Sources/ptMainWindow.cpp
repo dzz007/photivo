@@ -24,10 +24,10 @@
 #include <iomanip>
 #include <iostream>
 
+#include "ptDefines.h"
 #include "ptChannelMixer.h"
 #include "ptConfirmRequest.h"
 #include "ptConstants.h"
-#include "ptDefines.h"
 #include "ptError.h"
 #include "ptGuiOptions.h"
 //#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
@@ -679,11 +679,16 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   // Show the file manager if no image loaded at startup, the image editor otherwise.
   // Do this last in the constructor because it triggers thumbnail reading.
+#ifndef PT_WITHOUT_FILEMGR
   if (ImageFileToOpen == "") {
     OpenFileMgrWindow();
   } else {
     MainStack->setCurrentWidget(ProcessingPage);
   }
+#else
+  MainStack->setCurrentWidget(ProcessingPage);
+  findChild<ptGroupBox *>(QString("TabFileMgrSettings"))->setVisible(0);
+#endif
 }
 
 void CB_Event0();
@@ -953,13 +958,17 @@ short ptMainWindow::GetCurrentTab() {
 // Show/hide file manager window
 
 void ptMainWindow::OpenFileMgrWindow() {
+#ifndef PT_WITHOUT_FILEMGR
   MainStack->setCurrentWidget(FileManagerPage);
   Settings->SetValue("FileMgrIsOpen", 1);
+#endif
 }
 
 void ptMainWindow::CloseFileMgrWindow() {
+#ifndef PT_WITHOUT_FILEMGR
   MainStack->setCurrentWidget(ProcessingPage);
   Settings->SetValue("FileMgrIsOpen", 0);
+#endif
 }
 
 //==============================================================================

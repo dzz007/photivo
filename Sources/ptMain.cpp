@@ -31,6 +31,7 @@
 #include <string>
 #include <csignal>
 
+#include "ptDefines.h"
 #include "ptCalloc.h"
 #include "ptConfirmRequest.h"
 #include "ptConstants.h"
@@ -840,12 +841,13 @@ int photivoMain(int Argc, char *Argv[]) {
   HistogramWindow =
       new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
 
+#ifndef PT_WITHOUT_FILEMGR
   FileMgrWindow = new ptFileMgrWindow(MainWindow->FileManagerPage);
   MainWindow->FileManagerLayout->addWidget(FileMgrWindow);
   QObject::connect(FileMgrWindow, SIGNAL(FileMgrWindowClosed()),
                    MainWindow, SLOT(CloseFileMgrWindow()));
   QObject::connect(ViewWindow, SIGNAL(openFileMgr()), MainWindow, SLOT(OpenFileMgrWindow()));
-
+#endif
 
   // Populate Translations combobox
   MainWindow->PopulateTranslationsCombobox(UiLanguages, LangIdx);
@@ -1067,10 +1069,12 @@ void CB_Event0() {
     Settings->SetValue("FavouriteTools", Temp);
   }
 
+#ifndef PT_WITHOUT_FILEMGR
   if (Settings->GetInt("FileMgrIsOpen")) {
     FileMgrWindow->DisplayThumbnails();
     FileMgrWindow->setFocus(Qt::OtherFocusReason);
   }
+#endif
 
 //prepare for further QFileOpenEvent(s)
 #ifdef Q_OS_MAC
@@ -3450,8 +3454,10 @@ void CB_MenuFileExit(const short) {
 
   printf("Saving settings ...\n");
 
+#ifndef PT_WITHOUT_FILEMGR
   // this also writes settings.
   delete FileMgrWindow;
+#endif
 
   // Store the position of the splitter and main window
   Settings->m_IniSettings->
@@ -3675,7 +3681,9 @@ void CB_ZoomStep(int direction) {
 
 
 void CB_FileMgrButton() {
+#ifndef PT_WITHOUT_FILEMGR
   MainWindow->OpenFileMgrWindow();
+#endif
 }
 
 void CB_FullScreenButton(const int State) {
@@ -3896,7 +3904,9 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
   CB_SliderWidthInput(Settings->GetInt("SliderWidth"));
+#ifndef PT_WITHOUT_FILEMGR
   FileMgrWindow->UpdateTheme();
+#endif
 }
 
 void CB_StyleHighLightChoice(const QVariant Choice) {
