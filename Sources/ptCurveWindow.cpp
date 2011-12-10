@@ -572,7 +572,7 @@ void ptCurveWindow::CalculateCurve() {
 
   // Colors from the palette should give more consistent results.
   QColor FGColor = QColor(200,200,200);//palette().color(QPalette::WindowText);
-  QColor BGColor = QColor(0,0,0);//palette().color(QPalette::Window);
+//  QColor BGColor = QColor(0,0,0);//palette().color(QPalette::Window);
   QColor MColor  = QColor(53,53,53);//palette().color(QPalette::Mid);
 
   // Gradient for saturation curve
