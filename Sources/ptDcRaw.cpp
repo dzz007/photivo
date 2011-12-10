@@ -6846,7 +6846,7 @@ void CLASS identify() {
     { m_Height  = 3124;   m_Width  = 4688; m_Filters = 0x16161616; }
   if (m_Width == 4352 && (!strcmp(m_CameraModel,"K-r") || !strcmp(m_CameraModel,"K-x")))
     { m_Width  = 4309; m_Filters = 0x16161616; }
-  if (m_Width == 4960 && !strcmp(m_CameraModel,"K-5"))
+  if (m_Width >= 4960 && !strcmp(m_CameraModel,"K-5"))
     { m_LeftMargin = 10; m_Width  = 4950; m_Filters = 0x16161616; }
   if (m_Width == 4736 && !strcmp(m_CameraModel,"K-7"))
     { m_Height  = 3122;   m_Width  = 4684; m_Filters = 0x16161616; m_TopMargin = 2; }
