@@ -252,6 +252,8 @@ ptImageType CheckImageType(QString filename,
 void   RunJob(const QString FileName);
 short  ReadJobFile(const QString FileName);
 short  ReadSettingsFile(const QString FileName, short& NextPhase);
+void   Settings_2_Form();
+void   Form_2_Settings();
 void   WriteOut();
 void   UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
                           const short    OnlyHistogram = 0);
@@ -1029,6 +1031,7 @@ void CB_Event0() {
   InitCurves();
   InitChannelMixers();
   PreCalcTransforms();
+  Settings_2_Form();
 
   if (Settings->GetInt("JobMode") == 0) { // not job mode!
     // Load user settings
@@ -2377,6 +2380,14 @@ void PrepareTags(const QString TagsInput) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void StringClean(QString& AString) {
+  while (AString.contains("  "))
+    AString.replace("  "," ");
+
+  AString = AString.trimmed();
+}
+
+
 void WriteExif(const QString FileName, uint8_t* ExifBuffer, const unsigned ExifBufferLength) {
 
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
@@ -2514,18 +2525,26 @@ void WriteExif(const QString FileName, uint8_t* ExifBuffer, const unsigned ExifB
       xmpData["Xmp.xmp.CreatorTool"] = ProgramName;
       xmpData["Xmp.tiff.Software"] = ProgramName;
 
+      Form_2_Settings();
+
       // Title
-      if (Settings->GetInt("JobMode") == 0)
-        Settings->SetValue("ImageTitle",MainWindow->TitleEditWidget->text());
       QString TitleWorking = Settings->GetString("ImageTitle");
-      while (TitleWorking.contains("  "))
-        TitleWorking.replace("  "," ");
-      if (TitleWorking != "" && TitleWorking != " ") {
+      StringClean(TitleWorking);
+      if (TitleWorking != "") {
         outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
         iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
         xmpData["Xmp.dc.description"] = TitleWorking.toStdString();
         xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
         xmpData["Xmp.tiff.ImageDescription"] = TitleWorking.toStdString();
+      }
+
+      // Copyright
+      QString CopyrightWorking = Settings->GetString("Copyright");
+      StringClean(CopyrightWorking);
+      if (CopyrightWorking != "") {
+        outExifData["Exif.Image.Copyright"] = CopyrightWorking.toStdString();
+        iptcData["Iptc.Application2.Copyright"] = CopyrightWorking.toStdString();
+        xmpData["Xmp.tiff.Copyright"] = CopyrightWorking.toStdString();
       }
 
       Exiv2Image->setExifData(outExifData);
@@ -2541,6 +2560,26 @@ void WriteExif(const QString FileName, uint8_t* ExifBuffer, const unsigned ExifB
     }
   }
 #endif
+}
+
+//==============================================================================
+// Display strings from settings
+void Settings_2_Form() {
+  if (MainWindow == NULL) return;
+
+  // Metadata
+  MainWindow->edtImageTitle->setText(Settings->GetString("ImageTitle"));
+  MainWindow->edtCopyright->setText( Settings->GetString("Copyright"));
+}
+
+//==============================================================================
+// Read settings from Form
+void Form_2_Settings() {
+  if (MainWindow == NULL) return;
+
+  //Metadata
+  Settings->SetValue("ImageTitle", MainWindow->edtImageTitle->text().trimmed());
+  Settings->SetValue("Copyright",  MainWindow->edtCopyright->text().trimmed());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2998,6 +3037,8 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   // Color space transformations precalc
   if (NeedRecalcTransforms == 1) PreCalcTransforms();
 
+  Settings_2_Form();
+
   // clean up non-existing files in settings file
   // currently, we completely preserve the settings file
   /*
@@ -3451,6 +3492,8 @@ void CB_MenuFileExit(const short) {
     if (Settings->GetInt(CurveKeys.at(i))==ptCurveChoice_Manual)
       Settings->SetValue(CurveKeys.at(i),ptCurveChoice_None);
   }
+
+  Form_2_Settings();
 
   printf("Saving settings ...\n");
 

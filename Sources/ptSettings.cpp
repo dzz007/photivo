@@ -712,6 +712,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"DigikamTagsList"                      ,9    ,QStringList()                         ,1},
     {"TagsList"                             ,9    ,QStringList()                         ,1},
     {"ImageTitle"                           ,9    ,""                                    ,1},
+    {"Copyright"                            ,1    ,""                                    ,1},
     {"BackgroundRed"                        ,1    ,0                                     ,0},
     {"BackgroundGreen"                      ,1    ,0                                     ,0},
     {"BackgroundBlue"                       ,1    ,0                                     ,0},
