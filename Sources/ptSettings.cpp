@@ -395,6 +395,15 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TextureOverlayCenterX"         ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center X")           ,tr("Center X")},
     {"TextureOverlayCenterY"         ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center Y")           ,tr("Center Y")},
     {"TextureOverlaySoftness"        ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0 ,1.0   ,0.1  ,2 ,tr("Softness")           ,tr("Softness")},
+    {"TextureOverlay2Opacity"        ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity")},
+    {"TextureOverlay2Saturation"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.1  ,2 ,tr("Saturation")         ,tr("Saturation")},
+    {"TextureOverlay2Exponent"       ,ptGT_Input           ,2,1,1 ,2    ,1    ,6     ,1    ,0 ,tr("Shape")              ,tr("Shape of the mask")},
+    {"TextureOverlay2InnerRadius"    ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2 ,tr("Inner Radius")       ,tr("Inner Radius")},
+    {"TextureOverlay2OuterRadius"    ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2 ,tr("Outer Radius")       ,tr("Outer Radius")},
+    {"TextureOverlay2Roundness"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Roundness")          ,tr("Roundness")},
+    {"TextureOverlay2CenterX"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center X")           ,tr("Center X")},
+    {"TextureOverlay2CenterY"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center Y")           ,tr("Center Y")},
+    {"TextureOverlay2Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0 ,1.0   ,0.1  ,2 ,tr("Softness")           ,tr("Softness")},
     {"GradualOverlay1Amount"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount")},
     {"GradualOverlay1Angle"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-180.0,180.0  ,5.0  ,0 ,tr("Angle")            ,tr("Angle")},
     {"GradualOverlay1LowerLevel"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,3.0   ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
@@ -554,6 +563,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CrossprocessingMode"         ,ptGT_Choice       ,2,1,1 ,ptCrossprocessMode_None     ,GuiOptions->CrossprocessMode          ,tr("Colors for cross processing")},
     {"TextureOverlayMode"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
     {"TextureOverlayMask"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
+    {"TextureOverlay2Mode"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
+    {"TextureOverlay2Mask"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
     {"GradualOverlay1"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"GradualOverlay2"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"VignetteMode"                ,ptGT_Choice       ,2,1,1 ,ptVignetteMode_None         ,GuiOptions->VignetteMode              ,tr("Mode for Vignette")},
@@ -709,6 +720,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradualOverlay2ColorGreen"            ,2    ,200                                   ,1},
     {"GradualOverlay2ColorBlue"             ,2    ,0                                     ,1},
     {"TextureOverlayFile"                   ,2    ,""                                    ,1},
+    {"TextureOverlay2File"                  ,2    ,""                                    ,1},
     {"DigikamTagsList"                      ,9    ,QStringList()                         ,1},
     {"TagsList"                             ,9    ,QStringList()                         ,1},
     {"ImageTitle"                           ,9    ,""                                    ,1},
@@ -1980,6 +1992,10 @@ sToolInfo ToolInfo (const QString GuiName) {
     Info.Name = "Texture Overlay";
     Info.IsActive = (Settings->GetInt("TextureOverlayMode") &&
                      Settings->GetDouble("TextureOverlayOpacity")!=0.0)!=0?1:0;
+  } else if (GuiName == "TabTextureOverlay2") {
+    Info.Name = "Texture Overlay 2";
+    Info.IsActive = (Settings->GetInt("TextureOverlay2Mode") &&
+                     Settings->GetDouble("TextureOverlay2Opacity")!=0.0)!=0?1:0;
   } else if (GuiName == "TabGradualOverlay1") {
       Info.Name = "Gradual Overlay 1";
       Info.IsActive = (Settings->GetInt("GradualOverlay1") &&

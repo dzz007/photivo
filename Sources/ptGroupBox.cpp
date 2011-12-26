@@ -349,6 +349,8 @@ void ptGroupBox::WriteSettings(const short Append) {
   // Additional for texture overlay
   if (m_Name == "TabTextureOverlay")
     Keys << "TextureOverlayFile";
+  if (m_Name == "TabTextureOverlay2")
+    Keys << "TextureOverlay2File";
 
   QString SuggestedFileName = Settings->GetString("PresetDirectory") + "/preset.pts";
   QString FileName;

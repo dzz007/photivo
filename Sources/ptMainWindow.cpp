@@ -438,6 +438,8 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   Macro_ConnectSomeButton(TextureOverlay);
   Macro_ConnectSomeButton(TextureOverlayClear);
+  Macro_ConnectSomeButton(TextureOverlay2);
+  Macro_ConnectSomeButton(TextureOverlay2Clear);
 
   Macro_ConnectSomeButton(GradualOverlay1Color);
   Macro_ConnectSomeButton(GradualOverlay2Color);
@@ -1598,6 +1600,16 @@ void ptMainWindow::OnTextureOverlayClearButtonClicked() {
   ::CB_TextureOverlayClearButton();
 }
 
+void CB_TextureOverlay2Button();
+void ptMainWindow::OnTextureOverlay2ButtonClicked() {
+  ::CB_TextureOverlay2Button();
+}
+
+void CB_TextureOverlay2ClearButton();
+void ptMainWindow::OnTextureOverlay2ClearButtonClicked() {
+  ::CB_TextureOverlay2ClearButton();
+}
+
 
 void CB_GradualOverlay1ColorButton();
 void ptMainWindow::OnGradualOverlay1ColorButtonClicked() {
@@ -2372,6 +2384,26 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("TextureOverlayCenterX",0);
     Settings->SetEnabled("TextureOverlayCenterY",0);
     Settings->SetEnabled("TextureOverlaySoftness",0);
+  }
+  PathInfo.setFile(Settings->GetString("TextureOverlay2File"));
+  ShortFileName = PathInfo.baseName();
+  TextureOverlay2Text->setText(ShortFileName);
+  if (Settings->GetInt("TextureOverlay2Mask") > 0) {
+    Settings->SetEnabled("TextureOverlay2Exponent",1);
+    Settings->SetEnabled("TextureOverlay2InnerRadius",1);
+    Settings->SetEnabled("TextureOverlay2OuterRadius",1);
+    Settings->SetEnabled("TextureOverlay2Roundness",1);
+    Settings->SetEnabled("TextureOverlay2CenterX",1);
+    Settings->SetEnabled("TextureOverlay2CenterY",1);
+    Settings->SetEnabled("TextureOverlay2Softness",1);
+  } else {
+    Settings->SetEnabled("TextureOverlay2Exponent",0);
+    Settings->SetEnabled("TextureOverlay2InnerRadius",0);
+    Settings->SetEnabled("TextureOverlay2OuterRadius",0);
+    Settings->SetEnabled("TextureOverlay2Roundness",0);
+    Settings->SetEnabled("TextureOverlay2CenterX",0);
+    Settings->SetEnabled("TextureOverlay2CenterY",0);
+    Settings->SetEnabled("TextureOverlay2Softness",0);
   }
 
   // Color buttons

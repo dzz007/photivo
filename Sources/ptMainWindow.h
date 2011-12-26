@@ -308,6 +308,8 @@ private slots:
 
   void OnTextureOverlayButtonClicked();
   void OnTextureOverlayClearButtonClicked();
+  void OnTextureOverlay2ButtonClicked();
+  void OnTextureOverlay2ClearButtonClicked();
 
   void OnGradualOverlay1ColorButtonClicked();
   void OnGradualOverlay2ColorButtonClicked();

@@ -2822,7 +2822,8 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
       << "CameraColorProfile"
       << "PreviewColorProfile"
       << "OutputColorProfile"
-      << "TextureOverlayFile";
+      << "TextureOverlayFile"
+      << "TextureOverlay2File";
 
   QStringList Locations;
   Locations << CurveFileNamesKeys
@@ -8046,6 +8047,80 @@ void CB_TextureOverlayOuterRadiusInput(const QVariant Value) {
   }
 }
 
+// Texture Overlay 2
+
+void CB_TextureOverlay2MaskChoice(const QVariant Choice) {
+  Settings->SetValue("TextureOverlay2Mask",Choice);
+  if (Settings->ToolIsActive("TabTextureOverlay2")) {
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlay2Button() {
+  QString Directory = "";
+  if (Settings->GetString("TextureOverlay2File")!="") {
+    QFileInfo PathInfo(Settings->GetString("TextureOverlay2File"));
+    Directory = PathInfo.absolutePath();
+  } else {
+    Directory = Settings->GetString("UserDirectory");
+  }
+
+  QString TextureOverlay2String = QFileDialog::getOpenFileName(NULL,
+    QObject::tr("Get texture bitmap file"),
+    Directory,
+    BitmapPattern);
+
+  if (0 == TextureOverlay2String.size() ) {
+    // Canceled just return
+    return;
+  } else {
+    QFileInfo PathInfo(TextureOverlay2String);
+    Settings->SetValue("TextureOverlay2File",PathInfo.absoluteFilePath());
+  }
+
+  // Reflect in gui.
+  if (Settings->ToolIsActive("TabTextureOverlay2")) {
+    // free old one
+    if (TheProcessor->m_Image_TextureOverlay2) {
+      delete TheProcessor->m_Image_TextureOverlay2;
+      TheProcessor->m_Image_TextureOverlay2 = NULL;
+    }
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlay2ClearButton() {
+  if (TheProcessor->m_Image_TextureOverlay2) {
+    delete TheProcessor->m_Image_TextureOverlay2;
+    TheProcessor->m_Image_TextureOverlay2 = NULL;
+  }
+  Settings->SetValue("TextureOverlay2File","");
+  if (Settings->ToolIsActive("TabTextureOverlay2")) {
+    Settings->SetValue("TextureOverlay2Mode",0);
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlay2InnerRadiusInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlay2InnerRadius",MIN(Value.toDouble(), Settings->GetDouble("TextureOverlay2OuterRadius")));
+  if (Settings->ToolIsActive("TabTextureOverlay2")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlay2OuterRadiusInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlay2OuterRadius",MAX(Value.toDouble(), Settings->GetDouble("TextureOverlay2InnerRadius")));
+  if (Settings->ToolIsActive("TabTextureOverlay2")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the EyeCandy Tab
@@ -8880,6 +8955,17 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(TextureOverlayCenterXInput)
   M_SetAndRunDispatch(TextureOverlayCenterYInput)
   M_SetAndRunDispatch(TextureOverlaySoftnessInput)
+  M_SetAndRunDispatch(TextureOverlay2ModeChoice)
+  M_Dispatch(TextureOverlay2MaskChoice)
+  M_SetAndRunDispatch(TextureOverlay2OpacityInput)
+  M_SetAndRunDispatch(TextureOverlay2SaturationInput)
+  M_SetAndRunDispatch(TextureOverlay2ExponentInput)
+  M_Dispatch(TextureOverlay2InnerRadiusInput)
+  M_Dispatch(TextureOverlay2OuterRadiusInput)
+  M_SetAndRunDispatch(TextureOverlay2RoundnessInput)
+  M_SetAndRunDispatch(TextureOverlay2CenterXInput)
+  M_SetAndRunDispatch(TextureOverlay2CenterYInput)
+  M_SetAndRunDispatch(TextureOverlay2SoftnessInput)
 
   M_SetAndRunDispatch(GradualOverlay1Choice)
   M_SetAndRunDispatch(GradualOverlay1AmountInput)
