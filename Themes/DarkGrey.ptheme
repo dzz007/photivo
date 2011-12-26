@@ -1,0 +1,71 @@
+/*******************************************************************************
+**
+** Photivo
+**
+** Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2010-2011 Bernd Schoeler <brjohn@brother-john.net>
+**
+** This file is part of Photivo.
+**
+** Photivo is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License version 3
+** as published by the Free Software Foundation.
+**
+** Photivo is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
+**
+******************************************************************************
+
+Photivo’s theme parser is not error tolerant! It will break quickly if you
+don’t stick to the rules.
+- Except comments a .ptheme file consists of an @Variables section followed by an
+  @import command. Both are mandatory.
+- Multiple @Variables or @import are not allowed.
+- Comments are only allowed at the start of the file before the @Variables section.
+  Do not use comments anywhere else!
+- Comments must be the slash-star type.
+- Everything is case sensitive.
+- Theme and qss files are assumed to be UTF-8 encoded.
+- Always use the forward slash “/” as path delimiter.
+- .ptheme files must reside in <PhotivoProgramFolder>/Themes
+
+The @Variables section defines global color values and paths to graphical elements. 
+Access them anywhere in the QSS as $VariableName$.
+- Always define ALL the colors.
+- You MUST use #rrggbb notation compatible with QColor::name()
+- For graphics, paths can be Qt resource paths or real file paths. File paths may be 
+  absolute or relative to the .qss file’s location.
+
+The @import specifies the theme’s QSS files.
+- Only give the file name without the extension, i.e. for “Photivo.qss” write “Photivo”.
+- The file name may include a path. Paths may be absolute or relative to the
+  .ptheme file’s location.
+- The file extension for all QSS files must be .qss (lower case).
+- Avoid additional @import rules in the QSS files themselves. You cannot use the variables
+  from the @Variables section in additionally imported files.
+- Platform specific settings are supported in additional QSS files. For example
+  “Photivo.qss” may be accompanied by “Photivo.windows.qss”, “Photivo.linux.qss” and
+  “Photivo.mac.qss”. If present the parser appends additional files to the end of the
+  main style file depending on the platform Photivo was compiled for.
+*/
+@Variables {
+  AltBase             : #1E1E1E;
+  Base                : #333333;
+  Emphasized          : #737373;
+  Gradient            : #464646;
+  SliderStart         : #5A5A5A;
+  SliderStartDisabled : #464646;
+  SliderStop          : #505050;
+  SliderStopDisabled  : #3C3C3C;
+  SliderStripe        : ":/patterns/slider-stripe-grey.png";
+  SliderStripeDisabled: ":/patterns/slider-stripe-darkgrey.png";
+  Strong              : #B4B4B4;
+  Text                : #F0F0F0;
+  TextDisabled        : #888888;
+}
+@import "Photivo";

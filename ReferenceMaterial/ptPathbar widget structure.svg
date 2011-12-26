@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:cc="http://creativecommons.org/ns#"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:svg="http://www.w3.org/2000/svg"
+ xmlns="http://www.w3.org/2000/svg"
+ xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+ xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+ width="744.09448819"
+ height="1052.3622047"
+ id="svg2"
+ version="1.1"
+ inkscape:version="0.48.0 r9654"
+ sodipodi:docname="ptPathbar widget structure.svg">
+<defs
+ id="defs4" />
+<sodipodi:namedview
+ id="base"
+ pagecolor="#ffffff"
+ bordercolor="#666666"
+ borderopacity="1.0"
+ inkscape:pageopacity="0.0"
+ inkscape:pageshadow="2"
+ inkscape:zoom="1.18125"
+ inkscape:cx="439.01507"
+ inkscape:cy="679.22398"
+ inkscape:document-units="px"
+ inkscape:current-layer="layer1"
+ showgrid="false"
+ inkscape:window-width="1920"
+ inkscape:window-height="1148"
+ inkscape:window-x="-8"
+ inkscape:window-y="22"
+ inkscape:window-maximized="1" />
+<metadata
+ id="metadata7">
+<rdf:RDF>
+<cc:Work
+ rdf:about="">
+<dc:format>image/svg+xml</dc:format>
+<dc:type
+ rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+<dc:title />
+</cc:Work>
+</rdf:RDF>
+</metadata>
+<g
+ inkscape:label="Layer 1"
+ inkscape:groupmode="layer"
+ id="layer1">
+<rect
+ style="fill:#fbffb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.99999988;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ id="rect3022"
+ width="726.34924"
+ height="190.4762"
+ x="9.5449734"
+ y="92.679657"
+ rx="7.5000005"
+ ry="7.5" />
+<rect
+ style="fill:#bebebe;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.99999988;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ id="rect2985"
+ width="713.5097"
+ height="155.20282"
+ x="16.317461"
+ y="116.78546"
+ rx="7.5000005"
+ ry="7.5" />
+<g
+ id="g3769"
+ transform="translate(-4,104)">
+<rect
+ ry="7.5"
+ rx="7.5000005"
+ y="34.796043"
+ x="25.961199"
+ height="127.5485"
+ width="55.30864"
+ id="rect3757"
+ style="fill:#626262;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+<path
+ transform="matrix(0.34525867,0,0,0.21878446,43.290152,77.922388)"
+ inkscape:transform-center-y="-0.75248654"
+ inkscape:transform-center-x="0.53475603"
+ d="m 75.37391,127.19529 c -0.649427,0.37426 -85.671075,-48.802224 -85.670485,-49.551778 5.9e-4,-0.749553 85.099501,-49.792216 85.748339,-49.416928 0.648837,0.375287 0.571573,98.594436 -0.07785,98.968706 z"
+ inkscape:randomized="0"
+ inkscape:rounded="0.0075736391"
+ inkscape:flatsided="true"
+ sodipodi:arg2="2.0951817"
+ sodipodi:arg1="1.0479842"
+ sodipodi:r2="17.275742"
+ sodipodi:r1="57.139626"
+ sodipodi:cy="77.688461"
+ sodipodi:cx="46.843033"
+ sodipodi:sides="3"
+ id="path3767"
+ style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:7.27695131;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ sodipodi:type="star" />
+</g>
+<g
+ transform="matrix(-1,0,0,-1,751.18166,301.70496)"
+ id="g3769-2">
+<rect
+ ry="7.5"
+ rx="7.5000005"
+ y="34.796043"
+ x="25.961199"
+ height="127.5485"
+ width="55.30864"
+ id="rect3757-7"
+ style="fill:#626262;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+<path
+ transform="matrix(0.34525867,0,0,0.21878446,43.290152,77.922388)"
+ inkscape:transform-center-y="-0.75248654"
+ inkscape:transform-center-x="0.53475603"
+ d="m 75.37391,127.19529 c -0.649427,0.37426 -85.671075,-48.802224 -85.670485,-49.551778 5.9e-4,-0.749553 85.099501,-49.792216 85.748339,-49.416928 0.648837,0.375287 0.571573,98.594436 -0.07785,98.968706 z"
+ inkscape:randomized="0"
+ inkscape:rounded="0.0075736391"
+ inkscape:flatsided="true"
+ sodipodi:arg2="2.0951817"
+ sodipodi:arg1="1.0479842"
+ sodipodi:r2="17.275742"
+ sodipodi:r1="57.139626"
+ sodipodi:cy="77.688461"
+ sodipodi:cx="46.843033"
+ sodipodi:sides="3"
+ id="path3767-2"
+ style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:7.27695131;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ sodipodi:type="star" />
+</g>
+<rect
+ style="fill:#d8b69e;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ id="rect3797"
+ width="576.22577"
+ height="121.34039"
+ x="86.29982"
+ y="142.18228"
+ rx="7.5000005"
+ ry="7.5" />
+<rect
+ style="fill:#9ed89f;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ id="rect3799"
+ width="312.38095"
+ height="103.28043"
+ x="95.329803"
+ y="150.08353"
+ rx="7.5000005"
+ ry="7.5" />
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="511.45514"
+ y="158.54913"
+ id="text3801"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ x="511.45514"
+ y="158.54913"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+ id="tspan3857">QWidget* m_InnerContainer</tspan></text>
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="653.04639"
+ y="131.25696"
+ id="text3801-1"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ id="tspan3803-7"
+ x="653.04639"
+ y="131.25696"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">QWidget* m_PrettyDisplay</tspan></text>
+<rect
+ style="fill:#9ea2d8;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.99999988;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ id="rect3834"
+ width="152.66315"
+ height="84.938271"
+ x="107.18166"
+ y="158.83133"
+ rx="7.5000005"
+ ry="7.4999995" />
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="294.71021"
+ y="165.68375"
+ id="text3801-1-6"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ x="294.71021"
+ y="165.68375"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+ id="tspan3859">QWidget* m_Tokens</tspan></text>
+<rect
+ style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ id="rect3861"
+ width="63.77425"
+ height="55.873016"
+ x="117.90476"
+ y="178.65848"
+ rx="7.5000005"
+ ry="7.5" />
+<rect
+ style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ id="rect3861-7"
+ width="63.77425"
+ height="55.873016"
+ x="183.65433"
+ y="179.50504"
+ rx="7.5000005"
+ ry="7.5" />
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="651.67065"
+ y="311.79663"
+ id="text3801-1-3"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ id="tspan3803-7-0"
+ x="651.67065"
+ y="311.79663"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">QToolButton* m_GoRightButton</tspan></text>
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="4.0530853"
+ y="301.13348"
+ id="text3801-1-3-6"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ id="tspan3803-7-0-0"
+ x="4.0530853"
+ y="301.13348"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">QToolButton*</tspan><tspan
+ sodipodi:role="line"
+ x="4.0530853"
+ y="313.63348"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+ id="tspan4034">m_GoLeftButton</tspan></text>
+<path
+ style="fill:none;stroke:#000000;stroke-width:0.99999988px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+ d="m 679.45682,301.33572 26.52559,-46.56085"
+ id="path3832-2"
+ inkscape:connector-curvature="0" />
+<path
+ style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+ d="M 42.278659,290.33043 54.130517,254.77488"
+ id="path3832-5"
+ inkscape:connector-curvature="0" />
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="199.5506"
+ y="173.33498"
+ id="text3801-1-6-6"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ x="199.5506"
+ y="173.33498"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+ id="tspan3859-7">pbToken*</tspan></text>
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="223.85863"
+ y="323.2832"
+ id="text3801-1-6-6-0"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ x="223.85863"
+ y="323.2832"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+ id="tspan3859-7-9">pbButton* #PBDirSeparator</tspan></text>
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="94.474365"
+ y="306.91638"
+ id="text3801-1-6-6-0-5"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ x="94.474365"
+ y="306.91638"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+ id="tspan3859-7-9-4">pbButton* #PBDirCaption</tspan></text>
+<path
+ style="fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+ d="M 170.2381,290.8948 146.27688,218.65495"
+ id="path3832-5-3"
+ inkscape:connector-curvature="0" />
+<path
+ style="fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+ d="M 285.93477,311.49445 230.93299,226.274"
+ id="path3832-5-3-2"
+ inkscape:connector-curvature="0" />
+<path
+ transform="matrix(-0.11489751,0,0,-0.21878446,218.51559,223.87912)"
+ inkscape:transform-center-y="-0.75248654"
+ inkscape:transform-center-x="0.17796411"
+ d="m 75.37391,127.19529 c -0.649427,0.37426 -85.671075,-48.802224 -85.670485,-49.551778 5.9e-4,-0.749553 85.099501,-49.792216 85.748339,-49.416928 0.648837,0.375287 0.571573,98.594436 -0.07785,98.968706 z"
+ inkscape:randomized="0"
+ inkscape:rounded="0.0075736391"
+ inkscape:flatsided="true"
+ sodipodi:arg2="2.0951817"
+ sodipodi:arg1="1.0479842"
+ sodipodi:r2="17.275742"
+ sodipodi:r1="57.139626"
+ sodipodi:cy="77.688461"
+ sodipodi:cx="46.843033"
+ sodipodi:sides="3"
+ id="path3767-2-5"
+ style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:12.6143961;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ sodipodi:type="star" />
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="125.11247"
+ y="208.50723"
+ id="text3801-1-6-6-0-5-6"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ x="125.11247"
+ y="208.50723"
+ style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;fill:#000000;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+ id="tspan3859-7-9-4-0">folder name</tspan></text>
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="657.87872"
+ y="107.53122"
+ id="text3801-1-1"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ id="tspan3803-7-11"
+ x="657.87872"
+ y="107.53122"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">ptPathBar: public QWidget</tspan></text>
+<rect
+ style="fill:#fbffb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.99999988;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ id="rect3022-3"
+ width="726.34924"
+ height="190.4762"
+ x="11.005275"
+ y="420.49973"
+ rx="7.5000005"
+ ry="7.5" />
+<rect
+ style="fill:#bebebe;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.99999988;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+ id="rect2985-0"
+ width="713.5097"
+ height="155.20282"
+ x="17.777765"
+ y="444.6055"
+ rx="7.5000005"
+ ry="7.5" />
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="720.659"
+ y="459.07706"
+ id="text3801-1-7"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ id="tspan3803-7-04"
+ x="720.659"
+ y="459.07706"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;text-anchor:end;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">QLineEdit* m_Editor</tspan></text>
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="659.33899"
+ y="435.35135"
+ id="text3801-1-1-0"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ id="tspan3803-7-11-6"
+ x="659.33899"
+ y="435.35135"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">ptPathBar: public QWidget</tspan></text>
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="13.570842"
+ y="22.944193"
+ id="text3853"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ id="tspan3855"
+ x="13.570842"
+ y="22.944193"
+ style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">ptPathBar Widget Structure</tspan></text>
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="16.075769"
+ y="59.565414"
+ id="text3801-1-6-6-0-4"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ x="16.075769"
+ y="59.565414"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+ id="tspan3859-7-9-1">Layouts are not shown here. The main layout is a QStackedLayout displaying either the interactive path or the path text editor.</tspan></text>
+<text
+ xml:space="preserve"
+ style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller Display;-inkscape-font-specification:Aller Display"
+ x="10.958902"
+ y="350.78235"
+ id="text3801-1-6-6-0-4-0"
+ sodipodi:linespacing="125%"><tspan
+ sodipodi:role="line"
+ x="10.958902"
+ y="350.78235"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+ id="tspan3859-7-9-1-9">m_Tokens is the “sliding widget” that gets positioned horizontally to show the desired portion of the path. GoLeft/Right buttons are only</tspan><tspan
+ sodipodi:role="line"
+ x="10.958902"
+ y="363.28235"
+ style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;text-anchor:start;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+ id="tspan3920">visible when the path is too long for the available space.</tspan></text>
+</g>
+</svg>
