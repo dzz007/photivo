@@ -1,0 +1,536 @@
+/*******************************************************************************
+**
+** Photivo
+**
+** Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2010-2011 Bernd Schoeler <brjohn@brother-john.net>
+**
+** This file is part of Photivo.
+**
+** Photivo is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License version 3
+** as published by the Free Software Foundation.
+**
+** Photivo is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
+**
+*******************************************************************************/
+
+* {
+  background-color: $Base$;
+  color: $Text$;
+}
+
+*#ToolHeader {
+  background: $AltBase$;
+}
+
+/** Spinbox ****************************************/
+QAbstractSpinBox {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $Gradient$, stop: 1 $Base$);
+  border: 1px solid black;
+  selection-background-color: $Strong$;
+  selection-color: $AltBase$;
+
+  border-radius: 3px;
+  padding-left: 2px;
+  padding-right: 2px;
+  max-height: 1.1em;
+  min-height: 1.1em;
+  max-width: 40px;
+  min-width: 40px;
+}
+
+QAbstractSpinBox:disabled {
+  color: $TextDisabled$;
+}
+
+QAbstractSpinBox:hover {
+  border: 1px solid $Highlight$;
+}
+
+QAbstractSpinBox::down-button {
+  height: 0;
+  width: 0;
+}
+
+QAbstractSpinBox::up-button {
+  height: 0;
+  width: 0;
+}
+
+ptSlider QAbstractSpinBox {
+  padding-bottom: 2px;
+  padding-top: 2px;
+  max-height: 16px;
+  min-height: 16px;
+  max-width: 80px;
+  min-width: 20px;
+}
+
+
+/** Checkbox ****************************************/
+QCheckBox {
+  border: 1px solid $Base$;
+
+  border-radius: 3px;
+  padding: 2px;
+}
+
+QCheckBox:disabled {
+  color: $TextDisabled$;
+}
+
+QCheckBox:hover {
+  border: 1px solid $Highlight$;
+}
+
+QCheckBox::indicator {
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 $Gradient$, stop: 1 $Base$);
+  border: 1px solid #000;
+
+  border-radius: 3px;
+  height: 0.8em;
+  width: 0.8em;
+}
+
+QCheckBox::indicator:checked {
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #555, stop:1 $Highlight$);
+}
+
+
+/** Combobox ****************************************/
+QComboBox {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $Gradient$, stop: 1 $Base$);
+  border: 1px solid #000;
+
+  border-radius: 3px;
+  padding-left: 5px;
+  padding-right: 2px;
+  max-height: 1.1em;
+  min-height: 1.1em;
+}
+
+QComboBox:disabled {
+  color: $TextDisabled$;
+}
+
+QComboBox:hover {
+  border: 1px solid $Highlight$;
+}
+
+QComboBox::drop-down {
+  border: none;
+  border-left: 1px solid $Emphasized$;
+  border-bottom-right-radius: 3px;
+  border-top-right-radius: 3px;
+  width: 10px;
+}
+
+QComboBox QAbstractItemView {
+  border: 1px solid $Strong$;
+  selection-background-color: $Strong$;
+  selection-color: $AltBase$;
+
+  border-radius: 3px;
+}
+
+
+/** Textedits ****************************************/
+QLineEdit, QPlainTextEdit {
+  background-color: $Base$;
+  color: $Text$;
+  border: 1px solid $Strong$;
+  border-radius: 3px;
+  padding-left: 2px;
+  padding-right: 2px;
+  selection-background-color: $Strong$;
+  selection-color: $AltBase$;
+}
+
+QLineEdit {
+  max-height: 1.1em;
+  min-height: 1.1em;
+}
+
+QLineEdit:disabled, QPlainTextEdit:disabled {
+  color: $TextDisabled$;
+}
+
+QLineEdit:hover, QPlainTextEdit:hover {
+  border: 1px solid $Highlight$;
+}
+
+QLineEdit#SearchInputWidget {
+  margin-left: 5px;
+}
+
+QLineEdit#m_PathInput {
+  padding-bottom: 2px;
+  padding-top: 2px;
+}
+
+
+/** QScrollArea ****************************************/
+QScrollArea {
+  border: none;
+}
+
+
+/** tree view ****************************************/
+QTreeView {
+  border: 1px solid $AltBase$;
+}
+
+
+/** Slider, Progressbar ****************************************/
+QSlider {
+  background: none;
+  border: 1px solid $Base$;
+
+  padding: 2px;
+  max-height: 8px;
+  min-height: 8px;
+}
+
+QSlider:hover {
+  border: 1px solid $Highlight$;
+  border-radius: 3px;
+}
+
+QSlider::groove:horizontal, QProgressBar::groove:horizontal {
+  background: $Strong$;
+  border: 1px solid #000;
+  border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $Gradient$, stop: 1 $Base$);
+  width: 12px;
+}
+
+QSlider#HueSlider::groove:horizontal {
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 red, stop: 0.25 yellow, stop: 0.5 green, stop: 0.75 blue, stop: 1 red);
+}
+
+ptSlider, QProgressBar {
+  background: none;
+  border: 1px solid #000;
+  padding: 2px;
+  max-height: 16px;
+  min-height: 16px;
+  border-radius: 3px;
+}
+
+QProgressBar {
+  border-color: $Strong$;
+}
+
+QWidget#HueWidget {
+  max-height: 6px;
+  min-height: 6px;
+  border-radius: 3px;
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 red, stop: 0.25 yellow, stop: 0.5 green, stop: 0.75 blue, stop: 1 red);
+}
+
+ptSlider:disabled {
+  color: $TextDisabled$;
+}
+
+QWidget#HueWidget:disabled {
+  max-height: 6px;
+  min-height: 6px;
+  border-radius: 3px;
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 darkred, stop: 0.25 #808000, stop: 0.5 darkgreen, stop: 0.75 darkblue, stop: 1 darkred);
+}
+
+ptSlider::chunk, QProgressBar::chunk {
+  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $SliderStart$, stop: 1 $SliderStop$);
+  background-image: url($SliderStripe$);
+  border-radius: 2px;
+  border: 1px solid $SliderStop$;
+}
+
+ptSlider::chunk:disabled {
+  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $SliderStartDisabled$, stop: 1 $SliderStopDisabled$);
+  background-image: url($SliderStripeDisabled$);
+}
+
+
+/** Button ****************************************/
+QToolButton {
+  border: none;
+  padding: 2px;
+}
+
+QToolButton:hover {
+  border: 1px solid $Highlight$;
+  border-radius: 3px;
+}
+
+
+/** Menu ****************************************/
+QMenu {
+  background-color: $Base$;
+}
+
+QMenu::item:selected {
+  background-color: $Emphasized$;
+  color: $AltBase$;
+}
+
+QMenu::separator {
+   height: 2px;
+   background: #555;
+   margin: 2px 5px 2px 5px;
+}
+
+QMenu::indicator, QMenu::indicator:non-exclusive:unchecked, QMenu::indicator:non-exclusive:checked {
+  background: $Base$;
+  border: 0px solid $Base$;
+}
+
+
+/** Scrollbar ****************************************/
+QScrollBar:horizontal {
+  background: $AltBase$;
+
+  border: none;
+  border-radius: 3px;
+  margin: 0 40px 0 0;
+}
+
+QScrollBar:vertical {
+  background: $AltBase$;
+
+  border: none;
+  border-radius: 3px;
+  margin: 0 0 40px 0;
+}
+
+QScrollBar::handle:horizontal {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $Gradient$, stop: 1 $Base$);
+  border: 1px solid #000;
+
+  border-radius: 4px;
+  min-width: 20px;
+}
+
+QScrollBar::handle:vertical {
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 $Gradient$, stop: 1 $Base$);
+  border: 1px solid #000;
+
+  border-radius: 4px;
+  min-height: 20px;
+}
+
+QScrollBar::handle:horizontal:hover, QScrollBar::handle:vertical:hover,
+QScrollBar::add-line:horizontal:hover, QScrollBar::add-line:vertical:hover,
+QScrollBar::sub-line:horizontal:hover, QScrollBar::sub-line:vertical:hover {
+  border: 1px solid $Highlight$;
+}
+
+QScrollBar::add-line:horizontal {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $Gradient$, stop: 1 $Base$);
+  border: 1px solid #000;
+
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+  subcontrol-position: right;
+  subcontrol-origin: margin;
+  width: 16px;
+}
+
+QScrollBar::add-line:vertical {
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 $Gradient$, stop: 1 $Base$);
+  border: 1px solid #000;
+
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  subcontrol-position: bottom;
+  subcontrol-origin: margin;
+  height: 16px;
+}
+
+QScrollBar::sub-line:horizontal {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $Gradient$, stop: 1 $Base$);
+  border: 1px solid #000;
+
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+  subcontrol-position: top right;
+  subcontrol-origin: margin;
+  position: absolute;
+  right: 20px;
+  width: 16px;
+}
+
+QScrollBar::sub-line:vertical {
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 $Gradient$, stop: 1 $Base$);
+  border: 1px solid #000;
+
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  subcontrol-position: bottom right;
+  subcontrol-origin: margin;
+  position: absolute;
+  bottom: 20px;
+  height: 16px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal,
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+  background: none;
+}
+
+
+/** Splitter ****************************************/
+QSplitter {
+  max-width: 4px;
+  min-width: 4px;
+  background-color: $AltBase$;
+}
+
+QSplitter::handle:horizontal {
+  background-color: $AltBase$;
+  width: 4px;
+}
+
+QSplitter::handle:vertical {
+  background-color: $AltBase$;
+  height: 4px;
+}
+
+
+/** Tabs ****************************************/
+QTabWidget::pane {
+  border-top: 0px solid qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 $Base$);
+}
+
+QTabWidget::tab-bar {
+  alignment: center;
+}
+
+QTabBar::tab {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $Emphasized$, stop: 1 $Base$);
+  border: 1px solid #000;
+
+  border-radius: 4px;
+  margin: 5px 1px 5px 1px;
+  padding: 4px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 $Emphasized$, stop: 1 $AltBase$);
+}
+
+QTabBar::tab:selected {
+  border-color: $Highlight$;
+}
+
+QTabBar::tab:!selected {
+  margin-top: 7px;
+}
+
+/* Scrolling of tabs when not enough space */
+QTabBar::tear {
+  background: $Base$;
+}
+
+/* Special treatment for vertical tabs */
+QTabWidget::pane {
+  border: none;
+}
+
+QTabWidget::tab-bar {
+  alignment: left;
+}
+
+QTabWidget QTabBar::tab {
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 $Emphasized$, stop: 1 $Gradient$);
+  margin: 1px 5px 1px 5px;
+}
+
+QTabWidget QTabBar::tab:selected, QTabWidget QTabBar::tab:hover {
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 $Gradient$, stop: 1 $AltBase$);
+}
+
+QTabWidget QTabBar::tab:!selected {
+  margin-top: 1px;
+  margin-left: 7px;
+}
+
+/** Tooltips ****************************************/
+QToolTip {
+  border: none;
+  color: $Text$;
+}
+
+/******************************************/
+*#StatusFrame {  /* status text bottom left without border */
+  border: 1px solid $AltBase$;
+}
+
+*#StatusLabel {
+  color: $Text$;
+}
+
+
+/** File Manager **********************************************/
+
+#FMDirListPane, #FMTagPane, #FMThumbPane, #FMImageViewPane {
+  border-radius: 5px;
+}
+
+#FMMainSplitter {
+  padding: 10px;
+}
+
+#FMMainSplitter, #FMSidebarSplitter {
+  background-color: $AltBase$;
+  max-width : 10px;
+  min-width : 10px;
+  width     : 10px;
+  max-height: 10px;
+  min-height: 10px;
+  height    : 10px;
+}
+
+#FMTagMenu {
+  border: 1px solid $AltBase$;
+}
+
+ptFileMgrWindow QProgressBar {
+  border-color: $AltBase$;
+}
+
+/* PathBar */
+#PBInnerContainer { 
+  background-color: $AltBase$;
+  border: 1px solid $AltBase$;
+  border-radius: 3px;
+}
+
+#PBInnerContainer QWidget {
+  background-color: transparent;
+  border: none;
+}
+
+#PBInnerContainer QWidget QWidget:hover {
+  border: 1px solid $Highlight$;
+  border-radius: 3px;
+}
+
+#PBInnerContainer QWidget QWidget QWidget:hover {
+  border: none;
+}
+
+#PBInnerContainer QWidget QWidget QWidget#PBDirSeparator:hover {
+  border: 1px solid $Highlight$;
+  border-radius: 3px;
+}
