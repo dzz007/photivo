@@ -48,13 +48,6 @@ class ptMainWindow : public QMainWindow, public Ui::ptMainWindow {
 
 Q_OBJECT
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-////////////////////////////////////////////////////////////////////////////////
-
 public:
   // Constructor.
   ptMainWindow(const QString         Title);
@@ -130,14 +123,6 @@ public:
   QDockWidget* ControlsDockWidget;
 
   void OnToolBoxesEnabledTriggered(const bool Enabled);
-public slots:
-  void OtherInstanceMessage(const QString &msg);
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// PROTECTED members
-//
-////////////////////////////////////////////////////////////////////////////////
 
 protected:
   void closeEvent(QCloseEvent * Event);
@@ -147,17 +132,11 @@ protected:
   void dragEnterEvent(QDragEnterEvent* Event);
   void dropEvent(QDropEvent* Event);
   bool eventFilter(QObject *obj, QEvent *event);
+
 #ifdef Q_OS_WIN
   // reimplementation needed for Win 7 taskbar features
   virtual bool winEvent(MSG *message, long *result);
 #endif
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-////////////////////////////////////////////////////////////////////////////////
 
 private :
   QTabBar* Tabbar;
@@ -180,18 +159,11 @@ private :
   void ShowMovedTools(const QString Title);
   void InitVisibleTools();
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// slots
-//
-////////////////////////////////////////////////////////////////////////////////
-
 public slots:
   // Toggle file manager window
   void OpenFileMgrWindow();
   void CloseFileMgrWindow();
-
+  void OtherInstanceMessage(const QString &msg);
 
 private slots:
   void ResizeTimerExpired();

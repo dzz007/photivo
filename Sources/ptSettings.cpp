@@ -737,6 +737,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"HistogramCropY"                       ,9    ,0                                     ,0},
     {"HistogramCropW"                       ,9    ,0                                     ,0},
     {"HistogramCropH"                       ,9    ,0                                     ,0},
+    {"PixelReader"                          ,1    ,0                                     ,0},
     {"ExposureIndicator"                    ,1    ,0                                     ,0},
     {"ExposureIndicatorSensor"              ,0    ,0                                     ,0},
     {"ExposureIndicatorR"                   ,0    ,1                                     ,0},

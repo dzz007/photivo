@@ -33,6 +33,13 @@
 
 class ptCurve;
 
+// RGB type
+struct RGBValue {
+  uint16_t R;
+  uint16_t G;
+  uint16_t B;
+};
+
 // Class containing an image and its operations.
 
 class ptImage {
@@ -91,6 +98,9 @@ ptImage* Set(const ptImage *Origin);
 // Copy from another image and scale to pipe size.
 ptImage* SetScaled(const ptImage *Origin,
                    const short ScaleFactor);
+
+// Get the RGB at a given point
+RGBValue GetRGB(const uint16_t x, const uint16_t y);
 
 // Resize such that the maximum dimension becomes Size.
 // Typically the resizing is done in place, but one

@@ -55,6 +55,11 @@ enum ptInteraction {
   iaDrawLine = 3    // draw a single straight line: e.g. for rotate angle
 };
 
+enum ptPixelReading {
+  prNone    = 0,
+  prLinear  = 1,
+  prPreview = 2
+};
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -65,11 +70,6 @@ enum ptInteraction {
 class ptViewWindow : public QGraphicsView {
 Q_OBJECT
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
   ptViewWindow(QWidget* Parent, ptMainWindow* mainWin);
   ~ptViewWindow();
@@ -89,7 +89,7 @@ public:
   void ShowStatus(short mode);
   void ShowStatus(const QString text);    // shown for 1.5sec
 
-  // Star, stop, control interactions
+  // Start, stop, control interactions
   // - StartSimpleRect: Pass the function that is called after the
   //   selection finishes.
   void StartLine();
@@ -103,11 +103,10 @@ public:
   int ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
   void ZoomStep(int direction);
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PROTECTED members
-//
-///////////////////////////////////////////////////////////////////////////
+  ptPixelReading isPixelReading() const { return m_PixelReading; }
+  void SetPixelReader(void (*PixelReader)(const QPointF Point, const ptPixelReading PixelReading))
+    { m_PixelReader = PixelReader; };
+
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
   void dragEnterEvent(QDragEnterEvent* event);
@@ -121,13 +120,8 @@ protected:
   void mouseReleaseEvent(QMouseEvent* event);
   void mouseMoveEvent(QMouseEvent* event);
   void wheelEvent(QWheelEvent* event);
+  void leaveEvent(QEvent* event);
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
 private:
   const float MinZoom;
   const float MaxZoom;
@@ -145,6 +139,8 @@ private:
   float m_ZoomFactor;
   float m_ZoomFactorSav;
   short m_ZoomModeSav;
+  ptPixelReading m_PixelReading;
+  QTimer* m_PReadTimer;
 
   QGraphicsPixmapItem* m_8bitImageItem;
   QLine* m_DragDelta;
@@ -164,6 +160,9 @@ private:
   QAction* ac_Mode_A;
   QAction* ac_Mode_B;
   QAction* ac_Mode_Gradient;
+  QAction* ac_PRead_None;
+  QAction* ac_PRead_Linear;
+  QAction* ac_PRead_Preview;
   QAction* ac_Clip_Indicate;
   QAction* ac_Clip_Over;
   QAction* ac_Clip_Under;
@@ -177,15 +176,12 @@ private:
   QAction* ac_OpenFileMgr;
   QAction* ac_Fullscreen;
   QActionGroup* ac_ModeGroup;
+  QActionGroup* ac_PReadGroup;
 
   ptMainWindow* MainWindow;
 
+  void (*m_PixelReader)(const QPointF Point, const ptPixelReading PixelReading);
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-///////////////////////////////////////////////////////////////////////////
 private slots:
   void finishInteraction(ptStatus ExitStatus);
 
@@ -206,13 +202,8 @@ private slots:
   void Menu_ZoomOut();
   void Menu_Mode();
   void Menu_OpenFileMgr();
+  void Menu_PixelReading();
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// signals
-//
-///////////////////////////////////////////////////////////////////////////
 signals:
   void keyChanged(QKeyEvent* event);
   void mouseChanged(QMouseEvent* event);

@@ -61,6 +61,7 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   m_ZoomFactor(1.0),
   m_ZoomFactorSav(0.0),
   m_ZoomModeSav(ptZoomMode_Fit),
+  m_PixelReading(prNone),
   // always keep this at the end of the initializer list
   MainWindow(mainWin)
 {
@@ -95,6 +96,11 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
 
   m_Grid = new ptGridInteraction(this);  // scene must already be alive
   ConstructContextMenu();
+
+  m_PReadTimer = new QTimer();
+  m_PReadTimer->setSingleShot(true);
+
+  m_PixelReader = NULL;
 }
 
 
@@ -111,6 +117,13 @@ ptViewWindow::~ptViewWindow() {
   delete m_DrawLine;
   delete m_SelectRect;
   delete m_Grid;
+
+  delete ac_PRead_None;
+  delete ac_PRead_Linear;
+  delete ac_PRead_Preview;
+  delete ac_PReadGroup;
+
+  delete m_PReadTimer;
 }
 
 
@@ -338,6 +351,18 @@ void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
+  // We broadcast the pixel location
+  if (m_PixelReading != prNone && !m_PReadTimer->isActive()) {
+    m_PReadTimer->start(10);
+    QPointF Point = mapToScene(event->pos());
+    if (Point.x() >= 0 && Point.x() < m_8bitImageItem->pixmap().width() &&
+        Point.y() >= 0 && Point.y() < m_8bitImageItem->pixmap().height()) {
+      if (m_PixelReader) m_PixelReader(Point, m_PixelReading);
+    } else {
+      if (m_PixelReader) m_PixelReader(Point, prNone);
+    }
+  }
+
   // drag image with left mouse button to scroll
   // Also Ctrl needed in crop mode
   short ImgDragging = m_LeftMousePressed && m_Interaction == iaNone;
@@ -374,6 +399,10 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
 
 void ptViewWindow::wheelEvent(QWheelEvent* event) {
   ZoomStep(event->delta());
+}
+
+void ptViewWindow::leaveEvent(QEvent *event) {
+  if (m_PixelReader) m_PixelReader(QPoint(), prNone);
 }
 
 
@@ -620,16 +649,6 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Construct context menu
@@ -690,6 +709,28 @@ void ptViewWindow::ConstructContextMenu() {
   ac_ModeGroup->addAction(ac_Mode_Gradient);
   ac_ModeGroup->addAction(ac_Mode_Structure);
 
+  ac_PRead_None = new QAction(tr("&disabled"), this);
+  ac_PRead_None->setCheckable(true);
+  connect(ac_PRead_None, SIGNAL(triggered()), this, SLOT(Menu_PixelReading()));
+
+  ac_PRead_Linear = new QAction(tr("&linear"), this);
+  ac_PRead_Linear->setCheckable(true);
+  connect(ac_PRead_Linear, SIGNAL(triggered()), this, SLOT(Menu_PixelReading()));
+
+  ac_PRead_Preview = new QAction(tr("&preview"), this);
+  ac_PRead_Preview->setCheckable(true);
+  connect(ac_PRead_Preview, SIGNAL(triggered()), this, SLOT(Menu_PixelReading()));
+
+  ac_PReadGroup = new QActionGroup(this);
+  ac_PReadGroup->addAction(ac_PRead_None);
+  ac_PReadGroup->addAction(ac_PRead_Linear);
+  ac_PReadGroup->addAction(ac_PRead_Preview);
+  switch (Settings->GetInt("PixelReader")) {
+    case (int)prLinear:  ac_PRead_Linear->setChecked(true);  break;
+    case (int)prPreview: ac_PRead_Preview->setChecked(true); break;
+    default:             ac_PRead_None->setChecked(true);
+  };
+  Menu_PixelReading();
 
   ac_Clip_Indicate = new QAction(tr("Highlight &clipped pixels") + "\t" + tr("C"), this);
   ac_Clip_Indicate->setCheckable(true);
@@ -785,6 +826,13 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu_Clip.addAction(ac_Clip_G);
   Menu_Clip.addAction(ac_Clip_B);
 
+  QMenu Menu_PRead(tr("Pixel values"), this);
+  Menu_PRead.setPalette(Theme->menuPalette());
+  Menu_PRead.setStyle(Theme->style());
+  Menu_PRead.addAction(ac_PRead_None);
+  Menu_PRead.addAction(ac_PRead_Linear);
+  Menu_PRead.addAction(ac_PRead_Preview);
+
   QMenu Menu(this);
   Menu.setPalette(Theme->menuPalette());
   Menu.setStyle(Theme->style());
@@ -796,6 +844,7 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   if (m_Interaction == iaNone) {
     Menu.addMenu(&Menu_Mode);
     Menu.addMenu(&Menu_Clip);
+    Menu.addMenu(&Menu_PRead);
     Menu.addSeparator();
     Menu.addAction(ac_SensorClip);
     Menu.addAction(ac_SensorClipSep);
@@ -937,4 +986,17 @@ void ptViewWindow::Menu_Mode() {
     Settings->SetValue("SpecialPreview", ptSpecialPreview_Structure);
 
   Update(ptProcessorPhase_NULL);
+}
+
+void ptViewWindow::Menu_PixelReading() {
+  if (ac_PRead_None->isChecked()) {
+    if (m_PixelReader) m_PixelReader(QPoint(), prNone);
+    m_PixelReading = prNone;
+  }
+  else if (ac_PRead_Linear->isChecked())  m_PixelReading = prLinear;
+  else if (ac_PRead_Preview->isChecked()) m_PixelReading = prPreview;
+
+  setMouseTracking(m_PixelReading != prNone);
+
+  Settings->SetValue("PixelReader", (int)m_PixelReading);
 }

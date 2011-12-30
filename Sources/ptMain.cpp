@@ -288,6 +288,7 @@ void SaveButtonToolTip(const short mode);
 int    photivoMain(int Argc, char *Argv[]);
 void   CleanupResources();
 void copyFolder(QString sourceFolder, QString destFolder);
+void CB_PixelReader(const QPointF Point, const ptPixelReading PixelReading);
 bool GBusy = false;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -839,6 +840,8 @@ int photivoMain(int Argc, char *Argv[]) {
 
   ViewWindow =
       new ptViewWindow(MainWindow->ViewFrameCentralWidget, MainWindow);
+
+  ViewWindow->SetPixelReader(CB_PixelReader);
 
   HistogramWindow =
       new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
@@ -3141,6 +3144,35 @@ void NormalizeMultipliers(const short Max = 0) {
   }
 }
 
+//==============================================================================
+// Handles the display of the pixel values
+void CB_PixelReader(const QPointF Point, const ptPixelReading PixelReading) {
+  // No display while pipe is running
+  if (Settings->GetInt("PipeIsRunning") || Settings->GetInt("HaveImage")==0) {
+    HistogramWindow->PixelInfoHide();
+    return;
+  }
+
+  RGBValue RGB;
+
+  // reset the display
+  if (PixelReading == prNone) {
+    HistogramWindow->PixelInfoHide();
+    return;
+  } else if (PixelReading == prLinear) {
+    // we use the AfterEyeCandy image as source
+    RGB = TheProcessor->m_Image_AfterEyeCandy->GetRGB(Point.x(), Point.y());
+  } else {
+    // we use the PreviewImage as source
+    RGB = PreviewImage->GetRGB(Point.x(), Point.y());
+  }
+
+  // We normalize the values to 0..100
+  HistogramWindow->PixelInfo(QString::number(RGB.R/655.35, 'f', 2),
+                             QString::number(RGB.G/655.35, 'f', 2),
+                             QString::number(RGB.B/655.35, 'f', 2));
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // For convenience...
@@ -5240,7 +5272,7 @@ void CB_MakeCropButton() {
 
 // After-crop processing and cleanup.
 void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
-  BlockTools(btmUnblock);;
+  BlockTools(btmUnblock);
 
   if (CropStatus == stSuccess) {
     // Account for the pipesize factor.

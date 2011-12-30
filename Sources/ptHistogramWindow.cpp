@@ -168,6 +168,8 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
 
   m_LookUp = NULL;
   FillLookUp();
+
+  InitOverlay();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -181,6 +183,11 @@ ptHistogramWindow::~ptHistogramWindow() {
   delete m_QPixmap;
   delete m_Image8;
   delete m_LookUp;
+  delete m_PixelInfoR;
+  delete m_PixelInfoG;
+  delete m_PixelInfoB;
+  delete m_PixelInfoTimer;
+  delete m_OverlayPalette;
 }
 
 
@@ -192,6 +199,22 @@ ptHistogramWindow::~ptHistogramWindow() {
 
 void ptHistogramWindow::Init() {
   ResizeTimerExpired();
+}
+
+//==============================================================================
+
+void ptHistogramWindow::PixelInfo(const QString R, const QString G, const QString B) {
+  m_PixelInfoR->setText("R: " + R);
+  m_PixelInfoR->adjustSize();
+  m_PixelInfoR->show();
+
+  m_PixelInfoG->setText("G: " + G);
+  m_PixelInfoG->adjustSize();
+  m_PixelInfoG->show();
+
+  m_PixelInfoB->setText("B: " + B);
+  m_PixelInfoB->adjustSize();
+  m_PixelInfoB->show();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -418,6 +441,41 @@ void ptHistogramWindow::FillLookUp() {
   }
 }
 
+//==============================================================================
+
+void ptHistogramWindow::InitOverlay() {
+  m_OverlayPalette = new QPalette();
+  m_OverlayPalette->setColor(QPalette::Foreground, QColor(0xa0, 0xa0, 0xa0));
+
+  m_PixelInfoR = new QLabel(this);
+  m_PixelInfoR->setTextFormat(Qt::PlainText);
+  m_PixelInfoR->setTextInteractionFlags(Qt::NoTextInteraction);
+  m_PixelInfoR->show();
+  m_PixelInfoR->setPalette(*m_OverlayPalette);
+  m_PixelInfoR->move(10, 10);
+  m_PixelInfoR->hide();
+
+  m_PixelInfoG = new QLabel(this);
+  m_PixelInfoG->setTextFormat(Qt::PlainText);
+  m_PixelInfoG->setTextInteractionFlags(Qt::NoTextInteraction);
+  m_PixelInfoG->show();
+  m_PixelInfoG->setPalette(*m_OverlayPalette);
+  m_PixelInfoG->move(60, 10);
+  m_PixelInfoG->hide();
+
+  m_PixelInfoB = new QLabel(this);
+  m_PixelInfoB->setTextFormat(Qt::PlainText);
+  m_PixelInfoB->setTextInteractionFlags(Qt::NoTextInteraction);
+  m_PixelInfoB->show();
+  m_PixelInfoB->setPalette(*m_OverlayPalette);
+  m_PixelInfoB->move(110, 10);
+  m_PixelInfoB->hide();
+
+  m_PixelInfoTimer = new QTimer(this);
+  m_PixelInfoTimer->setSingleShot(true);
+  connect(m_PixelInfoTimer, SIGNAL(timeout()), this, SLOT(PixelInfoHide()));
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // UpdateView.
@@ -579,4 +637,13 @@ void ptHistogramWindow::MenuMode() {
 
   Update(ptProcessorPhase_OnlyHistogram);
 }
+
+//==============================================================================
+
+void ptHistogramWindow::PixelInfoHide() {
+  m_PixelInfoR->hide();
+  m_PixelInfoG->hide();
+  m_PixelInfoB->hide();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
