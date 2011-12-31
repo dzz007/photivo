@@ -95,12 +95,11 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   this->setScene(m_ImageScene);
 
   m_Grid = new ptGridInteraction(this);  // scene must already be alive
+  m_PixelReader = NULL;
   ConstructContextMenu();
 
   m_PReadTimer = new QTimer();
   m_PReadTimer->setSingleShot(true);
-
-  m_PixelReader = NULL;
 }
 
 
