@@ -105,7 +105,7 @@ public:
 
   ptPixelReading isPixelReading() const { return m_PixelReading; }
   void SetPixelReader(void (*PixelReader)(const QPointF Point, const ptPixelReading PixelReading))
-    { m_PixelReader = PixelReader; };
+    { m_PixelReader = PixelReader; }
 
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
