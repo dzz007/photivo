@@ -995,7 +995,5 @@ void ptViewWindow::Menu_PixelReading() {
   else if (ac_PRead_Linear->isChecked())  m_PixelReading = prLinear;
   else if (ac_PRead_Preview->isChecked()) m_PixelReading = prPreview;
 
-  setMouseTracking(m_PixelReading != prNone);
-
   Settings->SetValue("PixelReader", (int)m_PixelReading);
 }
