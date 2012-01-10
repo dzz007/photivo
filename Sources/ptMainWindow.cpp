@@ -1873,7 +1873,7 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_C && Event->modifiers()==Qt::NoModifier) {
       Settings->SetValue("ExposureIndicator",1-Settings->GetInt("ExposureIndicator"));
-      Update(ptProcessorPhase_NULL);
+      Update(ptProcessorPhase_Preview);
     // hidden tools, needs GUI implementation
     } else if (Event->key()==Qt::Key_H && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";

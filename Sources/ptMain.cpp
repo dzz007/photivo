@@ -939,7 +939,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
 
   // Update the preview image will result in displaying the splash.
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 
   // Open and keep open the profile for previewing.
   PreviewColorProfile = cmsOpenProfileFromFile(
@@ -1347,7 +1347,7 @@ void Update(short Phase,
     return;
   } else Settings->SetValue("PipeIsRunning",1);
 
-  if (Phase < ptProcessorPhase_NULL) {
+  if (Phase < ptProcessorPhase_Preview) {
     // main processing
     if (Phase < NextPhase) NextPhase = Phase;
     if (SubPhase > 0 && SubPhase < NextSubPhase) NextSubPhase = SubPhase;
@@ -1384,7 +1384,7 @@ void Update(short Phase,
   } else if (Phase == ptProcessorPhase_OnlyHistogram) {
     // only histogram update, don't care about manual mode
     UpdatePreviewImage(NULL,1);
-  } else if (Phase == ptProcessorPhase_NULL) {
+  } else if (Phase == ptProcessorPhase_Preview) {
     // only preview update, don't care about manual mode
     UpdatePreviewImage(NULL,0);
   } else if (Phase == ptProcessorPhase_WriteOut) {
@@ -1519,7 +1519,7 @@ void HistogramGetCrop() {
     ViewWindow->setFocus();
   } else {
     ReportProgress(QObject::tr("Updating histogram"));
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
     ReportProgress(QObject::tr("Ready"));
   }
 }
@@ -1557,7 +1557,7 @@ void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect) {
   }
 
   ReportProgress(QObject::tr("Updating histogram"));
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
   ReportProgress(QObject::tr("Ready"));
 }
 
@@ -3192,7 +3192,7 @@ void UpdateSettings() {
 void CB_Tabs(const short) {
   // If we are previewing according to Tab, we now have to update.
   if (Settings->GetInt("PreviewMode") == ptPreviewMode_Tab) {
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
   }
 }
 
@@ -3843,7 +3843,7 @@ void CB_CMQualityChoice(const QVariant Choice) {
   Settings->SetValue("CMQuality",Choice);
   MainWindow->UpdateSettings();
   PreCalcTransforms();
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_PreviewColorProfileButton() {
@@ -3877,13 +3877,13 @@ void CB_PreviewColorProfileButton() {
   }
   PreCalcTransforms();
   // And update the preview.
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_PreviewColorProfileIntentChoice(const QVariant Choice) {
   Settings->SetValue("PreviewColorProfileIntent",Choice);
   PreCalcTransforms();
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_OutputColorProfileButton() {
@@ -3904,8 +3904,8 @@ void CB_OutputColorProfileButton() {
 
   // Reflect in gui.
   if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output) {
-    if (Settings->GetInt("IndicateExposure")==1) {
-      Update(ptProcessorPhase_NULL);
+    if (Settings->GetInt("ExposureIndicator")==1) {
+      Update(ptProcessorPhase_Preview);
     } else {
       Update(ptProcessorPhase_OnlyHistogram);
     }
@@ -3917,8 +3917,8 @@ void CB_OutputColorProfileResetButton() {
   Settings->SetValue("OutputColorProfile",
                      (Settings->GetString("UserDirectory") + "Profiles/Output/sRGB.icc").toAscii().data());
   if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output) {
-    if (Settings->GetInt("IndicateExposure")==1) {
-      Update(ptProcessorPhase_NULL);
+    if (Settings->GetInt("ExposureIndicator")==1) {
+      Update(ptProcessorPhase_Preview);
     } else {
       Update(ptProcessorPhase_OnlyHistogram);
     }
@@ -3929,8 +3929,8 @@ void CB_OutputColorProfileResetButton() {
 void CB_OutputColorProfileIntentChoice(const QVariant Choice) {
   Settings->SetValue("OutputColorProfileIntent",Choice);
   if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output) {
-    if (Settings->GetInt("IndicateExposure")==1) {
-      Update(ptProcessorPhase_NULL);
+    if (Settings->GetInt("ExposureIndicator")==1) {
+      Update(ptProcessorPhase_Preview);
     } else {
       Update(ptProcessorPhase_OnlyHistogram);
     }
@@ -4114,7 +4114,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
         ptMessageBox::information(NULL,"No crop","Too small. Please try again!");
         //ViewWindow->Zoom(OldZoom,0);    // TODOSR: re-enable
         Settings->SetValue("ZoomMode",OldZoomMode);
-        Update(ptProcessorPhase_NULL);
+        Update(ptProcessorPhase_Preview);
         if (Settings->GetInt("DetailViewActive")==0) {
           delete TheProcessor->m_Image_DetailPreview;
           TheProcessor->m_Image_DetailPreview = NULL;
@@ -4207,7 +4207,7 @@ void CB_PreviewModeButton(const QVariant State) {
     Settings->SetValue("PreviewMode",ptPreviewMode_End);
     MainWindow->PreviewModeButton->setChecked(0);
   }
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_RunButton() {
@@ -4263,7 +4263,7 @@ void CB_ResetButton() {
 
 void CB_SpecialPreviewChoice(const QVariant Choice) {
   Settings->SetValue("SpecialPreview",Choice);
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_GimpExecCommandButton() {
@@ -4356,7 +4356,7 @@ void CB_PreviewTabModeCheck(const QVariant State) {
   } else {
     Settings->SetValue("PreviewMode",ptPreviewMode_End);
   }
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_BackgroundColorCheck(const QVariant State) {
@@ -5105,14 +5105,14 @@ void CB_PerspectiveScaleYInput(const QVariant Value) {
 void CB_GridCheck(const QVariant State) {
   Settings->SetValue("Grid",State);
   ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_GridXInput(const QVariant Value) {
   Settings->SetValue("GridX",Value);
   if (Settings->GetInt("Grid")) {
     ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
   }
 }
 
@@ -5120,7 +5120,7 @@ void CB_GridYInput(const QVariant Value) {
   Settings->SetValue("GridY",Value);
   if (Settings->GetInt("Grid")) {
     ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
   }
 }
 
@@ -5291,7 +5291,7 @@ void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
 
       if(Settings->GetInt("RunMode")==1) {
         // we're in manual mode!
-        Update(ptProcessorPhase_NULL);
+        Update(ptProcessorPhase_Preview);
       }
     } else {
       Settings->SetValue("Crop",1);
