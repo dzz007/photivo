@@ -897,42 +897,42 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
 void Update(short Phase, short SubPhase = -1, short WithIdentify  = 1, short ProcessorMode = ptProcessorMode_Preview);
 void ptViewWindow::Menu_Clip_Indicate() {
   Settings->SetValue("ExposureIndicator",(int)ac_Clip_Indicate->isChecked());
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_Clip_Over() {
   Settings->SetValue("ExposureIndicatorOver",(int)ac_Clip_Over->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_Clip_Under() {
   Settings->SetValue("ExposureIndicatorUnder",(int)ac_Clip_Under->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_Clip_R() {
   Settings->SetValue("ExposureIndicatorR",(int)ac_Clip_R->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_Clip_G() {
   Settings->SetValue("ExposureIndicatorG",(int)ac_Clip_G->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_Clip_B() {
   Settings->SetValue("ExposureIndicatorB",(int)ac_Clip_B->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_SensorClip() {
   Settings->SetValue("ExposureIndicatorSensor",(int)ac_SensorClip->isChecked());
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_ShowZoomBar() {
@@ -984,7 +984,7 @@ void ptViewWindow::Menu_Mode() {
   else if (ac_Mode_Structure->isChecked())
     Settings->SetValue("SpecialPreview", ptSpecialPreview_Structure);
 
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_PixelReading() {
