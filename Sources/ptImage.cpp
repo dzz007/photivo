@@ -4029,6 +4029,8 @@ ptImage* ptImage::Colorcontrast(const double Radius,
     }
   }
 
+  delete MicrocontrastLayer;
+
   return this;
 }
 
