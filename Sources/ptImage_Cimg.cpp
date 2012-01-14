@@ -76,10 +76,10 @@ ptImage* ptImage::ptCIDeriche(const float sigma,
       a3 = -k*ema2;
     } break;
     case 1 : {
-      const float k = (1-ema)*(1-ema)/ema;
-      a0 = k*ema;
-      a1 = a3 = 0;
-      a2 = -a0;
+      const float k = -(1-ema)*(1-ema)*(1-ema)/(2*(ema+1)*ema);
+      a0 = a3 = 0;
+      a1 = k*ema;
+      a2 = -a1;
     } break;
     case 2 : {
       const float
