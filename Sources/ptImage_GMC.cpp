@@ -57,11 +57,10 @@ bool ptImage::ptGMCWriteImage(const char* FileName,
 
   mw = NewMagickWand();
   MagickSetSize(mw, Width, Height);
-  MagickReadImage(mw,"xc:none");
+  MagickReadImage(mw,"xc:white");
   MagickSetImageFormat(mw,"RGB");
   MagickSetImageDepth(mw,16);
   MagickSetImageType(mw,TrueColorType);
-  MagickSetImageOption(mw, "tiff", "alpha", "associated");
 
   MagickSetImagePixels(mw,0,0,Width,Height,"RGB",ShortPixel,(unsigned char*) m_Image);
 
