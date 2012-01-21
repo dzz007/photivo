@@ -31,20 +31,21 @@ struct Entities {
   int       JobMode;
   int       DelInputFile;
   int       NewInstance;
+  int       NoOpenFileMgr;
   bool      ShowHelp;
 };
 
 
 ptCliCommands ParseCli(int argc, char *argv[]) {
-  Entities cli = { "", "", 0, 0, 0, 0, false };
-  ptCliCommands result = { cliNoAction, "", "", false };
+  Entities cli = { "", "", 0, 0, 0, 0, 0, false };
+  ptCliCommands result = { cliNoAction, "", "", false, false };
 
   if (argc == 1) {
     return result;
   }
 
   QStringList params;
-  params << "-i" << "-j" << "--load-and-delete" << "--pts" << "--new-instance" << "-h";
+  params << "-i" << "-j" << "--load-and-delete" << "--pts" << "--new-instance" << "--no-fmgr" << "-h";
 
   int i = 1;
   bool MustBeFilename = false;
@@ -91,6 +92,8 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
     } else if (whichParam == 4) {
       cli.NewInstance++;
     } else if (whichParam == 5) {
+      cli.NoOpenFileMgr++;
+    } else if (whichParam == 6) {
       cli.ShowHelp++;
       break;
     } else if (whichParam == -1) {  // can only be image file without -i param
@@ -123,6 +126,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
     result.Filename = cli.Filename;
     result.PtsFilename = cli.PtsFilename;
     result.NewInstance = cli.NewInstance > 0;
+    result.NoOpenFileMgr = cli.NoOpenFileMgr;
 
     if (cli.LoadFile > 0) {
       result.Mode = cliLoadImage;
