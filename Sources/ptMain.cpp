@@ -1342,8 +1342,11 @@ void Update(short Phase,
             short ProcessorMode /* = ptProcessorMode_Preview */)
 {
 #ifdef Q_OS_WIN
-  ptEcWin7* Win7Taskbar = ptEcWin7::GetInstance();
-  Win7Taskbar->setProgressState(ptEcWin7::Indeterminate);
+  ptEcWin7* Win7Taskbar = NULL;
+  if (!JobMode) {
+    Win7Taskbar = ptEcWin7::GetInstance();
+    Win7Taskbar->setProgressState(ptEcWin7::Indeterminate);
+  }
 #endif
 
   if (Settings->GetInt("BlockUpdate") == 1) return; // hard block
@@ -1407,7 +1410,9 @@ void Update(short Phase,
   Settings->SetValue("PipeIsRunning",0);
 
 #ifdef Q_OS_WIN
-  Win7Taskbar->setProgressState(ptEcWin7::NoProgress);
+  if (!JobMode) {
+    Win7Taskbar->setProgressState(ptEcWin7::NoProgress);
+  }
 #endif
 }
 
@@ -3557,7 +3562,8 @@ void CB_MenuFileExit(const short) {
   delete Settings;
 
 #ifdef Q_OS_WIN
-  ptEcWin7::DestroyInstance();
+  if (!JobMode)
+    ptEcWin7::DestroyInstance();
 #endif
 
   ALLOCATED(10000000);
