@@ -463,17 +463,21 @@ int photivoMain(int Argc, char *Argv[]) {
 "--new-instance\n"
 "      Allow opening another Photivo instance instead of using a currently\n"
 "      running Photivo. Job files are always opened in a new instance.\n"
+"--no-filemgr\n"
+"      Prevent auto-open file manager when Photivo starts.\n"
 "-h\n"
 "      Display this usage information.\n\n"
 "For more documentation visit the wiki: http://photivo.org/photivo/start\n"
   );
+
+  ptCliCommands cli = { cliNoAction, "", "", false, false };
 
 #ifdef Q_OS_MAC
 //Just Skip if engaged by QFileOpenEvent
   if(!MacGotFileEvent) {
 #endif
 
-  ptCliCommands cli = ParseCli(Argc, Argv);
+  cli = ParseCli(Argc, Argv);
 
   // Show help message and exit Photivo
   if (cli.Mode == cliShowHelp) {
@@ -831,6 +835,9 @@ int photivoMain(int Argc, char *Argv[]) {
     Settings->SetValue("LastFileMgrLocation", QFileInfo(ImageFileToOpen).absolutePath());
   }
 
+#ifndef PT_WITHOUT_FILEMGR
+  if (cli.NoOpenFileMgr) Settings->SetValue("NoFileMgrStartupOpen", 1);
+#endif
 
   // Construct windows
   MainWindow = new ptMainWindow(QObject::tr("Photivo"));
