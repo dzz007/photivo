@@ -58,6 +58,7 @@ public:
 
   // Sidecar image for texture overlay
   ptImage*  m_Image_TextureOverlay;
+  ptImage*  m_Image_TextureOverlay2;
 
   // Reporting back
   void (*m_ReportProgress)(const QString Message);
@@ -68,7 +69,7 @@ public:
   ~ptProcessor();
 
   // The associated DcRaw.
-  DcRaw* m_DcRaw;
+  ptDcRaw* m_DcRaw;
 
   // The real processing.
   void Run(short Phase,

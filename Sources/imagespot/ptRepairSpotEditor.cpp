@@ -37,7 +37,7 @@ ptRepairSpotEditor::ptRepairSpotEditor(QWidget *Parent,
 {
   setContentsMargins(0,0,0,0);
   QPalette pal = palette();
-  pal.setColor(QPalette::Window, Theme->ptBackground);
+  pal.setColor(QPalette::Window, Theme->baseColor());
   setPalette(pal);
 
   // init combobox with repair alorithms

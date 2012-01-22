@@ -197,8 +197,8 @@ void SetGuiChoice(const QString Key, ptChoice* Choice);
 void SetGuiCheck(const QString Key, ptCheck* Check);
 
 // Interface to update the settings to/from dcraw
-void ToDcRaw(DcRaw* TheDcRaw);
-void FromDcRaw(DcRaw* TheDcRaw);
+void ToDcRaw(ptDcRaw* TheDcRaw);
+void FromDcRaw(ptDcRaw* TheDcRaw);
 
 // Persistent Settings. Initialization code in ptMain
 // will access it directly.

@@ -4235,7 +4235,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     <name>ptCurveWindow</name>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="100"/>
-        <source>Adaptive</source>
+        <source>A&amp;daptive</source>
         <translation>Adaptiv</translation>
     </message>
     <message>
@@ -4245,7 +4245,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="104"/>
-        <source>Absolute</source>
+        <source>A&amp;bsolute</source>
         <translation>Absolut</translation>
     </message>
     <message>
@@ -4255,7 +4255,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="115"/>
-        <source>By luminance</source>
+        <source>By l&amp;uminance</source>
         <translation>Nach Luminanz</translation>
     </message>
     <message>
@@ -4265,7 +4265,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="119"/>
-        <source>By color</source>
+        <source>By c&amp;olor</source>
         <translation>Nach Farbe</translation>
     </message>
     <message>
@@ -4275,7 +4275,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="147"/>
-        <source>Linear</source>
+        <source>&amp;Linear</source>
         <translation>Linear</translation>
     </message>
     <message>
@@ -4285,7 +4285,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="151"/>
-        <source>Spline</source>
+        <source>&amp;Spline</source>
         <translation>Spline</translation>
     </message>
     <message>
@@ -4295,7 +4295,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="155"/>
-        <source>Cosine</source>
+        <source>&amp;Cosine</source>
         <translation>Cosinus</translation>
     </message>
     <message>
@@ -4323,28 +4323,28 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="130"/>
-        <source>Hide</source>
+        <source>&amp;Hide</source>
         <translation>Verstecken</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="135"/>
         <location filename="../Sources/ptGroupBox.cpp" line="565"/>
-        <source>Block</source>
+        <source>Bl&amp;ock</source>
         <translation>Blockieren</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="140"/>
-        <source>Reset</source>
+        <source>&amp;Reset</source>
         <translation>Zurücksetzen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="145"/>
-        <source>Save preset</source>
+        <source>&amp;Save preset</source>
         <translation>Einstellungen speichern</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="150"/>
-        <source>Append preset</source>
+        <source>&amp;Append preset</source>
         <translation>Einstellungen anhängen</translation>
     </message>
     <message>
@@ -4354,7 +4354,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="562"/>
-        <source>Allow</source>
+        <source>All&amp;ow</source>
         <translation>Zulassen</translation>
     </message>
     <message>
@@ -4451,7 +4451,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="100"/>
-        <source>Selection</source>
+        <source>&amp;Selection</source>
         <translation>Auswahl</translation>
     </message>
     <message>
@@ -4461,7 +4461,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="109"/>
-        <source>Linear</source>
+        <source>&amp;Linear</source>
         <translation>Linear</translation>
     </message>
     <message>
@@ -4471,7 +4471,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="114"/>
-        <source>Preview</source>
+        <source>&amp;Preview</source>
         <translation>Vorschau</translation>
     </message>
     <message>
@@ -4481,7 +4481,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="119"/>
-        <source>Output</source>
+        <source>&amp;Output</source>
         <translation>Ausgabe</translation>
     </message>
     <message>
@@ -4515,12 +4515,12 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="499"/>
-        <source>Channel</source>
+        <source>Display &amp;channels</source>
         <translation>Kanal</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="511"/>
-        <source>Mode</source>
+        <source>Display &amp;mode</source>
         <translation>Modus</translation>
     </message>
 </context>
@@ -5943,7 +5943,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="12511"/>
-        <source>Zoom Fit</source>
+        <source>Zoom fit</source>
         <translation>Einpassen</translation>
     </message>
     <message>
@@ -6034,7 +6034,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="592"/>
-        <source>Show hidden tools</source>
+        <source>&amp;Show hidden tools</source>
         <translation>Zeige verborgene Werkzeuge</translation>
     </message>
     <message>
@@ -9000,12 +9000,12 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <name>ptViewWindow</name>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="148"/>
-        <source>Zoom fit</source>
+        <source>Zoom &amp;fit</source>
         <translation>Passend zoomen</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="156"/>
-        <source>Zoom 100%</source>
+        <source>Zoom &amp;100%</source>
         <translation>Zoom 100%</translation>
     </message>
     <message>
@@ -9020,12 +9020,12 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="170"/>
-        <source>Over exposure</source>
+        <source>&amp;Over exposure</source>
         <translation>Überbelichtung</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="175"/>
-        <source>Under exposure</source>
+        <source>&amp;Under exposure</source>
         <translation>Unterbelichtung</translation>
     </message>
     <message>
@@ -9055,12 +9055,12 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="205"/>
-        <source>Show tools</source>
+        <source>Show &amp;tool pane</source>
         <translation>Zeige Werkzeuge</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="210"/>
-        <source>Full screen</source>
+        <source>Full&amp;screen</source>
         <translation>Vollbild</translation>
     </message>
     <message>
@@ -9085,12 +9085,12 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="231"/>
-        <source>Gradient</source>
+        <source>&amp;Gradient</source>
         <translation>Gradient</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="235"/>
-        <source>Structure</source>
+        <source>&amp;Structure</source>
         <translation>Struktur</translation>
     </message>
     <message>
@@ -9110,12 +9110,12 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="1782"/>
-        <source>Clipping</source>
+        <source>Show &amp;clipping</source>
         <translation>Clipping</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="1792"/>
-        <source>Mode</source>
+        <source>Display &amp;mode</source>
         <translation>Modus</translation>
     </message>
 </context>

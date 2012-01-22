@@ -36,23 +36,21 @@ extern QString SettingsFilePattern;
 extern ptCurve* Curve[17];
 extern ptViewWindow* ViewWindow;
 
+//==============================================================================
+
 // Prototypes
 void Update(const QString GuiName);
 int GetProcessorPhase(const QString GuiName);
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptGroupBox::ptGroupBox(const QString Title,
-           QWidget* Parent,
-           const QString Name,
-           const QString TabName,
-           const short TabNumber,
-           const short IndexInTab) {
-
+                       QWidget* Parent,
+                       const QString Name,
+                       const QString TabName,
+                       const short TabNumber,
+                       const short IndexInTab)
+{
   QVBoxLayout *Layout = new QVBoxLayout(this);
 
   setParent(Parent);
@@ -63,12 +61,12 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_TabNumber = TabNumber;
   m_IndexInTab = IndexInTab;
 
-  RightArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/rightarrow.png"));
-  DownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/downarrow.png"));
-  ActiveRightArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/activerightarrow.png"));
-  ActiveDownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/activedownarrow.png"));
-  BlockedRightArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/blockedrightarrow.png"));
-  BlockedDownArrow = QPixmap(QString::fromUtf8(":/photivo/Icons/blockeddownarrow.png"));
+  RightArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-folded-normal.png"));
+  DownArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-expanded-normal.png"));
+  ActiveRightArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-folded-active.png"));
+  ActiveDownArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-expanded-active.png"));
+  BlockedRightArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-folded-blocked.png"));
+  BlockedDownArrow = QPixmap(QString::fromUtf8(":/dark/ui-graphics/indicator-expanded-blocked.png"));
 
   m_Widget = new QWidget();
   m_Widget->setContentsMargins(8,5,0,5);
@@ -78,19 +76,27 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_Icon = new QLabel();
   m_Icon->setPixmap(DownArrow);
 
-  m_Symbol = new QLabel();
-  m_Symbol->setPixmap(QPixmap(QString::fromUtf8(":/photivo/Icons/attention.png")));
-  m_Symbol->setToolTip(tr("Complex filter. Might be slow."));
+
+  m_SlowIcon = new QLabel();
+  m_SlowIcon->setPixmap(QPixmap(QString::fromUtf8(":/dark/ui-graphics/bubble-attention.png")));
+  m_SlowIcon->setToolTip(tr("Complex filter. Might be slow."));
+  m_SlowIcon->hide();
+  m_SlowIcon->setEnabled(false);
+
+  m_Title = Title;
+  if (m_Title.contains("(*)")) {
+    m_Title.replace("(*)","");
+    m_Title = m_Title.trimmed();
+    m_SlowIcon->setEnabled(true);
+  }
 
   m_HelpIcon = new QLabel();
   m_HelpIcon->setPixmap(*Theme->ptIconQuestion);
+  m_HelpIcon->setCursor(QCursor(Qt::PointingHandCursor));
   m_HelpIcon->setToolTip(tr("Open help page in web browser."));
-  m_HelpIcon->setVisible(0);
+  m_HelpIcon->hide();
+  m_HelpIcon->setEnabled(false);
   m_HelpUri = "";
-
-  m_Title = Title;
-  m_Title.replace("(*)","");
-  m_Title.trimmed();
 
   m_TitleLabel = new QLabel();
   m_TitleLabel->setObjectName("Title");
@@ -102,12 +108,10 @@ ptGroupBox::ptGroupBox(const QString Title,
 
   ButtonLayout->addWidget(m_Icon);
   ButtonLayout->addWidget(m_TitleLabel);
-  ButtonLayout->addWidget(m_HelpIcon);
-  if (m_Title!=Title) {
-    ButtonLayout->addWidget(m_Symbol);
-  }
   ButtonLayout->addStretch();
-  ButtonLayout->setContentsMargins(-3,0,0,0);
+  ButtonLayout->addWidget(m_HelpIcon);
+  ButtonLayout->addWidget(m_SlowIcon);
+  ButtonLayout->setContentsMargins(-3,0,3,0);
   ButtonLayout->setSpacing(4);
   ButtonLayout->setMargin(3);
 
@@ -123,33 +127,33 @@ ptGroupBox::ptGroupBox(const QString Title,
   m_IsBlocked = Settings->ToolIsBlocked(m_Name)?1:0;
   m_IsEnabled = 1;
 
-  m_AtnFav = new QAction(tr("Favourite"), this);
+  m_AtnFav = new QAction(this);
   connect(m_AtnFav, SIGNAL(triggered()), this, SLOT(SetFavourite()));
   m_AtnFav->setIconVisibleInMenu(true);
 
-  m_AtnHide = new QAction(tr("Hide"), this);
+  m_AtnHide = new QAction(tr("&Hide"), this);
   connect(m_AtnHide, SIGNAL(triggered()), this, SLOT(Hide()));
   m_AtnHide->setIcon(QIcon(*Theme->ptIconCrossRed));
   m_AtnHide->setIconVisibleInMenu(true);
 
-  m_AtnBlock = new QAction(tr("Block"), this);
+  m_AtnBlock = new QAction(this);
   connect(m_AtnBlock, SIGNAL(triggered()), this, SLOT(SetBlocked()));
   m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleRed));
   m_AtnBlock->setIconVisibleInMenu(true);
 
-  m_AtnReset = new QAction(tr("Reset"), this);
+  m_AtnReset = new QAction(tr("&Reset"), this);
   connect(m_AtnReset, SIGNAL(triggered()), this, SLOT(Reset()));
   m_AtnReset->setIcon(QIcon(*Theme->ptIconReset));
   m_AtnReset->setIconVisibleInMenu(true);
 
-  m_AtnSavePreset = new QAction(tr("Save preset"), this);
+  m_AtnSavePreset = new QAction(tr("&Save preset"), this);
   connect(m_AtnSavePreset, SIGNAL(triggered()), this, SLOT(SaveSettings()));
-  m_AtnSavePreset->setIcon(QIcon(*Theme->ptIconDisk));
+  m_AtnSavePreset->setIcon(QIcon(*Theme->ptIconSavePreset));
   m_AtnSavePreset->setIconVisibleInMenu(true);
 
-  m_AtnAppendPreset = new QAction(tr("Append preset"), this);
+  m_AtnAppendPreset = new QAction(tr("&Append preset"), this);
   connect(m_AtnAppendPreset, SIGNAL(triggered()), this, SLOT(AppendSettings()));
-  m_AtnAppendPreset->setIcon(QIcon(*Theme->ptIconDisk));
+  m_AtnAppendPreset->setIcon(QIcon(*Theme->ptIconAppendPreset));
   m_AtnAppendPreset->setIconVisibleInMenu(true);
 
   UpdateView();
@@ -160,18 +164,10 @@ ptGroupBox::ptGroupBox(const QString Title,
           this,SLOT(PipeUpdate()));
 
   m_NeedPipeUpdate = 0;
-
-  //~ if (i==1 && j==1) this->setVisible(false);
-  //~ test = new QLabel();
-  //~ test->setText("Hallo");
-  //~ Layout->addWidget(test);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
 // Information about position in tabs
-//
-////////////////////////////////////////////////////////////////////////////////
 
 QString ptGroupBox::GetTitle() {
   return m_Title;
@@ -189,22 +185,14 @@ short ptGroupBox::GetIndexInTab() {
   return m_IndexInTab;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Update
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::Update() {
   m_IsBlocked = Settings->ToolIsBlocked(m_Name)?1:0;
   UpdateView();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// UpdateView
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::UpdateView() {
   if (m_IsBlocked == 1 || m_IsEnabled == 0) {
@@ -216,12 +204,16 @@ void ptGroupBox::UpdateView() {
 
   if (m_Folded==1) {
     m_Widget->setVisible(false);
+    m_SlowIcon->hide();
+    m_HelpIcon->hide();
     m_Icon->clear();
     if (m_IsBlocked) m_Icon->setPixmap(BlockedRightArrow);
     else if (m_IsActive) m_Icon->setPixmap(ActiveRightArrow);
     else m_Icon->setPixmap(RightArrow);
   } else {
     m_Widget->setVisible(true);
+    if (m_HelpIcon->isEnabled()) m_HelpIcon->show();
+    if (m_SlowIcon->isEnabled()) m_SlowIcon->show();
     m_Icon->clear();
     if (m_IsBlocked) m_Icon->setPixmap(BlockedDownArrow);
     else if (m_IsActive) m_Icon->setPixmap(ActiveDownArrow);
@@ -231,39 +223,30 @@ void ptGroupBox::UpdateView() {
   if (m_Folded!=1) {
     m_Header->setObjectName("ToolHeader");
     m_TitleLabel->setObjectName("ToolHeader");
-    m_Symbol->setObjectName("ToolHeader");
+    m_SlowIcon->setObjectName("ToolHeader");
     m_HelpIcon->setObjectName("ToolHeader");
     m_Icon->setObjectName("ToolHeader");
   } else {
     m_Header->setObjectName("");
     m_TitleLabel->setObjectName("");
-    m_Symbol->setObjectName("");
+    m_SlowIcon->setObjectName("");
     m_HelpIcon->setObjectName("");
     m_Icon->setObjectName("");
   }
-  m_Header->setStyleSheet(Theme->ptStyleSheet);
+  m_Header->setStyleSheet(Theme->stylesheet());
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Active
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SetActive(const short IsActive) {
-
-  if (IsActive == m_IsActive) return;
+  if (IsActive == m_IsActive)
+    return;
 
   m_IsActive = IsActive;
-
   UpdateView();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// PipeUpdate
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::PipeUpdate() {
   Settings->SetValue("BlockUpdate",0);
@@ -273,11 +256,7 @@ void ptGroupBox::PipeUpdate() {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Reset
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::Reset() {
   // immediate response
@@ -302,11 +281,7 @@ void ptGroupBox::Reset() {
   m_Timer->start(ptTimeout_Input+100);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Save Settings
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SaveSettings() {
   WriteSettings(0);
@@ -374,6 +349,8 @@ void ptGroupBox::WriteSettings(const short Append) {
   // Additional for texture overlay
   if (m_Name == "TabTextureOverlay")
     Keys << "TextureOverlayFile";
+  if (m_Name == "TabTextureOverlay2")
+    Keys << "TextureOverlay2File";
 
   QString SuggestedFileName = Settings->GetString("PresetDirectory") + "/preset.pts";
   QString FileName;
@@ -441,11 +418,7 @@ void ptGroupBox::WriteSettings(const short Append) {
     ptMessageBox::critical(0,"Error","Error while writing preset file!");
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Enabled
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SetEnabled(const short Enabled) {
   QStringList Temp = Settings->GetStringList("DisabledTools");
@@ -461,11 +434,7 @@ void ptGroupBox::SetEnabled(const short Enabled) {
   UpdateView();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Blocked
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SetBlocked() {
   m_IsBlocked = 1 - m_IsBlocked;
@@ -486,11 +455,7 @@ void ptGroupBox::SetBlocked() {
     ::Update(m_Name);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Hide
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::Hide() {
   int Active = Settings->ToolIsActive(m_Name);
@@ -502,11 +467,7 @@ void ptGroupBox::Hide() {
   if (Active) ::Update(m_Name);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Set Favourite
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SetFavourite() {
   QStringList Temp = Settings->GetStringList("FavouriteTools");
@@ -518,32 +479,21 @@ void ptGroupBox::SetFavourite() {
   Settings->SetValue("FavouriteTools", Temp);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Set help
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::SetHelpUri(const QString Uri) {
   m_HelpUri = Uri;
-  m_HelpIcon->setVisible(true);
+  m_HelpIcon->setEnabled(true);
+  if (!m_Folded)
+    m_HelpIcon->show();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// changeEvent handler.
-// To react on enable/disable
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::changeEvent(QEvent *) {
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// MousePress
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptGroupBox::mousePressEvent(QMouseEvent *event) {
   QPoint Position = event->pos()-m_HelpIcon->pos();
@@ -565,14 +515,14 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
       if (!Settings->ToolAlwaysVisible(m_Name)) {
         if (m_IsBlocked == 1) {
           m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleGreen));
-          m_AtnBlock->setText(tr("Allow"));
+          m_AtnBlock->setText(tr("All&ow"));
         } else {
           m_AtnBlock->setIcon(QIcon(*Theme->ptIconCircleRed));
-          m_AtnBlock->setText(tr("Block"));
+          m_AtnBlock->setText(tr("Bl&ock"));
         }
         QMenu Menu(NULL);
-        Menu.setPalette(Theme->ptMenuPalette);
-        Menu.setStyle(Theme->ptStyle);
+        Menu.setPalette(Theme->menuPalette());
+        Menu.setStyle(Theme->style());
         Menu.addAction(m_AtnBlock);
         Menu.addSeparator();
         Menu.addAction(m_AtnReset);
@@ -583,10 +533,10 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
         QStringList Temp = Settings->GetStringList("FavouriteTools");
         if (!Temp.contains(m_Name)) {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));
-          m_AtnFav->setText(tr("Favourite tool"));
+          m_AtnFav->setText(tr("Add to &favourites"));
         } else {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStarGrey));
-          m_AtnFav->setText(tr("Normal tool"));
+          m_AtnFav->setText(tr("Remove from &favourites"));
         }
         Menu.addAction(m_AtnFav);
         Menu.addSeparator();
@@ -597,33 +547,33 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
                  m_Name == "TabDemosaicing" ||
                  m_Name == "TabHighlightRecovery") {
         QMenu Menu(NULL);
-        Menu.setPalette(Theme->ptMenuPalette);
-        Menu.setStyle(Theme->ptStyle);
+        Menu.setPalette(Theme->menuPalette());
+        Menu.setStyle(Theme->style());
         Menu.addAction(m_AtnSavePreset);
         Menu.addAction(m_AtnAppendPreset);
         Menu.addSeparator();
         QStringList Temp = Settings->GetStringList("FavouriteTools");
         if (!Temp.contains(m_Name)) {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));
-          m_AtnFav->setText(tr("Favourite tool"));
+          m_AtnFav->setText(tr("Add to &favourites"));
         } else {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStarGrey));
-          m_AtnFav->setText(tr("Normal tool"));
+          m_AtnFav->setText(tr("Remove from &favourites"));
         }
         Menu.addAction(m_AtnFav);
         Menu.exec(event->globalPos());
       } else if (parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName() != "TabSetting" &&
                  parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName() != "TabInfo") {
         QMenu Menu(NULL);
-        Menu.setPalette(Theme->ptMenuPalette);
-        Menu.setStyle(Theme->ptStyle);
+        Menu.setPalette(Theme->menuPalette());
+        Menu.setStyle(Theme->style());
         QStringList Temp = Settings->GetStringList("FavouriteTools");
         if (!Temp.contains(m_Name)) {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));
-          m_AtnFav->setText(tr("Favourite tool"));
+          m_AtnFav->setText(tr("Add to &favourites"));
         } else {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStarGrey));
-          m_AtnFav->setText(tr("Normal tool"));
+          m_AtnFav->setText(tr("Remove from &favourites"));
         }
         Menu.addAction(m_AtnFav);
         Menu.exec(event->globalPos());
@@ -637,23 +587,9 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
   }
 }
 
- void ptGroupBox::paintEvent(QPaintEvent *)
- {
-   //~ QStyleOption opt;
-   //~ opt.init(this);
-   //~ QPainter p(this);
-   //~ style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
- }
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+void ptGroupBox::paintEvent(QPaintEvent *)
+{}
 
-ptGroupBox::~ptGroupBox() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-
+//==============================================================================

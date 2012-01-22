@@ -41,61 +41,72 @@ Q_OBJECT
 
 public :
 
-const ptImage*      m_RelatedImage;
-QTimer*             m_ResizeTimer; // To circumvent multi resize events.
+  const ptImage*      m_RelatedImage;
+  QTimer*             m_ResizeTimer; // To circumvent multi resize events.
 
-// Constructor.
-ptHistogramWindow(const ptImage* RelatedImage,
-                        QWidget* Parent);
-// Destructor.
-~ptHistogramWindow();
+  // Constructor.
+  ptHistogramWindow(const ptImage* RelatedImage,
+                          QWidget* Parent);
+  // Destructor.
+  ~ptHistogramWindow();
 
-// NewRelatedImage to associate anonter ptImage with this window.
-void UpdateView(const ptImage* NewRelatedImage = NULL);
-void Init();
+  // NewRelatedImage to associate anonter ptImage with this window.
+  void UpdateView(const ptImage* NewRelatedImage = NULL);
+  void Init();
+  void PixelInfo(const QString R, const QString G, const QString B);
 
 protected:
-void resizeEvent(QResizeEvent*);
-void paintEvent(QPaintEvent*);
-QSize sizeHint() const { return QSize(200,200); }
-QSize minimumSizeHint() const { return QSize(100,100); }
-int  heightForWidth(int w) const { return MIN(150,w);}
-void contextMenuEvent(QContextMenuEvent *event);
+  void resizeEvent(QResizeEvent*);
+  void paintEvent(QPaintEvent*);
+  QSize sizeHint() const { return QSize(200,200); }
+  QSize minimumSizeHint() const { return QSize(100,100); }
+  int  heightForWidth(int w) const { return MIN(150,w); }
+  void contextMenuEvent(QContextMenuEvent *event);
 
 private slots:
-void ResizeTimerExpired();
-void MenuLnX();
-void MenuLnY();
-void MenuCrop();
-void MenuChannel();
-void MenuMode();
+  void ResizeTimerExpired();
+  void MenuLnX();
+  void MenuLnY();
+  void MenuCrop();
+  void MenuChannel();
+  void MenuMode();
+
+public slots:
+  void PixelInfoHide();
 
 private:
-const ptImage8* m_Image8;
-QPixmap*        m_QPixmap;
-short           m_LogoActive;
-short           m_RecalcNeeded;
-uint32_t        m_HistoMax;
-short           m_PreviousHistogramGamma;
-short           m_PreviousHistogramLogX;
-short           m_PreviousHistogramLogY;
-QString         m_PreviousFileName;
-QAction*        m_AtnLnX;
-QAction*        m_AtnLnY;
-QAction*        m_AtnCrop;
-QActionGroup*   m_ModeGroup;
-QAction*        m_AtnLinear;
-QAction*        m_AtnPreview;
-QAction*        m_AtnOutput;
-QActionGroup*   m_ChannelGroup;
-QAction*        m_AtnRGB;
-QAction*        m_AtnR;
-QAction*        m_AtnG;
-QAction*        m_AtnB;
-uint16_t*       m_LookUp;
+  const ptImage8* m_Image8;
+  QPixmap*        m_QPixmap;
+  short           m_LogoActive;
+  short           m_RecalcNeeded;
+  uint32_t        m_HistoMax;
+  short           m_PreviousHistogramGamma;
+  short           m_PreviousHistogramLogX;
+  short           m_PreviousHistogramLogY;
+  QString         m_PreviousFileName;
+  QAction*        m_AtnLnX;
+  QAction*        m_AtnLnY;
+  QAction*        m_AtnCrop;
+  QActionGroup*   m_ModeGroup;
+  QAction*        m_AtnLinear;
+  QAction*        m_AtnPreview;
+  QAction*        m_AtnOutput;
+  QActionGroup*   m_ChannelGroup;
+  QAction*        m_AtnRGB;
+  QAction*        m_AtnR;
+  QAction*        m_AtnG;
+  QAction*        m_AtnB;
+  uint16_t*       m_LookUp;
 
-void CalculateHistogram();
-void FillLookUp();
+  void CalculateHistogram();
+  void FillLookUp();
+  void InitOverlay();
+
+  QLabel*         m_PixelInfoR;
+  QLabel*         m_PixelInfoG;
+  QLabel*         m_PixelInfoB;
+  QTimer*         m_PixelInfoTimer;
+  QPalette*       m_OverlayPalette;
 };
 
 #endif
