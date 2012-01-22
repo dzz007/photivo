@@ -28,6 +28,9 @@
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
 
+// disable the file manager
+// #define PT_WITHOUT_FILEMGR
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Delete an object and null the pointer

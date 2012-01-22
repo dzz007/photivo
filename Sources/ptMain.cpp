@@ -24,14 +24,17 @@
 
 #define QT_CLEAN_NAMESPACE
 
+#include <QFileInfo>
 #include <QtGui>
 #include <QtCore>
 //#include <QtNetwork>
 #include <string>
 #include <csignal>
 
+#include "ptDefines.h"
 #include "ptCalloc.h"
 #include "ptConfirmRequest.h"
+#include "ptConstants.h"
 #include "ptMessageBox.h"
 #include "ptDcRaw.h"
 #include "ptProcessor.h"
@@ -54,19 +57,16 @@
 #include "imagespot/ptImageSpotList.h"
 #include "imagespot/ptRepairSpot.h"
 #include "qtsingleapplication/qtsingleapplication.h"
+#include "filemgmt/ptFileMgrWindow.h"
+#include <wand/magick_wand.h>
 
 #ifdef Q_OS_MAC
-    #include <QFileOpenEvent>
+  #include <QFileOpenEvent>
 #endif
 
-#include <Magick++.h>
-
-#ifdef Q_OS_WIN32
-#include "qt_windows.h"
-#include "qlibrary.h"
-#ifndef CSIDL_APPDATA
-#define CSIDL_APPDATA 0x001a
-#endif
+#ifdef Q_OS_WIN
+  #include "ptEcWin7.h"
+  #include "ptWinApi.h"
 #endif
 
 using namespace std;
@@ -80,7 +80,7 @@ using namespace std;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-DcRaw*       TheDcRaw        = NULL;
+ptDcRaw*       TheDcRaw        = NULL;
 ptProcessor* TheProcessor    = NULL;
 
 ptCurve*  RGBGammaCurve     = NULL;
@@ -93,6 +93,10 @@ ptCurve*  BackupCurve[17]   = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
 // I don't manage to init statically following ones. Done in InitCurves.
 QStringList CurveKeys, CurveToolNameKeys, CurveBackupKeys;
 QStringList CurveFileNamesKeys;
+QStringList FileExtsRaw;
+QStringList FileExtsBitmap;
+QString     UserDirectory;
+QString     ShareDirectory;
 
 ptChannelMixer* ChannelMixer = NULL;
 
@@ -127,6 +131,7 @@ ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
 ptCurveWindow*     CurveWindow[17] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+ptFileMgrWindow*   FileMgrWindow   = NULL;
 
 // Error dialog for segfaults
 ptMessageBox* SegfaultErrorBox;
@@ -222,6 +227,7 @@ void InitStrings() {
                                                  "*.tiff *.TIFF *.Tiff "
                                                  "*.tif *.TIF *.Tif "
                                                  "*.bmp *.BMP *.Bmp "
+                                                 "*.png *.PNG *.Png "
                                                  "*.ppm *.PPm *.Ppm "
                                                  ";;All files (*.*)");
 
@@ -232,6 +238,7 @@ void InitStrings() {
                                                  "*.tiff *.TIFF *.Tiff "
                                                  "*.tif *.TIF *.Tif "
                                                  "*.bmp *.BMP *.Bmp "
+                                                 "*.png *.PNG *.Png "
                                                  "*.ppm *.PPm *.Ppm "
                                                  ";;All files (*.*)");
 }
@@ -242,9 +249,14 @@ void InitStrings() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+ptImageType CheckImageType(QString filename,
+                           uint16_t* width, uint16_t* height,
+                           ptDcRaw* dcRaw = NULL);
 void   RunJob(const QString FileName);
 short  ReadJobFile(const QString FileName);
 short  ReadSettingsFile(const QString FileName, short& NextPhase);
+void   Settings_2_Form();
+void   Form_2_Settings();
 void   WriteOut();
 void   UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
                           const short    OnlyHistogram = 0);
@@ -279,6 +291,7 @@ void SaveButtonToolTip(const short mode);
 int    photivoMain(int Argc, char *Argv[]);
 void   CleanupResources();
 void copyFolder(QString sourceFolder, QString destFolder);
+void CB_PixelReader(const QPointF Point, const ptPixelReading PixelReading);
 bool GBusy = false;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -327,6 +340,7 @@ void SegfaultAbort(int) {
 
 int main(int Argc, char *Argv[]) {
   int RV = photivoMain(Argc,Argv);
+  DestroyMagick();
   DelAndNull(SegfaultErrorBox);
   CleanupResources(); // Not necessary , for debug.
   return RV;
@@ -381,7 +395,7 @@ int photivoMain(int Argc, char *Argv[]) {
   QString VerTemp(TOSTRING(APPVERSION));    //also used for the cli syntax error msg below!
   printf("Photivo version %s\n", VerTemp.toAscii().data());
 
-  Magick::InitializeMagick(*Argv);
+  InitializeMagick(*Argv);
 
   // TextCodec
   QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
@@ -414,6 +428,21 @@ int photivoMain(int Argc, char *Argv[]) {
   std::signal(SIGSEGV, SegfaultAbort);
   std::signal(SIGABRT, SegfaultAbort);
 
+  // Check for wrong GM quantum depth. We need the 16bit GraphicsMagick.
+  ulong QDepth = 0;
+  const ulong MinQD = 16;
+  MagickGetQuantumDepth(&QDepth);
+  if (QDepth < MinQD) {
+    QString WrongQDepthMsg = QObject::tr(
+        "Fatal error: Wrong GraphicsMagick quantum depth!\n"
+        "Found quantum depth %1. Photivo needs at least %2.\n")
+        .arg(QDepth).arg(MinQD);
+    fprintf(stderr,"%s", WrongQDepthMsg.toAscii().data());
+    ptMessageBox::critical(0, QObject::tr("Photivo: Fatal Error"), WrongQDepthMsg);
+    exit(EXIT_FAILURE);
+  }
+
+
   // Handle cli arguments
   QString PhotivoCliUsageMsg = QObject::tr(
 "Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
@@ -436,21 +465,25 @@ int photivoMain(int Argc, char *Argv[]) {
 "--new-instance\n"
 "      Allow opening another Photivo instance instead of using a currently\n"
 "      running Photivo. Job files are always opened in a new instance.\n"
+"--no-filemgr\n"
+"      Prevent auto-open file manager when Photivo starts.\n"
 "-h\n"
 "      Display this usage information.\n\n"
 "For more documentation visit the wiki: http://photivo.org/photivo/start\n"
   );
+
+  ptCliCommands cli = { cliNoAction, "", "", false, false };
 
 #ifdef Q_OS_MAC
 //Just Skip if engaged by QFileOpenEvent
   if(!MacGotFileEvent) {
 #endif
 
-  ptCliCommands cli = ParseCli(Argc, Argv);
+  cli = ParseCli(Argc, Argv);
 
   // Show help message and exit Photivo
   if (cli.Mode == cliShowHelp) {
-  #ifdef Q_OS_WIN32
+  #ifdef Q_OS_WIN
     ptMessageBox::critical(0, QObject::tr("Photivo"), PhotivoCliUsageMsg);
   #else
     fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
@@ -468,11 +501,6 @@ int photivoMain(int Argc, char *Argv[]) {
     ImageFileToOpen = cli.Filename;
   }
 
-#ifdef Q_OS_MAC
-  } // !MacGotFileEvent
-#endif
-
-
   // QtSingleInstance, add CLI-Switch to skip and allow multiple instances
   // JobMode is always run in a new instance
   // Sent messages are handled by ptMainWindow::OtherInstanceMessage
@@ -483,9 +511,9 @@ int photivoMain(int Argc, char *Argv[]) {
       }
       if (ImageFileToOpen != "") {
         if (ImageCleanUp > 0) {
-          TheApplication->sendMessage("::img::" + ImageFileToOpen);
-        } else {
           TheApplication->sendMessage("::tmp::" + ImageFileToOpen);
+        } else {
+          TheApplication->sendMessage("::img::" + ImageFileToOpen);
         }
       }
       TheApplication->activateWindow();
@@ -495,6 +523,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
 
 #ifdef Q_OS_MAC
+  } // !MacGotFileEvent
   QDir dir(QApplication::applicationDirPath());
   QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
 #endif
@@ -557,53 +586,76 @@ int photivoMain(int Argc, char *Argv[]) {
 
   CurveBackupKeys = CurveKeys;
 
+  FileExtsRaw << "*.arw" << "*.ARW" << " *.Arw"
+              << "*.bay" << "*.BAY" << "*.Bay"
+              << "*.bmq" << "*.BMQ" << "*.Bmq"
+              << "*.cr2" << "*.CR2" << "*.Cr2"
+              << "*.crw" << "*.CRW" << "*.Crw"
+              << "*.cs1" << "*.CS1" << "*.Cs1"
+              << "*.dc2" << "*.DC2" << "*.Dc2"
+              << "*.dcr" << "*.DCR" << "*.Dcr"
+              << "*.dng" << "*.DNG" << "*.Dng"
+              << "*.erf" << "*.ERF" << "*.Erf"
+              << "*.fff" << "*.FFF" << "*.Fff"
+              << "*.hdr" << "*.HDR" << "*.Hdr"
+              << "*.ia " << "*.IA" << "*.Ia"
+              << "*.k25" << "*.K25"
+              << "*.kc2" << "*.KC2" << "*.Kc2"
+              << "*.kdc" << "*.KDC" << "*.Kdc"
+              << "*.mdc" << "*.MDC" << "*.Mdc"
+              << "*.mef" << "*.MEF" << "*.Mef"
+              << "*.mos" << "*.MOS" << "*.Mos"
+              << "*.mrw" << "*.MRW" << "*.Mrw"
+              << "*.nef" << "*.NEF" << "*.Nef"
+              << "*.orf" << "*.ORF" << "*.Orf"
+              << "*.pef" << "*.PEF" << "*.Pef"
+              << "*.pxn" << "*.PXN" << "*.Pxn"
+              << "*.qtk" << "*.QTK" << "*.Qtk"
+              << "*.raf" << "*.RAF" << "*.Raf"
+              << "*.raw" << "*.RAW" << "*.Raw"
+              << "*.rdc" << "*.RDC" << "*.Rdc"
+              << "*.rw2" << "*.RW2" << "*.Rw2"
+              << "*.sr2" << "*.SR2" << "*.Sr2"
+              << "*.srf" << "*.SRF" << "*.Srf"
+              << "*.srw" << "*.SRW" << "*.Srw"
+              << "*.sti" << "*.STI" << "*.Sti"
+              << "*.tif" << "*.TIF" << "*.Tif"
+              << "*.x3f" << "*.X3F" << "*.X3f";
+
+  FileExtsBitmap << "*.jpeg" << "*.JPEG" << "*.Jpeg "
+                 << "*.jpg" << "*.JPG" << "*.Jpg"
+                 << "*.png" << ".PNG" << "*.Png"
+                 << "*.tiff" << "*.TIFF" << "*.Tiff"
+                 << "*.tif" << "*.TIF" << "*.Tif"
+                 << "*.bmp" << "*.BMP" << "*.Bmp"
+                 << "*.png" << "*.PNG" << "*.Png"
+                 << "*.ppm" << "*.PPm" << "*.Ppm";
+
+
   // User home folder, where Photivo stores its ini and all Presets, Curves etc
   // %appdata%\Photivo on Windows, ~/.photivo on Linux or the program folder for the
   // portable Windows version.
   short IsPortableProfile = 0;
   QString AppDataFolder = "";
   QString Folder = "";
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   IsPortableProfile = QFile::exists("use-portable-profile");
   if (IsPortableProfile != 0) {
-      printf("Photivo running in portable mode.\n");
-      AppDataFolder = QCoreApplication::applicationDirPath();
-      Folder = "";
+    printf("Photivo running in portable mode.\n");
+    AppDataFolder = QCoreApplication::applicationDirPath();
+    Folder = "";
   } else {
-      // Get %appdata% via WinAPI call
-      QLibrary library(QLatin1String("shell32"));
-      QT_WA(
-              {
-              typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPTSTR, int, BOOL);
-              GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
-              if (SHGetSpecialFolderPath) {
-              TCHAR path[MAX_PATH];
-              SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-              AppDataFolder = QString::fromUtf16((ushort*)path);
-              }
-              },
-              {
-              typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, char*, int, BOOL);
-              GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathA");
-              if (SHGetSpecialFolderPath) {
-              char path[MAX_PATH];
-              SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, FALSE);
-              AppDataFolder = QString::fromLocal8Bit(path);
-              }
-              }
-           );
-
-      // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
-      AppDataFolder.replace(QString("\\"), QString("/"));
-      // Keeping the leading "/" separate here is important or mkdir will fail.
-      Folder = "Photivo/";
+    // WinAPI returns path with native separators "\". We need to change this to "/" for Qt.
+    AppDataFolder = WinApi::AppdataFolder();
+    // Keeping the leading "/" separate here is important or mkdir will fail.
+    Folder = "Photivo/";
   }
 #else
   Folder = ".photivo/";
   AppDataFolder = QDir::homePath();
 #endif
 
-  QString UserDirectory = AppDataFolder + "/" + Folder;
+  UserDirectory = AppDataFolder + "/" + Folder;
 
   if (IsPortableProfile == 0) {
       QDir home(AppDataFolder);
@@ -622,6 +674,7 @@ int photivoMain(int Argc, char *Argv[]) {
 #else
   QString NewShareDirectory = QCoreApplication::applicationDirPath().append("/");
 #endif
+  ShareDirectory = NewShareDirectory;
 
   QFileInfo SettingsFileInfo(SettingsFileName);
   short NeedInitialization = 1;
@@ -654,9 +707,9 @@ int photivoMain(int Argc, char *Argv[]) {
       QFile::remove(UserDirectory + "photivo.png");
       QFile::copy(NewShareDirectory + "photivo.png",
               UserDirectory + "photivo.png");
-      QFile::remove(UserDirectory + "photivoLogo.png");
-      QFile::copy(NewShareDirectory + "photivoLogo.png",
-              UserDirectory + "photivoLogo.png");
+//      QFile::remove(UserDirectory + "photivoLogo.png");
+//      QFile::copy(NewShareDirectory + "photivoLogo.png",
+//              UserDirectory + "photivoLogo.png");
       QFile::remove(UserDirectory + "photivoPreview.jpg");
       QFile::copy(NewShareDirectory + "photivoPreview.jpg",
               UserDirectory + "photivoPreview.jpg");
@@ -763,8 +816,10 @@ int photivoMain(int Argc, char *Argv[]) {
   // Start op the Gui stuff.
 
   // Start the theme class
-  Theme = new ptTheme(TheApplication);
-  Theme->SetCustomCSS(Settings->GetString("CustomCSSFile"));
+  Theme = new ptTheme(TheApplication,
+                      (ptTheme::Theme)Settings->GetInt("Style"),
+                      (ptTheme::Highlight)Settings->GetInt("StyleHighLight"));
+  Theme->setCustomCSS(Settings->GetString("CustomCSSFile"));
 
   GuiOptions = new ptGuiOptions();
 
@@ -778,17 +833,37 @@ int photivoMain(int Argc, char *Argv[]) {
       return ptError_FileOpen;
   }
 
+  // When loading a file via cli, set file manager directory to that path.
+  // Chances are good the user want to work with other files from that dir as well
+  if (!JobMode && !ImageCleanUp && (ImageFileToOpen != "")) {
+    Settings->SetValue("LastFileMgrLocation", QFileInfo(ImageFileToOpen).absolutePath());
+  }
+
+#ifndef PT_WITHOUT_FILEMGR
+  if (cli.NoOpenFileMgr) Settings->SetValue("NoFileMgrStartupOpen", 1);
+#endif
+
+  // Construct windows
   MainWindow = new ptMainWindow(QObject::tr("Photivo"));
   QObject::connect(TheApplication, SIGNAL(messageReceived(const QString &)),
                    MainWindow, SLOT(OtherInstanceMessage(const QString &)));
   TheApplication->setActivationWindow(MainWindow);
 
-
   ViewWindow =
       new ptViewWindow(MainWindow->ViewFrameCentralWidget, MainWindow);
 
+  ViewWindow->SetPixelReader(CB_PixelReader);
+
   HistogramWindow =
       new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
+
+#ifndef PT_WITHOUT_FILEMGR
+  FileMgrWindow = new ptFileMgrWindow(MainWindow->FileManagerPage);
+  MainWindow->FileManagerLayout->addWidget(FileMgrWindow);
+  QObject::connect(FileMgrWindow, SIGNAL(FileMgrWindowClosed()),
+                   MainWindow, SLOT(CloseFileMgrWindow()));
+  QObject::connect(ViewWindow, SIGNAL(openFileMgr()), MainWindow, SLOT(OpenFileMgrWindow()));
+#endif
 
   // Populate Translations combobox
   MainWindow->PopulateTranslationsCombobox(UiLanguages, LangIdx);
@@ -829,44 +904,41 @@ int photivoMain(int Argc, char *Argv[]) {
   Settings->SetValue("BlockedTools",Temp);
   MainWindow->UpdateToolBoxes();
 
-  // Calculate a nice position.
-  // Persistent settings.
 
-  QRect DesktopRect = (QApplication::desktop())->screenGeometry(MainWindow);
+  //------------------------------------------------------------------------------
+  // Initialize main window geometry and position
 
-  if (RememberSettingLevel == 0) {
-      MainWindowPos  = QPoint(DesktopRect.width()/20,DesktopRect.height()/20);
-      MainWindowSize = QSize(DesktopRect.width()*9/10,DesktopRect.height()*9/10);
+  QRect DesktopRect = (QApplication::desktop())->availableGeometry(MainWindow);
+  MainWindowPos = Settings->m_IniSettings->value("MainWindowPos", DesktopRect.topLeft()).toPoint();
+
+  QVariant WinSize = Settings->m_IniSettings->value("MainWindowSize");
+  if(!WinSize.isValid()) {
+    // ensure a reasonable size if we don’t get one from Settings
+    MainWindowSize = QSize(qMin(1200, (int)(DesktopRect.width() * 0.8)),
+                           qMin(900, (int)(DesktopRect.height() * 0.8)) );
   } else {
-      MainWindowPos = Settings->m_IniSettings->
-          value("MainWindowPos",
-                  QPoint(DesktopRect.width()/20,
-                      DesktopRect.height()/20)
-               ).toPoint();
-      MainWindowSize = Settings->m_IniSettings->
-          value("MainWindowSize",
-                  QSize(DesktopRect.width()*9/10,
-                      DesktopRect.height()*9/10)
-               ).toSize();
-  }
-
-  if (RememberSettingLevel) {
-      MainWindow->MainSplitter->
-          restoreState(Settings->m_IniSettings->
-                  value("MainSplitter").toByteArray());
-      MainWindow->ControlSplitter->
-          restoreState(Settings->m_IniSettings->
-                  value("ControlSplitter").toByteArray());
-  } else {
-      // Initial value of splitter.
-      QList <int> SizesList;
-      SizesList.append(250);
-      SizesList.append(1000); // Value obtained to avoid resizing at startup.
-      MainWindow->MainSplitter->setSizes(SizesList);
+    MainWindowSize = WinSize.toSize();
   }
 
   MainWindow->resize(MainWindowSize);
   MainWindow->move(MainWindowPos);
+
+  // MainSplitter is the one between tool pane and image pane.
+  // ControlSplitter is the one between histogram and tools tabwidget.
+  QVariant splitterState = Settings->m_IniSettings->value("MainSplitter");
+  if (splitterState.isValid()) {
+    MainWindow->MainSplitter->restoreState(splitterState.toByteArray());
+  } else {
+    // 10000 width for image pane to ensure the 300 for tool pane
+    MainWindow->MainSplitter->setSizes(QList<int>() << 300 << 10000);
+  }
+
+  splitterState = Settings->m_IniSettings->value("ControlSplitter");
+  if (splitterState.isValid()) {
+    MainWindow->ControlSplitter->restoreState(splitterState.toByteArray());
+  } else {
+    MainWindow->ControlSplitter->setSizes(QList<int>() << 100 << 10000);
+  }
 
   if (Settings->m_IniSettings->value("IsMaximized",0).toBool()) {
       MainWindow->showMaximized();
@@ -874,8 +946,11 @@ int photivoMain(int Argc, char *Argv[]) {
       MainWindow->show();
   }
 
+  //------------------------------------------------------------------------------
+
+
   // Update the preview image will result in displaying the splash.
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 
   // Open and keep open the profile for previewing.
   PreviewColorProfile = cmsOpenProfileFromFile(
@@ -922,6 +997,17 @@ void   ExtFileOpen(const QString file){
     CB_MenuFileOpen(1);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+void ptRemoveFile( const QString FileName) {
+  if (QMessageBox::Yes == ptMessageBox::question(
+                 MainWindow,
+                 QObject::tr("Clean up input file"),
+                 "As requested, Photivo will delete the input file " + FileName + ". Proceed?",
+                 QMessageBox::No|QMessageBox::Yes)) {
+    QFile::remove(FileName);
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -959,6 +1045,7 @@ void CB_Event0() {
   InitCurves();
   InitChannelMixers();
   PreCalcTransforms();
+  Settings_2_Form();
 
   if (Settings->GetInt("JobMode") == 0) { // not job mode!
     // Load user settings
@@ -999,11 +1086,19 @@ void CB_Event0() {
     Settings->SetValue("FavouriteTools", Temp);
   }
 
-  InStartup = 0;
+#ifndef PT_WITHOUT_FILEMGR
+  if (Settings->GetInt("FileMgrIsOpen")) {
+    FileMgrWindow->DisplayThumbnails();
+    FileMgrWindow->setFocus(Qt::OtherFocusReason);
+  }
+#endif
+
 //prepare for further QFileOpenEvent(s)
 #ifdef Q_OS_MAC
   TheApplication->macinit();
 #endif
+
+  InStartup = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1248,7 +1343,15 @@ void copyFolder(QString sourceFolder, QString destFolder)
 void Update(short Phase,
             short SubPhase      /* = -1 */,
             short WithIdentify  /* = 1 */,
-            short ProcessorMode /* = ptProcessorMode_Preview */) {
+            short ProcessorMode /* = ptProcessorMode_Preview */)
+{
+#ifdef Q_OS_WIN
+  ptEcWin7* Win7Taskbar = NULL;
+  if (!JobMode) {
+    Win7Taskbar = ptEcWin7::GetInstance();
+    Win7Taskbar->setProgressState(ptEcWin7::Indeterminate);
+  }
+#endif
 
   if (Settings->GetInt("BlockUpdate") == 1) return; // hard block
   if (Settings->GetInt("PipeIsRunning") == 1) {
@@ -1258,7 +1361,7 @@ void Update(short Phase,
     return;
   } else Settings->SetValue("PipeIsRunning",1);
 
-  if (Phase < ptProcessorPhase_NULL) {
+  if (Phase < ptProcessorPhase_Preview) {
     // main processing
     if (Phase < NextPhase) NextPhase = Phase;
     if (SubPhase > 0 && SubPhase < NextSubPhase) NextSubPhase = SubPhase;
@@ -1295,7 +1398,7 @@ void Update(short Phase,
   } else if (Phase == ptProcessorPhase_OnlyHistogram) {
     // only histogram update, don't care about manual mode
     UpdatePreviewImage(NULL,1);
-  } else if (Phase == ptProcessorPhase_NULL) {
+  } else if (Phase == ptProcessorPhase_Preview) {
     // only preview update, don't care about manual mode
     UpdatePreviewImage(NULL,0);
   } else if (Phase == ptProcessorPhase_WriteOut) {
@@ -1309,6 +1412,12 @@ void Update(short Phase,
     assert(0);
   }
   Settings->SetValue("PipeIsRunning",0);
+
+#ifdef Q_OS_WIN
+  if (!JobMode) {
+    Win7Taskbar->setProgressState(ptEcWin7::NoProgress);
+  }
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1425,7 +1534,7 @@ void HistogramGetCrop() {
     ViewWindow->setFocus();
   } else {
     ReportProgress(QObject::tr("Updating histogram"));
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
     ReportProgress(QObject::tr("Ready"));
   }
 }
@@ -1463,7 +1572,7 @@ void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect) {
   }
 
   ReportProgress(QObject::tr("Updating histogram"));
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
   ReportProgress(QObject::tr("Ready"));
 }
 
@@ -2131,38 +2240,33 @@ void RunJob(const QString JobFileName) {
   do {
     try {
       // Test if we can handle the file
-      DcRaw* TestDcRaw = new(DcRaw);
+      ptDcRaw* TestDcRaw = new(ptDcRaw);
       Settings->ToDcRaw(TestDcRaw);
-      int OpenError = 0;
       uint16_t InputWidth = 0;
       uint16_t InputHeight = 0;
-      if (TestDcRaw->Identify()) { // Bitmap
-        try {
-          Magick::Image image;
+      ptImageType InputType = CheckImageType(InputFileNameList[0],
+                                             &InputWidth, &InputHeight,
+                                             TestDcRaw);
 
-          image.ping(InputFileNameList[0].toAscii().data());
-
-          InputWidth = image.columns();
-          InputHeight = image.rows();
-        } catch (Magick::Exception &Error) {
-          OpenError = 1;
-        }
-        if (OpenError == 0) {
-          Settings->SetValue("IsRAW",0);
-          Settings->SetValue("ExposureNormalization",0.0);
-        }
-      } else {
-        Settings->SetValue("IsRAW",1);
-      }
-      if (OpenError == 1) {
-        // We don't have a RAW or a bitmap!
+      if (InputType <= itUndetermined) {
+        // not a supported image type or error reading the file
         QString ErrorMessage = QObject::tr("Cannot decode")
                              + " '"
                              + InputFileNameList[0]
                              + "'" ;
         printf("%s\n",ErrorMessage.toAscii().data());
         delete TestDcRaw;
-      } else { // process
+
+
+      } else {
+        // process the image
+        if (InputType == itRaw) {
+          Settings->SetValue("IsRAW",1);
+        } else {
+          Settings->SetValue("IsRAW",0);
+          Settings->SetValue("ExposureNormalization",0.0);
+        }
+
         QFileInfo PathInfo(InputFileNameList[0]);
         if (!Settings->GetString("OutputDirectory").isEmpty()) {
           Settings->SetValue("OutputFileName",
@@ -2203,13 +2307,8 @@ void RunJob(const QString JobFileName) {
         delete TheProcessor;
         TheProcessor = new ptProcessor(ReportProgress);
         TheDcRaw = TestDcRaw;
-        if (Settings->GetInt("IsRAW")==0) {
-          Settings->SetValue("ImageW",InputWidth);
-          Settings->SetValue("ImageH",InputHeight);
-        } else {
-          Settings->SetValue("ImageW",TheDcRaw->m_Width);
-          Settings->SetValue("ImageH",TheDcRaw->m_Height);
-        }
+        Settings->SetValue("ImageW",InputWidth);
+        Settings->SetValue("ImageH",InputHeight);
 
         TheProcessor->m_DcRaw = TheDcRaw;
 
@@ -2300,6 +2399,14 @@ void PrepareTags(const QString TagsInput) {
 // Append exif to an image file
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+void StringClean(QString& AString) {
+  while (AString.contains("  "))
+    AString.replace("  "," ");
+
+  AString = AString.trimmed();
+}
+
 
 void WriteExif(const QString FileName, uint8_t* ExifBuffer, const unsigned ExifBufferLength) {
 
@@ -2438,18 +2545,26 @@ void WriteExif(const QString FileName, uint8_t* ExifBuffer, const unsigned ExifB
       xmpData["Xmp.xmp.CreatorTool"] = ProgramName;
       xmpData["Xmp.tiff.Software"] = ProgramName;
 
+      Form_2_Settings();
+
       // Title
-      if (Settings->GetInt("JobMode") == 0)
-        Settings->SetValue("ImageTitle",MainWindow->TitleEditWidget->text());
       QString TitleWorking = Settings->GetString("ImageTitle");
-      while (TitleWorking.contains("  "))
-        TitleWorking.replace("  "," ");
-      if (TitleWorking != "" && TitleWorking != " ") {
+      StringClean(TitleWorking);
+      if (TitleWorking != "") {
         outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
         iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
         xmpData["Xmp.dc.description"] = TitleWorking.toStdString();
         xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
         xmpData["Xmp.tiff.ImageDescription"] = TitleWorking.toStdString();
+      }
+
+      // Copyright
+      QString CopyrightWorking = Settings->GetString("Copyright");
+      StringClean(CopyrightWorking);
+      if (CopyrightWorking != "") {
+        outExifData["Exif.Image.Copyright"] = CopyrightWorking.toStdString();
+        iptcData["Iptc.Application2.Copyright"] = CopyrightWorking.toStdString();
+        xmpData["Xmp.tiff.Copyright"] = CopyrightWorking.toStdString();
       }
 
       Exiv2Image->setExifData(outExifData);
@@ -2465,6 +2580,26 @@ void WriteExif(const QString FileName, uint8_t* ExifBuffer, const unsigned ExifB
     }
   }
 #endif
+}
+
+//==============================================================================
+// Display strings from settings
+void Settings_2_Form() {
+  if (MainWindow == NULL) return;
+
+  // Metadata
+  MainWindow->edtImageTitle->setText(Settings->GetString("ImageTitle"));
+  MainWindow->edtCopyright->setText( Settings->GetString("Copyright"));
+}
+
+//==============================================================================
+// Read settings from Form
+void Form_2_Settings() {
+  if (MainWindow == NULL) return;
+
+  //Metadata
+  Settings->SetValue("ImageTitle", MainWindow->edtImageTitle->text().trimmed());
+  Settings->SetValue("Copyright",  MainWindow->edtCopyright->text().trimmed());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2714,7 +2849,8 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
       << "CameraColorProfile"
       << "PreviewColorProfile"
       << "OutputColorProfile"
-      << "TextureOverlayFile";
+      << "TextureOverlayFile"
+      << "TextureOverlay2File";
 
   QStringList Locations;
   Locations << CurveFileNamesKeys
@@ -2929,6 +3065,8 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   // Color space transformations precalc
   if (NeedRecalcTransforms == 1) PreCalcTransforms();
 
+  Settings_2_Form();
+
   // clean up non-existing files in settings file
   // currently, we completely preserve the settings file
   /*
@@ -3041,6 +3179,35 @@ void NormalizeMultipliers(const short Max = 0) {
   }
 }
 
+//==============================================================================
+// Handles the display of the pixel values
+void CB_PixelReader(const QPointF Point, const ptPixelReading PixelReading) {
+  // No display while pipe is running
+  if (Settings->GetInt("PipeIsRunning") || Settings->GetInt("HaveImage")==0) {
+    HistogramWindow->PixelInfoHide();
+    return;
+  }
+
+  RGBValue RGB;
+
+  // reset the display
+  if (PixelReading == prNone) {
+    HistogramWindow->PixelInfoHide();
+    return;
+  } else if (PixelReading == prLinear) {
+    // we use the AfterEyeCandy image as source
+    RGB = TheProcessor->m_Image_AfterEyeCandy->GetRGB(Point.x(), Point.y());
+  } else {
+    // we use the PreviewImage as source
+    RGB = PreviewImage->GetRGB(Point.x(), Point.y());
+  }
+
+  // We normalize the values to 0..100
+  HistogramWindow->PixelInfo(QString::number(RGB.R/655.35, 'f', 2),
+                             QString::number(RGB.G/655.35, 'f', 2),
+                             QString::number(RGB.B/655.35, 'f', 2));
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // For convenience...
@@ -3060,7 +3227,7 @@ void UpdateSettings() {
 void CB_Tabs(const short) {
   // If we are previewing according to Tab, we now have to update.
   if (Settings->GetInt("PreviewMode") == ptPreviewMode_Tab) {
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
   }
 }
 
@@ -3079,7 +3246,7 @@ void CB_MenuFileOpen(const short HaveFile) {
   }
 
   // Ask user confirmation
-  if (!InStartup) {
+  if (Settings->GetInt("HaveImage") == 1) {
     if (!ptConfirmRequest::saveImage(InputFileName)) {
       return;
     }
@@ -3117,31 +3284,16 @@ void CB_MenuFileOpen(const short HaveFile) {
   ReportProgress(QObject::tr("Reading file"));
 
   // Test if we can handle the file
-  DcRaw* TestDcRaw = new(DcRaw);
+  ptDcRaw* TestDcRaw = new(ptDcRaw);
   Settings->ToDcRaw(TestDcRaw);
-  int OpenError = 0;
   uint16_t InputWidth = 0;
   uint16_t InputHeight = 0;
-  if (TestDcRaw->Identify()){ // Bitmap
-    try {
-      Magick::Image image;
+  ptImageType InputType = CheckImageType(InputFileNameList[0],
+                                         &InputWidth, &InputHeight,
+                                         TestDcRaw);
 
-      image.ping(InputFileNameList[0].toAscii().data());
-
-      InputWidth = image.columns();
-      InputHeight = image.rows();
-    } catch (Magick::Exception &Error) {
-      OpenError = 1;
-    }
-    if (OpenError == 0) {
-      Settings->SetValue("IsRAW",0);
-      Settings->SetValue("ExposureNormalization",0.0);
-    }
-  } else {
-    Settings->SetValue("IsRAW",1);
-  }
-  if (OpenError == 1) {
-    // We don't have a RAW or a bitmap!
+  if (InputType <= itUndetermined) {
+    // not a supported image type or error reading the file
     QString ErrorMessage = QObject::tr("Cannot decode")
                          + " '"
                          + InputFileNameList[0]
@@ -3150,6 +3302,15 @@ void CB_MenuFileOpen(const short HaveFile) {
     Settings->SetValue("InputFileNameList",OldInputFileNameList);
     delete TestDcRaw;
     return;
+  }
+
+
+  // Image type is supported: process the image
+  if (InputType == itRaw) {
+    Settings->SetValue("IsRAW",1);
+  } else {
+    Settings->SetValue("IsRAW",0);
+    Settings->SetValue("ExposureNormalization",0.0);
   }
 
   if (Settings->GetInt("HaveImage") == 1) {
@@ -3184,13 +3345,8 @@ void CB_MenuFileOpen(const short HaveFile) {
   }
 
   TheDcRaw = TestDcRaw;
-  if (Settings->GetInt("IsRAW")==0) {
-    Settings->SetValue("ImageW",InputWidth);
-    Settings->SetValue("ImageH",InputHeight);
-  } else {
-    Settings->SetValue("ImageW",TheDcRaw->m_Width);
-    Settings->SetValue("ImageH",TheDcRaw->m_Height);
-  }
+  Settings->SetValue("ImageW",InputWidth);
+  Settings->SetValue("ImageH",InputHeight);
 
   if (Settings->GetInt("StartupSwitchAR")) {
     // portrait image
@@ -3212,11 +3368,8 @@ void CB_MenuFileOpen(const short HaveFile) {
   TheProcessor->m_DcRaw = TheDcRaw;
 
   Settings->SetValue("HaveImage", 1);
-  if(Settings->GetInt("CameraColor")==ptCameraColor_Adobe_Matrix)
-    Settings->SetValue("CameraColor",ptCameraColor_Adobe_Profile);
   short OldRunMode = Settings->GetInt("RunMode");
   Settings->SetValue("RunMode",0);
-
 
   if (Settings->GetInt("AutomaticPipeSize") && Settings->ToolIsActive("TabResize")) {
     CalculatePipeSize(true);
@@ -3232,11 +3385,11 @@ void CB_MenuFileOpen(const short HaveFile) {
   Settings->SetValue("LfunAperture", (TmpAprt==0.0) ? 8.0 : TmpAprt);
   MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
 
-  #ifdef Q_OS_WIN32
-    MainWindow->setWindowTitle(QString((Settings->GetStringList("InputFileNameList"))[0]).replace(QString("/"), QString("\\")) + " - Photivo");
-  #else
-    MainWindow->setWindowTitle((Settings->GetStringList("InputFileNameList"))[0]+ " - Photivo");
-  #endif
+  QFileInfo finfo = QFileInfo((Settings->GetStringList("InputFileNameList"))[0]);
+  MainWindow->setWindowTitle(
+      QString("%1 - %2 - Photivo").arg(finfo.fileName())
+                                  .arg(QDir::toNativeSeparators(finfo.absolutePath())) );
+
   Settings->SetValue("RunMode",OldRunMode);
 }
 
@@ -3290,7 +3443,7 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
     // Processing the job.
     delete TheDcRaw;
     delete TheProcessor;
-    TheDcRaw = new(DcRaw);
+  TheDcRaw = new(ptDcRaw);
     TheProcessor = new ptProcessor(ReportProgress);
     Settings->SetValue("JobMode",1); // Disable caching to save memory
     TheProcessor->m_DcRaw = TheDcRaw;
@@ -3305,7 +3458,7 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
 
     delete TheDcRaw;
     delete TheProcessor;
-    TheDcRaw = new(DcRaw);
+  TheDcRaw = new(ptDcRaw);
     TheProcessor = new ptProcessor(ReportProgress);
     Settings->SetValue("JobMode",0);
     TheProcessor->m_DcRaw = TheDcRaw;
@@ -3394,7 +3547,7 @@ void CB_MenuFileExit(const short) {
   // clean up the input file if we got just a temp file
   if (Settings->GetInt("HaveImage")==1 && ImageCleanUp == 1) {
     QString OldInputFileName = Settings->GetStringList("InputFileNameList")[0];
-    QFile::remove(OldInputFileName);
+    ptRemoveFile(OldInputFileName);
     ImageCleanUp--;
   }
 
@@ -3408,7 +3561,14 @@ void CB_MenuFileExit(const short) {
       Settings->SetValue(CurveKeys.at(i),ptCurveChoice_None);
   }
 
+  Form_2_Settings();
+
   printf("Saving settings ...\n");
+
+#ifndef PT_WITHOUT_FILEMGR
+  // this also writes settings.
+  delete FileMgrWindow;
+#endif
 
   // Store the position of the splitter and main window
   Settings->m_IniSettings->
@@ -3424,6 +3584,11 @@ void CB_MenuFileExit(const short) {
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
   delete RepairSpotList;
+#ifdef Q_OS_WIN
+  if (!JobMode)
+    ptEcWin7::DestroyInstance();
+#endif
+
   ALLOCATED(10000000);
   printf("Exiting Photivo.\n");
   QCoreApplication::exit(EXIT_SUCCESS);
@@ -3457,9 +3622,10 @@ void GimpExport(const short UsePipe) {
       // Processing the job.
       delete TheDcRaw;
       delete TheProcessor;
-      TheDcRaw = new(DcRaw);
+    TheDcRaw = new(ptDcRaw);
       TheProcessor = new ptProcessor(ReportProgress);
       Settings->SetValue("JobMode",1); // Disable caching to save memory
+
       TheProcessor->m_DcRaw = TheDcRaw;
       Settings->ToDcRaw(TheDcRaw);
       // Run the graphical pipe in full format mode to recreate the image.
@@ -3585,7 +3751,7 @@ void GimpExport(const short UsePipe) {
     } else {
       delete TheDcRaw;
       delete TheProcessor;
-      TheDcRaw = new(DcRaw);
+    TheDcRaw = new(ptDcRaw);
       TheProcessor = new ptProcessor(ReportProgress);
       Settings->SetValue("JobMode",0);
       TheProcessor->m_DcRaw = TheDcRaw;
@@ -3621,9 +3787,20 @@ void CB_ZoomFullButton() {
   CB_ZoomInput(100);
 }
 
+void CB_ZoomStep(int direction) {
+  ViewWindow->ZoomStep(direction);
+}
+
+
+void CB_FileMgrButton() {
+#ifndef PT_WITHOUT_FILEMGR
+  MainWindow->OpenFileMgrWindow();
+#endif
+}
 
 void CB_FullScreenButton(const int State) {
   if (State == 1) {
+    MainWindow->raise();
     MainWindow->showFullScreen();
     Settings->SetValue("FullscreenActive", 1);
   } else {
@@ -3702,7 +3879,7 @@ void CB_CMQualityChoice(const QVariant Choice) {
   Settings->SetValue("CMQuality",Choice);
   MainWindow->UpdateSettings();
   PreCalcTransforms();
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_PreviewColorProfileButton() {
@@ -3736,13 +3913,13 @@ void CB_PreviewColorProfileButton() {
   }
   PreCalcTransforms();
   // And update the preview.
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_PreviewColorProfileIntentChoice(const QVariant Choice) {
   Settings->SetValue("PreviewColorProfileIntent",Choice);
   PreCalcTransforms();
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_OutputColorProfileButton() {
@@ -3763,8 +3940,8 @@ void CB_OutputColorProfileButton() {
 
   // Reflect in gui.
   if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output) {
-    if (Settings->GetInt("IndicateExposure")==1) {
-      Update(ptProcessorPhase_NULL);
+    if (Settings->GetInt("ExposureIndicator")==1) {
+      Update(ptProcessorPhase_Preview);
     } else {
       Update(ptProcessorPhase_OnlyHistogram);
     }
@@ -3776,8 +3953,8 @@ void CB_OutputColorProfileResetButton() {
   Settings->SetValue("OutputColorProfile",
                      (Settings->GetString("UserDirectory") + "Profiles/Output/sRGB.icc").toAscii().data());
   if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output) {
-    if (Settings->GetInt("IndicateExposure")==1) {
-      Update(ptProcessorPhase_NULL);
+    if (Settings->GetInt("ExposureIndicator")==1) {
+      Update(ptProcessorPhase_Preview);
     } else {
       Update(ptProcessorPhase_OnlyHistogram);
     }
@@ -3788,8 +3965,8 @@ void CB_OutputColorProfileResetButton() {
 void CB_OutputColorProfileIntentChoice(const QVariant Choice) {
   Settings->SetValue("OutputColorProfileIntent",Choice);
   if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output) {
-    if (Settings->GetInt("IndicateExposure")==1) {
-      Update(ptProcessorPhase_NULL);
+    if (Settings->GetInt("ExposureIndicator")==1) {
+      Update(ptProcessorPhase_Preview);
     } else {
       Update(ptProcessorPhase_OnlyHistogram);
     }
@@ -3798,41 +3975,38 @@ void CB_OutputColorProfileIntentChoice(const QVariant Choice) {
 }
 
 void CB_StyleChoice(const QVariant Choice) {
-  Settings->SetValue("Style",Choice);
-  if (Settings->GetInt("Style") == ptStyle_None) {
+  Settings->SetValue("Style", Choice);
+  ptTheme::Theme newTheme = (ptTheme::Theme)Choice.toInt();
+
+  if (newTheme == ptTheme::thNone) {
     Settings->SetValue("CustomCSSFile","");
-    Theme->Reset();
-  } else if (Settings->GetInt("Style") == ptStyle_Normal) {
-    Theme->Normal(Settings->GetInt("StyleHighLight"));
-  } else if (Settings->GetInt("Style") == ptStyle_50Grey) {
-    Theme->MidGrey(Settings->GetInt("StyleHighLight"));
-  } else if (Settings->GetInt("Style") == ptStyle_VeryDark) {
-    Theme->VeryDark(Settings->GetInt("StyleHighLight"));
-  } else {
-    Theme->DarkGrey(Settings->GetInt("StyleHighLight"));
+    Theme->setCustomCSS("");
   }
+
+  Theme->SwitchTo(newTheme, (ptTheme::Highlight)Settings->GetInt("StyleHighLight"));
+
 #ifdef Q_OS_MAC
 //dirty hack to make theming work
   MainWindow->MainSplitter->setStyleSheet("");
 #endif
 
-  MainWindow->MainTabBook->setStyle(Theme->ptStyle);
-  MainWindow->ProcessingTabBook->setStyle(Theme->ptStyle);
-  MainWindow->BottomContainer->setStyle(Theme->ptStyle);
-  MainWindow->PipeControlWidget->setStyle(Theme->ptStyle);
-  MainWindow->MainSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ControlSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ViewSplitter->setStyle(Theme->ptStyle);
-  MainWindow->ViewStartPage->setStyle(Theme->ptStyle);
+  MainWindow->MainTabBook->setStyle(Theme->style());
+  MainWindow->ProcessingTabBook->setStyle(Theme->style());
+  MainWindow->BottomContainer->setStyle(Theme->style());
+  MainWindow->PipeControlWidget->setStyle(Theme->style());
+  MainWindow->MainSplitter->setStyle(Theme->style());
+  MainWindow->ControlSplitter->setStyle(Theme->style());
+  MainWindow->ViewSplitter->setStyle(Theme->style());
+  MainWindow->ViewStartPage->setStyle(Theme->style());
 
-  TheApplication->setPalette(Theme->ptPalette);
+  TheApplication->setPalette(Theme->palette());
 
-  MainWindow->MainTabBook->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->BottomContainer->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->PipeControlWidget->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->StatusWidget->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->SearchWidget->setStyleSheet(Theme->ptStyleSheet);
-  MainWindow->ViewStartPageFrame->setStyleSheet(Theme->ptStyleSheet);
+  MainWindow->MainTabBook->setStyleSheet(Theme->stylesheet());
+  MainWindow->BottomContainer->setStyleSheet(Theme->stylesheet());
+  MainWindow->PipeControlWidget->setStyleSheet(Theme->stylesheet());
+  MainWindow->StatusWidget->setStyleSheet(Theme->stylesheet());
+  MainWindow->SearchWidget->setStyleSheet(Theme->stylesheet());
+  MainWindow->ViewStartPageFrame->setStyleSheet(Theme->stylesheet());
 #ifdef Q_OS_MAC
 //dirty hack to make theming work
   if(Theme->MacStyleFlag){
@@ -3842,6 +4016,9 @@ void CB_StyleChoice(const QVariant Choice) {
   MainWindow->UpdateToolBoxes();
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
   CB_SliderWidthInput(Settings->GetInt("SliderWidth"));
+#ifndef PT_WITHOUT_FILEMGR
+  FileMgrWindow->UpdateTheme();
+#endif
 }
 
 void CB_StyleHighLightChoice(const QVariant Choice) {
@@ -3862,7 +4039,7 @@ void CB_LoadStyleButton() {
     return;
   } else {
     Settings->SetValue("CustomCSSFile", FileName);
-    Theme->SetCustomCSS(FileName);
+    Theme->setCustomCSS(FileName);
     CB_StyleChoice(Settings->GetInt("Style"));
   }
 }
@@ -3927,9 +4104,6 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       return;
     } else if (msgBox.clickedButton() == DetailButton &&
                Settings->GetInt("HaveImage")==1) {
-      uint16_t Width = 0;
-      uint16_t Height = 0;
-      short OldZoom = 0;
       short OldZoomMode = 0;
       if (Settings->GetInt("DetailViewActive")==0) {
         Settings->SetValue("DetailViewScale", PreviousPipeSize);
@@ -3948,9 +4122,6 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       // First : make sure we have Image_AfterDcRaw in the view window.
       // Anything else might have undergone geometric transformations that are
       // impossible to calculate reverse to a spot in dcraw.
-      Width = TheProcessor->m_Image_DetailPreview->m_Width;
-      Height = TheProcessor->m_Image_DetailPreview->m_Height;
-      OldZoom = Settings->GetInt("Zoom");
       OldZoomMode = Settings->GetInt("ZoomMode");
       ViewWindow->ZoomToFit();
       UpdatePreviewImage(TheProcessor->m_Image_DetailPreview);
@@ -3979,7 +4150,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
         ptMessageBox::information(NULL,"No crop","Too small. Please try again!");
         //ViewWindow->Zoom(OldZoom,0);    // TODOSR: re-enable
         Settings->SetValue("ZoomMode",OldZoomMode);
-        Update(ptProcessorPhase_NULL);
+        Update(ptProcessorPhase_Preview);
         if (Settings->GetInt("DetailViewActive")==0) {
           delete TheProcessor->m_Image_DetailPreview;
           TheProcessor->m_Image_DetailPreview = NULL;
@@ -4072,7 +4243,7 @@ void CB_PreviewModeButton(const QVariant State) {
     Settings->SetValue("PreviewMode",ptPreviewMode_End);
     MainWindow->PreviewModeButton->setChecked(0);
   }
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_RunButton() {
@@ -4128,7 +4299,7 @@ void CB_ResetButton() {
 
 void CB_SpecialPreviewChoice(const QVariant Choice) {
   Settings->SetValue("SpecialPreview",Choice);
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_GimpExecCommandButton() {
@@ -4221,7 +4392,7 @@ void CB_PreviewTabModeCheck(const QVariant State) {
   } else {
     Settings->SetValue("PreviewMode",ptPreviewMode_End);
   }
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_BackgroundColorCheck(const QVariant State) {
@@ -4236,8 +4407,8 @@ void CB_BackgroundColorButton() {
   Color.setGreen(Settings->GetInt("BackgroundGreen"));
   Color.setBlue(Settings->GetInt("BackgroundBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -4262,8 +4433,8 @@ void SetBackgroundColor(int SetIt) {
     ViewWindow->setPalette(BGPal);
     MainWindow->ViewStartPage->setPalette(BGPal);
   } else {
-    ViewWindow->setPalette(Theme->ptPalette);
-    MainWindow->ViewStartPage->setPalette(Theme->ptPalette);
+    ViewWindow->setPalette(Theme->palette());
+    MainWindow->ViewStartPage->setPalette(Theme->palette());
   }
 }
 
@@ -5028,14 +5199,14 @@ void CB_PerspectiveScaleYInput(const QVariant Value) {
 void CB_GridCheck(const QVariant State) {
   Settings->SetValue("Grid",State);
   ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void CB_GridXInput(const QVariant Value) {
   Settings->SetValue("GridX",Value);
   if (Settings->GetInt("Grid")) {
     ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
   }
 }
 
@@ -5043,7 +5214,7 @@ void CB_GridYInput(const QVariant Value) {
   Settings->SetValue("GridY",Value);
   if (Settings->GetInt("Grid")) {
     ViewWindow->setGrid(Settings->GetInt("Grid"), Settings->GetInt("GridX"), Settings->GetInt("GridY"));
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
   }
 }
 
@@ -5214,7 +5385,7 @@ void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
 
       if(Settings->GetInt("RunMode")==1) {
         // we're in manual mode!
-        Update(ptProcessorPhase_NULL);
+        Update(ptProcessorPhase_Preview);
       }
     } else {
       Settings->SetValue("Crop",1);
@@ -7853,8 +8024,8 @@ void CB_Tone1ColorButton() {
   Color.setGreen(Settings->GetInt("Tone1ColorGreen"));
   Color.setBlue(Settings->GetInt("Tone1ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -7891,8 +8062,8 @@ void CB_Tone2ColorButton() {
   Color.setGreen(Settings->GetInt("Tone2ColorGreen"));
   Color.setBlue(Settings->GetInt("Tone2ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -8001,6 +8172,80 @@ void CB_TextureOverlayOuterRadiusInput(const QVariant Value) {
   }
 }
 
+// Texture Overlay 2
+
+void CB_TextureOverlay2MaskChoice(const QVariant Choice) {
+  Settings->SetValue("TextureOverlay2Mask",Choice);
+  if (Settings->ToolIsActive("TabTextureOverlay2")) {
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlay2Button() {
+  QString Directory = "";
+  if (Settings->GetString("TextureOverlay2File")!="") {
+    QFileInfo PathInfo(Settings->GetString("TextureOverlay2File"));
+    Directory = PathInfo.absolutePath();
+  } else {
+    Directory = Settings->GetString("UserDirectory");
+  }
+
+  QString TextureOverlay2String = QFileDialog::getOpenFileName(NULL,
+    QObject::tr("Get texture bitmap file"),
+    Directory,
+    BitmapPattern);
+
+  if (0 == TextureOverlay2String.size() ) {
+    // Canceled just return
+    return;
+  } else {
+    QFileInfo PathInfo(TextureOverlay2String);
+    Settings->SetValue("TextureOverlay2File",PathInfo.absoluteFilePath());
+  }
+
+  // Reflect in gui.
+  if (Settings->ToolIsActive("TabTextureOverlay2")) {
+    // free old one
+    if (TheProcessor->m_Image_TextureOverlay2) {
+      delete TheProcessor->m_Image_TextureOverlay2;
+      TheProcessor->m_Image_TextureOverlay2 = NULL;
+    }
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlay2ClearButton() {
+  if (TheProcessor->m_Image_TextureOverlay2) {
+    delete TheProcessor->m_Image_TextureOverlay2;
+    TheProcessor->m_Image_TextureOverlay2 = NULL;
+  }
+  Settings->SetValue("TextureOverlay2File","");
+  if (Settings->ToolIsActive("TabTextureOverlay2")) {
+    Settings->SetValue("TextureOverlay2Mode",0);
+    Update(ptProcessorPhase_EyeCandy);
+  } else {
+    MainWindow->UpdateSettings();
+  }
+}
+
+void CB_TextureOverlay2InnerRadiusInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlay2InnerRadius",MIN(Value.toDouble(), Settings->GetDouble("TextureOverlay2OuterRadius")));
+  if (Settings->ToolIsActive("TabTextureOverlay2")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+void CB_TextureOverlay2OuterRadiusInput(const QVariant Value) {
+  Settings->SetValue("TextureOverlay2OuterRadius",MAX(Value.toDouble(), Settings->GetDouble("TextureOverlay2InnerRadius")));
+  if (Settings->ToolIsActive("TabTextureOverlay2")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the EyeCandy Tab
@@ -8015,8 +8260,8 @@ void CB_GradualOverlay1ColorButton() {
   Color.setGreen(Settings->GetInt("GradualOverlay1ColorGreen"));
   Color.setBlue(Settings->GetInt("GradualOverlay1ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -8054,8 +8299,8 @@ void CB_GradualOverlay2ColorButton() {
   Color.setGreen(Settings->GetInt("GradualOverlay2ColorGreen"));
   Color.setBlue(Settings->GetInt("GradualOverlay2ColorBlue"));
   QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->ptSystemStyle);
-  Dialog.setPalette(Theme->ptSystemPalette);
+  Dialog.setStyle(Theme->systemStyle());
+  Dialog.setPalette(Theme->systemPalette());
   Dialog.exec();
   QColor TestColor = Dialog.selectedColor();
   if (TestColor.isValid()) {
@@ -8213,6 +8458,12 @@ void CB_WritePipeButton() {
   SaveOutput(Settings->GetInt("SaveButtonMode"));
 }
 
+void CB_FileMgrUseThumbMaxRowColCheck(const QVariant checked) {
+  Settings->SetValue("FileMgrUseThumbMaxRowCol", checked);
+  MainWindow->FileMgrThumbMaxRowColWidget->setEnabled(checked.toBool());
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callback dispatcher
@@ -8298,6 +8549,11 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FullPipeConfirmationCheck)
 
   M_Dispatch(WriteBackupSettingsCheck)
+
+  M_JustSetDispatch(FileMgrThumbnailSizeInput)
+  M_JustSetDispatch(FileMgrThumbnailPaddingInput)
+  M_Dispatch(FileMgrUseThumbMaxRowColCheck)
+  M_JustSetDispatch(FileMgrThumbMaxRowColInput)
 
   M_Dispatch(MemoryTestInput)
 
@@ -8827,6 +9083,17 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(TextureOverlayCenterXInput)
   M_SetAndRunDispatch(TextureOverlayCenterYInput)
   M_SetAndRunDispatch(TextureOverlaySoftnessInput)
+  M_SetAndRunDispatch(TextureOverlay2ModeChoice)
+  M_Dispatch(TextureOverlay2MaskChoice)
+  M_SetAndRunDispatch(TextureOverlay2OpacityInput)
+  M_SetAndRunDispatch(TextureOverlay2SaturationInput)
+  M_SetAndRunDispatch(TextureOverlay2ExponentInput)
+  M_Dispatch(TextureOverlay2InnerRadiusInput)
+  M_Dispatch(TextureOverlay2OuterRadiusInput)
+  M_SetAndRunDispatch(TextureOverlay2RoundnessInput)
+  M_SetAndRunDispatch(TextureOverlay2CenterXInput)
+  M_SetAndRunDispatch(TextureOverlay2CenterYInput)
+  M_SetAndRunDispatch(TextureOverlay2SoftnessInput)
 
   M_SetAndRunDispatch(GradualOverlay1Choice)
   M_SetAndRunDispatch(GradualOverlay1AmountInput)
@@ -8935,4 +9202,88 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
+/*! Returns the type of an image file.
+  \param filename
+    path/filename of the image. An empty string is interpreted as the current global
+    input file, i.e. InputFileNameList[0]. Note that \c CheckImageType never changes
+    the value of InputFileNameList[0].
+  \param width
+    A pointer to a variable that holds the width of the image. Pass NULL if you
+    do not need to know the width. If the width of the file cannot be determined,
+    \c CheckImageType sets this variable to \c 0.
+  \param height
+    Same as \c width, but for the image height.
+  \param dcRaw
+    An optional pointer to an existing and properly initialized ptDcRaw object that the
+    function should use. Note that the file associated with that dcraw gets changed to
+    \c filename.
+*/
+ptImageType CheckImageType(QString filename,
+                           uint16_t* width, uint16_t* height,
+                           ptDcRaw* dcRaw /*= NULL*/)
+{
+  ptImageType result = itUndetermined;
+  ptDcRaw* LocalDcRaw = NULL;
+  bool UseLocalDcRaw = dcRaw == NULL;
+
+  // Setup dcraw
+  if (UseLocalDcRaw) {
+    LocalDcRaw = new ptDcRaw;
+    Settings->ToDcRaw(LocalDcRaw);
+  } else {
+    LocalDcRaw = dcRaw;
+  }
+
+  // Setup file name
+  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+  if (filename.isEmpty())
+    filename = InputFileNameList[0];
+
+  if (filename != InputFileNameList[0]) {
+    FREE(LocalDcRaw->m_UserSetting_InputFileName);
+    LocalDcRaw->m_UserSetting_InputFileName =
+      (char*) MALLOC(1+strlen(filename.toAscii().data()));
+    ptMemoryError(LocalDcRaw->m_UserSetting_InputFileName,__FILE__,__LINE__);
+    strcpy(LocalDcRaw->m_UserSetting_InputFileName,filename.toAscii().data());
+  }
+
+  if (LocalDcRaw->Identify() == 0) {
+    // we have a raw file
+    result = itRaw;
+    if (width != NULL) *width = LocalDcRaw->m_Width;
+    if (height != NULL) *height = LocalDcRaw->m_Height;
+
+  } else {
+    // Not a raw image. We use GraphicsMagick to check for valid Bitmaps.
+    MagickWand* image = NewMagickWand();
+    MagickPingImage(image, filename.toAscii().data());
+
+    ExceptionType MagickExcept;
+    const char* MagickErrorMsg = MagickGetException(image, &MagickExcept);
+
+    if (MagickExcept == UndefinedException) {
+      // image could be pinged without problems: we have a bitmap
+      result = itBitmap;
+      if (width != NULL) *width = MagickGetImageWidth(image);
+      if (height != NULL) *height = MagickGetImageHeight(image);
+
+    } else {
+      // not a supported image format
+      printf("%s", MagickErrorMsg);
+      result = itNotSupported;
+      if (width != NULL) *width = 0;
+      if (height != NULL) *height = 0;
+    }
+
+    DestroyMagickWand(image);
+  }
+
+  if (UseLocalDcRaw)
+    DelAndNull(LocalDcRaw);
+
+  return result;
+}
+
+//==============================================================================

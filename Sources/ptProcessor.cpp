@@ -64,6 +64,7 @@ ptProcessor::ptProcessor(void (*ReportProgress)(const QString Message)) {
   m_Image_DetailPreview    = NULL;
 
   m_Image_TextureOverlay   = NULL;
+  m_Image_TextureOverlay2  = NULL;
 
   //
   m_AutoExposureValue = 0.0;
@@ -208,7 +209,7 @@ void ptProcessor::Run(short Phase,
 
           int Success = 0;
 
-          m_Image_AfterDcRaw->ptGMOpenImage(
+          m_Image_AfterDcRaw->ptGMCOpenImage(
             (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
             Settings->GetInt("WorkColor"),
             Settings->GetInt("PreviewColorProfileIntent"),
@@ -2239,7 +2240,7 @@ void ptProcessor::Run(short Phase,
             // No image in cache!
             int Success = 0;
 
-            m_Image_TextureOverlay->ptGMOpenImage(
+            m_Image_TextureOverlay->ptGMCOpenImage(
               (Settings->GetString("TextureOverlayFile")).toAscii().data(),
               Settings->GetInt("WorkColor"),
               Settings->GetInt("PreviewColorProfileIntent"),
@@ -2301,6 +2302,87 @@ void ptProcessor::Run(short Phase,
                                              Settings->GetDouble("TextureOverlayOpacity"),
                                              NULL,
                                              Settings->GetInt("TextureOverlayMode"));
+            }
+            delete TempImage;
+          }
+        }
+
+
+        //***************************************************************************
+        // Texture Overlay 2
+
+        if (Settings->ToolIsActive("TabTextureOverlay2")) {
+
+          m_ReportProgress(tr("Texture Overlay 2"));
+
+          if (!m_Image_TextureOverlay2) m_Image_TextureOverlay2 = new ptImage();
+
+          if (!m_Image_TextureOverlay2->m_Image) {
+            // No image in cache!
+            int Success = 0;
+
+            m_Image_TextureOverlay2->ptGMCOpenImage(
+              (Settings->GetString("TextureOverlay2File")).toAscii().data(),
+              Settings->GetInt("WorkColor"),
+              Settings->GetInt("PreviewColorProfileIntent"),
+              0,
+              Success);
+
+            if (Success == 0) {
+              ptMessageBox::critical(0,"File not found","Please open a valid image for texture overlay.");
+              Settings->SetValue("TextureOverlay2Mode",0);
+            }
+          }
+
+          // Only proceed if we have an image!
+          if (m_Image_TextureOverlay2->m_Image != NULL) {
+            // work on a temporary copy
+            ptImage *TempImage = new ptImage();
+            TempImage->Set(m_Image_TextureOverlay2);
+
+            // Resize, original sized image in cache
+            TempImage->ptGMResizeWH(m_Image_AfterEyeCandy->m_Width,
+                                    m_Image_AfterEyeCandy->m_Height,
+                                    ptIMFilter_Catrom);
+
+            double Value = ((Settings->GetDouble("TextureOverlay2Saturation")-1.0)*100);
+            double VibranceMixer[3][3];
+
+            VibranceMixer[0][0] = 1.0+(Value/150.0);
+            VibranceMixer[0][1] = -(Value/300.0);
+            VibranceMixer[0][2] = VibranceMixer[0][1];
+            VibranceMixer[1][0] = VibranceMixer[0][1];
+            VibranceMixer[1][1] = VibranceMixer[0][0];
+            VibranceMixer[1][2] = VibranceMixer[0][1];
+            VibranceMixer[2][0] = VibranceMixer[0][1];
+            VibranceMixer[2][1] = VibranceMixer[0][1];
+            VibranceMixer[2][2] = VibranceMixer[0][0];
+
+            TempImage->MixChannels(VibranceMixer);
+
+
+
+            if (Settings->GetInt("TextureOverlay2Mask")) {
+              float *VignetteMask;
+              VignetteMask = TempImage->GetVignetteMask(Settings->GetInt("TextureOverlay2Mask")-1,
+                                                        Settings->GetInt("TextureOverlay2Exponent"),
+                                                        Settings->GetDouble("TextureOverlay2InnerRadius"),
+                                                        Settings->GetDouble("TextureOverlay2OuterRadius"),
+                                                        Settings->GetDouble("TextureOverlay2Roundness"),
+                                                        Settings->GetDouble("TextureOverlay2CenterX"),
+                                                        Settings->GetDouble("TextureOverlay2CenterY"),
+                                                        Settings->GetDouble("TextureOverlay2Softness"));
+
+              m_Image_AfterEyeCandy->Overlay(TempImage->m_Image,
+                                             Settings->GetDouble("TextureOverlay2Opacity"),
+                                             VignetteMask,
+                                             Settings->GetInt("TextureOverlay2Mode"));
+              FREE(VignetteMask);
+            } else {
+              m_Image_AfterEyeCandy->Overlay(TempImage->m_Image,
+                                             Settings->GetDouble("TextureOverlay2Opacity"),
+                                             NULL,
+                                             Settings->GetInt("TextureOverlay2Mode"));
             }
             delete TempImage;
           }
@@ -3143,7 +3225,8 @@ ptProcessor::~ptProcessor() {
               << m_Image_AfterLabEyeCandy
               << m_Image_AfterEyeCandy
               << m_Image_DetailPreview
-              << m_Image_TextureOverlay;
+              << m_Image_TextureOverlay
+              << m_Image_TextureOverlay2;
   while(PointerList.size()) {
     if (PointerList[0] != NULL) {
       ptImage* CurrentPointer = PointerList[0];

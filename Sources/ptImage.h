@@ -33,6 +33,13 @@
 
 class ptCurve;
 
+// RGB type
+struct RGBValue {
+  uint16_t R;
+  uint16_t G;
+  uint16_t B;
+};
+
 // Class containing an image and its operations.
 
 class ptImage {
@@ -71,13 +78,13 @@ ptImage();
 // Initialize it via dcraw (from a DcRawObject).
 // By the way , the copying is always deep (and
 // might involve 4->3 color reduction.
-ptImage* Set(const DcRaw*  DcRawObject,
+ptImage* Set(const ptDcRaw*  DcRawObject,
              const short   TargetSpace,
              const char*   ProfileName,
              const int     Intent,
              const int     ProfileGamma);
 // Through connect variant of above (DcRawObject->m_Image as RGB)
-ptImage* Set(const DcRaw*  DcRawObject,
+ptImage* Set(const ptDcRaw*  DcRawObject,
              const short   TargetSpace);
 
 // Just allocation
@@ -91,6 +98,9 @@ ptImage* Set(const ptImage *Origin);
 // Copy from another image and scale to pipe size.
 ptImage* SetScaled(const ptImage *Origin,
                    const short ScaleFactor);
+
+// Get the RGB at a given point
+RGBValue GetRGB(const uint16_t x, const uint16_t y);
 
 // Resize such that the maximum dimension becomes Size.
 // Typically the resizing is done in place, but one
@@ -445,12 +455,15 @@ ptImage* USM(const uint8_t ChannelMask,
              const double  Threshold);
 
 // Apply Refocus sharpening
+/* TODO: Filter needs work to make it useful. Disabled for now to remove
+  dependency on clapack.
 ptImage* Refocus(const uint8_t ChannelMask,
                  const short   MatrixSize,
                  const double  Radius,
                  const double  Gauss,
                  const double  Correlation,
                  const double  Noise);
+*/
 
 // Wavelet denoise
 ptImage* WaveletDenoise(const uint8_t  ChannelMask,
@@ -565,6 +578,7 @@ ptImage* EAWChannel(const double scaling,
                     const double level5,
                     const double level6);
 
+/* not used atm
 // ptImage_GM.cpp
 ptImage* ptGMRotate(const double Angle);
 
@@ -585,19 +599,20 @@ ptImage* ptGMWriteImage(const char* FileName,
                         const int Quality,
                         const char* ColorProfileFileName,
                         const int Intent);
-
+*/
 ptImage* ptGMResize(const uint16_t Size,
                     const short Filter,
                     const short Mode);
 ptImage* ptGMResizeWH(const uint16_t NewWidth,
                       const uint16_t NewHeight,
                       const short Filter);
-
+/* not used atm
 ptImage* ptGMBlur(const double Radius);
-
+*/
 ptImage* ptGMUnsharp(const double Radius, const double Amount, const double Threshold);
 
 ptImage* ptGMNormalize(const double Opacity);
+
 
 // ptImage_GMC.cpp
 bool ptGMCWriteImage(const char* FileName,
@@ -607,6 +622,13 @@ bool ptGMCWriteImage(const char* FileName,
                      const int Resolution,
                      const char* ColorProfileFileName,
                      const int Intent);
+
+ptImage* ptGMCOpenImage(const char* FileName,
+                       const short ColorSpace,
+                       const short Intent,
+                       const short ScaleFactor,
+                       int& Success);
+
 
 // ptImage_Pyramid.cpp
 ptImage* dirpyrLab_denoise(const int luma,

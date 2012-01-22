@@ -20,16 +20,14 @@
 **
 *******************************************************************************/
 
-#ifndef DLGROUPBOX_H
-#define DLGROUPBOX_H
+#ifndef PTGROUPBOX_H
+#define PTGROUPBOX_H
+
+//==============================================================================
 
 #include <QtGui>
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ptGroupBox is a modified groupbox
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 class ptGroupBox : public QWidget {
 Q_OBJECT
@@ -42,10 +40,7 @@ public:
              const short TabNumber,
              const short IndexInTab);
 
-  // Destructor.
-  ~ptGroupBox();
-
-  QWidget*   m_Widget;
+  ~ptGroupBox() {}
 
   void SetActive(const short IsActive);
   void SetHelpUri(const QString Uri);
@@ -57,13 +52,18 @@ public:
   short GetTabNumber();
   short GetIndexInTab();
 
+  QWidget*   m_Widget;
+
+
 protected:
   void mousePressEvent(QMouseEvent *event);
   void paintEvent(QPaintEvent *);
   void changeEvent(QEvent *);
 
+
 private:
   void WriteSettings(const short Append);
+
   short     m_Folded;
   short     m_IsActive;
   short     m_IsBlocked;
@@ -76,7 +76,7 @@ private:
   QPixmap   BlockedDownArrow;
   QWidget*  m_Header;
   QLabel*   m_Icon;
-  QLabel*   m_Symbol;
+  QLabel*   m_SlowIcon;
   QLabel*   m_TitleLabel;
   QLabel*   m_HelpIcon;
   QString   m_Title;
@@ -95,6 +95,7 @@ private:
   QTimer*   m_Timer;
   short     m_NeedPipeUpdate;
 
+
 private slots:
   void SetFavourite();
   void Hide();
@@ -104,9 +105,7 @@ private slots:
   void SaveSettings();
   void AppendSettings();
 
+
+//==============================================================================
 };
-
 #endif
-
-////////////////////////////////////////////////////////////////////////////////
-

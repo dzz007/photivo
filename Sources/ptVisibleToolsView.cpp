@@ -20,6 +20,8 @@
 **
 *******************************************************************************/
 
+#include <QComboBox>
+
 #include "ptVisibleToolsView.h"
 #include "ptConstants.h"
 #include "ptTheme.h"
@@ -61,8 +63,9 @@ void ptVisibleToolsItemDelegate::setEditorData(QWidget *editor, const QModelInde
   box->addItem(index.data().toString(), index.data(Qt::UserRole+1));
 
   // test if tool isn't always visible
-  if (index.data(Qt::UserRole+2).toInt() != 1)
+  if (index.data(Qt::UserRole+2).toInt() != 1) {
     box->addItem(QIcon(* Theme->ptIconCrossRed), tr("Hidden"));
+  }
   box->addItem(QIcon(* Theme->ptIconStarGrey), tr("Normal"));
   box->addItem(QIcon(* Theme->ptIconStar), tr("Favourite"));
 }

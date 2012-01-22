@@ -28,6 +28,7 @@
 #include "ptRGBTemperature.h"
 #include "ptGuiOptions.h"
 #include "imagespot/ptImageSpotList.h"
+#include "filemgmt/ptFileMgrConstants.h"
 
 extern ptImageSpotList* RepairSpotList;
 
@@ -55,6 +56,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   const ptGuiInputItem GuiInputItems[] = {
     // Attention : Default,Min,Max,Step should be consistent int or double. Double *always* in X.Y notation to indicate so.
     // Unique Name,GuiElement,InitLevel,InJobFile,HasDefault (causes button too !),Default,Min,Max,Step,NrDecimals,Label,ToolTip
+    {"FileMgrThumbnailSize"          ,ptGT_InputSlider     ,1,0,1 ,100  ,50   ,500   ,25   ,0 ,tr("Thumbnail size")     ,tr("Thumbnail size in pixel")},
+    {"FileMgrThumbnailPadding"       ,ptGT_InputSlider     ,1,0,1 ,8    ,0    ,50    ,2    ,0 ,tr("Thumbnail padding")  ,tr("Thumbnail padding in pixel")},
+    {"FileMgrThumbMaxRowCol"         ,ptGT_Input           ,1,0,1 ,3    ,1    ,1000  ,1    ,0 ,tr("thumbnails in a row/column"), tr("Maximum number of thumbnails that should be placed in a row or column.")},
     {"MemoryTest"                    ,ptGT_InputSlider     ,9,0,1 ,0    ,0    ,500   ,50   ,0 ,tr("MB")                 ,tr("MB to waste")},
     {"TabStatusIndicator"            ,ptGT_Input           ,1,0,1 ,8    ,0    ,16    ,1    ,0 ,tr("Pixel")              ,tr("Size of the LED")},
     {"SliderWidth"                   ,ptGT_Input           ,1,0,1 ,0    ,0    ,500   ,50   ,0 ,tr("Maximum slider width") ,tr("Maximum slider width. Enter 0 to remove restriction")},
@@ -396,6 +400,15 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TextureOverlayCenterX"         ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center X")           ,tr("Center X")},
     {"TextureOverlayCenterY"         ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center Y")           ,tr("Center Y")},
     {"TextureOverlaySoftness"        ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0 ,1.0   ,0.1  ,2 ,tr("Softness")           ,tr("Softness")},
+    {"TextureOverlay2Opacity"        ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity")},
+    {"TextureOverlay2Saturation"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.1  ,2 ,tr("Saturation")         ,tr("Saturation")},
+    {"TextureOverlay2Exponent"       ,ptGT_Input           ,2,1,1 ,2    ,1    ,6     ,1    ,0 ,tr("Shape")              ,tr("Shape of the mask")},
+    {"TextureOverlay2InnerRadius"    ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2 ,tr("Inner Radius")       ,tr("Inner Radius")},
+    {"TextureOverlay2OuterRadius"    ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2 ,tr("Outer Radius")       ,tr("Outer Radius")},
+    {"TextureOverlay2Roundness"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Roundness")          ,tr("Roundness")},
+    {"TextureOverlay2CenterX"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center X")           ,tr("Center X")},
+    {"TextureOverlay2CenterY"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center Y")           ,tr("Center Y")},
+    {"TextureOverlay2Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0 ,1.0   ,0.1  ,2 ,tr("Softness")           ,tr("Softness")},
     {"GradualOverlay1Amount"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount")},
     {"GradualOverlay1Angle"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-180.0,180.0  ,5.0  ,0 ,tr("Angle")            ,tr("Angle")},
     {"GradualOverlay1LowerLevel"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,3.0   ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
@@ -501,8 +514,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ResizeFilter"                ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Mitchell         ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
     {"ResizeDimension"             ,ptGT_Choice       ,2,1,1 ,ptResizeDimension_LongerEdge,GuiOptions->ResizeDimension           ,tr("Image dimension the resize value applies to")},
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
-    {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatioW              ,tr("Aspect width")},
-    {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatioH              ,tr("Aspect height")},
+    {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatio               ,tr("Aspect width")},
+    {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
     {"ChannelMixer"                ,ptGT_Choice       ,2,1,1 ,ptChannelMixerChoice_None   ,GuiOptions->ChannelMixer              ,tr("ChannelMixer")},
     {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
     {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
@@ -555,6 +568,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CrossprocessingMode"         ,ptGT_Choice       ,2,1,1 ,ptCrossprocessMode_None     ,GuiOptions->CrossprocessMode          ,tr("Colors for cross processing")},
     {"TextureOverlayMode"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
     {"TextureOverlayMask"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
+    {"TextureOverlay2Mode"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
+    {"TextureOverlay2Mask"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
     {"GradualOverlay1"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"GradualOverlay2"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"VignetteMode"                ,ptGT_Choice       ,2,1,1 ,ptVignetteMode_None         ,GuiOptions->VignetteMode              ,tr("Mode for Vignette")},
@@ -573,6 +588,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   // Load in the gui check elements
   const ptGuiCheckItem GuiCheckItems[] = {
     // Name, GuiType,InitLevel,InJobFile,Default,Label,Tip
+    {"FileMgrUseThumbMaxRowCol"   ,ptGT_Check ,1,0,0,tr("At most")         ,tr("Maximum number of thumbnails that should be placed in a row or column.")},
     {"StartupSettings"            ,ptGT_Check ,1,0,1,tr("User settings")   ,tr("Load user settings on startup")},
     {"StartupSettingsReset"       ,ptGT_Check ,1,0,0,tr("Reset on new image") ,tr("Reset to user settings when new image is opened")},
     {"StartupSwitchAR"            ,ptGT_Check ,1,0,1,tr("Adjust aspect ratio") ,tr("Adjust crop aspect ratio to image aspect ratio")},
@@ -709,9 +725,11 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradualOverlay2ColorGreen"            ,2    ,200                                   ,1},
     {"GradualOverlay2ColorBlue"             ,2    ,0                                     ,1},
     {"TextureOverlayFile"                   ,2    ,""                                    ,1},
+    {"TextureOverlay2File"                  ,2    ,""                                    ,1},
     {"DigikamTagsList"                      ,9    ,QStringList()                         ,1},
     {"TagsList"                             ,9    ,QStringList()                         ,1},
     {"ImageTitle"                           ,9    ,""                                    ,1},
+    {"Copyright"                            ,1    ,""                                    ,1},
     {"BackgroundRed"                        ,1    ,0                                     ,0},
     {"BackgroundGreen"                      ,1    ,0                                     ,0},
     {"BackgroundBlue"                       ,1    ,0                                     ,0},
@@ -724,6 +742,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"HistogramCropY"                       ,9    ,0                                     ,0},
     {"HistogramCropW"                       ,9    ,0                                     ,0},
     {"HistogramCropH"                       ,9    ,0                                     ,0},
+    {"PixelReader"                          ,1    ,0                                     ,0},
     {"ExposureIndicator"                    ,1    ,0                                     ,0},
     {"ExposureIndicatorSensor"              ,0    ,0                                     ,0},
     {"ExposureIndicatorR"                   ,0    ,1                                     ,0},
@@ -758,6 +777,15 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"UiLanguage"                           ,1    ,""                                    ,0},  // Language name to load from qm file, e.g. "Deutsch"
     {"CustomCSSFile"                        ,1    ,""                                    ,0},
     {"FullscreenActive"                     ,9    ,0                                     ,0},
+
+    // stuff for the file manager
+    {"FileMgrIsOpen"                        ,9    ,0                                     ,0},
+    {"NoFileMgrStartupOpen"                 ,9    ,0                                     ,0},
+    {"LastFileMgrLocation"                  ,1    ,""                                    ,0},
+    {"FileMgrShowDirThumbs"                 ,1    ,1                                     ,0},
+    {"FileMgrShowImageView"                 ,1    ,1                                     ,0},
+    {"FileMgrShowSidebar"                   ,1    ,1                                     ,0},
+    {"FileMgrThumbLayoutType"               ,1    ,tlVerticalByRow                       ,0},
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.
@@ -1328,7 +1356,7 @@ QWidget* ptSettings::GetGuiWidget(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptSettings::ToDcRaw(DcRaw* TheDcRaw) {
+void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
 
   if (!TheDcRaw) return;
 
@@ -1545,7 +1573,7 @@ void ptSettings::ToDcRaw(DcRaw* TheDcRaw) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptSettings::FromDcRaw(DcRaw* TheDcRaw) {
+void ptSettings::FromDcRaw(ptDcRaw* TheDcRaw) {
 
   if (!TheDcRaw) return;
 
@@ -1974,6 +2002,10 @@ sToolInfo ToolInfo (const QString GuiName) {
     Info.Name = "Texture Overlay";
     Info.IsActive = (Settings->GetInt("TextureOverlayMode") &&
                      Settings->GetDouble("TextureOverlayOpacity")!=0.0)!=0?1:0;
+  } else if (GuiName == "TabTextureOverlay2") {
+    Info.Name = "Texture Overlay 2";
+    Info.IsActive = (Settings->GetInt("TextureOverlay2Mode") &&
+                     Settings->GetDouble("TextureOverlay2Opacity")!=0.0)!=0?1:0;
   } else if (GuiName == "TabGradualOverlay1") {
       Info.Name = "Gradual Overlay 1";
       Info.IsActive = (Settings->GetInt("GradualOverlay1") &&

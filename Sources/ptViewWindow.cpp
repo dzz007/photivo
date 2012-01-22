@@ -30,11 +30,11 @@
 
 #include <cassert>
 
+#include "ptDefines.h"
 #include "ptSettings.h"
 #include "ptTheme.h"
 #include "ptViewWindow.h"
 #include "ptConstants.h"
-#include "ptDefines.h"
 
 extern ptTheme* Theme;
 extern ptSettings* Settings;
@@ -61,6 +61,7 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   m_ZoomFactor(1.0),
   m_ZoomFactorSav(0.0),
   m_ZoomModeSav(ptZoomMode_Fit),
+  m_PixelReading(prNone),
   // always keep this at the end of the initializer list
   MainWindow(mainWin)
 {
@@ -94,7 +95,11 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   this->setScene(m_ImageScene);
 
   m_Grid = new ptGridInteraction(this);  // scene must already be alive
+  m_PixelReader = NULL;
   ConstructContextMenu();
+
+  m_PReadTimer = new QTimer();
+  m_PReadTimer->setSingleShot(true);
 }
 
 
@@ -111,6 +116,13 @@ ptViewWindow::~ptViewWindow() {
   delete m_DrawLine;
   delete m_SelectRect;
   delete m_Grid;
+
+  delete ac_PRead_None;
+  delete ac_PRead_Linear;
+  delete ac_PRead_Preview;
+  delete ac_PReadGroup;
+
+  delete m_PReadTimer;
 }
 
 
@@ -200,6 +212,33 @@ int ptViewWindow::ZoomToFit(const short withMsg /*= 1*/) {
   return m_ZoomFactor;
 }
 
+
+void ptViewWindow::ZoomStep(int direction) {
+  int ZoomIdx = -1;
+
+  // zoom larger
+  if (direction > 0) {
+    for (int i = 0; i < ZoomFactors.size(); i++) {
+      if (ZoomFactors[i] > m_ZoomFactor) {
+        ZoomIdx = i;
+        break;
+      }
+    }
+
+  // zoom smaller
+  } else if (direction < 0) {
+    for (int i = ZoomFactors.size() - 1; i >= 0; i--) {
+      if (ZoomFactors[i] < m_ZoomFactor) {
+        ZoomIdx = i;
+        break;
+      }
+    }
+  }
+
+  if (ZoomIdx != -1) {
+    ZoomTo(ZoomFactors[ZoomIdx]);
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -311,6 +350,18 @@ void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
+  // We broadcast the pixel location
+  if (m_PixelReading != prNone && !m_PReadTimer->isActive()) {
+    m_PReadTimer->start(10);
+    QPointF Point = mapToScene(event->pos());
+    if (Point.x() >= 0 && Point.x() < m_8bitImageItem->pixmap().width() &&
+        Point.y() >= 0 && Point.y() < m_8bitImageItem->pixmap().height()) {
+      if (m_PixelReader) m_PixelReader(Point, m_PixelReading);
+    } else {
+      if (m_PixelReader) m_PixelReader(Point, prNone);
+    }
+  }
+
   // drag image with left mouse button to scroll
   // Also Ctrl needed in crop & spot repair modes
   short ImgDragging = m_LeftMousePressed && m_Interaction == iaNone;
@@ -346,30 +397,11 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::wheelEvent(QWheelEvent* event) {
-  int ZoomIdx = -1;
+  ZoomStep(event->delta());
+}
 
-  // zoom larger
-  if (event->delta() > 0) {
-    for (int i = 0; i < ZoomFactors.size(); i++) {
-      if (ZoomFactors[i] > m_ZoomFactor) {
-        ZoomIdx = i;
-        break;
-      }
-    }
-
-  // zoom smaller
-  } else if (event->delta() < 0) {
-    for (int i = ZoomFactors.size() - 1; i >= 0; i--) {
-      if (ZoomFactors[i] < m_ZoomFactor) {
-        ZoomIdx = i;
-        break;
-      }
-    }
-  }
-
-  if (ZoomIdx != -1) {
-    ZoomTo(ZoomFactors[ZoomIdx]);
-  }
+void ptViewWindow::leaveEvent(QEvent *event) {
+  if (m_PixelReader) m_PixelReader(QPoint(), prNone);
 }
 
 
@@ -631,16 +663,6 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Construct context menu
@@ -652,44 +674,44 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
 
 void ptViewWindow::ConstructContextMenu() {
   // Create actions for context menu
-  ac_ZoomFit = new QAction(tr("Zoom fit"), this);
-  connect(ac_ZoomFit, SIGNAL(triggered()), this, SLOT(Menu_ZoomFit()));
-  QIcon ZoomFitIcon;
-  ZoomFitIcon.addPixmap(QPixmap(
-    QString::fromUtf8(":/photivo/Icons/viewmag_h.png")));
-  ac_ZoomFit->setIcon(ZoomFitIcon);
-  ac_ZoomFit->setIconVisibleInMenu(true);
+  ac_ZoomIn = new QAction(tr("Zoom &in") + "\t" + tr("1"), this);
+  ac_ZoomIn->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-in.png")));
+  connect(ac_ZoomIn, SIGNAL(triggered()), this, SLOT(Menu_ZoomIn()));
 
-  ac_Zoom100 = new QAction(tr("Zoom 100%"), this);
+  ac_Zoom100 = new QAction(tr("Zoom &100%") + "\t" + tr("2"), this);
   connect(ac_Zoom100, SIGNAL(triggered()), this, SLOT(Menu_Zoom100()));
-  QIcon Zoom100Icon;
-  Zoom100Icon.addPixmap(QPixmap(
-    QString::fromUtf8(":/photivo/Icons/viewmag1.png")));
-  ac_Zoom100->setIcon(Zoom100Icon);
-  ac_Zoom100->setIconVisibleInMenu(true);
+  ac_Zoom100->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-original.png")));
+
+  ac_ZoomOut = new QAction(tr("Zoom &out") + "\t" + tr("3"), this);
+  ac_ZoomOut->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-out.png")));
+  connect(ac_ZoomOut, SIGNAL(triggered()), this, SLOT(Menu_ZoomOut()));
+
+  ac_ZoomFit = new QAction(tr("Zoom &fit") + "\t" + tr("4"), this);
+  connect(ac_ZoomFit, SIGNAL(triggered()), this, SLOT(Menu_ZoomFit()));
+  ac_ZoomFit->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-fit.png")));
 
 
-  ac_Mode_RGB = new QAction(tr("RGB"), this);
+  ac_Mode_RGB = new QAction(tr("&RGB") + "\t" + tr("0"), this);
   ac_Mode_RGB->setCheckable(true);
   connect(ac_Mode_RGB, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_Structure = new QAction(tr("Structure"), this);
+  ac_Mode_Structure = new QAction(tr("&Structure") + "\t" + tr("9"), this);
   ac_Mode_Structure->setCheckable(true);
   connect(ac_Mode_Structure, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_L = new QAction(tr("L*"), this);
+  ac_Mode_L = new QAction(tr("&L*") + "\t" + tr("8"), this);
   ac_Mode_L->setCheckable(true);
   connect(ac_Mode_L, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_A = new QAction(tr("a*"), this);
+  ac_Mode_A = new QAction(tr("&a*") + "\t" + tr("7"), this);
   ac_Mode_A->setCheckable(true);
   connect(ac_Mode_A, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_B = new QAction(tr("b*"), this);
+  ac_Mode_B = new QAction(tr("&b*") + "\t" + tr("6"), this);
   ac_Mode_B->setCheckable(true);
   connect(ac_Mode_B, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
-  ac_Mode_Gradient = new QAction(tr("Gradient"), this);
+  ac_Mode_Gradient = new QAction(tr("&Gradient") + "\t" + tr("5"), this);
   ac_Mode_Gradient->setCheckable(true);
   connect(ac_Mode_Gradient, SIGNAL(triggered()), this, SLOT(Menu_Mode()));
 
@@ -701,56 +723,82 @@ void ptViewWindow::ConstructContextMenu() {
   ac_ModeGroup->addAction(ac_Mode_Gradient);
   ac_ModeGroup->addAction(ac_Mode_Structure);
 
+  ac_PRead_None = new QAction(tr("&disabled"), this);
+  ac_PRead_None->setCheckable(true);
+  connect(ac_PRead_None, SIGNAL(triggered()), this, SLOT(Menu_PixelReading()));
 
-  ac_Clip_Indicate = new QAction(tr("Indicate"), this);
-  ac_Clip_Indicate->setStatusTip(tr("Indicate clipping"));
+  ac_PRead_Linear = new QAction(tr("&linear"), this);
+  ac_PRead_Linear->setCheckable(true);
+  connect(ac_PRead_Linear, SIGNAL(triggered()), this, SLOT(Menu_PixelReading()));
+
+  ac_PRead_Preview = new QAction(tr("&preview"), this);
+  ac_PRead_Preview->setCheckable(true);
+  connect(ac_PRead_Preview, SIGNAL(triggered()), this, SLOT(Menu_PixelReading()));
+
+  ac_PReadGroup = new QActionGroup(this);
+  ac_PReadGroup->addAction(ac_PRead_None);
+  ac_PReadGroup->addAction(ac_PRead_Linear);
+  ac_PReadGroup->addAction(ac_PRead_Preview);
+  switch (Settings->GetInt("PixelReader")) {
+    case (int)prLinear:  ac_PRead_Linear->setChecked(true);  break;
+    case (int)prPreview: ac_PRead_Preview->setChecked(true); break;
+    default:             ac_PRead_None->setChecked(true);
+  };
+  Menu_PixelReading();
+
+  ac_Clip_Indicate = new QAction(tr("Highlight &clipped pixels") + "\t" + tr("C"), this);
   ac_Clip_Indicate->setCheckable(true);
   ac_Clip_Indicate->setChecked(Settings->GetInt("ExposureIndicator"));
   connect(ac_Clip_Indicate, SIGNAL(triggered()), this, SLOT(Menu_Clip_Indicate()));
 
-  ac_Clip_Over = new QAction(tr("Over exposure"), this);
+  ac_Clip_Over = new QAction(tr("&Over exposure"), this);
   ac_Clip_Over->setCheckable(true);
   ac_Clip_Over->setChecked(Settings->GetInt("ExposureIndicatorOver"));
   connect(ac_Clip_Over, SIGNAL(triggered()), this, SLOT(Menu_Clip_Over()));
 
-  ac_Clip_Under = new QAction(tr("Under exposure"), this);
+  ac_Clip_Under = new QAction(tr("&Under exposure"), this);
   ac_Clip_Under->setCheckable(true);
   ac_Clip_Under->setChecked(Settings->GetInt("ExposureIndicatorUnder"));
   connect(ac_Clip_Under, SIGNAL(triggered()), this, SLOT(Menu_Clip_Under()));
 
-  ac_Clip_R = new QAction(tr("R"), this);
+  ac_Clip_R = new QAction(tr("&R"), this);
   ac_Clip_R->setCheckable(true);
   ac_Clip_R->setChecked(Settings->GetInt("ExposureIndicatorR"));
   connect(ac_Clip_R, SIGNAL(triggered()), this, SLOT(Menu_Clip_R()));
 
-  ac_Clip_G = new QAction(tr("G"), this);
+  ac_Clip_G = new QAction(tr("&G"), this);
   ac_Clip_G->setCheckable(true);
   ac_Clip_G->setChecked(Settings->GetInt("ExposureIndicatorG"));
   connect(ac_Clip_G, SIGNAL(triggered()), this, SLOT(Menu_Clip_G()));
 
-  ac_Clip_B = new QAction(tr("B"), this);
+  ac_Clip_B = new QAction(tr("&B"), this);
   ac_Clip_B->setCheckable(true);
   ac_Clip_B->setChecked(Settings->GetInt("ExposureIndicatorB"));
   connect(ac_Clip_B, SIGNAL(triggered()), this, SLOT(Menu_Clip_B()));
 
-  ac_SensorClip = new QAction(tr("Sensor"), this);
+  ac_SensorClip = new QAction(tr("&Sensor"), this);
   ac_SensorClip->setCheckable(true);
   ac_SensorClip->setChecked(Settings->GetInt("ExposureIndicatorSensor"));
   connect(ac_SensorClip, SIGNAL(triggered()), this, SLOT(Menu_SensorClip()));
   ac_SensorClipSep = new QAction(this);
   ac_SensorClipSep->setSeparator(true);
 
-  ac_ShowZoomBar = new QAction(tr("Show zoom bar"), this);
+  ac_ShowZoomBar = new QAction(tr("Show &bottom bar"), this);
   ac_ShowZoomBar->setCheckable(true);
   ac_ShowZoomBar->setChecked(Settings->GetInt("ShowBottomContainer"));
   connect(ac_ShowZoomBar, SIGNAL(triggered()), this, SLOT(Menu_ShowZoomBar()));
 
-  ac_ShowTools = new QAction(tr("Show tools"), this);
+  ac_ShowTools = new QAction(tr("Show &tool pane") + "\t" + tr("Space"), this);
   ac_ShowTools->setCheckable(true);
   ac_ShowTools->setChecked(Settings->GetInt("ShowToolContainer"));
   connect(ac_ShowTools, SIGNAL(triggered()), this, SLOT(Menu_ShowTools()));
 
-  ac_Fullscreen = new QAction(tr("Full screen"), this);
+#ifndef PT_WITHOUT_FILEMGR
+  ac_OpenFileMgr = new QAction(tr("Open file m&anager") + "\t" + tr("Ctrl+M"), this);
+  connect(ac_OpenFileMgr, SIGNAL(triggered()), this, SLOT(Menu_OpenFileMgr()));
+#endif
+
+  ac_Fullscreen = new QAction(tr("Full&screen") + "\t" + tr("F11"), this);
   ac_Fullscreen->setCheckable(true);
   ac_Fullscreen->setChecked(0);
   connect(ac_Fullscreen, SIGNAL(triggered()), this, SLOT(Menu_Fullscreen()));
@@ -770,9 +818,9 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
 
   // Create the menus themselves
   // Note: Menus cannot be created with new. That breaks the theming.
-  QMenu Menu_Mode(tr("Mode"), this);
-  Menu_Mode.setPalette(Theme->ptMenuPalette);
-  Menu_Mode.setStyle(Theme->ptStyle);
+  QMenu Menu_Mode(tr("Display &mode"), this);
+  Menu_Mode.setPalette(Theme->menuPalette());
+  Menu_Mode.setStyle(Theme->style());
   Menu_Mode.addAction(ac_Mode_RGB);
   Menu_Mode.addAction(ac_Mode_Structure);
   Menu_Mode.addAction(ac_Mode_L);
@@ -780,9 +828,9 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu_Mode.addAction(ac_Mode_B);
   Menu_Mode.addAction(ac_Mode_Gradient);
 
-  QMenu Menu_Clip(tr("Clipping"), this);
-  Menu_Clip.setPalette(Theme->ptMenuPalette);
-  Menu_Clip.setStyle(Theme->ptStyle);
+  QMenu Menu_Clip(tr("Show &clipping"), this);
+  Menu_Clip.setPalette(Theme->menuPalette());
+  Menu_Clip.setStyle(Theme->style());
   Menu_Clip.addAction(ac_Clip_Indicate);
   Menu_Clip.addSeparator();
   Menu_Clip.addAction(ac_Clip_Over);
@@ -792,21 +840,34 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu_Clip.addAction(ac_Clip_G);
   Menu_Clip.addAction(ac_Clip_B);
 
+  QMenu Menu_PRead(tr("Pixel values"), this);
+  Menu_PRead.setPalette(Theme->menuPalette());
+  Menu_PRead.setStyle(Theme->style());
+  Menu_PRead.addAction(ac_PRead_None);
+  Menu_PRead.addAction(ac_PRead_Linear);
+  Menu_PRead.addAction(ac_PRead_Preview);
+
   QMenu Menu(this);
-  Menu.setPalette(Theme->ptMenuPalette);
-  Menu.setStyle(Theme->ptStyle);
-  Menu.addAction(ac_ZoomFit);
+  Menu.setPalette(Theme->menuPalette());
+  Menu.setStyle(Theme->style());
+  Menu.addAction(ac_ZoomIn);
   Menu.addAction(ac_Zoom100);
+  Menu.addAction(ac_ZoomOut);
+  Menu.addAction(ac_ZoomFit);
   Menu.addSeparator();
   if (m_Interaction == iaNone) {
     Menu.addMenu(&Menu_Mode);
     Menu.addMenu(&Menu_Clip);
+    Menu.addMenu(&Menu_PRead);
     Menu.addSeparator();
     Menu.addAction(ac_SensorClip);
     Menu.addAction(ac_SensorClipSep);
   }
   Menu.addAction(ac_ShowTools);
   Menu.addAction(ac_ShowZoomBar);
+#ifndef PT_WITHOUT_FILEMGR
+  Menu.addAction(ac_OpenFileMgr);
+#endif
   Menu.addSeparator();
   Menu.addAction(ac_Fullscreen);
 
@@ -851,42 +912,42 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
 void Update(short Phase, short SubPhase = -1, short WithIdentify  = 1, short ProcessorMode = ptProcessorMode_Preview);
 void ptViewWindow::Menu_Clip_Indicate() {
   Settings->SetValue("ExposureIndicator",(int)ac_Clip_Indicate->isChecked());
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_Clip_Over() {
   Settings->SetValue("ExposureIndicatorOver",(int)ac_Clip_Over->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_Clip_Under() {
   Settings->SetValue("ExposureIndicatorUnder",(int)ac_Clip_Under->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_Clip_R() {
   Settings->SetValue("ExposureIndicatorR",(int)ac_Clip_R->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_Clip_G() {
   Settings->SetValue("ExposureIndicatorG",(int)ac_Clip_G->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_Clip_B() {
   Settings->SetValue("ExposureIndicatorB",(int)ac_Clip_B->isChecked());
   if (Settings->GetInt("ExposureIndicator"))
-    Update(ptProcessorPhase_NULL);
+    Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_SensorClip() {
   Settings->SetValue("ExposureIndicatorSensor",(int)ac_SensorClip->isChecked());
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
 }
 
 void ptViewWindow::Menu_ShowZoomBar() {
@@ -897,6 +958,10 @@ void ptViewWindow::Menu_ShowZoomBar() {
 void ptViewWindow::Menu_ShowTools() {
   Settings->SetValue("ShowToolContainer",(int)ac_ShowTools->isChecked());
   MainWindow->UpdateSettings();
+}
+
+void ptViewWindow::Menu_OpenFileMgr() {
+  emit openFileMgr();
 }
 
 void CB_FullScreenButton(const int State);
@@ -910,6 +975,14 @@ void ptViewWindow::Menu_ZoomFit() {
 
 void ptViewWindow::Menu_Zoom100() {
   ZoomTo(1.0);
+}
+
+void ptViewWindow::Menu_ZoomIn() {
+  ZoomStep(1);
+}
+
+void ptViewWindow::Menu_ZoomOut() {
+  ZoomStep(-1);
 }
 
 void ptViewWindow::Menu_Mode() {
@@ -926,5 +999,16 @@ void ptViewWindow::Menu_Mode() {
   else if (ac_Mode_Structure->isChecked())
     Settings->SetValue("SpecialPreview", ptSpecialPreview_Structure);
 
-  Update(ptProcessorPhase_NULL);
+  Update(ptProcessorPhase_Preview);
+}
+
+void ptViewWindow::Menu_PixelReading() {
+  if (ac_PRead_None->isChecked()) {
+    if (m_PixelReader) m_PixelReader(QPoint(), prNone);
+    m_PixelReading = prNone;
+  }
+  else if (ac_PRead_Linear->isChecked())  m_PixelReading = prLinear;
+  else if (ac_PRead_Preview->isChecked()) m_PixelReading = prPreview;
+
+  Settings->SetValue("PixelReader", (int)m_PixelReading);
 }

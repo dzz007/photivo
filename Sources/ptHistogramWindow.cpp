@@ -85,19 +85,17 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
           SLOT(ResizeTimerExpired()));
 
   // Create actions for context menu
-  m_AtnLnX = new QAction(tr("LnX"), this);
-  m_AtnLnX->setStatusTip(tr("X axis logarithmic"));
+  m_AtnLnX = new QAction(tr("Logarithmic &X axis"), this);
   m_AtnLnX->setCheckable(true);
   m_AtnLnX->setChecked(Settings->GetInt("HistogramLogX"));
   connect(m_AtnLnX, SIGNAL(triggered()), this, SLOT(MenuLnX()));
 
-  m_AtnLnY = new QAction(tr("LnY"), this);
-  m_AtnLnY->setStatusTip(tr("Y axis logarithmic"));
+  m_AtnLnY = new QAction(tr("Logarithmic &Y axis"), this);
   m_AtnLnY->setCheckable(true);
   m_AtnLnY->setChecked(Settings->GetInt("HistogramLogY"));
   connect(m_AtnLnY, SIGNAL(triggered()), this, SLOT(MenuLnY()));
 
-  m_AtnCrop = new QAction(tr("Selection"), this);
+  m_AtnCrop = new QAction(tr("&Selection"), this);
   m_AtnCrop->setStatusTip(tr("Histogram only on a part of the image"));
   m_AtnCrop->setCheckable(true);
   if (Settings->GetInt("HistogramCrop"))
@@ -106,17 +104,17 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
     m_AtnCrop->setChecked(0);
   connect(m_AtnCrop, SIGNAL(triggered()), this, SLOT(MenuCrop()));
 
-  m_AtnLinear = new QAction(tr("Linear"), this);
+  m_AtnLinear = new QAction(tr("&Linear"), this);
   m_AtnLinear->setStatusTip(tr("Use data from linear pipe"));
   m_AtnLinear->setCheckable(true);
   connect(m_AtnLinear, SIGNAL(triggered()), this, SLOT(MenuMode()));
 
-  m_AtnPreview = new QAction(tr("Preview"), this);
+  m_AtnPreview = new QAction(tr("&Preview"), this);
   m_AtnPreview->setStatusTip(tr("Use data with preview profile"));
   m_AtnPreview->setCheckable(true);
   connect(m_AtnPreview, SIGNAL(triggered()), this, SLOT(MenuMode()));
 
-  m_AtnOutput = new QAction(tr("Output"), this);
+  m_AtnOutput = new QAction(tr("&Output"), this);
   m_AtnOutput->setStatusTip(tr("Use data with output profile"));
   m_AtnOutput->setCheckable(true);
   connect(m_AtnOutput, SIGNAL(triggered()), this, SLOT(MenuMode()));
@@ -138,17 +136,17 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
   m_AtnRGB->setCheckable(true);
   connect(m_AtnRGB, SIGNAL(triggered()), this, SLOT(MenuChannel()));
 
-  m_AtnR = new QAction(tr("R"), this);
+  m_AtnR = new QAction(tr("&R"), this);
   m_AtnR->setStatusTip(tr("R"));
   m_AtnR->setCheckable(true);
   connect(m_AtnR, SIGNAL(triggered()), this, SLOT(MenuChannel()));
 
-  m_AtnG = new QAction(tr("G"), this);
+  m_AtnG = new QAction(tr("&G"), this);
   m_AtnG->setStatusTip(tr("G"));
   m_AtnG->setCheckable(true);
   connect(m_AtnG, SIGNAL(triggered()), this, SLOT(MenuChannel()));
 
-  m_AtnB = new QAction(tr("B"), this);
+  m_AtnB = new QAction(tr("&B"), this);
   m_AtnB->setStatusTip(tr("B"));
   m_AtnB->setCheckable(true);
   connect(m_AtnB, SIGNAL(triggered()), this, SLOT(MenuChannel()));
@@ -170,6 +168,8 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
 
   m_LookUp = NULL;
   FillLookUp();
+
+  InitOverlay();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -183,6 +183,11 @@ ptHistogramWindow::~ptHistogramWindow() {
   delete m_QPixmap;
   delete m_Image8;
   delete m_LookUp;
+  delete m_PixelInfoR;
+  delete m_PixelInfoG;
+  delete m_PixelInfoB;
+  delete m_PixelInfoTimer;
+  delete m_OverlayPalette;
 }
 
 
@@ -194,6 +199,22 @@ ptHistogramWindow::~ptHistogramWindow() {
 
 void ptHistogramWindow::Init() {
   ResizeTimerExpired();
+}
+
+//==============================================================================
+
+void ptHistogramWindow::PixelInfo(const QString R, const QString G, const QString B) {
+  m_PixelInfoR->setText("R: " + R);
+  m_PixelInfoR->adjustSize();
+  m_PixelInfoR->show();
+
+  m_PixelInfoG->setText("G: " + G);
+  m_PixelInfoG->adjustSize();
+  m_PixelInfoG->show();
+
+  m_PixelInfoB->setText("B: " + B);
+  m_PixelInfoB->adjustSize();
+  m_PixelInfoB->show();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -420,6 +441,41 @@ void ptHistogramWindow::FillLookUp() {
   }
 }
 
+//==============================================================================
+
+void ptHistogramWindow::InitOverlay() {
+  m_OverlayPalette = new QPalette();
+  m_OverlayPalette->setColor(QPalette::Foreground, QColor(0xa0, 0xa0, 0xa0));
+
+  m_PixelInfoR = new QLabel(this);
+  m_PixelInfoR->setTextFormat(Qt::PlainText);
+  m_PixelInfoR->setTextInteractionFlags(Qt::NoTextInteraction);
+  m_PixelInfoR->show();
+  m_PixelInfoR->setPalette(*m_OverlayPalette);
+  m_PixelInfoR->move(10, 10);
+  m_PixelInfoR->hide();
+
+  m_PixelInfoG = new QLabel(this);
+  m_PixelInfoG->setTextFormat(Qt::PlainText);
+  m_PixelInfoG->setTextInteractionFlags(Qt::NoTextInteraction);
+  m_PixelInfoG->show();
+  m_PixelInfoG->setPalette(*m_OverlayPalette);
+  m_PixelInfoG->move(60, 10);
+  m_PixelInfoG->hide();
+
+  m_PixelInfoB = new QLabel(this);
+  m_PixelInfoB->setTextFormat(Qt::PlainText);
+  m_PixelInfoB->setTextInteractionFlags(Qt::NoTextInteraction);
+  m_PixelInfoB->show();
+  m_PixelInfoB->setPalette(*m_OverlayPalette);
+  m_PixelInfoB->move(110, 10);
+  m_PixelInfoB->hide();
+
+  m_PixelInfoTimer = new QTimer(this);
+  m_PixelInfoTimer->setSingleShot(true);
+  connect(m_PixelInfoTimer, SIGNAL(timeout()), this, SLOT(PixelInfoHide()));
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // UpdateView.
@@ -460,22 +516,23 @@ void ptHistogramWindow::paintEvent(QPaintEvent*) {
   //       __FILE__,__LINE__,__PRETTY_FUNCTION__,width(),height());
   QPainter Painter(this);
   Painter.save();
-  if (!m_QPixmap) {
-    QString FileName = Settings->GetString("UserDirectory") + "photivoLogo.png";
-    m_QPixmap = new QPixmap(FileName);
-    QPixmap* Scaled = new QPixmap(
-      m_QPixmap->scaled(width()-16,
-                        height()-16,
-                        Qt::KeepAspectRatio,
-                        Qt::SmoothTransformation));
-    delete m_QPixmap;
-    m_QPixmap = Scaled;
-  }
+//  if (!m_QPixmap) {
+//    QString FileName = Settings->GetString("UserDirectory") + "photivoLogo.png";
+//    m_QPixmap = new QPixmap(FileName);
+//    QPixmap* Scaled = new QPixmap(
+//      m_QPixmap->scaled(width()-16,
+//                        height()-16,
+//                        Qt::KeepAspectRatio,
+//                        Qt::SmoothTransformation));
+//    delete m_QPixmap;
+//    m_QPixmap = Scaled;
+//  }
 
-  if (m_LogoActive) {
-    Painter.drawPixmap((width()-m_QPixmap->width())/2,8,*m_QPixmap);
-    Painter.restore();
-  } else {
+//  if (m_LogoActive) {
+//    Painter.drawPixmap((width()-m_QPixmap->width())/2,8,*m_QPixmap);
+//    Painter.restore();
+//  } else {
+  if (!m_LogoActive) {
     Painter.drawPixmap(0,0,*m_QPixmap);
     Painter.restore();
   }
@@ -490,28 +547,28 @@ void ptHistogramWindow::paintEvent(QPaintEvent*) {
 void ptHistogramWindow::contextMenuEvent(QContextMenuEvent *event)
 {
   QMenu Menu(this);
-  Menu.setPalette(Theme->ptMenuPalette);
-  Menu.setStyle(Theme->ptStyle);
+  Menu.setPalette(Theme->menuPalette());
+  Menu.setStyle(Theme->style());
   QMenu ChannelMenu(this);
-  ChannelMenu.setPalette(Theme->ptMenuPalette);
-  ChannelMenu.setStyle(Theme->ptStyle);
+  ChannelMenu.setPalette(Theme->menuPalette());
+  ChannelMenu.setStyle(Theme->style());
   ChannelMenu.addAction(m_AtnRGB);
   ChannelMenu.addAction(m_AtnR);
   ChannelMenu.addAction(m_AtnG);
   ChannelMenu.addAction(m_AtnB);
-  ChannelMenu.setTitle(tr("Channel"));
+  ChannelMenu.setTitle(tr("Display &channels"));
   // TODO Check for ActiveTab == a LAB tab
   //~ if (Settings->GetInt("HistogramMode")==ptHistogramMode_Linear)
     //~ ChannelMenu.setEnabled(0);
   //~ else
     //~ ChannelMenu.setEnabled(1);
   QMenu ModeMenu(this);
-  ModeMenu.setPalette(Theme->ptMenuPalette);
-  ModeMenu.setStyle(Theme->ptStyle);
+  ModeMenu.setPalette(Theme->menuPalette());
+  ModeMenu.setStyle(Theme->style());
   ModeMenu.addAction(m_AtnLinear);
   ModeMenu.addAction(m_AtnPreview);
   ModeMenu.addAction(m_AtnOutput);
-  ModeMenu.setTitle(tr("Mode"));
+  ModeMenu.setTitle(tr("Display &mode"));
   Menu.addMenu(&ModeMenu);
   Menu.addMenu(&ChannelMenu);
   Menu.addSeparator();
@@ -580,4 +637,13 @@ void ptHistogramWindow::MenuMode() {
 
   Update(ptProcessorPhase_OnlyHistogram);
 }
+
+//==============================================================================
+
+void ptHistogramWindow::PixelInfoHide() {
+  m_PixelInfoR->hide();
+  m_PixelInfoG->hide();
+  m_PixelInfoB->hide();
+}
+
 ////////////////////////////////////////////////////////////////////////////////

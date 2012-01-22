@@ -25,11 +25,11 @@
 #include <iostream>
 
 #include "imagespot/ptImageSpotList.h"
+#include "ptDefines.h"
 #include "imagespot/ptRepairSpot.h"
 #include "ptChannelMixer.h"
 #include "ptConfirmRequest.h"
 #include "ptConstants.h"
-#include "ptDefines.h"
 #include "ptError.h"
 #include "ptGuiOptions.h"
 //#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
@@ -39,6 +39,10 @@
 #include "ptTheme.h"
 #include "ptViewWindow.h"
 #include "ptWhiteBalances.h"
+
+#ifdef Q_OS_WIN
+  #include "ptEcWin7.h"
+#endif
 
 using namespace std;
 
@@ -52,6 +56,7 @@ extern short ImageCleanUp;
 void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
+void CB_ZoomStep(int direction);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -106,6 +111,11 @@ ptMainWindow::ptMainWindow(const QString Title)
   // Setup from the Gui builder.
   setupUi(this);
   setWindowTitle(Title);
+
+  // Initialize Win 7 taskbar features
+  #ifdef Q_OS_WIN
+    ptEcWin7::CreateInstance(this);
+  #endif
 
   // Move the fullscreen button in the zoom bar a bit to the left
   // to make space for the Mac window resize handle
@@ -299,7 +309,10 @@ ptMainWindow::ptMainWindow(const QString Title)
   BottomContainer->setVisible(Settings->GetInt("ShowBottomContainer"));
 
   Macro_ConnectSomeButton(ZoomFit);
+  Macro_ConnectSomeButton(ZoomIn);
+  Macro_ConnectSomeButton(ZoomOut);
   Macro_ConnectSomeButton(ZoomFull);
+  Macro_ConnectSomeButton(FileMgr);
   Macro_ConnectSomeButton(FullScreen);
   FullScreenButton->setChecked(0);
   Macro_ConnectSomeButton(LoadStyle);
@@ -434,6 +447,8 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   Macro_ConnectSomeButton(TextureOverlay);
   Macro_ConnectSomeButton(TextureOverlayClear);
+  Macro_ConnectSomeButton(TextureOverlay2);
+  Macro_ConnectSomeButton(TextureOverlay2Clear);
 
   Macro_ConnectSomeButton(GradualOverlay1Color);
   Macro_ConnectSomeButton(GradualOverlay2Color);
@@ -548,7 +563,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   m_ActiveTabs.append(EyeCandyTab);
   m_ActiveTabs.append(OutTab);
 
-  m_StatusIcon = QIcon(QString::fromUtf8(":/photivo/Icons/circleactive.png"));
+  m_StatusIcon = QIcon(QString::fromUtf8(":/dark/ui-graphics/indicator-active-tab.png"));
 
   // Profiles
   QFileInfo PathInfo(Settings->GetString("CameraColorProfile"));
@@ -610,7 +625,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnMenuOpenSettings, SIGNAL(triggered()), this, SLOT(MenuOpenSettings()));
 
   // context menu to show tools
-  m_AtnShowTools = new QAction(tr("Show hidden tools"), this);
+  m_AtnShowTools = new QAction(tr("&Show hidden tools"), this);
   connect(m_AtnShowTools, SIGNAL(triggered()), this, SLOT(ShowToolsOnTab()));
   m_AtnShowTools->setIcon(QIcon(*Theme->ptIconCheckGreen));
   m_AtnShowTools->setIconVisibleInMenu(true);
@@ -629,14 +644,12 @@ ptMainWindow::ptMainWindow(const QString Title)
   m_SearchInputTimer->setSingleShot(1);
   connect(m_SearchInputTimer, SIGNAL(timeout()), this, SLOT(Search()));
 
-  // Set us in the beginning of the tabbook and show mainwindow.
-  // But we do not want to generate events for this during setup
+  // Set the toolpane to show the pipe controls ...
   MainTabBook->blockSignals(1);
-  MainTabBook->setCurrentIndex(0);
+  MainTabBook->setCurrentWidget(TabProcessing);
   MainTabBook->blockSignals(0);
 
-  MainTabBook->setCurrentWidget(TabProcessing);
-
+  // ... and open the first pipe controls tab
   ProcessingTabBook->blockSignals(1);
   ProcessingTabBook->setCurrentIndex(0);
   ProcessingTabBook->blockSignals(0);
@@ -662,6 +675,7 @@ ptMainWindow::ptMainWindow(const QString Title)
           SLOT(Event0TimerExpired()));
 
   ConfirmSpotRepairButton->hide();
+  FileMgrThumbMaxRowColWidget->setEnabled(Settings->GetInt("FileMgrUseThumbMaxRowCol"));
 
   UpdateSpotRepairUI();
   UpdateCropToolUI();
@@ -676,6 +690,19 @@ ptMainWindow::ptMainWindow(const QString Title)
     ShowFavouriteTools();
   if (Settings->GetInt("StartupUIMode") == ptStartupUIMode_AllTools)
     ShowAllTools();
+
+  // Show the file manager if no image loaded at startup, the image editor otherwise.
+  // Do this last in the constructor because it triggers thumbnail reading.
+#ifndef PT_WITHOUT_FILEMGR
+  if (ImageFileToOpen == "" && !Settings->GetInt("NoFileMgrStartupOpen")) {
+    OpenFileMgrWindow();
+  } else {
+    MainStack->setCurrentWidget(ProcessingPage);
+  }
+#else
+  MainStack->setCurrentWidget(ProcessingPage);
+  findChild<ptGroupBox *>(QString("TabFileMgrSettings"))->setVisible(0);
+#endif
 }
 
 void CB_Event0();
@@ -740,15 +767,15 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       if (clickedItem !=0 && HaveHiddenTools == 1) { // no hidden tools on camera tab
         m_ContextMenuOnTab = clickedItem;
         QMenu Menu(NULL);
-        Menu.setStyle(Theme->ptStyle);
-        Menu.setPalette(Theme->ptMenuPalette);
+        Menu.setStyle(Theme->style());
+        Menu.setPalette(Theme->menuPalette());
         Menu.addAction(m_AtnShowTools);
         Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
       }
     } else if (obj == WritePipeButton) {
       QMenu Menu(NULL);
-      Menu.setStyle(Theme->ptStyle);
-      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.setStyle(Theme->style());
+      Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnSavePipe);
       Menu.addAction(m_AtnSaveFull);
       Menu.addAction(m_AtnSaveSettings);
@@ -756,15 +783,15 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     } else if (obj == ToGimpButton) {
       QMenu Menu(NULL);
-      Menu.setStyle(Theme->ptStyle);
-      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.setStyle(Theme->style());
+      Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnGimpSavePipe);
       Menu.addAction(m_AtnGimpSaveFull);
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     } else if (obj == ResetButton) {
       QMenu Menu(NULL);
-      Menu.setStyle(Theme->ptStyle);
-      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.setStyle(Theme->style());
+      Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnMenuUserReset);
       Menu.addAction(m_AtnMenuFullReset);
       Menu.addSeparator();
@@ -942,9 +969,25 @@ short ptMainWindow::GetCurrentTab() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-//
+//==============================================================================
+// Show/hide file manager window
+
+void ptMainWindow::OpenFileMgrWindow() {
+#ifndef PT_WITHOUT_FILEMGR
+  MainStack->setCurrentWidget(FileManagerPage);
+  Settings->SetValue("FileMgrIsOpen", 1);
+#endif
+}
+
+void ptMainWindow::CloseFileMgrWindow() {
+#ifndef PT_WITHOUT_FILEMGR
+  MainStack->setCurrentWidget(ProcessingPage);
+  Settings->SetValue("FileMgrIsOpen", 0);
+#endif
+}
+
+//==============================================================================
 // Tabbook switching
-//
 
 void CB_Tabs(const short Index);
 void ptMainWindow::on_ProcessingTabBook_currentChanged(const int Index) {
@@ -1179,6 +1222,15 @@ void ptMainWindow::OnZoomFullButtonClicked() {
   ::CB_ZoomFullButton();
 }
 
+void ptMainWindow::OnZoomInButtonClicked() {
+  ViewWindow->ZoomStep(1);
+}
+
+void ptMainWindow::OnZoomOutButtonClicked() {
+  ViewWindow->ZoomStep(-1);
+}
+
+
 void CB_InputChanged(const QString ObjectName, const QVariant Value);
 void ptMainWindow::OnInputChanged(const QVariant Value) {
   QObject* Sender = sender();
@@ -1186,6 +1238,11 @@ void ptMainWindow::OnInputChanged(const QVariant Value) {
          __FILE__,__LINE__,Sender->objectName().toAscii().data());
   CB_InputChanged(Sender->objectName(),Value);
 
+}
+
+void CB_FileMgrButton();
+void ptMainWindow::OnFileMgrButtonClicked() {
+  ::CB_FileMgrButton();
 }
 
 void CB_FullScreenButton(const int State);
@@ -1566,6 +1623,16 @@ void ptMainWindow::OnTextureOverlayClearButtonClicked() {
   ::CB_TextureOverlayClearButton();
 }
 
+void CB_TextureOverlay2Button();
+void ptMainWindow::OnTextureOverlay2ButtonClicked() {
+  ::CB_TextureOverlay2Button();
+}
+
+void CB_TextureOverlay2ClearButton();
+void ptMainWindow::OnTextureOverlay2ClearButtonClicked() {
+  ::CB_TextureOverlay2ClearButton();
+}
+
 
 void CB_GradualOverlay1ColorButton();
 void ptMainWindow::OnGradualOverlay1ColorButtonClicked() {
@@ -1664,13 +1731,18 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
       DropInfo.setFile( DropName ); // information about file
       if ( DropInfo.isFile() ) { // if is file
         if (DropInfo.completeSuffix()!="pts" && DropInfo.completeSuffix()!="ptj" &&
-            DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj") {
+            DropInfo.completeSuffix()!="dls" && DropInfo.completeSuffix()!="dlj")
+        {
+          if (Settings->GetInt("FileMgrIsOpen"))
+            CloseFileMgrWindow();
           ImageFileToOpen = DropName;
           CB_MenuFileOpen(1);
 
         } else {
-          if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
-            CB_OpenSettingsFile(DropName);
+          if (!Settings->GetInt("FileMgrIsOpen")) {
+            if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
+              CB_OpenSettingsFile(DropName);
+            }
           }
         }
       }
@@ -1725,11 +1797,11 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     if (Event->key()==Qt::Key_F11) { // toggle full screen
       ::CB_FullScreenButton(!isFullScreen());
     } else if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::NoModifier) {
-      CB_InputChanged("ZoomInput",50);
+      CB_ZoomStep(1);
     } else if (Event->key()==Qt::Key_2 && Event->modifiers()==Qt::NoModifier) {
       CB_InputChanged("ZoomInput",100);
     } else if (Event->key()==Qt::Key_3 && Event->modifiers()==Qt::NoModifier) {
-      CB_InputChanged("ZoomInput",200);
+      CB_ZoomStep(-1);
     } else if (Event->key()==Qt::Key_4 && Event->modifiers()==Qt::NoModifier) {
       CB_ZoomFitButton();
     } else if (Event->key()==Qt::Key_Space) {
@@ -1761,6 +1833,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         SearchInputWidget->setText("");
         SearchInputWidget->setFocus();
       }
+    } else if (Event->key() == Qt::Key_M && Event->modifiers() == Qt::ControlModifier) {
+      OpenFileMgrWindow();
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::ControlModifier) {
       CB_OpenPresetFileButton();
     } else if (Event->key()==Qt::Key_Q && Event->modifiers()==Qt::ControlModifier) {
@@ -1823,7 +1897,7 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_C && Event->modifiers()==Qt::NoModifier) {
       Settings->SetValue("ExposureIndicator",1-Settings->GetInt("ExposureIndicator"));
-      Update(ptProcessorPhase_NULL);
+      Update(ptProcessorPhase_Preview);
     // hidden tools, needs GUI implementation
     } else if (Event->key()==Qt::Key_H && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
@@ -1919,6 +1993,7 @@ void ptMainWindow::Search() {
   }
 
   ShowMovedTools(tr("Search results:"));
+
 }
 
 void ptMainWindow::ShowActiveTools() {
@@ -2335,6 +2410,26 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("TextureOverlayCenterY",0);
     Settings->SetEnabled("TextureOverlaySoftness",0);
   }
+  PathInfo.setFile(Settings->GetString("TextureOverlay2File"));
+  ShortFileName = PathInfo.baseName();
+  TextureOverlay2Text->setText(ShortFileName);
+  if (Settings->GetInt("TextureOverlay2Mask") > 0) {
+    Settings->SetEnabled("TextureOverlay2Exponent",1);
+    Settings->SetEnabled("TextureOverlay2InnerRadius",1);
+    Settings->SetEnabled("TextureOverlay2OuterRadius",1);
+    Settings->SetEnabled("TextureOverlay2Roundness",1);
+    Settings->SetEnabled("TextureOverlay2CenterX",1);
+    Settings->SetEnabled("TextureOverlay2CenterY",1);
+    Settings->SetEnabled("TextureOverlay2Softness",1);
+  } else {
+    Settings->SetEnabled("TextureOverlay2Exponent",0);
+    Settings->SetEnabled("TextureOverlay2InnerRadius",0);
+    Settings->SetEnabled("TextureOverlay2OuterRadius",0);
+    Settings->SetEnabled("TextureOverlay2Roundness",0);
+    Settings->SetEnabled("TextureOverlay2CenterX",0);
+    Settings->SetEnabled("TextureOverlay2CenterY",0);
+    Settings->SetEnabled("TextureOverlay2Softness",0);
+  }
 
   // Color buttons
   QPixmap Pix(80, 14);
@@ -2453,7 +2548,7 @@ void ptMainWindow::UpdateFilenameInfo(const QStringList FileNameList) {
   QFileInfo fn(FileNameList[0]);
   if (FileNameList.length() > 0 ) {
     FileNameLabel->setText(fn.fileName());
-    #ifdef Q_OS_WIN32
+    #ifdef Q_OS_WIN
       FilePathLabel->setText(fn.canonicalPath().replace(QString("/"), QString("\\")));
     #else
       FilePathLabel->setText(fn.canonicalPath());
@@ -3148,3 +3243,11 @@ ptMainWindow::~ptMainWindow() {
     ToolBoxStructureList.removeAt(0);
   }
 }
+
+//==============================================================================
+
+#ifdef Q_OS_WIN
+bool ptMainWindow::winEvent(MSG *message, long *result) {
+  return ptEcWin7::GetInstance()->winEvent(message, result);
+}
+#endif

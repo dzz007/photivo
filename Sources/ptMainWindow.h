@@ -51,13 +51,6 @@ class ptMainWindow : public QMainWindow, public Ui::ptMainWindow {
 
 Q_OBJECT
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-////////////////////////////////////////////////////////////////////////////////
-
 public:
   // Constructor.
   ptMainWindow(const QString         Title);
@@ -140,14 +133,6 @@ public:
   ptRepairSpotModel* RepairSpotModel;
 
 
-public slots:
-  void OtherInstanceMessage(const QString &msg);
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// PROTECTED members
-//
-////////////////////////////////////////////////////////////////////////////////
 
 protected:
   void closeEvent(QCloseEvent * Event);
@@ -158,12 +143,10 @@ protected:
   void dropEvent(QDropEvent* Event);
   bool eventFilter(QObject *obj, QEvent *event);
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-////////////////////////////////////////////////////////////////////////////////
+#ifdef Q_OS_WIN
+  // reimplementation needed for Win 7 taskbar features
+  virtual bool winEvent(MSG *message, long *result);
+#endif
 
 private :
   QTabBar* Tabbar;
@@ -186,12 +169,11 @@ private :
   void ShowMovedTools(const QString Title);
   void InitVisibleTools();
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-////////////////////////////////////////////////////////////////////////////////
+public slots:
+  // Toggle file manager window
+  void OpenFileMgrWindow();
+  void CloseFileMgrWindow();
+  void OtherInstanceMessage(const QString &msg);
 
 private slots:
   void ResizeTimerExpired();
@@ -238,7 +220,10 @@ private slots:
   void OnSpotWBButtonClicked();
 
   void OnZoomFitButtonClicked();
+  void OnZoomInButtonClicked();
+  void OnZoomOutButtonClicked();
   void OnZoomFullButtonClicked();
+  void OnFileMgrButtonClicked();
   void OnFullScreenButtonClicked();
   void OnLoadStyleButtonClicked();
 
@@ -307,6 +292,8 @@ private slots:
 
   void OnTextureOverlayButtonClicked();
   void OnTextureOverlayClearButtonClicked();
+  void OnTextureOverlay2ButtonClicked();
+  void OnTextureOverlay2ClearButtonClicked();
 
   void OnGradualOverlay1ColorButtonClicked();
   void OnGradualOverlay2ColorButtonClicked();

@@ -24,6 +24,8 @@
 //
 ////////////////////////////////////////////////////////////////
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
 // adaptions for photivo
 // width -> m_Width
 // height -> m_Height
@@ -979,3 +981,5 @@ void CLASS amaze_demosaic() {
 #undef TS
 
 }
+
+#pragma GCC diagnostic warning "-Wunused-variable"

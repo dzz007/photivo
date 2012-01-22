@@ -4261,7 +4261,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     <name>ptCurveWindow</name>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="100"/>
-        <source>Adaptive</source>
+        <source>A&amp;daptive</source>
         <translation>Adaptief</translation>
     </message>
     <message>
@@ -4271,7 +4271,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="104"/>
-        <source>Absolute</source>
+        <source>A&amp;bsolute</source>
         <translation>Absoluut</translation>
     </message>
     <message>
@@ -4281,7 +4281,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="115"/>
-        <source>By luminance</source>
+        <source>By l&amp;uminance</source>
         <translation>Met luminantie</translation>
     </message>
     <message>
@@ -4291,7 +4291,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="119"/>
-        <source>By color</source>
+        <source>By c&amp;olor</source>
         <translation>Met kleur</translation>
     </message>
     <message>
@@ -4301,7 +4301,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="147"/>
-        <source>Linear</source>
+        <source>&amp;Linear</source>
         <translation>Lineair</translation>
     </message>
     <message>
@@ -4311,7 +4311,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="151"/>
-        <source>Spline</source>
+        <source>&amp;Spline</source>
         <translation>Spline</translation>
     </message>
     <message>
@@ -4321,7 +4321,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="155"/>
-        <source>Cosine</source>
+        <source>&amp;Cosine</source>
         <translation>Cosinus</translation>
     </message>
     <message>
@@ -4349,28 +4349,28 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="130"/>
-        <source>Hide</source>
+        <source>&amp;Hide</source>
         <translation>Verbergen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="135"/>
         <location filename="../Sources/ptGroupBox.cpp" line="570"/>
-        <source>Block</source>
+        <source>Bl&amp;ock</source>
         <translation>Blokkeren</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="140"/>
-        <source>Reset</source>
+        <source>&amp;Reset</source>
         <translation>Herstellen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="145"/>
-        <source>Save preset</source>
+        <source>&amp;Save preset</source>
         <translation>Opslaan voorinstelling</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="150"/>
-        <source>Append preset</source>
+        <source>&amp;Append preset</source>
         <translation>Toevoegen aan voorinstelling</translation>
     </message>
     <message>
@@ -4380,7 +4380,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="567"/>
-        <source>Allow</source>
+        <source>All&amp;ow</source>
         <translation>Toestaan</translation>
     </message>
     <message>
@@ -4422,7 +4422,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="100"/>
-        <source>Selection</source>
+        <source>&amp;Selection</source>
         <translation>Selectie</translation>
     </message>
     <message>
@@ -4432,7 +4432,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="109"/>
-        <source>Linear</source>
+        <source>&amp;Linear</source>
         <translation>Lineair</translation>
     </message>
     <message>
@@ -4442,7 +4442,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="114"/>
-        <source>Preview</source>
+        <source>&amp;Preview</source>
         <translation>Voorbeeld</translation>
     </message>
     <message>
@@ -4452,7 +4452,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="119"/>
-        <source>Output</source>
+        <source>&amp;Output</source>
         <translation>Uitvoer</translation>
     </message>
     <message>
@@ -4486,12 +4486,12 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="510"/>
-        <source>Channel</source>
+        <source>Display &amp;channels</source>
         <translation>Kanaal</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="522"/>
-        <source>Mode</source>
+        <source>Display &amp;mode</source>
         <translation>Modus</translation>
     </message>
 </context>
@@ -5749,7 +5749,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="12662"/>
-        <source>Zoom Fit</source>
+        <source>Zoom fit</source>
         <translation>Zoom passend</translation>
     </message>
     <message>
@@ -5845,7 +5845,7 @@ Geen uitsnede, probeer nogmaals.</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="592"/>
-        <source>Show hidden tools</source>
+        <source>&amp;Show hidden tools</source>
         <translation>Toon verborgen gereedschappen</translation>
     </message>
     <message>
@@ -8841,12 +8841,12 @@ Bruikbaar om het verlies van inhoudsverlies door verdraaiing/geometrie gereedsch
     <name>ptViewWindow</name>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="633"/>
-        <source>Zoom fit</source>
+        <source>Zoom &amp;fit</source>
         <translation>Zoom passend</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="641"/>
-        <source>Zoom 100%</source>
+        <source>Zoom &amp;100%</source>
         <translation>Zoom 100%</translation>
     </message>
     <message>
@@ -8861,12 +8861,12 @@ Bruikbaar om het verlies van inhoudsverlies door verdraaiing/geometrie gereedsch
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="689"/>
-        <source>Over exposure</source>
+        <source>&amp;Over exposure</source>
         <translation>Overbelichting</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="694"/>
-        <source>Under exposure</source>
+        <source>&amp;Under exposure</source>
         <translation>Onderbelichting</translation>
     </message>
     <message>
@@ -8896,12 +8896,12 @@ Bruikbaar om het verlies van inhoudsverlies door verdraaiing/geometrie gereedsch
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="726"/>
-        <source>Show tools</source>
+        <source>Show &amp;tool pane</source>
         <translation>Toon gereedschappen</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="731"/>
-        <source>Full screen</source>
+        <source>Full&amp;screen</source>
         <translation>Volledig scherm</translation>
     </message>
     <message>
@@ -8931,12 +8931,12 @@ Bruikbaar om het verlies van inhoudsverlies door verdraaiing/geometrie gereedsch
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="670"/>
-        <source>Gradient</source>
+        <source>&amp;Gradient</source>
         <translation>Gradatie</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="654"/>
-        <source>Structure</source>
+        <source>&amp;Structure</source>
         <translation>Structuur</translation>
     </message>
     <message>
@@ -8953,12 +8953,12 @@ Bruikbaar om het verlies van inhoudsverlies door verdraaiing/geometrie gereedsch
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="761"/>
-        <source>Clipping</source>
+        <source>Show &amp;clipping</source>
         <translation>Knijpen</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="751"/>
-        <source>Mode</source>
+        <source>Display &amp;mode</source>
         <translation>Modus</translation>
     </message>
 </context>

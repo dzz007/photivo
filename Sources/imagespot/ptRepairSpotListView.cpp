@@ -34,8 +34,8 @@ extern ptTheme* Theme;
 
 ptRepairSpotListView::ptRepairSpotListView(QWidget *parent)
 : QListView(parent) {
-  setStyle(Theme->ptStyle);
-  setStyleSheet(Theme->ptStyleSheet);
+  setStyle(Theme->style());
+  setStyleSheet(Theme->stylesheet());
   setSelectionMode(QAbstractItemView::SingleSelection);
   setDragEnabled(true);
   setDragDropMode(QAbstractItemView::InternalMove);

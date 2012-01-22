@@ -26,6 +26,7 @@
 
 extern ptSettings* Settings;
 extern short ImageCleanUp;
+extern void ptRemoveFile( const QString FileName);
 
 void CB_WritePipeButton();
 
@@ -51,7 +52,7 @@ bool ptConfirmRequest::loadConfig(const ptLoadCfgMode mode, QString newFilename 
 
     case lcmNeutralPreset:
       newFilename = Settings->GetString("StartupSettingsFile");
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
       newFilename.replace(QString("/"), QString("\\"));
 #endif
       msgBox.setText(QObject::tr("Discard current configuration and reset to startup preset?\n") +
@@ -64,7 +65,7 @@ bool ptConfirmRequest::loadConfig(const ptLoadCfgMode mode, QString newFilename 
 
     case lcmPresetFile:
       msgBox.setText(QObject::tr("Discard current configuration and load preset file?\n") +
-              #ifdef Q_OS_WIN32
+              #ifdef Q_OS_WIN
                 newFilename.replace(QString("/"), QString("\\")));
               #else
                 newFilename);
@@ -73,7 +74,7 @@ bool ptConfirmRequest::loadConfig(const ptLoadCfgMode mode, QString newFilename 
 
     case lcmSettingsFile:
       msgBox.setText(QObject::tr("Discard current configuration and load settings file?\n") +
-               #ifdef Q_OS_WIN32
+               #ifdef Q_OS_WIN
                  newFilename.replace(QString("/"), QString("\\")));
                #else
                  newFilename);
@@ -101,8 +102,8 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
 
   if (Settings->GetInt("SaveConfirmation") == 0) {
-    if (ImageCleanUp == 1) { // clean up the input file if we got just a temp file
-      QFile::remove(InputFileNameList[0]);
+    if (ImageCleanUp > 1) { // clean up the input file if we got just a temp file
+      ptRemoveFile(InputFileNameList[0]);
       ImageCleanUp--;
     }
     return true;
@@ -120,10 +121,10 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
   } else {
     msgBox.setWindowTitle(QObject::tr("Photivo: Open image"));
     msgBox.setText(QObject::tr("Before opening the image:\n") +
-                 #ifdef Q_OS_WIN32
+                 #ifdef Q_OS_WIN
                    newFilename.replace(QString("/"), QString("\\"))
                  #else
-                   filename
+                   newFilename
                  #endif
                    + "\n\n" +
                    QObject::tr("Do you want to save the current image?"));
@@ -137,16 +138,16 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
     case QMessageBox::Save:
       // Save was clicked
       CB_WritePipeButton();
-      if (ImageCleanUp == 1) { // clean up the input file if we got just a temp file
-        QFile::remove(InputFileNameList[0]);
+      if (ImageCleanUp > 1) { // clean up the input file if we got just a temp file
+        ptRemoveFile(InputFileNameList[0]);
         ImageCleanUp--;
       }
       break;
 
     case QMessageBox::Discard:
       // Don't Save was clicked
-      if (ImageCleanUp == 1) {  // clean up the input file if we got just a temp file
-        QFile::remove(InputFileNameList[0]);
+      if (ImageCleanUp > 1) {  // clean up the input file if we got just a temp file
+        ptRemoveFile(InputFileNameList[0]);
         ImageCleanUp--;
       }
       break;

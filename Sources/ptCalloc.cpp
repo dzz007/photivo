@@ -112,7 +112,7 @@ void  ptFree(void* Ptr,
 
   short PtrFound = 0;
   int   IdxFound;
-  Allocation* TheAllocation;
+  Allocation* TheAllocation = NULL;
   for (IdxFound=0; IdxFound<Allocations.size(); IdxFound++) {
     TheAllocation = Allocations.at(IdxFound);
     if (TheAllocation->Pointer == Ptr) {

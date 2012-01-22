@@ -942,7 +942,7 @@ ptImage::~ptImage() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Set(const DcRaw*  DcRawObject,
+ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
                       const short   TargetSpace,
                       const char*   ProfileName,
                       const int     Intent,
@@ -1194,7 +1194,7 @@ ptImage* ptImage::Set(const DcRaw*  DcRawObject,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Set(const DcRaw*  DcRawObject,
+ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
                       const short   TargetSpace) {
 
   assert(NULL != DcRawObject);
@@ -1369,6 +1369,26 @@ ptImage* ptImage::SetScaled(const ptImage *Origin,
     }
   }
   return this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Get the RGB value at a given point
+//
+////////////////////////////////////////////////////////////////////////////////
+
+RGBValue ptImage::GetRGB(const uint16_t x, const uint16_t y) {
+  RGBValue RGB;
+
+  if (m_ColorSpace != ptSpace_Lab) {
+    RGB.R = m_Image[y*m_Width+x][0];
+    RGB.G = m_Image[y*m_Width+x][1];
+    RGB.B = m_Image[y*m_Width+x][2];
+  } else {
+    RGB.R = RGB.G = RGB.B = 0;
+  }
+
+  return RGB;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4009,6 +4029,8 @@ ptImage* ptImage::Colorcontrast(const double Radius,
     }
   }
 
+  delete MicrocontrastLayer;
+
   return this;
 }
 
@@ -6604,7 +6626,7 @@ ptImage* ptImage::Rotate45(double Angle) {
 // (which in turn took it from http://refocus.sourceforge.net/)
 //
 ////////////////////////////////////////////////////////////////////////////////
-
+/*
 ptImage* ptImage::Refocus(const uint8_t ChannelMask,
                           const short   MatrixRadius,
                           const double  Radius,
@@ -6681,6 +6703,7 @@ ptImage* ptImage::Refocus(const uint8_t ChannelMask,
 
   return this;
 }
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //

@@ -88,19 +88,6 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
   }
   m_ComboBox->installEventFilter(this);
   m_ComboBox->setFocusPolicy(Qt::ClickFocus);
-
-  //~ m_Button  = new QToolButton(m_Parent);
-  //~ QIcon ButtonIcon;
-  //~ ButtonIcon.addPixmap(QPixmap(
-    //~ QString::fromUtf8(":/photivo/Icons/reload.png")),
-    //~ QIcon::Normal, QIcon::Off);
-  //~ m_Button->setIcon(ButtonIcon);
-  //~ m_Button->setIconSize(QSize(14,14));
-  //~ m_Button->setText(QObject::tr("Reset"));
-  //~ m_Button->setToolTip(QObject::tr("Reset to defaults"));
-  //~ if (!m_HaveDefault) m_Button->hide();
-
-  //~ Layout->addWidget(m_Button);
   Layout->addWidget(m_ComboBox);
   Layout->setContentsMargins(0,0,0,0);
   Layout->setMargin(0);
