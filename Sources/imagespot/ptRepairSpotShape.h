@@ -23,33 +23,40 @@
 #ifndef PTREPAIRSPOTSHAPE_H
 #define PTREPAIRSPOTSHAPE_H
 
+//==============================================================================
+
 #include <QGraphicsItemGroup>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
 #include <QGraphicsRectItem>
+#include <QGraphicsDropShadowEffect>
 
 #include "ptRepairSpot.h"
+
+//==============================================================================
 
 class ptRepairSpotShape : public QGraphicsItemGroup {
   friend class ptRepairInteraction;
 
 public:
-  explicit ptRepairSpotShape(QGraphicsItem *parent = 0);
+  explicit ptRepairSpotShape(QGraphicsItem* AParent = NULL);
   ~ptRepairSpotShape();
-  void Draw(ptRepairSpot* SpotData);
+  void Draw(ptRepairSpot* ASpotData);
 
 private:
-  QGraphicsItemGroup*   m_SpotGroup;        // container for the spot
-  QGraphicsItemGroup*   m_RepairerGroup;    // container for repairer and connector line to spot
+  QGraphicsItemGroup*   FSpotGroup;        // container for the spot
+  QGraphicsItemGroup*   FRepairerGroup;    // container for repairer and connector line to spot
 
-  QGraphicsEllipseItem* m_Spot;
-  QGraphicsEllipseItem* m_SpotBorder;
-  QGraphicsRectItem*    m_RadiusHandle;
-  QGraphicsRectItem*    m_PositionHandle;
-  QGraphicsEllipseItem* m_RotationHandle;
+  QGraphicsEllipseItem* FSpot;
+  QGraphicsEllipseItem* FSpotBorder;
+  QGraphicsRectItem*    FRadiusHandle;
+  QGraphicsRectItem*    FPositionHandle;
+  QGraphicsEllipseItem* FRotationHandle;
 
-  QGraphicsEllipseItem* m_Repairer;
-  QGraphicsLineItem*    m_Connector;
+  QGraphicsDropShadowEffect*  FShadow;   // for the b/w line effect
+
+  QGraphicsEllipseItem* FRepairer;
+  QGraphicsLineItem*    FConnector;
 
 
 };

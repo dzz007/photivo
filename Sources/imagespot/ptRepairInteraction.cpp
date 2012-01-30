@@ -27,64 +27,49 @@
 #include "../ptDefines.h"
 #include "../ptConstants.h"
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// constructor and destructor
-//
-///////////////////////////////////////////////////////////////////////////
-ptRepairInteraction::ptRepairInteraction(QGraphicsView* View, ptRepairSpotListView* ListView)
-: ptAbstractInteraction(View),
-  m_SpotData(NULL),
-  m_ListView(ListView),
-  m_SpotShape(new ptRepairSpotShape)
+ptRepairInteraction::ptRepairInteraction(QGraphicsView* AView,
+                                         ptRepairSpotListView* AListView,
+                                         ptRepairSpot* ASpotData /*= NULL*/)
+: ptImageInteraction(AView),
+  FSpotData(ASpotData),
+  FListView(AListView),
+  FSpotShape(new ptRepairSpotShape)
 {
-  assert(m_ListView != NULL);
-  m_View->scene()->addItem(m_SpotShape);
+  assert(FListView != NULL);
+  FView->scene()->addItem(FSpotShape);
 
-  connect(this, SIGNAL(finished(ptStatus)), m_View, SLOT(finishInteraction(ptStatus)));
-  connect(m_View, SIGNAL(mouseChanged(QMouseEvent*)), this, SLOT(mouseAction(QMouseEvent*)));
-  connect(m_View, SIGNAL(keyChanged(QKeyEvent*)), this, SLOT(keyAction(QKeyEvent*)));
-
-  connect(m_ListView, SIGNAL(rowChanged(QModelIndex)), this, SLOT(changeSpot(QModelIndex)));
-  changeSpot(m_ListView->currentIndex());
+  connect(FListView, SIGNAL(rowChanged(QModelIndex)), this, SLOT(changeSpot(QModelIndex)));
+  changeSpot(FListView->currentIndex());
 }
 
+//==============================================================================
 
 ptRepairInteraction::~ptRepairInteraction() {
-  m_View->scene()->removeItem(m_SpotShape);
-  DelAndNull(m_SpotShape);
-  // Warning: Never delete m_View, m_ListView, m_SpotData!
+  FView->scene()->removeItem(FSpotShape);
+  DelAndNull(FSpotShape);
+  // Warning: Never delete FView, FListView, FSpotData!
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// stop()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRepairInteraction::stop() {
   emit finished(stSuccess);
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// Mouse interaction
-//
-///////////////////////////////////////////////////////////////////////////
-
-void ptRepairInteraction::mouseAction(QMouseEvent *event) {
-  switch (event->type()) {
+void ptRepairInteraction::mouseAction(QMouseEvent* AEvent) {
+  switch (AEvent->type()) {
     case QEvent::MouseButtonPress:
-      //MousePressHandler(event);
+      MousePressHandler(AEvent);
       break;
     case QEvent::MouseButtonRelease:
       //MouseReleaseHandler(event);
       break;
     case QEvent::MouseButtonDblClick:
-      //MouseDblClickHandler(event);
+      MouseDblClickHandler(AEvent);
       break;
     case QEvent::MouseMove:
       //MouseMoveHandler(event);
@@ -95,34 +80,37 @@ void ptRepairInteraction::mouseAction(QMouseEvent *event) {
   }
 }
 
+//==============================================================================
 
-void ptRepairInteraction::MousePressHandler(QMouseEvent *event) {
-
+void ptRepairInteraction::MousePressHandler(QMouseEvent* AEvent) {
 }
 
+//==============================================================================
 
-
-void ptRepairInteraction::keyAction(QKeyEvent *event) {
-
+void ptRepairInteraction::MouseDblClickHandler(QMouseEvent *AEvent) {
+  if (FSpotData == NULL) {
+    // create new spot at mouse position
+    FListView
+  }
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// changeSpot()
-//
-///////////////////////////////////////////////////////////////////////////
+void ptRepairInteraction::keyAction(QKeyEvent* AEvent) {
+}
 
-void ptRepairInteraction::changeSpot(const QModelIndex &index) {
+//==============================================================================
+
+void ptRepairInteraction::changeSpot(const QModelIndex& AIndex) {
   // Set new current spot
   if (index.isValid()) {
-    m_SpotData = static_cast<ptRepairSpot*>(
-        static_cast<ptRepairSpotModel*>(m_ListView->model())->spotList()->at(index.row()) );
+    FSpotData = static_cast<ptRepairSpot*>(
+        static_cast<ptRepairSpotModel*>(FListView->model())->spotList()->at(index.row()) );
 
   // No spot focused in list -> remove the reference to active spot.
   } else {
-    m_SpotData = NULL;
+    FSpotData = NULL;
   }
 
-  m_SpotShape->Draw(m_SpotData);
+  FSpotShape->Draw(FSpotData);
 }

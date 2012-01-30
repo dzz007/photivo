@@ -33,7 +33,7 @@
 
 #include <QList>
 
-#include "ptAbstractInteraction.h"
+#include "ptImageInteraction.h"
 #include <QGraphicsLineItem>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,7 @@
 // class ptGridInteraction
 //
 ///////////////////////////////////////////////////////////////////////////
-class ptGridInteraction : public ptAbstractInteraction {
+class ptGridInteraction : public ptImageInteraction {
 Q_OBJECT
 
 ///////////////////////////////////////////////////////////////////////////
@@ -64,18 +64,6 @@ public:
 private:
   QList<QGraphicsLineItem*> m_GridLines;
   void ClearList();
-
-
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-///////////////////////////////////////////////////////////////////////////
-private slots:
-  // abstract fncs from base class not needed here
-  void keyAction(QKeyEvent* event) {}
-  void mouseAction(QMouseEvent* event) {}
-
 };
 
 #endif // PTGRIDINTERACTION_H

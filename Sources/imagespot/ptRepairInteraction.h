@@ -28,30 +28,24 @@
   mode, i.e. all manipulation of repair spots that happen directly on the image.
 */
 
+//==============================================================================
+
 #ifndef PTREPAIRINTERACTION_H
 #define PTREPAIRINTERACTION_H
 
 #include <QGraphicsItemGroup>
 
-#include "../ptAbstractInteraction.h"
+#include "../ptImageInteraction.h"
 #include "ptRepairSpotListView.h"
 #include "ptRepairSpot.h"
 #include "ptRepairSpotShape.h"
+#include "ptRepairSpotModel.h"
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptRepairInteraction
-//
-///////////////////////////////////////////////////////////////////////////
-class ptRepairInteraction : public ptAbstractInteraction {
+//==============================================================================
+
+class ptRepairInteraction : public ptImageInteraction {
 Q_OBJECT
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
   /*! Create a repair interaction object.
     \param View
@@ -61,7 +55,9 @@ public:
       A pointer to an existing list view widget containing the spots. \c ListView must
       have a model assigned.
   */
-  explicit ptRepairInteraction(QGraphicsView* View, ptRepairSpotListView* ListView);
+  ptRepairInteraction(QGraphicsView* AView,
+                      ptRepairSpotListView* AListView,
+                      ptRepairSpot* ASpotData = NULL);
 
   ~ptRepairInteraction();
 
@@ -71,44 +67,36 @@ public:
   void stop();
 
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
 private:
-  void MousePressHandler(QMouseEvent* event);
+  void MousePressHandler(QMouseEvent* AEvent);
+  void MouseDblClickHandler(QMouseEvent* AEvent);
 
-  ptRepairSpot* m_SpotData;   // pointer to current spot’s config data
-  ptRepairSpotListView* m_ListView;
+  ptRepairSpot*           FSpotData;   // pointer to current spot’s config data
+  ptRepairSpotListView*   FListView;
+  ptRepairSpotModel*      FSpotModel;
 
   // Components of the spot visual spot shape
-  ptRepairSpotShape*    m_SpotShape;    // container for the complete spot shape
+  ptRepairSpotShape*      FSpotShape;    // container for the complete spot shape
 
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-///////////////////////////////////////////////////////////////////////////
 private slots:
   /*! Slot that is called when the current spot is changed.
     \param index
       The model index of the new spot.
   */
-  void changeSpot(const QModelIndex &index);
+  void changeSpot(const QModelIndex& AIndex);
 
   /*! Slot for all keyboard events.
     \param event
       A pointer to the QKeyEvent that triggered this slot.
   */
-  void keyAction(QKeyEvent* event);
+  void keyAction(QKeyEvent* AEvent);
 
   /*! Slot for all mouse events.
     \param event
       A pointer to the QMouseEvent that triggered this slot.
   */
-  void mouseAction(QMouseEvent* event);
+  void mouseAction(QMouseEvent* AEvent);
 
 
 };

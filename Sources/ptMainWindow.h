@@ -130,7 +130,7 @@ public:
   void PopulateSpotRepairList();
 
   ptRepairSpotListView* RepairSpotListView;
-  ptRepairSpotModel* RepairSpotModel;
+  ptRepairSpotModel*    RepairSpotModel;
 
 
 

@@ -24,12 +24,13 @@
 #define PTRICHRECTINTERACTION_H
 
 #include <QGraphicsRectItem>
+#include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QRectF>
 #include <QRect>
 
-#include "ptAbstractInteraction.h"
+#include "ptImageInteraction.h"
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -58,7 +59,7 @@ enum ptMovingEdge {
 // class ptSimpleRectInteraction
 //
 ///////////////////////////////////////////////////////////////////////////
-class ptRichRectInteraction : public ptAbstractInteraction {
+class ptRichRectInteraction : public ptImageInteraction {
 Q_OBJECT
 
 ///////////////////////////////////////////////////////////////////////////
@@ -106,6 +107,8 @@ private:
   QGraphicsRectItem*  m_LightsOutRects[4];
   QRectF              m_Rect;
   QGraphicsRectItem*  m_RectItem;
+
+  QGraphicsDropShadowEffect*  m_Shadow;
 
   qreal       m_AspectRatio;        //  m_AspectRatioW / m_AspectRatioH
   uint        m_AspectRatioW;

@@ -32,6 +32,8 @@ extern ptMainWindow* MainWindow;
 extern ptImageSpotList* RepairSpotList;
 extern ptTheme* Theme;
 
+//==============================================================================
+
 ptRepairSpotListView::ptRepairSpotListView(QWidget *parent)
 : QListView(parent) {
   setStyle(Theme->style());
@@ -43,6 +45,7 @@ ptRepairSpotListView::ptRepairSpotListView(QWidget *parent)
   setDropIndicatorShown(true);
 }
 
+//==============================================================================
 
 void ptRepairSpotListView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
   if (current.row() > -1) {
@@ -55,9 +58,13 @@ void ptRepairSpotListView::currentChanged(const QModelIndex &current, const QMod
   emit rowChanged(current);
 }
 
+//==============================================================================
 
 void ptRepairSpotListView::deleteSpot() {
   static_cast<ptRepairSpotModel*>(model())
       ->removeRows(currentIndex().row(), 1, QModelIndex());
   emit rowChanged(currentIndex());
 }
+
+//==============================================================================
+

@@ -32,19 +32,18 @@
 #ifndef PTREPAIRSPOT_H
 #define PTREPAIRSPOT_H
 
+//==============================================================================
+
 #include <QtGlobal>
 #include <QPoint>
 
 #include "ptImageSpot.h"
 #include "../ptConstants.h"
 
+//==============================================================================
 
 class ptRepairSpot: public ptImageSpot {
-////////////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-////////////////////////////////////////////////////////////////////////////////
+
 public:
   /*! Creates an empty and disabled repair spot using the clone algorithm or loads a spot
     from the current ini file.
@@ -112,11 +111,7 @@ public:
   */
   void WriteToIni(QSettings* Ini);
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-////////////////////////////////////////////////////////////////////////////////
+
 private:
   short m_HasRepairer;
   ptSpotRepairAlgo m_Algorithm;

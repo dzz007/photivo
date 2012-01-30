@@ -19,32 +19,25 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-/*
-** Management class for spot repair image spots, based on QList.
-**
-** IMPORTANT! The caller is responsible for creating ptImageSpot instances that
-** should appear in the list, use "new". DO NOT delete them yourself, the list
-** takes care of that. Exception: the take...() functions that remove the object
-** return from the list and return the object itself.
-**
-*******************************************************************************/
+/*!
+  \class ptImageSpotList
+
+  \brief Management class for spot repair image spots, based on QList.
+
+  IMPORTANT! The caller is responsible for creating ptImageSpot instances that
+  should appear in the list, use "new". DO NOT delete them yourself, the list
+  takes care of that. Exception: the take...() functions that remove the object
+  return from the list and return the object itself.
+*/
+
+//==============================================================================
 
 #include "ptImageSpotList.h"
 #include "../ptSettings.h"
 
 extern ptSettings* Settings;
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// constructor and destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
-ptImageSpotList::ptImageSpotList(const QString IniPrefix /*= ""*/)
-: QList<ptImageSpot*>()
-{
-  m_IniName = IniPrefix + "Spots";
-}
+//==============================================================================
 
 ptImageSpotList::~ptImageSpotList() {
   while (!isEmpty()) {
@@ -52,52 +45,38 @@ ptImageSpotList::~ptImageSpotList() {
   }
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// overwritten methods from QList
-//
-////////////////////////////////////////////////////////////////////////////////
 void ptImageSpotList::clear() {
   while (!isEmpty()) {
     delete takeFirst();
   }
 }
 
+//==============================================================================
+
 void ptImageSpotList::removeAt(int i) {
   delete takeAt(i);
 }
+
+//==============================================================================
 
 void ptImageSpotList::removeFirst() {
   delete takeFirst();
 }
 
+//==============================================================================
+
 void ptImageSpotList::removeLast() {
   delete takeLast();
 }
+
+//==============================================================================
 
 void ptImageSpotList::replace(int i, ptImageSpot *const& NewSpot) {
   delete at(i);
   QList::replace(i, NewSpot);
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// WriteToIni()
-//
-////////////////////////////////////////////////////////////////////////////////
-void ptImageSpotList::WriteToIni(QSettings* Ini) {
-  // Clear old stored spots
-  Ini->beginGroup(m_IniName);
-  Ini->remove("");
-  Ini->endGroup();
-
-  // Save the new ones
-  Ini->beginWriteArray(m_IniName);
-  for (int i = 0; i < this->count(); i++) {
-    Ini->setArrayIndex(i);
-    at(i)->WriteToIni(Ini);
-  }
-  Ini->endArray();
-}

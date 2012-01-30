@@ -106,7 +106,7 @@ cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
 
-ptImageSpotList* RepairSpotList;
+//ptImageSpotList* RepairSpotList;
 
 //
 // The 'tee' towards the display.
@@ -663,7 +663,7 @@ int photivoMain(int Argc, char *Argv[]) {
           home.mkdir(Folder);
   }
 
-  RepairSpotList = new ptImageSpotList("Repair");
+//  RepairSpotList = new ptImageSpotList("Repair");
 
   QString SettingsFileName = UserDirectory + "photivo.ini";
   // this has to be changed when we move to a different tree structure!
