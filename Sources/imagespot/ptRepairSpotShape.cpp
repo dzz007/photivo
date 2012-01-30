@@ -25,121 +25,120 @@
 #include "../ptDefines.h"
 #include "ptRepairSpotShape.h"
 
-ptRepairSpotShape::ptRepairSpotShape(QGraphicsItem *parent)
-: QGraphicsItemGroup(parent),
-  m_SpotGroup(new QGraphicsItemGroup()),
-  m_RepairerGroup(new QGraphicsItemGroup()),
-  m_Spot(new QGraphicsEllipseItem()),
-  m_SpotBorder(new QGraphicsEllipseItem()),
-  m_RadiusHandle(new QGraphicsRectItem(0.0, 0.0, 15.0, 15.0)),
-  m_PositionHandle(new QGraphicsRectItem(0.0, 0.0, 15.0, 15.0)),
-  m_RotationHandle(new QGraphicsEllipseItem(0.0, 0.0, 15.0, 15.0)),
-  m_Repairer(new QGraphicsEllipseItem()),
-  m_Connector(new QGraphicsLineItem())
+//==============================================================================
+
+ptRepairSpotShape::ptRepairSpotShape(QGraphicsItem *AParent)
+: QGraphicsItemGroup(AParent),
+  FSpotGroup(new QGraphicsItemGroup()),
+  FRepairerGroup(new QGraphicsItemGroup()),
+  FSpot(new QGraphicsEllipseItem()),
+  FSpotBorder(new QGraphicsEllipseItem()),
+  FRadiusHandle(new QGraphicsRectItem(0.0, 0.0, 15.0, 15.0)),
+  FPositionHandle(new QGraphicsRectItem(0.0, 0.0, 15.0, 15.0)),
+  FRotationHandle(new QGraphicsEllipseItem(0.0, 0.0, 15.0, 15.0)),
+  FShadow(new QGraphicsDropShadowEffect),
+  FRepairer(new QGraphicsEllipseItem()),
+  FConnector(new QGraphicsLineItem())
 {
   this->hide();
-  QPen solidPen = QPen(QColor(150,150,150), 2);
-  solidPen.setCosmetic(true);
+  QPen hSolidPen = QPen(QColor(255,255,255), 1);
+  hSolidPen.setCosmetic(true);
 
-  m_Spot->setPen(solidPen);
-  m_SpotBorder->setPen(QPen(QColor(150,150,150), 0, Qt::DotLine));
-  m_RadiusHandle->setPen(solidPen);
-  m_RadiusHandle->setBrush(QBrush(QColor(150,150,150), Qt::SolidPattern));
-  m_PositionHandle->setPen(solidPen);
-  m_PositionHandle->setBrush(QBrush(QColor(150,150,150), Qt::SolidPattern));
-  m_RotationHandle->setPen(solidPen);
-  m_RotationHandle->setBrush(QBrush(QColor(150,150,150), Qt::SolidPattern));
+  FShadow->setBlurRadius(0);
+  FShadow->setOffset(1);
+  FShadow->setColor(QColor(0,0,0));
 
-  m_SpotGroup->addToGroup(m_Spot);
-  m_SpotGroup->addToGroup(m_SpotBorder);
-  m_SpotGroup->addToGroup(m_RadiusHandle);
-  m_SpotGroup->addToGroup(m_PositionHandle);
-  m_SpotGroup->addToGroup(m_RotationHandle);
+  FSpot->setPen(hSolidPen);
+  FSpotBorder->setPen(QPen(QColor(255,255,255), 0, Qt::DotLine));
+  FRadiusHandle->setPen(hSolidPen);
+  FRadiusHandle->setBrush(QBrush(QColor(255,255,255), Qt::SolidPattern));
+  FPositionHandle->setPen(hSolidPen);
+  FPositionHandle->setBrush(QBrush(QColor(255,255,255), Qt::SolidPattern));
+  FRotationHandle->setPen(hSolidPen);
+  FRotationHandle->setBrush(QBrush(QColor(255,255,255), Qt::SolidPattern));
 
-  m_Repairer->setPen(solidPen);
-  m_Connector->setPen(solidPen);
+  FSpot->setGraphicsEffect(FShadow);
+  FSpotBorder->setGraphicsEffect(FShadow);
+  FRadiusHandle->setGraphicsEffect(FShadow);
+  FPositionHandle->setGraphicsEffect(FShadow);
 
-  m_RepairerGroup->addToGroup(m_Repairer);
-  m_RepairerGroup->addToGroup(m_Connector);
 
-  this->addToGroup(m_SpotGroup);
-  this->addToGroup(m_RepairerGroup);
+  FSpotGroup->addToGroup(FSpot);
+  FSpotGroup->addToGroup(FSpotBorder);
+  FSpotGroup->addToGroup(FRadiusHandle);
+  FSpotGroup->addToGroup(FPositionHandle);
+  FSpotGroup->addToGroup(FRotationHandle);
+
+  FRepairer->setPen(hSolidPen);
+  FConnector->setPen(hSolidPen);
+
+  FRepairerGroup->addToGroup(FRepairer);
+  FRepairerGroup->addToGroup(FConnector);
+
+  this->addToGroup(FSpotGroup);
+  this->addToGroup(FRepairerGroup);
 }
 
+//==============================================================================
 
 ptRepairSpotShape::~ptRepairSpotShape() {
-  DelAndNull(m_Spot);
-  DelAndNull(m_SpotBorder);
-  DelAndNull(m_RadiusHandle);
-  DelAndNull(m_Repairer);
-  DelAndNull(m_Connector);
-  DelAndNull(m_SpotGroup);
-  DelAndNull(m_RepairerGroup);
+  DelAndNull(FSpot);
+  DelAndNull(FSpotBorder);
+  DelAndNull(FRadiusHandle);
+  DelAndNull(FRepairer);
+  DelAndNull(FConnector);
+  DelAndNull(FSpotGroup);
+  DelAndNull(FRepairerGroup);
+  DelAndNull(FShadow);
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// UpdateSpotShape()
-//
-///////////////////////////////////////////////////////////////////////////
-
-void ptRepairSpotShape::Draw(ptRepairSpot* SpotData) {
+void ptRepairSpotShape::Draw(ptRepairSpot* ASpotData) {
   // no spot focused in list
-  if (SpotData == NULL) {
+  if (ASpotData == NULL) {
     this->hide();
     return;
   }
 
-//  // spot outer edge
-//  printf("=========spotdata at shape===========\n"
-//         "x %d  y %d\n"
-//         "w %d  h %d\n"
-//         "angle %f\n==========================\n",
-//         SpotData->pos().x(), SpotData->pos().y(),
-//         SpotData->radiusW(), SpotData->radiusH(), SpotData->angle());
+  // Center point of spot and repairer relative to their groups
+  QPointF hSpotCenter(ASpotData->radiusX()/2, ASpotData->radiusY()/2);
 
   // Set spot’s container’s topleft position so that we can work with (0,0)
-  // as the spot’s center point.
-  m_SpotGroup->setPos(SpotData->pos().x() + SpotData->radiusX(),
-                      SpotData->pos().y() + SpotData->radiusY() );
+  // as the spot’s topleft point.
+  FSpotGroup->setPos(ASpotData->pos());
 
-  m_Spot->setRect(0,0,//-SpotData->radiusX(),
-                  //-SpotData->radiusY(),
-                  SpotData->radiusX() * 2,
-                  SpotData->radiusY() * 2);
+  FSpot->setRect(0, 0,
+                 ASpotData->radiusX() * 2,
+                 ASpotData->radiusY() * 2);
 
   // spot inner edge
-  // TODO: move inner egde to tool pane slider
-  m_SpotBorder->hide();
-//  if (SpotData->edgeRadius() == 0) {
-//    m_SpotBorder->hide();
-//  } else {
-//    m_SpotBorder->setRect(SpotData->edgeRadius(),
-//                          SpotData->edgeRadius(),
-//                          2 * SpotData->radiusX() - 2 * SpotData->edgeRadius(),
-//                          2 * SpotData->radiusY() - 2 * SpotData->edgeRadius() );
-//    m_SpotBorder->show();
-//  }
+  // TODO SR: implement inner border display
+  FSpotBorder->hide();
 
-  // TODO SR: real radius/rotate handle position
-  m_RadiusHandle->setPos(SpotData->radiusX(), SpotData->radiusY());
-  m_RotationHandle->setPos(SpotData->radiusX() + 20, SpotData->radiusY() + 20);
-  m_SpotGroup->setRotation(SpotData->angle());
+  // Unrotated handle positions: Radius handle rightcenter, rotation handle bottomcenter
+  FRadiusHandle->setPos(FSpot->rect().width() - FRadiusHandle->rect().width()/2,
+                        hSpotCenter.y() - FRadiusHandle->rect().height()/2);
+  FRotationHandle->setPos(hSpotCenter.x() - FRotationHandle->rect().width()/2,
+                          FSpot->rect().height() - FRotationHandle->rect().height()/2);
+  FSpotGroup->setRotation(ASpotData->angle());
 
-  // repairer and connector line between spot and repairer
-  m_RepairerGroup->hide();
-//  if (SpotData->hasRepairer()) {
-//    m_RepairerGroup->setPos(SpotData->repairerPos());
-//    m_Repairer->setRect(0, 0,
-//                        SpotData->radiusX() * 2,
-//                        SpotData->radiusY() * 2);
-//    m_Repairer->setRotation(SpotData->angle());
-//    m_Connector->setLine(m_Spot->x(), m_Spot->y(), m_Repairer->x(), m_Repairer->y());
-//    m_RepairerGroup->show();
-//  } else {
-//    m_RepairerGroup->hide();
-//  }
+
+  if (ASpotData->hasRepairer()) {
+    // repairer ellipse
+    FRepairerGroup->setPos(ASpotData->repairerPos());
+    FRepairer->setRect(0, 0,
+                       ASpotData->radiusX() * 2, ASpotData->radiusY() * 2);
+    FRepairer->setRotation(ASpotData->angle());
+
+    // connector line between spot and repairer (from/to center)
+    // TODO SR: hide undesired sections inside spots
+    FConnector->setLine(QLineF(FSpot->mapToItem(FRepairerGroup, hSpotCenter), hSpotCenter));
+
+    FRepairerGroup->show();
+  } else {
+    FRepairerGroup->hide();
+  }
 
   this->show();
 }

@@ -41,7 +41,7 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
       const int x, const int y, const int width, const int height,
       const short FixedAspectRatio, const uint AspectRatioW,
       const uint AspectRatioH, const short Guidelines)
-: ptAbstractInteraction(View),
+: ptImageInteraction(View),
   //constants
   EdgeThickness(40),
   TinyRectThreshold(80),
@@ -76,23 +76,25 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
 
   m_DragDelta = new QLine();
   m_Rect.setRect(x, y, width, height);
-  m_RectItem = m_View->scene()->addRect(m_Rect, QPen(QColor(150,150,150)));
+  m_RectItem = m_View->scene()->addRect(m_Rect, QPen(QColor(255,255,255)));
   m_RectItem->setVisible(Settings->GetInt("LightsOut") != ptLightsOutMode_Black);
+
+  m_Shadow = new QGraphicsDropShadowEffect;
+  m_Shadow->setBlurRadius(1);
+  m_Shadow->setOffset(1);
+  m_Shadow->setColor(QColor(0,0,0));
+  m_RectItem->setGraphicsEffect(m_Shadow);
 
   // Init guidelines items
   for (int i = 0; i <= 3; i++) {
     m_GuideItems[i] = new QGraphicsLineItem();
     m_GuideItems[i]->hide();
-    m_GuideItems[i]->setPen(QPen(QColor(150,150,150)));
+    m_GuideItems[i]->setPen(QPen(QColor(255,255,255)));
     m_View->scene()->addItem(m_GuideItems[i]);
   }
 
   setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH, 0);
   UpdateScene();
-
-  connect(this, SIGNAL(finished(ptStatus)), m_View, SLOT(finishInteraction(ptStatus)));
-  connect(m_View, SIGNAL(mouseChanged(QMouseEvent*)), this, SLOT(mouseAction(QMouseEvent*)));
-  connect(m_View, SIGNAL(keyChanged(QKeyEvent*)), this, SLOT(keyAction(QKeyEvent*)));
 }
 
 
@@ -109,6 +111,7 @@ ptRichRectInteraction::~ptRichRectInteraction() {
     DelAndNull(m_LightsOutRects[i]);
   }
 
+  DelAndNull(m_Shadow);
 }
 
 

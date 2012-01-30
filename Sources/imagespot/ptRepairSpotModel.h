@@ -28,40 +28,60 @@
 #ifndef PTREPAIRSPOTMODEL_H
 #define PTREPAIRSPOTMODEL_H
 
+//==============================================================================
+
 #include <QStandardItemModel>
+#include <QList>
+#include <QString>
+#include <QSettings>
+
+#include "ptImageSpot.h"
 #include "ptImageSpotList.h"
 
-class ptRepairSpotModel : public QStandardItemModel {
+//==============================================================================
+
+class ptRepairSpotModel: public QStandardItemModel {
   Q_OBJECT
 
 public:
   /*! Constructs a \c ptRepairSpotModel object and creates the list of items
     from the actual repair spot data.
-    \param SpotList
-      A pointer to the list where the actual spot data is stored.
-    \param SizeHint
-      The \c SizeHint used for each item in the model. Width should be \c 0 and height
-      large enough to contain the editor widget.
-  */
-  explicit ptRepairSpotModel(ptImageSpotList* SpotList, const QSize SizeHint);
+    \param AIniPrefix
+      IniPrefix is a unique string that identifies this image spot list. The ini
+      file needs this so we can store multiple lists in it.
+    \param ASizeHint
+      The \c ASizeHint used for each item in the model. Width should be \c 0 and height
+      large enough to contain the editor widget. */
+  ptRepairSpotModel(const QSize ASizeHint);
 
+  ~ptRepairSpotModel();
+
+  QString iniName() const { return m_IniName; }
   Qt::ItemFlags flags(const QModelIndex &index) const;
 
   /*! Update an item and the underlying spot repair data.  */
-  bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+  bool setData(const QModelIndex &AIndex, const QVariant &AValue, int ARole = Qt::EditRole);
 
   /*! Returns a pointer to the \c ptImageSpotList associated with the model. */
-  inline ptImageSpotList* spotList() { return m_SpotList; }
+  inline ptImageSpotList* spotList() { return FSpotList; }
 
   Qt::DropActions supportedDropActions() const;
 
   /*! Remove one or more items from the model and delete the underlying repair spots. */
   bool removeRows(int row, int count, const QModelIndex &parent);
 
+  /*! Saves complete spotlist to pts file.
+      \param AIni
+      A Pointer to a \c QSettings object that represents the pts file. */
+  void WriteToIni(QSettings *AIni);
+
+//------------------------------------------------------------------------------
 
 private:
-  QSize m_SizeHint;
-  ptImageSpotList* m_SpotList;
+  const QString     CIniName;
+
+  QSize             FSizeHint;
+  ptImageSpotList  *FSpotList;
 
 };
 #endif // PTREPAIRSPOTMODEL_H

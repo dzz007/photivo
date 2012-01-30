@@ -23,39 +23,30 @@
 #ifndef PTIMAGESPOTLIST_H
 #define PTIMAGESPOTLIST_H
 
+//==============================================================================
+
 #include <QList>
 #include <QString>
 #include <QSettings>
 
 #include "ptImageSpot.h"
 
+//==============================================================================
+
 class ptImageSpotList: public QList<ptImageSpot*> {
-////////////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-////////////////////////////////////////////////////////////////////////////////
 public:
-  // IniPrefix is a unique string that identifies this image spot list. The ini
-  // file needs this so we can store multiple lists in it.
-  ptImageSpotList(const QString IniPrefix = "");
+  ptImageSpotList(): QList<ptImageSpot*>(){}
   ~ptImageSpotList();
 
-  void clear();
-  inline QString iniName() const { return m_IniName; }
-  void removeAt(int i);
-  void removeFirst();
-  void removeLast();
-  void replace(int i, ptImageSpot *const& NewSpot);
-  void WriteToIni(QSettings* Ini);
+  void      clear();
+  void      removeAt(int i);
+  void      removeFirst();
+  void      removeLast();
+  void      replace(int i, ptImageSpot *const& NewSpot);
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-////////////////////////////////////////////////////////////////////////////////
+
+//------------------------------------------------------------------------------
 private:
-  QString m_IniName;
 
 };
 #endif

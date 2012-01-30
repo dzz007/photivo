@@ -27,61 +27,34 @@
 
 extern ptGuiOptions* GuiOptions;
 
-ptRepairSpotModel::ptRepairSpotModel(ptImageSpotList* SpotList, const QSize SizeHint)
+//==============================================================================
+
+ptRepairSpotModel::ptRepairSpotModel(const QSize ASizeHint)
 : QStandardItemModel(NULL),
-  m_SizeHint(SizeHint),
-  m_SpotList(SpotList)
+  CIniName("RepairSpots"),
+  FSizeHint(ASizeHint),
+  FSpotList(new ptImageSpotList)
 {
   // Create model from the actual spot data. Data included:
   // name of current algorithm as the caption; enabled state
-  for (int i = 0; i < m_SpotList->count(); i++) {
-    ptRepairSpot* spot = static_cast<ptRepairSpot*>(m_SpotList->at(i));
+  for (int i = 0; i < FSpotList->count(); i++) {
+    ptRepairSpot* spot = static_cast<ptRepairSpot*>(FSpotList->at(i));
     QStandardItem* SpotItem = new QStandardItem(GuiOptions->SpotRepair[spot->algorithm()].Text);
     SpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
                        Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     SpotItem->setCheckState(Qt::CheckState(spot->isEnabled()));
-    SpotItem->setSizeHint(m_SizeHint);
+    SpotItem->setSizeHint(FSizeHint);
     appendRow(SpotItem);
   }
 }
 
+//==============================================================================
 
-bool ptRepairSpotModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-  return QStandardItemModel::setData(index, value, role);
-
-  // Update actual repair spot data
-  ptRepairSpot* spot = static_cast<ptRepairSpot*>(m_SpotList->at(index.row()));
-  if (role == Qt::DisplayRole) {    // algorithm
-    int i = 0;
-    QString AlgoName = value.toString();
-    while (GuiOptions->SpotRepair[i].Value.toInt() > -1) {
-      if (AlgoName == GuiOptions->SpotRepair[i].Text) {
-        spot->setAlgorithm((ptSpotRepairAlgo)i);
-        break;
-      }
-      i++;
-    }
-
-  } else if (role == Qt::CheckStateRole) {    // en/disabled switch
-    spot->setEnabled(value.toInt());
-  }
+ptRepairSpotModel::~ptRepairSpotModel() {
+  DelAndNull(FSpotList);
 }
 
-
-bool ptRepairSpotModel::removeRows(int row, int count, const QModelIndex &parent) {
-  beginRemoveRows(parent, row, row+count-1);
-  m_SpotList->removeAt(row);
-  bool success = QStandardItemModel::removeRows(row, count, parent);
-  endRemoveRows();
-  return success;
-}
-
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Drag & Drop
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 Qt::ItemFlags ptRepairSpotModel::flags(const QModelIndex &index) const {
   Qt::ItemFlags defaultFlags = QStandardItemModel::flags(index);
@@ -92,7 +65,66 @@ Qt::ItemFlags ptRepairSpotModel::flags(const QModelIndex &index) const {
     return Qt::ItemIsDropEnabled | defaultFlags;
 }
 
+//==============================================================================
+
+bool ptRepairSpotModel::setData(const QModelIndex &AIndex, const QVariant &AValue, int ARole) {
+  bool hResult = QStandardItemModel::setData(AIndex, AValue, ARole);
+  if (!hResult) return hResult;
+
+  // Update actual repair spot data
+  ptRepairSpot* hspot = static_cast<ptRepairSpot*>(FSpotList->at(AIndex.row()));
+  if (ARole == Qt::DisplayRole) {
+    // algorithm
+    int i = 0;
+    QString hAlgoName = AValue.toString();
+    while (GuiOptions->SpotRepair[i].Value.toInt() > -1) {
+      if (hAlgoName == GuiOptions->SpotRepair[i].Text) {
+        hspot->setAlgorithm((ptSpotRepairAlgo)i);
+        break;
+      }
+      i++;
+    }
+
+  } else if (ARole == Qt::CheckStateRole) {
+    // en/disabled switch
+    hspot->setEnabled(AValue.toInt());
+  }
+
+  return hResult;
+}
+
+//==============================================================================
 
 Qt::DropActions ptRepairSpotModel::supportedDropActions() const {
   return Qt::MoveAction;
 }
+
+//==============================================================================
+
+bool ptRepairSpotModel::removeRows(int row, int count, const QModelIndex &parent) {
+  beginRemoveRows(parent, row, row+count-1);
+  FSpotList->removeAt(row);
+  bool success = QStandardItemModel::removeRows(row, count, parent);
+  endRemoveRows();
+  return success;
+}
+
+//==============================================================================
+
+void ptRepairSpotModel::WriteToIni(QSettings *AIni) {
+  // Clear old stored spots
+  AIni->beginGroup(CIniName);
+  AIni->remove("");
+  AIni->endGroup();
+
+  // Save the new ones
+  AIni->beginWriteArray(CIniName);
+  for (int i = 0; i < this->count(); i++) {
+    AIni->setArrayIndex(i);
+    FSpotList->at(i)->WriteToIni(AIni);
+  }
+  AIni->endArray();
+}
+
+//==============================================================================
+

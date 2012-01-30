@@ -31,8 +31,12 @@
 #ifndef PTREPAIRSPOTLISTVIEW_H
 #define PTREPAIRSPOTLISTVIEW_H
 
+//==============================================================================
+
 #include <QListView>
 #include <QToolButton>
+
+//==============================================================================
 
 class ptRepairSpotListView : public QListView
 {

@@ -535,6 +535,9 @@ void ptViewWindow::ShowStatus(const QString text) {
 void ptViewWindow::StartLine() {
   if (m_Interaction == iaNone) {
     m_DrawLine = new ptLineInteraction(this);
+    connect(m_DrawLine, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
+    connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_DrawLine, SLOT(mouseAction(QMouseEvent*)));
+    connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_DrawLine, SLOT(keyAction(QKeyEvent*)));
     m_Interaction = iaDrawLine;
   }
 }
@@ -552,6 +555,9 @@ void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect))
     assert(CB_SimpleRect != NULL);
     m_CB_SimpleRect = CB_SimpleRect;
     m_SelectRect = new ptSimpleRectInteraction(this);
+    connect(m_SelectRect, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
+    connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_SelectRect, SLOT(mouseAction(QMouseEvent*)));
+    connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_SelectRect, SLOT(keyAction(QKeyEvent*)));
     m_Interaction = iaSelectRect;
   }
 }
@@ -595,6 +601,10 @@ void ptViewWindow::StartCrop()
                                      Settings->GetInt("AspectRatioW"),
                                      Settings->GetInt("AspectRatioH"),
                                      Settings->GetInt("CropGuidelines") );
+
+  connect(m_Crop, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
+  connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_Crop, SLOT(mouseAction(QMouseEvent*)));
+  connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_Crop, SLOT(keyAction(QKeyEvent*)));
   m_Interaction = iaCrop;
 }
 
@@ -610,6 +620,9 @@ void ptViewWindow::StartSpotRepair(ptRepairSpotListView* ListView) {
     return;
   }
   m_SpotRepair = new ptRepairInteraction(this, ListView);
+  connect(m_SpotRepair, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
+  connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_SpotRepair, SLOT(mouseAction(QMouseEvent*)));
+  connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_SpotRepair, SLOT(keyAction(QKeyEvent*)));
   m_Interaction = iaSpotRepair;
 }
 
