@@ -463,17 +463,21 @@ int photivoMain(int Argc, char *Argv[]) {
 "--new-instance\n"
 "      Allow opening another Photivo instance instead of using a currently\n"
 "      running Photivo. Job files are always opened in a new instance.\n"
+"--no-filemgr\n"
+"      Prevent auto-open file manager when Photivo starts.\n"
 "-h\n"
 "      Display this usage information.\n\n"
 "For more documentation visit the wiki: http://photivo.org/photivo/start\n"
   );
+
+  ptCliCommands cli = { cliNoAction, "", "", false, false };
 
 #ifdef Q_OS_MAC
 //Just Skip if engaged by QFileOpenEvent
   if(!MacGotFileEvent) {
 #endif
 
-  ptCliCommands cli = ParseCli(Argc, Argv);
+  cli = ParseCli(Argc, Argv);
 
   // Show help message and exit Photivo
   if (cli.Mode == cliShowHelp) {
@@ -831,6 +835,9 @@ int photivoMain(int Argc, char *Argv[]) {
     Settings->SetValue("LastFileMgrLocation", QFileInfo(ImageFileToOpen).absolutePath());
   }
 
+#ifndef PT_WITHOUT_FILEMGR
+  if (cli.NoOpenFileMgr) Settings->SetValue("NoFileMgrStartupOpen", 1);
+#endif
 
   // Construct windows
   MainWindow = new ptMainWindow(QObject::tr("Photivo"));
@@ -1335,8 +1342,11 @@ void Update(short Phase,
             short ProcessorMode /* = ptProcessorMode_Preview */)
 {
 #ifdef Q_OS_WIN
-  ptEcWin7* Win7Taskbar = ptEcWin7::GetInstance();
-  Win7Taskbar->setProgressState(ptEcWin7::Indeterminate);
+  ptEcWin7* Win7Taskbar = NULL;
+  if (!JobMode) {
+    Win7Taskbar = ptEcWin7::GetInstance();
+    Win7Taskbar->setProgressState(ptEcWin7::Indeterminate);
+  }
 #endif
 
   if (Settings->GetInt("BlockUpdate") == 1) return; // hard block
@@ -1400,7 +1410,9 @@ void Update(short Phase,
   Settings->SetValue("PipeIsRunning",0);
 
 #ifdef Q_OS_WIN
-  Win7Taskbar->setProgressState(ptEcWin7::NoProgress);
+  if (!JobMode) {
+    Win7Taskbar->setProgressState(ptEcWin7::NoProgress);
+  }
 #endif
 }
 
@@ -3550,7 +3562,8 @@ void CB_MenuFileExit(const short) {
   delete Settings;
 
 #ifdef Q_OS_WIN
-  ptEcWin7::DestroyInstance();
+  if (!JobMode)
+    ptEcWin7::DestroyInstance();
 #endif
 
   ALLOCATED(10000000);
