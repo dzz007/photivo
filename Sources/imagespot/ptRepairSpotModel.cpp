@@ -31,22 +31,10 @@ extern ptGuiOptions* GuiOptions;
 
 ptRepairSpotModel::ptRepairSpotModel(const QSize ASizeHint)
 : QStandardItemModel(NULL),
-  CIniName("RepairSpots"),
+  CPtsName("RepairSpots"),
   FSizeHint(ASizeHint),
-  FSpotList(new ptImageSpotList)
-{
-  // Create model from the actual spot data. Data included:
-  // name of current algorithm as the caption; enabled state
-  for (int i = 0; i < FSpotList->count(); i++) {
-    ptRepairSpot* spot = static_cast<ptRepairSpot*>(FSpotList->at(i));
-    QStandardItem* SpotItem = new QStandardItem(GuiOptions->SpotRepair[spot->algorithm()].Text);
-    SpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
-                       Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    SpotItem->setCheckState(Qt::CheckState(spot->isEnabled()));
-    SpotItem->setSizeHint(FSizeHint);
-    appendRow(SpotItem);
-  }
-}
+  FSpotList(new QList<ptRepairSpot*>)
+{}
 
 //==============================================================================
 
@@ -63,6 +51,22 @@ Qt::ItemFlags ptRepairSpotModel::flags(const QModelIndex &index) const {
     return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
   else
     return Qt::ItemIsDropEnabled | defaultFlags;
+}
+
+//==============================================================================
+
+void ptRepairSpotModel::LoadFromFile(QSettings *APtsFile) {
+  ClearList();
+
+  int hSize = APtsFile->beginReadArray(CPtsName);
+  ReportProgress(QObject::tr(QString("Reading %1 repair spots.\n").arg(hSize).toAscii().data()));
+  for (int i = 0; i < hSize; i++) {
+    APtsFile->setArrayIndex(i);
+    RepairSpotList->append(new ptRepairSpot(APtsFile));
+  }
+  APtsFile->endArray();
+
+  RebuildModel();
 }
 
 //==============================================================================
@@ -95,6 +99,13 @@ bool ptRepairSpotModel::setData(const QModelIndex &AIndex, const QVariant &AValu
 
 //==============================================================================
 
+void ptRepairSpotModel::setSpot(const int AIndex, ptRepairSpot *ASpotData) {
+  delete FSpotList[AIndex];
+  FSpotList[AIndex] = ASpotData;
+}
+
+//==============================================================================
+
 Qt::DropActions ptRepairSpotModel::supportedDropActions() const {
   return Qt::MoveAction;
 }
@@ -111,19 +122,43 @@ bool ptRepairSpotModel::removeRows(int row, int count, const QModelIndex &parent
 
 //==============================================================================
 
-void ptRepairSpotModel::WriteToIni(QSettings *AIni) {
-  // Clear old stored spots
-  AIni->beginGroup(CIniName);
-  AIni->remove("");
-  AIni->endGroup();
+void ptRepairSpotModel::WriteToFile(QSettings *APtsFile) {
+  // Clear old stored spots, if any
+  APtsFile->beginGroup(CPtsName);
+  APtsFile->remove("");
+  APtsFile->endGroup();
 
   // Save the new ones
-  AIni->beginWriteArray(CIniName);
-  for (int i = 0; i < this->count(); i++) {
-    AIni->setArrayIndex(i);
-    FSpotList->at(i)->WriteToIni(AIni);
+  APtsFile->beginWriteArray(CPtsName);
+  for (int i = 0; i < FSpotList->size(); i++) {
+    APtsFile->setArrayIndex(i);
+    FSpotList->at(i)->WriteToIni(APtsFile);
   }
-  AIni->endArray();
+  APtsFile->endArray();
+}
+
+//==============================================================================
+
+void ptRepairSpotModel::ClearList() {
+  while (!FSpotList->isEmpty()) {
+    delete FSpotList->takeFirst();
+  }
+}
+
+//==============================================================================
+
+void ptRepairSpotModel::RebuildModel() {
+  this->clear();
+
+  for (int i = 0; i < FSpotList->size(); i++) {
+    ptRepairSpot* hSpot = FSpotList[i];
+    QStandardItem* hSpotItem = new QStandardItem(GuiOptions->SpotRepair[hSpot->algorithm()].Text);
+    hSpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
+                        Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    hSpotItem->setCheckState(Qt::CheckState(hSpot->isEnabled()));
+    hSpotItem->setSizeHint(FSizeHint);
+    appendRow(hSpotItem);
+  }
 }
 
 //==============================================================================

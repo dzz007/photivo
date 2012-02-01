@@ -53,7 +53,7 @@ public:
       All values not present in the pts file are set to their default values. The ini’s
       \c ReadArray() must be set appropriately before you can use this.
   */
-  ptRepairSpot(QSettings* Ini = NULL);
+  ptRepairSpot(QSettings *APtsFile = NULL);
 
   /*! Create a repair spot with specific values.  */
   ptRepairSpot(const short isEnabled,
