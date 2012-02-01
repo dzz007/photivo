@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -33,12 +33,16 @@ extern ptTheme* Theme;
 extern ptImageSpotList* RepairSpotList;
 extern ptGuiOptions* GuiOptions;
 
-ptRepairSpotItemDelegate::ptRepairSpotItemDelegate(QObject *parent)
-: QStyledItemDelegate(parent)
-{
-}
+//==============================================================================
 
-QWidget* ptRepairSpotItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem&,
+ptRepairSpotItemDelegate::ptRepairSpotItemDelegate(QObject *AParent)
+: QStyledItemDelegate(AParent)
+{}
+
+//==============================================================================
+
+QWidget* ptRepairSpotItemDelegate::createEditor(QWidget *parent,
+                                                const QStyleOptionViewItem&,
                                                 const QModelIndex &index) const
 {
   return new ptRepairSpotEditor(
@@ -47,12 +51,15 @@ QWidget* ptRepairSpotItemDelegate::createEditor(QWidget *parent, const QStyleOpt
   );
 }
 
+//==============================================================================
 
 void ptRepairSpotItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
 //  ptRepairSpotEditor *ed = qobject_cast<ptRepairSpotEditor*>(editor);
 //  ed->AlgoCombo->setCurrentIndex(
 //        static_cast<ptRepairSpot*>(RepairSpotList->at(index.row()))->algorithm() );
 }
+
+//==============================================================================
 
 void ptRepairSpotItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                                             const QModelIndex &index) const
@@ -65,4 +72,5 @@ void ptRepairSpotItemDelegate::setModelData(QWidget *editor, QAbstractItemModel 
                  Qt::DisplayRole);
 }
 
+//==============================================================================
 

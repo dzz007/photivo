@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -27,43 +27,40 @@
 
 extern ptSettings* Settings;
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ptImageSpot constructor
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptImageSpot::ptImageSpot(QSettings* Ini /*= NULL*/)
-: m_Angle(0.0),
-  m_EdgeSoftness(0.0),
-  m_EdgeRadius(0),
-  m_IsEnabled(0),
-  m_Opacity(1.0),
-  m_RadiusX(0),
-  m_RadiusY(0),
-  m_WeightMatrix(NULL)
+ptImageSpot::ptImageSpot(QSettings *APtsFile /*= NULL*/)
+: FAngle(0.0),
+  FEdgeSoftness(0.0),
+  FEdgeRadius(0),
+  FIsEnabled(0),
+  FOpacity(1.0),
+  FRadiusX(0),
+  FRadiusY(0),
+  FWeightMatrix(NULL)
 {
-  m_Pos = QPoint();
+  FPos = QPoint();
 
-  if (Ini != NULL) {
-    m_Angle = Ini->value("Angle", 0.0).toFloat();
-    m_EdgeSoftness = Ini->value("EdgeBlur", 0.0).toFloat();
-    m_EdgeRadius = Ini->value("EdgeRadius", 0).toUInt();
-    m_IsEnabled = Ini->value("IsEnabled", 0).toInt();
-    m_Opacity = Ini->value("Opacity", 1.0).toFloat();
-    m_RadiusX = Ini->value("RadiusX", 0).toUInt();
-    m_RadiusY = Ini->value("RadiusY", 0.).toUInt();
-    m_Pos.setX(Ini->value("SpotPosX", 0).toInt());
-    m_Pos.setY(Ini->value("SpotPosY", 0).toInt());
+  if (APtsFile != NULL) {
+    FAngle = APtsFile->value("Angle", 0.0).toFloat();
+    FEdgeSoftness = APtsFile->value("EdgeBlur", 0.0).toFloat();
+    FEdgeRadius = APtsFile->value("EdgeRadius", 0).toUInt();
+    FIsEnabled = APtsFile->value("IsEnabled", 0).toInt();
+    FOpacity = APtsFile->value("Opacity", 1.0).toFloat();
+    FRadiusX = APtsFile->value("RadiusX", 0).toUInt();
+    FRadiusY = APtsFile->value("RadiusY", 0.).toUInt();
+    FPos.setX(APtsFile->value("SpotPosX", 0).toInt());
+    FPos.setY(APtsFile->value("SpotPosY", 0).toInt());
   }
   printf("=========spotdata at spot ini constructor===========\n"
          "x %d  y %d\n"
          "w %d  h %d\n"
          "angle %f\n==========================\n",
-         m_Pos.x(), m_Pos.y(), m_RadiusY, m_RadiusX, m_Angle
+         FPos.x(), FPos.y(), FRadiusY, FRadiusX, FAngle
          );
 }
+
+//==============================================================================
 
 ptImageSpot::ptImageSpot(const short isEnabled,
                          const uint spotX,
@@ -76,19 +73,19 @@ ptImageSpot::ptImageSpot(const short isEnabled,
                          const float opacity)
 {
   int toFullPipe = 1 << Settings->GetInt("PipeSize");
-  m_EdgeRadius = edgeRadius * toFullPipe;
+  FEdgeRadius = edgeRadius * toFullPipe;
 
-  m_Angle = angle * toFullPipe;
-  m_IsEnabled = isEnabled * toFullPipe;
-  m_RadiusX = radiusX * toFullPipe;
-  m_RadiusY = radiusY * toFullPipe;
+  FAngle = angle * toFullPipe;
+  FIsEnabled = isEnabled * toFullPipe;
+  FRadiusX = radiusX * toFullPipe;
+  FRadiusY = radiusY * toFullPipe;
 
-  m_init = 1;
-  m_Pos = QPoint(spotX * toFullPipe, spotY * toFullPipe);
+  FInit = 1;
+  FPos = QPoint(spotX * toFullPipe, spotY * toFullPipe);
   setEdgeBlur(edgeBlur);
   setOpacity(opacity);
   UpdateWeight();
-  m_init = 0;
+  FInit = 0;
 
 //  printf("=========spotdata at spot normal constructor===========\n"
 //         "x %d  y %d\n"
@@ -98,107 +95,95 @@ ptImageSpot::ptImageSpot(const short isEnabled,
 //         );
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Getter methods
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 QPoint ptImageSpot::pos() const {
-  return QPoint(m_Pos.x() >> Settings->GetInt("Scaled"),
-                m_Pos.y() >> Settings->GetInt("Scaled") );
+  return QPoint(FPos.x() >> Settings->GetInt("Scaled"),
+                FPos.y() >> Settings->GetInt("Scaled") );
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Setter methods
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptImageSpot::setAngle(float angle) {
-  m_Angle = angle;
+void ptImageSpot::setAngle(float FAngle) {
+  FAngle = FAngle;
   UpdateWeight();
 }
 
-void ptImageSpot::setEdgeBlur(const float blur) {
-  if (blur > 1.0f) {
-    m_EdgeSoftness = 1.0;
-  } else if (blur < 0.0f){
-    m_EdgeSoftness = 0.0;
+//==============================================================================
+
+void ptImageSpot::setEdgeBlur(const float ABlur) {
+  if (ABlur > 1.0f) {
+    FEdgeSoftness = 1.0;
+  } else if (ABlur < 0.0f){
+    FEdgeSoftness = 0.0;
   } else {
-    m_EdgeSoftness = blur;
+    FEdgeSoftness = ABlur;
   }
-  if (!m_init) {
+  if (!FInit) {
     UpdateWeight();
   }
 }
 
-void ptImageSpot::setEdgeRadius(uint radius) {
-  m_EdgeRadius = radius << Settings->GetInt("Scaled");
+//==============================================================================
+
+void ptImageSpot::setEdgeRadius(uint ARadius) {
+  FEdgeRadius = ARadius << Settings->GetInt("Scaled");
   UpdateWeight();
 }
 
-void ptImageSpot::setRadiusY(uint radius) {
-  m_RadiusY = radius << Settings->GetInt("Scaled");
+//==============================================================================
+
+void ptImageSpot::setRadiusY(uint ARadius) {
+  FRadiusY = ARadius << Settings->GetInt("Scaled");
   UpdateWeight();
 }
 
-void ptImageSpot::setRadiusX(uint radius) {
-  m_RadiusX = radius << Settings->GetInt("Scaled");
+//==============================================================================
+
+void ptImageSpot::setRadiusX(uint ARadius) {
+  FRadiusX = ARadius << Settings->GetInt("Scaled");
   UpdateWeight();
 }
 
-void ptImageSpot::setOpacity(const float opacity) {
-  if (opacity > 1.0f) {
-    m_Opacity = 1.0;
+//==============================================================================
+
+void ptImageSpot::setOpacity(const float AOpacity) {
+  if (AOpacity > 1.0f) {
+    FOpacity = 1.0;
   } else {
-    m_Opacity = opacity;
+    FOpacity = AOpacity;
   }
-  if (!m_init) {
+  if (!FInit) {
     UpdateWeight();
   }
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Move spot
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptImageSpot::setPos(uint x, uint y) {
-  m_Pos.setX(x);
-  m_Pos.setY(y);
+void ptImageSpot::setPos(uint Ax, uint Ay) {
+  FPos.setX(Ax);
+  FPos.setY(Ay);
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// UpdateActivityMatrix
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptImageSpot::UpdateWeight() {
   // TODO SR: alpha channel calculation
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// WriteToIni
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptImageSpot::WriteToIni(QSettings* Ini) {
-  Ini->setValue("Angle", m_Angle);
-  Ini->setValue("EdgeBlur", m_EdgeSoftness);
-  Ini->setValue("EdgeRadius", m_EdgeRadius);
-  Ini->setValue("IsEnabled", m_IsEnabled);
-  Ini->setValue("Opacity", m_Opacity);
-  Ini->setValue("RadiusX", m_RadiusX);
-  Ini->setValue("RadiusY", m_RadiusY);
-  Ini->setValue("SpotPosX", m_Pos.x());
-  Ini->setValue("SpotPosY", m_Pos.y());
+void ptImageSpot::WriteToFile(QSettings *APtsFile) {
+  APtsFile->setValue("Angle", FAngle);
+  APtsFile->setValue("EdgeBlur", FEdgeSoftness);
+  APtsFile->setValue("EdgeRadius", FEdgeRadius);
+  APtsFile->setValue("IsEnabled", FIsEnabled);
+  APtsFile->setValue("Opacity", FOpacity);
+  APtsFile->setValue("RadiusX", FRadiusX);
+  APtsFile->setValue("RadiusY", FRadiusY);
+  APtsFile->setValue("SpotPosX", FPos.x());
+  APtsFile->setValue("SpotPosY", FPos.y());
 }
+
+//==============================================================================
+

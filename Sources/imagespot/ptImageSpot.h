@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -33,6 +33,7 @@
 
 #ifndef PTIMAGESPOT_H
 #define PTIMAGESPOT_H
+//==============================================================================
 
 #include <QtGlobal>
 #include <QPoint>
@@ -40,13 +41,9 @@
 
 #include "../ptSettings.h"
 
+//==============================================================================
 
 class ptImageSpot {
-////////////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-////////////////////////////////////////////////////////////////////////////////
 public:
   /*! Creates an empty and disabled image spot or loads a spot from the current ini file.
     \param Ini
@@ -55,7 +52,7 @@ public:
       All values not present in the pts file are set to their default values. The ini’s
       \c ReadArray() must be set appropriately before you can use this.
   */
-  ptImageSpot(QSettings* Ini = NULL);
+  ptImageSpot(QSettings *APtsFile = NULL);
 
   /*! Create an image spot with specific values. */
   ptImageSpot(const short isEnabled,
@@ -69,27 +66,26 @@ public:
               const float opacity);
 
   /*! Returns the spot's rotation angle in degrees clockwise. */
-  inline float angle() const { return m_Angle; }
+  inline float angle() const { return FAngle; }
 
   /*! Returns the edge blur value. */
-  inline float edgeBlur() const { return m_EdgeSoftness; }
+  inline float edgeBlur() const { return FEdgeSoftness; }
 
   /*! Returns the radius of the blurred outer edge. */
-  inline uint edgeRadius() const { return m_EdgeRadius >> Settings->GetInt("Scaled"); }
+  inline uint edgeRadius() const { return FEdgeRadius >> Settings->GetInt("Scaled"); }
 
   /*! Returns the spot's enabled status. */
-  inline short isEnabled() const { return m_IsEnabled; }
+  inline short isEnabled() const { return FIsEnabled; }
 
   /*! Returns the global opacity. \c 0.0 is fully transparent and
-      \c 1.0 is fully opaque.
-  */
-  inline float opactiy() const { return m_Opacity; }
+      \c 1.0 is fully opaque. */
+  inline float opactiy() const { return FOpacity; }
 
   /*! Returns the horizontal radius. */
-  inline uint radiusX() const { return m_RadiusY >> Settings->GetInt("Scaled"); }
+  inline uint radiusX() const { return FRadiusY >> Settings->GetInt("Scaled"); }
 
   /*! Returns the vertical radius. */
-  inline uint radiusY() const { return m_RadiusX >> Settings->GetInt("Scaled"); }
+  inline uint radiusY() const { return FRadiusX >> Settings->GetInt("Scaled"); }
 
   /*! Returns the topleft position of the spot’s bounding rectangle. */
   QPoint pos() const;
@@ -98,72 +94,60 @@ public:
   void setAngle(float angle);
 
   /*! Sets edge blur. */
-  void setEdgeBlur(const float blur);
+  void setEdgeBlur(const float ABlur);
 
   /*! Sets the size of the blurred edge. */
-  void setEdgeRadius(uint radius);
+  void setEdgeRadius(uint ARadius);
 
   /*! Enables or disables the spot. Disabled spots are ignored when running the pipe.
       Values are \c 0 (disabled) or \c 2 (enabled), corresponding to what \c QListView
-      checkboxes use.
-  */
-  inline void setEnabled(const short state) { m_IsEnabled = state; }
+      checkboxes use. */
+  inline void setEnabled(const short state) { FIsEnabled = state; }
 
   /*! Sets the spot's global opacity.
       \param opacity
         Opacity in the range from \c 0.0 (fully transparent) to \c 1.0
-        (fully opaque).
-  */
-  void setOpacity(const float opacity);
+        (fully opaque). */
+  void setOpacity(const float AOpacity);
 
   /*! Moves the spot to a new position.
       Coordinates are the topleft position of the spot’s bounding rectangle.
 
       Derived classes should re-implement \c setPos() to move the complete spot including repairers
       or any other additional elements. The default \c ptImageSpot implementation moves only the
-      spot itself.
-  */
-  virtual void setPos(uint x, uint y);
+      spot itself. */
+  virtual void setPos(uint Ax, uint Ay);
 
   /*! Sets the horizontal radius in pixels. */
-  void setRadiusX(uint radius);
+  void setRadiusX(uint ARadius);
 
   /*! Sets the vertical radius in pixels. */
-  void setRadiusY(uint radius);
+  void setRadiusY(uint ARadius);
 
   /*! Writes the spot’s data to the currently opened ini file.
-    The ini’s \c WriteArray() must be set appropriately before you use this.
-  */
-  virtual void WriteToIni(QSettings* Ini);
+    The ini’s \c WriteArray() must be set appropriately before you use this. */
+  virtual void WriteToFile(QSettings *APtsFile);
 
+//------------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// PROTECTED members
-//
-////////////////////////////////////////////////////////////////////////////////
 protected:
-  float m_Angle;
-  float m_EdgeSoftness;
-  uint m_EdgeRadius;
-  short m_IsEnabled;
-  float m_Opacity;  // global transparency percentage
-  uint m_RadiusX;
-  uint m_RadiusY;
-  QPoint m_Pos;  // Position is the center of the spot
-  uint16_t* m_WeightMatrix;
+  float     FAngle;
+  float     FEdgeSoftness;
+  uint      FEdgeRadius;
+  short     FIsEnabled;
+  float     FOpacity;   // global transparency percentage
+  uint      FRadiusX;
+  uint      FRadiusY;
+  QPoint    FPos;       // Position is the center of the spot
+  uint16_t  *FWeightMatrix;
 
   void UpdateWeight();
 
+//------------------------------------------------------------------------------
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-////////////////////////////////////////////////////////////////////////////////
 private:
-  short m_init;
+  short FInit;
+
 
 };
-
 #endif

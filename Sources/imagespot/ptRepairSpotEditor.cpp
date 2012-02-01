@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -31,9 +31,11 @@ extern ptGuiOptions* GuiOptions;
 extern ptMainWindow* MainWindow;
 extern ptTheme* Theme;
 
-ptRepairSpotEditor::ptRepairSpotEditor(QWidget *Parent,
-                                       const int InitialAlgoIndex)
-: QWidget(Parent)
+//==============================================================================
+
+ptRepairSpotEditor::ptRepairSpotEditor(QWidget *AParent,
+                                       const int AInitialAlgoIndex)
+: QWidget(AParent)
 {
   setContentsMargins(0,0,0,0);
   QPalette pal = palette();
@@ -47,7 +49,7 @@ ptRepairSpotEditor::ptRepairSpotEditor(QWidget *Parent,
     AlgoCombo->addItem(GuiOptions->SpotRepair[i].Text);
     i++;
   }
-  AlgoCombo->setCurrentIndex(InitialAlgoIndex);
+  AlgoCombo->setCurrentIndex(AInitialAlgoIndex);
 
   DelButton = new QToolButton(this);
   DelButton->setIcon(QIcon(QString::fromUtf8(":/photivo/Icons/cancel.png")));
@@ -64,12 +66,14 @@ ptRepairSpotEditor::ptRepairSpotEditor(QWidget *Parent,
           MainWindow->RepairSpotListView, SLOT(deleteSpot()));
 }
 
+//==============================================================================
 
 ptRepairSpotEditor::~ptRepairSpotEditor() {
   delete AlgoCombo;
   delete DelButton;
 }
 
+//==============================================================================
 
 bool ptRepairSpotEditor::eventFilter(QObject *obj, QEvent *event) {
   // detect delete button click
@@ -83,3 +87,6 @@ bool ptRepairSpotEditor::eventFilter(QObject *obj, QEvent *event) {
   // else: pass the event on to the parent class
   return QObject::eventFilter(obj, event);
 }
+
+//==============================================================================
+

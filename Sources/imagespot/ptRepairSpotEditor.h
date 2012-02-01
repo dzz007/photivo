@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -19,7 +19,6 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
 /*!
   \class ptRepairSpotEditor
 
@@ -34,13 +33,17 @@
 #ifndef PTREPAIRSPOTEDITOR_H
 #define PTREPAIRSPOTEDITOR_H
 
+//==============================================================================
+
 #include <QWidget>
 #include <QComboBox>
 #include <QToolButton>
 
-class ptRepairSpotEditor : public QWidget
-{
-    Q_OBJECT
+//==============================================================================
+
+class ptRepairSpotEditor: public QWidget {
+Q_OBJECT
+
 public:
   /*! Creates an editor widget.
     \param Parent
@@ -49,19 +52,22 @@ public:
       Index of the current algorithm for the spot. Values correspond to the
       \c ptSpotRepairAlgo enum.
   */
-  explicit ptRepairSpotEditor(QWidget *Parent,
-                              const int InitialAlgoIndex);
-
+  explicit ptRepairSpotEditor(QWidget *AParent,
+                              const int AInitialAlgoIndex);
   ~ptRepairSpotEditor();
 
   /*! A pointer to the \c QComboBox for seleting the repair algorithm. */
-  QComboBox* AlgoCombo;
+  QComboBox *AlgoCombo;
 
   /*! A pointer to the \c QToolButton used to delete the spot. */
-  QToolButton* DelButton;
+  QToolButton *DelButton;
+
+//------------------------------------------------------------------------------
 
 protected:
   bool eventFilter(QObject *obj, QEvent *event);
+
+//------------------------------------------------------------------------------
 
 signals:
   /*! [SIGNAL] Emitted when the delete button is pressed. Actual deletion is done outside
@@ -69,6 +75,6 @@ signals:
   */
   void deleteButtonClicked();
 
-};
 
+};
 #endif // PTREPAIRSPOTEDITOR_H
