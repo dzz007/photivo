@@ -775,6 +775,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
 
     // stuff for the file manager
     {"FileMgrIsOpen"                        ,9    ,0                                     ,0},
+    {"NoFileMgrStartupOpen"                 ,9    ,0                                     ,0},
     {"LastFileMgrLocation"                  ,1    ,""                                    ,0},
     {"FileMgrShowDirThumbs"                 ,1    ,1                                     ,0},
     {"FileMgrShowImageView"                 ,1    ,1                                     ,0},

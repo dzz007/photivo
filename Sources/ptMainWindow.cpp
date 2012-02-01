@@ -682,7 +682,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   // Show the file manager if no image loaded at startup, the image editor otherwise.
   // Do this last in the constructor because it triggers thumbnail reading.
 #ifndef PT_WITHOUT_FILEMGR
-  if (ImageFileToOpen == "") {
+  if (ImageFileToOpen == "" && !Settings->GetInt("NoFileMgrStartupOpen")) {
     OpenFileMgrWindow();
   } else {
     MainStack->setCurrentWidget(ProcessingPage);
