@@ -34,18 +34,18 @@ extern ptSettings* Settings;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptRepairSpot::ptRepairSpot(QSettings* Ini /*= NULL*/)
-: ptImageSpot(Ini),
+ptRepairSpot::ptRepairSpot(QSettings *APtsFile /*= NULL*/)
+: ptImageSpot(APtsFile),
   m_HasRepairer(1),
   m_Algorithm(SpotRepairAlgo_Clone),
   m_RepairerPos(QPoint())
 {
-  if (Ini != NULL) {
-    m_HasRepairer = Ini->value("HasRepairer", 1).toInt();
+  if (APtsFile != NULL) {
+    m_HasRepairer = APtsFile->value("HasRepairer", 1).toInt();
     m_Algorithm =
-        (ptSpotRepairAlgo)(Ini->value("Algorithm", SpotRepairAlgo_Clone).toInt());
-    m_RepairerPos.setX(Ini->value("RepairerPosX", 0).toInt());
-    m_RepairerPos.setY(Ini->value("RepairerPosY", 0).toInt());
+        (ptSpotRepairAlgo)(APtsFile->value("Algorithm", SpotRepairAlgo_Clone).toInt());
+    m_RepairerPos.setX(APtsFile->value("RepairerPosX", 0).toInt());
+    m_RepairerPos.setY(APtsFile->value("RepairerPosY", 0).toInt());
   }
 }
 

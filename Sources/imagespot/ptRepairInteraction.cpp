@@ -51,7 +51,7 @@ ptRepairInteraction::ptRepairInteraction(QGraphicsView *AView,
 //==============================================================================
 
 ptRepairInteraction::~ptRepairInteraction() {
-  for_each (FShapes->begin(), FShapes->end(), [&](TSpotShape *hShape) {
+  for_each (FShapes->begin(), FShapes->end(), [this](TSpotShape *hShape) {
     FView->scene()->removeItem(hShape->Group);
     DestroyShape(hShape);
   } );
