@@ -34,11 +34,14 @@
 #define PTREPAIRINTERACTION_H
 
 #include <QGraphicsItemGroup>
+#include <QGraphicsEllipseItem>
+#include <QGraphicsLineItem>
+#include <QGraphicsRectItem>
+#include <QGraphicsDropShadowEffect>
 
 #include "../ptImageInteraction.h"
 #include "ptRepairSpotListView.h"
 #include "ptRepairSpot.h"
-#include "ptRepairSpotShape.h"
 #include "ptRepairSpotModel.h"
 
 //==============================================================================
@@ -55,48 +58,72 @@ public:
       A pointer to an existing list view widget containing the spots. \c ListView must
       have a model assigned.
   */
-  ptRepairInteraction(QGraphicsView* AView,
-                      ptRepairSpotListView* AListView,
-                      ptRepairSpot* ASpotData = NULL);
+  ptRepairInteraction(QGraphicsView *AView,
+                      ptRepairSpotListView *AListView);
 
   ~ptRepairInteraction();
 
   /*! Stop the repair interaction.
-    Cleans up the QGraphicsScene and then emits the \c finished() signal.
-  */
+    Cleans up the QGraphicsScene and then emits the \c finished() signal. */
   void stop();
 
+//------------------------------------------------------------------------------
 
 private:
-  void MousePressHandler(QMouseEvent* AEvent);
-  void MouseDblClickHandler(QMouseEvent* AEvent);
+  struct TSpotShape {
+    QGraphicsItemGroup   *Group;            // container for the complete spot-shape
+    QGraphicsItemGroup   *SpotGroup;        // container for the spot
+    QGraphicsItemGroup   *RepairerGroup;    // container for repairer and connector line
 
-  ptRepairSpot*           FSpotData;   // pointer to current spot’s config data
-  ptRepairSpotListView*   FListView;
-  ptRepairSpotModel*      FSpotModel;
+    QGraphicsEllipseItem *Spot;             // outer border of the area to be repaired
+    QGraphicsEllipseItem *SpotBorder;       // inner border, for edge blur
+    QGraphicsRectItem    *RadiusHandle;     // mouse handle to change spot radius
+    QGraphicsEllipseItem *RotationHandle;   // mouse handle to rotate the spot
+
+    QGraphicsEllipseItem *Repairer;         // area with the repair reference data
+    QGraphicsLineItem    *Connector;        // connector line between spot and repairer
+  };
+
+  /*! Creates and initialises a TSpotShape. The shape is hidden. Component positions are not set. */
+  TSpotShape  *CreateShape();
+  /*! Destroys all objects of a TSpotShape as well as the shape struct itself. */
+  void        DestroyShape(TSpotShape *AShape);
+  /*! Draws a spotshape.
+      \param AShape
+        A pointer to the TSpotShape that should be drawn.
+      \param ASpotData
+        A pointer to the spot data to use. */
+  void        Draw(TSpotShape *AShape, ptRepairSpot *ASpotData);
+
+  void        MousePressHandler(QMouseEvent* AEvent);
+  void        MouseDblClickHandler(QMouseEvent* AEvent);
+
+  ptRepairSpotListView      *FListView;
 
   // Components of the spot visual spot shape
-  ptRepairSpotShape*      FSpotShape;    // container for the complete spot shape
+  QGraphicsDropShadowEffect *FShadow;      // for the b/w line effect
+  QList<TSpotShape*>        *FShapes;      // container for the complete spot shape
 
+//------------------------------------------------------------------------------
 
 private slots:
   /*! Slot that is called when the current spot is changed.
     \param index
       The model index of the new spot.
   */
-  void changeSpot(const QModelIndex& AIndex);
+  void changeSpot(const QModelIndex &AIndex);
 
   /*! Slot for all keyboard events.
     \param event
       A pointer to the QKeyEvent that triggered this slot.
   */
-  void keyAction(QKeyEvent* AEvent);
+  void keyAction(QKeyEvent *AEvent);
 
   /*! Slot for all mouse events.
     \param event
       A pointer to the QMouseEvent that triggered this slot.
   */
-  void mouseAction(QMouseEvent* AEvent);
+  void mouseAction(QMouseEvent *AEvent);
 
 
 };

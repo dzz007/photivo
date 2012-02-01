@@ -3235,13 +3235,11 @@ void ptMainWindow::UpdateGradualBlurUI() {
 ////////////////////////////////////////////////////////////////////////////////
 
 ptMainWindow::~ptMainWindow() {
-  //printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
-  for (short i=0; i<ToolBoxStructureList.size(); i++) {
-    //delete ToolBoxStructureList[i];
-  }
   while (ToolBoxStructureList.size()) {
     ToolBoxStructureList.removeAt(0);
   }
+
+  DelAndNull(RepairSpotModel);
 }
 
 //==============================================================================
