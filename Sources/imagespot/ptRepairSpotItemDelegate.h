@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -23,16 +23,20 @@
 #ifndef PTREPAIRSPOTVIEW_H
 #define PTREPAIRSPOTVIEW_H
 
+//==============================================================================
+
 #include <QStandardItemModel>
 #include <QStyledItemDelegate>
 #include <QToolButton>
 
+//==============================================================================
+
 // item delegate for UI settings tool
 class ptRepairSpotItemDelegate : public QStyledItemDelegate {
-  Q_OBJECT
+Q_OBJECT
 
 public:
-  explicit ptRepairSpotItemDelegate(QObject *parent = 0);
+  explicit ptRepairSpotItemDelegate(QObject *AParent = NULL);
   QWidget* createEditor(QWidget *parent,
                         const QStyleOptionViewItem &option,
                         const QModelIndex &index) const;

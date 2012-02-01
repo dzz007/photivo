@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -132,7 +132,7 @@ void ptRepairSpotModel::WriteToFile(QSettings *APtsFile) {
   APtsFile->beginWriteArray(CPtsName);
   for (int i = 0; i < FSpotList->size(); i++) {
     APtsFile->setArrayIndex(i);
-    FSpotList->at(i)->WriteToIni(APtsFile);
+    FSpotList->at(i)->WriteToFile(APtsFile);
   }
   APtsFile->endArray();
 }

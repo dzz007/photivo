@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -34,8 +34,8 @@ extern ptTheme* Theme;
 
 //==============================================================================
 
-ptRepairSpotListView::ptRepairSpotListView(QWidget *parent)
-: QListView(parent) {
+ptRepairSpotListView::ptRepairSpotListView(QWidget *AParent)
+: QListView(AParent) {
   setStyle(Theme->style());
   setStyleSheet(Theme->stylesheet());
   setSelectionMode(QAbstractItemView::SingleSelection);

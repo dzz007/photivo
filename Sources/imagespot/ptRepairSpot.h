@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -43,7 +43,6 @@
 //==============================================================================
 
 class ptRepairSpot: public ptImageSpot {
-
 public:
   /*! Creates an empty and disabled repair spot using the clone algorithm or loads a spot
     from the current ini file.
@@ -75,48 +74,49 @@ public:
     as the source for the repair action. The simplest example is clone that copies the image data
     from the repairer to the spot.
   */
-  inline short hasRepairer() const { return m_HasRepairer; }
+  inline short hasRepairer() const { return FHasRepairer; }
 
   /*! Returns the position of the repairer’s center. */
   QPoint repairerPos() const;
 
   /*! Returns algorithm used for repairing. */
-  inline ptSpotRepairAlgo algorithm() const { return m_Algorithm; }
+  inline ptSpotRepairAlgo algorithm() const { return FAlgorithm; }
 
   /*! Removes the repairer */
-  inline void removeRepairer() { m_HasRepairer = 0; }
+  inline void removeRepairer() { FHasRepairer = 0; }
 
   /*! Sets the repair algorithm. */
-  void setAlgorithm(const ptSpotRepairAlgo algorithm) { m_Algorithm = algorithm;printf("#######algo: %d\n",m_Algorithm); }
+  void setAlgorithm(const ptSpotRepairAlgo algorithm) { FAlgorithm = algorithm;printf("#######algo: %d\n",FAlgorithm); }
 
   /*! Moves the complete spot (including a repairer) to a new position.
       Coordinates are the topleft position of the spot’s (not the complete shape’s!)
       bounding rectangle.
   */
-  void setPos(uint x, uint y);
+  void setPos(uint Ax, uint Ay);
 
   /*! Moves only the repairer to a new position. The spot stays at its original location.
       Use this function for setting the repairer’s initial position as well.
       Coordinates are the topleft position of the repairer’s bounding rectangle.
   */
-  void setRepairerPos(const uint x, const uint y);
+  void setRepairerPos(const uint Ax, const uint Ay);
 
   /*! Moves only the spot to a new position. The repairer stays at its original location.
       Coordinates are the topleft position of the spot’s bounding rectangle.
   */
-  void setSpotPos(const uint x, const uint y);
+  void setSpotPos(const uint Ax, const uint Ay);
 
   /*! Writes all data to the currently opened ini file.
     The ini’s \c WriteArray() must be set appropriately before you use this.
   */
-  void WriteToIni(QSettings* Ini);
+  void WriteToFile(QSettings *APtsFile);
 
+//------------------------------------------------------------------------------
 
 private:
-  short m_HasRepairer;
-  ptSpotRepairAlgo m_Algorithm;
-  QPoint m_RepairerPos;   // the spot providing the source for the repair data
+  short             FHasRepairer;
+  ptSpotRepairAlgo  FAlgorithm;
+  QPoint            FRepairerPos;   // the spot providing the source for the repair data
 
 
 };
-#endif
+#endif // PTREPAIRSPOT_H

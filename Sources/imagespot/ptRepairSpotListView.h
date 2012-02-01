@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -38,28 +38,32 @@
 
 //==============================================================================
 
-class ptRepairSpotListView : public QListView
-{
-    Q_OBJECT
+class ptRepairSpotListView: public QListView {
+Q_OBJECT
+
 public:
-    /*! Creates a \c ptRepairSpotListView object. This is done by \c MainWindow in Photivo’s
-      startup phase. Do not create additional objects of this type!
-    */
-    explicit ptRepairSpotListView(QWidget *parent = 0);
+  /*! Creates a \c ptRepairSpotListView object. This is done by \c MainWindow in Photivo’s
+    startup phase. Do not create additional objects of this type! */
+  explicit ptRepairSpotListView(QWidget *AParent = NULL);
+
+//------------------------------------------------------------------------------
 
 signals:
-  void rowChanged(const QModelIndex &newRow);
+  void rowChanged(const QModelIndex &ANewRow);
+
+//------------------------------------------------------------------------------
 
 public slots:
   /*! This slot gets called when the delete button of a spot is pressed. */
   void deleteSpot();
 
+//------------------------------------------------------------------------------
+
 protected slots:
   /*! [EVENT] Triggered when the focused spot in the list changes. Additional config widgets
-    outside the ListView are handled here.
-  */
+    outside the ListView are handled here. */
   void currentChanged(const QModelIndex &current, const QModelIndex &previous);
 
-};
 
+};
 #endif // PTREPAIRSPOTLISTVIEW_H
