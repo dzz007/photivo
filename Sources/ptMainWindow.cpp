@@ -2366,7 +2366,7 @@ void ptMainWindow::UpdateSettings() {
 
   // Texture Overlay
   PathInfo.setFile(Settings->GetString("TextureOverlayFile"));
-  ShortFileName = PathInfo.baseName();
+  ShortFileName = PathInfo.completeBaseName();
   TextureOverlayText->setText(ShortFileName);
   if (Settings->GetInt("TextureOverlayMask") > 0) {
     Settings->SetEnabled("TextureOverlayExponent",1);
@@ -2386,7 +2386,7 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("TextureOverlaySoftness",0);
   }
   PathInfo.setFile(Settings->GetString("TextureOverlay2File"));
-  ShortFileName = PathInfo.baseName();
+  ShortFileName = PathInfo.completeBaseName();
   TextureOverlay2Text->setText(ShortFileName);
   if (Settings->GetInt("TextureOverlay2Mask") > 0) {
     Settings->SetEnabled("TextureOverlay2Exponent",1);

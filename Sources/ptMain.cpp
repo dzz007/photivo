@@ -2253,10 +2253,10 @@ void RunJob(const QString JobFileName) {
         QFileInfo PathInfo(InputFileNameList[0]);
         if (!Settings->GetString("OutputDirectory").isEmpty()) {
           Settings->SetValue("OutputFileName",
-            Settings->GetString("OutputDirectory") + "/" + PathInfo.baseName());
+            Settings->GetString("OutputDirectory") + "/" + PathInfo.completeBaseName());
         } else {
           Settings->SetValue("OutputFileName",
-            PathInfo.dir().path() + "/" + PathInfo.baseName());
+            PathInfo.dir().path() + "/" + PathInfo.completeBaseName());
         }
         if (!Settings->GetInt("IsRAW")) {
           Settings->SetValue("OutputFileName",
@@ -2667,7 +2667,7 @@ void WriteOut() {
     ReportProgress(QObject::tr("Writing output (settings)"));
 
     QFileInfo PathInfo(Settings->GetString("OutputFileName"));
-    QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".pts";
+    QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".pts";
 
     WriteSettingsFile(SettingsFileName);
   }
@@ -2681,7 +2681,7 @@ void WritePipe(QString OutputName = "") {
 
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
   QFileInfo PathInfo(InputFileNameList[0]);
-  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.baseName();
+  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName();
   if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
   QString Pattern;
 
@@ -3366,7 +3366,7 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
 
     QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
     QFileInfo PathInfo(InputFileNameList[0]);
-    QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.baseName();
+    QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName();
     if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
     QString Pattern;
 
@@ -3469,7 +3469,7 @@ void CB_MenuFileWriteJob(const short) {
   // And finally a dialog to obtain the output job file.
 
   QFileInfo PathInfo(InputFileNames[0]);
-  QString SuggestedJobFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".ptj";
+  QString SuggestedJobFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".ptj";
 
   QString JobFileName =
     QFileDialog::getSaveFileName(NULL,
@@ -3488,7 +3488,7 @@ void CB_MenuFileWriteSettings() {
   if (Settings->GetInt("HaveImage")==0) return;
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
   QFileInfo PathInfo(InputFileNameList[0]);
-  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".pts";
+  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".pts";
 
   QString FileName;
 
