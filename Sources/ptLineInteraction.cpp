@@ -72,7 +72,7 @@ double ptLineInteraction::angle() {
 
 void ptLineInteraction::Finalize(const ptStatus status) {
   if (m_LineItem != NULL) {
-    m_View->scene()->removeItem(m_LineItem);
+    FView->scene()->removeItem(m_LineItem);
     DelAndNull(m_LineItem);
   }
 
@@ -118,11 +118,11 @@ void ptLineInteraction::mouseAction(QMouseEvent* event) {
         assert(m_LineItem == NULL);
 
         // map viewport coords to scene coords
-        QPointF pos(m_View->mapToScene(event->pos()));
+        QPointF pos(FView->mapToScene(event->pos()));
         m_Line->setPoints(pos, pos);
 
-        m_LineItem = m_View->scene()->addLine(*m_Line, QPen(QColor(255, 0, 0)));
-        m_View->repaint();
+        m_LineItem = FView->scene()->addLine(*m_Line, QPen(QColor(255, 0, 0)));
+        FView->repaint();
 
         m_NowDragging = 1;
       }
@@ -144,9 +144,9 @@ void ptLineInteraction::mouseAction(QMouseEvent* event) {
     case QEvent::MouseMove: {
       if (m_NowDragging) {
         event->accept();
-        m_Line->setP2(m_View->mapToScene(event->pos()));
+        m_Line->setP2(FView->mapToScene(event->pos()));
         m_LineItem->setLine(*m_Line);
-        m_View->repaint();
+        FView->repaint();
       }
       break;
     }

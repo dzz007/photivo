@@ -57,9 +57,9 @@ unix {
   QMAKE_CXX   = ccache /usr/bin/g++
 
   QMAKE_CFLAGS_RELEASE    += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CXXFLAGS_RELEASE  += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE  += -std=c++0x -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CFLAGS_DEBUG      += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CXXFLAGS_DEBUG    += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_DEBUG    += -std=c++0x -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_LFLAGS_DEBUG      += -rdynamic
   
   LIBS += $$system(GraphicsMagick++-config --libs)
@@ -71,8 +71,8 @@ win32 {
 
   QMAKE_CFLAGS_RELEASE    += $$(CFLAGS)
   QMAKE_CFLAGS_DEBUG      += $$(CFLAGS)
-  QMAKE_CXXFLAGS_RELEASE  += $$(CXXFLAGS)
-  QMAKE_CXXFLAGS_DEBUG    += $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE  += -std=c++0x $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_DEBUG    += -std=c++0x $$(CXXFLAGS)
   QMAKE_LFLAGS_RELEASE    += $$(LDFLAGS)
   QMAKE_LFLAGS_DEBUG      += $$(LDFLAGS)
   
@@ -93,7 +93,7 @@ macx{
 
   # prevent qmake from adding -arch flags
   QMAKE_CFLAGS_X86_64           = -m64
-  QMAKE_CXXFLAGS_X86_64         = -m64
+  QMAKE_CXXFLAGS_X86_64         = -m64 -std=c++0x
   QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
   QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
   
@@ -199,8 +199,7 @@ HEADERS += \
     ../Sources/imagespot/ptRepairSpotEditor.h \
     ../Sources/imagespot/ptRepairSpotItemDelegate.h \
     ../Sources/imagespot/ptRepairSpotListView.h \
-    ../Sources/imagespot/ptRepairSpotModel.h \
-    ../Sources/imagespot/ptRepairSpotShape.h
+    ../Sources/imagespot/ptRepairSpotModel.h
 
 
 SOURCES += \
@@ -289,8 +288,7 @@ SOURCES += \
     ../Sources/imagespot/ptRepairSpotEditor.cpp \
     ../Sources/imagespot/ptRepairSpotItemDelegate.cpp \
     ../Sources/imagespot/ptRepairSpotListView.cpp \
-    ../Sources/imagespot/ptRepairSpotModel.cpp \
-    ../Sources/imagespot/ptRepairSpotShape.cpp
+    ../Sources/imagespot/ptRepairSpotModel.cpp
 
 
 FORMS += \

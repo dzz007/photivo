@@ -24,10 +24,15 @@
 
 #include "ptImageInteraction.h"
 
-ptImageInteraction::ptImageInteraction(QGraphicsView* View)
+//==============================================================================
+
+ptImageInteraction::ptImageInteraction(QGraphicsView* AView)
 : QObject(),
-  m_View(View)
+  FView(AView)
 {
-  assert(m_View != NULL);
-  assert(m_View->scene() != NULL);
+  assert(FView != NULL);
+  assert(FView->scene() != NULL);
 }
+
+//==============================================================================
+

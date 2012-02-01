@@ -35,7 +35,7 @@
 #include <QString>
 #include <QSettings>
 
-#include "ptImageSpot.h"
+#include "ptRepairSpot.h"
 #include "ptImageSpotList.h"
 
 //==============================================================================
@@ -53,27 +53,31 @@ public:
       The \c ASizeHint used for each item in the model. Width should be \c 0 and height
       large enough to contain the editor widget. */
   ptRepairSpotModel(const QSize ASizeHint);
-
   ~ptRepairSpotModel();
 
-  QString iniName() const { return m_IniName; }
-  Qt::ItemFlags flags(const QModelIndex &index) const;
+  QString           iniName() const { return CIniName; }
+  Qt::ItemFlags     flags(const QModelIndex &index) const;
 
   /*! Update an item and the underlying spot repair data.  */
-  bool setData(const QModelIndex &AIndex, const QVariant &AValue, int ARole = Qt::EditRole);
+  bool              setData(const QModelIndex &AIndex,
+                            const QVariant    &AValue,
+                            int               ARole = Qt::EditRole);
+
+  ptRepairSpot      *spot(const int AIndex)
+    { return static_cast<ptRepairSpot*>(FSpotList->at(AIndex)); }
 
   /*! Returns a pointer to the \c ptImageSpotList associated with the model. */
-  inline ptImageSpotList* spotList() { return FSpotList; }
+  ptImageSpotList   *spotList() { return FSpotList; }
 
-  Qt::DropActions supportedDropActions() const;
+  Qt::DropActions   supportedDropActions() const;
 
   /*! Remove one or more items from the model and delete the underlying repair spots. */
-  bool removeRows(int row, int count, const QModelIndex &parent);
+  bool              removeRows(int row, int count, const QModelIndex &parent);
 
   /*! Saves complete spotlist to pts file.
       \param AIni
       A Pointer to a \c QSettings object that represents the pts file. */
-  void WriteToIni(QSettings *AIni);
+  void              WriteToIni(QSettings *AIni);
 
 //------------------------------------------------------------------------------
 
@@ -81,7 +85,7 @@ private:
   const QString     CIniName;
 
   QSize             FSizeHint;
-  ptImageSpotList  *FSpotList;
+  ptImageSpotList   *FSpotList;
 
 };
 #endif // PTREPAIRSPOTMODEL_H
