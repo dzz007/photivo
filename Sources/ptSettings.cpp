@@ -27,10 +27,11 @@
 #include "ptError.h"
 #include "ptRGBTemperature.h"
 #include "ptGuiOptions.h"
-#include "imagespot/ptImageSpotList.h"
 #include "filemgmt/ptFileMgrConstants.h"
 
-extern ptImageSpotList* RepairSpotList;
+extern int RepairSpotCount();
+
+//==============================================================================
 
 // Macro for inserting a key into the hash and checking it is a new one.
 #define M_InsertKeyIntoHash(Key,Item)                      \
@@ -1685,7 +1686,7 @@ sToolInfo ToolInfo (const QString GuiName) {
   // Tab Geometry
   if (GuiName == "TabSpotRepair") {
     Info.Name = "Spot Repair";
-    Info.IsActive = RepairSpotList->count() > 0;
+    Info.IsActive = RepairSpotCount() > 0;
   } else if (GuiName == "TabLensfunCA") {
     Info.Name = "Chromatic Aberration (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunCAModel") != 0;

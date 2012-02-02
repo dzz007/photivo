@@ -54,7 +54,6 @@
 #include "ptTheme.h"
 #include "ptWiener.h"
 #include "ptParseCli.h"
-#include "imagespot/ptImageSpotList.h"
 #include "imagespot/ptRepairSpot.h"
 #include "qtsingleapplication/qtsingleapplication.h"
 #include "filemgmt/ptFileMgrWindow.h"
@@ -105,8 +104,6 @@ cmsCIExyY       D65;
 cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
-
-//ptImageSpotList* RepairSpotList;
 
 //
 // The 'tee' towards the display.
@@ -662,8 +659,6 @@ int photivoMain(int Argc, char *Argv[]) {
       if (!home.exists(Folder))
           home.mkdir(Folder);
   }
-
-//  RepairSpotList = new ptImageSpotList("Repair");
 
   QString SettingsFileName = UserDirectory + "photivo.ini";
   // this has to be changed when we move to a different tree structure!
@@ -2772,10 +2767,7 @@ short WriteSettingsFile(const QString FileName, const short IsJobFile /* = 0 */)
   }
 
   // Save list of spotrepair spots
-  ReportProgress(QObject::tr(
-      QString("Writing %1 repair spots to settings file.")
-      .arg(RepairSpotList->count()).toAscii().data()) );
-  RepairSpotList->WriteToIni(&JobSettings);
+  MainWindow->WriteSpotRepairList(&JobSettings);
 
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) return 0;
@@ -3085,7 +3077,8 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     RepairSpotList->append(new ptRepairSpot(&JobSettings));
   }
   JobSettings.endArray();
-  MainWindow->PopulateSpotRepairList();
+  MainWindow->PopulateSpotRepairList(&JobSettings);
+
 
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) {
@@ -9287,3 +9280,13 @@ ptImageType CheckImageType(QString filename,
 }
 
 //==============================================================================
+
+// Hack to pass current number of repair spots to ptSettings for determining
+// the tool active state. Used there in ToolInfo(). Avoids making the MainWindow
+// known to ptSettings.
+int RepairSpotCount() {
+  return MainWindow->RepairSpotModel->rowCount();
+}
+
+//==============================================================================
+

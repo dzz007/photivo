@@ -24,7 +24,6 @@
 #include <iomanip>
 #include <iostream>
 
-#include "imagespot/ptImageSpotList.h"
 #include "ptDefines.h"
 #include "imagespot/ptRepairSpot.h"
 #include "ptChannelMixer.h"
@@ -46,7 +45,6 @@
 
 using namespace std;
 
-extern ptImageSpotList* RepairSpotList;
 extern ptTheme* Theme;
 extern ptViewWindow* ViewWindow;
 extern QString ImageFileToOpen;
@@ -105,8 +103,7 @@ void Update(const QString GuiName);
 ////////////////////////////////////////////////////////////////////////////////
 
 ptMainWindow::ptMainWindow(const QString Title)
-: QMainWindow(NULL),
-  RepairSpotModel(NULL)
+: QMainWindow(NULL)
 {
   // Setup from the Gui builder.
   setupUi(this);
@@ -369,8 +366,16 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : Geometry
   //
 
-  RepairSpotListView = new ptRepairSpotListView;
+  RepairSpotListView = new ptRepairSpotListView(this);
   SpotRepairVLayout->insertWidget(1, RepairSpotListView);
+  RepairSpotModel = new ptRepairSpotModel(
+                          QSize(0, RepairSpotListView->fontMetrics().lineSpacing() + 2),
+                          this
+                        );
+  RepairSpotListView->setModel(RepairSpotModel);
+  RepairSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
+                                      QAbstractItemView::SelectedClicked);
+  RepairSpotListView->setItemDelegate(new ptRepairSpotItemDelegate(RepairSpotListView));
 
   // TODO BJ: Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
@@ -2809,19 +2814,22 @@ void ptMainWindow::UpdateCropToolUI() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ptMainWindow::PopulateSpotRepairList() {
-  if (RepairSpotModel != NULL) {
-    DelAndNull(RepairSpotModel);
-  }
-
-  RepairSpotModel = new ptRepairSpotModel(
-                            QSize(0, RepairSpotListView->fontMetrics().lineSpacing() + 2) );
-  RepairSpotListView->setModel(RepairSpotModel);
-  RepairSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
-                                      QAbstractItemView::SelectedClicked);
-  RepairSpotListView->setItemDelegate(new ptRepairSpotItemDelegate);
+void ptMainWindow::PopulateSpotRepairList(QSettings *APtsFile) {
+  RepairSpotModel->LoadFromFile(APtsFile);
 }
 
+//==============================================================================
+
+void ptMainWindow::WriteSpotRepairList(QSettings *APtsFile) {
+  ReportProgress(
+    tr(QString("Writing %1 repair spots to settings file.")
+      .arg(RepairSpotModel->rowCount()).toAscii().data()
+    )
+  );
+  RepairSpotModel->WriteToFile(APtsFile);
+}
+
+//==============================================================================
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -3238,8 +3246,6 @@ ptMainWindow::~ptMainWindow() {
   while (ToolBoxStructureList.size()) {
     ToolBoxStructureList.removeAt(0);
   }
-
-  DelAndNull(RepairSpotModel);
 }
 
 //==============================================================================
