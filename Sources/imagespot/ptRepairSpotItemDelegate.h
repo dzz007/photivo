@@ -32,7 +32,7 @@
 //==============================================================================
 
 // item delegate for UI settings tool
-class ptRepairSpotItemDelegate : public QStyledItemDelegate {
+class ptRepairSpotItemDelegate: public QStyledItemDelegate {
 Q_OBJECT
 
 public:
@@ -42,6 +42,7 @@ public:
                         const QModelIndex &index) const;
   void setEditorData(QWidget *editor, const QModelIndex &index) const;
   void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+
 
 };
 #endif // PTREPAIRSPOTVIEW_H

@@ -36,7 +36,6 @@
 #include <QSettings>
 
 #include "ptRepairSpot.h"
-#include "ptImageSpotList.h"
 
 //==============================================================================
 
@@ -48,7 +47,7 @@ public:
     \param ASizeHint
       The \c ASizeHint used for each item in the model. Width should be \c 0 and height
       large enough to contain the editor widget. */
-  ptRepairSpotModel(const QSize ASizeHint);
+  ptRepairSpotModel(const QSize ASizeHint, QObject *AParent = NULL);
   ~ptRepairSpotModel();
 
   /*! Reimplemented from parent class. */

@@ -127,7 +127,8 @@ public:
   QDockWidget* ControlsDockWidget;
 
   void OnToolBoxesEnabledTriggered(const bool Enabled);
-  void PopulateSpotRepairList();
+  void PopulateSpotRepairList(QSettings *APtsFile);
+  void WriteSpotRepairList(QSettings *APtsFile);
 
   ptRepairSpotListView* RepairSpotListView;
   ptRepairSpotModel*    RepairSpotModel;

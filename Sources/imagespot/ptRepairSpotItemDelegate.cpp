@@ -20,17 +20,15 @@
 **
 *******************************************************************************/
 
-#include "ptRepairSpotItemDelegate.h"
-#include "ptRepairSpotListView.h"
 #include "../ptConstants.h"
 #include "../ptTheme.h"
 #include "../ptGuiOptions.h"
+#include "ptRepairSpotItemDelegate.h"
 #include "ptRepairSpotEditor.h"
-#include "ptImageSpotList.h"
 #include "ptRepairSpot.h"
+#include "ptRepairSpotModel.h"
 
 extern ptTheme* Theme;
-extern ptImageSpotList* RepairSpotList;
 extern ptGuiOptions* GuiOptions;
 
 //==============================================================================
@@ -46,8 +44,8 @@ QWidget* ptRepairSpotItemDelegate::createEditor(QWidget *parent,
                                                 const QModelIndex &index) const
 {
   return new ptRepairSpotEditor(
-      parent,
-      (int)static_cast<ptRepairSpot*>(RepairSpotList->at(index.row()))->algorithm()
+    parent,
+    (int)qobject_cast<ptRepairSpotModel*>(index.model())->spot(index.row())->algorithm()
   );
 }
 
@@ -64,11 +62,9 @@ void ptRepairSpotItemDelegate::setEditorData(QWidget *editor, const QModelIndex 
 void ptRepairSpotItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                                             const QModelIndex &index) const
 {
-  ptRepairSpotEditor *ed = qobject_cast<ptRepairSpotEditor*>(editor);
+  ptRepairSpotEditor *hEd   = qobject_cast<ptRepairSpotEditor*>(editor);
   model->setData(index,
-                 GuiOptions->SpotRepair[
-                     static_cast<ptRepairSpot*>(RepairSpotList->at(ed->AlgoCombo->currentIndex()))
-                         ->algorithm()].Text,
+                 GuiOptions->SpotRepair[hEd->AlgoCombo->currentIndex()].Text,
                  Qt::DisplayRole);
 }
 

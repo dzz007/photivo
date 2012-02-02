@@ -20,8 +20,6 @@
 **
 *******************************************************************************/
 
-#include "ptRepairSpotListView.h"
-#include "ptImageSpotList.h"
 #include "ptRepairSpotModel.h"
 #include "../ptMainWindow.h"
 #include "../ptSettings.h"
@@ -29,7 +27,6 @@
 
 extern ptSettings* Settings;
 extern ptMainWindow* MainWindow;
-extern ptImageSpotList* RepairSpotList;
 extern ptTheme* Theme;
 
 //==============================================================================
@@ -49,8 +46,9 @@ ptRepairSpotListView::ptRepairSpotListView(QWidget *AParent)
 
 void ptRepairSpotListView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
   if (current.row() > -1) {
-    Settings->SetValue("SpotOpacity", RepairSpotList->at(current.row())->opactiy());
-    Settings->SetValue("SpotEdgeSoftness", RepairSpotList->at(current.row())->edgeBlur());
+    ptRepairSpot *hSpot = static_cast<ptRepairSpotModel*>(this->model())->spot(current.row());
+    Settings->SetValue("SpotOpacity", hSpot->opactiy());
+    Settings->SetValue("SpotEdgeSoftness", hSpot->edgeBlur());
   }
 
   MainWindow->UpdateSpotRepairUI();

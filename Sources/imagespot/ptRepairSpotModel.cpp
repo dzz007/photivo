@@ -29,8 +29,8 @@ extern ptGuiOptions* GuiOptions;
 
 //==============================================================================
 
-ptRepairSpotModel::ptRepairSpotModel(const QSize ASizeHint)
-: QStandardItemModel(NULL),
+ptRepairSpotModel::ptRepairSpotModel(const QSize ASizeHint, QObject *AParent /*= NULL*/)
+: QStandardItemModel(AParent),
   CPtsName("RepairSpots"),
   FSizeHint(ASizeHint),
   FSpotList(new QList<ptRepairSpot*>)

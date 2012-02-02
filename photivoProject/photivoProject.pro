@@ -193,7 +193,6 @@ HEADERS += \
     ../Sources/qtsingleapplication/qtlockedfile.h \
     ../Sources/qtsingleapplication/qtsingleapplication.h \
     ../Sources/imagespot/ptImageSpot.h \
-    ../Sources/imagespot/ptImageSpotList.h \
     ../Sources/imagespot/ptRepairInteraction.h \
     ../Sources/imagespot/ptRepairSpot.h \
     ../Sources/imagespot/ptRepairSpotEditor.h \
@@ -282,7 +281,6 @@ SOURCES += \
     ../Sources/vcd/refinement.c \
     ../Sources/vcd/vcd_interpolate.c \
     ../Sources/imagespot/ptImageSpot.cpp \
-    ../Sources/imagespot/ptImageSpotList.cpp \
     ../Sources/imagespot/ptRepairInteraction.cpp \
     ../Sources/imagespot/ptRepairSpot.cpp \
     ../Sources/imagespot/ptRepairSpotEditor.cpp \
