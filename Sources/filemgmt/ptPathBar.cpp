@@ -489,7 +489,9 @@ void ptPathBar::separatorClicked(bool checked) {
 
   // build a list of menu actions from the subdirs list
   QList<QAction*> actions;
+#if (QT_VERSION >= 0x40700)
   actions.reserve(subdirs.count());
+#endif
 
   for (int i = 0; i < subdirs.count(); i++) {
     actions.append(new QAction(QPixmap(QString::fromUtf8(":/dark/icons/folder.png")),
