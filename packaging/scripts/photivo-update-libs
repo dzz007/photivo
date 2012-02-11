@@ -84,16 +84,7 @@ fi
 
 
 if [[ $? == 0 ]]; then
-  # There might be a special folder with non-debug libs complied with different optimizations
-  # than the debug libs. In my setup that's true for the 32bit toolchain. The debugger started
-  # from Qt Creator will pick up the libs from /my/bin any Photivo in a separate location
-  # should get the non-debug libs.
-  if [ -d $Prefix/bin/nodebug ]; then
-    SrcDir=$Prefix/bin/nodebug/
-  else
-    SrcDir=$Prefix/bin/
-  fi
-  
+  SrcDir=$Prefix/bin/
   cp ${SrcDir}libexiv2.dll \
      ${SrcDir}libfftw3-3.dll \
      ${SrcDir}libGraphicsMagick-3.dll \

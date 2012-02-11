@@ -1,6 +1,10 @@
 #!/bin/bash
 BUILDDIR=build-win$PT_BIT
 
+# Additional C++ compiler flags. Temporary solution until the C++11 stuff is properly
+# integrated into the Photivo project.
+export CXXFLAGS="$CXXFLAGS --std=gnu++0x -fpermissive"
+
 if [ "$PT_REPO_PATH" = "" ]; then echo "PT_REPO_PATH not set!" ; exit 1 ; fi
 if [ "$PT_BINDIR" = "" ];    then echo "PT_BINDIR not set!" ; exit 1 ; fi
 if [ "$PT_BIT" = "" ];       then echo "PT_BIT not set!" ; exit 1 ; fi
