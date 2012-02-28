@@ -165,6 +165,10 @@ public slots:
   void CloseFileMgrWindow();
   void OtherInstanceMessage(const QString &msg);
 
+  // Represent and set settings values fomr the UI
+  void Settings_2_Form();
+  void Form_2_Settings();
+
 private slots:
   void ResizeTimerExpired();
   void Event0TimerExpired();
@@ -183,8 +187,7 @@ private slots:
   void Search();
   void OnTranslationChoiceChanged(int idx);
 
-  // The generic catchall input change.
-  //~ void OnTagsEditTextChanged();
+  void OnTagsEditTextChanged();
 
   void OnInputChanged(QVariant Value);
 

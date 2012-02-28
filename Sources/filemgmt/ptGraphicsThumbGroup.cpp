@@ -224,6 +224,12 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
       break;
     }
 
+  case QEvent::GraphicsSceneContextMenu: {
+      // We set the focus but we don't accept the event
+      this->setFocus(Qt::MouseFocusReason);
+      ptGraphicsSceneEmitter::EmitFocusChanged();
+    }
+
     default:
       break;
   }

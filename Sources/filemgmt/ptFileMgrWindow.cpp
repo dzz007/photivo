@@ -34,6 +34,8 @@
 #include "../ptDefines.h"
 #include "../ptSettings.h"
 #include "../ptTheme.h"
+#include "../ptImageHelper.h"
+#include "../ptMessageBox.h"
 #include "ptFileMgrWindow.h"
 #include "ptGraphicsSceneEmitter.h"
 #include "ptRowGridThumbnailLayouter.h"
@@ -45,6 +47,7 @@ extern ptSettings*  Settings;
 extern ptTheme*     Theme;
 extern QString      ImageFileToOpen;
 extern short        InStartup;
+extern QString      SaveBitmapPattern;
 
 //==============================================================================
 
@@ -206,6 +209,7 @@ ptFileMgrWindow::~ptFileMgrWindow() {
   DelAndNull(ac_ToggleSidebar);
   DelAndNull(ac_ToggleImageView);
   DelAndNull(ac_CloseFileMgr);
+  DelAndNull(ac_SaveThumb);
 
   DelAndNull(m_ImageView);
 }
@@ -487,6 +491,39 @@ void ptFileMgrWindow::thumbFocusChanged() {
 
 //==============================================================================
 
+void ptFileMgrWindow::saveThumbnail()
+{
+  int hThumbIdx = m_DataModel->focusedThumb();
+
+  if (hThumbIdx > -1 &&
+      hThumbIdx < m_DataModel->thumbList()->count()) {
+    QString   hFileName          = m_DataModel->thumbList()->at(hThumbIdx)->fullPath();
+    QImage*   hImage             = m_DataModel->getThumbnail(hFileName, Settings->GetInt("FileMgrThumbSaveSize"));
+
+    QFileInfo hPathInfo(hFileName);
+    QString   hSuggestedFileName = hPathInfo.dir().path() + "/" + hPathInfo.completeBaseName() + "-thumb.jpg";
+
+    QString hOutputName;
+    hOutputName = QFileDialog::getSaveFileName(NULL,
+                                               QObject::tr("Save File"),
+                                               hSuggestedFileName,
+                                               SaveBitmapPattern);
+    if (0 == hOutputName.size()) return; // Operation cancelled.
+
+    if (!(ptImageHelper::DumpImage(hImage, hOutputName))) {
+      ptMessageBox::warning(0, QObject::tr("Error"), QObject::tr("Thumbnail could not be saved."));
+    }
+
+    if (!ptImageHelper::TransferExif(hFileName, hOutputName)) {
+      ptMessageBox::warning(0, QObject::tr("Exif error"), QObject::tr("Exif data could not be written."));
+    }
+
+    delete hImage;
+  }
+}
+
+//==============================================================================
+
 void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const QString location) {
   if (action == tnaLoadImage) {
     closeWindow();
@@ -647,6 +684,9 @@ void ptFileMgrWindow::ConstructContextMenu() {
   ac_ToggleSidebar->setCheckable(true);
   connect(ac_ToggleSidebar, SIGNAL(triggered()), this, SLOT(toggleSidebar()));
 
+  ac_SaveThumb = new QAction(tr("&Save thumbnail"), this);
+  connect(ac_SaveThumb, SIGNAL(triggered()), this, SLOT(saveThumbnail()));
+
   ac_CloseFileMgr = new QAction(tr("&Close file manager") + "\t" + tr("Esc"), this);
   connect(ac_CloseFileMgr, SIGNAL(triggered()), this, SLOT(closeWindow()));
 }
@@ -679,6 +719,9 @@ void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
   ac_ToggleImageView->setChecked(FMImageViewPane->isVisible());
   Menu.addAction(ac_ToggleSidebar);
   ac_ToggleSidebar->setChecked(FMSidebar->isVisible());
+
+  Menu.addSeparator();
+  Menu.addAction(ac_SaveThumb);
 
   Menu.addSeparator();
   Menu.addAction(ac_CloseFileMgr);

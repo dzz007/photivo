@@ -27,7 +27,6 @@
 #include <QString>
 #include <QTime>
 
-#include <exiv2/image.hpp>
 #include <exiv2/exif.hpp>
 
 #include "ptDcRaw.h"

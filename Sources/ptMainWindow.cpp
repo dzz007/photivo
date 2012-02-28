@@ -471,8 +471,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : Output
   //
 
-  //~ connect(TagsEditWidget,SIGNAL(textChanged()),
-  //~ this,SLOT(OnTagsEditTextChanged()));
+  connect(TagsEditWidget, SIGNAL(textChanged()),     this, SLOT(OnTagsEditTextChanged()));
+  connect(edtImageTitle,  SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
+  connect(edtCopyright,   SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
 
   Macro_ConnectSomeButton(BaseCurveOpen);
   Macro_ConnectSomeButton(BaseCurveSave);
@@ -1638,11 +1639,10 @@ void ptMainWindow::OnWritePipeButtonClicked() {
   ::CB_WritePipeButton();
 }
 
-//~ void CB_TagsEditTextEdit(const QString Text);
-//~ void ptMainWindow::OnTagsEditTextChanged() {
-  //~ ::CB_TagsEditTextEdit(TagsEditWidget->toPlainText());
-//~ }
-
+void PrepareTags(const QString TagsInput);
+void ptMainWindow::OnTagsEditTextChanged() {
+  PrepareTags(TagsEditWidget->toPlainText());
+}
 
 // Intercept close event and translate to a FileExit.
 void ptMainWindow::closeEvent(QCloseEvent *Event) {
@@ -2516,6 +2516,21 @@ void ptMainWindow::UpdateSettings() {
   }
 }
 
+//==============================================================================
+// Display strings from settings
+void ptMainWindow::Settings_2_Form() {
+  // Metadata
+  edtImageTitle->setText(Settings->GetString("ImageTitle"));
+  edtCopyright->setText( Settings->GetString("Copyright"));
+}
+
+//==============================================================================
+// Read settings from Form
+void ptMainWindow::Form_2_Settings() {
+  //Metadata
+  Settings->SetValue("ImageTitle", edtImageTitle->text().trimmed());
+  Settings->SetValue("Copyright",  edtCopyright->text().trimmed());
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -3180,4 +3195,5 @@ ptMainWindow::~ptMainWindow() {
 bool ptMainWindow::winEvent(MSG *message, long *result) {
   return ptEcWin7::GetInstance()->winEvent(message, result);
 }
+
 #endif
