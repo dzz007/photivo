@@ -61,7 +61,7 @@ unix {
   QMAKE_CFLAGS_DEBUG      += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
   QMAKE_CXXFLAGS_DEBUG    += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_LFLAGS_DEBUG      += -rdynamic
-  
+
   LIBS += $$system(GraphicsMagick++-config --libs)
 }
 
@@ -75,7 +75,7 @@ win32 {
   QMAKE_CXXFLAGS_DEBUG    += $$(CXXFLAGS)
   QMAKE_LFLAGS_RELEASE    += $$(LDFLAGS)
   QMAKE_LFLAGS_DEBUG      += $$(LDFLAGS)
-  
+
   LIBS += \
       -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick \
       libole32 -lwsock32 -lexpat -lregex -lgdi32 -liconv \
@@ -96,7 +96,7 @@ macx{
   QMAKE_CXXFLAGS_X86_64         = -m64
   QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
   QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
-  
+
   LIBS += \
       $$system(pkg-config --libs lcms2) \
       -framework QtCore -framework QtGui -framework QtNetwork
@@ -116,7 +116,7 @@ COMMON_FLAGS = \
     -ffast-math -DDLRAW_HAVE_GIMP
 
 QMAKE_CFLAGS_RELEASE   += $${COMMON_FLAGS} $${RELEASE_SPECIFIC}
-QMAKE_CXXFLAGS_RELEASE += $${COMMON_FLAGS} $${RELEASE_SPECIFIC} 
+QMAKE_CXXFLAGS_RELEASE += $${COMMON_FLAGS} $${RELEASE_SPECIFIC}
 QMAKE_CFLAGS_DEBUG     += $${COMMON_FLAGS} $${DEBUG_SPECIFIC}
 QMAKE_CXXFLAGS_DEBUG   += $${COMMON_FLAGS} $${DEBUG_SPECIFIC}
 
@@ -191,7 +191,8 @@ HEADERS += \
     ../Sources/ptWiener.h \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
-    ../Sources/qtsingleapplication/qtsingleapplication.h
+    ../Sources/qtsingleapplication/qtsingleapplication.h \
+    ../Sources/ptImageHelper.h
 
 
 SOURCES += \
@@ -272,7 +273,8 @@ SOURCES += \
     ../Sources/vcd/es_median_filter.c \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
-    ../Sources/vcd/vcd_interpolate.c
+    ../Sources/vcd/vcd_interpolate.c \
+    ../Sources/ptImageHelper.cpp
 
 
 FORMS += \
