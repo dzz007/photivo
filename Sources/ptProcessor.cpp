@@ -22,6 +22,8 @@
 **
 *******************************************************************************/
 
+#include <exiv2/error.hpp>
+
 #include <QFileInfo>
 #include <QApplication>
 
@@ -35,6 +37,7 @@
 #include "ptFastBilateral.h"
 #include "ptWiener.h"
 #include "ptMessageBox.h"
+#include "ptImageHelper.h"
 
 #include "ptProcessor.h"
 
@@ -3033,114 +3036,17 @@ void ptProcessor::RunGeometry(const short StopBefore) {
 
 void ptProcessor::ReadExifBuffer() {
 
-  // Safe defaults.
-  FREE(m_ExifBuffer);
-  m_ExifBufferLength = 0;
-//  Settings->SetValue("LensfunCameraMake","");
-//  Settings->SetValue("LensfunCameraModel","");
-//  Settings->SetValue("LensfunCameraUpdatedByProcessor",1);
+  if (Settings->GetStringList("InputFileNameList").size() == 0) return;
+
+  if (!ptImageHelper::ReadExif(Settings->GetStringList("InputFileNameList")[0],
+                               m_ExifData,
+                               m_ExifBuffer,
+                               m_ExifBufferLength)) return;
+
 
   try {
-    Exiv2::Image::AutoPtr Image;
-    if (Settings->GetStringList("InputFileNameList").size() != 0 &&
-        Exiv2::ImageFactory::getType(
-          (Settings->GetStringList("InputFileNameList"))[0].toAscii().data()) != Exiv2::ImageType::none)
-      Image =
-        Exiv2::ImageFactory::open((Settings->GetStringList("InputFileNameList"))[0].toAscii().data());
-    else return;
-
-    assert(Image.get() != 0);
-    // TODO mike: The next line gives a seg fault when exiv2 doesn't know the camera.
-    Image->readMetadata();
-
-    m_ExifData = Image->exifData();
-    if (m_ExifData.empty()) {
-      ptLogWarning(ptWarning_Argument,
-                "No Exif data found in %s",
-                (Settings->GetStringList("InputFileNameList"))[0].toAscii().data());
-      return;
-    }
-
-#if EXIV2_TEST_VERSION(0,14,0)
-    // Processing software: photivo
-    m_ExifData["Exif.Image.ProcessingSoftware"] = ProgramName;
-    m_ExifData["Exif.Image.Software"] = ProgramName;
-    // Since gimp kills the software tags, append it to model
-    /* Exiv2::Exifdatum& tag = m_ExifData["Exif.Image.Model"];
-    std::string model = tag.toString();
-    std::string space = " ";
-    int Counter = model.find_last_not_of(space);
-    model.erase(Counter+1, model.length()-1-Counter);
-    std::string photivoInfo = " (photivo)";
-    model.append(photivoInfo);
-    tag.setValue(model); */
-#endif
-
-    if (Settings->GetInt("ImageRating"))
-      m_ExifData["Exif.Image.Rating"] = Settings->GetInt("ImageRating");
-
-    Exiv2::ExifData::iterator Pos;
-    long Size;
-
-#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-    Exiv2::Blob Blob;
-    Exiv2::ExifParser::encode(Blob,Exiv2::bigEndian,m_ExifData);
-    Size = Blob.size();
-#else
-    Exiv2::DataBuf Buf(m_ExifData.copy());
-    Size = Buf.size_;
-#endif
-    const unsigned char ExifHeader[] = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
-    const unsigned short MaxHeaderLength = 65533;
-    /* If buffer too big for JPEG, try deleting some stuff. */
-    if ( Size + sizeof(ExifHeader) > MaxHeaderLength ) {
-      if ( (Pos=m_ExifData.findKey(Exiv2::ExifKey("Exif.Photo.MakerNote")))
-            != m_ExifData.end() ) {
-        m_ExifData.erase(Pos);
-        ptLogWarning(ptWarning_Argument,
-         "Exif buffer too big, erasing Exif.Photo.MakerNote");
-#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-        Exiv2::ExifParser::encode(Blob,Exiv2::bigEndian,m_ExifData);
-        Size = Blob.size();
-#else
-        Buf = m_ExifData.copy();
-        Size = Buf.size_;
-#endif
-      }
-    }
-    if (Settings->GetInt("EraseExifThumbnail") || Size + sizeof(ExifHeader) > MaxHeaderLength ) {
-#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-      Exiv2::ExifThumb Thumb(m_ExifData);
-      Thumb.erase();
-#else
-      m_ExifData.eraseThumbnail();
-#endif
-
-      if (!Settings->GetInt("EraseExifThumbnail"))
-        ptLogWarning(ptWarning_Argument,
-         "Exif buffer too big, erasing Thumbnail");
-#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-      Exiv2::ExifParser::encode(Blob,Exiv2::bigEndian,m_ExifData);
-      Size = Blob.size();
-#else
-      Buf = m_ExifData.copy();
-      Size = Buf.size_;
-#endif
-    }
-
-    m_ExifBufferLength = Size + sizeof(ExifHeader);
-    FREE(m_ExifBuffer);
-    m_ExifBuffer = (unsigned char*) MALLOC(m_ExifBufferLength);
-    ptMemoryError(m_ExifBuffer,__FILE__,__LINE__);
-
-    memcpy(m_ExifBuffer, ExifHeader, sizeof(ExifHeader));
-#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-    memcpy(m_ExifBuffer+sizeof(ExifHeader), &Blob[0], Blob.size());
-#else
-    memcpy(m_ExifBuffer+sizeof(ExifHeader), Buf.pData_, Buf.size_);
-#endif
-
     // for use by lensfun : Make, Model, Focal Length, FNumber
+    Exiv2::ExifData::iterator Pos;
 
     Pos = m_ExifData.findKey(Exiv2::ExifKey("Exif.Image.Make"));
     if (Pos != m_ExifData.end() ) {
@@ -3176,8 +3082,7 @@ void ptProcessor::ReadExifBuffer() {
 //      Settings->SetValue("LensfunFocalLength",FocalLength);
     }
 
-  }
-  catch(Exiv2::Error& Error) {
+  } catch(Exiv2::Error& Error) {
     // Exiv2 errors are in this context hopefully harmless
     // (unsupported tags etc.)
 

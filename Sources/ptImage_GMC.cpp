@@ -33,6 +33,7 @@
 #endif
 
 #include "ptImage.h"
+#include "ptImage8.h"
 #include "ptError.h"
 #include "ptCalloc.h"
 
@@ -324,3 +325,30 @@ printf("%s\n", FileName);
 }
 
 //==============================================================================
+
+// just write an image to disk
+bool ptImage8::DumpImage(const char* FileName) const {
+
+  long unsigned int Width  = m_Width;
+  long unsigned int Height = m_Height;
+
+  MagickWand *mw;
+  mw = NewMagickWand();
+  MagickSetSize(mw, Width, Height);
+  MagickReadImage(mw,"xc:white");
+  MagickSetImageFormat(mw,"RGBA");
+  MagickSetImageDepth(mw,8);
+  MagickSetImageType(mw,TrueColorType);
+
+  MagickSetImagePixels(mw,0,0,Width,Height,"RGBA",CharPixel,(unsigned char*) m_Image);
+
+  MagickSetImageDepth(mw,8);
+
+  MagickSetImageFormat(mw,"RGB");
+  MagickSetCompressionQuality(mw,95);
+  MagickSetImageCompression(mw, LZWCompression);
+
+  bool Result = MagickWriteImage(mw, FileName);
+  DestroyMagickWand(mw);
+  return Result;
+}

@@ -68,6 +68,8 @@ ptFileMgrDM::ptFileMgrDM()
   // Init thumbnail cache
   m_Cache = new ptThumbnailCache(1000);
   m_Thumbnailer->setCache(m_Cache);
+
+  m_FocusedThumb = -1;
 }
 
 //==============================================================================
@@ -129,8 +131,8 @@ QImage* ptFileMgrDM::getThumbnail(const QString FileName,
     QByteArray* ImgData = NULL;
     if (dcRaw.thumbnail(ImgData)) {
       // raw thumbnail read successfully
-      Size.setWidth(dcRaw.m_Width);
-      Size.setHeight(dcRaw.m_Height);
+      Size.setWidth(dcRaw.m_ThumbWidth);
+      Size.setHeight(dcRaw.m_ThumbHeight);
       ScaleThumbSize(&Size, MaxSize);
       MagickSetSize(image, 2*Size.width(), 2*Size.height());
       MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->length());
@@ -203,6 +205,8 @@ QImage* ptFileMgrDM::GenerateThumbnail(MagickWand* image, const QSize tSize)
 //==============================================================================
 
 void ptFileMgrDM::ScaleThumbSize(QSize* tSize, const int max) {
+  if (tSize->width() < max && tSize->height() < max) return;
+
   if (tSize->width() == tSize->height()) {    // square image
     tSize->setWidth(max);
     tSize->setHeight(max);
@@ -231,6 +235,7 @@ int ptFileMgrDM::focusedThumb(QGraphicsItem* group) {
       return i;
     }
   }
+  m_FocusedThumb = -1;
   return -1;
 }
 

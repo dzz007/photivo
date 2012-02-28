@@ -80,6 +80,9 @@ ptImage8* FilteredScale(const float Factor,
 // Be aware : the writing function does *not* add gamma, thus
 // it needs to be done before if needed.
 short WriteAsPpm(const char*  FileName);
+
+// just write an image to disk
+bool DumpImage(const char* FileName) const;
 };
 
 #endif
