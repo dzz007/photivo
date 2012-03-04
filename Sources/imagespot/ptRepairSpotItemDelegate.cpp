@@ -45,7 +45,7 @@ QWidget* ptRepairSpotItemDelegate::createEditor(QWidget *parent,
 {
   return new ptRepairSpotEditor(
     parent,
-    (int)qobject_cast<ptRepairSpotModel*>(index.model())->spot(index.row())->algorithm()
+    (int)qobject_cast<const ptRepairSpotModel*>(index.model())->spot(index.row())->algorithm()
   );
 }
 

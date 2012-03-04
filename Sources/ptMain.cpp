@@ -672,13 +672,11 @@ int photivoMain(int Argc, char *Argv[]) {
   ShareDirectory = NewShareDirectory;
 
   QFileInfo SettingsFileInfo(SettingsFileName);
-  short NeedInitialization = 1;
   short FirstStart = 1;
   if (SettingsFileInfo.exists() &&
           SettingsFileInfo.isFile() &&
           SettingsFileInfo.isReadable()) {
       // photivo was initialized
-      NeedInitialization = 0;
       FirstStart = 0;
       printf("Existing settingsfile '%s'\n",SettingsFileName.toAscii().data());
   } else {
@@ -691,8 +689,8 @@ int photivoMain(int Argc, char *Argv[]) {
   // We need to load the translation before the ptSettings
   QSettings* TempSettings = new QSettings(SettingsFileName, QSettings::IniFormat);
 
-  if (TempSettings->value("SettingsVersion",0).toInt() < PhotivoSettingsVersion)
-      NeedInitialization = 1;
+//  if (TempSettings->value("SettingsVersion",0).toInt() < PhotivoSettingsVersion)
+//      NeedInitialization = 1;
 
   // Initialize the user folder if needed
   /* TODO: for testing. Enable the other line below once profile versions are final. */
@@ -3069,14 +3067,13 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   JobSettings.setValue("CameraColorProfile", Settings->GetString("CameraColorProfile"));*/
 
   // list of spotrepair spots
-  RepairSpotList->clear();
-  int size = JobSettings.beginReadArray(RepairSpotList->iniName());
-  ReportProgress(QObject::tr(QString("Reading %1 repair spots.\n").arg(size).toAscii().data()));
-  for (int i = 0; i < size; i++) {
-    JobSettings.setArrayIndex(i);
-    RepairSpotList->append(new ptRepairSpot(&JobSettings));
-  }
-  JobSettings.endArray();
+//  RepairSpotList->clear();
+//  int size = JobSettings.beginReadArray(RepairSpotList->iniName());
+//  for (int i = 0; i < size; i++) {
+//    JobSettings.setArrayIndex(i);
+//    RepairSpotList->append(new ptRepairSpot(&JobSettings));
+//  }
+//  JobSettings.endArray();
   MainWindow->PopulateSpotRepairList(&JobSettings);
 
 
@@ -3576,7 +3573,6 @@ void CB_MenuFileExit(const short) {
 
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
-  delete RepairSpotList;
 #ifdef Q_OS_WIN
   if (!JobMode)
     ptEcWin7::DestroyInstance();
@@ -4857,16 +4853,16 @@ void CB_ClipParameterInput(const QVariant Value) {
 void CB_SpotOpacityInput(const QVariant Value) {
   if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
     Settings->SetValue("SpotOpacity", Value);
-    RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row())
-        ->setOpacity(Value.toFloat());
+//    RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row())
+//        ->setOpacity(Value.toFloat());
   }
 }
 
 void CB_SpotEdgeSoftnessInput(const QVariant Value) {
   if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
     Settings->SetValue("SpotEdgeSoftness", Value);
-    RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row())
-        ->setEdgeBlur(Value.toFloat());
+//    RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row())
+//        ->setEdgeBlur(Value.toFloat());
   }
 }
 

@@ -35,10 +35,10 @@ ptRepairInteraction::ptRepairInteraction(QGraphicsView *AView,
 : ptImageInteraction(AView),
   FListView(AListView),
   FShadow(new QGraphicsDropShadowEffect),
-  FShapes(new QList<TSpotShape>)
+  FShapes(new QList<TSpotShape*>)
 {
   assert(FListView != NULL);
-  FView->scene()->addItem(FSpotShape);
+//  FView->scene()->addItem(FSpotShape);
 
   FShadow->setBlurRadius(0);
   FShadow->setOffset(1);
@@ -51,7 +51,7 @@ ptRepairInteraction::ptRepairInteraction(QGraphicsView *AView,
 //==============================================================================
 
 ptRepairInteraction::~ptRepairInteraction() {
-  for_each (FShapes->begin(), FShapes->end(), [this](TSpotShape *hShape) {
+  std::for_each (FShapes->begin(), FShapes->end(), [this](TSpotShape *hShape) {
     FView->scene()->removeItem(hShape->Group);
     DestroyShape(hShape);
   } );
@@ -215,7 +215,7 @@ void ptRepairInteraction::changeSpot(const QModelIndex &AIndex) {
   if (AIndex.isValid()) {
     int hIdx = AIndex.row();
     assert(hIdx < FShapes->size());   // catch invalid index rows
-    Draw(FShapes->at(hIdx), static_cast<ptRepairSpotModel*>(AIndex.model())->spot(hIdx));
+    Draw(FShapes->at(hIdx), static_cast<const ptRepairSpotModel*>(AIndex.model())->spot(hIdx));
   }
 }
 
