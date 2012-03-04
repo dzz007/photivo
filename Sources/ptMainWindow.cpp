@@ -55,6 +55,7 @@ void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
 void CB_ZoomStep(int direction);
+void ReportProgress(const QString Message);
 
 ////////////////////////////////////////////////////////////////////////////////
 //

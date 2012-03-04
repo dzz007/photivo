@@ -27,6 +27,8 @@
 
 extern ptGuiOptions* GuiOptions;
 
+void ReportProgress(const QString Message);
+
 //==============================================================================
 
 ptRepairSpotModel::ptRepairSpotModel(const QSize ASizeHint, QObject *AParent /*= NULL*/)
@@ -62,7 +64,7 @@ void ptRepairSpotModel::LoadFromFile(QSettings *APtsFile) {
   ReportProgress(QObject::tr(QString("Reading %1 repair spots.\n").arg(hSize).toAscii().data()));
   for (int i = 0; i < hSize; i++) {
     APtsFile->setArrayIndex(i);
-    RepairSpotList->append(new ptRepairSpot(APtsFile));
+    FSpotList->append(new ptRepairSpot(APtsFile));
   }
   APtsFile->endArray();
 
@@ -100,8 +102,8 @@ bool ptRepairSpotModel::setData(const QModelIndex &AIndex, const QVariant &AValu
 //==============================================================================
 
 void ptRepairSpotModel::setSpot(const int AIndex, ptRepairSpot *ASpotData) {
-  delete FSpotList[AIndex];
-  FSpotList[AIndex] = ASpotData;
+//  delete FSpotList->at(AIndex);
+//  FSpotList->at(AIndex) = ASpotData;
 }
 
 //==============================================================================
@@ -151,7 +153,7 @@ void ptRepairSpotModel::RebuildModel() {
   this->clear();
 
   for (int i = 0; i < FSpotList->size(); i++) {
-    ptRepairSpot* hSpot = FSpotList[i];
+    ptRepairSpot* hSpot = FSpotList->at(i);
     QStandardItem* hSpotItem = new QStandardItem(GuiOptions->SpotRepair[hSpot->algorithm()].Text);
     hSpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
                         Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
