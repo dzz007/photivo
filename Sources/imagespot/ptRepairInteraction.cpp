@@ -133,13 +133,13 @@ void ptRepairInteraction::DestroyShape(ptRepairInteraction::TSpotShape* AShape) 
 
 void ptRepairInteraction::Draw(ptRepairInteraction::TSpotShape *AShape, ptRepairSpot *ASpotData) {
   // Center point of spot and repairer relative to their groups
-  QPointF hSpotCenter(ASpotData->radiusX()/2, ASpotData->radiusY()/2);
+  QPointF hSpotCenter(ASpotData->radius()/2, ASpotData->radiusY()/2);
 
   // Set spot’s container’s topleft position so that we can work with (0,0)
   // as the spot’s topleft point.
   AShape->SpotGroup->setPos(ASpotData->pos());
 
-  AShape->Spot->setRect(0, 0, ASpotData->radiusX() * 2, ASpotData->radiusY() * 2);
+  AShape->Spot->setRect(0, 0, ASpotData->radius() * 2, ASpotData->radiusY() * 2);
   AShape->SpotBorder->hide();   // TODO SR: implement inner border display
 
   // Unrotated handle positions: Radius handle rightcenter, rotation handle bottomcenter
@@ -156,7 +156,7 @@ void ptRepairInteraction::Draw(ptRepairInteraction::TSpotShape *AShape, ptRepair
   if (ASpotData->hasRepairer()) {
     // repairer ellipse
     AShape->RepairerGroup->setPos(ASpotData->repairerPos());
-    AShape->Repairer->setRect(0, 0, ASpotData->radiusX() * 2, ASpotData->radiusY() * 2);
+    AShape->Repairer->setRect(0, 0, ASpotData->radius() * 2, ASpotData->radiusY() * 2);
     AShape->Repairer->setRotation(ASpotData->angle());
 
     // connector line between spot and repairer (from/to center)

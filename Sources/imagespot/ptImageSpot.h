@@ -29,6 +29,7 @@
   \c ptImageSpot always return values in current pipe size scale.
 
   However, internally (and in the ini file) everything is stored in 1:1 pipe size scale.
+  Derived classes are strongly recommended to do the same!
 */
 
 #ifndef PTIMAGESPOT_H
@@ -37,7 +38,7 @@
 
 #include <QtGlobal>
 #include <QPoint>
-#include <stdint.h>
+#include <QString>
 
 #include "../ptSettings.h"
 
@@ -52,63 +53,28 @@ public:
       All values not present in the pts file are set to their default values. The ini’s
       \c ReadArray() must be set appropriately before you can use this.
   */
-  ptImageSpot(QSettings *APtsFile = NULL);
+  ptImageSpot(QSettings *APtsFile = nullptr);
 
   /*! Create an image spot with specific values. */
-  ptImageSpot(const short isEnabled,
-              const uint spotX,
-              const uint spotY,
-              const uint radiusX,
-              const uint radiusY,
-              const float angle,
-              const uint edgeRadius,
-              const float edgeBlur,
-              const float opacity);
-
-  /*! Returns the spot's rotation angle in degrees clockwise. */
-  inline float angle() const { return FAngle; }
-
-  /*! Returns the edge blur value. */
-  inline float edgeBlur() const { return FEdgeSoftness; }
-
-  /*! Returns the radius of the blurred outer edge. */
-  inline uint edgeRadius() const { return FEdgeRadius >> Settings->GetInt("Scaled"); }
+  ptImageSpot(const uint ASpotX,
+              const uint ASpotY,
+              const uint ARadius,
+              const short AIsEnabled,
+              const QString &AName);
 
   /*! Returns the spot's enabled status. */
   inline short isEnabled() const { return FIsEnabled; }
 
-  /*! Returns the global opacity. \c 0.0 is fully transparent and
-      \c 1.0 is fully opaque. */
-  inline float opactiy() const { return FOpacity; }
-
   /*! Returns the horizontal radius. */
-  inline uint radiusX() const { return FRadiusY >> Settings->GetInt("Scaled"); }
-
-  /*! Returns the vertical radius. */
-  inline uint radiusY() const { return FRadiusX >> Settings->GetInt("Scaled"); }
+  inline uint radius() const { return FRadius >> Settings->GetInt("Scaled"); }
 
   /*! Returns the topleft position of the spot’s bounding rectangle. */
   QPoint pos() const;
 
-  /*! Sets the spot's rotation angle in degrees clockwise. */
-  void setAngle(float angle);
-
-  /*! Sets edge blur. */
-  void setEdgeBlur(const float ABlur);
-
-  /*! Sets the size of the blurred edge. */
-  void setEdgeRadius(uint ARadius);
-
   /*! Enables or disables the spot. Disabled spots are ignored when running the pipe.
       Values are \c 0 (disabled) or \c 2 (enabled), corresponding to what \c QListView
       checkboxes use. */
-  inline void setEnabled(const short state) { FIsEnabled = state; }
-
-  /*! Sets the spot's global opacity.
-      \param opacity
-        Opacity in the range from \c 0.0 (fully transparent) to \c 1.0
-        (fully opaque). */
-  void setOpacity(const float AOpacity);
+  inline void setEnabled(const short AState) { FIsEnabled = AState; }
 
   /*! Moves the spot to a new position.
       Coordinates are the topleft position of the spot’s bounding rectangle.
@@ -119,10 +85,7 @@ public:
   virtual void setPos(uint Ax, uint Ay);
 
   /*! Sets the horizontal radius in pixels. */
-  void setRadiusX(uint ARadius);
-
-  /*! Sets the vertical radius in pixels. */
-  void setRadiusY(uint ARadius);
+  void setRadius(uint ARadius);
 
   /*! Writes the spot’s data to the currently opened ini file.
     The ini’s \c WriteArray() must be set appropriately before you use this. */
@@ -131,22 +94,14 @@ public:
 //------------------------------------------------------------------------------
 
 protected:
-  float     FAngle;
-  float     FEdgeSoftness;
-  uint      FEdgeRadius;
   short     FIsEnabled;
-  float     FOpacity;   // global transparency percentage
-  uint      FRadiusX;
-  uint      FRadiusY;
+  QString   FName;
+  uint      FRadius;
   QPoint    FPos;       // Position is the center of the spot
-  uint16_t  *FWeightMatrix;
-
-  void UpdateWeight();
 
 //------------------------------------------------------------------------------
 
 private:
-  short FInit;
 
 
 };
