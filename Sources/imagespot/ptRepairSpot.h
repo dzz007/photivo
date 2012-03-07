@@ -57,14 +57,15 @@ public:
   ptRepairSpot(QSettings *APtsFile = nullptr);
 
   /*! Create a repair spot with specific values.  */
-  ptRepairSpot(const short isEnabled,
-               const uint spotX,
+  ptRepairSpot(const uint spotX,
                const uint spotY,
+               const uint radiusX,
                const uint radiusY,
-               const uint radius,
+               const short isEnabled,
+               const QString &AName,
                const float angle,
                const uint edgeRadius,
-               const float edgeBlur,
+               const float edgeSoftness,
                const float opacity,
                const ptSpotRepairAlgo algorithm,
                const short hasRepairer = 0,

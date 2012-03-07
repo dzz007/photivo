@@ -56,7 +56,12 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   // Load in the gui input elements
   const ptGuiInputItem GuiInputItems[] = {
     // Attention : Default,Min,Max,Step should be consistent int or double. Double *always* in X.Y notation to indicate so.
-    // Unique Name,GuiElement,InitLevel,InJobFile,HasDefault (causes button too !),Default,Min,Max,Step,NrDecimals,Label,ToolTip
+    // Unique Name              uiElement,InitLevel,InJobFile,HasDefault  Default     Min       Max       Step    Decimals  Label,ToolTip
+    {"LocalMaskThreshold"            ,ptGT_InputSlider     ,9,0,1         ,100        ,0        ,65536    ,5      ,0        ,tr("Threshold"),tr("Maximum amount a pixel may differ from the spot's source pixel to get included in the mask.")},
+    {"LocalMaskLumaWeight"           ,ptGT_InputSlider     ,9,0,1         ,0.5        ,0.0      ,1.0      ,0.1    ,2        ,tr("Brightness/color ratio"),tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")},
+    {"LocalMaxRadius"                ,ptGT_InputSlider     ,9,0,1         ,500        ,1        ,7000     ,10     ,0        ,tr("Maximum radius"),tr("Pixels outside this radius will never be included in the mask.")},
+    {"LocalSaturation"               ,ptGT_InputSlider     ,9,0,1         ,0.0        ,-10.0    ,10.0     ,0.5    ,1        ,tr("Saturation"),tr("Adjusts saturation in masked region")},
+
     {"FileMgrThumbnailSize"          ,ptGT_InputSlider     ,1,0,1 ,100  ,50   ,500   ,25   ,0 ,tr("Thumbnail size")     ,tr("Thumbnail size in pixel")},
     {"FileMgrThumbnailPadding"       ,ptGT_InputSlider     ,1,0,1 ,8    ,0    ,50    ,2    ,0 ,tr("Thumbnail padding")  ,tr("Thumbnail padding in pixel")},
     {"FileMgrThumbMaxRowCol"         ,ptGT_Input           ,1,0,1 ,3    ,1    ,1000  ,1    ,0 ,tr("thumbnails in a row/column"), tr("Maximum number of thumbnails that should be placed in a row or column.")},
@@ -479,7 +484,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
 
   // Load in the gui choice (combo) elements
   const ptGuiChoiceItem GuiChoiceItems[] = {
-    // Unique Name,                 GuiElement,    InitLevel,InJobFile,HasDefault,Default, Choices (from ptGuiOptions.h),         ToolTip
+    // Unique Name          GuiElement,InitLevel,InJobFile,HasDefault, Default            Choices (from ptGuiOptions.h),         ToolTip
+    {"LocalMode"                   ,ptGT_Choice       ,9,0,1 ,lamFloodFill                ,GuiOptions->LocalAdjustMode           ,tr("Mask generation mode")},
+
     {"RememberSettingLevel"        ,ptGT_Choice       ,1,0,0 ,2                           ,GuiOptions->RememberSettingLevel      ,tr("Remember setting level")},
     {"CameraColor"                 ,ptGT_Choice       ,1,1,1 ,ptCameraColor_Adobe_Profile ,GuiOptions->CameraColor               ,tr("Transform camera RGB to working space RGB")},
     {"CameraColorProfileIntent"    ,ptGT_Choice       ,1,1,1 ,INTENT_PERCEPTUAL           ,GuiOptions->CameraColorProfileIntent  ,tr("Intent of the profile")},
@@ -588,7 +595,11 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
 
   // Load in the gui check elements
   const ptGuiCheckItem GuiCheckItems[] = {
-    // Name, GuiType,InitLevel,InJobFile,Default,Label,Tip
+    // Name   GuiType,InitLevel,InJobFile,Default,Label,Tip
+    {"LocalEgdeAwareThreshold"    ,ptGT_Check ,9,0,1,   tr("Edge aware threshold"),tr("Apply threshold only to hard edges. Allow gradual changes.")},
+    {"LocalMaxRadiusCheck"        ,ptGT_Check ,9,0,0,   "",""},
+    {"LocalAdaptiveSaturation"    ,ptGT_Check ,9,0,0,   tr("Adaptive Saturation"),tr("Prevent clipping when adjusting saturation.")},
+
     {"FileMgrUseThumbMaxRowCol"   ,ptGT_Check ,1,0,0,tr("At most")         ,tr("Maximum number of thumbnails that should be placed in a row or column.")},
     {"StartupSettings"            ,ptGT_Check ,1,0,1,tr("User settings")   ,tr("Load user settings on startup")},
     {"StartupSettingsReset"       ,ptGT_Check ,1,0,0,tr("Reset on new image") ,tr("Reset to user settings when new image is opened")},

@@ -35,6 +35,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+const ptGuiOptionsItem ptGuiOptions::LocalAdjustMode[] = {
+  {lamFloodFill,    QObject::tr("Flood fill") },
+  {lamSearch,       QObject::tr("Search") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::ZoomLevel[] = {
   {ptZoomLevel_Current, QObject::tr("Current") },
   {ptZoomLevel_Fit,     QObject::tr("Zoom fit") },
