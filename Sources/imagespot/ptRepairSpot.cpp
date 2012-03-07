@@ -29,13 +29,18 @@ extern ptSettings* Settings;
 
 //==============================================================================
 
-ptRepairSpot::ptRepairSpot(QSettings *APtsFile /*= NULL*/)
+ptRepairSpot::ptRepairSpot(QSettings *APtsFile /*= nullptr*/)
 : ptImageSpot(APtsFile),
   FHasRepairer(1),
   FAlgorithm(SpotRepairAlgo_Clone),
   FRepairerPos(QPoint())
 {
-  if (APtsFile != NULL) {
+  if (APtsFile != nullptr) {
+    FAngle = APtsFile->value("Angle", 0.0).toFloat();
+    FEdgeSoftness = APtsFile->value("EdgeBlur", 0.0).toFloat();
+    FEdgeRadius = APtsFile->value("EdgeRadius", 0).toUInt();
+    FOpacity = APtsFile->value("Opacity", 1.0).toFloat();
+    FRadiusY = APtsFile->value("RadiusY", 0.).toUInt();
     FHasRepairer = APtsFile->value("HasRepairer", 1).toInt();
     FAlgorithm =
         (ptSpotRepairAlgo)(APtsFile->value("Algorithm", SpotRepairAlgo_Clone).toInt());
@@ -46,23 +51,40 @@ ptRepairSpot::ptRepairSpot(QSettings *APtsFile /*= NULL*/)
 
 //==============================================================================
 
-ptRepairSpot::ptRepairSpot(const short isEnabled,
-                           const uint spotX,
+ptRepairSpot::ptRepairSpot(const uint spotX,
                            const uint spotY,
                            const uint radiusX,
                            const uint radiusY,
+                           const short isEnabled,
+                           const QString &AName,
                            const float angle,
                            const uint edgeRadius,
-                           const float edgeBlur,
+                           const float edgeSoftness,
                            const float opacity,
                            const ptSpotRepairAlgo algorithm,
                            const short hasRepairer /*= 0*/,
                            const uint repairerX /*= 0*/,
                            const uint repairerY /*= 0*/)
-: ptImageSpot(isEnabled, spotX, spotY, radiusX, radiusY, angle, edgeRadius, edgeBlur, opacity),
+: ptImageSpot(spotX, spotY, radiusX, isEnabled, AName),
+  FAlgorithm(algorithm),
+  FAngle(angle),
+  FEdgeRadius(edgeRadius),
+  FEdgeSoftness(edgeSoftness),
   FHasRepairer(hasRepairer),
-  FAlgorithm(algorithm)
+  FOpacity(opacity),
+  FRadiusY(radiusY)
 {
+  int hToFullPipe = 1 << Settings->GetInt("PipeSize");
+  FEdgeRadius = edgeRadius * hToFullPipe;
+  FRadiusY = radiusY * hToFullPipe;
+
+  FAngle = angle * hToFullPipe;
+  FInit = true;
+  setEdgeBlur(edgeSoftness);
+  setOpacity(opacity);
+  UpdateWeight();
+  FInit = false;
+
   FRepairerPos = QPoint(repairerX * (1 >> Settings->GetInt("PipeSize")),
                          repairerY * (1 >> Settings->GetInt("PipeSize")) );
 }
@@ -91,7 +113,7 @@ void ptRepairSpot::setPos(uint Ax, uint Ay) {
 //==============================================================================
 
 void ptRepairSpot::setRepairerPos(const uint Ax, const uint Ay) {
-  FHasRepairer = 1;
+  FHasRepairer = true;
   FRepairerPos.setX(Ax * (1 << Settings->GetInt("PipeSize")));
   FRepairerPos.setY(Ay * (1 << Settings->GetInt("PipeSize")));
 }
@@ -105,8 +127,68 @@ void ptRepairSpot::setSpotPos(const uint Ax, const uint Ay) {
 
 //==============================================================================
 
+void ptRepairSpot::setAngle(float FAngle) {
+  FAngle = FAngle;
+  UpdateWeight();
+}
+
+//==============================================================================
+
+void ptRepairSpot::setEdgeBlur(const float ABlur) {
+  if (ABlur > 1.0f) {
+    FEdgeSoftness = 1.0;
+  } else if (ABlur < 0.0f){
+    FEdgeSoftness = 0.0;
+  } else {
+    FEdgeSoftness = ABlur;
+  }
+  if (!FInit) {
+    UpdateWeight();
+  }
+}
+
+//==============================================================================
+
+void ptRepairSpot::setEdgeRadius(uint ARadius) {
+  FEdgeRadius = ARadius << Settings->GetInt("Scaled");
+  UpdateWeight();
+}
+
+//==============================================================================
+
+void ptRepairSpot::setOpacity(const float AOpacity) {
+  if (AOpacity > 1.0f) {
+    FOpacity = 1.0;
+  } else {
+    FOpacity = AOpacity;
+  }
+  if (!FInit) {
+    UpdateWeight();
+  }
+}
+
+//==============================================================================
+
+void ptRepairSpot::setRadiusY(uint ARadius) {
+  FRadiusY = ARadius << Settings->GetInt("Scaled");
+  UpdateWeight();
+}
+
+//==============================================================================
+
+void ptRepairSpot::UpdateWeight() {
+  // TODO SR: alpha channel calculation
+}
+
+//==============================================================================
+
 void ptRepairSpot::WriteToFile(QSettings *APtsFile) {
-  ptImageSpot::WriteToFile(APtsFile);
+  ptRepairSpot::WriteToFile(APtsFile);
+  APtsFile->setValue("Angle", FAngle);
+  APtsFile->setValue("EdgeBlur", FEdgeSoftness);
+  APtsFile->setValue("EdgeRadius", FEdgeRadius);
+  APtsFile->setValue("Opacity", FOpacity);
+  APtsFile->setValue("RadiusY", FRadiusY);
   APtsFile->setValue("HasRepairer", FHasRepairer);
   APtsFile->setValue("Algorithm", FAlgorithm);
   APtsFile->setValue("RepairerPosX", FRepairerPos.x());

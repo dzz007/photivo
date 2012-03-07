@@ -102,8 +102,8 @@ bool ptRepairSpotModel::setData(const QModelIndex &AIndex, const QVariant &AValu
 //==============================================================================
 
 void ptRepairSpotModel::setSpot(const int AIndex, ptRepairSpot *ASpotData) {
-//  delete FSpotList->at(AIndex);
-//  FSpotList->at(AIndex) = ASpotData;
+  delete FSpotList->at(AIndex);
+  FSpotList->replace(AIndex, ASpotData);
 }
 
 //==============================================================================
