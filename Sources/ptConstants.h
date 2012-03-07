@@ -177,6 +177,12 @@ const short ptStartupUIMode_Tab       = 0;
 const short ptStartupUIMode_Favourite = 1;
 const short ptStartupUIMode_AllTools  = 2;
 
+// local adjust modes
+enum ptLocalAdjustMode {
+  lamFloodFill    = 0,
+  lamSearch       = 1
+};
+
 // Lensfun
 const short ptLfunCAModel_None        = LF_TCA_MODEL_NONE;
 const short ptLfunCAModel_Linear      = LF_TCA_MODEL_LINEAR;

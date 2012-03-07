@@ -4846,7 +4846,47 @@ void CB_ClipParameterInput(const QVariant Value) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Callbacks pertaining to spot repair (Geometry tab)
+// Callbacks pertaining to local adjust (Local tab)
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_LocalModeChoice(const QVariant Choice) {
+
+}
+
+void CB_LocalMaskThresholdInput(const QVariant Value) {
+
+}
+
+void CB_LocalMaskLumaWeightInput(const QVariant Value) {
+
+}
+
+void CB_LocalEgdeAwareThresholdCheck(const QVariant State) {
+
+}
+
+void CB_LocalMaxRadiusCheckCheck(const QVariant State) {
+
+}
+
+void CB_LocalMaxRadiusInput(const QVariant Value) {
+
+}
+
+void CB_LocalSaturationInput(const QVariant Value) {
+
+}
+
+void CB_LocalAdaptiveSaturationCheck(const QVariant State) {
+
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to spot repair (Local tab)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -8504,7 +8544,6 @@ void Standard_CB_SetAndRun (const QString ObjectName, const QVariant Value) {
 }
 
 void CB_InputChanged(const QString ObjectName, const QVariant Value) {
-
   // No CB processing while in startup phase. Too much
   // noise events otherwise.
   if (InStartup) return;
@@ -8602,6 +8641,15 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(EeciRefineCheck)
   M_Dispatch(ClipModeChoice)
   M_Dispatch(ClipParameterInput)
+
+  M_Dispatch(LocalModeChoice)
+  M_Dispatch(LocalMaskThresholdInput)
+  M_Dispatch(LocalMaskLumaWeightInput)
+  M_Dispatch(LocalEgdeAwareThresholdCheck)
+  M_Dispatch(LocalMaxRadiusCheckCheck)
+  M_Dispatch(LocalMaxRadiusInput)
+  M_Dispatch(LocalSaturationInput)
+  M_Dispatch(LocalAdaptiveSaturationCheck)
 
   M_Dispatch(SpotOpacityInput)
   M_Dispatch(SpotEdgeSoftnessInput)
