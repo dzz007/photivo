@@ -55,6 +55,7 @@
 #include "ptWiener.h"
 #include "ptParseCli.h"
 #include "imagespot/ptRepairSpot.h"
+#include "imagespot/ptLocalSpot.h"
 #include "qtsingleapplication/qtsingleapplication.h"
 #include "filemgmt/ptFileMgrWindow.h"
 #include <wand/magick_wand.h>
@@ -4850,38 +4851,69 @@ void CB_ClipParameterInput(const QVariant Value) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CB_LocalModeChoice(const QVariant Choice) {
-
+void CB_LocalModeChoice(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalMode", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setMode((ptLocalAdjustMode)Value.toInt());
 }
 
 void CB_LocalMaskThresholdInput(const QVariant Value) {
-
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalMaskThreshold", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setThreshold(Value.toFloat());
 }
 
 void CB_LocalMaskLumaWeightInput(const QVariant Value) {
-
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalMaskLumaWeight", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setLumaWeight(Value.toFloat());
 }
 
-void CB_LocalEgdeAwareThresholdCheck(const QVariant State) {
-
+void CB_LocalEgdeAwareThresholdCheck(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalEdgeAwareThreshold", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setEdgeAware(Value.toBool());
 }
 
-void CB_LocalMaxRadiusCheckCheck(const QVariant State) {
-
+void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalMaxRadiusCheck", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setHasMaxRadius(Value.toBool());
 }
 
 void CB_LocalMaxRadiusInput(const QVariant Value) {
-
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalMaxRadius", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setMaxRadius(Value.toUInt());
 }
 
 void CB_LocalSaturationInput(const QVariant Value) {
-
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalSaturation", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setSaturation(Value.toFloat());
 }
 
-void CB_LocalAdaptiveSaturationCheck(const QVariant State) {
-
+void CB_LocalAdaptiveSaturationCheck(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalAdaptiveSaturation", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setAdaptiveSaturation(Value.toBool());
 }
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -9325,11 +9357,15 @@ ptImageType CheckImageType(QString filename,
 
 //==============================================================================
 
-// Hack to pass current number of repair spots to ptSettings for determining
+// Hack to pass current number of spots to ptSettings for determining
 // the tool active state. Used there in ToolInfo(). Avoids making the MainWindow
 // known to ptSettings.
 int RepairSpotCount() {
   return MainWindow->RepairSpotModel->rowCount();
+}
+
+int LocalSpotCount() {
+  return MainWindow->LocalSpotModel->rowCount();
 }
 
 //==============================================================================

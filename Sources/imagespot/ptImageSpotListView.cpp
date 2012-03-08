@@ -20,19 +20,21 @@
 **
 *******************************************************************************/
 
-#include "ptRepairSpotModel.h"
-#include "../ptMainWindow.h"
-#include "../ptSettings.h"
+#include "ptImageSpotListView.h"
+#include "ptImageSpotModel.h"
+//#include "../ptMainWindow.h"
+//#include "../ptSettings.h"
 #include "../ptTheme.h"
 
-extern ptSettings* Settings;
-extern ptMainWindow* MainWindow;
+//extern ptSettings* Settings;
+//extern ptMainWindow* MainWindow;
 extern ptTheme* Theme;
 
 //==============================================================================
 
-ptRepairSpotListView::ptRepairSpotListView(QWidget *AParent)
-: QListView(AParent) {
+ptImageSpotListView::ptImageSpotListView(QWidget *AParent /*= nullptr*/)
+: QListView(AParent)
+{
   setStyle(Theme->style());
   setStyleSheet(Theme->stylesheet());
   setSelectionMode(QAbstractItemView::SingleSelection);
@@ -44,22 +46,25 @@ ptRepairSpotListView::ptRepairSpotListView(QWidget *AParent)
 
 //==============================================================================
 
-void ptRepairSpotListView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
-  if (current.row() > -1) {
-    ptRepairSpot *hSpot = static_cast<ptRepairSpotModel*>(this->model())->spot(current.row());
-    Settings->SetValue("SpotOpacity", hSpot->opactiy());
-    Settings->SetValue("SpotEdgeSoftness", hSpot->edgeBlur());
-  }
-
-  MainWindow->UpdateSpotRepairUI();
+void ptImageSpotListView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
   QListView::currentChanged(current, previous);
   emit rowChanged(current);
+
+//  if (current.row() > -1) {
+//    ptRepairSpot *hSpot = static_cast<ptRepairSpotModel*>(this->model())->spot(current.row());
+//    Settings->SetValue("SpotOpacity", hSpot->opactiy());
+//    Settings->SetValue("SpotEdgeSoftness", hSpot->edgeBlur());
+//  }
+
+//  MainWindow->UpdateSpotRepairUI();
+//  QListView::currentChanged(current, previous);
+//  emit rowChanged(current);
 }
 
 //==============================================================================
 
-void ptRepairSpotListView::deleteSpot() {
-  static_cast<ptRepairSpotModel*>(model())
+void ptImageSpotListView::deleteSpot() {
+  static_cast<ptImageSpotModel*>(model())
       ->removeRows(currentIndex().row(), 1, QModelIndex());
   emit rowChanged(currentIndex());
 }

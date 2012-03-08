@@ -40,7 +40,7 @@
 #include <QGraphicsDropShadowEffect>
 
 #include "../ptImageInteraction.h"
-#include "ptRepairSpotListView.h"
+#include "ptImageSpotListView.h"
 #include "ptRepairSpot.h"
 #include "ptRepairSpotModel.h"
 
@@ -59,7 +59,7 @@ public:
       have a model assigned.
   */
   ptRepairInteraction(QGraphicsView *AView,
-                      ptRepairSpotListView *AListView);
+                      ptImageSpotListView *AListView);
 
   ~ptRepairInteraction();
 
@@ -98,7 +98,7 @@ private:
   void        MousePressHandler(QMouseEvent* AEvent);
   void        MouseDblClickHandler(QMouseEvent* AEvent);
 
-  ptRepairSpotListView      *FListView;
+  ptImageSpotListView      *FListView;
 
   // Components of the spot visual spot shape
   QGraphicsDropShadowEffect *FShadow;      // for the b/w line effect

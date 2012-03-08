@@ -1,0 +1,168 @@
+/*******************************************************************************
+**
+** Photivo
+**
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
+**
+** This file is part of Photivo.
+**
+** Photivo is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License version 3
+** as published by the Free Software Foundation.
+**
+** Photivo is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
+**
+*******************************************************************************/
+
+#include "ptRepairSpotModel.h"
+
+void ReportProgress(const QString Message);
+
+//==============================================================================
+
+ptRepairSpotModel::ptRepairSpotModel(const QSize ASizeHint,
+                                     const QString &APtsSectionName,
+                                     QObject *AParent /*= nullptr*/)
+: ptImageSpotModel(ASizeHint, APtsSectionName, AParent)
+{}
+
+//==============================================================================
+
+//ptRepairSpotModel::~ptRepairSpotModel() {
+//  DelAndNull(FSpotList);
+//}
+
+//==============================================================================
+
+//Qt::ItemFlags ptRepairSpotModel::flags(const QModelIndex &index) const {
+//  Qt::ItemFlags defaultFlags = QStandardItemModel::flags(index);
+
+//  if (index.isValid())
+//    return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
+//  else
+//    return Qt::ItemIsDropEnabled | defaultFlags;
+//}
+
+//==============================================================================
+
+void ptRepairSpotModel::LoadFromFile(QSettings *APtsFile) {
+  ClearList();
+
+  int hSize = APtsFile->beginReadArray(FPtsName);
+  ReportProgress(
+    tr(QString("Reading %1 spots from '%2'.\n").arg(hSize).arg(FPtsName).toAscii().data())
+  );
+
+  for (int i = 0; i < hSize; i++) {
+    APtsFile->setArrayIndex(i);
+    FSpotList->append(new ptRepairSpot(APtsFile));
+  }
+  APtsFile->endArray();
+
+  RebuildModel();
+}
+
+//==============================================================================
+
+//bool ptRepairSpotModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+//  bool hResult = QStandardItemModel::setData(index, value, role);
+//  if (!hResult) return hResult;
+
+//  // Update actual repair spot data
+//  ptRepairSpot* hspot = static_cast<ptRepairSpot*>(FSpotList->at(index.row()));
+//  if (role == Qt::DisplayRole) {
+//    // algorithm
+//    int i = 0;
+//    QString hAlgoName = value.toString();
+//    while (GuiOptions->SpotRepair[i].Value.toInt() > -1) {
+//      if (hAlgoName == GuiOptions->SpotRepair[i].Text) {
+//        hspot->setAlgorithm((ptSpotRepairAlgo)i);
+//        break;
+//      }
+//      i++;
+//    }
+
+//  } else if (role == Qt::CheckStateRole) {
+//    // en/disabled switch
+//    hspot->setEnabled(value.toInt());
+//  }
+
+//  return hResult;
+//}
+
+//==============================================================================
+
+//void ptRepairSpotModel::setSpot(const int AIndex, ptRepairSpot *ASpotData) {
+//  delete FSpotList->at(AIndex);
+//  FSpotList->replace(AIndex, ASpotData);
+//}
+
+//==============================================================================
+
+//Qt::DropActions ptRepairSpotModel::supportedDropActions() const {
+//  return Qt::MoveAction;
+//}
+
+//==============================================================================
+
+//bool ptRepairSpotModel::removeRows(int row, int count, const QModelIndex &parent) {
+//  beginRemoveRows(parent, row, row+count-1);
+//  FSpotList->removeAt(row);
+//  bool success = QStandardItemModel::removeRows(row, count, parent);
+//  endRemoveRows();
+//  return success;
+//}
+
+//==============================================================================
+
+//void ptRepairSpotModel::WriteToFile(QSettings *APtsFile) {
+//  // Clear old stored spots, if any
+//  APtsFile->beginGroup(FPtsName);
+//  APtsFile->remove("");
+//  APtsFile->endGroup();
+
+//  // Save the new ones
+//  ReportProgress(
+//    tr(QString("Saving %1 spots to '%2'.\n").arg(FSpotList->size()).arg(FPtsName).toAscii().data())
+//  );
+
+//  APtsFile->beginWriteArray(FPtsName);
+//  for (int i = 0; i < FSpotList->size(); i++) {
+//    APtsFile->setArrayIndex(i);
+//    FSpotList->at(i)->WriteToFile(APtsFile);
+//  }
+//  APtsFile->endArray();
+//}
+
+//==============================================================================
+
+//void ptRepairSpotModel::ClearList() {
+//  while (!FSpotList->isEmpty()) {
+//    delete FSpotList->takeFirst();
+//  }
+//}
+
+//==============================================================================
+
+//void ptRepairSpotModel::RebuildModel() {
+//  this->clear();
+
+//  for (int i = 0; i < FSpotList->size(); i++) {
+//    ptRepairSpot* hSpot = FSpotList->at(i);
+//    QStandardItem* hSpotItem = new QStandardItem(GuiOptions->SpotRepair[hSpot->algorithm()].Text);
+//    hSpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
+//                        Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+//    hSpotItem->setCheckState(Qt::CheckState(hSpot->isEnabled()));
+//    hSpotItem->setSizeHint(FSizeHint);
+//    appendRow(hSpotItem);
+//  }
+//}
+
+//==============================================================================
+
