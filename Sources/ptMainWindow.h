@@ -36,9 +36,9 @@
 #include "ptCheck.h"
 #include "ptGroupBox.h"
 #include "ptVisibleToolsView.h"
-#include "imagespot/ptRepairSpotModel.h"
-#include "imagespot/ptRepairSpotItemDelegate.h"
-#include "imagespot/ptRepairSpotListView.h"
+#include "imagespot/ptImageSpotModel.h"
+//#include "imagespot/ptRepairSpotItemDelegate.h"
+#include "imagespot/ptImageSpotListView.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -130,10 +130,12 @@ public:
   void PopulateSpotRepairList(QSettings *APtsFile);
   void WriteSpotRepairList(QSettings *APtsFile);
 
-  ptRepairSpotListView* RepairSpotListView;
-  ptRepairSpotModel*    RepairSpotModel;
+  ptImageSpotListView* LocalSpotListView;
+  ptImageSpotModel*     LocalSpotModel;
+  ptImageSpotListView* RepairSpotListView;
+  ptImageSpotModel*     RepairSpotModel;
 
-
+//------------------------------------------------------------------------------
 
 protected:
   void closeEvent(QCloseEvent * Event);
@@ -149,7 +151,9 @@ protected:
   virtual bool winEvent(MSG *message, long *result);
 #endif
 
-private :
+//------------------------------------------------------------------------------
+
+private:
   QTabBar* Tabbar;
   QAction* m_AtnSavePipe;
   QAction* m_AtnSaveFull;
@@ -170,13 +174,20 @@ private :
   void ShowMovedTools(const QString Title);
   void InitVisibleTools();
 
+//------------------------------------------------------------------------------
+
 public slots:
   // Toggle file manager window
   void OpenFileMgrWindow();
   void CloseFileMgrWindow();
   void OtherInstanceMessage(const QString &msg);
 
+//------------------------------------------------------------------------------
+
 private slots:
+  void UpdateLocalSpotUI(const QModelIndex &ANewIdx);
+  void UpdateRepairSpotUI(const QModelIndex &ANewIdx);
+
   void ResizeTimerExpired();
   void Event0TimerExpired();
   void SaveMenuPipe();

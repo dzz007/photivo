@@ -197,8 +197,11 @@ HEADERS += \
     ../Sources/imagespot/ptRepairSpot.h \
     ../Sources/imagespot/ptRepairSpotEditor.h \
     ../Sources/imagespot/ptRepairSpotItemDelegate.h \
-    ../Sources/imagespot/ptRepairSpotListView.h \
-    ../Sources/imagespot/ptRepairSpotModel.h
+    ../Sources/imagespot/ptImageSpotListView.h \
+    ../Sources/imagespot/ptRepairSpotModel.h \
+    ../Sources/imagespot/ptImageSpotModel.h \
+    ../Sources/imagespot/ptLocalSpot.h \
+    ../Sources/imagespot/ptLocalSpotModel.h
 
 
 SOURCES += \
@@ -285,8 +288,11 @@ SOURCES += \
     ../Sources/imagespot/ptRepairSpot.cpp \
     ../Sources/imagespot/ptRepairSpotEditor.cpp \
     ../Sources/imagespot/ptRepairSpotItemDelegate.cpp \
-    ../Sources/imagespot/ptRepairSpotListView.cpp \
-    ../Sources/imagespot/ptRepairSpotModel.cpp
+    ../Sources/imagespot/ptImageSpotListView.cpp \
+    ../Sources/imagespot/ptRepairSpotModel.cpp \
+    ../Sources/imagespot/ptImageSpotModel.cpp \
+    ../Sources/imagespot/ptLocalSpot.cpp \
+    ../Sources/imagespot/ptLocalSpotModel.cpp
 
 
 FORMS += \

@@ -30,6 +30,7 @@
 #include "filemgmt/ptFileMgrConstants.h"
 
 extern int RepairSpotCount();
+extern int LocalSpotCount();
 
 //==============================================================================
 
@@ -57,7 +58,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   const ptGuiInputItem GuiInputItems[] = {
     // Attention : Default,Min,Max,Step should be consistent int or double. Double *always* in X.Y notation to indicate so.
     // Unique Name              uiElement,InitLevel,InJobFile,HasDefault  Default     Min       Max       Step    Decimals  Label,ToolTip
-    {"LocalMaskThreshold"            ,ptGT_InputSlider     ,9,0,1         ,100        ,0        ,65536    ,5      ,0        ,tr("Threshold"),tr("Maximum amount a pixel may differ from the spot's source pixel to get included in the mask.")},
+    {"LocalMaskThreshold"            ,ptGT_InputSlider     ,9,0,1         ,0.25       ,0.0      ,1.0      ,0.1    ,2        ,tr("Threshold"),tr("Maximum amount a pixel may differ from the spot's source pixel to get included in the mask.")},
     {"LocalMaskLumaWeight"           ,ptGT_InputSlider     ,9,0,1         ,0.5        ,0.0      ,1.0      ,0.1    ,2        ,tr("Brightness/color ratio"),tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")},
     {"LocalMaxRadius"                ,ptGT_InputSlider     ,9,0,1         ,500        ,1        ,7000     ,10     ,0        ,tr("Maximum radius"),tr("Pixels outside this radius will never be included in the mask.")},
     {"LocalSaturation"               ,ptGT_InputSlider     ,9,0,1         ,0.0        ,-10.0    ,10.0     ,0.5    ,1        ,tr("Saturation"),tr("Adjusts saturation in masked region")},
@@ -509,6 +510,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CaCorrect"                   ,ptGT_Choice       ,2,1,1 ,ptCACorrect_Off             ,GuiOptions->CACorrect                 ,tr("CA correction")},
     {"Interpolation"               ,ptGT_Choice       ,2,1,1 ,ptInterpolation_DCB         ,GuiOptions->Interpolation             ,tr("Demosaicing algorithm")},
     {"BayerDenoise"                ,ptGT_Choice       ,2,1,1 ,ptBayerDenoise_None         ,GuiOptions->BayerDenoise              ,tr("Denosie on Bayer pattern")},
+
+    {"SpotAlgorithm"               ,ptGT_Choice       ,9,0,1 ,SpotRepairAlgo_Clone        ,GuiOptions->SpotRepair                ,tr("Repair algorithm")},
+
     {"CropGuidelines"              ,ptGT_Choice       ,1,0,0 ,ptGuidelines_GoldenRatio    ,GuiOptions->CropGuidelines            ,tr("Guide lines for crop")},
     {"LightsOut"                   ,ptGT_Choice       ,1,0,0 ,ptLightsOutMode_Dimmed      ,GuiOptions->LightsOutMode             ,tr("Dim areas outside the crop rectangle")},
     {"ClipMode"                    ,ptGT_Choice       ,1,1,1 ,ptClipMode_Blend            ,GuiOptions->ClipMode                  ,tr("How to handle clipping")},
@@ -1694,11 +1698,18 @@ struct sToolInfo {
 
 sToolInfo ToolInfo (const QString GuiName) {
   sToolInfo Info = {"N.N.",0,0,0,0};
-  // Tab Geometry
-  if (GuiName == "TabSpotRepair") {
+
+  // Tab Local Edit
+  if (GuiName == "TabLocalAdjust") {
+    Info.Name = "Local adjust";
+    Info.IsActive = LocalSpotCount() > 0;
+  } else if (GuiName == "TabSpotRepair") {
     Info.Name = "Spot Repair";
     Info.IsActive = RepairSpotCount() > 0;
-  } else if (GuiName == "TabLensfunCA") {
+  }
+
+  // Tab Geometry
+  else if (GuiName == "TabLensfunCA") {
     Info.Name = "Chromatic Aberration (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunCAModel") != 0;
   } else if (GuiName == "TabLensfunVignette") {

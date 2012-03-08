@@ -54,7 +54,7 @@ public:
       All values not present in the pts file are set to their default values. The ini’s
       \c ReadArray() must be set appropriately before you can use this.
   */
-  ptRepairSpot(QSettings *APtsFile = nullptr);
+  explicit ptRepairSpot(QSettings *APtsFile = nullptr);
 
   /*! Create a repair spot with specific values.  */
   ptRepairSpot(const uint spotX,
@@ -76,7 +76,7 @@ public:
   inline float angle() const { return FAngle; }
 
   /*! Returns the edge blur value. */
-  inline float edgeBlur() const { return FEdgeSoftness; }
+  inline float edgeSoftness() const { return FEdgeSoftness; }
 
   /*! Returns the radius of the blurred outer edge. */
   inline uint edgeRadius() const { return FEdgeRadius >> Settings->GetInt("Scaled"); }

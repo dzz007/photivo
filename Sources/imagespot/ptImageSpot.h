@@ -34,6 +34,7 @@
 
 #ifndef PTIMAGESPOT_H
 #define PTIMAGESPOT_H
+
 //==============================================================================
 
 #include <QtGlobal>
@@ -53,7 +54,7 @@ public:
       All values not present in the pts file are set to their default values. The ini’s
       \c ReadArray() must be set appropriately before you can use this.
   */
-  ptImageSpot(QSettings *APtsFile = nullptr);
+  explicit ptImageSpot(QSettings *APtsFile = nullptr);
 
   /*! Create an image spot with specific values. */
   ptImageSpot(const uint ASpotX,
@@ -65,6 +66,8 @@ public:
   /*! Returns the spot's enabled status. */
   inline short isEnabled() const { return FIsEnabled; }
 
+  inline QString &name() { return FName; }
+
   /*! Returns the horizontal radius. */
   inline uint radius() const { return FRadius >> Settings->GetInt("Scaled"); }
 
@@ -75,6 +78,8 @@ public:
       Values are \c 0 (disabled) or \c 2 (enabled), corresponding to what \c QListView
       checkboxes use. */
   inline void setEnabled(const short AState) { FIsEnabled = AState; }
+
+  inline void setName(const QString &AName) { FName = AName; }
 
   /*! Moves the spot to a new position.
       Coordinates are the topleft position of the spot’s bounding rectangle.

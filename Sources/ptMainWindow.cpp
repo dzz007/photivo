@@ -26,6 +26,7 @@
 
 #include "ptDefines.h"
 #include "imagespot/ptRepairSpot.h"
+#include "imagespot/ptLocalSpot.h"
 #include "ptChannelMixer.h"
 #include "ptConfirmRequest.h"
 #include "ptConstants.h"
@@ -364,19 +365,40 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(SpotWB);
 
   //
-  // TAB : Geometry
+  // TAB : Local Edits
   //
 
-  RepairSpotListView = new ptRepairSpotListView(this);
+  LocalSpotListView = new ptImageSpotListView(this);
+  LocalAdjustVLayout->insertWidget(1, LocalSpotListView);
+  LocalSpotModel = new ptImageSpotModel(
+                         QSize(0, RepairSpotListView->fontMetrics().lineSpacing() + 2),
+                         "LocalSpots",
+                         this
+                       );
+  LocalSpotListView->setModel(LocalSpotModel);
+  LocalSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
+                                     QAbstractItemView::SelectedClicked);
+  LocalSpotListView->setItemDelegate(QStyledItemDelegate(LocalSpotListView));
+  connect(LocalSpotListView, SIGNAL(rowChanged(QModelIndex)),
+          this, SLOT(UpdateLocalSpotUI(QModelIndex)));
+
+  RepairSpotListView = new ptImageSpotListView(this);
   SpotRepairVLayout->insertWidget(1, RepairSpotListView);
-  RepairSpotModel = new ptRepairSpotModel(
+  RepairSpotModel = new ptImageSpotModel(
                           QSize(0, RepairSpotListView->fontMetrics().lineSpacing() + 2),
+                          "RepairSpots",
                           this
                         );
   RepairSpotListView->setModel(RepairSpotModel);
   RepairSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
                                       QAbstractItemView::SelectedClicked);
-  RepairSpotListView->setItemDelegate(new ptRepairSpotItemDelegate(RepairSpotListView));
+  RepairSpotListView->setItemDelegate(QStyledItemDelegate(RepairSpotListView));
+  connect(RepairSpotListView, SIGNAL(rowChanged(QModelIndex)),
+          this, SLOT(UpdateRepairSpotUI(QModelIndex)));
+
+  //
+  // TAB : Geometry
+  //
 
   // TODO BJ: Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
@@ -938,6 +960,30 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
     ImageCleanUp++;
     CB_MenuFileOpen(1);
   }
+}
+
+
+//==============================================================================
+
+void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
+  ptLocalSpot* hSpot = static_cast<ptLocalSpot*>(LocalSpotModel->spot(ANewIdx.row()));
+  Settings->SetValue("LocalMode", hSpot->mode());
+  Settings->SetValue("LocalMaskThreshold", hSpot->threshold());
+  Settings->SetValue("LocalMaskLumaWeight", hSpot->lumaWeight());
+  Settings->SetValue("LocalEgdeAwareThreshold", hSpot->isEdgeAware());
+  Settings->SetValue("LocalMaxRadiusCheck", hSpot->hasMaxRadius());
+  Settings->SetValue("LocalMaxRadius", hSpot->maxRadius());
+  // TODO: add curve settings here
+  Settings->SetValue("LocalSaturation", hSpot->saturation());
+  Settings->SetValue("LocalAdaptiveSaturation", hSpot->isAdaptiveSaturation());
+}
+
+void ptMainWindow::UpdateRepairSpotUI(const QModelIndex &ANewIdx) {
+  ptRepairSpot* hSpot = static_cast<ptRepairSpot*>(RepairSpotModel->spot(ANewIdx.row()));
+  Settings->SetValue("SpotAlgorithm", hSpot->algorithm());
+  Settings->SetValue("SpotOpacity", hSpot->opactiy());
+  Settings->SetValue("SpotEdgeSoftness", hSpot->edgeSoftness());
+  // TODO: some settings still missing, also from the UI
 }
 
 

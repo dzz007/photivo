@@ -20,7 +20,7 @@
 **
 *******************************************************************************/
 /*!
-  \class ptRepairSpotListView
+  \class ptImageSpotListView
 
   \brief The toolpane ListView for repair spots.
 
@@ -28,28 +28,31 @@
   care of updating the spot config widgets in the toolpane below the ListView.
 */
 
-#ifndef PTREPAIRSPOTLISTVIEW_H
-#define PTREPAIRSPOTLISTVIEW_H
+#ifndef PTIMAGESPOTLISTVIEW_H
+#define PTIMAGESPOTLISTVIEW_H
 
 //==============================================================================
 
 #include <QListView>
-#include <QToolButton>
 
 //==============================================================================
 
-class ptRepairSpotListView: public QListView {
+class ptImageSpotListView: public QListView {
 Q_OBJECT
 
 public:
-  /*! Creates a \c ptRepairSpotListView object. This is done by \c MainWindow in Photivo’s
-    startup phase. Do not create additional objects of this type! */
-  explicit ptRepairSpotListView(QWidget *AParent = NULL);
+  /*! Creates a \c ptImageSpotListView object. */
+  explicit ptImageSpotListView(QWidget *AParent = nullptr);
+
+//------------------------------------------------------------------------------
+
+private:
 
 //------------------------------------------------------------------------------
 
 signals:
-  void rowChanged(const QModelIndex &ANewRow);
+  /*! QListView does not emit a signal when the list focus changes. So we use our own signal. */
+  void rowChanged(const QModelIndex &ANewIdx);
 
 //------------------------------------------------------------------------------
 
@@ -60,10 +63,9 @@ public slots:
 //------------------------------------------------------------------------------
 
 protected slots:
-  /*! [EVENT] Triggered when the focused spot in the list changes. Additional config widgets
-    outside the ListView are handled here. */
+  /*! [EVENT] Triggered when the focused spot in the list changes. */
   void currentChanged(const QModelIndex &current, const QModelIndex &previous);
 
 
 };
-#endif // PTREPAIRSPOTLISTVIEW_H
+#endif // PTIMAGESPOTLISTVIEW_H
