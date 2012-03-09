@@ -33,21 +33,15 @@ extern void CB_CurveWindowRecalc(const short Channel, const short ForceUpdate = 
 
 extern ptTheme* Theme;
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor.
-//
+//==============================================================================
+
 // Instantiates a (also here defined) CurveWidget,
 // which acts as a central widget where the operations are finally done upon.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
                              const short Channel,
                              QWidget*    Parent)
-
-  :QWidget(NULL) {
-
+:QWidget()
+{
   m_RelatedCurve = RelatedCurve;
   m_Channel      = Channel;
 
@@ -182,11 +176,7 @@ ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptCurveWindow::~ptCurveWindow() {
   //printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
@@ -194,30 +184,25 @@ ptCurveWindow::~ptCurveWindow() {
   delete m_Image8;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
+
 // resizeEvent.
 // Delay a resize via a timer.
 // ResizeTimerExpired upon expiration.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptCurveWindow::resizeEvent(QResizeEvent*) {
   // Schedule the action 500ms from here to avoid multiple rescaling actions
   // during multiple resizeEvents from a window resized by the user.
   m_ResizeTimer->start(200); // 500 ms.
 }
 
+//==============================================================================
+
 void ptCurveWindow::ResizeTimerExpired() {
   // m_RelatedCurve enforces update, even if it is the same image.
   UpdateView(m_RelatedCurve);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Set Curve State
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptCurveWindow::SetCurveState(const short state) {
   switch (m_Channel) {
@@ -260,11 +245,7 @@ void ptCurveWindow::SetCurveState(const short state) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Get Curve State
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurveWindow::GetCurveState() {
   short State = 0;
@@ -309,11 +290,7 @@ short ptCurveWindow::GetCurveState() {
   return State;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Context menu and related
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptCurveWindow::ContextMenu(QMouseEvent* event) {
   short TempSetting = GetCurveState();
@@ -363,6 +340,8 @@ void ptCurveWindow::ContextMenu(QMouseEvent* event) {
   Menu.exec(event->globalPos());
 }
 
+//==============================================================================
+
 void ptCurveWindow::SetSatMode() {
   if (Settings->GetInt("SatCurveMode") == (int)m_AtnAdaptive->isChecked())
     return;
@@ -378,6 +357,8 @@ void ptCurveWindow::SetSatMode() {
 
   return;
 }
+
+//==============================================================================
 
 void ptCurveWindow::SetType() {
   if (m_Channel == ptCurveChannel_Saturation) {
@@ -435,6 +416,8 @@ void ptCurveWindow::SetType() {
   return;
 }
 
+//==============================================================================
+
 void ptCurveWindow::SetInterpolationType() {
   short Temp = 0;
   if ((int)m_AtnITLinear->isChecked())
@@ -459,13 +442,7 @@ void ptCurveWindow::SetInterpolationType() {
   return;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// CalculateCurve.
-//
-// Calculates the curve into an m_Image8.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptCurveWindow::SetBWGradient(ptImage8* Image) {
   int Width  = width();
@@ -483,6 +460,8 @@ void ptCurveWindow::SetBWGradient(ptImage8* Image) {
   }
 }
 
+//==============================================================================
+
 void ptCurveWindow::SetBWGammaGradient(ptImage8* Image) {
   int Width  = width();
   int Height = height();
@@ -498,6 +477,8 @@ void ptCurveWindow::SetBWGammaGradient(ptImage8* Image) {
     }
   }
 }
+
+//==============================================================================
 
 void ptCurveWindow::SetColorGradient(ptImage8* Image) {
   int Width  = width();
@@ -530,9 +511,9 @@ void ptCurveWindow::SetColorGradient(ptImage8* Image) {
   }
 }
 
+//==============================================================================
 
 void ptCurveWindow::CalculateCurve() {
-
   if (!m_RelatedCurve) return;
 
   if (m_Channel == ptCurveChannel_Saturation) {
@@ -722,14 +703,9 @@ void ptCurveWindow::CalculateCurve() {
 
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// UpdateView.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptCurveWindow::UpdateView(ptCurve* NewRelatedCurve) {
-
   if (NewRelatedCurve) m_RelatedCurve = NewRelatedCurve;
   if (!m_RelatedCurve) return;
 
@@ -757,31 +733,25 @@ void ptCurveWindow::UpdateView(ptCurve* NewRelatedCurve) {
   repaint();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// changeEvent handler.
-// To react on enable/disable
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
 
 void ptCurveWindow::changeEvent(QEvent* Event) {
   if (Event->type() == QEvent::EnabledChange)
     UpdateView(m_RelatedCurve);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// paintEvent handler.
-// Just draw the previously constructed m_QPixmap.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
+// Just draw the previously constructed m_QPixmap.
 void ptCurveWindow::paintEvent(QPaintEvent*) {
   QPainter Painter(this);
   Painter.save();
   if (m_QPixmap) Painter.drawPixmap(0,0,*m_QPixmap);
   Painter.restore();
 }
+
+//==============================================================================
 
 // How many pixels will be considered as 'bingo' for having the anchor ?
 const short SnapDelta = 6;
@@ -790,15 +760,8 @@ const double CurveDelta = 0.12;
 // Distance to the next anchor
 const float Delta = 0.005;
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// mousePressEvent handler.
 // Implements part of the anchors creation/deletion/moving.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
-
   // Reset the wheel status
   if (m_ActiveAnchor != -1 &&
       (abs((int)m_MousePosX-Event->x())>2 || abs((int)m_MousePosY-Event->y())>2)) {
@@ -912,12 +875,7 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
   return;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// mouseWheelEvent handler
-// together with the expired timer
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptCurveWindow::wheelEvent(QWheelEvent *Event) {
   if (m_BlockEvents) return;
@@ -1003,15 +961,9 @@ void ptCurveWindow::WheelTimerExpired() {
   m_BlockEvents  = 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// mouseMoveEvent handler.
-// Move anchor around.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptCurveWindow::mouseMoveEvent(QMouseEvent *Event) {
-
   // Reset the wheel status
   if (m_ActiveAnchor != -1 &&
       (abs((int)m_MousePosX-Event->x())>2 || abs((int)m_MousePosY-Event->y())>2)) {
@@ -1077,13 +1029,9 @@ void ptCurveWindow::mouseMoveEvent(QMouseEvent *Event) {
   return;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// mouseReleaseEvent handler.
-// Install the newly placed anchor and finalize.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
+// Install the newly placed anchor and finalize.
 void ptCurveWindow::mouseReleaseEvent(QMouseEvent*) {
 
   if (m_BlockEvents) return;
@@ -1101,4 +1049,5 @@ void ptCurveWindow::mouseReleaseEvent(QMouseEvent*) {
   return;
 }
 
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+

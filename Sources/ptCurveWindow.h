@@ -20,9 +20,16 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+/*!
+  \class ptCurveWindow
 
-#ifndef DLCURVEWINDOW_H
-#define DLCURVEWINDOW_H
+  \brief ptCurveWindow is a Gui element showing a curve.
+*/
+
+#ifndef PTCURVEWINDOW_H
+#define PTCURVEWINDOW_H
+
+//==============================================================================
 
 #include <QtGui>
 
@@ -30,93 +37,90 @@
 #include "ptCurve.h"
 #include "ptConstants.h"
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ptCurveWindow is a Gui element showing a curve.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 class ptCurveWindow : public QWidget {
-
 Q_OBJECT
 
-public :
+public:
+  ptCurveWindow(ptCurve*     RelatedCurve,
+                const short  Channel,   // RGB,R,G,B,L
+                QWidget*     Parent);
+  ~ptCurveWindow();
 
-QWidget*       m_Parent;
-ptCurve*       m_RelatedCurve;
-QTimer*        m_ResizeTimer; // To circumvent multi resize events.
-short          m_Channel;
-ptImage8*      m_Image8;
+  /*! NewRelatedCurve to associate anonter ptImage with this window.*/
+  void UpdateView(ptCurve* NewRelatedCurve = NULL);
 
-// Constructor.
-ptCurveWindow(ptCurve*     RelatedCurve,
-              const short  Channel,   // RGB,R,G,B,L
-              QWidget*     Parent);
-// Destructor.
-~ptCurveWindow();
+  /*! Calculate the curve into an Image8 */
+  void CalculateCurve();
 
-// NewRelatedCurve to associate anonter ptImage with this window.
-void UpdateView(ptCurve* NewRelatedCurve = NULL);
+  void ContextMenu(QMouseEvent* event);
 
-// Calculate the curve into an Image8
-void CalculateCurve();
+  QWidget*       m_Parent;
+  ptCurve*       m_RelatedCurve;
+  QTimer*        m_ResizeTimer; // To circumvent multi resize events.
+  short          m_Channel;
+  ptImage8*      m_Image8;
 
-void ContextMenu(QMouseEvent* event);
+//------------------------------------------------------------------------------
 
 protected:
-void changeEvent(QEvent* Event);
-void resizeEvent(QResizeEvent*);
-void paintEvent(QPaintEvent*);
-void mousePressEvent(QMouseEvent *Event);
-void wheelEvent(QWheelEvent *Event);
-void mouseMoveEvent(QMouseEvent *Event);
-void mouseReleaseEvent(QMouseEvent *Event);
-QSize sizeHint() const { return QSize(100,100); };
-QSize minimumSizeHint() const { return QSize(100,100); };
-int  heightForWidth(int w) const { return w;};
+  void changeEvent(QEvent* Event);
+  void resizeEvent(QResizeEvent*);
+  void paintEvent(QPaintEvent*);
+  void mousePressEvent(QMouseEvent *Event);
+  void wheelEvent(QWheelEvent *Event);
+  void mouseMoveEvent(QMouseEvent *Event);
+  void mouseReleaseEvent(QMouseEvent *Event);
+  QSize sizeHint() const { return QSize(100,100); }
+  QSize minimumSizeHint() const { return QSize(100,100); }
+  int  heightForWidth(int w) const { return w;}
 
-private slots:
-void ResizeTimerExpired();
-void WheelTimerExpired();
-void SetSatMode();
-void SetType();
-void SetInterpolationType();
+//------------------------------------------------------------------------------
 
 private:
-void UpdateCurve();
-void SetBWGradient(ptImage8* Image);
-void SetBWGammaGradient(ptImage8* Image);
-void SetColorGradient(ptImage8* Image);
-void SetCurveState(const short state);
-short GetCurveState();
+  void UpdateCurve();
+  void SetBWGradient(ptImage8* Image);
+  void SetBWGammaGradient(ptImage8* Image);
+  void SetColorGradient(ptImage8* Image);
+  void SetCurveState(const short state);
+  short GetCurveState();
 
-QTimer*             m_WheelTimer;
-short               m_XSpot[ptMaxAnchors];
-short               m_YSpot[ptMaxAnchors];
-QPixmap*            m_QPixmap;
-int32_t             m_OverlayAnchorX;
-int32_t             m_OverlayAnchorY;
-short               m_MovingAnchor;
-short               m_ActiveAnchor;  // gets the wheel event, -1 neutral
-uint16_t            m_MousePosX;
-uint16_t            m_MousePosY;
-short               m_BlockEvents;
-short               m_RecalcNeeded;
-short               m_CyclicCurve;
-// Saturaton Curve modes
-QAction*            m_AtnAbsolute;
-QAction*            m_AtnAdaptive;
-QActionGroup*       m_SatModeGroup;
-QAction*            m_AtnByLuma;
-QAction*            m_AtnByChroma;
-QActionGroup*       m_TypeGroup;
-// Interpolation Type
-QAction*            m_AtnITLinear;
-QAction*            m_AtnITSpline;
-QAction*            m_AtnITCosine;
-QActionGroup*       m_ITGroup;
+  QTimer*             m_WheelTimer;
+  short               m_XSpot[ptMaxAnchors];
+  short               m_YSpot[ptMaxAnchors];
+  QPixmap*            m_QPixmap;
+  int32_t             m_OverlayAnchorX;
+  int32_t             m_OverlayAnchorY;
+  short               m_MovingAnchor;
+  short               m_ActiveAnchor;  // gets the wheel event, -1 neutral
+  uint16_t            m_MousePosX;
+  uint16_t            m_MousePosY;
+  short               m_BlockEvents;
+  short               m_RecalcNeeded;
+  short               m_CyclicCurve;
+  // Saturaton Curve modes
+  QAction*            m_AtnAbsolute;
+  QAction*            m_AtnAdaptive;
+  QActionGroup*       m_SatModeGroup;
+  QAction*            m_AtnByLuma;
+  QAction*            m_AtnByChroma;
+  QActionGroup*       m_TypeGroup;
+  // Interpolation Type
+  QAction*            m_AtnITLinear;
+  QAction*            m_AtnITSpline;
+  QAction*            m_AtnITCosine;
+  QActionGroup*       m_ITGroup;
+
+//------------------------------------------------------------------------------
+
+private slots:
+  void ResizeTimerExpired();
+  void WheelTimerExpired();
+  void SetSatMode();
+  void SetType();
+  void SetInterpolationType();
+
+
 };
-
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
+#endif // PTCURVEWINDOW_H
