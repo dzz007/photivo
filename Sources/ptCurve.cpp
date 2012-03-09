@@ -33,12 +33,7 @@
 #include "ptImage.h"
 #include "ptError.h"
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Elementary constructor.
-// Sets the curve to 0 with no anchors.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptCurve::ptCurve(const short Channel) {
   if (Channel == ptCurveChannel_Saturation ||
@@ -52,22 +47,14 @@ ptCurve::ptCurve(const short Channel) {
     m_IntType = ptCurveIT_Spline;
 
   SetNullCurve(Channel);
-};
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptCurve::~ptCurve() {
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetNullCurve
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
+ptCurve::~ptCurve()
+{}
+
+//==============================================================================
 
 short ptCurve::SetNullCurve(const short Channel) {
   m_IntendedChannel = Channel;
@@ -123,11 +110,7 @@ short ptCurve::SetNullCurve(const short Channel) {
   return SetCurveFromAnchors();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetCurveFromAnchors
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::SetCurveFromAnchors() {
 
@@ -205,11 +188,7 @@ short ptCurve::SetCurveFromAnchors() {
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// DumpData
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::DumpData(const char* FileName,
                         const short Scale) {
@@ -228,11 +207,7 @@ short ptCurve::DumpData(const char* FileName,
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// A WriteCurve function. Naive, but should do !
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::WriteCurve(const char *FileName,
                           const char *Header) {
@@ -270,11 +245,7 @@ short ptCurve::WriteCurve(const char *FileName,
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// A ReadCurve function. Naive, but should do !
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::ReadCurve(const char *FileName) {
 
@@ -399,11 +370,7 @@ short ptCurve::ReadCurve(const char *FileName) {
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ReadAnchors
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::ReadAnchors(const char *FileName) {
 
@@ -453,11 +420,7 @@ short ptCurve::ReadAnchors(const char *FileName) {
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetCurveFromFunction
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::SetCurveFromFunction(double(*Function)
                                           (double r, double Arg1, double Arg2),
@@ -474,11 +437,7 @@ short ptCurve::SetCurveFromFunction(double(*Function)
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Set Curve From Curve
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::Set(ptCurve *Curve) {
   m_Type = Curve->m_Type;
@@ -498,11 +457,7 @@ short ptCurve::Set(ptCurve *Curve) {
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ApplyCurve
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptCurve* ptCurve::ApplyCurve(const ptCurve* Curve,
                              const short    AfterThis) {
@@ -523,8 +478,8 @@ ptCurve* ptCurve::ApplyCurve(const ptCurve* Curve,
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
+
 // Non member utility functions for Gamma curves.
 //   BT709 curve
 //   sRGB curve
@@ -533,8 +488,6 @@ ptCurve* ptCurve::ApplyCurve(const ptCurve* Curve,
 //                      (as in ufraw)
 //   DeltaGammaTool   : (Inverse(sRGB))*GammaTool
 //   InverseGammaSRGB : Inverse(sRGB)
-//
-////////////////////////////////////////////////////////////////////////////////
 
 double GammaBT709(double r, double, double) {
   return (r <= 0.018 ? r*4.5 : pow(r,0.45)*1.099-0.099 );
@@ -564,12 +517,9 @@ double InverseGammaSRGB(double r, double, double) {
   return (r <= 0.04045 ? r/12.92 : pow((r+0.055)/1.055,2.4) );
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Non member utility function for Sigmoidal contrast function.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
+// Non member utility function for Sigmoidal contrast function.
 double Sigmoidal(double r, double Threshold, double Contrast) {
   float Scaling = 1.0/(1.0+exp(-0.5*Contrast))-1.0/(1.0+exp(0.5*Contrast));
   float Offset = -1.0/(1.0+exp(0.5*Contrast));
@@ -586,11 +536,9 @@ double Sigmoidal(double r, double Threshold, double Contrast) {
   return Value;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
+
 // From here go verbatim copies of the spline functions.
-//
-////////////////////////////////////////////////////////////////////////////////
 
 //**********************************************************************
 //
@@ -998,4 +946,5 @@ double ptCurve::spline_cubic_val ( int n, double t[], double tval, double y[],
 
   return yval;
 }
-////////////////////////////////////////////////////////////////////////////////
+
+//==============================================================================
