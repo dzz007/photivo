@@ -24,14 +24,20 @@
 #include "ptDefines.h"
 #include <cstdio>
 
+//==============================================================================
+
 ptGridInteraction::ptGridInteraction(QGraphicsView* View)
 : ptImageInteraction(View)
 {
 }
 
+//==============================================================================
+
 ptGridInteraction::~ptGridInteraction() {
   ClearList();
 }
+
+//==============================================================================
 
 void ptGridInteraction::show(const uint linesX, const uint linesY) {
   ClearList();
@@ -55,7 +61,7 @@ void ptGridInteraction::show(const uint linesX, const uint linesY) {
   }
 }
 
-
+//==============================================================================
 
 // Properly destroy all lines and clear the list
 void ptGridInteraction::ClearList() {
@@ -67,3 +73,5 @@ void ptGridInteraction::ClearList() {
     m_GridLines.clear();
   }
 }
+
+//==============================================================================

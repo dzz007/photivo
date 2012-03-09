@@ -23,6 +23,8 @@
 #include <cassert>
 #include <cmath>
 
+//==============================================================================
+
 #include "ptRichRectInteraction.h"
 #include "ptDefines.h"
 #include "ptSettings.h"
@@ -31,11 +33,7 @@
 extern ptSettings* Settings;
 extern ptTheme* Theme;
 
-///////////////////////////////////////////////////////////////////////////
-//
-// constructor and destructor
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
       const int x, const int y, const int width, const int height,
@@ -97,6 +95,7 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
   UpdateScene();
 }
 
+//==============================================================================
 
 ptRichRectInteraction::~ptRichRectInteraction() {
   for (int i = 0; i <= 3; i++) {
@@ -114,12 +113,7 @@ ptRichRectInteraction::~ptRichRectInteraction() {
   DelAndNull(m_Shadow);
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// setAspectRatio()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::setAspectRatio(const short FixedAspectRatio,
                                            uint AspectRatioW, uint AspectRatioH,
@@ -140,12 +134,7 @@ void ptRichRectInteraction::setAspectRatio(const short FixedAspectRatio,
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// set guidelines
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::setGuidelines(const short mode) {
   if (m_Guides != mode) {
@@ -155,12 +144,7 @@ void ptRichRectInteraction::setGuidelines(const short mode) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// seLightsOut()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::setLightsOut(short mode) {
   mode = qBound((short)0, mode, (short)2);
@@ -172,13 +156,7 @@ void ptRichRectInteraction::setLightsOut(short mode) {
   UpdateScene();
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// mouseAction() [slot]
-// Dispatcher for mouse events received from the parent.
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::mouseAction(QMouseEvent* event) {
   switch (event->type()) {
@@ -200,12 +178,7 @@ void ptRichRectInteraction::mouseAction(QMouseEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// mouse button press
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::MousePressHandler(const QMouseEvent* event) {
   if (event->button() == Qt::LeftButton && event->modifiers() == Qt::NoModifier) {
@@ -227,12 +200,7 @@ void ptRichRectInteraction::MousePressHandler(const QMouseEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// mouse button release
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::MouseReleaseHandler(const QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
@@ -240,12 +208,7 @@ void ptRichRectInteraction::MouseReleaseHandler(const QMouseEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// mouse double click
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::MouseDblClickHandler(const QMouseEvent* event) {
   if (m_RectItem->contains(FView->mapToScene(event->pos())) ) {
@@ -254,12 +217,7 @@ void ptRichRectInteraction::MouseDblClickHandler(const QMouseEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// mouse move
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::MouseMoveHandler(const QMouseEvent* event) {
   if (m_NowDragging) {
@@ -308,13 +266,7 @@ void ptRichRectInteraction::MouseMoveHandler(const QMouseEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// keyAction()
-// Slot receiving keyboard events from the parent.
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::keyAction(QKeyEvent* event) {
   if (event->type() == QEvent::KeyPress) {
@@ -344,12 +296,7 @@ void ptRichRectInteraction::keyAction(QKeyEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// UpdateCursor()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::UpdateCursor() {
   switch (m_MovingEdge) {
@@ -384,24 +331,14 @@ void ptRichRectInteraction::UpdateCursor() {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// stop()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::stop(ptStatus exitStatus) {
   m_ExitStatus = exitStatus;
   Finalize();
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Finalize()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::Finalize() {
   FView->scene()->removeItem(m_RectItem);
@@ -411,12 +348,7 @@ void ptRichRectInteraction::Finalize() {
   emit finished(m_ExitStatus);
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// MoveToCenter()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::moveToCenter(const short horizontal, const short vertical) {
   QPointF NewCenter = m_Rect.center();
@@ -433,12 +365,7 @@ void ptRichRectInteraction::moveToCenter(const short horizontal, const short ver
   UpdateScene();
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// flipAspectRatio()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::flipAspectRatio() {
   if (m_FixedAspectRatio) {
@@ -454,16 +381,10 @@ void ptRichRectInteraction::flipAspectRatio() {
   UpdateScene();
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// ClampToScene()
-//
 // Make sure rectangle stays inside sceneRect. Does not change AR, even
 // when fixed AR is not set.
-//
-///////////////////////////////////////////////////////////////////////////
-
 void ptRichRectInteraction::ClampToScene() {
   QPointF center = m_Rect.center();
   qreal arw = m_Rect.width();
@@ -489,18 +410,12 @@ void ptRichRectInteraction::ClampToScene() {
   m_RectItem->setRect(m_Rect);
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// EnforceAspectRatio()
-//
 // Make sure rectangle has the proper AR. Wenn adjusted the opposite
 // corner/edge to the one that was moved remains fixed.
 // When there was no movement (e.g. changed AR values in MainWindow)
 // the center of the rectangle remains fixed.
-//
-///////////////////////////////////////////////////////////////////////////
-
 void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*/) {
   dx = qAbs(dx);
   dy = qAbs(dy);
@@ -655,11 +570,8 @@ void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*
   m_RectItem->setRect(m_Rect);
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////
-//
-// MouseDragPos
-//
 // Returns the area of the crop/selection rectangle the mouse cursor hovers over.
 // The mouse position inside the crop rectangle determines which action is performed
 // on drag. There are nine areas: 55511111111666
@@ -673,9 +585,6 @@ void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*
 //   changes shape to indicate the move/resize mode.
 // - For rectangle edges of TinyRectThreshold pixels or shorter only the corner modes
 //   apply, one for each half of the edge. This avoids too tiny interaction areas.
-//
-////////////////////////////////////////////////////////////////////////
-
 ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
   QPointF pos(FView->mapToScene(event->pos()));
 
@@ -735,15 +644,10 @@ ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
   return HoverOver;
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// RecalcRect()
 // Calc new corner point, change moving edge/corner when rect is
 // dragged into another "quadrant", and update rectangle.
-//
-///////////////////////////////////////////////////////////////////////////
-
 void ptRichRectInteraction::RecalcRect() {
   QRectF NewRect = m_Rect;
   qreal ImageRight = FView->scene()->sceneRect().right();
@@ -860,12 +764,7 @@ void ptRichRectInteraction::RecalcRect() {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// RecalcGuides()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::RecalcGuides() {
   // Draw no guides when LightsOut is on "black" setting. In that case calc
@@ -989,20 +888,14 @@ void ptRichRectInteraction::RecalcGuides() {
   }
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// RecalcLightsOutRects()
-//
 // Array index order: top, right, bottom, left
 // Up to four rectangles are drawn according to the following figure.
 // tttttttttttttttttt
 // lll            rrr
 // lll            rrr
 // bbbbbbbbbbbbbbbbbb
-//
-///////////////////////////////////////////////////////////////////////////
-
 void ptRichRectInteraction::RecalcLightsOutRects() {
   m_LightsOutRects[0]->setRect(    // top
       FView->scene()->sceneRect().left(),
@@ -1033,13 +926,7 @@ void ptRichRectInteraction::RecalcLightsOutRects() {
   );
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// UpdateScene()
-// Update all elements in the scene
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::UpdateScene() {
   FView->blockSignals(1);
@@ -1049,3 +936,5 @@ void ptRichRectInteraction::UpdateScene() {
   FView->blockSignals(0);
   //FView->repaint();
 }
+
+//==============================================================================

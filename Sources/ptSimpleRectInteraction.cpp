@@ -25,12 +25,7 @@
 #include "ptSimpleRectInteraction.h"
 #include "ptDefines.h"
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// constructor and destructor
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptSimpleRectInteraction::ptSimpleRectInteraction(QGraphicsView* View)
 : ptImageInteraction(View),
@@ -42,18 +37,15 @@ ptSimpleRectInteraction::ptSimpleRectInteraction(QGraphicsView* View)
   m_RectItem = NULL;
 }
 
+//==============================================================================
+
 ptSimpleRectInteraction::~ptSimpleRectInteraction() {
   delete m_Rect;
   delete m_RectItem;
   delete m_DragDelta;
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Finalize()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptSimpleRectInteraction::Finalize(const ptStatus status) {
   if (m_RectItem != NULL) {
@@ -65,12 +57,7 @@ void ptSimpleRectInteraction::Finalize(const ptStatus status) {
   emit finished(status);
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Key actions
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptSimpleRectInteraction::keyAction(QKeyEvent* event) {
   switch (event->type()) {
@@ -109,12 +96,7 @@ void ptSimpleRectInteraction::keyAction(QKeyEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Mouse actions: left press/release, move
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptSimpleRectInteraction::mouseAction(QMouseEvent* event) {
   switch (event->type()) {
@@ -184,3 +166,5 @@ void ptSimpleRectInteraction::mouseAction(QMouseEvent* event) {
     }
   } //switch
 }
+
+//==============================================================================

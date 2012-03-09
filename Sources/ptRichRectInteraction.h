@@ -23,6 +23,8 @@
 #ifndef PTRICHRECTINTERACTION_H
 #define PTRICHRECTINTERACTION_H
 
+//==============================================================================
+
 #include <QGraphicsRectItem>
 #include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
@@ -32,11 +34,7 @@
 
 #include "ptImageInteraction.h"
 
-///////////////////////////////////////////////////////////////////////////
-//
-// Custom types used by ptRichRectInteraction
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 // Position of the mouse when button pressed for dragging
 enum ptMovingEdge {
@@ -53,20 +51,11 @@ enum ptMovingEdge {
   meCenter = 9
 };
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptSimpleRectInteraction
-//
-///////////////////////////////////////////////////////////////////////////
 class ptRichRectInteraction : public ptImageInteraction {
 Q_OBJECT
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
   explicit ptRichRectInteraction(QGraphicsView* View,
                                  const int x,
@@ -92,11 +81,8 @@ public:
   void setLightsOut(short mode);
   void stop(ptStatus exitStatus);
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
+
 private:
   const int EdgeThickness;
   const int TinyRectThreshold;
@@ -137,15 +123,12 @@ private:
   void MouseDblClickHandler(const QMouseEvent* event);
   void MouseMoveHandler(const QMouseEvent* event);
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-///////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
+
 private slots:
   void keyAction(QKeyEvent* event);
   void mouseAction(QMouseEvent* event);
 
-};
 
+};
 #endif // PTRICHRECTINTERACTION_H

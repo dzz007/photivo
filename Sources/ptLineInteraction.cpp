@@ -28,12 +28,7 @@
 #include "ptLineInteraction.h"
 #include "ptDefines.h"
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// constructor and destructor
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptLineInteraction::ptLineInteraction(QGraphicsView* View)
 : ptImageInteraction(View),
@@ -43,17 +38,13 @@ ptLineInteraction::ptLineInteraction(QGraphicsView* View)
   m_LineItem = NULL;
 }
 
+//==============================================================================
+
 ptLineInteraction::~ptLineInteraction() {
   delete m_Line;
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// angle()
-// Determine rotation angle from the drawn line.
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 double ptLineInteraction::angle() {
   if (m_Line->x1() == m_Line->x2()) {
@@ -63,12 +54,7 @@ double ptLineInteraction::angle() {
   return atan(m) * 180.0 / ptPI;
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Finalize()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptLineInteraction::Finalize(const ptStatus status) {
   if (m_LineItem != NULL) {
@@ -80,12 +66,7 @@ void ptLineInteraction::Finalize(const ptStatus status) {
   emit finished(status);
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Key actions
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptLineInteraction::keyAction(QKeyEvent* event) {
   switch (event->type()) {
@@ -102,12 +83,7 @@ void ptLineInteraction::keyAction(QKeyEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Mouse actions: left press/release, move
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptLineInteraction::mouseAction(QMouseEvent* event) {
   switch (event->type()) {
@@ -158,3 +134,5 @@ void ptLineInteraction::mouseAction(QMouseEvent* event) {
     }
   } //switch
 }
+
+//==============================================================================

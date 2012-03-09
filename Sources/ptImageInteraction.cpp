@@ -30,8 +30,8 @@ ptImageInteraction::ptImageInteraction(QGraphicsView* AView)
 : QObject(),
   FView(AView)
 {
-  assert(FView != NULL);
-  assert(FView->scene() != NULL);
+  assert(FView != nullptr);
+  assert(FView->scene() != nullptr);
 }
 
 //==============================================================================
