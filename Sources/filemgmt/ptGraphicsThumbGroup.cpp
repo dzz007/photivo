@@ -26,6 +26,8 @@
 #include "../ptDefines.h"
 #include "../ptTheme.h"
 #include "../ptSettings.h"
+
+#include "ptFileMgrDM.h"
 #include "ptGraphicsThumbGroup.h"
 #include "ptGraphicsSceneEmitter.h"
 
@@ -184,57 +186,65 @@ void ptGraphicsThumbGroup::addImage(QImage* image) {
 //==============================================================================
 
 bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
-  switch (event->type()) {
-    case QEvent::GraphicsSceneHoverEnter: {
-      m_hasHover = true;
-      this->update();
-      return true;
-    }
-
-    case QEvent::GraphicsSceneHoverLeave: {
-      m_hasHover = false;
-      this->update();
-      return true;
-    }
-
-    case QEvent::GraphicsSceneMouseDoubleClick: {
-      exec();
-      return true;
-    }
-
-    case QEvent::GraphicsSceneMousePress: {
-      // Must accept mouse press to get mouse release as well.
-      event->accept();
-      return true;
-    }
-
-    case QEvent::GraphicsSceneMouseRelease: {
-      // set focus, FM window takes care of showing image in the viewer if necessary
-      this->setFocus(Qt::MouseFocusReason);
-      ptGraphicsSceneEmitter::EmitFocusChanged();
-      return true;
-    }
-
-    case QEvent::KeyPress: {
-      QKeyEvent* e = (QKeyEvent*)event;
-      if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) {
-        exec();
-        return true;
+  if (ptFileMgrDM::GetInstance()->tryLock()) {
+    switch (event->type()) {
+      case QEvent::GraphicsSceneHoverEnter: {
+        m_hasHover = true;
+        this->update();
+        break;
       }
-      break;
-    }
 
-  case QEvent::GraphicsSceneContextMenu: {
-      // We set the focus but we don't accept the event
-      this->setFocus(Qt::MouseFocusReason);
-      ptGraphicsSceneEmitter::EmitFocusChanged();
-    }
+      case QEvent::GraphicsSceneHoverLeave: {
+        m_hasHover = false;
+        this->update();
+        break;
+      }
 
-    default:
-      break;
+      case QEvent::GraphicsSceneMousePress: {
+        // Must accept mouse press to get mouse release as well.
+        event->accept();
+        this->setFocus(Qt::MouseFocusReason);
+        ptGraphicsSceneEmitter::EmitFocusChanged();
+        break;
+      }
+
+      case QEvent::GraphicsSceneMouseDoubleClick: {
+        exec();
+        break;
+      }
+
+      case QEvent::GraphicsSceneMouseRelease: {
+        event->accept();
+        break;
+      }
+
+      case QEvent::KeyPress: {
+        QKeyEvent* e = (QKeyEvent*)event;
+        if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) {
+          exec();
+          break;
+        }
+        ptFileMgrDM::GetInstance()->unlock();
+        return QGraphicsRectItem::sceneEvent(event);
+      }
+
+      case QEvent::GraphicsSceneContextMenu: {
+        // We set the focus but we don't accept the event
+        this->setFocus(Qt::MouseFocusReason);
+        ptGraphicsSceneEmitter::EmitFocusChanged();
+        ptFileMgrDM::GetInstance()->unlock();
+        return QGraphicsRectItem::sceneEvent(event);
+      }
+
+      default: {
+        ptFileMgrDM::GetInstance()->unlock();
+        return QGraphicsRectItem::sceneEvent(event);
+      }
+    }
+    ptFileMgrDM::GetInstance()->unlock();
   }
 
-  return QGraphicsRectItem::sceneEvent(event);
+  return true;
 }
 
 //==============================================================================
