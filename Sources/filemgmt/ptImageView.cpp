@@ -88,6 +88,7 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   m_DragDelta         = new QLine();
   m_LeftMousePressed  = false;
   m_NeedRun           = false;
+  m_Closing           = false;
   m_ZoomSizeOverlay   = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
                                             1000, Qt::AlignRight, 20);
   m_StatusOverlay     = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
@@ -132,7 +133,6 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
 //==============================================================================
 
 ptImageView::~ptImageView() {
-  m_Worker->terminate();
   DelAndNull(m_Worker);
   DelAndNull(m_DragDelta);
   DelAndNull(m_ZoomSizeOverlay);
@@ -144,14 +144,32 @@ ptImageView::~ptImageView() {
 //==============================================================================
 
 void ptImageView::ShowImage(const QString FileName) {
-  if (m_FileName == FileName) return;
-  m_FileName = FileName;
+  // only one thread at a time may ask for an image
+  if (m_ExternalGuard.tryLock(100)) {
 
-  if (this->isVisible()) {
-    // only process image when the ImageView is visible
+    if (m_FileName == FileName) {
+      m_ExternalGuard.unlock();
+      return;
+    }
+    m_FileName = FileName;
     m_NeedRun  = true;
-    startWorker();
+
+    if (this->isVisible()) {
+      // only process image when the ImageView is visible
+      startWorker();
+    }
+    m_ExternalGuard.unlock();
   }
+}
+
+//==============================================================================
+
+void ptImageView::Clear()
+{
+  m_FileName = "";
+  m_NeedRun  = false;
+  m_Closing  = true;
+  m_StatusOverlay->stop();
 }
 
 //==============================================================================
@@ -217,7 +235,7 @@ void ptImageView::mouseMoveEvent(QMouseEvent* event) {
 //==============================================================================
 
 void ptImageView::wheelEvent(QWheelEvent* event) {
-  ZoomStep(event->delta());
+  zoomStep(event->delta());
 }
 
 //==============================================================================
@@ -235,7 +253,7 @@ void ptImageView::contextMenuEvent(QContextMenuEvent* event) {
 
 //==============================================================================
 
-void ptImageView::ZoomStep(int direction) {
+void ptImageView::zoomStep(int direction) {
   int ZoomIdx = -1;
 
   // zoom larger
@@ -268,31 +286,33 @@ void ptImageView::ZoomStep(int direction) {
 //==============================================================================
 
 void ptImageView::zoomIn() {
-  ZoomStep(1);
+  zoomStep(1);
 }
 
 //==============================================================================
 
 void ptImageView::zoomOut() {
-  ZoomStep(-1);
+  zoomStep(-1);
 }
 
 //==============================================================================
 
 void ptImageView::zoom100() {
-  ZoomTo(1.0, true);
+  zoomTo(1.0, true);
 }
 
 //==============================================================================
 
 // ZoomTo() is also called by wheelEvent() for mouse wheel zoom.
-void ptImageView::ZoomTo(float factor, const bool withMsg) {
+void ptImageView::zoomTo(float factor, const bool withMsg) {
+  if (m_Image == 0) return;
+
   m_ZoomMode = ptZoomMode_NonFit;
   factor = qBound(MinZoom, factor, MaxZoom);
 
   ImageToScene(factor);
 
-  m_ZoomFactor = factor;//transform().m11();
+  m_ZoomFactor = factor;
   m_Zoom = qRound(m_ZoomFactor * 100);
   if (withMsg)
     m_ZoomSizeOverlay->exec(QString::number(m_Zoom) + "%");
@@ -301,11 +321,11 @@ void ptImageView::ZoomTo(float factor, const bool withMsg) {
 //==============================================================================
 
 int ptImageView::zoomFit(const bool withMsg /*= true*/) {
+  if (m_Image == 0) return m_ZoomFactor;
+
   m_ZoomMode = ptZoomMode_Fit;
 
-  if (m_Image != NULL) {
-    m_Scene->setSceneRect(0, 0, m_Image->width(), m_Image->height());
-  }
+  m_Scene->setSceneRect(0, 0, m_Image->width(), m_Image->height());
 
   fitInView(m_Scene->sceneRect(), Qt::KeepAspectRatio);
   m_ZoomFactor = transform().m11();
@@ -324,46 +344,52 @@ int ptImageView::zoomFit(const bool withMsg /*= true*/) {
 //==============================================================================
 
 void ptImageView::ImageToScene(const double Factor) {
-  if (m_Image != NULL) {
-    resetTransform();
+  if (m_Image == 0) return;
 
-    if (m_PixmapItem != NULL) {
-      m_Scene->removeItem(m_PixmapItem);
-      DelAndNull(m_PixmapItem);
-    }
+  resetTransform();
 
-    Qt::TransformationMode Mode;
+  Qt::TransformationMode Mode;
 
-    if(((uint)(Factor * 10000) % 10000) < 1) {
-      // nearest neighbour resize for 200%, 300%, 400% zoom
-      Mode = Qt::FastTransformation;
-    } else {
-      // bilinear resize for all others
-      Mode = Qt::SmoothTransformation;
-    }
-    m_Scene->setSceneRect(0, 0, m_Image->width()*Factor, m_Image->height()*Factor);
-    m_PixmapItem = m_Scene->addPixmap(
-                     QPixmap::fromImage(*m_Image).scaled(m_Image->width()*Factor,
-                                                         m_Image->height()*Factor,
-                                                         Qt::IgnoreAspectRatio,
-                                                         Mode));
-    m_PixmapItem->setTransformationMode(Mode);
+  if(((uint)(Factor * 10000) % 10000) < 1) {
+    // nearest neighbour resize for 200%, 300%, 400% zoom
+    Mode = Qt::FastTransformation;
+  } else {
+    // bilinear resize for all others
+    Mode = Qt::SmoothTransformation;
   }
+  m_Scene->setSceneRect(0, 0, m_Image->width()*Factor, m_Image->height()*Factor);
+
+  m_Scene->blockSignals(true);
+  if (m_PixmapItem != NULL) {
+    m_Scene->removeItem(m_PixmapItem);
+    DelAndNull(m_PixmapItem);
+  }
+  m_PixmapItem = m_Scene->addPixmap(
+                   QPixmap::fromImage(*m_Image).scaled(m_Image->width()*Factor,
+                                                       m_Image->height()*Factor,
+                                                       Qt::IgnoreAspectRatio,
+                                                       Mode));
+  m_Scene->blockSignals(false);
 }
 
 //==============================================================================
 
 void ptImageView::updateView() {
-  QImage* Image = m_DataModule->getThumbnail(m_FileName, 0);
+  QImage* Image = m_DataModule->getThumbnail(m_Worker->m_FileName, 0);
   if (Image != NULL) {
-    DelAndNull(m_Image);
-    if (m_FileName == m_Worker->m_FileName) {
-      m_Image = Image;
-    } else {
-      DelAndNull(Image);
+    if (!Image->isNull()) {
+      if (m_FileName == m_Worker->m_FileName) {
+        DelAndNull(m_Image);
+        m_Image = Image;
+      } else {
+        DelAndNull(Image);
+        m_NeedRun = true;
+      }
     }
   }
-  update();
+  if (!m_Closing) {
+    update();
+  }
 }
 
 //==============================================================================
@@ -387,15 +413,20 @@ void ptImageView::startWorker() {
 //==============================================================================
 
 void ptImageView::afterWorker() {
+  if (m_Closing) return;
+
   if (m_NeedRun) {
-    startWorker();
+    if (m_ExternalGuard.tryLock()) {
+      startWorker();
+      m_ExternalGuard.unlock();
+    }
   } else {
     m_StatusOverlay->stop();
     if (m_Image != NULL) {
       if (m_ZoomMode == ptZoomMode_Fit)
         zoomFit(false);
       else
-        ZoomTo(m_ZoomFactor, true);
+        zoomTo(m_ZoomFactor, true);
     }
   }
 }
@@ -403,7 +434,7 @@ void ptImageView::afterWorker() {
 //==============================================================================
 
 void ptImageView::ResizeTimerExpired() {
-  ZoomTo(m_ZoomFactor, false);
+  zoomTo(m_ZoomFactor, false);
 }
 
 //==============================================================================
@@ -411,9 +442,10 @@ void ptImageView::ResizeTimerExpired() {
 void ptImageView::showEvent(QShowEvent* event) {
   QGraphicsView::showEvent(event);
 
+  m_Closing = false;
+
   if (!m_FileName.isEmpty()) {
     // Re-process on becoming visible. Filename might have changed while we were hidden.
-    m_NeedRun  = true;
     startWorker();
   }
 }
