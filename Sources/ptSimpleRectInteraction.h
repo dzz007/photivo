@@ -23,6 +23,8 @@
 #ifndef PTSELECTINTERACTION_H
 #define PTSELECTINTERACTION_H
 
+//==============================================================================
+
 #include <QRectF>
 #include <QLine>
 #include <QGraphicsRectItem>
@@ -30,31 +32,19 @@
 
 #include "ptImageInteraction.h"
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptSimpleRectInteraction
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
 class ptSimpleRectInteraction : public ptImageInteraction {
 Q_OBJECT
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
   explicit ptSimpleRectInteraction(QGraphicsView* View);
   ~ptSimpleRectInteraction();
 
   inline QRect rect() const { return QRect(m_Rect->normalized().toRect()); }
 
+//------------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
 private:
   int m_CtrlPressed;
   QLine* m_DragDelta;
@@ -64,16 +54,12 @@ private:
 
   void Finalize(const ptStatus status);
 
+//------------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-///////////////////////////////////////////////////////////////////////////
+
 private slots:
   void keyAction(QKeyEvent* event);
   void mouseAction(QMouseEvent* event);
 
 };
-
 #endif // PTSELECTINTERACTION_H

@@ -24,39 +24,27 @@
 #ifndef PTDRAWLINEINTERACTION_H
 #define PTDRAWLINEINTERACTION_H
 
+//==============================================================================
+
 #include <QMouseEvent>
 #include <QLine>
 #include <QGraphicsLineItem>
 
 #include "ptImageInteraction.h"
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptLineInteraction
-//
-///////////////////////////////////////////////////////////////////////////
 class ptLineInteraction : public ptImageInteraction {
 Q_OBJECT
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
   explicit ptLineInteraction(QGraphicsView* View);
   ~ptLineInteraction();
 
   double angle();
 
+//------------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
 private:
   QLineF* m_Line;
   short m_NowDragging;
@@ -64,16 +52,12 @@ private:
 
   void Finalize(const ptStatus status);
 
+//------------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-///////////////////////////////////////////////////////////////////////////
 private slots:
   void keyAction(QKeyEvent* event);
   void mouseAction(QMouseEvent* event);
 
-};
 
+};
 #endif // PTDRAWLINEINTERACTION_H
