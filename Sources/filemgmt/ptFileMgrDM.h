@@ -32,6 +32,7 @@
 #include <QGraphicsItemGroup>
 #include <QList>
 #include <QHash>
+#include <QMutex>
 
 #include <wand/magick_wand.h>
 
@@ -114,6 +115,11 @@ public:
   QImage* getThumbnail(const QString FileName,
                        const int     MaxSize);
 
+  /*! Lock for fast user inputs */
+  bool   tryLock(const int AMSec = 0, const char *ALocation = "");
+  void   lock(                        const char *ALocation = "");
+  void   unlock(                      const char *ALocation = "");
+
 private:
   static ptFileMgrDM* m_Instance;
 
@@ -132,7 +138,10 @@ private:
   ptTagModel*                   m_TagModel;
   ptThumbnailer*                m_Thumbnailer;
   QList<ptGraphicsThumbGroup*>* m_ThumbList;
-
+  // Mutex for user interaction
+  QMutex                        m_FileMgrBusy;
+  // Mutex for thumbnail generator
+  QMutex                        m_ThumbGenBusy;
 
 };
 
