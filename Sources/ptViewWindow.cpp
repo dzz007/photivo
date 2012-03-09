@@ -20,13 +20,6 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-/**
-** Reminder:
-** current horizontal scale factor: this->transform().m11();
-** current vertical scale factor: this->transform().m22();
-** Because we do not change aspect ratio both factors are always the same.
-** Use m_ZoomFactor whenever possible and m11() otherwise.
-**/
 
 #include <cassert>
 
@@ -39,12 +32,7 @@
 extern ptTheme* Theme;
 extern ptSettings* Settings;
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// ptViewWindow constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
 : QGraphicsView(Parent),
@@ -102,12 +90,7 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   m_PReadTimer->setSingleShot(true);
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// ptViewWindow destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptViewWindow::~ptViewWindow() {
   delete m_DragDelta;
@@ -125,16 +108,10 @@ ptViewWindow::~ptViewWindow() {
   delete m_PReadTimer;
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// UpdateImage()
-//
 // Convert a 16bit ptImage to an 8bit QPixmap. Mind R<->B. Also update the
 // graphics scene and the viewport.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptViewWindow::UpdateImage(const ptImage* relatedImage) {
   if (relatedImage) {
     this->blockSignals(1);
@@ -166,12 +143,7 @@ void ptViewWindow::UpdateImage(const ptImage* relatedImage) {
   }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Zoom
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 // ZoomTo() is also called by wheelEvent() for mouse wheel zoom.
 void ptViewWindow::ZoomTo(float factor) {
@@ -193,6 +165,7 @@ void ptViewWindow::ZoomTo(float factor) {
   m_ZoomSizeOverlay->exec(QString::number(z) + "%");
 }
 
+//==============================================================================
 
 int ptViewWindow::ZoomToFit(const short withMsg /*= 1*/) {
   Settings->SetValue("ZoomMode",ptZoomMode_Fit);
@@ -212,6 +185,7 @@ int ptViewWindow::ZoomToFit(const short withMsg /*= 1*/) {
   return m_ZoomFactor;
 }
 
+//==============================================================================
 
 void ptViewWindow::ZoomStep(int direction) {
   int ZoomIdx = -1;
@@ -240,11 +214,7 @@ void ptViewWindow::ZoomStep(int direction) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Save and restore current zoom
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::RestoreZoom() {
   if (m_ZoomIsSaved) {
@@ -258,6 +228,7 @@ void ptViewWindow::RestoreZoom() {
   }
 }
 
+//==============================================================================
 
 void ptViewWindow::SaveZoom() {
   m_ZoomFactorSav = m_ZoomFactor;
@@ -265,12 +236,7 @@ void ptViewWindow::SaveZoom() {
   m_ZoomIsSaved = 1;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// setGrid()
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::setGrid(const short enabled, const uint linesX, const uint linesY) {
   if (enabled) {
@@ -280,12 +246,7 @@ void ptViewWindow::setGrid(const short enabled, const uint linesX, const uint li
   }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// paintEvent()
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::paintEvent(QPaintEvent* event) {
   // Fill viewport with background colour
@@ -297,12 +258,7 @@ void ptViewWindow::paintEvent(QPaintEvent* event) {
   QGraphicsView::paintEvent(event);
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Mouse clicks
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::mousePressEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
@@ -317,6 +273,7 @@ void ptViewWindow::mousePressEvent(QMouseEvent* event) {
   }
 }
 
+//==============================================================================
 
 void ptViewWindow::mouseReleaseEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton && m_LeftMousePressed) {
@@ -332,6 +289,7 @@ void ptViewWindow::mouseReleaseEvent(QMouseEvent* event) {
   }
 }
 
+//==============================================================================
 
 void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
   // Broadcast event to possible interaction handlers
@@ -342,12 +300,7 @@ void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
   }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// mouseMoveEvent()
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   // We broadcast the pixel location
@@ -389,12 +342,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// wheelEvent()
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::wheelEvent(QWheelEvent* event) {
   ZoomStep(event->delta());
@@ -404,12 +352,7 @@ void ptViewWindow::leaveEvent(QEvent *event) {
   if (m_PixelReader) m_PixelReader(QPoint(), prNone);
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// keyPressEvent() and keyReleaseEvent()
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::keyPressEvent(QKeyEvent* event) {
   // m_CtrlIsPressed is not a simple bool flag to account for keyboards with
@@ -431,6 +374,8 @@ void ptViewWindow::keyPressEvent(QKeyEvent* event) {
   }
 }
 
+//==============================================================================
+
 void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
   if (event->key() == Qt::Key_Control) {
     m_CtrlIsPressed--;
@@ -448,15 +393,10 @@ void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
   }
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Drag & Drop
-//
 // The two functions are necessary to enable d&d over the view window.
 // The actual d&d action is handled by the resp. main window events.
-//
-////////////////////////////////////////////////////////////////////////////////
 
 void ptViewWindow::dragEnterEvent(QDragEnterEvent* event) {
   event->ignore();
@@ -466,12 +406,7 @@ void ptViewWindow::dropEvent(QDropEvent* event) {
   event->ignore();
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// resizeEvent()
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::resizeEvent(QResizeEvent* event) {
   if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
@@ -483,14 +418,9 @@ void ptViewWindow::resizeEvent(QResizeEvent* event) {
   }
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ShowStatus()
 // Top left corner overlay for the processing status
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptViewWindow::ShowStatus(short mode) {
   switch (mode) {
     case ptStatus_Done:
@@ -517,21 +447,17 @@ void ptViewWindow::ShowStatus(short mode) {
   }
 }
 
+//==============================================================================
+
 void ptViewWindow::ShowStatus(const QString text) {
   m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255));    // blue
   m_StatusOverlay->setDuration(1500);
   m_StatusOverlay->exec(text);
 }
 
+//==============================================================================
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// StartLine()
 // Start draw line interaction to determine rotation angle.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptViewWindow::StartLine() {
   if (m_Interaction == iaNone) {
     m_DrawLine = new ptLineInteraction(this);
@@ -542,14 +468,9 @@ void ptViewWindow::StartLine() {
   }
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// StartSelectRect()
 // Start simple selection interaction for spot WB and histogram "crop".
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect)) {
   if (m_Interaction == iaNone) {
     assert(CB_SimpleRect != NULL);
@@ -562,12 +483,7 @@ void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect))
   }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// StartCrop()
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::StartCrop()
 {
@@ -608,12 +524,7 @@ void ptViewWindow::StartCrop()
   m_Interaction = iaCrop;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// StartSpotRepair()
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::StartSpotRepair(ptImageSpotListView* ListView) {
   if (m_Interaction != iaNone) {
@@ -626,12 +537,7 @@ void ptViewWindow::StartSpotRepair(ptImageSpotListView* ListView) {
   m_Interaction = iaSpotRepair;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// finishInteraction()
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void RotateAngleDetermined(const ptStatus ExitStatus, double RotateAngle);
 void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect);
@@ -676,15 +582,10 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Construct context menu
-//
+//==============================================================================
+
 // Convenience function to keep constructor short. Is only called once from the
 // constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptViewWindow::ConstructContextMenu() {
   // Create actions for context menu
   ac_ZoomIn = new QAction(tr("Zoom &in") + "\t" + tr("1"), this);
@@ -817,12 +718,7 @@ void ptViewWindow::ConstructContextMenu() {
   connect(ac_Fullscreen, SIGNAL(triggered()), this, SLOT(Menu_Fullscreen()));
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// contextMenuEvent()
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   if (m_Interaction == iaSelectRect || m_Interaction == iaDrawLine) {
@@ -915,12 +811,8 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu.exec(((QMouseEvent*)event)->globalPos());
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
 // slots for the context menu
-//
-////////////////////////////////////////////////////////////////////////////////
 
 void Update(short Phase, short SubPhase = -1, short WithIdentify  = 1, short ProcessorMode = ptProcessorMode_Preview);
 void ptViewWindow::Menu_Clip_Indicate() {
@@ -1025,3 +917,5 @@ void ptViewWindow::Menu_PixelReading() {
 
   Settings->SetValue("PixelReader", (int)m_PixelReading);
 }
+
+//==============================================================================

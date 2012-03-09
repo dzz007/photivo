@@ -20,14 +20,29 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-/**
-** Displays the preview image and manages all interactions that happen directly
-** on the image itself, e.g. zoom, crop, spot repair
-**
-** - Create ptMainWindow and the global ptTheme BEFORE you create ptViewWindow.
+/*!
+  \class ptViewWindow
+
+  \brief Displays the preview image and manages all interactions that happen directly
+    on the image itself, e.g. zoom, crop, spot repair.
+
+  Usage notes:
+
+  The global instances of ptMainWindow and ptTheme must be created BEFORE
+  creating the global ptViewWindow instance.
+
+  Consider ptViewWindow to be a singleton. DO NOT create additional instances.
+
+  Current horizontal scale factor: this->transform().m11();
+  Current vertical scale factor: this->transform().m22();
+  Because we do not change aspect ratio both factors are always the same.
+  Use m_ZoomFactor whenever possible and m11() otherwise.
 **/
+
 #ifndef PTVIEWWINDOW_H
 #define PTVIEWWINDOW_H
+
+//==============================================================================
 
 #include <QLine>
 #include <QMenu>
@@ -43,12 +58,7 @@
 #include "imagespot/ptRepairInteraction.h"
 #include "imagespot/ptImageSpotListView.h"
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Custom types used in ViewWindow
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 enum ptInteraction {
   iaNone = 0,
@@ -64,12 +74,8 @@ enum ptPixelReading {
   prPreview = 2
 };
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptViewWindow
-//
-///////////////////////////////////////////////////////////////////////////
 class ptViewWindow : public QGraphicsView {
 Q_OBJECT
 
@@ -112,6 +118,8 @@ public:
   void SetPixelReader(void (*PixelReader)(const QPointF Point, const ptPixelReading PixelReading))
     { m_PixelReader = PixelReader; }
 
+//------------------------------------------------------------------------------
+
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
   void dragEnterEvent(QDragEnterEvent* event);
@@ -126,6 +134,8 @@ protected:
   void mouseMoveEvent(QMouseEvent* event);
   void wheelEvent(QWheelEvent* event);
   void leaveEvent(QEvent* event);
+
+//------------------------------------------------------------------------------
 
 private:
   const float MinZoom;
@@ -188,6 +198,8 @@ private:
 
   void (*m_PixelReader)(const QPointF Point, const ptPixelReading PixelReading);
 
+//------------------------------------------------------------------------------
+
 private slots:
   void finishInteraction(ptStatus ExitStatus);
 
@@ -210,11 +222,13 @@ private slots:
   void Menu_OpenFileMgr();
   void Menu_PixelReading();
 
+//------------------------------------------------------------------------------
+
 signals:
   void keyChanged(QKeyEvent* event);
   void mouseChanged(QMouseEvent* event);
   void openFileMgr();
 
-};
 
-#endif
+};
+#endif // PTVIEWWINDOW_H
