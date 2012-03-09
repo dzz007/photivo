@@ -29,12 +29,15 @@ ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
   FHasMaxRadius(false),
   FIsAdaptiveSaturation(false),
   FIsEdgeAware(true),
+  FLumaCurve(unique_ptr<ptCurve>(new ptCurve())),
   FLumaWeight(0.5),
   FMaxRadius(500),
   FMode(lamFloodFill),
   FSaturation(0.0),
   FThreshold(0.25)
 {
+  FLumaCurve->setId("LumaCurve");
+
   if (APtsFile != nullptr) {
     FHasMaxRadius = APtsFile->value("HasMaxRadius", false).toBool();
     FIsAdaptiveSaturation = APtsFile->value("IsAdaptiveSaturation", false).toBool();
@@ -51,6 +54,7 @@ ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
 
 ptLocalSpot::WriteToFile(QSettings *APtsFile) {
   ptImageSpot::WriteToFile(APtsFile);
+
   APtsFile->setValue("HasMaxRadius", FHasMaxRadius);
   APtsFile->setValue("IsAdaptiveSaturation", FIsAdaptiveSaturation);
   APtsFile->setValue("IsEdgeAware", FIsEdgeAware);
@@ -59,6 +63,8 @@ ptLocalSpot::WriteToFile(QSettings *APtsFile) {
   APtsFile->setValue("Mode", FMode);
   APtsFile->setValue("Saturation", FSaturation);
   APtsFile->setValue("Threshold", FThreshold);
+
+  FLumaCurve->WriteToFile(APtsFile);
 }
 
 //==============================================================================

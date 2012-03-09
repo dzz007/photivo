@@ -31,6 +31,8 @@
 
 //==============================================================================
 
+#include <QSettings>
+
 #include "ptDefines.h"
 #include "ptConstants.h"
 
@@ -68,7 +70,22 @@ class ptCurve {
 public:
   /*! Constructor sets the curve to 0 with no anchors. */
   ptCurve(const short Channel = 0);
-  ~ptCurve();
+  ~ptCurve() {}
+
+
+  QString id() { return FId; }
+  void setId(const QString &AId) { FId = AId; }
+
+  /*! Reads the curve from the settings file object given by APtsFile.
+      Atm this function is only used by the "spot adjust" tool. */
+  void ReadFromFile(QSettings *APtsFile);
+
+  /*! Writes the curve to the settings file object given by APtsFile.
+      Atm this function is only used by the "spot adjust" tool. */
+  void WriteToFile(QSettings *APtsFile);
+
+
+
 
   /*! Set Curve from Curve */
   short Set(ptCurve *Curve);
@@ -131,6 +148,16 @@ public:
   short     m_NrAnchors;
   double    m_XAnchor[ptMaxAnchors];
   double    m_YAnchor[ptMaxAnchors];
+
+//------------------------------------------------------------------------------
+
+private:
+  // Unique ID string used to construct the keys in pts files.
+  // Atm only used by the "spot adjust" tool.
+  QString FId;
+  short   FChannel;
+
+
 };
 
 //==============================================================================
@@ -142,5 +169,6 @@ extern ptCurve*  ExposureCurve;
 extern ptCurve*  ContrastCurve;
 // RGB,R,G,B,L,a,b,Base
 extern ptCurve*  Curve[17];
+
 
 #endif // PTCURVE_H

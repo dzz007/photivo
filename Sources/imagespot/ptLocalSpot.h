@@ -25,7 +25,11 @@
 
 //==============================================================================
 
+#include <memory>
+using std::unique_ptr;
+
 #include "ptImageSpot.h"
+#include "../ptCurve.h"
 
 //==============================================================================
 
@@ -52,6 +56,7 @@ public:
   bool hasMaxRadius() { return FHasMaxRadius; }
   bool isAdaptiveSaturation() { return FIsAdaptiveSaturation; }
   bool isEdgeAware() { return FIsEdgeAware; }
+  ptCurve *lumaCurve() { return FLumaCurve->get(); }
   float lumaWeight() { return FLumaWeight; }
   uint maxRadius() { return FMaxRadius; }
   ptLocalAdjustMode mode() { return FMode; }
@@ -76,10 +81,10 @@ public:
 //------------------------------------------------------------------------------
 
 private:
-  // TODO BJ: Add curves everywhere. They’re completely non-functional now.
   bool                FHasMaxRadius;
   bool                FIsAdaptiveSaturation;
   bool                FIsEdgeAware;
+  unique_ptr<ptCurve> FLumaCurve;
   float               FLumaWeight;
   uint                FMaxRadius;
   ptLocalAdjustMode   FMode;
