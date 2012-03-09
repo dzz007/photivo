@@ -347,7 +347,7 @@ void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
     m_Progressbar->hide();
     m_PathContainer->show();
     m_FilesScene->setFocus();
-    if (m_FilesScene->focusItem() == NULL) {
+    if (m_DataModel->focusedThumb() == -1) {
       FocusThumbnail(0);
     }
   }
@@ -450,11 +450,15 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 //------------------------------------------------------------------------------
 
   else if (obj == m_FilesScene && event->type() == QEvent::KeyPress) {
-    // Keyboard navigation in thumbnail list
-    int newIdx = m_Layouter->MoveIndex(m_DataModel->focusedThumb(), (QKeyEvent*)event);
-    if (newIdx >= 0) {
-      FocusThumbnail(newIdx);
-      return true;
+    if (m_DataModel->tryLock()) {
+      // Keyboard navigation in thumbnail list
+      int newIdx = m_Layouter->MoveIndex(m_DataModel->focusedThumb(), (QKeyEvent*)event);
+      if (newIdx >= 0) {
+        FocusThumbnail(newIdx);
+        m_DataModel->unlock();
+        return true;
+      }
+      m_DataModel->unlock();
     }
   }
 
@@ -477,7 +481,6 @@ void ptFileMgrWindow::FocusThumbnail(int index) {
     if (thumb->fsoType() == fsoFile) {
       m_ImageView->ShowImage(thumb->fullPath());
     }
-
   } else {
     m_FilesScene->clearFocus();
   }
@@ -639,7 +642,7 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
       case Qt::Key_1: m_ImageView->zoomIn();  break;
       case Qt::Key_2: m_ImageView->zoom100(); break;
       case Qt::Key_3: m_ImageView->zoomOut(); break;
-      case Qt::Key_4: m_ImageView->zoomFit(); break;
+      case Qt::Key_4: m_ImageView->ZoomFit(); break;
       default: break;
     }
   }
