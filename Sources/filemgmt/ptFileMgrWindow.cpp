@@ -285,8 +285,6 @@ void ptFileMgrWindow::changeDir(const QString& path) {
 //==============================================================================
 
 void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/, ptFSOType fsoType /*= fsoDir*/) {
-  m_DataModel->setClosing(false);
-
   if (path.isEmpty()) {
     path = m_DataModel->dirModel()->absolutePath();
     fsoType = m_DataModel->dirModel()->pathType();
@@ -349,7 +347,7 @@ void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
     m_Progressbar->hide();
     m_PathContainer->show();
     m_FilesScene->setFocus();
-    if (m_DataModel->focusedThumb() == -1) {
+    if (m_FilesScene->focusItem() == NULL) {
       FocusThumbnail(0);
     }
   }
@@ -416,8 +414,6 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 //==============================================================================
 
 bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
-  if (m_DataModel->closing()) return QWidget::eventFilter(obj, event);
-
   if (obj == m_FilesView && event->type() == QEvent::Resize) {
     // Resize event: Rearrange thumbnails when size of viewport changes
     LayoutAll();
@@ -454,15 +450,11 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 //------------------------------------------------------------------------------
 
   else if (obj == m_FilesScene && event->type() == QEvent::KeyPress) {
-    if (m_DataModel->tryLock()) {
-      // Keyboard navigation in thumbnail list
-      int newIdx = m_Layouter->MoveIndex(m_DataModel->focusedThumb(), (QKeyEvent*)event);
-      if (newIdx >= 0) {
-        FocusThumbnail(newIdx);
-        m_DataModel->unlock();
-        return true;
-      }
-      m_DataModel->unlock();
+    // Keyboard navigation in thumbnail list
+    int newIdx = m_Layouter->MoveIndex(m_DataModel->focusedThumb(), (QKeyEvent*)event);
+    if (newIdx >= 0) {
+      FocusThumbnail(newIdx);
+      return true;
     }
   }
 
@@ -482,10 +474,10 @@ void ptFileMgrWindow::FocusThumbnail(int index) {
     m_FilesScene->setFocusItem(thumb);
     m_FilesView->ensureVisible(thumb, 0, 0);
     m_FilesView->setFocus();
-
     if (thumb->fsoType() == fsoFile) {
       m_ImageView->ShowImage(thumb->fullPath());
     }
+
   } else {
     m_FilesScene->clearFocus();
   }
@@ -494,10 +486,7 @@ void ptFileMgrWindow::FocusThumbnail(int index) {
 //==============================================================================
 
 void ptFileMgrWindow::thumbFocusChanged() {
-  if (m_DataModel->m_ClickBusy.tryLock(500)) {
-    FocusThumbnail(m_DataModel->focusedThumb(m_FilesScene->focusItem()));
-    m_DataModel->m_ClickBusy.unlock();
-  }
+  FocusThumbnail(m_DataModel->focusedThumb(m_FilesScene->focusItem()));
 }
 
 //==============================================================================
@@ -536,10 +525,8 @@ void ptFileMgrWindow::saveThumbnail()
 //==============================================================================
 
 void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const QString location) {
-  if (m_DataModel->closing()) return;
-
   if (action == tnaLoadImage) {
-    closeWindow(); // -> sets m_DataModel->closing!
+    closeWindow();
     ImageFileToOpen = location;
     CB_MenuFileOpen(1);
   } else if (action == tnaChangeDir) {
@@ -574,10 +561,8 @@ void ptFileMgrWindow::closeWindow() {
 
 void ptFileMgrWindow::hideEvent(QHideEvent* event) {
   if (!event->spontaneous()) {
-    m_DataModel->setClosing(true);
     event->accept();
     m_DataModel->StopThumbnailer();
-    m_ImageView->Clear();
     // free memory occupied by thumbnails
     ClearScene();
     m_DataModel->Clear();
