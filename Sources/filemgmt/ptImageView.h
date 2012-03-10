@@ -31,7 +31,6 @@
 #include <QGraphicsScene>
 #include <QGridLayout>
 #include <QThread>
-#include <QMutex>
 
 #include "../ptReportOverlay.h"
 #include "ptFileMgrDM.h"
@@ -54,7 +53,6 @@ public:
 
   void ShowImage(const QString FileName);
 
-  void Clear();
 
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
@@ -68,8 +66,8 @@ protected:
 
 
 private:
-  void zoomStep(int direction);
-  void zoomTo(float factor, const bool withMsg);  // 1.0 means 100%
+  void ZoomStep(int direction);
+  void ZoomTo(float factor, const bool withMsg);  // 1.0 means 100%
 
   /*! Put the QImage in the scene */
   void ImageToScene(const double Factor);
@@ -99,7 +97,6 @@ private:
   QTimer*               m_ResizeTimer;
   QTimer                m_ResizeEventTimer;  // to avoid jerky UI during widget resize
                                              // in zoom fit mode
-  QMutex                m_ExternalGuard;
 
   QAction* ac_Zoom100;
   QAction* ac_ZoomIn;

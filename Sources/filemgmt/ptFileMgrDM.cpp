@@ -55,8 +55,7 @@ void ptFileMgrDM::DestroyInstance() {
 //==============================================================================
 
 ptFileMgrDM::ptFileMgrDM()
-: QObject(),
-  m_FileMgrBusy(QMutex::Recursive)
+: QObject()
 {
   m_DirModel    = new ptSingleDirModel;
   m_TagModel    = new ptTagModel;
@@ -71,7 +70,6 @@ ptFileMgrDM::ptFileMgrDM()
   m_Thumbnailer->setCache(m_Cache);
 
   m_FocusedThumb = -1;
-  m_Closing      = true;
 }
 
 //==============================================================================
@@ -122,78 +120,50 @@ void ptFileMgrDM::StopThumbnailer() {
 QImage* ptFileMgrDM::getThumbnail(const QString FileName,
                                   const int     MaxSize) {
 
-  if (m_ThumbGenBusy.tryLock(500)) {
-    ptDcRaw dcRaw;
-    MagickWand* image = NewMagickWand();
-    QSize Size = QSize(MaxSize, MaxSize);
+  ptDcRaw dcRaw;
+  bool isRaw = false;
+  MagickWand* image = NewMagickWand();
+  QSize Size = QSize(MaxSize, MaxSize);
 
-    if (dcRaw.Identify(FileName) == 0 ) {
-      // we have a raw image
-      QByteArray* ImgData = NULL;
-      if (dcRaw.thumbnail(ImgData)) {
-        // raw thumbnail read successfully
-        Size.setWidth(dcRaw.m_ThumbWidth);
-        Size.setHeight(dcRaw.m_ThumbHeight);
-        ScaleThumbSize(&Size, MaxSize);
-        MagickSetSize(image, 2*Size.width(), 2*Size.height());
-        MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->length());
-      }
-      DelAndNull(ImgData);
-    } else {
-      // no raw, try for bitmap
-      MagickPingImage(image, FileName.toAscii().data());
-      Size.setWidth(MagickGetImageWidth(image));
-      Size.setHeight(MagickGetImageHeight(image));
+  if (dcRaw.Identify(FileName) == 0 ) {
+    // we have a raw image
+    isRaw = true;
+    QByteArray* ImgData = NULL;
+    if (dcRaw.thumbnail(ImgData)) {
+      // raw thumbnail read successfully
+      Size.setWidth(dcRaw.m_ThumbWidth);
+      Size.setHeight(dcRaw.m_ThumbHeight);
       ScaleThumbSize(&Size, MaxSize);
       MagickSetSize(image, 2*Size.width(), 2*Size.height());
-      MagickReadImage(image, FileName.toAscii().data());
+      MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->length());
     }
-
-    ExceptionType MagickExcept;
-    char* MagickErrMsg = MagickGetException(image, &MagickExcept);
-    if (MagickExcept != UndefinedException) {
-      // error occurred: no raw thumbnail, no supported image type, any other GM error
-      printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
-      DestroyMagickWand(image);
-
-      m_ThumbGenBusy.unlock();
-      return new QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png"));
-
-    } else {
-      // no error: scale and rotate thumbnail
-      QImage* Temp = GenerateThumbnail(image, Size);
-      DestroyMagickWand(image);
-
-      m_ThumbGenBusy.unlock();
-      return Temp;
-    }
-  } else {
-    return new QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png"));
+    DelAndNull(ImgData);
   }
-}
 
-//==============================================================================
+  if (!isRaw) {
+    // no raw, try for bitmap
+    MagickPingImage(image, FileName.toAscii().data());
+    Size.setWidth(MagickGetImageWidth(image));
+    Size.setHeight(MagickGetImageHeight(image));
+    ScaleThumbSize(&Size, MaxSize);
+    MagickSetSize(image, 2*Size.width(), 2*Size.height());
+    MagickReadImage(image, FileName.toAscii().data());
+  }
 
-bool ptFileMgrDM::tryLock(const int AMSec, const char *ALocation)
-{
-  bool Success = m_FileMgrBusy.tryLock(AMSec);
-  return Success;
-}
+  ExceptionType MagickExcept;
+  char* MagickErrMsg = MagickGetException(image, &MagickExcept);
+  if (MagickExcept != UndefinedException) {
+    // error occurred: no raw thumbnail, no supported image type, any other GM error
+    printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
+    DestroyMagickWand(image);
+    return new QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png"));
 
-//==============================================================================
-
-void ptFileMgrDM::lock(const char *ALocation)
-{
-  m_FileMgrBusy.lock();
-  return;
-}
-
-//==============================================================================
-
-void ptFileMgrDM::unlock(const char *ALocation)
-{
-  m_FileMgrBusy.unlock();
-  return;
+  } else {
+    // no error: scale and rotate thumbnail
+    QImage* Temp = GenerateThumbnail(image, Size);
+    DestroyMagickWand(image);
+    return Temp;
+  }
 }
 
 //==============================================================================
