@@ -71,6 +71,7 @@ ptFileMgrDM::ptFileMgrDM()
   m_Thumbnailer->setCache(m_Cache);
 
   m_FocusedThumb = -1;
+  m_Closing      = true;
 }
 
 //==============================================================================

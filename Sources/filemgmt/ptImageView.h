@@ -93,7 +93,6 @@ private:
   ptReportOverlay*      m_ZoomSizeOverlay;
   ptReportOverlay*      m_StatusOverlay;
   bool                  m_NeedRun;
-  bool                  m_Closing;
   MyWorker*             m_Worker;
   QGraphicsPixmapItem*  m_PixmapItem;
   int                   m_ResizeTimeOut;

@@ -88,7 +88,6 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   m_DragDelta         = new QLine();
   m_LeftMousePressed  = false;
   m_NeedRun           = false;
-  m_Closing           = false;
   m_ZoomSizeOverlay   = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
                                             1000, Qt::AlignRight, 20);
   m_StatusOverlay     = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
@@ -144,6 +143,8 @@ ptImageView::~ptImageView() {
 //==============================================================================
 
 void ptImageView::ShowImage(const QString FileName) {
+  if (m_DataModule->closing()) return;
+
   // only one thread at a time may ask for an image
   if (m_ExternalGuard.tryLock(100)) {
 
@@ -168,7 +169,6 @@ void ptImageView::Clear()
 {
   m_FileName = "";
   m_NeedRun  = false;
-  m_Closing  = true;
   m_StatusOverlay->stop();
 }
 
@@ -387,7 +387,7 @@ void ptImageView::updateView() {
       }
     }
   }
-  if (!m_Closing) {
+  if (!m_DataModule->closing()) {
     update();
   }
 }
@@ -413,7 +413,7 @@ void ptImageView::startWorker() {
 //==============================================================================
 
 void ptImageView::afterWorker() {
-  if (m_Closing) return;
+  if (m_DataModule->closing()) return;
 
   if (m_NeedRun) {
     if (m_ExternalGuard.tryLock()) {
@@ -441,8 +441,6 @@ void ptImageView::ResizeTimerExpired() {
 
 void ptImageView::showEvent(QShowEvent* event) {
   QGraphicsView::showEvent(event);
-
-  m_Closing = false;
 
   if (!m_FileName.isEmpty()) {
     // Re-process on becoming visible. Filename might have changed while we were hidden.
