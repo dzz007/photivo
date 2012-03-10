@@ -186,6 +186,8 @@ void ptGraphicsThumbGroup::addImage(QImage* image) {
 //==============================================================================
 
 bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
+  if (ptFileMgrDM::GetInstance()->closing()) return true;
+
   if (ptFileMgrDM::GetInstance()->tryLock()) {
     switch (event->type()) {
       case QEvent::GraphicsSceneHoverEnter: {
@@ -250,6 +252,8 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
 //==============================================================================
 
 void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
+  if (ptFileMgrDM::GetInstance()->closing()) return;
+
   SetupPenAndBrush();
   painter->setPen(m_Pen);
   painter->setBrush(m_Brush);
@@ -272,12 +276,15 @@ QFont ptGraphicsThumbGroup::font() const {
 //==============================================================================
 
 void ptGraphicsThumbGroup::exec() {
-  if (m_InfoText) {
-    if (m_FSOType == fsoFile) {
-      ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
-    } else {
-      ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
+  if (ptFileMgrDM::GetInstance()->m_ClickBusy.tryLock(500)) {
+    if (m_InfoText) {
+      if (m_FSOType == fsoFile) {
+        ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
+      } else {
+        ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
+      }
     }
+    ptFileMgrDM::GetInstance()->m_ClickBusy.unlock();
   }
 }
 
