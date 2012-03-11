@@ -36,7 +36,7 @@
   Current horizontal scale factor: this->transform().m11();
   Current vertical scale factor: this->transform().m22();
   Because we do not change aspect ratio both factors are always the same.
-  Use m_ZoomFactor whenever possible and m11() otherwise.
+  Use FZoomFactor whenever possible and m11() otherwise.
 **/
 
 #ifndef PTVIEWWINDOW_H
@@ -61,11 +61,11 @@
 //==============================================================================
 
 enum ptInteraction {
-  iaNone = 0,
-  iaCrop = 1,
-  iaSelectRect = 2, // simple rectangle selection: e.g. for spot WB
-  iaDrawLine = 3,    // draw a single straight line: e.g. for rotate angle
-  iaSpotRepair = 4
+  iaNone        = 0,
+  iaCrop        = 1,
+  iaSelectRect  = 2,  // simple rectangle selection: e.g. for spot WB
+  iaDrawLine    = 3,  // draw a single straight line: e.g. for rotate angle
+  iaSpotRepair  = 4
 };
 
 enum ptPixelReading {
@@ -83,9 +83,9 @@ public:
   ptViewWindow(QWidget* Parent, ptMainWindow* mainWin);
   ~ptViewWindow();
 
-  inline ptInteraction interaction() const { return m_Interaction; }
-  inline int zoomPercent() { return qRound(m_ZoomFactor * 100); }
-  inline float zoomFactor() const { return m_ZoomFactor; }
+  inline ptInteraction interaction() const { return FInteraction; }
+  inline int zoomPercent() { return qRound(FZoomFactor * 100); }
+  inline float zoomFactor() const { return FZoomFactor; }
 
   // Save (and later restore) current zoom settings. Takes care of
   // everything incl. ptSettings. RestoreZoom() also updates the
@@ -105,8 +105,8 @@ public:
   void StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect));
   void StartCrop();
   void StartSpotRepair(ptImageSpotListView* ListView);
-  ptRichRectInteraction* crop() const { return m_Crop; }
-  ptRepairInteraction* spotRepair() const { return m_SpotRepair; }
+  ptRichRectInteraction* crop() const { return FCrop; }
+  ptRepairInteraction* spotRepair() const { return FSpotRepair; }
 
   void setGrid(const short enabled, const uint linesX, const uint linesY);
   void UpdateImage(const ptImage* relatedImage);
@@ -114,9 +114,9 @@ public:
   int ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
   void ZoomStep(int direction);
 
-  ptPixelReading isPixelReading() const { return m_PixelReading; }
+  ptPixelReading isPixelReading() const { return FPixelReading; }
   void SetPixelReader(void (*PixelReader)(const QPointF Point, const ptPixelReading PixelReading))
-    { m_PixelReader = PixelReader; }
+    { FPixelReader = PixelReader; }
 
 //------------------------------------------------------------------------------
 
@@ -138,65 +138,65 @@ protected:
 //------------------------------------------------------------------------------
 
 private:
-  const float MinZoom;
-  const float MaxZoom;
-  QList<float> ZoomFactors;   // steps for wheel zoom
+  const float   MinZoom;
+  const float   MaxZoom;
+  QList<float>  ZoomFactors;   // steps for wheel zoom
 
-  short m_CtrlIsPressed;
-  ptLineInteraction* m_DrawLine;
-  ptSimpleRectInteraction* m_SelectRect;
-  ptRichRectInteraction* m_Crop;
-  ptGridInteraction* m_Grid;
-  ptRepairInteraction* m_SpotRepair;
-  ptInteraction m_Interaction;
-  short m_LeftMousePressed;
-  void (*m_CB_SimpleRect)(const ptStatus, QRect);
-  short m_ZoomIsSaved;
-  float m_ZoomFactor;
-  float m_ZoomFactorSav;
-  short m_ZoomModeSav;
-  ptPixelReading m_PixelReading;
-  QTimer* m_PReadTimer;
+  short                     FCtrlIsPressed;
+  ptLineInteraction         *FDrawLine;
+  ptSimpleRectInteraction   *FSelectRect;
+  ptRichRectInteraction     *FCrop;
+  ptGridInteraction         *FGrid;
+  ptRepairInteraction       *FSpotRepair;
+  ptInteraction             FInteraction;
+  short                     FLeftMousePressed;
+  void (*FCB_SimpleRect)(const ptStatus, QRect);
+  short                     FZoomIsSaved;
+  float                     FZoomFactor;
+  float                     FZoomFactorSav;
+  short                     FZoomModeSav;
+  ptPixelReading            FPixelReading;
+  QTimer                    *FPReadTimer;
 
-  QGraphicsPixmapItem* m_8bitImageItem;
-  QLine* m_DragDelta;
-  QGraphicsScene* m_ImageScene;
-  ptReportOverlay* m_StatusOverlay;
-  ptReportOverlay* m_ZoomSizeOverlay;
+  QGraphicsPixmapItem       *F8bitImageItem;
+  QLine                     *FDragDelta;
+  QGraphicsScene            *FImageScene;
+  ptReportOverlay           *FStatusOverlay;
+  ptReportOverlay           *FZoomSizeOverlay;
 
   // context menu stuff
-  void ConstructContextMenu();
-  QAction* ac_ZoomFit;
-  QAction* ac_Zoom100;
-  QAction* ac_ZoomIn;
-  QAction* ac_ZoomOut;
-  QAction* ac_Mode_RGB;
-  QAction* ac_Mode_Structure;
-  QAction* ac_Mode_L;
-  QAction* ac_Mode_A;
-  QAction* ac_Mode_B;
-  QAction* ac_Mode_Gradient;
-  QAction* ac_PRead_None;
-  QAction* ac_PRead_Linear;
-  QAction* ac_PRead_Preview;
-  QAction* ac_Clip_Indicate;
-  QAction* ac_Clip_Over;
-  QAction* ac_Clip_Under;
-  QAction* ac_Clip_R;
-  QAction* ac_Clip_G;
-  QAction* ac_Clip_B;
-  QAction* ac_SensorClip;
-  QAction* ac_SensorClipSep;
-  QAction* ac_ShowTools;
-  QAction* ac_ShowZoomBar;
-  QAction* ac_OpenFileMgr;
-  QAction* ac_Fullscreen;
-  QActionGroup* ac_ModeGroup;
-  QActionGroup* ac_PReadGroup;
+  void          ConstructContextMenu();
+  QAction       *ac_ZoomFit;
+  QAction       *ac_Zoom100;
+  QAction       *ac_ZoomIn;
+  QAction       *ac_ZoomOut;
+  QAction       *ac_Mode_RGB;
+  QAction       *ac_Mode_Structure;
+  QAction       *ac_Mode_L;
+  QAction       *ac_Mode_A;
+  QAction       *ac_Mode_B;
+  QAction       *ac_Mode_Gradient;
+  QAction       *ac_PRead_None;
+  QAction       *ac_PRead_Linear;
+  QAction       *ac_PRead_Preview;
+  QAction       *ac_Clip_Indicate;
+  QAction       *ac_Clip_Over;
+  QAction       *ac_Clip_Under;
+  QAction       *ac_Clip_R;
+  QAction       *ac_Clip_G;
+  QAction       *ac_Clip_B;
+  QAction       *ac_SensorClip;
+  QAction       *ac_SensorClipSep;
+  QAction       *ac_ShowTools;
+  QAction       *ac_ShowZoomBar;
+  QAction       *ac_OpenFileMgr;
+  QAction       *ac_Fullscreen;
+  QActionGroup  *ac_ModeGroup;
+  QActionGroup  *ac_PReadGroup;
 
-  ptMainWindow* MainWindow;
+  ptMainWindow  *FMainWindow;
 
-  void (*m_PixelReader)(const QPointF Point, const ptPixelReading PixelReading);
+  void (*FPixelReader)(const QPointF Point, const ptPixelReading PixelReading);
 
 //------------------------------------------------------------------------------
 

@@ -39,30 +39,30 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   // constants
   MinZoom(0.05), MaxZoom(4.0),
   // member variables
-  m_CtrlIsPressed(0),
-  m_DrawLine(NULL),
-  m_SelectRect(NULL),
-  m_Crop(NULL),
-  m_Interaction(iaNone),
-  m_LeftMousePressed(0),
-  m_ZoomIsSaved(0),
-  m_ZoomFactor(1.0),
-  m_ZoomFactorSav(0.0),
-  m_ZoomModeSav(ptZoomMode_Fit),
-  m_PixelReading(prNone),
+  FCtrlIsPressed(0),
+  FDrawLine(NULL),
+  FSelectRect(NULL),
+  FCrop(NULL),
+  FInteraction(iaNone),
+  FLeftMousePressed(0),
+  FZoomIsSaved(0),
+  FZoomFactor(1.0),
+  FZoomFactorSav(0.0),
+  FZoomModeSav(ptZoomMode_Fit),
+  FPixelReading(prNone),
   // always keep this at the end of the initializer list
-  MainWindow(mainWin)
+  FMainWindow(mainWin)
 {
-  assert(MainWindow != NULL);    // Main window must exist before view window
+  assert(FMainWindow != NULL);    // Main window must exist before view window
   assert(Theme != NULL);
   assert(Settings != NULL);
 
   ZoomFactors << MinZoom << 0.08 << 0.10 << 0.15 << 0.20 << 0.25 << 0.33 << 0.50 << 0.66 << 1.00
               << 1.50 << 2.00 << 3.00 << MaxZoom;
 
-  m_DragDelta = new QLine();
-  m_StatusOverlay = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
-  m_ZoomSizeOverlay = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
+  FDragDelta = new QLine();
+  FStatusOverlay = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
+  FZoomSizeOverlay = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
                                           1000, Qt::AlignRight, 20);
 
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -77,35 +77,35 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   this->setStyleSheet("QGraphicsView { border: none; }");
 
   // Init the scene
-  m_ImageScene = new QGraphicsScene(0, 0, 0, 0, Parent);
-  m_8bitImageItem = m_ImageScene->addPixmap(QPixmap());
-  m_8bitImageItem->setPos(0, 0);
-  this->setScene(m_ImageScene);
+  FImageScene = new QGraphicsScene(0, 0, 0, 0, Parent);
+  F8bitImageItem = FImageScene->addPixmap(QPixmap());
+  F8bitImageItem->setPos(0, 0);
+  this->setScene(FImageScene);
 
-  m_Grid = new ptGridInteraction(this);  // scene must already be alive
-  m_PixelReader = NULL;
+  FGrid = new ptGridInteraction(this);  // scene must already be alive
+  FPixelReader = NULL;
   ConstructContextMenu();
 
-  m_PReadTimer = new QTimer();
-  m_PReadTimer->setSingleShot(true);
+  FPReadTimer = new QTimer();
+  FPReadTimer->setSingleShot(true);
 }
 
 //==============================================================================
 
 ptViewWindow::~ptViewWindow() {
-  delete m_DragDelta;
-  delete m_StatusOverlay;
-  delete m_ZoomSizeOverlay;
-  delete m_DrawLine;
-  delete m_SelectRect;
-  delete m_Grid;
+  delete FDragDelta;
+  delete FStatusOverlay;
+  delete FZoomSizeOverlay;
+  delete FDrawLine;
+  delete FSelectRect;
+  delete FGrid;
 
   delete ac_PRead_None;
   delete ac_PRead_Linear;
   delete ac_PRead_Preview;
   delete ac_PReadGroup;
 
-  delete m_PReadTimer;
+  delete FPReadTimer;
 }
 
 //==============================================================================
@@ -129,11 +129,11 @@ void ptViewWindow::UpdateImage(const ptImage* relatedImage) {
       Pixel[3] = 0xff;
     }
 
-    m_8bitImageItem->setPixmap(QPixmap::fromImage(*Img8bit, Qt::ColorOnly));
+    F8bitImageItem->setPixmap(QPixmap::fromImage(*Img8bit, Qt::ColorOnly));
     DelAndNull(Img8bit);
-    m_ImageScene->setSceneRect(0, 0,
-                               m_8bitImageItem->pixmap().width(),
-                               m_8bitImageItem->pixmap().height());
+    FImageScene->setSceneRect(0, 0,
+                               F8bitImageItem->pixmap().width(),
+                               F8bitImageItem->pixmap().height());
 
     if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
       ZoomToFit(0);
@@ -152,17 +152,17 @@ void ptViewWindow::ZoomTo(float factor) {
 
   if(((uint)(factor * 10000) % 10000) < 1) {
     // nearest neighbour resize for 200%, 300%, 400% zoom
-    m_8bitImageItem->setTransformationMode(Qt::FastTransformation);
+    F8bitImageItem->setTransformationMode(Qt::FastTransformation);
   } else {
     // bilinear resize for all others
-    m_8bitImageItem->setTransformationMode(Qt::SmoothTransformation);
+    F8bitImageItem->setTransformationMode(Qt::SmoothTransformation);
   }
   setTransform(QTransform(factor, 0, 0, factor, 0, 0));
 
-  m_ZoomFactor = transform().m11();
-  int z = qRound(m_ZoomFactor * 100);
+  FZoomFactor = transform().m11();
+  int z = qRound(FZoomFactor * 100);
   Settings->SetValue("Zoom", z);
-  m_ZoomSizeOverlay->exec(QString::number(z) + "%");
+  FZoomSizeOverlay->exec(QString::number(z) + "%");
 }
 
 //==============================================================================
@@ -170,19 +170,19 @@ void ptViewWindow::ZoomTo(float factor) {
 int ptViewWindow::ZoomToFit(const short withMsg /*= 1*/) {
   Settings->SetValue("ZoomMode",ptZoomMode_Fit);
 
-  if (!m_8bitImageItem->pixmap().isNull()) {
+  if (!F8bitImageItem->pixmap().isNull()) {
     // Always smooth scaling because we don't know the zoom factor in advance.
-    m_8bitImageItem->setTransformationMode(Qt::SmoothTransformation);
-    fitInView(m_8bitImageItem, Qt::KeepAspectRatio);
-    m_ZoomFactor = transform().m11();
+    F8bitImageItem->setTransformationMode(Qt::SmoothTransformation);
+    fitInView(F8bitImageItem, Qt::KeepAspectRatio);
+    FZoomFactor = transform().m11();
 
     if (withMsg) {
-      m_ZoomSizeOverlay->exec(tr("Fit"));
+      FZoomSizeOverlay->exec(tr("Fit"));
     }
   }
 
-  Settings->SetValue("Zoom",qRound(m_ZoomFactor * 100));
-  return m_ZoomFactor;
+  Settings->SetValue("Zoom",qRound(FZoomFactor * 100));
+  return FZoomFactor;
 }
 
 //==============================================================================
@@ -193,7 +193,7 @@ void ptViewWindow::ZoomStep(int direction) {
   // zoom larger
   if (direction > 0) {
     for (int i = 0; i < ZoomFactors.size(); i++) {
-      if (ZoomFactors[i] > m_ZoomFactor) {
+      if (ZoomFactors[i] > FZoomFactor) {
         ZoomIdx = i;
         break;
       }
@@ -202,7 +202,7 @@ void ptViewWindow::ZoomStep(int direction) {
   // zoom smaller
   } else if (direction < 0) {
     for (int i = ZoomFactors.size() - 1; i >= 0; i--) {
-      if (ZoomFactors[i] < m_ZoomFactor) {
+      if (ZoomFactors[i] < FZoomFactor) {
         ZoomIdx = i;
         break;
       }
@@ -217,32 +217,32 @@ void ptViewWindow::ZoomStep(int direction) {
 //==============================================================================
 
 void ptViewWindow::RestoreZoom() {
-  if (m_ZoomIsSaved) {
-    if (m_ZoomModeSav == ptZoomMode_Fit) {
+  if (FZoomIsSaved) {
+    if (FZoomModeSav == ptZoomMode_Fit) {
       ZoomToFit();
     } else {
-      ZoomTo(m_ZoomFactorSav);
+      ZoomTo(FZoomFactorSav);
     }
 
-    m_ZoomIsSaved = 0;
+    FZoomIsSaved = 0;
   }
 }
 
 //==============================================================================
 
 void ptViewWindow::SaveZoom() {
-  m_ZoomFactorSav = m_ZoomFactor;
-  m_ZoomModeSav = Settings->GetValue("ZoomMode").toInt();
-  m_ZoomIsSaved = 1;
+  FZoomFactorSav = FZoomFactor;
+  FZoomModeSav = Settings->GetValue("ZoomMode").toInt();
+  FZoomIsSaved = 1;
 }
 
 //==============================================================================
 
 void ptViewWindow::setGrid(const short enabled, const uint linesX, const uint linesY) {
   if (enabled) {
-    m_Grid->show(linesX, linesY);
+    FGrid->show(linesX, linesY);
   } else {
-    m_Grid->hide();
+    FGrid->hide();
   }
 }
 
@@ -263,12 +263,12 @@ void ptViewWindow::paintEvent(QPaintEvent* event) {
 void ptViewWindow::mousePressEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
     event->accept();
-    m_LeftMousePressed = 1;
-    m_DragDelta->setPoints(event->pos(), event->pos());
+    FLeftMousePressed = 1;
+    FDragDelta->setPoints(event->pos(), event->pos());
   }
 
   // Broadcast event to possible interaction handlers
-  if (m_Interaction != iaNone) {
+  if (FInteraction != iaNone) {
     emit mouseChanged(event);
   }
 }
@@ -276,15 +276,15 @@ void ptViewWindow::mousePressEvent(QMouseEvent* event) {
 //==============================================================================
 
 void ptViewWindow::mouseReleaseEvent(QMouseEvent* event) {
-  if (event->button() == Qt::LeftButton && m_LeftMousePressed) {
-    m_LeftMousePressed = 0;
+  if (event->button() == Qt::LeftButton && FLeftMousePressed) {
+    FLeftMousePressed = 0;
     event->accept();
   } else {
     event->ignore();
   }
 
   // Broadcast event to possible interaction handlers
-  if (m_Interaction != iaNone) {
+  if (FInteraction != iaNone) {
     emit mouseChanged(event);
   }
 }
@@ -293,7 +293,7 @@ void ptViewWindow::mouseReleaseEvent(QMouseEvent* event) {
 
 void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
   // Broadcast event to possible interaction handlers
-  if (m_Interaction != iaNone) {
+  if (FInteraction != iaNone) {
     emit mouseChanged(event);
   } else {
     event->ignore();
@@ -304,39 +304,39 @@ void ptViewWindow::mouseDoubleClickEvent(QMouseEvent* event) {
 
 void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   // We broadcast the pixel location
-  if (m_PixelReading != prNone && !m_PReadTimer->isActive()) {
-    m_PReadTimer->start(10);
+  if (FPixelReading != prNone && !FPReadTimer->isActive()) {
+    FPReadTimer->start(10);
     QPointF Point = mapToScene(event->pos());
-    if (Point.x() >= 0 && Point.x() < m_8bitImageItem->pixmap().width() &&
-        Point.y() >= 0 && Point.y() < m_8bitImageItem->pixmap().height()) {
-      if (m_PixelReader) m_PixelReader(Point, m_PixelReading);
+    if (Point.x() >= 0 && Point.x() < F8bitImageItem->pixmap().width() &&
+        Point.y() >= 0 && Point.y() < F8bitImageItem->pixmap().height()) {
+      if (FPixelReader) FPixelReader(Point, FPixelReading);
     } else {
-      if (m_PixelReader) m_PixelReader(Point, prNone);
+      if (FPixelReader) FPixelReader(Point, prNone);
     }
   }
 
   // drag image with left mouse button to scroll
   // Also Ctrl needed in crop & spot repair modes
-  short ImgDragging = m_LeftMousePressed && m_Interaction == iaNone;
-  if (m_Interaction == iaCrop || m_Interaction == iaSpotRepair) {
-    ImgDragging = m_LeftMousePressed && m_CtrlIsPressed;
+  short ImgDragging = FLeftMousePressed && FInteraction == iaNone;
+  if (FInteraction == iaCrop || FInteraction == iaSpotRepair) {
+    ImgDragging = FLeftMousePressed && FCtrlIsPressed;
   }
 
   if (ImgDragging) {
-    m_DragDelta->setP2(event->pos());
+    FDragDelta->setP2(event->pos());
     horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
-                                    m_DragDelta->x2() +
-                                    m_DragDelta->x1());
+                                    FDragDelta->x2() +
+                                    FDragDelta->x1());
     verticalScrollBar()->setValue(verticalScrollBar()->value() -
-                                  m_DragDelta->y2() +
-                                  m_DragDelta->y1());
-    m_DragDelta->setP1(event->pos());
+                                  FDragDelta->y2() +
+                                  FDragDelta->y1());
+    FDragDelta->setP1(event->pos());
     event->accept();
 
   } else {
     event->ignore();
     // Broadcast event to possible interaction handlers
-    if (m_Interaction != iaNone) {
+    if (FInteraction != iaNone) {
       emit mouseChanged(event);
     }
   }
@@ -349,27 +349,27 @@ void ptViewWindow::wheelEvent(QWheelEvent* event) {
 }
 
 void ptViewWindow::leaveEvent(QEvent *event) {
-  if (m_PixelReader) m_PixelReader(QPoint(), prNone);
+  if (FPixelReader) FPixelReader(QPoint(), prNone);
 }
 
 //==============================================================================
 
 void ptViewWindow::keyPressEvent(QKeyEvent* event) {
-  // m_CtrlIsPressed is not a simple bool flag to account for keyboards with
+  // FCtrlIsPressed is not a simple bool flag to account for keyboards with
   // multiple ctrl keys. There's a lot of those. ;-) For each ctrl press the
   // variable is increased, for each release it's decreased. This is necessary
   // because in cases like press left ctrl - press right ctrl - release left ctrl
   // Photivo should still recognise the ctrl key as being held down.
   if (event->key() == Qt::Key_Control) {
-    m_CtrlIsPressed++;
-    if (m_Interaction == iaNone || m_Interaction == iaCrop || m_Interaction == iaSpotRepair) {
+    FCtrlIsPressed++;
+    if (FInteraction == iaNone || FInteraction == iaCrop || FInteraction == iaSpotRepair) {
       setCursor(Qt::ClosedHandCursor);
     }
   } else {
     event->ignore();  // necessary to forward unhandled keys to main window
   }
 
-  if (m_Interaction != iaNone) {
+  if (FInteraction != iaNone) {
     emit keyChanged(event);
   }
 }
@@ -378,9 +378,9 @@ void ptViewWindow::keyPressEvent(QKeyEvent* event) {
 
 void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
   if (event->key() == Qt::Key_Control) {
-    m_CtrlIsPressed--;
-    if (m_CtrlIsPressed == 0 &&
-      (m_Interaction == iaNone || m_Interaction == iaCrop || m_Interaction == iaSpotRepair))
+    FCtrlIsPressed--;
+    if (FCtrlIsPressed == 0 &&
+      (FInteraction == iaNone || FInteraction == iaCrop || FInteraction == iaSpotRepair))
     {
       setCursor(Qt::ArrowCursor);
     }
@@ -388,7 +388,7 @@ void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
     event->ignore();  // necessary to forward unhandled keys to main window
   }
 
-  if (m_Interaction != iaNone) {
+  if (FInteraction != iaNone) {
     emit keyChanged(event);
   }
 }
@@ -424,25 +424,25 @@ void ptViewWindow::resizeEvent(QResizeEvent* event) {
 void ptViewWindow::ShowStatus(short mode) {
   switch (mode) {
     case ptStatus_Done:
-      m_StatusOverlay->setColors(QColor(0,130,0), QColor(120,170,120));   // green
-      m_StatusOverlay->setDuration(1500);
-      m_StatusOverlay->exec(QObject::tr("Done"));
+      FStatusOverlay->setColors(QColor(0,130,0), QColor(120,170,120));   // green
+      FStatusOverlay->setDuration(1500);
+      FStatusOverlay->exec(QObject::tr("Done"));
       break;
 
     case ptStatus_Updating:
-      m_StatusOverlay->setColors(QColor(255,140,0), QColor(255,200,120));   // orange
-      m_StatusOverlay->setDuration(0);
-      m_StatusOverlay->exec(QObject::tr("Updating"));
+      FStatusOverlay->setColors(QColor(255,140,0), QColor(255,200,120));   // orange
+      FStatusOverlay->setDuration(0);
+      FStatusOverlay->exec(QObject::tr("Updating"));
       break;
 
     case ptStatus_Processing:
-      m_StatusOverlay->setColors(QColor(255,75,75), QColor(255,190,190));   // red
-      m_StatusOverlay->setDuration(0);
-      m_StatusOverlay->exec(QObject::tr("Processing"));
+      FStatusOverlay->setColors(QColor(255,75,75), QColor(255,190,190));   // red
+      FStatusOverlay->setDuration(0);
+      FStatusOverlay->exec(QObject::tr("Processing"));
       break;
 
     default:    // should not happen
-      m_StatusOverlay->stop();
+      FStatusOverlay->stop();
       break;
   }
 }
@@ -450,21 +450,21 @@ void ptViewWindow::ShowStatus(short mode) {
 //==============================================================================
 
 void ptViewWindow::ShowStatus(const QString text) {
-  m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255));    // blue
-  m_StatusOverlay->setDuration(1500);
-  m_StatusOverlay->exec(text);
+  FStatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255));    // blue
+  FStatusOverlay->setDuration(1500);
+  FStatusOverlay->exec(text);
 }
 
 //==============================================================================
 
 // Start draw line interaction to determine rotation angle.
 void ptViewWindow::StartLine() {
-  if (m_Interaction == iaNone) {
-    m_DrawLine = new ptLineInteraction(this);
-    connect(m_DrawLine, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
-    connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_DrawLine, SLOT(mouseAction(QMouseEvent*)));
-    connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_DrawLine, SLOT(keyAction(QKeyEvent*)));
-    m_Interaction = iaDrawLine;
+  if (FInteraction == iaNone) {
+    FDrawLine = new ptLineInteraction(this);
+    connect(FDrawLine, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
+    connect(this, SIGNAL(mouseChanged(QMouseEvent*)), FDrawLine, SLOT(mouseAction(QMouseEvent*)));
+    connect(this, SIGNAL(keyChanged(QKeyEvent*)), FDrawLine, SLOT(keyAction(QKeyEvent*)));
+    FInteraction = iaDrawLine;
   }
 }
 
@@ -472,14 +472,14 @@ void ptViewWindow::StartLine() {
 
 // Start simple selection interaction for spot WB and histogram "crop".
 void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect)) {
-  if (m_Interaction == iaNone) {
+  if (FInteraction == iaNone) {
     assert(CB_SimpleRect != NULL);
-    m_CB_SimpleRect = CB_SimpleRect;
-    m_SelectRect = new ptSimpleRectInteraction(this);
-    connect(m_SelectRect, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
-    connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_SelectRect, SLOT(mouseAction(QMouseEvent*)));
-    connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_SelectRect, SLOT(keyAction(QKeyEvent*)));
-    m_Interaction = iaSelectRect;
+    FCB_SimpleRect = CB_SimpleRect;
+    FSelectRect = new ptSimpleRectInteraction(this);
+    connect(FSelectRect, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
+    connect(this, SIGNAL(mouseChanged(QMouseEvent*)), FSelectRect, SLOT(mouseAction(QMouseEvent*)));
+    connect(this, SIGNAL(keyChanged(QKeyEvent*)), FSelectRect, SLOT(keyAction(QKeyEvent*)));
+    FInteraction = iaSelectRect;
   }
 }
 
@@ -487,7 +487,7 @@ void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect))
 
 void ptViewWindow::StartCrop()
 {
-  if (m_Interaction != iaNone) {
+  if (FInteraction != iaNone) {
     return;
   }
 
@@ -500,41 +500,41 @@ void ptViewWindow::StartCrop()
 
   // If any value is outside the allowed range reset the inital crop
   // rectangle to the whole image.
-  if(x < 0 || x >= m_8bitImageItem->pixmap().width() ||
-     y < 0 || y >= m_8bitImageItem->pixmap().height() ||
-     width <= 0 || width > m_8bitImageItem->pixmap().width() ||
-     height <= 0 || height > m_8bitImageItem->pixmap().height() )
+  if(x < 0 || x >= F8bitImageItem->pixmap().width() ||
+     y < 0 || y >= F8bitImageItem->pixmap().height() ||
+     width <= 0 || width > F8bitImageItem->pixmap().width() ||
+     height <= 0 || height > F8bitImageItem->pixmap().height() )
   {
     x = 0;
     y = 0;
-    width = m_8bitImageItem->pixmap().width();
-    height = m_8bitImageItem->pixmap().height();
+    width = F8bitImageItem->pixmap().width();
+    height = F8bitImageItem->pixmap().height();
   }
 
 
-  m_Crop = new ptRichRectInteraction(this, x, y, width, height,
+  FCrop = new ptRichRectInteraction(this, x, y, width, height,
                                      Settings->GetInt("FixedAspectRatio"),
                                      Settings->GetInt("AspectRatioW"),
                                      Settings->GetInt("AspectRatioH"),
                                      Settings->GetInt("CropGuidelines") );
 
-  connect(m_Crop, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
-  connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_Crop, SLOT(mouseAction(QMouseEvent*)));
-  connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_Crop, SLOT(keyAction(QKeyEvent*)));
-  m_Interaction = iaCrop;
+  connect(FCrop, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
+  connect(this, SIGNAL(mouseChanged(QMouseEvent*)), FCrop, SLOT(mouseAction(QMouseEvent*)));
+  connect(this, SIGNAL(keyChanged(QKeyEvent*)), FCrop, SLOT(keyAction(QKeyEvent*)));
+  FInteraction = iaCrop;
 }
 
 //==============================================================================
 
 void ptViewWindow::StartSpotRepair(ptImageSpotListView* ListView) {
-  if (m_Interaction != iaNone) {
+  if (FInteraction != iaNone) {
     return;
   }
-  m_SpotRepair = new ptRepairInteraction(this, ListView);
-  connect(m_SpotRepair, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
-  connect(this, SIGNAL(mouseChanged(QMouseEvent*)), m_SpotRepair, SLOT(mouseAction(QMouseEvent*)));
-  connect(this, SIGNAL(keyChanged(QKeyEvent*)), m_SpotRepair, SLOT(keyAction(QKeyEvent*)));
-  m_Interaction = iaSpotRepair;
+  FSpotRepair = new ptRepairInteraction(this, ListView);
+  connect(FSpotRepair, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
+  connect(this, SIGNAL(mouseChanged(QMouseEvent*)), FSpotRepair, SLOT(mouseAction(QMouseEvent*)));
+  connect(this, SIGNAL(keyChanged(QKeyEvent*)), FSpotRepair, SLOT(keyAction(QKeyEvent*)));
+  FInteraction = iaSpotRepair;
 }
 
 //==============================================================================
@@ -544,40 +544,40 @@ void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect);
 void CleanupAfterSpotRepair();
 
 void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
-  switch (m_Interaction) {
+  switch (FInteraction) {
     case iaDrawLine: {
-      double Angle = m_DrawLine->angle();
-      DelAndNull(m_DrawLine);   // also disconnects all signals/slots
-      m_Interaction = iaNone;
+      double Angle = FDrawLine->angle();
+      DelAndNull(FDrawLine);   // also disconnects all signals/slots
+      FInteraction = iaNone;
       RotateAngleDetermined(ExitStatus, Angle);
       break;
     }
 
     case iaSelectRect: {
-      QRect sr = m_SelectRect->rect();
-      DelAndNull(m_SelectRect);   // also disconnects all signals/slots
-      m_Interaction = iaNone;
-      m_CB_SimpleRect(ExitStatus, sr);
+      QRect sr = FSelectRect->rect();
+      DelAndNull(FSelectRect);   // also disconnects all signals/slots
+      FInteraction = iaNone;
+      FCB_SimpleRect(ExitStatus, sr);
       break;
     }
 
     case iaCrop: {
-      QRect cr = m_Crop->rect();
-      DelAndNull(m_Crop);   // also disconnects all signals/slots
-      m_Interaction = iaNone;
+      QRect cr = FCrop->rect();
+      DelAndNull(FCrop);   // also disconnects all signals/slots
+      FInteraction = iaNone;
       CleanupAfterCrop(ExitStatus, cr);
       break;
     }
 
     case iaSpotRepair: {
-      DelAndNull(m_SpotRepair);   // also disconnects all signals/slots
-      m_Interaction = iaNone;
+      DelAndNull(FSpotRepair);   // also disconnects all signals/slots
+      FInteraction = iaNone;
       CleanupAfterSpotRepair();
       break;
     }
 
     default:
-      assert(!"Unknown m_Interaction");
+      assert(!"Unknown FInteraction");
       break;
   }
 }
@@ -721,7 +721,7 @@ void ptViewWindow::ConstructContextMenu() {
 //==============================================================================
 
 void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
-  if (m_Interaction == iaSelectRect || m_Interaction == iaDrawLine) {
+  if (FInteraction == iaSelectRect || FInteraction == iaDrawLine) {
     return;
   }
 
@@ -764,7 +764,7 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu.addAction(ac_ZoomOut);
   Menu.addAction(ac_ZoomFit);
   Menu.addSeparator();
-  if (m_Interaction == iaNone) {
+  if (FInteraction == iaNone) {
     Menu.addMenu(&Menu_Mode);
     Menu.addMenu(&Menu_Clip);
     Menu.addMenu(&Menu_PRead);
@@ -857,12 +857,12 @@ void ptViewWindow::Menu_SensorClip() {
 
 void ptViewWindow::Menu_ShowZoomBar() {
   Settings->SetValue("ShowBottomContainer",(int)ac_ShowZoomBar->isChecked());
-  MainWindow->UpdateSettings();
+  FMainWindow->UpdateSettings();
 }
 
 void ptViewWindow::Menu_ShowTools() {
   Settings->SetValue("ShowToolContainer",(int)ac_ShowTools->isChecked());
-  MainWindow->UpdateSettings();
+  FMainWindow->UpdateSettings();
 }
 
 void ptViewWindow::Menu_OpenFileMgr() {
@@ -909,13 +909,13 @@ void ptViewWindow::Menu_Mode() {
 
 void ptViewWindow::Menu_PixelReading() {
   if (ac_PRead_None->isChecked()) {
-    if (m_PixelReader) m_PixelReader(QPoint(), prNone);
-    m_PixelReading = prNone;
+    if (FPixelReader) FPixelReader(QPoint(), prNone);
+    FPixelReading = prNone;
   }
-  else if (ac_PRead_Linear->isChecked())  m_PixelReading = prLinear;
-  else if (ac_PRead_Preview->isChecked()) m_PixelReading = prPreview;
+  else if (ac_PRead_Linear->isChecked())  FPixelReading = prLinear;
+  else if (ac_PRead_Preview->isChecked()) FPixelReading = prPreview;
 
-  Settings->SetValue("PixelReader", (int)m_PixelReading);
+  Settings->SetValue("PixelReader", (int)FPixelReading);
 }
 
 //==============================================================================
