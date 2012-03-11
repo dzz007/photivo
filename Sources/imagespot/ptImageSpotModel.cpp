@@ -49,6 +49,13 @@ ptImageSpotModel::~ptImageSpotModel() {
 
 //==============================================================================
 
+void ptImageSpotModel::appendSpot(ptImageSpot *ANewSpot) {
+  FSpotList->append(ANewSpot);
+  RebuildModel();
+}
+
+//==============================================================================
+
 Qt::ItemFlags ptImageSpotModel::flags(const QModelIndex &index) const {
   Qt::ItemFlags defaultFlags = QStandardItemModel::flags(index);
 

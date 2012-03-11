@@ -22,18 +22,17 @@
 
 #include "ptImageSpotListView.h"
 #include "ptImageSpotModel.h"
-//#include "../ptMainWindow.h"
-//#include "../ptSettings.h"
+#include "ptImageSpot.h"
 #include "../ptTheme.h"
 
-//extern ptSettings* Settings;
-//extern ptMainWindow* MainWindow;
 extern ptTheme* Theme;
 
 //==============================================================================
 
-ptImageSpotListView::ptImageSpotListView(QWidget *AParent /*= nullptr*/)
-: QListView(AParent)
+ptImageSpotListView::ptImageSpotListView(QWidget *AParent,
+                                         ptImageSpot::PCreateSpotFunc ASpotCreator)
+: QListView(AParent),
+  FSpotCreator(ASpotCreator)
 {
   setStyle(Theme->style());
   setStyleSheet(Theme->stylesheet());
@@ -49,16 +48,6 @@ ptImageSpotListView::ptImageSpotListView(QWidget *AParent /*= nullptr*/)
 void ptImageSpotListView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
   QListView::currentChanged(current, previous);
   emit rowChanged(current);
-
-//  if (current.row() > -1) {
-//    ptRepairSpot *hSpot = static_cast<ptRepairSpotModel*>(this->model())->spot(current.row());
-//    Settings->SetValue("SpotOpacity", hSpot->opactiy());
-//    Settings->SetValue("SpotEdgeSoftness", hSpot->edgeBlur());
-//  }
-
-//  MainWindow->UpdateSpotRepairUI();
-//  QListView::currentChanged(current, previous);
-//  emit rowChanged(current);
 }
 
 //==============================================================================
@@ -67,6 +56,24 @@ void ptImageSpotListView::deleteSpot() {
   static_cast<ptImageSpotModel*>(model())
       ->removeRows(currentIndex().row(), 1, QModelIndex());
   emit rowChanged(currentIndex());
+}
+
+//==============================================================================
+
+void ptImageSpotListView::processCoordinates(const QPoint &APos, const bool AMoveCurrent) {
+  if (AMoveCurrent && this->currentIndex().isValid()) {
+    // move currently selected spot to new position
+    qobject_cast<ptImageSpotModel*>(this->model())
+        ->spot(this->currentIndex().row())
+            ->setPos(APos.x(), APos.y());
+
+  } else {
+    // append new spot to list
+    ptImageSpot *hSpot = FSpotCreator();
+    hSpot->setPos(APos.x(), APos.y());
+    qobject_cast<ptImageSpotModel*>(this->model())
+        ->appendSpot(hSpot);
+  }
 }
 
 //==============================================================================

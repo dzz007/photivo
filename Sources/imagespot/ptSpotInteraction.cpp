@@ -39,7 +39,10 @@ void ptSpotInteraction::stop() {
 void ptSpotInteraction::mouseAction(QMouseEvent *AEvent) {
   if (AEvent->type() == QEvent::MouseButtonPress && AEvent->button() == Qt::LeftButton) {
     QPointF hClickPos = FView->mapToScene(AEvent->pos());
-    emit clicked(QPoint(qRound(hClickPos.x()), qRound(hClickPos.y()) ) );
+    if (FView->scene()->sceneRect().contains(hClickPos)) {
+      emit clicked(QPoint(qRound(hClickPos.x()), qRound(hClickPos.y())),
+                   AEvent->modifiers() == Qt::Key_Control);
+    }
   }
 }
 

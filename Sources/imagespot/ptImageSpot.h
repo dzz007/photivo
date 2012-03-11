@@ -37,6 +37,8 @@
 
 //==============================================================================
 
+#include <functional>
+
 #include <QtGlobal>
 #include <QPoint>
 #include <QString>
@@ -47,6 +49,14 @@
 
 class ptImageSpot {
 public:
+  /*! Type definition for the function pointer to the spot factory method.
+     There is no factory method returning a \c ptImageSpot because we only use
+     specialised spots in derived classes. */
+//  typedef ptImageSpot* (*PCreateSpotFunc)();
+  typedef std::function<ptImageSpot*()> PCreateSpotFunc;
+
+//------------------------------------------------------------------------------
+
   /*! Creates an empty and disabled image spot or loads a spot from the current ini file.
     \param Ini
       Optional QSettings object representing a pts file. When is parameter is non-NULL

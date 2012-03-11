@@ -52,6 +52,8 @@ public:
                    QObject *AParent = nullptr);
   ~ptImageSpotModel();
 
+  void appendSpot(ptImageSpot *ANewSpot);
+
   /*! Reimplemented from parent class. */
   virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 

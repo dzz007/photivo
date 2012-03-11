@@ -215,7 +215,7 @@ void ptRepairInteraction::changeSpot(const QModelIndex &AIndex) {
   if (AIndex.isValid()) {
     int hIdx = AIndex.row();
     assert(hIdx < FShapes->size());   // catch invalid index rows
-    Draw(FShapes->at(hIdx), static_cast<const ptRepairSpotModel*>(AIndex.model())->spot(hIdx));
+//    Draw(FShapes->at(hIdx), static_cast<ptRepairSpotModel*>(AIndex.model())->spot(hIdx));
   }
 }
 

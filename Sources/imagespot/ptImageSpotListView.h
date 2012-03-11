@@ -35,6 +35,8 @@
 
 #include <QListView>
 
+#include "ptImageSpot.h"
+
 //==============================================================================
 
 class ptImageSpotListView: public QListView {
@@ -42,11 +44,13 @@ Q_OBJECT
 
 public:
   /*! Creates a \c ptImageSpotListView object. */
-  explicit ptImageSpotListView(QWidget *AParent = nullptr);
+  explicit ptImageSpotListView(QWidget *AParent,
+                               ptImageSpot::PCreateSpotFunc ASpotCreator);
 
 //------------------------------------------------------------------------------
 
 private:
+  ptImageSpot::PCreateSpotFunc FSpotCreator;  // pointer to spot factory method
 
 //------------------------------------------------------------------------------
 
@@ -59,6 +63,9 @@ signals:
 public slots:
   /*! This slot gets called when the delete button of a spot is pressed. */
   void deleteSpot();
+
+  /*! This slot gets called when the user selects a position on the image. */
+  void processCoordinates(const QPoint &APos, const bool AMoveCurrent);
 
 //------------------------------------------------------------------------------
 

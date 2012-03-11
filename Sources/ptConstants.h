@@ -805,7 +805,8 @@ enum ptBlockToolsMode {
   btmUnblock             = 0,
   btmBlockAll            = 1,
   btmBlockForCrop        = 2,
-  btmBlockForSpotRepair  = 3
+  btmBlockForSpotRepair  = 3,
+  btmBlockForLocalAdjust = 4
 };
 
 /*! This enum defines the different modes for loading a pipe configuration

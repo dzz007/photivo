@@ -1251,16 +1251,17 @@
                                          </spacer>
                                         </item>
                                         <item>
-                                         <widget class="QToolButton" name="toolButton">
+                                         <widget class="QToolButton" name="LocalSpotButton">
                                           <property name="text">
-                                           <string>...</string>
+                                           <string>L</string>
                                           </property>
                                          </widget>
                                         </item>
                                         <item>
-                                         <widget class="QToolButton" name="toolButton_2">
-                                          <property name="text">
-                                           <string>...</string>
+                                         <widget class="QToolButton" name="ConfirmLocalSpotButton">
+                                          <property name="icon">
+                                           <iconset resource="../qrc/photivo.qrc">
+                                            <normaloff>:/dark/icons/tool-show.png</normaloff>:/dark/icons/tool-show.png</iconset>
                                           </property>
                                          </widget>
                                         </item>
@@ -1439,8 +1440,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>112</height>
+                                    <width>469</width>
+                                    <height>518</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1482,8 +1483,8 @@
                                             <string/>
                                            </property>
                                            <property name="icon">
-                                            <iconset>
-                                             <normaloff>:/photivo/Icons/checkgreen.png</normaloff>:/photivo/Icons/checkgreen.png</iconset>
+                                            <iconset resource="../qrc/photivo.qrc">
+                                             <normaloff>:/dark/icons/tool-show.png</normaloff>:/dark/icons/tool-show.png</iconset>
                                            </property>
                                           </widget>
                                          </item>

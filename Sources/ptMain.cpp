@@ -1463,6 +1463,8 @@ void BlockTools(const ptBlockToolsMode NewState) {
     case btmBlockForSpotRepair:
       ExcludeTool = "TabSpotRepair";
       break;
+    case btmBlockForLocalAdjust:
+      ExcludeTool = "TabLocalAdjust";
     default:
       // nothing to do
       break;
@@ -4851,6 +4853,43 @@ void CB_ClipParameterInput(const QVariant Value) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+void CB_LocalSpotButton() {
+  if (Settings->GetInt("HaveImage") == 0) {
+    ptMessageBox::information(MainWindow,
+      QObject::tr("No image opened"),
+      QObject::tr("Open an image before editing spots."));
+    return;
+  }
+
+  MainWindow->LocalSpotButton->hide();
+  MainWindow->ConfirmLocalSpotButton->show();
+  ViewWindow->ShowStatus(QObject::tr("Prepare"));
+  ReportProgress(QObject::tr("Prepare for local adjust"));
+
+  //TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
+  UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw); // Calculate in any case.
+
+  // Allow to be selected in the view window. And deactivate main.
+  ViewWindow->ShowStatus(QObject::tr("Local adjust"));
+  ReportProgress(QObject::tr("Local adjust"));
+  BlockTools(btmBlockForLocalAdjust);
+
+  // always start the interaction first, *then* update main window
+  ViewWindow->StartLocalAdjust(MainWindow->LocalSpotListView);
+  ViewWindow->setFocus();
+}
+
+void CleanupAfterLocalAdjust() {
+  BlockTools(btmUnblock);
+  Update(ptProcessorPhase_Geometry);
+  MainWindow->LocalSpotButton->show();
+  MainWindow->ConfirmLocalSpotButton->hide();
+}
+
+void CB_ConfirmLocalSpotButton() {
+  ViewWindow->localAdjust()->stop();
+}
+
 void CB_LocalModeChoice(const QVariant Value) {
   int hRow = MainWindow->LocalSpotListView->currentIndex().row();
   if (hRow < 0) return;
@@ -4921,6 +4960,41 @@ void CB_LocalAdaptiveSaturationCheck(const QVariant Value) {
 // Callbacks pertaining to spot repair (Local tab)
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+void CB_SpotRepairButton() {
+  if (Settings->GetInt("HaveImage")==0) {
+    ptMessageBox::information(MainWindow,
+      QObject::tr("No image opened"),
+      QObject::tr("Open an image before editing repair spots."));
+    return;
+  }
+
+  ViewWindow->ShowStatus(QObject::tr("Prepare"));
+  ReportProgress(QObject::tr("Prepare for spot repair"));
+
+  //TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
+  UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw); // Calculate in any case.
+
+  // Allow to be selected in the view window. And deactivate main.
+  ViewWindow->ShowStatus(QObject::tr("Spot repair"));
+  ReportProgress(QObject::tr("Spot repair"));
+  BlockTools(btmBlockForSpotRepair);
+
+  // always start the interaction first, *then* update main window
+  ViewWindow->StartSpotRepair(MainWindow->RepairSpotListView);
+  MainWindow->UpdateSpotRepairUI();
+  ViewWindow->setFocus();
+}
+
+void CleanupAfterSpotRepair() {
+  BlockTools(btmUnblock);
+  Update(ptProcessorPhase_Geometry);
+  MainWindow->UpdateSpotRepairUI();
+}
+
+void CB_ConfirmSpotRepairButton() {
+  ViewWindow->spotRepair()->stop();
+}
 
 void CB_SpotOpacityInput(const QVariant Value) {
   if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
@@ -5133,41 +5207,6 @@ void CB_DefishAutoScaleCheck(const QVariant State) {
 // Partim Rotate
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-void CB_SpotRepairButton() {
-  if (Settings->GetInt("HaveImage")==0) {
-    ptMessageBox::information(MainWindow,
-      QObject::tr("No image opened"),
-      QObject::tr("Open an image before editing repair spots."));
-    return;
-  }
-
-  ViewWindow->ShowStatus(QObject::tr("Prepare"));
-  ReportProgress(QObject::tr("Prepare for spot repair"));
-
-  //TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
-  UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw); // Calculate in any case.
-
-  // Allow to be selected in the view window. And deactivate main.
-  ViewWindow->ShowStatus(QObject::tr("Spot repair"));
-  ReportProgress(QObject::tr("Spot repair"));
-  BlockTools(btmBlockForSpotRepair);
-
-  // always start the interaction first, *then* update main window
-  ViewWindow->StartSpotRepair(MainWindow->RepairSpotListView);
-  MainWindow->UpdateSpotRepairUI();
-  ViewWindow->setFocus();
-}
-
-void CleanupAfterSpotRepair() {
-  BlockTools(btmUnblock);
-  Update(ptProcessorPhase_Geometry);
-  MainWindow->UpdateSpotRepairUI();
-}
-
-void CB_ConfirmSpotRepairButton() {
-  ViewWindow->spotRepair()->stop();
-}
 
 void CB_RotateLeftButton() {
   double Value = Settings->GetDouble("Rotate");
