@@ -42,7 +42,7 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
                    const ptGuiOptionsItem* InitialOptions,
                    const QString           ToolTip,
                    const int               TimeOut)
-  :QObject() {
+  :QWidget() {
 
   if (Default.type() != QVariant::Int) {
     printf("(%s,%d) this : %s\n"

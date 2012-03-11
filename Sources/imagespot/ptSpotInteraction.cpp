@@ -2,8 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -21,43 +20,30 @@
 **
 *******************************************************************************/
 
-#ifndef PTDRAWLINEINTERACTION_H
-#define PTDRAWLINEINTERACTION_H
+#include "ptSpotInteraction.h"
 
 //==============================================================================
 
-#include <QMouseEvent>
-#include <QLine>
-#include <QGraphicsLineItem>
-
-#include "ptImageInteraction.h"
+ptSpotInteraction::ptSpotInteraction(QGraphicsView *AView)
+  : ptImageInteraction(AView)
+{}
 
 //==============================================================================
 
-class ptLineInteraction : public ptImageInteraction {
-Q_OBJECT
+void ptSpotInteraction::stop() {
+  emit finished(stSuccess);
+}
 
-public:
-  explicit ptLineInteraction(QGraphicsView* View);
-  ~ptLineInteraction();
+//==============================================================================
 
-  double angle();
+void ptSpotInteraction::mouseAction(QMouseEvent *AEvent) {
+  if (AEvent->type() == QEvent::MouseButtonPress && AEvent->button() == Qt::LeftButton) {
+    QPointF hClickPos = FView->mapToScene(AEvent->pos());
+    if (FView->scene()->sceneRect().contains(hClickPos)) {
+      emit clicked(QPoint(qRound(hClickPos.x()), qRound(hClickPos.y())),
+                   AEvent->modifiers() == Qt::Key_Control);
+    }
+  }
+}
 
-//------------------------------------------------------------------------------
-
-private:
-  QLineF* m_Line;
-  short m_NowDragging;
-  QGraphicsLineItem* m_LineItem;
-
-  void Finalize(const ptStatus status);
-
-//------------------------------------------------------------------------------
-
-private slots:
-  void keyAction(QKeyEvent* event);
-  void mouseAction(QMouseEvent* event);
-
-
-};
-#endif // PTDRAWLINEINTERACTION_H
+//==============================================================================

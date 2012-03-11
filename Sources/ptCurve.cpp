@@ -33,12 +33,7 @@
 #include "ptImage.h"
 #include "ptError.h"
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Elementary constructor.
-// Sets the curve to 0 with no anchors.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptCurve::ptCurve(const short Channel) {
   if (Channel == ptCurveChannel_Saturation ||
@@ -52,22 +47,39 @@ ptCurve::ptCurve(const short Channel) {
     m_IntType = ptCurveIT_Spline;
 
   SetNullCurve(Channel);
-};
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptCurve::~ptCurve() {
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetNullCurve
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
+void ptCurve::ReadFromFile(QSettings *APtsFile) {
+  m_Type = ptCurveType_Anchor;
+  m_IntType = APtsFile->value(FId + "Interpolation", ptCurveIT_Cosine).toInt();
+  m_NrAnchors = qBound(0, APtsFile->value(FId + "Counter", 0).toInt(), (int)ptMaxAnchors);
+
+  for (int i = 0; i < m_NrAnchors; i++) {
+    m_XAnchor[i] = APtsFile->value(QString("%1X%2").arg(FId).arg(i), 0.0).toDouble();
+    m_YAnchor[i] = APtsFile->value(QString("%1Y%2").arg(FId).arg(i), 0.0).toDouble();
+  }
+
+  SetCurveFromAnchors();
+}
+
+//==============================================================================
+
+void ptCurve::WriteToFile(QSettings *APtsFile) {
+  if (m_Type != ptCurveType_Anchor) {
+    assert(!"Invalid curve type. Only ptCurveType_Anchor is allowed.");
+  }
+
+  APtsFile->setValue(FId + "Interpolation", m_IntType);
+  APtsFile->setValue(FId + "Counter", m_NrAnchors);
+  for (int j = 0; j < m_NrAnchors; j++) {
+    APtsFile->setValue(QString("%1X%2").arg(FId).arg(j), m_XAnchor[j]);
+    APtsFile->setValue(QString("%1Y%2").arg(FId).arg(j), m_YAnchor[j]);
+  }
+}
+
+//==============================================================================
 
 short ptCurve::SetNullCurve(const short Channel) {
   m_IntendedChannel = Channel;
@@ -123,11 +135,7 @@ short ptCurve::SetNullCurve(const short Channel) {
   return SetCurveFromAnchors();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetCurveFromAnchors
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::SetCurveFromAnchors() {
 
@@ -205,11 +213,7 @@ short ptCurve::SetCurveFromAnchors() {
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// DumpData
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::DumpData(const char* FileName,
                         const short Scale) {
@@ -228,11 +232,7 @@ short ptCurve::DumpData(const char* FileName,
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// A WriteCurve function. Naive, but should do !
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::WriteCurve(const char *FileName,
                           const char *Header) {
@@ -270,11 +270,7 @@ short ptCurve::WriteCurve(const char *FileName,
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// A ReadCurve function. Naive, but should do !
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::ReadCurve(const char *FileName) {
 
@@ -399,11 +395,7 @@ short ptCurve::ReadCurve(const char *FileName) {
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ReadAnchors
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::ReadAnchors(const char *FileName) {
 
@@ -453,11 +445,7 @@ short ptCurve::ReadAnchors(const char *FileName) {
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetCurveFromFunction
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::SetCurveFromFunction(double(*Function)
                                           (double r, double Arg1, double Arg2),
@@ -474,11 +462,7 @@ short ptCurve::SetCurveFromFunction(double(*Function)
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Set Curve From Curve
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 short ptCurve::Set(ptCurve *Curve) {
   m_Type = Curve->m_Type;
@@ -498,11 +482,7 @@ short ptCurve::Set(ptCurve *Curve) {
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ApplyCurve
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptCurve* ptCurve::ApplyCurve(const ptCurve* Curve,
                              const short    AfterThis) {
@@ -523,8 +503,8 @@ ptCurve* ptCurve::ApplyCurve(const ptCurve* Curve,
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
+
 // Non member utility functions for Gamma curves.
 //   BT709 curve
 //   sRGB curve
@@ -533,8 +513,6 @@ ptCurve* ptCurve::ApplyCurve(const ptCurve* Curve,
 //                      (as in ufraw)
 //   DeltaGammaTool   : (Inverse(sRGB))*GammaTool
 //   InverseGammaSRGB : Inverse(sRGB)
-//
-////////////////////////////////////////////////////////////////////////////////
 
 double GammaBT709(double r, double, double) {
   return (r <= 0.018 ? r*4.5 : pow(r,0.45)*1.099-0.099 );
@@ -564,12 +542,9 @@ double InverseGammaSRGB(double r, double, double) {
   return (r <= 0.04045 ? r/12.92 : pow((r+0.055)/1.055,2.4) );
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Non member utility function for Sigmoidal contrast function.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
+// Non member utility function for Sigmoidal contrast function.
 double Sigmoidal(double r, double Threshold, double Contrast) {
   float Scaling = 1.0/(1.0+exp(-0.5*Contrast))-1.0/(1.0+exp(0.5*Contrast));
   float Offset = -1.0/(1.0+exp(0.5*Contrast));
@@ -586,11 +561,9 @@ double Sigmoidal(double r, double Threshold, double Contrast) {
   return Value;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
+
 // From here go verbatim copies of the spline functions.
-//
-////////////////////////////////////////////////////////////////////////////////
 
 //**********************************************************************
 //
@@ -998,4 +971,5 @@ double ptCurve::spline_cubic_val ( int n, double t[], double tval, double y[],
 
   return yval;
 }
-////////////////////////////////////////////////////////////////////////////////
+
+//==============================================================================

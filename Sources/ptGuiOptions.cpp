@@ -35,6 +35,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+const ptGuiOptionsItem ptGuiOptions::LocalAdjustMode[] = {
+  {lamFloodFill,    QObject::tr("Flood fill") },
+  {lamSearch,       QObject::tr("Search") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::ZoomLevel[] = {
   {ptZoomLevel_Current, QObject::tr("Current") },
   {ptZoomLevel_Fit,     QObject::tr("Zoom fit") },
@@ -561,5 +566,10 @@ const ptGuiOptionsItem ptGuiOptions::BadPixels[] = {
   {0, QObject::tr("None")   },
   {1, QObject::tr("Load one")   },
   {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::SpotRepair[] = {
+  {SpotRepairAlgo_Clone,     QObject::tr("Clone")},
+  {SpotRepairAlgo_Heal,      QObject::tr("Heal (Dummy)")},
+  {-1, NULL}};
 
 ////////////////////////////////////////////////////////////////////////////////

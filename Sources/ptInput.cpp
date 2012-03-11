@@ -46,7 +46,7 @@ ptInput::ptInput(const QWidget* MainWindow,
                  const QString  LabelText,
                  const QString  ToolTip,
                  const int      TimeOut)
-  :QObject() {
+  :QWidget() {
 
   m_Type = Minimum.type();
 

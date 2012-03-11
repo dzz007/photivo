@@ -29,6 +29,11 @@
 #include "ptGuiOptions.h"
 #include "filemgmt/ptFileMgrConstants.h"
 
+extern int RepairSpotCount();
+extern int LocalSpotCount();
+
+//==============================================================================
+
 // Macro for inserting a key into the hash and checking it is a new one.
 #define M_InsertKeyIntoHash(Key,Item)                      \
   if (m_Hash.contains(Key)) {                              \
@@ -52,7 +57,12 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   // Load in the gui input elements
   const ptGuiInputItem GuiInputItems[] = {
     // Attention : Default,Min,Max,Step should be consistent int or double. Double *always* in X.Y notation to indicate so.
-    // Unique Name,GuiElement,InitLevel,InJobFile,HasDefault (causes button too !),Default,Min,Max,Step,NrDecimals,Label,ToolTip
+    // Unique Name              uiElement,InitLevel,InJobFile,HasDefault  Default     Min       Max       Step    Decimals  Label,ToolTip
+    {"LocalMaskThreshold"            ,ptGT_InputSlider     ,9,0,1         ,0.25       ,0.0      ,1.0      ,0.1    ,2        ,tr("Threshold"),tr("Maximum amount a pixel may differ from the spot's source pixel to get included in the mask.")},
+    {"LocalMaskLumaWeight"           ,ptGT_InputSlider     ,9,0,1         ,0.5        ,0.0      ,1.0      ,0.1    ,2        ,tr("Brightness/color ratio"),tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")},
+    {"LocalMaxRadius"                ,ptGT_InputSlider     ,9,0,1         ,500        ,1        ,7000     ,10     ,0        ,tr("Maximum radius"),tr("Pixels outside this radius will never be included in the mask.")},
+    {"LocalSaturation"               ,ptGT_InputSlider     ,9,0,1         ,0.0        ,-10.0    ,10.0     ,0.5    ,1        ,tr("Saturation"),tr("Adjusts saturation in masked region")},
+
     {"FileMgrThumbnailSize"          ,ptGT_InputSlider     ,1,0,1 ,100  ,50   ,500   ,25   ,0 ,tr("Thumbnail size")     ,tr("Thumbnail size in pixel")},
     {"FileMgrThumbnailPadding"       ,ptGT_InputSlider     ,1,0,1 ,8    ,0    ,50    ,2    ,0 ,tr("Thumbnail padding")  ,tr("Thumbnail padding in pixel")},
     {"FileMgrThumbMaxRowCol"         ,ptGT_Input           ,1,0,1 ,3    ,1    ,1000  ,1    ,0 ,tr("Thumbnails in a row/column"), tr("Maximum number of thumbnails that should be placed in a row or column.")},
@@ -79,6 +89,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"MedianPasses"                  ,ptGT_Input           ,2,1,1 ,0    ,0    ,10     ,1    ,0 ,tr("Median passes")      ,tr("Nr of median filter passes")},
     {"ESMedianPasses"                ,ptGT_Input           ,2,1,1 ,0    ,0    ,10     ,1    ,0 ,tr("Edge sensitive median passes")      ,tr("Nr of edge sensitive median filter passes")},
     {"ClipParameter"                 ,ptGT_InputSlider     ,1,1,1 ,0    ,0    ,100   ,1    ,0 ,tr("Parameter")          ,tr("Clip function dependent parameter")},
+    {"SpotOpacity"                   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,1.0  ,1  ,tr("Opacity")   , tr("Opacity for the whole spot")},
+    {"SpotEdgeSoftness"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1  ,tr("Edge softness")   ,tr("Edge softness")},
     {"LfunFocal"                     ,ptGT_Input           ,2,1,1 ,50.0 ,4.0  ,1000.0,1.0  ,0 ,tr("Focal length (35mm equiv.)"), tr("Focal length (35mm equiv.)")},
     {"LfunAperture"                  ,ptGT_Input           ,2,1,1 ,8.0  ,0.8  ,32.0  ,1.0  ,1 ,tr("Aperture"), tr("")},
     {"LfunDistance"                  ,ptGT_Input           ,2,1,1 ,1.0  ,0.01 ,500.0 ,1.0  ,2 ,tr("Distance"), tr("Distance between object and camera")},
@@ -474,7 +486,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
 
   // Load in the gui choice (combo) elements
   const ptGuiChoiceItem GuiChoiceItems[] = {
-    // Unique Name,                 GuiElement,    InitLevel,InJobFile,HasDefault,Default, Choices (from ptGuiOptions.h),         ToolTip
+    // Unique Name          GuiElement,InitLevel,InJobFile,HasDefault, Default            Choices (from ptGuiOptions.h),         ToolTip
+    {"LocalMode"                   ,ptGT_Choice       ,9,0,1 ,lamFloodFill                ,GuiOptions->LocalAdjustMode           ,tr("Mask generation mode")},
+
     {"RememberSettingLevel"        ,ptGT_Choice       ,1,0,0 ,2                           ,GuiOptions->RememberSettingLevel      ,tr("Remember setting level")},
     {"CameraColor"                 ,ptGT_Choice       ,1,1,1 ,ptCameraColor_Adobe_Profile ,GuiOptions->CameraColor               ,tr("Transform camera RGB to working space RGB")},
     {"CameraColorProfileIntent"    ,ptGT_Choice       ,1,1,1 ,INTENT_PERCEPTUAL           ,GuiOptions->CameraColorProfileIntent  ,tr("Intent of the profile")},
@@ -497,6 +511,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CaCorrect"                   ,ptGT_Choice       ,2,1,1 ,ptCACorrect_Off             ,GuiOptions->CACorrect                 ,tr("CA correction")},
     {"Interpolation"               ,ptGT_Choice       ,2,1,1 ,ptInterpolation_DCB         ,GuiOptions->Interpolation             ,tr("Demosaicing algorithm")},
     {"BayerDenoise"                ,ptGT_Choice       ,2,1,1 ,ptBayerDenoise_None         ,GuiOptions->BayerDenoise              ,tr("Denosie on Bayer pattern")},
+
+    {"SpotAlgorithm"               ,ptGT_Choice       ,9,0,1 ,SpotRepairAlgo_Clone        ,GuiOptions->SpotRepair                ,tr("Repair algorithm")},
+
     {"CropGuidelines"              ,ptGT_Choice       ,1,0,0 ,ptGuidelines_GoldenRatio    ,GuiOptions->CropGuidelines            ,tr("Guide lines for crop")},
     {"LightsOut"                   ,ptGT_Choice       ,1,0,0 ,ptLightsOutMode_Dimmed      ,GuiOptions->LightsOutMode             ,tr("Dim areas outside the crop rectangle")},
     {"ClipMode"                    ,ptGT_Choice       ,1,1,1 ,ptClipMode_Blend            ,GuiOptions->ClipMode                  ,tr("How to handle clipping")},
@@ -583,7 +600,11 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
 
   // Load in the gui check elements
   const ptGuiCheckItem GuiCheckItems[] = {
-    // Name, GuiType,InitLevel,InJobFile,Default,Label,Tip
+    // Name   GuiType,InitLevel,InJobFile,Default,Label,Tip
+    {"LocalEgdeAwareThreshold"    ,ptGT_Check ,9,0,1,   tr("Edge aware threshold"),tr("Apply threshold only to hard edges. Allow gradual changes.")},
+    {"LocalMaxRadiusCheck"        ,ptGT_Check ,9,0,0,   "",""},
+    {"LocalAdaptiveSaturation"    ,ptGT_Check ,9,0,0,   tr("Adaptive Saturation"),tr("Prevent clipping when adjusting saturation.")},
+
     {"FileMgrUseThumbMaxRowCol"   ,ptGT_Check ,1,0,0,tr("At most")         ,tr("Maximum number of thumbnails that should be placed in a row or column.")},
     {"StartupSettings"            ,ptGT_Check ,1,0,1,tr("User settings")   ,tr("Load user settings on startup")},
     {"StartupSettingsReset"       ,ptGT_Check ,1,0,0,tr("Reset on new image") ,tr("Reset to user settings when new image is opened")},
@@ -1678,8 +1699,18 @@ struct sToolInfo {
 
 sToolInfo ToolInfo (const QString GuiName) {
   sToolInfo Info = {"N.N.",0,0,0,0};
+
+  // Tab Local Edit
+  if (GuiName == "TabLocalAdjust") {
+    Info.Name = "Local adjust";
+    Info.IsActive = LocalSpotCount() > 0;
+  } else if (GuiName == "TabSpotRepair") {
+    Info.Name = "Spot Repair";
+    Info.IsActive = RepairSpotCount() > 0;
+  }
+
   // Tab Geometry
-  if (GuiName == "TabLensfunCA") {
+  else if (GuiName == "TabLensfunCA") {
     Info.Name = "Chromatic Aberration (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunCAModel") != 0;
   } else if (GuiName == "TabLensfunVignette") {

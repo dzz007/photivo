@@ -55,6 +55,8 @@
 #include "ptWiener.h"
 #include "ptParseCli.h"
 #include "ptImageHelper.h"
+#include "imagespot/ptRepairSpot.h"
+#include "imagespot/ptLocalSpot.h"
 #include "qtsingleapplication/qtsingleapplication.h"
 #include "filemgmt/ptFileMgrWindow.h"
 #include <wand/magick_wand.h>
@@ -104,7 +106,6 @@ cmsCIExyY       D65;
 cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
-
 
 //
 // The 'tee' towards the display.
@@ -431,7 +432,6 @@ int photivoMain(int Argc, char *Argv[]) {
   std::signal(SIGSEGV, SegfaultAbort);
   std::signal(SIGABRT, SegfaultAbort);
 
-
   // Check for wrong GM quantum depth. We need the 16bit GraphicsMagick.
   ulong QDepth = 0;
   const ulong MinQD = 16;
@@ -679,13 +679,11 @@ int photivoMain(int Argc, char *Argv[]) {
   ShareDirectory = NewShareDirectory;
 
   QFileInfo SettingsFileInfo(SettingsFileName);
-  short NeedInitialization = 1;
   short FirstStart = 1;
   if (SettingsFileInfo.exists() &&
           SettingsFileInfo.isFile() &&
           SettingsFileInfo.isReadable()) {
       // photivo was initialized
-      NeedInitialization = 0;
       FirstStart = 0;
       printf("Existing settingsfile '%s'\n",SettingsFileName.toAscii().data());
   } else {
@@ -698,8 +696,8 @@ int photivoMain(int Argc, char *Argv[]) {
   // We need to load the translation before the ptSettings
   QSettings* TempSettings = new QSettings(SettingsFileName, QSettings::IniFormat);
 
-  if (TempSettings->value("SettingsVersion",0).toInt() < PhotivoSettingsVersion)
-      NeedInitialization = 1;
+//  if (TempSettings->value("SettingsVersion",0).toInt() < PhotivoSettingsVersion)
+//      NeedInitialization = 1;
 
   // Initialize the user folder if needed
   /* TODO: for testing. Enable the other line below once profile versions are final. */
@@ -1458,7 +1456,6 @@ void Update(const QString GuiName) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Block tools
-// 0: enable tools, 1: disable everything, 2: disable but keep crop tools enabled
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1472,6 +1469,8 @@ void BlockTools(const ptBlockToolsMode NewState) {
     case btmBlockForSpotRepair:
       ExcludeTool = "TabSpotRepair";
       break;
+    case btmBlockForLocalAdjust:
+      ExcludeTool = "TabLocalAdjust";
     default:
       // nothing to do
       break;
@@ -1544,7 +1543,7 @@ void HistogramGetCrop() {
 
 void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(btmUnblock);;
+  BlockTools(btmUnblock);
   if (ExitStatus == stFailure) {
     Settings->SetValue("HistogramCropX",0);
     Settings->SetValue("HistogramCropY",0);
@@ -1878,6 +1877,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   } else if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output &&
              !(Settings->GetInt("HistogramCrop") && !Settings->GetInt("WebResize"))) {
     HistogramImage->Set(PreviewImage);
+
+
   } else if (Settings->GetInt("HistogramCrop")) {
     HistogramImage->Set(PreviewImage);
   }
@@ -2547,6 +2548,10 @@ short WriteSettingsFile(const QString FileName, const short IsJobFile /* = 0 */)
       JobSettings.setValue(CurveKeys.at(i) + "Type",Curve[i]->m_IntType);
     }
   }
+
+  // Save list of spotrepair spots
+  MainWindow->WriteSpotRepairList(&JobSettings);
+
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) return 0;
   assert(JobSettings.status() == QSettings::NoError); // TODO
@@ -2845,6 +2850,17 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
     JobSettings.setValue(Locations.at(i), Settings->GetStringList(Locations.at(i)));
   }
   JobSettings.setValue("CameraColorProfile", Settings->GetString("CameraColorProfile"));*/
+
+  // list of spotrepair spots
+//  RepairSpotList->clear();
+//  int size = JobSettings.beginReadArray(RepairSpotList->iniName());
+//  for (int i = 0; i < size; i++) {
+//    JobSettings.setArrayIndex(i);
+//    RepairSpotList->append(new ptRepairSpot(&JobSettings));
+//  }
+//  JobSettings.endArray();
+  MainWindow->PopulateSpotRepairList(&JobSettings);
+
 
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) {
@@ -3342,7 +3358,6 @@ void CB_MenuFileExit(const short) {
 
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
-
 #ifdef Q_OS_WIN
   if (!JobMode)
     ptEcWin7::DestroyInstance();
@@ -3894,7 +3909,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       }
 
       // Selection is done at this point. Disallow it further and activate main.
-      BlockTools(btmUnblock);;
+      BlockTools(btmUnblock);
 
       if (DetailViewRect.width() >>4 <<4 > 19 &&
           DetailViewRect.height() >>4 <<4 > 19) {
@@ -4399,7 +4414,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
 
 void SelectSpotWBDone(const ptStatus ExitStatus, const QRect SelectionRect) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(btmUnblock);;
+  BlockTools(btmUnblock);
 
   if (ExitStatus == stSuccess) {
     Settings->SetValue("VisualSelectionX", SelectionRect.left());
@@ -4613,6 +4628,172 @@ void CB_ClipParameterInput(const QVariant Value) {
   Settings->SetValue("ClipParameter",Value);
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Highlights);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to local adjust (Local tab)
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_LocalSpotButton() {
+  if (Settings->GetInt("HaveImage") == 0) {
+    ptMessageBox::information(MainWindow,
+      QObject::tr("No image opened"),
+      QObject::tr("Open an image before editing spots."));
+    return;
+  }
+
+  MainWindow->LocalSpotButton->hide();
+  MainWindow->ConfirmLocalSpotButton->show();
+  ViewWindow->ShowStatus(QObject::tr("Prepare"));
+  ReportProgress(QObject::tr("Prepare for local adjust"));
+
+  //TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
+  UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw); // Calculate in any case.
+
+  // Allow to be selected in the view window. And deactivate main.
+  ViewWindow->ShowStatus(QObject::tr("Local adjust"));
+  ReportProgress(QObject::tr("Local adjust"));
+  BlockTools(btmBlockForLocalAdjust);
+
+  // always start the interaction first, *then* update main window
+  ViewWindow->StartLocalAdjust(MainWindow->LocalSpotListView);
+  ViewWindow->setFocus();
+}
+
+void CleanupAfterLocalAdjust() {
+  BlockTools(btmUnblock);
+  Update(ptProcessorPhase_Geometry);
+  MainWindow->LocalSpotButton->show();
+  MainWindow->ConfirmLocalSpotButton->hide();
+}
+
+void CB_ConfirmLocalSpotButton() {
+  ViewWindow->localAdjust()->stop();
+}
+
+void CB_LocalModeChoice(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalMode", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setMode((ptLocalAdjustMode)Value.toInt());
+}
+
+void CB_LocalMaskThresholdInput(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalMaskThreshold", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setThreshold(Value.toFloat());
+}
+
+void CB_LocalMaskLumaWeightInput(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalMaskLumaWeight", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setLumaWeight(Value.toFloat());
+}
+
+void CB_LocalEgdeAwareThresholdCheck(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalEdgeAwareThreshold", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setEdgeAware(Value.toBool());
+}
+
+void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalMaxRadiusCheck", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setHasMaxRadius(Value.toBool());
+}
+
+void CB_LocalMaxRadiusInput(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalMaxRadius", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setMaxRadius(Value.toUInt());
+}
+
+void CB_LocalSaturationInput(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalSaturation", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setSaturation(Value.toFloat());
+}
+
+void CB_LocalAdaptiveSaturationCheck(const QVariant Value) {
+  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("LocalAdaptiveSaturation", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+      ->setAdaptiveSaturation(Value.toBool());
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to spot repair (Local tab)
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_SpotRepairButton() {
+  if (Settings->GetInt("HaveImage")==0) {
+    ptMessageBox::information(MainWindow,
+      QObject::tr("No image opened"),
+      QObject::tr("Open an image before editing repair spots."));
+    return;
+  }
+
+  ViewWindow->ShowStatus(QObject::tr("Prepare"));
+  ReportProgress(QObject::tr("Prepare for spot repair"));
+
+  //TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
+  UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw); // Calculate in any case.
+
+  // Allow to be selected in the view window. And deactivate main.
+  ViewWindow->ShowStatus(QObject::tr("Spot repair"));
+  ReportProgress(QObject::tr("Spot repair"));
+  BlockTools(btmBlockForSpotRepair);
+
+  // always start the interaction first, *then* update main window
+  ViewWindow->StartSpotRepair(MainWindow->RepairSpotListView);
+  MainWindow->UpdateSpotRepairUI();
+  ViewWindow->setFocus();
+}
+
+void CleanupAfterSpotRepair() {
+  BlockTools(btmUnblock);
+  Update(ptProcessorPhase_Geometry);
+  MainWindow->UpdateSpotRepairUI();
+}
+
+void CB_ConfirmSpotRepairButton() {
+  ViewWindow->spotRepair()->stop();
+}
+
+void CB_SpotOpacityInput(const QVariant Value) {
+  if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
+    Settings->SetValue("SpotOpacity", Value);
+//    RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row())
+//        ->setOpacity(Value.toFloat());
+  }
+}
+
+void CB_SpotEdgeSoftnessInput(const QVariant Value) {
+  if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
+    Settings->SetValue("SpotEdgeSoftness", Value);
+//    RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row())
+//        ->setEdgeBlur(Value.toFloat());
+  }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -4851,7 +5032,7 @@ void CB_RotateAngleButton() {
 
 void RotateAngleDetermined(const ptStatus ExitStatus, double RotateAngle) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(btmUnblock);;
+  BlockTools(btmUnblock);
 
   if (ExitStatus == stSuccess) {
     if (RotateAngle < -45.0) {
@@ -5094,7 +5275,6 @@ void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
       Settings->SetValue("CropY",CropRect.top() * YScale);
       Settings->SetValue("CropW",CropRect.width() * XScale);
       Settings->SetValue("CropH",CropRect.height() * YScale);
-//      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Checked);
     }
 
     TRACEKEYVALS("PreviewImageW","%d",PreviewImage->m_Width);
@@ -5111,7 +5291,6 @@ void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
   } else {
     if ((Settings->GetInt("CropW") < 4) || (Settings->GetInt("CropH") < 4)) {
       Settings->SetValue("Crop", 0);
-//      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Unchecked);
     }
   }
 
@@ -5196,6 +5375,7 @@ void CB_LqrVertFirstCheck(const QVariant Check) {
   if (Settings->ToolIsActive("TabLiquidRescale"))
     Update(ptProcessorPhase_Geometry);
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -8212,7 +8392,6 @@ void Standard_CB_SetAndRun (const QString ObjectName, const QVariant Value) {
 }
 
 void CB_InputChanged(const QString ObjectName, const QVariant Value) {
-
   // No CB processing while in startup phase. Too much
   // noise events otherwise.
   if (InStartup) return;
@@ -8311,6 +8490,18 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(EeciRefineCheck)
   M_Dispatch(ClipModeChoice)
   M_Dispatch(ClipParameterInput)
+
+  M_Dispatch(LocalModeChoice)
+  M_Dispatch(LocalMaskThresholdInput)
+  M_Dispatch(LocalMaskLumaWeightInput)
+  M_Dispatch(LocalEgdeAwareThresholdCheck)
+  M_Dispatch(LocalMaxRadiusCheckCheck)
+  M_Dispatch(LocalMaxRadiusInput)
+  M_Dispatch(LocalSaturationInput)
+  M_Dispatch(LocalAdaptiveSaturationCheck)
+
+  M_Dispatch(SpotOpacityInput)
+  M_Dispatch(SpotEdgeSoftnessInput)
 
   M_Dispatch(LfunFocalInput)
   M_Dispatch(LfunApertureInput)
@@ -8982,3 +9173,17 @@ ptImageType CheckImageType(QString filename,
 }
 
 //==============================================================================
+
+// Hack to pass current number of spots to ptSettings for determining
+// the tool active state. Used there in ToolInfo(). Avoids making the MainWindow
+// known to ptSettings.
+int RepairSpotCount() {
+  return MainWindow->RepairSpotModel->rowCount();
+}
+
+int LocalSpotCount() {
+  return MainWindow->LocalSpotModel->rowCount();
+}
+
+//==============================================================================
+

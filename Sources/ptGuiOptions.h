@@ -47,6 +47,8 @@ struct ptGuiOptionsItem {
 
 class ptGuiOptions {
 public:
+  static const ptGuiOptionsItem LocalAdjustMode[];
+
   static const ptGuiOptionsItem ZoomLevel[];
   static const ptGuiOptionsItem RememberSettingLevel[];
   static const ptGuiOptionsItem CameraColor[];
@@ -112,6 +114,8 @@ public:
   static const ptGuiOptionsItem ResetMode[];
   static const ptGuiOptionsItem BadPixels[];
   static const ptGuiOptionsItem DarkFrame[];
+
+  static const ptGuiOptionsItem SpotRepair[];
 };
 
 extern ptGuiOptions* GuiOptions;

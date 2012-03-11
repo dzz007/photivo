@@ -35,7 +35,8 @@
 
 /* !!!
   IMPORTANT: Photivo uses groups of const short for historical reasons.
-  They are deprecated for new constants groups! Use enums insteads.
+  They are deprecated for new constants groups! Instead use enums or, even better,
+  C++11 enum classes.
 !!! */
 
 //==============================================================================
@@ -177,6 +178,12 @@ const short ptStartupUIMode_Tab       = 0;
 const short ptStartupUIMode_Favourite = 1;
 const short ptStartupUIMode_AllTools  = 2;
 
+// local adjust modes
+enum ptLocalAdjustMode {
+  lamFloodFill    = 0,
+  lamSearch       = 1
+};
+
 // Lensfun
 const short ptLfunCAModel_None        = LF_TCA_MODEL_NONE;
 const short ptLfunCAModel_Linear      = LF_TCA_MODEL_LINEAR;
@@ -297,6 +304,7 @@ const short ptCurveChannel_Denoise           = 13;
 const short ptCurveChannel_Hue               = 14;
 const short ptCurveChannel_Denoise2          = 15;
 const short ptCurveChannel_Outline           = 16;
+const short ptCurveChannel_SpotLuma          = 17;
 
 const short ptCurveType_Full         = 0;
 const short ptCurveType_Anchor       = 1;
@@ -574,6 +582,13 @@ const short ptLqr_LumaGradNorm     = 6;
 const short ptLqr_ScaleRelative    = 0;
 const short ptLqr_ScaleAbsolute    = 1;
 
+// Spot repair algos
+// indexes MUST be consecutive integers starting from 0
+enum ptSpotRepairAlgo {
+  SpotRepairAlgo_Clone = 0,
+  SpotRepairAlgo_Heal  = 1
+};
+
 // Zoom modes
 const short ptZoomMode_Fit    = 0;
 const short ptZoomMode_NonFit = 1;
@@ -790,7 +805,8 @@ enum ptBlockToolsMode {
   btmUnblock             = 0,
   btmBlockAll            = 1,
   btmBlockForCrop        = 2,
-  btmBlockForSpotRepair  = 3
+  btmBlockForSpotRepair  = 3,
+  btmBlockForLocalAdjust = 4
 };
 
 /*! This enum defines the different modes for loading a pipe configuration

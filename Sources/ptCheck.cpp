@@ -37,7 +37,7 @@ ptCheck::ptCheck(const QWidget* MainWindow,
                  const QVariant Default,
                  const QString  Label,
                  const QString  ToolTip)
-  :QObject() {
+  :QWidget() {
 
   setObjectName(ObjectName);
   m_SettingsName = ObjectName;

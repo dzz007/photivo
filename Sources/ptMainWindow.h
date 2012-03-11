@@ -24,6 +24,11 @@
 #ifndef DLMAINWINDOW_H
 #define DLMAINWINDOW_H
 
+//==============================================================================
+
+#include <memory>
+using std::unique_ptr;
+
 #include <QTimer>
 
 #include <exiv2/exif.hpp>
@@ -31,11 +36,15 @@
 
 #include "ui_ptMainWindow.h"
 
+#include "ptCurve.h"
+#include "ptCurveWindow.h"
 #include "ptInput.h"
 #include "ptChoice.h"
 #include "ptCheck.h"
 #include "ptGroupBox.h"
 #include "ptVisibleToolsView.h"
+#include "imagespot/ptImageSpotModel.h"
+#include "imagespot/ptImageSpotListView.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,6 +99,7 @@ public:
 
   void UpdateLiquidRescaleUI();
 
+  void UpdateSpotRepairUI();
   void UpdateGradualBlurUI();
 
   // Visible tools
@@ -123,6 +133,15 @@ public:
   QDockWidget* ControlsDockWidget;
 
   void OnToolBoxesEnabledTriggered(const bool Enabled);
+  void PopulateSpotRepairList(QSettings *APtsFile);
+  void WriteSpotRepairList(QSettings *APtsFile);
+
+  ptImageSpotListView *LocalSpotListView;
+  ptImageSpotModel    *LocalSpotModel;
+  ptImageSpotListView *RepairSpotListView;
+  ptImageSpotModel    *RepairSpotModel;
+
+//------------------------------------------------------------------------------
 
 protected:
   void closeEvent(QCloseEvent * Event);
@@ -138,7 +157,9 @@ protected:
   virtual bool winEvent(MSG *message, long *result);
 #endif
 
-private :
+//------------------------------------------------------------------------------
+
+private:
   QTabBar* Tabbar;
   QAction* m_AtnSavePipe;
   QAction* m_AtnSaveFull;
@@ -153,11 +174,15 @@ private :
   short    m_ContextMenuOnTab;
   QAction* m_AtnShowTools;
 
-  ptVisibleToolsModel* m_VisibleToolsModel;
+  ptVisibleToolsModel  *m_VisibleToolsModel;
+  unique_ptr<ptCurve>  FEmptyCurve; //Empty curve for spots. Gets applied when no spot is selected.
+  ptCurveWindow        *FSpotCurveWindow;  // raw pointer because managed by Qt parent mechanism
 
   void AnalyzeToolBoxStructure();
   void ShowMovedTools(const QString Title);
   void InitVisibleTools();
+
+//------------------------------------------------------------------------------
 
 public slots:
   // Toggle file manager window
@@ -169,7 +194,12 @@ public slots:
   void Settings_2_Form();
   void Form_2_Settings();
 
+//------------------------------------------------------------------------------
+
 private slots:
+  void UpdateLocalSpotUI(const QModelIndex &ANewIdx);
+  void UpdateRepairSpotUI(const QModelIndex &ANewIdx);
+
   void ResizeTimerExpired();
   void Event0TimerExpired();
   void SaveMenuPipe();
@@ -231,6 +261,10 @@ private slots:
 
   void OnStartupSettingsButtonClicked();
 
+  void OnLocalSpotButtonClicked();
+  void OnConfirmLocalSpotButtonClicked();
+  void OnSpotRepairButtonClicked();
+  void OnConfirmSpotRepairButtonClicked();
   void OnRotateLeftButtonClicked();
   void OnRotateRightButtonClicked();
   void OnRotateAngleButtonClicked();

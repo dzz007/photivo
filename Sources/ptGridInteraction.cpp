@@ -24,46 +24,54 @@
 #include "ptDefines.h"
 #include <cstdio>
 
+//==============================================================================
+
 ptGridInteraction::ptGridInteraction(QGraphicsView* View)
 : ptImageInteraction(View)
 {
 }
 
+//==============================================================================
+
 ptGridInteraction::~ptGridInteraction() {
   ClearList();
 }
+
+//==============================================================================
 
 void ptGridInteraction::show(const uint linesX, const uint linesY) {
   ClearList();
   QPen pen(QColor(150,150,150));
 
-  uint width = (uint)m_View->scene()->width();
-  uint height = (uint)m_View->scene()->height();
+  uint width = (uint)FView->scene()->width();
+  uint height = (uint)FView->scene()->height();
   uint stepX = (uint)((double)width / (double)(linesX + 1));
   uint stepY = (uint)((double)height / (double)(linesY + 1));
 
   // Add vertical lines
   for (uint i = 1; i <= linesX; i++) {
-    QGraphicsLineItem* temp = m_View->scene()->addLine(i*stepX, 0.0, i*stepX, height, pen);
+    QGraphicsLineItem* temp = FView->scene()->addLine(i*stepX, 0.0, i*stepX, height, pen);
     m_GridLines.append(temp);
   }
 
   // Add horizontal lines
   for (uint i = 1; i <= linesY; i++) {
-    QGraphicsLineItem* temp = m_View->scene()->addLine(0.0, i*stepY, width, i*stepY, pen);
+    QGraphicsLineItem* temp = FView->scene()->addLine(0.0, i*stepY, width, i*stepY, pen);
     m_GridLines.append(temp);
   }
 }
 
-
+//==============================================================================
 
 // Properly destroy all lines and clear the list
 void ptGridInteraction::ClearList() {
   if (m_GridLines.count() > 0) {
     for (int i = 0; i < m_GridLines.count(); i++) {
-      m_View->scene()->removeItem(m_GridLines[i]);
+      FView->scene()->removeItem(m_GridLines[i]);
       DelAndNull(m_GridLines[i]);
     }
     m_GridLines.clear();
   }
 }
+
+//==============================================================================

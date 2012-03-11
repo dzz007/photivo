@@ -25,6 +25,9 @@
 #include <iostream>
 
 #include "ptDefines.h"
+#include "imagespot/ptRepairSpot.h"
+#include "imagespot/ptLocalSpot.h"
+#include "imagespot/ptImageSpotItemDelegate.h"
 #include "ptChannelMixer.h"
 #include "ptConfirmRequest.h"
 #include "ptConstants.h"
@@ -54,6 +57,7 @@ void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
 void CB_ZoomStep(int direction);
+void ReportProgress(const QString Message);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -102,7 +106,9 @@ void Update(const QString GuiName);
 ////////////////////////////////////////////////////////////////////////////////
 
 ptMainWindow::ptMainWindow(const QString Title)
-: QMainWindow(NULL)
+: QMainWindow(NULL),
+  FEmptyCurve(new ptCurve(ptCurveChannel_SpotLuma)),
+  FSpotCurveWindow(new ptCurveWindow(FEmptyCurve.get(), ptCurveChannel_SpotLuma, LocalLumaCurveWidget))
 {
   // Setup from the Gui builder.
   setupUi(this);
@@ -362,6 +368,51 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(SpotWB);
 
   //
+  // TAB : Local Edits
+  //
+
+  // "local adjust"
+  Macro_ConnectSomeButton(LocalSpot);
+  Macro_ConnectSomeButton(ConfirmLocalSpot);
+  ConfirmLocalSpotButton->hide();
+
+  LocalSpotListView = new ptImageSpotListView(this, ptLocalSpot::CreateSpot);
+  LocalAdjustVLayout->insertWidget(1, LocalSpotListView);
+  LocalSpotModel = new ptImageSpotModel(
+                         QSize(0, RepairSpotListView->fontMetrics().lineSpacing() + 2),
+                         "LocalSpots",
+                         this
+                       );
+  LocalSpotListView->setModel(LocalSpotModel);
+  LocalSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
+                                     QAbstractItemView::SelectedClicked);
+  LocalSpotListView->setItemDelegate(new ptImageSpotItemDelegate(LocalSpotListView));
+  connect(LocalSpotListView, SIGNAL(rowChanged(QModelIndex)),
+          this, SLOT(UpdateLocalSpotUI(QModelIndex)));
+  UpdateLocalSpotUI(QModelIndex());
+
+
+  // "spot repair"
+  Macro_ConnectSomeButton(SpotRepair);
+  Macro_ConnectSomeButton(ConfirmSpotRepair);
+  ConfirmSpotRepairButton->hide();
+
+  RepairSpotListView = new ptImageSpotListView(this, ptRepairSpot::CreateSpot);
+  SpotRepairVLayout->insertWidget(1, RepairSpotListView);
+  RepairSpotModel = new ptImageSpotModel(
+                          QSize(0, RepairSpotListView->fontMetrics().lineSpacing() + 2),
+                          "RepairSpots",
+                          this
+                        );
+  RepairSpotListView->setModel(RepairSpotModel);
+  RepairSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
+                                      QAbstractItemView::SelectedClicked);
+  RepairSpotListView->setItemDelegate(new ptImageSpotItemDelegate(RepairSpotListView));
+  connect(RepairSpotListView, SIGNAL(rowChanged(QModelIndex)),
+          this, SLOT(UpdateRepairSpotUI(QModelIndex)));
+  UpdateRepairSpotUI(QModelIndex());
+
+  //
   // TAB : Geometry
   //
 
@@ -369,6 +420,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
 
+  Macro_ConnectSomeButton(SpotRepair);
+  Macro_ConnectSomeButton(ConfirmSpotRepair);
   Macro_ConnectSomeButton(RotateLeft);
   Macro_ConnectSomeButton(RotateRight);
   Macro_ConnectSomeButton(RotateAngle);
@@ -666,7 +719,10 @@ ptMainWindow::ptMainWindow(const QString Title)
           this,
           SLOT(Event0TimerExpired()));
 
+  ConfirmSpotRepairButton->hide();
   FileMgrThumbMaxRowColWidget->setEnabled(Settings->GetInt("FileMgrUseThumbMaxRowCol"));
+
+  UpdateSpotRepairUI();
   UpdateCropToolUI();
   UpdateLfunDistUI();
   UpdateLfunCAUI();
@@ -720,6 +776,7 @@ void ptMainWindow::OnTranslationChoiceChanged(int idx) {
     Settings->SetValue("UiLanguage", TranslationChoice->itemText(idx));
   }
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -919,6 +976,47 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
     ImageFileToOpen.remove(0,7);
     ImageCleanUp++;
     CB_MenuFileOpen(1);
+  }
+}
+
+
+//==============================================================================
+
+void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
+  if (!ANewIdx.isValid()) {
+    // empty spot list or none selected
+    FSpotCurveWindow->UpdateView(FEmptyCurve.get());
+    SpotConfigGroup->setEnabled(false);
+
+  } else {
+    // update with values from selected spot
+    SpotConfigGroup->setEnabled(true);
+    ptLocalSpot* hSpot = static_cast<ptLocalSpot*>(LocalSpotModel->spot(ANewIdx.row()));
+    Settings->SetValue("LocalMode", hSpot->mode());
+    Settings->SetValue("LocalMaskThreshold", hSpot->threshold());
+    Settings->SetValue("LocalMaskLumaWeight", hSpot->lumaWeight());
+    Settings->SetValue("LocalEgdeAwareThreshold", hSpot->isEdgeAware());
+    Settings->SetValue("LocalMaxRadiusCheck", hSpot->hasMaxRadius());
+    Settings->SetValue("LocalMaxRadius", hSpot->maxRadius());
+    FSpotCurveWindow->UpdateView(hSpot->lumaCurve());
+    Settings->SetValue("LocalSaturation", hSpot->saturation());
+    Settings->SetValue("LocalAdaptiveSaturation", hSpot->isAdaptiveSaturation());
+  }
+}
+
+void ptMainWindow::UpdateRepairSpotUI(const QModelIndex &ANewIdx) {
+  if (!ANewIdx.isValid()) {
+    // empty spot list or none selected
+    SpotConfigGroup->setEnabled(false);
+
+  } else {
+    // update with values from selected spot
+    SpotConfigGroup->setEnabled(true);
+    ptRepairSpot* hSpot = static_cast<ptRepairSpot*>(RepairSpotModel->spot(ANewIdx.row()));
+    Settings->SetValue("SpotAlgorithm", hSpot->algorithm());
+    Settings->SetValue("SpotOpacity", hSpot->opactiy());
+    Settings->SetValue("SpotEdgeSoftness", hSpot->edgeSoftness());
+    // TODO: some settings still missing, also from the UI
   }
 }
 
@@ -1332,6 +1430,8 @@ void CB_StartupSettingsButton();
 void ptMainWindow::OnStartupSettingsButtonClicked() {
   ::CB_StartupSettingsButton();
 }
+
+
 //
 // Tab : Camera
 //
@@ -1351,6 +1451,30 @@ void ptMainWindow::OnOpenPresetFileButtonClicked() {
 void CB_SpotWBButton();
 void ptMainWindow::OnSpotWBButtonClicked() {
   ::CB_SpotWBButton();
+}
+
+//
+// Tab : Local Edit
+//
+
+void CB_LocalSpotButton();
+void ptMainWindow::OnLocalSpotButtonClicked() {
+  ::CB_LocalSpotButton();
+}
+
+void CB_ConfirmLocalSpotButton();
+void ptMainWindow::OnConfirmLocalSpotButtonClicked() {
+  ::CB_ConfirmLocalSpotButton();
+}
+
+void CB_SpotRepairButton();
+void ptMainWindow::OnSpotRepairButtonClicked() {
+  ::CB_SpotRepairButton();
+}
+
+void CB_ConfirmSpotRepairButton();
+void ptMainWindow::OnConfirmSpotRepairButtonClicked() {
+  ::CB_ConfirmSpotRepairButton();
 }
 
 //
@@ -1714,6 +1838,7 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
             CloseFileMgrWindow();
           ImageFileToOpen = DropName;
           CB_MenuFileOpen(1);
+
         } else {
           if (!Settings->GetInt("FileMgrIsOpen")) {
             if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
@@ -2021,6 +2146,7 @@ void ptMainWindow::ShowFavouriteTools() {
   // clean up first!
   if (m_MovedTools->size()>0) CleanUpMovedTools();
   SearchInputWidget->setText("");
+
 
   QStringList FavTools = Settings->GetStringList("FavouriteTools");
   for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
@@ -2794,6 +2920,30 @@ void ptMainWindow::UpdateCropToolUI() {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// PopulateSpotRepairList
+// Populate spot repair list when constructing main window.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::PopulateSpotRepairList(QSettings *APtsFile) {
+  RepairSpotModel->LoadFromFile(APtsFile);
+}
+
+//==============================================================================
+
+void ptMainWindow::WriteSpotRepairList(QSettings *APtsFile) {
+  ReportProgress(
+    tr(QString("Writing %1 repair spots to settings file.")
+      .arg(RepairSpotModel->rowCount()).toAscii().data()
+    )
+  );
+  RepairSpotModel->WriteToFile(APtsFile);
+}
+
+//==============================================================================
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // InitVisibleTools
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -2834,7 +2984,8 @@ void ptMainWindow::InitVisibleTools() {
 
   // connect model with Visible Tools View
   VisibleToolsView->setModel(m_VisibleToolsModel);
-  VisibleToolsView->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::DoubleClicked);
+  VisibleToolsView->setEditTriggers(QAbstractItemView::CurrentChanged |
+                                    QAbstractItemView::DoubleClicked);
   VisibleToolsView->setItemDelegate(new ptVisibleToolsItemDelegate);
 }
 
@@ -3149,7 +3300,29 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
   LqrWHContainter->setVisible(Scaling == ptLqr_ScaleAbsolute);
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////
+//
+// Update spot repair UI elements
+//
 ////////////////////////////////////////////////////////////////////////////////
+
+void ptMainWindow::UpdateSpotRepairUI() {
+  // interactive mode buttons
+  if (ViewWindow == NULL) {
+    SpotRepairButton->setVisible(true);
+    ConfirmSpotRepairButton->setVisible(false);
+  } else {
+    SpotRepairButton->setVisible(ViewWindow->interaction() != iaSpotRepair);
+    ConfirmSpotRepairButton->setVisible(!SpotRepairButton->isVisible());
+  }
+
+  // additional config sliders at the bottom
+  SpotOpacityWidget->setEnabled(RepairSpotListView->currentIndex().row() > -1);
+  SpotEdgeSoftnessWidget->setEnabled(SpotOpacityWidget->isEnabled());
+}
+
+/////////////////////////////////////////////////////////////////////////////
 //
 // Update gradual blur UI elements
 //
@@ -3180,10 +3353,6 @@ void ptMainWindow::UpdateGradualBlurUI() {
 ////////////////////////////////////////////////////////////////////////////////
 
 ptMainWindow::~ptMainWindow() {
-  //printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
-  for (short i=0; i<ToolBoxStructureList.size(); i++) {
-    //delete ToolBoxStructureList[i];
-  }
   while (ToolBoxStructureList.size()) {
     ToolBoxStructureList.removeAt(0);
   }

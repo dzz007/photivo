@@ -57,9 +57,9 @@ unix {
   QMAKE_CXX   = ccache /usr/bin/g++
 
   QMAKE_CFLAGS_RELEASE    += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CXXFLAGS_RELEASE  += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE  += -std=c++0x -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CFLAGS_DEBUG      += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CXXFLAGS_DEBUG    += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_DEBUG    += -std=c++0x -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_LFLAGS_DEBUG      += -rdynamic
 
   LIBS += $$system(GraphicsMagick++-config --libs)
@@ -71,8 +71,8 @@ win32 {
 
   QMAKE_CFLAGS_RELEASE    += $$(CFLAGS)
   QMAKE_CFLAGS_DEBUG      += $$(CFLAGS)
-  QMAKE_CXXFLAGS_RELEASE  += $$(CXXFLAGS)
-  QMAKE_CXXFLAGS_DEBUG    += $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE  += -std=c++0x $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_DEBUG    += -std=c++0x $$(CXXFLAGS)
   QMAKE_LFLAGS_RELEASE    += $$(LDFLAGS)
   QMAKE_LFLAGS_DEBUG      += $$(LDFLAGS)
 
@@ -93,7 +93,7 @@ macx{
 
   # prevent qmake from adding -arch flags
   QMAKE_CFLAGS_X86_64           = -m64
-  QMAKE_CXXFLAGS_X86_64         = -m64
+  QMAKE_CXXFLAGS_X86_64         = -m64 -std=c++0x
   QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
   QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
 
@@ -108,7 +108,7 @@ LIBS += \
     $$system(pkg-config --libs-only-l lqr-1) \
     -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
-RELEASE_SPECIFIC = -O3 -ftree-vectorize -fopenmp
+RELEASE_SPECIFIC = -O3 -ftree-vectorize -fopenmp -Wno-deprecated-declarations
 DEBUG_SPECIFIC   = -O0 -g
 COMMON_FLAGS = \
     $$system(pkg-config --cflags-only-I lqr-1) \
@@ -193,6 +193,16 @@ HEADERS += \
     ../Sources/qtsingleapplication/qtlockedfile.h \
     ../Sources/qtsingleapplication/qtsingleapplication.h \
     ../Sources/ptImageHelper.h
+    ../Sources/imagespot/ptImageSpot.h \
+    ../Sources/imagespot/ptRepairInteraction.h \
+    ../Sources/imagespot/ptRepairSpot.h \
+    ../Sources/imagespot/ptImageSpotEditor.h \
+    ../Sources/imagespot/ptImageSpotItemDelegate.h \
+    ../Sources/imagespot/ptImageSpotListView.h \
+    ../Sources/imagespot/ptRepairSpotModel.h \
+    ../Sources/imagespot/ptImageSpotModel.h \
+    ../Sources/imagespot/ptLocalSpot.h \
+    ../Sources/imagespot/ptSpotInteraction.h
 
 
 SOURCES += \
@@ -275,6 +285,16 @@ SOURCES += \
     ../Sources/vcd/refinement.c \
     ../Sources/vcd/vcd_interpolate.c \
     ../Sources/ptImageHelper.cpp
+    ../Sources/imagespot/ptImageSpot.cpp \
+    ../Sources/imagespot/ptRepairInteraction.cpp \
+    ../Sources/imagespot/ptRepairSpot.cpp \
+    ../Sources/imagespot/ptImageSpotEditor.cpp \
+    ../Sources/imagespot/ptImageSpotItemDelegate.cpp \
+    ../Sources/imagespot/ptImageSpotListView.cpp \
+    ../Sources/imagespot/ptRepairSpotModel.cpp \
+    ../Sources/imagespot/ptImageSpotModel.cpp \
+    ../Sources/imagespot/ptLocalSpot.cpp \
+    ../Sources/imagespot/ptSpotInteraction.cpp
 
 
 FORMS += \
@@ -298,5 +318,3 @@ TRANSLATIONS += ../Translations/photivo_Russian.ts
 exists(../local-system-specific.pro) {
   include(../local-system-specific.pro)
 }
-
-

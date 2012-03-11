@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -19,47 +19,47 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+/*!
+  \class ptImageSpotItemDelegate
 
-#ifndef PTSELECTINTERACTION_H
-#define PTSELECTINTERACTION_H
+  \brief Manager for the editor widget in spot list views.
+*/
 
-//==============================================================================
-
-#include <QRectF>
-#include <QLine>
-#include <QGraphicsRectItem>
-#include <QMouseEvent>
-
-#include "ptImageInteraction.h"
+#ifndef PTIMAGESPOTITEMDELEGATE_H
+#define PTIMAGESPOTITEMDELEGATE_H
 
 //==============================================================================
 
-class ptSimpleRectInteraction : public ptImageInteraction {
+#include <QStandardItemModel>
+#include <QStyledItemDelegate>
+#include <QToolButton>
+
+#include "ptImageSpotListView.h"
+
+//==============================================================================
+
+class ptImageSpotItemDelegate: public QStyledItemDelegate {
 Q_OBJECT
 
 public:
-  explicit ptSimpleRectInteraction(QGraphicsView* View);
-  ~ptSimpleRectInteraction();
+  explicit ptImageSpotItemDelegate(ptImageSpotListView *AParent);
 
-  inline QRect rect() const { return QRect(m_Rect->normalized().toRect()); }
+  QWidget* createEditor(QWidget                     *parent,
+                        const QStyleOptionViewItem  &option,
+                        const QModelIndex           &index) const;
+
+  void setEditorData(QWidget            *editor,
+                     const QModelIndex  &index) const;
+
+  void setModelData(QWidget             *editor,
+                    QAbstractItemModel  *model,
+                    const QModelIndex   &index) const;
 
 //------------------------------------------------------------------------------
 
 private:
-  int m_CtrlPressed;
-  QLine* m_DragDelta;
-  QRectF* m_Rect;
-  short m_NowDragging;
-  QGraphicsRectItem* m_RectItem;
+  ptImageSpotListView *FListView;
 
-  void Finalize(const ptStatus status);
-
-//------------------------------------------------------------------------------
-
-
-private slots:
-  void keyAction(QKeyEvent* event);
-  void mouseAction(QMouseEvent* event);
 
 };
-#endif // PTSELECTINTERACTION_H
+#endif // PTIMAGESPOTITEMDELEGATE_H

@@ -19,7 +19,7 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-/**
+/*!
 ** Displays a rectangular grid on top of the preview image.
 **
 ** - Does not emit the finished() signal because no lengthy interaction is going
@@ -31,24 +31,18 @@
 #ifndef PTGRIDINTERACTION_H
 #define PTGRIDINTERACTION_H
 
+//==============================================================================
+
 #include <QList>
 
 #include "ptImageInteraction.h"
 #include <QGraphicsLineItem>
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptGridInteraction
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
 class ptGridInteraction : public ptImageInteraction {
 Q_OBJECT
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
   explicit ptGridInteraction(QGraphicsView* View);
   ~ptGridInteraction();
@@ -56,14 +50,12 @@ public:
   void show(const uint linesX, const uint linesY);
   inline void hide() { ClearList(); }
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
+
 private:
   QList<QGraphicsLineItem*> m_GridLines;
   void ClearList();
-};
 
+
+};
 #endif // PTGRIDINTERACTION_H

@@ -500,7 +500,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
   if (Position.x() > 0 && Position.x() < 14 &&
       Position.y() > 0 && Position.y() < 14 &&
       event->button()==Qt::LeftButton &&
-      m_HelpIcon->isVisible()) {
+      m_HelpIcon->isVisible())
+  {
     QDesktopServices::openUrl(m_HelpUri);
   } else if (event->y()<20 && event->x()<250) {
     if (event->button()==Qt::LeftButton) {
