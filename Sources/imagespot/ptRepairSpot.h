@@ -46,6 +46,11 @@
 
 class ptRepairSpot: public ptImageSpot {
 public:
+  /*! Static factory method returning a new default constructed \c ptRepairSpot object. */
+  static ptRepairSpot *CreateSpot() { return new ptRepairSpot(); }
+
+//------------------------------------------------------------------------------
+
   /*! Creates an empty and disabled repair spot using the clone algorithm or loads a spot
     from the current ini file.
     \param Ini

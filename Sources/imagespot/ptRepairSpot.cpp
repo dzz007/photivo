@@ -31,8 +31,8 @@ extern ptSettings* Settings;
 
 ptRepairSpot::ptRepairSpot(QSettings *APtsFile /*= nullptr*/)
 : ptImageSpot(APtsFile),
-  FHasRepairer(1),
   FAlgorithm(SpotRepairAlgo_Clone),
+  FHasRepairer(1),
   FRepairerPos(QPoint())
 {
   if (APtsFile != nullptr) {

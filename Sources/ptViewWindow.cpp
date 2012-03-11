@@ -40,9 +40,10 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   MinZoom(0.05), MaxZoom(4.0),
   // member variables
   FCtrlIsPressed(0),
-  FDrawLine(NULL),
-  FSelectRect(NULL),
-  FCrop(NULL),
+  FDrawLine(nullptr),
+  FLocalAdjust(nullptr),
+  FSelectRect(nullptr),
+  FCrop(nullptr),
   FInteraction(iaNone),
   FLeftMousePressed(0),
   FZoomIsSaved(0),
@@ -476,9 +477,14 @@ void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect))
     assert(CB_SimpleRect != NULL);
     FCB_SimpleRect = CB_SimpleRect;
     FSelectRect = new ptSimpleRectInteraction(this);
-    connect(FSelectRect, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
-    connect(this, SIGNAL(mouseChanged(QMouseEvent*)), FSelectRect, SLOT(mouseAction(QMouseEvent*)));
-    connect(this, SIGNAL(keyChanged(QKeyEvent*)), FSelectRect, SLOT(keyAction(QKeyEvent*)));
+
+    connect(FSelectRect, SIGNAL(finished(ptStatus)),
+            this,        SLOT  (finishInteraction(ptStatus)));
+    connect(this,        SIGNAL(mouseChanged(QMouseEvent*)),
+            FSelectRect, SLOT  (mouseAction(QMouseEvent*)));
+    connect(this,        SIGNAL(keyChanged(QKeyEvent*)),
+            FSelectRect, SLOT  (keyAction(QKeyEvent*)));
+
     FInteraction = iaSelectRect;
   }
 }
@@ -518,22 +524,49 @@ void ptViewWindow::StartCrop()
                                      Settings->GetInt("AspectRatioH"),
                                      Settings->GetInt("CropGuidelines") );
 
-  connect(FCrop, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
-  connect(this, SIGNAL(mouseChanged(QMouseEvent*)), FCrop, SLOT(mouseAction(QMouseEvent*)));
-  connect(this, SIGNAL(keyChanged(QKeyEvent*)), FCrop, SLOT(keyAction(QKeyEvent*)));
+  connect(FCrop, SIGNAL(finished(ptStatus)),
+          this,  SLOT  (finishInteraction(ptStatus)));
+  connect(this,  SIGNAL(mouseChanged(QMouseEvent*)),
+          FCrop, SLOT  (mouseAction(QMouseEvent*)));
+  connect(this,  SIGNAL(keyChanged(QKeyEvent*)),
+          FCrop, SLOT  (keyAction(QKeyEvent*)));
+
   FInteraction = iaCrop;
 }
 
 //==============================================================================
 
-void ptViewWindow::StartSpotRepair(ptImageSpotListView* ListView) {
+void ptViewWindow::StartLocalAdjust(ptImageSpotListView *AListView) {
   if (FInteraction != iaNone) {
     return;
   }
-  FSpotRepair = new ptRepairInteraction(this, ListView);
-  connect(FSpotRepair, SIGNAL(finished(ptStatus)), this, SLOT(finishInteraction(ptStatus)));
-  connect(this, SIGNAL(mouseChanged(QMouseEvent*)), FSpotRepair, SLOT(mouseAction(QMouseEvent*)));
-  connect(this, SIGNAL(keyChanged(QKeyEvent*)), FSpotRepair, SLOT(keyAction(QKeyEvent*)));
+  FLocalAdjust = new ptSpotInteraction(this);
+
+  connect(FLocalAdjust, SIGNAL(finished(ptStatus)),
+          this,         SLOT  (finishInteraction(ptStatus)));
+  connect(FLocalAdjust, SIGNAL(clicked(QPoint,bool)),
+          AListView,    SLOT  (processCoordinates(QPoint,bool)));
+  connect(this,         SIGNAL(mouseChanged(QMouseEvent*)),
+          FLocalAdjust, SLOT  (mouseAction(QMouseEvent*)));
+
+  FInteraction = iaLocalAdjust;
+}
+
+//==============================================================================
+
+void ptViewWindow::StartSpotRepair(ptImageSpotListView* AListView) {
+  if (FInteraction != iaNone) {
+    return;
+  }
+  FSpotRepair = new ptRepairInteraction(this, AListView);
+
+  connect(FSpotRepair, SIGNAL(finished(ptStatus)),
+          this,        SLOT  (finishInteraction(ptStatus)));
+  connect(this,        SIGNAL(mouseChanged(QMouseEvent*)),
+          FSpotRepair, SLOT  (mouseAction(QMouseEvent*)));
+  connect(this,        SIGNAL(keyChanged(QKeyEvent*)),
+          FSpotRepair, SLOT  (keyAction(QKeyEvent*)));
+
   FInteraction = iaSpotRepair;
 }
 
@@ -542,6 +575,7 @@ void ptViewWindow::StartSpotRepair(ptImageSpotListView* ListView) {
 void RotateAngleDetermined(const ptStatus ExitStatus, double RotateAngle);
 void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect);
 void CleanupAfterSpotRepair();
+void CleanupAfterLocalAdjust();
 
 void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
   switch (FInteraction) {
@@ -573,6 +607,13 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
       DelAndNull(FSpotRepair);   // also disconnects all signals/slots
       FInteraction = iaNone;
       CleanupAfterSpotRepair();
+      break;
+    }
+
+    case iaLocalAdjust: {
+      DelAndNull(FLocalAdjust);
+      FInteraction = iaNone;
+      CleanupAfterLocalAdjust();
       break;
     }
 

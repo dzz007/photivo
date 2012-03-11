@@ -55,6 +55,7 @@
 #include "ptSimpleRectInteraction.h"
 #include "ptRichRectInteraction.h"
 #include "ptGridInteraction.h"
+#include "imagespot/ptSpotInteraction.h"
 #include "imagespot/ptRepairInteraction.h"
 #include "imagespot/ptImageSpotListView.h"
 
@@ -65,7 +66,8 @@ enum ptInteraction {
   iaCrop        = 1,
   iaSelectRect  = 2,  // simple rectangle selection: e.g. for spot WB
   iaDrawLine    = 3,  // draw a single straight line: e.g. for rotate angle
-  iaSpotRepair  = 4
+  iaSpotRepair  = 4,
+  iaLocalAdjust = 5
 };
 
 enum ptPixelReading {
@@ -104,14 +106,17 @@ public:
   void StartLine();
   void StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect));
   void StartCrop();
-  void StartSpotRepair(ptImageSpotListView* ListView);
-  ptRichRectInteraction* crop() const { return FCrop; }
-  ptRepairInteraction* spotRepair() const { return FSpotRepair; }
+  void StartLocalAdjust(ptImageSpotListView* AListView);
+  void StartSpotRepair(ptImageSpotListView* AListView);
+
+  ptRichRectInteraction *crop() const { return FCrop; }
+  ptSpotInteraction     *localAdjust() const { return FLocalAdjust; }
+  ptRepairInteraction   *spotRepair() const { return FSpotRepair; }
 
   void setGrid(const short enabled, const uint linesX, const uint linesY);
   void UpdateImage(const ptImage* relatedImage);
   void ZoomTo(float factor);  // 1.0 means 100%
-  int ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
+  int  ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
   void ZoomStep(int direction);
 
   ptPixelReading isPixelReading() const { return FPixelReading; }
@@ -144,6 +149,7 @@ private:
 
   short                     FCtrlIsPressed;
   ptLineInteraction         *FDrawLine;
+  ptSpotInteraction         *FLocalAdjust;
   ptSimpleRectInteraction   *FSelectRect;
   ptRichRectInteraction     *FCrop;
   ptGridInteraction         *FGrid;

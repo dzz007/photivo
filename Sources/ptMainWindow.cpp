@@ -372,7 +372,11 @@ ptMainWindow::ptMainWindow(const QString Title)
   //
 
   // "local adjust"
-  LocalSpotListView = new ptImageSpotListView(this);
+  Macro_ConnectSomeButton(LocalSpot);
+  Macro_ConnectSomeButton(ConfirmLocalSpot);
+  ConfirmLocalSpotButton->hide();
+
+  LocalSpotListView = new ptImageSpotListView(this, ptLocalSpot::CreateSpot);
   LocalAdjustVLayout->insertWidget(1, LocalSpotListView);
   LocalSpotModel = new ptImageSpotModel(
                          QSize(0, RepairSpotListView->fontMetrics().lineSpacing() + 2),
@@ -385,9 +389,15 @@ ptMainWindow::ptMainWindow(const QString Title)
   LocalSpotListView->setItemDelegate(new ptImageSpotItemDelegate(LocalSpotListView));
   connect(LocalSpotListView, SIGNAL(rowChanged(QModelIndex)),
           this, SLOT(UpdateLocalSpotUI(QModelIndex)));
+  UpdateLocalSpotUI(QModelIndex());
+
 
   // "spot repair"
-  RepairSpotListView = new ptImageSpotListView(this);
+  Macro_ConnectSomeButton(SpotRepair);
+  Macro_ConnectSomeButton(ConfirmSpotRepair);
+  ConfirmSpotRepairButton->hide();
+
+  RepairSpotListView = new ptImageSpotListView(this, ptRepairSpot::CreateSpot);
   SpotRepairVLayout->insertWidget(1, RepairSpotListView);
   RepairSpotModel = new ptImageSpotModel(
                           QSize(0, RepairSpotListView->fontMetrics().lineSpacing() + 2),
@@ -400,6 +410,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   RepairSpotListView->setItemDelegate(new ptImageSpotItemDelegate(RepairSpotListView));
   connect(RepairSpotListView, SIGNAL(rowChanged(QModelIndex)),
           this, SLOT(UpdateRepairSpotUI(QModelIndex)));
+  UpdateRepairSpotUI(QModelIndex());
 
   //
   // TAB : Geometry
@@ -1418,6 +1429,8 @@ void CB_StartupSettingsButton();
 void ptMainWindow::OnStartupSettingsButtonClicked() {
   ::CB_StartupSettingsButton();
 }
+
+
 //
 // Tab : Camera
 //
@@ -1440,9 +1453,18 @@ void ptMainWindow::OnSpotWBButtonClicked() {
 }
 
 //
-// Tab : Geometry
+// Tab : Local Edit
 //
 
+void CB_LocalSpotButton();
+void ptMainWindow::OnLocalSpotButtonClicked() {
+  ::CB_LocalSpotButton();
+}
+
+void CB_ConfirmLocalSpotButton();
+void ptMainWindow::OnConfirmLocalSpotButtonClicked() {
+  ::CB_ConfirmLocalSpotButton();
+}
 
 void CB_SpotRepairButton();
 void ptMainWindow::OnSpotRepairButtonClicked() {
@@ -1453,6 +1475,11 @@ void CB_ConfirmSpotRepairButton();
 void ptMainWindow::OnConfirmSpotRepairButtonClicked() {
   ::CB_ConfirmSpotRepairButton();
 }
+
+//
+// Tab : Geometry
+//
+
 
 void CB_RotateLeftButton();
 void ptMainWindow::OnRotateLeftButtonClicked() {
@@ -3259,7 +3286,7 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 //
 // Update spot repair UI elements
 //
@@ -3280,8 +3307,7 @@ void ptMainWindow::UpdateSpotRepairUI() {
   SpotEdgeSoftnessWidget->setEnabled(SpotOpacityWidget->isEnabled());
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 //
 // Update gradual blur UI elements
 //

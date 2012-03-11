@@ -33,6 +33,7 @@
 
 #include <QPoint>
 #include <QMouseEvent>
+#include <QKeyEvent>
 
 #include "../ptImageInteraction.h"
 
@@ -52,9 +53,16 @@ public:
 //------------------------------------------------------------------------------
 
 signals:
-  /*! Signal emitted when the user clicks a spot on the image.
-      The coordinates are in current pipe size.  */
-  void clicked(const QPoint &pos);
+  /*! Signal emitted when the user left-clicks a spot on the image.
+      \param APos
+        Coordinates of the clicked image position in current pipe size scale.
+      \param AMoveCurrent
+        Indicates if an existing spot should be moved (true) or a new spot should
+        be created (false). Set to true when the user holds down Ctrl while clicking.
+        Connected slots are responsible to interpret what “an existing spot”
+        actually means – usually this is the currently selected spot in a list of spots.
+  */
+  void clicked(const QPoint &APos, const bool AMoveCurrent);
 
 //------------------------------------------------------------------------------
 

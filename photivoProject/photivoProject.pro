@@ -108,7 +108,7 @@ LIBS += \
     $$system(pkg-config --libs-only-l lqr-1) \
     -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
-RELEASE_SPECIFIC = -O3 -ftree-vectorize -fopenmp -Wdeprecated-declarations
+RELEASE_SPECIFIC = -O3 -ftree-vectorize -fopenmp -Wno-deprecated-declarations
 DEBUG_SPECIFIC   = -O0 -g
 COMMON_FLAGS = \
     $$system(pkg-config --cflags-only-I lqr-1) \

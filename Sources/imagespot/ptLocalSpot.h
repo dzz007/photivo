@@ -35,22 +35,12 @@ using std::unique_ptr;
 
 class ptLocalSpot: public ptImageSpot {
 public:
-  explicit ptLocalSpot(QSettings *APtsFile = nullptr);
+  /*! Static factory method returning a new default constructed \c ptLocalSpot object. */
+  static ptLocalSpot *CreateSpot() { return new ptLocalSpot(); }
 
-  // TODO BJ: not sure is this constructor is needed at all.
-//  ptLocalSpot(const uint ASpotX,
-//              const uint ASpotY,
-//              const uint ARadius,
-//              const short AIsEnabled,
-//              const QString &AName,
-//              const bool AHasMaxRadius,
-//              const bool AIsAdaptiveSaturation,
-//              const bool AIsEdgeAware,
-//              const float ALumaWeight,
-//              const uint AMaxRadius,
-//              const ptLocalAdjustMode AMode,
-//              const float ASaturation,
-//              const float AThreshold);
+//------------------------------------------------------------------------------
+
+  explicit ptLocalSpot(QSettings *APtsFile = nullptr);
 
   /*! Standard getters. */
   bool hasMaxRadius() { return FHasMaxRadius; }

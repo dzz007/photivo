@@ -258,6 +258,8 @@ private slots:
 
   void OnStartupSettingsButtonClicked();
 
+  void OnLocalSpotButtonClicked();
+  void OnConfirmLocalSpotButtonClicked();
   void OnSpotRepairButtonClicked();
   void OnConfirmSpotRepairButtonClicked();
   void OnRotateLeftButtonClicked();
