@@ -20,47 +20,47 @@
 **
 *******************************************************************************/
 /*!
-  \class ptRepairSpotEditor
+  \class ptImageSpotEditor
 
-  \brief Editor widget for the spot repair ListView.
+  \brief Editor widget for spot ListViews.
 
-  This widget represents the editor for items in the spot repair ListView. It contains
-  a combobox for selecting the repair algorithm and a button to delete the repair spot.
+  This widget represents the editor for items in the spot ListView. It contains
+  a QLineEdit for the spot’s name and a button to delete the spot.
 
-  This widget is managed by ptRepairSpotItemDelegate.
+  This widget is managed by ptImageSpotItemDelegate.
 */
 
-#ifndef PTREPAIRSPOTEDITOR_H
-#define PTREPAIRSPOTEDITOR_H
+#ifndef PTIMAGESPOTEDITOR_H
+#define PTIMAGESPOTEDITOR_H
 
 //==============================================================================
 
 #include <QWidget>
-#include <QComboBox>
+#include <QLineEdit>
 #include <QToolButton>
 
 //==============================================================================
 
-class ptRepairSpotEditor: public QWidget {
+class ptImageSpotEditor: public QWidget {
 Q_OBJECT
 
 public:
   /*! Creates an editor widget.
-    \param Parent
-      The editor’s parent widget, i.e. the item row in the spot repair ListView.
-    \param InitialAlgoIndex
-      Index of the current algorithm for the spot. Values correspond to the
-      \c ptSpotRepairAlgo enum.
+    \param AParent
+      The editor’s parent widget. Must be set to the item row in the spot ListView
+      for proper positioning of the editor.
+    \param AInitialName
+      Current name of the spot.
   */
-  explicit ptRepairSpotEditor(QWidget *AParent,
-                              const int AInitialAlgoIndex);
-  ~ptRepairSpotEditor();
-
-  /*! A pointer to the \c QComboBox for seleting the repair algorithm. */
-  QComboBox *AlgoCombo;
+  explicit ptImageSpotEditor(QWidget        *AParent,
+                             const QString  &AInitialName);
+  ~ptImageSpotEditor();
 
   /*! A pointer to the \c QToolButton used to delete the spot. */
   QToolButton *DelButton;
+
+  /*! A pointer to the \c QLineEdit for editing the spot’s name. */
+  QLineEdit *NameEditor;
 
 //------------------------------------------------------------------------------
 
@@ -77,4 +77,4 @@ signals:
 
 
 };
-#endif // PTREPAIRSPOTEDITOR_H
+#endif // PTIMAGESPOTEDITOR_H

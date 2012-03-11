@@ -19,9 +19,14 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+/*!
+  \class ptImageSpotItemDelegate
 
-#ifndef PTREPAIRSPOTVIEW_H
-#define PTREPAIRSPOTVIEW_H
+  \brief Manager for the editor widget in spot list views.
+*/
+
+#ifndef PTIMAGESPOTITEMDELEGATE_H
+#define PTIMAGESPOTITEMDELEGATE_H
 
 //==============================================================================
 
@@ -29,20 +34,32 @@
 #include <QStyledItemDelegate>
 #include <QToolButton>
 
+#include "ptImageSpotListView.h"
+
 //==============================================================================
 
-// item delegate for UI settings tool
-class ptRepairSpotItemDelegate: public QStyledItemDelegate {
+class ptImageSpotItemDelegate: public QStyledItemDelegate {
 Q_OBJECT
 
 public:
-  explicit ptRepairSpotItemDelegate(QObject *AParent = NULL);
-  QWidget* createEditor(QWidget *parent,
-                        const QStyleOptionViewItem &option,
-                        const QModelIndex &index) const;
-  void setEditorData(QWidget *editor, const QModelIndex &index) const;
-  void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+  explicit ptImageSpotItemDelegate(ptImageSpotListView *AParent);
+
+  QWidget* createEditor(QWidget                     *parent,
+                        const QStyleOptionViewItem  &option,
+                        const QModelIndex           &index) const;
+
+  void setEditorData(QWidget            *editor,
+                     const QModelIndex  &index) const;
+
+  void setModelData(QWidget             *editor,
+                    QAbstractItemModel  *model,
+                    const QModelIndex   &index) const;
+
+//------------------------------------------------------------------------------
+
+private:
+  ptImageSpotListView *FListView;
 
 
 };
-#endif // PTREPAIRSPOTVIEW_H
+#endif // PTIMAGESPOTITEMDELEGATE_H

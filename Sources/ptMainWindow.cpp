@@ -27,6 +27,7 @@
 #include "ptDefines.h"
 #include "imagespot/ptRepairSpot.h"
 #include "imagespot/ptLocalSpot.h"
+#include "imagespot/ptImageSpotItemDelegate.h"
 #include "ptChannelMixer.h"
 #include "ptConfirmRequest.h"
 #include "ptConstants.h"
@@ -381,7 +382,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   LocalSpotListView->setModel(LocalSpotModel);
   LocalSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
                                      QAbstractItemView::SelectedClicked);
-  LocalSpotListView->setItemDelegate(FLocalSpotDelegate.get());
+  LocalSpotListView->setItemDelegate(new ptImageSpotItemDelegate(LocalSpotListView));
   connect(LocalSpotListView, SIGNAL(rowChanged(QModelIndex)),
           this, SLOT(UpdateLocalSpotUI(QModelIndex)));
 
@@ -396,7 +397,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   RepairSpotListView->setModel(RepairSpotModel);
   RepairSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
                                       QAbstractItemView::SelectedClicked);
-  RepairSpotListView->setItemDelegate(FRepairSpotDelegate.get());
+  RepairSpotListView->setItemDelegate(new ptImageSpotItemDelegate(RepairSpotListView));
   connect(RepairSpotListView, SIGNAL(rowChanged(QModelIndex)),
           this, SLOT(UpdateRepairSpotUI(QModelIndex)));
 

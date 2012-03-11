@@ -35,7 +35,8 @@
 
 /* !!!
   IMPORTANT: Photivo uses groups of const short for historical reasons.
-  They are deprecated for new constants groups! Use enums insteads.
+  They are deprecated for new constants groups! Instead use enums or, even better,
+  C++11 enum classes.
 !!! */
 
 //==============================================================================
