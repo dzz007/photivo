@@ -201,7 +201,6 @@ HEADERS += \
     ../Sources/imagespot/ptRepairSpotModel.h \
     ../Sources/imagespot/ptImageSpotModel.h \
     ../Sources/imagespot/ptLocalSpot.h \
-    ../Sources/imagespot/ptLocalSpotModel.h \
     ../Sources/imagespot/ptSpotInteraction.h
 
 
@@ -293,7 +292,6 @@ SOURCES += \
     ../Sources/imagespot/ptRepairSpotModel.cpp \
     ../Sources/imagespot/ptImageSpotModel.cpp \
     ../Sources/imagespot/ptLocalSpot.cpp \
-    ../Sources/imagespot/ptLocalSpotModel.cpp \
     ../Sources/imagespot/ptSpotInteraction.cpp
 
 

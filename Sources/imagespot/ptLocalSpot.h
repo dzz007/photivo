@@ -56,7 +56,7 @@ public:
   bool hasMaxRadius() { return FHasMaxRadius; }
   bool isAdaptiveSaturation() { return FIsAdaptiveSaturation; }
   bool isEdgeAware() { return FIsEdgeAware; }
-  ptCurve *lumaCurve() { return FLumaCurve->get(); }
+  ptCurve *lumaCurve() { return FLumaCurve.get(); }
   float lumaWeight() { return FLumaWeight; }
   uint maxRadius() { return FMaxRadius; }
   ptLocalAdjustMode mode() { return FMode; }

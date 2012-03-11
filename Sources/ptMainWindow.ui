@@ -374,8 +374,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>249</height>
+                                <width>487</width>
+                                <height>590</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_19">
@@ -389,8 +389,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>155</width>
-                                    <height>120</height>
+                                    <width>469</width>
+                                    <height>410</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1267,151 +1267,118 @@
                                        </layout>
                                       </item>
                                       <item>
-                                       <widget class="Line" name="line">
-                                        <property name="sizePolicy">
-                                         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                                          <horstretch>0</horstretch>
-                                          <verstretch>0</verstretch>
-                                         </sizepolicy>
-                                        </property>
-                                        <property name="orientation">
-                                         <enum>Qt::Horizontal</enum>
-                                        </property>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QLabel" name="label_18">
-                                        <property name="font">
-                                         <font>
-                                          <weight>75</weight>
-                                          <bold>true</bold>
-                                         </font>
-                                        </property>
-                                        <property name="text">
-                                         <string>Mask</string>
-                                        </property>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <layout class="QHBoxLayout" name="horizontalLayout_103">
-                                        <item>
-                                         <widget class="QLabel" name="label_19">
-                                          <property name="text">
-                                           <string>Mode</string>
-                                          </property>
-                                         </widget>
-                                        </item>
-                                        <item>
-                                         <widget class="QWidget" name="LocalModeWidget" native="true"/>
-                                        </item>
-                                        <item>
-                                         <spacer name="horizontalSpacer_84">
-                                          <property name="orientation">
-                                           <enum>Qt::Horizontal</enum>
-                                          </property>
-                                          <property name="sizeHint" stdset="0">
-                                           <size>
-                                            <width>40</width>
-                                            <height>20</height>
-                                           </size>
-                                          </property>
-                                         </spacer>
-                                        </item>
-                                       </layout>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LocalMaskThresholdWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LocalMaskLumaWeightWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LocalEgdeAwareThresholdWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <layout class="QHBoxLayout" name="horizontalLayout_102">
-                                        <property name="bottomMargin">
-                                         <number>0</number>
-                                        </property>
-                                        <item>
-                                         <widget class="QWidget" name="LocalMaxRadiusCheckWidget" native="true"/>
-                                        </item>
-                                        <item>
-                                         <widget class="QWidget" name="LocalMaxRadiusWidget" native="true"/>
-                                        </item>
-                                        <item>
-                                         <spacer name="horizontalSpacer_83">
-                                          <property name="orientation">
-                                           <enum>Qt::Horizontal</enum>
-                                          </property>
-                                          <property name="sizeHint" stdset="0">
-                                           <size>
-                                            <width>40</width>
-                                            <height>20</height>
-                                           </size>
-                                          </property>
-                                         </spacer>
-                                        </item>
-                                       </layout>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="widget_181" native="true">
-                                        <property name="enabled">
-                                         <bool>true</bool>
-                                        </property>
+                                       <widget class="QWidget" name="SpotConfigGroup" native="true">
                                         <layout class="QVBoxLayout" name="verticalLayout_283">
-                                         <property name="margin">
-                                          <number>2</number>
-                                         </property>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="Line" name="line_3">
-                                        <property name="orientation">
-                                         <enum>Qt::Horizontal</enum>
-                                        </property>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QLabel" name="label_22">
-                                        <property name="font">
-                                         <font>
-                                          <weight>75</weight>
-                                          <bold>true</bold>
-                                         </font>
-                                        </property>
-                                        <property name="text">
-                                         <string>Luminance curve</string>
-                                        </property>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="widget_183" native="true">
-                                        <property name="enabled">
-                                         <bool>true</bool>
-                                        </property>
-                                        <layout class="QVBoxLayout" name="verticalLayout_284">
-                                         <property name="margin">
-                                          <number>2</number>
-                                         </property>
                                          <item>
-                                          <widget class="QFrame" name="LocalLumaCurveWidget">
+                                          <layout class="QHBoxLayout" name="horizontalLayout_103">
+                                           <item>
+                                            <widget class="QLabel" name="label_19">
+                                             <property name="text">
+                                              <string>Mode</string>
+                                             </property>
+                                            </widget>
+                                           </item>
+                                           <item>
+                                            <widget class="QWidget" name="LocalModeWidget" native="true"/>
+                                           </item>
+                                           <item>
+                                            <spacer name="horizontalSpacer_84">
+                                             <property name="orientation">
+                                              <enum>Qt::Horizontal</enum>
+                                             </property>
+                                             <property name="sizeHint" stdset="0">
+                                              <size>
+                                               <width>40</width>
+                                               <height>20</height>
+                                              </size>
+                                             </property>
+                                            </spacer>
+                                           </item>
+                                          </layout>
+                                         </item>
+                                         <item>
+                                          <layout class="QHBoxLayout" name="horizontalLayout_102">
+                                           <property name="bottomMargin">
+                                            <number>0</number>
+                                           </property>
+                                           <item>
+                                            <widget class="QWidget" name="LocalMaxRadiusCheckWidget" native="true"/>
+                                           </item>
+                                           <item>
+                                            <widget class="QWidget" name="LocalMaxRadiusWidget" native="true"/>
+                                           </item>
+                                           <item>
+                                            <spacer name="horizontalSpacer_83">
+                                             <property name="orientation">
+                                              <enum>Qt::Horizontal</enum>
+                                             </property>
+                                             <property name="sizeHint" stdset="0">
+                                              <size>
+                                               <width>40</width>
+                                               <height>20</height>
+                                              </size>
+                                             </property>
+                                            </spacer>
+                                           </item>
+                                          </layout>
+                                         </item>
+                                         <item>
+                                          <widget class="Line" name="line">
                                            <property name="sizePolicy">
-                                            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                                            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                                              <horstretch>0</horstretch>
                                              <verstretch>0</verstretch>
                                             </sizepolicy>
                                            </property>
-                                           <property name="minimumSize">
-                                            <size>
-                                             <width>20</width>
-                                             <height>20</height>
-                                            </size>
+                                           <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
                                            </property>
-                                           <property name="autoFillBackground">
-                                            <bool>false</bool>
+                                          </widget>
+                                         </item>
+                                         <item>
+                                          <widget class="QLabel" name="label_18">
+                                           <property name="font">
+                                            <font>
+                                             <weight>75</weight>
+                                             <bold>true</bold>
+                                            </font>
                                            </property>
+                                           <property name="text">
+                                            <string>Mask</string>
+                                           </property>
+                                          </widget>
+                                         </item>
+                                         <item>
+                                          <widget class="QWidget" name="LocalMaskThresholdWidget" native="true"/>
+                                         </item>
+                                         <item>
+                                          <widget class="QWidget" name="LocalMaskLumaWeightWidget" native="true"/>
+                                         </item>
+                                         <item>
+                                          <widget class="QWidget" name="LocalEgdeAwareThresholdWidget" native="true"/>
+                                         </item>
+                                         <item>
+                                          <widget class="Line" name="line_3">
+                                           <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                           </property>
+                                          </widget>
+                                         </item>
+                                         <item>
+                                          <widget class="QLabel" name="label_22">
+                                           <property name="font">
+                                            <font>
+                                             <weight>75</weight>
+                                             <bold>true</bold>
+                                            </font>
+                                           </property>
+                                           <property name="text">
+                                            <string>Luminance curve</string>
+                                           </property>
+                                          </widget>
+                                         </item>
+                                         <item>
+                                          <widget class="QFrame" name="LocalLumaCurveWidget">
                                            <property name="frameShape">
                                             <enum>QFrame::StyledPanel</enum>
                                            </property>
@@ -1421,110 +1388,49 @@
                                           </widget>
                                          </item>
                                          <item>
-                                          <widget class="QWidget" name="widget_184" native="true">
-                                           <layout class="QHBoxLayout" name="horizontalLayout_105">
-                                            <property name="sizeConstraint">
-                                             <enum>QLayout::SetFixedSize</enum>
-                                            </property>
-                                            <property name="margin">
-                                             <number>0</number>
-                                            </property>
-                                            <item>
-                                             <widget class="QWidget" name="LocalLumaCurveModeWidget" native="true"/>
-                                            </item>
-                                            <item>
-                                             <widget class="QToolButton" name="LocalLumaCurveSaveButton">
-                                              <property name="toolTip">
-                                               <string>Open</string>
-                                              </property>
-                                              <property name="text">
-                                               <string>Open</string>
-                                              </property>
-                                              <property name="icon">
-                                               <iconset resource="../qrc/photivo.qrc">
-                                                <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
-                                              </property>
-                                              <property name="iconSize">
-                                               <size>
-                                                <width>16</width>
-                                                <height>16</height>
-                                               </size>
-                                              </property>
-                                              <property name="toolButtonStyle">
-                                               <enum>Qt::ToolButtonIconOnly</enum>
-                                              </property>
-                                             </widget>
-                                            </item>
-                                            <item>
-                                             <widget class="QToolButton" name="CurveRGBSaveButton_3">
-                                              <property name="toolTip">
-                                               <string>Save</string>
-                                              </property>
-                                              <property name="text">
-                                               <string>Save</string>
-                                              </property>
-                                              <property name="icon">
-                                               <iconset resource="../qrc/photivo.qrc">
-                                                <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
-                                              </property>
-                                              <property name="iconSize">
-                                               <size>
-                                                <width>16</width>
-                                                <height>16</height>
-                                               </size>
-                                              </property>
-                                              <property name="toolButtonStyle">
-                                               <enum>Qt::ToolButtonIconOnly</enum>
-                                              </property>
-                                             </widget>
-                                            </item>
-                                            <item>
-                                             <spacer name="RGBCurveTabHorizontalSpacer_3">
-                                              <property name="orientation">
-                                               <enum>Qt::Horizontal</enum>
-                                              </property>
-                                              <property name="sizeHint" stdset="0">
-                                               <size>
-                                                <width>40</width>
-                                                <height>20</height>
-                                               </size>
-                                              </property>
-                                             </spacer>
-                                            </item>
-                                           </layout>
+                                          <widget class="Line" name="line_4">
+                                           <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                           </property>
                                           </widget>
+                                         </item>
+                                         <item>
+                                          <widget class="QLabel" name="label_25">
+                                           <property name="font">
+                                            <font>
+                                             <weight>75</weight>
+                                             <bold>true</bold>
+                                            </font>
+                                           </property>
+                                           <property name="text">
+                                            <string>Saturation</string>
+                                           </property>
+                                          </widget>
+                                         </item>
+                                         <item>
+                                          <widget class="QWidget" name="LocalSaturationWidget" native="true"/>
+                                         </item>
+                                         <item>
+                                          <widget class="QWidget" name="LocalAdaptiveSaturationWidget" native="true"/>
                                          </item>
                                         </layout>
                                        </widget>
                                       </item>
-                                      <item>
-                                       <widget class="Line" name="line_4">
-                                        <property name="orientation">
-                                         <enum>Qt::Horizontal</enum>
-                                        </property>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QLabel" name="label_25">
-                                        <property name="font">
-                                         <font>
-                                          <weight>75</weight>
-                                          <bold>true</bold>
-                                         </font>
-                                        </property>
-                                        <property name="text">
-                                         <string>Saturation</string>
-                                        </property>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LocalSaturationWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LocalAdaptiveSaturationWidget" native="true"/>
-                                      </item>
                                      </layout>
                                     </widget>
+                                   </item>
+                                   <item>
+                                    <spacer name="verticalSpacer_140">
+                                     <property name="orientation">
+                                      <enum>Qt::Vertical</enum>
+                                     </property>
+                                     <property name="sizeHint" stdset="0">
+                                      <size>
+                                       <width>20</width>
+                                       <height>40</height>
+                                      </size>
+                                     </property>
+                                    </spacer>
                                    </item>
                                   </layout>
                                  </widget>
@@ -1640,8 +1546,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>411</height>
+                                <width>487</width>
+                                <height>590</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -1797,8 +1703,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>183</height>
+                                    <width>469</width>
+                                    <height>248</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3106,8 +3012,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>519</height>
+                                <width>487</width>
+                                <height>590</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -4050,8 +3956,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>76</height>
+                                    <width>469</width>
+                                    <height>140</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4213,8 +4119,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>492</height>
+                                <width>487</width>
+                                <height>590</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_43">
@@ -4530,8 +4436,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>76</height>
+                                    <width>469</width>
+                                    <height>167</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5155,8 +5061,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>546</height>
+                                <width>487</width>
+                                <height>590</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_40">
@@ -6134,8 +6040,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>78</height>
+                                    <width>469</width>
+                                    <height>113</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6503,8 +6409,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>438</height>
+                                <width>487</width>
+                                <height>590</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_169">
@@ -7873,8 +7779,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>174</height>
+                                    <width>469</width>
+                                    <height>221</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7983,8 +7889,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>573</height>
+                                <width>487</width>
+                                <height>590</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_181">
@@ -8572,7 +8478,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>146</width>
+                                    <width>452</width>
                                     <height>232</height>
                                    </rect>
                                   </property>
@@ -9788,8 +9694,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>330</height>
+                                <width>487</width>
+                                <height>590</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="OutLayout">
@@ -10453,8 +10359,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>266</width>
-                                    <height>244</height>
+                                    <width>469</width>
+                                    <height>329</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">

@@ -105,7 +105,9 @@ void Update(const QString GuiName);
 ////////////////////////////////////////////////////////////////////////////////
 
 ptMainWindow::ptMainWindow(const QString Title)
-: QMainWindow(NULL)
+: QMainWindow(NULL),
+  FEmptyCurve(new ptCurve(ptCurveChannel_SpotLuma)),
+  FSpotCurveWindow(new ptCurveWindow(FEmptyCurve.get(), ptCurveChannel_SpotLuma, LocalLumaCurveWidget))
 {
   // Setup from the Gui builder.
   setupUi(this);
@@ -368,6 +370,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : Local Edits
   //
 
+  // "local adjust"
   LocalSpotListView = new ptImageSpotListView(this);
   LocalAdjustVLayout->insertWidget(1, LocalSpotListView);
   LocalSpotModel = new ptImageSpotModel(
@@ -378,10 +381,11 @@ ptMainWindow::ptMainWindow(const QString Title)
   LocalSpotListView->setModel(LocalSpotModel);
   LocalSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
                                      QAbstractItemView::SelectedClicked);
-  LocalSpotListView->setItemDelegate(QStyledItemDelegate(LocalSpotListView));
+  LocalSpotListView->setItemDelegate(FLocalSpotDelegate.get());
   connect(LocalSpotListView, SIGNAL(rowChanged(QModelIndex)),
           this, SLOT(UpdateLocalSpotUI(QModelIndex)));
 
+  // "spot repair"
   RepairSpotListView = new ptImageSpotListView(this);
   SpotRepairVLayout->insertWidget(1, RepairSpotListView);
   RepairSpotModel = new ptImageSpotModel(
@@ -392,7 +396,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   RepairSpotListView->setModel(RepairSpotModel);
   RepairSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
                                       QAbstractItemView::SelectedClicked);
-  RepairSpotListView->setItemDelegate(QStyledItemDelegate(RepairSpotListView));
+  RepairSpotListView->setItemDelegate(FRepairSpotDelegate.get());
   connect(RepairSpotListView, SIGNAL(rowChanged(QModelIndex)),
           this, SLOT(UpdateRepairSpotUI(QModelIndex)));
 
@@ -966,24 +970,41 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
 //==============================================================================
 
 void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
-  ptLocalSpot* hSpot = static_cast<ptLocalSpot*>(LocalSpotModel->spot(ANewIdx.row()));
-  Settings->SetValue("LocalMode", hSpot->mode());
-  Settings->SetValue("LocalMaskThreshold", hSpot->threshold());
-  Settings->SetValue("LocalMaskLumaWeight", hSpot->lumaWeight());
-  Settings->SetValue("LocalEgdeAwareThreshold", hSpot->isEdgeAware());
-  Settings->SetValue("LocalMaxRadiusCheck", hSpot->hasMaxRadius());
-  Settings->SetValue("LocalMaxRadius", hSpot->maxRadius());
-  // TODO: add curve settings here
-  Settings->SetValue("LocalSaturation", hSpot->saturation());
-  Settings->SetValue("LocalAdaptiveSaturation", hSpot->isAdaptiveSaturation());
+  if (!ANewIdx.isValid()) {
+    // empty spot list or none selected
+    FSpotCurveWindow->UpdateView(FEmptyCurve.get());
+    SpotConfigGroup->setEnabled(false);
+
+  } else {
+    // update with values from selected spot
+    SpotConfigGroup->setEnabled(true);
+    ptLocalSpot* hSpot = static_cast<ptLocalSpot*>(LocalSpotModel->spot(ANewIdx.row()));
+    Settings->SetValue("LocalMode", hSpot->mode());
+    Settings->SetValue("LocalMaskThreshold", hSpot->threshold());
+    Settings->SetValue("LocalMaskLumaWeight", hSpot->lumaWeight());
+    Settings->SetValue("LocalEgdeAwareThreshold", hSpot->isEdgeAware());
+    Settings->SetValue("LocalMaxRadiusCheck", hSpot->hasMaxRadius());
+    Settings->SetValue("LocalMaxRadius", hSpot->maxRadius());
+    FSpotCurveWindow->UpdateView(hSpot->lumaCurve());
+    Settings->SetValue("LocalSaturation", hSpot->saturation());
+    Settings->SetValue("LocalAdaptiveSaturation", hSpot->isAdaptiveSaturation());
+  }
 }
 
 void ptMainWindow::UpdateRepairSpotUI(const QModelIndex &ANewIdx) {
-  ptRepairSpot* hSpot = static_cast<ptRepairSpot*>(RepairSpotModel->spot(ANewIdx.row()));
-  Settings->SetValue("SpotAlgorithm", hSpot->algorithm());
-  Settings->SetValue("SpotOpacity", hSpot->opactiy());
-  Settings->SetValue("SpotEdgeSoftness", hSpot->edgeSoftness());
-  // TODO: some settings still missing, also from the UI
+  if (!ANewIdx.isValid()) {
+    // empty spot list or none selected
+    SpotConfigGroup->setEnabled(false);
+
+  } else {
+    // update with values from selected spot
+    SpotConfigGroup->setEnabled(true);
+    ptRepairSpot* hSpot = static_cast<ptRepairSpot*>(RepairSpotModel->spot(ANewIdx.row()));
+    Settings->SetValue("SpotAlgorithm", hSpot->algorithm());
+    Settings->SetValue("SpotOpacity", hSpot->opactiy());
+    Settings->SetValue("SpotEdgeSoftness", hSpot->edgeSoftness());
+    // TODO: some settings still missing, also from the UI
+  }
 }
 
 

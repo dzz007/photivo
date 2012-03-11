@@ -614,7 +614,8 @@ void ptCurveWindow::CalculateCurve() {
     }
   } else if (m_Channel == ptCurveChannel_L ||
              m_Channel == ptCurveChannel_Outline ||
-             m_Channel == ptCurveChannel_Base2) {
+             m_Channel == ptCurveChannel_Base2 ||
+             m_Channel == ptCurveChannel_SpotLuma) {
     SetBWGradient(m_Image8);
   } else if (m_Channel == ptCurveChannel_RGB ||
              m_Channel == ptCurveChannel_Base) {

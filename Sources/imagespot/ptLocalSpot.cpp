@@ -52,7 +52,7 @@ ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
 
 //==============================================================================
 
-ptLocalSpot::WriteToFile(QSettings *APtsFile) {
+void ptLocalSpot::WriteToFile(QSettings *APtsFile) {
   ptImageSpot::WriteToFile(APtsFile);
 
   APtsFile->setValue("HasMaxRadius", FHasMaxRadius);
