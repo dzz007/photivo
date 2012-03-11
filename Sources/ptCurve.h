@@ -77,10 +77,12 @@ public:
   void setId(const QString &AId) { FId = AId; }
 
   /*! Reads the curve from the settings file object given by APtsFile.
+      Only works for ptCurveType_Anchor.
       Atm this function is only used by the "spot adjust" tool. */
   void ReadFromFile(QSettings *APtsFile);
 
   /*! Writes the curve to the settings file object given by APtsFile.
+      Only works for ptCurveType_Anchor.
       Atm this function is only used by the "spot adjust" tool. */
   void WriteToFile(QSettings *APtsFile);
 
@@ -155,7 +157,6 @@ private:
   // Unique ID string used to construct the keys in pts files.
   // Atm only used by the "spot adjust" tool.
   QString FId;
-  short   FChannel;
 
 
 };

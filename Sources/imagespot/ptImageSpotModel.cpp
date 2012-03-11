@@ -26,6 +26,9 @@
 #include "ptLocalSpot.h"
 #include "ptRepairSpot.h"
 
+void ReportProgress(const QString Message);
+
+
 //==============================================================================
 
 ptImageSpotModel::ptImageSpotModel(const QSize ASizeHint,
@@ -86,7 +89,7 @@ void ptImageSpotModel::LoadFromFile(QSettings *APtsFile) {
 
 bool ptImageSpotModel::setData(const QModelIndex &index,
                                const QVariant    &value,
-                               int               role = Qt::EditRole)
+                               int               role /*= Qt::EditRole*/)
 {
   bool hResult = QStandardItemModel::setData(index, value, role);
   if (!hResult) return hResult;

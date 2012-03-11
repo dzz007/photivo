@@ -36,7 +36,6 @@
 //==============================================================================
 
 ptCurve::ptCurve(const short Channel) {
-  FChannel = Channel;
   if (Channel == ptCurveChannel_Saturation ||
       Channel == ptCurveChannel_LByHue ||
       Channel == ptCurveChannel_Texture ||
@@ -53,53 +52,30 @@ ptCurve::ptCurve(const short Channel) {
 //==============================================================================
 
 void ptCurve::ReadFromFile(QSettings *APtsFile) {
-  m_Type == APtsFile->value(FId + "Type", ptCurveType_Anchor).toInt();
+  m_Type = ptCurveType_Anchor;
+  m_IntType = APtsFile->value(FId + "Interpolation", ptCurveIT_Cosine).toInt();
+  m_NrAnchors = qBound(0, APtsFile->value(FId + "Counter", 0).toInt(), (int)ptMaxAnchors);
 
-  if (m_Type == ptCurveType_Anchor) {
-    // manual curve
-    m_IntType = APtsFile->value(FId + "Interpolation", ptCurveIT_Cosine).toInt();
-    m_NrAnchors = qBound(0, APtsFile->value(FId + "Counter", 0).toInt(), ptMaxAnchors);
-
-    for (int i = 0; i < m_NrAnchors; i++) {
-      m_XAnchor[i] = APtsFile->value(QString("%1X%2").arg(FId).arg(i), 0.0).toDouble();
-      m_YAnchor[i] = APtsFile->value(QString("%1Y%2").arg(FId).arg(i), 0.0).toDouble();
-    }
-
-    SetCurveFromAnchors();
-
-  } else if (m_Type == ptCurveType_Full) {
-    // pre-defined curve from external file
-    QString hFileName = APtsFile->value(FId + "Filename", "").toString();
-
-    if (hFileName.isEmpty()) {
-      SetNullCurve(FChannel);
-    } else {
-      ReadCurve(hFileName.toAscii().data());
-    }
-
-  } else {
-    assert(!"Invalid curve type.");
+  for (int i = 0; i < m_NrAnchors; i++) {
+    m_XAnchor[i] = APtsFile->value(QString("%1X%2").arg(FId).arg(i), 0.0).toDouble();
+    m_YAnchor[i] = APtsFile->value(QString("%1Y%2").arg(FId).arg(i), 0.0).toDouble();
   }
 
+  SetCurveFromAnchors();
 }
 
 //==============================================================================
 
 void ptCurve::WriteToFile(QSettings *APtsFile) {
-  if (m_Type == ptCurveType_Anchor) {   // manual curve
-    APtsFile->setValue(FId + "Type", ptCurveType_Anchor);
-    APtsFile->setValue(FId + "Interpolation", m_IntType);
-    APtsFile->setValue(FId + "Counter", m_NrAnchors);
-    for (int j = 0; j < m_NrAnchors; j++) {
-      APtsFile->setValue(QString("%1X%2").arg(FId).arg(j), m_XAnchor[j]);
-      APtsFile->setValue(QString("%1Y%2").arg(FId).arg(j), m_YAnchor[j]);
-    }
+  if (m_Type != ptCurveType_Anchor) {
+    assert(!"Invalid curve type. Only ptCurveType_Anchor is allowed.");
+  }
 
-  } else if (m_Type == ptCurveType_Full) {    // pre-defined curve
-    // TODO: Save file name. First find a sensible way to store that filename in the curve object.
-
-  } else {
-    assert(!"Invalid curve type.");
+  APtsFile->setValue(FId + "Interpolation", m_IntType);
+  APtsFile->setValue(FId + "Counter", m_NrAnchors);
+  for (int j = 0; j < m_NrAnchors; j++) {
+    APtsFile->setValue(QString("%1X%2").arg(FId).arg(j), m_XAnchor[j]);
+    APtsFile->setValue(QString("%1Y%2").arg(FId).arg(j), m_YAnchor[j]);
   }
 }
 
