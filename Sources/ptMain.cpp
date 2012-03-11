@@ -54,6 +54,7 @@
 #include "ptTheme.h"
 #include "ptWiener.h"
 #include "ptParseCli.h"
+#include "ptImageHelper.h"
 #include "imagespot/ptRepairSpot.h"
 #include "imagespot/ptLocalSpot.h"
 #include "qtsingleapplication/qtsingleapplication.h"
@@ -168,6 +169,7 @@ QString SettingsFilePattern;
 QString ProfilePattern;
 QString RawPattern;
 QString BitmapPattern;
+QString SaveBitmapPattern;
 
 void InitStrings() {
   ChannelMixerFilePattern =
@@ -239,6 +241,12 @@ void InitStrings() {
                                                  "*.png *.PNG *.Png "
                                                  "*.ppm *.PPm *.Ppm "
                                                  ";;All files (*.*)");
+
+  SaveBitmapPattern =
+    QCoreApplication::translate("Global Strings","Jpeg (*.jpg);;"
+                                                 "Tiff (*.tiff);;"
+                                                 "Png (*.png);;"
+                                                 "All files (*.*)");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -253,8 +261,6 @@ ptImageType CheckImageType(QString filename,
 void   RunJob(const QString FileName);
 short  ReadJobFile(const QString FileName);
 short  ReadSettingsFile(const QString FileName, short& NextPhase);
-void   Settings_2_Form();
-void   Form_2_Settings();
 void   WriteOut();
 void   UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
                           const short    OnlyHistogram = 0);
@@ -1039,7 +1045,7 @@ void CB_Event0() {
   InitCurves();
   InitChannelMixers();
   PreCalcTransforms();
-  Settings_2_Form();
+  MainWindow->Settings_2_Form();
 
   if (Settings->GetInt("JobMode") == 0) { // not job mode!
     // Load user settings
@@ -2266,10 +2272,10 @@ void RunJob(const QString JobFileName) {
         QFileInfo PathInfo(InputFileNameList[0]);
         if (!Settings->GetString("OutputDirectory").isEmpty()) {
           Settings->SetValue("OutputFileName",
-            Settings->GetString("OutputDirectory") + "/" + PathInfo.baseName());
+            Settings->GetString("OutputDirectory") + "/" + PathInfo.completeBaseName());
         } else {
           Settings->SetValue("OutputFileName",
-            PathInfo.dir().path() + "/" + PathInfo.baseName());
+            PathInfo.dir().path() + "/" + PathInfo.completeBaseName());
         }
         if (!Settings->GetInt("IsRAW")) {
           Settings->SetValue("OutputFileName",
@@ -2334,12 +2340,8 @@ void RunJob(const QString JobFileName) {
   } while (InputFileNameList.size());
 } // RunJob
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// PrepareTags
-//
-////////////////////////////////////////////////////////////////////////////////
-
+//==============================================================================
+// Prepares the tags list and sets TagsList and DigikamTagsList
 void PrepareTags(const QString TagsInput) {
 
   QString WorkString = TagsInput;
@@ -2376,226 +2378,6 @@ void PrepareTags(const QString TagsInput) {
 
   Settings->SetValue("DigikamTagsList", DigikamTags);
   Settings->SetValue("TagsList", Tags);
-
-  //~ WorkString += "\n";
-  //~ for (int i = 0; i < DigikamTags.size(); i++) {
-    //~ if (i) WorkString.append(",");
-    //~ WorkString.append(DigikamTags.at(i));
-    //~ WorkString.append("...");
-    //~ WorkString.append(Tags.at(i));
-  //~ }
-  //~ ptMessageBox::warning(0,"Tags",WorkString);
-
-  return;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// WriteExif
-// Append exif to an image file
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void StringClean(QString& AString) {
-  while (AString.contains("  "))
-    AString.replace("  "," ");
-
-  AString = AString.trimmed();
-}
-
-
-void WriteExif(const QString FileName, uint8_t* ExifBuffer, const unsigned ExifBufferLength) {
-
-#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-  try {
-    if (ExifBufferLength) {
-
-      // Open the raw again for full exif data
-      //~ Exiv2::Image::AutoPtr InImage =
-      //~ Exiv2::ImageFactory::open((Settings->GetStringList("InputFileNameList"))[0].toAscii().data());
-      //~ assert(InImage.get() != 0);
-      //~ InImage->readMetadata();
-
-      const unsigned char ExifHeader[] = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
-
-      unsigned char*  Buffer;
-      unsigned long   BufferLength;
-
-      BufferLength = ExifBufferLength-sizeof(ExifHeader);
-
-      Buffer = (unsigned char*) MALLOC2(BufferLength);
-      ptMemoryError(Buffer,__FILE__,__LINE__);
-
-      Exiv2::ExifData exifData;
-
-      memcpy(Buffer,ExifBuffer+sizeof(ExifHeader), BufferLength);
-
-      Exiv2::ExifParser::decode(exifData, Buffer, BufferLength);
-
-      // Reset orientation
-      Exiv2::ExifData::iterator pos = exifData.begin();
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Orientation")))
-      != exifData.end() ) {
-        pos->setValue("1"); // Normal orientation
-      }
-
-      // Code from UFRaw, necessary for Tiff files
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageLength")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.BitsPerSample")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Compression")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.PhotometricInterpretation")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.FillOrder")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.SamplesPerPixel")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.StripOffsets")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.RowsPerStrip")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.StripByteCounts")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.XResolution")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.YResolution")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.PlanarConfiguration")))
-      != exifData.end() )
-        exifData.erase(pos);
-      if ( (pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.ResolutionUnit")))
-      != exifData.end() )
-        exifData.erase(pos);
-
-      if (Settings->GetInt("EraseExifThumbnail")) {
-#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-        Exiv2::ExifThumb Thumb(exifData);
-        Thumb.erase();
-#else
-        exifData.eraseThumbnail();
-#endif
-      }
-
-      QString JpegExtensions[] = {"jpg", "JPG", "Jpg", "jpeg", "Jpeg", "JPEG"};
-      short deleteDNGdata = 0;
-      for (int i=0; i<6; i++) if (!FileName.endsWith(JpegExtensions[i])) deleteDNGdata = 1;
-
-      Exiv2::Image::AutoPtr Exiv2Image = Exiv2::ImageFactory::open(FileName.toAscii().data());
-
-      Exiv2Image->readMetadata();
-      Exiv2::ExifData &outExifData = Exiv2Image->exifData();
-      pos = exifData.begin();
-      while ( !exifData.empty() ) {
-        if (deleteDNGdata == 0 || (*pos).key() != "Exif.Image.DNGPrivateData") {
-          outExifData.add(*pos);
-        }
-        pos = exifData.erase(pos);
-      }
-
-      if (Settings->GetInt("JobMode") == 0)
-        PrepareTags(MainWindow->TagsEditWidget->toPlainText());
-
-      // IPTC data
-      Exiv2::IptcData iptcData;
-
-      QStringList Tags = Settings->GetStringList("TagsList");
-      QStringList DigikamTags = Settings->GetStringList("DigikamTagsList");
-
-      Exiv2::StringValue StringValue;
-      for (int i = 0; i < Tags.size(); i++) {
-        StringValue.read(Tags.at(i).toStdString());
-        iptcData.add(Exiv2::IptcKey("Iptc.Application2.Keywords"), &StringValue);
-      }
-
-      // XMP data
-      Exiv2::XmpData xmpData;
-
-      if (Settings->GetInt("ImageRating"))
-        xmpData["Xmp.xmp.Rating"] = Settings->GetInt("ImageRating");
-      for (int i = 0; i < Tags.size(); i++) {
-        xmpData["Xmp.dc.subject"] = Tags.at(i).toStdString();
-      }
-      for (int i = 0; i < DigikamTags.size(); i++) {
-        xmpData["Xmp.digiKam.TagsList"] = DigikamTags.at(i).toStdString();
-      }
-
-      // Program name
-      iptcData["Iptc.Application2.Program"] = ProgramName;
-      iptcData["Iptc.Application2.ProgramVersion"] = "idle";
-      xmpData["Xmp.xmp.CreatorTool"] = ProgramName;
-      xmpData["Xmp.tiff.Software"] = ProgramName;
-
-      Form_2_Settings();
-
-      // Title
-      QString TitleWorking = Settings->GetString("ImageTitle");
-      StringClean(TitleWorking);
-      if (TitleWorking != "") {
-        outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
-        iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
-        xmpData["Xmp.dc.description"] = TitleWorking.toStdString();
-        xmpData["Xmp.exif.UserComment"] = TitleWorking.toStdString();
-        xmpData["Xmp.tiff.ImageDescription"] = TitleWorking.toStdString();
-      }
-
-      // Copyright
-      QString CopyrightWorking = Settings->GetString("Copyright");
-      StringClean(CopyrightWorking);
-      if (CopyrightWorking != "") {
-        outExifData["Exif.Image.Copyright"] = CopyrightWorking.toStdString();
-        iptcData["Iptc.Application2.Copyright"] = CopyrightWorking.toStdString();
-        xmpData["Xmp.tiff.Copyright"] = CopyrightWorking.toStdString();
-      }
-
-      Exiv2Image->setExifData(outExifData);
-      Exiv2Image->setIptcData(iptcData);
-      Exiv2Image->setXmpData(xmpData);
-      Exiv2Image->writeMetadata();
-    }
-  } catch (Exiv2::AnyError& Error) {
-    if (Settings->GetInt("JobMode") == 0) {
-      ptMessageBox::warning(MainWindow,"Exiv2 Error","No exif data written!\nCaught Exiv2 exception '" + QString(Error.what()) + "'\n");
-    } else {
-      std::cout << "Caught Exiv2 exception '" << Error << "'\n";
-    }
-  }
-#endif
-}
-
-//==============================================================================
-// Display strings from settings
-void Settings_2_Form() {
-  if (MainWindow == NULL) return;
-
-  // Metadata
-  MainWindow->edtImageTitle->setText(Settings->GetString("ImageTitle"));
-  MainWindow->edtCopyright->setText( Settings->GetString("Copyright"));
-}
-
-//==============================================================================
-// Read settings from Form
-void Form_2_Settings() {
-  if (MainWindow == NULL) return;
-
-  //Metadata
-  Settings->SetValue("ImageTitle", MainWindow->edtImageTitle->text().trimmed());
-  Settings->SetValue("Copyright",  MainWindow->edtCopyright->text().trimmed());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2660,15 +2442,15 @@ void WriteOut() {
     Settings->GetInt("OutputColorProfileIntent"));
 
   if (!FileWritten) {
-    ptMessageBox::warning(MainWindow,"GraphicsMagick Error","No output file written.");
+    ptMessageBox::warning(MainWindow, QObject::tr("GraphicsMagick Error"), QObject::tr("No output file written."));
   } else {
     ReportProgress(QObject::tr("Writing output (exif)"));
 
-    if (Settings->GetInt("IncludeExif") &&
-        TheProcessor->m_ExifBufferLength) {
-      WriteExif(Settings->GetString("OutputFileName"),
-          TheProcessor->m_ExifBuffer,
-          TheProcessor->m_ExifBufferLength);
+    if (Settings->GetInt("IncludeExif")) {
+      if (!ptImageHelper::WriteExif(Settings->GetString("OutputFileName"),
+                                    TheProcessor->m_ExifBuffer,
+                                    TheProcessor->m_ExifBufferLength))
+        ptMessageBox::warning(MainWindow, QObject::tr("Exif Error"), QObject::tr("No exif data written."));
     }
   }
 
@@ -2680,7 +2462,7 @@ void WriteOut() {
     ReportProgress(QObject::tr("Writing output (settings)"));
 
     QFileInfo PathInfo(Settings->GetString("OutputFileName"));
-    QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".pts";
+    QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".pts";
 
     WriteSettingsFile(SettingsFileName);
   }
@@ -2694,7 +2476,7 @@ void WritePipe(QString OutputName = "") {
 
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
   QFileInfo PathInfo(InputFileNameList[0]);
-  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.baseName();
+  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName();
   if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
   QString Pattern;
 
@@ -3058,7 +2840,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   // Color space transformations precalc
   if (NeedRecalcTransforms == 1) PreCalcTransforms();
 
-  Settings_2_Form();
+  MainWindow->Settings_2_Form();
 
   // clean up non-existing files in settings file
   // currently, we completely preserve the settings file
@@ -3394,7 +3176,7 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
 
     QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
     QFileInfo PathInfo(InputFileNameList[0]);
-    QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.baseName();
+    QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName();
     if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
     QString Pattern;
 
@@ -3497,7 +3279,7 @@ void CB_MenuFileWriteJob(const short) {
   // And finally a dialog to obtain the output job file.
 
   QFileInfo PathInfo(InputFileNames[0]);
-  QString SuggestedJobFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".ptj";
+  QString SuggestedJobFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".ptj";
 
   QString JobFileName =
     QFileDialog::getSaveFileName(NULL,
@@ -3516,7 +3298,7 @@ void CB_MenuFileWriteSettings() {
   if (Settings->GetInt("HaveImage")==0) return;
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
   QFileInfo PathInfo(InputFileNameList[0]);
-  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.baseName() + ".pts";
+  QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".pts";
 
   QString FileName;
 
@@ -3554,7 +3336,7 @@ void CB_MenuFileExit(const short) {
       Settings->SetValue(CurveKeys.at(i),ptCurveChoice_None);
   }
 
-  Form_2_Settings();
+  MainWindow->Form_2_Settings();
 
   printf("Saving settings ...\n");
 
@@ -8481,11 +8263,6 @@ void CB_EraseExifThumbnailCheck(const QVariant State) {
   TheProcessor->ReadExifBuffer();
 }
 
-void CB_ImageRatingInput(const QVariant Value) {
-  Settings->SetValue("ImageRating",Value);
-  TheProcessor->ReadExifBuffer();
-}
-
 inline void BlockExport(bool Block) {
   if (!Block) QApplication::processEvents();
   MainWindow->ToGimpButton->setEnabled(!Block);
@@ -8653,6 +8430,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_JustSetDispatch(FileMgrThumbnailPaddingInput)
   M_Dispatch(FileMgrUseThumbMaxRowColCheck)
   M_JustSetDispatch(FileMgrThumbMaxRowColInput)
+  M_JustSetDispatch(FileMgrThumbSaveSizeInput)
 
   M_Dispatch(MemoryTestInput)
 
@@ -9300,7 +9078,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_JustSetDispatch(SaveSamplingChoice)
   M_JustSetDispatch(IncludeExifCheck)
   M_Dispatch(EraseExifThumbnailCheck)
-  M_Dispatch(ImageRatingInput)
+  M_JustSetDispatch(ImageRatingInput)
   M_JustSetDispatch(OutputModeChoice)
 
   } else {

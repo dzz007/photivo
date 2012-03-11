@@ -19,6 +19,10 @@ ARCHIVEDIR=/d/Software/Anwendungen/Photivo
 # to change too soon/often, setting it here is enough. Use forward slashes.
 REALBASEDIR="D:/Projekte/Photivo"
 
+# Additional C++ compiler flags. Temporary solution until the C++11 stuff is properly
+# integrated into the Photivo project.
+MORECXXFLAGS="--std=gnu++0x -fpermissive"
+
 #===============================================================================
 
 SCRIPTVERSION=1.0
@@ -27,6 +31,7 @@ COLOR_GREEN='\e[0;32m'
 COLOR_NONE='\e[00m'
 
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export CXXFLAGS="$CXXFLAGS $MORECXXFLAGS"
 
 #===============================================================================
 

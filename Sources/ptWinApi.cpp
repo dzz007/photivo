@@ -56,7 +56,9 @@ QString WinApi::AppdataFolder() {
 QStringList WinApi::DrivesListPretty() {
   QFileInfoList list = QDir::drives();
   QStringList result;
+#if (QT_VERSION >= 0x40700)
   result.reserve(list.count());
+#endif
   for (int i = 0; i < list.count(); i++) {
     result.append(WinApi::VolumeNamePretty(list.at(i).filePath().left(2)));
   }

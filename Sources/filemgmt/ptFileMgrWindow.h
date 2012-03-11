@@ -110,6 +110,7 @@ private:
   QAction*      ac_ToggleSidebar;
   QAction*      ac_ToggleImageView;
   QAction*      ac_CloseFileMgr;
+  QAction*      ac_SaveThumb;
 
 
 public slots:
@@ -127,6 +128,7 @@ private slots:
   void fetchNewThumbs(const bool isLast);
   void on_m_BookmarkButton_clicked();
   void thumbFocusChanged();
+  void saveThumbnail();
 
   // context menu slots
   void verticalThumbs();
