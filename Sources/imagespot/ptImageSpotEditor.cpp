@@ -22,60 +22,59 @@
 
 #include <QHBoxLayout>
 
-#include "ptRepairSpotEditor.h"
-#include "../ptGuiOptions.h"
+#include "ptImageSpotEditor.h"
 #include "../ptMainWindow.h"
 #include "../ptTheme.h"
 
-extern ptGuiOptions* GuiOptions;
 extern ptMainWindow* MainWindow;
 extern ptTheme* Theme;
 
 //==============================================================================
 
-ptRepairSpotEditor::ptRepairSpotEditor(QWidget *AParent,
-                                       const int AInitialAlgoIndex)
+ptImageSpotEditor::ptImageSpotEditor(QWidget        *AParent,
+                                     const QString  &AInitialName)
 : QWidget(AParent)
 {
+  // ensure proper widget styling
   setContentsMargins(0,0,0,0);
-  QPalette pal = palette();
-  pal.setColor(QPalette::Window, Theme->baseColor());
-  setPalette(pal);
+  auto hPal = palette();
+  hPal.setColor(QPalette::Window, Theme->baseColor());
+  setPalette(hPal);
 
-  // init combobox with repair alorithms
-  AlgoCombo = new QComboBox(this);
-  int i = 0;
-  while (GuiOptions->SpotRepair[i].Value != -1) {
-    AlgoCombo->addItem(GuiOptions->SpotRepair[i].Text);
-    i++;
-  }
-  AlgoCombo->setCurrentIndex(AInitialAlgoIndex);
-
+  // init delete button
   DelButton = new QToolButton(this);
   DelButton->setIcon(QIcon(QString::fromUtf8(":/photivo/Icons/cancel.png")));
   DelButton->installEventFilter(this);
+  connect(this, SIGNAL(deleteButtonClicked()),
+          MainWindow->RepairSpotListView, SLOT(deleteSpot()));
 
+  // init name editor
+  NameEditor = new QLineEdit(this);
+  NameEditor->setText(AInitialName);
+  NameEditor->selectAll();
+  NameEditor->setFocus();
+
+  // setup layout: DelButton right-justified, NameEditor gets remaining width
   QHBoxLayout* Layout = new QHBoxLayout;
   Layout->setContentsMargins(0,0,0,0);
   Layout->setSpacing(0);
-  Layout->addWidget(AlgoCombo);
+  Layout->addWidget(NameEditor);
   Layout->addWidget(DelButton);
   this->setLayout(Layout);
-
-  connect(this, SIGNAL(deleteButtonClicked()),
-          MainWindow->RepairSpotListView, SLOT(deleteSpot()));
 }
 
 //==============================================================================
 
-ptRepairSpotEditor::~ptRepairSpotEditor() {
-  delete AlgoCombo;
-  delete DelButton;
-}
+ptImageSpotEditor::~ptImageSpotEditor()
+{}
+/* Auto resource management: do not delete these members explicitely.
+  DelButton
+  NameEditor
+*/
 
 //==============================================================================
 
-bool ptRepairSpotEditor::eventFilter(QObject *obj, QEvent *event) {
+bool ptImageSpotEditor::eventFilter(QObject *obj, QEvent *event) {
   // detect delete button click
   if (event->type() == QEvent::MouseButtonPress) {
     if (obj == DelButton) {

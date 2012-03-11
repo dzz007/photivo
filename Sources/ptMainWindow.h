@@ -44,7 +44,6 @@ using std::unique_ptr;
 #include "ptGroupBox.h"
 #include "ptVisibleToolsView.h"
 #include "imagespot/ptImageSpotModel.h"
-//#include "imagespot/ptRepairSpotItemDelegate.h"
 #include "imagespot/ptImageSpotListView.h"
 
 
@@ -137,10 +136,10 @@ public:
   void PopulateSpotRepairList(QSettings *APtsFile);
   void WriteSpotRepairList(QSettings *APtsFile);
 
-  ptImageSpotListView* LocalSpotListView;
-  ptImageSpotModel*     LocalSpotModel;
-  ptImageSpotListView* RepairSpotListView;
-  ptImageSpotModel*     RepairSpotModel;
+  ptImageSpotListView *LocalSpotListView;
+  ptImageSpotModel    *LocalSpotModel;
+  ptImageSpotListView *RepairSpotListView;
+  ptImageSpotModel    *RepairSpotModel;
 
 //------------------------------------------------------------------------------
 
@@ -175,12 +174,9 @@ private:
   short    m_ContextMenuOnTab;
   QAction* m_AtnShowTools;
 
-  ptVisibleToolsModel* m_VisibleToolsModel;
-
-  unique_ptr<ptCurve> FEmptyCurve;  // Empty curve for spots. Gets applied when no spot is selected.
-  ptCurveWindow       *FSpotCurveWindow;  // raw pointer because managed by Qt parent mechanism
-  unique_ptr<QStyledItemDelegate> FLocalSpotDelegate;
-  unique_ptr<QStyledItemDelegate> FRepairSpotDelegate;
+  ptVisibleToolsModel  *m_VisibleToolsModel;
+  unique_ptr<ptCurve>  FEmptyCurve; //Empty curve for spots. Gets applied when no spot is selected.
+  ptCurveWindow        *FSpotCurveWindow;  // raw pointer because managed by Qt parent mechanism
 
   void AnalyzeToolBoxStructure();
   void ShowMovedTools(const QString Title);

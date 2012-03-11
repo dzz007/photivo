@@ -195,8 +195,8 @@ HEADERS += \
     ../Sources/imagespot/ptImageSpot.h \
     ../Sources/imagespot/ptRepairInteraction.h \
     ../Sources/imagespot/ptRepairSpot.h \
-    ../Sources/imagespot/ptRepairSpotEditor.h \
-    ../Sources/imagespot/ptRepairSpotItemDelegate.h \
+    ../Sources/imagespot/ptImageSpotEditor.h \
+    ../Sources/imagespot/ptImageSpotItemDelegate.h \
     ../Sources/imagespot/ptImageSpotListView.h \
     ../Sources/imagespot/ptRepairSpotModel.h \
     ../Sources/imagespot/ptImageSpotModel.h \
@@ -286,8 +286,8 @@ SOURCES += \
     ../Sources/imagespot/ptImageSpot.cpp \
     ../Sources/imagespot/ptRepairInteraction.cpp \
     ../Sources/imagespot/ptRepairSpot.cpp \
-    ../Sources/imagespot/ptRepairSpotEditor.cpp \
-    ../Sources/imagespot/ptRepairSpotItemDelegate.cpp \
+    ../Sources/imagespot/ptImageSpotEditor.cpp \
+    ../Sources/imagespot/ptImageSpotItemDelegate.cpp \
     ../Sources/imagespot/ptImageSpotListView.cpp \
     ../Sources/imagespot/ptRepairSpotModel.cpp \
     ../Sources/imagespot/ptImageSpotModel.cpp \

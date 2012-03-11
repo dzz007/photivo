@@ -22,49 +22,46 @@
 
 #include "../ptConstants.h"
 #include "../ptTheme.h"
-#include "../ptGuiOptions.h"
-#include "ptRepairSpotItemDelegate.h"
-#include "ptRepairSpotEditor.h"
-#include "ptRepairSpot.h"
-#include "ptRepairSpotModel.h"
+#include "ptImageSpotItemDelegate.h"
+#include "ptImageSpotEditor.h"
 
 extern ptTheme* Theme;
-extern ptGuiOptions* GuiOptions;
 
 //==============================================================================
 
-ptRepairSpotItemDelegate::ptRepairSpotItemDelegate(QObject *AParent)
-: QStyledItemDelegate(AParent)
+ptImageSpotItemDelegate::ptImageSpotItemDelegate(ptImageSpotListView *AParent)
+: QStyledItemDelegate(AParent),
+  FListView(AParent)
 {}
 
 //==============================================================================
 
-QWidget* ptRepairSpotItemDelegate::createEditor(QWidget *parent,
+QWidget* ptImageSpotItemDelegate::createEditor(QWidget *parent,
                                                 const QStyleOptionViewItem&,
                                                 const QModelIndex &index) const
 {
-  return new ptRepairSpotEditor(
-    parent,
-    (int)qobject_cast<const ptRepairSpotModel*>(index.model())->spot(index.row())->algorithm()
-  );
+  auto hEd = new ptImageSpotEditor(parent, index.data(Qt::DisplayRole).toString());
+  connect(hEd, SIGNAL(deleteButtonClicked()), FListView, SLOT(deleteSpot()));
+  return hEd;
 }
 
 //==============================================================================
 
-void ptRepairSpotItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
-//  ptRepairSpotEditor *ed = qobject_cast<ptRepairSpotEditor*>(editor);
-//  ed->AlgoCombo->setCurrentIndex(
-//        static_cast<ptRepairSpot*>(RepairSpotList->at(index.row()))->algorithm() );
+void ptImageSpotItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
+  auto hNameEd = qobject_cast<ptImageSpotEditor*>(editor)->NameEditor;
+  hNameEd->setText(index.data(Qt::DisplayRole).toString());
+  hNameEd->selectAll();
+  hNameEd->setFocus();
 }
 
 //==============================================================================
 
-void ptRepairSpotItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-                                            const QModelIndex &index) const
+void ptImageSpotItemDelegate::setModelData(QWidget *editor,
+                                           QAbstractItemModel *model,
+                                           const QModelIndex &index) const
 {
-  ptRepairSpotEditor *hEd   = qobject_cast<ptRepairSpotEditor*>(editor);
   model->setData(index,
-                 GuiOptions->SpotRepair[hEd->AlgoCombo->currentIndex()].Text,
+                 qobject_cast<ptImageSpotEditor*>(editor)->NameEditor->text(),
                  Qt::DisplayRole);
 }
 
