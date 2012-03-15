@@ -2549,8 +2549,9 @@ short WriteSettingsFile(const QString FileName, const short IsJobFile /* = 0 */)
     }
   }
 
-  // Save list of spotrepair spots
-  MainWindow->WriteSpotRepairList(&JobSettings);
+  // Save spot lists
+  MainWindow->LocalSpotModel->WriteToFile(&JobSettings);
+  MainWindow->RepairSpotModel->WriteToFile(&JobSettings);
 
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) return 0;
@@ -2859,7 +2860,8 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
 //    RepairSpotList->append(new ptRepairSpot(&JobSettings));
 //  }
 //  JobSettings.endArray();
-  MainWindow->PopulateSpotRepairList(&JobSettings);
+  MainWindow->LocalSpotModel->LoadFromFile(&JobSettings);
+  MainWindow->RepairSpotModel->LoadFromFile(&JobSettings);
 
 
   JobSettings.sync();
@@ -4710,6 +4712,7 @@ void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
   Settings->SetValue("LocalMaxRadiusCheck", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
       ->setHasMaxRadius(Value.toBool());
+  MainWindow->LocalMaxRadiusWidget->setEnabled(Value.toBool());
 }
 
 void CB_LocalMaxRadiusInput(const QVariant Value) {
@@ -4778,20 +4781,28 @@ void CB_ConfirmSpotRepairButton() {
   ViewWindow->spotRepair()->stop();
 }
 
+void CB_SpotAlgorithmChoice(const QVariant Value) {
+  int hRow = MainWindow->RepairSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("SpotAlgorithm", Value);
+  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hRow))
+      ->setAlgorithm((ptSpotRepairAlgo)Value.toInt());
+}
+
 void CB_SpotOpacityInput(const QVariant Value) {
-  if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
-    Settings->SetValue("SpotOpacity", Value);
-//    RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row())
-//        ->setOpacity(Value.toFloat());
-  }
+  int hRow = MainWindow->RepairSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("SpotOpacity", Value);
+  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hRow))
+      ->setOpacity(Value.toFloat());
 }
 
 void CB_SpotEdgeSoftnessInput(const QVariant Value) {
-  if (MainWindow->RepairSpotListView->currentIndex().row() > -1) {
-    Settings->SetValue("SpotEdgeSoftness", Value);
-//    RepairSpotList->at(MainWindow->RepairSpotListView->currentIndex().row())
-//        ->setEdgeBlur(Value.toFloat());
-  }
+  int hRow = MainWindow->RepairSpotListView->currentIndex().row();
+  if (hRow < 0) return;
+  Settings->SetValue("SpotEdgeSoftness", Value);
+  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hRow))
+      ->setEdgeSoftness(Value.toFloat());
 }
 
 
@@ -8500,7 +8511,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LocalSaturationInput)
   M_Dispatch(LocalAdaptiveSaturationCheck)
 
-//  M_Dispatch(SpotAlgorithmChoice)
+  M_Dispatch(SpotAlgorithmChoice)
   M_Dispatch(SpotOpacityInput)
   M_Dispatch(SpotEdgeSoftnessInput)
 

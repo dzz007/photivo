@@ -57,7 +57,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-  /*! Creates an empty and disabled image spot or loads a spot from the current ini file.
+  /*! Creates an empty and enabled image spot or loads a spot from the current ini file.
     \param Ini
       Optional QSettings object representing a pts file. When is parameter is non-NULL
       the constructor will attempt to initialise the spot with data read from \c Ini.
@@ -70,7 +70,7 @@ public:
   ptImageSpot(const uint ASpotX,
               const uint ASpotY,
               const uint ARadius,
-              const short AIsEnabled,
+              const bool AIsEnabled,
               const QString &AName);
 
   /*! Returns the spot's enabled status. */
@@ -87,7 +87,7 @@ public:
   /*! Enables or disables the spot. Disabled spots are ignored when running the pipe.
       Values are \c 0 (disabled) or \c 2 (enabled), corresponding to what \c QListView
       checkboxes use. */
-  inline void setEnabled(const short AState) { FIsEnabled = AState; }
+  inline void setEnabled(const bool AState) { FIsEnabled = AState; }
 
   inline void setName(const QString &AName) { FName = AName; }
 
@@ -109,7 +109,7 @@ public:
 //------------------------------------------------------------------------------
 
 protected:
-  short     FIsEnabled;
+  bool      FIsEnabled;
   QString   FName;
   uint      FRadius;
   QPoint    FPos;       // Position is the center of the spot

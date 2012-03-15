@@ -116,7 +116,7 @@ public:
   void setAngle(float angle);
 
   /*! Sets edge blur. */
-  void setEdgeBlur(const float ABlur);
+  void setEdgeSoftness(const float ASoftness);
 
   /*! Sets the size of the blurred edge. */
   void setEdgeRadius(uint ARadius);

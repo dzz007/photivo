@@ -70,7 +70,10 @@ void ptImageSpotListView::processCoordinates(const QPoint &APos, const bool AMov
   } else {
     // append new spot to list
     ptImageSpot *hSpot = FSpotCreator();
+
     hSpot->setPos(APos.x(), APos.y());
+    hSpot->setName(tr("Spot"));
+
     qobject_cast<ptImageSpotModel*>(this->model())
         ->appendSpot(hSpot);
   }

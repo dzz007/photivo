@@ -602,7 +602,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   const ptGuiCheckItem GuiCheckItems[] = {
     // Name   GuiType,InitLevel,InJobFile,Default,Label,Tip
     {"LocalEgdeAwareThreshold"    ,ptGT_Check ,9,0,1,   tr("Edge aware threshold"),tr("Apply threshold only to hard edges. Allow gradual changes.")},
-    {"LocalMaxRadiusCheck"        ,ptGT_Check ,9,0,0,   "",""},
+    {"LocalMaxRadiusCheck"        ,ptGT_Check ,9,0,0,   tr("Use maximum radius"),""},
     {"LocalAdaptiveSaturation"    ,ptGT_Check ,9,0,0,   tr("Adaptive Saturation"),tr("Prevent clipping when adjusting saturation.")},
 
     {"FileMgrUseThumbMaxRowCol"   ,ptGT_Check ,1,0,0,tr("At most")         ,tr("Maximum number of thumbnails that should be placed in a row or column.")},

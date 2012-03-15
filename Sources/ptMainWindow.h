@@ -133,8 +133,6 @@ public:
   QDockWidget* ControlsDockWidget;
 
   void OnToolBoxesEnabledTriggered(const bool Enabled);
-  void PopulateSpotRepairList(QSettings *APtsFile);
-  void WriteSpotRepairList(QSettings *APtsFile);
 
   ptImageSpotListView *LocalSpotListView;
   ptImageSpotModel    *LocalSpotModel;
