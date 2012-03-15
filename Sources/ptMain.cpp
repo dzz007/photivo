@@ -8500,6 +8500,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LocalSaturationInput)
   M_Dispatch(LocalAdaptiveSaturationCheck)
 
+//  M_Dispatch(SpotAlgorithmChoice)
   M_Dispatch(SpotOpacityInput)
   M_Dispatch(SpotEdgeSoftnessInput)
 
@@ -9178,11 +9179,19 @@ ptImageType CheckImageType(QString filename,
 // the tool active state. Used there in ToolInfo(). Avoids making the MainWindow
 // known to ptSettings.
 int RepairSpotCount() {
-  return MainWindow->RepairSpotModel->rowCount();
+  if (InStartup) {
+    return 0;
+  } else {
+    return MainWindow->RepairSpotModel->rowCount();
+  }
 }
 
 int LocalSpotCount() {
-  return MainWindow->LocalSpotModel->rowCount();
+  if (InStartup) {
+    return 0;
+  } else {
+    return MainWindow->LocalSpotModel->rowCount();
+  }
 }
 
 //==============================================================================

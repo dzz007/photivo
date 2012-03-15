@@ -57,9 +57,9 @@ unix {
   QMAKE_CXX   = ccache /usr/bin/g++
 
   QMAKE_CFLAGS_RELEASE    += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CXXFLAGS_RELEASE  += -std=c++0x -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE  += -std=gnu++0x -fpermissive -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CFLAGS_DEBUG      += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CXXFLAGS_DEBUG    += -std=c++0x -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_DEBUG    += -std=gnu++0x -fpermissive -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_LFLAGS_DEBUG      += -rdynamic
 
   LIBS += $$system(GraphicsMagick++-config --libs)
@@ -71,8 +71,8 @@ win32 {
 
   QMAKE_CFLAGS_RELEASE    += $$(CFLAGS)
   QMAKE_CFLAGS_DEBUG      += $$(CFLAGS)
-  QMAKE_CXXFLAGS_RELEASE  += -std=c++0x $$(CXXFLAGS)
-  QMAKE_CXXFLAGS_DEBUG    += -std=c++0x $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE  += -std=gnu++0x -fpermissive $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_DEBUG    += -std=gnu++0x -fpermissive $$(CXXFLAGS)
   QMAKE_LFLAGS_RELEASE    += $$(LDFLAGS)
   QMAKE_LFLAGS_DEBUG      += $$(LDFLAGS)
 
@@ -93,7 +93,7 @@ macx{
 
   # prevent qmake from adding -arch flags
   QMAKE_CFLAGS_X86_64           = -m64
-  QMAKE_CXXFLAGS_X86_64         = -m64 -std=c++0x
+  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x -fpermissive
   QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
   QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
 
@@ -192,7 +192,7 @@ HEADERS += \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
     ../Sources/qtsingleapplication/qtsingleapplication.h \
-    ../Sources/ptImageHelper.h
+    ../Sources/ptImageHelper.h \
     ../Sources/imagespot/ptImageSpot.h \
     ../Sources/imagespot/ptRepairInteraction.h \
     ../Sources/imagespot/ptRepairSpot.h \
@@ -284,7 +284,7 @@ SOURCES += \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
     ../Sources/vcd/vcd_interpolate.c \
-    ../Sources/ptImageHelper.cpp
+    ../Sources/ptImageHelper.cpp \
     ../Sources/imagespot/ptImageSpot.cpp \
     ../Sources/imagespot/ptRepairInteraction.cpp \
     ../Sources/imagespot/ptRepairSpot.cpp \
