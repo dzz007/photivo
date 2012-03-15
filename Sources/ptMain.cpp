@@ -8261,6 +8261,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(StartupSettingsResetCheck)
   M_Dispatch(StartupUIModeChoice)
   M_Dispatch(StartupPipeSizeChoice)
+  M_JustSetDispatch(EscToExitCheck)
 
   M_JustSetDispatch(StartupSwitchARCheck)
 

@@ -374,8 +374,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>477</width>
-                                <height>597</height>
+                                <width>98</width>
+                                <height>249</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_19">
@@ -389,8 +389,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>465</width>
-                                    <height>417</height>
+                                    <width>155</width>
+                                    <height>120</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -570,8 +570,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>102</height>
+                                    <width>113</width>
+                                    <height>112</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -669,8 +669,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>159</width>
-                                    <height>76</height>
+                                    <width>154</width>
+                                    <height>88</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -770,8 +770,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>112</width>
-                                    <height>180</height>
+                                    <width>124</width>
+                                    <height>184</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -991,8 +991,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>99</width>
-                                    <height>264</height>
+                                    <width>108</width>
+                                    <height>270</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1139,8 +1139,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>62</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1209,8 +1209,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>477</width>
-                                <height>597</height>
+                                <width>98</width>
+                                <height>411</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -1224,8 +1224,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>144</height>
+                                    <width>98</width>
+                                    <height>150</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1366,8 +1366,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>172</height>
+                                    <width>98</width>
+                                    <height>183</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1474,8 +1474,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>92</height>
+                                    <width>98</width>
+                                    <height>103</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1558,8 +1558,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>156</height>
+                                    <width>98</width>
+                                    <height>167</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1682,7 +1682,7 @@
                                     <x>0</x>
                                     <y>0</y>
                                     <width>140</width>
-                                    <height>64</height>
+                                    <height>74</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1779,8 +1779,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>88</height>
+                                    <width>98</width>
+                                    <height>100</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1825,8 +1825,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>465</width>
-                                    <height>249</height>
+                                    <width>165</width>
+                                    <height>208</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2061,8 +2061,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>252</width>
-                                    <height>144</height>
+                                    <width>258</width>
+                                    <height>153</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2374,8 +2374,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>140</height>
+                                    <width>98</width>
+                                    <height>152</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2502,8 +2502,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>74</height>
+                                    <width>98</width>
+                                    <height>86</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2577,8 +2577,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>40</height>
+                                    <width>98</width>
+                                    <height>52</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2614,8 +2614,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>40</height>
+                                    <width>98</width>
+                                    <height>52</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2675,8 +2675,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>477</width>
-                                <height>597</height>
+                                <width>98</width>
+                                <height>519</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -2693,8 +2693,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>147</height>
+                                    <width>102</width>
+                                    <height>159</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2880,8 +2880,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>84</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2923,8 +2923,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>104</height>
+                                    <width>98</width>
+                                    <height>116</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2985,8 +2985,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>84</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3028,8 +3028,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>98</height>
+                                    <width>98</width>
+                                    <height>110</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3125,8 +3125,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>88</height>
+                                    <width>98</width>
+                                    <height>100</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3171,8 +3171,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>56</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3211,8 +3211,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>40</height>
+                                    <width>98</width>
+                                    <height>52</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3248,8 +3248,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>56</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3288,8 +3288,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>200</height>
+                                    <width>98</width>
+                                    <height>212</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3368,8 +3368,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>120</height>
+                                    <width>98</width>
+                                    <height>132</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3420,8 +3420,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>152</height>
+                                    <width>98</width>
+                                    <height>164</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3478,8 +3478,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>152</height>
+                                    <width>98</width>
+                                    <height>164</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3536,8 +3536,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>56</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3579,8 +3579,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>56</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3619,8 +3619,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>465</width>
-                                    <height>137</height>
+                                    <width>98</width>
+                                    <height>76</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3782,8 +3782,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>477</width>
-                                <height>597</height>
+                                <width>98</width>
+                                <height>492</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_43">
@@ -3797,8 +3797,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>40</height>
+                                    <width>98</width>
+                                    <height>52</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3834,8 +3834,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>100</width>
-                                    <height>128</height>
+                                    <width>110</width>
+                                    <height>138</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3976,8 +3976,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>200</height>
+                                    <width>98</width>
+                                    <height>212</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4056,8 +4056,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>84</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4099,8 +4099,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>465</width>
-                                    <height>165</height>
+                                    <width>98</width>
+                                    <height>76</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4238,8 +4238,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>120</height>
+                                    <width>98</width>
+                                    <height>132</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4290,8 +4290,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>120</height>
+                                    <width>98</width>
+                                    <height>132</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4342,8 +4342,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>146</height>
+                                    <width>98</width>
+                                    <height>158</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4387,8 +4387,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>152</height>
+                                    <width>98</width>
+                                    <height>164</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4445,8 +4445,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>88</height>
+                                    <width>98</width>
+                                    <height>100</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4491,8 +4491,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>88</height>
+                                    <width>98</width>
+                                    <height>100</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4537,8 +4537,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>56</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4580,8 +4580,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>40</height>
+                                    <width>98</width>
+                                    <height>52</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4620,8 +4620,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>56</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4660,8 +4660,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>56</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4724,8 +4724,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>477</width>
-                                <height>597</height>
+                                <width>98</width>
+                                <height>546</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_40">
@@ -4739,8 +4739,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>56</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4779,8 +4779,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>152</height>
+                                    <width>98</width>
+                                    <height>164</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4850,8 +4850,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>242</height>
+                                    <width>98</width>
+                                    <height>254</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4951,8 +4951,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>114</height>
+                                    <width>98</width>
+                                    <height>126</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5043,8 +5043,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>200</height>
+                                    <width>98</width>
+                                    <height>212</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5123,8 +5123,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>88</height>
+                                    <width>98</width>
+                                    <height>100</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5169,8 +5169,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>100</width>
-                                    <height>112</height>
+                                    <width>110</width>
+                                    <height>122</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5308,8 +5308,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>88</height>
+                                    <width>98</width>
+                                    <height>100</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5354,8 +5354,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>88</height>
+                                    <width>98</width>
+                                    <height>100</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5400,8 +5400,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>100</width>
-                                    <height>128</height>
+                                    <width>110</width>
+                                    <height>138</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5542,8 +5542,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>152</height>
+                                    <width>98</width>
+                                    <height>164</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5626,8 +5626,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>114</height>
+                                    <width>98</width>
+                                    <height>126</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5703,8 +5703,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>465</width>
-                                    <height>109</height>
+                                    <width>98</width>
+                                    <height>78</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5774,8 +5774,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>88</height>
+                                    <width>98</width>
+                                    <height>100</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5820,8 +5820,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>88</height>
+                                    <width>98</width>
+                                    <height>100</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5866,8 +5866,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>257</height>
+                                    <width>98</width>
+                                    <height>269</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6008,8 +6008,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>40</height>
+                                    <width>98</width>
+                                    <height>52</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6072,8 +6072,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>477</width>
-                                <height>597</height>
+                                <width>98</width>
+                                <height>438</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_169">
@@ -6087,8 +6087,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>100</width>
-                                    <height>154</height>
+                                    <width>110</width>
+                                    <height>164</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6260,8 +6260,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>76</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6399,8 +6399,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>76</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6538,8 +6538,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>76</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6677,8 +6677,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>76</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6813,8 +6813,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>128</height>
+                                    <width>98</width>
+                                    <height>130</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7048,8 +7048,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>88</height>
+                                    <width>98</width>
+                                    <height>100</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7094,8 +7094,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>136</height>
+                                    <width>98</width>
+                                    <height>148</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7149,8 +7149,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>136</height>
+                                    <width>98</width>
+                                    <height>148</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7204,8 +7204,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>152</height>
+                                    <width>98</width>
+                                    <height>164</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7262,8 +7262,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>152</height>
+                                    <width>98</width>
+                                    <height>164</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7320,8 +7320,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>296</height>
+                                    <width>98</width>
+                                    <height>304</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7442,8 +7442,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>465</width>
-                                    <height>221</height>
+                                    <width>98</width>
+                                    <height>174</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7552,8 +7552,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>477</width>
-                                <height>597</height>
+                                <width>98</width>
+                                <height>573</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_181">
@@ -7567,8 +7567,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>114</height>
+                                    <width>98</width>
+                                    <height>126</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7644,8 +7644,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>84</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7687,8 +7687,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>140</width>
-                                    <height>119</height>
+                                    <width>152</width>
+                                    <height>131</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7789,8 +7789,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>140</width>
-                                    <height>119</height>
+                                    <width>152</width>
+                                    <height>131</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7891,8 +7891,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>84</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7934,8 +7934,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>56</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7974,8 +7974,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>114</width>
-                                    <height>222</height>
+                                    <width>146</width>
+                                    <height>232</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -8141,8 +8141,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>450</width>
-                                    <height>222</height>
+                                    <width>146</width>
+                                    <height>232</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -8308,8 +8308,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>140</width>
-                                    <height>135</height>
+                                    <width>152</width>
+                                    <height>147</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -8413,8 +8413,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>140</width>
-                                    <height>135</height>
+                                    <width>152</width>
+                                    <height>147</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -8518,8 +8518,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>162</height>
+                                    <width>98</width>
+                                    <height>174</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -8604,8 +8604,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>178</height>
+                                    <width>98</width>
+                                    <height>190</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -8709,8 +8709,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>178</height>
+                                    <width>98</width>
+                                    <height>190</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -8814,8 +8814,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>104</height>
+                                    <width>98</width>
+                                    <height>116</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -8863,8 +8863,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>104</height>
+                                    <width>98</width>
+                                    <height>116</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -8925,8 +8925,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>76</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -9061,8 +9061,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>76</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -9197,8 +9197,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>76</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -9357,8 +9357,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>477</width>
-                                <height>597</height>
+                                <width>98</width>
+                                <height>330</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="OutLayout">
@@ -9375,8 +9375,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>76</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -9511,8 +9511,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>72</height>
+                                    <width>98</width>
+                                    <height>84</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -9554,8 +9554,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>118</width>
-                                    <height>72</height>
+                                    <width>150</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -9670,8 +9670,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>100</width>
-                                    <height>80</height>
+                                    <width>110</width>
+                                    <height>90</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -9803,8 +9803,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>56</height>
+                                    <width>98</width>
+                                    <height>68</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -9843,8 +9843,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>92</height>
+                                    <width>98</width>
+                                    <height>104</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -9945,8 +9945,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>114</height>
+                                    <width>98</width>
+                                    <height>126</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -10022,8 +10022,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>465</width>
-                                    <height>333</height>
+                                    <width>266</width>
+                                    <height>244</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -10398,8 +10398,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
-                                    <height>46</height>
+                                    <width>98</width>
+                                    <height>50</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -10496,8 +10496,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>502</width>
-                            <height>603</height>
+                            <width>98</width>
+                            <height>195</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_236">
@@ -10511,8 +10511,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>285</width>
-                                <height>96</height>
+                                <width>294</width>
+                                <height>105</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -10660,8 +10660,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>105</width>
-                                <height>64</height>
+                                <width>117</width>
+                                <height>74</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -10770,8 +10770,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>112</width>
-                                <height>345</height>
+                                <width>123</width>
+                                <height>340</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11056,8 +11056,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>490</width>
-                                <height>479</height>
+                                <width>119</width>
+                                <height>93</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11263,8 +11263,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>502</width>
-                            <height>567</height>
+                            <width>98</width>
+                            <height>28</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_248"/>
@@ -11297,8 +11297,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>488</width>
-                            <height>620</height>
+                            <width>516</width>
+                            <height>601</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_143">
@@ -11324,8 +11324,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>498</width>
+                                <height>70</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11361,8 +11361,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>461</width>
-                                <height>84</height>
+                                <width>481</width>
+                                <height>94</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11468,8 +11468,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>461</width>
-                                <height>354</height>
+                                <width>481</width>
+                                <height>364</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11582,8 +11582,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>481</width>
+                                <height>80</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11678,8 +11678,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>498</width>
+                                <height>70</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11714,9 +11714,9 @@
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
-                                <y>0</y>
-                                <width>461</width>
-                                <height>144</height>
+                                <y>-82</y>
+                                <width>481</width>
+                                <height>168</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11875,6 +11875,9 @@
                                     </item>
                                    </layout>
                                   </item>
+                                  <item>
+                                   <widget class="QWidget" name="EscToExitWidget" native="true"/>
+                                  </item>
                                  </layout>
                                 </widget>
                                </item>
@@ -11898,8 +11901,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>498</width>
+                                <height>70</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -11964,8 +11967,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>498</width>
+                                <height>70</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12001,8 +12004,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>498</width>
+                                <height>70</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12038,8 +12041,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>498</width>
+                                <height>70</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12075,8 +12078,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>498</width>
+                                <height>70</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12112,8 +12115,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>461</width>
-                                <height>101</height>
+                                <width>481</width>
+                                <height>111</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12256,8 +12259,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>481</width>
+                                <height>74</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12376,8 +12379,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>498</width>
+                                <height>70</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12413,8 +12416,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>481</width>
+                                <height>84</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12456,8 +12459,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>498</width>
+                                <height>70</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12493,8 +12496,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>481</width>
+                                <height>81</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12572,8 +12575,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>476</width>
-                                <height>76</height>
+                                <width>498</width>
+                                <height>70</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -12609,8 +12612,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>461</width>
-                                <height>100</height>
+                                <width>481</width>
+                                <height>112</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -13082,8 +13085,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>539</width>
-                      <height>837</height>
+                      <width>543</width>
+                      <height>841</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_240">
