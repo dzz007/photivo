@@ -107,8 +107,7 @@ void Update(const QString GuiName);
 
 ptMainWindow::ptMainWindow(const QString Title)
 : QMainWindow(NULL),
-  FEmptyCurve(new ptCurve(ptCurveChannel_SpotLuma)),
-  FSpotCurveWindow(new ptCurveWindow(FEmptyCurve.get(), ptCurveChannel_SpotLuma, LocalLumaCurveWidget))
+  FEmptyCurve(new ptCurve(ptCurveChannel_SpotLuma))
 {
   // Setup from the Gui builder.
   setupUi(this);
@@ -375,11 +374,14 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(LocalSpot);
   Macro_ConnectSomeButton(ConfirmLocalSpot);
   ConfirmLocalSpotButton->hide();
+  FSpotCurveWindow = new ptCurveWindow(FEmptyCurve.get(),
+                                       ptCurveChannel_SpotLuma,
+                                       LocalLumaCurveWidget);
 
   LocalSpotListView = new ptImageSpotListView(this, ptLocalSpot::CreateSpot);
   LocalAdjustVLayout->insertWidget(1, LocalSpotListView);
   LocalSpotModel = new ptImageSpotModel(
-                         QSize(0, RepairSpotListView->fontMetrics().lineSpacing() + 2),
+                         QSize(0, LocalSpotListView->fontMetrics().lineSpacing() + 2),
                          "LocalSpots",
                          this
                        );
@@ -986,11 +988,11 @@ void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
   if (!ANewIdx.isValid()) {
     // empty spot list or none selected
     FSpotCurveWindow->UpdateView(FEmptyCurve.get());
-    SpotConfigGroup->setEnabled(false);
+    ToggleLocalAdjustWidgets(false);
 
   } else {
     // update with values from selected spot
-    SpotConfigGroup->setEnabled(true);
+    ToggleLocalAdjustWidgets(true);
     ptLocalSpot* hSpot = static_cast<ptLocalSpot*>(LocalSpotModel->spot(ANewIdx.row()));
     Settings->SetValue("LocalMode", hSpot->mode());
     Settings->SetValue("LocalMaskThreshold", hSpot->threshold());
@@ -1004,20 +1006,45 @@ void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
   }
 }
 
+//==============================================================================
+
+void ptMainWindow::ToggleLocalAdjustWidgets(const bool AEnabled) {
+  LocalMaxRadiusCheckWidget->setEnabled(AEnabled);
+  LocalMaxRadiusWidget->setEnabled(AEnabled);
+  LocalModeLabel->setEnabled(AEnabled);
+  LocalModeWidget->setEnabled(AEnabled);
+  LocalMaskThresholdWidget->setEnabled(AEnabled);
+  LocalMaskLumaWeightWidget->setEnabled(AEnabled);
+  LocalEgdeAwareThresholdWidget->setEnabled(AEnabled);
+  LocalLumaCurveWidget->setEnabled(AEnabled);
+  LocalSaturationWidget->setEnabled(AEnabled);
+  LocalAdaptiveSaturationWidget->setEnabled(AEnabled);
+}
+
+//==============================================================================
+
 void ptMainWindow::UpdateRepairSpotUI(const QModelIndex &ANewIdx) {
   if (!ANewIdx.isValid()) {
     // empty spot list or none selected
-    SpotConfigGroup->setEnabled(false);
+    ToggleSpotRepairWidgets(false);
 
   } else {
     // update with values from selected spot
-    SpotConfigGroup->setEnabled(true);
+    ToggleSpotRepairWidgets(true);
     ptRepairSpot* hSpot = static_cast<ptRepairSpot*>(RepairSpotModel->spot(ANewIdx.row()));
     Settings->SetValue("SpotAlgorithm", hSpot->algorithm());
     Settings->SetValue("SpotOpacity", hSpot->opactiy());
     Settings->SetValue("SpotEdgeSoftness", hSpot->edgeSoftness());
     // TODO: some settings still missing, also from the UI
   }
+}
+
+//==============================================================================
+
+void ptMainWindow::ToggleSpotRepairWidgets(const bool AEnabled) {
+  SpotAlgorithmWidget->setEnabled(AEnabled);
+  SpotOpacityWidget->setEnabled(AEnabled);
+  SpotEdgeSoftnessWidget->setEnabled(AEnabled);
 }
 
 
