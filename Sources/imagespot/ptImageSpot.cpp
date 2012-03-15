@@ -28,14 +28,14 @@ extern ptSettings* Settings;
 //==============================================================================
 
 ptImageSpot::ptImageSpot(QSettings *APtsFile /*= nullptr*/)
-: FIsEnabled(0),
+: FIsEnabled(true),
   FName(""),
   FRadius(0)
 {
   FPos = QPoint();
 
   if (APtsFile != nullptr) {
-    FIsEnabled = APtsFile->value("IsEnabled", 0).toInt();
+    FIsEnabled = APtsFile->value("IsEnabled", 0).toBool();
     FName = APtsFile->value("Name", "").toString();
     FRadius = APtsFile->value("Radius", 0).toUInt();
     FPos.setX(APtsFile->value("SpotPosX", 0).toInt());
@@ -48,14 +48,14 @@ ptImageSpot::ptImageSpot(QSettings *APtsFile /*= nullptr*/)
 ptImageSpot::ptImageSpot(const uint ASpotX,
                          const uint ASpotY,
                          const uint ARadius,
-                         const short AIsEnabled,
+                         const bool AIsEnabled,
                          const QString &AName)
 {
   int hToFullPipe = 1 << Settings->GetInt("PipeSize");
 
   FPos        = QPoint(ASpotX * hToFullPipe, ASpotY * hToFullPipe);
   FRadius     = ARadius * hToFullPipe;
-  FIsEnabled  = AIsEnabled * hToFullPipe;
+  FIsEnabled  = AIsEnabled;
   FName       = AName;
 }
 

@@ -997,20 +997,24 @@ void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
     Settings->SetValue("LocalMode", hSpot->mode());
     Settings->SetValue("LocalMaskThreshold", hSpot->threshold());
     Settings->SetValue("LocalMaskLumaWeight", hSpot->lumaWeight());
-    Settings->SetValue("LocalEgdeAwareThreshold", hSpot->isEdgeAware());
-    Settings->SetValue("LocalMaxRadiusCheck", hSpot->hasMaxRadius());
+    Settings->SetValue("LocalEgdeAwareThreshold", (int)hSpot->isEdgeAware());
+    Settings->SetValue("LocalMaxRadiusCheck", (int)hSpot->hasMaxRadius());
     Settings->SetValue("LocalMaxRadius", hSpot->maxRadius());
     FSpotCurveWindow->UpdateView(hSpot->lumaCurve());
     Settings->SetValue("LocalSaturation", hSpot->saturation());
-    Settings->SetValue("LocalAdaptiveSaturation", hSpot->isAdaptiveSaturation());
+    Settings->SetValue("LocalAdaptiveSaturation", (int)hSpot->isAdaptiveSaturation());
   }
 }
 
 //==============================================================================
 
 void ptMainWindow::ToggleLocalAdjustWidgets(const bool AEnabled) {
+  LocalMaxRadiusWidget->setEnabled(
+      AEnabled &&
+      (static_cast<ptLocalSpot*>(LocalSpotModel->spot(LocalSpotListView->currentIndex().row()))
+          ->hasMaxRadius() )
+  );
   LocalMaxRadiusCheckWidget->setEnabled(AEnabled);
-  LocalMaxRadiusWidget->setEnabled(AEnabled);
   LocalModeLabel->setEnabled(AEnabled);
   LocalModeWidget->setEnabled(AEnabled);
   LocalMaskThresholdWidget->setEnabled(AEnabled);
@@ -1060,14 +1064,15 @@ short ptMainWindow::GetCurrentTab() {
   // I opt for matching onto widget name, rather than on
   // index, as I feel that this is more robust for change.
   //~ if (ProcessingTabBook->currentWidget() == GenericTab) return ptGenericTab;
-  if (ProcessingTabBook->currentWidget()== CameraTab) return ptCameraTab;
-  else if (ProcessingTabBook->currentWidget()== GeometryTab) return ptGeometryTab;
-  else if (ProcessingTabBook->currentWidget()== RGBTab) return ptRGBTab;
-  else if (ProcessingTabBook->currentWidget()== LabCCTab) return ptLabCCTab;
-  else if (ProcessingTabBook->currentWidget()== LabSNTab) return ptLabSNTab;
-  else if (ProcessingTabBook->currentWidget()== LabEyeCandyTab) return ptLabEyeCandyTab;
-  else if (ProcessingTabBook->currentWidget()== EyeCandyTab) return ptEyeCandyTab;
-  else if (ProcessingTabBook->currentWidget()== OutTab) return ptOutTab;
+  if      (ProcessingTabBook->currentWidget() == CameraTab) return ptCameraTab;
+  else if (ProcessingTabBook->currentWidget() == LocalTab) return ptLocalTab;
+  else if (ProcessingTabBook->currentWidget() == GeometryTab) return ptGeometryTab;
+  else if (ProcessingTabBook->currentWidget() == RGBTab) return ptRGBTab;
+  else if (ProcessingTabBook->currentWidget() == LabCCTab) return ptLabCCTab;
+  else if (ProcessingTabBook->currentWidget() == LabSNTab) return ptLabSNTab;
+  else if (ProcessingTabBook->currentWidget() == LabEyeCandyTab) return ptLabEyeCandyTab;
+  else if (ProcessingTabBook->currentWidget() == EyeCandyTab) return ptEyeCandyTab;
+  else if (ProcessingTabBook->currentWidget() == OutTab) return ptOutTab;
   else {
      ptLogError(ptError_Argument,"Unforeseen tab.");
      assert(0);
@@ -1281,6 +1286,7 @@ void ptMainWindow::OnToolBoxesEnabledTriggered(const bool Enabled) {
     }
   }
 }
+
 
 //
 // Gimp
@@ -2944,30 +2950,6 @@ void ptMainWindow::UpdateCropToolUI() {
   }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// PopulateSpotRepairList
-// Populate spot repair list when constructing main window.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptMainWindow::PopulateSpotRepairList(QSettings *APtsFile) {
-  RepairSpotModel->LoadFromFile(APtsFile);
-}
-
-//==============================================================================
-
-void ptMainWindow::WriteSpotRepairList(QSettings *APtsFile) {
-  ReportProgress(
-    tr(QString("Writing %1 repair spots to settings file.")
-      .arg(RepairSpotModel->rowCount()).toAscii().data()
-    )
-  );
-  RepairSpotModel->WriteToFile(APtsFile);
-}
-
-//==============================================================================
 
 ////////////////////////////////////////////////////////////////////////////////
 //

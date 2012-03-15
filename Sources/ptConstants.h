@@ -521,15 +521,16 @@ const short ptResetMode_OpenSettings = 3;
 
 // Gui Tabs.
 
-const short ptGenericTab    = 0;
-const short ptCameraTab     = 1;
-const short ptGeometryTab    = 2;
-const short ptRGBTab        = 3;
-const short ptLabCCTab      = 4;
-const short ptLabSNTab      = 5;
-const short ptEyeCandyTab   = 6;
-const short ptLabEyeCandyTab  = 7;
-const short ptOutTab        = 8;
+const short ptGenericTab      = 0;
+const short ptCameraTab       = 1;
+const short ptLocalTab        = 2;
+const short ptGeometryTab     = 3;
+const short ptRGBTab          = 4;
+const short ptLabCCTab        = 5;
+const short ptLabSNTab        = 6;
+const short ptEyeCandyTab     = 7;
+const short ptLabEyeCandyTab  = 8;
+const short ptOutTab          = 9;
 
 // Resize filters
 

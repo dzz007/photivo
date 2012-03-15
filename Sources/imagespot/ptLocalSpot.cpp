@@ -29,7 +29,7 @@ ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
   FHasMaxRadius(false),
   FIsAdaptiveSaturation(false),
   FIsEdgeAware(true),
-  FLumaCurve(unique_ptr<ptCurve>(new ptCurve())),
+  FLumaCurve(unique_ptr<ptCurve>(new ptCurve(ptCurveChannel_SpotLuma))),
   FLumaWeight(0.5),
   FMaxRadius(500),
   FMode(lamFloodFill),

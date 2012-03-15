@@ -72,7 +72,7 @@ void ptImageSpotModel::LoadFromFile(QSettings *APtsFile) {
 
   int hSize = APtsFile->beginReadArray(FPtsName);
   ReportProgress(
-    tr(QString("Reading %1 spots from '%2'.\n").arg(hSize).arg(FPtsName).toAscii().data())
+    tr(QString("Reading %1 spots from '%2'.").arg(hSize).arg(FPtsName).toAscii().data())
   );
 
   for (int i = 0; i < hSize; i++) {
@@ -105,7 +105,7 @@ bool ptImageSpotModel::setData(const QModelIndex &index,
   if (role == Qt::DisplayRole) {    // spot name
     FSpotList->at(index.row())->setName(value.toString());
   } else if (role == Qt::CheckStateRole) {    // en/disabled switch
-    FSpotList->at(index.row())->setEnabled(value.toInt());
+    FSpotList->at(index.row())->setEnabled(value.toBool());
   }
 
   return hResult;
@@ -144,7 +144,7 @@ void ptImageSpotModel::WriteToFile(QSettings *APtsFile) {
 
   // Save the new ones
   ReportProgress(
-    tr(QString("Saving %1 spots to '%2'.\n").arg(FSpotList->size()).arg(FPtsName).toAscii().data())
+    tr(QString("Saving %1 spots to '%2'.").arg(FSpotList->size()).arg(FPtsName).toAscii().data())
   );
 
   APtsFile->beginWriteArray(FPtsName);
@@ -173,7 +173,8 @@ void ptImageSpotModel::RebuildModel() {
     QStandardItem* hSpotItem = new QStandardItem(hSpot->name());
     hSpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
                         Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    hSpotItem->setCheckState(Qt::CheckState(hSpot->isEnabled()));
+    // ListView checkboxes are tristate, so we can’t pass a bool as is.
+    hSpotItem->setCheckState(hSpot->isEnabled() ? Qt::Checked : Qt::Unchecked);
     hSpotItem->setSizeHint(FSizeHint);
     appendRow(hSpotItem);
   }

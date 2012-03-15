@@ -240,8 +240,11 @@ void ptCurveWindow::SetCurveState(const short state) {
       Settings->SetValue("CurveDenoise",state); break;
     case ptCurveChannel_Denoise2 :
       Settings->SetValue("CurveDenoise2",state); break;
+    case ptCurveChannel_SpotLuma :
+      // Spot curve only has one single state.
+      break;
     default :
-      assert(0);
+      assert(!"Unknown curve in 'SetCurveState'.");
   }
 }
 
@@ -284,8 +287,11 @@ short ptCurveWindow::GetCurveState() {
       State = Settings->GetInt("CurveDenoise"); break;
     case ptCurveChannel_Denoise2 :
       State = Settings->GetInt("CurveDenoise2"); break;
+    case ptCurveChannel_SpotLuma :
+      // Spot curve only has one single state.
+      break;
     default :
-      assert(0);
+      assert(!"Unknown curve in 'GetCurveState'.");
   }
   return State;
 }

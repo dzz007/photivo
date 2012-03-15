@@ -80,7 +80,7 @@ ptRepairSpot::ptRepairSpot(const uint spotX,
 
   FAngle = angle * hToFullPipe;
   FInit = true;
-  setEdgeBlur(edgeSoftness);
+  setEdgeSoftness(edgeSoftness);
   setOpacity(opacity);
   UpdateWeight();
   FInit = false;
@@ -134,13 +134,13 @@ void ptRepairSpot::setAngle(float FAngle) {
 
 //==============================================================================
 
-void ptRepairSpot::setEdgeBlur(const float ABlur) {
-  if (ABlur > 1.0f) {
+void ptRepairSpot::setEdgeSoftness(const float ASoftness) {
+  if (ASoftness > 1.0f) {
     FEdgeSoftness = 1.0;
-  } else if (ABlur < 0.0f){
+  } else if (ASoftness < 0.0f){
     FEdgeSoftness = 0.0;
   } else {
-    FEdgeSoftness = ABlur;
+    FEdgeSoftness = ASoftness;
   }
   if (!FInit) {
     UpdateWeight();
