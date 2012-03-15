@@ -632,7 +632,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"EraseExifThumbnail"         ,ptGT_Check ,2,1,1,tr("Erase thumbnail") ,tr("Erase the exif thumbnail (only in jpeg and tiff)")},
     {"SaveConfirmation"           ,ptGT_Check ,1,0,1,tr("Save image")      ,tr("Confirm any action that would discard an unsaved image")},
     {"ResetSettingsConfirmation"  ,ptGT_Check, 1,0,1,tr("Reset settings")  ,tr("Confirm resetting settings or dropping a settings file onto an image")},
-    {"FullPipeConfirmation"       ,ptGT_Check ,1,0,1,tr("Switch to 1:1 pipe"), tr("Confirm switch to the full sized pipe")}
+    {"FullPipeConfirmation"       ,ptGT_Check ,1,0,1,tr("Switch to 1:1 pipe"), tr("Confirm switch to the full sized pipe")},
+    {"EscToExit"                  ,ptGT_Check ,1,0,0,tr("Esc key exits Photivo"),tr("Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.")}
   };
 
   // Load in the non gui elements
