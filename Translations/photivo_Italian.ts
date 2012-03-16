@@ -5071,7 +5071,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="245"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="2032"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2034"/>
         <source>Favourite tools</source>
         <translation>Strumenti preferiti</translation>
     </message>
@@ -5236,7 +5236,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="2069"/>
-        <location filename="../Sources/ptMainWindow.ui" line="11906"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11909"/>
         <source>Crop</source>
         <translation>Ritaglio</translation>
     </message>
@@ -5375,7 +5375,7 @@ No crop, try again.</source>
         <location filename="../Sources/ptMainWindow.ui" line="9435"/>
         <location filename="../Sources/ptMainWindow.ui" line="9724"/>
         <location filename="../Sources/ptMainWindow.ui" line="9727"/>
-        <location filename="../Sources/ptMainWindow.ui" line="13525"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13528"/>
         <source>Open</source>
         <translation>Apri</translation>
     </message>
@@ -5716,32 +5716,32 @@ No crop, try again.</source>
         <translation>Comando Esporta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12817"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12820"/>
         <source>Load template</source>
         <translation>Carica template</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12837"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12840"/>
         <source>Save image</source>
         <translation>Salva immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12857"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12860"/>
         <source>Send image to external editor</source>
         <translation>Invia immagine a editor esterno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12951"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12954"/>
         <source>Processing pane</source>
         <translation>Pannello strumenti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12974"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12977"/>
         <source>Info pane</source>
         <translation>Pannello informazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12997"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13000"/>
         <source>Photivo settings</source>
         <translation>Impostazioni Photivo</translation>
     </message>
@@ -5845,7 +5845,7 @@ No crop, try again.</source>
         <location filename="../Sources/ptMainWindow.ui" line="7833"/>
         <location filename="../Sources/ptMainWindow.ui" line="8352"/>
         <location filename="../Sources/ptMainWindow.ui" line="8457"/>
-        <location filename="../Sources/ptMainWindow.ui" line="12153"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12156"/>
         <source>Color</source>
         <translation>Colore</translation>
     </message>
@@ -5940,7 +5940,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9585"/>
-        <location filename="../Sources/ptMainWindow.ui" line="13421"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13424"/>
         <source>Full</source>
         <translation>Pieno</translation>
     </message>
@@ -6011,7 +6011,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="10604"/>
-        <location filename="../Sources/ptMainWindow.ui" line="13237"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13240"/>
         <source>Rev:</source>
         <translation>Versione:</translation>
     </message>
@@ -6068,7 +6068,7 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="285"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="1990"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1992"/>
         <source>Active tools</source>
         <translation>Strumenti attivi</translation>
     </message>
@@ -6279,97 +6279,97 @@ No crop, try again.</source>
         <translation>Formato in lavorazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11921"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11924"/>
         <source>Initial zoom</source>
         <translation>Zoom iniziale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="11972"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11975"/>
         <source>Inputs</source>
         <translation>Inputs</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12009"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12012"/>
         <source>ToolBoxes</source>
         <translation>Riquadro strumenti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12046"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12049"/>
         <source>Tab status indicator</source>
         <translation>Scheda indicatore stato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12083"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12086"/>
         <source>Preview</source>
         <translation>Anteprima</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12120"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12123"/>
         <source>Theming</source>
         <translation>Tema</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12194"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12197"/>
         <source>Set new CSS style</source>
         <translation>Imposta nuovo stile CSS</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12197"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12200"/>
         <source>CSS</source>
         <translation>CSS</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12264"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12267"/>
         <source>Button modes</source>
         <translation>Modalità pulsanti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12303"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12306"/>
         <source>Save button:</source>
         <translation>Salva:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12346"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12349"/>
         <source>Reset button:</source>
         <translation>Ripristina:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12384"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12387"/>
         <source>Searchbar</source>
         <translation>Barra di ricerca</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12421"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12424"/>
         <source>Show confirmation dialogs</source>
         <translation>Mostra finestra di conferma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12464"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12467"/>
         <source>Backup settings</source>
         <translation>Backup impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12501"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12504"/>
         <source>Translation</source>
         <translation>Traduzione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12519"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12522"/>
         <source>Switch Photivo&apos;s language</source>
         <translation>Cambia la lingua di Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12580"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12583"/>
         <source>Memory test</source>
         <translation>Test della memoria</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12617"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12620"/>
         <source>File Manager</source>
         <translation>File Manager</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12720"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12723"/>
         <source>Change preview mode</source>
         <translation>Cambia modalità anteprima</translation>
     </message>
@@ -6378,7 +6378,7 @@ No crop, try again.</source>
         <translation type="obsolete">Modalità anteprima</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12778"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12781"/>
         <source>Run pipe</source>
         <translation>Esegui flusso di lavoro</translation>
     </message>
@@ -6408,7 +6408,7 @@ No crop, try again.</source>
         <translation type="obsolete">Esporta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="12925"/>
+        <location filename="../Sources/ptMainWindow.ui" line="12928"/>
         <source>Status</source>
         <translation>Stato</translation>
     </message>
@@ -6425,37 +6425,37 @@ No crop, try again.</source>
         <translation type="obsolete">Mostra informazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13189"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13192"/>
         <source>Open image</source>
         <translation>Apri immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13227"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13230"/>
         <source>&lt;p align=&quot;center&quot;&gt;Photivo photo processor&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;Photivo photo processor&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13247"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13250"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13260"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13263"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Forum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Issues&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Forum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Problemi&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13364"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13367"/>
         <source>Zoom in</source>
         <translation>Zoom +</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13375"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13378"/>
         <source>Zoom out</source>
         <translation>Zoom -</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13398"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13401"/>
         <source>Zoom fit</source>
         <translation>Adatta allo spazio di lavoro</translation>
     </message>
@@ -6464,47 +6464,47 @@ No crop, try again.</source>
         <translation type="obsolete">Adatta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13418"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13421"/>
         <source>Zoom Full</source>
         <translation>Dimensione 1:1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13460"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13463"/>
         <source>File manager</source>
         <translation>File manager</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13471"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13474"/>
         <source>Fullscreen</source>
         <translation>Schermo intero</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13530"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13533"/>
         <source>Exit</source>
         <translation>Esci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13538"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13541"/>
         <source>TabMode</source>
         <translation>Modalità schede</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13543"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13546"/>
         <source>Save Output</source>
         <translation>Salva output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13548"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13551"/>
         <source>Write Job</source>
         <translation>Scrivi file di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13556"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13559"/>
         <source>Enabled</source>
         <translation>Abilitato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="13567"/>
+        <location filename="../Sources/ptMainWindow.ui" line="13570"/>
         <source>Add power law</source>
         <translation>Aggiungi &quot;Power law&quot;</translation>
     </message>
@@ -6584,93 +6584,93 @@ No crop, try again.</source>
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1887"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1889"/>
         <source>No tools hidden!</source>
         <translation>Nessuno strumento nascosto!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1888"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1890"/>
         <source>Hidden tools</source>
         <translation>Strumenti nascosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1906"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1908"/>
         <source>No tools blocked!</source>
         <translation>Nessuno strumento bloccato!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1907"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1909"/>
         <source>Blocked tools</source>
         <translation>Strumenti bloccati</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1971"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1973"/>
         <source>Search results:</source>
         <translation>Risultati di ricerca:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1990"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1992"/>
         <source>No tools active!</source>
         <translation>Nessuno strumento attivo!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1994"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1996"/>
         <source>Active tools:</source>
         <translation>Strumenti attivi:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2010"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2012"/>
         <source>All tools hidden</source>
         <translation>Tutti gli strumenti nascosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2010"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2012"/>
         <source>No visible tools!</source>
         <translation>Nessuno strumento visibile!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2013"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2015"/>
         <source>All visible tools:</source>
         <translation>Tutti gli strumenti visibili:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2032"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2034"/>
         <source>No favourite tools!</source>
         <translation>Nessuno strumento preferito!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2036"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2038"/>
         <source>Favourite tools:</source>
         <translation>Strumenti preferiti:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2665"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2667"/>
         <source> at </source>
         <translation> a </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2684"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2686"/>
         <source> with ISO </source>
         <translation> con ISO </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2725"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2727"/>
         <source> (35mm equiv.: </source>
         <translation> (35mm equiv.: </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="3075"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="3099"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3077"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3101"/>
         <source>Photivo UI file (*.ptu);;All files (*.*)</source>
         <translation>File interfaccia Photivo (*.ptu);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="3077"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3079"/>
         <source>Open UI</source>
         <translation>Apri interfaccia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="3101"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3103"/>
         <source>Save UI</source>
         <translation>Salva interfaccia</translation>
     </message>
@@ -9028,6 +9028,16 @@ Usata per la correzione della geometria.</translation>
         <location filename="../Sources/ptSettings.cpp" line="502"/>
         <source>How to handle clipping</source>
         <translation>Come gestire il tosaggio</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="636"/>
+        <source>Esc key exits Photivo</source>
+        <translation>Usare il tasto Esc per chiudere Photivo</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="636"/>
+        <source>Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.</source>
+        <translation>Usare il tasto Esc non solo per uscire da modalità di visualizzazione speciali (ad esempio schermo intero) ma anche per chiudere Photivo.</translation>
     </message>
     <message>
         <source>Camera for lensfun</source>
