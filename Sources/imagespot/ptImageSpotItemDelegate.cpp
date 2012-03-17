@@ -49,7 +49,9 @@ QWidget* ptImageSpotItemDelegate::createEditor(QWidget *parent,
 
 void ptImageSpotItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
   auto hNameEd = qobject_cast<ptImageSpotEditor*>(editor)->NameEditor;
-  hNameEd->setText(index.data(Qt::DisplayRole).toString());
+  QString hText = index.data().toString();
+  hText.chop(hText.length() - hText.lastIndexOf("\t@"));
+  hNameEd->setText(hText);
   hNameEd->selectAll();
   hNameEd->setFocus();
 }

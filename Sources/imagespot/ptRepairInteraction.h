@@ -42,7 +42,7 @@
 #include "../ptImageInteraction.h"
 #include "ptImageSpotListView.h"
 #include "ptRepairSpot.h"
-#include "ptRepairSpotModel.h"
+#include "ptImageSpotModel.h"
 
 //==============================================================================
 

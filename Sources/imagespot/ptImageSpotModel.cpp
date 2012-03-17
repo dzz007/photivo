@@ -28,7 +28,6 @@
 
 void ReportProgress(const QString Message);
 
-
 //==============================================================================
 
 ptImageSpotModel::ptImageSpotModel(const QSize ASizeHint,
@@ -99,17 +98,20 @@ bool ptImageSpotModel::setData(const QModelIndex &index,
                                const QVariant    &value,
                                int               role /*= Qt::EditRole*/)
 {
-  bool hResult = QStandardItemModel::setData(index, value, role);
-  if (!hResult) return hResult;
+  auto hSpot  = FSpotList->at(index.row());
+  auto hValue = QVariant(value);
 
-  // Update actual repair spot data
-  if (role == Qt::DisplayRole) {    // spot name
-    FSpotList->at(index.row())->setName(value.toString());
-  } else if (role == Qt::CheckStateRole) {    // en/disabled switch
-    FSpotList->at(index.row())->setEnabled(value.toBool());
+  // update underlying spot data structure
+  if (role == Qt::DisplayRole) {            // spot name
+    hSpot->setName(value.toString());
+    hValue = AppendCoordsToName(hSpot);
+
+  } else if (role == Qt::CheckStateRole) { // en/disabled switch
+    hSpot->setEnabled(value.toBool());
   }
 
-  return hResult;
+  // update model data
+  return QStandardItemModel::setData(index, hValue, role);
 }
 
 //==============================================================================
@@ -171,7 +173,7 @@ void ptImageSpotModel::RebuildModel() {
 
   for (int i = 0; i < FSpotList->size(); i++) {
     ptImageSpot* hSpot = FSpotList->at(i);
-    QStandardItem* hSpotItem = new QStandardItem(hSpot->name());
+    QStandardItem* hSpotItem = new QStandardItem(AppendCoordsToName(hSpot));
     hSpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
                         Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     // ListView checkboxes are tristate, so we can’t pass a bool as is.
@@ -181,6 +183,12 @@ void ptImageSpotModel::RebuildModel() {
                                     .arg(hSpot->x()).arg(hSpot->y()) );
     appendRow(hSpotItem);
   }
+}
+
+//==============================================================================
+
+QString ptImageSpotModel::AppendCoordsToName(const ptImageSpot *ASpot) {
+  return QString("%1\t@%2,%3px").arg(ASpot->name()).arg(ASpot->x()).arg(ASpot->y());
 }
 
 //==============================================================================
