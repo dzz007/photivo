@@ -105,5 +105,13 @@ protected:
   QSize                 FSizeHint;
   QList<ptImageSpot*>  *FSpotList;
 
+//------------------------------------------------------------------------------
+
+private:
+  /*! Returns a spot’s name and coordinates in the form "spotname\t@x,y".
+      This formatting is needed for the ListView caption. */
+  QString AppendCoordsToName(const ptImageSpot *ASpot);
+
+
 };
 #endif // PTIMAGESPOTMODEL_H

@@ -31,8 +31,7 @@ extern ptTheme* Theme;
 
 //==============================================================================
 
-ptImageSpotEditor::ptImageSpotEditor(QWidget        *AParent,
-                                     const QString  &AInitialName)
+ptImageSpotEditor::ptImageSpotEditor(QWidget *AParent)
 : QWidget(AParent)
 {
   // ensure proper widget styling
@@ -48,7 +47,6 @@ ptImageSpotEditor::ptImageSpotEditor(QWidget        *AParent,
 
   // init name editor
   NameEditor = new QLineEdit(this);
-  NameEditor->setText(AInitialName);
   NameEditor->selectAll();
   NameEditor->setFocus();
 

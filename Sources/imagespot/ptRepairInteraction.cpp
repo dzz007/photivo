@@ -24,7 +24,6 @@
 #include <algorithm>
 
 #include "ptRepairInteraction.h"
-#include "ptRepairSpotModel.h"
 #include "../ptDefines.h"
 #include "../ptConstants.h"
 
@@ -215,7 +214,7 @@ void ptRepairInteraction::changeSpot(const QModelIndex &AIndex) {
   if (AIndex.isValid()) {
     int hIdx = AIndex.row();
     assert(hIdx < FShapes->size());   // catch invalid index rows
-//    Draw(FShapes->at(hIdx), static_cast<ptRepairSpotModel*>(AIndex.model())->spot(hIdx));
+//    Draw(FShapes->at(hIdx), static_cast<ptImageSpotModel*>(AIndex.model())->spot(hIdx));
   }
 }
 

@@ -42,7 +42,7 @@
 //==============================================================================
 
 class ptImageSpotEditor: public QWidget {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   /*! Creates an editor widget.
@@ -52,8 +52,7 @@ public:
     \param AInitialName
       Current name of the spot.
   */
-  explicit ptImageSpotEditor(QWidget        *AParent,
-                             const QString  &AInitialName);
+  explicit ptImageSpotEditor(QWidget *AParent);
   ~ptImageSpotEditor();
 
   /*! A pointer to the \c QToolButton used to delete the spot. */
