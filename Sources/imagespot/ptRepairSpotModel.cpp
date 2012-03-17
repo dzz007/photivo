@@ -20,6 +20,11 @@
 **
 *******************************************************************************/
 
+/*
+  DO NOT USE THIS CLASS!
+  It’s obsolete and only remains because ptRepairInteraction isn’t updated yet.
+*/
+
 #include "ptRepairSpotModel.h"
 #include "ptRepairSpot.h"
 #include "../ptGuiOptions.h"

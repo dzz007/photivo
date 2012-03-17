@@ -57,17 +57,18 @@ void ptImageSpotModel::appendSpot(ptImageSpot *ANewSpot) {
 //==============================================================================
 
 Qt::ItemFlags ptImageSpotModel::flags(const QModelIndex &index) const {
-  Qt::ItemFlags defaultFlags = QStandardItemModel::flags(index);
-
-  if (index.isValid())
-    return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
-  else
-    return Qt::ItemIsDropEnabled | defaultFlags;
+  if (index.isValid()) {
+    return Qt::ItemIsEnabled |
+           Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEditable |
+           Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+  } else {
+    return Qt::ItemIsDropEnabled;
+  }
 }
 
 //==============================================================================
 
-void ptImageSpotModel::LoadFromFile(QSettings *APtsFile) {
+void ptImageSpotModel::ReadFromFile(QSettings *APtsFile) {
   ClearList();
 
   int hSize = APtsFile->beginReadArray(FPtsName);
@@ -121,7 +122,7 @@ void ptImageSpotModel::setSpot(const int AIndex, ptImageSpot *ASpotData) {
 //==============================================================================
 
 Qt::DropActions ptImageSpotModel::supportedDropActions() const {
-  return Qt::MoveAction;
+  return Qt::MoveAction | Qt::CopyAction;
 }
 
 //==============================================================================
@@ -176,6 +177,8 @@ void ptImageSpotModel::RebuildModel() {
     // ListView checkboxes are tristate, so we can’t pass a bool as is.
     hSpotItem->setCheckState(hSpot->isEnabled() ? Qt::Checked : Qt::Unchecked);
     hSpotItem->setSizeHint(FSizeHint);
+    hSpotItem->setToolTip(QString(tr("Coordinates in current pipe size: x=%1, y=%2"))
+                                    .arg(hSpot->x()).arg(hSpot->y()) );
     appendRow(hSpotItem);
   }
 }

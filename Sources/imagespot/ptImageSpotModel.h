@@ -52,6 +52,9 @@ public:
                    QObject *AParent = nullptr);
   ~ptImageSpotModel();
 
+  /*! Appends a new spot to the end of the spot list.
+   \param ANewSpot
+     A pointer to the spot object. The model takes ownership of the spot. */
   void appendSpot(ptImageSpot *ANewSpot);
 
   /*! Reimplemented from parent class. */
@@ -60,18 +63,18 @@ public:
   /*! Loads a list of spots from a pts file. The existing list is replaced.
       \param APtsFile
         A pointer to the \c QSettings object representing the pts file. */
-  void LoadFromFile(QSettings *APtsFile);
+  void ReadFromFile(QSettings *APtsFile);
 
   /*! Update an item and the underlying spot repair data.  */
   virtual bool setData(const QModelIndex &index,
                        const QVariant    &value,
                        int               role = Qt::EditRole);
 
-  /*! Assigns a new \c ptSpotData object to a spot.
+  /*! Assigns new \data to a spot.
       \param AIndex
         The list index of the spot.
       \param ASpotData
-        A pointer to the new data object. The old data object is deleted and \c ASpotData
+        A pointer to the new spot object. The old data object is deleted and \c ASpotData
         reparented to the model. */
   virtual void setSpot(const int AIndex, ptImageSpot *ASpotData);
 

@@ -81,7 +81,7 @@ using namespace std;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptDcRaw*       TheDcRaw        = NULL;
+ptDcRaw*     TheDcRaw        = NULL;
 ptProcessor* TheProcessor    = NULL;
 
 ptCurve*  RGBGammaCurve     = NULL;
@@ -2860,8 +2860,8 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
 //    RepairSpotList->append(new ptRepairSpot(&JobSettings));
 //  }
 //  JobSettings.endArray();
-  MainWindow->LocalSpotModel->LoadFromFile(&JobSettings);
-  MainWindow->RepairSpotModel->LoadFromFile(&JobSettings);
+  MainWindow->LocalSpotModel->ReadFromFile(&JobSettings);
+  MainWindow->RepairSpotModel->ReadFromFile(&JobSettings);
 
 
   JobSettings.sync();
@@ -6300,7 +6300,7 @@ void CB_BaseCurve2Choice(const QVariant Choice) {
 }
 
 void CB_CurveWindowRecalc(const short Channel, const short ForceUpdate /* =0 */) {
-  if (!InStartup) {
+  if (!InStartup && (Channel != ptCurveChannel_SpotLuma)) {
     short NewActiveState = Settings->ToolIsActive(CurveToolNameKeys[Channel]);
     MainWindow->m_GroupBox->value(CurveToolNameKeys[Channel])->SetActive(NewActiveState);
     // Run the graphical pipe according to a changed curve.
@@ -6311,10 +6311,13 @@ void CB_CurveWindowRecalc(const short Channel, const short ForceUpdate /* =0 */)
 }
 
 void CB_CurveWindowManuallyChanged(const short Channel) {
-  // Combobox and curve choice has to be adapted to manual.
-  Settings->SetValue(CurveKeys[Channel],ptCurveChoice_Manual);
-  // Run the graphical pipe according to a changed curve.
-  CB_CurveWindowRecalc(Channel);
+  if (Channel != ptCurveChannel_SpotLuma) {
+    // Exclude spot curve that does not appear in ptSettings.
+    // Combobox and curve choice has to be adapted to manual.
+    Settings->SetValue(CurveKeys[Channel],ptCurveChoice_Manual);
+    // Run the graphical pipe according to a changed curve.
+    CB_CurveWindowRecalc(Channel);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
