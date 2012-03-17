@@ -67,5 +67,6 @@
         <file>dark/icons/file-manager.png</file>
         <file>dark/icons/zoom-in.png</file>
         <file>dark/icons/zoom-out.png</file>
+        <file>dark/icons/delete.png</file>
     </qresource>
 </RCC>

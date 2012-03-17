@@ -41,7 +41,7 @@ void ptSpotInteraction::mouseAction(QMouseEvent *AEvent) {
     QPointF hClickPos = FView->mapToScene(AEvent->pos());
     if (FView->scene()->sceneRect().contains(hClickPos)) {
       emit clicked(QPoint(qRound(hClickPos.x()), qRound(hClickPos.y())),
-                   AEvent->modifiers() == Qt::Key_Control);
+                   AEvent->modifiers() == Qt::ControlModifier);
     }
   }
 }

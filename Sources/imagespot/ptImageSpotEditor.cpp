@@ -43,10 +43,8 @@ ptImageSpotEditor::ptImageSpotEditor(QWidget        *AParent,
 
   // init delete button
   DelButton = new QToolButton(this);
-  DelButton->setIcon(QIcon(QString::fromUtf8(":/photivo/Icons/cancel.png")));
+  DelButton->setIcon(QIcon(QString::fromUtf8(":/dark/icons/delete.png")));
   DelButton->installEventFilter(this);
-  connect(this, SIGNAL(deleteButtonClicked()),
-          MainWindow->RepairSpotListView, SLOT(deleteSpot()));
 
   // init name editor
   NameEditor = new QLineEdit(this);

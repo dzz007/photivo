@@ -40,7 +40,7 @@
 //==============================================================================
 
 class ptImageSpotListView: public QListView {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   /*! Creates a \c ptImageSpotListView object. */

@@ -36,11 +36,16 @@ ptImageSpotListView::ptImageSpotListView(QWidget *AParent,
 {
   setStyle(Theme->style());
   setStyleSheet(Theme->stylesheet());
+
+//  setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
+  setEditTriggers(QAbstractItemView::DoubleClicked);
+  setSelectionBehavior(QAbstractItemView::SelectRows);
   setSelectionMode(QAbstractItemView::SingleSelection);
-  setDragEnabled(true);
+
   setDragDropMode(QAbstractItemView::InternalMove);
-  viewport()->setAcceptDrops(true);
+  setDragEnabled(true);
   setDropIndicatorShown(true);
+  setAcceptDrops(true);
 }
 
 //==============================================================================

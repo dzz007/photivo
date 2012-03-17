@@ -25,6 +25,11 @@
   \brief The model belonging to \c ptImageSpotListView.
 */
 
+/*
+  DO NOT USE THIS CLASS!
+  It’s obsolete and only remains because ptRepairInteraction isn’t updated yet.
+*/
+
 #ifndef PTREPAIRSPOTMODEL_H
 #define PTREPAIRSPOTMODEL_H
 

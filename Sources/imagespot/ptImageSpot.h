@@ -52,7 +52,6 @@ public:
   /*! Type definition for the function pointer to the spot factory method.
      There is no factory method returning a \c ptImageSpot because we only use
      specialised spots in derived classes. */
-//  typedef ptImageSpot* (*PCreateSpotFunc)();
   typedef std::function<ptImageSpot*()> PCreateSpotFunc;
 
 //------------------------------------------------------------------------------
@@ -105,6 +104,10 @@ public:
   /*! Writes the spot’s data to the currently opened ini file.
     The ini’s \c WriteArray() must be set appropriately before you use this. */
   virtual void WriteToFile(QSettings *APtsFile);
+
+  /*! Convenience functions to access the spot’s X and Y coordinates. */
+  inline int x() { return FPos.x(); }
+  inline int y() { return FPos.y(); }
 
 //------------------------------------------------------------------------------
 

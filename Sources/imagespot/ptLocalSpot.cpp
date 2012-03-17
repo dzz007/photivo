@@ -47,6 +47,7 @@ ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
     FMode = (ptLocalAdjustMode)APtsFile->value("Mode", lamFloodFill).toInt();
     FSaturation = APtsFile->value("Saturation", 0.0).toFloat();
     FThreshold = APtsFile->value("Threshold", 0.25).toFloat();
+    FLumaCurve->ReadFromFile(APtsFile);
   }
 }
 
