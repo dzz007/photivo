@@ -75,7 +75,7 @@ public:
   /*! Returns the spot's enabled status. */
   inline short isEnabled() const { return FIsEnabled; }
 
-  inline QString &name() { return FName; }
+  inline QString name() const { return FName; }
 
   /*! Returns the horizontal radius. */
   inline uint radius() const { return FRadius >> Settings->GetInt("Scaled"); }
@@ -106,8 +106,8 @@ public:
   virtual void WriteToFile(QSettings *APtsFile);
 
   /*! Convenience functions to access the spot’s X and Y coordinates. */
-  inline int x() { return FPos.x(); }
-  inline int y() { return FPos.y(); }
+  inline int x() const { return FPos.x(); }
+  inline int y() const { return FPos.y(); }
 
 //------------------------------------------------------------------------------
 

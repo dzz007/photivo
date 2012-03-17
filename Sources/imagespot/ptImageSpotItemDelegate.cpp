@@ -38,9 +38,9 @@ ptImageSpotItemDelegate::ptImageSpotItemDelegate(ptImageSpotListView *AParent)
 
 QWidget* ptImageSpotItemDelegate::createEditor(QWidget *parent,
                                                 const QStyleOptionViewItem&,
-                                                const QModelIndex &index) const
+                                                const QModelIndex& /*index*/) const
 {
-  auto hEd = new ptImageSpotEditor(parent, index.data(Qt::DisplayRole).toString());
+  auto hEd = new ptImageSpotEditor(parent);
   connect(hEd, SIGNAL(deleteButtonClicked()), FListView, SLOT(deleteSpot()));
   return hEd;
 }
