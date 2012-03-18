@@ -24,6 +24,7 @@
 #ifndef DLIMAGE_H
 #define DLIMAGE_H
 
+#include <vector>
 #include <lensfun.h>
 #include "ptDefines.h"
 #include "ptConstants.h"
@@ -51,6 +52,11 @@ public:
 // [1] = G
 // [2] = B
 uint16_t (*m_Image)[3];
+
+// LCH image data, m_Image is NULL when the image is in ptSpace_LCH
+std::vector<uint16_t> m_ImageL;
+std::vector<float>    m_ImageC;
+std::vector<float>    m_ImageH;
 
 // Width and height of the image
 uint16_t m_Width;
@@ -147,6 +153,9 @@ ptImage* lcmsRGBToLab(const int Intent = INTENT_PERCEPTUAL);
 ptImage* LabToRGB(const short To);
 ptImage* lcmsLabToRGB(const short To,
                       const int Intent = INTENT_PERCEPTUAL);
+
+ptImage* LabToLch();
+ptImage* LchToLab();
 
 // MixChannels
 // MixFactors[To][From]
@@ -404,6 +413,19 @@ float *GetMask(const short  MaskType,
                const double FactorR = 0.3,
                const double FactorG = 0.59,
                const double FactorB = 0.11);
+
+// FillMask
+float *FillMask(const uint16_t APointX,
+                const uint16_t APointY,
+                const float    AThreshold,
+                const uint16_t AMaxRadius);
+
+// MaskedContrast
+ptImage* MaskedContrast(const uint16_t APointX,
+                        const uint16_t APointY,
+                        const float AMaskThres,
+                        const float AContrast,
+                        const float AContrastThres);
 
 // GetVignetteMask
 float *GetVignetteMask(const short Inverted,
@@ -676,6 +698,9 @@ ptImage* LiquidRescale(const uint16_t Width,
  */
 ptImage* Lensfun(const int LfunActions,
                  const lfModifier* LfunData);
+
+private:
+  void ResizeLCH(size_t ASize);
 };
 
 #endif
