@@ -159,6 +159,7 @@ short ImageCleanUp;
 
 // uint16_t (0,0xffff) to float (0.0, 1.0)
 float    ToFloatTable[0x10000];
+float    ToFloatABNeutral[0x10000];
 uint16_t ToSRGBTable[0x10000];
 
 // Filter patterns for the filechooser.
@@ -1025,7 +1026,8 @@ void CB_Event0() {
   // uint16_t (0,0xffff) to float (0.0, 1.0)
 #pragma omp parallel for
   for (uint32_t i=0; i<0x10000; i++) {
-    ToFloatTable[i] = (float)i/(float)0xffff;
+    ToFloatTable[i]     = (float)i/(float)0xffff;
+    ToFloatABNeutral[i] = (float)i-WPHLab;
   }
 
   // linear RGB to sRGB table

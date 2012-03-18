@@ -43,6 +43,11 @@ inline void DelAndNull(T*& p) {
   p = 0;
 }
 
+//==============================================================================
+// Calculate the square
+template <typename T>
+inline T ptSqr(const T a) { return a*a; }
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Some macro's (most cannot go efficiently in functions).

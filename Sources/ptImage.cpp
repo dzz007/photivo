@@ -23,6 +23,7 @@
 
 // std stuff needs to be declared apparently for jpeglib
 // which seems a bug in the jpeglib header ?
+#include <stack>
 #include <cstdlib>
 #include <cstdio>
 #include <QString>
@@ -74,6 +75,7 @@ extern cmsHTRANSFORM ToPreviewTransform;
 
 // Lut
 extern float    ToFloatTable[0x10000];
+extern float    ToFloatABNeutral[0x10000];
 extern uint16_t ToSRGBTable[0x10000];
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -892,7 +894,86 @@ ptImage* ptImage::lcmsLabToRGB(const short To,
   m_ColorSpace = To;
 
   return this;
-};
+}
+
+//==============================================================================
+
+// Helping function
+inline float ToHue(const float AValueA, const float AValueB) {
+  if (AValueA == 0.0f && AValueB == 0.0f) {
+    return 0.0f;   // value for grey pixel
+  } else {
+    float hHue = atan2f(AValueB,AValueA);
+    while (hHue < 0.0f) hHue += pt2PI;
+    return hHue;
+  }
+}
+
+//==============================================================================
+
+void ptImage::ResizeLCH(size_t ASize)
+{
+  m_ImageL.resize(ASize);
+  m_ImageL.shrink_to_fit();
+  m_ImageC.resize(ASize);
+  m_ImageC.shrink_to_fit();
+  m_ImageH.resize(ASize);
+  m_ImageH.shrink_to_fit();
+}
+
+//==============================================================================
+
+ptImage *ptImage::LabToLch()
+{
+  assert (m_ColorSpace == ptSpace_Lab);
+
+  uint32_t hSize = (uint32_t)m_Width*m_Height;
+
+  ResizeLCH(hSize);
+
+  float hValueA = 0.0f;
+  float hValueB = 0.0f;
+#pragma omp parallel for schedule(static) private(hValueA, hValueB)
+  for (uint32_t i = 0; i < hSize; i++) {
+    hValueA        = ToFloatABNeutral[m_Image[i][1]];
+    hValueB        = ToFloatABNeutral[m_Image[i][2]];
+    m_ImageL.at(i) = m_Image[i][0];
+    m_ImageH.at(i) = ToHue(hValueA, hValueB);
+    m_ImageC.at(i) = powf(hValueA*hValueA + hValueB*hValueB, 0.5f);
+  }
+
+  FREE(m_Image);
+  m_Image      = 0;
+  m_ColorSpace = ptSpace_LCH;
+
+  return this;
+}
+
+//==============================================================================
+
+ptImage *ptImage::LchToLab()
+{
+  assert (m_ColorSpace == ptSpace_LCH);
+  assert (m_Image      == 0);
+
+  uint32_t hSize = (uint32_t)m_Width*m_Height;
+
+  m_Image = (uint16_t (*)[3]) CALLOC(hSize,sizeof(*m_Image));
+  ptMemoryError(m_Image,__FILE__,__LINE__);
+
+#pragma omp parallel for schedule(static)
+  for (uint32_t i = 0; i < hSize; i++) {
+    m_Image[i][0] = m_ImageL.at(i);
+    m_Image[i][1] = CLIP((int32_t)(cosf(m_ImageH.at(i))*m_ImageC.at(i) + WPHLab));
+    m_Image[i][2] = CLIP((int32_t)(sinf(m_ImageH.at(i))*m_ImageC.at(i) + WPHLab));
+  }
+
+  ResizeLCH(0);
+
+  m_ColorSpace = ptSpace_Lab;
+  return this;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -906,6 +987,7 @@ ptImage::ptImage() {
   m_Image              = NULL;
   m_Colors             = 0;
   m_ColorSpace         = ptSpace_sRGB_D65;
+  ResizeLCH(0);
 
   // Initialize the lookup table for the RGB->LAB function
   // if this would be the first time.
@@ -5557,6 +5639,169 @@ float *ptImage::GetMask(const short MaskType,
 } // end OpenMP
 
   return dMask;
+}
+
+//==============================================================================
+
+// InMask should only be called once per pixel!
+void fill4stack(float         *AMask,
+                const uint16_t APointX,
+                const uint16_t APointY,
+                const uint16_t AWidth,
+                const uint16_t AHeight,
+                std::function<float (uint16_t, uint16_t)> InMask){
+
+  std::stack<uint16_t> hStack;
+  hStack.push(APointX);
+  hStack.push(APointY);
+
+  uint16_t hX     = 0,
+           hY     = 0;
+  float    hValue = 0.0f;
+
+  while (!hStack.empty()) {
+    hY = hStack.top();
+    hStack.pop();
+    hX = hStack.top();
+    hStack.pop();
+
+    // array bounds
+    if (hX < 0 || hX >= AWidth ||
+        hY < 0 || hY >= AHeight ) continue;
+
+    // already processed?
+    if (AMask[hY*AWidth + hX] != 0.0f) continue;
+
+    hValue = InMask(hX, hY);
+    // pixel suitable for mask?
+    if (hValue > 0.0f) {
+      AMask[hY*AWidth + hX] = hValue;
+
+      hStack.push(hX);
+      hStack.push(hY + 1);
+      hStack.push(hX);
+      hStack.push(hY - 1);
+      hStack.push(hX + 1);
+      hStack.push(hY);
+      hStack.push(hX - 1);
+      hStack.push(hY);
+    }
+  }
+}
+
+float *ptImage::FillMask(const uint16_t APointX, const uint16_t APointY, const float AThreshold, const uint16_t AMaxRadius)
+{
+  float (*FillMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*FillMask));
+  ptMemoryError(FillMask,__FILE__,__LINE__);
+
+  memset(FillMask, 0, m_Width*m_Height*sizeof(*FillMask));
+
+  uint16_t hThresholdHalf = CLIP((int32_t)(AThreshold*0x2AAA));
+  uint16_t hThreshold     = CLIP((int32_t)(AThreshold*0x5555));
+  int32_t hRadiusOut      = ptSqr(AMaxRadius);
+  int32_t hRadiusIn       = ptSqr(AMaxRadius>>1);
+  int32_t hRadiusDiff     = hRadiusOut - hRadiusIn;
+
+  float hResult  = 0.0f,
+        hValue0  = 0.0f,
+        hValue1  = 0.0f,
+        hValue2  = 0.0f;
+  uint16_t hDiff = 0;
+  int32_t  hIdx  = 0,
+           hRad  = 0;
+
+  // Calculate mean around the sample point
+  short hSample  = 5;
+  int32_t hCnt   = 0;
+
+  for (int32_t lX = APointX-hSample; lX <= APointX+hSample; lX++) {
+    if (lX < 0 || lX >= m_Width) continue;
+
+    for (int32_t lY = APointY-hSample; lY <= APointY+hSample; lY++) {
+      if (lY < 0 || lY >= m_Height) continue;
+
+      hIdx     = (int32_t)lY*m_Width + lX;
+      hValue0 += m_Image[hIdx][0];
+      hValue1 += m_Image[hIdx][1];
+      hValue2 += m_Image[hIdx][2];
+      hCnt++;
+    }
+  }
+  hValue0 /= hCnt;
+  hValue1 /= hCnt;
+  hValue2 /= hCnt;
+
+  // fill mask with radius and value threshold
+  fill4stack(FillMask, APointX, APointY, m_Width, m_Height,
+             [&](uint16_t X, uint16_t Y) -> float {
+
+    hResult = 1.0f;
+    if (AMaxRadius > 0) {
+      hRad = ptSqr(std::abs((int32_t)X-APointX)) + ptSqr(std::abs((int32_t)Y-APointY));
+      if (hRad > hRadiusIn) {
+        if (hRad < hRadiusOut) hResult = ptSqr((hRadiusOut - hRad)/(float)hRadiusDiff);
+        else                   hResult = 0.0f;
+      }
+    }
+
+    if (hResult == 0.0f) return hResult;
+
+    hIdx  = (int32_t)Y*m_Width + X;
+
+    hDiff = 0.4*std::abs((float)m_Image[hIdx][0] - hValue0) +
+                std::abs((float)m_Image[hIdx][1] - hValue1) +
+                std::abs((float)m_Image[hIdx][2] - hValue2);
+
+    if (hDiff > hThresholdHalf) {
+      if (hDiff < hThreshold) hResult = hResult*(hThreshold - hDiff)/(float)hThresholdHalf;
+      else                    hResult = 0.0f;
+    }
+
+    return hResult;
+  });
+
+  return FillMask;
+}
+
+//==============================================================================
+
+// Example for using local mask with sigmoidal contrast
+ptImage *ptImage::MaskedContrast(const uint16_t APointX, const uint16_t APointY, const float AMaskThres, const float AContrast, const float AContrastThres)
+{
+  assert (m_ColorSpace == ptSpace_Lab);
+
+  float *hMask = 0;
+  hMask = FillMask(APointX, APointY, AMaskThres, 0);
+
+  float Scaling = 1.0/(1.0+exp(-0.5*AContrast))-1.0/(1.0+exp(0.5*AContrast));
+  float Offset = -1.0/(1.0+exp(0.5*AContrast));
+  float logtf = -logf(AContrastThres)/logf(2.0);
+  float logft = -logf(2.0)/logf(AContrastThres);
+
+  uint16_t ContrastTable[0x10000];
+  ContrastTable[0] = 0;
+  if (AContrast > 0)
+#pragma omp parallel for
+    for (uint32_t i=1; i<0x10000; i++) {
+      ContrastTable[i] = CLIP((int32_t)(powf((((1.0/(1.0+
+        expf(AContrast*(0.5-powf(ToFloatTable[i],logft)))))+Offset)/Scaling),logtf)*0xffff));
+    }
+  else
+#pragma omp parallel for
+    for (uint32_t i=1; i<0x10000; i++) {
+      ContrastTable[i] = CLIP((int32_t)(powf(0.5-1.0/AContrast*
+        logf(1.0/(AContrast*powf(ToFloatTable[i],logft)-Offset)-1.0),logtf)*0xffff));
+    }
+
+#pragma omp parallel for default(shared)
+  for (uint32_t i=0; i < (uint32_t)m_Height*m_Width; i++) {
+    if (hMask[i] > 0.0f) {
+      m_Image[i][0] = CLIP((int32_t)((1.0f-hMask[i])*m_Image[i][0] + hMask[i]*ContrastTable[m_Image[i][0]]));
+    }
+  }
+
+  FREE(hMask);
+  return this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

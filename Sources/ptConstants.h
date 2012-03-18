@@ -58,10 +58,14 @@ const ptFiles PhotivoFile = { "photivo.ini",
 // Mathematical constants.
 const double ptPI     = 3.14159265358979323846264338327950288419716939937510;
 const double ptSQ2PI  = 2.50662827463100024161235523934010416269302368164062;
+const float  pt2PI    = 6.28318530717f;
 
 // Some program limits.
 const short ptMaxAnchors    = 50; // Curve anchors.
 const short ptMaxInputFiles = 2048;
+
+// Neutral AB value
+const float WPHLab = 0x8080;
 
 // Don't mess with the numbers of any of those constants.
 // Often there is relied upon , for instance as index in an array.
@@ -111,6 +115,7 @@ const short ptSpace_WideGamutRGB_D50 = 3;
 const short ptSpace_ProPhotoRGB_D50  = 4;
 const short ptSpace_Lab              = 10;
 const short ptSpace_XYZ              = 11;
+const short ptSpace_LCH              = 15;
 const short ptSpace_Profiled         = 20;
 
 // Color profiles.
