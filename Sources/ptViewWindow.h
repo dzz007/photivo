@@ -57,7 +57,6 @@
 #include "ptGridInteraction.h"
 #include "imagespot/ptSpotInteraction.h"
 #include "imagespot/ptRepairInteraction.h"
-#include "imagespot/ptImageSpotListView.h"
 
 //==============================================================================
 
@@ -106,8 +105,8 @@ public:
   void StartLine();
   void StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect));
   void StartCrop();
-  void StartLocalAdjust(ptImageSpotListView* AListView);
-  void StartSpotRepair(ptImageSpotListView* AListView);
+  void StartLocalAdjust();
+  void StartSpotRepair();
 
   ptRichRectInteraction *crop() const { return FCrop; }
   ptSpotInteraction     *localAdjust() const { return FLocalAdjust; }

@@ -20,12 +20,20 @@
 **
 *******************************************************************************/
 
+#include <memory>
+
 #include "ptImageSpotListView.h"
 #include "ptImageSpotModel.h"
 #include "ptImageSpot.h"
 #include "../ptTheme.h"
+#include "../ptViewWindow.h"
+#include "../ptImage.h"
+#include "../ptSettings.h"
 
-extern ptTheme* Theme;
+extern ptImage *PreviewImage; // global prev image. Basis for quick interactive preview
+extern ptTheme *Theme;
+extern ptSettings *Settings;
+extern ptViewWindow* ViewWindow;
 
 //==============================================================================
 
@@ -50,6 +58,10 @@ ptImageSpotListView::ptImageSpotListView(QWidget *AParent,
 
 //==============================================================================
 
+ptImageSpotListView::~ptImageSpotListView() {}
+
+//==============================================================================
+
 void ptImageSpotListView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
   QListView::currentChanged(current, previous);
   emit rowChanged(current);
@@ -66,22 +78,28 @@ void ptImageSpotListView::deleteSpot() {
 //==============================================================================
 
 void ptImageSpotListView::processCoordinates(const QPoint &APos, const bool AMoveCurrent) {
+  ptImageSpotModel* hModel = qobject_cast<ptImageSpotModel*>(this->model());
+
   if (AMoveCurrent && this->currentIndex().isValid()) {
     // move currently selected spot to new position
-    qobject_cast<ptImageSpotModel*>(this->model())
-        ->spot(this->currentIndex().row())
-            ->setPos(APos.x(), APos.y());
+    hModel->spot(this->currentIndex().row())->setPos(APos.x(), APos.y());
 
   } else {
     // append new spot to list
     ptImageSpot *hSpot = FSpotCreator();
-
     hSpot->setPos(APos.x(), APos.y());
     hSpot->setName(tr("Spot"));
-
-    qobject_cast<ptImageSpotModel*>(this->model())
-        ->appendSpot(hSpot);
+    hModel->appendSpot(hSpot);
   }
+
+  // Update preview in ViewWindow
+  std::unique_ptr<ptImage> hImage(new ptImage);
+  hImage->Set(PreviewImage);
+  //TODO: BJ PreviewImage is in ptSpace_Profiled -> colour space conversion fails
+//  hImage->RGBToLch();
+  hModel->RunFiltering(hImage.get());
+//  hImage->LchToRGB(Settings->GetInt("WorkColor"));
+  ViewWindow->UpdateImage(hImage.get());
 }
 
 //==============================================================================

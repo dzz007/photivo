@@ -133,8 +133,8 @@ void ptViewWindow::UpdateImage(const ptImage* relatedImage) {
     F8bitImageItem->setPixmap(QPixmap::fromImage(*Img8bit, Qt::ColorOnly));
     DelAndNull(Img8bit);
     FImageScene->setSceneRect(0, 0,
-                               F8bitImageItem->pixmap().width(),
-                               F8bitImageItem->pixmap().height());
+                              F8bitImageItem->pixmap().width(),
+                              F8bitImageItem->pixmap().height());
 
     if (Settings->GetInt("ZoomMode") == ptZoomMode_Fit) {
       ZoomToFit(0);
@@ -536,7 +536,7 @@ void ptViewWindow::StartCrop()
 
 //==============================================================================
 
-void ptViewWindow::StartLocalAdjust(ptImageSpotListView *AListView) {
+void ptViewWindow::StartLocalAdjust() {
   if (FInteraction != iaNone) {
     return;
   }
@@ -544,8 +544,8 @@ void ptViewWindow::StartLocalAdjust(ptImageSpotListView *AListView) {
 
   connect(FLocalAdjust, SIGNAL(finished(ptStatus)),
           this,         SLOT  (finishInteraction(ptStatus)));
-  connect(FLocalAdjust, SIGNAL(clicked(QPoint,bool)),
-          AListView,    SLOT  (processCoordinates(QPoint,bool)));
+//  connect(FLocalAdjust, SIGNAL(clicked(QPoint,bool)),
+//          AListView,    SLOT  (processCoordinates(QPoint,bool)));
   connect(this,         SIGNAL(mouseChanged(QMouseEvent*)),
           FLocalAdjust, SLOT  (mouseAction(QMouseEvent*)));
 
@@ -554,11 +554,12 @@ void ptViewWindow::StartLocalAdjust(ptImageSpotListView *AListView) {
 
 //==============================================================================
 
-void ptViewWindow::StartSpotRepair(ptImageSpotListView* AListView) {
+void ptViewWindow::StartSpotRepair() {
   if (FInteraction != iaNone) {
     return;
   }
-  FSpotRepair = new ptRepairInteraction(this, AListView);
+  //TODO: BJ ptRepairInteraction constructor should not have to know its ListView
+  FSpotRepair = new ptRepairInteraction(this, nullptr);
 
   connect(FSpotRepair, SIGNAL(finished(ptStatus)),
           this,        SLOT  (finishInteraction(ptStatus)));

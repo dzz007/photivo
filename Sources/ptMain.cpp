@@ -4658,16 +4658,17 @@ void CB_LocalSpotButton() {
   ViewWindow->ShowStatus(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for local adjust"));
 
-  //TheProcessor->RunGeometry(ptProcessorStopBefore::Crop);
-  UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw); // Calculate in any case.
+  TheProcessor->RunLocalEdit(ptProcessorStopBefore::LocalAdjust);
+  UpdatePreviewImage(TheProcessor->m_Image_AfterLocalEdit);
 
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->ShowStatus(QObject::tr("Local adjust"));
   ReportProgress(QObject::tr("Local adjust"));
   BlockTools(btmBlockForLocalAdjust);
 
-  // always start the interaction first, *then* update main window
-  ViewWindow->StartLocalAdjust(MainWindow->LocalSpotListView);
+  ViewWindow->StartLocalAdjust();
+  QObject::connect(ViewWindow->localAdjust(), SIGNAL(clicked(QPoint,bool)),
+                   MainWindow->LocalSpotListView, SLOT(processCoordinates(QPoint,bool)));
   ViewWindow->setFocus();
 }
 
@@ -4773,8 +4774,8 @@ void CB_SpotRepairButton() {
   ViewWindow->ShowStatus(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for spot repair"));
 
-  //TheProcessor->RunGeometry(ptProcessorStopBefore::Crop);
-  UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw); // Calculate in any case.
+  TheProcessor->RunLocalEdit(ptProcessorStopBefore::SpotRepair);
+  UpdatePreviewImage(TheProcessor->m_Image_AfterLocalEdit); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->ShowStatus(QObject::tr("Spot repair"));
@@ -4782,7 +4783,7 @@ void CB_SpotRepairButton() {
   BlockTools(btmBlockForSpotRepair);
 
   // always start the interaction first, *then* update main window
-  ViewWindow->StartSpotRepair(MainWindow->RepairSpotListView);
+  ViewWindow->StartSpotRepair();
   MainWindow->UpdateSpotRepairUI();
   ViewWindow->setFocus();
 }
