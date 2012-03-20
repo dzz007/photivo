@@ -75,7 +75,7 @@ public:
   /*! Returns the spot's enabled status. */
   inline short isEnabled() const { return FIsEnabled; }
 
-  inline QString name() const { return FName; }
+  inline QString const &name() const { return FName; }
 
   /*! Returns the horizontal radius. */
   inline uint radius() const { return FRadius >> Settings->GetInt("Scaled"); }

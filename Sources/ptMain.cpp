@@ -796,7 +796,8 @@ int photivoMain(int Argc, char *Argv[]) {
   printf("Lensfun database: '%s'; \n",Settings->GetString("LensfunDatabaseDirectory").toAscii().data());
   //  LensfunData = new ptLensfun;    // TODO BJ: implement lensfun DB
 
-  // Instantiate the processor.
+  // Instantiate the processor. Spot models are not set here because we
+  // do not yet know if we are in GUI or batch mode.
   TheProcessor = new ptProcessor(ReportProgress);
 
   // ChannelMixer instance.
@@ -806,11 +807,11 @@ int photivoMain(int Argc, char *Argv[]) {
   // (And thus have to run a batch job)
 
   if (JobMode) {
-      for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
-          Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
-      }
-      RunJob(JobFileName);
-      exit(EXIT_SUCCESS);
+    for (short Channel=0; Channel < CurveKeys.size(); Channel++) {
+      Curve[Channel] = new ptCurve(Channel); // Automatically a null curve.
+    }
+    RunJob(JobFileName);
+    exit(EXIT_SUCCESS);
   }
 
   // If falling through to here we are in an interactive non-job mode.
@@ -857,6 +858,9 @@ int photivoMain(int Argc, char *Argv[]) {
 
   HistogramWindow =
       new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
+
+  // We are in GUI mode and MainWindow is created -> Set spot models.
+  TheProcessor->setSpotModels(MainWindow->LocalSpotModel, MainWindow->RepairSpotModel);
 
 #ifndef PT_WITHOUT_FILEMGR
   FileMgrWindow = new ptFileMgrWindow(MainWindow->FileManagerPage);
@@ -1433,14 +1437,15 @@ int GetProcessorPhase(const QString GuiName) {
   int Phase = 0;
   QString Tab = MainWindow->m_GroupBox->value(GuiName)->GetTabName();
   //ptMessageBox::information(0,"Feedback","I was called from \n" + GuiName + "\nMy tab is\n" Tab);
-  if (Tab == "GeometryTab") Phase = ptProcessorPhase_Geometry;
-  else if (Tab == "RGBTab") Phase = ptProcessorPhase_RGB;
-  else if (Tab == "LabCCTab") Phase = ptProcessorPhase_LabCC;
-  else if (Tab == "LabSNTab") Phase = ptProcessorPhase_LabSN;
+  if      (Tab == "LocalTab")       Phase = ptProcessorPhase_LocalEdit;
+  else if (Tab == "GeometryTab")    Phase = ptProcessorPhase_Geometry;
+  else if (Tab == "RGBTab")         Phase = ptProcessorPhase_RGB;
+  else if (Tab == "LabCCTab")       Phase = ptProcessorPhase_LabCC;
+  else if (Tab == "LabSNTab")       Phase = ptProcessorPhase_LabSN;
   else if (Tab == "LabEyeCandyTab") Phase = ptProcessorPhase_LabEyeCandy;
-  else if (Tab == "EyeCandyTab") Phase = ptProcessorPhase_EyeCandy;
-  else if (Tab == "OutTab") Phase = ptProcessorPhase_Output;
-  else Phase = ptProcessorPhase_Raw;
+  else if (Tab == "EyeCandyTab")    Phase = ptProcessorPhase_EyeCandy;
+  else if (Tab == "OutTab")         Phase = ptProcessorPhase_Output;
+  else                              Phase = ptProcessorPhase_Raw;
   return Phase;
 }
 
@@ -2232,6 +2237,7 @@ void RunJob(const QString JobFileName) {
 
   // Read the gui settings from a file.
   short NextPhase = 1;
+  // TODO: BJ Implement spot processing
   short ReturnValue = ReadSettingsFile(JobFileName, NextPhase);
   if (ReturnValue) {
     printf("\nNo valid job file!\n\n");
@@ -4652,7 +4658,7 @@ void CB_LocalSpotButton() {
   ViewWindow->ShowStatus(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for local adjust"));
 
-  //TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
+  //TheProcessor->RunGeometry(ptProcessorStopBefore::Crop);
   UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
@@ -4667,9 +4673,9 @@ void CB_LocalSpotButton() {
 
 void CleanupAfterLocalAdjust() {
   BlockTools(btmUnblock);
-  Update(ptProcessorPhase_Geometry);
   MainWindow->LocalSpotButton->show();
   MainWindow->ConfirmLocalSpotButton->hide();
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_ConfirmLocalSpotButton() {
@@ -4682,6 +4688,7 @@ void CB_LocalModeChoice(const QVariant Value) {
   Settings->SetValue("LocalMode", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
       ->setMode((ptLocalAdjustMode)Value.toInt());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_LocalMaskThresholdInput(const QVariant Value) {
@@ -4690,6 +4697,7 @@ void CB_LocalMaskThresholdInput(const QVariant Value) {
   Settings->SetValue("LocalMaskThreshold", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
       ->setThreshold(Value.toFloat());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_LocalMaskLumaWeightInput(const QVariant Value) {
@@ -4698,14 +4706,16 @@ void CB_LocalMaskLumaWeightInput(const QVariant Value) {
   Settings->SetValue("LocalMaskLumaWeight", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
       ->setLumaWeight(Value.toFloat());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_LocalEgdeAwareThresholdCheck(const QVariant Value) {
   int hRow = MainWindow->LocalSpotListView->currentIndex().row();
   if (hRow < 0) return;
-  Settings->SetValue("LocalEdgeAwareThreshold", Value);
+  Settings->SetValue("LocalEgdeAwareThreshold", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
       ->setEdgeAware(Value.toBool());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
@@ -4715,6 +4725,7 @@ void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
       ->setHasMaxRadius(Value.toBool());
   MainWindow->LocalMaxRadiusWidget->setEnabled(Value.toBool());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_LocalMaxRadiusInput(const QVariant Value) {
@@ -4723,6 +4734,7 @@ void CB_LocalMaxRadiusInput(const QVariant Value) {
   Settings->SetValue("LocalMaxRadius", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
       ->setMaxRadius(Value.toUInt());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_LocalSaturationInput(const QVariant Value) {
@@ -4731,6 +4743,7 @@ void CB_LocalSaturationInput(const QVariant Value) {
   Settings->SetValue("LocalSaturation", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
       ->setSaturation(Value.toFloat());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_LocalAdaptiveSaturationCheck(const QVariant Value) {
@@ -4739,6 +4752,7 @@ void CB_LocalAdaptiveSaturationCheck(const QVariant Value) {
   Settings->SetValue("LocalAdaptiveSaturation", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
       ->setAdaptiveSaturation(Value.toBool());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 
@@ -4759,7 +4773,7 @@ void CB_SpotRepairButton() {
   ViewWindow->ShowStatus(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for spot repair"));
 
-  //TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
+  //TheProcessor->RunGeometry(ptProcessorStopBefore::Crop);
   UpdatePreviewImage(TheProcessor->m_Image_AfterDcRaw); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
@@ -4775,8 +4789,8 @@ void CB_SpotRepairButton() {
 
 void CleanupAfterSpotRepair() {
   BlockTools(btmUnblock);
-  Update(ptProcessorPhase_Geometry);
   MainWindow->UpdateSpotRepairUI();
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_ConfirmSpotRepairButton() {
@@ -4789,6 +4803,7 @@ void CB_SpotAlgorithmChoice(const QVariant Value) {
   Settings->SetValue("SpotAlgorithm", Value);
   static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hRow))
       ->setAlgorithm((ptSpotRepairAlgo)Value.toInt());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_SpotOpacityInput(const QVariant Value) {
@@ -4797,6 +4812,7 @@ void CB_SpotOpacityInput(const QVariant Value) {
   Settings->SetValue("SpotOpacity", Value);
   static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hRow))
       ->setOpacity(Value.toFloat());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_SpotEdgeSoftnessInput(const QVariant Value) {
@@ -4805,6 +4821,7 @@ void CB_SpotEdgeSoftnessInput(const QVariant Value) {
   Settings->SetValue("SpotEdgeSoftness", Value);
   static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hRow))
       ->setEdgeSoftness(Value.toFloat());
+  Update(ptProcessorPhase_LocalEdit);
 }
 
 
@@ -5029,7 +5046,7 @@ void CB_RotateAngleButton() {
 
   // Rerun the part of geometry stage before rotate to get correct preview
   // image in TheProcessor->m_Image_AfterGeometry
-  TheProcessor->RunGeometry(ptProcessorStopBefore_Rotate);
+  TheProcessor->RunGeometry(ptProcessorStopBefore::Rotate);
   ViewWindow->SaveZoom();
   ViewWindow->ZoomToFit();
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
@@ -5231,7 +5248,7 @@ void CB_MakeCropButton() {
 
   // Rerun the part of geometry stage before crop to get correct preview
   // image in TheProcessor->m_Image_AfterGeometry
-  TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
+  TheProcessor->RunGeometry(ptProcessorStopBefore::Crop);
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.

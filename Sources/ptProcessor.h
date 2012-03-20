@@ -21,30 +21,76 @@
 **
 *******************************************************************************/
 
-#ifndef DLPROCESSOR_H
-#define DLPROCESSOR_H
+#ifndef PTPROCESSOR_H
+#define PTPROCESSOR_H
+
+//==============================================================================
 
 #include <QString>
 #include <QTime>
+#include <QList>
 
 #include <exiv2/exif.hpp>
 
 #include "ptDcRaw.h"
 #include "ptImage.h"
+#include "imagespot/ptImageSpotModel.h"
 
+//==============================================================================
+
+typedef void (*PReportProgressFunc)(const QString);
+
+//==============================================================================
 
 class ptProcessor {
-Q_DECLARE_TR_FUNCTIONS(ptProcessor)
+  Q_DECLARE_TR_FUNCTIONS(ptProcessor)
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
+  /*! Creates a new processor instance.
+    \param AReportProgress
+      A function pointer to the progress report function.
+    \param ARunLocalSpots
+      A pointer to the \c RunFiltering() function of the “local adjust” spot model.
+      If you do not set a valid pointer in the constructor you MUST call \c setSpotFuncs()
+      before the first run of the processor instance.
+    \param ARunRepairSpots
+      Same as \c ARunLocalSpots, but for “spot repair”.
+  */
+  ptProcessor(PReportProgressFunc AReportProgress);
+  ~ptProcessor();
+
+  // The associated DcRaw.
+  ptDcRaw* m_DcRaw;
+
+  /*! Main Graphical Pipe.
+      Look here for all operations and all possible future extensions.
+      As well Gui mode as JobMode are sharing this part of the code.
+      The idea is to have an image object and operating on it.
+      Run the graphical pipe from a certain point on.
+  */
+  void Run(short Phase,
+           short SubPhase      = -1,
+           short WithIdentify  = 1,
+           short ProcessorMode = ptProcessorMode_Preview);
+
+  /*! Rerun Local Edit stage. */
+  void RunLocalEdit(ptProcessorStopBefore StopBefore = ptProcessorStopBefore::NoStop);
+
+  /*! Rerun Geometry stage (and stop for crop or rotate tool)
+   Use the ptProcessorStopBefore_{Rotate|Crop} constants to stop early.*/
+  void RunGeometry(ptProcessorStopBefore StopBefore = ptProcessorStopBefore::NoStop);
+
+  void setSpotModels(ptImageSpotModel *ALocalSpotModel, ptImageSpotModel *ARepairSpotModel);
+
+  // Exif Related
+  Exiv2::ExifData m_ExifData;
+  unsigned char*  m_ExifBuffer;
+  unsigned int    m_ExifBufferLength;
+  void            ReadExifBuffer();
+
   // Cached image versions at different points.
   ptImage*  m_Image_AfterDcRaw;
+  ptImage*  m_Image_AfterLocalEdit;
   ptImage*  m_Image_AfterGeometry;
   ptImage*  m_Image_AfterRGB;
   ptImage*  m_Image_AfterLabCC;
@@ -60,31 +106,8 @@ public:
   ptImage*  m_Image_TextureOverlay2;
 
   // Reporting back
-  void (*m_ReportProgress)(const QString Message);
-
-  // Constructor
-  ptProcessor(void (*ReportProgress)(const QString Message));
-  // Destructor
-  ~ptProcessor();
-
-  // The associated DcRaw.
-  ptDcRaw* m_DcRaw;
-
-  // The real processing.
-  void Run(short Phase,
-           short SubPhase      = -1,
-           short WithIdentify  = 1,
-           short ProcessorMode = ptProcessorMode_Preview);
-
-  // Rerun Geometry stage (and stop for crop or rotate tool)
-  // Use the ptProcessorStopBefore_{Rotate|Crop} constants to stop early.
-  void RunGeometry(const short StopBefore = ptProcessorStopBefore_NoStop);
-
-  // Exif Related
-  Exiv2::ExifData m_ExifData;
-  unsigned char*  m_ExifBuffer;
-  unsigned int    m_ExifBufferLength;
-  void            ReadExifBuffer();
+  //void (*m_ReportProgress)(const QString Message);
+  PReportProgressFunc m_ReportProgress;
 
   // Reporting
   void ReportProgress(const QString Message);
@@ -98,14 +121,11 @@ public:
   // Factor for size dependend filters
   float           m_ScaleFactor;
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
 private:
-  QTime m_RunTimer;
-};
+  QTime             FRunTimer;
 
+
+};
 #endif

@@ -37,6 +37,8 @@
   IMPORTANT: Photivo uses groups of const short for historical reasons.
   They are deprecated for new constants groups! Instead use enums or, even better,
   C++11 enum classes.
+  Up to at least v2.5 beta Qt Creator does not support enum classes properly.
+  Do not let red error underlining impress you. Compiling works fine. ;)
 !!! */
 
 //==============================================================================
@@ -67,23 +69,25 @@ const short ptMaxInputFiles = 2048;
 // Neutral AB value
 const float WPHLab = 0x8080;
 
-// Don't mess with the numbers of any of those constants.
-// Often there is relied upon , for instance as index in an array.
-// Or the numbers are assumptions from dcraw.
-
-// Processor phases.
-
-const short ptProcessorPhase_Raw           = 1;
-const short ptProcessorPhase_Load          = 1; // Same constant, subphase !
-const short ptProcessorPhase_Demosaic      = 2; // Same constant, subphase !
-const short ptProcessorPhase_Highlights    = 3; // Same constant, subphase !
-const short ptProcessorPhase_Geometry      = 2;
-const short ptProcessorPhase_RGB           = 3;
-const short ptProcessorPhase_LabCC         = 4;
-const short ptProcessorPhase_LabSN         = 5;
-const short ptProcessorPhase_LabEyeCandy   = 6;
-const short ptProcessorPhase_EyeCandy      = 7;
-const short ptProcessorPhase_Output        = 8;
+/*! Processor phases.
+    Don't mess with the numbers of any of those constants.
+    Often they are relied upon, for instance as index in an array.
+    Or the numbers are assumptions from dcraw.
+*/
+const short ptProcessorPhase_Raw           = 1;   // dcraw
+  // subphases of Raw
+  const short ptProcessorPhase_Load          = 1; // Same constant, subphase !
+  const short ptProcessorPhase_Demosaic      = 2; // Same constant, subphase !
+  const short ptProcessorPhase_Highlights    = 3; // Same constant, subphase !
+const short ptProcessorPhase_LocalEdit     = 2;
+const short ptProcessorPhase_Geometry      = 3;
+const short ptProcessorPhase_RGB           = 4;
+const short ptProcessorPhase_LabCC         = 5;
+const short ptProcessorPhase_LabSN         = 6;
+const short ptProcessorPhase_LabEyeCandy   = 7;
+const short ptProcessorPhase_EyeCandy      = 8;
+const short ptProcessorPhase_Output        = 9;
+// special phases, not your usual pipe run
 const short ptProcessorPhase_Preview       = 10; // escape characters
 const short ptProcessorPhase_OnlyHistogram = 11;
 const short ptProcessorPhase_WriteOut      = 12;
@@ -91,9 +95,13 @@ const short ptProcessorPhase_ToGimp        = 13;
 
 // if stop is set, we have no console output of processing, to prevent
 // spamming while crop preview
-const short ptProcessorStopBefore_NoStop = 0;
-const short ptProcessorStopBefore_Rotate = 1;
-const short ptProcessorStopBefore_Crop   = 2;
+enum class ptProcessorStopBefore {
+  NoStop       = 0,
+  LocalAdjust  = 1,
+  SpotRepair   = 2,
+  Rotate       = 3,
+  Crop         = 4
+};
 
 // Processor modes.
 

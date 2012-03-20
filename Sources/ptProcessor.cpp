@@ -41,60 +41,20 @@
 
 #include "ptProcessor.h"
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptProcessor::ptProcessor(void (*ReportProgress)(const QString Message)) {
-
-  // We work with a callback to avoid dependency on ptMainWindow
-  m_ReportProgress = ReportProgress;
-
-  // The DcRaw
-  m_DcRaw          = NULL;
-
-  // Cached version at different points.
-  m_Image_AfterDcRaw       = NULL;
-  m_Image_AfterGeometry     = NULL;
-  m_Image_AfterRGB         = NULL;
-  m_Image_AfterLabCC       = NULL;
-  m_Image_AfterLabSN       = NULL;
-  m_Image_AfterLabEyeCandy = NULL;
-  m_Image_AfterEyeCandy    = NULL;
-
-  m_Image_DetailPreview    = NULL;
-
-  m_Image_TextureOverlay   = NULL;
-  m_Image_TextureOverlay2  = NULL;
-
-  //
-  m_AutoExposureValue = 0.0;
-
-  // Exif Data and Buffer
-  m_ExifBuffer       = NULL;
-  m_ExifBufferLength = 0;
-
-  m_ScaleFactor = 0;
-}
+//==============================================================================
 
 // Prototype for status report in Viewwindow
 void ViewWindowShowStatus(short State);
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
+
 // FindAlpha (helper for ExposureFunction)
 // such that f(x)=(1-exp(-Alpha*x)/(1-exp(-Alpha))
 // f(x) is then foto curve for which :
 // f(0) = 0
 // f(1) = 1
 // f'(0)= Exposure
-//
-////////////////////////////////////////////////////////////////////////////////
-
 double FindAlpha(double Exposure) {
-
   assert(Exposure > 1.0);
 
   double Alpha;
@@ -112,13 +72,10 @@ double FindAlpha(double Exposure) {
   return Alpha;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
+
 // ExposureFunction
 // (used to generate an expsure curve)
-//
-////////////////////////////////////////////////////////////////////////////////
-
 static double Alpha;
 static double ExposureForWhichAlphaIsCalculated = -1;
 
@@ -129,15 +86,81 @@ double ExposureFunction(double r, double Exposure, double) {
   return (1-exp(-Alpha*r))/(1-exp(-Alpha));
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Main Graphical Pipe.
-// Look here for all operations and all possible future extensions.
-// As well Gui mode as JobMode are sharing this part of the code.
-// The idea is to have an image object and operating on it.
-// Run the graphical pipe from a certain point on.
-//
-////////////////////////////////////////////////////////////////////////////////
+
+//==============================================================================
+
+static ptImageSpotModel *LocalSpotModel = nullptr;
+static ptImageSpotModel *RepairSpotModel = nullptr;
+
+ptProcessor::ptProcessor(PReportProgressFunc AReportProgress)
+{
+  // We work with a callback to avoid dependency on ptMainWindow
+  m_ReportProgress = AReportProgress;
+
+  // The DcRaw
+  m_DcRaw          = NULL;
+
+  // Cached version at different points.
+  m_Image_AfterDcRaw       = NULL;
+  m_Image_AfterLocalEdit   = NULL;
+  m_Image_AfterGeometry    = NULL;
+  m_Image_AfterRGB         = NULL;
+  m_Image_AfterLabCC       = NULL;
+  m_Image_AfterLabSN       = NULL;
+  m_Image_AfterLabEyeCandy = NULL;
+  m_Image_AfterEyeCandy    = NULL;
+
+  m_Image_DetailPreview    = NULL;
+
+  m_Image_TextureOverlay   = NULL;
+  m_Image_TextureOverlay2  = NULL;
+
+  m_AutoExposureValue      = 0.0;
+
+  // Exif Data and Buffer
+  m_ExifBuffer             = NULL;
+  m_ExifBufferLength       = 0;
+
+  m_ScaleFactor            = 0;
+}
+
+//==============================================================================
+
+ptProcessor::~ptProcessor() {
+  // Tricky delete stuff as some pointer might be shared.
+  QList <ptImage*> PointerList;
+  PointerList << m_Image_AfterDcRaw
+              << m_Image_AfterLocalEdit
+              << m_Image_AfterGeometry
+              << m_Image_AfterRGB
+              << m_Image_AfterLabCC
+              << m_Image_AfterLabSN
+              << m_Image_AfterLabEyeCandy
+              << m_Image_AfterEyeCandy
+              << m_Image_DetailPreview
+              << m_Image_TextureOverlay
+              << m_Image_TextureOverlay2;
+  while(PointerList.size()) {
+    if (PointerList[0] != NULL) {
+      ptImage* CurrentPointer = PointerList[0];
+      delete CurrentPointer;
+      // Remove all elements equal to CurrentPointer.
+      short Index=0;
+      while (Index<PointerList.size()) {
+        if (CurrentPointer == PointerList[Index]) {
+          PointerList.removeAt(Index);
+        } else {
+          Index++;
+        }
+      }
+    } else {
+      PointerList.removeAt(0);
+    }
+  }
+  if (m_ExifBuffer) FREE(m_ExifBuffer);
+}
+
+//==============================================================================
 
 void ptProcessor::Run(short Phase,
                       short SubPhase,
@@ -160,7 +183,7 @@ void ptProcessor::Run(short Phase,
     PreviousProcessorMode = ProcessorMode;
 
     // Purposes of timing the lenghty operations.
-    m_RunTimer.start();
+    FRunTimer.start();
 
     double  ExposureFactor;
     QString CameraProfileName = Settings->GetString("CameraColorProfile");
@@ -179,6 +202,7 @@ void ptProcessor::Run(short Phase,
     }
 
     switch(Phase) {
+      //------------------------------------------------------------------------------
       case ptProcessorPhase_Raw:
 
         Settings->ToDcRaw(m_DcRaw);
@@ -186,7 +210,7 @@ void ptProcessor::Run(short Phase,
         // The halfsize setting is only used in Gui interactive.
         // (or thumbnail generation)
         // Otherwise we always start from the full image to operate upon.
-        // TODO Improvement possible if final image is less than half
+        // TODO: Improvement possible if final image is less than half
         // the size of the original. With Crop/Rotate/Resize maybe non-trivial
         if (ProcessorMode == ptProcessorMode_Full) {
           m_DcRaw->m_UserSetting_HalfSize = 0;
@@ -206,7 +230,7 @@ void ptProcessor::Run(short Phase,
           m_ReportProgress(tr("Loading Bitmap"));
 
           TRACEMAIN("Start opening bitmap at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           if (!m_Image_AfterDcRaw) m_Image_AfterDcRaw = new ptImage();
 
@@ -230,11 +254,11 @@ void ptProcessor::Run(short Phase,
             // Read Exif
             ReadExifBuffer();
           }
-          TRACEMAIN("Opened bitmap at %d ms.", m_RunTimer.elapsed());
+          TRACEMAIN("Opened bitmap at %d ms.", FRunTimer.elapsed());
 
         } else { // we have a RAW image!
 
-          TRACEMAIN("Starting DcRaw at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Starting DcRaw at %d ms.",FRunTimer.elapsed());
           switch (SubPhase) {
             case ptProcessorPhase_Load :
 
@@ -262,7 +286,7 @@ void ptProcessor::Run(short Phase,
                 ReadExifBuffer();
               }
               TRACEMAIN("Opened RAW at %d ms.",
-                        m_RunTimer.elapsed());
+                        FRunTimer.elapsed());
 
             case ptProcessorPhase_Demosaic :
 
@@ -272,7 +296,7 @@ void ptProcessor::Run(short Phase,
               m_DcRaw->RunDcRaw_Phase2(Settings->GetInt("JobMode"));
 
               TRACEMAIN("Done Color Scaling and Interpolation at %d ms.",
-                        m_RunTimer.elapsed());
+                        FRunTimer.elapsed());
 
             case ptProcessorPhase_Highlights :
 
@@ -281,7 +305,7 @@ void ptProcessor::Run(short Phase,
               // Settings->GetInt("JobMode") causes NoCache
               m_DcRaw->RunDcRaw_Phase3(Settings->GetInt("JobMode"));
 
-              TRACEMAIN("Done Highlights at %d ms.",m_RunTimer.elapsed());
+              TRACEMAIN("Done Highlights at %d ms.",FRunTimer.elapsed());
 
               // Already here we want the output profile.
               // It will be applied, not in the pipe but on a
@@ -308,12 +332,12 @@ void ptProcessor::Run(short Phase,
                   Settings->SetValue("CameraColorProfile",CameraProfileName);
                   TRACEKEYVALS("Found adobe profile","%s",
                                CameraProfileName.toAscii().data());
-                  TRACEMAIN("Found profile at %d ms.",m_RunTimer.elapsed());
+                  TRACEMAIN("Found profile at %d ms.",FRunTimer.elapsed());
                 } else {
                   ptMessageBox::information(0,
                             tr("Profile not found"),
                             tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
-                  TRACEMAIN("Not found profile at %d ms.",m_RunTimer.elapsed());
+                  TRACEMAIN("Not found profile at %d ms.",FRunTimer.elapsed());
                   Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
                 }
               } else if (Settings->GetInt("CameraColor") == ptCameraColor_Profile) {
@@ -325,7 +349,7 @@ void ptProcessor::Run(short Phase,
                     ptMessageBox::information(0,
                               tr("Profile not found"),
                               tr("Profile not found. Reverting to Adobe Matrix.\nYou could try an external profile."));
-                    TRACEMAIN("Not found profile at %d ms.",m_RunTimer.elapsed());
+                    TRACEMAIN("Not found profile at %d ms.",FRunTimer.elapsed());
                     Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
                   }
               } else if (Settings->GetInt("CameraColor") == ptCameraColor_Flat) {
@@ -339,9 +363,9 @@ void ptProcessor::Run(short Phase,
                     PathInfo.isReadable()) {
                   CameraProfileName = PathInfo.absoluteFilePath();
                   Settings->SetValue("CameraColorProfile",CameraProfileName);
-                  TRACEMAIN("Found profile at %d ms.",m_RunTimer.elapsed());
+                  TRACEMAIN("Found profile at %d ms.",FRunTimer.elapsed());
                 } else {
-                  TRACEMAIN("Not found profile at %d ms.",m_RunTimer.elapsed());
+                  TRACEMAIN("Not found profile at %d ms.",FRunTimer.elapsed());
                   printf("profile %s\n\n",InputFileName.toAscii().data());
                   Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
                 }
@@ -367,7 +391,7 @@ void ptProcessor::Run(short Phase,
                 Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
 
               TRACEMAIN("Done m_Image_AfterDcRaw transfer to GUI at %d ms.",
-                         m_RunTimer.elapsed());
+                         FRunTimer.elapsed());
 
 
             default : // Should not happen.
@@ -375,13 +399,19 @@ void ptProcessor::Run(short Phase,
           }
         }
 
+      //------------------------------------------------------------------------------
+
+      case ptProcessorPhase_LocalEdit:
+        RunLocalEdit();
+
+      //------------------------------------------------------------------------------
 
       case ptProcessorPhase_Geometry:
         RunGeometry();
 
+      //------------------------------------------------------------------------------
 
       case ptProcessorPhase_RGB : // Run everything in RGB.
-
         // Geometry block
         // This will skip the rest of the pipe, to make geometry adjustments easier.
 
@@ -702,7 +732,7 @@ void ptProcessor::Run(short Phase,
             Settings->GetDouble("RGBTextureContrastOpacity"),
             Settings->GetDouble("RGBTextureContrastEdgeControl"),
             Settings->GetDouble("RGBTextureContrastMasking")*m_ScaleFactor);
-          TRACEMAIN("Done RGB texture contrast at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done RGB texture contrast at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -776,7 +806,7 @@ void ptProcessor::Run(short Phase,
 
           m_Image_AfterRGB->ApplyCurve(Curve[ptCurveChannel_RGB],7);
 
-          TRACEMAIN("Done RGB Curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done RGB Curve at %d ms.",FRunTimer.elapsed());
 
         }
 
@@ -814,7 +844,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabCC->ShadowsHighlights(Curve[ptCurveChannel_ShadowsHighlights],
@@ -837,7 +867,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabCC->LMHLightRecovery(
@@ -858,7 +888,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabCC->LMHLightRecovery(
@@ -882,7 +912,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabCC->DRC(Settings->GetDouble("DRCAlpha"),
@@ -903,13 +933,13 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
           m_Image_AfterLabCC->ApplyTextureCurve(Curve[ptCurveChannel_Texture],
                                                 Settings->GetInt("TextureCurveType"),
                                                 (int) (logf(m_ScaleFactor)/logf(0.5)));
-          TRACEMAIN("Done texture curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done texture curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -925,7 +955,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
           m_Image_AfterLabCC->TextureContrast(Settings->GetDouble("TextureContrast1Threshold")*m_ScaleFactor,
@@ -934,7 +964,7 @@ void ptProcessor::Run(short Phase,
             Settings->GetDouble("TextureContrast1Opacity"),
             Settings->GetDouble("TextureContrast1EdgeControl"),
             Settings->GetDouble("TextureContrast1Masking")*m_ScaleFactor);
-          TRACEMAIN("Done texture contrast 1 at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done texture contrast 1 at %d ms.",FRunTimer.elapsed());
         }
 
         if (Settings->ToolIsActive("TabLABTexture2")) {
@@ -946,7 +976,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
           m_Image_AfterLabCC->TextureContrast(Settings->GetDouble("TextureContrast2Threshold")*m_ScaleFactor,
@@ -955,7 +985,7 @@ void ptProcessor::Run(short Phase,
             Settings->GetDouble("TextureContrast2Opacity"),
             Settings->GetDouble("TextureContrast2EdgeControl"),
             Settings->GetDouble("TextureContrast2Masking")*m_ScaleFactor);
-          TRACEMAIN("Done texture contrast 2 at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done texture contrast 2 at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -971,7 +1001,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabCC->Microcontrast(
@@ -994,7 +1024,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabCC->Microcontrast(
@@ -1021,7 +1051,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabCC->Localcontrast(Settings->GetInt("LC1Radius")*m_ScaleFactor,
@@ -1039,7 +1069,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabCC->Localcontrast(Settings->GetInt("LC2Radius")*m_ScaleFactor,
@@ -1061,7 +1091,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
            m_Image_AfterLabCC->SigmoidalContrast(Settings->GetDouble("ContrastAmount"),
@@ -1082,7 +1112,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabCC->SigmoidalContrast(Settings->GetDouble("SaturationAmount"),0.5,6);
@@ -1101,7 +1131,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabCC->ColorBoost(Settings->GetDouble("ColorBoostValueA"),Settings->GetDouble("ColorBoostValueB"));
@@ -1119,7 +1149,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabCC->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           //~ double BP = Settings->GetDouble("LabLevelsBlackPoint");
@@ -1153,13 +1183,13 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabSN->DenoiseImpulse(Settings->GetDouble("ImpulseDenoiseThresholdL"),
                                              Settings->GetDouble("ImpulseDenoiseThresholdAB"));
 
-          TRACEMAIN("Done impulse denoise at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done impulse denoise at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1174,7 +1204,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabSN->EAWChannel((int)(logf(m_ScaleFactor)/logf(0.5)),
@@ -1185,7 +1215,7 @@ void ptProcessor::Run(short Phase,
                                          Settings->GetDouble("EAWLevel5"),
                                          Settings->GetDouble("EAWLevel6"));
 
-          TRACEMAIN("Done EAW at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done EAW at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1202,7 +1232,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
         TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
 
@@ -1222,7 +1252,7 @@ void ptProcessor::Run(short Phase,
                Settings->GetInt("GREYCLabMaskType"),
                Settings->GetDouble("GREYCLabOpacity"));
 
-          TRACEMAIN("Done GreyCStoration on L at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done GreyCStoration on L at %d ms.",FRunTimer.elapsed());
 
         } else if (Settings->ToolIsActive("TabLABGreyC") &&
                    Settings->GetInt("GREYCLab") == ptEnable_ShowMask) {
@@ -1233,7 +1263,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
           TRACEMAIN("Done conversion to LAB at %d ms.",
-          m_RunTimer.elapsed());
+          FRunTimer.elapsed());
 
           }
           ptCimgEdgeTensors(m_Image_AfterLabSN,
@@ -1258,7 +1288,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabSN->DeFringe(Settings->GetDouble("DefringeRadius")*m_ScaleFactor,
@@ -1270,7 +1300,7 @@ void ptProcessor::Run(short Phase,
                                        (Settings->GetInt("DefringeColor5")<<4) +
                                        (Settings->GetInt("DefringeColor6")<<5),
                                        Settings->GetDouble("DefringeShift"));
-          TRACEMAIN("Done defringe at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done defringe at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1287,7 +1317,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabSN->WaveletDenoise(
@@ -1300,7 +1330,7 @@ void ptProcessor::Run(short Phase,
               Settings->GetDouble("WaveletDenoiseLAlpha"),
               Settings->GetDouble("WaveletDenoiseLSigma"));
           // The scaling of the inputvalue is artificial, to get roughly the same image in each pipesize with the same value...
-          TRACEMAIN("Done Luminance wavelet denoise at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done Luminance wavelet denoise at %d ms.",FRunTimer.elapsed());
         }
 
         if (Settings->GetDouble("WaveletDenoiseA") &&
@@ -1313,7 +1343,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
 
@@ -1322,7 +1352,7 @@ void ptProcessor::Run(short Phase,
                                   Settings->GetDouble("WaveletDenoiseA")/((logf(m_ScaleFactor)/logf(0.5))+1.0),
           Settings->GetDouble("WaveletDenoiseASoftness"));
 
-          TRACEMAIN("Done A wavelet denoise at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done A wavelet denoise at %d ms.",FRunTimer.elapsed());
         }
 
         if (Settings->GetDouble("WaveletDenoiseB") &&
@@ -1335,7 +1365,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
 
@@ -1344,7 +1374,7 @@ void ptProcessor::Run(short Phase,
                                   Settings->GetDouble("WaveletDenoiseB")/((logf(m_ScaleFactor)/logf(0.5))+1.0),
               Settings->GetDouble("WaveletDenoiseBSoftness"));
 
-          TRACEMAIN("Done B wavelet denoise at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done B wavelet denoise at %d ms.",FRunTimer.elapsed());
         }
 
         // Bilateral filter on L
@@ -1357,7 +1387,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabSN->BilateralDenoise(Settings->GetDouble("BilateralLSigmaS")*m_ScaleFactor,
@@ -1365,7 +1395,7 @@ void ptProcessor::Run(short Phase,
                  Settings->GetDouble("BilateralLOpacity"),
                  Settings->GetDouble("BilateralLUseMask")*m_ScaleFactor);
 
-          TRACEMAIN("Done Luminance denoise at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done Luminance denoise at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1381,7 +1411,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
           m_Image_AfterLabSN->ApplyDenoiseCurve(Settings->GetDouble("DenoiseCurveSigmaS")*m_ScaleFactor,
@@ -1389,7 +1419,7 @@ void ptProcessor::Run(short Phase,
                                                 Curve[ptCurveChannel_Denoise2],
                                                 Settings->GetInt("Denoise2CurveType"));
 
-          TRACEMAIN("Done denoise curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done denoise curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1404,7 +1434,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabSN->dirpyrLab_denoise(
@@ -1414,7 +1444,7 @@ void ptProcessor::Run(short Phase,
               Settings->GetInt("PyrDenoiseLevels")/*,
               (int)(logf(m_ScaleFactor)/logf(0.5))*/);
 
-          TRACEMAIN("Done Pyramid denoise at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done Pyramid denoise at %d ms.",FRunTimer.elapsed());
         }
 
         // Bilateral filter on AB
@@ -1428,7 +1458,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           ptFastBilateralChannel(m_Image_AfterLabSN,
@@ -1437,7 +1467,7 @@ void ptProcessor::Run(short Phase,
                2,
                2);
 
-          TRACEMAIN("Done A denoise at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done A denoise at %d ms.",FRunTimer.elapsed());
         }
 
         if (Settings->ToolIsActive("TabColorDenoise") &&
@@ -1450,7 +1480,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           ptFastBilateralChannel(m_Image_AfterLabSN,
@@ -1459,7 +1489,7 @@ void ptProcessor::Run(short Phase,
                2,
                4);
 
-          TRACEMAIN("Done B denoise at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done B denoise at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1475,7 +1505,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
           m_Image_AfterLabSN->MLMicroContrast(0.15,
@@ -1486,7 +1516,7 @@ void ptProcessor::Run(short Phase,
 
           m_Image_AfterLabSN->HotpixelReduction(Settings->GetDouble("DetailCurveHotpixel"));
 
-          TRACEMAIN("Done detail curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done detail curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1503,7 +1533,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabSN->GradientSharpen(Settings->GetInt("GradientSharpenPasses"),
@@ -1515,7 +1545,7 @@ void ptProcessor::Run(short Phase,
 
           m_Image_AfterLabSN->HotpixelReduction(Settings->GetDouble("LabHotpixel"));
 
-          TRACEMAIN("Done Gradient Sharpen at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done Gradient Sharpen at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1531,7 +1561,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           ptWienerFilterChannel(m_Image_AfterLabSN,
@@ -1541,7 +1571,7 @@ void ptProcessor::Run(short Phase,
                                 Settings->GetDouble("WienerFilterAmount"),
                                 Settings->GetInt("WienerFilterUseEdgeMask"));
 
-          TRACEMAIN("Done Wiener Filter at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done Wiener Filter at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1557,7 +1587,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           ptCimgSharpen(m_Image_AfterLabSN,
@@ -1566,7 +1596,7 @@ void ptProcessor::Run(short Phase,
                         Settings->GetInt("InverseDiffusionIterations"),
                         Settings->GetInt("InverseDiffusionUseEdgeMask"));
 
-          TRACEMAIN("Done Inverse Diffusion Sharpen at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done Inverse Diffusion Sharpen at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1582,7 +1612,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
 
@@ -1595,7 +1625,7 @@ void ptProcessor::Run(short Phase,
                                           Settings->GetDouble("USMAmount"),
                                           Settings->GetDouble("USMThreshold"));
 
-          TRACEMAIN("Done USM at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done USM at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1612,7 +1642,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
 
@@ -1621,7 +1651,7 @@ void ptProcessor::Run(short Phase,
                                      -0.3,
                                      Settings->GetDouble("HighpassDenoise")/((logf(m_ScaleFactor)/logf(0.5))+1.0));
 
-          TRACEMAIN("Done Highpass at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done Highpass at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1639,7 +1669,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
           m_Image_AfterLabSN->Grain(Settings->GetDouble("Grain1Strength"),
@@ -1650,7 +1680,7 @@ void ptProcessor::Run(short Phase,
                                     Settings->GetDouble("Grain1LowerLimit"),
                                     Settings->GetDouble("Grain1UpperLimit"),
                                     (int)(logf(m_ScaleFactor)/logf(0.5)));
-          TRACEMAIN("Done film grain 1 at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done film grain 1 at %d ms.",FRunTimer.elapsed());
         }
 
         if (Settings->ToolIsActive("TabLABFilmGrain") &&
@@ -1663,7 +1693,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
           m_Image_AfterLabSN->Grain(Settings->GetDouble("Grain2Strength"),
@@ -1674,7 +1704,7 @@ void ptProcessor::Run(short Phase,
                                     Settings->GetDouble("Grain2LowerLimit"),
                                     Settings->GetDouble("Grain2UpperLimit"),
                                     (int)(logf(m_ScaleFactor)/logf(0.5)));
-          TRACEMAIN("Done film grain 2 at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done film grain 2 at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1688,7 +1718,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabSN->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
           m_ReportProgress(tr("View LAB"));
 
@@ -1746,7 +1776,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabEyeCandy->Outline(Settings->GetInt("OutlineMode"),
@@ -1756,7 +1786,7 @@ void ptProcessor::Run(short Phase,
                                             Settings->GetDouble("OutlineBlurRadius"),
                                             Settings->GetInt("OutlineSwitchLayer"));
 
-          TRACEMAIN("Done Outline at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done Outline at %d ms.",FRunTimer.elapsed());
         }
 
         //***************************************************************************
@@ -1770,12 +1800,12 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabEyeCandy->ApplyLByHueCurve(Curve[ptCurveChannel_LByHue]);
 
-          TRACEMAIN("Done L by Hue Curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done L by Hue Curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1790,14 +1820,14 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabEyeCandy->ApplySaturationCurve(Curve[ptCurveChannel_Saturation],
                                                          Settings->GetInt("SatCurveMode"),
                                                          Settings->GetInt("SatCurveType"));
 
-          TRACEMAIN("Done saturation Curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done saturation Curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1812,13 +1842,13 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabEyeCandy->ApplyHueCurve(Curve[ptCurveChannel_Hue],
                                                   Settings->GetInt("HueCurveType"));
 
-          TRACEMAIN("Done hue Curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done hue Curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1834,13 +1864,13 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
 
           m_Image_AfterLabEyeCandy->ApplyCurve(Curve[ptCurveChannel_L],1);
 
-          TRACEMAIN("Done L Curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done L Curve at %d ms.",FRunTimer.elapsed());
 
         }
 
@@ -1858,13 +1888,13 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
 
           m_Image_AfterLabEyeCandy->ApplyCurve(Curve[ptCurveChannel_a],2);
 
-          TRACEMAIN("Done a Curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done a Curve at %d ms.",FRunTimer.elapsed());
 
         }
 
@@ -1882,13 +1912,13 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
 
           }
 
           m_Image_AfterLabEyeCandy->ApplyCurve(Curve[ptCurveChannel_b],4);
 
-          TRACEMAIN("Done b Curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done b Curve at %d ms.",FRunTimer.elapsed());
 
         }
 
@@ -1906,7 +1936,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_Image_AfterLabEyeCandy->Colorcontrast(
@@ -1927,7 +1957,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_ReportProgress(tr("LAB tone adjustments 1"));
@@ -1949,7 +1979,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_ReportProgress(tr("LAB tone adjustments 2"));
@@ -1976,7 +2006,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
           m_ReportProgress(tr("Luminance and saturation adjustment"));
 
@@ -2011,7 +2041,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_ReportProgress(tr("LAB toning"));
@@ -2030,7 +2060,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_ReportProgress(tr("LAB shadows toning"));
@@ -2050,7 +2080,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_ReportProgress(tr("LAB midtones toning"));
@@ -2070,7 +2100,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_ReportProgress(tr("LAB highlights toning"));
@@ -2092,7 +2122,7 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterLabEyeCandy->RGBToLab();
 
             TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
+                      FRunTimer.elapsed());
           }
 
           m_ReportProgress(tr("Lab Vignette"));
@@ -2123,7 +2153,7 @@ void ptProcessor::Run(short Phase,
         if (m_Image_AfterEyeCandy->m_ColorSpace == ptSpace_Lab) {
           m_ReportProgress(tr("Lab to RGB"));
           m_Image_AfterEyeCandy->LabToRGB(Settings->GetInt("WorkColor"));
-          TRACEMAIN("Done conversion to RGB at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done conversion to RGB at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -2477,7 +2507,7 @@ void ptProcessor::Run(short Phase,
                                              Settings->GetDouble("GradBlur1CenterX"),
                                              Settings->GetDouble("GradBlur1CenterY"));
 
-          TRACEMAIN("Done gradual blur 1 at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done gradual blur 1 at %d ms.",FRunTimer.elapsed());
         }
 
         //***************************************************************************
@@ -2496,7 +2526,7 @@ void ptProcessor::Run(short Phase,
                                              Settings->GetDouble("GradBlur2CenterX"),
                                              Settings->GetDouble("GradBlur2CenterY"));
 
-          TRACEMAIN("Done gradual blur 2 at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done gradual blur 2 at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -2571,7 +2601,7 @@ void ptProcessor::Run(short Phase,
 
           m_Image_AfterEyeCandy->ApplyCurve(Curve[ptCurveChannel_R],1);
 
-          TRACEMAIN("Done R Curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done R Curve at %d ms.",FRunTimer.elapsed());
 
         }
 
@@ -2581,7 +2611,7 @@ void ptProcessor::Run(short Phase,
 
           m_Image_AfterEyeCandy->ApplyCurve(Curve[ptCurveChannel_G],2);
 
-          TRACEMAIN("Done G Curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done G Curve at %d ms.",FRunTimer.elapsed());
 
         }
 
@@ -2591,7 +2621,7 @@ void ptProcessor::Run(short Phase,
 
           m_Image_AfterEyeCandy->ApplyCurve(Curve[ptCurveChannel_B],4);
 
-          TRACEMAIN("Done B Curve at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done B Curve at %d ms.",FRunTimer.elapsed());
 
         }
 
@@ -2604,12 +2634,12 @@ void ptProcessor::Run(short Phase,
 
       case ptProcessorPhase_Output : // Run Output.
 
-        TRACEMAIN("Done pipe processing at %d ms.",m_RunTimer.elapsed());
+        TRACEMAIN("Done pipe processing at %d ms.",FRunTimer.elapsed());
 
         break;
 
       default : // Should not happen.
-        assert(0);
+        assert(!"Invalid processor phase in ptProcessor::Run()");
     }
 
     m_ReportProgress(tr("Ready"));
@@ -2620,16 +2650,12 @@ void ptProcessor::Run(short Phase,
   }
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Process Geometry stage
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptProcessor::RunGeometry(const short StopBefore) {
-  if (Settings->GetInt("IsRAW")==0) {
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
+void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
+  if (Settings->GetInt("IsRAW") == 0) {
+    // image is a bitmap
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
       m_ReportProgress(tr("Transfer Bitmap"));
     }
 
@@ -2638,16 +2664,17 @@ void ptProcessor::RunGeometry(const short StopBefore) {
     // 0 for full, 1 for half, 2 for quarter (useable in >> operators)
     Settings->SetValue("Scaled",Settings->GetInt("PipeSize"));
 
-    if (Settings->GetInt("JobMode")==1) // FinalRun!
+    if (Settings->GetInt("JobMode") == 1) // FinalRun!
       Settings->SetValue("Scaled",0);
 
-    if (!m_Image_AfterGeometry) m_Image_AfterGeometry = new ptImage();
+    if (!m_Image_AfterLocalEdit)
+      m_Image_AfterLocalEdit = new ptImage();
 
-    m_Image_AfterGeometry->SetScaled(m_Image_AfterDcRaw,
+    m_Image_AfterLocalEdit->SetScaled(m_Image_AfterDcRaw,
                                     Settings->GetInt("Scaled"));
 
     if (Settings->GetInt("DetailViewActive") == 1) {
-      m_Image_AfterGeometry->Crop(Settings->GetInt("DetailViewCropX") >> Settings->GetInt("Scaled"),
+      m_Image_AfterLocalEdit->Crop(Settings->GetInt("DetailViewCropX") >> Settings->GetInt("Scaled"),
                                   Settings->GetInt("DetailViewCropY") >> Settings->GetInt("Scaled"),
                                   Settings->GetInt("DetailViewCropW") >> Settings->GetInt("Scaled"),
                                   Settings->GetInt("DetailViewCropH") >> Settings->GetInt("Scaled"));
@@ -2655,32 +2682,72 @@ void ptProcessor::RunGeometry(const short StopBefore) {
 
     // The full image width and height is already set.
     // This is the current size:
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
-      TRACEKEYVALS("ImageW","%d",m_Image_AfterGeometry->m_Width);
-      TRACEKEYVALS("ImageH","%d",m_Image_AfterGeometry->m_Height);
-      TRACEMAIN("Done bitmap transfer at %d ms.", m_RunTimer.elapsed());
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
+      TRACEKEYVALS("ImageW","%d",m_Image_AfterLocalEdit->m_Width);
+      TRACEKEYVALS("ImageH","%d",m_Image_AfterLocalEdit->m_Height);
+      TRACEMAIN("Done bitmap transfer at %d ms.", FRunTimer.elapsed());
     }
 
   } else {
+    // image is raw
     if (Settings->GetInt("JobMode")) {
-      m_Image_AfterGeometry = m_Image_AfterDcRaw; // Job mode -> no cache
+      m_Image_AfterLocalEdit = m_Image_AfterDcRaw; // Job mode -> no cache
     } else {
-      if (!m_Image_AfterGeometry) m_Image_AfterGeometry = new ptImage();
-      m_Image_AfterGeometry->Set(m_Image_AfterDcRaw);
+      if (!m_Image_AfterLocalEdit) m_Image_AfterLocalEdit = new ptImage();
+      m_Image_AfterLocalEdit->Set(m_Image_AfterDcRaw);
     }
   }
 
+//  m_Image_AfterLocalEdit->RGBToLch();
+
+  // execute local adjust spots
+  if (StopBefore == ptProcessorStopBefore::LocalAdjust) return;
+  if (StopBefore == ptProcessorStopBefore::NoStop) {
+    m_ReportProgress(tr("Local spot adjustments"));
+  }
+
+  assert(LocalSpotModel != nullptr);
+  LocalSpotModel->RunFiltering(m_Image_AfterLocalEdit);
+
+  if (StopBefore == ptProcessorStopBefore::NoStop) {
+    TRACEMAIN("Done local spot adjustments at %d ms.",FRunTimer.elapsed());
+  }
+
+
+  // execute spot repair
+  if (StopBefore == ptProcessorStopBefore::SpotRepair) return;
+  if (StopBefore == ptProcessorStopBefore::NoStop) {
+    m_ReportProgress(tr("Spot repair"));
+  }
+
+  assert(RepairSpotModel != nullptr);
+  RepairSpotModel->RunFiltering(m_Image_AfterLocalEdit);
+
+  if (StopBefore == ptProcessorStopBefore::NoStop) {
+    TRACEMAIN("Done spot repair at %d ms.",FRunTimer.elapsed());
+  }
+}
+
+
+//==============================================================================
+
+void ptProcessor::RunGeometry(ptProcessorStopBefore StopBefore) {
+  if (!m_Image_AfterGeometry) m_Image_AfterGeometry = new ptImage();
+// TODO: Set() fails with an Lch image. Fix and re-enable colour conversions.
+  m_Image_AfterGeometry->Set(m_Image_AfterLocalEdit);
+
+  // Output of “Local” tab is Lch, but we need RGB for the “Geometry” tab.
+//  m_Image_AfterGeometry->LchToRGB(Settings->GetInt("WorkColor"));
 
   // Often used.
   int TmpScaled = Settings->GetInt("Scaled");
-
 
   //***************************************************************************
   // Lensfun
   if (Settings->ToolIsActive("TabLensfunCA") || Settings->ToolIsActive("TabLensfunVignette") ||
       Settings->ToolIsActive("TabLensfunDistortion") || Settings->ToolIsActive("TabLensfunGeometry") )
   {
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
       m_ReportProgress(tr("Lensfun corrections"));
     }
     int modflags = 0;
@@ -2820,8 +2887,8 @@ void ptProcessor::RunGeometry(const short StopBefore) {
     m_Image_AfterGeometry->Lensfun(modflags, LfunData);
     LfunData->Destroy();
 
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
-      TRACEMAIN("Done Lensfun corrections at %d ms.",m_RunTimer.elapsed());
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
+      TRACEMAIN("Done Lensfun corrections at %d ms.",FRunTimer.elapsed());
     }
   }
 
@@ -2830,7 +2897,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   // Defish (dedicated lensfun)
   if (Settings->ToolIsActive("TabDefish"))
   {
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
       m_ReportProgress(tr("Defish correction"));
     }
 
@@ -2873,15 +2940,15 @@ void ptProcessor::RunGeometry(const short StopBefore) {
     m_Image_AfterGeometry->Lensfun(modflags, LfunData);
     LfunData->Destroy();
 
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
-      TRACEMAIN("Done defish correction at %d ms.",m_RunTimer.elapsed());
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
+      TRACEMAIN("Done defish correction at %d ms.",FRunTimer.elapsed());
     }
   }
 
 
   //***************************************************************************
   // Stop here when activating rotate tool (the draw-line-to-get-angle mode)
-  if (StopBefore == ptProcessorStopBefore_Rotate) {
+  if (StopBefore == ptProcessorStopBefore::Rotate) {
     return;
   }
 
@@ -2889,7 +2956,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   //***************************************************************************
   // Rotation
   if (Settings->ToolIsActive("TabRotation")) {
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
       m_ReportProgress(tr("Perspective transform"));
     }
 
@@ -2900,8 +2967,8 @@ void ptProcessor::RunGeometry(const short StopBefore) {
                                            Settings->GetDouble("PerspectiveScaleX"),
                                            Settings->GetDouble("PerspectiveScaleY"));
 
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
-      TRACEMAIN("Done perspective at %d ms.",m_RunTimer.elapsed());
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
+      TRACEMAIN("Done perspective at %d ms.",FRunTimer.elapsed());
     }
   }
 
@@ -2911,7 +2978,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   Settings->SetValue("RotateW",m_Image_AfterGeometry->m_Width << TmpScaled);
   Settings->SetValue("RotateH",m_Image_AfterGeometry->m_Height<< TmpScaled);
 
-  if (StopBefore == ptProcessorStopBefore_NoStop) {
+  if (StopBefore == ptProcessorStopBefore::NoStop) {
     TRACEKEYVALS("RotateW","%d",Settings->GetInt("RotateW"));
     TRACEKEYVALS("RotateH","%d",Settings->GetInt("RotateH"));
   }
@@ -2919,7 +2986,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
 
   //***************************************************************************
   // Stop here when activating crop tool
-  if (StopBefore == ptProcessorStopBefore_Crop) {
+  if (StopBefore == ptProcessorStopBefore::Crop) {
     return;
   }
 
@@ -2941,7 +3008,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
       Settings->SetValue("CropH",0);
       Settings->SetValue("Crop",0);
     } else {
-      if (StopBefore == ptProcessorStopBefore_NoStop) {
+      if (StopBefore == ptProcessorStopBefore::NoStop) {
         TRACEKEYVALS("CropW","%d",Settings->GetInt("CropW"));
         TRACEKEYVALS("CropH","%d",Settings->GetInt("CropH"));
         m_ReportProgress(tr("Cropping"));
@@ -2952,13 +3019,13 @@ void ptProcessor::RunGeometry(const short StopBefore) {
                                  Settings->GetInt("CropW") >> TmpScaled,
                                  Settings->GetInt("CropH") >> TmpScaled);
 
-      if (StopBefore == ptProcessorStopBefore_NoStop) {
-        TRACEMAIN("Done cropping at %d ms.",m_RunTimer.elapsed());
+      if (StopBefore == ptProcessorStopBefore::NoStop) {
+        TRACEMAIN("Done cropping at %d ms.",FRunTimer.elapsed());
       }
     }
   }
 
-  if (StopBefore == ptProcessorStopBefore_NoStop) {
+  if (StopBefore == ptProcessorStopBefore::NoStop) {
     TRACEKEYVALS("CropW","%d",m_Image_AfterGeometry->m_Width << TmpScaled);
     TRACEKEYVALS("CropH","%d",m_Image_AfterGeometry->m_Height<< TmpScaled);
   }
@@ -2970,7 +3037,7 @@ void ptProcessor::RunGeometry(const short StopBefore) {
   //***************************************************************************
   // Liquid rescale
   if (Settings->ToolIsActive("TabLiquidRescale")) {
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
       m_ReportProgress(tr("Seam carving"));
     }
 
@@ -2985,15 +3052,15 @@ void ptProcessor::RunGeometry(const short StopBefore) {
                                            Settings->GetInt("LqrEnergy"),
                                            Settings->GetInt("LqrVertFirst"));
     }
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
-      TRACEMAIN("Done seam carving at %d ms.",m_RunTimer.elapsed());
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
+      TRACEMAIN("Done seam carving at %d ms.",FRunTimer.elapsed());
     }
   }
 
   //***************************************************************************
   // Resize
   if (Settings->ToolIsActive("TabResize")) {
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
       m_ReportProgress(tr("Resize image"));
     }
 
@@ -3005,37 +3072,38 @@ void ptProcessor::RunGeometry(const short StopBefore) {
 
     m_ScaleFactor = (float) m_Image_AfterGeometry->m_Width/WidthIn/powf(2.0, Settings->GetInt("Scaled"));
 
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
-      TRACEMAIN("Done resize at %d ms.",m_RunTimer.elapsed());
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
+      TRACEMAIN("Done resize at %d ms.",FRunTimer.elapsed());
     }
   }
 
   //***************************************************************************
   // Flip
   if (Settings->ToolIsActive("TabFlip")) {
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
       m_ReportProgress(tr("Flip image"));
     }
 
     m_Image_AfterGeometry->Flip(Settings->GetInt("FlipMode"));
 
-    if (StopBefore == ptProcessorStopBefore_NoStop) {
-      TRACEMAIN("Done flip at %d ms.",m_RunTimer.elapsed());
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
+      TRACEMAIN("Done flip at %d ms.",FRunTimer.elapsed());
     }
   }
 
 }
 
+//==============================================================================
 
+void ptProcessor::setSpotModels(ptImageSpotModel *ALocalSpotModel, ptImageSpotModel *ARepairSpotModel)
+{
+  LocalSpotModel = ALocalSpotModel;
+  RepairSpotModel = ARepairSpotModel;
+}
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ReadExifBuffer
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptProcessor::ReadExifBuffer() {
-
   if (Settings->GetStringList("InputFileNameList").size() == 0) return;
 
   if (!ptImageHelper::ReadExif(Settings->GetStringList("InputFileNameList")[0],
@@ -3090,15 +3158,10 @@ void ptProcessor::ReadExifBuffer() {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// CalculateAutoExposure
+//==============================================================================
+
 // There should be Settings->m_WhiteFraction % pixels above 90%
-//
-////////////////////////////////////////////////////////////////////////////////
-
 double ptProcessor::CalculateAutoExposure(ptImage *Image) {
-
   uint16_t White = Image->CalculateFractionLevel(Settings->GetInt("WhiteFraction")/100.0,7);
   TRACEKEYVALS("White","%d",White);
   // Account also for the ExposureNormalization that will be added.
@@ -3113,43 +3176,5 @@ double ptProcessor::CalculateAutoExposure(ptImage *Image) {
   // Since now the ExposureNormalization is not used all the time.
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
-ptProcessor::~ptProcessor() {
-  // Tricky delete stuff as some pointer might be shared.
-  QList <ptImage*> PointerList;
-  PointerList << m_Image_AfterDcRaw
-              << m_Image_AfterGeometry
-              << m_Image_AfterRGB
-              << m_Image_AfterLabCC
-              << m_Image_AfterLabSN
-              << m_Image_AfterLabEyeCandy
-              << m_Image_AfterEyeCandy
-              << m_Image_DetailPreview
-              << m_Image_TextureOverlay
-              << m_Image_TextureOverlay2;
-  while(PointerList.size()) {
-    if (PointerList[0] != NULL) {
-      ptImage* CurrentPointer = PointerList[0];
-      delete CurrentPointer;
-      // Remove all elements equal to CurrentPointer.
-      short Index=0;
-      while (Index<PointerList.size()) {
-        if (CurrentPointer == PointerList[Index]) {
-          PointerList.removeAt(Index);
-        } else {
-          Index++;
-        }
-      }
-    } else {
-      PointerList.removeAt(0);
-    }
-  }
-  if (m_ExifBuffer) FREE(m_ExifBuffer);
-}
-
-///////////////////////////////////////////////////////////////////////////////

@@ -898,6 +898,22 @@ ptImage* ptImage::lcmsLabToRGB(const short To,
 
 //==============================================================================
 
+ptImage *ptImage::RGBToLch() {
+  this->RGBToLab();
+  this->LabToLch();
+  return this;
+}
+
+//==============================================================================
+
+ptImage *ptImage::LchToRGB(const short To) {
+  LchToLab();
+  LabToRGB(To);
+  return this;
+}
+
+//==============================================================================
+
 // Helping function
 inline float ToHue(const float AValueA, const float AValueB) {
   if (AValueA == 0.0f && AValueB == 0.0f) {
@@ -5766,17 +5782,24 @@ float *ptImage::FillMask(const uint16_t APointX, const uint16_t APointY, const f
 //==============================================================================
 
 // Example for using local mask with sigmoidal contrast
-ptImage *ptImage::MaskedContrast(const uint16_t APointX, const uint16_t APointY, const float AMaskThres, const float AContrast, const float AContrastThres)
+ptImage *ptImage::MaskedContrast(const uint16_t APointX,
+                                 const uint16_t APointY,
+                                 const float AMaskThresh,
+                                 const float AContrast,
+                                 const float AContrastThresh)
 {
+  return this;
+  // TODO: write the real implementation ;)
+
   assert (m_ColorSpace == ptSpace_Lab);
 
   float *hMask = 0;
-  hMask = FillMask(APointX, APointY, AMaskThres, 0);
+  hMask = FillMask(APointX, APointY, AMaskThresh, 0);
 
   float Scaling = 1.0/(1.0+exp(-0.5*AContrast))-1.0/(1.0+exp(0.5*AContrast));
   float Offset = -1.0/(1.0+exp(0.5*AContrast));
-  float logtf = -logf(AContrastThres)/logf(2.0);
-  float logft = -logf(2.0)/logf(AContrastThres);
+  float logtf = -logf(AContrastThresh)/logf(2.0);
+  float logft = -logf(2.0)/logf(AContrastThresh);
 
   uint16_t ContrastTable[0x10000];
   ContrastTable[0] = 0;
