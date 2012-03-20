@@ -31,6 +31,12 @@
 #include <QSettings>
 
 #include "ptImageSpot.h"
+#include "../ptImage.h"
+
+//==============================================================================
+
+static QString CLocalAdjustName = "LocalAdjustSpots";
+static QString CRepairSpotName  = "RepairSpots";
 
 //==============================================================================
 
@@ -43,7 +49,7 @@ public:
       The size hint used for each item in the model. Width should be \c 0 and height
       large enough to contain the editor widget.
     \param APtsSectionName
-      Name of the pts inifile section for this spot type. Must be unique!
+      Name of the pts inifile section for this spot type. Use the predefined static strings!
     \param AParent
       The models parent widget.
   */
@@ -64,6 +70,9 @@ public:
       \param APtsFile
         A pointer to the \c QSettings object representing the pts file. */
   void ReadFromFile(QSettings *APtsFile);
+
+  /*! Run the filters for all spots on the image given by \c AImage. */
+  void RunFiltering(ptImage *AImage);
 
   /*! Update an item and the underlying spot repair data.  */
   virtual bool setData(const QModelIndex &index,

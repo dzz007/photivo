@@ -154,7 +154,16 @@ ptImage* LabToRGB(const short To);
 ptImage* lcmsLabToRGB(const short To,
                       const int Intent = INTENT_PERCEPTUAL);
 
+/*! Converts the image from RGB to Lch colour space. Returns a pointer to itself. */
+ptImage* RGBToLch();
+
+/*! Converts the image from Lch to RGB colour space. Returns a pointer to itself. */
+ptImage* LchToRGB(const short To);
+
+/*! Converts the image from Lab to Lch colour space. Returns a pointer to itself. */
 ptImage* LabToLch();
+
+/*! Converts the image from Lch to Lab colour space. Returns a pointer to itself. */
 ptImage* LchToLab();
 
 // MixChannels
@@ -423,9 +432,9 @@ float *FillMask(const uint16_t APointX,
 // MaskedContrast
 ptImage* MaskedContrast(const uint16_t APointX,
                         const uint16_t APointY,
-                        const float AMaskThres,
+                        const float AMaskThresh,
                         const float AContrast,
-                        const float AContrastThres);
+                        const float AContrastThresh);
 
 // GetVignetteMask
 float *GetVignetteMask(const short Inverted,

@@ -21,6 +21,7 @@
 *******************************************************************************/
 
 #include <cassert>
+#include <algorithm>
 
 #include "ptImageSpotModel.h"
 #include "ptLocalSpot.h"
@@ -79,9 +80,9 @@ void ptImageSpotModel::ReadFromFile(QSettings *APtsFile) {
     APtsFile->setArrayIndex(i);
 
     // TODO: Change into a proper factory some day ...
-    if (FPtsName == "LocalSpots") {
+    if (FPtsName == CLocalAdjustName) {
       FSpotList->append(new ptLocalSpot(APtsFile));
-    } else if (FPtsName == "RepairSpots") {
+    } else if (FPtsName == CRepairSpotName) {
       FSpotList->append(new ptRepairSpot(APtsFile));
     } else {
       assert(!"FPtsName string not recognised. Invalid type of spot.");
@@ -90,6 +91,28 @@ void ptImageSpotModel::ReadFromFile(QSettings *APtsFile) {
   APtsFile->endArray();
 
   RebuildModel();
+}
+
+//==============================================================================
+
+void ptImageSpotModel::RunFiltering(ptImage *AImage) {
+  if (FPtsName == CLocalAdjustName) {
+    std::for_each (FSpotList->begin(), FSpotList->end(), [AImage](ptImageSpot *hSpot) {
+      ptLocalSpot *hLSpot = static_cast<ptLocalSpot*>(hSpot);
+      AImage->MaskedContrast((uint16_t)hLSpot->x(),
+                             (uint16_t)hLSpot->y(),
+                             hLSpot->threshold(),
+                             0,
+                             0);
+    } );
+
+  } else if (FPtsName == CRepairSpotName) {
+    // TODO: BJ repair spot processing
+
+  } else {
+    fprintf(stderr, "(%s,%d) WARNING: Unrecognized spot type (%s). No processing done.\n",
+            __FILE__, __LINE__, FPtsName.toAscii().data());
+  }
 }
 
 //==============================================================================
