@@ -40,7 +40,7 @@
 template<class T>
 inline void DelAndNull(T*& p) {
   delete p;
-  p = 0;
+  p = nullptr;
 }
 
 //==============================================================================
