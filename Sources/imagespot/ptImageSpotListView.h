@@ -46,6 +46,7 @@ public:
   /*! Creates a \c ptImageSpotListView object. */
   explicit ptImageSpotListView(QWidget *AParent,
                                ptImageSpot::PCreateSpotFunc ASpotCreator);
+  ~ptImageSpotListView();
 
 //------------------------------------------------------------------------------
 
