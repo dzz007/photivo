@@ -50,6 +50,11 @@ public:
 
 //------------------------------------------------------------------------------
 
+protected:
+  virtual void keyPressEvent(QKeyEvent *event);
+
+//------------------------------------------------------------------------------
+
 private:
   ptImageSpot::PCreateSpotFunc FSpotCreator;  // pointer to spot factory method
 
@@ -62,7 +67,7 @@ signals:
 //------------------------------------------------------------------------------
 
 public slots:
-  /*! This slot gets called when the delete button of a spot is pressed. */
+  /*! This slot gets called when the DEL key or the delete button of a spot is pressed. */
   void deleteSpot();
 
   /*! This slot gets called when the user selects a position on the image. */

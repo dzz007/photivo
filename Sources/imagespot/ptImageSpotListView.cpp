@@ -45,9 +45,7 @@ ptImageSpotListView::ptImageSpotListView(QWidget *AParent,
   setStyle(Theme->style());
   setStyleSheet(Theme->stylesheet());
 
-//  setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
-  setEditTriggers(QAbstractItemView::DoubleClicked);
-  setSelectionBehavior(QAbstractItemView::SelectRows);
+  setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
   setSelectionMode(QAbstractItemView::SingleSelection);
 
   setDragDropMode(QAbstractItemView::InternalMove);
@@ -62,9 +60,18 @@ ptImageSpotListView::~ptImageSpotListView() {}
 
 //==============================================================================
 
-void ptImageSpotListView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
-  QListView::currentChanged(current, previous);
-  emit rowChanged(current);
+void ptImageSpotListView::keyPressEvent(QKeyEvent *event) {
+  if (event->key() == Qt::Key_Delete && event->modifiers() == Qt::NoModifier) {
+    // DEL key to delete selected spot
+    event->accept();
+    if (currentIndex().isValid()) {
+      this->deleteSpot();
+    }
+
+  } else {
+    // Base class takes care of standard stuff like cursor keys
+    QListView::keyPressEvent(event);
+  }
 }
 
 //==============================================================================
@@ -100,6 +107,13 @@ void ptImageSpotListView::processCoordinates(const QPoint &APos, const bool AMov
   hModel->RunFiltering(hImage.get());
 //  hImage->LchToRGB(Settings->GetInt("WorkColor"));
   ViewWindow->UpdateImage(hImage.get());
+}
+
+//==============================================================================
+
+void ptImageSpotListView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
+  QListView::currentChanged(current, previous);
+  emit rowChanged(current);
 }
 
 //==============================================================================

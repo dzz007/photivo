@@ -60,7 +60,7 @@ Qt::ItemFlags ptImageSpotModel::flags(const QModelIndex &index) const {
   if (index.isValid()) {
     return Qt::ItemIsEnabled |
            Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEditable |
-           Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+           Qt::ItemIsDragEnabled;
   } else {
     return Qt::ItemIsDropEnabled;
   }
@@ -123,7 +123,6 @@ bool ptImageSpotModel::setData(const QModelIndex &index,
 {
   auto hSpot  = FSpotList->at(index.row());
   auto hValue = QVariant(value);
-
   // update underlying spot data structure
   if (role == Qt::DisplayRole) {            // spot name
     hSpot->setName(value.toString());
@@ -147,7 +146,7 @@ void ptImageSpotModel::setSpot(const int AIndex, ptImageSpot *ASpotData) {
 //==============================================================================
 
 Qt::DropActions ptImageSpotModel::supportedDropActions() const {
-  return Qt::MoveAction | Qt::CopyAction;
+  return Qt::MoveAction;
 }
 
 //==============================================================================
