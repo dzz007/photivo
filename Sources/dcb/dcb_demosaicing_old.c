@@ -305,13 +305,14 @@ void CLASS dcb_correction2_old()
 void CLASS dcb_correction3_old()
 {
   int current, row, col, c, u=m_Width, v=2*u, indx;
-  uint16_t (*pix)[4];
+//warning: variable 'pix' set but not used [-Wunused-but-set-variable]
+//  uint16_t (*pix)[4];
 
   for (row=4; row < m_Height-4; row++) {
   for (col=4; col < m_Width-4; col++) {
 
     indx=row*m_Width+col;
-    pix=m_Image+indx;
+//    pix=m_Image+indx;
     c =  FC(row,col);
 
     if (c != 1)

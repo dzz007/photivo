@@ -284,6 +284,11 @@ void ptFileMgrWindow::changeDir(const QString& path) {
 
 //==============================================================================
 
+#ifdef Q_OS_UNIX
+// Linux does not need parameter fsoType. Disable compiler warning.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-parameter"
+#endif
 void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/, ptFSOType fsoType /*= fsoDir*/) {
   if (path.isEmpty()) {
     path = m_DataModel->dirModel()->absolutePath();
@@ -315,6 +320,9 @@ void ptFileMgrWindow::DisplayThumbnails(QString path /*= ""*/, ptFSOType fsoType
     m_FilesScene->setSceneRect(0,0,0,0);
   }
 }
+#ifdef Q_OS_UNIX
+#pragma GCC diagnostic pop
+#endif
 
 //==============================================================================
 

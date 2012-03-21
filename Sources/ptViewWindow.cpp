@@ -400,7 +400,7 @@ void ptViewWindow::wheelEvent(QWheelEvent* event) {
   ZoomStep(event->delta());
 }
 
-void ptViewWindow::leaveEvent(QEvent *event) {
+void ptViewWindow::leaveEvent(QEvent*) {
   if (m_PixelReader) m_PixelReader(QPoint(), prNone);
 }
 

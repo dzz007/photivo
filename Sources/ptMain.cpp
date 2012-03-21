@@ -679,13 +679,13 @@ int photivoMain(int Argc, char *Argv[]) {
   ShareDirectory = NewShareDirectory;
 
   QFileInfo SettingsFileInfo(SettingsFileName);
-  short NeedInitialization = 1;
+//  short NeedInitialization = 1;
   short FirstStart = 1;
   if (SettingsFileInfo.exists() &&
           SettingsFileInfo.isFile() &&
           SettingsFileInfo.isReadable()) {
       // photivo was initialized
-      NeedInitialization = 0;
+//      NeedInitialization = 0;
       FirstStart = 0;
       printf("Existing settingsfile '%s'\n",SettingsFileName.toAscii().data());
   } else {
@@ -698,8 +698,8 @@ int photivoMain(int Argc, char *Argv[]) {
   // We need to load the translation before the ptSettings
   QSettings* TempSettings = new QSettings(SettingsFileName, QSettings::IniFormat);
 
-  if (TempSettings->value("SettingsVersion",0).toInt() < PhotivoSettingsVersion)
-      NeedInitialization = 1;
+//  if (TempSettings->value("SettingsVersion",0).toInt() < PhotivoSettingsVersion)
+//      NeedInitialization = 1;
 
   // Initialize the user folder if needed
   /* TODO: for testing. Enable the other line below once profile versions are final. */

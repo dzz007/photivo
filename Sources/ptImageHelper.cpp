@@ -20,7 +20,10 @@
 **
 *******************************************************************************/
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <exiv2/image.hpp>
+#pragma GCC diagnostic pop
 #include <wand/magick_wand.h>
 
 #include <vector>
