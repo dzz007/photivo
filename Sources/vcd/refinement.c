@@ -13,10 +13,11 @@ void CLASS refinement()
   uint16_t (*pix)[4];
   int row, col, indx, c, i, d, w1, w2, v0;
   double dL, dR, dU, dD; //dt;
-  clock_t t1; //t2;
+// warning: variable 't1' set but not used [-Wunused-but-set-variable]
+//  clock_t t1; //t2;
 
   TRACEKEYVALS("Post-demosaic refinement","%s","");
-  t1 = clock();
+//  t1 = clock();
   w1 = m_Width;
   w2 = 2*w1;
 

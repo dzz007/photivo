@@ -26,11 +26,11 @@
 
 struct ptAdobeTableItem {
   const char *Identification;
-  short       Blackpoint;
-  short       Whitepoint;
+  int       Blackpoint;
+  int       Whitepoint;
   // TODO Double check. But according to my (jpta) analysis
   // those are in fact XYZ->CAM matrices. And not the other way around.
-  short       XYZToCam[12];
+  int       XYZToCam[12];
 };
 
 static const ptAdobeTableItem AdobeTable[] = {
