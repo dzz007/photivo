@@ -386,8 +386,6 @@ ptMainWindow::ptMainWindow(const QString Title)
                          this
                        );
   LocalSpotListView->setModel(LocalSpotModel);
-  LocalSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
-                                     QAbstractItemView::SelectedClicked);
   LocalSpotListView->setItemDelegate(new ptImageSpotItemDelegate(LocalSpotListView));
   connect(LocalSpotListView, SIGNAL(rowChanged(QModelIndex)),
           this, SLOT(UpdateLocalSpotUI(QModelIndex)));
@@ -407,18 +405,18 @@ ptMainWindow::ptMainWindow(const QString Title)
                           this
                         );
   RepairSpotListView->setModel(RepairSpotModel);
-  RepairSpotListView->setEditTriggers(QAbstractItemView::CurrentChanged |
-                                      QAbstractItemView::SelectedClicked);
   RepairSpotListView->setItemDelegate(new ptImageSpotItemDelegate(RepairSpotListView));
   connect(RepairSpotListView, SIGNAL(rowChanged(QModelIndex)),
           this, SLOT(UpdateRepairSpotUI(QModelIndex)));
   UpdateRepairSpotUI(QModelIndex());
+  // TODO: BJ Hide the unfinished spot repair tab so we can release local adjust alone first.
+  this->TabSpotRepair->hide();
 
   //
   // TAB : Geometry
   //
 
-  // TODO BJ: Unhide when lensfun implementation has grown far enough
+  // TODO: BJ Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
 

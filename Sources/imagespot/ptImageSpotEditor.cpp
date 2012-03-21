@@ -47,6 +47,7 @@ ptImageSpotEditor::ptImageSpotEditor(QWidget *AParent)
 
   // init name editor
   NameEditor = new QLineEdit(this);
+  NameEditor->setToolTip(tr("Delete this spot"));
   NameEditor->selectAll();
   NameEditor->setFocus();
 

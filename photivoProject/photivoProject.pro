@@ -57,9 +57,9 @@ unix {
   QMAKE_CXX   = ccache /usr/bin/g++
 
   QMAKE_CFLAGS_RELEASE    += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CXXFLAGS_RELEASE  += -std=gnu++0x -fpermissive -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE  += -std=gnu++0x -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CFLAGS_DEBUG      += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CXXFLAGS_DEBUG    += -std=gnu++0x -fpermissive -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_DEBUG    += -std=gnu++0x -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_LFLAGS_DEBUG      += -rdynamic
 
   LIBS += $$system(GraphicsMagick++-config --libs)
@@ -71,8 +71,8 @@ win32 {
 
   QMAKE_CFLAGS_RELEASE    += $$(CFLAGS)
   QMAKE_CFLAGS_DEBUG      += $$(CFLAGS)
-  QMAKE_CXXFLAGS_RELEASE  += -std=gnu++0x -fpermissive $$(CXXFLAGS)
-  QMAKE_CXXFLAGS_DEBUG    += -std=gnu++0x -fpermissive $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE  += -std=gnu++0x $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_DEBUG    += -std=gnu++0x $$(CXXFLAGS)
   QMAKE_LFLAGS_RELEASE    += $$(LDFLAGS)
   QMAKE_LFLAGS_DEBUG      += $$(LDFLAGS)
 
@@ -93,7 +93,7 @@ macx{
 
   # prevent qmake from adding -arch flags
   QMAKE_CFLAGS_X86_64           = -m64
-  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x -fpermissive
+  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x
   QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
   QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
 
@@ -108,8 +108,8 @@ LIBS += \
     $$system(pkg-config --libs-only-l lqr-1) \
     -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
-RELEASE_SPECIFIC = -O3 -ftree-vectorize -fopenmp -Wno-deprecated-declarations
-DEBUG_SPECIFIC   = -O0 -g
+RELEASE_SPECIFIC = -O3 -ftree-vectorize -fopenmp
+DEBUG_SPECIFIC   = -O0 -g -Wno-pragmas
 COMMON_FLAGS = \
     $$system(pkg-config --cflags-only-I lqr-1) \
     -DAPPVERSION=\'$${APPVERSION}\' \
