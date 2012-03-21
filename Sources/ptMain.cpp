@@ -680,11 +680,13 @@ int photivoMain(int Argc, char *Argv[]) {
   ShareDirectory = NewShareDirectory;
 
   QFileInfo SettingsFileInfo(SettingsFileName);
+//  short NeedInitialization = 1;
   short FirstStart = 1;
   if (SettingsFileInfo.exists() &&
           SettingsFileInfo.isFile() &&
           SettingsFileInfo.isReadable()) {
       // photivo was initialized
+//      NeedInitialization = 0;
       FirstStart = 0;
       printf("Existing settingsfile '%s'\n",SettingsFileName.toAscii().data());
   } else {
@@ -8474,6 +8476,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(StartupSettingsResetCheck)
   M_Dispatch(StartupUIModeChoice)
   M_Dispatch(StartupPipeSizeChoice)
+  M_JustSetDispatch(EscToExitCheck)
 
   M_JustSetDispatch(StartupSwitchARCheck)
 

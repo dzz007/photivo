@@ -22,10 +22,13 @@ void CLASS lmmse_interpolate(int gamma_apply)
   float (*rix)[6], (*qix)[6];
   float *glut = NULL;
   char  *buffer;
-  clock_t t1, t2;
-  double dt;
+//warning: variable 't1' set but not used [-Wunused-but-set-variable]
+//warning: variable 't2' set but not used [-Wunused-but-set-variable]
+//  clock_t t1, t2;
+//warning: variable 'dt' set but not used [-Wunused-but-set-variable]
+//  double dt;
   TRACEKEYVALS("LMMSE interpolation","%s","");
-  t1 = clock();
+//  t1 = clock();
   // allocate work with boundary
   ba = 10;
   rr1 = m_Height + 2*ba;
@@ -266,7 +269,7 @@ void CLASS lmmse_interpolate(int gamma_apply)
     }
   // Done
   free(buffer);
-  t2 = clock();
-  dt = ((double)(t2-t1)) / CLOCKS_PER_SEC;
+//  t2 = clock();
+//  dt = ((double)(t2-t1)) / CLOCKS_PER_SEC;
   //~ if (verbose) fprintf(stderr,_("\telapsed time     = %5.3fs\n"),dt);
 }

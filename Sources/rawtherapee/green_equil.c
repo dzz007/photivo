@@ -32,7 +32,8 @@ void CLASS green_equilibrate(float thresh)
       char          *buffer;      // TS*TS*16
       float         (*cfa);       // TS*TS*4
       float         (*checker);   // TS*TS*4
-      float         (*gvar);      // TS*TS*4
+//warning: variable 'gvar' set but not used [-Wunused-but-set-variable]
+//      float         (*gvar);      // TS*TS*4
       float         (*gdiffv);    // TS*TS*4
       float         (*gdiffh);    // TS*TS*4
 
@@ -43,7 +44,7 @@ void CLASS green_equilibrate(float thresh)
 
       cfa       = (float (*))     buffer;
       checker   = (float (*))     (buffer + sizeof(float)*TS*TS);
-      gvar      = (float (*))     (buffer + 2*sizeof(float)*TS*TS);
+//      gvar      = (float (*))     (buffer + 2*sizeof(float)*TS*TS);
       gdiffv    = (float (*))     (buffer + 3*sizeof(float)*TS*TS);
       gdiffh    = (float (*))     (buffer + 4*sizeof(float)*TS*TS);
 

@@ -73,6 +73,9 @@ echo
 $QMAKECLI
 make -j4
 
+if [ ! $? -eq 0 ]; then
+  exit 1
+fi
 
 if [ -s ./photivo.exe ]; then
   if [ ! -d "../$PT_BINDIR" ]; then

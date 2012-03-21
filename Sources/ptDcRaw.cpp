@@ -28,8 +28,6 @@
 **
 *******************************************************************************/
 
-#pragma GCC diagnostic ignored "-Wwrite-strings"
-
 #include "ptDcRaw.h"
 
 #include <cassert>
@@ -1461,7 +1459,10 @@ void CLASS layer_thumb ()
   for (unsigned i=0; i < m_ThumbLength; i++) {
     for (c=0; c < m_Colors; c++) {
       //putc (thumb[i+m_ThumbLength*(map[m_ThumbMisc >> 8][c]-'0')], m_OutputFile);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
       m_ThumbStream->writeRawData((char*)thumb[i+m_ThumbLength*(map[m_ThumbMisc >> 8][c]-'0')], 1);
+#pragma GCC diagnostic pop
     }
   }
   FREE (thumb);
@@ -1488,9 +1489,12 @@ void CLASS rollei_thumb ()
     //putc (thumb[i] << 3, m_OutputFile);
     //putc (thumb[i] >> 5  << 2, m_OutputFile);
     //putc (thumb[i] >> 11 << 3, m_OutputFile);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
     m_ThumbStream->writeRawData((char*)(thumb[i] << 3) ,1);
     m_ThumbStream->writeRawData((char*)(thumb[i] >> 5 << 2) ,1);
     m_ThumbStream->writeRawData((char*)(thumb[i] >> 11 << 3) ,1);
+#pragma GCC diagnostic pop
   }
   FREE (thumb);
 }
@@ -2233,7 +2237,10 @@ void CLASS kodak_radc_load_raw()
   for(c=0;c<256;c++) huff[18][c] = (8-s) << 8 | c >> s << s | 1 << (s-1);
   getbits(-1);
   for (unsigned i=0; i < sizeof(buf)/sizeof(short); i++)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
     buf[0][0][i] = 2048;
+#pragma GCC diagnostic pop
   for (row=0; row < m_Height; row+=4) {
     for (c=0; c<3; c++) mul[c] = getbits(6);
     for (c=0; c<3; c++) {
@@ -2955,7 +2962,10 @@ void CLASS foveon_thumb ()
   }
   pred[c] += dindex->leaf;
   //fputc (pred[c], m_OutputFile);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
   m_ThumbStream->writeRawData((char*)pred[c], 1);
+#pragma GCC diagnostic pop
       }
   }
 }
@@ -3131,6 +3141,8 @@ int CLASS foveon_apply_curve (short *l_Curve, int i)
 
 void CLASS foveon_interpolate()
 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
   static const short hood[] = { -1,-1, -1,0, -1,1, 0,-1, 0,1, 1,-1, 1,0, 1,1 };
   short *pix, prev[3], *l_curve[8], (*shrink)[3];
   float cfilt=0, ddft[3][3][2], ppm[3][3][3];
@@ -3522,6 +3534,7 @@ void CLASS foveon_interpolate()
    i * sizeof *m_Image);
   m_Width = i;
   m_Height = row;
+#pragma GCC diagnostic pop
 }
 #undef m_Image
 
@@ -4120,14 +4133,15 @@ void CLASS ptHighlight(const short  ClipMode,
             ClippedSaturation =
               1.0 - (double)ClippedPixel[MinChannel] / ClippedPixel[MaxChannel];
           }
-          double ClippedHue;
-    if ( ClippedPixel[MaxChannel]==ClippedPixel[MinChannel] ) {
-            ClippedHue = 0;
-    } else {
-            ClippedHue =
-              ((double)ClippedPixel[MidChannel]-ClippedPixel[MinChannel]) /
-              ((double)ClippedPixel[MaxChannel]-ClippedPixel[MinChannel]);
-          }
+//warning: variable 'ClippedHue' set but not used [-Wunused-but-set-variable]
+//          double ClippedHue;
+//    if ( ClippedPixel[MaxChannel]==ClippedPixel[MinChannel] ) {
+//            ClippedHue = 0;
+//    } else {
+//            ClippedHue =
+//              ((double)ClippedPixel[MidChannel]-ClippedPixel[MinChannel]) /
+//              ((double)ClippedPixel[MaxChannel]-ClippedPixel[MinChannel]);
+//          }
           double UnclippedHue;
     if ( m_Image[Pos][MaxChannel]==m_Image[Pos][MinChannel] ) {
             UnclippedHue = 0;
@@ -4284,7 +4298,7 @@ void CLASS lin_interpolate()
  */
 void CLASS vng_interpolate()
 {
-  static const signed char *cp, terms[] = {
+  static const int16_t *cp, terms[] = {
     -2,-2,+0,-1,0,0x01, -2,-2,+0,+0,1,0x01, -2,-1,-1,+0,0,0x01,
     -2,-1,+0,-1,0,0x02, -2,-1,+0,+0,0,0x03, -2,-1,+0,+1,1,0x01,
     -2,+0,+0,-1,0,0x06, -2,+0,+0,+0,1,0x02, -2,+0,+0,+1,0,0x03,
@@ -4763,7 +4777,10 @@ void CLASS parse_makernote (int base, int uptag)
     }
     if (tag == 0xd && type == 7 && get2() == 0xaaaa) {
       ptfread (buf97, 1, sizeof buf97, m_InputFile);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wwrite-strings"
       i = (uint8_t *) memmem ((char*)buf97, sizeof buf97,"\xbb\xbb",2) - buf97 + 10;
+#pragma GCC diagnostic pop
       if (i < 70 && buf97[i] < 3)
         m_Flip = "065"[buf97[i]]-'0';
     }
@@ -6076,7 +6093,8 @@ void CLASS parse_sinar_ia()
 
 void CLASS parse_phase_one (int base)
 {
-  unsigned entries, tag, type, len, data, save, i, c;
+//warning: variable 'type' set but not used [-Wunused-but-set-variable]
+  unsigned entries, tag, /*type,*/ len, data, save, i, c;
   float romm_cam[3][3];
   char *cp;
 
@@ -6089,7 +6107,7 @@ void CLASS parse_phase_one (int base)
   get4();
   while (entries--) {
     tag  = get4();
-    type = get4();
+//    type = get4();
     len  = get4();
     data = get4();
     save = ftell(m_InputFile);
@@ -6691,8 +6709,11 @@ void CLASS identify() {
   fseek (m_InputFile, 0, SEEK_END);
   l_FLen = l_FileSize = ftell(m_InputFile);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wwrite-strings"
   if ((l_CharPointer = (char *) memmem (l_Head, 32, "MMMM", 4)) ||
       (l_CharPointer = (char *) memmem (l_Head, 32, "IIII", 4))) {
+#pragma GCC diagnostic pop
     parse_phase_one (l_CharPointer-l_Head);
     if ((l_CharPointer-l_Head) && parse_tiff(0)) apply_tiff();
   } else if (m_ByteOrder == 0x4949 || m_ByteOrder == 0x4d4d) {
@@ -9398,6 +9419,3 @@ bool CLASS thumbnail(QByteArray*& thumbnail) {
   return result;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-#pragma GCC diagnostic warning "-Wwrite-strings"
