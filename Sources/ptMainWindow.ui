@@ -6600,7 +6600,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
+                                    <width>98</width>
                                     <height>76</height>
                                    </rect>
                                   </property>
@@ -6739,7 +6739,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
+                                    <width>98</width>
                                     <height>76</height>
                                    </rect>
                                   </property>
@@ -6878,7 +6878,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
+                                    <width>98</width>
                                     <height>76</height>
                                    </rect>
                                   </property>
@@ -7017,7 +7017,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
+                                    <width>98</width>
                                     <height>76</height>
                                    </rect>
                                   </property>
@@ -7153,7 +7153,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
+                                    <width>98</width>
                                     <height>130</height>
                                    </rect>
                                   </property>
@@ -9265,7 +9265,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
+                                    <width>98</width>
                                     <height>76</height>
                                    </rect>
                                   </property>
@@ -9401,7 +9401,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
+                                    <width>98</width>
                                     <height>76</height>
                                    </rect>
                                   </property>
@@ -9537,7 +9537,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
+                                    <width>98</width>
                                     <height>76</height>
                                    </rect>
                                   </property>
@@ -9715,7 +9715,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>96</width>
+                                    <width>98</width>
                                     <height>76</height>
                                    </rect>
                                   </property>
@@ -12054,7 +12054,7 @@
                               <property name="geometry">
                                <rect>
                                 <x>0</x>
-                                <y>0</y>
+                                <y>-82</y>
                                 <width>125</width>
                                 <height>152</height>
                                </rect>
@@ -12214,6 +12214,9 @@
                                      </spacer>
                                     </item>
                                    </layout>
+                                  </item>
+                                  <item>
+                                   <widget class="QWidget" name="EscToExitWidget" native="true"/>
                                   </item>
                                  </layout>
                                 </widget>

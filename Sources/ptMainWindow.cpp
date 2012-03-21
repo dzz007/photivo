@@ -1914,7 +1914,9 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       ::CB_FullScreenButton(0);
       return;
     } else {
-      ::CB_MenuFileExit(1);
+      if (Settings->GetInt("EscToExit") == 1) {
+        ::CB_MenuFileExit(1);
+      }
       return;
     }
   }

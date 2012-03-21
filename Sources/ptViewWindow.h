@@ -137,7 +137,7 @@ protected:
   void mouseReleaseEvent(QMouseEvent* event);
   void mouseMoveEvent(QMouseEvent* event);
   void wheelEvent(QWheelEvent* event);
-  void leaveEvent(QEvent* event);
+  void leaveEvent(QEvent*);
 
 //------------------------------------------------------------------------------
 
