@@ -68,5 +68,8 @@
         <file>dark/icons/zoom-in.png</file>
         <file>dark/icons/zoom-out.png</file>
         <file>dark/icons/delete.png</file>
+        <file>dark/icons/move-object-down.png</file>
+        <file>dark/icons/move-object-up.png</file>
+        <file>dark/icons/edit-spot.png</file>
     </qresource>
 </RCC>

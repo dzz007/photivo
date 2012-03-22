@@ -67,8 +67,14 @@ signals:
 //------------------------------------------------------------------------------
 
 public slots:
-  /*! This slot gets called when the DEL key or the delete button of a spot is pressed. */
+  /*! Deletes the selcted spot. This slot gets called when the DEL key or the delete button
+      of a spot is pressed. */
   void deleteSpot();
+
+  /*! Moves the selected spot one position down or up in the list.
+      The selection stays at the that spot. */
+  void moveSpotDown();
+  void moveSpotUp();
 
   /*! This slot gets called when the user selects a position on the image. */
   void processCoordinates(const QPoint &APos, const bool AMoveCurrent);

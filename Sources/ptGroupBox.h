@@ -95,10 +95,12 @@ private:
   QTimer*   m_Timer;
   short     m_NeedPipeUpdate;
 
+public slots:
+  void Hide();
 
 private slots:
   void SetFavourite();
-  void Hide();
+//  void Hide();
   void SetBlocked();
   void Reset();
   void PipeUpdate();

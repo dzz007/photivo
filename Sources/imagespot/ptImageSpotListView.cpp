@@ -62,11 +62,13 @@ ptImageSpotListView::~ptImageSpotListView() {}
 
 void ptImageSpotListView::keyPressEvent(QKeyEvent *event) {
   if (event->key() == Qt::Key_Delete && event->modifiers() == Qt::NoModifier) {
-    // DEL key to delete selected spot
-    event->accept();
-    if (currentIndex().isValid()) {
-      this->deleteSpot();
-    }
+    if (currentIndex().isValid()) this->deleteSpot();
+
+  } else if (event->key() == Qt::Key_Down && event->modifiers() == Qt::ControlModifier) {
+    moveSpotDown();
+
+  } else if (event->key() == Qt::Key_Up && event->modifiers() == Qt::ControlModifier) {
+    moveSpotUp();
 
   } else {
     // Base class takes care of standard stuff like cursor keys
@@ -77,9 +79,26 @@ void ptImageSpotListView::keyPressEvent(QKeyEvent *event) {
 //==============================================================================
 
 void ptImageSpotListView::deleteSpot() {
-  static_cast<ptImageSpotModel*>(model())
-      ->removeRows(currentIndex().row(), 1, QModelIndex());
+  static_cast<ptImageSpotModel*>(model())->removeRows(currentIndex().row(), 1, QModelIndex());
   emit rowChanged(currentIndex());
+}
+
+//==============================================================================
+
+void ptImageSpotListView::moveSpotDown() {
+  int hNewRow = static_cast<ptImageSpotModel*>(model())->MoveRow(currentIndex(), +1);
+  if (hNewRow > -1) {
+    this->setCurrentIndex(this->model()->index(hNewRow, 0));
+  }
+}
+
+//==============================================================================
+
+void ptImageSpotListView::moveSpotUp() {
+  int hNewRow = static_cast<ptImageSpotModel*>(model())->MoveRow(currentIndex(), -1);
+  if (hNewRow > -1) {
+    this->setCurrentIndex(this->model()->index(hNewRow, 0));
+  }
 }
 
 //==============================================================================

@@ -68,6 +68,21 @@ Qt::ItemFlags ptImageSpotModel::flags(const QModelIndex &index) const {
 
 //==============================================================================
 
+int ptImageSpotModel::MoveRow(const QModelIndex &AFromIdx, const int AOffset) {
+  // Sanity and boundary checks
+  if (!AFromIdx.isValid() || (AOffset == 0)) return -1;
+  int hDestRow = qBound(0, AFromIdx.row()+AOffset, this->rowCount()-1);
+  if (AFromIdx.row() == hDestRow) return hDestRow;
+
+  // The actual move: spot data structure first, then the Qt model
+  FSpotList->move(AFromIdx.row(), hDestRow);
+  this->insertRow(hDestRow, this->takeRow(AFromIdx.row()));
+
+  return hDestRow;
+}
+
+//==============================================================================
+
 void ptImageSpotModel::ReadFromFile(QSettings *APtsFile) {
   ClearList();
 

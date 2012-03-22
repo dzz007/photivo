@@ -66,6 +66,12 @@ public:
   /*! Reimplemented from parent class. */
   virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
+  /*! Moves the row given by \c AFromIdx by \c AOffset rows and returns the index
+      of the destination row.
+      Negative offsets move up, positive offsets move down. If \c AFromIdx is invalid
+      or \c AOffset is \c 0 the function does nothing and returns \c -1. */
+  int MoveRow(const QModelIndex &AFromIdx, const int AOffset);
+
   /*! Loads a list of spots from a pts file. The existing list is replaced.
       \param APtsFile
         A pointer to the \c QSettings object representing the pts file. */
