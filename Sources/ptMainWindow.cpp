@@ -378,7 +378,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   LocalSpotListView = new ptImageSpotListView(this, ptLocalSpot::CreateSpot);
   LocalAdjustVLayout->insertWidget(1, LocalSpotListView);
   LocalSpotModel = new ptImageSpotModel(
-                         QSize(0, LocalSpotListView->fontMetrics().lineSpacing() + 2),
+                         QSize(0, (int)(LocalSpotListView->fontMetrics().lineSpacing()*1.5)),
                          CLocalAdjustName,
                          this
                        );
@@ -405,7 +405,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   RepairSpotListView = new ptImageSpotListView(this, ptRepairSpot::CreateSpot);
   SpotRepairVLayout->insertWidget(1, RepairSpotListView);
   RepairSpotModel = new ptImageSpotModel(
-                          QSize(0, RepairSpotListView->fontMetrics().lineSpacing() + 2),
+                          QSize(0, (int)(LocalSpotListView->fontMetrics().lineSpacing()*1.5)),
                           CRepairSpotName,
                           this
                         );

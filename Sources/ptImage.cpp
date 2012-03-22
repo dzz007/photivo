@@ -28,6 +28,7 @@
 #include <cstdio>
 #include <QString>
 #include <QTime>
+#include <functional>
 
 #ifdef _OPENMP
   #include <omp.h>
