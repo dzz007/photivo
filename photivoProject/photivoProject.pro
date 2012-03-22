@@ -288,6 +288,7 @@ TRANSLATIONS += ../Translations/photivo_French.ts
 TRANSLATIONS += ../Translations/photivo_German.ts
 TRANSLATIONS += ../Translations/photivo_Italian.ts
 TRANSLATIONS += ../Translations/photivo_Russian.ts
+TRANSLATIONS += ../Translations/photivo_Spanish.ts
 
 ################################################################################
 

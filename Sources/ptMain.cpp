@@ -2379,15 +2379,10 @@ void PrepareTags(const QString TagsInput) {
   Settings->SetValue("TagsList", Tags);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// WriteOut
-// Write out in one of the output formats (after applying output profile).
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
+/*! Write out in one of the output formats (after applying output profile). */
 void WriteOut() {
-
   ptImage* OutImage = NULL;
 
   if (Settings->GetInt("JobMode") == 1) {
@@ -2466,8 +2461,19 @@ void WriteOut() {
     WriteSettingsFile(SettingsFileName);
   }
 
-  ReportProgress(QObject::tr("Ready"));
+  if (FileWritten) {
+    QFileInfo hInfo = QFileInfo(Settings->GetString("OutputFileName"));
+    ReportProgress(
+      QString(QObject::tr("Written %L1 bytes (%L2 MByte)"))
+          .arg(hInfo.size())
+          .arg((float)hInfo.size()/1024/1024, 0, 'f', 2)
+    );
+  } else {
+    ReportProgress(QObject::tr("Ready"));
+  }
 }
+
+//==============================================================================
 
 void WritePipe(QString OutputName = "") {
 
