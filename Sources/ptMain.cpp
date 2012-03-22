@@ -4674,6 +4674,8 @@ void CB_LocalSpotButton() {
   ViewWindow->setFocus();
 }
 
+//==============================================================================
+
 void CleanupAfterLocalAdjust() {
   BlockTools(btmUnblock);
   MainWindow->LocalSpotButton->show();
@@ -4681,9 +4683,17 @@ void CleanupAfterLocalAdjust() {
   Update(ptProcessorPhase_LocalEdit);
 }
 
+//==============================================================================
+
 void CB_ConfirmLocalSpotButton() {
   ViewWindow->localAdjust()->stop();
 }
+
+//==============================================================================
+
+/* Move/del buttons are directly connected to the LocalSpotListView slots. */
+
+//==============================================================================
 
 void CB_LocalModeChoice(const QVariant Value) {
   int hRow = MainWindow->LocalSpotListView->currentIndex().row();
@@ -4694,6 +4704,8 @@ void CB_LocalModeChoice(const QVariant Value) {
   Update(ptProcessorPhase_LocalEdit);
 }
 
+//==============================================================================
+
 void CB_LocalMaskThresholdInput(const QVariant Value) {
   int hRow = MainWindow->LocalSpotListView->currentIndex().row();
   if (hRow < 0) return;
@@ -4702,6 +4714,8 @@ void CB_LocalMaskThresholdInput(const QVariant Value) {
       ->setThreshold(Value.toFloat());
   Update(ptProcessorPhase_LocalEdit);
 }
+
+//==============================================================================
 
 void CB_LocalMaskLumaWeightInput(const QVariant Value) {
   int hRow = MainWindow->LocalSpotListView->currentIndex().row();
@@ -4712,6 +4726,8 @@ void CB_LocalMaskLumaWeightInput(const QVariant Value) {
   Update(ptProcessorPhase_LocalEdit);
 }
 
+//==============================================================================
+
 void CB_LocalEgdeAwareThresholdCheck(const QVariant Value) {
   int hRow = MainWindow->LocalSpotListView->currentIndex().row();
   if (hRow < 0) return;
@@ -4720,6 +4736,8 @@ void CB_LocalEgdeAwareThresholdCheck(const QVariant Value) {
       ->setEdgeAware(Value.toBool());
   Update(ptProcessorPhase_LocalEdit);
 }
+
+//==============================================================================
 
 void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
   int hRow = MainWindow->LocalSpotListView->currentIndex().row();
@@ -4731,6 +4749,8 @@ void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
   Update(ptProcessorPhase_LocalEdit);
 }
 
+//==============================================================================
+
 void CB_LocalMaxRadiusInput(const QVariant Value) {
   int hRow = MainWindow->LocalSpotListView->currentIndex().row();
   if (hRow < 0) return;
@@ -4740,6 +4760,8 @@ void CB_LocalMaxRadiusInput(const QVariant Value) {
   Update(ptProcessorPhase_LocalEdit);
 }
 
+//==============================================================================
+
 void CB_LocalSaturationInput(const QVariant Value) {
   int hRow = MainWindow->LocalSpotListView->currentIndex().row();
   if (hRow < 0) return;
@@ -4748,6 +4770,8 @@ void CB_LocalSaturationInput(const QVariant Value) {
       ->setSaturation(Value.toFloat());
   Update(ptProcessorPhase_LocalEdit);
 }
+
+//==============================================================================
 
 void CB_LocalAdaptiveSaturationCheck(const QVariant Value) {
   int hRow = MainWindow->LocalSpotListView->currentIndex().row();

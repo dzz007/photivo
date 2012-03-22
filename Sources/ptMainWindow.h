@@ -182,7 +182,7 @@ private:
   void AnalyzeToolBoxStructure();
   void ShowMovedTools(const QString Title);
   void InitVisibleTools();
-  void ToggleLocalAdjustWidgets(const bool AEnabled);
+  void ToggleLocalAdjustWidgets(const bool AEnabled, const int ARow);
   void ToggleSpotRepairWidgets(const bool AEnabled);
 
 //------------------------------------------------------------------------------

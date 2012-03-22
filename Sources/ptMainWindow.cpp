@@ -371,9 +371,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   //
 
   // "local adjust"
-  Macro_ConnectSomeButton(LocalSpot);
-  Macro_ConnectSomeButton(ConfirmLocalSpot);
-  ConfirmLocalSpotButton->hide();
   FSpotCurveWindow = new ptCurveWindow(FEmptyCurve.get(),
                                        ptCurveChannel_SpotLuma,
                                        LocalLumaCurveWidget);
@@ -389,6 +386,14 @@ ptMainWindow::ptMainWindow(const QString Title)
   LocalSpotListView->setItemDelegate(new ptImageSpotItemDelegate(LocalSpotListView));
   connect(LocalSpotListView, SIGNAL(rowChanged(QModelIndex)),
           this, SLOT(UpdateLocalSpotUI(QModelIndex)));
+
+  connect(LocalSpotDownButton, SIGNAL(clicked()), LocalSpotListView, SLOT(moveSpotDown()));
+  connect(LocalSpotUpButton, SIGNAL(clicked()), LocalSpotListView, SLOT(moveSpotUp()));
+  connect(LocalSpotDelButton, SIGNAL(clicked()), LocalSpotListView, SLOT(deleteSpot()));
+  Macro_ConnectSomeButton(LocalSpot);
+  Macro_ConnectSomeButton(ConfirmLocalSpot);
+  ConfirmLocalSpotButton->hide();
+
   UpdateLocalSpotUI(QModelIndex());
 
 
@@ -410,7 +415,11 @@ ptMainWindow::ptMainWindow(const QString Title)
           this, SLOT(UpdateRepairSpotUI(QModelIndex)));
   UpdateRepairSpotUI(QModelIndex());
   // TODO: BJ Hide the unfinished spot repair tab so we can release local adjust alone first.
-  this->TabSpotRepair->hide();
+//  printf("### %d\n", this->ProcessingTabBook->indexOf(LocalTab));
+//  this->ProcessingTabBook->widget(1)->findChild<ptGroupBox*>("TabSpotRepair")->Hide();
+  findChild<ptGroupBox *>(QString("TabSpotRepair"))->Hide();
+//  m_GroupBox->value("TabSpotRepair")->setVisible(0);
+//  m_GroupBox->remove("TabSpotRepair");
 
   //
   // TAB : Geometry
@@ -986,11 +995,11 @@ void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
   if (!ANewIdx.isValid()) {
     // empty spot list or none selected
     FSpotCurveWindow->UpdateView(FEmptyCurve.get());
-    ToggleLocalAdjustWidgets(false);
+    ToggleLocalAdjustWidgets(false, -1);
 
   } else {
-    // update with values from selected spot
-    ToggleLocalAdjustWidgets(true);
+    // update UI elements with actual spot data
+    ToggleLocalAdjustWidgets(true, ANewIdx.row());
     ptLocalSpot* hSpot = static_cast<ptLocalSpot*>(LocalSpotModel->spot(ANewIdx.row()));
     Settings->SetValue("LocalMode", hSpot->mode());
     Settings->SetValue("LocalMaskThreshold", hSpot->threshold());
@@ -1006,7 +1015,10 @@ void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
 
 //==============================================================================
 
-void ptMainWindow::ToggleLocalAdjustWidgets(const bool AEnabled) {
+void ptMainWindow::ToggleLocalAdjustWidgets(const bool AEnabled, const int ARow) {
+  LocalSpotDownButton->setEnabled(AEnabled && (ARow < LocalSpotModel->rowCount()-1));
+  LocalSpotUpButton->setEnabled(AEnabled && (ARow > 0));
+  LocalSpotDelButton->setEnabled(AEnabled);
   LocalMaxRadiusWidget->setEnabled(
       AEnabled &&
       (static_cast<ptLocalSpot*>(LocalSpotModel->spot(LocalSpotListView->currentIndex().row()))
