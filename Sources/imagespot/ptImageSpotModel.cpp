@@ -160,6 +160,14 @@ void ptImageSpotModel::setSpot(const int AIndex, ptImageSpot *ASpotData) {
 
 //==============================================================================
 
+void ptImageSpotModel::setSpotPos(const int AIndex, const int Ax, const int Ay) {
+  FSpotList->at(AIndex)->setPos((uint)Ax, (uint)Ay);
+  this->setData(this->index(AIndex,0), FSpotList->at(AIndex)->name(), Qt::DisplayRole);
+  this->setData(this->index(AIndex,0), CreateToolTip(FSpotList->at(AIndex)), Qt::ToolTipRole);
+}
+
+//==============================================================================
+
 Qt::DropActions ptImageSpotModel::supportedDropActions() const {
   return Qt::MoveAction;
 }
@@ -216,8 +224,7 @@ void ptImageSpotModel::RebuildModel() {
     // ListView checkboxes are tristate, so we can’t pass a bool as is.
     hSpotItem->setCheckState(hSpot->isEnabled() ? Qt::Checked : Qt::Unchecked);
     hSpotItem->setSizeHint(FSizeHint);
-    hSpotItem->setToolTip(QString(tr("Coordinates in current pipe size: x=%1, y=%2"))
-                                    .arg(hSpot->x()).arg(hSpot->y()) );
+    hSpotItem->setToolTip(CreateToolTip(hSpot));
     appendRow(hSpotItem);
   }
 }
@@ -225,7 +232,14 @@ void ptImageSpotModel::RebuildModel() {
 //==============================================================================
 
 QString ptImageSpotModel::AppendCoordsToName(const ptImageSpot *ASpot) {
-  return QString("%1\t@%2,%3px").arg(ASpot->name()).arg(ASpot->x()).arg(ASpot->y());
+  return QString("%1\t@%2, %3px").arg(ASpot->name()).arg(ASpot->x()).arg(ASpot->y());
+}
+
+//==============================================================================
+
+QString ptImageSpotModel::CreateToolTip(const ptImageSpot *ASpot) {
+  return
+    QString(tr("Coordinates in current pipe size: x=%1, y=%2")).arg(ASpot->x()).arg(ASpot->y());
 }
 
 //==============================================================================

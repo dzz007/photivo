@@ -48,10 +48,10 @@ ptImageSpotListView::ptImageSpotListView(QWidget *AParent,
   setEditTriggers(QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
   setSelectionMode(QAbstractItemView::SingleSelection);
 
-  setDragDropMode(QAbstractItemView::InternalMove);
-  setDragEnabled(true);
-  setDropIndicatorShown(true);
-  setAcceptDrops(true);
+//  setDragDropMode(QAbstractItemView::InternalMove);
+  setDragEnabled(false);
+//  setDropIndicatorShown(true);
+//  setAcceptDrops(true);
 }
 
 //==============================================================================
@@ -108,7 +108,7 @@ void ptImageSpotListView::processCoordinates(const QPoint &APos, const bool AMov
 
   if (AMoveCurrent && this->currentIndex().isValid()) {
     // move currently selected spot to new position
-    hModel->spot(this->currentIndex().row())->setPos(APos.x(), APos.y());
+    hModel->setSpotPos(this->currentIndex().row(), APos.x(), APos.y());
 
   } else {
     // append new spot to list

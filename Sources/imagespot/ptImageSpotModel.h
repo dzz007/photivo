@@ -93,6 +93,8 @@ public:
         reparented to the model. */
   virtual void setSpot(const int AIndex, ptImageSpot *ASpotData);
 
+  void setSpotPos(const int AIndex, const int Ax, const int Ay);
+
   /*! Returns a pointer to the spot at list position \c AIndex. */
   ptImageSpot *spot(const int AIndex) { return FSpotList->at(AIndex); }
 
@@ -126,6 +128,8 @@ private:
   /*! Returns a spot’s name and coordinates in the form "spotname\t@x,y".
       This formatting is needed for the ListView caption. */
   QString AppendCoordsToName(const ptImageSpot *ASpot);
+
+  QString CreateToolTip(const ptImageSpot *ASpot);
 
 
 };
