@@ -50,6 +50,8 @@ QWidget* ptImageSpotItemDelegate::createEditor(QWidget *parent,
 void ptImageSpotItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
   auto hNameEd = qobject_cast<ptImageSpotEditor*>(editor)->NameEditor;
   QString hText = index.data().toString();
+  // Remove the coordinates ("\t@x, ypx") from the name. A bit hackish but avoids
+  // including any spot related headers.
   hText.chop(hText.length() - hText.lastIndexOf("\t@"));
   hNameEd->setText(hText);
   hNameEd->selectAll();
