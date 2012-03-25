@@ -29,8 +29,8 @@
 #include "ptGuiOptions.h"
 #include "filemgmt/ptFileMgrConstants.h"
 
-extern int RepairSpotCount();
-extern int LocalSpotCount();
+extern bool HasActiveRepairSpots();
+extern bool HasActiveLocalSpots();
 
 //==============================================================================
 
@@ -1704,10 +1704,10 @@ sToolInfo ToolInfo (const QString GuiName) {
   // Tab Local Edit
   if (GuiName == "TabLocalAdjust") {
     Info.Name = "Local adjust";
-    Info.IsActive = LocalSpotCount() > 0;
+    Info.IsActive = HasActiveLocalSpots();
   } else if (GuiName == "TabSpotRepair") {
     Info.Name = "Spot Repair";
-    Info.IsActive = RepairSpotCount() > 0;
+    Info.IsActive = HasActiveRepairSpots();
   }
 
   // Tab Geometry

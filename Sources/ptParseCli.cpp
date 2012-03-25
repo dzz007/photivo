@@ -45,7 +45,8 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
   }
 
   QStringList params;
-  params << "-i" << "-j" << "--load-and-delete" << "--pts" << "--new-instance" << "--no-fmgr" << "-h";
+  params << "-i" << "-j" << "--load-and-delete" << "--pts" << "--new-instance" << "--no-fmgr"
+         << "-h" << "--help" << "-help";
 
   int i = 1;
   bool MustBeFilename = false;
@@ -93,7 +94,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
       cli.NewInstance++;
     } else if (whichParam == 5) {
       cli.NoOpenFileMgr++;
-    } else if (whichParam == 6) {
+    } else if (whichParam == 6 || whichParam == 7 || whichParam == 8) {
       cli.ShowHelp++;
       break;
     } else if (whichParam == -1) {  // can only be image file without -i param

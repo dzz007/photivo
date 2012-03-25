@@ -449,7 +449,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
 
   // Handle cli arguments
-  QString PhotivoCliUsageMsg = QObject::tr(
+  QString PhotivoCliUsageMsg = "<pre>" + QObject::tr(
 "Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
 "                [-h] [--new-instance]\n"
 "Options:\n"
@@ -470,12 +470,12 @@ int photivoMain(int Argc, char *Argv[]) {
 "--new-instance\n"
 "      Allow opening another Photivo instance instead of using a currently\n"
 "      running Photivo. Job files are always opened in a new instance.\n"
-"--no-filemgr\n"
+"--no-fmgr\n"
 "      Prevent auto-open file manager when Photivo starts.\n"
 "-h\n"
 "      Display this usage information.\n\n"
 "For more documentation visit the wiki: http://photivo.org/photivo/start\n"
-  );
+  ) + "</pre>";
 
   ptCliCommands cli = { cliNoAction, "", "", false, false };
 
@@ -2856,26 +2856,9 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
 
   MainWindow->Settings_2_Form();
 
-  // clean up non-existing files in settings file
-  // currently, we completely preserve the settings file
-  /*
-  for (int i = 0; i < ListCombos.size(); i++) {
-    JobSettings.setValue(ListCombos.at(i), Settings->GetInt(ListCombos.at(i)));
-    JobSettings.setValue(Locations.at(i), Settings->GetStringList(Locations.at(i)));
-  }
-  JobSettings.setValue("CameraColorProfile", Settings->GetString("CameraColorProfile"));*/
-
-  // list of spotrepair spots
-//  RepairSpotList->clear();
-//  int size = JobSettings.beginReadArray(RepairSpotList->iniName());
-//  for (int i = 0; i < size; i++) {
-//    JobSettings.setArrayIndex(i);
-//    RepairSpotList->append(new ptRepairSpot(&JobSettings));
-//  }
-//  JobSettings.endArray();
   MainWindow->LocalSpotModel->ReadFromFile(&JobSettings);
   MainWindow->RepairSpotModel->ReadFromFile(&JobSettings);
-
+  ReportProgress(QObject::tr("Ready"));
 
   JobSettings.sync();
   if (JobSettings.status() == QSettings::NoError) {
@@ -4664,7 +4647,8 @@ void CB_LocalSpotButton() {
   ReportProgress(QObject::tr("Prepare for local adjust"));
 
   TheProcessor->RunLocalEdit(ptProcessorStopBefore::LocalAdjust);
-  UpdatePreviewImage(TheProcessor->m_Image_AfterLocalEdit);
+  MainWindow->LocalSpotListView->setInteractionOngoing(true);
+  // No UpdatePreviewImage(), that is handled by setInteractionOngoing()
 
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->ShowStatus(QObject::tr("Local adjust"));
@@ -4681,6 +4665,7 @@ void CB_LocalSpotButton() {
 
 void CleanupAfterLocalAdjust() {
   BlockTools(btmUnblock);
+  MainWindow->LocalSpotListView->setInteractionOngoing(false);
   MainWindow->LocalSpotButton->show();
   MainWindow->ConfirmLocalSpotButton->hide();
   Update(ptProcessorPhase_LocalEdit);
@@ -4704,7 +4689,7 @@ void CB_LocalModeChoice(const QVariant Value) {
   Settings->SetValue("LocalMode", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setMode((ptLocalAdjustMode)Value.toInt());
-  Update(ptProcessorPhase_LocalEdit);
+  MainWindow->LocalSpotListView->UpdatePreview();
 }
 
 //==============================================================================
@@ -4715,7 +4700,7 @@ void CB_LocalMaskThresholdInput(const QVariant Value) {
   Settings->SetValue("LocalMaskThreshold", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setThreshold(Value.toFloat());
-  Update(ptProcessorPhase_LocalEdit);
+  MainWindow->LocalSpotListView->UpdatePreview();
 }
 
 //==============================================================================
@@ -4726,7 +4711,7 @@ void CB_LocalMaskLumaWeightInput(const QVariant Value) {
   Settings->SetValue("LocalMaskLumaWeight", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setLumaWeight(Value.toFloat());
-  Update(ptProcessorPhase_LocalEdit);
+  MainWindow->LocalSpotListView->UpdatePreview();
 }
 
 //==============================================================================
@@ -4737,7 +4722,7 @@ void CB_LocalEgdeAwareThresholdCheck(const QVariant Value) {
   Settings->SetValue("LocalEgdeAwareThreshold", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setEdgeAware(Value.toBool());
-  Update(ptProcessorPhase_LocalEdit);
+  MainWindow->LocalSpotListView->UpdatePreview();
 }
 
 //==============================================================================
@@ -4749,7 +4734,7 @@ void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setHasMaxRadius(Value.toBool());
   MainWindow->LocalMaxRadiusWidget->setEnabled(Value.toBool());
-  Update(ptProcessorPhase_LocalEdit);
+  MainWindow->LocalSpotListView->UpdatePreview();
 }
 
 //==============================================================================
@@ -4761,7 +4746,7 @@ void CB_LocalMaxRadiusInput(const QVariant Value) {
   Settings->SetValue("LocalMaxRadius", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setMaxRadius(Value.toUInt()>>Settings->GetInt("PipeSize"));
-  Update(ptProcessorPhase_LocalEdit);
+  MainWindow->LocalSpotListView->UpdatePreview();
 }
 
 //==============================================================================
@@ -4772,7 +4757,7 @@ void CB_LocalSaturationInput(const QVariant Value) {
   Settings->SetValue("LocalSaturation", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setSaturation(Value.toFloat());
-  Update(ptProcessorPhase_LocalEdit);
+  MainWindow->LocalSpotListView->UpdatePreview();
 }
 
 //==============================================================================
@@ -4783,7 +4768,7 @@ void CB_LocalAdaptiveSaturationCheck(const QVariant Value) {
   Settings->SetValue("LocalAdaptiveSaturation", Value);
   static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setAdaptiveSaturation(Value.toBool());
-  Update(ptProcessorPhase_LocalEdit);
+  MainWindow->LocalSpotListView->UpdatePreview();
 }
 
 
@@ -9243,20 +9228,14 @@ ptImageType CheckImageType(QString filename,
 // Hack to pass current number of spots to ptSettings for determining
 // the tool active state. Used there in ToolInfo(). Avoids making the MainWindow
 // known to ptSettings.
-int RepairSpotCount() {
-  if (InStartup) {
-    return 0;
-  } else {
-    return MainWindow->RepairSpotModel->rowCount();
-  }
+bool HasActiveLocalSpots() {
+  if (InStartup) return false;
+  return MainWindow->LocalSpotModel->hasEnabledSpots();
 }
 
-int LocalSpotCount() {
-  if (InStartup) {
-    return 0;
-  } else {
-    return MainWindow->LocalSpotModel->rowCount();
-  }
+bool HasActiveRepairSpots() {
+  if (InStartup) return false;
+  return MainWindow->RepairSpotModel->hasEnabledSpots();
 }
 
 //==============================================================================

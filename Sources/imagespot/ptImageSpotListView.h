@@ -48,15 +48,22 @@ public:
                                ptImageSpot::PCreateSpotFunc ASpotCreator);
   ~ptImageSpotListView();
 
+  void setInteractionOngoing(const bool AOngoing);
+  void UpdatePreview();
+
 //------------------------------------------------------------------------------
 
 protected:
+  virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
   virtual void keyPressEvent(QKeyEvent *event);
 
 //------------------------------------------------------------------------------
 
 private:
-  ptImageSpot::PCreateSpotFunc FSpotCreator;  // pointer to spot factory method
+  void UpdateToolActiveState();
+
+  bool                          FInteractionOngoing;
+  ptImageSpot::PCreateSpotFunc  FSpotCreator;  // pointer to spot factory method
 
 //------------------------------------------------------------------------------
 

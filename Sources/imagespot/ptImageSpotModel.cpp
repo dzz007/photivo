@@ -21,7 +21,6 @@
 *******************************************************************************/
 
 #include <cassert>
-#include <algorithm>
 
 #include "ptImageSpotModel.h"
 #include "ptLocalSpot.h"
@@ -64,6 +63,17 @@ Qt::ItemFlags ptImageSpotModel::flags(const QModelIndex &index) const {
   } else {
     return Qt::ItemIsDropEnabled;
   }
+}
+
+//==============================================================================
+
+bool ptImageSpotModel::hasEnabledSpots() {
+  // Find at least one enabled spot in the list
+  for (auto hSpot: *FSpotList) {
+    if (hSpot->isEnabled())
+      return true;
+  }
+  return false;
 }
 
 //==============================================================================
@@ -112,15 +122,14 @@ void ptImageSpotModel::ReadFromFile(QSettings *APtsFile) {
 
 void ptImageSpotModel::RunFiltering(ptImage *AImage) {
   if (FPtsName == CLocalAdjustName) {
-    std::for_each (FSpotList->begin(), FSpotList->end(), [AImage](ptImageSpot *hSpot) {
+    for (auto hSpot: *FSpotList) {
       ptLocalSpot *hLSpot = static_cast<ptLocalSpot*>(hSpot);
       AImage->MaskedColorAdjust((uint16_t)hLSpot->x(),
                                 (uint16_t)hLSpot->y(),
                                           hLSpot->threshold(),
                                 (uint16_t)hLSpot->maxRadius(),
                                           hLSpot->lumaCurve());
-
-    } );
+    }
 
   } else if (FPtsName == CRepairSpotName) {
     // TODO: BJ repair spot processing
@@ -137,19 +146,17 @@ bool ptImageSpotModel::setData(const QModelIndex &index,
                                const QVariant    &value,
                                int               role /*= Qt::EditRole*/)
 {
-  auto hSpot  = FSpotList->at(index.row());
-  auto hValue = QVariant(value);
   // update underlying spot data structure
+  auto hSpot = FSpotList->at(index.row());
   if (role == Qt::DisplayRole) {            // spot name
     hSpot->setName(value.toString());
-    hValue = AppendCoordsToName(hSpot);
 
   } else if (role == Qt::CheckStateRole) { // en/disabled switch
     hSpot->setEnabled(value.toBool());
   }
 
   // update model data
-  return QStandardItemModel::setData(index, hValue, role);
+  return QStandardItemModel::setData(index, value, role);
 }
 
 //==============================================================================
@@ -163,7 +170,6 @@ void ptImageSpotModel::setSpot(const int AIndex, ptImageSpot *ASpotData) {
 
 void ptImageSpotModel::setSpotPos(const int AIndex, const int Ax, const int Ay) {
   FSpotList->at(AIndex)->setPos((uint)Ax, (uint)Ay);
-  this->setData(this->index(AIndex,0), FSpotList->at(AIndex)->name(), Qt::DisplayRole);
   this->setData(this->index(AIndex,0), CreateToolTip(FSpotList->at(AIndex)), Qt::ToolTipRole);
 }
 
@@ -217,30 +223,33 @@ void ptImageSpotModel::ClearList() {
 void ptImageSpotModel::RebuildModel() {
   this->clear();  // clears the model, NOT the list of spot data
 
-  for (int i = 0; i < FSpotList->size(); i++) {
-    ptImageSpot* hSpot = FSpotList->at(i);
-    QStandardItem* hSpotItem = new QStandardItem(AppendCoordsToName(hSpot));
-    hSpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
-                        Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    // ListView checkboxes are tristate, so we can’t pass a bool as is.
-    hSpotItem->setCheckState(hSpot->isEnabled() ? Qt::Checked : Qt::Unchecked);
-    hSpotItem->setSizeHint(FSizeHint);
-    hSpotItem->setToolTip(CreateToolTip(hSpot));
-    appendRow(hSpotItem);
+  // Create new model entries from spot data structure
+  for (auto hSpot: *FSpotList) {
+    this->appendRow(CreateSpotItem(hSpot));
   }
 }
 
 //==============================================================================
 
-QString ptImageSpotModel::AppendCoordsToName(const ptImageSpot *ASpot) {
-  return QString("%1\t@%2, %3px").arg(ASpot->name()).arg(ASpot->x()).arg(ASpot->y());
+QStandardItem *ptImageSpotModel::CreateSpotItem(const ptImageSpot *ASpot) {
+  QStandardItem* hSpotItem = new QStandardItem(ASpot->name());
+
+  hSpotItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable |
+                      Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+  // ListView checkboxes are tristate, so we can’t pass a bool as is.
+  hSpotItem->setCheckState(ASpot->isEnabled() ? Qt::Checked : Qt::Unchecked);
+  hSpotItem->setSizeHint(FSizeHint);
+  hSpotItem->setToolTip(CreateToolTip(ASpot));
+
+  return hSpotItem;
 }
 
 //==============================================================================
 
 QString ptImageSpotModel::CreateToolTip(const ptImageSpot *ASpot) {
   return
-    QString(tr("Coordinates in current pipe size: x=%1, y=%2")).arg(ASpot->x()).arg(ASpot->y());
+    QString(tr("%1\nCoordinates in pipe size: x=%2, y=%3"))
+      .arg(ASpot->name()).arg(ASpot->x()).arg(ASpot->y());
 }
 
 //==============================================================================
