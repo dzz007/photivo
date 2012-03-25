@@ -114,11 +114,12 @@ void ptImageSpotModel::RunFiltering(ptImage *AImage) {
   if (FPtsName == CLocalAdjustName) {
     std::for_each (FSpotList->begin(), FSpotList->end(), [AImage](ptImageSpot *hSpot) {
       ptLocalSpot *hLSpot = static_cast<ptLocalSpot*>(hSpot);
-      AImage->MaskedContrast((uint16_t)hLSpot->x(),
-                             (uint16_t)hLSpot->y(),
-                             hLSpot->threshold(),
-                             0,
-                             0);
+      AImage->MaskedColorAdjust((uint16_t)hLSpot->x(),
+                                (uint16_t)hLSpot->y(),
+                                          hLSpot->threshold(),
+                                (uint16_t)hLSpot->maxRadius(),
+                                          hLSpot->lumaCurve());
+
     } );
 
   } else if (FPtsName == CRepairSpotName) {

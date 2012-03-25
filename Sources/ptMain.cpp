@@ -1847,6 +1847,9 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
           PreviewImage->Set(TheProcessor->m_Image_AfterDcRaw);
         }
         break;
+      case ptLocalTab:
+        PreviewImage->Set(TheProcessor->m_Image_AfterLocalEdit);
+        break;
       case ptGeometryTab:
         PreviewImage->Set(TheProcessor->m_Image_AfterGeometry);
         break;
@@ -4696,10 +4699,10 @@ void CB_ConfirmLocalSpotButton() {
 //==============================================================================
 
 void CB_LocalModeChoice(const QVariant Value) {
-  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("LocalMode", Value);
-  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setMode((ptLocalAdjustMode)Value.toInt());
   Update(ptProcessorPhase_LocalEdit);
 }
@@ -4707,10 +4710,10 @@ void CB_LocalModeChoice(const QVariant Value) {
 //==============================================================================
 
 void CB_LocalMaskThresholdInput(const QVariant Value) {
-  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("LocalMaskThreshold", Value);
-  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setThreshold(Value.toFloat());
   Update(ptProcessorPhase_LocalEdit);
 }
@@ -4718,10 +4721,10 @@ void CB_LocalMaskThresholdInput(const QVariant Value) {
 //==============================================================================
 
 void CB_LocalMaskLumaWeightInput(const QVariant Value) {
-  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("LocalMaskLumaWeight", Value);
-  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setLumaWeight(Value.toFloat());
   Update(ptProcessorPhase_LocalEdit);
 }
@@ -4729,10 +4732,10 @@ void CB_LocalMaskLumaWeightInput(const QVariant Value) {
 //==============================================================================
 
 void CB_LocalEgdeAwareThresholdCheck(const QVariant Value) {
-  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("LocalEgdeAwareThreshold", Value);
-  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setEdgeAware(Value.toBool());
   Update(ptProcessorPhase_LocalEdit);
 }
@@ -4740,10 +4743,10 @@ void CB_LocalEgdeAwareThresholdCheck(const QVariant Value) {
 //==============================================================================
 
 void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
-  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("LocalMaxRadiusCheck", Value);
-  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setHasMaxRadius(Value.toBool());
   MainWindow->LocalMaxRadiusWidget->setEnabled(Value.toBool());
   Update(ptProcessorPhase_LocalEdit);
@@ -4752,21 +4755,22 @@ void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
 //==============================================================================
 
 void CB_LocalMaxRadiusInput(const QVariant Value) {
-  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  // The individual spot needs pipe size values, so we transform the value here.
+  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("LocalMaxRadius", Value);
-  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
-      ->setMaxRadius(Value.toUInt());
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
+      ->setMaxRadius(Value.toUInt()>>Settings->GetInt("PipeSize"));
   Update(ptProcessorPhase_LocalEdit);
 }
 
 //==============================================================================
 
 void CB_LocalSaturationInput(const QVariant Value) {
-  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("LocalSaturation", Value);
-  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setSaturation(Value.toFloat());
   Update(ptProcessorPhase_LocalEdit);
 }
@@ -4774,10 +4778,10 @@ void CB_LocalSaturationInput(const QVariant Value) {
 //==============================================================================
 
 void CB_LocalAdaptiveSaturationCheck(const QVariant Value) {
-  int hRow = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("LocalAdaptiveSaturation", Value);
-  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hRow))
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
       ->setAdaptiveSaturation(Value.toBool());
   Update(ptProcessorPhase_LocalEdit);
 }
@@ -4825,28 +4829,28 @@ void CB_ConfirmSpotRepairButton() {
 }
 
 void CB_SpotAlgorithmChoice(const QVariant Value) {
-  int hRow = MainWindow->RepairSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  int hSpotIdx = MainWindow->RepairSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("SpotAlgorithm", Value);
-  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hRow))
+  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hSpotIdx))
       ->setAlgorithm((ptSpotRepairAlgo)Value.toInt());
   Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_SpotOpacityInput(const QVariant Value) {
-  int hRow = MainWindow->RepairSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  int hSpotIdx = MainWindow->RepairSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("SpotOpacity", Value);
-  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hRow))
+  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hSpotIdx))
       ->setOpacity(Value.toFloat());
   Update(ptProcessorPhase_LocalEdit);
 }
 
 void CB_SpotEdgeSoftnessInput(const QVariant Value) {
-  int hRow = MainWindow->RepairSpotListView->currentIndex().row();
-  if (hRow < 0) return;
+  int hSpotIdx = MainWindow->RepairSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
   Settings->SetValue("SpotEdgeSoftness", Value);
-  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hRow))
+  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hSpotIdx))
       ->setEdgeSoftness(Value.toFloat());
   Update(ptProcessorPhase_LocalEdit);
 }

@@ -436,6 +436,13 @@ ptImage* MaskedContrast(const uint16_t APointX,
                         const float AContrast,
                         const float AContrastThresh);
 
+// MaskedContrast
+ptImage* MaskedColorAdjust(const uint16_t APointX,
+                           const uint16_t APointY,
+                           const float    AMaskThresh,
+                           const uint16_t AMaskRadius,
+                           const ptCurve *ACurve);
+
 // GetVignetteMask
 float *GetVignetteMask(const short Inverted,
                        const short Exponent,

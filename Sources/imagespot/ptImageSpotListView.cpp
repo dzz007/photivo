@@ -26,14 +26,16 @@
 #include "ptImageSpotModel.h"
 #include "ptImageSpot.h"
 #include "../ptTheme.h"
-#include "../ptViewWindow.h"
 #include "../ptImage.h"
 #include "../ptSettings.h"
+#include "../ptProcessor.h"
 
-extern ptImage *PreviewImage; // global prev image. Basis for quick interactive preview
-extern ptTheme *Theme;
-extern ptSettings *Settings;
-extern ptViewWindow* ViewWindow;
+extern ptTheme     *Theme;
+extern ptSettings  *Settings;
+extern ptProcessor *TheProcessor;
+
+extern void UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
+                               const short    OnlyHistogram = 0);
 
 //==============================================================================
 
@@ -120,12 +122,11 @@ void ptImageSpotListView::processCoordinates(const QPoint &APos, const bool AMov
 
   // Update preview in ViewWindow
   std::unique_ptr<ptImage> hImage(new ptImage);
-  hImage->Set(PreviewImage);
-  //TODO: BJ PreviewImage is in ptSpace_Profiled -> colour space conversion fails
-//  hImage->RGBToLch();
+  hImage->Set(TheProcessor->m_Image_AfterLocalEdit);
+  hImage->RGBToLch();
   hModel->RunFiltering(hImage.get());
-//  hImage->LchToRGB(Settings->GetInt("WorkColor"));
-  ViewWindow->UpdateImage(hImage.get());
+  hImage->LchToRGB(Settings->GetInt("WorkColor"));
+  UpdatePreviewImage(hImage.get());
 }
 
 //==============================================================================

@@ -2653,6 +2653,7 @@ void ptProcessor::Run(short Phase,
 //==============================================================================
 
 void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
+  // We fetch the image from the input processing
   if (Settings->GetInt("IsRAW") == 0) {
     // image is a bitmap
     if (StopBefore == ptProcessorStopBefore::NoStop) {
@@ -2698,36 +2699,45 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
     }
   }
 
-//  m_Image_AfterLocalEdit->RGBToLch();
+  // We have the image for the pipe in linear RGB.
+
+  if (StopBefore == ptProcessorStopBefore::LocalAdjust) return;
 
   // execute local adjust spots
-  if (StopBefore == ptProcessorStopBefore::LocalAdjust) return;
-  if (StopBefore == ptProcessorStopBefore::NoStop) {
-    m_ReportProgress(tr("Local spot adjustments"));
+  if (Settings->ToolIsActive("TabLocalAdjust")) {
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
+      m_ReportProgress(tr("Local spot adjustments"));
+    }
+
+    assert(LocalSpotModel != nullptr);
+    m_Image_AfterLocalEdit->RGBToLch();
+
+    LocalSpotModel->RunFiltering(m_Image_AfterLocalEdit);
+
+    if (StopBefore == ptProcessorStopBefore::NoStop) {
+      TRACEMAIN("Done local spot adjustments at %d ms.",FRunTimer.elapsed());
+    }
   }
 
-  assert(LocalSpotModel != nullptr);
-  LocalSpotModel->RunFiltering(m_Image_AfterLocalEdit);
+//  // execute spot repair
+//  if (StopBefore == ptProcessorStopBefore::SpotRepair) {
+//    m_Image_AfterLocalEdit->LchToRGB(Settings->GetInt("WorkColor"));
+//    return;
+//  }
+//  if (StopBefore == ptProcessorStopBefore::NoStop) {
+//    m_ReportProgress(tr("Spot repair"));
+//  }
 
-  if (StopBefore == ptProcessorStopBefore::NoStop) {
-    TRACEMAIN("Done local spot adjustments at %d ms.",FRunTimer.elapsed());
-  }
+//  assert(RepairSpotModel != nullptr);
+//  RepairSpotModel->RunFiltering(m_Image_AfterLocalEdit);
 
+//  if (StopBefore == ptProcessorStopBefore::NoStop) {
+//    TRACEMAIN("Done spot repair at %d ms.",FRunTimer.elapsed());
+//  }
 
-  // execute spot repair
-  if (StopBefore == ptProcessorStopBefore::SpotRepair) return;
-  if (StopBefore == ptProcessorStopBefore::NoStop) {
-    m_ReportProgress(tr("Spot repair"));
-  }
-
-  assert(RepairSpotModel != nullptr);
-  RepairSpotModel->RunFiltering(m_Image_AfterLocalEdit);
-
-  if (StopBefore == ptProcessorStopBefore::NoStop) {
-    TRACEMAIN("Done spot repair at %d ms.",FRunTimer.elapsed());
-  }
+  // Currently we assume that we only have LCH color space for local edits.
+  m_Image_AfterLocalEdit->LchToRGB(Settings->GetInt("WorkColor"));
 }
-
 
 //==============================================================================
 
