@@ -589,6 +589,8 @@ static short  ToLABFunctionInited = 0;
 
 ptImage* ptImage::RGBToLab() {
 
+  if (m_ColorSpace == ptSpace_Lab) return this;
+
   assert (3 == m_Colors);
 
   double DReference[3];
@@ -900,14 +902,21 @@ ptImage* ptImage::lcmsLabToRGB(const short To,
 //==============================================================================
 
 ptImage *ptImage::RGBToLch() {
+
+  if (m_ColorSpace == ptSpace_LCH) return this;
+
   this->RGBToLab();
   this->LabToLch();
+
   return this;
 }
 
 //==============================================================================
 
 ptImage *ptImage::LchToRGB(const short To) {
+
+  if (m_ColorSpace == To) return this;
+
   LchToLab();
   LabToRGB(To);
   return this;
@@ -942,6 +951,8 @@ void ptImage::ResizeLCH(size_t ASize)
 
 ptImage *ptImage::LabToLch()
 {
+  if (m_ColorSpace == ptSpace_LCH) return this;
+
   assert (m_ColorSpace == ptSpace_Lab);
 
   uint32_t hSize = (uint32_t)m_Width*m_Height;
@@ -960,7 +971,7 @@ ptImage *ptImage::LabToLch()
   }
 
   FREE(m_Image);
-  m_Image      = 0;
+  m_Image      = nullptr;
   m_ColorSpace = ptSpace_LCH;
 
   return this;
@@ -970,6 +981,8 @@ ptImage *ptImage::LabToLch()
 
 ptImage *ptImage::LchToLab()
 {
+  if (m_ColorSpace == ptSpace_Lab) return this;
+
   assert (m_ColorSpace == ptSpace_LCH);
   assert (m_Image      == 0);
 
@@ -5825,6 +5838,23 @@ ptImage *ptImage::MaskedContrast(const uint16_t APointX,
   }
 
   FREE(hMask);
+  return this;
+}
+
+//==============================================================================
+
+ptImage *ptImage::MaskedColorAdjust(const uint16_t APointX,
+                                    const uint16_t APointY,
+                                    const float    AMaskThresh,
+                                    const uint16_t AMaskRadius,
+                                    const ptCurve *ACurve)
+{
+  assert (m_ColorSpace == ptSpace_LCH);
+
+  m_ImageL[APointY*m_Width + APointX] = 0;
+  m_ImageC[APointY*m_Width + APointX] = 0;
+  m_ImageH[APointY*m_Width + APointX] = 0;
+
   return this;
 }
 
