@@ -45,12 +45,12 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
   }
 
   QStringList params;
-  params << "-i" << "-j" << "--load-and-delete" << "--pts" << "--new-instance" << "--no-fmgr"
+  params << "-i" << "-j" << "--load-and-delete" << "--pts" << "--new-instance" << "--no-fmgr" << "-p"
          << "-h" << "--help" << "-help";
 
   int i = 1;
   bool MustBeFilename = false;
-  bool MustBePtsName = false;
+  bool MustBePtsName  = false;
   while (i < argc) {
     QString current = argv[i];
     int whichParam = params.indexOf(current.toLower());
@@ -92,9 +92,9 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
       MustBePtsName = true;
     } else if (whichParam == 4) {
       cli.NewInstance++;
-    } else if (whichParam == 5) {
+    } else if (whichParam == 5 || whichParam == 6) {
       cli.NoOpenFileMgr++;
-    } else if (whichParam == 6 || whichParam == 7 || whichParam == 8) {
+    } else if (whichParam == 7 || whichParam == 8 || whichParam == 9) {
       cli.ShowHelp++;
       break;
     } else if (whichParam == -1) {  // can only be image file without -i param
@@ -124,9 +124,9 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
     result.Mode = cliShowHelp;
 
   } else {
-    result.Filename = cli.Filename;
-    result.PtsFilename = cli.PtsFilename;
-    result.NewInstance = cli.NewInstance > 0;
+    result.Filename      = cli.Filename;
+    result.PtsFilename   = cli.PtsFilename;
+    result.NewInstance   = cli.NewInstance > 0;
     result.NoOpenFileMgr = cli.NoOpenFileMgr;
 
     if (cli.LoadFile > 0) {
