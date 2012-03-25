@@ -62,20 +62,21 @@ public:
   explicit ptRepairSpot(QSettings *APtsFile = nullptr);
 
   /*! Create a repair spot with specific values.  */
-  ptRepairSpot(const uint spotX,
-               const uint spotY,
-               const uint radiusX,
-               const uint radiusY,
-               const short isEnabled,
-               const QString &AName,
-               const float angle,
-               const uint edgeRadius,
-               const float edgeSoftness,
-               const float opacity,
-               const ptSpotRepairAlgo algorithm,
-               const short hasRepairer = 0,
-               const uint repairerX = 0,
-               const uint repairerY = 0);
+// BJ: this constructor probably superfluous
+//  ptRepairSpot(const uint spotX,
+//               const uint spotY,
+//               const uint radiusX,
+//               const uint radiusY,
+//               const short isEnabled,
+//               const QString &AName,
+//               const float angle,
+//               const uint edgeRadius,
+//               const float edgeSoftness,
+//               const float opacity,
+//               const ptSpotRepairAlgo algorithm,
+//               const short hasRepairer = 0,
+//               const uint repairerX = 0,
+//               const uint repairerY = 0);
 
   /*! Returns the spot's rotation angle in degrees clockwise. */
   inline float angle() const { return FAngle; }

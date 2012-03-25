@@ -106,8 +106,8 @@ public:
   virtual void WriteToFile(QSettings *APtsFile);
 
   /*! Convenience functions to access the spot’s X and Y coordinates. */
-  inline int x() const { return FPos.x(); }
-  inline int y() const { return FPos.y(); }
+  inline int x() const { return FPos.x() >> Settings->GetInt("Scaled"); }
+  inline int y() const { return FPos.y() >> Settings->GetInt("Scaled"); }
 
 //------------------------------------------------------------------------------
 

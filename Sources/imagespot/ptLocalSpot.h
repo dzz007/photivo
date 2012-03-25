@@ -30,6 +30,7 @@ using std::unique_ptr;
 
 #include "ptImageSpot.h"
 #include "../ptCurve.h"
+#include "../ptSettings.h"
 
 //==============================================================================
 
@@ -42,26 +43,36 @@ public:
 
   explicit ptLocalSpot(QSettings *APtsFile = nullptr);
 
-  /*! Standard getters. */
-  bool hasMaxRadius() { return FHasMaxRadius; }
-  bool isAdaptiveSaturation() { return FIsAdaptiveSaturation; }
-  bool isEdgeAware() { return FIsEdgeAware; }
-  ptCurve *lumaCurve() { return FLumaCurve.get(); }
-  float lumaWeight() { return FLumaWeight; }
-  uint maxRadius() { return FMaxRadius; }
+  /*!
+   *  \name Standard getters.
+   *  Standard getter methods. See the the setters documentation for detailed descriptions.
+   */
+  ///@{
+  bool              hasMaxRadius() { return FHasMaxRadius >> Settings->GetInt("Scaled"); }
+  bool              isAdaptiveSaturation() { return FIsAdaptiveSaturation; }
+  bool              isEdgeAware() { return FIsEdgeAware; }
+  /*! Returns a pointer to the spot’s luminance curve. The curve is a read only member. */
+  ptCurve           *lumaCurve() { return FLumaCurve.get(); }
+  float             lumaWeight() { return FLumaWeight; }
+  uint              maxRadius() { return FMaxRadius >> Settings->GetInt("Scaled"); }
   ptLocalAdjustMode mode() { return FMode; }
-  float saturation() { return FSaturation; }
-  float threshold() { return FThreshold; }
+  float             saturation() { return FSaturation; }
+  float             threshold() { return FThreshold; }
+  ///@}
 
-  /*! Standard setters. */
+  /*!
+   *  \name Standard setters.
+   */
+  ///@{
   void setHasMaxRadius(const bool AHasMaxRadius) { FHasMaxRadius = AHasMaxRadius; }
   void setAdaptiveSaturation(const bool AIsAdaptive) { FIsAdaptiveSaturation = AIsAdaptive; }
   void setEdgeAware(const bool AIsEdgeAware) { FIsEdgeAware = AIsEdgeAware; }
   void setLumaWeight(const float AWeight) { FLumaWeight = AWeight; }
-  void setMaxRadius(const uint ARadius) { FMaxRadius = ARadius; }
+  void setMaxRadius(const uint ARadius) { FMaxRadius = ARadius << Settings->GetInt("Scaled"); }
   void setMode(const ptLocalAdjustMode AMode) { FMode = AMode; }
   void setSaturation(const float ASaturation) { FSaturation = ASaturation; }
   void setThreshold(const float AThreshold) { FThreshold = AThreshold; }
+  ///@}
 
   /*! Writes all data to the currently opened ini file.
     The ini’s \c WriteArray() must be set appropriately before you use this.

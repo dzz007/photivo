@@ -66,6 +66,8 @@ QPoint ptImageSpot::pos() const {
                 FPos.y() >> Settings->GetInt("Scaled") );
 }
 
+//==============================================================================
+
 void ptImageSpot::setRadius(uint ARadius) {
   FRadius = ARadius << Settings->GetInt("Scaled");
 }
@@ -73,8 +75,8 @@ void ptImageSpot::setRadius(uint ARadius) {
 //==============================================================================
 
 void ptImageSpot::setPos(uint Ax, uint Ay) {
-  FPos.setX(Ax);
-  FPos.setY(Ay);
+  FPos.setX(Ax << Settings->GetInt("Scaled"));
+  FPos.setY(Ay << Settings->GetInt("Scaled"));
 }
 
 //==============================================================================

@@ -29,11 +29,16 @@
 #include "../ptImage.h"
 #include "../ptSettings.h"
 #include "../ptProcessor.h"
+#include "../ptGroupBox.h"
 
 extern ptTheme     *Theme;
 extern ptSettings  *Settings;
 extern ptProcessor *TheProcessor;
 
+extern void Update(short Phase,
+                   short SubPhase       = -1,
+                   short WithIdentify   = 1,
+                   short ProcessorMode  = ptProcessorMode_Preview);
 extern void UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
                                const short    OnlyHistogram = 0);
 
@@ -42,6 +47,7 @@ extern void UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
 ptImageSpotListView::ptImageSpotListView(QWidget *AParent,
                                          ptImageSpot::PCreateSpotFunc ASpotCreator)
 : QListView(AParent),
+  FInteractionOngoing(false),
   FSpotCreator(ASpotCreator)
 {
   setStyle(Theme->style());
@@ -59,6 +65,44 @@ ptImageSpotListView::ptImageSpotListView(QWidget *AParent,
 //==============================================================================
 
 ptImageSpotListView::~ptImageSpotListView() {}
+
+//==============================================================================
+
+void ptImageSpotListView::setInteractionOngoing(const bool AOngoing) {
+  FInteractionOngoing = AOngoing;
+
+  if (FInteractionOngoing && model()->rowCount() > 0) {
+    // Pipe stops *before* spot processing to provide a clean basis for the quick
+    // preview in interactive mode. To make present spots immediately visibe when
+    // entering the interaction, we trigger spot processing now.
+    UpdatePreview();
+  }
+}
+
+//==============================================================================
+
+void ptImageSpotListView::UpdatePreview() {
+  if (FInteractionOngoing) {
+    // We’re in interactive mode: only recalc spots
+    std::unique_ptr<ptImage> hImage(new ptImage);
+    hImage->Set(TheProcessor->m_Image_AfterLocalEdit);
+    hImage->RGBToLch();
+    static_cast<ptImageSpotModel*>(this->model())->RunFiltering(hImage.get());
+    hImage->LchToRGB(Settings->GetInt("WorkColor"));
+    UpdatePreviewImage(hImage.get());
+
+  } else {
+    // not in interactive mode: run pipe
+    Update(ptProcessorPhase_LocalEdit);
+  }
+}
+
+//==============================================================================
+
+void ptImageSpotListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
+  UpdateToolActiveState();
+  QListView::dataChanged(topLeft, bottomRight);
+}
 
 //==============================================================================
 
@@ -80,8 +124,24 @@ void ptImageSpotListView::keyPressEvent(QKeyEvent *event) {
 
 //==============================================================================
 
+void ptImageSpotListView::UpdateToolActiveState() {
+  // Copied from ptMain::Standard_CB_SetAndRun().
+  QWidget* CurrentControl = this->parentWidget();
+  ptGroupBox* CurrentTool = dynamic_cast<ptGroupBox*>(CurrentControl);
+
+  while (CurrentTool == NULL) {
+    CurrentControl = CurrentControl->parentWidget();
+    CurrentTool = dynamic_cast<ptGroupBox*>(CurrentControl);
+  }
+
+  CurrentTool->SetActive(static_cast<ptImageSpotModel*>(model())->hasEnabledSpots());
+}
+
+//==============================================================================
+
 void ptImageSpotListView::deleteSpot() {
   static_cast<ptImageSpotModel*>(model())->removeRows(currentIndex().row(), 1, QModelIndex());
+  UpdatePreview();
   emit rowChanged(currentIndex());
 }
 
@@ -91,6 +151,7 @@ void ptImageSpotListView::moveSpotDown() {
   int hNewRow = static_cast<ptImageSpotModel*>(model())->MoveRow(currentIndex(), +1);
   if (hNewRow > -1) {
     this->setCurrentIndex(this->model()->index(hNewRow, 0));
+    UpdatePreview();
   }
 }
 
@@ -100,13 +161,14 @@ void ptImageSpotListView::moveSpotUp() {
   int hNewRow = static_cast<ptImageSpotModel*>(model())->MoveRow(currentIndex(), -1);
   if (hNewRow > -1) {
     this->setCurrentIndex(this->model()->index(hNewRow, 0));
+    UpdatePreview();
   }
 }
 
 //==============================================================================
 
 void ptImageSpotListView::processCoordinates(const QPoint &APos, const bool AMoveCurrent) {
-  ptImageSpotModel* hModel = qobject_cast<ptImageSpotModel*>(this->model());
+  ptImageSpotModel* hModel = static_cast<ptImageSpotModel*>(this->model());
 
   if (AMoveCurrent && this->currentIndex().isValid()) {
     // move currently selected spot to new position
@@ -118,15 +180,10 @@ void ptImageSpotListView::processCoordinates(const QPoint &APos, const bool AMov
     hSpot->setPos(APos.x(), APos.y());
     hSpot->setName(tr("Spot"));
     hModel->appendSpot(hSpot);
+    UpdateToolActiveState();
   }
 
-  // Update preview in ViewWindow
-  std::unique_ptr<ptImage> hImage(new ptImage);
-  hImage->Set(TheProcessor->m_Image_AfterLocalEdit);
-  hImage->RGBToLch();
-  hModel->RunFiltering(hImage.get());
-  hImage->LchToRGB(Settings->GetInt("WorkColor"));
-  UpdatePreviewImage(hImage.get());
+  UpdatePreview();
 }
 
 //==============================================================================

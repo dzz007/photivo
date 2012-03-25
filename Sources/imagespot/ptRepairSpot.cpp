@@ -51,43 +51,43 @@ ptRepairSpot::ptRepairSpot(QSettings *APtsFile /*= nullptr*/)
 
 //==============================================================================
 
-ptRepairSpot::ptRepairSpot(const uint spotX,
-                           const uint spotY,
-                           const uint radiusX,
-                           const uint radiusY,
-                           const short isEnabled,
-                           const QString &AName,
-                           const float angle,
-                           const uint edgeRadius,
-                           const float edgeSoftness,
-                           const float opacity,
-                           const ptSpotRepairAlgo algorithm,
-                           const short hasRepairer /*= 0*/,
-                           const uint repairerX /*= 0*/,
-                           const uint repairerY /*= 0*/)
-: ptImageSpot(spotX, spotY, radiusX, isEnabled, AName),
-  FAlgorithm(algorithm),
-  FAngle(angle),
-  FEdgeRadius(edgeRadius),
-  FEdgeSoftness(edgeSoftness),
-  FHasRepairer(hasRepairer),
-  FOpacity(opacity),
-  FRadiusY(radiusY)
-{
-  int hToFullPipe = 1 << Settings->GetInt("PipeSize");
-  FEdgeRadius = edgeRadius * hToFullPipe;
-  FRadiusY = radiusY * hToFullPipe;
+//ptRepairSpot::ptRepairSpot(const uint spotX,
+//                           const uint spotY,
+//                           const uint radiusX,
+//                           const uint radiusY,
+//                           const short isEnabled,
+//                           const QString &AName,
+//                           const float angle,
+//                           const uint edgeRadius,
+//                           const float edgeSoftness,
+//                           const float opacity,
+//                           const ptSpotRepairAlgo algorithm,
+//                           const short hasRepairer /*= 0*/,
+//                           const uint repairerX /*= 0*/,
+//                           const uint repairerY /*= 0*/)
+//: ptImageSpot(spotX, spotY, radiusX, isEnabled, AName),
+//  FAlgorithm(algorithm),
+//  FAngle(angle),
+//  FEdgeRadius(edgeRadius),
+//  FEdgeSoftness(edgeSoftness),
+//  FHasRepairer(hasRepairer),
+//  FOpacity(opacity),
+//  FRadiusY(radiusY)
+//{
+//  int hToFullPipe = 1 << Settings->GetInt("PipeSize");
+//  FEdgeRadius = edgeRadius * hToFullPipe;
+//  FRadiusY = radiusY * hToFullPipe;
 
-  FAngle = angle * hToFullPipe;
-  FInit = true;
-  setEdgeSoftness(edgeSoftness);
-  setOpacity(opacity);
-  UpdateWeight();
-  FInit = false;
+//  FAngle = angle * hToFullPipe;
+//  FInit = true;
+//  setEdgeSoftness(edgeSoftness);
+//  setOpacity(opacity);
+//  UpdateWeight();
+//  FInit = false;
 
-  FRepairerPos = QPoint(repairerX * (1 >> Settings->GetInt("PipeSize")),
-                         repairerY * (1 >> Settings->GetInt("PipeSize")) );
-}
+//  FRepairerPos = QPoint(repairerX * (1 >> Settings->GetInt("PipeSize")),
+//                         repairerY * (1 >> Settings->GetInt("PipeSize")) );
+//}
 
 //==============================================================================
 

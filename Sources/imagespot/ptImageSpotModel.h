@@ -66,6 +66,8 @@ public:
   /*! Reimplemented from parent class. */
   virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
+  bool hasEnabledSpots();
+
   /*! Moves the row given by \c AFromIdx by \c AOffset rows and returns the index
       of the destination row.
       Negative offsets move up, positive offsets move down. If \c AFromIdx is invalid
@@ -125,11 +127,8 @@ protected:
 //------------------------------------------------------------------------------
 
 private:
-  /*! Returns a spot’s name and coordinates in the form "spotname\t@x,y".
-      This formatting is needed for the ListView caption. */
-  QString AppendCoordsToName(const ptImageSpot *ASpot);
-
-  QString CreateToolTip(const ptImageSpot *ASpot);
+  QStandardItem*  CreateSpotItem(const ptImageSpot *ASpot);
+  QString         CreateToolTip(const ptImageSpot *ASpot);
 
 
 };
