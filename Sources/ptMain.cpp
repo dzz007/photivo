@@ -470,9 +470,9 @@ int photivoMain(int Argc, char *Argv[]) {
 "--new-instance\n"
 "      Allow opening another Photivo instance instead of using a currently\n"
 "      running Photivo. Job files are always opened in a new instance.\n"
-"--no-fmgr\n"
+"--no-fmgr or -p\n"
 "      Prevent auto-open file manager when Photivo starts.\n"
-"-h\n"
+"--help or -h\n"
 "      Display this usage information.\n\n"
 "For more documentation visit the wiki: http://photivo.org/photivo/start\n"
   ) + "</pre>";
