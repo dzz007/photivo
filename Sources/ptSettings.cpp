@@ -2109,9 +2109,11 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     // Settings tab
     << "TabWorkColorSpace"
     << "TabPreviewColorSpace"
+    << "TabUISettings"
     << "TabGimpCommand"
     << "TabRememberSettings"
     << "TabStartupSettings"
+    << "TabCropSettings"
     << "TabInputControl"
     << "TabToolBoxControl"
     << "TabTabStatusIndicator"
@@ -2124,6 +2126,7 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     << "TabTranslation"
     << "TabMemoryTest"
     << "TabVisibleTools"
+    << "TabFileMgrSettings"
     // Info tab
     << "TabInfoPhotivo"
     << "TabInfoFile"
