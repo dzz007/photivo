@@ -5720,8 +5720,14 @@ void fill4stack(float         *AMask,
   }
 }
 
-float *ptImage::FillMask(const uint16_t APointX, const uint16_t APointY, const float AThreshold, const uint16_t AMaxRadius)
+float *ptImage::FillMask(const uint16_t APointX,
+                         const uint16_t APointY,
+                         const float    AThreshold,
+                         const float    ALumaWeight,
+                         const uint16_t AMaxRadius)
 {
+  assert (m_ColorSpace == ptSpace_LCH);
+
   float (*FillMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*FillMask));
   ptMemoryError(FillMask,__FILE__,__LINE__);
 
@@ -5729,14 +5735,15 @@ float *ptImage::FillMask(const uint16_t APointX, const uint16_t APointY, const f
 
   uint16_t hThresholdHalf = CLIP((int32_t)(AThreshold*0x2AAA));
   uint16_t hThreshold     = CLIP((int32_t)(AThreshold*0x5555));
-  int32_t hRadiusOut      = ptSqr(AMaxRadius);
-  int32_t hRadiusIn       = ptSqr(AMaxRadius>>1);
-  int32_t hRadiusDiff     = hRadiusOut - hRadiusIn;
+  int32_t  hRadiusOut     = ptSqr(AMaxRadius);
+  int32_t  hRadiusIn      = ptSqr(AMaxRadius>>1);
+  int32_t  hRadiusDiff    = hRadiusOut - hRadiusIn;
+  float    hNegLumaWeight = 1.0f - ALumaWeight;
 
   float hResult  = 0.0f,
-        hValue0  = 0.0f,
-        hValue1  = 0.0f,
-        hValue2  = 0.0f;
+        hValueL  = 0.0f,
+        hValueC  = 0.0f,
+        hValueH  = 0.0f;
   uint16_t hDiff = 0;
   int32_t  hIdx  = 0,
            hRad  = 0;
@@ -5752,15 +5759,15 @@ float *ptImage::FillMask(const uint16_t APointX, const uint16_t APointY, const f
       if (lY < 0 || lY >= m_Height) continue;
 
       hIdx     = (int32_t)lY*m_Width + lX;
-      hValue0 += m_Image[hIdx][0];
-      hValue1 += m_Image[hIdx][1];
-      hValue2 += m_Image[hIdx][2];
+      hValueL += m_ImageL[hIdx];
+      hValueC += m_ImageC[hIdx];
+      hValueH += m_ImageH[hIdx];
       hCnt++;
     }
   }
-  hValue0 /= hCnt;
-  hValue1 /= hCnt;
-  hValue2 /= hCnt;
+  hValueL /= hCnt;
+  hValueC /= hCnt;
+  hValueH /= hCnt;
 
   // fill mask with radius and value threshold
   fill4stack(FillMask, APointX, APointY, m_Width, m_Height,
@@ -5779,9 +5786,8 @@ float *ptImage::FillMask(const uint16_t APointX, const uint16_t APointY, const f
 
     hIdx  = (int32_t)Y*m_Width + X;
 
-    hDiff = 0.4*std::abs((float)m_Image[hIdx][0] - hValue0) +
-                std::abs((float)m_Image[hIdx][1] - hValue1) +
-                std::abs((float)m_Image[hIdx][2] - hValue2);
+    hDiff = std::abs((float)m_ImageL[hIdx] - hValueL)*hNegLumaWeight +
+            std::abs((float)m_ImageH[hIdx] - hValueH)*ALumaWeight;
 
     if (hDiff > hThresholdHalf) {
       if (hDiff < hThreshold) hResult = hResult*(hThreshold - hDiff)/(float)hThresholdHalf;
@@ -5806,10 +5812,12 @@ ptImage *ptImage::MaskedContrast(const uint16_t APointX,
   return this;
   // TODO: write the real implementation ;)
 
+  // DEAD!
+
   assert (m_ColorSpace == ptSpace_Lab);
 
   float *hMask = 0;
-  hMask = FillMask(APointX, APointY, AMaskThresh, 0);
+  hMask = FillMask(APointX, APointY, AMaskThresh, 0, 0);
 
   float Scaling = 1.0/(1.0+exp(-0.5*AContrast))-1.0/(1.0+exp(0.5*AContrast));
   float Offset = -1.0/(1.0+exp(0.5*AContrast));
@@ -5848,13 +5856,24 @@ ptImage *ptImage::MaskedColorAdjust(const ptLocalSpot *ASpot)
 {
   assert (m_ColorSpace == ptSpace_LCH);
 
-  uint16_t hX = ASpot->x(),
-           hY = ASpot->y();
+  float *hMask = 0;
+  hMask = FillMask(ASpot->x(),
+                   ASpot->y(),
+                   ASpot->threshold(),
+                   ASpot->lumaWeight(),
+                   ASpot->radius());
 
-  m_ImageL[hY*m_Width + hX] = 0;
-  m_ImageC[hY*m_Width + hX] = 0;
-  m_ImageH[hY*m_Width + hX] = 0;
+  const ptCurve *hCurve = ASpot->lumaCurve();
 
+#pragma omp parallel for default(shared)
+  for (uint32_t i=0; i< (uint32_t)m_Height*m_Width; i++) {
+    if (hMask[i] > 0.0f) {
+      m_ImageL[i] = m_ImageL[i]                  * (1.0f - hMask[i]) +
+                    hCurve->m_Curve[m_ImageL[i]] * hMask[i];
+    }
+  }
+
+  FREE(hMask);
   return this;
 }
 

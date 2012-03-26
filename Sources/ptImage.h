@@ -427,6 +427,7 @@ float *GetMask(const short  MaskType,
 float *FillMask(const uint16_t APointX,
                 const uint16_t APointY,
                 const float    AThreshold,
+                const float    ALumaWeight,
                 const uint16_t AMaxRadius);
 
 // MaskedContrast
