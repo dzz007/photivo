@@ -5720,11 +5720,14 @@ void fill4stack(float         *AMask,
   }
 }
 
+//==============================================================================
+
 float *ptImage::FillMask(const uint16_t APointX,
                          const uint16_t APointY,
                          const float    AThreshold,
-                         const float    ALumaWeight,
-                         const uint16_t AMaxRadius)
+                         const float    AColorWeight,
+                         const uint16_t AMaxRadius,
+                         const bool     AUseMaxRadius)
 {
   assert (m_ColorSpace == ptSpace_LCH);
 
@@ -5733,24 +5736,25 @@ float *ptImage::FillMask(const uint16_t APointX,
 
   memset(FillMask, 0, m_Width*m_Height*sizeof(*FillMask));
 
-  uint16_t hThresholdHalf = CLIP((int32_t)(AThreshold*0x2AAA));
-  uint16_t hThreshold     = CLIP((int32_t)(AThreshold*0x5555));
-  int32_t  hRadiusOut     = ptSqr(AMaxRadius);
-  int32_t  hRadiusIn      = ptSqr(AMaxRadius>>1);
-  int32_t  hRadiusDiff    = hRadiusOut - hRadiusIn;
-  float    hNegLumaWeight = 1.0f - ALumaWeight;
-
+  float hThresholdHalf = AThreshold*0x2AAA;
+  float hThreshold     = AThreshold*0x5555;
+  float hRadiusOut     = ptSqr((float)AMaxRadius);
+  float hRadiusIn      = ptSqr(AMaxRadius/2.0f);
+  float hRadiusDiff    = hRadiusOut - hRadiusIn;
+  float hLumaWeight    = 1.0f - AColorWeight;
+  float hColorWeight   = AColorWeight*(float)0x7FFF;
+printf("ColorWeight: %f\n", hColorWeight);
   float hResult  = 0.0f,
         hValueL  = 0.0f,
         hValueC  = 0.0f,
         hValueH  = 0.0f;
-  uint16_t hDiff = 0;
-  int32_t  hIdx  = 0,
-           hRad  = 0;
+  float    hDiff = 0;
+  int32_t  hIdx  = 0;
+  float    hRad  = 0;
 
   // Calculate mean around the sample point
-  short hSample  = 5;
-  int32_t hCnt   = 0;
+  short   hSample = 1;
+  int32_t hCnt    = 0;
 
   for (int32_t lX = APointX-hSample; lX <= APointX+hSample; lX++) {
     if (lX < 0 || lX >= m_Width) continue;
@@ -5774,10 +5778,10 @@ float *ptImage::FillMask(const uint16_t APointX,
              [&](uint16_t X, uint16_t Y) -> float {
 
     hResult = 1.0f;
-    if (AMaxRadius > 0) {
+    if (AUseMaxRadius) {
       hRad = ptSqr(std::abs((int32_t)X-APointX)) + ptSqr(std::abs((int32_t)Y-APointY));
       if (hRad > hRadiusIn) {
-        if (hRad < hRadiusOut) hResult = ptSqr((hRadiusOut - hRad)/(float)hRadiusDiff);
+        if (hRad < hRadiusOut) hResult = ptSqr((hRadiusOut - hRad)/hRadiusDiff);
         else                   hResult = 0.0f;
       }
     }
@@ -5786,11 +5790,12 @@ float *ptImage::FillMask(const uint16_t APointX,
 
     hIdx  = (int32_t)Y*m_Width + X;
 
-    hDiff = std::abs((float)m_ImageL[hIdx] - hValueL)*hNegLumaWeight +
-            std::abs((float)m_ImageH[hIdx] - hValueH)*ALumaWeight;
+    hDiff = std::abs((float)m_ImageC[hIdx] - hValueC) +
+            std::abs((float)m_ImageL[hIdx] - hValueL)*hLumaWeight +
+            std::abs((float)m_ImageH[hIdx] - hValueH)*hColorWeight;
 
     if (hDiff > hThresholdHalf) {
-      if (hDiff < hThreshold) hResult = hResult*(hThreshold - hDiff)/(float)hThresholdHalf;
+      if (hDiff < hThreshold) hResult = hResult*(hThreshold - hDiff)/hThresholdHalf;
       else                    hResult = 0.0f;
     }
 
@@ -5807,47 +5812,9 @@ ptImage *ptImage::MaskedContrast(const uint16_t APointX,
                                  const uint16_t APointY,
                                  const float AMaskThresh,
                                  const float AContrast,
-                                 const float AContrastThresh)
-{
+                                 const float AContrastThresh) {
   return this;
   // TODO: write the real implementation ;)
-
-  // DEAD!
-
-  assert (m_ColorSpace == ptSpace_Lab);
-
-  float *hMask = 0;
-  hMask = FillMask(APointX, APointY, AMaskThresh, 0, 0);
-
-  float Scaling = 1.0/(1.0+exp(-0.5*AContrast))-1.0/(1.0+exp(0.5*AContrast));
-  float Offset = -1.0/(1.0+exp(0.5*AContrast));
-  float logtf = -logf(AContrastThresh)/logf(2.0);
-  float logft = -logf(2.0)/logf(AContrastThresh);
-
-  uint16_t ContrastTable[0x10000];
-  ContrastTable[0] = 0;
-  if (AContrast > 0)
-#pragma omp parallel for
-    for (uint32_t i=1; i<0x10000; i++) {
-      ContrastTable[i] = CLIP((int32_t)(powf((((1.0/(1.0+
-        expf(AContrast*(0.5-powf(ToFloatTable[i],logft)))))+Offset)/Scaling),logtf)*0xffff));
-    }
-  else
-#pragma omp parallel for
-    for (uint32_t i=1; i<0x10000; i++) {
-      ContrastTable[i] = CLIP((int32_t)(powf(0.5-1.0/AContrast*
-        logf(1.0/(AContrast*powf(ToFloatTable[i],logft)-Offset)-1.0),logtf)*0xffff));
-    }
-
-#pragma omp parallel for default(shared)
-  for (uint32_t i=0; i < (uint32_t)m_Height*m_Width; i++) {
-    if (hMask[i] > 0.0f) {
-      m_Image[i][0] = CLIP((int32_t)((1.0f-hMask[i])*m_Image[i][0] + hMask[i]*ContrastTable[m_Image[i][0]]));
-    }
-  }
-
-  FREE(hMask);
-  return this;
 }
 
 //==============================================================================
@@ -5859,9 +5826,10 @@ ptImage *ptImage::MaskedColorAdjust(const ptLocalSpot *ASpot)
   float *hMask = 0;
   hMask = FillMask(ASpot->x(),
                    ASpot->y(),
-                   ASpot->threshold(),
-                   ASpot->lumaWeight(),
-                   ASpot->radius());
+                   ASpot->threshold()*2.0f,
+                   ASpot->lumaWeight(), // this is actually a color weight
+                   ASpot->maxRadius(),
+                   ASpot->hasMaxRadius());
 
   const ptCurve *hCurve = ASpot->lumaCurve();
 
@@ -6244,6 +6212,28 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       //~ ptCimgEdgeDetection(this,1);
 #pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+        m_Image[i][1]=0x8080;
+        m_Image[i][2]=0x8080;
+      }
+      break;
+
+    case ptViewLAB_C:
+      ContrastLayer->Set(this);
+      ContrastLayer->LabToLch();
+#pragma omp parallel for schedule(static)
+      for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+        m_Image[i][0]=CLIP((int32_t)(2.0f*ContrastLayer->m_ImageC[i]));
+        m_Image[i][1]=0x8080;
+        m_Image[i][2]=0x8080;
+      }
+      break;
+
+    case ptViewLAB_H:
+      ContrastLayer->Set(this);
+      ContrastLayer->LabToLch();
+#pragma omp parallel for schedule(static)
+      for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+        m_Image[i][0]=CLIP((int32_t)(ContrastLayer->m_ImageH[i]/pt2PI*(float)0xffff));
         m_Image[i][1]=0x8080;
         m_Image[i][2]=0x8080;
       }

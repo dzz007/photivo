@@ -56,7 +56,7 @@ ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
 
 bool ptLocalSpot::hasMaxRadius() const
 {
-  return FHasMaxRadius >> Settings->GetInt("Scaled");
+  return FHasMaxRadius;
 }
 
 //==============================================================================
