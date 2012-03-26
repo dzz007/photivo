@@ -61,6 +61,13 @@ ptImageSpot::ptImageSpot(const uint ASpotX,
 
 //==============================================================================
 
+uint ptImageSpot::radius() const
+{
+  return FRadius >> Settings->GetInt("Scaled");
+}
+
+//==============================================================================
+
 QPoint ptImageSpot::pos() const {
   return QPoint(FPos.x() >> Settings->GetInt("Scaled"),
                 FPos.y() >> Settings->GetInt("Scaled") );
@@ -87,6 +94,20 @@ void ptImageSpot::WriteToFile(QSettings *APtsFile) {
   APtsFile->setValue("Radius", FRadius);
   APtsFile->setValue("SpotPosX", FPos.x());
   APtsFile->setValue("SpotPosY", FPos.y());
+}
+
+//==============================================================================
+
+int ptImageSpot::x() const
+{
+  return FPos.x() >> Settings->GetInt("Scaled");
+}
+
+//==============================================================================
+
+int ptImageSpot::y() const
+{
+  return FPos.y() >> Settings->GetInt("Scaled");
 }
 
 //==============================================================================

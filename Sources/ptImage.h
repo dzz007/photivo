@@ -30,9 +30,9 @@
 #include "ptConstants.h"
 #include "ptDcRaw.h"
 
-// A forward declaration to the curve class.
-
+// forwards
 class ptCurve;
+class ptLocalSpot;
 
 // RGB type
 struct RGBValue {
@@ -437,11 +437,7 @@ ptImage* MaskedContrast(const uint16_t APointX,
                         const float AContrastThresh);
 
 // MaskedContrast
-ptImage* MaskedColorAdjust(const uint16_t APointX,
-                           const uint16_t APointY,
-                           const float    AMaskThresh,
-                           const uint16_t AMaskRadius,
-                           const ptCurve *ACurve);
+ptImage* MaskedColorAdjust(const ptLocalSpot *ASpot);
 
 // GetVignetteMask
 float *GetVignetteMask(const short Inverted,
