@@ -47,30 +47,30 @@ public:
    *  Standard getter methods. See the the setters documentation for detailed descriptions.
    */
   ///@{
-  bool              hasMaxRadius();
-  bool              isAdaptiveSaturation() { return FIsAdaptiveSaturation; }
-  bool              isEdgeAware() { return FIsEdgeAware; }
+  bool              hasMaxRadius()         const;
+  bool              isAdaptiveSaturation() const { return FIsAdaptiveSaturation; }
+  bool              isEdgeAware()          const { return FIsEdgeAware; }
   /*! Returns a pointer to the spot’s luminance curve. The curve is a read only member. */
-  ptCurve           *lumaCurve() { return FLumaCurve.get(); }
-  float             lumaWeight() { return FLumaWeight; }
-  uint              maxRadius();
-  ptLocalAdjustMode mode() { return FMode; }
-  float             saturation() { return FSaturation; }
-  float             threshold() { return FThreshold; }
+  ptCurve           *lumaCurve()           const { return FLumaCurve.get(); }
+  float             lumaWeight()           const { return FLumaWeight; }
+  uint              maxRadius()            const;
+  ptLocalAdjustMode mode()                 const { return FMode; }
+  float             saturation()           const { return FSaturation; }
+  float             threshold()            const { return FThreshold; }
   ///@}
 
   /*!
    *  \name Standard setters.
    */
   ///@{
-  void setHasMaxRadius(const bool AHasMaxRadius) { FHasMaxRadius = AHasMaxRadius; }
-  void setAdaptiveSaturation(const bool AIsAdaptive) { FIsAdaptiveSaturation = AIsAdaptive; }
-  void setEdgeAware(const bool AIsEdgeAware) { FIsEdgeAware = AIsEdgeAware; }
-  void setLumaWeight(const float AWeight) { FLumaWeight = AWeight; }
-  void setMaxRadius(const uint ARadius);
-  void setMode(const ptLocalAdjustMode AMode) { FMode = AMode; }
-  void setSaturation(const float ASaturation) { FSaturation = ASaturation; }
-  void setThreshold(const float AThreshold) { FThreshold = AThreshold; }
+  void setHasMaxRadius(      const bool AHasMaxRadius)      { FHasMaxRadius = AHasMaxRadius; }
+  void setAdaptiveSaturation(const bool AIsAdaptive)        { FIsAdaptiveSaturation = AIsAdaptive; }
+  void setEdgeAware(         const bool AIsEdgeAware)       { FIsEdgeAware = AIsEdgeAware; }
+  void setLumaWeight(        const float AWeight)           { FLumaWeight = AWeight; }
+  void setMaxRadius(         const uint ARadius);
+  void setMode(              const ptLocalAdjustMode AMode) { FMode = AMode; }
+  void setSaturation(        const float ASaturation)       { FSaturation = ASaturation; }
+  void setThreshold(         const float AThreshold)        { FThreshold = AThreshold; }
   ///@}
 
   /*! Writes all data to the currently opened ini file.
