@@ -1236,93 +1236,165 @@
                                     <widget class="QWidget" name="widget_180" native="true">
                                      <layout class="QVBoxLayout" name="LocalAdjustVLayout">
                                       <item>
-                                       <layout class="QHBoxLayout" name="horizontalLayout_106">
+                                       <layout class="QHBoxLayout" name="LocalSpotListLayout">
                                         <item>
-                                         <widget class="QToolButton" name="LocalSpotDownButton">
-                                          <property name="icon">
-                                           <iconset resource="../qrc/photivo.qrc">
-                                            <normaloff>:/dark/icons/move-object-down.png</normaloff>
-                                            <disabledoff>:/dark/icons/move-object-down-disabled.png</disabledoff>:/dark/icons/move-object-down.png</iconset>
+                                         <layout class="QVBoxLayout" name="verticalLayout_284">
+                                          <property name="spacing">
+                                           <number>2</number>
                                           </property>
-                                         </widget>
-                                        </item>
-                                        <item>
-                                         <widget class="QToolButton" name="LocalSpotUpButton">
-                                          <property name="icon">
-                                           <iconset resource="../qrc/photivo.qrc">
-                                            <normaloff>:/dark/icons/move-object-up.png</normaloff>
-                                            <disabledoff>:/dark/icons/move-object-up-disabled.png</disabledoff>:/dark/icons/move-object-up.png</iconset>
-                                          </property>
-                                         </widget>
-                                        </item>
-                                        <item>
-                                         <widget class="QToolButton" name="LocalSpotDelButton">
-                                          <property name="toolTip">
-                                           <string>Delete spot</string>
-                                          </property>
-                                          <property name="icon">
-                                           <iconset resource="../qrc/photivo.qrc">
-                                            <normaloff>:/dark/icons/delete.png</normaloff>:/dark/icons/delete.png</iconset>
-                                          </property>
-                                         </widget>
-                                        </item>
-                                        <item>
-                                         <spacer name="horizontalSpacer_85">
-                                          <property name="orientation">
-                                           <enum>Qt::Horizontal</enum>
-                                          </property>
-                                          <property name="sizeHint" stdset="0">
-                                           <size>
-                                            <width>40</width>
-                                            <height>20</height>
-                                           </size>
-                                          </property>
-                                         </spacer>
-                                        </item>
-                                        <item>
-                                         <widget class="QToolButton" name="LocalSpotButton">
-                                          <property name="icon">
-                                           <iconset resource="../qrc/photivo.qrc">
-                                            <normaloff>:/dark/icons/edit-spot.png</normaloff>:/dark/icons/edit-spot.png</iconset>
-                                          </property>
-                                         </widget>
-                                        </item>
-                                        <item>
-                                         <widget class="QToolButton" name="ConfirmLocalSpotButton">
-                                          <property name="icon">
-                                           <iconset resource="../qrc/photivo.qrc">
-                                            <normaloff>:/dark/icons/tool-show.png</normaloff>:/dark/icons/tool-show.png</iconset>
-                                          </property>
-                                         </widget>
+                                          <item>
+                                           <widget class="QToolButton" name="LocalSpotUpButton">
+                                            <property name="icon">
+                                             <iconset resource="../qrc/photivo.qrc">
+                                              <normaloff>:/dark/icons/move-object-up.png</normaloff>
+                                              <disabledoff>:/dark/icons/move-object-up-disabled.png</disabledoff>:/dark/icons/move-object-up.png</iconset>
+                                            </property>
+                                           </widget>
+                                          </item>
+                                          <item>
+                                           <widget class="QToolButton" name="LocalSpotDownButton">
+                                            <property name="icon">
+                                             <iconset resource="../qrc/photivo.qrc">
+                                              <normaloff>:/dark/icons/move-object-down.png</normaloff>
+                                              <disabledoff>:/dark/icons/move-object-down-disabled.png</disabledoff>:/dark/icons/move-object-down.png</iconset>
+                                            </property>
+                                           </widget>
+                                          </item>
+                                          <item>
+                                           <spacer name="LocalSpotButtonSpacer">
+                                            <property name="orientation">
+                                             <enum>Qt::Vertical</enum>
+                                            </property>
+                                            <property name="sizeType">
+                                             <enum>QSizePolicy::Fixed</enum>
+                                            </property>
+                                            <property name="sizeHint" stdset="0">
+                                             <size>
+                                              <width>10</width>
+                                              <height>4</height>
+                                             </size>
+                                            </property>
+                                           </spacer>
+                                          </item>
+                                          <item>
+                                           <widget class="QToolButton" name="LocalSpotAddButton">
+                                            <property name="toolTip">
+                                             <string>Add spot</string>
+                                            </property>
+                                            <property name="icon">
+                                             <iconset resource="../qrc/photivo.qrc">
+                                              <normaloff>:/dark/icons/list-add.png</normaloff>:/dark/icons/list-add.png</iconset>
+                                            </property>
+                                           </widget>
+                                          </item>
+                                          <item>
+                                           <widget class="QToolButton" name="LocalSpotDelButton">
+                                            <property name="toolTip">
+                                             <string>Delete spot</string>
+                                            </property>
+                                            <property name="icon">
+                                             <iconset resource="../qrc/photivo.qrc">
+                                              <normaloff>:/dark/icons/dialog-cancel.png</normaloff>:/dark/icons/dialog-cancel.png</iconset>
+                                            </property>
+                                           </widget>
+                                          </item>
+                                          <item>
+                                           <widget class="QToolButton" name="LocalSpotButton">
+                                            <property name="toolTip">
+                                             <string>Edit spots</string>
+                                            </property>
+                                            <property name="icon">
+                                             <iconset resource="../qrc/photivo.qrc">
+                                              <normaloff>:/dark/icons/edit-spot.png</normaloff>:/dark/icons/edit-spot.png</iconset>
+                                            </property>
+                                           </widget>
+                                          </item>
+                                          <item>
+                                           <widget class="QToolButton" name="ConfirmLocalSpotButton">
+                                            <property name="icon">
+                                             <iconset resource="../qrc/photivo.qrc">
+                                              <normaloff>:/dark/icons/tool-show.png</normaloff>:/dark/icons/tool-show.png</iconset>
+                                            </property>
+                                           </widget>
+                                          </item>
+                                         </layout>
                                         </item>
                                        </layout>
                                       </item>
                                       <item>
-                                       <widget class="QFrame" name="frame_181">
-                                        <property name="frameShape">
-                                         <enum>QFrame::Box</enum>
-                                        </property>
+                                       <widget class="QWidget" name="LocalSpotMaskContainer" native="true">
                                         <layout class="QVBoxLayout" name="verticalLayout_283">
+                                         <property name="margin">
+                                          <number>0</number>
+                                         </property>
                                          <item>
-                                          <widget class="QWidget" name="widget_181" native="true">
-                                           <layout class="QHBoxLayout" name="horizontalLayout_102">
-                                            <item>
-                                             <widget class="QLabel" name="label_18">
-                                              <property name="font">
-                                               <font>
-                                                <weight>75</weight>
-                                                <bold>true</bold>
-                                               </font>
-                                              </property>
-                                              <property name="text">
-                                               <string>Mask</string>
-                                              </property>
-                                             </widget>
-                                            </item>
-                                            <item>
-                                             <widget class="QWidget" name="LocalMaxRadiusCheckWidget" native="true"/>
-                                            </item>
-                                           </layout>
+                                          <layout class="QHBoxLayout" name="horizontalLayout_103">
+                                           <item>
+                                            <widget class="QLabel" name="label_18">
+                                             <property name="font">
+                                              <font>
+                                               <weight>75</weight>
+                                               <bold>true</bold>
+                                              </font>
+                                             </property>
+                                             <property name="text">
+                                              <string>Mask</string>
+                                             </property>
+                                            </widget>
+                                           </item>
+                                           <item>
+                                            <spacer name="horizontalSpacer_83">
+                                             <property name="orientation">
+                                              <enum>Qt::Horizontal</enum>
+                                             </property>
+                                             <property name="sizeHint" stdset="0">
+                                              <size>
+                                               <width>40</width>
+                                               <height>20</height>
+                                              </size>
+                                             </property>
+                                            </spacer>
+                                           </item>
+                                           <item>
+                                            <layout class="QHBoxLayout" name="horizontalLayout_102">
+                                             <property name="sizeConstraint">
+                                              <enum>QLayout::SetMaximumSize</enum>
+                                             </property>
+                                             <item>
+                                              <widget class="QLabel" name="LocalModeLabel">
+                                               <property name="sizePolicy">
+                                                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                                                 <horstretch>0</horstretch>
+                                                 <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                               </property>
+                                               <property name="text">
+                                                <string>Mode</string>
+                                               </property>
+                                              </widget>
+                                             </item>
+                                             <item>
+                                              <widget class="QWidget" name="LocalModeWidget" native="true">
+                                               <property name="sizePolicy">
+                                                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                                                 <horstretch>0</horstretch>
+                                                 <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                               </property>
+                                              </widget>
+                                             </item>
+                                            </layout>
+                                           </item>
+                                          </layout>
+                                         </item>
+                                         <item>
+                                          <widget class="QWidget" name="LocalMaxRadiusCheckWidget" native="true">
+                                           <property name="minimumSize">
+                                            <size>
+                                             <width>0</width>
+                                             <height>10</height>
+                                            </size>
+                                           </property>
                                           </widget>
                                          </item>
                                          <item>
@@ -1332,52 +1404,12 @@
                                           <widget class="QWidget" name="LocalMaskLumaWeightWidget" native="true"/>
                                          </item>
                                          <item>
-                                          <widget class="QWidget" name="LocalEgdeAwareThresholdWidget" native="true"/>
-                                         </item>
-                                         <item>
                                           <widget class="QWidget" name="LocalMaskThresholdWidget" native="true"/>
                                          </item>
+                                         <item>
+                                          <widget class="QWidget" name="LocalEgdeAwareThresholdWidget" native="true"/>
+                                         </item>
                                         </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <layout class="QHBoxLayout" name="horizontalLayout_103">
-                                        <item>
-                                         <widget class="QLabel" name="LocalModeLabel">
-                                          <property name="text">
-                                           <string>Mode</string>
-                                          </property>
-                                         </widget>
-                                        </item>
-                                        <item>
-                                         <widget class="QWidget" name="LocalModeWidget" native="true"/>
-                                        </item>
-                                        <item>
-                                         <spacer name="horizontalSpacer_84">
-                                          <property name="orientation">
-                                           <enum>Qt::Horizontal</enum>
-                                          </property>
-                                          <property name="sizeHint" stdset="0">
-                                           <size>
-                                            <width>40</width>
-                                            <height>20</height>
-                                           </size>
-                                          </property>
-                                         </spacer>
-                                        </item>
-                                       </layout>
-                                      </item>
-                                      <item>
-                                       <widget class="QLabel" name="label_22">
-                                        <property name="font">
-                                         <font>
-                                          <weight>75</weight>
-                                          <bold>true</bold>
-                                         </font>
-                                        </property>
-                                        <property name="text">
-                                         <string>Luminance curve</string>
-                                        </property>
                                        </widget>
                                       </item>
                                       <item>
@@ -1391,17 +1423,20 @@
                                        </widget>
                                       </item>
                                       <item>
-                                       <widget class="QLabel" name="label_25">
-                                        <property name="font">
-                                         <font>
-                                          <weight>75</weight>
-                                          <bold>true</bold>
-                                         </font>
+                                       <spacer name="verticalSpacer_141">
+                                        <property name="orientation">
+                                         <enum>Qt::Vertical</enum>
                                         </property>
-                                        <property name="text">
-                                         <string>Saturation</string>
+                                        <property name="sizeType">
+                                         <enum>QSizePolicy::Fixed</enum>
                                         </property>
-                                       </widget>
+                                        <property name="sizeHint" stdset="0">
+                                         <size>
+                                          <width>20</width>
+                                          <height>5</height>
+                                         </size>
+                                        </property>
+                                       </spacer>
                                       </item>
                                       <item>
                                        <widget class="QWidget" name="LocalSaturationWidget" native="true"/>

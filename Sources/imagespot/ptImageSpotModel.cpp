@@ -34,6 +34,7 @@ ptImageSpotModel::ptImageSpotModel(const QSize ASizeHint,
                                    const QString &APtsSectionName,
                                    QObject *AParent /*= nullptr*/)
 : QStandardItemModel(AParent),
+  FLastChangedRole(Qt::DisplayRole),
   FPtsName(APtsSectionName),
   FSizeHint(ASizeHint),
   FSpotList(new QList<ptImageSpot*>)
@@ -67,7 +68,7 @@ Qt::ItemFlags ptImageSpotModel::flags(const QModelIndex &index) const {
 
 //==============================================================================
 
-bool ptImageSpotModel::hasEnabledSpots() {
+bool ptImageSpotModel::hasEnabledSpots() const {
   // Find at least one enabled spot in the list
   for (auto hSpot: *FSpotList) {
     if (hSpot->isEnabled())
@@ -123,8 +124,10 @@ void ptImageSpotModel::ReadFromFile(QSettings *APtsFile) {
 void ptImageSpotModel::RunFiltering(ptImage *AImage) {
   if (FPtsName == CLocalAdjustName) {
     for (auto hSpot: *FSpotList) {
-      ptLocalSpot *hLSpot = static_cast<ptLocalSpot*>(hSpot);
-      AImage->MaskedColorAdjust(hLSpot);
+      if (hSpot->isEnabled()) {
+        ptLocalSpot *hLSpot = static_cast<ptLocalSpot*>(hSpot);
+        AImage->MaskedColorAdjust(hLSpot);
+      }
     }
 
   } else if (FPtsName == CRepairSpotName) {
@@ -152,6 +155,7 @@ bool ptImageSpotModel::setData(const QModelIndex &index,
   }
 
   // update model data
+  FLastChangedRole = role;
   return QStandardItemModel::setData(index, value, role);
 }
 

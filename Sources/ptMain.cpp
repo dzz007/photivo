@@ -6346,7 +6346,12 @@ void CB_CurveWindowRecalc(const short Channel, const short ForceUpdate /* =0 */)
 }
 
 void CB_CurveWindowManuallyChanged(const short Channel) {
-  if (Channel != ptCurveChannel_SpotLuma) {
+  if (Channel == ptCurveChannel_SpotLuma) {
+    if (!InStartup) {
+      MainWindow->LocalSpotListView->UpdatePreview();
+    }
+
+  } else {
     // Exclude spot curve that does not appear in ptSettings.
     // Combobox and curve choice has to be adapted to manual.
     Settings->SetValue(CurveKeys[Channel],ptCurveChoice_Manual);

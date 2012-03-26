@@ -57,9 +57,9 @@ unix {
   QMAKE_CXX   = ccache /usr/bin/g++
 
   QMAKE_CFLAGS_RELEASE    += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CXXFLAGS_RELEASE  += -std=gnu++0x -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE  += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CFLAGS_DEBUG      += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CXXFLAGS_DEBUG    += -std=gnu++0x -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_DEBUG    += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_LFLAGS_DEBUG      += -rdynamic
 
   LIBS += $$system(GraphicsMagick++-config --libs)
@@ -71,8 +71,8 @@ win32 {
 
   QMAKE_CFLAGS_RELEASE    += $$(CFLAGS)
   QMAKE_CFLAGS_DEBUG      += $$(CFLAGS)
-  QMAKE_CXXFLAGS_RELEASE  += -std=gnu++0x $$(CXXFLAGS)
-  QMAKE_CXXFLAGS_DEBUG    += -std=gnu++0x $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_RELEASE  += $$(CXXFLAGS)
+  QMAKE_CXXFLAGS_DEBUG    += $$(CXXFLAGS)
   QMAKE_LFLAGS_RELEASE    += $$(LDFLAGS)
   QMAKE_LFLAGS_DEBUG      += $$(LDFLAGS)
 
@@ -109,16 +109,16 @@ LIBS += \
     -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
 RELEASE_SPECIFIC = -O3 -ftree-vectorize -fopenmp
-DEBUG_SPECIFIC   = -O0 -g -Wno-pragmas
+DEBUG_SPECIFIC   = -O0 -g -Wno-unknown-pragmas
 COMMON_FLAGS = \
     $$system(pkg-config --cflags-only-I lqr-1) \
     -DAPPVERSION=\'$${APPVERSION}\' \
     -ffast-math -DDLRAW_HAVE_GIMP
 
 QMAKE_CFLAGS_RELEASE   += $${COMMON_FLAGS} $${RELEASE_SPECIFIC}
-QMAKE_CXXFLAGS_RELEASE += $${COMMON_FLAGS} $${RELEASE_SPECIFIC}
+QMAKE_CXXFLAGS_RELEASE += $${COMMON_FLAGS} $${RELEASE_SPECIFIC} -std=gnu++0x
 QMAKE_CFLAGS_DEBUG     += $${COMMON_FLAGS} $${DEBUG_SPECIFIC}
-QMAKE_CXXFLAGS_DEBUG   += $${COMMON_FLAGS} $${DEBUG_SPECIFIC}
+QMAKE_CXXFLAGS_DEBUG   += $${COMMON_FLAGS} $${DEBUG_SPECIFIC} -std=gnu++0x
 
 ################################################################################
 

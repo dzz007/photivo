@@ -66,7 +66,8 @@ public:
   /*! Reimplemented from parent class. */
   virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
-  bool hasEnabledSpots();
+  bool hasEnabledSpots() const;
+  Qt::ItemDataRole lastChangedRole() const { return FLastChangedRole; }
 
   /*! Moves the row given by \c AFromIdx by \c AOffset rows and returns the index
       of the destination row.
@@ -120,6 +121,7 @@ protected:
       Included data: name of repair algorithm, enabled state. */
   void              RebuildModel();
 
+  Qt::ItemDataRole      FLastChangedRole;
   QString               FPtsName;
   QSize                 FSizeHint;
   QList<ptImageSpot*>  *FSpotList;
