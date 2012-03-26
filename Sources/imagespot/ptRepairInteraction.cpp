@@ -23,6 +23,8 @@
 #include <cassert>
 #include <algorithm>
 
+#include <QMouseEvent>
+
 #include "ptRepairInteraction.h"
 #include "../ptDefines.h"
 #include "../ptConstants.h"

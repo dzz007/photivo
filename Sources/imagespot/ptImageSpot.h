@@ -40,10 +40,9 @@
 #include <functional>
 
 #include <QtGlobal>
+#include <QSettings>
 #include <QPoint>
 #include <QString>
-
-#include "../ptSettings.h"
 
 //==============================================================================
 
@@ -78,7 +77,7 @@ public:
   inline QString const &name() const { return FName; }
 
   /*! Returns the horizontal radius. */
-  inline uint radius() const { return FRadius >> Settings->GetInt("Scaled"); }
+  uint radius() const;
 
   /*! Returns the topleft position of the spot’s bounding rectangle. */
   QPoint pos() const;
@@ -106,8 +105,8 @@ public:
   virtual void WriteToFile(QSettings *APtsFile);
 
   /*! Convenience functions to access the spot’s X and Y coordinates. */
-  inline int x() const { return FPos.x() >> Settings->GetInt("Scaled"); }
-  inline int y() const { return FPos.y() >> Settings->GetInt("Scaled"); }
+  int x() const;
+  int y() const;
 
 //------------------------------------------------------------------------------
 

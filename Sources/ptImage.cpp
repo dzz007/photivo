@@ -60,6 +60,7 @@
 #include "ptMessageBox.h"
 #include "ptResizeFilters.h"
 #include "ptCurve.h"
+#include "imagespot/ptLocalSpot.h"
 #include "ptKernel.h"
 #include "ptConstants.h"
 #include "ptRefocusMatrix.h"
@@ -5843,17 +5844,16 @@ ptImage *ptImage::MaskedContrast(const uint16_t APointX,
 
 //==============================================================================
 
-ptImage *ptImage::MaskedColorAdjust(const uint16_t APointX,
-                                    const uint16_t APointY,
-                                    const float    AMaskThresh,
-                                    const uint16_t AMaskRadius,
-                                    const ptCurve *ACurve)
+ptImage *ptImage::MaskedColorAdjust(const ptLocalSpot *ASpot)
 {
   assert (m_ColorSpace == ptSpace_LCH);
 
-  m_ImageL[APointY*m_Width + APointX] = 0;
-  m_ImageC[APointY*m_Width + APointX] = 0;
-  m_ImageH[APointY*m_Width + APointX] = 0;
+  uint16_t hX = ASpot->x(),
+           hY = ASpot->y();
+
+  m_ImageL[hY*m_Width + hX] = 0;
+  m_ImageC[hY*m_Width + hX] = 0;
+  m_ImageH[hY*m_Width + hX] = 0;
 
   return this;
 }

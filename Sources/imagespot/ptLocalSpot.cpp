@@ -21,6 +21,7 @@
 *******************************************************************************/
 
 #include "ptLocalSpot.h"
+#include "../ptSettings.h"
 
 //==============================================================================
 
@@ -49,6 +50,27 @@ ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
     FThreshold = APtsFile->value("Threshold", 0.25).toFloat();
     FLumaCurve->ReadFromFile(APtsFile);
   }
+}
+
+//==============================================================================
+
+bool ptLocalSpot::hasMaxRadius()
+{
+  return FHasMaxRadius >> Settings->GetInt("Scaled");
+}
+
+//==============================================================================
+
+uint ptLocalSpot::maxRadius()
+{
+  return FMaxRadius >> Settings->GetInt("Scaled");
+}
+
+//==============================================================================
+
+void ptLocalSpot::setMaxRadius(const uint ARadius)
+{
+  FMaxRadius = ARadius << Settings->GetInt("Scaled");
 }
 
 //==============================================================================

@@ -85,7 +85,7 @@ public:
   inline float edgeSoftness() const { return FEdgeSoftness; }
 
   /*! Returns the radius of the blurred outer edge. */
-  inline uint edgeRadius() const { return FEdgeRadius >> Settings->GetInt("Scaled"); }
+  uint edgeRadius() const;
 
   /*! Returns \c 1 if the spot has a repairer, \c 0 otherwise.
     A repairer is only applicable for algorithms that need data from somewhere else in the image
@@ -99,7 +99,7 @@ public:
   inline float opactiy() const { return FOpacity; }
 
   /*! Returns the vertical radius. */
-  inline uint radiusY() const { return FRadiusY >> Settings->GetInt("Scaled"); }
+  uint radiusY() const;
 
   /*! Returns the position of the repairer’s center. */
   QPoint repairerPos() const;

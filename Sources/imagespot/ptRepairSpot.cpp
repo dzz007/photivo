@@ -51,6 +51,20 @@ ptRepairSpot::ptRepairSpot(QSettings *APtsFile /*= nullptr*/)
 
 //==============================================================================
 
+uint ptRepairSpot::edgeRadius() const
+{
+  return FEdgeRadius >> Settings->GetInt("Scaled");
+}
+
+//==============================================================================
+
+uint ptRepairSpot::radiusY() const
+{
+  return FRadiusY >> Settings->GetInt("Scaled");
+}
+
+//==============================================================================
+
 //ptRepairSpot::ptRepairSpot(const uint spotX,
 //                           const uint spotY,
 //                           const uint radiusX,
