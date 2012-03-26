@@ -58,7 +58,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   const ptGuiInputItem GuiInputItems[] = {
     // Attention : Default,Min,Max,Step should be consistent int or double. Double *always* in X.Y notation to indicate so.
     // Unique Name              uiElement,InitLevel,InJobFile,HasDefault  Default     Min       Max       Step    Decimals  Label,ToolTip
-    {"LocalMaskThreshold"            ,ptGT_InputSlider     ,9,0,1         ,0.25       ,0.0      ,1.0      ,0.1    ,2        ,tr("Threshold"),tr("Maximum amount a pixel may differ from the spot's source pixel to get included in the mask.")},
+    {"LocalMaskThreshold"            ,ptGT_InputSlider     ,9,0,1         ,0.25       ,0.0      ,1.0      ,0.05   ,3        ,tr("Threshold"),tr("Maximum amount a pixel may differ from the spot's source pixel to get included in the mask.")},
     {"LocalMaskLumaWeight"           ,ptGT_InputSlider     ,9,0,1         ,0.5        ,0.0      ,1.0      ,0.1    ,2        ,tr("Brightness/color ratio"),tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")},
     {"LocalMaxRadius"                ,ptGT_InputSlider     ,9,0,1         ,500        ,1        ,7000     ,10     ,0        ,tr("Maximum radius"),tr("Pixels outside this radius will never be included in the mask.")},
     {"LocalSaturation"               ,ptGT_InputSlider     ,9,0,1         ,0.0        ,-10.0    ,10.0     ,0.5    ,1        ,tr("Saturation"),tr("Adjusts saturation in masked region")},

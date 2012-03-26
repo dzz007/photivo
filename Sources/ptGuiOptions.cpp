@@ -526,6 +526,8 @@ const ptGuiOptionsItem ptGuiOptions::ViewLAB[] = {
   {ptViewLAB_L_Grad,      QObject::tr("Structure on L") },
   {ptViewLAB_A,           QObject::tr("A") },
   {ptViewLAB_B,           QObject::tr("B") },
+  {ptViewLAB_C,           QObject::tr("C") },
+  {ptViewLAB_H,           QObject::tr("H") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::SaveFormat[] = {
