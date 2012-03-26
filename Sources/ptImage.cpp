@@ -5739,7 +5739,7 @@ float *ptImage::FillMask(const uint16_t APointX,
   float hThresholdHalf = AThreshold*0x2AAA;
   float hThreshold     = AThreshold*0x5555;
   float hRadiusOut     = ptSqr((float)AMaxRadius);
-  float hRadiusIn      = ptSqr(AMaxRadius/2.0f);
+  float hRadiusIn      = ptSqr(AMaxRadius/3.0f);
   float hRadiusDiff    = hRadiusOut - hRadiusIn;
   float hLumaWeight    = 1.0f - AColorWeight;
   float hColorWeight   = AColorWeight*(float)0x7FFF;
@@ -5831,13 +5831,23 @@ ptImage *ptImage::MaskedColorAdjust(const ptLocalSpot *ASpot)
                    ASpot->maxRadius(),
                    ASpot->hasMaxRadius());
 
-  const ptCurve *hCurve = ASpot->lumaCurve();
+  const ptCurve *hCurve       = ASpot->lumaCurve();
+  const bool     hSatAdjust   = ASpot->saturation() != 0.0f;
+  const bool     hSatAdaptive = ASpot->isAdaptiveSaturation();
+  const float    hSaturation  = ASpot->saturation();
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i< (uint32_t)m_Height*m_Width; i++) {
     if (hMask[i] > 0.0f) {
       m_ImageL[i] = m_ImageL[i]                  * (1.0f - hMask[i]) +
                     hCurve->m_Curve[m_ImageL[i]] * hMask[i];
+
+      if (hSatAdjust) {
+        if (hSatAdaptive)
+          m_ImageC[i] = m_ImageC[i] * (1.0f + hMask[i] * hSaturation * (2.0f - m_ImageC[i]/(float)0x3FFF));
+        else
+          m_ImageC[i] = m_ImageC[i] * (1.0f + hMask[i] * hSaturation);
+      }
     }
   }
 
