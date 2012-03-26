@@ -89,7 +89,7 @@ void ptImageSpot::setPos(uint Ax, uint Ay) {
 //==============================================================================
 
 void ptImageSpot::WriteToFile(QSettings *APtsFile) {
-  APtsFile->setValue("IsEnabled", FIsEnabled);
+  APtsFile->setValue("IsEnabled", (int)FIsEnabled);
   APtsFile->setValue("Name", FName);
   APtsFile->setValue("Radius", FRadius);
   APtsFile->setValue("SpotPosX", FPos.x());

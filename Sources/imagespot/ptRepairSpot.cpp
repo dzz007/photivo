@@ -203,7 +203,7 @@ void ptRepairSpot::WriteToFile(QSettings *APtsFile) {
   APtsFile->setValue("EdgeRadius", FEdgeRadius);
   APtsFile->setValue("Opacity", FOpacity);
   APtsFile->setValue("RadiusY", FRadiusY);
-  APtsFile->setValue("HasRepairer", FHasRepairer);
+  APtsFile->setValue("HasRepairer", (int)FHasRepairer);
   APtsFile->setValue("Algorithm", FAlgorithm);
   APtsFile->setValue("RepairerPosX", FRepairerPos.x());
   APtsFile->setValue("RepairerPosY", FRepairerPos.y());

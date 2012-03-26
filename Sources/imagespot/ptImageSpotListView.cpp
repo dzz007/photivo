@@ -100,6 +100,9 @@ void ptImageSpotListView::UpdatePreview() {
 //==============================================================================
 
 void ptImageSpotListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
+  if (static_cast<ptImageSpotModel*>(model())->lastChangedRole() == Qt::CheckStateRole) {
+    UpdatePreview();
+  }
   UpdateToolActiveState();
   QListView::dataChanged(topLeft, bottomRight);
 }
@@ -180,7 +183,6 @@ void ptImageSpotListView::processCoordinates(const QPoint &APos, const bool AMov
     hSpot->setPos(APos.x(), APos.y());
     hSpot->setName(tr("Spot"));
     hModel->appendSpot(hSpot);
-    UpdateToolActiveState();
   }
 
   UpdatePreview();

@@ -374,9 +374,13 @@ ptMainWindow::ptMainWindow(const QString Title)
   FSpotCurveWindow = new ptCurveWindow(FEmptyCurve.get(),
                                        ptCurveChannel_SpotLuma,
                                        LocalLumaCurveWidget);
+  Macro_ConnectSomeButton(LocalSpot);
+  Macro_ConnectSomeButton(ConfirmLocalSpot);
+  ConfirmLocalSpotButton->hide();
 
   LocalSpotListView = new ptImageSpotListView(this, ptLocalSpot::CreateSpot);
-  LocalAdjustVLayout->insertWidget(1, LocalSpotListView);
+  LocalSpotListView->setFixedHeight(125);
+  LocalSpotListLayout->addWidget(LocalSpotListView);
   LocalSpotModel = new ptImageSpotModel(
                          QSize(0, (int)(LocalSpotListView->fontMetrics().lineSpacing()*1.5)),
                          CLocalAdjustName,
@@ -390,9 +394,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(LocalSpotDownButton, SIGNAL(clicked()), LocalSpotListView, SLOT(moveSpotDown()));
   connect(LocalSpotUpButton, SIGNAL(clicked()), LocalSpotListView, SLOT(moveSpotUp()));
   connect(LocalSpotDelButton, SIGNAL(clicked()), LocalSpotListView, SLOT(deleteSpot()));
-  Macro_ConnectSomeButton(LocalSpot);
-  Macro_ConnectSomeButton(ConfirmLocalSpot);
-  ConfirmLocalSpotButton->hide();
 
   UpdateLocalSpotUI(QModelIndex());
 

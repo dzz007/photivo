@@ -78,9 +78,9 @@ void ptLocalSpot::setMaxRadius(const uint ARadius)
 void ptLocalSpot::WriteToFile(QSettings *APtsFile) {
   ptImageSpot::WriteToFile(APtsFile);
 
-  APtsFile->setValue("HasMaxRadius", FHasMaxRadius);
-  APtsFile->setValue("IsAdaptiveSaturation", FIsAdaptiveSaturation);
-  APtsFile->setValue("IsEdgeAware", FIsEdgeAware);
+  APtsFile->setValue("HasMaxRadius", (int)FHasMaxRadius);
+  APtsFile->setValue("IsAdaptiveSaturation", (int)FIsAdaptiveSaturation);
+  APtsFile->setValue("IsEdgeAware", (int)FIsEdgeAware);
   APtsFile->setValue("LumaWeight", FLumaWeight);
   APtsFile->setValue("MaxRadius", FMaxRadius);
   APtsFile->setValue("Mode", FMode);
