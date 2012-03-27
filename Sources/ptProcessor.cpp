@@ -30,6 +30,7 @@
 #include "ptConstants.h"
 #include "ptError.h"
 #include "ptSettings.h"
+#include "ptImage.h"
 //#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
 #include "ptCurve.h"
 #include "ptChannelMixer.h"

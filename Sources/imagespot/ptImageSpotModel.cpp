@@ -25,6 +25,7 @@
 #include "ptImageSpotModel.h"
 #include "ptLocalSpot.h"
 #include "ptRepairSpot.h"
+#include "../ptImage.h"
 
 void ReportProgress(const QString Message);
 

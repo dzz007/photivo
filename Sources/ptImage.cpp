@@ -5736,18 +5736,6 @@ float *ptImage::FillMask(const uint16_t APointX,
 
 //==============================================================================
 
-// Example for using local mask with sigmoidal contrast
-ptImage *ptImage::MaskedContrast(const uint16_t APointX,
-                                 const uint16_t APointY,
-                                 const float AMaskThresh,
-                                 const float AContrast,
-                                 const float AContrastThresh) {
-  return this;
-  // TODO: write the real implementation ;)
-}
-
-//==============================================================================
-
 ptImage *ptImage::MaskedColorAdjust(const ptLocalSpot *ASpot)
 {
   assert (m_ColorSpace == ptSpace_LCH);

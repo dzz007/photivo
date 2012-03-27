@@ -48,7 +48,6 @@
 #include <QMenu>
 #include <QGraphicsView>
 
-#include "ptImage.h"
 #include "ptMainWindow.h"
 #include "ptReportOverlay.h"
 #include "ptLineInteraction.h"
@@ -57,6 +56,11 @@
 #include "ptGridInteraction.h"
 #include "imagespot/ptSpotInteraction.h"
 #include "imagespot/ptRepairInteraction.h"
+
+//==============================================================================
+
+// forward for faster compilation
+class ptImage;
 
 //==============================================================================
 

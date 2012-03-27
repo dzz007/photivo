@@ -31,7 +31,11 @@
 #include <QSettings>
 
 #include "ptImageSpot.h"
-#include "../ptImage.h"
+
+//==============================================================================
+
+// forward for faster compilation
+class ptImage;
 
 //==============================================================================
 
