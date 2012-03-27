@@ -66,8 +66,16 @@ const float  pt2PI    = 6.28318530717f;
 const short ptMaxAnchors    = 50; // Curve anchors.
 const short ptMaxInputFiles = 2048;
 
+// White point
+const uint16_t ptWP    = 0xffff;
+const float    ptWPf   = (float)ptWP;
+const float    ptInvWP = 1.0f/(float)ptWP;
+
+const uint16_t ptWPH   = 0x7fff;
+const float    ptWPHf  = (float)ptWPH;
+
 // Neutral AB value
-const float WPHLab = 0x8080;
+const float ptWPHLab = 0x8080;
 
 /*! Processor phases.
     Don't mess with the numbers of any of those constants.

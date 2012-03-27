@@ -160,6 +160,7 @@ short ImageCleanUp;
 // uint16_t (0,0xffff) to float (0.0, 1.0)
 float    ToFloatTable[0x10000];
 float    ToFloatABNeutral[0x10000];
+uint16_t ToInvertTable[0x10000];
 uint16_t ToSRGBTable[0x10000];
 
 // Filter patterns for the filechooser.
@@ -1029,20 +1030,18 @@ void CB_Event0() {
   if (Settings->GetInt("JobMode") == 0)
     SaveButtonToolTip(Settings->GetInt("SaveButtonMode"));
 
-  // uint16_t (0,0xffff) to float (0.0, 1.0)
+  // Fill some look up tables
 #pragma omp parallel for
   for (uint32_t i=0; i<0x10000; i++) {
-    ToFloatTable[i]     = (float)i/(float)0xffff;
-    ToFloatABNeutral[i] = (float)i-WPHLab;
-  }
-
-  // linear RGB to sRGB table
-#pragma omp parallel for
-  for (uint32_t i=0; i<0x10000; i++) {
-    if ((double)i/0xffff <= 0.0031308)
+    // uint16_t (0,0xffff) to float (0.0, 1.0)
+    ToFloatTable[i]     = (float)i*ptInvWP;
+    ToFloatABNeutral[i] = (float)i-ptWPHLab;
+    ToInvertTable[i]    = ptWP - i;
+    // linear RGB to sRGB table
+    if (ToFloatTable[i] <= 0.0031308)
       ToSRGBTable[i] = CLIP((int32_t)(12.92*i));
     else
-      ToSRGBTable[i] = CLIP((int32_t)((1.055*pow((double)i/0xffff,1.0/2.4)-0.055)*0xffff));
+      ToSRGBTable[i] = CLIP((int32_t)((1.055*pow(ToFloatTable[i],1.0/2.4)-0.055)*ptWPf));
   }
 
   // Init run mode
