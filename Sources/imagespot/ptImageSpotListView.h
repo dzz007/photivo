@@ -37,18 +37,45 @@
 
 #include "ptImageSpot.h"
 
+class ptImageSpotModel;
+
 //==============================================================================
 
 class ptImageSpotListView: public QListView {
   Q_OBJECT
 
 public:
-  /*! Creates a \c ptImageSpotListView object. */
+  /*!
+   * Creates a \c ptImageSpotListView object.
+   * \param AParent
+   *    Parent widget of the ListView.
+   * \param ASpotCreator
+   *    A function pointer to the appropriate factory method for spot creation. Each specialised
+   *    spot class has one, called \c CreateSpot().
+   */
   explicit ptImageSpotListView(QWidget *AParent,
                                ptImageSpot::PCreateSpotFunc ASpotCreator);
   ~ptImageSpotListView();
 
+  /*! Returns \c true if spot append action is in progress, \c false otherwise. */
+  bool appendMode() { return FAppendOngoing; }
+
+  /*! Appends a new spot, selects and focuses it in the list. */
+  void setAppendMode(const bool AAppendOngoing);
+
+  /*! Set to true if the related ViewWindow spot interaction starts to ensure that the
+   *  preview image gets updated correctly.
+   */
   void setInteractionOngoing(const bool AOngoing);
+
+  /*! Reimplemented from base class for convenience to avoid casting to ptImageSpotModel*
+   *  all the time.
+   */
+  void setModel(ptImageSpotModel *model);
+
+  /*! Updates the preview image in the ViewWindow and takes into account if the ViewWindow
+   *  interaction is running or not.
+   */
   void UpdatePreview();
 
 //------------------------------------------------------------------------------
@@ -62,7 +89,9 @@ protected:
 private:
   void UpdateToolActiveState();
 
-  bool                          FInteractionOngoing;
+  bool                          FAppendOngoing;     // when true, add spot button was clicked
+  bool                          FInteractionOngoing;    // ViewWindow interaction
+  ptImageSpotModel              *FModel;
   ptImageSpot::PCreateSpotFunc  FSpotCreator;  // pointer to spot factory method
 
 //------------------------------------------------------------------------------
@@ -78,13 +107,16 @@ public slots:
       of a spot is pressed. */
   void deleteSpot();
 
+
   /*! Moves the selected spot one position down or up in the list.
-      The selection stays at the that spot. */
+      The selection stays at that spot. */
+  ///@{
   void moveSpotDown();
   void moveSpotUp();
+  ///@}
 
   /*! This slot gets called when the user selects a position on the image. */
-  void processCoordinates(const QPoint &APos, const bool AMoveCurrent);
+  void processCoordinates(const QPoint &APos);
 
 //------------------------------------------------------------------------------
 

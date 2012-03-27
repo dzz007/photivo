@@ -2301,7 +2301,7 @@ ptImage* ptImage::Crop(const uint16_t X,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-// macros are bad, but in lack of a better idea...
+// macros are bad, but for lack of a better idea...
 #define Value_4_Amount(AValue)      CLIP((int32_t)  ((AValue)*Amount  + Source*CompAmount))
 #define Value_4_Amount_Mask(AValue) CLIP((int32_t) (((AValue)*Mask[i] + Source*(1.0f - Mask[i]))*Amount + Source*CompAmount))
 #define LoopBody(ABlock, AResult) \

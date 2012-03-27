@@ -197,6 +197,8 @@ public slots:
   void Settings_2_Form();
   void Form_2_Settings();
 
+  void ToggleLocalSpotAppendMode();
+
 //------------------------------------------------------------------------------
 
 private slots:

@@ -53,16 +53,12 @@ public:
 //------------------------------------------------------------------------------
 
 signals:
-  /*! Signal emitted when the user left-clicks a spot on the image.
-      \param APos
-        Coordinates of the clicked image position in current pipe size scale.
-      \param AMoveCurrent
-        Indicates if an existing spot should be moved (true) or a new spot should
-        be created (false). Set to true when the user holds down Ctrl while clicking.
-        Connected slots are responsible to interpret what “an existing spot”
-        actually means – usually this is the currently selected spot in a list of spots.
-  */
-  void clicked(const QPoint &APos, const bool AMoveCurrent);
+  /*!
+   *  Signal emitted when the user left-clicks a spot on the image.
+   *  \param APos
+   *    Coordinates of the clicked image position in current pipe size scale.
+   */
+  void clicked(const QPoint &APos);
 
 //------------------------------------------------------------------------------
 

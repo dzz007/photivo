@@ -47,7 +47,9 @@ extern void UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
 ptImageSpotListView::ptImageSpotListView(QWidget *AParent,
                                          ptImageSpot::PCreateSpotFunc ASpotCreator)
 : QListView(AParent),
+  FAppendOngoing(false),
   FInteractionOngoing(false),
+  FModel(nullptr),
   FSpotCreator(ASpotCreator)
 {
   setStyle(Theme->style());
@@ -71,12 +73,19 @@ ptImageSpotListView::~ptImageSpotListView() {}
 void ptImageSpotListView::setInteractionOngoing(const bool AOngoing) {
   FInteractionOngoing = AOngoing;
 
-  if (FInteractionOngoing && model()->rowCount() > 0) {
+  if (FInteractionOngoing && FModel->rowCount() > 0) {
     // Pipe stops *before* spot processing to provide a clean basis for the quick
     // preview in interactive mode. To make present spots immediately visibe when
     // entering the interaction, we trigger spot processing now.
     UpdatePreview();
   }
+}
+
+//==============================================================================
+
+void ptImageSpotListView::setModel(ptImageSpotModel *model) {
+  FModel = model;
+  QListView::setModel(model);
 }
 
 //==============================================================================
@@ -87,7 +96,7 @@ void ptImageSpotListView::UpdatePreview() {
     std::unique_ptr<ptImage> hImage(new ptImage);
     hImage->Set(TheProcessor->m_Image_AfterLocalEdit);
     hImage->RGBToLch();
-    static_cast<ptImageSpotModel*>(this->model())->RunFiltering(hImage.get());
+    FModel->RunFiltering(hImage.get());
     hImage->LchToRGB(Settings->GetInt("WorkColor"));
     UpdatePreviewImage(hImage.get());
 
@@ -100,7 +109,7 @@ void ptImageSpotListView::UpdatePreview() {
 //==============================================================================
 
 void ptImageSpotListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
-  if (static_cast<ptImageSpotModel*>(model())->lastChangedRole() == Qt::CheckStateRole) {
+  if (FModel->lastChangedRole() == Qt::CheckStateRole) {
     UpdatePreview();
   }
   UpdateToolActiveState();
@@ -137,23 +146,29 @@ void ptImageSpotListView::UpdateToolActiveState() {
     CurrentTool = dynamic_cast<ptGroupBox*>(CurrentControl);
   }
 
-  CurrentTool->SetActive(static_cast<ptImageSpotModel*>(model())->hasEnabledSpots());
+  CurrentTool->SetActive(FModel->hasEnabledSpots());
 }
 
 //==============================================================================
 
 void ptImageSpotListView::deleteSpot() {
-  static_cast<ptImageSpotModel*>(model())->removeRows(currentIndex().row(), 1, QModelIndex());
+  FModel->removeRows(currentIndex().row(), 1, QModelIndex());
   UpdatePreview();
   emit rowChanged(currentIndex());
 }
 
 //==============================================================================
 
+void ptImageSpotListView::setAppendMode(const bool AAppendOngoing) {
+  FAppendOngoing = AAppendOngoing;
+}
+
+//==============================================================================
+
 void ptImageSpotListView::moveSpotDown() {
-  int hNewRow = static_cast<ptImageSpotModel*>(model())->MoveRow(currentIndex(), +1);
+  int hNewRow = FModel->MoveRow(currentIndex(), +1);
   if (hNewRow > -1) {
-    this->setCurrentIndex(this->model()->index(hNewRow, 0));
+    this->setCurrentIndex(FModel->index(hNewRow, 0));
     UpdatePreview();
   }
 }
@@ -161,31 +176,30 @@ void ptImageSpotListView::moveSpotDown() {
 //==============================================================================
 
 void ptImageSpotListView::moveSpotUp() {
-  int hNewRow = static_cast<ptImageSpotModel*>(model())->MoveRow(currentIndex(), -1);
+  int hNewRow = FModel->MoveRow(currentIndex(), -1);
   if (hNewRow > -1) {
-    this->setCurrentIndex(this->model()->index(hNewRow, 0));
+    this->setCurrentIndex(FModel->index(hNewRow, 0));
     UpdatePreview();
   }
 }
 
 //==============================================================================
 
-void ptImageSpotListView::processCoordinates(const QPoint &APos, const bool AMoveCurrent) {
-  ptImageSpotModel* hModel = static_cast<ptImageSpotModel*>(this->model());
-
-  if (AMoveCurrent && this->currentIndex().isValid()) {
-    // move currently selected spot to new position
-    hModel->setSpotPos(this->currentIndex().row(), APos.x(), APos.y());
-
-  } else {
-    // append new spot to list
+void ptImageSpotListView::processCoordinates(const QPoint &APos) {
+  if (FAppendOngoing) {
+    // append new spot after append-spot button was clicked
     ptImageSpot *hSpot = FSpotCreator();
     hSpot->setPos(APos.x(), APos.y());
     hSpot->setName(tr("Spot"));
-    hModel->appendSpot(hSpot);
-  }
 
-  UpdatePreview();
+    FModel->appendSpot(hSpot);
+    this->setCurrentIndex(FModel->index(FModel->rowCount()-1, 0));
+
+  } else if (this->currentIndex().isValid()) {
+    // move currently selected spot to new position
+    FModel->setSpotPos(this->currentIndex().row(), APos.x(), APos.y());
+    UpdatePreview();
+  }
 }
 
 //==============================================================================

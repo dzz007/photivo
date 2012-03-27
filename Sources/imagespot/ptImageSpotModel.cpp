@@ -26,7 +26,9 @@
 #include "ptLocalSpot.h"
 #include "ptRepairSpot.h"
 #include "../ptImage.h"
+#include "../ptSettings.h"
 
+extern ptSettings *Settings;
 void ReportProgress(const QString Message);
 
 //==============================================================================
@@ -250,7 +252,9 @@ QStandardItem *ptImageSpotModel::CreateSpotItem(const ptImageSpot *ASpot) {
 QString ptImageSpotModel::CreateToolTip(const ptImageSpot *ASpot) {
   return
     QString(tr("%1\nCoordinates in pipe size: x=%2, y=%3"))
-      .arg(ASpot->name()).arg(ASpot->x()).arg(ASpot->y());
+      .arg(ASpot->name())
+      .arg(ASpot->x() << Settings->GetInt("Scaled"))
+      .arg(ASpot->y() << Settings->GetInt("Scaled"));
 }
 
 //==============================================================================

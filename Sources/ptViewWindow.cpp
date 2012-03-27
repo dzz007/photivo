@@ -318,9 +318,9 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   }
 
   // drag image with left mouse button to scroll
-  // Also Ctrl needed in crop & spot repair modes
+  // Also Ctrl needed in crop & spot modes
   short ImgDragging = FLeftMousePressed && FInteraction == iaNone;
-  if (FInteraction == iaCrop || FInteraction == iaSpotRepair) {
+  if (FInteraction == iaCrop || FInteraction == iaSpotRepair || FInteraction == iaLocalAdjust) {
     ImgDragging = FLeftMousePressed && FCtrlIsPressed;
   }
 
@@ -545,8 +545,6 @@ void ptViewWindow::StartLocalAdjust() {
 
   connect(FLocalAdjust, SIGNAL(finished(ptStatus)),
           this,         SLOT  (finishInteraction(ptStatus)));
-//  connect(FLocalAdjust, SIGNAL(clicked(QPoint,bool)),
-//          AListView,    SLOT  (processCoordinates(QPoint,bool)));
   connect(this,         SIGNAL(mouseChanged(QMouseEvent*)),
           FLocalAdjust, SLOT  (mouseAction(QMouseEvent*)));
 

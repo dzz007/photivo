@@ -4655,8 +4655,8 @@ void CB_LocalSpotButton() {
   BlockTools(btmBlockForLocalAdjust);
 
   ViewWindow->StartLocalAdjust();
-  QObject::connect(ViewWindow->localAdjust(), SIGNAL(clicked(QPoint,bool)),
-                   MainWindow->LocalSpotListView, SLOT(processCoordinates(QPoint,bool)));
+  QObject::connect(ViewWindow->localAdjust(), SIGNAL(clicked(QPoint)),
+                   MainWindow->LocalSpotListView, SLOT(processCoordinates(QPoint)));
   ViewWindow->setFocus();
 }
 
@@ -4667,6 +4667,9 @@ void CleanupAfterLocalAdjust() {
   MainWindow->LocalSpotListView->setInteractionOngoing(false);
   MainWindow->LocalSpotButton->show();
   MainWindow->ConfirmLocalSpotButton->hide();
+  if (MainWindow->LocalSpotListView->appendMode()) {
+    MainWindow->ToggleLocalSpotAppendMode();
+  }
   Update(ptProcessorPhase_LocalEdit);
 }
 
