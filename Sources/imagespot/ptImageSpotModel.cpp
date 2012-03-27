@@ -251,7 +251,7 @@ QStandardItem *ptImageSpotModel::CreateSpotItem(const ptImageSpot *ASpot) {
 
 QString ptImageSpotModel::CreateToolTip(const ptImageSpot *ASpot) {
   return
-    QString(tr("%1\nCoordinates in pipe size: x=%2, y=%3"))
+    QString(tr("%1\nx=%2, y=%3 (1:1 pipe size)"))
       .arg(ASpot->name())
       .arg(ASpot->x() << Settings->GetInt("Scaled"))
       .arg(ASpot->y() << Settings->GetInt("Scaled"));

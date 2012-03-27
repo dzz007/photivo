@@ -26,7 +26,15 @@
 
 ptSpotInteraction::ptSpotInteraction(QGraphicsView *AView)
   : ptImageInteraction(AView)
-{}
+{
+  FView->setCursor(Qt::CrossCursor);
+}
+
+//==============================================================================
+
+ptSpotInteraction::~ptSpotInteraction() {
+  FView->setCursor(Qt::ArrowCursor);
+}
 
 //==============================================================================
 
