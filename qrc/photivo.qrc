@@ -73,6 +73,7 @@
         <file>dark/icons/move-object-down-disabled.png</file>
         <file>dark/icons/move-object-up.png</file>
         <file>dark/icons/move-object-up-disabled.png</file>
-        <file>dark/icons/list-add.png</file>
+        <file>dark/icons/add-spot.png</file>
+        <file>dark/icons/add-spot-stop.png</file>
     </qresource>
 </RCC>

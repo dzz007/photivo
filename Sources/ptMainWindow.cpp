@@ -379,7 +379,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   ConfirmLocalSpotButton->hide();
 
   LocalSpotListView = new ptImageSpotListView(this, ptLocalSpot::CreateSpot);
-  LocalSpotListView->setFixedHeight(125);
+  LocalSpotListView->setFixedHeight(132);
   LocalSpotListLayout->addWidget(LocalSpotListView);
   LocalSpotModel = new ptImageSpotModel(
                          QSize(0, (int)(LocalSpotListView->fontMetrics().lineSpacing()*1.5)),
@@ -393,6 +393,7 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   connect(LocalSpotDownButton, SIGNAL(clicked()), LocalSpotListView, SLOT(moveSpotDown()));
   connect(LocalSpotUpButton, SIGNAL(clicked()), LocalSpotListView, SLOT(moveSpotUp()));
+  connect(LocalSpotAddButton, SIGNAL(clicked()), this, SLOT(ToggleLocalSpotAppendMode()));
   connect(LocalSpotDelButton, SIGNAL(clicked()), LocalSpotListView, SLOT(deleteSpot()));
 
   UpdateLocalSpotUI(QModelIndex());
@@ -1007,7 +1008,7 @@ void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
     Settings->SetValue("LocalMaskLumaWeight", hSpot->lumaWeight());
     Settings->SetValue("LocalEgdeAwareThreshold", (int)hSpot->isEdgeAware());
     Settings->SetValue("LocalMaxRadiusCheck", (int)hSpot->hasMaxRadius());
-    Settings->SetValue("LocalMaxRadius", hSpot->maxRadius());
+    Settings->SetValue("LocalMaxRadius", hSpot->maxRadius() << Settings->GetInt("Scaled"));
     FSpotCurveWindow->UpdateView(hSpot->lumaCurve());
     Settings->SetValue("LocalSaturation", hSpot->saturation());
     Settings->SetValue("LocalAdaptiveSaturation", (int)hSpot->isAdaptiveSaturation());
@@ -1019,7 +1020,9 @@ void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
 void ptMainWindow::ToggleLocalAdjustWidgets(const bool AEnabled, const int ARow) {
   LocalSpotDownButton->setEnabled(AEnabled && (ARow < LocalSpotModel->rowCount()-1));
   LocalSpotUpButton->setEnabled(AEnabled && (ARow > 0));
-  LocalSpotDelButton->setEnabled(AEnabled);
+  // LocalSpotAddButton: no need to set here, is always enabled
+  LocalSpotDelButton->setEnabled(AEnabled && (ARow > -1));
+  LocalSpotButton->setEnabled(AEnabled && (ARow > -1));
   LocalMaxRadiusWidget->setEnabled(
       AEnabled &&
       (static_cast<ptLocalSpot*>(LocalSpotModel->spot(LocalSpotListView->currentIndex().row()))
@@ -1504,6 +1507,26 @@ void ptMainWindow::OnSpotWBButtonClicked() {
 void CB_LocalSpotButton();
 void ptMainWindow::OnLocalSpotButtonClicked() {
   ::CB_LocalSpotButton();
+}
+
+void ptMainWindow::ToggleLocalSpotAppendMode() {
+  if (LocalSpotListView->appendMode()) {
+    // cancel appending a spot
+    LocalSpotListView->setAppendMode(false);
+    LocalSpotAddButton->setIcon(QIcon(":/dark/icons/add-spot.png"));
+    LocalSpotAddButton->setToolTip(tr("Append spot mode"));
+
+  } else {
+    // start appending a spot
+    LocalSpotListView->setAppendMode(true);
+    LocalSpotAddButton->setIcon(QIcon(":/dark/icons/add-spot-stop.png"));
+    LocalSpotAddButton->setToolTip(tr("Exit append spot mode"));
+
+    if (ViewWindow->interaction() == iaNone) {
+      // start editing mode if it is not already active
+      ::CB_LocalSpotButton();
+    }
+  }
 }
 
 void CB_ConfirmLocalSpotButton();

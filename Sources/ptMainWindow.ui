@@ -1271,21 +1271,10 @@
                                             <property name="sizeHint" stdset="0">
                                              <size>
                                               <width>10</width>
-                                              <height>4</height>
+                                              <height>6</height>
                                              </size>
                                             </property>
                                            </spacer>
-                                          </item>
-                                          <item>
-                                           <widget class="QToolButton" name="LocalSpotAddButton">
-                                            <property name="toolTip">
-                                             <string>Add spot</string>
-                                            </property>
-                                            <property name="icon">
-                                             <iconset resource="../qrc/photivo.qrc">
-                                              <normaloff>:/dark/icons/list-add.png</normaloff>:/dark/icons/list-add.png</iconset>
-                                            </property>
-                                           </widget>
                                           </item>
                                           <item>
                                            <widget class="QToolButton" name="LocalSpotDelButton">
@@ -1294,7 +1283,18 @@
                                             </property>
                                             <property name="icon">
                                              <iconset resource="../qrc/photivo.qrc">
-                                              <normaloff>:/dark/icons/dialog-cancel.png</normaloff>:/dark/icons/dialog-cancel.png</iconset>
+                                              <normaloff>:/dark/icons/delete.png</normaloff>:/dark/icons/delete.png</iconset>
+                                            </property>
+                                           </widget>
+                                          </item>
+                                          <item>
+                                           <widget class="QToolButton" name="LocalSpotAddButton">
+                                            <property name="toolTip">
+                                             <string>Append spot mode</string>
+                                            </property>
+                                            <property name="icon">
+                                             <iconset resource="../qrc/photivo.qrc">
+                                              <normaloff>:/dark/icons/add-spot.png</normaloff>:/dark/icons/add-spot.png</iconset>
                                             </property>
                                            </widget>
                                           </item>
@@ -1313,7 +1313,7 @@
                                            <widget class="QToolButton" name="ConfirmLocalSpotButton">
                                             <property name="icon">
                                              <iconset resource="../qrc/photivo.qrc">
-                                              <normaloff>:/dark/icons/tool-show.png</normaloff>:/dark/icons/tool-show.png</iconset>
+                                              <normaloff>:/dark/icons/dialog-ok.png</normaloff>:/dark/icons/dialog-ok.png</iconset>
                                             </property>
                                            </widget>
                                           </item>
@@ -11653,7 +11653,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>63</width>
+                            <width>80</width>
                             <height>18</height>
                            </rect>
                           </property>

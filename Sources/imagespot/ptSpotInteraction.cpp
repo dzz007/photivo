@@ -37,11 +37,14 @@ void ptSpotInteraction::stop() {
 //==============================================================================
 
 void ptSpotInteraction::mouseAction(QMouseEvent *AEvent) {
-  if (AEvent->type() == QEvent::MouseButtonPress && AEvent->button() == Qt::LeftButton) {
+  if (AEvent->type() == QEvent::MouseButtonPress &&
+      AEvent->button() == Qt::LeftButton &&
+      AEvent->modifiers() == Qt::NoModifier)
+  {
     QPointF hClickPos = FView->mapToScene(AEvent->pos());
+    // ensure click was inside image, then emit signal
     if (FView->scene()->sceneRect().contains(hClickPos)) {
-      emit clicked(QPoint(qRound(hClickPos.x()), qRound(hClickPos.y())),
-                   AEvent->modifiers() == Qt::ControlModifier);
+      emit clicked(QPoint(qRound(hClickPos.x()), qRound(hClickPos.y())));
     }
   }
 }
