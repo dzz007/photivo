@@ -2292,11 +2292,11 @@ ptImage* ptImage::Crop(const uint16_t X,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
-                          const double   Amount,
-                          const float *Mask,
-                          const short Mode /* SoftLight */,
-                          const short Swap /* = 0 */) {
+ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
+                          const double  Amount,
+                          const float  *Mask,
+                          const short   Mode /* SoftLight */,
+                          const short   Swap /* = 0 */) {
 
   const float WP = 0xffff;
   const float WPH = 0x7fff;
@@ -2343,12 +2343,13 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
             Multiply = CLIP((int32_t)(Source*Blend/WP));
             Screen   = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
             Overlay  = CLIP((int32_t)((((WP-Source)*Multiply+Source*Screen)/WP)));
-            m_Image[i][Ch] = CLIP((int32_t)((Overlay*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+            m_Image[i][Ch] = CLIP((int32_t)((Overlay*Mask[i]+Source*(1.0f-Mask[i]))*Amount+Source*(CompAmount)));
           }
         }
       }
@@ -2373,10 +2374,11 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
             Multiply = CLIP((int32_t)(Source*Blend/WP));
-            m_Image[i][Ch] = CLIP((int32_t)((Multiply*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+            m_Image[i][Ch] = CLIP((int32_t)((Multiply*Mask[i]+Source*(1.0f-Mask[i]))*Amount+Source*(CompAmount)));
           }
         }
       }
@@ -2401,10 +2403,11 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
             Screen = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
-            m_Image[i][Ch] = CLIP((int32_t)((Screen*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+            m_Image[i][Ch] = CLIP((int32_t)((Screen*Mask[i]+Source*(1.0f-Mask[i]))*Amount+Source*(CompAmount)));
           }
         }
       }
@@ -2430,11 +2433,12 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
             if (Blend == 0) Multiply = 0;
             else Multiply = CLIP((int32_t)(WP*powf(Source/WP,WP/Blend)));
-            m_Image[i][Ch] = CLIP((int32_t)((Multiply*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+            m_Image[i][Ch] = CLIP((int32_t)((Multiply*Mask[i]+Source*(1.0f-Mask[i]))*Amount+Source*(CompAmount)));
           }
         }
       }
@@ -2460,11 +2464,12 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
             if (Blend == WP) Multiply = WP;
             else Multiply = CLIP((int32_t)(WP-WP*powf((WP-Source)/WP,WP/(WP-Blend))));
-            m_Image[i][Ch] = CLIP((int32_t)((Multiply*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+            m_Image[i][Ch] = CLIP((int32_t)((Multiply*Mask[i]+Source*(1.0f-Mask[i]))*Amount+Source*(CompAmount)));
           }
         }
       }
@@ -2488,9 +2493,10 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
-            m_Image[i][Ch] = CLIP((int32_t)((Blend*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+            m_Image[i][Ch] = CLIP((int32_t)((Blend*Mask[i]+Source*(1.0f-Mask[i]))*Amount+Source*(CompAmount)));
           }
         }
       }
@@ -2514,9 +2520,10 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
-            m_Image[i][Ch] = CLIP((int32_t)(MAX(Blend*Mask[i]+Source*(1-Mask[i])*Amount,Source)));
+            m_Image[i][Ch] = CLIP((int32_t)(MAX(Blend*Mask[i]+Source*(1.0f-Mask[i])*Amount,Source)));
           }
         }
       }
@@ -2540,9 +2547,10 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
         if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
         for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+          if (Mask[i] == 0.0f) continue;
           Source   = SourceImage[i][Ch];
           Blend    = BlendImage[i][Ch];
-          m_Image[i][Ch] = CLIP((int32_t)(MIN(Blend*Mask[i]+Source*(1-Mask[i])*Amount,Source)));
+          m_Image[i][Ch] = CLIP((int32_t)(MIN(Blend*Mask[i]+Source*(1.0f-Mask[i])*Amount,Source)));
         }
       }
     }
@@ -2571,6 +2579,7 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
             if (Source <= WPH) {
@@ -2578,7 +2587,7 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
             } else {
               Overlay = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
             }
-            m_Image[i][Ch] = CLIP((int32_t)((Overlay*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+            m_Image[i][Ch] = CLIP((int32_t)((Overlay*Mask[i]+Source*(1.0f-Mask[i]))*Amount+Source*(CompAmount)));
           }
         }
       }
@@ -2602,9 +2611,10 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
-            m_Image[i][Ch] = CLIP((int32_t)(((Blend+Source-WPH)*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+            m_Image[i][Ch] = CLIP((int32_t)(((Blend+Source-WPH)*Mask[i]+Source*(1.0f-Mask[i]))*Amount+Source*(CompAmount)));
           }
         }
       }
@@ -2633,6 +2643,7 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
             if (Source == 0) Temp = 0;
@@ -2640,7 +2651,7 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
               if (Blend == WP) Temp = WP;
               else Temp = CLIP((int32_t)(Source / (1 - Blend/WP)));
             }
-            m_Image[i][Ch] = CLIP((int32_t)((Temp*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+            m_Image[i][Ch] = CLIP((int32_t)((Temp*Mask[i]+Source*(1.0f-Mask[i]))*Amount+Source*(CompAmount)));
           }
         }
       }
@@ -2669,6 +2680,7 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
           if  (! (ChannelMask & (1<<Ch))) continue;
 #pragma omp parallel for default(shared) private(Source, Blend, Multiply, Screen, Overlay, Temp)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+            if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
             if (Source == WP) Temp = WP;
@@ -2676,7 +2688,7 @@ ptImage* ptImage::Overlay(uint16_t (*OverlayImage)[3],
               if (Blend == 0) Temp = 0;
               else Temp = WP - CLIP((int32_t)( (WP - Source) / (Blend/WP)));
             }
-            m_Image[i][Ch] = CLIP((int32_t)((Temp*Mask[i]+Source*(1-Mask[i]))*Amount+Source*(CompAmount)));
+            m_Image[i][Ch] = CLIP((int32_t)((Temp*Mask[i]+Source*(1.0f-Mask[i]))*Amount+Source*(CompAmount)));
           }
         }
       }
@@ -5243,24 +5255,26 @@ float *ptImage::GetGradualMask(const double Angle,
   float (*GradualMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*GradualMask));
   ptMemoryError(GradualMask,__FILE__,__LINE__);
 
-  double Length = 0;
+  float Length = 0;
   if (fabs(Angle) == 0 || fabs(Angle) == 180 ) {
     Length = m_Height;
   } else if (fabs(Angle) == 90) {
     Length = m_Width;
   } else if (fabs(Angle) < 90) {
-    Length = (((double)m_Width) + ((double)m_Height)/tan(fabs(Angle)/180*ptPI))*sin(fabs(Angle)/180*ptPI);
+    Length = (((float)m_Width) + ((float)m_Height)/tan(fabs(Angle)/180*ptPI))*sin(fabs(Angle)/180*ptPI);
   } else {
-    Length = (((double)m_Width) + ((double)m_Height)/tan((180.0-fabs(Angle))/180.0*ptPI))*sin((180.0-fabs(Angle))/180.0*ptPI);
+    Length = (((float)m_Width) + ((float)m_Height)/tan((180.0-fabs(Angle))/180.0*ptPI))*sin((180.0-fabs(Angle))/180.0*ptPI);
   }
 
   boolean Switch = UpperLevel < LowerLevel;
 
+  float Eps = 0.0001f;
+
   float LL = Length*(Switch?UpperLevel:LowerLevel);
   float UL = Length*(Switch?LowerLevel:UpperLevel);
-  float Black = Switch?1.0:0.0;
-  float White = Switch?0.0:1.0;
-  float Denom = 1.0/MAX((UL-LL),0.0001f);
+  float Black = Switch?1.0f:0.0f;
+  float White = Switch?0.0f:1.0f;
+  float Denom = 1.0f/MAX((UL-LL),Eps);
 
   float coordinate = 0;
   float Value = 0;
@@ -5269,22 +5283,23 @@ float *ptImage::GetGradualMask(const double Angle,
 
   float Factor1 = 0;
   float Factor2 = 0;
-  if (Angle > 0.0 && Angle < 90.0) {
-    Factor1 = 1.0/tanf(Angle/180*ptPI);
+  if (Angle >= 0.0 && Angle < 90.0) {
+    Factor1 = 1.0/MAX(tanf(Angle/180*ptPI),Eps);
     Factor2 = sinf(Angle/180*ptPI);
-  } else if (Angle > 90.0 && Angle < 180.0) {
-    Factor1 = 1.0/tanf((180.0-Angle)/180*ptPI);
+  } else if (Angle >= 90.0 && Angle < 180.0) {
+    Factor1 = 1.0/MAX(tanf((180.0-Angle)/180*ptPI),Eps);
     Factor2 = sinf((180.0-Angle)/180*ptPI);
-  } else if (Angle > -90.0 && Angle < 0.0) {
-    Factor1 = 1.0/tanf(fabs(Angle)/180*ptPI);
+  } else if (Angle >= -90.0 && Angle < 0.0) {
+    Factor1 = 1.0/MAX(tanf(fabs(Angle)/180*ptPI),Eps);
     Factor2 = sinf(fabs(Angle)/180*ptPI);
-  } else if (Angle > -180.0 && Angle < -90.0) {
-    Factor1 = 1.0/tanf((180.0-fabs(Angle))/180*ptPI);
+  } else if (Angle >= -180.0 && Angle < -90.0) {
+    Factor1 = 1.0/MAX(tanf((180.0-fabs(Angle))/180*ptPI),Eps);
     Factor2 = sinf((180.0-fabs(Angle))/180*ptPI);
   }
 
 #pragma omp parallel for schedule(static) firstprivate(dist, Value, coordinate)
   for (uint16_t Row=0; Row<m_Height; Row++) {
+    uint32_t Idx = Row*m_Width;
     for (uint16_t Col=0; Col<m_Width; Col++) {
       if (fabs(Angle) == 0.0)
         dist = m_Height-Row;
@@ -5304,14 +5319,14 @@ float *ptImage::GetGradualMask(const double Angle,
         dist = Length-((float)Col + (float)(m_Height-Row)*Factor1)*Factor2;
 
       if (dist <= LL)
-        GradualMask[Row*m_Width+Col] = Black;
+        GradualMask[Idx+Col] = Black;
       else if (dist >= UL)
-        GradualMask[Row*m_Width+Col] = White;
+        GradualMask[Idx+Col] = White;
       else {
-        coordinate = 1.0 - (UL-dist)*Denom;
-        Value = (1.0-powf(cosf(coordinate*ptPI/2.0),50.0*Softness))
-                  * powf(coordinate,0.07*Softness);
-        GradualMask[Row*m_Width+Col] = LIM(Value*White, 0.0, 1.0);
+        coordinate = 1.0f - (UL-dist)*Denom;
+        Value = (1.0f-powf(cosf(coordinate*ptPI/2.0f),50.0f*Softness))
+                  * powf(coordinate,0.07f*Softness);
+        GradualMask[Idx+Col] = LIM(Value*White, 0.0f, 1.0f);
       }
     }
   }
@@ -5326,88 +5341,19 @@ float *ptImage::GetGradualMask(const double Angle,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::GradualOverlay(const uint16_t R,
-                 const uint16_t G,
-                 const uint16_t B,
-                 const short Mode,
-                 const double Amount,
-                 const double Angle,
-                 const double LowerLevel,
-                 const double UpperLevel,
-                 const double Softness) {
+                                 const uint16_t G,
+                                 const uint16_t B,
+                                 const short Mode,
+                                 const double Amount,
+                                 const double Angle,
+                                 const double LowerLevel,
+                                 const double UpperLevel,
+                                 const double Softness) {
 
-  double Length = 0;
-  if (fabs(Angle) == 0 || fabs(Angle) == 180 ) {
-    Length = m_Height;
-  } else if (fabs(Angle) == 90) {
-    Length = m_Width;
-  } else if (fabs(Angle) < 90) {
-    Length = (((double)m_Width) + ((double)m_Height)/tan(fabs(Angle)/180*ptPI))*sin(fabs(Angle)/180*ptPI);
-  } else {
-    Length = (((double)m_Width) + ((double)m_Height)/tan((180.0-fabs(Angle))/180.0*ptPI))*sin((180.0-fabs(Angle))/180.0*ptPI);
-  }
+  float* GradualMask = GetGradualMask(Angle, LowerLevel, UpperLevel, Softness);
 
-  float LL = Length*LowerLevel;
-  float UL = Length*UpperLevel;
-  float Black = 0.0;
-  float White = 1.0;
-  float Denom = 1.0/MAX((UL-LL),0.0001f);
-
-  float coordinate = 0;
-  float Value = 0;
-  float (*GradualMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*GradualMask));
-  ptMemoryError(GradualMask,__FILE__,__LINE__);
-  float dist = 0;
   uint16_t (*ToneImage)[3] = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*ToneImage));
   ptMemoryError(ToneImage,__FILE__,__LINE__);
-  float Factor1 = 0;
-  float Factor2 = 0;
-  if (Angle > 0.0 && Angle < 90.0) {
-    Factor1 = 1.0/tanf(Angle/180*ptPI);
-    Factor2 = sinf(Angle/180*ptPI);
-  } else if (Angle > 90.0 && Angle < 180.0) {
-    Factor1 = 1.0/tanf((180.0-Angle)/180*ptPI);
-    Factor2 = sinf((180.0-Angle)/180*ptPI);
-  } else if (Angle > -90.0 && Angle < 0.0) {
-    Factor1 = 1.0/tanf(fabs(Angle)/180*ptPI);
-    Factor2 = sinf(fabs(Angle)/180*ptPI);
-  } else if (Angle > -180.0 && Angle < -90.0) {
-    Factor1 = 1.0/tanf((180.0-fabs(Angle))/180*ptPI);
-    Factor2 = sinf((180.0-fabs(Angle))/180*ptPI);
-  }
-#pragma omp parallel
-{ // begin OpenMP
-#pragma omp for schedule(static) firstprivate(dist, Value, coordinate)
-  for (uint16_t Row=0; Row<m_Height; Row++) {
-    for (uint16_t Col=0; Col<m_Width; Col++) {
-      if (fabs(Angle) == 0.0)
-        dist = m_Height-Row;
-      else if (fabs(Angle) == 180.0)
-        dist = Row;
-      else if (Angle == 90.0)
-        dist = Col;
-      else if (Angle == -90.0)
-        dist = m_Width-Col;
-      else if (Angle > 0.0 && Angle < 90.0)
-        dist = (Col + (float)(m_Height-Row)*Factor1)*Factor2;
-      else if (Angle > 90.0 && Angle < 180.0)
-        dist = Length-((m_Width-Col) + (float)(m_Height-Row)*Factor1)*Factor2;
-      else if (Angle > -90.0 && Angle < 0.0)
-        dist = ((m_Width-Col) + (float)(m_Height-Row)*Factor1)*Factor2;
-      else if (Angle > -180.0 && Angle < -90.0)
-        dist = Length-((float)Col + (float)(m_Height-Row)*Factor1)*Factor2;
-
-      if (dist <= LL)
-        GradualMask[Row*m_Width+Col] = Black;
-      else if (dist >= UL)
-        GradualMask[Row*m_Width+Col] = White;
-      else {
-        coordinate = 1.0 - (UL-dist)*Denom;
-        Value = (1.0-powf(cosf(coordinate*ptPI/2.0),50.0*Softness))
-                  * powf(coordinate,0.07*Softness);
-        GradualMask[Row*m_Width+Col] = LIM(Value*White, 0.0, 1.0);
-      }
-    }
-  }
 
 #pragma omp for schedule(static)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -5415,7 +5361,6 @@ ptImage* ptImage::GradualOverlay(const uint16_t R,
     ToneImage[i][1] = G;
     ToneImage[i][2] = B;
   }
-} // end OpenMP
 
   Overlay(ToneImage, Amount, GradualMask, Mode);
 
@@ -5453,42 +5398,26 @@ ptImage* ptImage::Vignette(const short VignetteMode,
 
   switch (VignetteMode) {
     case ptVignetteMode_Soft:
-      {
-        uint16_t (*ToneImage)[3] = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*ToneImage));
-        ptMemoryError(ToneImage,__FILE__,__LINE__);
-        if (Amount > 0) {
-#pragma omp parallel for schedule(static) default(shared)
-          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-            ToneImage[i][0] = ToneImage[i][1] = ToneImage[i][2] = 0;
-          }
-        } else {
-#pragma omp parallel for schedule(static) default(shared)
-          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-            ToneImage[i][0] = ToneImage[i][1] = ToneImage[i][2] = 0xffff;
-          }
-        }
-        Overlay(ToneImage, fabs(Amount), VignetteMask);
-        FREE(ToneImage);
-      }
-      break;
-
     case ptVignetteMode_Hard:
       {
         uint16_t (*ToneImage)[3] = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*ToneImage));
         ptMemoryError(ToneImage,__FILE__,__LINE__);
+        uint16_t hColor = 0;
+        short    hMode  = ptOverlayMode_SoftLight;
         if (Amount > 0) {
-#pragma omp parallel for schedule(static) default(shared)
-          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-            ToneImage[i][0] = ToneImage[i][1] = ToneImage[i][2] = 0;
-          }
-          Overlay(ToneImage, fabs(Amount), VignetteMask, ptOverlayMode_Multiply);
+          hColor = 0;
+          if (VignetteMode == ptVignetteMode_Hard) hMode = ptOverlayMode_Multiply;
         } else {
-#pragma omp parallel for schedule(static) default(shared)
-          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-            ToneImage[i][0] = ToneImage[i][1] = ToneImage[i][2] = 0xffff;
-          }
-          Overlay(ToneImage, fabs(Amount), VignetteMask, ptOverlayMode_Screen);
+          hColor = 0xffff;
+          if (VignetteMode == ptVignetteMode_Hard) hMode = ptOverlayMode_Screen;
         }
+
+#pragma omp parallel for schedule(static) default(shared)
+        for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+          ToneImage[i][0] = ToneImage[i][1] = ToneImage[i][2] = hColor;
+        }
+
+        Overlay(ToneImage, fabs(Amount), VignetteMask, hMode);
         FREE(ToneImage);
       }
       break;
@@ -5743,7 +5672,7 @@ float *ptImage::FillMask(const uint16_t APointX,
   float hRadiusDiff    = hRadiusOut - hRadiusIn;
   float hLumaWeight    = 1.0f - AColorWeight;
   float hColorWeight   = AColorWeight*(float)0x7FFF;
-printf("ColorWeight: %f\n", hColorWeight);
+
   float hResult  = 0.0f,
         hValueL  = 0.0f,
         hValueC  = 0.0f,
@@ -5899,19 +5828,19 @@ float *ptImage::GetVignetteMask(const short  Inverted,
 
   #pragma omp parallel for schedule(static) default(shared) firstprivate(dist, Value, coordinate)
   for (uint16_t Row=0; Row<m_Height; Row++) {
+    int32_t Idx = Row*m_Width;
     for (uint16_t Col=0; Col<m_Width; Col++) {
       dist = powf(powf(fabsf((float)Col-CX)*Factor1,Exponent)
                   + powf(fabsf((float)Row-CY)*Factor2,Exponent),InversExponent);
       if (dist <= IR)
-        VignetteMask[Row*m_Width+Col] = Black;
+        VignetteMask[Idx+Col] = Black;
       else if (dist >= OR)
-        VignetteMask[Row*m_Width+Col] = White;
+        VignetteMask[Idx+Col] = White;
       else {
-        coordinate = 1.0-(OR-dist)*Denom;
-        Value = (1.0-powf(cosf(coordinate*ptPI/2.0),50.0*Softness))
-                * powf(coordinate,0.07*Softness);
-        //~ Value = pow(cos(coordinate*ptPI/2),2);
-        VignetteMask[Row*m_Width+Col] = LIM(Value*ColorDiff+Black,0.0,1.0);
+        coordinate = 1.0f-(OR-dist)*Denom;
+        Value = (1.0f-powf(cosf(coordinate*ptPI/2.0f),50.0f*Softness))
+                * powf(coordinate,0.07f*Softness);
+        VignetteMask[Idx+Col] = LIM(Value*ColorDiff+Black,0.0f,1.0f);
       }
     }
   }
