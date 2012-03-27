@@ -44,6 +44,7 @@ Q_OBJECT
 
 public:
   explicit ptSpotInteraction(QGraphicsView *AView);
+  ~ptSpotInteraction();
 
   /*! Stops the spotinteraction. Makes sure any necessary cleanup happens properly
       and emits finished() afterwards.  */

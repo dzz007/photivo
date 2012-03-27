@@ -398,9 +398,11 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   UpdateLocalSpotUI(QModelIndex());
 
+  //TODO: Temporarily disabled widgets that don’t have an implementation yet.
   LocalModeLabel->hide();
   LocalModeWidget->hide();
   LocalEgdeAwareThresholdWidget->hide();
+
 
   // "spot repair"
   Macro_ConnectSomeButton(SpotRepair);
