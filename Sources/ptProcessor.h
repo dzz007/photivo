@@ -33,8 +33,12 @@
 #include <exiv2/exif.hpp>
 
 #include "ptDcRaw.h"
-#include "ptImage.h"
 #include "imagespot/ptImageSpotModel.h"
+
+//==============================================================================
+
+// forward for faster compilation
+class ptImage;
 
 //==============================================================================
 

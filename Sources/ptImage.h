@@ -432,13 +432,6 @@ float *FillMask(const uint16_t APointX,
                 const bool     AUseMaxRadius);
 
 // MaskedContrast
-ptImage* MaskedContrast(const uint16_t APointX,
-                        const uint16_t APointY,
-                        const float AMaskThresh,
-                        const float AContrast,
-                        const float AContrastThresh);
-
-// MaskedContrast
 ptImage* MaskedColorAdjust(const ptLocalSpot *ASpot);
 
 // GetVignetteMask

@@ -28,6 +28,7 @@
 #include "ptTheme.h"
 #include "ptViewWindow.h"
 #include "ptConstants.h"
+#include "ptImage.h"
 
 extern ptTheme* Theme;
 extern ptSettings* Settings;
