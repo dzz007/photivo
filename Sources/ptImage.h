@@ -171,11 +171,11 @@ ptImage* LchToLab();
 ptImage* MixChannels(const double MixFactors[3][3]);
 
 // Overlay
-ptImage* Overlay(uint16_t (*OverlayImage)[3],
-                 const double   Amount,
+ptImage* Overlay(uint16_t   (*OverlayImage)[3],
+                 const double Amount,
                  const float *Mask = NULL,
-                 const short Mode = ptOverlayMode_SoftLight,
-                 const short Swap = 0);
+                 const short  Mode = ptOverlayMode_SoftLight,
+                 const short  Swap = 0);
 
 // Flip
 ptImage* Flip(const short FlipMode);
