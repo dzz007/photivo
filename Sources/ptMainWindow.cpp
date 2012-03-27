@@ -398,6 +398,9 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   UpdateLocalSpotUI(QModelIndex());
 
+  LocalModeLabel->hide();
+  LocalModeWidget->hide();
+  LocalEgdeAwareThresholdWidget->hide();
 
   // "spot repair"
   Macro_ConnectSomeButton(SpotRepair);
