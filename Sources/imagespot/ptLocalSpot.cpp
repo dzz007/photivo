@@ -27,6 +27,7 @@
 
 ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
 : ptImageSpot(APtsFile),
+  FColorShift(0.5),
   FHasMaxRadius(false),
   FIsAdaptiveSaturation(false),
   FIsEdgeAware(true),
@@ -40,6 +41,7 @@ ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
   FLumaCurve->setId("LumaCurve");
 
   if (APtsFile != nullptr) {
+    FColorShift = APtsFile->value("ColorShift", 0.5).toFloat();
     FHasMaxRadius = APtsFile->value("HasMaxRadius", false).toBool();
     FIsAdaptiveSaturation = APtsFile->value("IsAdaptiveSaturation", false).toBool();
     FIsEdgeAware = APtsFile->value("IsEdgeAware", true).toBool();
@@ -78,6 +80,7 @@ void ptLocalSpot::setMaxRadius(const uint ARadius)
 void ptLocalSpot::WriteToFile(QSettings *APtsFile) {
   ptImageSpot::WriteToFile(APtsFile);
 
+  APtsFile->setValue("ColorShift", FColorShift);
   APtsFile->setValue("HasMaxRadius", (int)FHasMaxRadius);
   APtsFile->setValue("IsAdaptiveSaturation", (int)FIsAdaptiveSaturation);
   APtsFile->setValue("IsEdgeAware", (int)FIsEdgeAware);

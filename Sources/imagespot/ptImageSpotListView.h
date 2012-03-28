@@ -78,6 +78,8 @@ public:
    */
   void UpdatePreview();
 
+  void UpdateToolActiveState();
+
 //------------------------------------------------------------------------------
 
 protected:
@@ -87,8 +89,6 @@ protected:
 //------------------------------------------------------------------------------
 
 private:
-  void UpdateToolActiveState();
-
   bool                          FAppendOngoing;     // when true, add spot button was clicked
   bool                          FInteractionOngoing;    // ViewWindow interaction
   ptImageSpotModel              *FModel;

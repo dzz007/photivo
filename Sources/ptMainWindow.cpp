@@ -1020,6 +1020,7 @@ void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
     FSpotCurveWindow->UpdateView(hSpot->lumaCurve());
     Settings->SetValue("LocalSaturation", hSpot->saturation());
     Settings->SetValue("LocalAdaptiveSaturation", (int)hSpot->isAdaptiveSaturation());
+    Settings->SetValue("LocalColorShift", hSpot->colorShift());
   }
 }
 
@@ -1045,6 +1046,7 @@ void ptMainWindow::ToggleLocalAdjustWidgets(const bool AEnabled, const int ARow)
   LocalLumaCurveWidget->setEnabled(AEnabled);
   LocalSaturationWidget->setEnabled(AEnabled);
   LocalAdaptiveSaturationWidget->setEnabled(AEnabled);
+  LocalColorShiftWidget->setEnabled(AEnabled);
 }
 
 //==============================================================================
