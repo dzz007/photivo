@@ -47,6 +47,7 @@ public:
    *  Standard getter methods. See the the setters documentation for detailed descriptions.
    */
   ///@{
+  float             colorShift()           const { return FColorShift; }
   bool              hasMaxRadius()         const;
   bool              isAdaptiveSaturation() const { return FIsAdaptiveSaturation; }
   bool              isEdgeAware()          const { return FIsEdgeAware; }
@@ -65,6 +66,7 @@ public:
   ///@{
   void setHasMaxRadius(      const bool AHasMaxRadius)      { FHasMaxRadius = AHasMaxRadius; }
   void setAdaptiveSaturation(const bool AIsAdaptive)        { FIsAdaptiveSaturation = AIsAdaptive; }
+  void setColorShift        (const float AColorShift)       { FColorShift = AColorShift; }
   void setEdgeAware(         const bool AIsEdgeAware)       { FIsEdgeAware = AIsEdgeAware; }
   void setLumaWeight(        const float AWeight)           { FLumaWeight = AWeight; }
   void setMaxRadius(         const uint ARadius);
@@ -81,6 +83,7 @@ public:
 //------------------------------------------------------------------------------
 
 private:
+  float               FColorShift;
   bool                FHasMaxRadius;
   bool                FIsAdaptiveSaturation;
   bool                FIsEdgeAware;

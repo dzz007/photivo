@@ -2856,7 +2856,9 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   MainWindow->Settings_2_Form();
 
   MainWindow->LocalSpotModel->ReadFromFile(&JobSettings);
+  MainWindow->LocalSpotListView->UpdateToolActiveState();
   MainWindow->RepairSpotModel->ReadFromFile(&JobSettings);
+  MainWindow->RepairSpotListView->UpdateToolActiveState();
   ReportProgress(QObject::tr("Ready"));
 
   JobSettings.sync();
@@ -4773,6 +4775,16 @@ void CB_LocalAdaptiveSaturationCheck(const QVariant Value) {
   MainWindow->LocalSpotListView->UpdatePreview();
 }
 
+//==============================================================================
+
+void CB_LocalColorShiftInput(const QVariant Value) {
+  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
+  if (hSpotIdx < 0) return;
+  Settings->SetValue("LocalColorShift", Value);
+  static_cast<ptLocalSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
+      ->setColorShift(Value.toFloat());
+  MainWindow->LocalSpotListView->UpdatePreview();
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -8555,6 +8567,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LocalMaxRadiusCheckCheck)
   M_Dispatch(LocalMaxRadiusInput)
   M_Dispatch(LocalSaturationInput)
+  M_Dispatch(LocalColorShiftInput)
   M_Dispatch(LocalAdaptiveSaturationCheck)
 
   M_Dispatch(SpotAlgorithmChoice)
