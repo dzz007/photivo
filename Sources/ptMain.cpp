@@ -8128,11 +8128,9 @@ void Export(const short mode) {
   }
 
   // regular export without plugin
-  QTemporaryFile ImageFile;
-  ImageFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.tiff");
-  assert (ImageFile.open());
-  QString ImageFileName = ImageFile.fileName();
-  ImageFile.setAutoRemove(false);
+  // We generate a temporary name.
+  QString ImageFileName = QDir::tempPath() + QDir::separator() +
+                          "ptTemp" + QString::number(QDateTime::currentMSecsSinceEpoch()) + ".tif";
 
   short Temp = Settings->GetInt("SaveFormat");
   Settings->SetValue("SaveFormat", ptSaveFormat_TIFF16);
