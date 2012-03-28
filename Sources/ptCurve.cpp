@@ -122,6 +122,15 @@ short ptCurve::SetNullCurve(const short Channel) {
     m_YAnchor[1]      = 0.501960784; // 0x8080/0xffff
     m_XAnchor[2]      = 1.0;
     m_YAnchor[2]      = 1.0;
+  } else if (Channel == ptCurveChannel_SpotLuma) {
+    m_Type            = ptCurveType_Anchor;
+    m_NrAnchors       = 3;
+    m_XAnchor[0]      = 0.0;
+    m_YAnchor[0]      = 0.0;
+    m_XAnchor[1]      = 0.4;
+    m_YAnchor[1]      = 0.6;
+    m_XAnchor[2]      = 1.0;
+    m_YAnchor[2]      = 1.0;
   } else {
     m_Type            = ptCurveType_Anchor;
     m_NrAnchors       = 3;
