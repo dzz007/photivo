@@ -146,11 +146,17 @@ protected:
 //------------------------------------------------------------------------------
 
 private:
+  // Determine how/if visible image area can be moved with the mouse.
+  // Default is dragging the image, alternatively Ctrl+Drag depending on current interaction
+  bool isImgDragging();
+
   const float   MinZoom;
   const float   MaxZoom;
   QList<float>  ZoomFactors;   // steps for wheel zoom
 
   short                     FCtrlIsPressed;
+  bool                      FInteractionHasMousePress;
+  ptAbstractInteraction     *FCurrentInteraction;  // for easy basic access to current interaction
   ptLineInteraction         *FDrawLine;
   ptSpotInteraction         *FLocalAdjust;
   ptSimpleRectInteraction   *FSelectRect;
@@ -158,7 +164,7 @@ private:
   ptGridInteraction         *FGrid;
   ptRepairInteraction       *FSpotRepair;
   ptInteraction             FInteraction;
-  short                     FLeftMousePressed;
+  bool                      FLeftMousePressed;
   void (*FCB_SimpleRect)(const ptStatus, QRect);
   short                     FZoomIsSaved;
   float                     FZoomFactor;

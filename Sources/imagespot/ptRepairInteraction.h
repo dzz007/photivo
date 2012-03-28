@@ -39,14 +39,14 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsDropShadowEffect>
 
-#include "../ptImageInteraction.h"
+#include "../ptAbstractInteraction.h"
 #include "ptImageSpotListView.h"
 #include "ptRepairSpot.h"
 #include "ptImageSpotModel.h"
 
 //==============================================================================
 
-class ptRepairInteraction : public ptImageInteraction {
+class ptRepairInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
 public:
@@ -62,6 +62,16 @@ public:
                       ptImageSpotListView *AListView);
 
   ~ptRepairInteraction();
+
+  // TODO: key/mouse flags are very preliminary!
+  /*! Reimplemented from base class. */
+  virtual Qt::KeyboardModifiers modifiers()    const { return Qt::NoModifier; }
+
+  /*! Reimplemented from base class. */
+  virtual ptMouseActions        mouseActions() const { return maClick; }
+
+  /*! Reimplemented from base class. */
+  virtual Qt::MouseButtons      mouseButtons() const { return Qt::LeftButton; }
 
   /*! Stop the repair interaction.
     Cleans up the QGraphicsScene and then emits the \c finished() signal. */

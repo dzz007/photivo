@@ -30,16 +30,25 @@
 #include <QGraphicsRectItem>
 #include <QMouseEvent>
 
-#include "ptImageInteraction.h"
+#include "ptAbstractInteraction.h"
 
 //==============================================================================
 
-class ptSimpleRectInteraction : public ptImageInteraction {
+class ptSimpleRectInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
 public:
   explicit ptSimpleRectInteraction(QGraphicsView* View);
   ~ptSimpleRectInteraction();
+
+  /*! Reimplemented from base class. */
+  virtual Qt::KeyboardModifiers modifiers()    const { return Qt::ControlModifier; }
+
+  /*! Reimplemented from base class. */
+  virtual ptMouseActions        mouseActions() const { return maDragDrop; }
+
+  /*! Reimplemented from base class. */
+  virtual Qt::MouseButtons      mouseButtons() const { return Qt::LeftButton; }
 
   inline QRect rect() const { return QRect(m_Rect->normalized().toRect()); }
 

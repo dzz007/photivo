@@ -30,16 +30,25 @@
 #include <QLine>
 #include <QGraphicsLineItem>
 
-#include "ptImageInteraction.h"
+#include "ptAbstractInteraction.h"
 
 //==============================================================================
 
-class ptLineInteraction : public ptImageInteraction {
+class ptLineInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
 public:
   explicit ptLineInteraction(QGraphicsView* View);
   ~ptLineInteraction();
+
+  /*! Reimplemented from base class. */
+  virtual Qt::KeyboardModifiers modifiers()    const { return Qt::NoModifier; }
+
+  /*! Reimplemented from base class. */
+  virtual ptMouseActions        mouseActions() const { return maDragDrop; }
+
+  /*! Reimplemented from base class. */
+  virtual Qt::MouseButtons      mouseButtons() const { return Qt::LeftButton; }
 
   double angle();
 

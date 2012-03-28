@@ -23,16 +23,13 @@
 #include "ptImageSpot.h"
 #include "../ptSettings.h"
 
-extern ptSettings* Settings;
-
 //==============================================================================
 
 ptImageSpot::ptImageSpot(QSettings *APtsFile /*= nullptr*/)
 : FIsEnabled(true),
-  FName("")
+  FName(""),
+  FPos(QPoint(0, 0))
 {
-  FPos = QPoint();
-
   if (APtsFile != nullptr) {
     FIsEnabled = APtsFile->value("IsEnabled", 0).toBool();
     FName = APtsFile->value("Name", "").toString();

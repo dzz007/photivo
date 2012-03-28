@@ -28,7 +28,7 @@
 //==============================================================================
 
 ptSimpleRectInteraction::ptSimpleRectInteraction(QGraphicsView* View)
-: ptImageInteraction(View),
+: ptAbstractInteraction(View),
   m_CtrlPressed(0),
   m_NowDragging(0)
 {

@@ -198,8 +198,9 @@ void ptImageSpotListView::processCoordinates(const QPoint &APos) {
   } else if (this->currentIndex().isValid()) {
     // move currently selected spot to new position
     FModel->setSpotPos(this->currentIndex().row(), APos.x(), APos.y());
-    UpdatePreview();
   }
+
+  UpdatePreview();
 }
 
 //==============================================================================

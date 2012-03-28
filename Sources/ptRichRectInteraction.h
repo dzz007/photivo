@@ -32,7 +32,7 @@
 #include <QRectF>
 #include <QRect>
 
-#include "ptImageInteraction.h"
+#include "ptAbstractInteraction.h"
 
 //==============================================================================
 
@@ -53,7 +53,7 @@ enum ptMovingEdge {
 
 //==============================================================================
 
-class ptRichRectInteraction : public ptImageInteraction {
+class ptRichRectInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
 public:
@@ -67,6 +67,15 @@ public:
                                  const uint AspectRatioH,
                                  const short CropGuidelines);
   ~ptRichRectInteraction();
+
+  /*! Reimplemented from base class. */
+  virtual Qt::KeyboardModifiers modifiers()    const { return Qt::NoModifier; }
+
+  /*! Reimplemented from base class. */
+  virtual ptMouseActions        mouseActions() const { return maDragDrop; }
+
+  /*! Reimplemented from base class. */
+  virtual Qt::MouseButtons      mouseButtons() const { return Qt::LeftButton; }
 
   inline ptStatus exitStatus() const { return m_ExitStatus; }
   inline short isDragging() const { return m_NowDragging; }

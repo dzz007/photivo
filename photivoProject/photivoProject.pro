@@ -168,7 +168,7 @@ HEADERS += \
     ../Sources/ptHistogramWindow.h \
     ../Sources/ptImage.h \
     ../Sources/ptImage8.h \
-    ../Sources/ptImageInteraction.h \
+    ../Sources/ptAbstractInteraction.h \
     ../Sources/ptInput.h \
     ../Sources/ptKernel.h \
     ../Sources/ptLensfun.h \
@@ -246,7 +246,7 @@ SOURCES += \
     ../Sources/ptImage_Lqr.cpp \
     ../Sources/ptImage_Pyramid.cpp \
     ../Sources/ptImage8.cpp \
-    ../Sources/ptImageInteraction.cpp \
+    ../Sources/ptAbstractInteraction.cpp \
     ../Sources/ptInput.cpp \
     ../Sources/ptKernel.cpp \
     ../Sources/ptLensfun.cpp \

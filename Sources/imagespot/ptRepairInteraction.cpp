@@ -33,7 +33,7 @@
 
 ptRepairInteraction::ptRepairInteraction(QGraphicsView *AView,
                                          ptImageSpotListView *AListView)
-: ptImageInteraction(AView),
+: ptAbstractInteraction(AView),
   FListView(AListView),
   FShadow(new QGraphicsDropShadowEffect),
   FShapes(new QList<TSpotShape*>)

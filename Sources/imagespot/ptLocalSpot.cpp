@@ -27,30 +27,30 @@
 
 ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
 : ptImageSpot(APtsFile),
-  FColorShift(0.0),
-  FHasMaxRadius(false),
-  FIsAdaptiveSaturation(false),
-  FIsEdgeAware(true),
-  FLumaCurve(unique_ptr<ptCurve>(new ptCurve(ptCurveChannel_SpotLuma))),
-  FLumaWeight(0.5),
-  FMaxRadius(500),
-  FMode(lamFloodFill),
-  FSaturation(0.0),
-  FThreshold(0.25)
+  FColorShift           (Settings->GetDefaultValue("LocalColorShift").toFloat()),
+  FHasMaxRadius         (Settings->GetDefaultValue("LocalMaxRadiusCheck").toBool()),
+  FIsAdaptiveSaturation (Settings->GetDefaultValue("LocalAdaptiveSaturation").toBool()),
+  FIsEdgeAware          (Settings->GetDefaultValue("LocalEgdeAwareThreshold").toBool()),
+  FLumaCurve            (unique_ptr<ptCurve>(new ptCurve(ptCurveChannel_SpotLuma))),
+  FLumaWeight           (Settings->GetDefaultValue("LocalMaskLumaWeight").toFloat()),
+  FMaxRadius            (Settings->GetDefaultValue("LocalMaxRadius").toUInt()),
+  FMode                 ((ptLocalAdjustMode)Settings->GetDefaultValue("LocalMode").toInt()),
+  FSaturation           (Settings->GetDefaultValue("LocalSaturation").toFloat()),
+  FThreshold            (Settings->GetDefaultValue("LocalMaskThreshold").toFloat())
 {
   FLumaCurve->setId("LumaCurve");
   FLumaCurve.get()->SetNullCurve(ptCurveChannel_SpotLuma);
 
   if (APtsFile != nullptr) {
-    FColorShift = APtsFile->value("ColorShift", 0.0).toFloat();
-    FHasMaxRadius = APtsFile->value("HasMaxRadius", false).toBool();
+    FColorShift           = APtsFile->value("ColorShift", 0.0).toFloat();
+    FHasMaxRadius         = APtsFile->value("HasMaxRadius", false).toBool();
     FIsAdaptiveSaturation = APtsFile->value("IsAdaptiveSaturation", false).toBool();
-    FIsEdgeAware = APtsFile->value("IsEdgeAware", true).toBool();
-    FLumaWeight = APtsFile->value("LumaWeight", 0.5).toFloat();
-    FMaxRadius = APtsFile->value("MaxRadius", 500).toUInt();
-    FMode = (ptLocalAdjustMode)APtsFile->value("Mode", lamFloodFill).toInt();
-    FSaturation = APtsFile->value("Saturation", 0.0).toFloat();
-    FThreshold = APtsFile->value("Threshold", 0.25).toFloat();
+    FIsEdgeAware          = APtsFile->value("IsEdgeAware", true).toBool();
+    FLumaWeight           = APtsFile->value("LumaWeight", 0.5).toFloat();
+    FMaxRadius            = APtsFile->value("MaxRadius", 500).toUInt();
+    FMode                 = (ptLocalAdjustMode)APtsFile->value("Mode", lamFloodFill).toInt();
+    FSaturation           = APtsFile->value("Saturation", 0.0).toFloat();
+    FThreshold            = APtsFile->value("Threshold", 0.25).toFloat();
     FLumaCurve->ReadFromFile(APtsFile);
   }
 }
