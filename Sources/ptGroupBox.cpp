@@ -308,7 +308,7 @@ void ptGroupBox::WriteSettings(const short Append) {
   }
   QList <ptCurveWindow *> CurveWindows = findChildren <ptCurveWindow *> ();
   for (int i = 0; i < CurveWindows.size(); i++) {
-    Curves << CurveKeys.at((CurveWindows.at(i))->m_Channel);
+    Curves << CurveKeys.at((CurveWindows.at(i))->Channel);
   }
 
   // Additional for Camera color profile

@@ -43,9 +43,9 @@ class ptCurveWindow : public QWidget {
 Q_OBJECT
 
 public:
-  ptCurveWindow(ptCurve*     RelatedCurve,
-                const short  Channel,   // RGB,R,G,B,L
-                QWidget*     Parent);
+  ptCurveWindow(ptCurve*     ARelatedCurve,
+                const short  AChannel,   // RGB,R,G,B,L
+                QWidget*     AParent);
   ~ptCurveWindow();
 
   /*! NewRelatedCurve to associate anonter ptImage with this window.*/
@@ -56,11 +56,10 @@ public:
 
   void ContextMenu(QMouseEvent* event);
 
-  QWidget*       m_Parent;
-  ptCurve*       m_RelatedCurve;
-  QTimer*        m_ResizeTimer; // To circumvent multi resize events.
-  short          m_Channel;
-  ptImage8*      m_Image8;
+  ptCurve*       RelatedCurve;
+  QTimer*        ResizeTimer; // To circumvent multi resize events.
+  short          Channel;
+  ptImage8*      Image8;
 
 //------------------------------------------------------------------------------
 
@@ -86,31 +85,32 @@ private:
   void SetCurveState(const short state);
   short GetCurveState();
 
-  QTimer*             m_WheelTimer;
-  short               m_XSpot[ptMaxAnchors];
-  short               m_YSpot[ptMaxAnchors];
-  QPixmap*            m_QPixmap;
-  int32_t             m_OverlayAnchorX;
-  int32_t             m_OverlayAnchorY;
-  short               m_MovingAnchor;
-  short               m_ActiveAnchor;  // gets the wheel event, -1 neutral
-  uint16_t            m_MousePosX;
-  uint16_t            m_MousePosY;
-  short               m_BlockEvents;
-  short               m_RecalcNeeded;
-  short               m_CyclicCurve;
+
+  QTimer*             FWheelTimer;
+  short               FXSpot[ptMaxAnchors];
+  short               FYSpot[ptMaxAnchors];
+  QPixmap*            FQPixmap;
+  int32_t             FOverlayAnchorX;
+  int32_t             FOverlayAnchorY;
+  short               FMovingAnchor;
+  short               FActiveAnchor;  // gets the wheel event, -1 neutral
+  uint16_t            FMousePosX;
+  uint16_t            FMousePosY;
+  short               FBlockEvents;
+  short               FRecalcNeeded;
+  short               FCyclicCurve;
   // Saturaton Curve modes
-  QAction*            m_AtnAbsolute;
-  QAction*            m_AtnAdaptive;
-  QActionGroup*       m_SatModeGroup;
-  QAction*            m_AtnByLuma;
-  QAction*            m_AtnByChroma;
-  QActionGroup*       m_TypeGroup;
+  QAction*            FAtnAbsolute;
+  QAction*            FAtnAdaptive;
+  QActionGroup*       FSatModeGroup;
+  QAction*            FAtnByLuma;
+  QAction*            FAtnByChroma;
+  QActionGroup*       FTypeGroup;
   // Interpolation Type
-  QAction*            m_AtnITLinear;
-  QAction*            m_AtnITSpline;
-  QAction*            m_AtnITCosine;
-  QActionGroup*       m_ITGroup;
+  QAction*            FAtnITLinear;
+  QAction*            FAtnITSpline;
+  QAction*            FAtnITCosine;
+  QActionGroup*       FITGroup;
 
 //------------------------------------------------------------------------------
 
