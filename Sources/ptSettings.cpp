@@ -62,7 +62,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LocalMaskLumaWeight"           ,ptGT_InputSlider     ,9,0,1         ,0.5        ,0.0      ,1.0      ,0.1    ,2        ,tr("Brightness/color ratio"),tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")},
     {"LocalMaxRadius"                ,ptGT_InputSlider     ,9,0,1         ,500        ,1        ,7000     ,10     ,0        ,tr("Maximum radius"),tr("Pixels outside this radius will never be included in the mask.")},
     {"LocalSaturation"               ,ptGT_InputSlider     ,9,0,1         ,0.0        ,-1.0     ,1.0      ,0.05   ,2        ,tr("Saturation"),tr("Adjusts saturation in masked region")},
-    {"LocalColorShift"               ,ptGT_InputSlider     ,9,0,1         ,0.5        ,0.0      ,1.0      ,0.05   ,2        ,tr("Color shift"),tr("Shifts the hue")},
+    {"LocalColorShift"               ,ptGT_InputSlider     ,9,0,1         ,0.0        ,0.0      ,1.0      ,0.001  ,3        ,tr("Color shift"),tr("Shifts the hue")},
 
     {"FileMgrThumbnailSize"          ,ptGT_InputSlider     ,1,0,1 ,100  ,50   ,500   ,25   ,0 ,tr("Thumbnail size")     ,tr("Thumbnail size in pixel")},
     {"FileMgrThumbnailPadding"       ,ptGT_InputSlider     ,1,0,1 ,8    ,0    ,50    ,2    ,0 ,tr("Thumbnail padding")  ,tr("Thumbnail padding in pixel")},

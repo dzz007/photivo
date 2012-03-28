@@ -5498,7 +5498,13 @@ ptImage *ptImage::MaskedColorAdjust(const ptLocalSpot *ASpot)
   const ptCurve *hCurve       = ASpot->lumaCurve();
   const bool     hSatAdjust   = ASpot->saturation() != 0.0f;
   const bool     hSatAdaptive = ASpot->isAdaptiveSaturation();
-  const float    hSaturation  = ASpot->saturation();
+  float          hSaturation  = ASpot->saturation();
+  const bool     hHueAdjust   = ASpot->colorShift() != 0.0f;
+  const float    hHueShift    = ASpot->colorShift() * pt2PI;
+
+  // we enhance positive saturation values; negative values should give B&W with
+  // -1.0, at least when not adaptive.
+  if (hSaturation > 0) hSaturation *= 2.0f;
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i< (uint32_t)m_Height*m_Width; i++) {
@@ -5511,6 +5517,10 @@ ptImage *ptImage::MaskedColorAdjust(const ptLocalSpot *ASpot)
           m_ImageC[i] = m_ImageC[i] * (1.0f + hMask[i] * hSaturation * (2.0f - m_ImageC[i]/(float)0x3FFF));
         else
           m_ImageC[i] = m_ImageC[i] * (1.0f + hMask[i] * hSaturation);
+      }
+
+      if (hHueAdjust) {
+        m_ImageH[i] = m_ImageH[i] + hHueShift * hMask[i];
       }
     }
   }

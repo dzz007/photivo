@@ -27,7 +27,7 @@
 
 ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
 : ptImageSpot(APtsFile),
-  FColorShift(0.5),
+  FColorShift(0.0),
   FHasMaxRadius(false),
   FIsAdaptiveSaturation(false),
   FIsEdgeAware(true),
@@ -39,9 +39,10 @@ ptLocalSpot::ptLocalSpot(QSettings *APtsFile)
   FThreshold(0.25)
 {
   FLumaCurve->setId("LumaCurve");
+  FLumaCurve.get()->SetNullCurve(ptCurveChannel_SpotLuma);
 
   if (APtsFile != nullptr) {
-    FColorShift = APtsFile->value("ColorShift", 0.5).toFloat();
+    FColorShift = APtsFile->value("ColorShift", 0.0).toFloat();
     FHasMaxRadius = APtsFile->value("HasMaxRadius", false).toBool();
     FIsAdaptiveSaturation = APtsFile->value("IsAdaptiveSaturation", false).toBool();
     FIsEdgeAware = APtsFile->value("IsEdgeAware", true).toBool();
