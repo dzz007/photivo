@@ -308,6 +308,7 @@ const short ptAutoExposureMode_Zero     = 3;
 
 // Curves.
 
+// Beware the “channel”. It’s a historical name and not accurate anymore. Read: “curve type”
 const short ptCurveChannel_RGB               = 0;
 const short ptCurveChannel_R                 = 1;
 const short ptCurveChannel_G                 = 2;

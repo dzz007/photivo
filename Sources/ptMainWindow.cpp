@@ -373,12 +373,14 @@ ptMainWindow::ptMainWindow(const QString Title)
   // "local adjust"
   FSpotCurveWindow = new ptCurveWindow(FEmptyCurve.get(),
                                        ptCurveChannel_SpotLuma,
-                                       LocalLumaCurveWidget);
+                                       LocalLumaCurveWidget,
+                                       tr("Luminance curve"));
   Macro_ConnectSomeButton(LocalSpot);
   Macro_ConnectSomeButton(ConfirmLocalSpot);
   ConfirmLocalSpotButton->hide();
 
   LocalSpotListView = new ptImageSpotListView(this, ptLocalSpot::CreateSpot);
+  LocalSpotListView->setObjectName("LocalSpotListView");  // needed for save/append preset menu
   LocalSpotListView->setFixedHeight(132);
   LocalSpotListLayout->addWidget(LocalSpotListView);
   LocalSpotModel = new ptImageSpotModel(
@@ -410,6 +412,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   ConfirmSpotRepairButton->hide();
 
   RepairSpotListView = new ptImageSpotListView(this, ptRepairSpot::CreateSpot);
+  RepairSpotListView->setObjectName("RepairSpotListView");
   SpotRepairVLayout->insertWidget(1, RepairSpotListView);
   RepairSpotModel = new ptImageSpotModel(
                           QSize(0, (int)(LocalSpotListView->fontMetrics().lineSpacing()*1.5)),
@@ -1515,20 +1518,21 @@ void ptMainWindow::OnLocalSpotButtonClicked() {
 }
 
 void ptMainWindow::ToggleLocalSpotAppendMode() {
+  // For the button “checked” means append mode is on, “unchecked” means append mode is off.
   if (LocalSpotListView->appendMode()) {
     // cancel appending a spot
     LocalSpotListView->setAppendMode(false);
-    LocalSpotAddButton->setIcon(QIcon(":/dark/icons/add-spot.png"));
+    LocalSpotAddButton->setChecked(false);
     LocalSpotAddButton->setToolTip(tr("Append spot mode"));
 
   } else {
     // start appending a spot
     LocalSpotListView->setAppendMode(true);
-    LocalSpotAddButton->setIcon(QIcon(":/dark/icons/add-spot-stop.png"));
+    LocalSpotAddButton->setChecked(true);
     LocalSpotAddButton->setToolTip(tr("Exit append spot mode"));
 
     if (ViewWindow->interaction() == iaNone) {
-      // start editing mode if it is not already active
+      // Appending is only possible in editing mode. Start it if it is not already active.
       ::CB_LocalSpotButton();
     }
   }

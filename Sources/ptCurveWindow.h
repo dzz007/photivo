@@ -43,9 +43,10 @@ class ptCurveWindow : public QWidget {
 Q_OBJECT
 
 public:
-  ptCurveWindow(ptCurve*     ARelatedCurve,
-                const short  AChannel,   // RGB,R,G,B,L
-                QWidget*     AParent);
+  ptCurveWindow(ptCurve*      ARelatedCurve,
+                const short   AChannel,
+                QWidget*      AParent,
+                const QString &ACaption = "");
   ~ptCurveWindow();
 
   /*! NewRelatedCurve to associate anonter ptImage with this window.*/
@@ -58,7 +59,7 @@ public:
 
   ptCurve*       RelatedCurve;
   QTimer*        ResizeTimer; // To circumvent multi resize events.
-  short          Channel;
+  short          Channel;   // Beware, historical name. Read: “curve type”
   ptImage8*      Image8;
 
 //------------------------------------------------------------------------------
@@ -86,6 +87,7 @@ private:
   short GetCurveState();
 
 
+  QLabel*             FCaptionLabel;
   QTimer*             FWheelTimer;
   short               FXSpot[ptMaxAnchors];
   short               FYSpot[ptMaxAnchors];

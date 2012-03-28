@@ -37,16 +37,28 @@ extern ptTheme* Theme;
 
 // Instantiates a (also here defined) CurveWidget,
 // which acts as a central widget where the operations are finally done upon.
-ptCurveWindow::ptCurveWindow(ptCurve*    ARelatedCurve,
-                             const short AChannel,
-                             QWidget*    AParent)
-:QWidget(AParent)
+ptCurveWindow::ptCurveWindow(ptCurve*      ARelatedCurve,
+                             const short   AChannel,
+                             QWidget*      AParent,
+                             const QString &ACaption /*= ""*/)
+: QWidget(AParent),
+  FCaptionLabel(nullptr)
 {
   RelatedCurve = ARelatedCurve;
   Channel      = AChannel;
 
-  // Sizing and layout related.
+  // set up caption in topleft corner
+  if (!ACaption.isEmpty()) {
+    FCaptionLabel = new QLabel("<b style='color:#ffffff'>" + ACaption + "</b>", this);
+    FCaptionLabel->move(5,5);
 
+    // Make label ignore mouse events and ensure transparent background
+    FCaptionLabel->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    FCaptionLabel->setAttribute(Qt::WA_NoSystemBackground, true);
+    FCaptionLabel->setAttribute(Qt::WA_OpaquePaintEvent, false);
+  }
+
+  // Sizing and layout related.
   QSizePolicy Policy(QSizePolicy::Minimum, QSizePolicy::Preferred);
   Policy.setHeightForWidth(1);
   setSizePolicy(Policy);

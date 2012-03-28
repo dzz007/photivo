@@ -9247,3 +9247,14 @@ bool HasActiveRepairSpots() {
 
 //==============================================================================
 
+// Another hack to avoid making MainWindow known to ptGroupBox.
+void WriteLocalSpots(QSettings *APtsFile) {
+  MainWindow->LocalSpotModel->WriteToFile(APtsFile);
+}
+
+void WriteRepairSpots(QSettings *APtsFile) {
+  MainWindow->RepairSpotModel->WriteToFile(APtsFile);
+}
+
+//==============================================================================
+
