@@ -2856,9 +2856,7 @@ short ReadSettingsFile(const QString FileName, short& NextPhase) {
   MainWindow->Settings_2_Form();
 
   MainWindow->LocalSpotModel->ReadFromFile(&JobSettings);
-  MainWindow->LocalSpotListView->UpdateToolActiveState();
   MainWindow->RepairSpotModel->ReadFromFile(&JobSettings);
-  MainWindow->RepairSpotListView->UpdateToolActiveState();
   ReportProgress(QObject::tr("Ready"));
 
   JobSettings.sync();
@@ -9249,12 +9247,12 @@ ptImageType CheckImageType(QString filename,
 // the tool active state. Used there in ToolInfo(). Avoids making the MainWindow
 // known to ptSettings.
 bool HasActiveLocalSpots() {
-  if (InStartup) return false;
+  if (!MainWindow) return false;
   return MainWindow->LocalSpotModel->hasEnabledSpots();
 }
 
 bool HasActiveRepairSpots() {
-  if (InStartup) return false;
+  if (!MainWindow) return false;
   return MainWindow->RepairSpotModel->hasEnabledSpots();
 }
 

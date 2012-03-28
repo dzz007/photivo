@@ -78,8 +78,6 @@ public:
    */
   void UpdatePreview();
 
-  void UpdateToolActiveState();
-
 //------------------------------------------------------------------------------
 
 protected:
@@ -89,7 +87,9 @@ protected:
 //------------------------------------------------------------------------------
 
 private:
-  bool                          FAppendOngoing;     // when true, add spot button was clicked
+  void UpdateToolActiveState();
+
+  bool                          FAppendOngoing;     // when true, “add spot” button was clicked
   bool                          FInteractionOngoing;    // ViewWindow interaction
   ptImageSpotModel              *FModel;
   ptImageSpot::PCreateSpotFunc  FSpotCreator;  // pointer to spot factory method
