@@ -25,15 +25,20 @@
 //==============================================================================
 
 ptSpotInteraction::ptSpotInteraction(QGraphicsView *AView)
-  : ptImageInteraction(AView)
+: ptAbstractInteraction(AView),
+  FAbortNextMouseAction(false)
 {
   FView->setCursor(Qt::CrossCursor);
 }
 
 //==============================================================================
 
-ptSpotInteraction::~ptSpotInteraction() {
-  FView->setCursor(Qt::ArrowCursor);
+ptSpotInteraction::~ptSpotInteraction() {}
+
+//==============================================================================
+
+void ptSpotInteraction::abortMouseAction(const ptMouseAction /*AAction*/) {
+  FAbortNextMouseAction = true;
 }
 
 //==============================================================================
@@ -45,7 +50,12 @@ void ptSpotInteraction::stop() {
 //==============================================================================
 
 void ptSpotInteraction::mouseAction(QMouseEvent *AEvent) {
-  if (AEvent->type() == QEvent::MouseButtonPress &&
+  if (FAbortNextMouseAction) {
+    FAbortNextMouseAction = false;
+    return;
+  }
+
+  if (AEvent->type() == QEvent::MouseButtonRelease &&
       AEvent->button() == Qt::LeftButton &&
       AEvent->modifiers() == Qt::NoModifier)
   {

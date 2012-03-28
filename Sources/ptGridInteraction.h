@@ -35,25 +35,34 @@
 
 #include <QList>
 
-#include "ptImageInteraction.h"
+#include "ptAbstractInteraction.h"
 #include <QGraphicsLineItem>
 
 //==============================================================================
 
-class ptGridInteraction : public ptImageInteraction {
+class ptGridInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
 public:
-  explicit ptGridInteraction(QGraphicsView* View);
+  explicit ptGridInteraction(QGraphicsView* AView);
   ~ptGridInteraction();
 
-  void show(const uint linesX, const uint linesY);
+  /*! Reimplemented from base class. */
+  virtual Qt::KeyboardModifiers modifiers()    const { return Qt::NoModifier; }
+
+  /*! Reimplemented from base class. */
+  virtual ptMouseActions        mouseActions() const { return maNone; }
+
+  /*! Reimplemented from base class. */
+  virtual Qt::MouseButtons      mouseButtons() const { return Qt::NoButton; }
+
+  void show(const uint ALinesX, const uint ALinesY);
   inline void hide() { ClearList(); }
 
 //------------------------------------------------------------------------------
 
 private:
-  QList<QGraphicsLineItem*> m_GridLines;
+  QList<QGraphicsLineItem*> FGridLines;
   void ClearList();
 
 

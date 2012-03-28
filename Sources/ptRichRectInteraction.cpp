@@ -39,7 +39,7 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
       const int x, const int y, const int width, const int height,
       const short FixedAspectRatio, const uint AspectRatioW,
       const uint AspectRatioH, const short Guidelines)
-: ptImageInteraction(View),
+: ptAbstractInteraction(View),
   //constants
   EdgeThickness(40),
   TinyRectThreshold(80),
@@ -109,9 +109,10 @@ ptRichRectInteraction::~ptRichRectInteraction() {
   for (int i = 0; i <= 3; i++) {
     DelAndNull(m_LightsOutRects[i]);
   }
-
-  DelAndNull(m_Shadow);
 }
+/* Resources managed by Qt parent mechanism (do not delete manually):
+   m_Shadow
+*/
 
 //==============================================================================
 

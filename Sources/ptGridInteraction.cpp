@@ -26,8 +26,8 @@
 
 //==============================================================================
 
-ptGridInteraction::ptGridInteraction(QGraphicsView* View)
-: ptImageInteraction(View)
+ptGridInteraction::ptGridInteraction(QGraphicsView* AView)
+: ptAbstractInteraction(AView)
 {
 }
 
@@ -39,25 +39,25 @@ ptGridInteraction::~ptGridInteraction() {
 
 //==============================================================================
 
-void ptGridInteraction::show(const uint linesX, const uint linesY) {
+void ptGridInteraction::show(const uint ALinesX, const uint ALinesY) {
   ClearList();
   QPen pen(QColor(150,150,150));
 
   uint width = (uint)FView->scene()->width();
   uint height = (uint)FView->scene()->height();
-  uint stepX = (uint)((double)width / (double)(linesX + 1));
-  uint stepY = (uint)((double)height / (double)(linesY + 1));
+  uint stepX = (uint)((double)width / (double)(ALinesX + 1));
+  uint stepY = (uint)((double)height / (double)(ALinesY + 1));
 
   // Add vertical lines
-  for (uint i = 1; i <= linesX; i++) {
+  for (uint i = 1; i <= ALinesX; i++) {
     QGraphicsLineItem* temp = FView->scene()->addLine(i*stepX, 0.0, i*stepX, height, pen);
-    m_GridLines.append(temp);
+    FGridLines.append(temp);
   }
 
   // Add horizontal lines
-  for (uint i = 1; i <= linesY; i++) {
+  for (uint i = 1; i <= ALinesY; i++) {
     QGraphicsLineItem* temp = FView->scene()->addLine(0.0, i*stepY, width, i*stepY, pen);
-    m_GridLines.append(temp);
+    FGridLines.append(temp);
   }
 }
 
@@ -65,12 +65,12 @@ void ptGridInteraction::show(const uint linesX, const uint linesY) {
 
 // Properly destroy all lines and clear the list
 void ptGridInteraction::ClearList() {
-  if (m_GridLines.count() > 0) {
-    for (int i = 0; i < m_GridLines.count(); i++) {
-      FView->scene()->removeItem(m_GridLines[i]);
-      DelAndNull(m_GridLines[i]);
+  if (FGridLines.count() > 0) {
+    for (int i = 0; i < FGridLines.count(); i++) {
+      FView->scene()->removeItem(FGridLines[i]);
+      DelAndNull(FGridLines[i]);
     }
-    m_GridLines.clear();
+    FGridLines.clear();
   }
 }
 

@@ -31,7 +31,6 @@
 #include "ptImage.h"
 
 extern ptTheme* Theme;
-extern ptSettings* Settings;
 
 //==============================================================================
 
@@ -41,6 +40,8 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   MinZoom(0.05), MaxZoom(4.0),
   // member variables
   FCtrlIsPressed(0),
+  FInteractionHasMousePress(false),
+  FCurrentInteraction(nullptr),
   FDrawLine(nullptr),
   FLocalAdjust(nullptr),
   FSelectRect(nullptr),
@@ -62,10 +63,11 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   ZoomFactors << MinZoom << 0.08 << 0.10 << 0.15 << 0.20 << 0.25 << 0.33 << 0.50 << 0.66 << 1.00
               << 1.50 << 2.00 << 3.00 << MaxZoom;
 
-  FDragDelta = new QLine();
-  FStatusOverlay = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
+  FDragDelta       = new QLine();
+  FStatusOverlay   = new ptReportOverlay(this, "", QColor(),           QColor(),
+                                         0,    Qt::AlignLeft,  20);
   FZoomSizeOverlay = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
-                                          1000, Qt::AlignRight, 20);
+                                         1000, Qt::AlignRight, 20);
 
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -95,19 +97,19 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
 //==============================================================================
 
 ptViewWindow::~ptViewWindow() {
-  delete FDragDelta;
-  delete FStatusOverlay;
-  delete FZoomSizeOverlay;
-  delete FDrawLine;
-  delete FSelectRect;
-  delete FGrid;
+  DelAndNull(FDragDelta);
+  DelAndNull(FStatusOverlay);
+  DelAndNull(FZoomSizeOverlay);
+  DelAndNull(FDrawLine);
+  DelAndNull(FSelectRect);
+  DelAndNull(FGrid);
 
-  delete ac_PRead_None;
-  delete ac_PRead_Linear;
-  delete ac_PRead_Preview;
-  delete ac_PReadGroup;
+  DelAndNull(ac_PRead_None);
+  DelAndNull(ac_PRead_Linear);
+  DelAndNull(ac_PRead_Preview);
+  DelAndNull(ac_PReadGroup);
 
-  delete FPReadTimer;
+  DelAndNull(FPReadTimer);
 }
 
 //==============================================================================
@@ -317,14 +319,8 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
     }
   }
 
-  // drag image with left mouse button to scroll
-  // Also Ctrl needed in crop & spot modes
-  short ImgDragging = FLeftMousePressed && FInteraction == iaNone;
-  if (FInteraction == iaCrop || FInteraction == iaSpotRepair || FInteraction == iaLocalAdjust) {
-    ImgDragging = FLeftMousePressed && FCtrlIsPressed;
-  }
-
-  if (ImgDragging) {
+  if (isImgDragging()) {
+    // drag move visible image area
     FDragDelta->setP2(event->pos());
     horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
                                     FDragDelta->x2() +
@@ -352,6 +348,33 @@ void ptViewWindow::wheelEvent(QWheelEvent* event) {
 
 void ptViewWindow::leaveEvent(QEvent*) {
   if (FPixelReader) FPixelReader(QPoint(), prNone);
+}
+
+//==============================================================================
+
+bool ptViewWindow::isImgDragging() {
+  bool hResult = FLeftMousePressed;
+
+  // Handle special cases first
+  if (FInteraction != iaNone) {
+    if (FCurrentInteraction->mouseActions().testFlag(maDragDrop)) {
+      // Interaction handles d&d. Test if Ctrl key is available
+      if (FCurrentInteraction->modifiers().testFlag(Qt::ControlModifier)) {
+        // Interaction handles d&d and Ctrl key. Dragging image not possible.
+        return false;
+      } else {
+        // image dragging by Ctrl+Drag
+        hResult = FLeftMousePressed && FCtrlIsPressed;
+        if (hResult) FCurrentInteraction->abortMouseAction(maClick);
+      }
+
+    } else {
+      if (hResult) FCurrentInteraction->abortMouseAction(maClick);
+    }
+  }
+
+  // usual case: no interaction or interaction doesn’t handle d&d
+  return hResult;
 }
 
 //==============================================================================
@@ -467,6 +490,7 @@ void ptViewWindow::StartLine() {
     connect(this, SIGNAL(mouseChanged(QMouseEvent*)), FDrawLine, SLOT(mouseAction(QMouseEvent*)));
     connect(this, SIGNAL(keyChanged(QKeyEvent*)), FDrawLine, SLOT(keyAction(QKeyEvent*)));
     FInteraction = iaDrawLine;
+    FCurrentInteraction = FDrawLine;
   }
 }
 
@@ -487,6 +511,7 @@ void ptViewWindow::StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect))
             FSelectRect, SLOT  (keyAction(QKeyEvent*)));
 
     FInteraction = iaSelectRect;
+    FCurrentInteraction = FSelectRect;
   }
 }
 
@@ -533,6 +558,7 @@ void ptViewWindow::StartCrop()
           FCrop, SLOT  (keyAction(QKeyEvent*)));
 
   FInteraction = iaCrop;
+  FCurrentInteraction = FCrop;
 }
 
 //==============================================================================
@@ -549,6 +575,7 @@ void ptViewWindow::StartLocalAdjust() {
           FLocalAdjust, SLOT  (mouseAction(QMouseEvent*)));
 
   FInteraction = iaLocalAdjust;
+  FCurrentInteraction = FLocalAdjust;
 }
 
 //==============================================================================
@@ -568,6 +595,7 @@ void ptViewWindow::StartSpotRepair() {
           FSpotRepair, SLOT  (keyAction(QKeyEvent*)));
 
   FInteraction = iaSpotRepair;
+  FCurrentInteraction = FSpotRepair;
 }
 
 //==============================================================================
@@ -621,6 +649,8 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
       assert(!"Unknown FInteraction");
       break;
   }
+
+  FCurrentInteraction = nullptr;
 }
 
 //==============================================================================

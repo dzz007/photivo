@@ -35,21 +35,37 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 
-#include "../ptImageInteraction.h"
+#include "../ptAbstractInteraction.h"
 
 //==============================================================================
 
-class ptSpotInteraction: public ptImageInteraction {
+class ptSpotInteraction: public ptAbstractInteraction {
 Q_OBJECT
 
 public:
   explicit ptSpotInteraction(QGraphicsView *AView);
   ~ptSpotInteraction();
 
+  /*! Reimplemented from base class. */
+  virtual void abortMouseAction(const ptMouseAction AAction);
+
+  /*! Reimplemented from base class. */
+  virtual Qt::KeyboardModifiers modifiers()    const { return Qt::NoModifier; }
+
+  /*! Reimplemented from base class. */
+  virtual ptMouseActions        mouseActions() const { return maClick; }
+
+  /*! Reimplemented from base class. */
+  virtual Qt::MouseButtons      mouseButtons() const { return Qt::LeftButton; }
+
   /*! Stops the spotinteraction. Makes sure any necessary cleanup happens properly
       and emits finished() afterwards.  */
   void stop();
 
+//------------------------------------------------------------------------------
+
+private:
+  bool          FAbortNextMouseAction;
   
 //------------------------------------------------------------------------------
 
