@@ -29,15 +29,13 @@ extern ptSettings* Settings;
 
 ptImageSpot::ptImageSpot(QSettings *APtsFile /*= nullptr*/)
 : FIsEnabled(true),
-  FName(""),
-  FRadius(0)
+  FName("")
 {
   FPos = QPoint();
 
   if (APtsFile != nullptr) {
     FIsEnabled = APtsFile->value("IsEnabled", 0).toBool();
     FName = APtsFile->value("Name", "").toString();
-    FRadius = APtsFile->value("Radius", 0).toUInt();
     FPos.setX(APtsFile->value("SpotPosX", 0).toInt());
     FPos.setY(APtsFile->value("SpotPosY", 0).toInt());
   }
@@ -54,16 +52,8 @@ ptImageSpot::ptImageSpot(const uint ASpotX,
   int hToFullPipe = 1 << Settings->GetInt("PipeSize");
 
   FPos        = QPoint(ASpotX * hToFullPipe, ASpotY * hToFullPipe);
-  FRadius     = ARadius * hToFullPipe;
   FIsEnabled  = AIsEnabled;
   FName       = AName;
-}
-
-//==============================================================================
-
-uint ptImageSpot::radius() const
-{
-  return FRadius >> Settings->GetInt("Scaled");
 }
 
 //==============================================================================
@@ -71,12 +61,6 @@ uint ptImageSpot::radius() const
 QPoint ptImageSpot::pos() const {
   return QPoint(FPos.x() >> Settings->GetInt("Scaled"),
                 FPos.y() >> Settings->GetInt("Scaled") );
-}
-
-//==============================================================================
-
-void ptImageSpot::setRadius(uint ARadius) {
-  FRadius = ARadius << Settings->GetInt("Scaled");
 }
 
 //==============================================================================
@@ -91,7 +75,6 @@ void ptImageSpot::setPos(uint Ax, uint Ay) {
 void ptImageSpot::WriteToFile(QSettings *APtsFile) {
   APtsFile->setValue("IsEnabled", (int)FIsEnabled);
   APtsFile->setValue("Name", FName);
-  APtsFile->setValue("Radius", FRadius);
   APtsFile->setValue("SpotPosX", FPos.x());
   APtsFile->setValue("SpotPosY", FPos.y());
 }

@@ -133,44 +133,45 @@ void ptRepairInteraction::DestroyShape(ptRepairInteraction::TSpotShape* AShape) 
 //==============================================================================
 
 void ptRepairInteraction::Draw(ptRepairInteraction::TSpotShape *AShape, ptRepairSpot *ASpotData) {
-  // Center point of spot and repairer relative to their groups
-  QPointF hSpotCenter(ASpotData->radius()/2, ASpotData->radiusY()/2);
+  //TODO: Temporarily disabled because of removal of radius() from ptImageSpot
+//  // Center point of spot and repairer relative to their groups
+//  QPointF hSpotCenter(ASpotData->radius()/2, ASpotData->radiusY()/2);
 
-  // Set spot’s container’s topleft position so that we can work with (0,0)
-  // as the spot’s topleft point.
-  AShape->SpotGroup->setPos(ASpotData->pos());
+//  // Set spot’s container’s topleft position so that we can work with (0,0)
+//  // as the spot’s topleft point.
+//  AShape->SpotGroup->setPos(ASpotData->pos());
 
-  AShape->Spot->setRect(0, 0, ASpotData->radius() * 2, ASpotData->radiusY() * 2);
-  AShape->SpotBorder->hide();   // TODO SR: implement inner border display
+//  AShape->Spot->setRect(0, 0, ASpotData->radius() * 2, ASpotData->radiusY() * 2);
+//  AShape->SpotBorder->hide();   // TODO SR: implement inner border display
 
-  // Unrotated handle positions: Radius handle rightcenter, rotation handle bottomcenter
-  AShape->RadiusHandle->setPos(
-                          AShape->Spot->rect().width() - AShape->RadiusHandle->rect().width()/2,
-                          hSpotCenter.y() - AShape->RadiusHandle->rect().height()/2
-                        );
-  AShape->RotationHandle->setPos(
-                          hSpotCenter.x() - AShape->RotationHandle->rect().width()/2,
-                          AShape->Spot->rect().height() - AShape->RotationHandle->rect().height()/2
-                        );
-  AShape->SpotGroup->setRotation(ASpotData->angle());
+//  // Unrotated handle positions: Radius handle rightcenter, rotation handle bottomcenter
+//  AShape->RadiusHandle->setPos(
+//                          AShape->Spot->rect().width() - AShape->RadiusHandle->rect().width()/2,
+//                          hSpotCenter.y() - AShape->RadiusHandle->rect().height()/2
+//                        );
+//  AShape->RotationHandle->setPos(
+//                          hSpotCenter.x() - AShape->RotationHandle->rect().width()/2,
+//                          AShape->Spot->rect().height() - AShape->RotationHandle->rect().height()/2
+//                        );
+//  AShape->SpotGroup->setRotation(ASpotData->angle());
 
-  if (ASpotData->hasRepairer()) {
-    // repairer ellipse
-    AShape->RepairerGroup->setPos(ASpotData->repairerPos());
-    AShape->Repairer->setRect(0, 0, ASpotData->radius() * 2, ASpotData->radiusY() * 2);
-    AShape->Repairer->setRotation(ASpotData->angle());
+//  if (ASpotData->hasRepairer()) {
+//    // repairer ellipse
+//    AShape->RepairerGroup->setPos(ASpotData->repairerPos());
+//    AShape->Repairer->setRect(0, 0, ASpotData->radius() * 2, ASpotData->radiusY() * 2);
+//    AShape->Repairer->setRotation(ASpotData->angle());
 
-    // connector line between spot and repairer (from/to center)
-    // TODO SR: hide undesired sections inside spots
-    AShape->Connector->setLine(QLineF(AShape->Spot->mapToItem(AShape->RepairerGroup, hSpotCenter),
-                                      hSpotCenter) );
-    AShape->RepairerGroup->show();
+//    // connector line between spot and repairer (from/to center)
+//    // TODO SR: hide undesired sections inside spots
+//    AShape->Connector->setLine(QLineF(AShape->Spot->mapToItem(AShape->RepairerGroup, hSpotCenter),
+//                                      hSpotCenter) );
+//    AShape->RepairerGroup->show();
 
-  } else {
-    AShape->RepairerGroup->hide();
-  }
+//  } else {
+//    AShape->RepairerGroup->hide();
+//  }
 
-  AShape->Group->show();
+//  AShape->Group->show();
 }
 
 //==============================================================================

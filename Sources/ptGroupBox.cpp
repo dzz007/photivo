@@ -291,66 +291,78 @@ void ptGroupBox::AppendSettings() {
   WriteSettings(1);
 }
 
+void WriteLocalSpots(QSettings *APtsFile);
+void WriteRepairSpots(QSettings *APtsFile);
+
 void ptGroupBox::WriteSettings(const short Append) {
+  // Quick and dirty spot tool detection because spots cannot be saved in the usual way.
+  int hWhichSpotGroup = 0;  // 0=no spot, 1=local spot, 2=repair spot
+  if (this->findChild<QWidget*>("LocalSpotListView"))
+    hWhichSpotGroup = 1;
+  else if (this->findChild<QWidget*>("RepairSpotListView"))
+    hWhichSpotGroup = 2;
+
   QStringList Keys;
   QStringList Curves;
-  QList <ptInput *> Inputs = findChildren <ptInput *> ();
-  for (int i = 0; i < Inputs.size(); i++) {
-    Keys << (Inputs.at(i))->GetName();
-  }
-  QList <ptChoice *> Combos = findChildren <ptChoice *> ();
-  for (int i = 0; i < Combos.size(); i++) {
-    Keys << (Combos.at(i))->GetName();
-  }
-  QList <ptCheck *> Checks = findChildren <ptCheck *> ();
-  for (int i = 0; i < Checks.size(); i++) {
-    Keys << (Checks.at(i))->GetName();
-  }
-  QList <ptCurveWindow *> CurveWindows = findChildren <ptCurveWindow *> ();
-  for (int i = 0; i < CurveWindows.size(); i++) {
-    Curves << CurveKeys.at((CurveWindows.at(i))->Channel);
-  }
-
-  // Additional for Camera color profile
-  if (m_Name == "TabCameraColorSpace")
-    Keys << "CameraColorProfile";
-
-  // Additional for Curves
-  if (Curves.contains("CurveSaturation"))
-    Keys << "SatCurveMode" << "SatCurveType";
-  if (Curves.contains("CurveTexture"))
-    Keys << "TextureCurveType";
-  if (Curves.contains("CurveDenoise"))
-    Keys << "DenoiseCurveType";
-  if (Curves.contains("CurveDenoise2"))
-    Keys << "Denoise2CurveType";
-  if (Curves.contains("CurveHue"))
-    Keys << "HueCurveType";
-  if(m_Name == "TabRGBTone")
-    Keys << "Tone1ColorRed" << "Tone1ColorGreen" << "Tone1ColorBlue"
-         << "Tone2ColorRed" << "Tone2ColorGreen" << "Tone2ColorBlue";
-  if (m_Name == "TabGradualOverlay1")
-    Keys << "GradualOverlay1ColorRed" << "GradualOverlay1ColorGreen" << "GradualOverlay1ColorBlue";
-  if (m_Name == "TabGradualOverlay2")
-    Keys << "GradualOverlay2ColorRed" << "GradualOverlay2ColorGreen" << "GradualOverlay2ColorBlue";
-
-  for (int i = 0; i < Curves.size(); i++) {
-    if (Settings->GetInt(Curves.at(i)) > ptCurveChoice_Manual) {
-      ptMessageBox::information(0,"Curve problem",
-        "Only manual curves are supported in presets.\nNo preset file will be written!");
-      return;
+  if (hWhichSpotGroup == 0) {
+    QList <ptInput *> Inputs = findChildren <ptInput *> ();
+    for (int i = 0; i < Inputs.size(); i++) {
+      Keys << (Inputs.at(i))->GetName();
     }
+    QList <ptChoice *> Combos = findChildren <ptChoice *> ();
+    for (int i = 0; i < Combos.size(); i++) {
+      Keys << (Combos.at(i))->GetName();
+    }
+    QList <ptCheck *> Checks = findChildren <ptCheck *> ();
+    for (int i = 0; i < Checks.size(); i++) {
+      Keys << (Checks.at(i))->GetName();
+    }
+    QList <ptCurveWindow *> CurveWindows = findChildren <ptCurveWindow *> ();
+    for (int i = 0; i < CurveWindows.size(); i++) {
+      Curves << CurveKeys.at((CurveWindows.at(i))->Channel);
+    }
+
+    // Additional for Camera color profile
+    if (m_Name == "TabCameraColorSpace")
+      Keys << "CameraColorProfile";
+
+    // Additional for Curves
+    if (Curves.contains("CurveSaturation"))
+      Keys << "SatCurveMode" << "SatCurveType";
+    if (Curves.contains("CurveTexture"))
+      Keys << "TextureCurveType";
+    if (Curves.contains("CurveDenoise"))
+      Keys << "DenoiseCurveType";
+    if (Curves.contains("CurveDenoise2"))
+      Keys << "Denoise2CurveType";
+    if (Curves.contains("CurveHue"))
+      Keys << "HueCurveType";
+    if(m_Name == "TabRGBTone")
+      Keys << "Tone1ColorRed" << "Tone1ColorGreen" << "Tone1ColorBlue"
+           << "Tone2ColorRed" << "Tone2ColorGreen" << "Tone2ColorBlue";
+    if (m_Name == "TabGradualOverlay1")
+      Keys << "GradualOverlay1ColorRed" << "GradualOverlay1ColorGreen" << "GradualOverlay1ColorBlue";
+    if (m_Name == "TabGradualOverlay2")
+      Keys << "GradualOverlay2ColorRed" << "GradualOverlay2ColorGreen" << "GradualOverlay2ColorBlue";
+
+    for (int i = 0; i < Curves.size(); i++) {
+      if (Settings->GetInt(Curves.at(i)) > ptCurveChoice_Manual) {
+        ptMessageBox::information(0,"Curve problem",
+          "Only manual curves are supported in presets.\nNo preset file will be written!");
+        return;
+      }
+    }
+
+    // Additional for Crop
+    if (m_Name == "TabCrop" && Settings->GetInt("Crop")==1)
+      Keys << "CropX" << "CropY" << "CropW" << "CropH";
+
+    // Additional for texture overlay
+    if (m_Name == "TabTextureOverlay")
+      Keys << "TextureOverlayFile";
+    if (m_Name == "TabTextureOverlay2")
+      Keys << "TextureOverlay2File";
   }
-
-  // Additional for Crop
-  if (m_Name == "TabCrop" && Settings->GetInt("Crop")==1)
-    Keys << "CropX" << "CropY" << "CropW" << "CropH";
-
-  // Additional for texture overlay
-  if (m_Name == "TabTextureOverlay")
-    Keys << "TextureOverlayFile";
-  if (m_Name == "TabTextureOverlay2")
-    Keys << "TextureOverlay2File";
 
   QString SuggestedFileName = Settings->GetString("PresetDirectory") + "/preset.pts";
   QString FileName;
@@ -371,16 +383,22 @@ void ptGroupBox::WriteSettings(const short Append) {
         JobSettings.value("Magic") == "photivoSettingsFile" ||
         JobSettings.value("Magic") == "dlRawJobFile" ||
         JobSettings.value("Magic") == "dlRawSettingsFile" ||
-        JobSettings.value("Magic") == "photivoPresetFile")) JobSettings.clear();
+        JobSettings.value("Magic") == "photivoPresetFile"))
+  {
+    JobSettings.clear();
+  }
 
   if (JobSettings.value("Magic") == "photivoJobFile" ||
       JobSettings.value("Magic") == "dlRawJobFile")
+  {
     JobSettings.setValue("Magic","photivoJobFile");
-  else if (JobSettings.value("Magic") == "photivoSettingsFile" ||
-      JobSettings.value("Magic") == "dlRawSettingsFile")
+  } else if (JobSettings.value("Magic") == "photivoSettingsFile" ||
+             JobSettings.value("Magic") == "dlRawSettingsFile")
+  {
     JobSettings.setValue("Magic","photivoSettingsFile");
-  else
+  } else {
     JobSettings.setValue("Magic","photivoPresetFile");
+  }
 
 
   // e.g. a full settings file which should be altered should not get NextPhase
@@ -392,27 +410,38 @@ void ptGroupBox::WriteSettings(const short Append) {
     JobSettings.setValue("NextPhase",GetProcessorPhase(m_Name));
   }
 
-  for (int i=0; i<Keys.size(); i++) {
-    QString Key = Keys[i];
-    if (!Settings->GetInJobFile(Key)) continue;
-    if (Keys.at(i) == "ChannelMixer") {// set ChannelMixer to manual if needed
-      JobSettings.setValue("ChannelMixer",MIN((Settings->GetValue(Key)).toInt(),1));
-      continue;
+
+  if (hWhichSpotGroup == 1 /*local spots*/) {
+    WriteLocalSpots(&JobSettings);
+
+  } else if (hWhichSpotGroup == 2 /*repair spots*/) {
+    WriteRepairSpots(&JobSettings);
+
+  } else {
+    for (int i=0; i<Keys.size(); i++) {
+      QString Key = Keys[i];
+      if (!Settings->GetInJobFile(Key)) continue;
+      if (Keys.at(i) == "ChannelMixer") {// set ChannelMixer to manual if needed
+        JobSettings.setValue("ChannelMixer",MIN((Settings->GetValue(Key)).toInt(),1));
+        continue;
+      }
+      JobSettings.setValue(Key,Settings->GetValue(Key));
     }
-    JobSettings.setValue(Key,Settings->GetValue(Key));
+
+    // save the manual curves
+    for (int i = 0; i < Curves.size(); i++) {
+      if (Settings->GetInt(Curves.at(i))==ptCurveChoice_Manual) {
+        JobSettings.setValue(Curves.at(i) + "Counter",Curve[CurveKeys.indexOf(Curves.at(i))]->m_NrAnchors);
+        for (int j = 0; j < Curve[CurveKeys.indexOf(Curves.at(i))]->m_NrAnchors; j++) {
+          JobSettings.setValue(Curves.at(i) + "X" + QString::number(j),Curve[CurveKeys.indexOf(Curves.at(i))]->m_XAnchor[j]);
+          JobSettings.setValue(Curves.at(i) + "Y" + QString::number(j),Curve[CurveKeys.indexOf(Curves.at(i))]->m_YAnchor[j]);
+        }
+        JobSettings.setValue(Curves.at(i) + "Type",Curve[CurveKeys.indexOf(Curves.at(i))]->m_IntType);
+      }
+    }
   }
 
-  // save the manual curves
-  for (int i = 0; i < Curves.size(); i++) {
-    if (Settings->GetInt(Curves.at(i))==ptCurveChoice_Manual) {
-      JobSettings.setValue(Curves.at(i) + "Counter",Curve[CurveKeys.indexOf(Curves.at(i))]->m_NrAnchors);
-      for (int j = 0; j < Curve[CurveKeys.indexOf(Curves.at(i))]->m_NrAnchors; j++) {
-        JobSettings.setValue(Curves.at(i) + "X" + QString::number(j),Curve[CurveKeys.indexOf(Curves.at(i))]->m_XAnchor[j]);
-        JobSettings.setValue(Curves.at(i) + "Y" + QString::number(j),Curve[CurveKeys.indexOf(Curves.at(i))]->m_YAnchor[j]);
-      }
-      JobSettings.setValue(Curves.at(i) + "Type",Curve[CurveKeys.indexOf(Curves.at(i))]->m_IntType);
-    }
-  }
+
   JobSettings.sync();
   if (JobSettings.status() != QSettings::NoError)
     ptMessageBox::critical(0,"Error","Error while writing preset file!");

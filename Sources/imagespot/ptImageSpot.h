@@ -76,9 +76,6 @@ public:
 
   inline QString const &name() const { return FName; }
 
-  /*! Returns the horizontal radius. */
-  uint radius() const;
-
   /*! Returns the topleft position of the spot’s bounding rectangle. */
   QPoint pos() const;
 
@@ -97,9 +94,6 @@ public:
       spot itself. */
   virtual void setPos(uint Ax, uint Ay);
 
-  /*! Sets the horizontal radius in pixels. */
-  void setRadius(uint ARadius);
-
   /*! Writes the spot’s data to the currently opened ini file.
     The ini’s \c WriteArray() must be set appropriately before you use this. */
   virtual void WriteToFile(QSettings *APtsFile);
@@ -113,7 +107,6 @@ public:
 protected:
   bool      FIsEnabled;
   QString   FName;
-  uint      FRadius;
   QPoint    FPos;       // Position is the center of the spot
 
 //------------------------------------------------------------------------------
