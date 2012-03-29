@@ -2521,6 +2521,8 @@ void ptMainWindow::UpdateSettings() {
 //==============================================================================
 // Display strings from settings
 void ptMainWindow::Settings_2_Form() {
+  if (Settings->GetInt("JobMode") == 1) return;
+
   // Metadata
   edtImageTitle->setText(Settings->GetString("ImageTitle"));
   edtCopyright->setText( Settings->GetString("Copyright"));
@@ -2529,6 +2531,8 @@ void ptMainWindow::Settings_2_Form() {
 //==============================================================================
 // Read settings from Form
 void ptMainWindow::Form_2_Settings() {
+  if (Settings->GetInt("JobMode") == 1) return;
+
   //Metadata
   Settings->SetValue("ImageTitle", edtImageTitle->text().trimmed());
   Settings->SetValue("Copyright",  edtCopyright->text().trimmed());
