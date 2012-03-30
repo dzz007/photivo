@@ -1576,7 +1576,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation>Echo</translation>
+        <translation>Hecho</translation>
     </message>
     <message>
         <source>Updating</source>
@@ -2990,7 +2990,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Contrast</source>
-        <translation>Contaste</translation>
+        <translation>Contraste</translation>
     </message>
     <message>
         <source>Texture overlay I</source>
