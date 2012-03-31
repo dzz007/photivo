@@ -656,7 +656,7 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="39"/>
         <source>Flood fill</source>
-        <translation></translation>
+        <translation>Riempi</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="40"/>
@@ -1303,7 +1303,7 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="530"/>
         <source>H</source>
-        <translation></translation>
+        <translation>H</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="534"/>
@@ -1343,12 +1343,12 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="573"/>
         <source>Clone</source>
-        <translation></translation>
+        <translation>Clona</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="574"/>
         <source>Heal (Dummy)</source>
-        <translation></translation>
+        <translation>Ripara (Fittizio)</translation>
     </message>
     <message>
         <source>PNG</source>
@@ -1550,7 +1550,34 @@ inputfile
 
 For more documentation visit the wiki: http://photivo.org/photivo/start
 </source>
-        <translation></translation>
+        <translation>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
+                [-h] [--new-instance]
+Options:
+inputfile
+      Specify the image or settings file to load. Works like -i for image files
+      and like --pts for settings files.
+-i imagefile
+      Specify image file to load.
+-j jobfile
+      Specify jobfile for batch processing. Job files are created
+ in Photivo
+      and then executed with this option.
+--load-and-delete imagefile
+      Specify temporary file used for Gimp-to-Photivo export. Internal option,
+      not intended for general use. BEWARE! This option deletes imagefile!
+--pts ptsfile
+      Specify settings file to load with the image. Must be used together
+      with -i.
+--new-instance
+      Allow opening another Photivo instance instead of using a currently
+      running Photivo. Job files are always opened in a new instance.
+--no-fmgr or -p
+      Prevent auto-open file manager when Photivo starts.
+--help or -h
+      Display this usage information.
+
+For more documentation visit the wiki: http://photivo.org/photivo/start
+</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="1013"/>
@@ -2099,39 +2126,39 @@ Are you sure?</source>
         <location filename="../Sources/ptMain.cpp" line="4644"/>
         <location filename="../Sources/ptMain.cpp" line="4802"/>
         <source>No image opened</source>
-        <translation></translation>
+        <translation>Nessuna immagine aperta</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="4645"/>
         <source>Open an image before editing spots.</source>
-        <translation></translation>
+        <translation>Apri un&apos;immagine prima di modificare i punti.</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="4652"/>
         <source>Prepare for local adjust</source>
-        <translation></translation>
+        <translation>Preparazione per regolazione locale</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="4659"/>
         <location filename="../Sources/ptMain.cpp" line="4660"/>
         <source>Local adjust</source>
-        <translation></translation>
+        <translation>Regolazione locale</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="4803"/>
         <source>Open an image before editing repair spots.</source>
-        <translation></translation>
+        <translation>Apri un&apos;immagine prima di modificare i punti di regolazione.</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="4808"/>
         <source>Prepare for spot repair</source>
-        <translation></translation>
+        <translation>Preparazione per regolazione locale</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="4814"/>
         <location filename="../Sources/ptMain.cpp" line="4815"/>
         <source>Spot repair</source>
-        <translation></translation>
+        <translation>Regolazione locale</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="5076"/>
@@ -3499,7 +3526,7 @@ No crop, try again.</source>
         <location filename="../Sources/ptWhiteBalances.cpp" line="6358"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="6774"/>
         <source>3400K</source>
-        <translation></translation>
+        <translation>3400K</translation>
     </message>
     <message>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1966"/>
@@ -4747,7 +4774,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="106"/>
         <source>Adaptive saturation</source>
-        <translation>Adattiva saturazione</translation>
+        <translation>Saturazione adattiva</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="109"/>
@@ -4757,7 +4784,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="110"/>
         <source>Absolute saturation</source>
-        <translation>Assoluta saturazione</translation>
+        <translation>Saturazione assoluta</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="120"/>
@@ -5126,7 +5153,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/imagespot/ptImageSpotEditor.cpp" line="50"/>
         <source>Delete this spot</source>
-        <translation></translation>
+        <translation>Cancella questo punto</translation>
     </message>
 </context>
 <context>
@@ -5134,7 +5161,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/imagespot/ptImageSpotListView.cpp" line="193"/>
         <source>Spot</source>
-        <translation>Spot</translation>
+        <translation>Punto</translation>
     </message>
 </context>
 <context>
@@ -5424,17 +5451,17 @@ x=%2, y=%3 (1:1 dimensione flusso)</translation>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1193"/>
         <source>Local Edit</source>
-        <translation></translation>
+        <translation>Modifica locale</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1232"/>
         <source>Local adjust</source>
-        <translation></translation>
+        <translation>Regolazione locale</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1282"/>
         <source>Delete spot</source>
-        <translation></translation>
+        <translation>Cancella punto</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1293"/>
@@ -5445,27 +5472,27 @@ x=%2, y=%3 (1:1 dimensione flusso)</translation>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1314"/>
         <source>Edit spots</source>
-        <translation></translation>
+        <translation>Modifica punti</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1357"/>
         <source>Mask</source>
-        <translation></translation>
+        <translation>Maschera</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1388"/>
         <source>Mode</source>
-        <translation></translation>
+        <translation>Modalità</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1494"/>
         <source>Spot repair (Unfinished! DO NOT USE!)</source>
-        <translation></translation>
+        <translation>Regolazione per punti (Non finito! NON USARE!)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1546"/>
         <source>Repair mode</source>
-        <translation></translation>
+        <translation>Modalità di regolazione</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="2596"/>
@@ -7248,7 +7275,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1773"/>
         <source>Applying Outline</source>
-        <translation></translation>
+        <translation>Applicazione outline</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1797"/>
@@ -7353,7 +7380,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="2710"/>
         <source>Local spot adjustments</source>
-        <translation></translation>
+        <translation>Regolazione punti locali</translation>
     </message>
     <message>
         <source>Toning</source>
@@ -8245,33 +8272,34 @@ Usata per la correzione della geometria.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="61"/>
         <source>Maximum amount a pixel may differ from the spot&apos;s source pixel to get included in the mask.</source>
-        <translation></translation>
+        <translation>Differenza massima dal pixel di origine affinché un pixel sia incluso nella maschera.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="62"/>
         <source>Brightness/color ratio</source>
-        <translation></translation>
+        <translation>Rapporto luminosità/colore</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="62"/>
         <source>Defines how brightness and color affect the threshold.
 0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both</source>
-        <translation></translation>
+        <translation>Definisci come luminosità e colore influiscono sulla .soglia
+0.0: ignora colore, 1.0: ignora luminosità, 0.5: uguale importanza per entrambi</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="63"/>
         <source>Maximum radius</source>
-        <translation></translation>
+        <translation>Raggio massimo</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="63"/>
         <source>Pixels outside this radius will never be included in the mask.</source>
-        <translation></translation>
+        <translation>I pixel al di fuori di questo raggio non saranno inclusi nella maschera.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="64"/>
         <source>Adjusts saturation in masked region</source>
-        <translation></translation>
+        <translation>Regola la saturazione nella zona mascherata</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="65"/>
@@ -8309,12 +8337,12 @@ Usata per la correzione della geometria.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="93"/>
         <source>Opacity for the whole spot</source>
-        <translation></translation>
+        <translation>Opacità dell&apos;intero punto</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="94"/>
         <source>Edge softness</source>
-        <translation></translation>
+        <translation>Morbidezza bordo</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="177"/>
@@ -9167,7 +9195,7 @@ Usata per la correzione della geometria.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="491"/>
         <source>Mask generation mode</source>
-        <translation></translation>
+        <translation>Modalità di generazione della maschera</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="493"/>
@@ -9274,7 +9302,7 @@ Usata per la correzione della geometria.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="516"/>
         <source>Repair algorithm</source>
-        <translation></translation>
+        <translation>Algoritmo di regolazione</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="518"/>
@@ -9642,27 +9670,27 @@ Usata per la correzione della geometria.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="605"/>
         <source>Edge aware threshold</source>
-        <translation></translation>
+        <translation>Limite bordo sumatura</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="605"/>
         <source>Apply threshold only to hard edges. Allow gradual changes.</source>
-        <translation></translation>
+        <translation>Applica sfumatura solo ai bordi netti. Consenti passaggio graduale.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="606"/>
         <source>Use maximum radius</source>
-        <translation></translation>
+        <translation>Usa raggio massimo</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="607"/>
         <source>Adaptive Saturation</source>
-        <translation></translation>
+        <translation>Saturazione adattiva</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="607"/>
         <source>Prevent clipping when adjusting saturation.</source>
-        <translation></translation>
+        <translation>Previeni tosaggio regolando la saturazione.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="609"/>
