@@ -1,0 +1,15 @@
+;
+; photivo ChannelMixer File
+;
+; B/W from Green alone
+;
+Magic photivoChannelMixerFile
+0 0
+1 1000
+2 0
+3 0
+4 1000
+5 0
+6 0
+7 1000
+8 0
