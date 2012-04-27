@@ -1,98 +1,76 @@
 #!/bin/bash
-BUILDDIR=build-win$PT_BIT
+ColorRed='\e[1;31m'
+ColorGreen='\e[0;32m'
+ColorNone='\e[00m'
 
-# Additional C++ compiler flags. Temporary solution until the C++11 stuff is properly
-# integrated into the Photivo project.
-#export CXXFLAGS="$CXXFLAGS --std=gnu++0x -fpermissive"
+# Additional C++ compiler flags.
+#export CXXFLAGS="$CXXFLAGS "
 
-if [ "$PT_REPO_PATH" = "" ]; then echo "PT_REPO_PATH not set!" ; exit 1 ; fi
-if [ "$PT_BINDIR" = "" ];    then echo "PT_BINDIR not set!" ; exit 1 ; fi
-if [ "$PT_BIT" = "" ];       then echo "PT_BIT not set!" ; exit 1 ; fi
+if [[ ("$PhotivoRepoPath" == "") || ("$PhotivoBuildPath" == "") ]]; then 
+  printf "No repo set. Cannot continue."
+  exit 1
+fi
 
-if [ ! -d "$PT_REPO_PATH" ]; then
-  echo "Path to repository \"$PT_REPO_PATH\" not found."
-  exit
+if [ ! -d "$PhotivoRepoPath" ]; then
+  printf "Path to repository \"$PhotivoRepoPath\" not found."
+  exit 1
 fi
 
 
-if [ "$1" = "all" ]; then
-  ACTIONMSG="Complete re-build of Photivo ${PT_BIT}bit"
-  UPDATEMSG=""
-  QMAKECLI="qmake ../photivo.pro CONFIG+=WithoutGimp CONFIG-=debug"
-elif [ "$1" = "q" ]; then
-  ACTIONMSG="Updating Photivo ${PT_BIT}bit"
-  UPDATEMSG="\n Rebuilding makefiles"
-  QMAKECLI="qmake ../photivo.pro CONFIG+=console CONFIG+=WithoutGimp CONFIG+=WithoutClear CONFIG-=debug"
-elif [ "$1" = "" ]; then
-  ACTIONMSG="Updating Photivo ${PT_BIT}bit"
-  UPDATEMSG=""
-  QMAKECLI=""
+if [[ "$1" == "all" ]]; then
+  ActionMsg="Complete re-build of Photivo ${GccArch}bit"
+  QmakeCli="qmake ../photivo.pro CONFIG+=WithoutGimp CONFIG+=WithoutClear CONFIG+=console CONFIG-=debug"
+elif [[ "$1" == "q" ]]; then
+  ActionMsg="Updating Photivo ${GccArch}bit\n Rebuilding makefiles"
+  QmakeCli="qmake ../photivo.pro CONFIG+=console CONFIG+=WithoutGimp CONFIG+=WithoutClear CONFIG-=debug"
+elif [[ "$1" == "" ]]; then
+  ActionMsg="Updating Photivo ${GccArch}bit"
+  QmakeCli=""
 else
-  echo "Unrecognized mode: \"$1\"."
-  echo ""
-  echo "Usage: photivo-build [all|q]"
-  echo "This script never builds the Gimp plugin, Adobe profiler or Curves creator."
-  echo "all"
-  echo "  Full build: First removes all makefiles and object files. Then runs"
-  echo "  qmake (console disabled, ptClear enabled) and make. Afterwards copies "
-  echo "  the binaries to $PT_BINDIR and updates the subfolders there."
-  echo "  DLLs are not updated. Use photivo-update-libs for that."
-  echo "[no option]"
-  echo "  Update build: Runs make and copies photivo.exe to $PT_BINDIR."
-  echo "q"
-  echo "  Update build: Runs qmake to enable the console and disable ptClear."
-  echo "  then runs make and copies photivo.exe to $PT_BINDIR."
-  exit
+  printf "Unrecognized mode: \"$1\".\n\n"
+  printf "Usage: photivo-build [all|q]\n"
+  printf "This script only build Photivo itself, not builds ptClear, the Gimp plugin,\n"
+  printf "Adobe profiler or Curves creator."\n
+  printf "all\n"
+  printf "  Full build: First removes all makefiles and object files. Then runs\n"
+  printf "  qmake (console enabled) and make.\n"
+  printf "[no option]\n"
+  printf "  Update build: Runs make and copies photivo.exe to $PT_BINDIR.\n"
+  printf "q\n"
+  printf "  Update build: Runs qmake to enable the console and disable ptClear.\n"
+  printf "  then runs make and copies photivo.exe to $PT_BINDIR.\n"
+  exit 1
 fi
 
 
-echo "------------------------------------"
-echo " $ACTIONMSG"
-echo -e " $PT_REPO_PATH$UPDATEMSG"
-echo "------------------------------------"
-echo 
+printf "–––––––––––––––––––––––––––––––––––––\n"
+printf " $ActionMsg\n"
+printf " $PhotivoRepoPath\n"
+printf "–––––––––––––––––––––––––––––––––––––\n\n"
 
-cd "$PT_REPO_PATH"
-if [ -d "$BUILDDIR" ]; then
+if [[ -e "$PhotivoBuildPath" ]]; then
   if [ "$1" = "all" ]; then
-    echo "Cleaning ..."
-    cd "$BUILDDIR" && rm -rf *
+    printf "Cleaning ...\n"
+    cd "$PhotivoBuildPath" && rm -rf Makefile* photivoProject/* Objects/*
   else
-    cd "$BUILDDIR"
+    cd "$PhotivoBuildPath"
     if [ "$1" = "q" ]; then
       rm -f Makefile* photivoProject/Makefile* Objects/ptMain.o
     fi
   fi
 else
-  mkdir "$BUILDDIR"
-  cd "$BUILDDIR"
+  mkdir "$PhotivoBuildPath"
+  cd "$PhotivoBuildPath"
 fi
 
-echo "Building ..."
-echo
-$QMAKECLI
-make -j4
+printf "Building ...\n\n"
+$QmakeCli
+make -j$JobsForMake
 
-if [ ! $? -eq 0 ]; then
+if [[ $? == 0 ]]; then
+  printf "\n${ColorGreen}Make finished successfully.$ColorNone\n"
+  exit 0
+else
+  printf "\n${ColorRed}Error. Build not finished.$ColorNone\n"
   exit 1
-fi
-
-if [ -s ./photivo.exe ]; then
-  if [ ! -d "../$PT_BINDIR" ]; then
-    mkdir "../$PT_BINDIR"
-    echo "$PT_BINDIR did not exist!"
-    echo "You might want to run photivo-update-libs."
-  fi
-
-  cd "../$PT_BINDIR"
-  
-  if [ "$1" = "all" ]; then
-    photivo-update-datafiles
-    cp ../${BUILDDIR}/ptClear.exe .
-  else
-    echo "Copying photivo.exe ..."
-  fi
-  
-  cp ../${BUILDDIR}/photivo.exe .
-  echo "Finished."
 fi

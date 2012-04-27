@@ -1,10 +1,12 @@
 #!/bin/bash
 
+if [[ "$PhotivoRepoPath"  == "" ]];            then printf "PhotivoRepoPath not set!\n"    ; exit 1 ; fi
+if [[ "$PhotivoBuildPath" == "" ]];            then printf "PhotivoBuildPath not set!\n"   ; exit 1 ; fi
+if [[ "$GccArch"       == "" ]];               then printf "GccArch not set!\n"            ; exit 1 ; fi
+if [[ ($GccArch != 64) && ($GccArch != 32) ]]; then printf "Wrong GccArch (${GccArch})!\n" ; exit 1 ; fi
+
 if [ "$1" = "" ]; then
-  if [ "$PT_REPO_PATH" = "" ]; then echo "PT_REPO_PATH not set!" ; exit 1 ; fi
-  if [ "$PT_BINDIR" = "" ];    then echo "PT_BINDIR not set!" ; exit 1 ; fi
-  if [ "$PT_BIT" = "" ];       then echo "PT_BIT not set!" ; exit 1 ; fi
-  THEBINDIR=$PT_REPO_PATH/$PT_BINDIR
+  THEBINDIR=$PhotivoBuildPath
 else
   THEBINDIR=$1
 fi
@@ -16,7 +18,7 @@ echo "Updating data files in \"$THEBINDIR\" ..."
 cd $THEBINDIR && \
 rm -rf ChannelMixers Curves LensfunDatabase Presets Profiles Themes Translations UISettings && \
 mkdir  ChannelMixers Curves LensfunDatabase Presets Profiles Themes Translations UISettings && \
-cd $PT_REPO_PATH && \
+cd $PhotivoRepoPath && \
 cp -r ./ChannelMixers/*    $THEBINDIR/ChannelMixers && \
 cp -r ./Curves/*           $THEBINDIR/Curves && \
 cp -r ./LensfunDatabase/*  $THEBINDIR/LensfunDatabase && \
