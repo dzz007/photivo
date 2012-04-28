@@ -111,8 +111,8 @@ public:
   QList<ptGraphicsThumbGroup*>* thumbList() { return m_ThumbList; }
 
   /*! Returns a pointer to the thumbnail.*/
-  QImage* getThumbnail(const QString FileName,
-                       const int     MaxSize);
+  QImage* getThumbnail(const QString &FileName,
+                       const int      MaxSize);
 
 private:
   static ptFileMgrDM* m_Instance;
