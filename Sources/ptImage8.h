@@ -70,17 +70,6 @@ ptImage8(const uint16_t Width,
 // Copying is always deep (so including copying the image).
 ptImage8* Set(const ptImage *Origin);
 
-// Scale with Facto 0..1
-// Always in place !
-ptImage8* SimpleScale(const float Factor);
-ptImage8* FilteredScale(const float Factor,
-                        const short Filter = ptResizeFilter_Triangle);
-
-// Write the image as a ppm file.
-// Be aware : the writing function does *not* add gamma, thus
-// it needs to be done before if needed.
-short WriteAsPpm(const char*  FileName);
-
 // just write an image to disk
 bool DumpImage(const char* FileName) const;
 };
