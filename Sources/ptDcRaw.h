@@ -41,6 +41,7 @@
 #endif
 
 #define _USE_MATH_DEFINES
+#include <vector>
 #include <cctype>
 #include <cerrno>
 #include <cfloat>
@@ -311,7 +312,7 @@ public:
   void  ptRebuildHighlights(const short Effort);
   void  ptBlendHighlights();
   void  ptCrop();
-  bool  thumbnail(QByteArray*& thumbnail);
+  bool  thumbnail(std::vector<char>& thumbnail);
 
 
   /*************************************************************************
@@ -322,8 +323,7 @@ public:
   The lower ones are questionable if they should be of interest to the user.
   *************************************************************************/
 
-  QDataStream* m_ThumbStream;
-  QByteArray*  m_ThumbData;
+  std::vector<char> m_Thumb;
 
   // The image !
   uint16_t    (*m_Image)[4];

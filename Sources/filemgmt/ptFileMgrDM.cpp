@@ -117,8 +117,11 @@ void ptFileMgrDM::StopThumbnailer() {
 
 //==============================================================================
 
-QImage* ptFileMgrDM::getThumbnail(const QString FileName,
-                                  const int     MaxSize) {
+QImage* ptFileMgrDM::getThumbnail(const QString &FileName,
+                                  const int      MaxSize) {
+
+  if (FileName.isEmpty())
+    return new QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png"));
 
   ptDcRaw dcRaw;
   bool isRaw = false;
@@ -128,16 +131,15 @@ QImage* ptFileMgrDM::getThumbnail(const QString FileName,
   if (dcRaw.Identify(FileName) == 0 ) {
     // we have a raw image
     isRaw = true;
-    QByteArray* ImgData = NULL;
+    std::vector<char> ImgData;
     if (dcRaw.thumbnail(ImgData)) {
       // raw thumbnail read successfully
       Size.setWidth(dcRaw.m_ThumbWidth);
       Size.setHeight(dcRaw.m_ThumbHeight);
       ScaleThumbSize(&Size, MaxSize);
       MagickSetSize(image, 2*Size.width(), 2*Size.height());
-      MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->length());
+      MagickReadImageBlob(image, (const uchar*)ImgData.data(), (const size_t)ImgData.size());
     }
-    DelAndNull(ImgData);
   }
 
   if (!isRaw) {

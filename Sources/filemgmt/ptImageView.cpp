@@ -356,14 +356,14 @@ void ptImageView::ImageToScene(const double Factor) {
 void ptImageView::updateView() {
   QImage* Image = m_DataModule->getThumbnail(m_FileName, 0);
   if (Image != NULL) {
-    DelAndNull(m_Image);
     if (m_FileName == m_Worker->m_FileName) {
+      DelAndNull(m_Image);
       m_Image = Image;
+      update();
     } else {
       DelAndNull(Image);
     }
   }
-  update();
 }
 
 //==============================================================================

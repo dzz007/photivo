@@ -64,6 +64,11 @@ char* RV = fgets(str,num,file); \
 assert (RV);                    \
 }
 
+inline void VAppend(std::vector<char> &AVector, char* AArray, const int ALength) {
+  char* hEnd = AArray + ALength * sizeof(char);
+  AVector.insert(AVector.end(), AArray, hEnd);
+}
+
 // The class.
 #define CLASS ptDcRaw::
 CLASS ptDcRaw() {
@@ -125,8 +130,7 @@ CLASS ptDcRaw() {
   m_MetaData    = NULL;
   m_InputFile   = NULL;
 
-  m_ThumbData   = new QByteArray();
-  m_ThumbStream = new QDataStream(m_ThumbData, QIODevice::ReadWrite);
+  m_Thumb.clear();
   ResetNonUserSettings();
 }
 
@@ -150,8 +154,6 @@ CLASS ~ptDcRaw() {
   FREE(m_Image_AfterPhase3);
   FCLOSE(m_InputFile);
   FREE(m_MetaData);
-  DelAndNull(m_ThumbData);
-  DelAndNull(m_ThumbStream);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1419,8 +1421,7 @@ void CLASS fuji_load_raw()
 
 void CLASS ppm_thumb ()
 /* Remember: This function is modified to write the raw’s thumbnail to the
-   m_ThumbStream stream instead of a file on disk. Always access thumbnails
-   via DcRaw::thumbnail()!
+   m_Thumb instead of a file on disk. Always access thumbnails via DcRaw::thumbnail()!
 */
 {
   char *thumb;
@@ -1429,17 +1430,15 @@ void CLASS ppm_thumb ()
   merror (thumb, "ppm_thumb()");
   //fprintf (m_OutputFile, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  m_ThumbStream->writeRawData(dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toAscii().data(), dummy.length());
   ptfread  (thumb, 1, m_ThumbLength, m_InputFile);
-  //ptfwrite (thumb, 1, m_ThumbLength, m_OutputFile);
-  m_ThumbStream->writeRawData(thumb, m_ThumbLength);
+  VAppend(m_Thumb, thumb, m_ThumbLength);
   FREE (thumb);
 }
 
 void CLASS layer_thumb ()
 /* Remember: This function is modified to write the raw’s thumbnail to the
-   m_ThumbStream stream instead of a file on disk. Always access thumbnails
-   via DcRaw::thumbnail()!
+   m_Thumb instead of a file on disk. Always access thumbnails via DcRaw::thumbnail()!
 */
 // TODO: Tests needed: What format is this? Can it be read by QPixmap?
 {
@@ -1454,14 +1453,14 @@ void CLASS layer_thumb ()
   //fprintf (m_OutputFile, "P%d\n%d %d\n255\n", 5 + (m_Colors >> 1), m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P%1\n%2 %3\n255\n")
       .arg(5 + (m_Colors >> 1)).arg(m_ThumbWidth).arg(m_ThumbHeight);
-  m_ThumbStream->writeRawData(dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toAscii().data(), dummy.length());
   ptfread (thumb, m_ThumbLength, m_Colors, m_InputFile);
   for (unsigned i=0; i < m_ThumbLength; i++) {
     for (c=0; c < m_Colors; c++) {
       //putc (thumb[i+m_ThumbLength*(map[m_ThumbMisc >> 8][c]-'0')], m_OutputFile);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
-      m_ThumbStream->writeRawData((char*)thumb[i+m_ThumbLength*(map[m_ThumbMisc >> 8][c]-'0')], 1);
+      m_Thumb.push_back(thumb[i+m_ThumbLength*(map[m_ThumbMisc >> 8][c]-'0')]);
 #pragma GCC diagnostic pop
     }
   }
@@ -1470,8 +1469,7 @@ void CLASS layer_thumb ()
 
 void CLASS rollei_thumb ()
 /* Remember: This function is modified to write the raw’s thumbnail to the
-   m_ThumbStream stream instead of a file on disk. Always access thumbnails
-   via DcRaw::thumbnail()!
+   m_Thumb instead of a file on disk. Always access thumbnails via DcRaw::thumbnail()!
 */
 // TODO: Tests needed: What format is this? Can it be read by QPixmap?
 {
@@ -1483,7 +1481,7 @@ void CLASS rollei_thumb ()
   merror (thumb, "rollei_thumb()");
   //fprintf (m_OutputFile, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  m_ThumbStream->writeRawData(dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toAscii().data(), dummy.length());
   read_shorts (thumb, m_ThumbLength);
   for (i=0; i < m_ThumbLength; i++) {
     //putc (thumb[i] << 3, m_OutputFile);
@@ -1491,9 +1489,9 @@ void CLASS rollei_thumb ()
     //putc (thumb[i] >> 11 << 3, m_OutputFile);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
-    m_ThumbStream->writeRawData((char*)(thumb[i] << 3) ,1);
-    m_ThumbStream->writeRawData((char*)(thumb[i] >> 5 << 2) ,1);
-    m_ThumbStream->writeRawData((char*)(thumb[i] >> 11 << 3) ,1);
+    m_Thumb.push_back(thumb[i] << 3);
+    m_Thumb.push_back(thumb[i] >> 5 << 2);
+    m_Thumb.push_back(thumb[i] >> 11 << 3);
 #pragma GCC diagnostic pop
   }
   FREE (thumb);
@@ -2921,8 +2919,7 @@ void CLASS foveon_decoder (unsigned size, unsigned code)
 
 void CLASS foveon_thumb ()
 /* Remember: This function is modified to write the raw’s thumbnail to the
-   m_ThumbStream stream instead of a file on disk. Always access thumbnails
-   via DcRaw::thumbnail()!
+   m_Thumb instead of a file on disk. Always access thumbnails via DcRaw::thumbnail()!
 */
 // TODO: Tests needed: What format is this? Can it be read by QPixmap?
 {
@@ -2934,7 +2931,7 @@ void CLASS foveon_thumb ()
   bwide = get4();
   //fprintf (m_OutputFile, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  m_ThumbStream->writeRawData(dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toAscii().data(), dummy.length());
   if (bwide > 0) {
     if (bwide < (unsigned)(m_ThumbWidth*3)) return;
     buf = (char *) MALLOC (bwide);
@@ -2942,7 +2939,7 @@ void CLASS foveon_thumb ()
     for (row=0; row < m_ThumbHeight; row++) {
       ptfread  (buf, 1, bwide, m_InputFile);
       //ptfwrite (buf, 3, m_ThumbWidth, m_OutputFile);
-      m_ThumbStream->writeRawData(buf, 3 * m_ThumbWidth);
+      VAppend(m_Thumb, buf, 3 * m_ThumbWidth);
     }
     FREE (buf);
     return;
@@ -2964,7 +2961,7 @@ void CLASS foveon_thumb ()
   //fputc (pred[c], m_OutputFile);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
-  m_ThumbStream->writeRawData((char*)pred[c], 1);
+  m_Thumb.push_back(pred[c]);
 #pragma GCC diagnostic pop
       }
   }
@@ -8254,8 +8251,7 @@ void CLASS tiff_head (struct tiff_hdr *th)
 
 void CLASS jpeg_thumb ()
 /* Remember: This function is modified to write the raw’s thumbnail to the
-   m_ThumbStream stream instead of a file on disk. Always access thumbnails
-   via DcRaw::thumbnail()!
+   m_Thumb instead of a file on disk. Always access thumbnails via DcRaw::thumbnail()!
 */
 {
   char *thumb;
@@ -8267,19 +8263,21 @@ void CLASS jpeg_thumb ()
   ptfread (thumb, 1, m_ThumbLength, m_InputFile);
 //  fputc (0xff, m_OutputFile);
 //  fputc (0xd8, m_OutputFile);
-  m_ThumbStream->writeRawData("\xff\xd8", 2);
+  m_Thumb.push_back('\xff');
+  m_Thumb.push_back('\xd8');
 
   if (strcmp (thumb+6, "Exif")) {
     memcpy (exif, "\xff\xe1  Exif\0\0", 10);
     exif[1] = htons (8 + sizeof th);
     //ptfwrite (exif, 1, sizeof exif, m_OutputFile);
-    m_ThumbStream->writeRawData((char*)&exif[0], sizeof exif);
+    VAppend(m_Thumb, (char*)&exif[0], sizeof(exif));
     tiff_head (&th);
     //ptfwrite (&th, 1, sizeof th, m_OutputFile);
-    m_ThumbStream->writeRawData((char*)&th, sizeof th);
+    VAppend(m_Thumb, (char*)&th, sizeof(th));
   }
   //ptfwrite (thumb+2, 1, m_ThumbLength-2, m_OutputFile);
-  m_ThumbStream->writeRawData(thumb+2, m_ThumbLength-2);
+  VAppend(m_Thumb, thumb+2, m_ThumbLength-2);
+
   FREE (thumb);
 }
 
@@ -9400,21 +9398,22 @@ void CLASS CamToLab(uint16_t Cam[4], double Lab[3]) {
   Lab[2] = 200.0*(xyz[1]-xyz[2]);
 }
 
+//==============================================================================
 
-bool CLASS thumbnail(QByteArray*& thumbnail) {
+bool CLASS thumbnail(std::vector<char> &thumbnail) {
   if(!m_InputFile || !m_LoadRawFunction) {
     return false;
   }
 
-  m_ThumbData->clear();
-  m_ThumbStream->resetStatus();
+  m_Thumb.clear();
+  m_Thumb.reserve(1000000);
 
   fseek (m_InputFile, m_ThumbOffset, SEEK_SET);
   (*this.*m_WriteThumb)();
 
-  bool result = (!m_ThumbData->isEmpty());
+  bool result = (!m_Thumb.empty());
 
-  if (result) thumbnail = new QByteArray(*m_ThumbData);
+  if (result) thumbnail.swap(m_Thumb);
 
   return result;
 }
