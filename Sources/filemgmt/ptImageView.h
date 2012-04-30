@@ -81,8 +81,9 @@ private:
   QList<float>          ZoomFactors;   // steps for wheel zoom
   QGridLayout*          m_parentLayout;
   QGraphicsScene*       m_Scene;
-  QImage*               m_Image;
-  QString               m_FileName;
+  ptImage8*             m_Image;
+  QString               m_FileName_Current;
+  QString               m_FileName_Next;
   int                   m_ZoomMode;
   float                 m_ZoomFactor;
   int                   m_Zoom;
@@ -90,7 +91,6 @@ private:
   bool                  m_LeftMousePressed;
   ptReportOverlay*      m_ZoomSizeOverlay;
   ptReportOverlay*      m_StatusOverlay;
-  bool                  m_NeedRun;
   MyWorker*             m_Worker;
   QGraphicsPixmapItem*  m_PixmapItem;
   int                   m_ResizeTimeOut;

@@ -32,6 +32,7 @@
 #include "../ptCalloc.h"
 #include "../ptDefines.h"
 #include "../ptSettings.h"
+#include "../ptImage8.h"
 #include "ptFileMgrConstants.h"
 #include "ptThumbnailer.h"
 #include "ptFileMgrDM.h"
@@ -244,27 +245,26 @@ void ptThumbnailer::run() {
       return;
     }
 
-    QImage* thumbImage = NULL;
+    ptImage8* thumbImage = new ptImage8();
     ptGraphicsThumbGroup* currentGroup = m_ThumbList->at(i);
 
     if (currentGroup->fsoType() == fsoParentDir) {
       // we have a parent directory (dirs are not cached!)
-      thumbImage = new QImage(QString::fromUtf8(":/dark/icons/go-up-48px.png"));
+      thumbImage->FromQImage(QImage(QString::fromUtf8(":/dark/icons/go-up-48px.png")));
 
     } else if (currentGroup->fsoType() == fsoDir) {
       // we have a subdirectory (dirs are not cached!)
-      thumbImage = new QImage(QString::fromUtf8(":/dark/icons/folder-48px.png"));
+      thumbImage->FromQImage(QImage(QString::fromUtf8(":/dark/icons/folder-48px.png")));
 
     } else {
       if (!currentGroup->hasImage()) {
         // we have a file and no image in the thumb group == cache miss.
         // See if we can get a thumbnail image
-
-        thumbImage = DataModule->getThumbnail(currentGroup->fullPath(), thumbMaxSize);
+        DataModule->getThumbnail(thumbImage, currentGroup->fullPath(), thumbMaxSize);
       }
     }
 
-  // Notification signal for each finished thumb image.
+    // Notification signal for each finished thumb image.
     emit newImageNotify(m_ThumbList->at(i), thumbImage);
 #ifdef Q_OS_MAC
     QApplication::processEvents();

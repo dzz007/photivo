@@ -66,12 +66,23 @@ ptImage8(const uint16_t Width,
 // Destructor
 ~ptImage8();
 
+// Alloc a new buffer
+void SetSize(const uint16_t Width,
+             const uint16_t Height,
+             const short    NrColors = 3);
+
 // Initialize it from a ptImage.
 // Copying is always deep (so including copying the image).
 ptImage8* Set(const ptImage *Origin);
 
+// Deep copy
+ptImage8* Set(const ptImage8 *Origin);
+
+// We copy a QImage
+void FromQImage(const QImage AImage);
+
 // just write an image to disk
-bool DumpImage(const char* FileName) const;
+bool DumpImage(const char* FileName, const bool BGR) const;
 };
 
 #endif

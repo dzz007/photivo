@@ -30,6 +30,7 @@
 #include "../ptSettings.h"
 #include "../ptTheme.h"
 #include "../ptMessageBox.h"
+#include "../ptImage8.h"
 #include "ptImageView.h"
 #include "ptFileMgrWindow.h"
 #include "ptGraphicsSceneEmitter.h"
@@ -81,16 +82,18 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   // Init
   m_PixmapItem        = NULL;
   m_Image             = NULL;
-  m_FileName          = "";
+  m_FileName_Current  = "";
+  m_FileName_Next     = "";
   m_ZoomMode          = ptZoomMode_Fit;
   m_ZoomFactor        = 1.0;
   m_Zoom              = 100;
   m_DragDelta         = new QLine();
   m_LeftMousePressed  = false;
-  m_NeedRun           = false;
   m_ZoomSizeOverlay   = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
                                             1000, Qt::AlignRight, 20);
   m_StatusOverlay     = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
+  m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255)); // blue
+  m_StatusOverlay->setDuration(0);
 
   // parallel worker
   m_Worker = new MyWorker();
@@ -144,13 +147,46 @@ ptImageView::~ptImageView() {
 //==============================================================================
 
 void ptImageView::ShowImage(const QString FileName) {
-  if (m_FileName == FileName) return;
-  m_FileName = FileName;
+  m_FileName_Next = FileName;
 
-  if (this->isVisible()) {
-    // only process image when the ImageView is visible
-    m_NeedRun  = true;
+  if (!isVisible() ||
+      m_FileName_Current == m_FileName_Next) return;
+
+  startWorker();
+}
+
+//==============================================================================
+
+void ptImageView::startWorker() {
+  if (m_FileName_Current == m_FileName_Next) {
+    m_StatusOverlay->stop();
+    return;
+  }
+
+  if (!m_Worker->isRunning()) {
+    m_StatusOverlay->exec(QObject::tr("Loading"));
+    m_Worker->m_FileName = m_FileName_Next;
+    m_FileName_Current   = m_FileName_Next;
+    m_Worker->start();
+
+    if (!m_Worker->isRunning())
+      ptMessageBox::critical(NULL, "Thread error", "Could not start thread for parallel image loading.");
+  }
+}
+
+//==============================================================================
+
+void ptImageView::afterWorker() {
+  if (m_FileName_Current != m_FileName_Next) {
     startWorker();
+  } else {
+    m_StatusOverlay->stop();
+    if (m_Image != NULL) {
+      if (m_ZoomMode == ptZoomMode_Fit)
+        zoomFit(false);
+      else
+        ZoomTo(m_ZoomFactor, true);
+    }
   }
 }
 
@@ -191,7 +227,7 @@ void ptImageView::mouseReleaseEvent(QMouseEvent* event) {
 
 void ptImageView::mouseDoubleClickEvent(QMouseEvent* event) {
   event->accept();
-  ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FileName);
+  ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FileName_Current);
 }
 
 //==============================================================================
@@ -304,7 +340,7 @@ int ptImageView::zoomFit(const bool withMsg /*= true*/) {
   m_ZoomMode = ptZoomMode_Fit;
 
   if (m_Image != NULL) {
-    m_Scene->setSceneRect(0, 0, m_Image->width(), m_Image->height());
+    m_Scene->setSceneRect(0, 0, m_Image->m_Width, m_Image->m_Height);
   }
 
   fitInView(m_Scene->sceneRect(), Qt::KeepAspectRatio);
@@ -341,12 +377,14 @@ void ptImageView::ImageToScene(const double Factor) {
       // bilinear resize for all others
       Mode = Qt::SmoothTransformation;
     }
-    m_Scene->setSceneRect(0, 0, m_Image->width()*Factor, m_Image->height()*Factor);
-    m_PixmapItem = m_Scene->addPixmap(
-                     QPixmap::fromImage(*m_Image).scaled(m_Image->width()*Factor,
-                                                         m_Image->height()*Factor,
-                                                         Qt::IgnoreAspectRatio,
-                                                         Mode));
+    m_Scene->setSceneRect(0, 0, m_Image->m_Width*Factor, m_Image->m_Height*Factor);
+    m_PixmapItem = m_Scene->addPixmap(QPixmap::fromImage(QImage((const uchar*) m_Image->m_Image,
+                                                                               m_Image->m_Width,
+                                                                               m_Image->m_Height,
+                                                                               QImage::Format_RGB32).scaled(m_Image->m_Width*Factor,
+                                                                                                            m_Image->m_Height*Factor,
+                                                                                                            Qt::IgnoreAspectRatio,
+                                                                                                            Mode)));
     m_PixmapItem->setTransformationMode(Mode);
   }
 }
@@ -354,50 +392,7 @@ void ptImageView::ImageToScene(const double Factor) {
 //==============================================================================
 
 void ptImageView::updateView() {
-  QImage* Image = m_DataModule->getThumbnail(m_FileName, 0);
-  if (Image != NULL) {
-    if (m_FileName == m_Worker->m_FileName) {
-      DelAndNull(m_Image);
-      m_Image = Image;
-      update();
-    } else {
-      DelAndNull(Image);
-    }
-  }
-}
-
-//==============================================================================
-
-void ptImageView::startWorker() {
-  if (m_Worker->isRunning()) {
-    if (m_Worker->m_FileName == m_FileName) m_NeedRun = false;
-  } else {
-    m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255)); // blue
-    m_StatusOverlay->setDuration(0);
-    m_StatusOverlay->exec(QObject::tr("Loading"));
-    m_NeedRun = false;
-    m_Worker->m_FileName = m_FileName;
-    m_Worker->start();
-
-    if (!m_Worker->isRunning())
-      ptMessageBox::critical(NULL, "Thread error", "Could not start thread for parallel image loading.");
-  }
-}
-
-//==============================================================================
-
-void ptImageView::afterWorker() {
-  if (m_NeedRun) {
-    startWorker();
-  } else {
-    m_StatusOverlay->stop();
-    if (m_Image != NULL) {
-      if (m_ZoomMode == ptZoomMode_Fit)
-        zoomFit(false);
-      else
-        ZoomTo(m_ZoomFactor, true);
-    }
-  }
+  if (m_DataModule->getThumbnail(m_Image, m_FileName_Current, 0)) update();
 }
 
 //==============================================================================
@@ -411,9 +406,7 @@ void ptImageView::ResizeTimerExpired() {
 void ptImageView::showEvent(QShowEvent* event) {
   QGraphicsView::showEvent(event);
 
-  if (!m_FileName.isEmpty()) {
-    // Re-process on becoming visible. Filename might have changed while we were hidden.
-    m_NeedRun  = true;
+  if (!m_FileName_Next.isEmpty()) {
     startWorker();
   }
 }
