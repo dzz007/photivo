@@ -36,6 +36,10 @@
 
 //==============================================================================
 
+class ptImage8;
+
+//==============================================================================
+
 /*!
   \class ptThumbnailer
 
@@ -93,7 +97,7 @@ private:
 
 signals:
   void newThumbNotify(const bool isLast);
-  void newImageNotify(ptGraphicsThumbGroup* group, QImage* pix);
+  void newImageNotify(ptGraphicsThumbGroup* group, ptImage8* pix);
 
 
 public slots:

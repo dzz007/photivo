@@ -43,6 +43,10 @@
 
 //==============================================================================
 
+class ptImage8;
+
+//==============================================================================
+
 class ptFileMgrWindow: public QWidget, private Ui::ptFileMgrWindow {
 Q_OBJECT
 
@@ -124,7 +128,7 @@ private slots:
   void changeDir(const QString& path);
   void closeWindow();
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
-  void fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix);
+  void fetchNewImages(ptGraphicsThumbGroup* group, ptImage8* pix);
   void fetchNewThumbs(const bool isLast);
   void on_m_BookmarkButton_clicked();
   void thumbFocusChanged();

@@ -36,6 +36,7 @@
 #include "../ptTheme.h"
 #include "../ptImageHelper.h"
 #include "../ptMessageBox.h"
+#include "../ptImage8.h"
 #include "ptFileMgrWindow.h"
 #include "ptGraphicsSceneEmitter.h"
 #include "ptRowGridThumbnailLayouter.h"
@@ -142,8 +143,8 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_FilesView->setScene(m_FilesScene);
   connect(m_DataModel->thumbnailer(), SIGNAL(newThumbNotify(const bool)),
           this, SLOT(fetchNewThumbs(const bool)));
-  connect(m_DataModel->thumbnailer(), SIGNAL(newImageNotify(ptGraphicsThumbGroup*,QImage*)),
-          this, SLOT(fetchNewImages(ptGraphicsThumbGroup*,QImage*)));
+  connect(m_DataModel->thumbnailer(), SIGNAL(newImageNotify(ptGraphicsThumbGroup*,ptImage8*)),
+          this, SLOT(fetchNewImages(ptGraphicsThumbGroup*,ptImage8*)));
   setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
 
   m_PathBar = new ptPathBar(m_PathContainer);
@@ -343,9 +344,8 @@ void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
 
 //==============================================================================
 
-void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, QImage* pix) {
+void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, ptImage8 *pix) {
   m_Progressbar->setValue(m_Progressbar->value() + 1);
-
   if (pix != NULL) {
     // Adding the image to the group must be done from the main GUI thread.
     group->addImage(pix);
@@ -506,7 +506,8 @@ void ptFileMgrWindow::saveThumbnail()
   if (hThumbIdx > -1 &&
       hThumbIdx < m_DataModel->thumbList()->count()) {
     QString   hFileName          = m_DataModel->thumbList()->at(hThumbIdx)->fullPath();
-    QImage*   hImage             = m_DataModel->getThumbnail(hFileName, Settings->GetInt("FileMgrThumbSaveSize"));
+    ptImage8* hImage             = new ptImage8();
+    m_DataModel->getThumbnail(hImage, hFileName, Settings->GetInt("FileMgrThumbSaveSize"));
 
     QFileInfo hPathInfo(hFileName);
     QString   hSuggestedFileName = hPathInfo.dir().path() + "/" + hPathInfo.completeBaseName() + "-thumb.jpg";
@@ -518,7 +519,7 @@ void ptFileMgrWindow::saveThumbnail()
                                                SaveBitmapPattern);
     if (0 == hOutputName.size()) return; // Operation cancelled.
 
-    if (!(ptImageHelper::DumpImage(hImage, hOutputName))) {
+    if (!(hImage->DumpImage(hOutputName.toAscii().data(), true))) {
       ptMessageBox::warning(0, QObject::tr("Error"), QObject::tr("Thumbnail could not be saved."));
     }
 
