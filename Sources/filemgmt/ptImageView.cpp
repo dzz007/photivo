@@ -80,7 +80,8 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   setScene(m_Scene);
 
   // Init
-  m_PixmapItem        = NULL;
+  m_PixmapItem        = m_Scene->addPixmap(QPixmap());
+  m_PixmapItem->setPos(0,0);
   m_Image             = NULL;
   m_FileName_Current  = "";
   m_FileName_Next     = "";
@@ -137,6 +138,7 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
 ptImageView::~ptImageView() {
   m_Worker->terminate();
   DelAndNull(m_Worker);
+  DelAndNull(m_Image);
   DelAndNull(m_DragDelta);
   DelAndNull(m_ZoomSizeOverlay);
   DelAndNull(m_StatusOverlay);
@@ -363,11 +365,6 @@ void ptImageView::ImageToScene(const double Factor) {
   if (m_Image != NULL) {
     resetTransform();
 
-    if (m_PixmapItem != NULL) {
-      m_Scene->removeItem(m_PixmapItem);
-      DelAndNull(m_PixmapItem);
-    }
-
     Qt::TransformationMode Mode;
 
     if(((uint)(Factor * 10000) % 10000) < 1) {
@@ -378,13 +375,13 @@ void ptImageView::ImageToScene(const double Factor) {
       Mode = Qt::SmoothTransformation;
     }
     m_Scene->setSceneRect(0, 0, m_Image->m_Width*Factor, m_Image->m_Height*Factor);
-    m_PixmapItem = m_Scene->addPixmap(QPixmap::fromImage(QImage((const uchar*) m_Image->m_Image,
-                                                                               m_Image->m_Width,
-                                                                               m_Image->m_Height,
-                                                                               QImage::Format_RGB32).scaled(m_Image->m_Width*Factor,
-                                                                                                            m_Image->m_Height*Factor,
-                                                                                                            Qt::IgnoreAspectRatio,
-                                                                                                            Mode)));
+    m_PixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) m_Image->m_Image,
+                                                                     m_Image->m_Width,
+                                                                     m_Image->m_Height,
+                                                                     QImage::Format_RGB32).scaled(m_Image->m_Width*Factor,
+                                                                                                  m_Image->m_Height*Factor,
+                                                                                                  Qt::IgnoreAspectRatio,
+                                                                                                  Mode)));
     m_PixmapItem->setTransformationMode(Mode);
   }
 }
@@ -392,7 +389,7 @@ void ptImageView::ImageToScene(const double Factor) {
 //==============================================================================
 
 void ptImageView::updateView() {
-  if (m_DataModule->getThumbnail(m_Image, m_FileName_Current, 0)) update();
+  m_DataModule->getThumbnail(m_Image, m_FileName_Current, 0);
 }
 
 //==============================================================================
