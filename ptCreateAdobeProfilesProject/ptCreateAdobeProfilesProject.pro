@@ -55,9 +55,9 @@ macx{
   QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags lcms2) 
 }
 
-QMAKE_CXXFLAGS_RELEASE += -O3  $$(CXXFLAGS) -I$${PREFIX}/include
+QMAKE_CXXFLAGS_RELEASE += -O3  $$(CXXFLAGS) -I$${PREFIX}/include -std=gnu++0x
 QMAKE_CXXFLAGS_RELEASE += -ffast-math
-QMAKE_CXXFLAGS_DEBUG += -O3  $$(CXXFLAGS)  -I$${PREFIX}/include
+QMAKE_CXXFLAGS_DEBUG += -O3  $$(CXXFLAGS)  -I$${PREFIX}/include -std=gnu++0x
 QMAKE_CXXFLAGS_DEBUG += -ffast-math
 QMAKE_CFLAGS_RELEASE += -O3  $$(CFLAGS)  -I$${PREFIX}/include
 QMAKE_CFLAGS_RELEASE += -ffast-math

@@ -49,9 +49,9 @@ macx{
   QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
   QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
 }
-QMAKE_CXXFLAGS_RELEASE += -O3 $$(CXXFLAGS) -I$${PREFIX}/include
+QMAKE_CXXFLAGS_RELEASE += -O3 $$(CXXFLAGS) -I$${PREFIX}/include -std=gnu++0x
 QMAKE_CXXFLAGS_RELEASE += -ffast-math
-QMAKE_CXXFLAGS_DEBUG += -O3 $$(CXXFLAGS)  -I$${PREFIX}/include
+QMAKE_CXXFLAGS_DEBUG += -O3 $$(CXXFLAGS)  -I$${PREFIX}/include -std=gnu++0x
 QMAKE_CXXFLAGS_DEBUG += -ffast-math
 QMAKE_CFLAGS_RELEASE += -O3 $$(CFLAGS)  -I$${PREFIX}/include
 QMAKE_CFLAGS_RELEASE += -ffast-math

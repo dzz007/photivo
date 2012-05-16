@@ -68,7 +68,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
       this, SLOT(execThumbnailAction(ptThumbnailAction,QString)));
   ptGraphicsSceneEmitter::ConnectFocusChanged(this, SLOT(thumbFocusChanged()));
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   // sidebar
   FMSidebar->setVisible(Settings->GetInt("FileMgrShowSidebar"));
@@ -99,7 +99,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_AddBookmarkButton->setToolTip(BookmarkTooltip);
   connect(m_AddBookmarkButton, SIGNAL(clicked()), this, SLOT(bookmarkCurrentDir()));
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   //bookmark menu
   m_TagMenu = new QMenu(this);
@@ -129,7 +129,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   layout->addWidget(m_TagMenuList);
   m_TagMenu->setLayout(layout);
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   // Setup the graphics view/scene
   m_FilesScene = new QGraphicsScene(m_FilesView);
@@ -152,14 +152,14 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_PathLayout->addWidget(m_PathBar);
   m_Progressbar->hide();
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   // construct the image view
   m_ImageView = new ptImageView(FMImageViewPane, m_DataModel);
   m_ImageView->installEventFilter(this);
   FMImageViewPane->setVisible((bool)Settings->GetInt("FileMgrShowImageView"));
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   // Filemgr main splitter layout
   if (Settings->m_IniSettings->contains("FileMgrMainSplitter")) {
@@ -179,7 +179,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   }
   FMSidebarSplitter->setStretchFactor(1,1);
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   ConstructContextMenu();
 }
@@ -428,7 +428,7 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
     return false;   // handle event further
   }
 
-//------------------------------------------------------------------------------
+//-------------------------------------
 
   else if ((obj == m_FilesView->verticalScrollBar() ||
             obj == m_FilesView->horizontalScrollBar()) &&
@@ -446,7 +446,7 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
     return true;    // prevent further event handling
   }
 
-//------------------------------------------------------------------------------
+//-------------------------------------
 
   else if (obj == m_FilesScene && (event->type() == QEvent::GraphicsSceneDragEnter ||
                                    event->type() == QEvent::GraphicsSceneDrop))
@@ -455,7 +455,7 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
     return true;
   }
 
-//------------------------------------------------------------------------------
+//-------------------------------------
 
   else if (obj == m_FilesScene && event->type() == QEvent::KeyPress) {
     // Keyboard navigation in thumbnail list
@@ -466,7 +466,7 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
     }
   }
 
-//------------------------------------------------------------------------------
+//-------------------------------------
 
   // unhandled events fall through to here
   // make sure parent event filters are executed
@@ -639,7 +639,7 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
     toggleSidebar();
   }
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   else if (event->modifiers() == Qt::NoModifier) {
     // Keyboard actions for image viewer

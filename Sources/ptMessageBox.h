@@ -19,12 +19,13 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-/**
-** Wrapper around QMessageBox to ensure all message boxes have the system's
-** palette. Avoids partly styled and possibly illegible dialogs.
-**
-** Always use ptMessageBox instead of QMessageBox!
-**/
+/*!
+  \class ptMessageBox
+   Wrapper around QMessageBox to ensure all message boxes have the system's
+   palette. Avoids partly styled and possibly illegible dialogs.
+
+   Always use ptMessageBox instead of QMessageBox!
+*/
 
 #ifndef PTMESSAGEBOX_H
 #define PTMESSAGEBOX_H

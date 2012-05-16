@@ -111,8 +111,8 @@ void CLASS cfa_linedn(float noise)
   for (int top=0; top < height-16; top += TS-32)
     for (int left=0; left < width-16; left += TS-32) {
 
-      int bottom = MIN( top+TS,height);
-      int right  = MIN(left+TS, width);
+      int bottom = MIN( top+TS, (int32_t)height);
+      int right  = MIN(left+TS, (int32_t)width);
       int numrows = bottom - top;
       int numcols = right - left;
       int indx1;

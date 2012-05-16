@@ -30,6 +30,8 @@
 #include "ptCurve.h"
 #include "ptConstants.h"
 
+#define PT_CREATE_CURVES_PROJECT
+
 double DeltaGammaBT709(double r, double, double) {
   return InverseGammaSRGB(GammaBT709(r,0,0),0,0);
 };
@@ -37,7 +39,7 @@ double DeltaGammaBT709(double r, double, double) {
 int main () {
   // Delta between sRGB and BT709
   ptCurve* DeltaGammaBT709Curve = new ptCurve();
-  DeltaGammaBT709Curve->SetCurveFromFunction(DeltaGammaBT709,0,0);
+  DeltaGammaBT709Curve->setFromFunc(DeltaGammaBT709,0,0);
   DeltaGammaBT709Curve->m_Type = ptCurveType_Full;
   DeltaGammaBT709Curve->m_IntendedChannel = ptCurveChannel_RGB;
   char* Header = (char*)
@@ -142,7 +144,7 @@ int main () {
   // Some Sigmoidals.
   for (double Contrast=0.5; Contrast<10.0; Contrast+=0.5) {
     ptCurve* SigmoidalCurve = new ptCurve();
-    SigmoidalCurve->SetCurveFromFunction(Sigmoidal,0.5,Contrast);
+    SigmoidalCurve->setFromFunc(Sigmoidal,0.5,Contrast);
     SigmoidalCurve->m_Type = ptCurveType_Full;
     SigmoidalCurve->m_IntendedChannel = ptCurveChannel_RGB;
     char* Header = NULL;
@@ -156,18 +158,18 @@ int main () {
 
   // GammaTool
   ptCurve* GammaToolCurve = new ptCurve();
-  GammaToolCurve->SetCurveFromFunction(GammaTool,0.45,0.1);
+  GammaToolCurve->setFromFunc(GammaTool,0.45,0.1);
   GammaToolCurve->m_Type = ptCurveType_Full;
   GammaToolCurve->m_IntendedChannel = ptCurveChannel_RGB;
   GammaToolCurve->WriteCurve("Curves/GammaTool.ptc",NULL);
 
   // DeltaGammaTool
   ptCurve* DeltaGammaToolCurve = new ptCurve();
-  DeltaGammaToolCurve->SetCurveFromFunction(DeltaGammaTool,0.33,0.06);
+  DeltaGammaToolCurve->setFromFunc(DeltaGammaTool,0.33,0.06);
   DeltaGammaToolCurve->m_Type = ptCurveType_Full;
   DeltaGammaToolCurve->m_IntendedChannel = ptCurveChannel_RGB;
   DeltaGammaToolCurve->WriteCurve("Curves/DeltaGamma(0.33,0.06).ptc",NULL);
-  DeltaGammaToolCurve->SetCurveFromFunction(DeltaGammaTool,0.45,0.1);
+  DeltaGammaToolCurve->setFromFunc(DeltaGammaTool,0.45,0.1);
   DeltaGammaToolCurve->m_Type = ptCurveType_Full;
   DeltaGammaToolCurve->m_IntendedChannel = ptCurveChannel_RGB;
   DeltaGammaToolCurve->WriteCurve("Curves/DeltaGamma(0.45,0.1).ptc",NULL);

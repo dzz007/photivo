@@ -105,10 +105,10 @@ unix {
   !exists($$OUT_PWD/ptClear) {
     system(touch $$OUT_PWD/ptClear)
   }
-  binaries.path       = $${PREFIX}/bin  
+  binaries.path       = $${PREFIX}/bin
   binaries.files      = $$OUT_PWD/photivo $$OUT_PWD/ptClear
   INSTALLS           += binaries
-  
+
   shortcut.path       = $${PREFIX}/share/applications
   shortcut.files      = ReferenceMaterial/photivo.desktop
   INSTALLS           += shortcut
@@ -120,31 +120,31 @@ unix {
   icon.path           = $${PREFIX}/share/pixmaps
   icon.files          = qrc/photivo-appicon.png
   INSTALLS           += icon
-  
+
   curves.path         = $${PREFIX}/share/photivo/Curves
   curves.files        = Curves/*
   INSTALLS           += curves
-  
+
   mixer.path          = $${PREFIX}/share/photivo/ChannelMixers
   mixer.files         = ChannelMixers/*
   INSTALLS           += mixer
-  
+
   presets.path        = $${PREFIX}/share/photivo/Presets
   presets.files       = Presets/*
   INSTALLS           += presets
-  
+
   profiles.path       = $${PREFIX}/share/photivo/Profiles
   profiles.files      = Profiles/*
   INSTALLS           += profiles
-  
+
   translations.path   = $${PREFIX}/share/photivo/Translations
   translations.files  = Translations/*
   INSTALLS           += translations
-  
+
   lensfun.path        = $${PREFIX}/share/photivo/LensfunDatabase
   lensfun.files       = LensfunDatabase/*
   INSTALLS           += lensfun
-  
+
   uisettings.path     = $${PREFIX}/share/photivo/UISettings
   uisettings.files    = UISettings/*
   themes.path         = $${PREFIX}/share/photivo/Themes

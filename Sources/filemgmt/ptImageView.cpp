@@ -109,7 +109,7 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   m_ResizeEventTimer.setInterval(100);
   connect(&m_ResizeEventTimer, SIGNAL(timeout()), this, SLOT(zoomFit()));
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   // Create actions for context menu
   ac_ZoomIn = new QAction(tr("Zoom &in") + "\t" + tr("1"), this);
