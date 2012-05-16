@@ -46,9 +46,10 @@ using std::unique_ptr;
 #include "ptCheck.h"
 #include "ptGroupBox.h"
 #include "ptVisibleToolsView.h"
-#include "imagespot/ptImageSpotModel.h"
-#include "imagespot/ptImageSpotListView.h"
+#include "filters/imagespot/ptImageSpotModel.h"
+#include "filters/imagespot/ptImageSpotListView.h"
 
+#include "ptTempFilterBase.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -123,10 +124,10 @@ public:
   QTimer* m_SearchInputTimer;
 
   // ToolBoxes
-  QMap<QString, ptGroupBox*>* m_GroupBox;
+  QMap<QString, ptTempFilterBase*>* m_GroupBox;
   QList<QString>*             m_GroupBoxesOrdered;
   QList<QVBoxLayout*>*        m_TabLayouts;
-  QList<ptGroupBox*>*         m_MovedTools;
+  QList<QWidget*>*            m_MovedTools;
   QIcon                       m_StatusIcon;
   QList<QWidget*>             m_ActiveTabs;
 
@@ -180,7 +181,7 @@ private:
   ptCurveWindow        *FSpotCurveWindow;  // raw pointer because managed by Qt parent mechanism
 
   void AnalyzeToolBoxStructure();
-  void ShowMovedTools(const QString Title);
+  void ShowMovedTools(const QString ATitle);
   void InitVisibleTools();
   void ToggleLocalAdjustWidgets(const bool AEnabled, const int ARow);
   void ToggleSpotRepairWidgets(const bool AEnabled);
@@ -284,38 +285,6 @@ private slots:
   void OnChannelMixerOpenButtonClicked();
   void OnChannelMixerSaveButtonClicked();
 
-  void OnCurveRGBOpenButtonClicked();
-  void OnCurveRGBSaveButtonClicked();
-  void OnCurveROpenButtonClicked();
-  void OnCurveRSaveButtonClicked();
-  void OnCurveGOpenButtonClicked();
-  void OnCurveGSaveButtonClicked();
-  void OnCurveBOpenButtonClicked();
-  void OnCurveBSaveButtonClicked();
-  void OnCurveLOpenButtonClicked();
-  void OnCurveLSaveButtonClicked();
-  void OnCurveaOpenButtonClicked();
-  void OnCurveaSaveButtonClicked();
-  void OnCurvebOpenButtonClicked();
-  void OnCurvebSaveButtonClicked();
-  void OnCurveOutlineOpenButtonClicked();
-  void OnCurveOutlineSaveButtonClicked();
-  void OnCurveLByHueOpenButtonClicked();
-  void OnCurveLByHueSaveButtonClicked();
-  void OnCurveHueOpenButtonClicked();
-  void OnCurveHueSaveButtonClicked();
-  void OnCurveTextureOpenButtonClicked();
-  void OnCurveTextureSaveButtonClicked();
-  void OnCurveShadowsHighlightsOpenButtonClicked();
-  void OnCurveShadowsHighlightsSaveButtonClicked();
-  void OnCurveDenoiseOpenButtonClicked();
-  void OnCurveDenoiseSaveButtonClicked();
-  void OnCurveSaturationOpenButtonClicked();
-  void OnCurveSaturationSaveButtonClicked();
-  void OnBaseCurveOpenButtonClicked();
-  void OnBaseCurveSaveButtonClicked();
-  void OnBaseCurve2OpenButtonClicked();
-  void OnBaseCurve2SaveButtonClicked();
 
   void OnTone1ColorButtonClicked();
   void OnTone2ColorButtonClicked();
@@ -329,7 +298,6 @@ private slots:
   void OnGradualOverlay2ColorButtonClicked();
 
   void OnOutputColorProfileResetButtonClicked();
-  void OnWriteOutputButtonClicked();
   void OnWritePipeButtonClicked();
 
   void OnVisibleToolsDiscardButtonClicked();

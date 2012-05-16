@@ -1,4 +1,6 @@
-<!DOCTYPE TS><TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="es_ES" sourcelanguage="en">
 <context>
     <name>Global Strings</name>
     <message>
@@ -1576,7 +1578,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation>Echo</translation>
+        <translation>Hecho</translation>
     </message>
     <message>
         <source>Updating</source>
@@ -2618,7 +2620,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Crop</source>
-        <translation>Recotar</translation>
+        <translation>Recortar</translation>
     </message>
     <message>
         <source>Make a crop</source>
@@ -2990,7 +2992,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Contrast</source>
-        <translation>Contaste</translation>
+        <translation>Contraste</translation>
     </message>
     <message>
         <source>Texture overlay I</source>
@@ -4322,7 +4324,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Crop exposure</source>
-        <translation>Recotar exposición</translation>
+        <translation>Recortar exposición</translation>
     </message>
     <message>
         <source>Temporary exposure in EV</source>
@@ -4522,7 +4524,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Catch black</source>
-        <translation>Ajsutar negro</translation>
+        <translation>Ajustar negro</translation>
     </message>
     <message>
         <source>Brighten just the darkest parts</source>

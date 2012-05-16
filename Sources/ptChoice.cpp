@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -25,14 +26,12 @@
 
 #include "ptChoice.h"
 #include "ptSettings.h"
+#include "ptInfo.h"
+#include "filters/ptCfgItem.h"
 
 extern QTranslator appTranslator;
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptChoice::ptChoice(const QWidget*          MainWindow,
                    const QString           ObjectName,
@@ -42,8 +41,9 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
                    const ptGuiOptionsItem* InitialOptions,
                    const QString           ToolTip,
                    const int               TimeOut)
-  :QWidget() {
-
+: ptWidget(nullptr),
+  m_ComboBox(nullptr)
+{
   if (Default.type() != QVariant::Int) {
     printf("(%s,%d) this : %s\n"
            "Default.type() : %d\n",
@@ -53,6 +53,7 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
     assert (Default.type() == QVariant::Int);
  }
 
+  FIsNewSchool  = false;
   m_HaveDefault = HasDefaultValue;
 
   setObjectName(ObjectName);
@@ -67,25 +68,75 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
     assert(m_Parent);
   }
   setParent(m_Parent);
+  m_InitialOptions = InitialOptions;
+  m_TimeOut = TimeOut;
+  m_DefaultValue = Default;
 
+  createGUI();
+  m_ComboBox->setToolTip(ToolTip);
+}
+
+//==============================================================================
+
+ptChoice::ptChoice(const ptCfgItem &ACfgItem, QWidget *AParent)
+: ptWidget(AParent),
+  m_ComboBox(nullptr)
+{
+  init(ACfgItem);
+}
+
+//==============================================================================
+
+ptChoice::ptChoice(QWidget *AParent)
+: ptWidget(AParent),
+  m_ComboBox(nullptr)
+{}
+
+//==============================================================================
+
+void ptChoice::init(const ptCfgItem &ACfgItem) {
+  GInfo->Assert(this->parent(), "Parent cannot be null.", AT);
+  GInfo->Assert(!m_ComboBox, "Trying to initialize an already initalized check box.", AT);
+  GInfo->Assert(ACfgItem.Type == ptCfgItem::Combo,
+                QString("Wrong GUI type (%1). Must be ptCfgItem::Combo.").arg(ACfgItem.Type), AT);
+
+  this->setObjectName(ACfgItem.Id);
+  m_InitialOptionsNewschool = ACfgItem.EntryList;
+
+  FIsNewSchool      = true;
+  m_SettingsName    = "";  // not used
+  m_Parent          = this;
+  m_DefaultValue    = ACfgItem.Default;
+  m_HaveDefault     = true;
+  m_TimeOut         = ptTimeout_Input;
+  m_InitialOptions  = nullptr;
+
+  createGUI();
+  m_ComboBox->setToolTip(ACfgItem.ToolTip);
+}
+
+//==============================================================================
+
+void ptChoice::createGUI() {
   QHBoxLayout *Layout = new QHBoxLayout(m_Parent);
-
-  //~ Layout->setContentsMargins(2,2,2,2);
-  //~ Layout->setMargin(2);
   m_Parent->setLayout(Layout);
 
   m_ComboBox = new QComboBox(m_Parent);
   m_ComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-  m_ComboBox->setToolTip(ToolTip);
   m_ComboBox->setFixedHeight(24);
   m_ComboBox->setMaxVisibleItems(24);
-  //~ m_ComboBox->setLayoutDirection(Qt::RightToLeft);
-  m_InitialOptions = InitialOptions;
-  for (short i=0; InitialOptions && InitialOptions[i].Value !=-1; i++ ) {
-    QString Temp = appTranslator.translate("QObject",InitialOptions[i].Text.toAscii().data());
-    if (Temp == "") Temp = InitialOptions[i].Text;
-    m_ComboBox->addItem(Temp,InitialOptions[i].Value);
+
+  if (FIsNewSchool) {
+    m_ComboBox->addItems(m_InitialOptionsNewschool);
+
+  } else {
+    for (short i=0; m_InitialOptions && m_InitialOptions[i].Value !=-1; i++ ) {
+      QString Temp = appTranslator.translate("QObject",m_InitialOptions[i].Text.toAscii().data());
+      if (Temp == "") Temp = m_InitialOptions[i].Text;
+      m_ComboBox->addItem(Temp,m_InitialOptions[i].Value);
+    }
   }
+
   m_ComboBox->installEventFilter(this);
   m_ComboBox->setFocusPolicy(Qt::ClickFocus);
   Layout->addWidget(m_ComboBox);
@@ -95,31 +146,36 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
   Layout->setSpacing(2);
 
   // A timer for time filtering signals going outside.
-  m_TimeOut = TimeOut;
   m_Timer = new QTimer(this);
   m_Timer->setSingleShot(1);
 
-  connect(m_Timer,SIGNAL(timeout()),
-          this,SLOT(OnValueChangedTimerExpired()));
-
-  // Connect the button
-  //~ connect(m_Button,SIGNAL(clicked()),
-          //~ this,SLOT(OnButtonClicked()));
-
-  // Connect the combo
-  connect(m_ComboBox,SIGNAL(activated(int)),
-          this,SLOT(OnValueChanged(int)));
+  connect(m_Timer,    SIGNAL(timeout()),      this, SLOT(OnValueChangedTimerExpired()));
+  connect(m_ComboBox, SIGNAL(activated(int)), this, SLOT(OnValueChanged(int)));
 
   // Set the default Value (and remember for later).
-  m_DefaultValue = Default;
-  SetValue(Default,1);
+  SetValue(m_DefaultValue,1);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetValue
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
+ptChoice::~ptChoice() {
+  /* nothing to do here */
+}
+
+//==============================================================================
+
+void ptChoice::setValue(const QVariant &AValue) {
+  bool ok;
+  int i = AValue.toInt(&ok);
+
+  if (!ok || i<0 || i>=m_ComboBox->count()) {
+    GInfo->Raise("Invalid combo index: " + AValue.toString(), AT);
+  } else {
+    m_ComboBox->setCurrentIndex(i);
+  }
+}
+
+//==============================================================================
 
 void ptChoice::SetValue(const QVariant Value,
                         const short    BlockSignal) {
@@ -134,13 +190,10 @@ void ptChoice::SetValue(const QVariant Value,
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// AddOrReplaceItem
-// Keeps Data unique, i.e. replace if exist.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
+// Keeps Data unique, i.e. replace if exist.
+// NOTE: This function is only used by ptSettings, i.e. oldschool
 void ptChoice::AddOrReplaceItem(const QString Text,const QVariant Data) {
   for (int i=0; i<m_ComboBox->count(); i++) {
     if (Data == m_ComboBox->itemData(i)) {
@@ -155,74 +208,54 @@ void ptChoice::AddOrReplaceItem(const QString Text,const QVariant Data) {
   m_ComboBox->addItem(Temp,Data);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Clear
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptChoice::Clear(const short WithDefault) {
   m_ComboBox->clear();
   m_Value.clear();
+
   if (WithDefault) {
     // Add the standard choices again.
-    for (short i=0; m_InitialOptions && m_InitialOptions[i].Value !=-1; i++ ) {
-      QString Temp = appTranslator.translate("QObject",m_InitialOptions[i].Text.toAscii().data());
-      if (Temp == "") Temp = m_InitialOptions[i].Text;
-      m_ComboBox->addItem(Temp,m_InitialOptions[i].Value);
+    if (FIsNewSchool) {
+      m_ComboBox->addItems(m_InitialOptionsNewschool);
+
+    } else {
+      for (short i=0; m_InitialOptions && m_InitialOptions[i].Value !=-1; i++ ) {
+        QString Temp = appTranslator.translate("QObject",m_InitialOptions[i].Text.toAscii().data());
+        if (Temp == "") Temp = m_InitialOptions[i].Text;
+        m_ComboBox->addItem(Temp,m_InitialOptions[i].Value);
+      }
     }
+
     m_Value = m_DefaultValue;
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Show
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptChoice::Show(const short Show) {
   m_Parent->setVisible(Show);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Reset
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptChoice::Reset() {
   SetValue(m_DefaultValue,0 /* Generate signal */);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetEnabled
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptChoice::SetEnabled(const short Enabled) {
   m_ComboBox->setEnabled(Enabled);
-  //~ m_Button->setEnabled(Enabled);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// OnButtonClicked
-// Reset to the defaults.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptChoice::OnButtonClicked() {
   SetValue(m_DefaultValue,0); // Generate signal !
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// OnValueChanged
-// Translate to an 'external' signal
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptChoice::OnValueChanged(int Value) {
   m_Value = m_ComboBox->itemData(Value);
@@ -233,45 +266,40 @@ void ptChoice::OnValueChanged(int Value) {
   }
 }
 
+//==============================================================================
+
 void ptChoice::OnValueChangedTimerExpired() {
-  //printf("(%s,%d) emiting signal(%d)\n",__FILE__,__LINE__,m_Value.toInt());
   m_ComboBox->clearFocus();
-  emit(valueChanged(m_Value));
+
+  if (FIsNewSchool)
+    emit ptWidget::valueChanged(this->objectName(), m_ComboBox->currentIndex());
+  else
+    emit valueChanged(m_Value);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Event filter
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
-bool ptChoice::eventFilter(QObject *obj, QEvent *event)
-{
+bool ptChoice::eventFilter(QObject *obj, QEvent *event) {
   if (event->type() == QEvent::ContextMenu) {
+    // reset to default value
     if (m_HaveDefault && m_ComboBox->isEnabled())
       OnButtonClicked();
     return true;
+
   } else if (event->type() == QEvent::Wheel
-             && ((QMouseEvent*)event)->modifiers()==Qt::AltModifier) {
-    QApplication::sendEvent(m_Parent, event);
+             && ((QMouseEvent*)event)->modifiers()==Qt::AltModifier)
+  {
+    // send Alt+Wheel to parent
+    if (FIsNewSchool)
+      QApplication::sendEvent(this->parentWidget(), event);
+    else
+      QApplication::sendEvent(m_Parent, event);
     return true;
+
   } else {
     // pass the event on to the parent class
-    return QObject::eventFilter(obj, event);
+    return ptWidget::eventFilter(obj, event);
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptChoice::~ptChoice() {
-  //printf("(%s,%d) %s this:%p name:%s\n",
-  //       __FILE__,__LINE__,__PRETTY_FUNCTION__,
-  //       this,objectName().toAscii().data());
-  // Do not remove what is handled by Parent !
-}
-
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================

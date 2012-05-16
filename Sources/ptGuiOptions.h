@@ -88,7 +88,6 @@ public:
   static const ptGuiOptionsItem LABTransformMode[];
   static const ptGuiOptionsItem DenoiseMask[];
   static const ptGuiOptionsItem ChannelMixer[];
-  static const ptGuiOptionsItem Curve[];
   static const ptGuiOptionsItem SpecialPreview[];
   static const ptGuiOptionsItem ViewLAB[];
   static const ptGuiOptionsItem GREYCInterpolation[];
@@ -101,7 +100,6 @@ public:
   static const ptGuiOptionsItem GrainMaskType[];
   static const ptGuiOptionsItem OverlayMode[];
   static const ptGuiOptionsItem OutlineMode[];
-  static const ptGuiOptionsItem OutlineGradientMode[];
   static const ptGuiOptionsItem OverlayMaskMode[];
   static const ptGuiOptionsItem CrossprocessMode[];
   static const ptGuiOptionsItem VignetteMode[];

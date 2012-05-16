@@ -2,8 +2,8 @@
 **
 ** Photivo
 **
-** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2010-2012 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -20,109 +20,112 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-/*!
-  \class ptCurveWindow
-
-  \brief ptCurveWindow is a Gui element showing a curve.
-*/
 
 #ifndef PTCURVEWINDOW_H
 #define PTCURVEWINDOW_H
 
 //==============================================================================
 
-#include <QtGui>
+#include <memory>
+#include <vector>
+#include <utility>
+
+#include <QPixmap>
 
 #include "ptImage8.h"
-#include "ptCurve.h"
-#include "ptConstants.h"
+#include "ptWidget.h"
+
+class QLabel;
+class QActionGroup;
+class ptCurve;
+class ptFilterBase;
 
 //==============================================================================
 
-class ptCurveWindow : public QWidget {
-Q_OBJECT
+typedef std::pair<int, int>        TScreenAnchor;
+typedef std::vector<TScreenAnchor> TScreenAnchorList;
 
+//==============================================================================
+
+class ptCurveWindow: public ptWidget {
+Q_OBJECT
 public:
-  ptCurveWindow(ptCurve*      ARelatedCurve,
-                const short   AChannel,
-                QWidget*      AParent,
-                const QString &ACaption = "");
+  explicit ptCurveWindow(QWidget *AParent);
+  ptCurveWindow(const ptCfgItem &ACfgItem, QWidget *AParent);
   ~ptCurveWindow();
 
-  /*! NewRelatedCurve to associate anonter ptImage with this window.*/
-  void UpdateView(ptCurve* NewRelatedCurve = NULL);
+  void init(const ptCfgItem &ACfgItem);
+  void setValue(const QVariant &AValue);
 
-  /*! Calculate the curve into an Image8 */
-  void CalculateCurve();
+  void setCaption(const QString &ACaption);
 
-  void ContextMenu(QMouseEvent* event);
+  /*! Recalcs the curve window image and repaints the viewport. Does *not* trigger a pipe run. */
+  void updateView();
 
-  ptCurve*       RelatedCurve;
-  QTimer*        ResizeTimer; // To circumvent multi resize events.
-  short          Channel;   // Beware, historical name. Read: “curve type”
-  ptImage8*      Image8;
+  /*! This is an overloaded function. Assigns a new \c ptCurve object to the curve window,
+      then recalcs the curve window image and repaints the viewport. Does *not* trigger a pipe run.
+   */
+  void updateView(const std::shared_ptr<ptCurve> ANewCurve);
 
-//------------------------------------------------------------------------------
 
 protected:
-  void changeEvent(QEvent* Event);
-  void resizeEvent(QResizeEvent*);
-  void paintEvent(QPaintEvent*);
-  void mousePressEvent(QMouseEvent *Event);
-  void wheelEvent(QWheelEvent *Event);
-  void mouseMoveEvent(QMouseEvent *Event);
-  void mouseReleaseEvent(QMouseEvent *Event);
-  QSize sizeHint() const { return QSize(100,100); }
-  QSize minimumSizeHint() const { return QSize(100,100); }
-  int  heightForWidth(int w) const { return w;}
+  void    mousePressEvent(QMouseEvent *AEvent);
+  void    mouseReleaseEvent(QMouseEvent *Event);
+  void    mouseMoveEvent(QMouseEvent *AEvent);
+  void    changeEvent(QEvent* Event);
+  void    paintEvent(QPaintEvent*);
+  void    resizeEvent(QResizeEvent*);
 
-//------------------------------------------------------------------------------
+  QSize   sizeHint()                const { return QSize(100, 100); }
+  QSize   minimumSizeHint()         const { return QSize(100, 100); }
+  int     heightForWidth(int width) const { return width; }
+
 
 private:
-  void UpdateCurve();
-  void SetBWGradient(ptImage8* Image);
-  void SetBWGammaGradient(ptImage8* Image);
-  void SetColorGradient(ptImage8* Image);
-  void SetCurveState(const short state);
-  short GetCurveState();
+  enum TUserAction { NoAction, InsertAction, DeleteAction, DragAction, WheelAction };
 
 
-  QLabel*             FCaptionLabel;
-  QTimer*             FWheelTimer;
-  short               FXSpot[ptMaxAnchors];
-  short               FYSpot[ptMaxAnchors];
-  QPixmap*            FQPixmap;
-  int32_t             FOverlayAnchorX;
-  int32_t             FOverlayAnchorY;
-  short               FMovingAnchor;
-  short               FActiveAnchor;  // gets the wheel event, -1 neutral
-  uint16_t            FMousePosX;
-  uint16_t            FMousePosY;
-  short               FBlockEvents;
-  short               FRecalcNeeded;
-  short               FCyclicCurve;
-  // Saturaton Curve modes
-  QAction*            FAtnAbsolute;
-  QAction*            FAtnAdaptive;
-  QActionGroup*       FSatModeGroup;
-  QAction*            FAtnByLuma;
-  QAction*            FAtnByChroma;
-  QActionGroup*       FTypeGroup;
-  // Interpolation Type
-  QAction*            FAtnITLinear;
-  QAction*            FAtnITSpline;
-  QAction*            FAtnITCosine;
-  QActionGroup*       FITGroup;
+private:
+  /*! Calculate the GUI representation of the curve as a ptImage8. */
+  void          calcCurveImage();
 
-//------------------------------------------------------------------------------
+  void          setBWGradient(ptImage8* AImage);
+  void          setBWGammaGradient(ptImage8* AImage);
+  void          setColorGradient(ptImage8* AImage);
+  void          setColorBlocks(const QColor &ATopLeftColor, const QColor &ABottomRightColor);
+  TAnchor       clampMovingAnchor(const TAnchor &APoint, const QPoint &AMousePos);
+  int           hasCaughtAnchor(const QPoint APos);
+  inline bool   isCyclicCurve();
+  void          requestPipeRun();
+
+  ptImage8                  FCanvas;
+  QLabel                   *FCaptionLabel;
+  std::shared_ptr<ptCurve>  FCurve;
+  TScreenAnchorList         FDisplayAnchors;
+  QPixmap                   FDisplayImage;
+  QTimer                   *FWheelTimer;
+  TUserAction               FMouseAction;
+  int                       FMovingAnchor;
+
+  // context menu actions
+  void createMenuActions();
+  void execContextMenu(const QPoint APos);
+  QAction*            FLinearIpolAction;
+  QAction*            FSplineIpolAction;
+  QAction*            FCosineIpolAction;
+  QActionGroup*       FIpolGroup;
+  QAction*            FByLumaAction;
+  QAction*            FByChromaAction;
+  QActionGroup*       FMaskGroup;
+
 
 private slots:
-  void ResizeTimerExpired();
-  void WheelTimerExpired();
-  void SetSatMode();
-  void SetType();
-  void SetInterpolationType();
+  void wheelTimerExpired();
 
+  // context menu slots
+  void setMaskType();
+  void setInterpolationType();
 
 };
+
 #endif // PTCURVEWINDOW_H

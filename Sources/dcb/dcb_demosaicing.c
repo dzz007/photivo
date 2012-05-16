@@ -100,8 +100,8 @@ void CLASS hid()
 
       c =  fc(row,col);
       if(c != 1) {
-        m_Image[indx][1] = CLIP((m_Image[indx+u][1] + m_Image[indx-u][1] + m_Image[indx-1][1] + m_Image[indx+1][1])/4.0 +
-                 (m_Image[indx][c] - ( m_Image[indx+v][c] + m_Image[indx-v][c] + m_Image[indx-2][c] + m_Image[indx+2][c])/4.0)/2.0);
+        m_Image[indx][1] = CLIP((int32_t)((m_Image[indx+u][1] + m_Image[indx-u][1] + m_Image[indx-1][1] + m_Image[indx+1][1])/4.0f +
+                 (m_Image[indx][c] - ( m_Image[indx+v][c] + m_Image[indx-v][c] + m_Image[indx-2][c] + m_Image[indx+2][c])/4.0f)/2.f));
       }
     }
   }
@@ -119,8 +119,8 @@ void CLASS hid2()
       c =  fc(row,col);
 
       if (c != 1) {
-        m_Image[indx][1] = CLIP((m_Image[indx+v][1] + m_Image[indx-v][1] + m_Image[indx-2][1] + m_Image[indx+2][1])/4.0 +
-                  m_Image[indx][c] - ( m_Image[indx+v][c] + m_Image[indx-v][c] + m_Image[indx-2][c] + m_Image[indx+2][c])/4.0);
+        m_Image[indx][1] = CLIP((int32_t)((m_Image[indx+v][1] + m_Image[indx-v][1] + m_Image[indx-2][1] + m_Image[indx+2][1])/4.0f +
+                  m_Image[indx][c] - ( m_Image[indx+v][c] + m_Image[indx-v][c] + m_Image[indx-2][c] + m_Image[indx+2][c])/4.0f));
       }
     }
   }
@@ -135,16 +135,16 @@ void CLASS dcb_color()
 #pragma omp for schedule(static) private(row, col, c, indx)
   for (row=1; row < m_Height-1; row++)
     for (col=1+(FC(row,1) & 1), indx=row*m_Width+col, c=2-FC(row,col); col < u-1; col+=2, indx+=2) {
-      m_Image[indx][c] = CLIP((
-      4*m_Image[indx][1]
-      - m_Image[indx+u+1][1] - m_Image[indx+u-1][1] - m_Image[indx-u+1][1] - m_Image[indx-u-1][1]
-      + m_Image[indx+u+1][c] + m_Image[indx+u-1][c] + m_Image[indx-u+1][c] + m_Image[indx-u-1][c] )/4.0);
+      m_Image[indx][c] = CLIP((int32_t)((
+                              4*m_Image[indx][1]
+                              - m_Image[indx+u+1][1] - m_Image[indx+u-1][1] - m_Image[indx-u+1][1] - m_Image[indx-u-1][1]
+                              + m_Image[indx+u+1][c] + m_Image[indx+u-1][c] + m_Image[indx-u+1][c] + m_Image[indx-u-1][c] )/4.0f));
     }
 #pragma omp for schedule(static) private(row, col, c, d, indx)
   for (row=1; row<m_Height-1; row++)
     for (col=1+(FC(row,2)&1), indx=row*m_Width+col,c=FC(row,col+1),d=2-c; col<m_Width-1; col+=2, indx+=2) {
-      m_Image[indx][c] = CLIP((2*m_Image[indx][1] - m_Image[indx+1][1] - m_Image[indx-1][1] + m_Image[indx+1][c] + m_Image[indx-1][c])/2.0);
-      m_Image[indx][d] = CLIP((2*m_Image[indx][1] - m_Image[indx+u][1] - m_Image[indx-u][1] + m_Image[indx+u][d] + m_Image[indx-u][d])/2.0);
+      m_Image[indx][c] = CLIP((int32_t)((2*m_Image[indx][1] - m_Image[indx+1][1] - m_Image[indx-1][1] + m_Image[indx+1][c] + m_Image[indx-1][c])/2.0f));
+      m_Image[indx][d] = CLIP((int32_t)((2*m_Image[indx][1] - m_Image[indx+u][1] - m_Image[indx-u][1] + m_Image[indx+u][d] + m_Image[indx-u][d])/2.0f));
     }
 } // end of parallel
 }
@@ -194,8 +194,8 @@ void CLASS dcb_color_full()
 #pragma omp for schedule(static) private(row, col, indx)
   for(row=3; row<m_Height-3; row++)
     for(col=3,indx=row*m_Width+col; col<m_Width-3; col++,indx++){
-      m_Image[indx][0]=CLIP(chroma[indx][0]+m_Image[indx][1]);
-      m_Image[indx][2]=CLIP(chroma[indx][1]+m_Image[indx][1]);
+      m_Image[indx][0]=CLIP((int32_t)(chroma[indx][0]+m_Image[indx][1]));
+      m_Image[indx][2]=CLIP((int32_t)(chroma[indx][1]+m_Image[indx][1]));
     }
 } // end of parallel
   free(chroma);
@@ -260,7 +260,7 @@ void CLASS dcb_correction2()
                 2*(m_Image[indx+u][3] + m_Image[indx-u][3] + m_Image[indx+1][3] + m_Image[indx-1][3]) +
                 m_Image[indx+v][3] + m_Image[indx-v][3] + m_Image[indx+2][3] + m_Image[indx-2][3];
 
-        m_Image[indx][1] = CLIP(((16-current)*((m_Image[indx-1][1] + m_Image[indx+1][1])/2.0 + m_Image[indx][c] - (m_Image[indx+2][c] + m_Image[indx-2][c])/2.0) + current*((m_Image[indx-u][1] + m_Image[indx+u][1])/2.0 + m_Image[indx][c] - (m_Image[indx+v][c] + m_Image[indx-v][c])/2.0))/16.0);
+        m_Image[indx][1] = CLIP((int32_t)(((16-current)*((m_Image[indx-1][1] + m_Image[indx+1][1])/2.0f + m_Image[indx][c] - (m_Image[indx+2][c] + m_Image[indx-2][c])/2.0f) + current*((m_Image[indx-u][1] + m_Image[indx+u][1])/2.0f + m_Image[indx][c] - (m_Image[indx+v][c] + m_Image[indx-v][c])/2.0f))/16.0f));
       }
     }
   }
@@ -281,19 +281,19 @@ void CLASS dcb_refinement()
       f[2]=1.0/(1.0+abs(m_Image[indx-1][c]-m_Image[indx][c])+abs(m_Image[indx-1][1]-m_Image[indx][1]));
       f[3]=1.0/(1.0+abs(m_Image[indx+u][c]-m_Image[indx][c])+abs(m_Image[indx+u][1]-m_Image[indx][1]));
 
-      g[0]=CLIP(m_Image[indx-u][1]+0.5*(m_Image[indx][c]-m_Image[indx-u][c]) + 0.25*(m_Image[indx][c]-m_Image[indx-v][c]));
-      g[1]=CLIP(m_Image[indx+1][1]+0.5*(m_Image[indx][c]-m_Image[indx+1][c]) + 0.25*(m_Image[indx][c]-m_Image[indx+2][c]));
-      g[2]=CLIP(m_Image[indx-1][1]+0.5*(m_Image[indx][c]-m_Image[indx-1][c]) + 0.25*(m_Image[indx][c]-m_Image[indx-2][c]));
-      g[3]=CLIP(m_Image[indx+u][1]+0.5*(m_Image[indx][c]-m_Image[indx+u][c]) + 0.25*(m_Image[indx][c]-m_Image[indx+v][c]));
+      g[0]=CLIP((int32_t)(m_Image[indx-u][1]+0.5f*(m_Image[indx][c]-m_Image[indx-u][c]) + 0.25f*(m_Image[indx][c]-m_Image[indx-v][c])));
+      g[1]=CLIP((int32_t)(m_Image[indx+1][1]+0.5f*(m_Image[indx][c]-m_Image[indx+1][c]) + 0.25f*(m_Image[indx][c]-m_Image[indx+2][c])));
+      g[2]=CLIP((int32_t)(m_Image[indx-1][1]+0.5f*(m_Image[indx][c]-m_Image[indx-1][c]) + 0.25f*(m_Image[indx][c]-m_Image[indx-2][c])));
+      g[3]=CLIP((int32_t)(m_Image[indx+u][1]+0.5f*(m_Image[indx][c]-m_Image[indx+u][c]) + 0.25f*(m_Image[indx][c]-m_Image[indx+v][c])));
 
-      m_Image[indx][1]=CLIP(((f[0]*g[0]+f[1]*g[1]+f[2]*g[2]+f[3]*g[3])/(f[0]+f[1]+f[2]+f[3]) ));
+      m_Image[indx][1]=CLIP((int32_t)(((f[0]*g[0]+f[1]*g[1]+f[2]*g[2]+f[3]*g[3])/(f[0]+f[1]+f[2]+f[3]) )));
 
       // get rid of the overshooted pixels
       min = MIN(m_Image[indx+1+u][1], MIN(m_Image[indx+1-u][1], MIN(m_Image[indx-1+u][1], MIN(m_Image[indx-1-u][1], MIN(m_Image[indx-1][1], MIN(m_Image[indx+1][1], MIN(m_Image[indx-u][1], m_Image[indx+u][1])))))));
 
       max = MAX(m_Image[indx+1+u][1], MAX(m_Image[indx+1-u][1], MAX(m_Image[indx-1+u][1], MAX(m_Image[indx-1-u][1], MAX(m_Image[indx-1][1], MAX(m_Image[indx+1][1], MAX(m_Image[indx-u][1], m_Image[indx+u][1])))))));
 
-      m_Image[indx][1] =  ULIM(m_Image[indx][1], max, min);
+      m_Image[indx][1] =  ULIM((int32_t)(m_Image[indx][1]), max, min);
     }
 }
 
@@ -321,9 +321,9 @@ void CLASS lch_to_rgb(double (*m_Image3)[3])
   int indx;
 #pragma omp parallel for schedule(static) private(indx)
   for (indx=0; indx < m_Height*m_Width; indx++) {
-    m_Image[indx][0] = CLIP(m_Image3[indx][0] / 3.0 - m_Image3[indx][2] / 6.0 + m_Image3[indx][1] / 3.464101615);
-    m_Image[indx][1] = CLIP(m_Image3[indx][0] / 3.0 - m_Image3[indx][2] / 6.0 - m_Image3[indx][1] / 3.464101615);
-    m_Image[indx][2] = CLIP(m_Image3[indx][0] / 3.0 + m_Image3[indx][2] / 3.0);
+    m_Image[indx][0] = CLIP((int32_t)(m_Image3[indx][0] / 3.0f - m_Image3[indx][2] / 6.0f + m_Image3[indx][1] / 3.464101615));
+    m_Image[indx][1] = CLIP((int32_t)(m_Image3[indx][0] / 3.0f - m_Image3[indx][2] / 6.0f - m_Image3[indx][1] / 3.464101615));
+    m_Image[indx][2] = CLIP((int32_t)(m_Image3[indx][0] / 3.0f + m_Image3[indx][2] / 3.0f));
   }
 }
 
@@ -341,13 +341,13 @@ void CLASS fbdd_green2()
         g2 = (m_Image[indx+u][1] + m_Image[indx-u][1] + m_Image[indx-1][1] + m_Image[indx+1][1])/4.0;
         g1 = (m_Image[indx+w][1] + m_Image[indx-w][1] + m_Image[indx-3][1] + m_Image[indx+3][1])/4.0;
 
-        m_Image[indx][1] = CLIP((g2+g1)/2.0 + current);
+        m_Image[indx][1] = CLIP((int32_t)((g2+g1)/2.0f + current));
 
         min = MIN(m_Image[indx-1][1], MIN(m_Image[indx+1][1], MIN(m_Image[indx-u][1], m_Image[indx+u][1])));
 
         max = MAX(m_Image[indx-1][1], MAX(m_Image[indx+1][1], MAX(m_Image[indx-u][1], m_Image[indx+u][1])));
 
-        m_Image[indx][1] =  ULIM(m_Image[indx][1], max, min);
+        m_Image[indx][1] =  ULIM((int32_t)(m_Image[indx][1]), max, min);
       }
     }
   }
@@ -399,23 +399,23 @@ void CLASS fbdd_green()
 #pragma omp parallel for schedule(static) private(row, col, c, indx, min, max, f, g)
   for (row=5; row < m_Height-5; row++)
     for (col=5+(FC(row,1)&1),indx=row*m_Width+col,c=FC(row,col); col < u-5; col+=2,indx+=2) {
-      f[0]=1.0/(1.0+abs(m_Image[indx-u][1]-m_Image[indx-w][1])+abs(m_Image[indx-w][1]-m_Image[indx+y][1]));
-      f[1]=1.0/(1.0+abs(m_Image[indx+1][1]-m_Image[indx+3][1])+abs(m_Image[indx+3][1]-m_Image[indx-5][1]));
-      f[2]=1.0/(1.0+abs(m_Image[indx-1][1]-m_Image[indx-3][1])+abs(m_Image[indx-3][1]-m_Image[indx+5][1]));
-      f[3]=1.0/(1.0+abs(m_Image[indx+u][1]-m_Image[indx+w][1])+abs(m_Image[indx+w][1]-m_Image[indx-y][1]));
+      f[0]=1.0f/(1.0f+abs(m_Image[indx-u][1]-m_Image[indx-w][1])+abs(m_Image[indx-w][1]-m_Image[indx+y][1]));
+      f[1]=1.0f/(1.0f+abs(m_Image[indx+1][1]-m_Image[indx+3][1])+abs(m_Image[indx+3][1]-m_Image[indx-5][1]));
+      f[2]=1.0f/(1.0f+abs(m_Image[indx-1][1]-m_Image[indx-3][1])+abs(m_Image[indx-3][1]-m_Image[indx+5][1]));
+      f[3]=1.0f/(1.0f+abs(m_Image[indx+u][1]-m_Image[indx+w][1])+abs(m_Image[indx+w][1]-m_Image[indx-y][1]));
 
-      g[0]=CLIP((23*m_Image[indx-u][1]+23*m_Image[indx-w][1]+2*m_Image[indx-y][1]+8*(m_Image[indx-v][c]-m_Image[indx-x][c])+40*(m_Image[indx][c]-m_Image[indx-v][c]))/48.0);
-      g[1]=CLIP((23*m_Image[indx+1][1]+23*m_Image[indx+3][1]+2*m_Image[indx+5][1]+8*(m_Image[indx+2][c]-m_Image[indx+4][c])+40*(m_Image[indx][c]-m_Image[indx+2][c]))/48.0);
-      g[2]=CLIP((23*m_Image[indx-1][1]+23*m_Image[indx-3][1]+2*m_Image[indx-5][1]+8*(m_Image[indx-2][c]-m_Image[indx-4][c])+40*(m_Image[indx][c]-m_Image[indx-2][c]))/48.0);
-      g[3]=CLIP((23*m_Image[indx+u][1]+23*m_Image[indx+w][1]+2*m_Image[indx+y][1]+8*(m_Image[indx+v][c]-m_Image[indx+x][c])+40*(m_Image[indx][c]-m_Image[indx+v][c]))/48.0);
+      g[0]=CLIP((int32_t)((23*m_Image[indx-u][1]+23*m_Image[indx-w][1]+2*m_Image[indx-y][1]+8*(m_Image[indx-v][c]-m_Image[indx-x][c])+40*(m_Image[indx][c]-m_Image[indx-v][c]))/48.0f));
+      g[1]=CLIP((int32_t)((23*m_Image[indx+1][1]+23*m_Image[indx+3][1]+2*m_Image[indx+5][1]+8*(m_Image[indx+2][c]-m_Image[indx+4][c])+40*(m_Image[indx][c]-m_Image[indx+2][c]))/48.0f));
+      g[2]=CLIP((int32_t)((23*m_Image[indx-1][1]+23*m_Image[indx-3][1]+2*m_Image[indx-5][1]+8*(m_Image[indx-2][c]-m_Image[indx-4][c])+40*(m_Image[indx][c]-m_Image[indx-2][c]))/48.0f));
+      g[3]=CLIP((int32_t)((23*m_Image[indx+u][1]+23*m_Image[indx+w][1]+2*m_Image[indx+y][1]+8*(m_Image[indx+v][c]-m_Image[indx+x][c])+40*(m_Image[indx][c]-m_Image[indx+v][c]))/48.0f));
 
-      m_Image[indx][1]=CLIP((f[0]*g[0]+f[1]*g[1]+f[2]*g[2]+f[3]*g[3])/(f[0]+f[1]+f[2]+f[3]));
+      m_Image[indx][1]=CLIP((int32_t)((f[0]*g[0]+f[1]*g[1]+f[2]*g[2]+f[3]*g[3])/(f[0]+f[1]+f[2]+f[3])));
 
       min = MIN(m_Image[indx+1+u][1], MIN(m_Image[indx+1-u][1], MIN(m_Image[indx-1+u][1], MIN(m_Image[indx-1-u][1], MIN(m_Image[indx-1][1], MIN(m_Image[indx+1][1], MIN(m_Image[indx-u][1], m_Image[indx+u][1])))))));
 
       max = MAX(m_Image[indx+1+u][1], MAX(m_Image[indx+1-u][1], MAX(m_Image[indx-1+u][1], MAX(m_Image[indx-1-u][1], MAX(m_Image[indx-1][1], MAX(m_Image[indx+1][1], MAX(m_Image[indx-u][1], m_Image[indx+u][1])))))));
 
-      m_Image[indx][1] = ULIM(m_Image[indx][1], max, min);
+      m_Image[indx][1] = ULIM((int32_t)(m_Image[indx][1]), max, min);
     }
 }
 
@@ -434,22 +434,22 @@ void CLASS fbdd_color()
 #pragma omp for schedule(static) private(row, col, c, d, indx, f)
   for (row=3; row<m_Height-3; row++)
     for (col=3+(FC(row,1)&1),indx=row*m_Width+col,d=1-FC(row,col)/2,c=2*d; col<u-3; col+=2,indx+=2) {
-      f[0]=1.0/(1.0+abs(chroma[indx-u-1][d]-chroma[indx+u+1][d])+abs(chroma[indx-u-1][d]-chroma[indx-w-3][d])+abs(chroma[indx+u+1][d]-chroma[indx-w-3][d]));
-      f[1]=1.0/(1.0+abs(chroma[indx-u+1][d]-chroma[indx+u-1][d])+abs(chroma[indx-u+1][d]-chroma[indx-w+3][d])+abs(chroma[indx+u-1][d]-chroma[indx-w+3][d]));
-      f[2]=1.0/(1.0+abs(chroma[indx+u-1][d]-chroma[indx-u+1][d])+abs(chroma[indx+u-1][d]-chroma[indx+w+3][d])+abs(chroma[indx-u+1][d]-chroma[indx+w-3][d]));
-      f[3]=1.0/(1.0+abs(chroma[indx+u+1][d]-chroma[indx-u-1][d])+abs(chroma[indx+u+1][d]-chroma[indx+w-3][d])+abs(chroma[indx-u-1][d]-chroma[indx+w+3][d]));
+      f[0]=1.0f/(1.0f+abs(chroma[indx-u-1][d]-chroma[indx+u+1][d])+abs(chroma[indx-u-1][d]-chroma[indx-w-3][d])+abs(chroma[indx+u+1][d]-chroma[indx-w-3][d]));
+      f[1]=1.0f/(1.0f+abs(chroma[indx-u+1][d]-chroma[indx+u-1][d])+abs(chroma[indx-u+1][d]-chroma[indx-w+3][d])+abs(chroma[indx+u-1][d]-chroma[indx-w+3][d]));
+      f[2]=1.0f/(1.0f+abs(chroma[indx+u-1][d]-chroma[indx-u+1][d])+abs(chroma[indx+u-1][d]-chroma[indx+w+3][d])+abs(chroma[indx-u+1][d]-chroma[indx+w-3][d]));
+      f[3]=1.0f/(1.0f+abs(chroma[indx+u+1][d]-chroma[indx-u-1][d])+abs(chroma[indx+u+1][d]-chroma[indx+w-3][d])+abs(chroma[indx-u-1][d]-chroma[indx+w+3][d]));
       chroma[indx][d]=(f[0]*chroma[indx-u-1][d]+f[1]*chroma[indx-u+1][d]+f[2]*chroma[indx+u-1][d]+f[3]*chroma[indx+u+1][d])/(f[0]+f[1]+f[2]+f[3]);
-      m_Image[indx][c]=CLIP(chroma[indx][d]+m_Image[indx][1]);
+      m_Image[indx][c]=CLIP((int32_t)(chroma[indx][d]+m_Image[indx][1]));
     }
 #pragma omp for schedule(static) private(row, col, c, d, indx, f)
   for (row=3; row<m_Height-3; row++)
     for (col=3+(FC(row,2)&1),indx=row*m_Width+col; col<u-3; col+=2,indx+=2)
       for(c=d=0;d<=1;c+=2,d++){
-        f[0]=1.0/(1.0+abs(chroma[indx-u][d]-chroma[indx+u][d])+abs(chroma[indx-u][d]-chroma[indx-w][d])+abs(chroma[indx+u][d]-chroma[indx-w][d]));
-        f[1]=1.0/(1.0+abs(chroma[indx+1][d]-chroma[indx-1][d])+abs(chroma[indx+1][d]-chroma[indx+3][d])+abs(chroma[indx-1][d]-chroma[indx+3][d]));
-        f[2]=1.0/(1.0+abs(chroma[indx-1][d]-chroma[indx+1][d])+abs(chroma[indx-1][d]-chroma[indx-3][d])+abs(chroma[indx+1][d]-chroma[indx-3][d]));
-        f[3]=1.0/(1.0+abs(chroma[indx+u][d]-chroma[indx-u][d])+abs(chroma[indx+u][d]-chroma[indx+w][d])+abs(chroma[indx-u][d]-chroma[indx+w][d]));
-        m_Image[indx][c]=CLIP((f[0]*chroma[indx-u][d]+f[1]*chroma[indx+1][d]+f[2]*chroma[indx-1][d]+f[3]*chroma[indx+u][d])/(f[0]+f[1]+f[2]+f[3])+m_Image[indx][1]);
+        f[0]=1.0f/(1.0f+abs(chroma[indx-u][d]-chroma[indx+u][d])+abs(chroma[indx-u][d]-chroma[indx-w][d])+abs(chroma[indx+u][d]-chroma[indx-w][d]));
+        f[1]=1.0f/(1.0f+abs(chroma[indx+1][d]-chroma[indx-1][d])+abs(chroma[indx+1][d]-chroma[indx+3][d])+abs(chroma[indx-1][d]-chroma[indx+3][d]));
+        f[2]=1.0f/(1.0f+abs(chroma[indx-1][d]-chroma[indx+1][d])+abs(chroma[indx-1][d]-chroma[indx-3][d])+abs(chroma[indx+1][d]-chroma[indx-3][d]));
+        f[3]=1.0f/(1.0f+abs(chroma[indx+u][d]-chroma[indx-u][d])+abs(chroma[indx+u][d]-chroma[indx+w][d])+abs(chroma[indx-u][d]-chroma[indx+w][d]));
+        m_Image[indx][c]=CLIP((int32_t)((f[0]*chroma[indx-u][d]+f[1]*chroma[indx+1][d]+f[2]*chroma[indx-1][d]+f[3]*chroma[indx+u][d])/(f[0]+f[1]+f[2]+f[3])+m_Image[indx][1]));
       }
 } // end of parallel
   free(chroma);

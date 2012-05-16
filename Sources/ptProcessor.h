@@ -28,12 +28,11 @@
 
 #include <QString>
 #include <QTime>
-#include <QList>
+#include <QCoreApplication>
 
 #include <exiv2/exif.hpp>
 
 #include "ptDcRaw.h"
-#include "imagespot/ptImageSpotModel.h"
 
 //==============================================================================
 

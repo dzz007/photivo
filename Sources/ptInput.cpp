@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -21,16 +22,16 @@
 **
 *******************************************************************************/
 
-#include <QMessageBox>
 #include <cassert>
 
-#include "ptInput.h"
+#include <QMessageBox>
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+#include "ptInput.h"
+#include "ptInfo.h"
+#include "filters/ptCfgItem.h"
+#include "ptConstants.h"
+
+//==============================================================================
 
 ptInput::ptInput(const QWidget* MainWindow,
                  const QString  ObjectName,
@@ -46,36 +47,17 @@ ptInput::ptInput(const QWidget* MainWindow,
                  const QString  LabelText,
                  const QString  ToolTip,
                  const int      TimeOut)
-  :QWidget() {
-
+: ptWidget(nullptr),
+  m_SpinBox(nullptr)
+{
   m_Type = Minimum.type();
-
-  // Check consistency of all types.
-  if (Default.type() != m_Type ||
-      Maximum.type() != m_Type ||
-      Step.type()    != m_Type ) {
-    printf("(%s,%d) this : %s\n"
-           "Default.type() : %d\n"
-           "Minimum.type() : %d\n"
-           "Maximum.type() : %d\n"
-           "Step.type() : %d\n"
-           "m_Type : %d\n",
-           __FILE__,__LINE__,
-           ObjectName.toAscii().data(),
-           Default.type(),
-           Minimum.type(),
-           Maximum.type(),
-           Step.type(),
-           m_Type);
-    assert (Default.type() == m_Type);
-    assert (Maximum.type() == m_Type);
-    assert (Step.type()    == m_Type);
- }
+  setObjectName(ObjectName);
+  CheckTypes(Default, Minimum, Maximum, Step);
 
   m_HaveDefault = HasDefaultValue;
   m_HaveSlider = HasSlider;
+  m_DefaultValue = Default;
 
-  setObjectName(ObjectName);
   m_SettingsName = ObjectName;
   m_SettingsName.chop(5);
 
@@ -88,9 +70,58 @@ ptInput::ptInput(const QWidget* MainWindow,
   }
   setParent(m_Parent);
 
+  createGUI(Minimum, Maximum, Step, Decimals, ToolTip, LabelText, ColorSetting, TimeOut);
+}
+
+//==============================================================================
+
+ptInput::ptInput(const ptCfgItem &ACfgItem, QWidget *AParent)
+: ptWidget(AParent),
+  m_SpinBox(nullptr)
+{
+  init(ACfgItem);
+}
+
+//==============================================================================
+
+ptInput::ptInput(QWidget *AParent)
+: ptWidget(AParent),
+  m_SpinBox(nullptr)
+{}
+
+//==============================================================================
+
+void ptInput::init(const ptCfgItem &ACfgItem) {
+  GInfo->Assert(this->parent(), "Parent cannot be null.", AT);
+  GInfo->Assert(!m_SpinBox, "Trying to initialize an already initalized input widget.", AT);
+  if (!(ACfgItem.Type == ptCfgItem::SpinEdit || ACfgItem.Type == ptCfgItem::Slider ||
+        ACfgItem.Type == ptCfgItem::HueSlider))
+  {
+    GInfo->Raise(QString("Wrong GUI type (%1). Must be a spin edit or slider.").arg(ACfgItem.Type), AT);
+  }
+
+  FIsNewSchool    = true;
+  m_Type          = ACfgItem.Min.type();
+  m_HaveDefault   = true;
+  m_HaveSlider    = (ACfgItem.Type == ptCfgItem::Slider) || (ACfgItem.Type == ptCfgItem::HueSlider);
+  m_SettingsName  = "";  // not used
+  m_Parent        = this;
+  m_DefaultValue  = ACfgItem.Default;
+
+  this->setObjectName(ACfgItem.Id);
+  CheckTypes(ACfgItem.Default, ACfgItem.Min, ACfgItem.Max, ACfgItem.StepSize);
+  createGUI(ACfgItem.Min, ACfgItem.Max, ACfgItem.StepSize, ACfgItem.Decimals,
+            ACfgItem.ToolTip, ACfgItem.Caption, (ACfgItem.Type == ptCfgItem::HueSlider),
+            ptTimeout_Input);
+}
+
+//==============================================================================
+
+void ptInput::createGUI(const QVariant &Minimum, const QVariant &Maximum, const QVariant &Step,
+                        const int Decimals, const QString &ToolTip, const QString &LabelText,
+                        const short ColorSetting, const int TimeOut)
+{
   QHBoxLayout *Layout = new QHBoxLayout(m_Parent);
-  //~ Layout->setContentsMargins(2,2,2,2);
-  //~ Layout->setMargin(2);
   m_Parent->setLayout(Layout);
 
   if (m_Type == QVariant::Int) {
@@ -116,7 +147,8 @@ ptInput::ptInput(const QWidget* MainWindow,
   m_SpinBox->installEventFilter(this);
   m_SpinBox->setFocusPolicy(Qt::ClickFocus);
 
-  m_Slider = new ptSlider(m_Parent, LabelText, ToolTip, m_Type, Minimum, Maximum, Default, Step, Decimals);
+  m_Slider = new ptSlider(m_Parent, LabelText, ToolTip, m_Type, Minimum, Maximum, m_DefaultValue,
+                          Step, Decimals);
   m_Slider->setMinimumWidth(120);
 //  m_Slider->setMaximumWidth(250);
   m_Slider->installEventFilter(this);
@@ -128,7 +160,6 @@ ptInput::ptInput(const QWidget* MainWindow,
   m_Label->setTextInteractionFlags(Qt::NoTextInteraction);
   m_Label->installEventFilter(this);
 
-  //~ Layout->addWidget(m_Button);
   Layout->addWidget(m_SpinBox);
 
   QVBoxLayout *colorLayout=NULL;
@@ -143,20 +174,19 @@ ptInput::ptInput(const QWidget* MainWindow,
     colorLayout->setContentsMargins(0,0,0,0);
     colorLayout->setMargin(0);
     colorLayout->setSpacing(0);
-  }
-  else
+  } else {
     Layout->addWidget(m_Slider);
+  }
 
   Layout->addWidget(m_Label);
   Layout->setContentsMargins(0,0,0,0);
   Layout->setMargin(0);
 
-  if (HasSlider) {
+  if (m_HaveSlider) {
     m_SpinBox->hide();
     m_Label->hide();
     Layout->setAlignment(Qt::AlignLeft);
-  }
-  else {
+  } else {
     m_Slider->hide();
     Layout->addStretch(1);
     Layout->setSpacing(2);
@@ -164,7 +194,7 @@ ptInput::ptInput(const QWidget* MainWindow,
 
   // A timer for time filtering signals going outside.
   // Bad coding but fun ;-) (mike)
-  if (ObjectName == "CropExposureInput")
+  if (this->objectName() == "CropExposureInput")
     m_TimeOut = 5;
   else
     m_TimeOut = TimeOut;
@@ -185,34 +215,40 @@ ptInput::ptInput(const QWidget* MainWindow,
     connect(m_SpinBox,SIGNAL(valueChanged(double)),
             this,SLOT(OnSpinBoxChanged(double)));
   }
-  //~ connect(m_Button,SIGNAL(clicked()),
-          //~ this,SLOT(OnButtonClicked()));
   connect(m_Slider,SIGNAL(valueChanged(QVariant)),
           this,SLOT(OnSliderChanged(QVariant)));
   connect(m_SpinBox,SIGNAL(editingFinished()),
           this,SLOT(EditingFinished()));
 
   // Set the default Value (and remember for later).
-  m_DefaultValue = Default;
-  SetValue(Default,1 /* block signals */);
+  SetValue(m_DefaultValue,1 /* block signals */);
   m_Emited = 1;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetValue
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
+ptInput::~ptInput() {
+  /* nothing to do here*/
+}
+
+//==============================================================================
+
+void ptInput::setValue(const QVariant &AValue) {
+  this->SetValue(AValue, 1);
+}
+
+//==============================================================================
 
 void ptInput::SetValue(const QVariant Value,
-                       const short    BlockSignal) {
-
+                       const short    BlockSignal)
+{
   // Hack for QT 4.6 update:
   // QVariant has now a new implicit constructor that takes a float. This
   // means that code that assigned a float to a variant would create a
   // variant with userType QMetaType::Float, instead of QVariant::Double.
   QVariant TempValue = Value;
-  if (static_cast<QMetaType::Type>(TempValue.type()) == QMetaType::Float) TempValue.convert(QVariant::Double);
+  if (static_cast<QMetaType::Type>(TempValue.type()) == QMetaType::Float)
+    TempValue.convert(QVariant::Double);
 
   // For the double->int implication , I don't want to use canConvert.
   if ( (TempValue.type() == QVariant::Double && m_Type == QVariant::Int)  ||
@@ -221,11 +257,12 @@ void ptInput::SetValue(const QVariant Value,
        (TempValue.type() != QVariant::Int  &&
         TempValue.type() != QVariant::UInt &&
         TempValue.type() != QVariant::Double) ) {
-    printf("(%s,%d) this : %s Value.type() : %d m_Type : %d\n",
+    printf("(%s,%d) this : %s Value.type() : %d m_Type : %d value : %s\n",
            __FILE__,__LINE__,
            this->objectName().toAscii().data(),
            TempValue.type(),
-           m_Type);
+           m_Type,
+           TempValue.toString().toAscii().data());
     assert(TempValue.type() == m_Type);
   }
 
@@ -251,14 +288,9 @@ void ptInput::SetValue(const QVariant Value,
   m_Slider->blockSignals(0);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetMinimum
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptInput::SetMinimum(const QVariant Value) {
-
   if (Value.type() != m_Type) {
     printf("(%s,%d) this : %s Value.type() : %d m_Type : %d\n",
            __FILE__,__LINE__,
@@ -279,14 +311,9 @@ void ptInput::SetMinimum(const QVariant Value) {
   m_Slider->SetMinimum(Value);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetMaximum
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptInput::SetMaximum(const QVariant Value) {
-
   if (Value.type() != m_Type) {
     printf("(%s,%d) this : %s Value.type() : %d m_Type : %d\n",
            __FILE__,__LINE__,
@@ -307,33 +334,20 @@ void ptInput::SetMaximum(const QVariant Value) {
   m_Slider->SetMaximum(Value);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetEnabled
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptInput::SetEnabled(const short Enabled) {
   m_SpinBox->setEnabled(Enabled);
   m_Slider->setEnabled(Enabled);
-  //~ m_Button->setEnabled(Enabled);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Show
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptInput::Show(const short Show) {
   m_Parent->setVisible(Show);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Reset
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptInput::Reset() {
   m_SpinBox->clearFocus();
@@ -341,13 +355,9 @@ void ptInput::Reset() {
   SetValue(m_DefaultValue,0 /* Generate signal */);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// OnSpinBoxChanged
-// Set the slider. Int and Double variant.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
+// Set the slider. Int and Double variant.
 void ptInput::OnSpinBoxChanged(int Value) {
   QSpinBox* IntSpinBox = qobject_cast <QSpinBox *> (m_SpinBox);
   m_Slider->blockSignals(true);
@@ -358,6 +368,8 @@ void ptInput::OnSpinBoxChanged(int Value) {
   m_Value = Value;
   OnValueChanged(Value);
 }
+
+//==============================================================================
 
 void ptInput::OnSpinBoxChanged(double Value) {
   QDoubleSpinBox* DoubleSpinBox = qobject_cast <QDoubleSpinBox *> (m_SpinBox);
@@ -370,12 +382,9 @@ void ptInput::OnSpinBoxChanged(double Value) {
   OnValueChanged(Value);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// OnSliderChanged
+//==============================================================================
+
 // Set the spinbox.
-//
-////////////////////////////////////////////////////////////////////////////////
 /*
 void ptInput::OnSliderChanged(int Value) {
   if (m_Type == QVariant::Int) {
@@ -416,25 +425,15 @@ void ptInput::OnSliderChanged(QVariant Value) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// OnButtonClicked
-// Reset to the defaults.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
+// Reset to the defaults.
 void ptInput::OnButtonClicked() {
   m_SpinBox->clearFocus();
   SetValue(m_DefaultValue,0 /* Generate signal */);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// OnValueChanged
-// Int and Double variant.
-// Translate to an 'external' signal, maybe after time filtering.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptInput::EditingFinished() {
   if (m_Emited == 0) {
@@ -442,6 +441,7 @@ void ptInput::EditingFinished() {
   }
 }
 
+//==============================================================================
 
 void ptInput::OnValueChanged(int Value) {
   m_Emited = 0;
@@ -457,6 +457,8 @@ void ptInput::OnValueChanged(int Value) {
   }
 }
 
+//==============================================================================
+
 void ptInput::OnValueChanged(double Value) {
   m_Emited = 0;
   m_Value = QVariant(Value);
@@ -471,23 +473,26 @@ void ptInput::OnValueChanged(double Value) {
   }
 }
 
+//==============================================================================
+
 void ptInput::OnValueChangedTimerExpired() {
   if (m_Emited == 0) {
     if (m_Type == QVariant::Int)
-      printf("(%s,%d) emiting signal(%d)\n",__FILE__,__LINE__,m_Value.toInt());
+      printf("(%s,%d) emitting signal(%d)\n",__FILE__,__LINE__,m_Value.toInt());
     if (m_Type == QVariant::Double)
-      printf("(%s,%d) emiting signal(%f)\n",__FILE__,__LINE__,m_Value.toDouble());
-    emit(valueChanged(m_Value));
+      printf("(%s,%d) emitting signal(%f)\n",__FILE__,__LINE__,m_Value.toDouble());
+
+    if (FIsNewSchool){
+      emit ptWidget::valueChanged(this->objectName(), m_Value);
+    } else {
+      emit this->valueChanged(m_Value);
+    }
   }
   m_Emited = 1;
   m_SpinBox->clearFocus();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Event filter
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 bool ptInput::eventFilter(QObject *obj, QEvent *event)
 {
@@ -495,31 +500,52 @@ bool ptInput::eventFilter(QObject *obj, QEvent *event)
     if (m_HaveDefault && m_SpinBox->isEnabled() && !m_HaveSlider)
       OnButtonClicked();
     return true;
+
   } else if (0 && ((QMouseEvent*) event)->button()==Qt::RightButton) {
     if (m_HaveDefault)
       OnButtonClicked();
     return true;
+
   } else if (event->type() == QEvent::Wheel
-             && ((QMouseEvent*)event)->modifiers()==Qt::AltModifier) {
-    QApplication::sendEvent(m_Parent, event);
+             && ((QMouseEvent*)event)->modifiers()==Qt::AltModifier)
+  {
+    // send Alt+Wheel to parent
+    if (FIsNewSchool)
+      QApplication::sendEvent(this->parentWidget(), event);
+    else
+      QApplication::sendEvent(m_Parent, event);
     return true;
+
   } else {
     // pass the event on to the parent class
-    return QObject::eventFilter(obj, event);
+    return ptWidget::eventFilter(obj, event);
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
-ptInput::~ptInput() {
-  //printf("(%s,%d) %s this:%p name:%s\n",
-  //       __FILE__,__LINE__,__PRETTY_FUNCTION__,
-  //       this,objectName().toAscii().data());
-  // Do not remove what is handled by Parent !
+void ptInput::CheckTypes(const QVariant &Default, const QVariant &Minimum, const QVariant &Maximum, const QVariant &Step) {
+  // Check consistency of all types.
+  if (Default.type() != m_Type ||
+      Maximum.type() != m_Type ||
+      Step.type()    != m_Type ) {
+    printf("(%s,%d) this : %s\n"
+           "Default.type() : %d\n"
+           "Minimum.type() : %d\n"
+           "Maximum.type() : %d\n"
+           "Step.type() : %d\n"
+           "m_Type : %d\n",
+           __FILE__,__LINE__,
+           objectName().toAscii().data(),
+           Default.type(),
+           Minimum.type(),
+           Maximum.type(),
+           Step.type(),
+           m_Type);
+    assert (Default.type() == m_Type);
+    assert (Maximum.type() == m_Type);
+    assert (Step.type()    == m_Type);
+  }
 }
 
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================

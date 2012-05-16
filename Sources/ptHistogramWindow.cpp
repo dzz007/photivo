@@ -51,14 +51,12 @@ using namespace std;
 
 ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
                                            QWidget* Parent)
-  :QWidget(NULL) {
-
+: QWidget(nullptr)
+{
   m_RelatedImage = RelatedImage; // don't delete that at cleanup !
   // Some other dynamic members we want to have clean.
   m_QPixmap      = NULL;
   m_Image8       = NULL;
-
-  m_LogoActive   = 1;
 
   m_PreviousHistogramGamma = -1;
   m_PreviousHistogramLogX  = -1;
@@ -180,7 +178,6 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptHistogramWindow::~ptHistogramWindow() {
-  //printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
   delete m_QPixmap;
   delete m_Image8;
   delete m_LookUp;
@@ -498,9 +495,7 @@ void ptHistogramWindow::UpdateView(const ptImage* NewRelatedImage) {
                              m_Image8->m_Width,
                              m_Image8->m_Height,
                              QImage::Format_RGB32)));
-  m_LogoActive = 0;
   repaint();
-
 }
 
 
@@ -513,30 +508,9 @@ void ptHistogramWindow::UpdateView(const ptImage* NewRelatedImage) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptHistogramWindow::paintEvent(QPaintEvent*) {
-  //printf("(%s,%d) %s - Size : (%d,%d)\n",
-  //       __FILE__,__LINE__,__PRETTY_FUNCTION__,width(),height());
   QPainter Painter(this);
-  Painter.save();
-//  if (!m_QPixmap) {
-//    QString FileName = Settings->GetString("UserDirectory") + "photivoLogo.png";
-//    m_QPixmap = new QPixmap(FileName);
-//    QPixmap* Scaled = new QPixmap(
-//      m_QPixmap->scaled(width()-16,
-//                        height()-16,
-//                        Qt::KeepAspectRatio,
-//                        Qt::SmoothTransformation));
-//    delete m_QPixmap;
-//    m_QPixmap = Scaled;
-//  }
-
-//  if (m_LogoActive) {
-//    Painter.drawPixmap((width()-m_QPixmap->width())/2,8,*m_QPixmap);
-//    Painter.restore();
-//  } else {
-  if (!m_LogoActive) {
+  if (m_QPixmap)
     Painter.drawPixmap(0,0,*m_QPixmap);
-    Painter.restore();
-  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -558,11 +532,6 @@ void ptHistogramWindow::contextMenuEvent(QContextMenuEvent *event)
   ChannelMenu.addAction(m_AtnG);
   ChannelMenu.addAction(m_AtnB);
   ChannelMenu.setTitle(tr("Display &channels"));
-  // TODO Check for ActiveTab == a LAB tab
-  //~ if (Settings->GetInt("HistogramMode")==ptHistogramMode_Linear)
-    //~ ChannelMenu.setEnabled(0);
-  //~ else
-    //~ ChannelMenu.setEnabled(1);
   QMenu ModeMenu(this);
   ModeMenu.setPalette(Theme->menuPalette());
   ModeMenu.setStyle(Theme->style());

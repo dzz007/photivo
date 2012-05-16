@@ -63,9 +63,10 @@ void CLASS amaze_demosaic() {
 #define SQR(x) ((x)*(x))
   //#define MIN(a,b) ((a) < (b) ? (a) : (b))
   //#define MAX(a,b) ((a) > (b) ? (a) : (b))
-#define LIM(x,min,max) MAX(min,MIN(x,max))
+//#define LIM(x,min,max) MAX(min,MIN(x,max))
 #define ULIM(x,y,z) ((y) < (z) ? LIM(x,y,z) : LIM(x,z,y))
   //#define CLIP(x) LIM(x,0,65535)
+
 
 #define ridata(x,y) m_Image[(x)*width+(y)][c]
 
@@ -653,8 +654,8 @@ void CLASS amaze_demosaic() {
               }
 
             //horizontal and vertical color differences, and adaptive weight
-            hcdvar=epssq+MAX(0, areawt*sumsqh-sumh*sumh);
-            vcdvar=epssq+MAX(0, areawt*sumsqv-sumv*sumv);
+            hcdvar=epssq+MAX(0.f, areawt*sumsqh-sumh*sumh);
+            vcdvar=epssq+MAX(0.f, areawt*sumsqv-sumv*sumv);
             hvwt[indx]=hcdvar/(vcdvar+hcdvar);
 
             // end of area interpolation
