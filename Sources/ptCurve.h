@@ -197,6 +197,15 @@ private:
   QString             FFileName;  // only used for the FullPrecalc curve type
 
 
+  TAnchorList         FAnchors;
+  TAnchorList         FNullAnchors;
+  TType               FCurveType;   // use setCurveType() to change it
+  TMask               FCurrentMask;
+  TMasks              FSupportedMasks;
+  TInterpolation      FInterpolType;
+  QString             FFileName;  // only used for the FullPrecalc curve type
+
+
 public:
   /*! 'Sigmoidal' function operating in the (0,0)(1,1) box. */
   static double Sigmoidal(double r, double Threshold, double Contrast);

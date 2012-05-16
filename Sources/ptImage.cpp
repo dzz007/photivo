@@ -27,6 +27,8 @@
 
 // std stuff needs to be declared apparently for jpeglib
 // which seems a bug in the jpeglib header ?
+#include <algorithm>
+#include <parallel/algorithm>
 #include <cstdlib>
 #include <cstdio>
 
@@ -4907,9 +4909,9 @@ float *ptImage::GetMask(const short MaskType,
          break;
     }
     if (Soft>1.0) {
-      MaskTable[i] = LIM(pow(MaskTable[i]/(float)0xffff,Soft),0.0,1.0);
+      MaskTable[i] = LIM(powf(MaskTable[i]/(float)0xffff,Soft),0.0f,1.0f);
     } else {
-      MaskTable[i] = LIM(MaskTable[i]/(float)0xffff/Soft,0.0,1.0);
+      MaskTable[i] = LIM(MaskTable[i]/(float)0xffff/(float)Soft,0.0f,1.0f);
     }
     FactorRTable[i] = i*FactorR;
     FactorGTable[i] = i*FactorG;
@@ -6029,6 +6031,49 @@ static void hat_transform (float *temp, float *base, int st, int size, int sc) {
   for (; i < size; i++)
     temp[i] = 2 * base[st * i] + base[st * (i - sc)]
         + base[st * (2 * size - 2 - (i + sc))];
+}
+
+TAnchorList ptImage::createAmpAnchors(const double Amount,
+                                               const double HaloControl)
+{
+// TODO: mike: Anpassen der Verstärkungskurve an den Sigmoidalen Kontrast.
+// Der Berech mit Halocontrol soll linear sein, der andere sigmoidal.
+// Wichtig ist, dass bei kleinen Werten der Halocontrol im schwächeren Bereich
+// keine Verstärkung auftritt, da evtl die Ableitung der sigmoidalen Kurve
+// schwächer ist, als bei der linearen Kurve.
+// Anpassen bei allen Filtern, die dieses Verfahren benutzen.
+
+  const double  t     = (1.0 - Amount)/2;
+  const double  mHC   = Amount*(1.0-fabs(HaloControl)); // m with HaloControl
+  const double  tHC   = (1.0 - mHC)/2; // t with HaloControl
+  const int     Steps = 20;
+
+  TAnchorList hAnchors;
+  for (int i = 0; i<= Steps; i++) {
+    auto x = (float)i/(float)Steps;
+    float YAnchor = 0;
+    if (x < 0.5) {
+      if (HaloControl > 0) YAnchor=mHC*x+tHC;
+      else                 YAnchor=Amount*x+t;
+    } else if (x > 0.5) {
+      if (HaloControl < 0) YAnchor=mHC*x+tHC;
+      else                 YAnchor=Amount*x+t;
+    } else {
+      YAnchor=0.5;
+    }
+    hAnchors.push_back(TAnchor(x, YAnchor));
+  }
+  return hAnchors;
+}
+
+void ptImage::setCurrentRGB(const short ARGB)
+{
+  CurrentRGBMode = ARGB;
+}
+
+short ptImage::getCurrentRGB()
+{
+  return CurrentRGBMode;
 }
 
 TAnchorList ptImage::createAmpAnchors(const double Amount,
