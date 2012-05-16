@@ -863,7 +863,6 @@ int photivoMain(int Argc, char *Argv[]) {
 
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
 
-  // TODO: BJ: really only curve related?
   MainWindow->UpdateToolBoxes();
 
 
@@ -1326,12 +1325,6 @@ int GetProcessorPhase(const QString GuiName) {
                   MainWindow->m_GroupBox->value(GuiName)->parentTabIdx() )->objectName();
   if      (Tab == "LocalTab")       Phase = ptProcessorPhase_LocalEdit;
   else if (Tab == "GeometryTab")    Phase = ptProcessorPhase_Geometry;
-//    Tab = MainWindow->ProcessingTabBook->findChild<QWidget*>(
-//            GFilterDM->GetFilterFromName(GuiName)->uniqueName() )->objectName();
-//  } else {
-//    Tab = MainWindow->m_GroupBox->value(GuiName)->GetTabName();
-//  }
-
   else if (Tab == "RGBTab")         Phase = ptProcessorPhase_RGB;
   else if (Tab == "LabCCTab")       Phase = ptProcessorPhase_LabCC;
   else if (Tab == "LabSNTab")       Phase = ptProcessorPhase_LabSN;
@@ -5397,14 +5390,6 @@ void CB_ColorEnhanceHighlightsInput(const QVariant Value) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-  if (Channel == ptCurveChannel_SpotLuma) {
-    if (!InStartup) {
-      MainWindow->LocalSpotListView->UpdatePreview();
-    }
-
-  } else {
-    // Exclude spot curve that does not appear in ptSettings.
-}
 // Callbacks pertaining to the RGB Tab
 // Local Exposure
 //

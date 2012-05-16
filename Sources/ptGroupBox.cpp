@@ -299,7 +299,6 @@ void ptGroupBox::WriteSettings(const short Append) {
     hWhichSpotGroup = 2;
 
   QStringList Keys;
-  if (hWhichSpotGroup == 0) {
     QList <ptInput *> Inputs = findChildren <ptInput *> ();
     for (int i = 0; i < Inputs.size(); i++) {
       Keys << (Inputs.at(i))->GetName();
@@ -400,7 +399,6 @@ void ptGroupBox::WriteSettings(const short Append) {
       JobSettings.setValue(Key,Settings->GetValue(Key));
     }
 
-  }
 
 
   JobSettings.sync();
