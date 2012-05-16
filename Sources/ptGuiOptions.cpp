@@ -410,15 +410,6 @@ const ptGuiOptionsItem ptGuiOptions::OutlineMode[] = {
 //  {ptOverlayMode_Overlay,           QObject::tr("Overlay") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::OutlineGradientMode[] = {
-  {ptGradientMode_Backward,         QObject::tr("Backward finite differences") },
-  {ptGradientMode_Centered,         QObject::tr("Centered finite differences") },
-  {ptGradientMode_Forward,          QObject::tr("Forward finite differences") },
-  {ptGradientMode_Sobel,            QObject::tr("Sobel masks") },
-  {ptGradientMode_RotInv,           QObject::tr("Rotation invariant masks") },
-  {ptGradientMode_Deriche,          QObject::tr("Deriche recursive filter") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::OverlayMaskMode[] = {
   {ptOverlayMaskMode_FullImage,     QObject::tr("Full image") },
   {ptOverlayMaskMode_Vignette,      QObject::tr("Vignette") },
@@ -499,11 +490,6 @@ const ptGuiOptionsItem ptGuiOptions::AutoExposureMode[] = {
 const ptGuiOptionsItem ptGuiOptions::ChannelMixer[] = {
   {ptChannelMixerChoice_None,    QObject::tr("None") },
   {ptChannelMixerChoice_Manual,  QObject::tr("Manual") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::Curve[] = {
-  {ptCurveChoice_None,    QObject::tr("None") },
-  {ptCurveChoice_Manual,  QObject::tr("Manual") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::SpecialPreview[] = {
