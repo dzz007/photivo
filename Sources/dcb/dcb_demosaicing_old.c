@@ -58,8 +58,8 @@ void CLASS dcb_pp_old()
       g1 = ( pix[-1][1] + pix[1][1] + pix[-u][1] + pix[u][1] + pix[-u-1][1] + pix[+u+1][1] + pix[-u+1][1] + pix[+u-1][1])/8.0;
       b1 = ( pix[-1][2] + pix[1][2] + pix[-u][2] + pix[u][2] + pix[-u-1][2] + pix[+u+1][2] + pix[-u+1][2] + pix[+u-1][2])/8.0;
 
-      m_Image[indx][0] = CLIP(r1 + ( pix[0][1] - g1 ));
-      m_Image[indx][2] = CLIP(b1 + ( pix[0][1] - g1 ));
+      m_Image[indx][0] = CLIP((int32_t)(r1 + ( pix[0][1] - g1 )));
+      m_Image[indx][2] = CLIP((int32_t)(b1 + ( pix[0][1] - g1 )));
     }
   }
 }
@@ -106,8 +106,8 @@ void CLASS hid_old()
       if(c != 1)
       {
         pix=m_Image+row*u+col;
-        m_Image[row*u+col][1] = CLIP((pix[u][1] + pix[-u][1] + pix[-1][1] + pix[1][1])/4.0 +
-                 (pix[0][c] - ( pix[v][c] + pix[-v][c] + pix[-2][c] + pix[2][c])/4.0)/2.0);
+        m_Image[row*u+col][1] = CLIP((int32_t)((pix[u][1] + pix[-u][1] + pix[-1][1] + pix[1][1])/4.0f +
+                 (pix[0][c] - ( pix[v][c] + pix[-v][c] + pix[-2][c] + pix[2][c])/4.0f)/2.0f));
       }
 
     }
@@ -132,8 +132,8 @@ void CLASS hid2_old()
     if (c != 1)
     {
       pix=m_Image+row*u+col;
-      m_Image[row*u+col][1] = CLIP((pix[v][1] + pix[-v][1] + pix[-2][1] + pix[2][1])/4.0 +
-                pix[0][c] - ( pix[v][c] + pix[-v][c] + pix[-2][c] + pix[2][c])/4.0);
+      m_Image[row*u+col][1] = CLIP((int32_t)((pix[v][1] + pix[-v][1] + pix[-2][1] + pix[2][1])/4.0f +
+                pix[0][c] - ( pix[v][c] + pix[-v][c] + pix[-2][c] + pix[2][c])/4.0f));
       }
 
   }
@@ -152,18 +152,18 @@ void CLASS dcb_color_old()
     for (col=1+(FC(row,1) & 1), c=2-FC(row,col),d=2-c; col < u-1; col+=2) {
       pix=m_Image+row*u+col;
 
-      m_Image[row*u+col][c] = CLIP((
+      m_Image[row*u+col][c] = CLIP((int32_t)((
       4*pix[0][1]
       - pix[+u+1][1] - pix[+u-1][1] - pix[-u+1][1] - pix[-u-1][1]
-      + pix[+u+1][c] + pix[+u-1][c] + pix[-u+1][c] + pix[-u-1][c] )/4.0);
+      + pix[+u+1][c] + pix[+u-1][c] + pix[-u+1][c] + pix[-u-1][c] )/4.0f));
     }
 
   for (row=1; row<m_Height-1; row++)
     for (col=1+(FC(row,2)&1),c=FC(row,col+1),d=2-c; col<m_Width-1; col+=2) {
       pix=m_Image+row*u+col;
 
-      pix[0][c] = CLIP((2*pix[0][1] - pix[1][1] - pix[-1][1] + pix[1][c] + pix[-1][c])/2.0);
-      pix[0][d] = CLIP((2*pix[0][1] - pix[u][1] - pix[-u][1] + pix[u][d] + pix[-u][d])/2.0);
+      pix[0][c] = CLIP((int32_t)((2*pix[0][1] - pix[1][1] - pix[-1][1] + pix[1][c] + pix[-1][c])/2.0f));
+      pix[0][d] = CLIP((int32_t)((2*pix[0][1] - pix[u][1] - pix[-u][1] + pix[u][d] + pix[-u][d])/2.0f));
     }
 }
 
@@ -186,7 +186,7 @@ void CLASS dcb_map_old()
     pix=m_Image+indx;
 
 
-    if (pix[0][1] > ( pix[-1][1] + pix[1][1] + pix[-u][1] + pix[u][1])/4.0)
+    if (pix[0][1] > ( pix[-1][1] + pix[1][1] + pix[-u][1] + pix[u][1])/4.0f)
       pix[0][3] = ((MIN( pix[-1][1], pix[1][1]) + pix[-1][1] + pix[1][1] ) < (MIN( pix[-u][1], pix[u][1]) + pix[-u][1] + pix[u][1]));
     else
       pix[0][3] = ((MAX( pix[-1][1], pix[1][1]) + pix[-1][1] + pix[1][1] ) > (MAX( pix[-u][1], pix[u][1]) + pix[-u][1] + pix[u][1])) ;
@@ -213,7 +213,7 @@ void CLASS dcb_map2_old()
     pix=m_Image+indx;
 
 
-    if (pix[0][1] > ( pix[-1][1] + pix[1][1] + pix[-u][1] + pix[u][1])/4.0)
+    if (pix[0][1] > ( pix[-1][1] + pix[1][1] + pix[-u][1] + pix[u][1])/4.0f)
       pix[0][3] = ((MIN( pix[-1][1], pix[1][1]) + pix[-1][1] + pix[1][1] +
               MIN( pix[-1][0], pix[1][0]) + pix[-1][0] + pix[1][0] +
               MIN( pix[-1][2], pix[1][2]) + pix[-1][2] + pix[1][2]) <
@@ -256,7 +256,7 @@ void CLASS dcb_correction_old()
               2*(pix[u][3] + pix[-u][3] + pix[1][3] + pix[-1][3]) +
               pix[v][3] + pix[-v][3] + pix[2][3] + pix[-2][3];
 
-      pix[0][1] = ((16-current)*(pix[-1][1] + pix[1][1])/2.0 + current*(pix[-u][1] + pix[u][1])/2.0)/16.0;
+      pix[0][1] = ((16-current)*(pix[-1][1] + pix[1][1])/2.0f + current*(pix[-u][1] + pix[u][1])/2.0f)/16.0f;
     }
 
   }
@@ -290,7 +290,7 @@ void CLASS dcb_correction2_old()
               2*(pix[u][3] + pix[-u][3] + pix[1][3] + pix[-1][3]) +
               pix[v][3] + pix[-v][3] + pix[2][3] + pix[-2][3];
 
-      pix[0][1] = CLIP(((16-current)*((pix[-1][1] + pix[1][1])/2.0 + pix[0][c] - (pix[2][c] + pix[-2][c])/2.0) + current*((pix[-u][1] + pix[u][1])/2.0 + pix[0][c] - (pix[v][c] + pix[-v][c])/2.0))/16.0);
+      pix[0][1] = CLIP((int32_t)(((16-current)*((pix[-1][1] + pix[1][1])/2.0f + pix[0][c] - (pix[2][c] + pix[-2][c])/2.0f) + current*((pix[-u][1] + pix[u][1])/2.0f + pix[0][c] - (pix[v][c] + pix[-v][c])/2.0f))/16.0f));
     }
 
   }
@@ -323,17 +323,17 @@ void CLASS dcb_correction3_old()
             m_Image[(row+2)*m_Width+col][3] + m_Image[(row-2)*m_Width+col][3] + m_Image[row*m_Width+col+2][3] + m_Image[row*m_Width+col-2][3];
 
       if (current > 7)
-        m_Image[indx][1] = CLIP(((16-current)*(m_Image[row*m_Width+col-1][1] + m_Image[row*m_Width+col+1][1])/2.0 +
-                       current*(m_Image[(row-1)*m_Width+col][1] + m_Image[(row+1)*m_Width+col][1])/2.0)/16.0 +
-                       LIM((m_Image[indx][c] - (m_Image[indx-v][c] + m_Image[indx+v][c])/2.0)/2.0,
+        m_Image[indx][1] = CLIP((int32_t)(((16-current)*(m_Image[row*m_Width+col-1][1] + m_Image[row*m_Width+col+1][1])/2.0f +
+                       current*(m_Image[(row-1)*m_Width+col][1] + m_Image[(row+1)*m_Width+col][1])/2.0f)/16.0f +
+                       LIM((int32_t)((m_Image[indx][c] - (m_Image[indx-v][c] + m_Image[indx+v][c])/2.0f)/2.0f),
                        -MIN(ABS(m_Image[indx-u][1] - m_Image[indx+u][1]), ABS(m_Image[indx-u][c] + m_Image[indx+u][c])),
-                      MIN(ABS(m_Image[indx-u][1] - m_Image[indx+u][1]), ABS(m_Image[indx-u][c] + m_Image[indx+u][c])) ));
+                      MIN(ABS(m_Image[indx-u][1] - m_Image[indx+u][1]), ABS(m_Image[indx-u][c] + m_Image[indx+u][c])) )));
       else
-        m_Image[indx][1] = CLIP(((16-current)*(m_Image[row*m_Width+col-1][1] + m_Image[row*m_Width+col+1][1])/2.0 +
-                       current*(m_Image[(row-1)*m_Width+col][1] + m_Image[(row+1)*m_Width+col][1])/2.0)/16.0 +
-                       LIM((m_Image[indx][c] - (m_Image[indx-2][c] + m_Image[indx+2][c])/2.0)/2.0,
+        m_Image[indx][1] = CLIP((int32_t)(((16-current)*(m_Image[row*m_Width+col-1][1] + m_Image[row*m_Width+col+1][1])/2.0f +
+                       current*(m_Image[(row-1)*m_Width+col][1] + m_Image[(row+1)*m_Width+col][1])/2.0f)/16.0f +
+                       LIM((int32_t)((m_Image[indx][c] - (m_Image[indx-2][c] + m_Image[indx+2][c])/2.0f)/2.0f),
                       -MIN(ABS(m_Image[indx-1][1] - m_Image[indx+1][1]), ABS(m_Image[indx-1][c] + m_Image[indx+1][c])),
-                       MIN(ABS(m_Image[indx-1][1] - m_Image[indx+1][1]), ABS(m_Image[indx-1][c] + m_Image[indx+1][c])) ));
+                       MIN(ABS(m_Image[indx-1][1] - m_Image[indx+1][1]), ABS(m_Image[indx-1][c] + m_Image[indx+1][c])) )));
       }
   }
   }

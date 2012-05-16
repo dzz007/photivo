@@ -3,7 +3,8 @@
 ** Photivo
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2010-2012 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -21,562 +22,428 @@
 **
 *******************************************************************************/
 
-#include <cstring>
-#include <cstdio>
-#include <cstdlib>
-#include <cassert>
+#include <array>
 #include <cmath>
 
-#include "ptDefines.h"
+#include <QFile>
+#include <QTextStream>
+
 #include "ptCalloc.h"
-#include "ptCurve.h"
-#include "ptImage.h"
 #include "ptError.h"
+#include "ptCurve.h"
+#include "ptInfo.h"
+#include "ptConstants.h"
+#include "ptMessageBox.h"
 
 //==============================================================================
 
-ptCurve::ptCurve(const short Channel) {
-  if (Channel == ptCurveChannel_Saturation ||
-      Channel == ptCurveChannel_LByHue ||
-      Channel == ptCurveChannel_Texture ||
-      Channel == ptCurveChannel_Denoise ||
-      Channel == ptCurveChannel_Denoise2 ||
-      Channel == ptCurveChannel_Hue)
-    m_IntType = ptCurveIT_Cosine;
-  else
-    m_IntType = ptCurveIT_Spline;
-
-  SetNullCurve(Channel);
+ptCurve::ptCurve(const TAnchorList    &ANullAnchors,
+                 const TMasks         &ASupportedMasks,
+                 const TMask          &ACurrentMask,
+                 const TInterpolation &AInterpolType)
+: FCurveType(AnchorType),
+  FCurrentMask(ACurrentMask),
+  FSupportedMasks(ASupportedMasks),
+  FInterpolType(AInterpolType)
+{
+  setNullCurve(ANullAnchors);  // setNullCurve() might change the anchor list.
+  FAnchors = FNullAnchors;     // Use FNullAnchors from this point on, never ANullAnchors!
+  calcCurve();
 }
 
 //==============================================================================
 
-void ptCurve::ReadFromFile(QSettings *APtsFile) {
-  m_Type = ptCurveType_Anchor;
-  m_IntType = APtsFile->value(FId + "Interpolation", ptCurveIT_Cosine).toInt();
-  m_NrAnchors = qBound(0, APtsFile->value(FId + "Counter", 0).toInt(), (int)ptMaxAnchors);
-
-  for (int i = 0; i < m_NrAnchors; i++) {
-    m_XAnchor[i] = APtsFile->value(QString("%1X%2").arg(FId).arg(i), 0.0).toDouble();
-    m_YAnchor[i] = APtsFile->value(QString("%1Y%2").arg(FId).arg(i), 0.0).toDouble();
-  }
-
-  SetCurveFromAnchors();
+ptCurve::ptCurve(const TAnchorList &AAnchors, const bool AImmediateCalc)
+: FAnchors(AAnchors),
+  FCurveType(AnchorType),
+  FCurrentMask(NoMask),
+  FSupportedMasks(NoMask),
+  FInterpolType(SplineInterpol)
+{
+  if (AImmediateCalc)
+    calcCurve();
 }
 
 //==============================================================================
 
-void ptCurve::WriteToFile(QSettings *APtsFile) {
-  if (m_Type != ptCurveType_Anchor) {
-    assert(!"Invalid curve type. Only ptCurveType_Anchor is allowed.");
-  }
+ptCurve::ptCurve()
+: FCurveType(AnchorType),
+  FCurrentMask(NoMask),
+  FSupportedMasks(NoMask),
+  FInterpolType(SplineInterpol)
+{}
 
-  APtsFile->setValue(FId + "Interpolation", m_IntType);
-  APtsFile->setValue(FId + "Counter", m_NrAnchors);
-  for (int j = 0; j < m_NrAnchors; j++) {
-    APtsFile->setValue(QString("%1X%2").arg(FId).arg(j), m_XAnchor[j]);
-    APtsFile->setValue(QString("%1Y%2").arg(FId).arg(j), m_YAnchor[j]);
+//==============================================================================
+
+ptCurve::~ptCurve() {
+/*
+  Resources managed by Qt parent or other objects. Do not delete manually.
+    currently none
+*/
+}
+
+//==============================================================================
+
+void ptCurve::set(const ptCurve &AOther) {
+  Curve           = AOther.Curve;
+  FAnchors        = AOther.FAnchors;
+  FNullAnchors    = AOther.FNullAnchors;
+  FCurveType      = AOther.FCurveType;
+  FSupportedMasks = AOther.FSupportedMasks;
+  FInterpolType   = AOther.FInterpolType;
+  FFileName       = AOther.FFileName;
+  calcCurve();
+}
+
+//==============================================================================
+
+void ptCurve::setNullCurve(const TAnchorList &AAnchors) {
+  this->setCurveType(AnchorType);
+  FNullAnchors    = AAnchors;
+
+  // make sure we have at least two anchors.
+  if (FNullAnchors.empty())
+    FNullAnchors.push_back(TAnchor(0.0, 0.0));
+
+  if (FNullAnchors.size() == 1)
+    FNullAnchors.push_back(TAnchor(1.0, 1.0));
+}
+
+//==============================================================================
+
+void ptCurve::reset() {
+  FCurveType = AnchorType;
+  FAnchors = FNullAnchors;
+  calcCurve();
+}
+
+//==============================================================================
+
+void ptCurve::setFromAnchors(const TAnchorList &AAnchors) {
+  this->setCurveType(AnchorType);
+  FAnchors = AAnchors;
+
+  // make sure we have at least two anchors.
+  if (FAnchors.empty())
+    FAnchors.push_back(TAnchor(0.0, 0.0));
+
+  if (FAnchors.size() == 1)
+    FAnchors.push_back(TAnchor(1.0, 1.0));
+
+  calcCurve();
+}
+
+//==============================================================================
+
+void ptCurve::setAnchor(const int AIdx, const TAnchor &APoint) {
+  FAnchors[AIdx] = APoint;
+}
+
+//==============================================================================
+
+void ptCurve::setAnchorY(const int AIdx, const float y) {
+  FAnchors[AIdx].second = y;
+}
+
+//==============================================================================
+
+void ptCurve::calcCurve() {
+  if ((FAnchors.size() < 2) || (FCurveType == FullPrecalcType)) return;
+
+  switch (FInterpolType) {
+    case SplineInterpol: calcSplineCurve(); break;
+    case CosineInterpol: calcCosineCurve(); break;
+    case LinearInterpol: calcLinearCurve(); break;
+    default: GInfo->Raise("Unhandled interpolation type: " + FInterpolType, AT);
   }
 }
 
 //==============================================================================
 
-short ptCurve::SetNullCurve(const short Channel) {
-  m_IntendedChannel = Channel;
-  if (Channel == ptCurveChannel_Saturation ||
-      Channel == ptCurveChannel_LByHue ||
-      Channel == ptCurveChannel_Hue ||
-      Channel == ptCurveChannel_Denoise2) {
-    m_Type            = ptCurveType_Anchor;
-    m_NrAnchors       = 3;
-    m_XAnchor[0]      = 0.0;
-    m_YAnchor[0]      = 0.5;
-    m_XAnchor[1]      = 0.5;
-    m_YAnchor[1]      = 0.5;
-    m_XAnchor[2]      = 1.0;
-    m_YAnchor[2]      = 0.5;
-  } else if (Channel == ptCurveChannel_Texture) {
-    m_Type            = ptCurveType_Anchor;
-    m_NrAnchors       = 3;
-    m_XAnchor[0]      = 0.0;
-    m_YAnchor[0]      = 0.25;
-    m_XAnchor[1]      = 0.5;
-    m_YAnchor[1]      = 0.25;
-    m_XAnchor[2]      = 1.0;
-    m_YAnchor[2]      = 0.25;
-  } else if (Channel == ptCurveChannel_Denoise) {
-    m_Type            = ptCurveType_Anchor;
-    m_NrAnchors       = 3;
-    m_XAnchor[0]      = 0.0;
-    m_YAnchor[0]      = 0.2;
-    m_XAnchor[1]      = 0.5;
-    m_YAnchor[1]      = 0.2;
-    m_XAnchor[2]      = 1.0;
-    m_YAnchor[2]      = 0.2;
-  } else if (Channel == ptCurveChannel_a || Channel == ptCurveChannel_b) {
-    m_Type            = ptCurveType_Anchor;
-    m_NrAnchors       = 3;
-    m_XAnchor[0]      = 0.0;
-    m_YAnchor[0]      = 0.0;
-    m_XAnchor[1]      = 0.501960784; // 0x8080/0xffff
-    m_YAnchor[1]      = 0.501960784; // 0x8080/0xffff
-    m_XAnchor[2]      = 1.0;
-    m_YAnchor[2]      = 1.0;
-  } else if (Channel == ptCurveChannel_SpotLuma) {
-    m_Type            = ptCurveType_Anchor;
-    m_NrAnchors       = 3;
-    m_XAnchor[0]      = 0.0;
-    m_YAnchor[0]      = 0.0;
-    m_XAnchor[1]      = 0.4;
-    m_YAnchor[1]      = 0.6;
-    m_XAnchor[2]      = 1.0;
-    m_YAnchor[2]      = 1.0;
-  } else {
-    m_Type            = ptCurveType_Anchor;
-    m_NrAnchors       = 3;
-    m_XAnchor[0]      = 0.0;
-    m_YAnchor[0]      = 0.0;
-    m_XAnchor[1]      = 0.5;
-    m_YAnchor[1]      = 0.5;
-    m_XAnchor[2]      = 1.0;
-    m_YAnchor[2]      = 1.0;
+void ptCurve::calcCosineCurve() {
+  for(uint32_t a = 0; a < FAnchors[0].first * 0xffff; a++)
+    Curve[a] = FAnchors[0].second * 0xffff;
+
+  for(size_t b = 0; b < FAnchors.size()-1; b++) {
+    float Factor = FAnchors[b+1].second - FAnchors[b].second;
+    float Scale  = ptPI / (float)0xffff / (FAnchors[b+1].first-FAnchors[b].first);
+
+    for(uint32_t i = 0; i < FAnchors[b+1].first * 0xffff - FAnchors[b].first * 0xffff; i++) {
+      Curve[i + (int32_t)(FAnchors[b].first * 0xffff)] =
+          (int32_t)((( (1-cosf(i*Scale))/2 ) * Factor + FAnchors[b].second)*0xffff);
+    }
   }
-  return SetCurveFromAnchors();
+
+  auto hMaxAnchorIdx = FAnchors.size()-1;
+  for(uint32_t c = FAnchors[hMaxAnchorIdx].first * 0xffff; c < 0x10000; c++) {
+    Curve[c] = FAnchors[hMaxAnchorIdx].second * 0xffff;
+  }
 }
 
 //==============================================================================
 
-short ptCurve::SetCurveFromAnchors() {
-
-  assert (m_NrAnchors != 0);
-
-  m_Type = ptCurveType_Anchor;
-
-  if (m_IntType == ptCurveIT_Spline) {
-    double *ypp = spline_cubic_set(m_NrAnchors,
-                                   m_XAnchor,
-                                   m_YAnchor,
-                                   2, 0.0,
-                                   2, 0.0);
-    if (NULL==ypp) {
-      ptLogError(ptError_Spline,"Unexpected NULL return at %s line %d\n",
-                 __FILE__,__LINE__);
-      return -1;
-    }
-
-    //first derivative at a point
-    double ypval = 0;
-    //second derivate at a point
-    double yppval = 0;
-
-    //Now build a table
-    uint16_t firstPointX = (uint16_t) (m_XAnchor[0] * 0xffff);
-    uint16_t firstPointY = (uint16_t) (m_YAnchor[0] * 0xffff);
-    uint16_t lastPointX  = (uint16_t) (m_XAnchor[m_NrAnchors-1] * 0xffff);
-    uint16_t lastPointY  = (uint16_t) (m_YAnchor[m_NrAnchors-1] * 0xffff);
-
-    double Resolution = 1.0/(double)(0xffff);
-
-    for(uint32_t i = 0; i < 0x10000; i++) {
-      if (i < firstPointX) {
-        m_Curve[i] = firstPointY;
-      } else if (i > lastPointX) {
-        m_Curve[i] = lastPointY;
-      } else  {
-        int32_t Value = (int32_t) (spline_cubic_val(m_NrAnchors,
-                                             m_XAnchor, i*Resolution,
-                                             m_YAnchor, ypp, &ypval, &yppval)
-                                   *0xffff + 0.5);
-        m_Curve[i] = CLIP(Value);
-      }
-    }
-    FREE(ypp);
-  } else  if (m_IntType == ptCurveIT_Cosine) {
-    for(uint32_t i = 0; i < m_XAnchor[0] * 0xffff; i++)
-      m_Curve[i] = m_YAnchor[0] * 0xffff;
-    for(short l = 0; l < m_NrAnchors-1; l++) {
-      float Factor = m_YAnchor[l+1]-m_YAnchor[l];
-      float Scale = ptPI/(float)0xffff/(m_XAnchor[l+1]-m_XAnchor[l]);
-      for(uint32_t i = 0; i < m_XAnchor[l+1] * 0xffff - m_XAnchor[l] * 0xffff; i++) {
-        m_Curve[i+(int32_t)(m_XAnchor[l] * 0xffff)] =
-          (int32_t)((( (1-cosf(i*Scale))/2 ) * Factor + m_YAnchor[l])*0xffff);
-      }
-    }
-    for(uint32_t i = m_XAnchor[m_NrAnchors-1] * 0xffff; i < 0x10000; i++)
-      m_Curve[i] = m_YAnchor[m_NrAnchors-1] * 0xffff;
-  } else { // Linear
-    for(uint32_t i = 0; i < m_XAnchor[0] * 0xffff; i++)
-      m_Curve[i] = m_YAnchor[0] * 0xffff;
-    for(short l = 0; l < m_NrAnchors-1; l++) {
-      float Factor = (float)(m_YAnchor[l+1] - m_YAnchor[l])/
-                     (float)(m_XAnchor[l+1] - m_XAnchor[l]);
-      for(uint32_t i = 0; i < m_XAnchor[l+1] * 0xffff - m_XAnchor[l] * 0xffff; i++) {
-        m_Curve[i+(int32_t)(m_XAnchor[l] * 0xffff)] =
-          m_YAnchor[l] * 0xffff + (int32_t)(Factor*i);
-      }
-    }
-    for(uint32_t i = m_XAnchor[m_NrAnchors-1] * 0xffff; i < 0x10000; i++)
-      m_Curve[i] = m_YAnchor[m_NrAnchors-1] * 0xffff;
+void ptCurve::calcLinearCurve() {
+  for(uint32_t a = 0; a < FAnchors[0].first * 0xffff; a++) {
+    Curve[a] = FAnchors[0].second * 0xffff;
   }
 
-  return 0;
+  for(size_t b = 0; b < FAnchors.size()-1; b++) {
+    float Factor = (float)(FAnchors[b+1].second - FAnchors[b].second) /
+                   (float)(FAnchors[b+1].first - FAnchors[b].first);
+    for(uint32_t i = 0; i < FAnchors[b+1].first * 0xffff - FAnchors[b].first * 0xffff; i++) {
+      Curve[i+(int32_t)(FAnchors[b].first * 0xffff)] =
+         FAnchors[b].second * 0xffff + (int32_t)(Factor*i);
+    }
+  }
+
+  auto hMaxAnchorIdx = FAnchors.size()-1;
+  for(uint32_t c = FAnchors[hMaxAnchorIdx].first * 0xffff; c < 0x10000; c++) {
+    Curve[c] = FAnchors[hMaxAnchorIdx].second * 0xffff;
+  }
 }
 
 //==============================================================================
 
-short ptCurve::DumpData(const char* FileName,
-                        const short Scale) {
-
-  FILE *OutputFile = fopen(FileName,"wb");
-  if (!OutputFile) {
-    ptLogError(ptError_FileOpen,FileName);
-    return ptError_FileOpen;
+void ptCurve::calcSplineCurve() {
+  std::vector<double> hXAnchors;
+  std::vector<double> hYAnchors;
+  for (auto hPoint: FAnchors) {
+    hXAnchors.push_back(hPoint.first);
+    hYAnchors.push_back(hPoint.second);
   }
 
-  for (uint32_t i=0;i<0x10000;i+=Scale) {
-    fprintf(OutputFile,"%5d\t%5d\n",i/Scale,m_Curve[i]/Scale);
-  }
+  double *ypp = spline_cubic_set(FAnchors.size(), hXAnchors, hYAnchors, 2, 0.0, 2, 0.0);
+  GInfo->Assert(ypp, "spline_cubic_set() returned a nullptr.", AT);
 
-  FCLOSE(OutputFile);
-  return 0;
+  double ypval = 0;   //first derivative at a point
+  double yppval = 0;  //second derivate at a point
+
+  //Now build a table
+  uint16_t firstPointX = (uint16_t) (hXAnchors[0] * 0xffff);
+  uint16_t firstPointY = (uint16_t) (hYAnchors[0] * 0xffff);
+  uint16_t lastPointX  = (uint16_t) (hXAnchors[FAnchors.size()-1] * 0xffff);
+  uint16_t lastPointY  = (uint16_t) (hYAnchors[FAnchors.size()-1] * 0xffff);
+
+  double Resolution = 1.0/(double)(0xffff);
+
+  for(uint32_t i = 0; i < 0x10000; i++) {
+    if (i < firstPointX) {
+      Curve[i] = firstPointY;
+    } else if (i > lastPointX) {
+      Curve[i] = lastPointY;
+    } else  {
+      int32_t Value = (int32_t) (spline_cubic_val(FAnchors.size(), hXAnchors, i*Resolution,
+                                                  hYAnchors, ypp, &ypval, &yppval)
+                                 * 0xffff + 0.5);
+      Curve[i] = CLIP(Value);
+    }
+  }
+  FREE(ypp);
 }
 
 //==============================================================================
 
-short ptCurve::WriteCurve(const char *FileName,
-                          const char *Header) {
-
-  FILE *OutFile = fopen(FileName,"wb");
-  if (!OutFile) {
-    ptLogError(ptError_FileOpen,FileName);
-    return ptError_FileOpen;
-  }
-  if (Header) {
-    fprintf(OutFile,"%s",Header);
-  } else {
-    fprintf(OutFile,";\n; photivo Curve File\n; Generated by photivo\n;\n");
-  }
-  fprintf(OutFile,"Magic FLOSSCurveFile\n");
-  fprintf(OutFile,"IntendedChannel %d\n",m_IntendedChannel);
-  fprintf(OutFile,"CurveType %d\n",m_Type);
-  switch(m_Type) {
-    case ptCurveType_Anchor :
-      for (short i=0; i<m_NrAnchors; i++) {
-        fprintf(OutFile,"%d %d\n",
-                         // We represent a float in 1/1000ths to avoid
-                         // any ',','.' related problem.
-                         (int)(1000*m_XAnchor[i]),
-                         (int)(1000*m_YAnchor[i]));
-      }
-      break;
-    case ptCurveType_Full :
-      for (uint32_t i=0;i<0x10000;i++) {
-        fprintf(OutFile,"0x%04X 0x%04X\n",i,m_Curve[i]);
-      }
-      break;
-  }
-  FCLOSE(OutFile);
-  return 0;
+void ptCurve::setCurveType(const ptCurve::TType AType) {
+  FCurveType = AType;
+  if (AType == AnchorType) FFileName.clear();
 }
 
 //==============================================================================
 
-short ptCurve::ReadCurve(const char *FileName) {
+TConfigStore ptCurve::storeConfig(const QString &APrefix /*=""*/) {
+  TConfigStore hStore;
 
-  // Some safe presets in case things go wrong.
-  m_NrAnchors = 0;
-  m_IntendedChannel = ptCurveChannel_RGB;
-  m_Type = ptCurveType_Full;
-  memset(m_Curve,0,sizeof(m_Curve));
+  hStore.insert(APrefix+"CurveType",     (int)FCurveType);
+  hStore.insert(APrefix+"Mask",          (int)FCurrentMask);
+  hStore.insert(APrefix+"Interpolation", (int)FInterpolType);
+  hStore.insert(APrefix+"FileName",      FFileName);
 
-  FILE *InFile = fopen(FileName,"r");
-  if (!InFile) {
-    ptLogError(ptError_FileOpen,FileName);
-    return ptError_FileOpen;
-  }
+  if (this->isNull()) {
+    hStore.insert(APrefix+"Anchor/size", 0);
 
-  char Buffer[100];
-  char Key[100];
-  char Value[100];
-  int  LineNr = 0;
-  int  NrKeys = 0;
-
-  do {
-    if (NULL == fgets(Buffer,100,InFile)) break;
-    LineNr++;
-    if (';' == Buffer[0]) continue;
-    sscanf(Buffer,"%s %s",Key,Value);
-    NrKeys++;
-    if (1 == NrKeys) {
-      if ((strcmp(Key,"Magic") || strcmp(Value,"FLOSSCurveFile")) &&
-          (strcmp(Key,"Magic") || strcmp(Value,"photivoCurveFile")) &&
-          (strcmp(Key,"Magic") || strcmp(Value,"dlRawCurveFile"))) {
-        ptLogError(ptError_FileFormat,
-                   "'%s' has wrong format at line %d\n",
-                   FileName,
-                   LineNr);
-        return ptError_FileFormat;
-      }
-    } else if (!strcmp(Key,"IntendedChannel")) {
-      short IntendedChannel;
-      sscanf(Value,"%hd",&IntendedChannel);
-      switch (IntendedChannel) {
-        case ptCurveChannel_RGB :
-        case ptCurveChannel_R :
-        case ptCurveChannel_G :
-        case ptCurveChannel_B :
-        case ptCurveChannel_L :
-        case ptCurveChannel_a :
-        case ptCurveChannel_b :
-        case ptCurveChannel_LByHue :
-        case ptCurveChannel_Hue :
-        case ptCurveChannel_Texture :
-        case ptCurveChannel_Saturation :
-        case ptCurveChannel_ShadowsHighlights :
-        case ptCurveChannel_Denoise :
-        case ptCurveChannel_Denoise2 :
-        case ptCurveChannel_Base :
-        case ptCurveChannel_Base2 :
-        case ptCurveChannel_Outline :
-          m_IntendedChannel = IntendedChannel;
-          break;
-        default :
-          ptLogError(ptError_Argument,
-                     "Error reading %s at line %d : out of range\n",
-                     FileName,LineNr);
-          return ptError_Argument;
-        }
-    } else if (!strcmp(Key,"CurveType")) {
-      short CurveType;
-      sscanf(Value,"%hd",&CurveType);
-      switch (CurveType) {
-        case ptCurveType_Anchor :
-        case ptCurveType_Full :
-          m_Type = CurveType;
-          break;
-        default :
-          ptLogError(ptError_Argument,
-                     "Error reading %s at line %d : out of range\n",
-                     FileName,LineNr);
-          return ptError_Argument;
-       }
-    } else if (m_Type == ptCurveType_Anchor) {
-      // Read further an Anchor type curve.
-      // Remember we expressed in thousands.
-      double Value1 = atof(Key)/1000.0;
-      double Value2 = atof(Value)/1000.0;
-      const double Epsilon = 0.00001;
-      if ( Value1<0.0-Epsilon || Value2 <0.0-Epsilon ||
-           Value1>1.0+Epsilon || Value2>1.0+Epsilon) {
-        ptLogError(ptError_Argument,
-                   "Error reading %s at line %d (out of box : %f %f)\n",
-                   FileName,LineNr,Value1,Value2);
-        return ptError_Argument;
-      }
-      if (m_NrAnchors >= ptMaxAnchors) {
-        ptLogError(ptError_FileFormat,
-                   "Error reading %s at line %d (too many anchors)\n",
-                   FileName,LineNr);
-        return ptError_FileFormat;
-      }
-      m_XAnchor[m_NrAnchors] = Value1;
-      m_YAnchor[m_NrAnchors] = Value2;
-      m_NrAnchors++;
-    } else if (m_Type == ptCurveType_Full) {
-      int Value1 = strtol(Key,NULL,16);
-      int Value2 = strtol(Value,NULL,16);
-      if ( Value1<0 || Value2 <0 || Value1>0xffff || Value2>0xffff) {
-        ptLogError(ptError_Argument,
-                   "Error reading %s at line %d (out of box : %x %x)\n",
-                   FileName,LineNr,Value1,Value2);
-        return ptError_Argument;
-      }
-      m_Curve[Value1] = Value2;
+  } else if (FCurveType == AnchorType) {
+    hStore.insert(APrefix+"Anchor/size", (int)FAnchors.size());
+    int i = 0;
+    for (TAnchor hAnchor: FAnchors) {
+      hStore.insert(QString(APrefix+"Anchor/%1/X").arg(i), hAnchor.first);
+      hStore.insert(QString(APrefix+"Anchor/%1/Y").arg(i), hAnchor.second);
+      ++i;
     }
-  } while (!feof(InFile));
-
-  if (m_Type == ptCurveType_Anchor) {
-    // Construct the curve now also complete.
-    SetCurveFromAnchors();
   }
 
-  // Looks OK.
-  return 0;
+  return hStore;
 }
 
 //==============================================================================
 
-short ptCurve::ReadAnchors(const char *FileName) {
+void ptCurve::loadConfig(const TConfigStore &AConfig, const QString &APrefix) {
+  FCurveType    = (TType)AConfig.value(APrefix+"CurveType", FCurveType).toInt();
+  FCurrentMask  = (TMask)AConfig.value(APrefix+"Mask", FCurrentMask).toInt();
+  FInterpolType = (TInterpolation)AConfig.value(APrefix+"Interpolation", FInterpolType).toInt();
+  FFileName     = AConfig.value(APrefix+"FileName", "").toString();
 
-  m_NrAnchors = 0;
+  if (FCurveType == AnchorType) {
+    FAnchors.clear();
+    int hSize = AConfig.value(APrefix+"Anchor/size", 0).toInt();
 
-  FILE *InFile = fopen(FileName,"r");
-  if (!InFile) {
-    ptLogError(ptError_FileOpen,FileName);
-    return ptError_FileOpen;
+    if (hSize < 2) {  // no/not enough anchors, fall back to null curve
+      FAnchors = FNullAnchors;
+
+    } else {  // read anchors
+      for (int i = 0; i < hSize; ++i) {
+        FAnchors.push_back(TAnchor(AConfig.value(QString(APrefix+"Anchor/%1/X").arg(i), 0.0).toDouble(),
+                                   AConfig.value(QString(APrefix+"Anchor/%1/Y").arg(i), 0.0).toDouble()));
+      }
+      FAnchors.shrink_to_fit();
+    }
+
+    calcCurve();
+
+  } else {  // curve from old-style curve file
+    int hError = readCurveFile(FFileName);
+    if (hError != 0) {
+      QString hErrMsg = QString(QObject::tr("Failed to load curve file %1.")).arg(FFileName);
+      if (hError > 0) hErrMsg += QString(QObject::tr("\nThe error occurred in line %1.")).arg(hError);
+      ptMessageBox::critical(nullptr, QObject::tr("Load curve file"), hErrMsg);
+      this->reset();
+    }
   }
-
-  char Buffer[100];
-  int  Line = 0;
-  while (!feof(InFile)) {
-    Line++;
-    if (NULL == fgets(Buffer,100,InFile)) {
-      if (feof(InFile)) break;
-      ptLogError(ptError_FileFormat,
-                 "Error reading %s at line %d (line too long ?)\n",
-                 FileName,Line);
-      return ptError_FileFormat;
-    }
-    double Value1;
-    double Value2;
-    if (2 != sscanf(Buffer,"%lf %lf",&Value1,&Value2)) {
-      ptLogError(ptError_FileFormat,
-                 "Error reading %s at line %d\n",FileName,Line);
-      return ptError_FileFormat;
-    }
-    if ( Value1<0.0 || Value2 <0.0 || Value1>1.0 || Value2>1.0) {
-      ptLogError(ptError_FileFormat,
-                 "Error reading %s at line %d (out of box : %f %f)\n",
-                 FileName,Line,Value1,Value2);
-      return ptError_FileFormat;
-    }
-    if (m_NrAnchors >= ptMaxAnchors) {
-      ptLogError(ptError_FileFormat,
-                 "Error reading %s at line %d (too many anchors)\n",
-                 FileName,Line);
-      return ptError_FileFormat;
-    }
-    m_XAnchor[m_NrAnchors] = Value1;
-    m_YAnchor[m_NrAnchors] = Value2;
-    m_NrAnchors++;
-
-  }
-  return 0;
 }
 
 //==============================================================================
 
-short ptCurve::SetCurveFromFunction(double(*Function)
-                                          (double r, double Arg1, double Arg2),
-                                    double Arg1,
-                                    double Arg2) {
-
-  m_Type = ptCurveType_Full;
+void ptCurve::setFromFunc(double(*Function)(double r, double Arg1, double Arg2),
+                               double Arg1, double Arg2)
+{
+  this->setCurveType(FullPrecalcType);
+  FFileName.clear();
 
   for (uint32_t i=0; i<0x10000; i++) {
     double r = (double(i) / 0xffff);
     int32_t Value = (int32_t) (0xffff * Function(r,Arg1,Arg2));
-    m_Curve[i] = CLIP(Value);
+    Curve[i] = CLIP(Value);
   }
-  return 0;
+
+  calcCurve();
 }
 
 //==============================================================================
 
-short ptCurve::Set(ptCurve *Curve) {
-  m_Type = Curve->m_Type;
-  m_IntType = Curve->m_IntType;
-  m_IntendedChannel = Curve->m_IntendedChannel;
-  if (m_Type == ptCurveType_Anchor) {
-    m_NrAnchors = Curve->m_NrAnchors;
-    for (int i=0; i<m_NrAnchors; i++) {
-      m_XAnchor[i] = Curve->m_XAnchor[i];
-      m_YAnchor[i] = Curve->m_YAnchor[i];
+int ptCurve::readCurveFile(const QString &AFileName) {
+  // No members are updated until the curve file is completely and successfully read.
+  // That way we can error-return safely at any point.
+
+  // read the file into a string list
+  QStringList hCurveData;
+  QFile       hCurveFile(AFileName);
+
+  hCurveFile.open(QIODevice::ReadOnly);
+  QTextStream hTextStream(&hCurveFile);
+
+  while (!hTextStream.atEnd()) {
+    hCurveData.append(hTextStream.readLine());
+  }
+
+  // read and check curve type (precalced or anchors)
+  int hNextIdx = hCurveData.indexOf(QRegExp("^CurveType  *[0-1]$"));
+  if (hNextIdx == -1) return -1;
+  bool ok = false;
+  int hCurveType = hCurveData.at(hNextIdx).right(1).toInt(&ok);
+  if (!ok || (hCurveType < 0) || (hCurveType > 1))
+    return hNextIdx;
+
+  // temporary containers for the actual data
+  std::array<uint16_t, 0x10000> hCurveArray;
+  TAnchorList          hAnchors;
+  hCurveArray.fill(0);
+
+  // Assume data starts immediately after the "CurveType" line
+  if (++hNextIdx >= hCurveData.size()) return hNextIdx;
+
+  // read key/value pairs
+  for (; hNextIdx < hCurveData.size(); ++hNextIdx) {
+    if (hCurveData.at(hNextIdx).trimmed().isEmpty()) continue;  // ignore empty lines
+    QStringList hLine = hCurveData.at(hNextIdx).split(" ");     // split line into key and value
+    if (hLine.size() != 2) return hNextIdx;
+
+    if (hCurveType == 0) {  // full precalc
+      bool ok;
+      uint16_t hKey = hLine.at(0).mid(2).toUInt(&ok, 16);
+      if (!ok) return hNextIdx;
+      uint16_t hVal = hLine.at(1).mid(2).toUInt(&ok, 16);
+      if (!ok) return hNextIdx;
+      hCurveArray[hKey] = hVal;
+
+    } else {  // anchors
+      bool ok;
+      uint16_t hKey = hLine.at(0).toUInt(&ok);
+      if (!ok) return hNextIdx;
+      uint16_t hVal = hLine.at(1).toUInt(&ok);
+      if (!ok) return hNextIdx;
+      if (hKey > 1000 || hVal > 1000) return hNextIdx;
+      hAnchors.push_back(TAnchor((float)hKey/1000.0f, (float)hVal/1000.0f));
     }
   }
 
-  for (uint32_t i=0; i<0x10000; i++) {
-    m_Curve[i] = Curve->m_Curve[i];
-  }
-  return 0;
-}
+  // When we arrive here the file was successfully and completely read.
+  FFileName  = AFileName;
+  this->setCurveType((TType)hCurveType);
 
-//==============================================================================
-
-ptCurve* ptCurve::ApplyCurve(const ptCurve* Curve,
-                             const short    AfterThis) {
-
-  m_Type = ptCurveType_Full;
-
-  if (AfterThis) {
-    for (uint32_t i=0; i<0x10000; i++) {
-      int32_t Value = (int32_t) (Curve->m_Curve[m_Curve[i]]);
-      m_Curve[i] = CLIP(Value);
-    }
+  if (FCurveType == FullPrecalcType) {
+    Curve = hCurveArray;
   } else {
-    for (uint32_t i=0; i<0x10000; i++) {
-      int32_t Value = (int32_t) (m_Curve[Curve->m_Curve[i]]);
-      m_Curve[i] = CLIP(Value);
-    }
+    FInterpolType = SplineInterpol;
+    FAnchors = hAnchors;
   }
+
+  calcCurve();
   return 0;
 }
 
 //==============================================================================
 
-// Non member utility functions for Gamma curves.
-//   BT709 curve
-//   sRGB curve
-//   Pure22 curve
-//   GammaTool        : Gamma function on basis of Gamma and Linearity
-//                      (as in ufraw)
-//   DeltaGammaTool   : (Inverse(sRGB))*GammaTool
-//   InverseGammaSRGB : Inverse(sRGB)
-
-double GammaBT709(double r, double, double) {
-  return (r <= 0.018 ? r*4.5 : pow(r,0.45)*1.099-0.099 );
-}
-
-double GammaSRGB(double r, double, double) {
-  return (r <= 0.00304 ? r*12.92 : pow(r,2.5/6)*1.055-0.055 );
-}
-
-double GammaPure22(double r, double, double) {
-  return (pow(r,2.2));
-}
-
-double GammaTool(double r, double Gamma, double Linearity) {
-  const double g = Gamma * (1 - Linearity) / (1-Gamma*Linearity);
-  const double a = 1/(1 + Linearity*(g-1));
-  const double b = Linearity * (g-1)*a;
-  const double c = pow((a*Linearity+b),g) / Linearity;
-  return r<Linearity ? c*r : pow (a*r+b,g);
-}
-
-double DeltaGammaTool(double r, double Gamma, double Linearity) {
-  return InverseGammaSRGB(GammaTool(r,Gamma,Linearity),0,0);
-};
-
-double InverseGammaSRGB(double r, double, double) {
-  return (r <= 0.04045 ? r/12.92 : pow((r+0.055)/1.055,2.4) );
-}
-
-//==============================================================================
-
-// Non member utility function for Sigmoidal contrast function.
-double Sigmoidal(double r, double Threshold, double Contrast) {
-  float Scaling = 1.0/(1.0+exp(-0.5*Contrast))-1.0/(1.0+exp(0.5*Contrast));
-  float Offset = -1.0/(1.0+exp(0.5*Contrast));
-  float logtf = -logf(Threshold)/logf(2.0);
-  float logft = -logf(2.0)/logf(Threshold);
-  float Value = 0;
-  if (Contrast > 0) {
-    if (r != 0.0)
-      Value = powf((((1.0/(1.0+exp(Contrast*(0.5-powf(r,logft)))))+Offset)/Scaling),logtf);
-  } else {
-    if (r != 0.0)
-      Value = powf(0.5-1.0/Contrast*logf(1.0/(Scaling*powf(r,logft)-Offset)-1.0),logtf);
+void ptCurve::setMask(const ptCurve::TMask AMask) {
+  if (FSupportedMasks & AMask) {
+    FCurrentMask = AMask;
   }
-  return Value;
 }
 
 //==============================================================================
 
-// From here go verbatim copies of the spline functions.
+bool ptCurve::isNull() const {
+  return (FCurveType == AnchorType) && (FAnchors == FNullAnchors);
+}
 
-//**********************************************************************
-//
-//  Purpose:
+//==============================================================================
+
+void ptCurve::setInterpolType(const ptCurve::TInterpolation AInterpolType) {
+  if (FInterpolType != AInterpolType) {
+    FInterpolType = AInterpolType;
+    calcCurve();
+  }
+}
+
+//==============================================================================
+
+TAnchorList ptCurve::diagonalNull() {
+  return TAnchorList( { TAnchor(0.0, 0.0), TAnchor(0.5, 0.5), TAnchor(1.0, 1.0) } );
+}
+
+//==============================================================================
+
+TAnchorList ptCurve::horizontalMidNull() {
+  return TAnchorList( { TAnchor(0.0, 0.5), TAnchor(0.5, 0.5), TAnchor(1.0, 0.5) } );
+}
+
+//==============================================================================
+
+TAnchorList ptCurve::horizontalQuarterNull() {
+  return TAnchorList( { TAnchor(0.0, 0.25), TAnchor(0.5, 0.25), TAnchor(1.0, 0.25) } );
+}
+
+//==============================================================================
+
+/*  Purpose:
 //
 //    D3_NP_FS factors and solves a D3 system.
 //
@@ -622,14 +489,14 @@ double Sigmoidal(double r, double Threshold, double Contrast) {
 //    Output, double D3_NP_FS[N], the solution of the linear system.
 //    This is NULL if there was an error because one of the diagonal
 //    entries was zero.
-//
+*/
 double *ptCurve::d3_np_fs ( int n, double a[], double b[] ) {
   int i;
   double *x;
   double xmult;
-//
-//  Check.
-//
+  //
+  //  Check.
+  //
   for ( i = 0; i < n; i++ ) {
     if ( a[1+i*3] == 0.0E+00 ) {
       return NULL;
@@ -656,9 +523,9 @@ double *ptCurve::d3_np_fs ( int n, double a[], double b[] ) {
   return x;
 }
 
-//**********************************************************************
-//
-//  Purpose:
+//==============================================================================
+
+/*  Purpose:
 //
 //    SPLINE_CUBIC_SET computes the second derivatives of a piecewise cubic spline.
 //
@@ -766,40 +633,29 @@ double *ptCurve::d3_np_fs ( int n, double a[], double b[] ) {
 //    conditions if IBCEND is equal to 1 or 2.
 //
 //    Output, double SPLINE_CUBIC_SET[N], the second derivatives of the cubic spline.
-//
-//
-double *ptCurve::spline_cubic_set ( int n, double t[], double y[], int ibcbeg,
-    double ybcbeg, int ibcend, double ybcend ) {
-  double *a;
-  double *b;
-  int i;
-  double *ypp;
-//
-//  Check.
-//
-  if ( n <= 1 ) {
-    ptLogError(ptError_Spline,
-               "spline_cubic_set() error: "
-         "The number of data points must be at least 2.\n");
-    return NULL;
-  }
+*/
+double *ptCurve::spline_cubic_set (int n, const std::vector<double> t, const std::vector<double> y, int ibcbeg,
+                                   double ybcbeg, int ibcend, double ybcend )
+{
+  double *a   = nullptr;
+  double *b   = nullptr;
+  int     i   = 0;
+  double *ypp = nullptr;
 
-  for ( i = 0; i < n - 1; i++ ) {
+  for (; i < n - 1; i++ ) {
     if ( t[i+1] <= t[i] ) {
-      ptLogError(ptError_Spline,
-                 "spline_cubic_set() error: "
-           "The knots must be strictly increasing, but "
-           "T(%u) = %e, T(%u) = %e\n",i,t[i],i+1,t[i+1]);
-      return NULL;
+      GInfo->Raise(QString("The knots must be strictly increasing, but T(%1) = %2, T(%3) = %4")
+                     .arg(i).arg(t[i]).arg(i+1).arg(t[i+1]), AT);
     }
   }
+
   a = (double *)CALLOC(3*n,sizeof(double));
   ptMemoryError(a,__FILE__,__LINE__);
   b = (double *)CALLOC(n,sizeof(double));
   ptMemoryError(b,__FILE__,__LINE__);
-//
-//  Set up the first equation.
-//
+  //
+  //  Set up the first equation.
+  //
   if ( ibcbeg == 0 ) {
     b[0] = 0.0E+00;
     a[1+0*3] = 1.0E+00;
@@ -813,16 +669,13 @@ double *ptCurve::spline_cubic_set ( int n, double t[], double y[], int ibcbeg,
     a[1+0*3] = 1.0E+00;
     a[0+1*3] = 0.0E+00;
   } else {
-    ptLogError(ptError_Spline,
-               "spline_cubic_set() error: "
-         "IBCBEG must be 0, 1 or 2. The input value is %u.\n", ibcbeg);
     FREE(a);
     FREE(b);
-    return NULL;
+    GInfo->Raise(QString("IBCBEG must be 0, 1 or 2, but the input value is %1.").arg(ibcbeg), AT);
   }
-//
-//  Set up the intermediate equations.
-//
+  //
+  //  Set up the intermediate equations.
+  //
   for ( i = 1; i < n-1; i++ ) {
     b[i] = ( y[i+1] - y[i] ) / ( t[i+1] - t[i] )
       - ( y[i] - y[i-1] ) / ( t[i] - t[i-1] );
@@ -830,9 +683,9 @@ double *ptCurve::spline_cubic_set ( int n, double t[], double y[], int ibcbeg,
     a[1+ i   *3] = ( t[i+1] - t[i-1] ) / 3.0E+00;
     a[0+(i+1)*3] = ( t[i+1] - t[i] ) / 6.0E+00;
   }
-//
-//  Set up the last equation.
-//
+  //
+  //  Set up the last equation.
+  //
   if ( ibcend == 0 ) {
     b[n-1] = 0.0E+00;
     a[2+(n-2)*3] = -1.0E+00;
@@ -846,16 +699,13 @@ double *ptCurve::spline_cubic_set ( int n, double t[], double y[], int ibcbeg,
     a[2+(n-2)*3] = 0.0E+00;
     a[1+(n-1)*3] = 1.0E+00;
   } else {
-    ptLogError(ptError_Spline,
-               "spline_cubic_set() error: "
-         "IBCEND must be 0, 1 or 2. The input value is %u", ibcend);
     FREE(a);
     FREE(b);
-    return NULL;
+    GInfo->Raise(QString("IBCEND must be 0, 1 or 2, but the input value is %1.").arg(ibcend), AT);
   }
-//
-//  Solve the linear system.
-//
+  //
+  //  Solve the linear system.
+  //
   if ( n == 2 && ibcbeg == 0 && ibcend == 0 ) {
     ypp = (double *)CALLOC(2,sizeof(double));
     ptMemoryError(ypp,__FILE__,__LINE__);
@@ -866,14 +716,10 @@ double *ptCurve::spline_cubic_set ( int n, double t[], double y[], int ibcbeg,
     ypp = d3_np_fs ( n, a, b );
 
     if ( !ypp ) {
-      ptLogError(ptError_Spline,
-                 "spline_cubic_set() error: "
-           "The linear system could not be solved.\n");
       FREE(a);
       FREE(b);
-      return NULL;
+      GInfo->Raise("The linear system could not be solved.", AT);
     }
-
   }
 
   FREE(a);
@@ -881,9 +727,9 @@ double *ptCurve::spline_cubic_set ( int n, double t[], double y[], int ibcbeg,
   return ypp;
 }
 
-//**********************************************************************
-//
-//  Purpose:
+//==============================================================================
+
+/*  Purpose:
 //
 //    SPLINE_CUBIC_VAL evaluates a piecewise cubic spline at a point.
 //
@@ -937,19 +783,19 @@ double *ptCurve::spline_cubic_set ( int n, double t[], double y[], int ibcbeg,
 //    Output, double *YPPVAL, the second derivative of the spline at TVAL.
 //
 //    Output, double SPLINE_VAL, the value of the spline at TVAL.
-//
-
-double ptCurve::spline_cubic_val ( int n, double t[], double tval, double y[],
-  double ypp[], double *ypval, double *yppval ) {
+*/
+double ptCurve::spline_cubic_val(int n, const std::vector<double> t, double tval, const std::vector<double> y,
+                                 double ypp[], double *ypval, double *yppval )
+{
   double dt;
   double h;
   int i;
   int ival;
   double yval;
-//
-//  Determine the interval [ T(I), T(I+1) ] that contains TVAL.
-//  Values below T[0] or above T[N-1] use extrapolation.
-//
+  //
+  //  Determine the interval [ T(I), T(I+1) ] that contains TVAL.
+  //  Values below T[0] or above T[N-1] use extrapolation.
+  //
   ival = n - 2;
 
   for ( i = 0; i < n-1; i++ ) {
@@ -958,10 +804,10 @@ double ptCurve::spline_cubic_val ( int n, double t[], double tval, double y[],
       break;
     }
   }
-//
-//  In the interval I, the polynomial is in terms of a normalized
-//  coordinate between 0 and 1.
-//
+  //
+  //  In the interval I, the polynomial is in terms of a normalized
+  //  coordinate between 0 and 1.
+  //
   dt = tval - t[ival];
   h = t[ival+1] - t[ival];
 
@@ -982,3 +828,149 @@ double ptCurve::spline_cubic_val ( int n, double t[], double tval, double y[],
 }
 
 //==============================================================================
+
+double ptCurve::GammaTool(double r, double Gamma, double Linearity) {
+  const double g = Gamma * (1 - Linearity) / (1-Gamma*Linearity);
+  const double a = 1/(1 + Linearity*(g-1));
+  const double b = Linearity * (g-1)*a;
+  const double c = pow((a*Linearity+b),g) / Linearity;
+  return r<Linearity ? c*r : pow (a*r+b,g);
+}
+
+//==============================================================================
+
+double ptCurve::DeltaGammaTool(double r, double Gamma, double Linearity) {
+  return InverseGammaSRGB(GammaTool(r,Gamma,Linearity),0,0);
+}
+
+//==============================================================================
+
+double ptCurve::InverseGammaSRGB(double r, double, double) {
+  return (r <= 0.04045 ? r/12.92 : pow((r+0.055)/1.055,2.4) );
+}
+
+//==============================================================================
+
+double ptCurve::Sigmoidal(double r, double Threshold, double Contrast) {
+  float Scaling = 1.0/(1.0+exp(-0.5*Contrast))-1.0/(1.0+exp(0.5*Contrast));
+  float Offset = -1.0/(1.0+exp(0.5*Contrast));
+  float logtf = -logf(Threshold)/logf(2.0);
+  float logft = -logf(2.0)/logf(Threshold);
+  float Value = 0;
+  if (Contrast > 0) {
+    if (r != 0.0)
+      Value = powf((((1.0/(1.0+exp(Contrast*(0.5-powf(r,logft)))))+Offset)/Scaling),logtf);
+  } else {
+    if (r != 0.0)
+      Value = powf(0.5-1.0/Contrast*logf(1.0/(Scaling*powf(r,logft)-Offset)-1.0),logtf);
+  }
+  return Value;
+}
+
+//==============================================================================
+
+#ifdef PT_CREATE_CURVES_PROJECT
+double ptCurve::GammaBT709(double r, double, double) {
+  return (r <= 0.018 ? r*4.5 : pow(r,0.45)*1.099-0.099 );
+}
+
+double ptCurve::GammaSRGB(double r, double, double) {
+  return (r <= 0.00304 ? r*12.92 : pow(r,2.5/6)*1.055-0.055 );
+}
+
+double ptCurve::GammaPure22(double r, double, double) {
+  return (pow(r,2.2));
+}
+
+
+//==============================================================================
+
+short ptCurve::WriteCurve(const char *FileName,
+                          const char *Header) {
+
+  FILE *OutFile = fopen(FileName,"wb");
+  if (!OutFile) {
+    ptLogError(ptError_FileOpen,FileName);
+    return ptError_FileOpen;
+  }
+  if (Header) {
+    fprintf(OutFile,"%s",Header);
+  } else {
+    fprintf(OutFile,";\n; photivo Curve File\n; Generated by photivo\n;\n");
+  }
+  fprintf(OutFile,"Magic FLOSSCurveFile\n");
+  fprintf(OutFile,"IntendedChannel %d\n",m_IntendedChannel);
+  fprintf(OutFile,"CurveType %d\n",m_Type);
+  switch(m_Type) {
+    case ptCurveType_Anchor :
+      for (short i=0; i<m_NrAnchors; i++) {
+        fprintf(OutFile,"%d %d\n",
+                         // We represent a float in 1/1000ths to avoid
+                         // any ',','.' related problem.
+                         (int)(1000*m_XAnchor[i]),
+                         (int)(1000*m_YAnchor[i]));
+      }
+      break;
+    case ptCurveType_Full :
+      for (uint32_t i=0;i<0x10000;i++) {
+        fprintf(OutFile,"0x%04X 0x%04X\n",i,Lookup[i]);
+      }
+      break;
+  }
+  FCLOSE(OutFile);
+  return 0;
+}
+
+//==============================================================================
+
+short ptCurve::ReadAnchors(const char *FileName) {
+
+  m_NrAnchors = 0;
+
+  FILE *InFile = fopen(FileName,"r");
+  if (!InFile) {
+    ptLogError(ptError_FileOpen,FileName);
+    return ptError_FileOpen;
+  }
+
+  char Buffer[100];
+  int  Line = 0;
+  while (!feof(InFile)) {
+    Line++;
+    if (NULL == fgets(Buffer,100,InFile)) {
+      if (feof(InFile)) break;
+      ptLogError(ptError_FileFormat,
+                 "Error reading %s at line %d (line too long ?)\n",
+                 FileName,Line);
+      return ptError_FileFormat;
+    }
+    double Value1;
+    double Value2;
+    if (2 != sscanf(Buffer,"%lf %lf",&Value1,&Value2)) {
+      ptLogError(ptError_FileFormat,
+                 "Error reading %s at line %d\n",FileName,Line);
+      return ptError_FileFormat;
+    }
+    if ( Value1<0.0 || Value2 <0.0 || Value1>1.0 || Value2>1.0) {
+      ptLogError(ptError_FileFormat,
+                 "Error reading %s at line %d (out of box : %f %f)\n",
+                 FileName,Line,Value1,Value2);
+      return ptError_FileFormat;
+    }
+    if (m_NrAnchors >= ptMaxAnchors) {
+      ptLogError(ptError_FileFormat,
+                 "Error reading %s at line %d (too many anchors)\n",
+                 FileName,Line);
+      return ptError_FileFormat;
+    }
+    m_XAnchor[m_NrAnchors] = Value1;
+    m_YAnchor[m_NrAnchors] = Value2;
+    m_NrAnchors++;
+
+  }
+  return 0;
+}
+#endif // PT_CREATE_CURVES_PROJECT
+
+//==============================================================================
+

@@ -2,9 +2,9 @@
 ##
 ## Photivo
 ##
-## Copyright (C) 2008,2009 Jos De Laender
-## Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
-## Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
+## Copyright (C) 2008-2009 Jos De Laender
+## Copyright (C) 2009-2012 Michael Munzert <mail@mm-log.com>
+## Copyright (C) 2011-2012 Bernd Schoeler <brother.john@photivo.org>
 ##
 ## This file is part of Photivo.
 ##
@@ -47,6 +47,11 @@ MOC_DIR         = ../Objects
 UI_HEADERS_DIR  = ../Objects
 RCC_DIR         = ../Objects
 
+# Add path to sources folder to the include search paths.
+# Necessary for GCC to find the .h files of (in Designer) promoted widgets.
+# When you promote widgets you must specify the .h relative to the "Sources" folder.
+INCLUDEPATH    += $${_PRO_FILE_PWD_}/../Sources
+
 ################################################################################
 
 unix {
@@ -68,6 +73,9 @@ unix {
 win32 {
   QT       += network
   RC_FILE   = photivo.rc
+
+  QMAKE_CC   = gcc
+  QMAKE_CXX  = g++
 
   QMAKE_CFLAGS_RELEASE    += $$(CFLAGS)
   QMAKE_CFLAGS_DEBUG      += $$(CFLAGS)
@@ -108,12 +116,16 @@ LIBS += \
     $$system(pkg-config --libs-only-l lqr-1) \
     -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
-RELEASE_SPECIFIC = -O3 -ftree-vectorize -fopenmp
+RELEASE_SPECIFIC = -O3 -funroll-loops -ftree-vectorize -fopenmp
 DEBUG_SPECIFIC   = -O0 -g -Wno-unknown-pragmas
 COMMON_FLAGS = \
     $$system(pkg-config --cflags-only-I lqr-1) \
     -DAPPVERSION=\'$${APPVERSION}\' \
     -ffast-math -DDLRAW_HAVE_GIMP
+
+!contains(QMAKE_HOST.arch, x86_64) {
+  COMMON_FLAGS+=-march=i686
+}
 
 QMAKE_CFLAGS_RELEASE   += $${COMMON_FLAGS} $${RELEASE_SPECIFIC}
 QMAKE_CXXFLAGS_RELEASE += $${COMMON_FLAGS} $${RELEASE_SPECIFIC} -std=gnu++0x
@@ -147,6 +159,26 @@ HEADERS += \
     ../Sources/filemgmt/ptTagModel.h \
     ../Sources/filemgmt/ptThumbnailCache.h \
     ../Sources/filemgmt/ptThumbnailer.h \
+    ../Sources/filters/ptCfgItem.h \
+    ../Sources/filters/ptFilter_ABCurves.h \
+    ../Sources/filters/ptFilter_ColorContrast.h \
+    ../Sources/filters/ptFilter_DetailCurve.h \
+    ../Sources/filters/ptFilter_GammaTool.h \
+    ../Sources/filters/ptFilter_Highlights.h \
+    ../Sources/filters/ptFilter_LumaDenoiseCurve.h \
+    ../Sources/filters/ptFilter_LumaSatAdjust.h \
+    ../Sources/filters/ptFilter_Outline.h \
+    ../Sources/filters/ptFilter_SatCurve.h \
+    ../Sources/filters/ptFilter_ShadowsHighlights.h \
+    ../Sources/filters/ptFilter_SigContrast.h \
+    ../Sources/filters/ptFilter_StdCurve.h \
+    ../Sources/filters/ptFilter_ToneAdjust.h \
+    ../Sources/filters/ptFilter_Wiener.h \
+    ../Sources/filters/ptFilterBase.h \
+    ../Sources/filters/ptFilterConfig.h \
+    ../Sources/filters/ptFilterDM.h \
+    ../Sources/filters/ptFilterFactory.h \
+    ../Sources/filters/ptFilterUids.h \
     ../Sources/greyc/CImg.h \
     ../Sources/ptAdobeTable.h \
     ../Sources/ptCalloc.h \
@@ -169,6 +201,8 @@ HEADERS += \
     ../Sources/ptImage.h \
     ../Sources/ptImage8.h \
     ../Sources/ptAbstractInteraction.h \
+    ../Sources/ptImageHelper.h \
+    ../Sources/ptInfo.h \
     ../Sources/ptInput.h \
     ../Sources/ptKernel.h \
     ../Sources/ptLensfun.h \
@@ -184,24 +218,32 @@ HEADERS += \
     ../Sources/ptSettings.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptSlider.h \
+    ../Sources/ptTempFile.h \
+    ../Sources/ptTempFilterBase.h \
     ../Sources/ptTheme.h \
+    ../Sources/ptToolBox.h \
     ../Sources/ptViewWindow.h \
     ../Sources/ptVisibleToolsView.h \
     ../Sources/ptWhiteBalances.h \
+    ../Sources/ptWidget.h \
     ../Sources/ptWiener.h \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
-    ../Sources/qtsingleapplication/qtsingleapplication.h \
-    ../Sources/ptImageHelper.h \
-    ../Sources/imagespot/ptImageSpot.h \
-    ../Sources/imagespot/ptRepairInteraction.h \
-    ../Sources/imagespot/ptRepairSpot.h \
-    ../Sources/imagespot/ptImageSpotEditor.h \
-    ../Sources/imagespot/ptImageSpotItemDelegate.h \
-    ../Sources/imagespot/ptImageSpotListView.h \
-    ../Sources/imagespot/ptImageSpotModel.h \
-    ../Sources/imagespot/ptLocalSpot.h \
-    ../Sources/imagespot/ptSpotInteraction.h
+    ../Sources/qtsingleapplication/qtsingleapplication.h
+    ../Sources/filters/imagespot/ptFilter_SpotTuning.h \
+    ../Sources/filters/imagespot/ptImageSpot.h \
+    ../Sources/filters/imagespot/ptImageSpotEditor.h \
+    ../Sources/filters/imagespot/ptImageSpotItemDelegate.h \
+    ../Sources/filters/imagespot/ptImageSpotModel.h \
+    ../Sources/filters/imagespot/ptTuningSpot.h \
+    ../Sources/filters/imagespot/ptRepairInteraction.h \
+    ../Sources/filters/imagespot/ptRepairSpot.h \
+    ../Sources/filters/imagespot/ptSpotInteraction.h \
+    ../Sources/filters/imagespot/ptSpotListWidget.h \
+    ../Sources/filters/imagespot/ptSpotListWidgetHelper.h \
+    ../Sources/ptTempFile.h \
+    ../Sources/filters/ptStorable.h \
+    ../Sources/filters/imagespot/ptImageSpotList.h
 
 
 SOURCES += \
@@ -220,6 +262,25 @@ SOURCES += \
     ../Sources/filemgmt/ptTagModel.cpp \
     ../Sources/filemgmt/ptThumbnailCache.cpp \
     ../Sources/filemgmt/ptThumbnailer.cpp \
+    ../Sources/filters/ptCfgItem.cpp \
+    ../Sources/filters/ptFilter_ABCurves.cpp \
+    ../Sources/filters/ptFilter_ColorContrast.cpp \
+    ../Sources/filters/ptFilter_DetailCurve.cpp \
+    ../Sources/filters/ptFilter_GammaTool.cpp \
+    ../Sources/filters/ptFilter_Highlights.cpp \
+    ../Sources/filters/ptFilter_LumaDenoiseCurve.cpp \
+    ../Sources/filters/ptFilter_LumaSatAdjust.cpp \
+    ../Sources/filters/ptFilter_Outline.cpp \
+    ../Sources/filters/ptFilter_SatCurve.cpp \
+    ../Sources/filters/ptFilter_ShadowsHighlights.cpp \
+    ../Sources/filters/ptFilter_SigContrast.cpp \
+    ../Sources/filters/ptFilter_StdCurve.cpp \
+    ../Sources/filters/ptFilter_ToneAdjust.cpp \
+    ../Sources/filters/ptFilter_Wiener.cpp \
+    ../Sources/filters/ptFilterBase.cpp \
+    ../Sources/filters/ptFilterConfig.cpp \
+    ../Sources/filters/ptFilterDM.cpp \
+    ../Sources/filters/ptFilterFactory.cpp \
     ../Sources/perfectraw/lmmse_interpolate.c \
     ../Sources/ptCalloc.cpp \
     ../Sources/ptChannelMixer.cpp \
@@ -247,6 +308,8 @@ SOURCES += \
     ../Sources/ptImage_Pyramid.cpp \
     ../Sources/ptImage8.cpp \
     ../Sources/ptAbstractInteraction.cpp \
+    ../Sources/ptImageHelper.cpp \
+    ../Sources/ptInfo.cpp \
     ../Sources/ptInput.cpp \
     ../Sources/ptKernel.cpp \
     ../Sources/ptLensfun.cpp \
@@ -263,10 +326,14 @@ SOURCES += \
     ../Sources/ptSettings.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptSlider.cpp \
+    ../Sources/ptTempFile.cpp \
+    ../Sources/ptTempFilterBase.cpp \
     ../Sources/ptTheme.cpp \
+    ../Sources/ptToolBox.cpp \
     ../Sources/ptViewWindow.cpp \
     ../Sources/ptVisibleToolsView.cpp \
     ../Sources/ptWhiteBalances.cpp \
+    ../Sources/ptWidget.cpp \
     ../Sources/ptWiener.cpp \
     ../Sources/qtsingleapplication/qtlocalpeer.cpp \
     ../Sources/qtsingleapplication/qtlockedfile.cpp \
@@ -282,22 +349,29 @@ SOURCES += \
     ../Sources/vcd/es_median_filter.c \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
-    ../Sources/vcd/vcd_interpolate.c \
-    ../Sources/ptImageHelper.cpp \
-    ../Sources/imagespot/ptImageSpot.cpp \
-    ../Sources/imagespot/ptRepairInteraction.cpp \
-    ../Sources/imagespot/ptRepairSpot.cpp \
-    ../Sources/imagespot/ptImageSpotEditor.cpp \
-    ../Sources/imagespot/ptImageSpotItemDelegate.cpp \
-    ../Sources/imagespot/ptImageSpotListView.cpp \
-    ../Sources/imagespot/ptImageSpotModel.cpp \
-    ../Sources/imagespot/ptLocalSpot.cpp \
-    ../Sources/imagespot/ptSpotInteraction.cpp
+    ../Sources/vcd/vcd_interpolate.c
+    ../Sources/filters/imagespot/ptFilter_SpotTuning.cpp \
+    ../Sources/filters/imagespot/ptImageSpot.cpp \
+    ../Sources/filters/imagespot/ptImageSpotEditor.cpp \
+    ../Sources/filters/imagespot/ptImageSpotItemDelegate.cpp \
+    ../Sources/filters/imagespot/ptImageSpotModel.cpp \
+    ../Sources/filters/imagespot/ptTuningSpot.cpp \
+    ../Sources/filters/imagespot/ptRepairInteraction.cpp \
+    ../Sources/filters/imagespot/ptRepairSpot.cpp \
+    ../Sources/filters/imagespot/ptSpotInteraction.cpp \
+    ../Sources/filters/imagespot/ptSpotListWidget.cpp \
+    ../Sources/filters/imagespot/ptSpotListWidgetHelper.cpp \
+    ../Sources/ptTempFile.cpp \
+    ../Sources/filters/imagespot/ptImageSpotList.cpp
 
 
 FORMS += \
     ../Sources/filemgmt/ptFileMgrWindow.ui \
-    ../Sources/ptMainWindow.ui
+    ../Sources/ptMainWindow.ui \
+    ../Sources/filters/ptFilter_Wiener.ui \
+    ../Sources/filters/ptFilter_Outline.ui \
+    ../Sources/filters/imagespot/ptFilter_SpotTuning.ui \
+    ../Sources/filters/imagespot/ptSpotListWidget.ui
 
 RESOURCES += ../qrc/photivo.qrc
 

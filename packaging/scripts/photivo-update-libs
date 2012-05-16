@@ -3,10 +3,10 @@
 cpDestOpts=--preserve=timestamps
 Prefix=/my
 
-if [[ "$PT_REPO_PATH" == "" ]];              then printf "PT_REPO_PATH not set!\n"     ; exit 1 ; fi
-if [[ "$PT_BINDIR"    == "" ]];              then printf "PT_BINDIR not set!\n"        ; exit 1 ; fi
-if [[ "$PT_BIT"       == "" ]];              then printf "PT_BIT not set!\n"           ; exit 1 ; fi
-if [[ ($PT_BIT != 64) && ($PT_BIT != 32) ]]; then printf "Wrong PT_BIT (${PT_BIT})!\n" ; exit 1 ; fi
+if [[ "$PhotivoRepoPath"  == "" ]];            then printf "PhotivoRepoPath not set!\n"    ; exit 1 ; fi
+if [[ "$PhotivoBuildPath" == "" ]];            then printf "PhotivoBuildPath not set!\n"   ; exit 1 ; fi
+if [[ "$GccArch"       == "" ]];               then printf "GccArch not set!\n"            ; exit 1 ; fi
+if [[ ($GccArch != 64) && ($GccArch != 32) ]]; then printf "Wrong GccArch (${GccArch})!\n" ; exit 1 ; fi
 
 Result () {
   if [[ $1 == 0 ]]; then
@@ -23,11 +23,11 @@ Result () {
 if [[ "$1" != "" ]]; then
   TheBindir="$1"
 else
-  if [ ! -d "$PT_REPO_PATH" ]; then
-    echo "Path to repository \"$PT_REPO_PATH\" not found."
+  if [ ! -d "$PhotivoBuildPath" ]; then
+    echo "Path to build folder \"$PhotivoBuildPath\" not found."
     exit 1
   fi
-  TheBindir="$PT_REPO_PATH/$PT_BINDIR"
+  TheBindir="$PhotivoBuildPath"
 fi
 
 
@@ -39,7 +39,7 @@ else
   rm -f "$TheBindir/*.dll"
 fi
 
-if [[ "$PT_BIT" == "64" ]]; then
+if [[ "$GccArch" == "64" ]]; then
   cd /mingw/qt/bin && \
   cp QtCore4.dll \
      QtGui4.dll \
@@ -60,7 +60,7 @@ if [[ "$PT_BIT" == "64" ]]; then
      zlib1.dll \
      $TheBindir $cpDestOpts
 
-elif [[ "$PT_BIT" == "32" ]]; then
+elif [[ "$GccArch" == "32" ]]; then
   cd /mingw/qt/bin && \
   cp QtCore4.dll \
      QtGui4.dll \

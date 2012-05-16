@@ -36,9 +36,11 @@
 #include "ptChannelMixer.h"
 #include "ptCimg.h"
 #include "ptFastBilateral.h"
-#include "ptWiener.h"
 #include "ptMessageBox.h"
 #include "ptImageHelper.h"
+#include <filters/ptFilterDM.h>
+#include <filters/ptFilterBase.h>
+#include <filters/ptFilterUids.h>
 
 #include "ptProcessor.h"
 
@@ -169,6 +171,9 @@ void ptProcessor::Run(short Phase,
                       short ProcessorMode)
 {
   try {
+    // Temp var for new-style filters. Needs to be up here to not interfere with gotos and case labels.
+    ptFilterBase *hFilter = nullptr;
+
     printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
 
     static short PreviousProcessorMode = ptProcessorMode_Preview;
@@ -201,6 +206,7 @@ void ptProcessor::Run(short Phase,
         Phase = ptProcessorPhase_Geometry;
       }
     }
+
 
     switch(Phase) {
       //------------------------------------------------------------------------------
@@ -412,12 +418,11 @@ void ptProcessor::Run(short Phase,
 
       //------------------------------------------------------------------------------
 
-      case ptProcessorPhase_RGB : // Run everything in RGB.
+      case ptProcessorPhase_RGB: // Run everything in RGB.
         // Geometry block
         // This will skip the rest of the pipe, to make geometry adjustments easier.
 
         if (Settings->ToolIsActive("TabBlock")){ // &&
-          //~ MainWindow->GetCurrentTab() == ptGeometryTab) {
           if (!m_Image_AfterRGB) m_Image_AfterRGB = new ptImage();
           m_Image_AfterRGB->Set(m_Image_AfterGeometry);
           if (!m_Image_AfterLabCC) m_Image_AfterLabCC = new ptImage();
@@ -460,50 +465,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Highlights
 
-        if (Settings->ToolIsActive("TabHighlights")) {
-
-          ptCurve* HighlightsCurve = new ptCurve();
-          HighlightsCurve->m_Type = ptCurveType_Anchor;
-          HighlightsCurve->m_IntendedChannel = ptCurveChannel_RGB;
-          HighlightsCurve->m_NrAnchors=12;
-          for (int i=0; i<11; i++) {
-            HighlightsCurve->m_XAnchor[i]=(double) i/33.0;
-            HighlightsCurve->m_YAnchor[i]=(double) i/33.0;
-          }
-          if (Settings->GetDouble("HighlightsR") < 0) {
-            HighlightsCurve->m_XAnchor[11]=1.0;
-            HighlightsCurve->m_YAnchor[11]=1.0+0.5*Settings->GetDouble("HighlightsR");
-            HighlightsCurve->SetCurveFromAnchors();
-            m_Image_AfterRGB->ApplyCurve(HighlightsCurve,1);
-          } else if (Settings->GetDouble("HighlightsR") > 0) {
-            HighlightsCurve->m_XAnchor[11]=1.0-0.5*Settings->GetDouble("HighlightsR");
-            HighlightsCurve->m_YAnchor[11]=1.0;
-            HighlightsCurve->SetCurveFromAnchors();
-            m_Image_AfterRGB->ApplyCurve(HighlightsCurve,1);
-          }
-          if (Settings->GetDouble("HighlightsG") < 0) {
-            HighlightsCurve->m_XAnchor[11]=1.0;
-            HighlightsCurve->m_YAnchor[11]=1.0+0.5*Settings->GetDouble("HighlightsG");
-            HighlightsCurve->SetCurveFromAnchors();
-            m_Image_AfterRGB->ApplyCurve(HighlightsCurve,2);
-          } else if (Settings->GetDouble("HighlightsG") > 0) {
-            HighlightsCurve->m_XAnchor[11]=1.0-0.5*Settings->GetDouble("HighlightsG");
-            HighlightsCurve->m_YAnchor[11]=1.0;
-            HighlightsCurve->SetCurveFromAnchors();
-            m_Image_AfterRGB->ApplyCurve(HighlightsCurve,2);
-          }
-          if (Settings->GetDouble("HighlightsB") < 0) {
-            HighlightsCurve->m_XAnchor[11]=1.0;
-            HighlightsCurve->m_YAnchor[11]=1.0+0.5*Settings->GetDouble("HighlightsB");
-            HighlightsCurve->SetCurveFromAnchors();
-            m_Image_AfterRGB->ApplyCurve(HighlightsCurve,4);
-          } else if (Settings->GetDouble("HighlightsB") > 0) {
-            HighlightsCurve->m_XAnchor[11]=1.0-0.5*Settings->GetDouble("HighlightsB");
-            HighlightsCurve->m_YAnchor[11]=1.0;
-            HighlightsCurve->SetCurveFromAnchors();
-            m_Image_AfterRGB->ApplyCurve(HighlightsCurve,4);
-          }
-          delete HighlightsCurve;
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Highlights_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(tr("Highlights"));
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
@@ -559,42 +524,29 @@ void ptProcessor::Run(short Phase,
 
         if (Settings->ToolIsActive("TabBrightness")) {
           m_ReportProgress(tr("Brightness"));
-          ptCurve* CatchWhiteCurve = new ptCurve();
-          CatchWhiteCurve->m_Type = ptCurveType_Anchor;
-          CatchWhiteCurve->m_IntendedChannel = ptCurveChannel_RGB;
+
+          TAnchorList hAnchors;
           if (Settings->GetDouble("CatchBlack") > 0) {
-            CatchWhiteCurve->m_XAnchor[0]=0.0;
-            CatchWhiteCurve->m_YAnchor[0]=0.02*Settings->GetDouble("CatchBlack");
+            hAnchors.push_back(TAnchor(0.0, 0.02*Settings->GetDouble("CatchBlack")));
           } else {
-            CatchWhiteCurve->m_XAnchor[0]=-0.02*Settings->GetDouble("CatchBlack");
-            CatchWhiteCurve->m_YAnchor[0]=0.0;
+            hAnchors.push_back(TAnchor(-0.02*Settings->GetDouble("CatchBlack"), 0.0));
           }
           for (int i=3; i<12; i++) {
-            CatchWhiteCurve->m_XAnchor[i-2]=(double) i/20.0;
-            CatchWhiteCurve->m_YAnchor[i-2]=(double) i/20.0;
+            hAnchors.push_back(TAnchor((double) i/20.0, (double) i/20.0));
           }
-          if (Settings->GetDouble("CatchWhite") > 0) {
-            CatchWhiteCurve->m_XAnchor[10]=1.0;
-            CatchWhiteCurve->m_YAnchor[10]=1.0-0.40*Settings->GetDouble("CatchWhite");
+          if (Settings->GetDouble("CatchWhite") > 0) {            
+            hAnchors.push_back(TAnchor(1.0, 1.0-0.40*Settings->GetDouble("CatchWhite")));
           } else {
-            CatchWhiteCurve->m_XAnchor[10]=1.0+0.40*Settings->GetDouble("CatchWhite");
-            CatchWhiteCurve->m_YAnchor[10]=1.0;
+            hAnchors.push_back(TAnchor(1.0+0.40*Settings->GetDouble("CatchWhite"), 1.0));
           }
-          CatchWhiteCurve->m_NrAnchors=11;
-          CatchWhiteCurve->SetCurveFromAnchors();
+          auto CatchWhiteCurve = new ptCurve(hAnchors);
           m_Image_AfterRGB->ApplyCurve(CatchWhiteCurve,7);
 
-          ptCurve* ExposureGainCurve = new ptCurve();
-          ExposureGainCurve->m_Type = ptCurveType_Anchor;
-          ExposureGainCurve->m_IntendedChannel = ptCurveChannel_RGB;
-          ExposureGainCurve->m_XAnchor[0]=0.0;
-          ExposureGainCurve->m_YAnchor[0]=0.0;
-          ExposureGainCurve->m_XAnchor[1]=0.5-0.2*Settings->GetDouble("ExposureGain");
-          ExposureGainCurve->m_YAnchor[1]=0.5+0.2*Settings->GetDouble("ExposureGain");
-          ExposureGainCurve->m_XAnchor[2]=1.0;
-          ExposureGainCurve->m_YAnchor[2]=1.0;
-          ExposureGainCurve->m_NrAnchors=3;
-          ExposureGainCurve->SetCurveFromAnchors();
+          ptCurve* ExposureGainCurve = new ptCurve(
+              {TAnchor(0.0, 0.0),
+               TAnchor(0.5-0.2*Settings->GetDouble("ExposureGain"),
+                                0.5+0.2*Settings->GetDouble("ExposureGain")),
+               TAnchor(1.0, 1.0)});
           // Merging these two curves results in bad results, no clue
           // ExposureGainCurve->ApplyCurve(CatchWhiteCurve,0);
 
@@ -621,11 +573,10 @@ void ptProcessor::Run(short Phase,
             m_Image_AfterRGB->Expose(ExposureFactor,
                                      Settings->GetInt("ExposureClipMode"));
           } else {
-            if (!ExposureCurve) ExposureCurve = new ptCurve();
-            ExposureCurve->SetCurveFromFunction(ExposureFunction,
-                                                ExposureFactor,
-                                                0);
+            auto ExposureCurve = new ptCurve();
+            ExposureCurve->setFromFunc(ExposureFunction, ExposureFactor, 0);
             m_Image_AfterRGB->ApplyCurve(ExposureCurve,7);
+            delete ExposureCurve;
           }
         }
 
@@ -646,16 +597,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Gamma tool
 
-        if (Settings->ToolIsActive("TabGammaTool")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::GammaTool_RGB);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying RGB Gamma"));
-
-          if (!RGBGammaCurve) RGBGammaCurve = new ptCurve();
-          RGBGammaCurve->SetCurveFromFunction(
-                                     GammaTool,
-                                     Settings->GetDouble("RGBGammaAmount"),
-                                     Settings->GetDouble("RGBGammaLinearity"));
-          m_Image_AfterRGB->ApplyCurve(RGBGammaCurve,7);
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
@@ -755,7 +700,7 @@ void ptProcessor::Run(short Phase,
             Settings->GetDouble("Microcontrast1Softness"));
         }
 
-       if (Settings->ToolIsActive("TabRGBLocalContrast2")) {
+        if (Settings->ToolIsActive("TabRGBLocalContrast2")) {
 
           m_ReportProgress(tr("Microcontrast 2"));
 
@@ -774,12 +719,10 @@ void ptProcessor::Run(short Phase,
        //***************************************************************************
        // RGB Contrast.
 
-        if (Settings->ToolIsActive("TabRGBContrast")) {
-
-          m_ReportProgress(tr("Applying RGB Contrast"));
-
-          m_Image_AfterRGB->SigmoidalContrast(Settings->GetDouble("RGBContrastAmount"),
-                                              Settings->GetDouble("RGBContrastThreshold"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::SigContrastRgb_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(tr("Applying RGB contrast"));
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
@@ -801,14 +744,11 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // RGB Curves.
 
-        if (Settings->ToolIsActive("TabRGBCurve")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::RgbCurve_RGB);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying RGB curve"));
-
-          m_Image_AfterRGB->ApplyCurve(Curve[ptCurveChannel_RGB],7);
-
+          hFilter->runFilter(m_Image_AfterRGB);
           TRACEMAIN("Done RGB Curve at %d ms.",FRunTimer.elapsed());
-
         }
 
       case ptProcessorPhase_LabCC : // Run everything in LAB.
@@ -836,22 +776,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Shadows Highlights
 
-        if (Settings->ToolIsActive("TabLABShadowsHighlights")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ShadowsHighlights_LabCC);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Shadows and Highlights"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->ShadowsHighlights(Curve[ptCurveChannel_ShadowsHighlights],
-                                                Settings->GetDouble("ShadowsHighlightsRadius")*m_ScaleFactor,
-                                                Settings->GetDouble("ShadowsHighlightsCoarse"),
-                                                Settings->GetDouble("ShadowsHighlightsFine"));
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
 
@@ -925,21 +853,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Texture curve
 
-        if (Settings->ToolIsActive("TabLABTextureCurve")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::TextureCurve_LabCC);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Texture curve"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-          m_Image_AfterLabCC->ApplyTextureCurve(Curve[ptCurveChannel_Texture],
-                                                Settings->GetInt("TextureCurveType"),
-                                                (int) (logf(m_ScaleFactor)/logf(0.5)));
+          hFilter->runFilter(m_Image_AfterLabCC);
           TRACEMAIN("Done texture curve at %d ms.",FRunTimer.elapsed());
         }
 
@@ -1083,21 +1000,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // L Contrast
 
-        if (Settings->ToolIsActive("TabLABContrast")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::SigContrastLab_LabCC);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying Lab contrast"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-           m_Image_AfterLabCC->SigmoidalContrast(Settings->GetDouble("ContrastAmount"),
-                                                 Settings->GetDouble("ContrastThreshold"),
-                                                 1);
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
 
@@ -1153,15 +1059,8 @@ void ptProcessor::Run(short Phase,
                       FRunTimer.elapsed());
           }
 
-          //~ double BP = Settings->GetDouble("LabLevelsBlackPoint");
-          //~ double WP = Settings->GetDouble("LabLevelsWhitePoint");
-          //~ BP = (BP>0)? pow(BP,Settings->GetDouble("InputPowerFactor")):
-                      //~ -pow(-BP,Settings->GetDouble("InputPowerFactor"));
-          //~ WP = pow(WP,Settings->GetDouble("InputPowerFactor"));
           m_Image_AfterLabCC->Levels(Settings->GetDouble("LabLevelsBlackPoint"),Settings->GetDouble("LabLevelsWhitePoint"));
-          //~ m_Image_AfterLab->Levels(BP,WP);
         }
-
 
       case ptProcessorPhase_LabSN : // Run everything in LABSN.
 
@@ -1378,6 +1277,7 @@ void ptProcessor::Run(short Phase,
           TRACEMAIN("Done B wavelet denoise at %d ms.",FRunTimer.elapsed());
         }
 
+        //***************************************************************************
         // Bilateral filter on L
         if (Settings->ToolIsActive("TabLuminanceDenoise")) {
 
@@ -1403,23 +1303,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Denoise curve
 
-        if (Settings->ToolIsActive("TabDenoiseCurve")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LumaDenoiseCurve_LabSN);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Denoise curve"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-          m_Image_AfterLabSN->ApplyDenoiseCurve(Settings->GetDouble("DenoiseCurveSigmaS")*m_ScaleFactor,
-                                                Settings->GetDouble("DenoiseCurveSigmaR")/10,
-                                                Curve[ptCurveChannel_Denoise2],
-                                                Settings->GetInt("Denoise2CurveType"));
-
+          hFilter->runFilter(m_Image_AfterLabSN);
           TRACEMAIN("Done denoise curve at %d ms.",FRunTimer.elapsed());
         }
 
@@ -1448,6 +1335,7 @@ void ptProcessor::Run(short Phase,
           TRACEMAIN("Done Pyramid denoise at %d ms.",FRunTimer.elapsed());
         }
 
+        //***************************************************************************
         // Bilateral filter on AB
         if (Settings->ToolIsActive("TabColorDenoise") &&
             Settings->GetDouble("BilateralASigmaR")) {
@@ -1497,29 +1385,12 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Detail / denoise curve
 
-        if (Settings->ToolIsActive("TabDetailCurve")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::DetailCurve_LabSN);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Detail curve"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-          m_Image_AfterLabSN->MLMicroContrast(0.15,
-                                              Settings->GetDouble("DetailCurveScaling"),
-                                              Settings->GetDouble("DetailCurveWeight"),
-                                              Curve[ptCurveChannel_Denoise],
-                                              Settings->GetInt("DenoiseCurveType"));
-
-          m_Image_AfterLabSN->HotpixelReduction(Settings->GetDouble("DetailCurveHotpixel"));
-
+          hFilter->runFilter(m_Image_AfterLabSN);
           TRACEMAIN("Done detail curve at %d ms.",FRunTimer.elapsed());
         }
-
 
 
         //***************************************************************************
@@ -1553,25 +1424,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Wiener Filter Sharpen
 
-        if (Settings->ToolIsActive("TabLABWiener")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Wiener_LabSN);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Wiener Filter"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          ptWienerFilterChannel(m_Image_AfterLabSN,
-                                Settings->GetDouble("WienerFilterGaussian"),
-                                Settings->GetDouble("WienerFilterBox"),
-                                Settings->GetDouble("WienerFilterLensBlur"),
-                                Settings->GetDouble("WienerFilterAmount"),
-                                Settings->GetInt("WienerFilterUseEdgeMask"));
-
+          hFilter->runFilter(m_Image_AfterLabSN);
           TRACEMAIN("Done Wiener Filter at %d ms.",FRunTimer.elapsed());
         }
 
@@ -1769,43 +1625,20 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Outline
 
-        if (Settings->ToolIsActive("TabOutline")) {
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Outline_LabEyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying Outline"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabEyeCandy->Outline(Settings->GetInt("OutlineMode"),
-                                            Settings->GetInt("OutlineGradientMode"),
-                                            Curve[ptCurveChannel_Outline],
-                                            Settings->GetDouble("OutlineWeight"),
-                                            Settings->GetDouble("OutlineBlurRadius"),
-                                            Settings->GetInt("OutlineSwitchLayer"));
-
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
           TRACEMAIN("Done Outline at %d ms.",FRunTimer.elapsed());
         }
 
         //***************************************************************************
         // LByHue Curve
 
-        if (Settings->ToolIsActive("TabLbyHue")) {
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LumaByHueCurve_LabEyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying L by Hue curve"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabEyeCandy->ApplyLByHueCurve(Curve[ptCurveChannel_LByHue]);
-
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
           TRACEMAIN("Done L by Hue Curve at %d ms.",FRunTimer.elapsed());
         }
 
@@ -1813,42 +1646,20 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Saturation Curve
 
-        if (Settings->ToolIsActive("TabSaturationCurve")) {
+        hFilter = GFilterDM->GetFilterFromName(Fuid::SatCurve_LabEyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying saturation curve"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabEyeCandy->ApplySaturationCurve(Curve[ptCurveChannel_Saturation],
-                                                         Settings->GetInt("SatCurveMode"),
-                                                         Settings->GetInt("SatCurveType"));
-
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
           TRACEMAIN("Done saturation Curve at %d ms.",FRunTimer.elapsed());
         }
 
 
         //***************************************************************************
         // Hue Curve
-
-        if (Settings->ToolIsActive("TabHueCurve")) {
+        hFilter = GFilterDM->GetFilterFromName(Fuid::HueCurve_LabEyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying hue curve"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabEyeCandy->ApplyHueCurve(Curve[ptCurveChannel_Hue],
-                                                  Settings->GetInt("HueCurveType"));
-
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
           TRACEMAIN("Done hue Curve at %d ms.",FRunTimer.elapsed());
         }
 
@@ -1856,177 +1667,65 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // L Curve
 
-        if (Settings->ToolIsActive("TabLCurve")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LCurve_LabEyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying L curve"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-
-          m_Image_AfterLabEyeCandy->ApplyCurve(Curve[ptCurveChannel_L],1);
-
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
           TRACEMAIN("Done L Curve at %d ms.",FRunTimer.elapsed());
-
-        }
-
-
         //***************************************************************************
-        // a Curve
+        // a b Curves
 
-        if (Settings->GetInt("CurveLa") &&
-            Settings->ToolIsActive("TabABCurves")) {
-
-          m_ReportProgress(tr("Applying a curve"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-
-          m_Image_AfterLabEyeCandy->ApplyCurve(Curve[ptCurveChannel_a],2);
-
-          TRACEMAIN("Done a Curve at %d ms.",FRunTimer.elapsed());
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ABCurves_LabEyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(tr("Applying a* b* curves"));
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
+          TRACEMAIN("Done a* b* curves at %d ms.",m_RunTimer.elapsed());
         }
 
-
-        //***************************************************************************
-        // b Curve
-
-        if (Settings->GetInt("CurveLb") &&
-            Settings->ToolIsActive("TabABCurves")) {
-
-          m_ReportProgress(tr("Applying b curve"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-
-          m_Image_AfterLabEyeCandy->ApplyCurve(Curve[ptCurveChannel_b],4);
-
-          TRACEMAIN("Done b Curve at %d ms.",FRunTimer.elapsed());
-
-        }
-
-
-
+        
         //***************************************************************************
         // Colorcontrast
 
-        if (Settings->ToolIsActive("TabColorContrast")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ColorContrast_LabEyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Colorcontrast"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabEyeCandy->Colorcontrast(
-            Settings->GetInt("ColorcontrastRadius")*m_ScaleFactor,
-            Settings->GetDouble("ColorcontrastAmount"),
-            Settings->GetDouble("ColorcontrastOpacity"),
-            Settings->GetDouble("ColorcontrastHaloControl"));
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
 
         //***************************************************************************
         // LAB Tone adjustments
 
-        if (Settings->ToolIsActive("TabLABToneAdjust1")) {
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ToneAdjust1_LabEyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("LAB tone adjustments 1"));
-
-          m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneAdjust1Amount"),
-              Settings->GetDouble("LABToneAdjust1Hue"),
-              Settings->GetDouble("LABToneAdjust1Saturation"),
-              Settings->GetInt("LABToneAdjust1MaskType"),
-              1,
-              Settings->GetDouble("LABToneAdjust1LowerLimit"),
-              Settings->GetDouble("LABToneAdjust1UpperLimit"),
-              Settings->GetDouble("LABToneAdjust1Softness"));
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
-        if (Settings->ToolIsActive("TabLABToneAdjust2")) {
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ToneAdjust2_LabEyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("LAB tone adjustments 2"));
-
-          m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneAdjust2Amount"),
-              Settings->GetDouble("LABToneAdjust2Hue"),
-              Settings->GetDouble("LABToneAdjust2Saturation"),
-              Settings->GetInt("LABToneAdjust2MaskType"),
-              1,
-              Settings->GetDouble("LABToneAdjust2LowerLimit"),
-              Settings->GetDouble("LABToneAdjust2UpperLimit"),
-              Settings->GetDouble("LABToneAdjust2Softness"));
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
 
         //***************************************************************************
         // Luminance adjustment
 
-        if (Settings->ToolIsActive("TabSaturationAdjustment") ||
-            Settings->ToolIsActive("TabLAdjustment")) {
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LumaAdjust_LabEyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(tr("Luminance adjustment"));
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
+        }
 
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
 
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-          m_ReportProgress(tr("Luminance and saturation adjustment"));
+        //***************************************************************************
+        // Saturation adjustment
 
-          m_Image_AfterLabEyeCandy->LAdjust(Settings->GetDouble("LAdjustC1"),
-              Settings->GetDouble("LAdjustC2"),
-              Settings->GetDouble("LAdjustC3"),
-              Settings->GetDouble("LAdjustC4"),
-              Settings->GetDouble("LAdjustC5"),
-              Settings->GetDouble("LAdjustC6"),
-              Settings->GetDouble("LAdjustC7"),
-              Settings->GetDouble("LAdjustC8"),
-              Settings->GetDouble("LAdjustSC1"),
-              Settings->GetDouble("LAdjustSC2"),
-              Settings->GetDouble("LAdjustSC3"),
-              Settings->GetDouble("LAdjustSC4"),
-              Settings->GetDouble("LAdjustSC5"),
-              Settings->GetDouble("LAdjustSC6"),
-              Settings->GetDouble("LAdjustSC7"),
-              Settings->GetDouble("LAdjustSC8"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::SatAdjust_LabEyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(tr("Saturation adjustment"));
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
 
@@ -2252,12 +1951,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // RGB Contrast.
 
-        if (Settings->ToolIsActive("TabECContrast")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::SigContrastRgb_EyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying RGB Contrast"));
-
-          m_Image_AfterEyeCandy->SigmoidalContrast(Settings->GetDouble("RGBContrast2Amount"),
-                                                   Settings->GetDouble("RGBContrast2Threshold"));
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
 
@@ -2596,34 +2293,26 @@ void ptProcessor::Run(short Phase,
 
         //***************************************************************************
         // Tone curves
-        if (Settings->ToolIsActive("TabRToneCurve")) {
 
+        hFilter = GFilterDM->GetFilterFromName(Fuid::RTone_EyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying R curve"));
-
-          m_Image_AfterEyeCandy->ApplyCurve(Curve[ptCurveChannel_R],1);
-
+          hFilter->runFilter(m_Image_AfterEyeCandy);
           TRACEMAIN("Done R Curve at %d ms.",FRunTimer.elapsed());
-
         }
 
-        if (Settings->ToolIsActive("TabGToneCurve")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::GTone_EyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying G curve"));
-
-          m_Image_AfterEyeCandy->ApplyCurve(Curve[ptCurveChannel_G],2);
-
+          hFilter->runFilter(m_Image_AfterEyeCandy);
           TRACEMAIN("Done G Curve at %d ms.",FRunTimer.elapsed());
-
         }
 
-        if (Settings->ToolIsActive("TabBToneCurve")) {
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::BTone_EyeCandy);
+        if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying B curve"));
-
-          m_Image_AfterEyeCandy->ApplyCurve(Curve[ptCurveChannel_B],4);
-
+          hFilter->runFilter(m_Image_AfterEyeCandy);
           TRACEMAIN("Done B Curve at %d ms.",FRunTimer.elapsed());
-
         }
 
 
@@ -2699,7 +2388,8 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
       m_Image_AfterLocalEdit->Set(m_Image_AfterDcRaw);
     }
   }
-
+// TODO: spot processing
+return;
   // We have the image for the pipe in linear RGB.
 
   if (StopBefore == ptProcessorStopBefore::LocalAdjust) return;
@@ -2711,7 +2401,7 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
     }
 
     assert(LocalSpotModel != nullptr);
-    m_Image_AfterLocalEdit->RGBToLch();
+//    m_Image_AfterLocalEdit->RGBToLch();
 
     LocalSpotModel->RunFiltering(m_Image_AfterLocalEdit);
 
@@ -2737,7 +2427,7 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
 //  }
 
   // Currently we assume that we only have LCH color space for local edits.
-  m_Image_AfterLocalEdit->LchToRGB(Settings->GetInt("WorkColor"));
+//  m_Image_AfterLocalEdit->LchToRGB(Settings->GetInt("WorkColor"));
 }
 
 //==============================================================================

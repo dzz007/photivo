@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -21,72 +22,89 @@
 **
 *******************************************************************************/
 
-#ifndef DLCHOICE_H
-#define DLCHOICE_H
+#ifndef PTCHOICE_H
+#define PTCHOICE_H
+
+//==============================================================================
 
 #include <QtGui>
 #include "ptGuiOptions.h"
+#include "ptWidget.h"
+#include "ptInfo.h"
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ptChoice is a object showing a choice element with associated widgets
-//
-////////////////////////////////////////////////////////////////////////////////
+class ptCfgItem;
 
-class ptChoice : public QWidget {
+//==============================================================================
 
+class ptChoice: public ptWidget {
 Q_OBJECT
 
-public :
+public:
+  ptChoice(const QWidget*          MainWindow,
+           const QString           ObjectName,
+           const QString           ParentName,
+           const short             HasDefaultValue,
+           const QVariant          Default,
+           const ptGuiOptionsItem* InitialOptions,
+           const QString           ToolTip,
+           const int               TimeOut);
+  ptChoice(const ptCfgItem &ACfgItem, QWidget *AParent);
+  ptChoice(QWidget *AParent);
+  ~ptChoice();
 
-ptChoice(const QWidget*          MainWindow,
-         const QString           ObjectName,
-         const QString           ParentName,
-         const short             HasDefaultValue,
-         const QVariant          Default,
-         const ptGuiOptionsItem* InitialOptions,
-         const QString           ToolTip,
-         const int     TimeOut);
-// Destructor.
-~ptChoice();
+  /*! Reimplemented from base class.
+      For compatibility with the new GUI structure. Just calls SetValue().
+   */
+  void    setValue(const QVariant &AValue);
 
-// Matches Value with a value in combobox.
-void SetValue(const QVariant Value, const short BlockSignal = 1);
-void AddOrReplaceItem(const QString Text,const QVariant Data);
-int  Count(void) { return m_ComboBox->count(); };
-void SetEnabled(const short Enabled);
-void Clear(const short WithDefault = 0);
-void Show(const short Show);
-QVariant GetItemData(const int Index) { return m_ComboBox->itemData(Index); };
-QString  CurrentText(void) { return m_ComboBox->currentText(); };
-void Reset();
-QString GetName() {return m_SettingsName;}
+  void    init(const ptCfgItem &ACfgItem);
 
-private slots:
-void OnValueChanged(int Value);
-void OnButtonClicked();
-void OnValueChangedTimerExpired();
+  void      SetValue(const QVariant Value, const short BlockSignal = 1);
+  void      AddOrReplaceItem(const QString Text,const QVariant Data);
+  int       Count(void) { return m_ComboBox->count(); }
+  void      SetEnabled(const short Enabled);
+  void      Clear(const short WithDefault = 0);
+  void      Show(const short Show);
+  QVariant  GetItemData(const int Index) { return m_ComboBox->itemData(Index); }
+  QString   CurrentText(void) { return m_ComboBox->currentText(); }
+  void      Reset();
+  QString   GetName() {return m_SettingsName;}
 
-signals :
-void valueChanged(QVariant Value);
+//-------------------------------------
 
 protected:
-bool eventFilter(QObject *obj, QEvent *event);
+  bool eventFilter(QObject *obj, QEvent *event);
+
+//-------------------------------------
 
 private:
-QVariant m_Value;
-QVariant m_DefaultValue;
-short    m_HaveDefault;
-int      m_TimeOut;
-const ptGuiOptionsItem* m_InitialOptions;
+  void createGUI();
 
-QWidget*     m_Parent;
-QComboBox*   m_ComboBox;
-QToolButton* m_Button;
-QTimer*      m_Timer;
-QString      m_SettingsName;
+  QVariant m_Value;
+  QVariant m_DefaultValue;
+  short    m_HaveDefault;
+  int      m_TimeOut;
+  const ptGuiOptionsItem* m_InitialOptions;
+  QStringList             m_InitialOptionsNewschool;
+
+  QWidget*     m_Parent;
+  QComboBox*   m_ComboBox;
+  QToolButton* m_Button;
+  QTimer*      m_Timer;
+  QString      m_SettingsName;
+
+//-------------------------------------
+
+signals:
+  void valueChanged(QVariant Value);
+
+//-------------------------------------
+
+private slots:
+  void OnValueChanged(int Value);
+  void OnButtonClicked();
+  void OnValueChangedTimerExpired();
+
 };
 
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
+#endif // PTCHOICE_H

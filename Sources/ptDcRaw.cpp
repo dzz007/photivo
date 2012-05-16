@@ -1289,7 +1289,7 @@ void CLASS nikon_compressed_load_raw()
       else     hpred[col & 1] += diff;
       if ((uint16_t)(hpred[col & 1] + min) >= max) derror();
       if ((unsigned) (col-m_LeftMargin) < m_Width)
-  BAYER(row,col-m_LeftMargin)=m_Curve[LIM((short)hpred[col&1],0,0x3fff)];
+  BAYER(row,col-m_LeftMargin)=m_Curve[LIM((int32_t)hpred[col&1],0,0x3fff)];
     }
   }
   FREE(huff);
@@ -1560,7 +1560,7 @@ void CLASS phase_one_flat_field (int is_float, int nc)
     c = nc > 2 ? FC(row,col) : 0;
     if (!(c & 1)) {
       c = unsigned ( BAYER(row,col) * mult[c] );
-      BAYER(row,col) = MIN(c,65535);
+      BAYER(row,col) = MIN((int32_t)c,65535);
     }
     for (c=0; c < (unsigned) nc; c+=2)
       mult[c] += mult[c+1];
@@ -1604,7 +1604,7 @@ void CLASS phase_one_correct()
       poly[3] += (ph1.tag_210 - poly[7]) * poly[6] + 1;
       for (i=0; i < 0x10000; i++) {
   num = (poly[5]*i + poly[3])*i + poly[1];
-  m_Curve[i] = (uint16_t) LIM(num,0,65535);
+  m_Curve[i] = (uint16_t) LIM((int32_t)num,0,65535);
       } goto apply;       /* apply to right half */
     } else if (tag == 0x41a) {      /* Polynomial curve */
       for (i=0; i < 4; i++)
@@ -1612,7 +1612,7 @@ void CLASS phase_one_correct()
       for (i=0; i < 0x10000; i++) {
   for (num=0, j=4; j--; )
     num = num * i + poly[j];
-  m_Curve[i] = (uint16_t) LIM(num+i,0,65535);
+  m_Curve[i] = (uint16_t) LIM((int32_t)(num+i),0,65535);
       } apply:          /* apply to whole image */
       for (row=0; row < m_Height; row++)
   for (col = (tag & 1)*ph1.split_col; col < m_Width; col++)
@@ -3760,40 +3760,7 @@ void CLASS hat_transform (float *temp, float *base, int st, int size, int sc)
 ////////////////////////////////////////////////////////////////////////////////
 
 void CLASS ptAdjustMaximum(double Threshold) {
-  //~ uint16_t ChannelMaximum[4], AbsoluteMaximum;
-  //~ short c;
-//~
-  //~ for (c=0; c<4; c++) ChannelMaximum[c] = 0;
-  //~ AbsoluteMaximum = 0;
-//~
-//~ #pragma omp parallel
-//~ { // begin parallel
-  //~ uint16_t OmpCM[4];
-  //~ for (short i=0; i<4; i++) OmpCM[i] = 0;
-//~
-//~ #pragma omp for schedule(static) private(c)
-  //~ for (uint32_t i=0; i<m_OutHeight*m_OutWidth; i++) {
-    //~ for (c=0; c<4; c++) {
-      //~ if(OmpCM[c] < m_Image[i][c])
-        //~ OmpCM[c] = m_Image[i][c];
-    //~ }
-  //~ }
-//~ #pragma omp critical
-  //~ {
-    //~ for (short i=0; i<4; i++)
-      //~ if(OmpCM[i] > ChannelMaximum[i]) ChannelMaximum[i] = OmpCM[i];
-  //~ }
-//~ } // end of parallel
-//~
-  //~ for (c=0; c<4; c++)
-    //~ AbsoluteMaximum = MAX(AbsoluteMaximum,ChannelMaximum[c]);
-//~
-  //~ if (AbsoluteMaximum < m_WhiteLevel &&
-      //~ AbsoluteMaximum > m_WhiteLevel*Threshold)
-    //~ m_WhiteLevel = AbsoluteMaximum;
-//~
-  //~ TRACEKEYVALS("Absolute Maximum","%d",AbsoluteMaximum);
-m_WhiteLevel = LIM((int32_t)(Threshold*(double)m_WhiteLevel),0, 4095);
+  m_WhiteLevel = LIM((int32_t)(Threshold*(double)m_WhiteLevel),0, 4095);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3830,8 +3797,8 @@ void CLASS ptScaleColors() {
   if ( m_UserSetting_AutoWb ||
       (m_UserSetting_CameraWb && VALUE(m_CameraMultipliers[0]) == -1)) {
     memset (dsum, 0, sizeof dsum);
-    bottom = MIN (m_UserSetting_GreyBox[1]+m_UserSetting_GreyBox[3], m_Height);
-    right  = MIN (m_UserSetting_GreyBox[0]+m_UserSetting_GreyBox[2], m_Width);
+    bottom = MIN (m_UserSetting_GreyBox[1]+m_UserSetting_GreyBox[3], (int32_t)m_Height);
+    right  = MIN (m_UserSetting_GreyBox[0]+m_UserSetting_GreyBox[2], (int32_t)m_Width);
     TRACEKEYVALS("AutoWB GreyBox[0]","%d",m_UserSetting_GreyBox[0]);
     TRACEKEYVALS("AutoWB GreyBox[1]","%d",m_UserSetting_GreyBox[1]);
     TRACEKEYVALS("AutoWB GreyBox[2]","%d",m_UserSetting_GreyBox[2]);
@@ -3961,7 +3928,7 @@ void CLASS ptScaleColors() {
   for (uint32_t i = 0; i < 0xffff; i++) {
     for (short c = 0; c < 4; c++) {
       LUT[i][c] = i>m_CBlackLevel[c]?
-                    MIN((uint32_t)((i - m_CBlackLevel[c])*VALUE(m_Multipliers[c])),0xffff):0;
+                    MIN((int32_t)((i - m_CBlackLevel[c])*VALUE(m_Multipliers[c])),0xffff):0;
     }
   }
 
@@ -4040,7 +4007,7 @@ void CLASS ptHighlight(const short  ClipMode,
           // is clipped at its saturation level.
           ClippedPixel[Color] =
             MIN(0xFFFF,
-                (uint32_t)(m_Image[Pos][Color]/m_MinPreMulti));
+                (int32_t)(m_Image[Pos][Color]/m_MinPreMulti));
           // And now we correct it back for the increased exposure.
           // (but clipped stays clipped !)
           ClippedPixel[Color] = (uint16_t)(ClippedPixel[Color]* m_MinPreMulti);
@@ -4454,7 +4421,7 @@ void CLASS ppg_interpolate()
         ABS(pix[-3*d][1] - pix[-d][1]) ) * 2;
       }
       d = dir[i = diff[0] > diff[1]];
-      pix[0][1] = ULIM(guess[i] >> 2, pix[d][1], pix[-d][1]);
+      pix[0][1] = ULIM(guess[i] >> 2, (int32_t)pix[d][1], (int32_t)pix[-d][1]);
     }
 /*  Calculate red and blue for each green pixel:    */
 #pragma omp for
@@ -4533,10 +4500,10 @@ void CLASS ahd_interpolate()
                   pix = m_Image + row*m_Width+col;
                   val = ((pix[-1][1] + pix[0][c] + pix[1][1]) * 2
                          - pix[-2][c] - pix[2][c]) >> 2;
-                  rgb[0][row-top][col-left][1] = ULIM(val,pix[-1][1],pix[1][1]);
+                  rgb[0][row-top][col-left][1] = ULIM(val,(int32_t)pix[-1][1],(int32_t)pix[1][1]);
                   val = ((pix[-m_Width][1] + pix[0][c] + pix[m_Width][1]) * 2
                          - pix[-2*m_Width][c] - pix[2*m_Width][c]) >> 2;
-                  rgb[1][row-top][col-left][1] = ULIM(val,pix[-m_Width][1],pix[m_Width][1]);
+                  rgb[1][row-top][col-left][1] = ULIM(val,(int32_t)pix[-m_Width][1],(int32_t)pix[m_Width][1]);
               }
           }
           /*  Interpolate red and blue, and convert to CIELab:    */
@@ -8706,7 +8673,6 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
 
   // Median filter.
   if (!m_IsFoveon && m_Colors == 3) {
-    //~ if (m_UserSetting_MedianPasses > 0)  ptMedianFilter();
     if (m_UserSetting_MedianPasses > 0)  median_filter_new();
     if (m_UserSetting_ESMedianPasses > 0 && !m_UserSetting_HalfSize) es_median_filter();
     if (m_UserSetting_EeciRefine == 1)  refinement();
@@ -8836,7 +8802,7 @@ void CLASS ptBlendHighlights() {
       if (c == m_Colors) continue; // No clip
       for (c=0; c<m_Colors; c++) {
   Cam[0][c] = m_Image[Row*m_Width+Column][c];
-  Cam[1][c] = MIN(Cam[0][c],ClipLevel);
+  Cam[1][c] = MIN(Cam[0][c],(float)ClipLevel);
       }
       for (i=0; i < 2; i++) {
   for (c=0; c<m_Colors; c++) {

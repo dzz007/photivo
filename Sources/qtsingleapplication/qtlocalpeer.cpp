@@ -37,6 +37,7 @@
 **
 ****************************************************************************/
 
+#include <unistd.h>
 
 #include "qtlocalpeer.h"
 #include <QtCore/QCoreApplication>

@@ -54,8 +54,8 @@
 #include "ptSimpleRectInteraction.h"
 #include "ptRichRectInteraction.h"
 #include "ptGridInteraction.h"
-#include "imagespot/ptSpotInteraction.h"
-#include "imagespot/ptRepairInteraction.h"
+#include "filters/imagespot/ptSpotInteraction.h"
+#include "filters/imagespot/ptRepairInteraction.h"
 
 //==============================================================================
 

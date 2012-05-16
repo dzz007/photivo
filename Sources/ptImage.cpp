@@ -21,11 +21,15 @@
 **
 *******************************************************************************/
 
+#include <algorithm>
+#include <parallel/algorithm>
+#include <stack>
+
 // std stuff needs to be declared apparently for jpeglib
 // which seems a bug in the jpeglib header ?
-#include <stack>
 #include <cstdlib>
 #include <cstdio>
+
 #include <QString>
 #include <QTime>
 #include <functional>
@@ -56,18 +60,16 @@
 #include "ptCalloc.h"
 #include "ptConstants.h"
 #include "ptError.h"
+#include "ptInfo.h"
 #include "ptImage.h"
 #include "ptMessageBox.h"
 #include "ptResizeFilters.h"
 #include "ptCurve.h"
-#include "imagespot/ptLocalSpot.h"
 #include "ptKernel.h"
 #include "ptConstants.h"
 #include "ptRefocusMatrix.h"
 #include "ptCimg.h"
 #include "ptFastBilateral.h"
-//~ #include "ptImageMagick.h"
-//~ #include "ptImageMagickC.h"
 
 extern cmsCIExyY       D65;
 extern cmsCIExyY       D50;
@@ -80,6 +82,8 @@ extern float    ToFloatTable[0x10000];
 extern float    ToFloatABNeutral[0x10000];
 extern uint16_t ToInvertTable[0x10000];
 extern uint16_t ToSRGBTable[0x10000];
+
+short ptImage::CurrentRGBMode = 0;
 
 //==============================================================================
 
@@ -700,9 +704,9 @@ ptImage* ptImage::RGBToLab() {
     xyz[2] = ToLABFunctionTable[ (int32_t) MAX(0.0,xyz[2]+0.5) ];
 
     // L in 0 , a in 1, b in 2
-    m_Image[i][0] = CLIP(0xffff*(116.0/100.0 * xyz[1] - 16.0/100.0));
-    m_Image[i][1] = CLIP(0x101*(128.0+500.0*(xyz[0]-xyz[1])));
-    m_Image[i][2] = CLIP(0x101*(128.0+200.0*(xyz[1]-xyz[2])));
+    m_Image[i][0] = CLIP((int32_t) (0xffff*(116.0/100.0 * xyz[1] - 16.0/100.0)));
+    m_Image[i][1] = CLIP((int32_t) (0x101*(128.0+500.0*(xyz[0]-xyz[1]))));
+    m_Image[i][2] = CLIP((int32_t) (0x101*(128.0+200.0*(xyz[1]-xyz[2]))));
 
   }
 
@@ -710,7 +714,7 @@ ptImage* ptImage::RGBToLab() {
   m_ColorSpace = ptSpace_Lab;
 
   return this;
-};
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -790,7 +794,7 @@ ptImage* ptImage::lcmsRGBToLab(const int Intent) {
   m_ColorSpace = ptSpace_Lab;
 
   return this;
-};
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -801,6 +805,8 @@ ptImage* ptImage::lcmsRGBToLab(const int Intent) {
 
 ptImage* ptImage::LabToRGB(const short To) {
 
+  if (m_ColorSpace == To) return this;
+
   if (!(m_ColorSpace == ptSpace_Lab)) {
     ptMessageBox::critical(0,"Error","Too fast! Keep cool ;-)");
     return this;
@@ -808,7 +814,6 @@ ptImage* ptImage::LabToRGB(const short To) {
 
   assert (3 == m_Colors);
   assert ((To>0) && (To<5));
-  //~ assert (m_ColorSpace == ptSpace_Lab);
 
   double DReference[3];
   switch (To) {
@@ -878,7 +883,7 @@ ptImage* ptImage::LabToRGB(const short To) {
   m_ColorSpace = To;
 
   return this;
-};
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -966,7 +971,6 @@ ptImage* ptImage::lcmsLabToRGB(const short To,
 //==============================================================================
 
 ptImage *ptImage::RGBToLch() {
-
   if (m_ColorSpace == ptSpace_LCH) return this;
 
   this->RGBToLab();
@@ -978,7 +982,6 @@ ptImage *ptImage::RGBToLch() {
 //==============================================================================
 
 ptImage *ptImage::LchToRGB(const short To) {
-
   if (m_ColorSpace == To) return this;
 
   LchToLab();
@@ -988,8 +991,7 @@ ptImage *ptImage::LchToRGB(const short To) {
 
 //==============================================================================
 
-void ptImage::ResizeLCH(size_t ASize)
-{
+void ptImage::ResizeLCH(size_t ASize) {
   m_ImageL.resize(ASize);
   m_ImageL.shrink_to_fit();
   m_ImageC.resize(ASize);
@@ -1024,14 +1026,31 @@ ptImage *ptImage::LabToLch()
   FREE(m_Image);
   m_Image      = nullptr;
   m_ColorSpace = ptSpace_LCH;
+}
+
+ptImage *ptImage::toRGB()
+{
+  if      (m_ColorSpace == ptSpace_Lab)      LabToRGB(getCurrentRGB());
+  else if (m_ColorSpace == ptSpace_XYZ)      XYZToRGB(getCurrentRGB());
+  else if (m_ColorSpace == ptSpace_Profiled) GInfo->Raise("Cannot transform color space!");
 
   return this;
 }
 
 //==============================================================================
 
-ptImage *ptImage::LchToLab()
+ptImage *ptImage::toLab()
 {
+  if      (m_ColorSpace == ptSpace_Lab)      return this;
+  else if (m_ColorSpace == ptSpace_XYZ)      XYZToRGB(getCurrentRGB());
+  else if (m_ColorSpace == ptSpace_Profiled) GInfo->Raise("Cannot transform color space!");
+
+  RGBToLab();
+
+  return this;
+}
+
+ptImage *ptImage::LchToLab() {
   if (m_ColorSpace == ptSpace_Lab) return this;
 
   assert (m_ColorSpace == ptSpace_LCH);
@@ -1055,7 +1074,6 @@ ptImage *ptImage::LchToLab()
   return this;
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Constructor.
@@ -1065,9 +1083,10 @@ ptImage *ptImage::LchToLab()
 ptImage::ptImage() {
   m_Width              = 0;
   m_Height             = 0;
-  m_Image              = NULL;
+  m_Image              = nullptr;
   m_Colors             = 0;
   m_ColorSpace         = ptSpace_sRGB_D65;
+  m_Data.clear();
   ResizeLCH(0);
 
   // Initialize the lookup table for the RGB->LAB function
@@ -1077,7 +1096,7 @@ ptImage::ptImage() {
     // stability purposes. XYZ>1.0 occurs sometimes and this way
     // it stays stable (srgb->lab->srgb correct within 0.02%)
 #pragma omp parallel for
-    for (uint32_t i = 0; i < 0x20000; i++) {
+    for (uint32_t i=0; i<0x20000; i++) {
       double r = (double)(i) / ptWP;
       ToLABFunctionTable[i] = r > 216.0/24389.0 ? pow(r,1/3.0) : (24389.0/27.0*r + 16.0)/116.0;
     }
@@ -1088,7 +1107,7 @@ ptImage::ptImage() {
   //cmsErrorAction (LCMS_ERROR_SHOW);
   cmsWhitePointFromTemp(&D65, 6503);
   cmsWhitePointFromTemp(&D50, 5003);
-};
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1097,7 +1116,15 @@ ptImage::ptImage() {
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage::~ptImage() {
-  FREE(m_Image);
+  // nothing to free :-)
+}
+
+//==============================================================================
+
+void ptImage::setSize(size_t Size) {
+  m_Data.resize(Size);
+  m_Data.shrink_to_fit();
+  m_Image = (uint16_t (*)[3]) m_Data.data();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1118,13 +1145,11 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
   m_Width  = DcRawObject->m_Width;
   m_Height = DcRawObject->m_Height;
 
-  // Free a maybe preexisting and allocate space.
-  FREE(m_Image);
-  m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
+  // Temp image for later flip
+  std::vector<std::array<uint16_t, 3> > PreFlip;
+  PreFlip.resize((size_t)m_Width*m_Height);
 
   if (!ProfileName) {
-
     // Matrix for conversion RGB to RGB : is a multiplication via XYZ
     double MatrixRGBToRGB[3][3];
     for(short i=0;i<3;i++) {
@@ -1163,11 +1188,11 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
         }
       }
       for (short c=0; c<3; c++) {
-        m_Image[i][c] = (uint16_t) CLIP(Value[c]);
+        PreFlip[i][c] = (uint16_t) CLIP(Value[c]);
       }
     }
 
-    m_Colors = MIN(DcRawObject->m_Colors,3);
+    m_Colors = MIN((int)(DcRawObject->m_Colors),3);
     m_ColorSpace = TargetSpace;
 
     if (m_Colors != 3) {
@@ -1179,11 +1204,10 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
               "further.\n");
       assert(0);
     }
-  } // (if !ProfileName)
+  }// (if !ProfileName)
+  else if (ProfileName) {
 
-  if (ProfileName) {
-
-    m_Colors = MIN(DcRawObject->m_Colors,3);
+    m_Colors = MIN((int)(DcRawObject->m_Colors),3);
     m_ColorSpace = TargetSpace;
 
     if (m_Colors != 3) {
@@ -1300,14 +1324,13 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
                                                TYPE_RGB_16,
                                                Intent,
                                                0);
-
     int32_t Size = m_Width*m_Height;
     int32_t Step = 100000;
 #pragma omp parallel for schedule(static)
     for (int32_t i = 0; i < Size; i+=Step) {
       int32_t Length = (i+Step)<Size ? Step : Size - i;
       uint16_t* Tile1 = &(DcRawObject->m_Image[i][0]);
-      uint16_t* Tile2 = &(m_Image[i][0]);
+      uint16_t* Tile2 = &(PreFlip[i][0]);
       cmsDoTransform(Transform,Tile1,Tile2,Length);
     }
     cmsDeleteTransform(Transform);
@@ -1316,14 +1339,13 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
     }
   }
 
-  // Flip image. With m_Flip as in dcraw.
-  // (see also flip_index() function in dcraw)
-  uint16_t (*ImageFlipped)[3];
-  ImageFlipped =(uint16_t(*)[3])CALLOC(m_Width*m_Height,sizeof(*ImageFlipped));
-  ptMemoryError(ImageFlipped,__FILE__,__LINE__);
-
   uint16_t TargetWidth  = m_Width;
   uint16_t TargetHeight = m_Height;
+  // Free and allocate
+  setSize((int32_t)TargetWidth*TargetHeight);
+
+  // Flip image. With m_Flip as in dcraw.
+  // (see also flip_index() function in dcraw)
   if (DcRawObject->m_Flip & 4) {
     SWAP(TargetWidth,TargetHeight);
   }
@@ -1336,17 +1358,14 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
       if (DcRawObject->m_Flip & 2) OriginRow = m_Height-1-OriginRow;
       if (DcRawObject->m_Flip & 1) OriginCol = m_Width-1-OriginCol;
       for (short c=0; c<3; c++) {
-        ImageFlipped[TargetRow*TargetWidth+TargetCol][c] =
-          m_Image[OriginRow*m_Width+OriginCol][c];
+        m_Data[TargetRow*TargetWidth+TargetCol][c] =
+          PreFlip[OriginRow*m_Width+OriginCol][c];
       }
     }
   }
 
   m_Height = TargetHeight;
   m_Width  = TargetWidth;
-
-  FREE(m_Image);
-  m_Image = ImageFlipped;
 
   return this;
 }
@@ -1368,20 +1387,19 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
   m_Height = DcRawObject->m_Height;
   m_ColorSpace = TargetSpace;
 
-  // Free a maybe preexisting and allocate space.
-  FREE(m_Image);
-  m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
+  // Temp image for later flip
+  std::vector<std::array<uint16_t, 3> > PreFlip;
+  PreFlip.resize((size_t)m_Width*m_Height);
 
   // Convert the image.
 #pragma omp parallel for
   for (uint32_t i=0; i<(uint32_t)m_Height*m_Width; i++) {
     for (short c=0; c<3; c++) {
-      m_Image[i][c] = DcRawObject->m_Image_AfterPhase2[i][c];
+      PreFlip[i][c] = DcRawObject->m_Image_AfterPhase2[i][c];
     }
   }
 
-  m_Colors = MIN(DcRawObject->m_Colors,3);
+  m_Colors = MIN((int)(DcRawObject->m_Colors),3);
 
   if (m_Colors != 3) {
     fprintf(stderr,
@@ -1393,14 +1411,12 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
     assert(0);
   }
 
-  // Flip image. With m_Flip as in dcraw.
-  // (see also flip_index() function in dcraw)
-  uint16_t (*ImageFlipped)[3];
-  ImageFlipped =(uint16_t(*)[3])CALLOC(m_Width*m_Height,sizeof(*ImageFlipped));
-  ptMemoryError(ImageFlipped,__FILE__,__LINE__);
-
   uint16_t TargetWidth  = m_Width;
   uint16_t TargetHeight = m_Height;
+
+  // Free a maybe preexisting and allocate space.
+  setSize((size_t)TargetWidth*TargetHeight);
+
   if (DcRawObject->m_Flip & 4) {
     SWAP(TargetWidth,TargetHeight);
   }
@@ -1413,17 +1429,14 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
       if (DcRawObject->m_Flip & 2) OriginRow = m_Height-1-OriginRow;
       if (DcRawObject->m_Flip & 1) OriginCol = m_Width-1-OriginCol;
       for (short c=0; c<3; c++) {
-        ImageFlipped[TargetRow*TargetWidth+TargetCol][c] =
-          m_Image[OriginRow*m_Width+OriginCol][c];
+        m_Data[TargetRow*TargetWidth+TargetCol][c] =
+          PreFlip[OriginRow*m_Width+OriginCol][c];
       }
     }
   }
 
   m_Height = TargetHeight;
   m_Width  = TargetWidth;
-
-  FREE(m_Image);
-  m_Image = ImageFlipped;
 
   return this;
 }
@@ -1441,9 +1454,7 @@ ptImage* ptImage::Set(const uint16_t Width,
   m_Height = Height;
 
   // Free a maybe preexisting and allocate space.
-  FREE(m_Image);
-  m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
+  setSize((size_t)m_Width*m_Height);
 
   m_Colors = 3;
   m_ColorSpace = ptSpace_sRGB_D65;
@@ -1461,18 +1472,12 @@ ptImage* ptImage::Set(const ptImage *Origin) { // Always deep
 
   assert(NULL != Origin);
 
-  m_Width              = Origin->m_Width;
-  m_Height             = Origin->m_Height;
-  m_Colors             = Origin->m_Colors;
-  m_ColorSpace         = Origin->m_ColorSpace;
-
-  // And a deep copying of the image.
-  // Free a maybe preexisting.
-  FREE(m_Image);
-  // Allocate new.
-  m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
-  memcpy(m_Image,Origin->m_Image,m_Width*m_Height*sizeof(*m_Image));
+  m_Width      = Origin->m_Width;
+  m_Height     = Origin->m_Height;
+  m_Colors     = Origin->m_Colors;
+  m_ColorSpace = Origin->m_ColorSpace;
+  setSize((size_t)m_Width*m_Height);
+  m_Data       = Origin->m_Data;
 
   return this;
 }
@@ -1488,30 +1493,23 @@ ptImage* ptImage::SetScaled(const ptImage *Origin,
 
   assert(NULL != Origin);
 
-  m_Width              = Origin->m_Width;
-  m_Height             = Origin->m_Height;
-  m_Colors             = Origin->m_Colors;
-  m_ColorSpace         = Origin->m_ColorSpace;
-
-  // And a deep copying of the image.
-  // Free a maybe preexisting.
-  FREE(m_Image);
+  m_Width      = Origin->m_Width;
+  m_Height     = Origin->m_Height;
+  m_Colors     = Origin->m_Colors;
+  m_ColorSpace = Origin->m_ColorSpace;
 
   if (ScaleFactor == 0) {
-    // Allocate new.
-    m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-    ptMemoryError(m_Image,__FILE__,__LINE__);
-    memcpy(m_Image,Origin->m_Image,m_Width*m_Height*sizeof(*m_Image));
+    setSize((int32_t)m_Width*m_Height);
+    m_Data     = Origin->m_Data;
   } else {
-    m_Width >>= ScaleFactor;
+    m_Width  >>= ScaleFactor;
     m_Height >>= ScaleFactor;
 
     short Step = 1 << ScaleFactor;
     float InvAverage = 1.0/powf(2.0,2.0 * ScaleFactor);
 
     // Allocate new.
-    m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-    ptMemoryError(m_Image,__FILE__,__LINE__);
+    setSize((int32_t)m_Width*m_Height);
 
 #pragma omp parallel for schedule(static)
     for (uint16_t Row=0; Row < m_Height; Row++) {
@@ -1521,12 +1519,12 @@ ptImage* ptImage::SetScaled(const ptImage *Origin,
           for (uint8_t sCol=0; sCol < Step; sCol++) {
             int32_t index = (Row*Step+sRow)*Origin->m_Width+Col*Step+sCol;
             for (short c=0; c < 3; c++) {
-              PixelValue[c] += Origin->m_Image[index][c];
+              PixelValue[c] += Origin->m_Data[index][c];
             }
           }
         }
         for (short c=0; c < 3; c++) {
-          m_Image[Row*m_Width+Col][c]
+          m_Data[Row*m_Width+Col][c]
             = (int32_t) (PixelValue[c] * InvAverage);
         }
       }
@@ -1545,10 +1543,9 @@ RGBValue ptImage::GetRGB(const uint16_t x, const uint16_t y) {
   RGBValue RGB;
 
   if (m_ColorSpace != ptSpace_Lab) {
-    uint32_t Idx = y*m_Width+x;
-    RGB.R = m_Image[Idx][0];
-    RGB.G = m_Image[Idx][1];
-    RGB.B = m_Image[Idx][2];
+    RGB.R = m_Image[y*m_Width+x][0];
+    RGB.G = m_Image[y*m_Width+x][1];
+    RGB.B = m_Image[y*m_Width+x][2];
   } else {
     RGB.R = RGB.G = RGB.B = 0;
   }
@@ -1622,14 +1619,14 @@ ptImage* ptImage::Expose(const double Exposure,
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
 
 #pragma omp parallel for schedule(static)
-  for (uint32_t i = 0; i < (uint32_t)m_Height*m_Width; i++) {
+  for (uint32_t i=0; i< (uint32_t)m_Height*m_Width; i++) {
     uint32_t Pixel[3];
     uint32_t Highest = 0;
     for (short Color=0; Color<NrChannels; Color++) {
       Pixel[Color] = (uint32_t)(m_Image[i][Color]*Exposure);
       if (Pixel[Color] > Highest) Highest = Pixel[Color];
     }
-    if (Highest <= 0XFFFF) {
+    if (Highest<= 0XFFFF) {
       // No clipping.
       for (short Color=0; Color<NrChannels; Color++) {
         m_Image[i][Color] = Pixel[Color];
@@ -1637,12 +1634,11 @@ ptImage* ptImage::Expose(const double Exposure,
     } else {
       if (ExposureClipMode == ptExposureClipMode_None) {
         for (short Color=0; Color<NrChannels; Color++) {
-          m_Image[i][Color] = MIN(0XFFFF,Pixel[Color]);
+          m_Image[i][Color] = CLIP((int32_t)Pixel[Color]);
         }
       } else if (ExposureClipMode == ptExposureClipMode_Ratio) {
         for (short Color=0; Color<NrChannels; Color++) {
-          m_Image[i][Color] = MIN(0XFFFF,
-                               (uint32_t)(Pixel[Color]*(float)0xFFFF/Highest));
+          m_Image[i][Color] = CLIP((int32_t)(Pixel[Color]*(float)0xFFFF/Highest));
         }
       } else {
         assert(0);
@@ -1697,22 +1693,23 @@ uint16_t ptImage::CalculateFractionLevel(const double  Fraction,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+
 ptImage* ptImage::ApplyCurve(const ptCurve *Curve,
                              const uint8_t ChannelMask) {
 
   assert (NULL != Curve);
   assert (m_Colors == 3);
   assert (m_ColorSpace != ptSpace_XYZ);
-  uint8_t Channels   = 0;
-  uint8_t Channel[3] = {0,1,2};
-  if (ChannelMask & 1) {Channel[Channels] = 0; Channels++;}
-  if (ChannelMask & 2) {Channel[Channels] = 1; Channels++;}
-  if (ChannelMask & 4) {Channel[Channels] = 2; Channels++;}
-#pragma omp parallel for default(shared)
-  for (uint32_t i=0; i< (uint32_t)m_Height*m_Width; i++) {
-    for (uint8_t c = 0; c<Channels; c++)
-      m_Image[i][Channel[c]] = Curve->m_Curve[ m_Image[i][Channel[c]] ];
-  }
+
+  std::vector<short> Channel;
+  if (ChannelMask & 1) Channel.push_back(0);
+  if (ChannelMask & 2) Channel.push_back(1);
+  if (ChannelMask & 4) Channel.push_back(2);
+  __gnu_parallel::for_each (m_Data.begin(), m_Data.end(), [&](std::array<uint16_t, 3> &Pixel) {
+    std::for_each (Channel.begin(), Channel.end(), [&](const short &Value){
+      Pixel[Value] = Curve->Curve[ Pixel[Value] ];
+    });
+  });
 
   return this;
 }
@@ -1732,14 +1729,10 @@ ptImage* ptImage::ApplyLByHueCurve(const ptCurve *Curve) {
   // neutral value for a* and b* channel
   const float WPH = 0x8080;
 
-  float ValueA = 0.0;
-  float ValueB = 0.0;
-
-#pragma omp parallel for schedule(static) private(ValueA, ValueB)
-  for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
+  __gnu_parallel::for_each (m_Data.begin(), m_Data.end(), [&](std::array<uint16_t, 3> &Pixel) {
     // Factor by hue
-    ValueA = (float)m_Image[i][1]-WPH;
-    ValueB = (float)m_Image[i][2]-WPH;
+    float ValueA = (float)Pixel[1]-WPH;
+    float ValueB = (float)Pixel[2]-WPH;
     float Hue = 0;
     if (ValueA == 0.0 && ValueB == 0.0) {
       Hue = 0;   // value for grey pixel
@@ -1748,14 +1741,14 @@ ptImage* ptImage::ApplyLByHueCurve(const ptCurve *Curve) {
     }
     while (Hue < 0) Hue += 2.*ptPI;
 
-    float Factor = Curve->m_Curve[CLIP((int32_t)(Hue/ptPI*WPH))]/(float)0x7fff - 1.0;
-    if (Factor == 0.0) continue;
+    float Factor = Curve->Curve[CLIP((int32_t)(Hue/ptPI*WPH))]/(float)0x7fff - 1.0f;
+    if (Factor != 0.0) {
+      float Col = powf(ValueA * ValueA + ValueB * ValueB, 0.25) / (float) 0xb5;
+      Factor = powf(2.0f, 3.0f*Factor*Col);
 
-    float Col = powf(ValueA * ValueA + ValueB * ValueB, 0.25) / (float) 0xb5;
-    Factor = powf(2,3*Factor*Col);
-
-    m_Image[i][0] = CLIP((int32_t)(m_Image[i][0] * Factor));
-  }
+      Pixel[0] = CLIP((int32_t)(Pixel[0] * Factor));
+    }
+  });
 
   return this;
 }
@@ -1766,8 +1759,7 @@ ptImage* ptImage::ApplyLByHueCurve(const ptCurve *Curve) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::ApplyHueCurve(const ptCurve *Curve,
-                                const short Type) {
+ptImage* ptImage::ApplyHueCurve(const ptCurve *Curve) {
 
   assert (m_ColorSpace == ptSpace_Lab);
   // neutral value for a* and b* channel
@@ -1780,7 +1772,7 @@ ptImage* ptImage::ApplyHueCurve(const ptCurve *Curve,
   float Col = 0.0;
   float Hue = 0.0;
 
-  if (Type == 0) { // by chroma
+  if (Curve->mask() == ptCurve::ChromaMask) { // by chroma
 #pragma omp parallel for schedule(static) private(ValueA, ValueB, Col, Hue)
       for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
 
@@ -1795,11 +1787,12 @@ ptImage* ptImage::ApplyHueCurve(const ptCurve *Curve,
         while (Hue < 0) Hue += 2.*ptPI;
         Col = powf(ValueA * ValueA + ValueB * ValueB, 0.5);
 
-        Hue += ((float)Curve->m_Curve[CLIP((int32_t)(Hue*InvScalePi))]-(float)0x7fff)*ScalePi;
+        Hue += ((float)Curve->Curve[CLIP((int32_t)(Hue*InvScalePi))]-(float)0x7fff)*ScalePi;
 
-        m_Image[i][1] = CLIP((int32_t)(cosf(Hue)*Col)+WPH);
-        m_Image[i][2] = CLIP((int32_t)(sinf(Hue)*Col)+WPH);
+        m_Image[i][1] = CLIP((int32_t)((cosf(Hue)*Col)+WPH));
+        m_Image[i][2] = CLIP((int32_t)((sinf(Hue)*Col)+WPH));
       }
+
   } else { // by luma
 #pragma omp parallel for schedule(static) private(ValueA, ValueB, Col, Hue)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
@@ -1814,10 +1807,10 @@ ptImage* ptImage::ApplyHueCurve(const ptCurve *Curve,
       }
       Col = powf(ValueA * ValueA + ValueB * ValueB, 0.5);
 
-      Hue += ((float)Curve->m_Curve[m_Image[i][0]]-(float)0x7fff)*ScalePi;
+      Hue += ((float)Curve->Curve[m_Image[i][0]]-(float)0x7fff)*ScalePi;
 
-      m_Image[i][1] = CLIP((int32_t)(cosf(Hue)*Col)+WPH);
-      m_Image[i][2] = CLIP((int32_t)(sinf(Hue)*Col)+WPH);
+      m_Image[i][1] = CLIP((int32_t)((cosf(Hue)*Col)+WPH));
+      m_Image[i][2] = CLIP((int32_t)((sinf(Hue)*Col)+WPH));
     }
   }
   return this;
@@ -1830,8 +1823,7 @@ ptImage* ptImage::ApplyHueCurve(const ptCurve *Curve,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
-                                       const short Mode,
-                                       const short Type) {
+                                       const short Mode) {
 
 // Best solution would be to use the Lab <-> Lch conversion from lcms.
 // This should be faster without sacrificing much quality.
@@ -1844,7 +1836,7 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
   float ValueA = 0.0;
   float ValueB = 0.0;
 
-  if (Type == 0) { // by chroma
+  if (Curve->mask() == ptCurve::ChromaMask) { // by chroma
 #pragma omp parallel for schedule(static) private(ValueA, ValueB)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by hue
@@ -1858,7 +1850,7 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
       }
       while (Hue < 0) Hue += 2.*ptPI;
 
-      float Factor = Curve->m_Curve[CLIP((int32_t)(Hue*InvScalePi))]/(float)0x7fff;
+      float Factor = Curve->Curve[CLIP((int32_t)(Hue*InvScalePi))]/(float)0x7fff;
       if (Factor == 1.0) continue;
       Factor *= Factor;
       float m = 0;
@@ -1875,14 +1867,15 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
       } else {
         m = Factor;
       }
-      m_Image[i][1] = CLIP((int32_t)(m_Image[i][1] * m + WPH * (1.0f - m)));
-      m_Image[i][2] = CLIP((int32_t)(m_Image[i][2] * m + WPH * (1.0f - m)));
+      m_Image[i][1] = CLIP((int32_t)(m_Image[i][1] * m + WPH * (1.0 - m)));
+      m_Image[i][2] = CLIP((int32_t)(m_Image[i][2] * m + WPH * (1.0 - m)));
     }
+
   } else { // by luma
 #pragma omp parallel for schedule(static) private(ValueA, ValueB)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by luminance
-      float Factor = Curve->m_Curve[m_Image[i][0]]/(float)0x7fff;
+      float Factor = Curve->Curve[m_Image[i][0]]/(float)0x7fff;
       if (Factor == 1.0) continue;
       Factor *= Factor;
       float m = 0;
@@ -1901,8 +1894,8 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
       } else {
         m = Factor;
       }
-      m_Image[i][1] = CLIP((int32_t)(m_Image[i][1] * m + WPH * (1.0f - m)));
-      m_Image[i][2] = CLIP((int32_t)(m_Image[i][2] * m + WPH * (1.0f - m)));
+      m_Image[i][1] = CLIP((int32_t)(m_Image[i][1] * m + WPH * (1.0 - m)));
+      m_Image[i][2] = CLIP((int32_t)(m_Image[i][2] * m + WPH * (1.0 - m)));
     }
   }
   return this;
@@ -1914,58 +1907,70 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve,
-                           const short Type,
-                           const short Scaling) {
+ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve, const short Scaling) {
+  const double Threshold = 10.0/pow(2,Scaling);
+  const double Softness = 0.01;
+  const double Opacity = 1.0;
+  const double EdgeControl = 1.0;
 
   assert (m_ColorSpace == ptSpace_Lab);
+  // neutral value for a* and b* channel
+  const float WPH = 0x8080;
+
+  float ValueA = 0.0;
+  float ValueB = 0.0;
+  float m = 0.0;
 
   const short ChannelMask = 1;
-
-  const float Threshold   = 10.0/pow(2,Scaling);
-  const float Softness    = 0.01;
-  const float Opacity     = 1.0;
-  const float EdgeControl = 1.0;
-
-  float hValueA = 0.0;
-  float hValueB = 0.0;
-  float m       = 0.0;
 
   ptImage *ContrastLayer = new ptImage;
   ContrastLayer->Set(this);
 
   ptFastBilateralChannel(ContrastLayer, Threshold, Softness, 2, ChannelMask);
 
-  if (Type == 0) { // by chroma
-#pragma omp parallel for schedule(static) private(hValueA, hValueB, m)
+  if (Curve->mask() == ptCurve::ChromaMask) {
+#pragma omp parallel for schedule(static) private(ValueA, ValueB, m)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by hue
-      hValueA    = ToFloatABNeutral[m_Image[i][1]];
-      hValueB    = ToFloatABNeutral[m_Image[i][2]];
+      ValueA = (float)m_Image[i][1]-WPH;
+      ValueB = (float)m_Image[i][2]-WPH;
+      float Hue = 0;
+      if (ValueA == 0.0 && ValueB == 0.0) {
+        Hue = 0;   // value for grey pixel
+      } else {
+        Hue = atan2f(ValueB,ValueA);
+      }
+      while (Hue < 0) Hue += 2.*ptPI;
 
-      float hHue = ToHue(hValueA, hValueB);
-      float hCol = powf(ptSqr(hValueA) + ptSqr(hValueB), 0.125f);
-      hCol /= 0x7; // normalizing to 0..2
+      float Col = powf(ValueA * ValueA + ValueB * ValueB, 0.125);
+      Col /= 0x7; // normalizing to 0..2
 
-      float Factor = Curve->m_Curve[CLIP((int32_t)(hHue/ptPI*ptWPHf))]/(float)0x3fff - 1.0f;
-      m = 20.0f * Factor * hCol;
+      float Factor = Curve->Curve[CLIP((int32_t)(Hue/ptPI*WPH))]/(float)0x3fff - 1.0;
+      m = 20.0 * Factor * Col;
+      float Scaling = 1.0/(1.0+exp(-0.5*m))-1.0/(1.0+exp(0.5*m));
+      float Offset = -1.0/(1.0+exp(0.5*m));
 
-      ContrastLayer->m_Image[i][0] = CLIP((int32_t) ((ptWPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
-      if (Factor < 0) ContrastLayer->m_Image[i][0] = ToInvertTable[ContrastLayer->m_Image[i][0]];
-      if (fabsf(Factor*hCol)<0.1f) continue;
-      ContrastLayer->m_Image[i][0] = Sigmoidal_4_Value(ContrastLayer->m_Image[i][0], m);
+      ContrastLayer->m_Image[i][0] = CLIP((int32_t) ((WPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
+      if (Factor < 0) ContrastLayer->m_Image[i][0] = 0xffff-ContrastLayer->m_Image[i][0];
+      if (fabsf(Factor*Col)<0.1) continue;
+      ContrastLayer->m_Image[i][0] = CLIP((int32_t)((((1.0/(1.0+
+        exp(m*(0.5-(float)ContrastLayer->m_Image[i][0]/(float)0xffff))))+Offset)/Scaling)*0xffff));
     }
+
   } else { // by luma
-#pragma omp parallel for schedule(static) private(m)
+#pragma omp parallel for schedule(static) private(ValueA, ValueB, m)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by luminance
-      float Factor = Curve->m_Curve[m_Image[i][0]]/(float)0x3fff - 1.0;
-      m = 20.0f * Factor;
+      float Factor = Curve->Curve[m_Image[i][0]]/(float)0x3fff - 1.0;
+      m = 20.0 * Factor;
+      float Scaling = 1.0/(1.0+exp(-0.5*m))-1.0/(1.0+exp(0.5*m));
+      float Offset = -1.0/(1.0+exp(0.5*m));
 
-      ContrastLayer->m_Image[i][0] = CLIP((int32_t) ((ptWPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
-      if (Factor < 0) ContrastLayer->m_Image[i][0] = ToInvertTable[ContrastLayer->m_Image[i][0]];
-      if (fabsf(Factor)<0.1f) continue;
-      ContrastLayer->m_Image[i][0] = Sigmoidal_4_Value(ContrastLayer->m_Image[i][0], m);
+      ContrastLayer->m_Image[i][0] = CLIP((int32_t) ((WPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
+      if (Factor < 0) ContrastLayer->m_Image[i][0] = 0xffff-ContrastLayer->m_Image[i][0];
+      if (fabsf(Factor)<0.1) continue;
+      ContrastLayer->m_Image[i][0] = CLIP((int32_t)((((1.0/(1.0+
+        exp(m*(0.5-(float)ContrastLayer->m_Image[i][0]/(float)0xffff))))+Offset)/Scaling)*0xffff));
     }
   }
 
@@ -1979,6 +1984,7 @@ ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve,
   return this;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Sigmoidal Contrast
@@ -1988,7 +1994,7 @@ ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve,
 
 ptImage* ptImage::SigmoidalContrast(const double Contrast,
                                     const double Threshold,
-                                    const short  ChannelMask) {
+                                    const short ChannelMask) {
 
   int Channels = 0;
   int Channel[3] = {0,1,2};
@@ -2001,255 +2007,11 @@ ptImage* ptImage::SigmoidalContrast(const double Contrast,
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i < (uint32_t)m_Height*m_Width; i++) {
-    for (int c = 0; c < Channels; c++)
+    for (int c = 0; c<Channels; c++)
       m_Image[i][Channel[c]] = ContrastTable[ m_Image[i][Channel[c]] ];
   }
 
   return this;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// SimpleResize
-// A simple bilinear resize. Does not upscale. No resampling filter.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptImage* ptImage::SimpleResize(const uint16_t Size,
-                               const short    InPlace) {
-
-  assert(m_Colors ==3);
-
-  uint16_t   Multiplier = Size;
-  uint16_t   Divider = MAX(m_Height,m_Width);
-  uint32_t   Normalizer = Divider * Divider;
-
-  if (Multiplier > Divider) {
-    ptLogError(ptError_Argument,"Size : %d is too large",Size);
-    return NULL;
-  }
-
-  uint16_t NewHeight = m_Height * Multiplier / Divider;
-  uint16_t NewWidth  = m_Width  * Multiplier / Divider;
-
-  uint64_t (*Image64Bit)[3] =
-    (uint64_t (*)[3]) CALLOC(NewWidth*NewHeight,sizeof(*Image64Bit));
-  ptMemoryError(Image64Bit,__FILE__,__LINE__);
-
-  for(uint16_t r=0; r<m_Height; r++) {
-    /* r should be divided between ri and rii */
-    uint16_t ri  = r * Multiplier / Divider;
-    uint16_t rii = (r+1) * Multiplier / Divider;
-    /* with weights riw and riiw (riw+riiw==Multiplier) */
-    int64_t riw  = rii * Divider - r * Multiplier;
-    int64_t riiw = (r+1) * Multiplier - rii * Divider;
-    if (rii>=NewHeight) {
-      rii  = NewHeight-1;
-      riiw = 0;
-    }
-    if (ri>=NewHeight) {
-      ri  = NewHeight-1;
-      riw = 0;
-    }
-    for(uint16_t c=0; c<m_Width; c++) {
-      uint16_t ci   = c * Multiplier / Divider;
-      uint16_t cii  = (c+1) * Multiplier / Divider;
-      int64_t ciw  = cii * Divider - c * Multiplier;
-      int64_t ciiw = (c+1) * Multiplier - cii * Divider;
-      if (cii>=NewWidth) {
-        cii  = NewWidth-1;
-        ciiw = 0;
-      }
-      if (ci>=NewWidth) {
-        ci  = NewWidth-1;
-        ciw = 0;
-      }
-      for (short cl=0; cl<3; cl++) {
-        Image64Bit[ri *NewWidth+ci ][cl] += m_Image[r*m_Width+c][cl]*riw *ciw ;
-        Image64Bit[ri *NewWidth+cii][cl] += m_Image[r*m_Width+c][cl]*riw *ciiw;
-        Image64Bit[rii*NewWidth+ci ][cl] += m_Image[r*m_Width+c][cl]*riiw*ciw ;
-        Image64Bit[rii*NewWidth+cii][cl] += m_Image[r*m_Width+c][cl]*riiw*ciiw;
-      }
-    }
-  }
-
-  // The image worked finally upon is 'this' or a new created one.
-  ptImage* WorkImage = InPlace ? this : new (ptImage);
-
-  if (InPlace) {
-    FREE(m_Image); // free the old image.
-  }
-
-  WorkImage->m_Image =
-    (uint16_t (*)[3]) CALLOC(NewWidth*NewHeight,sizeof(*m_Image));
-  ptMemoryError(WorkImage->m_Image,__FILE__,__LINE__);
-
-  // Fill the image from the Image64Bit.
-  for (uint32_t c=0; c<(uint32_t)NewHeight*NewWidth; c++) {
-    for (short cl=0; cl<3; cl++) {
-      WorkImage->m_Image[c][cl] = Image64Bit[c][cl]/Normalizer;
-    }
-  }
-
-  FREE(Image64Bit);
-
-  WorkImage->m_Width  = NewWidth;
-  WorkImage->m_Height = NewHeight;
-  WorkImage->m_Colors = m_Colors;
-
-  return WorkImage;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// FilteredResize
-// Resize with a resampling filter.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-// TODO
-// Note : I have tried this in all possible combinations with
-// integer types, in which case 64 bit needed for image, or with
-// combinations of integer images and floating weights but nothing
-// comes close to the float performance.
-// Someone else ?
-//
-// Also this implementation has been tweaked by taking as much
-// as possible calculations (especially * and /) from the inner loops.
-
-ptImage* ptImage::FilteredResize(const uint16_t Size,
-                                 const short    ResizeFilter,
-                                 const short    InPlace) {
-
-  assert(m_Colors ==3);
-
-  const float Lobes = FilterLobes[ResizeFilter];
-
-  if (not FilterTableInited[ResizeFilter]) {
-    FilterTableSize[ResizeFilter] = (uint16_t) (Lobes*SamplesPerLobe+1);
-    FilterTable[ResizeFilter] =
-      (float*) CALLOC(FilterTableSize[ResizeFilter],sizeof(*FilterTable));
-    ptMemoryError(FilterTable,__FILE__,__LINE__);
-    for (uint16_t i=0; i<FilterTableSize[ResizeFilter]; i++) {
-      float x = (float) i / SamplesPerLobe;
-      FilterTable[ResizeFilter][i] = (*FilterFunction[ResizeFilter])(x);
-    }
-    FilterTableInited[ResizeFilter] = 1;
-  }
-
-  float*      Table = FilterTable[ResizeFilter];
-
-  //printf("(%s,%d) ResizeFilter : %d Table : %p Lobes:%f\n",
-  //       __FILE__,__LINE__,ResizeFilter,Table,Lobes);
-
-  // Some precalculations based on the resizing factor
-  // MIN/MAX corrections are for upsampling.
-  float    Ratio     = (float) MAX(m_Width,m_Height)/Size;
-  uint16_t NewHeight = (uint16_t)(m_Height / Ratio+0.5);
-  uint16_t NewWidth  = (uint16_t)(m_Width / Ratio+0.5);
-  float    Scale      = MIN(1.0,1.0/Ratio);
-  float    Radius     = MAX(Lobes* Ratio,Lobes);
-  int32_t  ScaledLobe = (int32_t)(SamplesPerLobe*Scale);
-
-  // X Size change
-
-  // Be aware, height still that of the original image in this pass!
-  float (*DstImageX)[3] =
-    (float (*)[3]) CALLOC(NewWidth*m_Height,sizeof(*DstImageX));
-  ptMemoryError(DstImageX,__FILE__,__LINE__);
-
-  for (uint16_t OrgRow=0; OrgRow<m_Height; OrgRow++) {
-    for (uint16_t DstCol=0; DstCol<NewWidth; DstCol++) {
-      uint32_t DstPointer = OrgRow*NewWidth+DstCol;
-      float    OrgCenter  = (DstCol+0.5) * Ratio; // Checked.OK.
-      int32_t  OrgLeft    = (int32_t)(OrgCenter-Radius);
-      int32_t  OrgRight   = (int32_t)(OrgCenter+Radius);
-      float    SumWeight = 0;
-      float    x = (OrgCenter-OrgLeft-0.5)*Scale; // TODO -0.5 correct ?
-      int32_t  idx = (int32_t)(x*SamplesPerLobe);
-      for (int32_t i=OrgLeft; i<=OrgRight; i++,x-=Scale,idx-=ScaledLobe) {
-        if (i<0 || i>=m_Width) continue;
-        if (fabs(x) <= Lobes) {
-          float Weight = Table[abs(idx)];
-          SumWeight+=Weight;
-          uint32_t OrgPointer = OrgRow*m_Width+i;
-          DstImageX[DstPointer][0] += m_Image[OrgPointer][0] * Weight;
-          DstImageX[DstPointer][1] += m_Image[OrgPointer][1] * Weight;
-          DstImageX[DstPointer][2] += m_Image[OrgPointer][2] * Weight;
-        }
-      }
-      // One division & three multiplications is faster then three divisions
-      SumWeight = 1/SumWeight;
-      DstImageX[DstPointer][0] *= SumWeight;
-      DstImageX[DstPointer][1] *= SumWeight;
-      DstImageX[DstPointer][2] *= SumWeight;
-    }
-  }
-
-  // At this stage we can free memory of the original image to
-  // reduce a bit the memory demand.
-  FREE(m_Image);
-
-  // Y Size reduction
-
-  float (*DstImageY)[3] =
-    (float (*)[3]) CALLOC(NewWidth*NewHeight,sizeof(*DstImageY));
-  ptMemoryError(DstImageY,__FILE__,__LINE__);
-
-  // NewWidth as the X direction is resized already.
-  for (uint16_t OrgCol=0; OrgCol<NewWidth; OrgCol++) {
-    for (uint16_t DstRow=0; DstRow<NewHeight; DstRow++) {
-      uint32_t DstPointer = DstRow*NewWidth+OrgCol;
-      float    OrgCenter  = (DstRow+0.5)*Ratio; // Checked. OK.
-      int32_t  OrgLeft    = (int32_t)(OrgCenter-Radius);
-      int32_t  OrgRight   = (int32_t)(OrgCenter+Radius);
-      float    SumWeight = 0;
-      float    x   = (OrgCenter-OrgLeft-0.5)*Scale; // TODO -0.5 correct ?
-      int32_t  idx = (int32_t)(x*SamplesPerLobe);
-      for (int32_t i=OrgLeft; i<=OrgRight; i++,x-=Scale,idx-=ScaledLobe) {
-        if (i<0 || i>=m_Height) continue;
-        if (fabs(x) <= Lobes) {
-          float Weight = Table[abs(idx)];
-          SumWeight+=Weight;
-          uint32_t OrgPointer = i*NewWidth+OrgCol;
-          DstImageY[DstPointer][0] += DstImageX[OrgPointer][0]*Weight;
-          DstImageY[DstPointer][1] += DstImageX[OrgPointer][1]*Weight;
-          DstImageY[DstPointer][2] += DstImageX[OrgPointer][2]*Weight;
-        }
-      }
-      // One division & three multiplications is faster then three divisions
-      SumWeight = 1/SumWeight;
-      DstImageY[DstPointer][0] *= SumWeight;
-      DstImageY[DstPointer][1] *= SumWeight;
-      DstImageY[DstPointer][2] *= SumWeight;
-    }
-  }
-
-  // At this stage we can free memory of the DstImageX image to
-  // reduce a bit the memory demand.
-  FREE(DstImageX);
-
-  // The image worked finally upon is 'this' or a new created one.
-  ptImage* WorkImage = InPlace ? this : new (ptImage);
-
-  WorkImage->m_Image =
-    (uint16_t (*)[3]) CALLOC(NewWidth*NewHeight,sizeof(*m_Image));
-  ptMemoryError(WorkImage->m_Image,__FILE__,__LINE__);
-
-  // Fill the image from the DstImage.
-  for (uint32_t c=0; c<(uint32_t)NewHeight*NewWidth; c++) {
-    for (short cl=0; cl<3; cl++) {
-      WorkImage->m_Image[c][cl] = (uint16_t)CLIP(DstImageY[c][cl]+0.5);
-    }
-  }
-
-  FREE(DstImageY);
-
-  WorkImage->m_Width  = NewWidth;
-  WorkImage->m_Height = NewHeight;
-  WorkImage->m_Colors = m_Colors;
-
-  return WorkImage;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2261,38 +2023,29 @@ ptImage* ptImage::FilteredResize(const uint16_t Size,
 ptImage* ptImage::Crop(const uint16_t X,
                        const uint16_t Y,
                        const uint16_t W,
-                       const uint16_t H,
-                       const short    InPlace) {
+                       const uint16_t H) {
 
   assert(m_Colors ==3);
   assert( (X+W) <= m_Width);
   assert( (Y+H) <= m_Height);
 
-  uint16_t (*CroppedImage)[3] =
-    (uint16_t (*)[3]) CALLOC(W*H,sizeof(*m_Image));
-  ptMemoryError(CroppedImage,__FILE__,__LINE__);
+  ptImage hCroppedImage;
+  hCroppedImage.setSize((size_t)W*H);
 
 #pragma omp parallel for
   for (uint16_t Row=0;Row<H;Row++) {
     for (uint16_t Column=0;Column<W;Column++) {
-      CroppedImage[Row*W+Column][0] = m_Image[(Y+Row)*m_Width+X+Column][0];
-      CroppedImage[Row*W+Column][1] = m_Image[(Y+Row)*m_Width+X+Column][1];
-      CroppedImage[Row*W+Column][2] = m_Image[(Y+Row)*m_Width+X+Column][2];
+      hCroppedImage.m_Data[Row*W+Column] = m_Data[(Y+Row)*m_Width+X+Column];
     }
   }
 
-  // The image worked finally upon is 'this' or a new created one.
-  ptImage* WorkImage = InPlace ? this : new (ptImage);
+  setSize((size_t) W*H);
 
-  if (InPlace) {
-    FREE(m_Image); // FREE the old image.
-  }
+  m_Data   = hCroppedImage.m_Data;
+  m_Width  = W;
+  m_Height = H;
 
-  WorkImage->m_Image  = CroppedImage;
-  WorkImage->m_Width  = W;
-  WorkImage->m_Height = H;
-  WorkImage->m_Colors = m_Colors;
-  return WorkImage;
+  return this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2623,7 +2376,7 @@ ptImage* ptImage::DeFringe(const double Radius,
 
   float NewThreshold = Threshold*Average/33.0f;
   float HueShift = Shift * ptPI/6;
-  float Val1 = MAX(0,HueShift);
+  float Val1 = MAX(0.f,HueShift);
   float Val2 = ptPI/3+HueShift;
   float Val3 = 2*ptPI/3+HueShift;
   float Val4 = 3*ptPI/3+HueShift;
@@ -2666,8 +2419,8 @@ ptImage* ptImage::DeFringe(const double Radius,
         float TotalB=0;
         float Total=0;
         float Weight;
-        for (int i1 = MAX(0,Row-Neighborhood+1); i1 < MIN(m_Height,Row+Neighborhood); i1++)
-          for (int j1 = MAX(0,Col-Neighborhood+1); j1 < MIN(m_Width,Col+Neighborhood); j1++) {
+        for (int i1 = MAX(0,Row-Neighborhood+1); i1 < MIN((int)m_Height,Row+Neighborhood); i1++)
+          for (int j1 = MAX(0,Col-Neighborhood+1); j1 < MIN((int)m_Width,Col+Neighborhood); j1++) {
             // Neighborhood average of pixels weighted by chrominance
             uint32_t Index2 = i1*m_Width+j1;
             Weight = 1/(ChromaDiff[Index2]+Average);
@@ -2858,8 +2611,6 @@ ptImage* ptImage::Reinhard05(const double Brightness,
     thread_max = (thread_max > lum) ? thread_max : lum;
     thread_min = (thread_min < lum) ? thread_min : lum;
     world_lum += logf(2.3e-5+lum);
-    //~ for (int c = 0; c < NrChannels; c++)
-      //~ Cav[c] += m_Image[i][c];
     Cav1 += m_Image[i][0];
     Cav2 += m_Image[i][1];
     Cav3 += m_Image[i][2];
@@ -2985,23 +2736,15 @@ ptImage* ptImage::ColorBoost(const double ValueA,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::LAdjust(const double LC1, // 8 colors for L
-                          const double LC2,
-                          const double LC3,
-                          const double LC4,
-                          const double LC5,
-                          const double LC6,
-                          const double LC7,
-                          const double LC8,
-                          const double SC1, // 8 colors for saturation
-                          const double SC2,
-                          const double SC3,
-                          const double SC4,
-                          const double SC5,
-                          const double SC6,
-                          const double SC7,
-                          const double SC8) {
-
+ptImage* ptImage::LumaAdjust(const double LC1, // 8 colors for L
+                            const double LC2,
+                            const double LC3,
+                            const double LC4,
+                            const double LC5,
+                            const double LC6,
+                            const double LC7,
+                            const double LC8)
+{
   assert (m_ColorSpace == ptSpace_Lab);
   float WPH = 0x7fff;
   float IQPI = 4/ptPI;
@@ -3038,6 +2781,39 @@ ptImage* ptImage::LAdjust(const double LC1, // 8 colors for L
       m_Image[i][0] = CLIP((int32_t)(m_Image[i][0] * powf(2,(1.-fabsf(Hue-ptPI*7/4)*IQPI)*LC8*Col)));
     if ( LC1 != 0 && Hue > ptPI*7/4 && Hue < ptPI*2.1)
       m_Image[i][0] = CLIP((int32_t)(m_Image[i][0] * powf(2,(1.-fabsf(Hue-ptPI*2)*IQPI)*LC1*Col)));
+  }
+
+  return this;
+}
+
+//==============================================================================
+
+ptImage* ptImage::SatAdjust(const double SC1, // 8 colors for saturation
+                            const double SC2,
+                            const double SC3,
+                            const double SC4,
+                            const double SC5,
+                            const double SC6,
+                            const double SC7,
+                            const double SC8)
+{
+  assert (m_ColorSpace == ptSpace_Lab);
+  float WPH = 0x7fff;
+  float IQPI = 4/ptPI;
+
+#pragma omp parallel for schedule(static)
+  for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
+    float Col = powf(((float)m_Image[i][1]-WPH)*((float)m_Image[i][1]-WPH) +
+          ((float)m_Image[i][2]-WPH)*((float)m_Image[i][2]-WPH), 0.25);
+    Col /= 0xb5; // normalizing to 0..1, sqrt(0x7fff)
+    float Hue = 0;
+    if (m_Image[i][1] == WPH && m_Image[i][2] == WPH) {
+      Hue = 0;   // value for grey pixel
+    } else {
+      Hue = atan2f((float)m_Image[i][2]-WPH,
+      (float)m_Image[i][1]-WPH);
+    }
+    while (Hue < 0) Hue += 2.*ptPI;
 
     float m = 0;
     if ( SC1 != 0 && Hue > -.1 && Hue < ptPI/4) {
@@ -3254,12 +3030,12 @@ ptImage* ptImage::LMHLightRecovery(const short   MaskType,
         // more of the darkened image.
         Mask = LIM((Mask-LowerLimit)*ReciprocalRange,0.0f,1.0f);
         break;
-    case ptMaskType_All:
+      case ptMaskType_All:
         Mask = 1.0f;
         break;
 
-      default :
-        assert(0);
+      default:
+        GInfo->Raise("Unknown mask type: " + MaskType, AT);
     }
 
     // Softening the mask
@@ -3287,8 +3063,8 @@ ptImage* ptImage::LMHLightRecovery(const short   MaskType,
 ptImage* ptImage::Highpass(const double Radius,
                            const double Amount,
                            const double HaloControl,
-                           const double Denoise) {
-
+                           const double Denoise)
+{
   double LowerLimit = 0.1;
   double UpperLimit = 1 - LowerLimit;
   double Softness = 0;
@@ -3299,34 +3075,10 @@ ptImage* ptImage::Highpass(const double Radius,
 
   ptImage *HighpassLayer = new ptImage;
   HighpassLayer->Set(this);
-
   HighpassLayer->ptCIBlur(Radius, ChannelMask);
 
-  const double t = (1.0 - Amount)/2;
-  const double mHC = Amount*(1.0-fabs(HaloControl)); // m with HaloControl
-  const double tHC = (1.0 - mHC)/2; // t with HaloControl
-
-  int Steps = 20;
-  ptCurve* AmpCurve = new ptCurve();
-  AmpCurve->m_Type = ptCurveType_Anchor;
-  for (int i = 0; i<= Steps; i++) {
-    double x = (double) i/(double) Steps;
-    AmpCurve->m_XAnchor[i]=x;
-    if (x < 0.5)
-      if (HaloControl > 0)
-        AmpCurve->m_YAnchor[i]=mHC*x+tHC;
-      else
-        AmpCurve->m_YAnchor[i]=Amount*x+t;
-    else if (x > 0.5)
-      if (HaloControl < 0)
-        AmpCurve->m_YAnchor[i]=mHC*x+tHC;
-      else
-        AmpCurve->m_YAnchor[i]=Amount*x+t;
-    else
-      AmpCurve->m_YAnchor[i]=0.5;
-  }
-  AmpCurve->m_NrAnchors=Steps+1;
-  AmpCurve->SetCurveFromAnchors();
+  // also calculates the curve
+  auto AmpCurve = new ptCurve(createAmpAnchors(Amount, HaloControl));
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -3339,7 +3091,6 @@ ptImage* ptImage::Highpass(const double Radius,
   delete AmpCurve;
 
   if (Denoise)
-    //~ HighpassLayer->WaveletDenoise(ChannelMask, Denoise, 0, 0);
     ptFastBilateralChannel(HighpassLayer, 4.0, Denoise/3.0, 1, 1);
 
   float (*Mask);
@@ -3512,9 +3263,8 @@ ptImage* ptImage::GradientSharpen(const short Passes,
 ptImage* ptImage::MLMicroContrast(const double Strength,
                                   const double Scaling,
                                   const double Weight,
-                                  const ptCurve *Curve,
-                                  const short Type) {
-
+                                  const ptCurve *Curve)
+{
   assert (m_ColorSpace == ptSpace_Lab);
 
   int32_t offset,offset2,c,i,j,col,row,n;
@@ -3547,7 +3297,7 @@ ptImage* ptImage::MLMicroContrast(const double Strength,
       if (Curve == NULL) s=Strength;
       else {
         // set s according to the curve
-        if (Type == 0) { // by chroma
+        if (Curve->mask() == ptCurve::ChromaMask) {
           ValueA = (float)m_Image[offset][1]-WPH;
           ValueB = (float)m_Image[offset][2]-WPH;
           float Hue = 0;
@@ -3561,12 +3311,11 @@ ptImage* ptImage::MLMicroContrast(const double Strength,
           float Col = powf(ValueA * ValueA + ValueB * ValueB, 0.125);
           Col /= 0x7; // normalizing to 0..2
 
-          float Factor = Curve->m_Curve[CLIP((int32_t)(Hue/ptPI*WPH))]/(float)0x3333 - 1.0;
-          //~ m = powf(3.0,fabs(Factor) * Col);
+          float Factor = Curve->Curve[CLIP((int32_t)(Hue/ptPI*WPH))]/(float)0x3333 - 1.0;
           s = Strength * Factor * Col;
+
         } else { //by luma
-          float Factor = Curve->m_Curve[m_Image[offset][0]]/(float)0x3333 - 1.0;
-          //~ m = powf(3.0,fabs(Factor));
+          float Factor = Curve->Curve[m_Image[offset][0]]/(float)0x3333 - 1.0;
           s = Strength * Factor;
         }
       }
@@ -3596,7 +3345,7 @@ ptImage* ptImage::MLMicroContrast(const double Strength,
       temp +=(v-L[offset+width])*s;
       temp +=(v-L[offset+width+1])*sqrtf(2)*s;
 
-      temp = MAX(0,temp);
+      temp = MAX(0.0f,temp);
 
       // Reduce halo looking artifacs
       v=temp;
@@ -3687,14 +3436,14 @@ ptImage* ptImage::ShadowsHighlights(const ptCurve *Curve,
   ptMemoryError(FineLayer,__FILE__,__LINE__);
 
 #pragma omp parallel for default(shared)
-  for (uint32_t i = 0; i < (uint32_t) m_Height*m_Width; i++) {
+  for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
     CoarseLayer[i] = m_Image[i][0];
   }
 
   ptFastBilateralChannel(this,Radius,0.14,2,1);
 
 #pragma omp parallel for default(shared)
-  for (uint32_t i = 0; i < (uint32_t) m_Height*m_Width; i++) {
+  for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
     FineLayer[i]   = CLIP((int32_t) ((ptWPH - (int32_t)m_Image[i][0]) + CoarseLayer[i]));
     CoarseLayer[i] = m_Image[i][0];
   }
@@ -3719,7 +3468,7 @@ ptImage* ptImage::ShadowsHighlights(const ptCurve *Curve,
   if (AmountCoarse != 0) {
     SigmoidalTable(ContrastTable, Contrast, Threshold);
 #pragma omp parallel for default(shared)
-    for (uint32_t i = 0; i < (uint32_t)m_Height*m_Width; i++) {
+    for (uint32_t i=0; i < (uint32_t)m_Height*m_Width; i++) {
       CoarseLayer[i] = ContrastTable[ CoarseLayer[i] ];
     }
   }
@@ -3729,8 +3478,8 @@ ptImage* ptImage::ShadowsHighlights(const ptCurve *Curve,
   if (AmountFine != 0) {
     SigmoidalTable(ContrastTable, Contrast, Threshold);
 #pragma omp parallel for default(shared)
-    for (uint32_t i = 0; i < (uint32_t)m_Height*m_Width; i++) {
-      FineLayer[i] = ContrastTable[ FineLayer[i] ];
+    for (uint32_t i=0; i < (uint32_t)m_Height*m_Width; i++) {
+      FineLayer[i]   = ContrastTable[ FineLayer[i] ];
     }
   }
 
@@ -3767,41 +3516,9 @@ ptImage* ptImage::Microcontrast(const double Radius,
 
   ptImage *MicrocontrastLayer = new ptImage;
   MicrocontrastLayer->Set(this);
-
   MicrocontrastLayer->ptCIBlur(Radius, ChannelMask);
 
-  const double t = (1.0 - Amount)/2;
-  const double mHC = Amount*(1.0-fabs(HaloControl)); // m with HaloControl
-  const double tHC = (1.0 - mHC)/2; // t with HaloControl
-
-// TODO mike: Anpassen der Verstärkungskurve an den Sigmoidalen Kontrast.
-// Der Berech mit Halocontrol soll linear sein, der andere sigmoidal.
-// Wichtig ist, dass bei kleinen Werten der Halocontrol im schwächeren Bereich
-// keine Verstärkung auftritt, da evtl die Ableitung der sigmoidalen Kurve
-// schwächer ist, als bei der linearen Kurve.
-// Anpassen bei allen Filtern, die dieses Verfahren benutzen.
-
-  int Steps = 20;
-  ptCurve* AmpCurve = new ptCurve();
-  AmpCurve->m_Type = ptCurveType_Anchor;
-  for (int i = 0; i<= Steps; i++) {
-    double x = (double) i/(double) Steps;
-    AmpCurve->m_XAnchor[i]=x;
-    if (x < 0.5)
-      if (HaloControl > 0)
-        AmpCurve->m_YAnchor[i]=mHC*x+tHC;
-      else
-          AmpCurve->m_YAnchor[i]=Amount*x+t;
-    else if (x > 0.5)
-      if (HaloControl < 0)
-        AmpCurve->m_YAnchor[i]=mHC*x+tHC;
-      else
-        AmpCurve->m_YAnchor[i]=Amount*x+t;
-    else
-      AmpCurve->m_YAnchor[i]=0.5;
-  }
-  AmpCurve->m_NrAnchors=Steps+1;
-  AmpCurve->SetCurveFromAnchors();
+  auto AmpCurve = new ptCurve(createAmpAnchors(Amount, HaloControl));
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -3835,8 +3552,8 @@ ptImage* ptImage::Microcontrast(const double Radius,
 ptImage* ptImage::Colorcontrast(const double Radius,
         const double Amount,
         const double Opacity,
-        const double HaloControl) {
-
+        const double HaloControl)
+{
   const double WP = 0xffff;
   const double WPH = 0x7fff; // WPH=WP/2
   const short NrChannels = 3;
@@ -3844,34 +3561,9 @@ ptImage* ptImage::Colorcontrast(const double Radius,
 
   ptImage *MicrocontrastLayer = new ptImage;
   MicrocontrastLayer->Set(this);
-
   MicrocontrastLayer->ptCIBlur(Radius, ChannelMask);
 
-  const double t = (1.0 - Amount)/2;
-  const double mHC = Amount*(1.0-fabs(HaloControl)); // m with HaloControl
-  const double tHC = (1.0 - mHC)/2; // t with HaloControl
-
-  int Steps = 20;
-  ptCurve* AmpCurve = new ptCurve();
-  AmpCurve->m_Type = ptCurveType_Anchor;
-  for (int i = 0; i<= Steps; i++) {
-    double x = (double) i/(double) Steps;
-    AmpCurve->m_XAnchor[i]=x;
-    if (x < 0.5)
-      if (HaloControl > 0)
-        AmpCurve->m_YAnchor[i]=mHC*x+tHC;
-      else
-  AmpCurve->m_YAnchor[i]=Amount*x+t;
-    else if (x > 0.5)
-      if (HaloControl < 0)
-        AmpCurve->m_YAnchor[i]=mHC*x+tHC;
-      else
-  AmpCurve->m_YAnchor[i]=Amount*x+t;
-    else
-      AmpCurve->m_YAnchor[i]=0.5;
-  }
-  AmpCurve->m_NrAnchors=Steps+1;
-  AmpCurve->SetCurveFromAnchors();
+  auto AmpCurve = new ptCurve(createAmpAnchors(Amount, HaloControl));
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -3899,7 +3591,7 @@ ptImage* ptImage::Colorcontrast(const double Radius,
       Multiply = CLIP((int32_t)(Source*Blend/WP));
       Screen   = CLIP((int32_t)(WP-(WP-Source)*(WP-Blend)/WP));
       Overlay  = CLIP((int32_t)((((WP-Source)*Multiply+Source*Screen)/WP)));
-      m_Image[i][Ch] = CLIP((int32_t) (-WP*MIN(Opacity, 0)+Overlay*Opacity+Source*(1-fabs(Opacity))));
+      m_Image[i][Ch] = CLIP((int32_t) (-WP*MIN(Opacity, 0.0)+Overlay*Opacity+Source*(1-fabs(Opacity))));
     }
   }
 
@@ -3956,32 +3648,19 @@ ptImage* ptImage::BilateralDenoise(const double Threshold,
         MaskLayer->m_Image[i][0] = RGB_2_L(MaskLayer->m_Image[i]);
     }
 
-    ptCurve* Curve = new ptCurve();
-    Curve->m_Type = ptCurveType_Anchor;
-    Curve->m_XAnchor[0]=0.0;
-    Curve->m_YAnchor[0]=1.0;
-    Curve->m_XAnchor[1]=0.4;
-    Curve->m_YAnchor[1]=0.3;
-    Curve->m_XAnchor[2]=0.5;
-    Curve->m_YAnchor[2]=0.0;
-    Curve->m_XAnchor[3]=0.6;
-    Curve->m_YAnchor[3]=0.3;
-    Curve->m_XAnchor[4]=1.0;
-    Curve->m_YAnchor[4]=1.0;
-    Curve->m_NrAnchors=5;
-    Curve->SetCurveFromAnchors();
-    MaskLayer->ApplyCurve(Curve,1);
+    ptCurve* Curve = new ptCurve({TAnchor(0.0, 1.0),
+                                  TAnchor(0.4, 0.3),
+                                  TAnchor(0.5, 0.0),
+                                  TAnchor(0.6, 0.3),
+                                  TAnchor(1.0, 1.0)});
 
+    MaskLayer->ApplyCurve(Curve,1);
     MaskLayer->ptCIBlur(UseMask, 1);
 
-    Curve->m_XAnchor[0]=0.0;
-    Curve->m_YAnchor[0]=0.0;
-    Curve->m_XAnchor[1]=0.6;
-    Curve->m_YAnchor[1]=0.4;
-    Curve->m_XAnchor[2]=1.0;
-    Curve->m_YAnchor[2]=0.8;
-    Curve->m_NrAnchors=3;
-    Curve->SetCurveFromAnchors();
+    Curve->setFromAnchors({TAnchor(0.0, 0.0),
+                           TAnchor(0.6, 0.4),
+                           TAnchor(1.0, 0.8)});
+
     MaskLayer->ApplyCurve(Curve,1);
     delete Curve;
 
@@ -4006,8 +3685,7 @@ ptImage* ptImage::BilateralDenoise(const double Threshold,
 
 ptImage* ptImage::ApplyDenoiseCurve(const double Threshold,
                                     const double Softness,
-                                    const ptCurve *MaskCurve,
-                                    const short Type) {
+                                    const ptCurve *MaskCurve) {
 
   assert (m_ColorSpace == ptSpace_Lab);
 
@@ -4046,33 +3724,20 @@ ptImage* ptImage::ApplyDenoiseCurve(const double Threshold,
     Temp[i] = m_Image[i][0];
   }
 
-  ptCurve* Curve = new ptCurve();
-  Curve->m_Type = ptCurveType_Anchor;
-  Curve->m_XAnchor[0]=0.0;
-  Curve->m_YAnchor[0]=1.0;
-  Curve->m_XAnchor[1]=0.4;
-  Curve->m_YAnchor[1]=0.3;
-  Curve->m_XAnchor[2]=0.5;
-  Curve->m_YAnchor[2]=0.0;
-  Curve->m_XAnchor[3]=0.6;
-  Curve->m_YAnchor[3]=0.3;
-  Curve->m_XAnchor[4]=1.0;
-  Curve->m_YAnchor[4]=1.0;
-  Curve->m_NrAnchors=5;
-  Curve->SetCurveFromAnchors();
-  MaskLayer->ApplyCurve(Curve,1);
+  ptCurve* Curve = new ptCurve({TAnchor(0.0, 1.0),
+                                TAnchor(0.4, 0.3),
+                                TAnchor(0.5, 0.0),
+                                TAnchor(0.6, 0.3),
+                                TAnchor(1.0, 1.0)});  // also triggers curve calc
+  MaskLayer->ApplyCurve(Curve, ChMask_L);
 
-  MaskLayer->ptCIBlur(UseMask, 1);
+  MaskLayer->ptCIBlur(UseMask, ChMask_L);
 
-  Curve->m_XAnchor[0]=0.0;
-  Curve->m_YAnchor[0]=0.0;
-  Curve->m_XAnchor[1]=0.6;
-  Curve->m_YAnchor[1]=0.4;
-  Curve->m_XAnchor[2]=1.0;
-  Curve->m_YAnchor[2]=0.8;
-  Curve->m_NrAnchors=3;
-  Curve->SetCurveFromAnchors();
-  MaskLayer->ApplyCurve(Curve,1);
+  Curve->setFromAnchors({TAnchor(0.0, 0.0),
+                         TAnchor(0.6, 0.4),
+                         TAnchor(1.0, 0.8)});
+  Curve->calcCurve();
+  MaskLayer->ApplyCurve(Curve, ChMask_L);
   delete Curve;
 
   float (*Mask);
@@ -4090,9 +3755,9 @@ ptImage* ptImage::ApplyDenoiseCurve(const double Threshold,
 
   float ValueA = 0.0;
   float ValueB = 0.0;
-  float Hue    = 0.0;
+  float Hue = 0.0;
 
-  if (Type == 0) { // by chroma
+  if (MaskCurve->mask() == ptCurve::ChromaMask) {
 #pragma omp parallel for schedule(static) private(ValueA, ValueB, Hue)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by hue
@@ -4106,16 +3771,17 @@ ptImage* ptImage::ApplyDenoiseCurve(const double Threshold,
       }
       while (Hue < 0) Hue += 2.*ptPI;
 
-      float Factor = MaskCurve->m_Curve[CLIP((int32_t)(Hue/ptPI*WPH))]-(float)0x7fff;
+      float Factor = MaskCurve->Curve[CLIP((int32_t)(Hue/ptPI*WPH))]-(float)0x7fff;
       Factor /= (float)0x7fff;
 
       m_Image[i][0]=CLIP((int32_t)(Temp[i]*(1.0f - Factor)+m_Image[i][0]*Factor ));
     }
+
   } else { // by luma
 #pragma omp parallel for schedule(static) private(ValueA, ValueB)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by luminance
-      float Factor = MaskCurve->m_Curve[Temp[i]]-(float)0x7fff;
+      float Factor = MaskCurve->Curve[Temp[i]]-(float)0x7fff;
       Factor /= (float)0x7fff;
 
       m_Image[i][0]=CLIP((int32_t)(Temp[i]*(1.0f - Factor)+m_Image[i][0]*Factor ));
@@ -4142,7 +3808,7 @@ ptImage* ptImage::TextureContrast(const double Threshold,
           const double Masking) {
 
   const int32_t WPH = 0x7fff; // WPH=WP/2
-  const short NrChannels  = (m_ColorSpace == ptSpace_Lab)?1:3;
+  const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
   const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
 
   ptImage *ContrastLayer = new ptImage;
@@ -4172,32 +3838,19 @@ ptImage* ptImage::TextureContrast(const double Threshold,
         MaskLayer->m_Image[i][0] = RGB_2_L(MaskLayer->m_Image[i]);
     }
 
-    ptCurve* Curve = new ptCurve();
-    Curve->m_Type = ptCurveType_Anchor;
-    Curve->m_XAnchor[0]=0.0;
-    Curve->m_YAnchor[0]=1.0;
-    Curve->m_XAnchor[1]=0.4;
-    Curve->m_YAnchor[1]=0.3;
-    Curve->m_XAnchor[2]=0.5;
-    Curve->m_YAnchor[2]=0.0;
-    Curve->m_XAnchor[3]=0.6;
-    Curve->m_YAnchor[3]=0.3;
-    Curve->m_XAnchor[4]=1.0;
-    Curve->m_YAnchor[4]=1.0;
-    Curve->m_NrAnchors=5;
-    Curve->SetCurveFromAnchors();
-    MaskLayer->ApplyCurve(Curve,1);
+    ptCurve* Curve = new ptCurve({TAnchor(0.0, 1.0),
+                                  TAnchor(0.4, 0.3),
+                                  TAnchor(0.5, 0.0),
+                                  TAnchor(0.6, 0.3),
+                                  TAnchor(1.0, 1.0)});
 
+    MaskLayer->ApplyCurve(Curve,1);
     MaskLayer->ptCIBlur(Masking, 1);
 
-    Curve->m_XAnchor[0]=0.0;
-    Curve->m_YAnchor[0]=0.0;
-    Curve->m_XAnchor[1]=0.4;
-    Curve->m_YAnchor[1]=0.6;
-    Curve->m_XAnchor[2]=0.8;
-    Curve->m_YAnchor[2]=1.0;
-    Curve->m_NrAnchors=3;
-    Curve->SetCurveFromAnchors();
+    Curve->setFromAnchors({TAnchor(0.0, 0.0),
+                           TAnchor(0.4, 0.6),
+                           TAnchor(0.8, 1.0)});
+
     MaskLayer->ApplyCurve(Curve,1);
     delete Curve;
 
@@ -4409,7 +4062,7 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
   ptImage *NoiseLayer = new ptImage;
   NoiseLayer->Set(this);  // allocation of free layer faster? TODO!
   float (*Mask);
-  short Noise = LIM(NoiseType,0,5);
+  short Noise = LIM((int)NoiseType,0,5);
   Noise = (Noise > 2) ? (Noise - 3) : Noise;
   short ScaledRadius = Radius/powf(2.0,(float)ScaleFactor);
 
@@ -4613,50 +4266,29 @@ ptImage* ptImage::SimpleTone(const double R,
   assert (m_ColorSpace != ptSpace_Lab);
 
   if (R) {
-    ptCurve* RedCurve = new ptCurve();
-    RedCurve->m_Type = ptCurveType_Anchor;
-    RedCurve->m_IntendedChannel = ptCurveChannel_R;
-    RedCurve->m_XAnchor[0]=0.0;
-    RedCurve->m_YAnchor[0]=0.0;
-    RedCurve->m_XAnchor[1]=0.5-0.2*R;
-    RedCurve->m_YAnchor[1]=0.5+0.2*R;
-    RedCurve->m_XAnchor[2]=1.0;
-    RedCurve->m_YAnchor[2]=1.0;
-    RedCurve->m_NrAnchors=3;
-    RedCurve->SetCurveFromAnchors();
+    ptCurve* RedCurve = new ptCurve({TAnchor(0.0,       0.0),
+                                     TAnchor(0.5-0.2*R, 0.5+0.2*R),
+                                     TAnchor(1.0,       1.0),});
     ApplyCurve(RedCurve,1);
     delete RedCurve;
   }
+
   if (G) {
-    ptCurve* GreenCurve = new ptCurve();
-    GreenCurve->m_Type = ptCurveType_Anchor;
-    GreenCurve->m_IntendedChannel = ptCurveChannel_G;
-    GreenCurve->m_XAnchor[0]=0.0;
-    GreenCurve->m_YAnchor[0]=0.0;
-    GreenCurve->m_XAnchor[1]=0.5-0.2*G;
-    GreenCurve->m_YAnchor[1]=0.5+0.2*G;
-    GreenCurve->m_XAnchor[2]=1.0;
-    GreenCurve->m_YAnchor[2]=1.0;
-    GreenCurve->m_NrAnchors=3;
-    GreenCurve->SetCurveFromAnchors();
+    ptCurve* GreenCurve = new ptCurve({TAnchor(0.0,       0.0),
+                                       TAnchor(0.5-0.2*G, 0.5+0.2*G),
+                                       TAnchor(1.0,       1.0),});
     ApplyCurve(GreenCurve,2);
     delete GreenCurve;
   }
+
   if (B) {
-    ptCurve* BlueCurve = new ptCurve();
-    BlueCurve->m_Type = ptCurveType_Anchor;
-    BlueCurve->m_IntendedChannel = ptCurveChannel_B;
-    BlueCurve->m_XAnchor[0]=0.0;
-    BlueCurve->m_YAnchor[0]=0.0;
-    BlueCurve->m_XAnchor[1]=0.5-0.2*B;
-    BlueCurve->m_YAnchor[1]=0.5+0.2*B;
-    BlueCurve->m_XAnchor[2]=1.0;
-    BlueCurve->m_YAnchor[2]=1.0;
-    BlueCurve->m_NrAnchors=3;
-    BlueCurve->SetCurveFromAnchors();
+    ptCurve* BlueCurve = new ptCurve({TAnchor(0.0,       0.0),
+                                      TAnchor(0.5-0.2*B, 0.5+0.2*B),
+                                      TAnchor(1.0,       1.0),});
     ApplyCurve(BlueCurve,4);
     delete BlueCurve;
   }
+
   return this;
 }
 
@@ -4666,36 +4298,21 @@ ptImage* ptImage::SimpleTone(const double R,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Temperature(const double Temperature,
-            const double Tint) {
-
+ptImage* ptImage::Temperature(const double Temperature, const double Tint) {
   assert (m_ColorSpace == ptSpace_Lab);
 
-  ptCurve* Temp1Curve = new ptCurve();
-  Temp1Curve->m_Type = ptCurveType_Anchor;
-  Temp1Curve->m_XAnchor[0]=0.0;
-  Temp1Curve->m_YAnchor[0]=0.0;
-  Temp1Curve->m_XAnchor[1]=0.5-0.05*Temperature+0.1*Tint;
-  Temp1Curve->m_YAnchor[1]=0.5+0.05*Temperature-0.1*Tint;
-  Temp1Curve->m_XAnchor[2]=1.0;
-  Temp1Curve->m_YAnchor[2]=1.0;
-  Temp1Curve->m_NrAnchors=3;
-  Temp1Curve->SetCurveFromAnchors();
-
-  ptCurve* Temp2Curve = new ptCurve();
-  Temp2Curve->m_Type = ptCurveType_Anchor;
-  Temp2Curve->m_XAnchor[0]=0.0;
-  Temp2Curve->m_YAnchor[0]=0.0;
-  Temp2Curve->m_XAnchor[1]=0.5-0.1*Temperature-0.05*Tint;
-  Temp2Curve->m_YAnchor[1]=0.5+0.1*Temperature+0.05*Tint;
-  Temp2Curve->m_XAnchor[2]=1.0;
-  Temp2Curve->m_YAnchor[2]=1.0;
-  Temp2Curve->m_NrAnchors=3;
-  Temp2Curve->SetCurveFromAnchors();
-
+  ptCurve* Temp1Curve = new ptCurve(
+      {TAnchor(0.0, 0.0),
+       TAnchor(0.5-0.05*Temperature+0.1*Tint, 0.5+0.05*Temperature-0.1*Tint),
+       TAnchor(1.0, 1.0)} );
   ApplyCurve(Temp1Curve,2);
-  ApplyCurve(Temp2Curve,4);
   delete Temp1Curve;
+
+  ptCurve* Temp2Curve = new ptCurve(
+      {TAnchor(0.0, 0.0),
+       TAnchor(0.5-0.1*Temperature-0.05*Tint, 0.5+0.1*Temperature+0.05*Tint),
+       TAnchor(1.0, 1.0)} );
+  ApplyCurve(Temp2Curve,4);
   delete Temp2Curve;
 
   return this;
@@ -4732,7 +4349,7 @@ ptImage* ptImage::LABTransform(const short Mode) {
   ptImage *TempLayer = new ptImage;
   TempLayer->Set(this);
   ptCurve* GammaCurve = new ptCurve();
-  GammaCurve->SetCurveFromFunction(GammaTool,0.45,0.);
+  GammaCurve->setFromFunc(ptCurve::GammaTool,0.45,0.0);
   TempLayer->ApplyCurve(GammaCurve,7);
   delete GammaCurve;
   RGBToLab();
@@ -4770,27 +4387,13 @@ ptImage* ptImage::LABTone(const double Amount,
 
   double t = (1.-Saturation)*WPH;
 
-  ptCurve* Temp1Curve = new ptCurve();
-  Temp1Curve->m_Type = ptCurveType_Anchor;
-  Temp1Curve->m_XAnchor[0]=0.0;
-  Temp1Curve->m_YAnchor[0]=0.0;
-  Temp1Curve->m_XAnchor[1]=0.5-0.1*a;
-  Temp1Curve->m_YAnchor[1]=0.5+0.1*a;
-  Temp1Curve->m_XAnchor[2]=1.0;
-  Temp1Curve->m_YAnchor[2]=1.0;
-  Temp1Curve->m_NrAnchors=3;
-  Temp1Curve->SetCurveFromAnchors();
+  ptCurve* Temp1Curve = new ptCurve({TAnchor(0.0,       0.0),
+                                     TAnchor(0.5-0.1*a, 0.5+0.1*a),
+                                     TAnchor(1.0,       1.0)} );
 
-  ptCurve* Temp2Curve = new ptCurve();
-  Temp2Curve->m_Type = ptCurveType_Anchor;
-  Temp2Curve->m_XAnchor[0]=0.0;
-  Temp2Curve->m_YAnchor[0]=0.0;
-  Temp2Curve->m_XAnchor[1]=0.5-0.1*b;
-  Temp2Curve->m_YAnchor[1]=0.5+0.1*b;
-  Temp2Curve->m_XAnchor[2]=1.0;
-  Temp2Curve->m_YAnchor[2]=1.0;
-  Temp2Curve->m_NrAnchors=3;
-  Temp2Curve->SetCurveFromAnchors();
+  ptCurve* Temp2Curve = new ptCurve({TAnchor(0.0,       0.0),
+                                     TAnchor(0.5-0.1*b, 0.5+0.1*b),
+                                     TAnchor(1.0,       1.0)} );
 
   if (MaskType == ptMaskType_All) {
     if (Saturation != 1) ColorBoost(Saturation, Saturation);
@@ -4904,42 +4507,19 @@ ptImage* ptImage::Crossprocess(const short Mode,
 
   assert (m_ColorSpace != ptSpace_Lab);
 
-  ptCurve* RedCurve = new ptCurve();
-  RedCurve->m_Type = ptCurveType_Anchor;
-  RedCurve->m_XAnchor[0]=0.0;
-  RedCurve->m_YAnchor[0]=0.0;
-  RedCurve->m_XAnchor[1]=0.05;
-  RedCurve->m_YAnchor[1]=0.05-0.05*Color1;
-  RedCurve->m_XAnchor[2]=0.15;
-  RedCurve->m_YAnchor[2]=0.15;
-  RedCurve->m_XAnchor[3]=1.0;
-  RedCurve->m_YAnchor[3]=1.0;
-  RedCurve->m_NrAnchors=4;
-  RedCurve->SetCurveFromAnchors();
+  ptCurve* RedCurve = new ptCurve({TAnchor(0.0,  0.0),
+                                   TAnchor(0.05, 0.05-0.05*Color1),
+                                   TAnchor(0.15, 0.15),
+                                   TAnchor(1.0,  1.0)});
 
-  ptCurve* GreenCurve = new ptCurve();
-  GreenCurve->m_Type = ptCurveType_Anchor;
-  GreenCurve->m_XAnchor[0]=0.0;
-  GreenCurve->m_YAnchor[0]=0.0;
-  GreenCurve->m_XAnchor[1]=0.03;
-  GreenCurve->m_YAnchor[1]=0.025;
-  GreenCurve->m_XAnchor[2]=0.2;
-  GreenCurve->m_YAnchor[2]=0.2+0.3*Color1;
-  GreenCurve->m_XAnchor[3]=1.0;
-  GreenCurve->m_YAnchor[3]=1.0;
-  GreenCurve->m_NrAnchors=4;
-  GreenCurve->SetCurveFromAnchors();
+  ptCurve* GreenCurve = new ptCurve({TAnchor(0.0,  0.0),
+                                     TAnchor(0.03, 0.025),
+                                     TAnchor(0.2,  0.2+0.3*Color1),
+                                     TAnchor(1.0,  1.0)});
 
-  ptCurve* BlueCurve = new ptCurve();
-  BlueCurve->m_Type = ptCurveType_Anchor;
-  BlueCurve->m_XAnchor[0]=0.0;
-  BlueCurve->m_YAnchor[0]=0.0;
-  BlueCurve->m_XAnchor[1]=0.3;
-  BlueCurve->m_YAnchor[1]=0.3-0.2*Color2;
-  BlueCurve->m_XAnchor[2]=1.0;
-  BlueCurve->m_YAnchor[2]=1.0;
-  BlueCurve->m_NrAnchors=3;
-  BlueCurve->SetCurveFromAnchors();
+  ptCurve* BlueCurve = new ptCurve({TAnchor(0.0,  0.0),
+                                    TAnchor(0.3,  0.3-0.2*Color2),
+                                    TAnchor(1.0,  1.0)});
 
   ptImage *ColorLayer = new ptImage;
   ColorLayer->Set(this);
@@ -5088,14 +4668,14 @@ float *ptImage::GetGradualMask(const double Angle,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::GradualOverlay(const uint16_t R,
-                                 const uint16_t G,
-                                 const uint16_t B,
-                                 const short Mode,
-                                 const double Amount,
-                                 const double Angle,
-                                 const double LowerLevel,
-                                 const double UpperLevel,
-                                 const double Softness) {
+                 const uint16_t G,
+                 const uint16_t B,
+                 const short Mode,
+                 const double Amount,
+                 const double Angle,
+                 const double LowerLevel,
+                 const double UpperLevel,
+                 const double Softness) {
 
   float* GradualMask = GetGradualMask(Angle, LowerLevel, UpperLevel, Softness);
 
@@ -5157,10 +4737,10 @@ ptImage* ptImage::Vignette(const short VignetteMode,
         } else {
           hColor = 0xffff;
           if (VignetteMode == ptVignetteMode_Hard) hMode = ptOverlayMode_Screen;
-        }
+      }
 
 #pragma omp parallel for schedule(static) default(shared)
-        for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
+          for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
           ToneImage[i][0] = ToneImage[i][1] = ToneImage[i][2] = hColor;
         }
 
@@ -5175,8 +4755,8 @@ ptImage* ptImage::Vignette(const short VignetteMode,
         VignetteLayer->Set(this);
         VignetteLayer->Expose(pow(2,-Amount*5), ptExposureClipMode_None);
         ptCurve* VignetteContrastCurve = new ptCurve();
-        VignetteContrastCurve->SetCurveFromFunction(Sigmoidal,0.5,fabs(Amount)*10);
-        VignetteLayer->ApplyCurve(VignetteContrastCurve,m_ColorSpace == ptSpace_Lab? 1:7);
+        VignetteContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,fabs(Amount)*10);
+        VignetteLayer->ApplyCurve(VignetteContrastCurve, (m_ColorSpace == ptSpace_Lab) ? 1 : 7);
         delete VignetteContrastCurve;
         Overlay(VignetteLayer->m_Image, 1, VignetteMask, ptOverlayMode_Normal);
         delete VignetteLayer;
@@ -5232,7 +4812,7 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
   // Contrast
   if (Contrast != 0) {
     ptCurve* MyContrastCurve = new ptCurve();
-    MyContrastCurve->SetCurveFromFunction(Sigmoidal,0.5,Contrast);
+    MyContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,Contrast);
     BlurLayer->ApplyCurve(MyContrastCurve,7);
     delete MyContrastCurve;
   }
@@ -5483,40 +5063,39 @@ float *ptImage::FillMask(const uint16_t APointX,
 
 //==============================================================================
 
-ptImage *ptImage::MaskedColorAdjust(const ptLocalSpot *ASpot)
+ptImage *ptImage::MaskedColorAdjust(const int       Ax,
+                                    const int       Ay,
+                                    const float     AThreshold,
+                                    const float     AChromaWeight,
+                                    const int       AMaxRadius,
+                                    const bool      AHasMaxRadius,
+                                    const ptCurve  *ACurve,
+                                    const bool      ASatAdaptive,
+                                    float           ASaturation,
+                                    const float     AHueShift)
 {
   assert (m_ColorSpace == ptSpace_LCH);
 
-  float *hMask = 0;
-  hMask = FillMask(ASpot->x(),
-                   ASpot->y(),
-                   ASpot->threshold()*2.0f,
-                   ASpot->lumaWeight(), // this is actually a color weight
-                   ASpot->maxRadius(),
-                   ASpot->hasMaxRadius());
-
-  const ptCurve *hCurve       = ASpot->lumaCurve();
-  const bool     hSatAdjust   = ASpot->saturation() != 0.0f;
-  const bool     hSatAdaptive = ASpot->isAdaptiveSaturation();
-  float          hSaturation  = ASpot->saturation();
-  const bool     hHueAdjust   = ASpot->colorShift() != 0.0f;
-  const float    hHueShift    = ASpot->colorShift() * pt2PI;
+  float *hMask = FillMask(Ax, Ay, AThreshold*2.0f, AChromaWeight, AMaxRadius, AHasMaxRadius);
+  const bool     hSatAdjust   = ASaturation() != 0.0f;
+  const bool     hHueAdjust   = AHueShift != 0.0f;
+  const float    hHueShift    = AHueShift * pt2PI;
 
   // we enhance positive saturation values; negative values should give B&W with
   // -1.0, at least when not adaptive.
-  if (hSaturation > 0) hSaturation *= 2.0f;
+  if (ASaturation > 0) ASaturation *= 2.0f;
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i< (uint32_t)m_Height*m_Width; i++) {
     if (hMask[i] > 0.0f) {
       m_ImageL[i] = m_ImageL[i]                  * (1.0f - hMask[i]) +
-                    hCurve->m_Curve[m_ImageL[i]] * hMask[i];
+                    ACurve->Curve[m_ImageL[i]] * hMask[i];
 
       if (hSatAdjust) {
-        if (hSatAdaptive)
-          m_ImageC[i] = m_ImageC[i] * (1.0f + hMask[i] * hSaturation * (2.0f - m_ImageC[i]/(float)0x3FFF));
+        if (ASatAdaptive)
+          m_ImageC[i] = m_ImageC[i] * (1.0f + hMask[i] * ASaturation * (2.0f - m_ImageC[i]/(float)0x3FFF));
         else
-          m_ImageC[i] = m_ImageC[i] * (1.0f + hMask[i] * hSaturation);
+          m_ImageC[i] = m_ImageC[i] * (1.0f + hMask[i] * ASaturation);
       }
 
       if (hHueAdjust) {
@@ -5712,135 +5291,6 @@ ptImage* ptImage::Box(const uint16_t MaxRadius, float* Mask) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Blur
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptImage* ptImage::Blur(const uint8_t ChannelMask,
-                       const double  Radius,
-                       const double  Sigma) {
-
-  assert (Sigma > 0.0);
-
-  // KernelWidth is per construction oneven. No need to assert.
-  uint16_t    KernelWidth   = ptGetOptimalKernelWidth1D(Radius,Sigma);
-
-  double *Kernel       = GetBlurKernel(KernelWidth,Sigma);
-
-  double Value;
-
-  // Blurred image , integer and ptoat version.
-  uint16_t (*BlurredImage)[3] = NULL;
-
-  // Blur rows.
-
-  // Copy image
-  BlurredImage =  (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(BlurredImage,__FILE__,__LINE__);
-  memcpy(BlurredImage,m_Image,m_Width*m_Height*sizeof(*m_Image));
-
-  for (short Channel=0;Channel<3;Channel++) {
-
-    // Is it a channel we are supposed to handle ?
-    if  (! (ChannelMask & (1<<Channel))) continue;
-
-    for (uint16_t Row=0; Row < m_Height; Row++) {
-      for (uint16_t Column=0; Column < m_Width-KernelWidth+1; Column++) {
-        Value = 0.0;
-        for (uint16_t i=0; i < KernelWidth; i++) {
-          Value += Kernel[i]*m_Image[Row*m_Width+Column+i][Channel];
-        }
-        BlurredImage[Row*m_Width+Column+KernelWidth/2][Channel] =
-          CLIP((int32_t)Value);
-      }
-    }
-  }
-
-  // Get rid of the original image and substitute it by the partly blurred.
-  FREE(m_Image);
-  m_Image = BlurredImage;
-
-  //  Blur Columns. Starting from the row blurred one.
-
-  // Copy image
-  BlurredImage = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(BlurredImage,__FILE__,__LINE__);
-  memcpy(BlurredImage,m_Image,m_Width*m_Height*sizeof(*m_Image));
-
-  for (short Channel=0;Channel<3;Channel++) {
-
-    // Is it a channel we are supposed to handle ?
-    if  (! (ChannelMask & (1<<Channel))) continue;
-
-    for (uint16_t Column=0; Column < m_Width; Column++) {
-      for (uint16_t Row=0; Row < m_Height-KernelWidth+1; Row++) {
-        Value = 0.0;
-        for (uint16_t i=0; i < KernelWidth; i++) {
-          Value += Kernel[i]*m_Image[(Row+i)*m_Width+Column][Channel];
-        }
-        BlurredImage[(Row+KernelWidth/2)*m_Width+Column][Channel] =
-          CLIP((int32_t)Value);
-      }
-    }
-  }
-
-  // Get rid of the partly blurred image and substitute it by the blurred.
-  FREE(m_Image);
-  m_Image = BlurredImage;
-  FREE(Kernel);
-
-  return this;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// USM
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptImage* ptImage::USM(const uint8_t ChannelMask,
-                      const double  Radius,
-                      const double  Amount,
-                      const double  Threshold) {
-
-  assert ((ChannelMask == 1) || (m_ColorSpace != ptSpace_Lab));
-
-  // Copy of the original message.
-  uint16_t (*OriginalImage)[3] = NULL;
-
-  // Copy original image
-  OriginalImage = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(OriginalImage,__FILE__,__LINE__);
-  memcpy(OriginalImage,m_Image,m_Width*m_Height*sizeof(*m_Image));
-
-  // Blur the original.
-  ptCIBlur(Radius, ChannelMask);
-
-  // Combine the original and the blurred one.
-  for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-    for (short c=0; c<3; c++) {
-
-      // Is it a channel we are supposed to handle ?
-      if  (! (ChannelMask & (1<<c))) continue;
-
-      int32_t Delta = OriginalImage[i][c]-m_Image[i][c];
-      if (abs(Delta) > Threshold*0xffff) {
-        OriginalImage[i][c] = CLIP((int32_t)(OriginalImage[i][c]+Delta*Amount));
-      }
-    }
-  }
-
-
-  // Get rid of the (blurred) this and substitute it.
-  // With the combined one
-  FREE(m_Image);
-  m_Image = OriginalImage;
-
-  return this;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
 // ViewLAB
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -5890,10 +5340,9 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0] = CLIP((int32_t) ((WPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
       }
-      MyContrastCurve->SetCurveFromFunction(Sigmoidal,0.5,30);
+      MyContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,30);
       ApplyCurve(MyContrastCurve,1);
 
-      //~ ptCimgEdgeDetection(this,1);
 #pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][1]=0x8080;
@@ -6041,7 +5490,7 @@ ptImage* ptImage::SpecialPreview(const short Mode, const int Intent) {
       m_Image[i][0] = CLIP((int32_t) ((WPH-(int32_t)ContrastLayer->m_Image[i][0]) + m_Image[i][0]));
     }
     ptCurve* MyContrastCurve = new ptCurve();
-    MyContrastCurve->SetCurveFromFunction(Sigmoidal,0.5,30);
+    MyContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,30);
     ApplyCurve(MyContrastCurve,1);
 #pragma omp parallel for default(shared) schedule(static)
     for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -6089,6 +5538,60 @@ ptImage* ptImage::MixChannels(const double MixFactors[3][3]) {
       m_Image[i][To] = CLIP((int32_t)Value[To]);
     }
   }
+  return this;
+}
+
+//==============================================================================
+
+ptImage *ptImage::Highlights(const float AHlRed, const float AHlGreen, const float AHlBlue) {
+  TAnchorList hAnchors;
+  for (int i=0; i<12; ++i) {  // 12th anchor is a dummy
+    hAnchors.push_back(TAnchor((double) i/33.0, (double) i/33.0));
+  }
+
+  ptCurve HighlightsCurve(hAnchors, false);   // no immediate curve calc
+
+  if (AHlRed < 0) {
+    HighlightsCurve.setAnchor(11, TAnchor(1.0, 1.0+0.5*AHlRed));
+    HighlightsCurve.calcCurve();
+    ApplyCurve(&HighlightsCurve,1);
+  } else if (AHlRed > 0) {
+    HighlightsCurve.setAnchor(11, TAnchor(1.0-0.5*AHlRed, 1.0));
+    HighlightsCurve.calcCurve();
+    ApplyCurve(&HighlightsCurve,1);
+  }
+
+  if (AHlGreen < 0) {
+    HighlightsCurve.setAnchor(11, TAnchor(1.0, 1.0+0.5*AHlGreen));
+    HighlightsCurve.calcCurve();
+    ApplyCurve(&HighlightsCurve,2);
+  } else if (AHlGreen > 0) {
+    HighlightsCurve.setAnchor(11, TAnchor(1.0-0.5*AHlGreen, 1.0));
+    HighlightsCurve.calcCurve();
+    ApplyCurve(&HighlightsCurve,2);
+  }
+
+  if (AHlBlue < 0) {
+    HighlightsCurve.setAnchor(11, TAnchor(1.0, 1.0+0.5*AHlBlue));
+    HighlightsCurve.calcCurve();
+    ApplyCurve(&HighlightsCurve,4);
+  } else if (AHlBlue > 0) {
+    HighlightsCurve.setAnchor(11, TAnchor(1.0-0.5*AHlBlue, 1.0));
+    HighlightsCurve.calcCurve();
+    ApplyCurve(&HighlightsCurve,4);
+  }
+
+  return this;
+}
+
+//==============================================================================
+
+ptImage *ptImage::GammaTool(const float AStrength, const float ALinearity)
+{
+  ptCurve RGBGammaCurve;
+  RGBGammaCurve.setFromFunc(ptCurve::GammaTool, AStrength, ALinearity);
+  ApplyCurve(&RGBGammaCurve, ChMask_RGB);
+
   return this;
 }
 
@@ -6141,76 +5644,6 @@ short ptImage::WriteAsPpm(const char*  FileName,
 
   FREE(PpmRow);
   FCLOSE(OutputFile);
-  return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// ReadPpm
-//
-// Remark : Extremely naive and not meant for production !
-// (just enough for testcase support)
-//
-////////////////////////////////////////////////////////////////////////////////
-
-short ptImage::ReadPpm(const char* FileName) {
-
-  printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
-
-  FILE *InputFile = fopen(FileName,"rb");
-  if (!InputFile) {
-    ptLogError(ptError_FileOpen,FileName);
-    return ptError_FileOpen;
-  }
-
-  short    Colors;
-  uint16_t Width;
-  uint16_t Height;
-  uint16_t BitsPerColor;
-  char     Buffer[128];
-
-  // Extremely naive. Probably just enough for testcases.
-  assert ( fgets(Buffer,127,InputFile) );
-  assert ( 1 == sscanf(Buffer,"P%hd",&Colors) );
-  assert(Colors == 6 );
-  do {
-    assert ( fgets(Buffer,127,InputFile) );
-  } while (Buffer[0] == '#');
-  sscanf(Buffer,"%hd %hd",&Width,&Height);
-  assert ( fgets(Buffer,127,InputFile) );
-  sscanf(Buffer,"%hd",&BitsPerColor);
-  assert(BitsPerColor == 0xffff);
-
-  m_Colors = 3;
-  m_Width  = Width;
-  m_Height = Height;
-
-  // Free a maybe preexisting and allocate space.
-  FREE(m_Image);
-  m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
-
-  uint16_t*  PpmRow = (uint16_t *) CALLOC(m_Width*m_Height,sizeof(*PpmRow));
-  ptMemoryError(PpmRow,__FILE__,__LINE__);
-
-  for (uint16_t Row=0; Row<m_Height; Row++) {
-    size_t RV = fread(PpmRow,m_Colors*2,m_Width,InputFile);
-    if (RV != (size_t) m_Width) {
-      printf("ReadPpm error. Expected %d bytes. Got %d\n",m_Width,(int)RV);
-      exit(EXIT_FAILURE);
-    }
-    if (htons(0x55aa) != 0x55aa) {
-      swab((char *)PpmRow,(char *)PpmRow,m_Width*m_Colors*2);
-    }
-    for (uint16_t Col=0; Col<m_Width; Col++) {
-      for (short c=0;c<3;c++) {
-        m_Image[Row*m_Width+Col][c] = PpmRow[Col*m_Colors+c];
-      }
-    }
-  }
-
-  FREE(PpmRow);
-  FCLOSE(InputFile);
   return 0;
 }
 
@@ -6278,334 +5711,6 @@ short ptImage::WriteAsJpeg(const char*    FileName,
   return 0;
 }
 #endif
-////////////////////////////////////////////////////////////////////////////////
-//
-// HorizontalSkew
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptImage::HorizontalSkew(uint16_t (*DestinationImage)[3],
-                             const    uint16_t DestinationWidth,
-                             const    uint16_t DestinationHeight,
-                             const    uint16_t Row,
-                             const    int16_t  SkewOffset,
-                             const    double Weight) {
-  assert(Row<DestinationHeight);
-
-  uint16_t Left[3];
-  uint16_t OldLeft[3];
-  uint16_t Source[3];
-  int32_t  i;
-
-  // Left has to be read as in 'left over'.
-  OldLeft[0] = 0;
-  OldLeft[1] = 0;
-  OldLeft[2] = 0;
-  for (i = 0; i < m_Width; i++) {
-    Source[0] = m_Image[Row*m_Width+i][0];
-    Source[1] = m_Image[Row*m_Width+i][1];
-    Source[2] = m_Image[Row*m_Width+i][2];
-    Left[0] =  (uint16_t) (m_Image[Row*m_Width+i][0] * Weight);
-    Left[1] =  (uint16_t) (m_Image[Row*m_Width+i][1] * Weight);
-    Left[2] =  (uint16_t) (m_Image[Row*m_Width+i][2] * Weight);
-    Source[0] -= Left[0] - OldLeft[0];
-    Source[1] -= Left[1] - OldLeft[1];
-    Source[2] -= Left[2] - OldLeft[2];
-    if ((SkewOffset+i >= 0) && (SkewOffset+i < DestinationWidth)) {
-      DestinationImage[Row*DestinationWidth+SkewOffset+i][0] = Source[0];
-      DestinationImage[Row*DestinationWidth+SkewOffset+i][1] = Source[1];
-      DestinationImage[Row*DestinationWidth+SkewOffset+i][2] = Source[2];
-    }
-    OldLeft[0] = Left[0];
-    OldLeft[1] = Left[1];
-    OldLeft[2] = Left[2];
-  }
-  // Go to rightmost point of skew
-  i += SkewOffset;
-  if (i<DestinationWidth) {
-    DestinationImage[Row*DestinationWidth+i][0] = OldLeft[0];
-    DestinationImage[Row*DestinationWidth+i][1] = OldLeft[1];
-    DestinationImage[Row*DestinationWidth+i][2] = OldLeft[2];
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// VerticalSkew
-// Inplace
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptImage::VerticalSkew(uint16_t (*DestinationImage)[3],
-                           const uint16_t DestinationWidth,
-                           const uint16_t DestinationHeight,
-                           const uint16_t Column,
-                           const int16_t  SkewOffset,
-                           const double Weight) {
-
-  assert(Column<DestinationWidth);
-
-  uint16_t Left[3];
-  uint16_t OldLeft[3];
-  uint16_t Source[3];
-  int32_t  i;
-
-  // Left has to be read as in 'left over'.
-  OldLeft[0] = 0;
-  OldLeft[1] = 0;
-  OldLeft[2] = 0;
-  for (i = 0; i < m_Height; i++) {
-    Source[0] = m_Image[i*m_Width+Column][0];
-    Source[1] = m_Image[i*m_Width+Column][1];
-    Source[2] = m_Image[i*m_Width+Column][2];
-    Left[0] = (uint16_t) (m_Image[i*m_Width+Column][0] * Weight);
-    Left[1] = (uint16_t) (m_Image[i*m_Width+Column][1] * Weight);
-    Left[2] = (uint16_t) (m_Image[i*m_Width+Column][2] * Weight);
-    Source[0] -= Left[0] - OldLeft[0];
-    Source[1] -= Left[1] - OldLeft[1];
-    Source[2] -= Left[2] - OldLeft[2];
-    if ((SkewOffset+i >= 0) && (SkewOffset+i < DestinationHeight)) {
-      DestinationImage[(i+SkewOffset)*DestinationWidth+Column][0] = Source[0];
-      DestinationImage[(i+SkewOffset)*DestinationWidth+Column][1] = Source[1];
-      DestinationImage[(i+SkewOffset)*DestinationWidth+Column][2] = Source[2];
-    }
-    OldLeft[0] = Left[0];
-    OldLeft[1] = Left[1];
-    OldLeft[2] = Left[2];
-  }
-  // Go to bottom point of skew
-  i += SkewOffset;
-  if (i<DestinationHeight) {
-    DestinationImage[i*DestinationWidth+Column][0] = OldLeft[0];
-    DestinationImage[i*DestinationWidth+Column][1] = OldLeft[1];
-    DestinationImage[i*DestinationWidth+Column][2] = OldLeft[2];
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Rotate90 - Always in place !
-// Dimensions are adapted to fit the rotation.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptImage* ptImage::Rotate90() {
-
-  uint16_t DestinationWidth  = m_Height;
-  uint16_t DestinationHeight = m_Width;
-  uint16_t (*DestinationImage)[3] = (uint16_t (*)[3])
-    CALLOC(DestinationWidth*DestinationHeight,sizeof(*DestinationImage));
-  ptMemoryError(DestinationImage,__FILE__,__LINE__);
-  for (uint16_t y=0; y<m_Height; y++) {
-    for (uint16_t x=0; x<m_Width; x++) {
-      uint32_t DestinationIndex = (DestinationHeight-x-1)*DestinationWidth+y;
-      uint32_t SourceIndex = y*m_Width+x;
-      DestinationImage[DestinationIndex][0] = m_Image[SourceIndex][0];
-      DestinationImage[DestinationIndex][1] = m_Image[SourceIndex][1];
-      DestinationImage[DestinationIndex][2] = m_Image[SourceIndex][2];
-    }
-  }
-
-  // Take over the result.
-  FREE(m_Image);
-  m_Image  = DestinationImage;
-  m_Width  = DestinationWidth;
-  m_Height = DestinationHeight;
-
-  return this;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Rotate180 - Always in place !
-// Dimensions are adapted to fit the rotation.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptImage* ptImage::Rotate180() {
-
-  uint16_t DestinationWidth  = m_Width;
-  uint16_t DestinationHeight = m_Height;
-  uint16_t (*DestinationImage)[3] = (uint16_t (*)[3])
-    CALLOC(DestinationWidth*DestinationHeight,sizeof(*DestinationImage));
-  ptMemoryError(DestinationImage,__FILE__,__LINE__);
-#pragma omp parallel for
-  for (uint16_t y=0; y<m_Height; y++) {
-    for (uint16_t x=0; x<m_Width; x++) {
-      uint32_t DestinationIndex = (DestinationHeight-y-1)*DestinationWidth +
-                                 DestinationWidth-x-1;
-      uint32_t SourceIndex = y*m_Width+x;
-      DestinationImage[DestinationIndex][0] = m_Image[SourceIndex][0];
-      DestinationImage[DestinationIndex][1] = m_Image[SourceIndex][1];
-      DestinationImage[DestinationIndex][2] = m_Image[SourceIndex][2];
-    }
-  }
-
-  // Take over the result.
-  FREE(m_Image);
-  m_Image  = DestinationImage;
-  m_Width  = DestinationWidth;
-  m_Height = DestinationHeight;
-
-  return this;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Rotate270 - Always in place !
-// Dimensions are adapted to fit the rotation.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptImage* ptImage::Rotate270() {
-
-  uint16_t DestinationWidth  = m_Height;
-  uint16_t DestinationHeight = m_Width;
-  uint16_t (*DestinationImage)[3] = (uint16_t (*)[3])
-    CALLOC(DestinationWidth*DestinationHeight,sizeof(*DestinationImage));
-  ptMemoryError(DestinationImage,__FILE__,__LINE__);
-#pragma omp parallel for
-  for (uint16_t y=0; y<m_Height; y++) {
-    for (uint16_t x=0; x<m_Width; x++) {
-      uint32_t DestinationIndex = x*DestinationWidth+DestinationWidth-y-1;
-      uint32_t SourceIndex = y*m_Width+x;
-      DestinationImage[DestinationIndex][0] = m_Image[SourceIndex][0];
-      DestinationImage[DestinationIndex][1] = m_Image[SourceIndex][1];
-      DestinationImage[DestinationIndex][2] = m_Image[SourceIndex][2];
-    }
-  }
-
-  // Take over the result.
-  FREE(m_Image);
-  m_Image  = DestinationImage;
-  m_Width  = DestinationWidth;
-  m_Height = DestinationHeight;
-
-  return this;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Rotate45 (ie angle -45..+45) - Always in place !
-// Dimensions are adapted to fit the rotation.
-// (3 shear algorithm for quality)
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptImage* ptImage::Rotate45(double Angle) {
-
-  if (0.0 == Angle) return this;
-
-  double RadianAngle  = Angle * ptPI / double(180);
-  double SinusAngle   = sin(RadianAngle);
-  double TanHalfAngle = tan(RadianAngle/2.0);
-
-  uint16_t OriginalWidth  = m_Width;
-  uint16_t OriginalHeight = m_Height;
-
-  // Calc first shear (horizontal) destination image dimensions
-  uint16_t DestinationWidth  = m_Width + (int)( m_Height * fabs(TanHalfAngle) );
-  uint16_t DestinationHeight = m_Height;
-
-  uint16_t (*DestinationImage)[3] = (uint16_t (*)[3])
-    CALLOC(DestinationWidth*DestinationHeight,sizeof(*DestinationImage));
-  ptMemoryError(DestinationImage,__FILE__,__LINE__);
-
-  /******* Perform 1st shear (horizontal) ******/
-
-  for (uint16_t u = 0; u < DestinationHeight; u++) {
-    double Shear;
-    if (TanHalfAngle >= 0.0) {
-      Shear = (double(u) + 0.5) * TanHalfAngle;
-    } else {
-      Shear = (double(u - DestinationHeight) + 0.5) * TanHalfAngle;
-    }
-    int16_t IntShear = (int16_t)(floor(Shear));
-    HorizontalSkew(DestinationImage,
-                   DestinationWidth,
-                   DestinationHeight,
-                   u,
-                   IntShear,
-                   Shear - double(IntShear));
-  }
-
-  // Take over the result.
-  FREE(m_Image);
-  m_Image  = DestinationImage;
-  m_Width  = DestinationWidth;
-  m_Height = DestinationHeight;
-
-  /******* Perform 2nd shear  (vertical) ******/
-
-  // Calc 2nd shear (vertical) destination image dimensions
-  DestinationWidth  = m_Width;
-  DestinationHeight = 1 + (uint16_t)(OriginalWidth * fabs(SinusAngle) +
-                                     OriginalHeight * cos(RadianAngle) );
-
-  DestinationImage = (uint16_t (*)[3])
-    CALLOC(DestinationWidth*DestinationHeight,sizeof(*DestinationImage));
-  ptMemoryError(DestinationImage,__FILE__,__LINE__);
-
-  double Offset;     // Variable skew offset
-  if (SinusAngle > 0.0) {
-    Offset = double (OriginalWidth - 1) * SinusAngle;
-  } else {
-    Offset = -SinusAngle * double (OriginalWidth-DestinationWidth);
-  }
-
-  for (uint16_t u = 0; u < DestinationWidth; u++,Offset-=SinusAngle) {
-    int16_t IntShear = (int16_t)(floor(Offset));
-    VerticalSkew(DestinationImage,
-                 DestinationWidth,
-                 DestinationHeight,
-                 u,
-                 IntShear,
-                 Offset-double(IntShear));
-  }
-
-  // Take over the result.
-  FREE(m_Image);
-  m_Image  = DestinationImage;
-  m_Width  = DestinationWidth;
-  m_Height = DestinationHeight;
-
-  /******* Perform 3rd shear (horizontal) ******/
-
-  // Calc 3rd shear (horizontal) destination image dimensions
-  DestinationWidth = 1 + (int)(OriginalHeight * fabs(SinusAngle) +
-                               OriginalWidth * cos(RadianAngle) );
-  DestinationHeight = m_Height;
-  DestinationImage = (uint16_t (*)[3])
-    CALLOC(DestinationWidth*DestinationHeight,sizeof(*DestinationImage));
-  ptMemoryError(DestinationImage,__FILE__,__LINE__);
-
-  if (SinusAngle >= 0.0) {
-    Offset = double(OriginalWidth - 1) * SinusAngle * -TanHalfAngle;
-  } else {
-    Offset = double(OriginalWidth - 1) * SinusAngle * -TanHalfAngle +
-             DestinationHeight*-TanHalfAngle;
-
-  }
-
-  for (uint16_t u = 0; u < DestinationHeight; u++,Offset+=TanHalfAngle) {
-    int16_t IntShear = (int16_t)(floor(Offset));
-    HorizontalSkew(DestinationImage,
-                   DestinationWidth,
-                   DestinationHeight,
-                   u,
-                   IntShear,
-                   Offset-double(IntShear));
-  }
-
-  // Take over the result.
-  FREE(m_Image);
-  m_Image  = DestinationImage;
-  m_Width  = DestinationWidth;
-  m_Height = DestinationHeight;
-
-  return this;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -6923,7 +6028,49 @@ static void hat_transform (float *temp, float *base, int st, int size, int sc) {
     temp[i] = 2 * base[st * i] + base[st * (i - sc)] + base[st * (i + sc)];
   for (; i < size; i++)
     temp[i] = 2 * base[st * i] + base[st * (i - sc)]
-      + base[st * (2 * size - 2 - (i + sc))];
+        + base[st * (2 * size - 2 - (i + sc))];
 }
 
-////////////////////////////////////////////////////////////////////////////////
+TAnchorList ptImage::createAmpAnchors(const double Amount,
+                                               const double HaloControl)
+{
+// TODO: mike: Anpassen der Verstärkungskurve an den Sigmoidalen Kontrast.
+// Der Berech mit Halocontrol soll linear sein, der andere sigmoidal.
+// Wichtig ist, dass bei kleinen Werten der Halocontrol im schwächeren Bereich
+// keine Verstärkung auftritt, da evtl die Ableitung der sigmoidalen Kurve
+// schwächer ist, als bei der linearen Kurve.
+// Anpassen bei allen Filtern, die dieses Verfahren benutzen.
+
+  const double  t     = (1.0 - Amount)/2;
+  const double  mHC   = Amount*(1.0-fabs(HaloControl)); // m with HaloControl
+  const double  tHC   = (1.0 - mHC)/2; // t with HaloControl
+  const int     Steps = 20;
+
+  TAnchorList hAnchors;
+  for (int i = 0; i<= Steps; i++) {
+    auto x = (float)i/(float)Steps;
+    float YAnchor = 0;
+    if (x < 0.5) {
+      if (HaloControl > 0) YAnchor=mHC*x+tHC;
+      else                 YAnchor=Amount*x+t;
+    } else if (x > 0.5) {
+      if (HaloControl < 0) YAnchor=mHC*x+tHC;
+      else                 YAnchor=Amount*x+t;
+    } else {
+      YAnchor=0.5;
+    }
+    hAnchors.push_back(TAnchor(x, YAnchor));
+  }
+  return hAnchors;
+}
+
+void ptImage::setCurrentRGB(const short ARGB)
+{
+  CurrentRGBMode = ARGB;
+}
+
+short ptImage::getCurrentRGB()
+{
+  return CurrentRGBMode;
+}
+

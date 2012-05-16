@@ -225,7 +225,7 @@ void ptRun(const gchar*     Name,
                         false);
     unsigned short TileHeight = gimp_tile_height();
     for (unsigned short Row=0; Row<Height; Row+=TileHeight) {
-      unsigned short NrRows = MIN(Height-Row,TileHeight);
+      unsigned short NrRows = MIN(Height-Row, (int)TileHeight);
       guint8* Buffer = g_new(guint8,TileHeight*Width*3);
       for (unsigned short i=0; i<NrRows; i++) {
         for (unsigned short j=0; j<Width; j++) {
