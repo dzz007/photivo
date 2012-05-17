@@ -84,7 +84,7 @@ void ptFilter_ToneAdjust::doRunFilter(ptImage *AImage) const {
   AImage->LABTone(FConfig->getValue(CStrength).toDouble(),
                   FConfig->getValue(CHue).toDouble(),
                   FConfig->getValue(CSaturation).toDouble(),
-                  FConfig->getValue(CMaskMode).toInt(),
+                  FConfig->getValue(CMaskMode).toInt()+1,
                   true, // manual mask
                   FConfig->getValue(CLowerLimit).toDouble(),
                   FConfig->getValue(CUpperLimit).toDouble(),
