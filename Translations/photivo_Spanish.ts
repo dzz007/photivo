@@ -872,27 +872,27 @@
     </message>
     <message>
         <source>Backward finite differences</source>
-        <translation>Diferencias finitas inversas</translation>
+        <translation type="obsolete">Diferencias finitas inversas</translation>
     </message>
     <message>
         <source>Centered finite differences</source>
-        <translation>Diferencias finitas centradas</translation>
+        <translation type="obsolete">Diferencias finitas centradas</translation>
     </message>
     <message>
         <source>Forward finite differences</source>
-        <translation>Diferencias finitas hacia adelante</translation>
+        <translation type="obsolete">Diferencias finitas hacia adelante</translation>
     </message>
     <message>
         <source>Sobel masks</source>
-        <translation>Máscara sobel</translation>
+        <translation type="obsolete">Máscara sobel</translation>
     </message>
     <message>
         <source>Rotation invariant masks</source>
-        <translation>Máscaras de rotacion invariante</translation>
+        <translation type="obsolete">Máscaras de rotacion invariante</translation>
     </message>
     <message>
         <source>Deriche recursive filter</source>
-        <translation>Filtro deriche recursivo</translation>
+        <translation type="obsolete">Filtro deriche recursivo</translation>
     </message>
     <message>
         <source>Full image</source>
@@ -1196,15 +1196,15 @@ Para más infomración consultar la wiki: http://photivo.org/photivo/start(new l
     </message>
     <message>
         <source>Loading curves (</source>
-        <translation>Cargando curvas (</translation>
+        <translation type="obsolete">Cargando curvas (</translation>
     </message>
     <message>
         <source>Cannot read curve </source>
-        <translation>No se puede leer la curva(sp)</translation>
+        <translation type="obsolete">No se puede leer la curva(sp)</translation>
     </message>
     <message>
         <source>Curve read error</source>
-        <translation>Error leyendo la curva</translation>
+        <translation type="obsolete">Error leyendo la curva</translation>
     </message>
     <message>
         <source>Ready</source>
@@ -1372,7 +1372,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Settings File</source>
-        <translation>Fichero de ajustes</translation>
+        <translation type="obsolete">Fichero de ajustes</translation>
     </message>
     <message>
         <source>Writing tmp image for gimp</source>
@@ -1554,23 +1554,23 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Open Curve</source>
-        <translation>Abriendo curva</translation>
+        <translation type="obsolete">Abriendo curva</translation>
     </message>
     <message>
         <source>This curve is meant for channel </source>
-        <translation>Esta curva está pensada para canal(sp)</translation>
+        <translation type="obsolete">Esta curva está pensada para canal(sp)</translation>
     </message>
     <message>
         <source>. Continue anyway ?</source>
-        <translation>. ¿Continuar igualmente?</translation>
+        <translation type="obsolete">. ¿Continuar igualmente?</translation>
     </message>
     <message>
         <source>Incompatible curve</source>
-        <translation>Curva cincompatible</translation>
+        <translation type="obsolete">Curva cincompatible</translation>
     </message>
     <message>
         <source>Save Curve</source>
-        <translation>Salvar curva</translation>
+        <translation type="obsolete">Salvar curva</translation>
     </message>
     <message>
         <source>Get texture bitmap file</source>
@@ -2156,40 +2156,61 @@ No recorte, intentelo de nuevo.</translation>
         <source>14000K</source>
         <translation>14000K</translation>
     </message>
+    <message>
+        <source>Append settings file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to load curve file %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+The error occurred in line %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load curve file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Written %L1 bytes (%L2 MByte)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ptCurveWindow</name>
     <message>
         <source>A&amp;daptive</source>
-        <translation>A&amp;daptativo</translation>
+        <translation type="obsolete">A&amp;daptativo</translation>
     </message>
     <message>
         <source>Adaptive saturation</source>
-        <translation>Saturación adaptativa</translation>
+        <translation type="obsolete">Saturación adaptativa</translation>
     </message>
     <message>
         <source>A&amp;bsolute</source>
-        <translation>A&amp;bsoluto</translation>
+        <translation type="obsolete">A&amp;bsoluto</translation>
     </message>
     <message>
         <source>Absolute saturation</source>
-        <translation>Saturación absoluta</translation>
+        <translation type="obsolete">Saturación absoluta</translation>
     </message>
     <message>
         <source>By l&amp;uminance</source>
-        <translation>Por l&amp;uminancia</translation>
+        <translation type="obsolete">Por l&amp;uminancia</translation>
     </message>
     <message>
         <source>Mask by luminance</source>
-        <translation>Máscara por luminancia</translation>
+        <translation type="obsolete">Máscara por luminancia</translation>
     </message>
     <message>
         <source>By c&amp;olor</source>
-        <translation>Por c&amp;olor</translation>
+        <translation type="obsolete">Por c&amp;olor</translation>
     </message>
     <message>
         <source>Mask by color</source>
-        <translation>Máscara por color</translation>
+        <translation type="obsolete">Máscara por color</translation>
     </message>
     <message>
         <source>&amp;Linear</source>
@@ -2214,6 +2235,14 @@ No recorte, intentelo de nuevo.</translation>
     <message>
         <source>Cosine interpolation</source>
         <translation>Interpolación coseno</translation>
+    </message>
+    <message>
+        <source>L&amp;uminance mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;olor mask</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2305,6 +2334,452 @@ No recorte, intentelo de nuevo.</translation>
     <message>
         <source>Thumbnail &amp;view</source>
         <translation>&amp;Vista miniaturas</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_ABCurves</name>
+    <message>
+        <source>a* b* curves</source>
+        <translation>Curvas a* b*</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_ColorContrast</name>
+    <message>
+        <source>Color contrast</source>
+        <translation>Contraste color</translation>
+    </message>
+    <message>
+        <source>Opacity</source>
+        <translation>Opacidad</translation>
+    </message>
+    <message>
+        <source>Radius</source>
+        <translation>Radio</translation>
+    </message>
+    <message>
+        <source>Strength</source>
+        <translation>Fuerza</translation>
+    </message>
+    <message>
+        <source>Halo control</source>
+        <translation>Contro de halos</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_DetailCurve</name>
+    <message>
+        <source>Detail curve</source>
+        <translation>Curva de detalle</translation>
+    </message>
+    <message>
+        <source>Halo control</source>
+        <translation>Contro de halos</translation>
+    </message>
+    <message>
+        <source>Weight</source>
+        <translation>Peso</translation>
+    </message>
+    <message>
+        <source>Anti badpixel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_GammaTool</name>
+    <message>
+        <source>Gamma adjustment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gamma</source>
+        <translation>Gamma</translation>
+    </message>
+    <message>
+        <source>Linearity</source>
+        <translation>Linealidad</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Highlights</name>
+    <message>
+        <source>Highlights</source>
+        <translation>Luces altas</translation>
+    </message>
+    <message>
+        <source>Reg highlights</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjusts brightness of highlights in R channel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Green highlights</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjusts brightness of highlights in G channel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blue highlights</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjusts brightness of highlights in B channel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LumaDenoiseCurve</name>
+    <message>
+        <source>Luminance denoise curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>L strength</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>L scale</source>
+        <translation>Escala L</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LumaSatAdjust</name>
+    <message>
+        <source>Luminance adjustment</source>
+        <translation>Ajuste luminancia</translation>
+    </message>
+    <message>
+        <source>Saturation adjustment</source>
+        <translation>Ajsute saturación</translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation>Rojo</translation>
+    </message>
+    <message>
+        <source>Orange</source>
+        <translation>Naranja</translation>
+    </message>
+    <message>
+        <source>Yellow</source>
+        <translation>Amarillo</translation>
+    </message>
+    <message>
+        <source>Light green</source>
+        <translation>Verde claro</translation>
+    </message>
+    <message>
+        <source>Dark green</source>
+        <translation>Verde oscuro</translation>
+    </message>
+    <message>
+        <source>Cyan</source>
+        <translation>Cian</translation>
+    </message>
+    <message>
+        <source>Blue</source>
+        <translation>Azul</translation>
+    </message>
+    <message>
+        <source>Magenta</source>
+        <translation>Magenta</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Outline</name>
+    <message>
+        <source>Outline</source>
+        <translation>Perfilar</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Deshabilitado</translation>
+    </message>
+    <message>
+        <source>SoftLight</source>
+        <translation>Luz suave</translation>
+    </message>
+    <message>
+        <source>Multiply</source>
+        <translation>Multiplicar</translation>
+    </message>
+    <message>
+        <source>Screen</source>
+        <translation>Pantalla</translation>
+    </message>
+    <message>
+        <source>Gamma dark</source>
+        <translation>Gamma oscuro</translation>
+    </message>
+    <message>
+        <source>Gamma bright</source>
+        <translation>Gamma brillo</translation>
+    </message>
+    <message>
+        <source>Color burn</source>
+        <translation>Quemar color</translation>
+    </message>
+    <message>
+        <source>Color dodge</source>
+        <translation>Adaptar color</translation>
+    </message>
+    <message>
+        <source>Darken only</source>
+        <translation>Solo oscurecer</translation>
+    </message>
+    <message>
+        <source>Lighten only</source>
+        <translation>Solo iluminar</translation>
+    </message>
+    <message>
+        <source>Show outlines</source>
+        <translation>Mostrar contorno</translation>
+    </message>
+    <message>
+        <source>Overlay mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Image on top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overlay the image on top of the outlines instead of vice versa</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backward finite differences</source>
+        <translation>Diferencias finitas inversas</translation>
+    </message>
+    <message>
+        <source>Centered finite differences</source>
+        <translation>Diferencias finitas centradas</translation>
+    </message>
+    <message>
+        <source>Forward finite differences</source>
+        <translation>Diferencias finitas hacia adelante</translation>
+    </message>
+    <message>
+        <source>Sobel masks</source>
+        <translation>Máscara sobel</translation>
+    </message>
+    <message>
+        <source>Rotation invariant masks</source>
+        <translation>Máscaras de rotacion invariante</translation>
+    </message>
+    <message>
+        <source>Deriche recursive filter</source>
+        <translation>Filtro deriche recursivo</translation>
+    </message>
+    <message>
+        <source>Outlines mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Method for calculating the outline gradients</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weight of the A/B channels in the outlines calculation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blur radius</source>
+        <translation>Radio de desenfoque</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_SatCurve</name>
+    <message>
+        <source>Saturation curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Absolute</source>
+        <translation>Absoluto</translation>
+    </message>
+    <message>
+        <source>Adaptive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saturation mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_ShadowsHighlights</name>
+    <message>
+        <source>Shadows/Highlights</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fine detail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coarse detail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation>Escala</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_SigContrast</name>
+    <message>
+        <source>Strength</source>
+        <translation>Fuerza</translation>
+    </message>
+    <message>
+        <source>Threshold</source>
+        <translation>Umbral</translation>
+    </message>
+    <message>
+        <source>Lightness contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sigmoidal contrast</source>
+        <translation>Contraste sigmoidal</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_StdCurve</name>
+    <message>
+        <source>RGB curve</source>
+        <translation>Curva RGB</translation>
+    </message>
+    <message>
+        <source>Texture curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Luminance by hue curve</source>
+        <translation>Luminancia por curva de color</translation>
+    </message>
+    <message>
+        <source>Hue curve</source>
+        <translation>Curva de color</translation>
+    </message>
+    <message>
+        <source>L* curve</source>
+        <translation>Curva L*</translation>
+    </message>
+    <message>
+        <source>R tone curve</source>
+        <translation>curva tono R</translation>
+    </message>
+    <message>
+        <source>G tone curve</source>
+        <translation>curva tono G</translation>
+    </message>
+    <message>
+        <source>B tone curve</source>
+        <translation>curva tono B</translation>
+    </message>
+    <message>
+        <source>After gamma curve</source>
+        <translation>Curva tras gamma</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_ToneAdjust</name>
+    <message>
+        <source>Tone adjustment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strength</source>
+        <translation>Fuerza</translation>
+    </message>
+    <message>
+        <source>Shadows</source>
+        <translation>Sombras</translation>
+    </message>
+    <message>
+        <source>Midtones</source>
+        <translation>Tonos medios</translation>
+    </message>
+    <message>
+        <source>Highlights</source>
+        <translation>Luces altas</translation>
+    </message>
+    <message>
+        <source>All values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mask mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation>Saturación</translation>
+    </message>
+    <message>
+        <source>Hue</source>
+        <translation>Color</translation>
+    </message>
+    <message>
+        <source>Lower limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upper limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Softness</source>
+        <translation>Suavidad</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Wiener</name>
+    <message>
+        <source>Wiener sharpen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable</source>
+        <translation>Habilitado</translation>
+    </message>
+    <message>
+        <source>Switch filter on and off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only edges</source>
+        <translation>Solo bordes</translation>
+    </message>
+    <message>
+        <source>Sharpen only edges</source>
+        <translation>Enfocar solo bordes</translation>
+    </message>
+    <message>
+        <source>Strength</source>
+        <translation>Fuerza</translation>
+    </message>
+    <message>
+        <source>Gaussian</source>
+        <translation>Gaussiano</translation>
+    </message>
+    <message>
+        <source>Box</source>
+        <translation>Caja</translation>
+    </message>
+    <message>
+        <source>Lens blur</source>
+        <translation>Desenfoque de lente</translation>
     </message>
 </context>
 <context>
@@ -2700,7 +3175,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Highlights</source>
-        <translation>Luces altas</translation>
+        <translation type="obsolete">Luces altas</translation>
     </message>
     <message>
         <source>Color Intensity</source>
@@ -2720,7 +3195,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>GammaTool</source>
-        <translation>Herramienta gamma</translation>
+        <translation type="obsolete">Herramienta gamma</translation>
     </message>
     <message>
         <source>Normalization</source>
@@ -2748,11 +3223,11 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>RGB Contrast</source>
-        <translation>Contraste RGB</translation>
+        <translation type="obsolete">Contraste RGB</translation>
     </message>
     <message>
         <source>Increase RGB contrast by a sigmoidal curve</source>
-        <translation>Incrementar curva RGB con curva sigmoidal</translation>
+        <translation type="obsolete">Incrementar curva RGB con curva sigmoidal</translation>
     </message>
     <message>
         <source>Levels</source>
@@ -2760,7 +3235,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>RGB Curve</source>
-        <translation>Curva RGB</translation>
+        <translation type="obsolete">Curva RGB</translation>
     </message>
     <message>
         <source>Lab Color/Contrast</source>
@@ -2772,7 +3247,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Shadows / Highlights</source>
-        <translation>Sombras / Luces altas</translation>
+        <translation type="obsolete">Sombras / Luces altas</translation>
     </message>
     <message>
         <source>Dynamic Range Compression (*)</source>
@@ -2780,7 +3255,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Texture curve (*)</source>
-        <translation>Curva de textura (*)</translation>
+        <translation type="obsolete">Curva de textura (*)</translation>
     </message>
     <message>
         <source>Texture Contrast I</source>
@@ -2800,7 +3275,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Lightness Contrast</source>
-        <translation>Contraste brillo</translation>
+        <translation type="obsolete">Contraste brillo</translation>
     </message>
     <message>
         <source>Increase contrast on L by a sigmoidal curve</source>
@@ -2848,7 +3323,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Luminance Denoise Curve (*)</source>
-        <translation>Curva de eliminación de ruido (*)</translation>
+        <translation type="obsolete">Curva de eliminación de ruido (*)</translation>
     </message>
     <message>
         <source>Pyramid Denoising</source>
@@ -2860,7 +3335,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Detail curve</source>
-        <translation>Curva de detalle</translation>
+        <translation type="obsolete">Curva de detalle</translation>
     </message>
     <message>
         <source>Gradient Sharpen</source>
@@ -2868,7 +3343,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Wiener Filter (Sharpen) (*)</source>
-        <translation>Filtro wiener (enfoque) (*)</translation>
+        <translation type="obsolete">Filtro wiener (enfoque) (*)</translation>
     </message>
     <message>
         <source>Inverse Diffusion Sharpen</source>
@@ -2896,47 +3371,47 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Outline</source>
-        <translation>Perfilar</translation>
+        <translation type="obsolete">Perfilar</translation>
     </message>
     <message>
         <source>Luminance by hue curve</source>
-        <translation>Luminancia por curva de color</translation>
+        <translation type="obsolete">Luminancia por curva de color</translation>
     </message>
     <message>
         <source>Saturation curve</source>
-        <translation>Curva de saturación</translation>
+        <translation type="obsolete">Curva de saturación</translation>
     </message>
     <message>
         <source>Hue curve</source>
-        <translation>Curva de color</translation>
+        <translation type="obsolete">Curva de color</translation>
     </message>
     <message>
         <source>L* curve</source>
-        <translation>Curva L*</translation>
+        <translation type="obsolete">Curva L*</translation>
     </message>
     <message>
         <source>a* b* curves</source>
-        <translation>Curvas a* b*</translation>
+        <translation type="obsolete">Curvas a* b*</translation>
     </message>
     <message>
         <source>Color contrast</source>
-        <translation>Contraste color</translation>
+        <translation type="obsolete">Contraste color</translation>
     </message>
     <message>
         <source>Tone adjustment I</source>
-        <translation>Ajuste tono I</translation>
+        <translation type="obsolete">Ajuste tono I</translation>
     </message>
     <message>
         <source>Tone adjustment II</source>
-        <translation>Ajuste tono II</translation>
+        <translation type="obsolete">Ajuste tono II</translation>
     </message>
     <message>
         <source>Luminance adjustment</source>
-        <translation>Ajuste luminancia</translation>
+        <translation type="obsolete">Ajuste luminancia</translation>
     </message>
     <message>
         <source>Saturation adjustment</source>
-        <translation>Ajsute saturación</translation>
+        <translation type="obsolete">Ajsute saturación</translation>
     </message>
     <message>
         <source>Tone</source>
@@ -2992,7 +3467,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Contrast</source>
-        <translation>Contraste</translation>
+        <translation type="obsolete">Contraste</translation>
     </message>
     <message>
         <source>Texture overlay I</source>
@@ -3036,15 +3511,15 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>R tone curve</source>
-        <translation>curva tono R</translation>
+        <translation type="obsolete">curva tono R</translation>
     </message>
     <message>
         <source>G tone curve</source>
-        <translation>curva tono G</translation>
+        <translation type="obsolete">curva tono G</translation>
     </message>
     <message>
         <source>B tone curve</source>
-        <translation>curva tono B</translation>
+        <translation type="obsolete">curva tono B</translation>
     </message>
     <message>
         <source>Output</source>
@@ -3052,7 +3527,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Basecurve</source>
-        <translation>Curva base</translation>
+        <translation type="obsolete">Curva base</translation>
     </message>
     <message>
         <source>sRGB gamma compensation</source>
@@ -3080,11 +3555,11 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>After gamma curve</source>
-        <translation>Curva tras gamma</translation>
+        <translation type="obsolete">Curva tras gamma</translation>
     </message>
     <message>
         <source>Sigmoidal contrast</source>
-        <translation>Contraste sigmoidal</translation>
+        <translation type="obsolete">Contraste sigmoidal</translation>
     </message>
     <message>
         <source>Resize for web</source>
@@ -3092,7 +3567,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Wiener Filter (Sharpen)</source>
-        <translation>Filtro wiever (Enfoque)</translation>
+        <translation type="obsolete">Filtro wiever (Enfoque)</translation>
     </message>
     <message>
         <source>Output Parameters</source>
@@ -3116,11 +3591,11 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Write the output file</source>
-        <translation>Guardar fichero de salida</translation>
+        <translation type="obsolete">Guardar fichero de salida</translation>
     </message>
     <message>
         <source>WP</source>
-        <translation>WP</translation>
+        <translation type="obsolete">WP</translation>
     </message>
     <message>
         <source>About Photivo</source>
@@ -3520,11 +3995,11 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>All tools hidden</source>
-        <translation>Todas las herramientas ocultas</translation>
+        <translation type="obsolete">Todas las herramientas ocultas</translation>
     </message>
     <message>
         <source>No visible tools!</source>
-        <translation>No hay herramientas visibles!</translation>
+        <translation type="obsolete">No hay herramientas visibles!</translation>
     </message>
     <message>
         <source>All visible tools:</source>
@@ -3561,6 +4036,130 @@ No recorte, intentelo de nuevo.</translation>
     <message>
         <source>Save UI</source>
         <translation>Guardar IU</translation>
+    </message>
+    <message>
+        <source>8daccb81-5dd3-4664-bf3c-1fefe7ad084e</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>a63b08df-36ee-4678-9e25-9c53467c502b</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>25b0402c-1668-4800-aab8-028160a08087</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>786384c5-ded7-4669-b748-e40ebabcdf2c</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>946311d6-64fb-46b8-a70e-bc9e8dcba56d</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>02ffc2a8-1fc6-4f50-940a-924da85efa1e</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2f4b0f7a-d720-41e0-b2fc-20dff3a02fcf</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e0310479-993f-4018-a80a-ac2d8c6c1ee4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>530aab8e-65e4-4bb8-b391-46f6673ac53d</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f2d800db-1d7a-42bc-970c-9a89597f34a4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1d3e2630-de72-46b8-b1f9-7169cd1b3832</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1f5f1b76-71b7-4dda-9db3-89ffce1c7981</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0a462e7c-5764-4ed5-bb28-e583aabbf292</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>960ada58-c073-4603-acad-f4894bb3fe91</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2fea9112-1a10-4466-8ef9-0918a09ea3d6</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ee8167f2-1c78-4ae3-843d-4a3a0b807db8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>6dc120c5-e8ec-430e-9c5e-40ba217559d5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f532185f-281a-4503-b96b-37c05bbcabf3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>25489dc0-8d77-4f39-bc42-1b91a0d1054d</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>61b61fd7-c891-4d78-92c2-3290c190be65</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>fb3f0bbc-6255-43ec-947c-4bd43e115379</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>6e7db630-310f-4f04-82e0-b668babfe8c9</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>6e3971ac-f640-4628-8aa0-ae07620f8ca4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>9e99b7ee-1e5f-4f4d-821f-efbfc0d6bffa</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>44112e0a-81df-4ae5-aee8-18a17d0ac810</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>221fa750-226c-4a48-a94b-e8b516865aca</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>88b24988-7fcf-47b6-b9a2-8600c992f3f3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>71999980-5530-4a91-996e-43e752099870</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>7c2a63e3-50be-476c-9364-7c442c2662fa</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No tools visible!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3829,11 +4428,11 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Applying a curve</source>
-        <translation>Aplicando curva a</translation>
+        <translation type="obsolete">Aplicando curva a</translation>
     </message>
     <message>
         <source>Applying b curve</source>
-        <translation>Aplicando curva b</translation>
+        <translation type="obsolete">Aplicando curva b</translation>
     </message>
     <message>
         <source>Colorcontrast</source>
@@ -3849,7 +4448,7 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Luminance and saturation adjustment</source>
-        <translation>Ajsutes de luminancia y saturación</translation>
+        <translation type="obsolete">Ajsutes de luminancia y saturación</translation>
     </message>
     <message>
         <source>LAB toning</source>
@@ -3992,6 +4591,26 @@ No recorte, inténtelo de nuevo.</translation>
     <message>
         <source>Flip image</source>
         <translation>Voltear imagen</translation>
+    </message>
+    <message>
+        <source>Highlights</source>
+        <translation>Luces altas</translation>
+    </message>
+    <message>
+        <source>Applying RGB contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Applying a* b* curves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Luminance adjustment</source>
+        <translation>Ajuste luminancia</translation>
+    </message>
+    <message>
+        <source>Saturation adjustment</source>
+        <translation>Ajsute saturación</translation>
     </message>
 </context>
 <context>
@@ -4444,27 +5063,27 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Highlights R</source>
-        <translation>Luces altas R</translation>
+        <translation type="obsolete">Luces altas R</translation>
     </message>
     <message>
         <source>Adjust the brightness of the highlights in R</source>
-        <translation>Ajustar el brillo de las luces altas en R</translation>
+        <translation type="obsolete">Ajustar el brillo de las luces altas en R</translation>
     </message>
     <message>
         <source>Highlights G</source>
-        <translation>Luces altas G</translation>
+        <translation type="obsolete">Luces altas G</translation>
     </message>
     <message>
         <source>Adjust the brightness of the highlights in G</source>
-        <translation>Ajustar el brillo de las luces altas en G</translation>
+        <translation type="obsolete">Ajustar el brillo de las luces altas en G</translation>
     </message>
     <message>
         <source>Highlights B</source>
-        <translation>Luces altas B</translation>
+        <translation type="obsolete">Luces altas B</translation>
     </message>
     <message>
         <source>Adjust the brightness of the highlights in B</source>
-        <translation>Ajustar el brillo de las luces altas en B</translation>
+        <translation type="obsolete">Ajustar el brillo de las luces altas en B</translation>
     </message>
     <message>
         <source>% white</source>
@@ -4580,11 +5199,11 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Fine Detail</source>
-        <translation>Detalle fino</translation>
+        <translation type="obsolete">Detalle fino</translation>
     </message>
     <message>
         <source>Coarse Detail</source>
-        <translation>Detalle grueso</translation>
+        <translation type="obsolete">Detalle grueso</translation>
     </message>
     <message>
         <source>Amount of compression</source>
@@ -4624,11 +5243,11 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Amount of contrast</source>
-        <translation>Cantidad de contraste</translation>
+        <translation type="obsolete">Cantidad de contraste</translation>
     </message>
     <message>
         <source>Threshold for contrast</source>
-        <translation>Umbral de contraste</translation>
+        <translation type="obsolete">Umbral de contraste</translation>
     </message>
     <message>
         <source>Amount of saturation</source>
@@ -4928,15 +5547,15 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Gaussian</source>
-        <translation>Gaussiano</translation>
+        <translation type="obsolete">Gaussiano</translation>
     </message>
     <message>
         <source>Box</source>
-        <translation>Caja</translation>
+        <translation type="obsolete">Caja</translation>
     </message>
     <message>
         <source>Lens blur</source>
-        <translation>Desenfoque de lente</translation>
+        <translation type="obsolete">Desenfoque de lente</translation>
     </message>
     <message>
         <source>Number of iterations</source>
@@ -4980,15 +5599,15 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Color Weight</source>
-        <translation>Peso color</translation>
+        <translation type="obsolete">Peso color</translation>
     </message>
     <message>
         <source>Use AB channels for the outline</source>
-        <translation>Usar canales AB para perfilado</translation>
+        <translation type="obsolete">Usar canales AB para perfilado</translation>
     </message>
     <message>
         <source>Blur radius</source>
-        <translation>Radio de desenfoque</translation>
+        <translation type="obsolete">Radio de desenfoque</translation>
     </message>
     <message>
         <source>Saturation</source>
@@ -5000,7 +5619,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Orange</source>
-        <translation>Naranja</translation>
+        <translation type="obsolete">Naranja</translation>
     </message>
     <message>
         <source>Yellow</source>
@@ -5008,11 +5627,11 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Light green</source>
-        <translation>Verde claro</translation>
+        <translation type="obsolete">Verde claro</translation>
     </message>
     <message>
         <source>Dark green</source>
-        <translation>Verde oscuro</translation>
+        <translation type="obsolete">Verde oscuro</translation>
     </message>
     <message>
         <source>Cyan</source>
@@ -5020,7 +5639,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Magenta</source>
-        <translation>Magenta</translation>
+        <translation type="obsolete">Magenta</translation>
     </message>
     <message>
         <source>Shape</source>
@@ -5332,71 +5951,71 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>RGB curve</source>
-        <translation>Curva RGB</translation>
+        <translation type="obsolete">Curva RGB</translation>
     </message>
     <message>
         <source>R curve</source>
-        <translation>Curva R</translation>
+        <translation type="obsolete">Curva R</translation>
     </message>
     <message>
         <source>G curve</source>
-        <translation>Curva G</translation>
+        <translation type="obsolete">Curva G</translation>
     </message>
     <message>
         <source>B curve</source>
-        <translation>Curva B</translation>
+        <translation type="obsolete">Curva B</translation>
     </message>
     <message>
         <source>L curve</source>
-        <translation>Curva L</translation>
+        <translation type="obsolete">Curva L</translation>
     </message>
     <message>
         <source>a curve</source>
-        <translation>Curva a</translation>
+        <translation type="obsolete">Curva a</translation>
     </message>
     <message>
         <source>b curve</source>
-        <translation>Curva b</translation>
+        <translation type="obsolete">Curva b</translation>
     </message>
     <message>
         <source>Outline curve</source>
-        <translation>Curva perfilado</translation>
+        <translation type="obsolete">Curva perfilado</translation>
     </message>
     <message>
         <source>L by hue curve</source>
-        <translation>L por curva de color</translation>
+        <translation type="obsolete">L por curva de color</translation>
     </message>
     <message>
         <source>Hue curve</source>
-        <translation>Curva de color</translation>
+        <translation type="obsolete">Curva de color</translation>
     </message>
     <message>
         <source>Texture curve</source>
-        <translation>Curva de textura</translation>
+        <translation type="obsolete">Curva de textura</translation>
     </message>
     <message>
         <source>Saturation curve</source>
-        <translation>Curva saturación</translation>
+        <translation type="obsolete">Curva saturación</translation>
     </message>
     <message>
         <source>Base curve</source>
-        <translation>Curva base</translation>
+        <translation type="obsolete">Curva base</translation>
     </message>
     <message>
         <source>After gamma curve</source>
-        <translation>Curva tras gamma</translation>
+        <translation type="obsolete">Curva tras gamma</translation>
     </message>
     <message>
         <source>Shadows / Highlights curve</source>
-        <translation>Curva sombras / luces altas</translation>
+        <translation type="obsolete">Curva sombras / luces altas</translation>
     </message>
     <message>
         <source>Detail curve</source>
-        <translation>Curva de detalle</translation>
+        <translation type="obsolete">Curva de detalle</translation>
     </message>
     <message>
         <source>Denoise curve</source>
-        <translation>Curva reducción de ruido</translation>
+        <translation type="obsolete">Curva reducción de ruido</translation>
     </message>
     <message>
         <source>View seperate LAB channels</source>
@@ -5404,15 +6023,15 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Mode for Outline Overlay</source>
-        <translation>Modo para superposición de perfilado</translation>
+        <translation type="obsolete">Modo para superposición de perfilado</translation>
     </message>
     <message>
         <source>Method for the Outlines</source>
-        <translation>Método para perfilado</translation>
+        <translation type="obsolete">Método para perfilado</translation>
     </message>
     <message>
         <source>Values for tone adjustment</source>
-        <translation>Valores para el ajuste de tono</translation>
+        <translation type="obsolete">Valores para el ajuste de tono</translation>
     </message>
     <message>
         <source>Film emulation</source>
@@ -5464,7 +6083,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Output mode</source>
-        <translation>Modo salida</translation>
+        <translation type="obsolete">Modo salida</translation>
     </message>
     <message>
         <source>Switch to this zoom level when starting to crop.</source>
@@ -5676,7 +6295,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Enable wiener filter</source>
-        <translation>Habilitar filtro wiener</translation>
+        <translation type="obsolete">Habilitar filtro wiener</translation>
     </message>
     <message>
         <source>Only edges</source>
@@ -5688,11 +6307,11 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Switch layers</source>
-        <translation>Cambiar capas</translation>
+        <translation type="obsolete">Cambiar capas</translation>
     </message>
     <message>
         <source>Outlines or image on top</source>
-        <translation>Perfilado o imagen encima</translation>
+        <translation type="obsolete">Perfilado o imagen encima</translation>
     </message>
     <message>
         <source>before gamma</source>
@@ -5754,12 +6373,51 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
         <source>Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.</source>
         <translation>Usar la tecla Esc no solo para cerrar modos de visionado espciales (e.g. pantalla completa) si no también para cerrar Photivo.</translation>
     </message>
+    <message>
+        <source>Open file manager on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Opens the file manager when Photivo starts without an image</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ptSingleDirModel</name>
     <message>
         <source>My Computer</source>
         <translation>Mi Equipo</translation>
+    </message>
+</context>
+<context>
+    <name>ptToolBox</name>
+    <message>
+        <source>Open help page in web browser.</source>
+        <translation>Abrir página de ayuda en el navegador.</translation>
+    </message>
+    <message>
+        <source>Complex filter. Might be slow.</source>
+        <translation>Filtro complejo. Puede ser lento.</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Reiniciar</translation>
+    </message>
+    <message>
+        <source>&amp;Save preset</source>
+        <translation>&amp;Salvar preconfiguración</translation>
+    </message>
+    <message>
+        <source>&amp;Append preset</source>
+        <translation>&amp;Recuperar preconfiguración</translation>
+    </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation>&amp;Ocultar</translation>
+    </message>
+    <message>
+        <source>Add to &amp;favourites</source>
+        <translation>Agregar a &amp;favoritos</translation>
     </message>
 </context>
 <context>
