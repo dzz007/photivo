@@ -127,7 +127,9 @@ void ptChoice::createGUI() {
   m_ComboBox->setMaxVisibleItems(24);
 
   if (FIsNewSchool) {
-    m_ComboBox->addItems(m_InitialOptionsNewschool);
+    for (ptCfgItem::TComboEntry &hComboEntry: m_InitialOptionsNewschool) {
+      m_ComboBox->addItem(hComboEntry.caption, hComboEntry.value);
+    }
 
   } else {
     for (short i=0; m_InitialOptions && m_InitialOptions[i].Value !=-1; i++ ) {
@@ -164,19 +166,32 @@ ptChoice::~ptChoice() {
 
 //==============================================================================
 
-void ptChoice::setValue(const QVariant &AValue) {
-  bool ok;
-  int i = AValue.toInt(&ok);
+int ptChoice::getIdxFromValue(const QVariant &AValue) {
+  int v = AValue.toInt();
+  int i = 0;
+  for (ptCfgItem::TComboEntry &hComboEntry: m_InitialOptionsNewschool) {
+    if (hComboEntry.value == v)
+      return i;
+    ++i;
+  }
+  return -1;
+}
 
-  if (!ok || i<0 || i>=m_ComboBox->count()) {
-    GInfo->Raise("Invalid combo index: " + AValue.toString(), AT);
+//==============================================================================
+
+// newschool
+void ptChoice::setValue(const QVariant &AValue) {
+  int idx = getIdxFromValue(AValue);
+  if (idx == -1) {
+    GInfo->Raise("Invalid combo value: " + AValue.toString(), AT);
   } else {
-    m_ComboBox->setCurrentIndex(i);
+    m_ComboBox->setCurrentIndex(idx);
   }
 }
 
 //==============================================================================
 
+//oldschool
 void ptChoice::SetValue(const QVariant Value,
                         const short    BlockSignal) {
   m_Value = Value;
@@ -217,7 +232,9 @@ void ptChoice::Clear(const short WithDefault) {
   if (WithDefault) {
     // Add the standard choices again.
     if (FIsNewSchool) {
-      m_ComboBox->addItems(m_InitialOptionsNewschool);
+      for (ptCfgItem::TComboEntry &hComboEntry: m_InitialOptionsNewschool) {
+        m_ComboBox->addItem(hComboEntry.caption, hComboEntry.value);
+      }
 
     } else {
       for (short i=0; m_InitialOptions && m_InitialOptions[i].Value !=-1; i++ ) {
@@ -272,7 +289,7 @@ void ptChoice::OnValueChangedTimerExpired() {
   m_ComboBox->clearFocus();
 
   if (FIsNewSchool)
-    emit ptWidget::valueChanged(this->objectName(), m_ComboBox->currentIndex());
+    emit ptWidget::valueChanged(this->objectName(), m_Value);
   else
     emit valueChanged(m_Value);
 }

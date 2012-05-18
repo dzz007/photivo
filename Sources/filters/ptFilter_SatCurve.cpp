@@ -24,6 +24,7 @@
 #include "ptCfgItem.h"
 #include <ptImage.h>
 #include <ptCurve.h>
+#include <ptConstants.h>
 
 //==============================================================================
 
@@ -52,6 +53,10 @@ ptFilterBase *ptFilter_SatCurve::CreateSatCurve() {
 //==============================================================================
 
 void ptFilter_SatCurve::doDefineControls() {
+  QList<ptCfgItem::TComboEntry> hModes;
+  hModes.append({tr("Absolute"), ptSaturationMode_Absolute, "absolute"});
+  hModes.append({tr("Adaptive"), ptSaturationMode_Adaptive, "adaptive"});
+
   FCfgItems = QList<ptCfgItem>()                                      //--- Combo: list of entries               ---//
                                                                       //--- Check: not available                 ---//
     //            Id            Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
@@ -59,8 +64,7 @@ void ptFilter_SatCurve::doDefineControls() {
                                                                                     ptCurve::LumaMask|ptCurve::ChromaMask,
                                                                                     ptCurve::ChromaMask,
                                                                                     ptCurve::CosineInterpol), ""})
-    << ptCfgItem({CMode,        ptCfgItem::Combo,         0,          QStringList(tr("Absolute"))
-                                                                               << tr("Adaptive"),                       true, true, tr("Saturation mode"),   tr("")})
+    << ptCfgItem({CMode,        ptCfgItem::Combo,         ptSaturationMode_Absolute, hModes, true, true, tr("Saturation mode"),   tr("")})
   ;
 }
 

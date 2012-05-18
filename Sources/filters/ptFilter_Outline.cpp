@@ -25,6 +25,7 @@
 #include "ptCfgItem.h"
 #include <ptImage.h>
 #include <ptCurve.h>
+#include <ptConstants.h>
 
 //==============================================================================
 
@@ -57,27 +58,33 @@ ptFilterBase *ptFilter_Outline::CreateOutline() {
 //==============================================================================
 
 void ptFilter_Outline::doDefineControls() {
+  QList<ptCfgItem::TComboEntry> hOverlayModes;
+  hOverlayModes.append({tr("Disabled"), ptOverlayMode_None, "none"});
+  hOverlayModes.append({tr("SoftLight"), ptOverlayMode_SoftLight, "softlight"});
+  hOverlayModes.append({tr("Multiply"), ptOverlayMode_Multiply, "multiply"});
+  hOverlayModes.append({tr("Screen"), ptOverlayMode_Screen, "screen"});
+  hOverlayModes.append({tr("Gamma dark"), ptOverlayMode_GammaDark, "gammadark"});
+  hOverlayModes.append({tr("Gamma bright"), ptOverlayMode_GammaBright, "gammabright"});
+  hOverlayModes.append({tr("Color burn"), ptOverlayMode_ColorBurn, "colorburn"});
+  hOverlayModes.append({tr("Color dodge"), ptOverlayMode_ColorDodge, "colordodge"});
+  hOverlayModes.append({tr("Darken only"), ptOverlayMode_Darken, "darken"});
+  hOverlayModes.append({tr("Lighten only"), ptOverlayMode_Lighten, "lighten"});
+  hOverlayModes.append({tr("Show outlines"), ptOverlayMode_Replace, "outlines"});
+
+  QList<ptCfgItem::TComboEntry> hGradientModes;
+  hGradientModes.append({tr("Backward finite differences"), ptGradientMode_Backward, "backward"});
+  hGradientModes.append({tr("Centered finite differences"), ptGradientMode_Centered, "centered"});
+  hGradientModes.append({tr("Forward finite differences"), ptGradientMode_Forward, "forward"});
+  hGradientModes.append({tr("Sobel masks"), ptGradientMode_Sobel, "sobel"});
+  hGradientModes.append({tr("Rotation invariant masks"), ptGradientMode_RotInv, "rotinv"});
+  hGradientModes.append({tr("Deriche recursive filter"), ptGradientMode_Deriche, "deriche"});
+
   FCfgItems = QList<ptCfgItem>()                                         //--- Combo: list of entries               ---//
                                                                          //--- Check: not available                 ---//
     //            Id               Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({COverlayMode,    ptCfgItem::Combo,         0,          QStringList(tr("Disabled"))
-                                                                                  << tr("SoftLight")
-                                                                                  << tr("Multiply")
-                                                                                  << tr("Screen")
-                                                                                  << tr("Gamma dark")
-                                                                                  << tr("Gamma bright")
-                                                                                  << tr("Color burn")
-                                                                                  << tr("Color dodge")
-                                                                                  << tr("Darken only")
-                                                                                  << tr("Lighten only")
-                                                                                  << tr("Show outlines"),                  true, true, tr("Overlay mode"),   tr("")})
+    << ptCfgItem({COverlayMode,    ptCfgItem::Combo,         ptOverlayMode_None, hOverlayModes,                            true, true, tr("Overlay mode"),   tr("")})
     << ptCfgItem({CImageOnTop,     ptCfgItem::Check,         0,                                                            true, true, tr("Image on top"), tr("Overlay the image on top of the outlines instead of vice versa")})
-    << ptCfgItem({CGradientMode,   ptCfgItem::Combo,         0,          QStringList(tr("Backward finite differences"))
-                                                                                  << tr("Centered finite differences")
-                                                                                  << tr("Forward finite differences")
-                                                                                  << tr("Sobel masks")
-                                                                                  << tr("Rotation invariant masks")
-                                                                                  << tr("Deriche recursive filter"),       true, true, tr("Outlines mode"),   tr("Method for calculating the outline gradients")})
+    << ptCfgItem({CGradientMode,   ptCfgItem::Combo,         ptGradientMode_Backward, hGradientModes,                      true, true, tr("Outlines mode"),   tr("Method for calculating the outline gradients")})
     << ptCfgItem({CColorWeight,    ptCfgItem::Slider,        1.0,        0.0,          5.0,          0.5,        2,        true, true, tr("Color weight"), tr("Weight of the A/B channels in the outlines calculation")})
     << ptCfgItem({CBlurRadius,     ptCfgItem::Slider,        0.0,        0.0,         20.0,          0.2,        2,        true, true, tr("Blur radius"), tr("")})
     << ptCfgItem({CCurve,          ptCfgItem::CurveWin,      std::make_shared<ptCurve>(ptCurve::diagonalNull(),

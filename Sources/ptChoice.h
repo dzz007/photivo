@@ -25,14 +25,11 @@
 #ifndef PTCHOICE_H
 #define PTCHOICE_H
 
-//==============================================================================
-
 #include <QtGui>
 #include "ptGuiOptions.h"
 #include "ptWidget.h"
 #include "ptInfo.h"
-
-class ptCfgItem;
+#include <filters/ptCfgItem.h>
 
 //==============================================================================
 
@@ -79,13 +76,14 @@ protected:
 
 private:
   void createGUI();
+  int  getIdxFromValue(const QVariant &AValue);
 
   QVariant m_Value;
   QVariant m_DefaultValue;
   short    m_HaveDefault;
   int      m_TimeOut;
   const ptGuiOptionsItem* m_InitialOptions;
-  QStringList             m_InitialOptionsNewschool;
+  QList<ptCfgItem::TComboEntry> m_InitialOptionsNewschool;
 
   QWidget*     m_Parent;
   QComboBox*   m_ComboBox;
