@@ -28,7 +28,7 @@
 
 #include <memory>
 
-#include <QStringList>
+#include <QList>
 #include <QVariant>
 
 class ptCurve;
@@ -52,6 +52,14 @@ public:
     CurveWin = CFirstCustomType,   /*!< ptCurveWindow */
   };
 
+  struct TComboEntry {
+    QString   caption;
+    int       value;
+    QString   storableId;
+  };
+
+
+public:
   struct TButton {
     // TODO: Unfinished dummy. Add icons etc. Might we need a ptButton class? Do we need it at all?
     QString       Id;
@@ -75,14 +83,14 @@ public:
   };
 
   struct TCombo {
-    QString       Id;
-    TType         Type;
-    int           Default;
-    QStringList   EntryList;
-    bool          UseCommonDispatch;
-    bool          Storeable;
-    QString       Caption;
-    QString       ToolTip;
+    QString             Id;
+    TType               Type;
+    int                 Default;
+    QList<TComboEntry>  EntryList;
+    bool                UseCommonDispatch;
+    bool                Storeable;
+    QString             Caption;
+    QString             ToolTip;
   };
 
   struct TInput {
@@ -141,7 +149,7 @@ public:
   bool          Checkable;
 
   // specific to TCombo
-  QStringList   EntryList;
+  QList<TComboEntry>   EntryList;
 
   // specific to TInput
   QVariant      Min;
