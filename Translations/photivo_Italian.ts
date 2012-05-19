@@ -1641,7 +1641,7 @@ Nessun ritaglio, prova di nuovo.</translation>
     <message>
         <location filename="../Sources/filters/ptFilterDM.cpp" line="358"/>
         <source>Append settings file</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilterDM.cpp" line="385"/>
@@ -4619,18 +4619,18 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptCurve.cpp" line="305"/>
         <source>Failed to load curve file %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Fallito caricamento file curva %1.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurve.cpp" line="306"/>
         <source>
 The error occurred in line %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore nella linea %1.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurve.cpp" line="307"/>
         <source>Load curve file</source>
-        <translation type="unfinished"></translation>
+        <translation>Carica file curva</translation>
     </message>
 </context>
 <context>
@@ -4670,12 +4670,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="631"/>
         <source>L&amp;uminance mask</source>
-        <translation type="unfinished"></translation>
+        <translation>Maschera di L&amp;uminanza</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="635"/>
         <source>C&amp;olor mask</source>
-        <translation type="unfinished"></translation>
+        <translation>Maschera di C&amp;olore</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurveWindow.cpp" line="644"/>
@@ -4871,7 +4871,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_DetailCurve.cpp" line="50"/>
         <source>Detail curve</source>
-        <translation type="unfinished"></translation>
+        <translation>Curva dettaglio</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_DetailCurve.cpp" line="67"/>
@@ -4886,7 +4886,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_DetailCurve.cpp" line="69"/>
         <source>Anti badpixel</source>
-        <translation type="unfinished"></translation>
+        <translation>Anti badpixel</translation>
     </message>
 </context>
 <context>
@@ -4894,7 +4894,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_GammaTool.cpp" line="47"/>
         <source>Gamma adjustment</source>
-        <translation type="unfinished"></translation>
+        <translation>Regolazione Gamma</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_GammaTool.cpp" line="56"/>
@@ -4917,32 +4917,32 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="57"/>
         <source>Reg highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Alteluci Rosso</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="57"/>
         <source>Adjusts brightness of highlights in R channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Regolazione luminosità alteluci nel canale R</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="58"/>
         <source>Green highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Alteluci Verde</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="58"/>
         <source>Adjusts brightness of highlights in G channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Regolazione luminosità alteluci nel canale G</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="59"/>
         <source>Blue highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Alteluci Blu</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="59"/>
         <source>Adjusts brightness of highlights in B channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Regolazione luminosità alteluci nel canale B</translation>
     </message>
 </context>
 <context>
@@ -4950,12 +4950,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_LumaDenoiseCurve.cpp" line="54"/>
         <source>Luminance denoise curve</source>
-        <translation type="unfinished"></translation>
+        <translation>Curva riduzione rumore Luminanza</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LumaDenoiseCurve.cpp" line="68"/>
         <source>L strength</source>
-        <translation type="unfinished"></translation>
+        <translation>Intensità L</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LumaDenoiseCurve.cpp" line="69"/>
@@ -5019,79 +5019,79 @@ The error occurred in line %1.</source>
 <context>
     <name>ptFilter_Outline</name>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="53"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="54"/>
         <source>Outline</source>
         <translation>Outline</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="63"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="62"/>
         <source>Disabled</source>
         <translation>Disabilitato</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="64"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="63"/>
         <source>SoftLight</source>
         <translation>Luce soffusa</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="65"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="64"/>
         <source>Multiply</source>
         <translation>Moltiplica</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="66"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="65"/>
         <source>Screen</source>
         <translation>Scherma</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="67"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="66"/>
         <source>Gamma dark</source>
         <translation>Gamma scura</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="68"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="67"/>
         <source>Gamma bright</source>
         <translation>Gamma chiara</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="69"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="68"/>
         <source>Color burn</source>
         <translation>Brucia colore</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="70"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="69"/>
         <source>Color dodge</source>
         <translation>Scherma colore</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="71"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="70"/>
         <source>Darken only</source>
         <translation>Scurisci soltanto</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="72"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="71"/>
         <source>Lighten only</source>
         <translation>Schiarisci soltanto</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="73"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="72"/>
         <source>Show outlines</source>
         <translation>Mostra outline</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="73"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="85"/>
         <source>Overlay mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modalità sovrapposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="74"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="86"/>
         <source>Image on top</source>
-        <translation type="unfinished"></translation>
+        <translation>Immagine al livello superiore</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="74"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="86"/>
         <source>Overlay the image on top of the outlines instead of vice versa</source>
-        <translation type="unfinished"></translation>
+        <translation>Sovrapponi l&apos;immagine al livello superiore outline anzicché il contrario</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="75"/>
@@ -5124,27 +5124,27 @@ The error occurred in line %1.</source>
         <translation>Filtro ricorsivo Deriche</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="80"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="87"/>
         <source>Outlines mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modalità outline</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="80"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="87"/>
         <source>Method for calculating the outline gradients</source>
-        <translation type="unfinished"></translation>
+        <translation>Metodo per calcolare i gradienti outline</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="81"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="88"/>
         <source>Color weight</source>
-        <translation type="unfinished"></translation>
+        <translation>Importanza colore</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="81"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="88"/>
         <source>Weight of the A/B channels in the outlines calculation</source>
-        <translation type="unfinished"></translation>
+        <translation>Importanza dei canali A/B per il calcolo outline</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="82"/>
+        <location filename="../Sources/filters/ptFilter_Outline.cpp" line="89"/>
         <source>Blur radius</source>
         <translation>Raggio sfocatura</translation>
     </message>
@@ -5152,24 +5152,24 @@ The error occurred in line %1.</source>
 <context>
     <name>ptFilter_SatCurve</name>
     <message>
-        <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="48"/>
+        <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="49"/>
         <source>Saturation curve</source>
         <translation>Curva Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="62"/>
+        <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="57"/>
         <source>Absolute</source>
         <translation>Assoluto</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="63"/>
+        <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="58"/>
         <source>Adaptive</source>
-        <translation type="unfinished"></translation>
+        <translation>Adattivo</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="63"/>
+        <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="67"/>
         <source>Saturation mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modalità saturazione</translation>
     </message>
 </context>
 <context>
@@ -5177,17 +5177,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="50"/>
         <source>Shadows/Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Ombre/Alteluci</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="60"/>
         <source>Fine detail</source>
-        <translation type="unfinished"></translation>
+        <translation>Dettaglio fine</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="61"/>
         <source>Coarse detail</source>
-        <translation type="unfinished"></translation>
+        <translation>Dettaglio grezzo</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="62"/>
@@ -5210,7 +5210,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_SigContrast.cpp" line="97"/>
         <source>Lightness contrast</source>
-        <translation type="unfinished"></translation>
+        <translation>Contrasto luminosità</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_SigContrast.cpp" line="107"/>
@@ -5269,62 +5269,62 @@ The error occurred in line %1.</source>
 <context>
     <name>ptFilter_ToneAdjust</name>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="52"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="53"/>
         <source>Tone adjustment</source>
-        <translation type="unfinished"></translation>
+        <translation>Regolazione tono</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="61"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="68"/>
         <source>Strength</source>
         <translation>Intensità</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="62"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="61"/>
         <source>Shadows</source>
         <translation>Ombre</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="63"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="62"/>
         <source>Midtones</source>
         <translation>Mezzitoni</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="64"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="63"/>
         <source>Highlights</source>
         <translation>Alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="65"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="64"/>
         <source>All values</source>
         <translation>Tutti i valori</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="65"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="69"/>
         <source>Mask mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modalità maschera</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="66"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="70"/>
         <source>Saturation</source>
         <translation>Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="67"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="71"/>
         <source>Hue</source>
         <translation>Tonalità</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="68"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="72"/>
         <source>Lower limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Limite inferiore</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="69"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="73"/>
         <source>Upper limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Limite superiore</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="70"/>
+        <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="74"/>
         <source>Softness</source>
         <translation>Morbidezza</translation>
     </message>
@@ -5334,7 +5334,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="54"/>
         <source>Wiener sharpen</source>
-        <translation type="unfinished"></translation>
+        <translation>Nitidezza Wiener</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="63"/>
@@ -5344,7 +5344,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="63"/>
         <source>Switch filter on and off</source>
-        <translation type="unfinished"></translation>
+        <translation>Attiva/disattiva filtro</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="64"/>
@@ -5685,117 +5685,117 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="2888"/>
         <source>8daccb81-5dd3-4664-bf3c-1fefe7ad084e</source>
-        <translation type="unfinished"></translation>
+        <translation>8daccb81-5dd3-4664-bf3c-1fefe7ad084e</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="3150"/>
         <source>a63b08df-36ee-4678-9e25-9c53467c502b</source>
-        <translation type="unfinished"></translation>
+        <translation>a63b08df-36ee-4678-9e25-9c53467c502b</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="3489"/>
         <source>25b0402c-1668-4800-aab8-028160a08087</source>
-        <translation type="unfinished"></translation>
+        <translation>25b0402c-1668-4800-aab8-028160a08087</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="3542"/>
         <source>786384c5-ded7-4669-b748-e40ebabcdf2c</source>
-        <translation type="unfinished"></translation>
+        <translation>786384c5-ded7-4669-b748-e40ebabcdf2c</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="3632"/>
         <source>946311d6-64fb-46b8-a70e-bc9e8dcba56d</source>
-        <translation type="unfinished"></translation>
+        <translation>946311d6-64fb-46b8-a70e-bc9e8dcba56d</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="3769"/>
         <source>02ffc2a8-1fc6-4f50-940a-924da85efa1e</source>
-        <translation type="unfinished"></translation>
+        <translation>02ffc2a8-1fc6-4f50-940a-924da85efa1e</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="4082"/>
         <source>2f4b0f7a-d720-41e0-b2fc-20dff3a02fcf</source>
-        <translation type="unfinished"></translation>
+        <translation>02ffc2a8-1fc6-4f50-940a-924da85efa1e</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="4688"/>
         <source>e0310479-993f-4018-a80a-ac2d8c6c1ee4</source>
-        <translation type="unfinished"></translation>
+        <translation>e0310479-993f-4018-a80a-ac2d8c6c1ee4</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="4694"/>
         <source>530aab8e-65e4-4bb8-b391-46f6673ac53d</source>
-        <translation type="unfinished"></translation>
+        <translation>530aab8e-65e4-4bb8-b391-46f6673ac53d</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="4799"/>
         <source>bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</source>
-        <translation type="unfinished"></translation>
+        <translation>bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="4897"/>
         <source>f2d800db-1d7a-42bc-970c-9a89597f34a4</source>
-        <translation type="unfinished"></translation>
+        <translation>f2d800db-1d7a-42bc-970c-9a89597f34a4</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5295"/>
         <source>1d3e2630-de72-46b8-b1f9-7169cd1b3832</source>
-        <translation type="unfinished"></translation>
+        <translation>1d3e2630-de72-46b8-b1f9-7169cd1b3832</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5309"/>
         <source>1f5f1b76-71b7-4dda-9db3-89ffce1c7981</source>
-        <translation type="unfinished"></translation>
+        <translation>1f5f1b76-71b7-4dda-9db3-89ffce1c7981</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5323"/>
         <source>0a462e7c-5764-4ed5-bb28-e583aabbf292</source>
-        <translation type="unfinished"></translation>
+        <translation>0a462e7c-5764-4ed5-bb28-e583aabbf292</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5337"/>
         <source>960ada58-c073-4603-acad-f4894bb3fe91</source>
-        <translation type="unfinished"></translation>
+        <translation>960ada58-c073-4603-acad-f4894bb3fe91</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5351"/>
         <source>2fea9112-1a10-4466-8ef9-0918a09ea3d6</source>
-        <translation type="unfinished"></translation>
+        <translation>2fea9112-1a10-4466-8ef9-0918a09ea3d6</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5365"/>
         <source>ee8167f2-1c78-4ae3-843d-4a3a0b807db8</source>
-        <translation type="unfinished"></translation>
+        <translation>ee8167f2-1c78-4ae3-843d-4a3a0b807db8</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5379"/>
         <source>6dc120c5-e8ec-430e-9c5e-40ba217559d5</source>
-        <translation type="unfinished"></translation>
+        <translation>6dc120c5-e8ec-430e-9c5e-40ba217559d5</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5393"/>
         <source>f532185f-281a-4503-b96b-37c05bbcabf3</source>
-        <translation type="unfinished"></translation>
+        <translation>f532185f-281a-4503-b96b-37c05bbcabf3</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5407"/>
         <source>25489dc0-8d77-4f39-bc42-1b91a0d1054d</source>
-        <translation type="unfinished"></translation>
+        <translation>25489dc0-8d77-4f39-bc42-1b91a0d1054d</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5421"/>
         <source>61b61fd7-c891-4d78-92c2-3290c190be65</source>
-        <translation type="unfinished"></translation>
+        <translation>61b61fd7-c891-4d78-92c2-3290c190be65</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5435"/>
         <source>fb3f0bbc-6255-43ec-947c-4bd43e115379</source>
-        <translation type="unfinished"></translation>
+        <translation>fb3f0bbc-6255-43ec-947c-4bd43e115379</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="6063"/>
         <source>6e7db630-310f-4f04-82e0-b668babfe8c9</source>
-        <translation type="unfinished"></translation>
+        <translation>6e7db630-310f-4f04-82e0-b668babfe8c9</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="6159"/>
@@ -6294,37 +6294,37 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7028"/>
         <source>6e3971ac-f640-4628-8aa0-ae07620f8ca4</source>
-        <translation type="unfinished"></translation>
+        <translation>6e3971ac-f640-4628-8aa0-ae07620f8ca4</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7042"/>
         <source>9e99b7ee-1e5f-4f4d-821f-efbfc0d6bffa</source>
-        <translation type="unfinished"></translation>
+        <translation>9e99b7ee-1e5f-4f4d-821f-efbfc0d6bffa</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7056"/>
         <source>44112e0a-81df-4ae5-aee8-18a17d0ac810</source>
-        <translation type="unfinished"></translation>
+        <translation>44112e0a-81df-4ae5-aee8-18a17d0ac810</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7112"/>
         <source>221fa750-226c-4a48-a94b-e8b516865aca</source>
-        <translation type="unfinished"></translation>
+        <translation>221fa750-226c-4a48-a94b-e8b516865aca</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7285"/>
         <source>88b24988-7fcf-47b6-b9a2-8600c992f3f3</source>
-        <translation type="unfinished"></translation>
+        <translation>88b24988-7fcf-47b6-b9a2-8600c992f3f3</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7299"/>
         <source>71999980-5530-4a91-996e-43e752099870</source>
-        <translation type="unfinished"></translation>
+        <translation>71999980-5530-4a91-996e-43e752099870</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7415"/>
         <source>7c2a63e3-50be-476c-9364-7c442c2662fa</source>
-        <translation type="unfinished"></translation>
+        <translation>7c2a63e3-50be-476c-9364-7c442c2662fa</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7649"/>
@@ -7176,7 +7176,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="1835"/>
         <source>No tools visible!</source>
-        <translation type="unfinished"></translation>
+        <translation>Nessuno strumento visibile!</translation>
     </message>
     <message>
         <source>Settings file dropped!</source>
@@ -7460,7 +7460,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1652"/>
         <source>Applying a* b* curves</source>
-        <translation type="unfinished"></translation>
+        <translation>Applicazione curve a* b*</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1689"/>
@@ -7490,7 +7490,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="693"/>
         <source>Applying RGB contrast</source>
-        <translation type="unfinished"></translation>
+        <translation>Applicazione contrasto RGB</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="718"/>
@@ -9583,12 +9583,12 @@ Usata per la correzione della geometria.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="501"/>
         <source>Open file manager on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri il file manager all&apos;avvio</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="501"/>
         <source>Opens the file manager when Photivo starts without an image</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri il file manager quando Photivo viene avviato senza un&apos;immagine</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="546"/>
