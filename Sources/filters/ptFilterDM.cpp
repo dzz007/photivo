@@ -826,7 +826,7 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
   auto hToneMaskKeys = QStringList("LABToneAdjust1MaskType") << "LABToneAdjust2MaskType";
   for (QString hOldMaskKey: hToneMaskKeys) {
     auto hComboIdx = APreset->value(hOldMaskKey, -9999).toInt();
-    if (hComboIdx == -10000) {
+    if (hComboIdx == -9999) {
       // key not present in settings object
       continue;
     }

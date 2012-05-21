@@ -365,6 +365,7 @@ private:
   int             FParentTabIdx;
   int             FIdxInParentTab;
   bool            FIsBlocked;
+  bool            FPreventPipeRun;
 
 
 signals:
