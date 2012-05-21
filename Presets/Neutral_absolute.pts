@@ -1,5 +1,5 @@
 [General]
-Magic=photivoSettingsFile
+Magic=photivoPresetFile
 AdjustMaximumThreshold=0
 AutoExposure=3
 AutomaticPipeSize=0
@@ -187,7 +187,7 @@ GreenIntensity=1.10525205826768
 Grid=0
 HaveBadPixels=0
 HaveDarkFrame=0
-HiddenTools=530aab8e-65e4-4bb8-b391-46f6673ac53d
+HiddenTools=@Invalid()
 Highpass=0
 HighpassAmount=4
 HighpassDenoise=0.2
