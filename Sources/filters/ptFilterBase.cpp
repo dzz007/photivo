@@ -103,6 +103,7 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
 //==============================================================================
 
 void ptFilterBase::importPreset(QSettings *APreset, const bool ARequestPipeRun /*=false*/) {
+  FPreventPipeRun = !ARequestPipeRun;
   APreset->beginGroup(this->FFilterName + "/" + this->uniqueName());
 
   // *** default config store *** //
@@ -141,6 +142,7 @@ void ptFilterBase::importPreset(QSettings *APreset, const bool ARequestPipeRun /
 
   FConfig->update(hSettings);
   updateGui(ARequestPipeRun);
+  FPreventPipeRun = false;
 }
 
 //==============================================================================
@@ -309,7 +311,8 @@ ptFilterBase::ptFilterBase()
   FIsActive(false),
   FParentTabIdx(-1),
   FIdxInParentTab(-1),
-  FIsBlocked(false)
+  FIsBlocked(false),
+  FPreventPipeRun(false)
 {}
 
 //==============================================================================
@@ -456,6 +459,7 @@ bool ptFilterBase::checkActiveChanged(const bool ANoSignal /*= false*/) {
 
 void Update(const QString GuiName);
 void ptFilterBase::requestPipeRun(const bool AUnconditional) {
+  if (FPreventPipeRun) return;
   if (AUnconditional || this->checkActiveChanged() || FIsActive)
     Update(FUniqueName);
 }
