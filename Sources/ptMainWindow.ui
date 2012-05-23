@@ -339,7 +339,7 @@
                           <enum>QTabWidget::West</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>4</number>
+                          <number>2</number>
                          </property>
                          <property name="iconSize">
                           <size>
@@ -2686,7 +2686,7 @@
                                   <number>-2</number>
                                  </property>
                                  <property name="currentIndex">
-                                  <number>6</number>
+                                  <number>15</number>
                                  </property>
                                  <widget class="QWidget" name="TabChannelMixer">
                                   <property name="geometry">
@@ -2880,12 +2880,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>139</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>8daccb81-5dd3-4664-bf3c-1fefe7ad084e</string>
+                                   <string notr="true">8daccb81-5dd3-4664-bf3c-1fefe7ad084e</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_159"/>
                                  </widget>
@@ -3147,7 +3147,7 @@
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>a63b08df-36ee-4678-9e25-9c53467c502b</string>
+                                   <string notr="true">a63b08df-36ee-4678-9e25-9c53467c502b</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_97"/>
                                  </widget>
@@ -3481,12 +3481,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>139</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>25b0402c-1668-4800-aab8-028160a08087</string>
+                                   <string notr="true">25b0402c-1668-4800-aab8-028160a08087</string>
                                   </attribute>
                                  </widget>
                                  <widget class="QWidget" name="TabRGBLevels">
@@ -3534,12 +3534,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>139</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>786384c5-ded7-4669-b748-e40ebabcdf2c</string>
+                                   <string notr="true">786384c5-ded7-4669-b748-e40ebabcdf2c</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_15"/>
                                  </widget>
@@ -3624,12 +3624,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>166</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>946311d6-64fb-46b8-a70e-bc9e8dcba56d</string>
+                                   <string notr="true">946311d6-64fb-46b8-a70e-bc9e8dcba56d</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_210"/>
                                  </widget>
@@ -3761,12 +3761,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>166</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>02ffc2a8-1fc6-4f50-940a-924da85efa1e</string>
+                                   <string notr="true">02ffc2a8-1fc6-4f50-940a-924da85efa1e</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_90"/>
                                  </widget>
@@ -4079,7 +4079,7 @@
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>2f4b0f7a-d720-41e0-b2fc-20dff3a02fcf</string>
+                                   <string notr="true">2f4b0f7a-d720-41e0-b2fc-20dff3a02fcf</string>
                                   </attribute>
                                   <attribute name="toolTip">
                                    <string>Increase contrast on L by a sigmoidal curve</string>
@@ -4243,7 +4243,7 @@
                                <item>
                                 <widget class="QToolBox" name="toolbox_4">
                                  <property name="currentIndex">
-                                  <number>7</number>
+                                  <number>12</number>
                                  </property>
                                  <widget class="QWidget" name="TabLABImpulseDenoise">
                                   <property name="geometry">
@@ -4685,13 +4685,21 @@
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>e0310479-993f-4018-a80a-ac2d8c6c1ee4</string>
+                                   <string notr="true">e0310479-993f-4018-a80a-ac2d8c6c1ee4</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_260"/>
                                  </widget>
                                  <widget class="QWidget" name="LumaDenoise2">
+                                  <property name="geometry">
+                                   <rect>
+                                    <x>0</x>
+                                    <y>0</y>
+                                    <width>427</width>
+                                    <height>85</height>
+                                   </rect>
+                                  </property>
                                   <attribute name="label">
-                                   <string>530aab8e-65e4-4bb8-b391-46f6673ac53d</string>
+                                   <string notr="true">530aab8e-65e4-4bb8-b391-46f6673ac53d</string>
                                   </attribute>
                                  </widget>
                                  <widget class="QWidget" name="TabPyramidDenoise">
@@ -4791,12 +4799,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>85</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</string>
+                                   <string notr="true">bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_220"/>
                                  </widget>
@@ -4890,11 +4898,11 @@
                                     <x>0</x>
                                     <y>0</y>
                                     <width>427</width>
-                                    <height>112</height>
+                                    <height>85</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>f2d800db-1d7a-42bc-970c-9a89597f34a4</string>
+                                   <string notr="true">f2d800db-1d7a-42bc-970c-9a89597f34a4</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_189"/>
                                  </widget>
@@ -5287,12 +5295,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>220</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>1d3e2630-de72-46b8-b1f9-7169cd1b3832</string>
+                                   <string notr="true">1d3e2630-de72-46b8-b1f9-7169cd1b3832</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_276"/>
                                  </widget>
@@ -5301,12 +5309,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>220</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>1f5f1b76-71b7-4dda-9db3-89ffce1c7981</string>
+                                   <string notr="true">1f5f1b76-71b7-4dda-9db3-89ffce1c7981</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_88"/>
                                  </widget>
@@ -5315,12 +5323,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>220</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>0a462e7c-5764-4ed5-bb28-e583aabbf292</string>
+                                   <string notr="true">0a462e7c-5764-4ed5-bb28-e583aabbf292</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_204"/>
                                  </widget>
@@ -5329,12 +5337,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>220</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>960ada58-c073-4603-acad-f4894bb3fe91</string>
+                                   <string notr="true">960ada58-c073-4603-acad-f4894bb3fe91</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_244"/>
                                  </widget>
@@ -5343,12 +5351,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>220</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>2fea9112-1a10-4466-8ef9-0918a09ea3d6</string>
+                                   <string notr="true">2fea9112-1a10-4466-8ef9-0918a09ea3d6</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_91"/>
                                  </widget>
@@ -5357,12 +5365,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>220</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>ee8167f2-1c78-4ae3-843d-4a3a0b807db8</string>
+                                   <string notr="true">ee8167f2-1c78-4ae3-843d-4a3a0b807db8</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_77"/>
                                  </widget>
@@ -5371,12 +5379,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>220</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>6dc120c5-e8ec-430e-9c5e-40ba217559d5</string>
+                                   <string notr="true">6dc120c5-e8ec-430e-9c5e-40ba217559d5</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_122"/>
                                  </widget>
@@ -5385,12 +5393,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>220</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>f532185f-281a-4503-b96b-37c05bbcabf3</string>
+                                   <string notr="true">f532185f-281a-4503-b96b-37c05bbcabf3</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_184"/>
                                  </widget>
@@ -5399,12 +5407,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>220</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>25489dc0-8d77-4f39-bc42-1b91a0d1054d</string>
+                                   <string notr="true">25489dc0-8d77-4f39-bc42-1b91a0d1054d</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_10"/>
                                  </widget>
@@ -5413,12 +5421,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>220</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>61b61fd7-c891-4d78-92c2-3290c190be65</string>
+                                   <string notr="true">61b61fd7-c891-4d78-92c2-3290c190be65</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_174"/>
                                  </widget>
@@ -5432,7 +5440,7 @@
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>fb3f0bbc-6255-43ec-947c-4bd43e115379</string>
+                                   <string notr="true">fb3f0bbc-6255-43ec-947c-4bd43e115379</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_177"/>
                                  </widget>
@@ -6055,12 +6063,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>85</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>6e7db630-310f-4f04-82e0-b668babfe8c9</string>
+                                   <string notr="true">6e7db630-310f-4f04-82e0-b668babfe8c9</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_152"/>
                                  </widget>
@@ -7020,12 +7028,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>85</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>6e3971ac-f640-4628-8aa0-ae07620f8ca4</string>
+                                   <string notr="true">6e3971ac-f640-4628-8aa0-ae07620f8ca4</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_32"/>
                                  </widget>
@@ -7034,12 +7042,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>85</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>9e99b7ee-1e5f-4f4d-821f-efbfc0d6bffa</string>
+                                   <string notr="true">9e99b7ee-1e5f-4f4d-821f-efbfc0d6bffa</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_86"/>
                                  </widget>
@@ -7053,7 +7061,7 @@
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>44112e0a-81df-4ae5-aee8-18a17d0ac810</string>
+                                   <string notr="true">44112e0a-81df-4ae5-aee8-18a17d0ac810</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_80"/>
                                  </widget>
@@ -7097,7 +7105,7 @@
                                   <enum>Qt::DefaultContextMenu</enum>
                                  </property>
                                  <property name="currentIndex">
-                                  <number>0</number>
+                                  <number>6</number>
                                  </property>
                                  <widget class="QWidget" name="TabBaseCurve">
                                   <property name="geometry">
@@ -7109,7 +7117,7 @@
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>221fa750-226c-4a48-a94b-e8b516865aca</string>
+                                   <string notr="true">221fa750-226c-4a48-a94b-e8b516865aca</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_24"/>
                                  </widget>
@@ -7277,12 +7285,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>355</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>88b24988-7fcf-47b6-b9a2-8600c992f3f3</string>
+                                   <string notr="true">88b24988-7fcf-47b6-b9a2-8600c992f3f3</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_131"/>
                                  </widget>
@@ -7291,12 +7299,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>355</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>71999980-5530-4a91-996e-43e752099870</string>
+                                   <string notr="true">71999980-5530-4a91-996e-43e752099870</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_208"/>
                                  </widget>
@@ -7407,12 +7415,12 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>427</width>
+                                    <height>355</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>7c2a63e3-50be-476c-9364-7c442c2662fa</string>
+                                   <string notr="true">7c2a63e3-50be-476c-9364-7c442c2662fa</string>
                                   </attribute>
                                   <layout class="QVBoxLayout" name="verticalLayout_87"/>
                                  </widget>
