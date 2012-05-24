@@ -342,23 +342,6 @@ private:
       connects the common dispatcher where needed. */
   void            createGui();
 
-  /*! QVariants read from preset files are often interpreted as strings even if they’re not.
-      This function casts to the intended type or raises an error if not possible.
-      \param AValue
-        A reference to the QVariant to validate.
-      \param AIntendedType
-        The intended type.
-   */
-  void            ensureVariantType(QVariant &AValue, const QVariant::Type &AIntendedType);
-
-  /*! Checks data type of a config item.
-      \param ACfgItem
-        The config item to check.
-      \return
-        The item’s variant type or raises an error if the type could not be determined.
-   */
-  QVariant::Type  variantType(const ptCfgItem &ACfgItem);
-
   QString         FUniqueName;
   QString         FCaptionPostfix;
   bool            FIsActive;

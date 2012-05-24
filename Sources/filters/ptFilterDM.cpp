@@ -830,9 +830,9 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
       // key not present in settings object
       continue;
     }
-    if (hComboIdx == 0) {
+    if (hComboIdx == ptMaskType_None) {
       // Old filter was disabled via mask type. Ensure amount 0.0 to keep it disabled.
-      hComboIdx = 1;
+      hComboIdx = ptMaskType_Shadows;
       auto hOldAmountKey = QString("LABToneAdjust%1Amount").arg(hOldMaskKey.at(13));
       APreset->setValue(FNameMap.value(hOldAmountKey), 0.0);
       APreset->remove(hOldAmountKey);
@@ -846,13 +846,8 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
 
 //==============================================================================
 
-void ptFilterDM::TranslateSpecialToOld(QSettings *APreset) {
-  if (APreset->contains("ToneAdjust/"+Fuid::ToneAdjust1_LabEyeCandy+"/MaskMode"))
-    APreset->setValue("ToneAdjust/"+Fuid::ToneAdjust1_LabEyeCandy+"/MaskMode",
-                      APreset->value("ToneAdjust/"+Fuid::ToneAdjust1_LabEyeCandy+"/MaskMode").toInt()+1);
-  if (APreset->contains("ToneAdjust/"+Fuid::ToneAdjust2_LabEyeCandy+"/MaskMode"))
-    APreset->setValue("ToneAdjust/"+Fuid::ToneAdjust2_LabEyeCandy+"/MaskMode",
-                      APreset->value("ToneAdjust/"+Fuid::ToneAdjust2_LabEyeCandy+"/MaskMode").toInt()+1);
+void ptFilterDM::TranslateSpecialToOld(QSettings */*APreset*/) {
+  // nothing to do atm
 }
 
 //==============================================================================

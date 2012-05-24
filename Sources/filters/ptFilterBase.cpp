@@ -109,11 +109,9 @@ void ptFilterBase::importPreset(QSettings *APreset, const bool ARequestPipeRun /
   // *** default config store *** //
   TConfigStore hSettings;
   for (ptCfgItem hCfgItem: FCfgItems) {
-    auto hValue = APreset->value(hCfgItem.Id);
+    auto hValue = APreset->value(hCfgItem.Id); // returns invalid QVariant if not present in preset
     if (hValue.isValid()) {
-      // valid hValue means the settings entry was present in AIni
-      ensureVariantType(hValue, variantType(hCfgItem));
-      hSettings.insert(hCfgItem.Id, hValue);
+      hSettings.insert(hCfgItem.Id, hCfgItem.validate(hValue));
     }
   }
 
@@ -520,37 +518,6 @@ void ptFilterBase::createGui() {
   if (Settings->GetStringList("HiddenTools").contains(FUniqueName)) {
     FGuiContainer->hide();
   }
-}
-
-//==============================================================================
-
-void ptFilterBase::ensureVariantType(QVariant &AValue, const QVariant::Type &AIntendedType) {
-  if (AValue.type() != AIntendedType) {
-    if (!AValue.convert(AIntendedType)) {
-      GInfo->Raise(QString("Could not cast QVariant with value \"%1\" from type \"%2\" to "
-                           "type \"%3\" in filter \"%4\" (filter class: %5).")
-                   .arg(AValue.toString()).arg((int)AValue.type()).arg((int)AIntendedType)
-                   .arg(FFilterName, FUniqueName), AT);
-    }
-  }
-}
-
-//==============================================================================
-
-QVariant::Type ptFilterBase::variantType(const ptCfgItem &ACfgItem) {
-  if ((ACfgItem.Type == ptCfgItem::Check) ||
-      (ACfgItem.Type == ptCfgItem::Combo) ||
-      (ACfgItem.Decimals == 0))
-  {
-    return QVariant::Int;
-  }
-
-  if (ACfgItem.Decimals > 0)
-    return QVariant::Double;
-
-  GInfo->Raise(QString("Could not determine data type of \"%1\" in filter \"%2\" (filter class: %3).")
-               .arg(ACfgItem.Id, FFilterName, FUniqueName));
-  return QVariant::Invalid;  // never reached but needed to shut up compiler warning
 }
 
 

@@ -24,8 +24,6 @@
 #ifndef PTCFGITEM_H
 #define PTCFGITEM_H
 
-//==============================================================================
-
 #include <memory>
 
 #include <QList>
@@ -48,7 +46,7 @@ public:
     SpinEdit,         /*!< ptInput: Simple input field for numbers. */
     Slider,           /*!< ptInput: Input of numbers via a slider. */
     HueSlider,        /*!< ptInput: Slider with an added hue bar. */
-    // Widgets stored in in a curstom store
+    // Widgets stored in in a custom store
     CurveWin = CFirstCustomType,   /*!< ptCurveWindow */
   };
 
@@ -129,6 +127,10 @@ public:
   ptCfgItem(const TCurve &AValues);
   ///@}
 
+  /*! Performs a type and range check of `AValue` according to the requirements of this `ptCfgItem`
+      object and returns a `QVariant` with valid type and value. When validation is not possible
+      raises a `ptInfo` exception. */
+  QVariant validate(QVariant AValue);
 
   /*! \group Members
       Simple members for easy access */
@@ -160,6 +162,15 @@ public:
   // specific to TCurve
   std::shared_ptr<ptCurve>  Curve;
   ///@}
+
+
+private:
+  void  init();
+  void  ensureVariantType(QVariant &AValue);
+  void  setVariantType();
+
+  QVariant::Type  FIntendedType;
+
 };
 
 #endif // PTCFGIITEM_H
