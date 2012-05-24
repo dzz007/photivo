@@ -24,6 +24,8 @@
 #include "ptCfgItem.h"
 #include "ptFilterConfig.h"
 #include <ptCurve.h>
+#include <ptDefines.h>
+#include <ptInfo.h>
 
 //==============================================================================
 
@@ -36,7 +38,9 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TButton &AValues):
   ToolTip(AValues.ToolTip),
   Checkable(AValues.Checkable),
   Decimals(-1)
-{}
+{
+  init();
+}
 
 //==============================================================================
 
@@ -50,7 +54,9 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCheck &AValues):
   Default(AValues.Default),
   Checkable(false),
   Decimals(-1)
-{}
+{
+  init();
+}
 
 //==============================================================================
 
@@ -65,7 +71,9 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCombo &AValues):
   Checkable(false),
   EntryList(AValues.EntryList),
   Decimals(-1)
-{}
+{
+  init();
+}
 
 //==============================================================================
 
@@ -82,7 +90,9 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TInput &AValues):
   Max(AValues.Max),
   StepSize(AValues.StepSize),
   Decimals(AValues.Decimals)
-{}
+{
+  init();
+}
 
 //==============================================================================
 
@@ -95,6 +105,74 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCurve &AValues):
   Curve(AValues.Curve)
 {
   Default = QVariant(Curve->filterConfig());
+  init();
 }
 
 //==============================================================================
+
+void ptCfgItem::init() {
+  setVariantType();
+}
+
+//==============================================================================
+
+QVariant ptCfgItem::validate(QVariant AValue) {
+  ensureVariantType(AValue);
+
+  switch (this->Type) {
+    case SpinEdit:  // fall through
+    case Slider:    // fall through
+    case HueSlider: {
+      if (this->Decimals > 0)
+        return ptBound(this->Min.toDouble(), AValue.toDouble(), this->Max.toDouble());
+      else
+        return ptBound(this->Min.toInt(), AValue.toInt(), this->Max.toInt());
+    }
+
+    case Combo: {
+      auto hValue = AValue.toInt();
+      for (TComboEntry &hEntry: this->EntryList) {
+        if (hValue == hEntry.value)
+          return hValue;
+      }
+      return this->EntryList[0].value;
+    }
+
+    default:
+      return AValue;
+  }
+}
+
+//==============================================================================
+
+void ptCfgItem::ensureVariantType(QVariant &AValue) {
+  if (AValue.type() != FIntendedType) {
+    if (!AValue.convert(FIntendedType)) {
+      GInfo->Raise(QString("Could not cast QVariant with value \"%1\" from type \"%2\" to "
+                           "type \"%3\".")
+                   .arg(AValue.toString()).arg((int)AValue.type()).arg((int)FIntendedType),
+                   AT);
+    }
+  }
+}
+
+//==============================================================================
+
+void ptCfgItem::setVariantType() {
+  if (this->Type == Button) {
+    FIntendedType = QVariant::Bool;
+
+  } else if (this->Type == CurveWin) {
+    FIntendedType = QVariant::UserType;
+
+  } else if ((this->Type == Check) || (this->Type == Combo) || (this->Decimals == 0)) {
+    FIntendedType = QVariant::Int;
+
+  } else if (this->Decimals > 0) {
+    FIntendedType = QVariant::Double;
+
+  } else {
+    GInfo->Raise(QString("Could not determine data type of \"%1\".").arg(this->Id));
+  }
+}
+
