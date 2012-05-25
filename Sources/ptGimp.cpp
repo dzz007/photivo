@@ -211,7 +211,7 @@ void ptRun(const gchar*     Name,
 #if GIMP_MINOR_VERSION<=6
     gimp_image_add_layer(GimpImage,GimpLayer,0);
 #else
-    gimp_image_insert_layer(GimpImage,GimpLayer,NULL,0);
+    gimp_image_insert_layer(GimpImage,GimpLayer,0,0);
 #endif
     GimpDrawable* Drawable = gimp_drawable_get(GimpLayer);
     GimpPixelRgn PixelRegion;

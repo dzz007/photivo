@@ -6317,7 +6317,7 @@ void CLASS parse_redcine()
   if (get4() != i || get4() != 0x52454f42) {
     fprintf (stderr,_("%s: Tail is missing, parsing from head...\n"), m_UserSetting_InputFileName);
     fseek (m_InputFile, 0, SEEK_SET);
-    while ((len = get4()) != EOF) {
+    while ((int)(len = get4()) != EOF) {
       if (get4() == 0x52454456)
   if (m_IsRaw++ == m_UserSetting_ShotSelect)
     m_Data_Offset = ftell(m_InputFile) - 8;
@@ -8212,7 +8212,7 @@ void CLASS tiff_head (struct tiff_hdr *th)
   strncpy (th->desc, m_Description, 512);
   strncpy (th->make, m_CameraMake, 64);
   strncpy (th->model, m_CameraModel, 64);
-  strcpy (th->soft, "dcraw v"DCRAW_VERSION);
+  strcpy (th->soft, DCRAW_VERSION);
   t = localtime (&m_TimeStamp);
   sprintf (th->date, "%04d:%02d:%02d %02d:%02d:%02d",
       t->tm_year+1900,t->tm_mon+1,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec);
