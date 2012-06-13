@@ -2788,6 +2788,11 @@ void CB_MenuFileExit(const short) {
       return;
     }
   }
+
+  // Save current filter config
+  if (Settings->GetString("StartupSettingsFile").endsWith("Presets/Latest.pts"))
+    GFilterDM->WritePresetFile(Settings->GetString("UserDirectory") + "/Presets/Latest.pts");
+
   // clean up the input file if we got just a temp file
   if (Settings->GetInt("HaveImage")==1 && ImageCleanUp == 1) {
     QString OldInputFileName = Settings->GetStringList("InputFileNameList")[0];
