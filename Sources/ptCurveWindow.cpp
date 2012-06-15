@@ -23,6 +23,7 @@
 *******************************************************************************/
 
 #include <vector>
+
 #include <QPainter>
 #include <QActionGroup>
 #include <QMenu>
@@ -30,12 +31,15 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QLabel>
+
 #include "ptCurveWindow.h"
 #include "ptCurve.h"
 #include "ptTheme.h"
 #include "ptInfo.h"
 #include <filters/ptCfgItem.h>
+
 //==============================================================================
+
 // How many pixels will be considered as 'bingo' for having the anchor ?
 const int CSnapDelta = 6;
 // Percentage to be close to a curve to get a new Anchor
@@ -44,7 +48,9 @@ const double CCurveDelta = 0.12;
 const float CAnchorDelta = 0.005f;
 // Delays in ms before certain actions are triggered
 const int CPipeDelay   = 300;
+
 //==============================================================================
+
 // NOTE: ptCurveWindow would be a good place to use C++11’s ctor delegation.
 // Unfortunately it’s only available in GCC 4.7.
 ptCurveWindow::ptCurveWindow(QWidget *AParent)
@@ -61,13 +67,10 @@ ptCurveWindow::ptCurveWindow(QWidget *AParent)
   FByChromaAction(nullptr),
   FMaskGroup(nullptr)
 {
-#include <QPainter>
-#include <QActionGroup>
-#include <QMenu>
-#include <QTimer>
-#include <QMouseEvent>
-#include <QWheelEvent>
-#include <QLabel>
+  // Timer for the wheel interaction
+  FWheelTimer->setSingleShot(1);
+  FWheelTimer->setInterval(CPipeDelay);
+  connect(FWheelTimer, SIGNAL(timeout()), this, SLOT(wheelTimerExpired()));
 
   QSizePolicy hPolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
   hPolicy.setHeightForWidth(true);
@@ -93,21 +96,14 @@ ptCurveWindow::~ptCurveWindow() {
 }
 
 //==============================================================================
+
 void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
   this->setObjectName(ACfgItem.Id);  // Do not touch! Filter commonDispatch relies on this.
   FCurve = ACfgItem.Curve;
 
   // set up caption in topleft corner
   this->setCaption(ACfgItem.Caption);
-  FMouseAction = NoAction;
-  FMovingAnchor = -1;
-  FLinearIpolAction = nullptr;
-  FSplineIpolAction = nullptr;
-  FCosineIpolAction = nullptr;
-  FIpolGroup = nullptr;
-  FByLumaAction = nullptr;
-  FByChromaAction = nullptr;
-  FMaskGroup = nullptr;
+}
 
 //==============================================================================
 
@@ -123,6 +119,7 @@ void ptCurveWindow::setValue(const QVariant &AValue) {
 }
 
 //==============================================================================
+
 void ptCurveWindow::setCaption(const QString &ACaption) {
   if (ACaption.isEmpty()) {
     DelAndNull(FCaptionLabel);
@@ -135,10 +132,8 @@ void ptCurveWindow::setCaption(const QString &ACaption) {
       FCaptionLabel->setAttribute(Qt::WA_NoSystemBackground, true);
       FCaptionLabel->setAttribute(Qt::WA_OpaquePaintEvent, false);
     }
-    FCaptionLabel->setText("<b style='color:#ffffff'>" + ACfgItem.Caption + "</b>");
-  FCurve->setFromFilterConfig(&hTempMap);
-  updateView();
-  requestPipeRun();
+    FCaptionLabel->setText("<b style='color:#ffffff'>" + ACaption + "</b>");
+  }
 }
 
 //==============================================================================
@@ -305,17 +300,6 @@ void ptCurveWindow::calcCurveImage() {
 
   // paint grid lines producing a 10×10 grid
   for (uint16_t Count = 0, Row = hHeight-1;
-    case ptCurve::LumaMask:     setBWGradient(&FCanvas); break;
-    case ptCurve::ChromaMask:   setColorGradient(&FCanvas); break;
-    case ptCurve::GammaMask:    setBWGammaGradient(&FCanvas); break;
-    case ptCurve::AChannelMask: setColorBlocks(QColor(200,50,100), QColor(50,150,50)); break;
-    case ptCurve::BChannelMask: setColorBlocks(QColor(255,255,75), QColor(50,100,200)); break;
-    case ptCurve::NoMask:       // fall through
-    default:                    break; // nothing to do
-  }
-
-  // paint grid lines producing a 10×10 grid
-  for (uint16_t Count = 0, Row = hHeight-1;
        Count <= 10;
        Count++, Row = hHeight-1-Count*(hHeight-1)/10)
   {
@@ -342,7 +326,6 @@ void ptCurveWindow::calcCurveImage() {
 
   if (!FCurve) return;
 
-
   // Compute curve points. The vector stores the position of the display curve (y value)
   // for each display x value. Note that coordinates origin is topleft.
   std::vector<uint16_t> hLocalCurve(hWidth);
@@ -364,6 +347,8 @@ void ptCurveWindow::calcCurveImage() {
       FCanvas.m_Image[Temp][1] = hCurveColor.green();
       FCanvas.m_Image[Temp][2] = hCurveColor.red();
       Temp += hWidth;
+    }
+  }
 
   // paint anchors if we have an anchored curve
   FDisplayAnchors.clear();
@@ -583,7 +568,6 @@ void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
 
 //==============================================================================
 
-  if (!FCurve) return;
 void ptCurveWindow::wheelTimerExpired() {
   FMouseAction  = NoAction;
   FMovingAnchor = -1;

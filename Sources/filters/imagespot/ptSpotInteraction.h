@@ -35,7 +35,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 
-#include "../ptAbstractInteraction.h"
+#include <ptAbstractInteraction.h>
 
 //==============================================================================
 

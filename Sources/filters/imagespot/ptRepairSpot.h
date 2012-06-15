@@ -40,14 +40,14 @@
 #include <QPoint>
 
 #include "ptImageSpot.h"
-#include "../ptConstants.h"
+#include <ptConstants.h>
 
 //==============================================================================
 
 class ptRepairSpot: public ptImageSpot {
 public:
   /*! Static factory method returning a new default constructed \c ptRepairSpot object. */
-  static ptRepairSpot *CreateSpot() { return new ptRepairSpot(); }
+//  static ptRepairSpot *CreateSpot() { return new ptRepairSpot(); }
 
 //------------------------------------------------------------------------------
 

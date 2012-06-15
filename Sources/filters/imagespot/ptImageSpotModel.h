@@ -38,8 +38,6 @@ public:
     \param ASizeHint
       The size hint used for each item in the model. Width should be \c 0 and height
       large enough to contain the editor widget.
-    \param APtsSectionName
-      Name of the pts inifile section for this spot type. Use the predefined static strings!
     \param AParent
       The models parent widget.
   */
@@ -85,7 +83,7 @@ public:
   void setSpotPos(const int AIndex, const int Ax, const int Ay);
 
   /*! Returns a pointer to the spot at list position \c AIndex. */
-  ptImageSpot *spot(const int AIndex) { return FSpotList->at(AIndex); }
+//  ptImageSpot *spot(const int AIndex) { return FSpotList->at(AIndex); }
 
   /*! Reimplemented from parent class. */
   virtual Qt::DropActions supportedDropActions() const;
@@ -103,7 +101,6 @@ private:
   QString         createToolTip(const ptImageSpot &ASpot);
 
   int                   FLastChangedRole;
-  QString               FPtsName;
   QSize                 FSizeHint;
   ptImageSpotList      *FSpotList;
 

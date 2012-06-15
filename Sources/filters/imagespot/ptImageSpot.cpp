@@ -70,6 +70,10 @@ QVariant ptImageSpot::getValue(const QString &AKey) const {
   else if (AKey == CSpotIsEnabledId)  return FIsEnabled;
   else if (AKey == CSpotNameId)       return FName;
   else if (AKey == CSpotPosId)        return this->pos();
+  else {
+    GInfo->Raise("Invalid key: " + AKey, AT);
+    return QVariant();
+  }
 }
 
 //==============================================================================
@@ -80,6 +84,8 @@ void ptImageSpot::setValue(const QString &AKey, const QVariant AValue) {
   else if (AKey == CSpotIsEnabledId)  FIsEnabled = AValue.toBool();
   else if (AKey == CSpotNameId)       FName = AValue.toString();
   else if (AKey == CSpotPosId)        this->setPos(AValue.toPoint());
+  else
+    GInfo->Raise("Invalid key: " + AKey, AT);
 }
 
 //==============================================================================

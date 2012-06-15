@@ -44,6 +44,8 @@
 
 //==============================================================================
 
+#include <functional>
+
 #include <QLine>
 #include <QMenu>
 #include <QGraphicsView>
@@ -70,7 +72,7 @@ enum ptInteraction {
   iaSelectRect  = 2,  // simple rectangle selection: e.g. for spot WB
   iaDrawLine    = 3,  // draw a single straight line: e.g. for rotate angle
   iaSpotRepair  = 4,
-  iaLocalAdjust = 5
+  iaSpotTuning = 5
 };
 
 enum ptPixelReading {
@@ -109,11 +111,10 @@ public:
   void StartLine();
   void StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect));
   void StartCrop();
-  void StartLocalAdjust();
-  void StartSpotRepair();
+  void StartLocalAdjust(std::function<void()> ACleanupFunc);
 
   ptRichRectInteraction *crop() const { return FCrop; }
-  ptSpotInteraction     *localAdjust() const { return FLocalAdjust; }
+  ptSpotInteraction     *localAdjust() const { return FSpotTuning; }
   ptRepairInteraction   *spotRepair() const { return FSpotRepair; }
 
   void setGrid(const short enabled, const uint linesX, const uint linesY);
@@ -158,7 +159,7 @@ private:
   bool                      FInteractionHasMousePress;
   ptAbstractInteraction     *FCurrentInteraction;  // for easy basic access to current interaction
   ptLineInteraction         *FDrawLine;
-  ptSpotInteraction         *FLocalAdjust;
+  ptSpotInteraction         *FSpotTuning;
   ptSimpleRectInteraction   *FSelectRect;
   ptRichRectInteraction     *FCrop;
   ptGridInteraction         *FGrid;
@@ -166,6 +167,7 @@ private:
   ptInteraction             FInteraction;
   bool                      FLeftMousePressed;
   void (*FCB_SimpleRect)(const ptStatus, QRect);
+  std::function<void()>     FSpotTuningCleanupFunc;
   short                     FZoomIsSaved;
   float                     FZoomFactor;
   float                     FZoomFactorSav;

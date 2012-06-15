@@ -258,10 +258,10 @@ public:
 
   // LMHLightRecovery
   ptImage* LMHLightRecovery(const short   MaskType,
-                            const double  Amount,
-                            const double  LowerLimit,
-                            const double  UpperLimit,
-                            const double  Softness);
+                            const float Amount,
+                            const float LowerLimit,
+                            const float UpperLimit,
+                            const float Softness);
 
   // Highpass
   ptImage* Highpass(const double Radius,

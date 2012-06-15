@@ -218,7 +218,6 @@ HEADERS += \
     ../Sources/ptSettings.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptSlider.h \
-    ../Sources/ptTempFile.h \
     ../Sources/ptTempFilterBase.h \
     ../Sources/ptTheme.h \
     ../Sources/ptToolBox.h \
@@ -229,18 +228,17 @@ HEADERS += \
     ../Sources/ptWiener.h \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
-    ../Sources/qtsingleapplication/qtsingleapplication.h
+    ../Sources/qtsingleapplication/qtsingleapplication.h \
     ../Sources/filters/imagespot/ptFilter_SpotTuning.h \
     ../Sources/filters/imagespot/ptImageSpot.h \
     ../Sources/filters/imagespot/ptImageSpotEditor.h \
     ../Sources/filters/imagespot/ptImageSpotItemDelegate.h \
     ../Sources/filters/imagespot/ptImageSpotModel.h \
     ../Sources/filters/imagespot/ptTuningSpot.h \
-    ../Sources/filters/imagespot/ptRepairInteraction.h \
-    ../Sources/filters/imagespot/ptRepairSpot.h \
+#    ../Sources/filters/imagespot/ptRepairInteraction.h \
+#    ../Sources/filters/imagespot/ptRepairSpot.h \
     ../Sources/filters/imagespot/ptSpotInteraction.h \
     ../Sources/filters/imagespot/ptSpotListWidget.h \
-    ../Sources/filters/imagespot/ptSpotListWidgetHelper.h \
     ../Sources/ptTempFile.h \
     ../Sources/filters/ptStorable.h \
     ../Sources/filters/imagespot/ptImageSpotList.h
@@ -326,7 +324,6 @@ SOURCES += \
     ../Sources/ptSettings.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptSlider.cpp \
-    ../Sources/ptTempFile.cpp \
     ../Sources/ptTempFilterBase.cpp \
     ../Sources/ptTheme.cpp \
     ../Sources/ptToolBox.cpp \
@@ -349,18 +346,17 @@ SOURCES += \
     ../Sources/vcd/es_median_filter.c \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
-    ../Sources/vcd/vcd_interpolate.c
+    ../Sources/vcd/vcd_interpolate.c \
     ../Sources/filters/imagespot/ptFilter_SpotTuning.cpp \
     ../Sources/filters/imagespot/ptImageSpot.cpp \
     ../Sources/filters/imagespot/ptImageSpotEditor.cpp \
     ../Sources/filters/imagespot/ptImageSpotItemDelegate.cpp \
     ../Sources/filters/imagespot/ptImageSpotModel.cpp \
     ../Sources/filters/imagespot/ptTuningSpot.cpp \
-    ../Sources/filters/imagespot/ptRepairInteraction.cpp \
-    ../Sources/filters/imagespot/ptRepairSpot.cpp \
+#    ../Sources/filters/imagespot/ptRepairInteraction.cpp \
+#    ../Sources/filters/imagespot/ptRepairSpot.cpp \
     ../Sources/filters/imagespot/ptSpotInteraction.cpp \
     ../Sources/filters/imagespot/ptSpotListWidget.cpp \
-    ../Sources/filters/imagespot/ptSpotListWidgetHelper.cpp \
     ../Sources/ptTempFile.cpp \
     ../Sources/filters/imagespot/ptImageSpotList.cpp
 

@@ -25,6 +25,8 @@
 
 #include <memory>
 
+#include <QList>
+
 #include "ptImageSpot.h"
 #include <ptCurve.h>
 
@@ -59,7 +61,7 @@ protected:
 
 private:
   std::shared_ptr<ptCurve>  FCurve;
-  ptCfgItem                *FDefaults;
+  const QList<ptCfgItem>   *FDefaults;
 
 };
 

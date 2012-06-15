@@ -1612,17 +1612,8 @@ struct sToolInfo {
 sToolInfo ToolInfo (const QString GuiName) {
   sToolInfo Info = {"N.N.",0,0,0,0};
 
-  // Tab Local Edit
-  if (GuiName == "TabLocalAdjust") {
-    Info.Name = "Local adjust";
-    Info.IsActive = HasActiveLocalSpots();
-  } else if (GuiName == "TabSpotRepair") {
-    Info.Name = "Spot Repair";
-    Info.IsActive = HasActiveRepairSpots();
-  }
-
   // Tab Geometry
-  else if (GuiName == "TabLensfunCA") {
+  if (GuiName == "TabLensfunCA") {
     Info.Name = "Chromatic Aberration (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunCAModel") != 0;
   } else if (GuiName == "TabLensfunVignette") {

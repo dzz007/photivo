@@ -287,53 +287,42 @@ void ptGroupBox::AppendSettings() {
   WriteSettings(1);
 }
 
-void WriteLocalSpots(QSettings *APtsFile);
-void WriteRepairSpots(QSettings *APtsFile);
-
 void ptGroupBox::WriteSettings(const short Append) {
-  // Quick and dirty spot tool detection because spots cannot be saved in the usual way.
-  int hWhichSpotGroup = 0;  // 0=no spot, 1=local spot, 2=repair spot
-  if (this->findChild<QWidget*>("LocalSpotListView"))
-    hWhichSpotGroup = 1;
-  else if (this->findChild<QWidget*>("RepairSpotListView"))
-    hWhichSpotGroup = 2;
-
   QStringList Keys;
-    QList <ptInput *> Inputs = findChildren <ptInput *> ();
-    for (int i = 0; i < Inputs.size(); i++) {
-      Keys << (Inputs.at(i))->GetName();
-    }
-    QList <ptChoice *> Combos = findChildren <ptChoice *> ();
-    for (int i = 0; i < Combos.size(); i++) {
-      Keys << (Combos.at(i))->GetName();
-    }
-    QList <ptCheck *> Checks = findChildren <ptCheck *> ();
-    for (int i = 0; i < Checks.size(); i++) {
-      Keys << (Checks.at(i))->GetName();
-    }
-
-    // Additional for Camera color profile
-    if (m_Name == "TabCameraColorSpace")
-      Keys << "CameraColorProfile";
-
-    if(m_Name == "TabRGBTone")
-      Keys << "Tone1ColorRed" << "Tone1ColorGreen" << "Tone1ColorBlue"
-           << "Tone2ColorRed" << "Tone2ColorGreen" << "Tone2ColorBlue";
-    if (m_Name == "TabGradualOverlay1")
-      Keys << "GradualOverlay1ColorRed" << "GradualOverlay1ColorGreen" << "GradualOverlay1ColorBlue";
-    if (m_Name == "TabGradualOverlay2")
-      Keys << "GradualOverlay2ColorRed" << "GradualOverlay2ColorGreen" << "GradualOverlay2ColorBlue";
-
-    // Additional for Crop
-    if (m_Name == "TabCrop" && Settings->GetInt("Crop")==1)
-      Keys << "CropX" << "CropY" << "CropW" << "CropH";
-
-    // Additional for texture overlay
-    if (m_Name == "TabTextureOverlay")
-      Keys << "TextureOverlayFile";
-    if (m_Name == "TabTextureOverlay2")
-      Keys << "TextureOverlay2File";
+  QList <ptInput *> Inputs = findChildren <ptInput *> ();
+  for (int i = 0; i < Inputs.size(); i++) {
+    Keys << (Inputs.at(i))->GetName();
   }
+  QList <ptChoice *> Combos = findChildren <ptChoice *> ();
+  for (int i = 0; i < Combos.size(); i++) {
+    Keys << (Combos.at(i))->GetName();
+  }
+  QList <ptCheck *> Checks = findChildren <ptCheck *> ();
+  for (int i = 0; i < Checks.size(); i++) {
+    Keys << (Checks.at(i))->GetName();
+  }
+
+  // Additional for Camera color profile
+  if (m_Name == "TabCameraColorSpace")
+    Keys << "CameraColorProfile";
+
+  if(m_Name == "TabRGBTone")
+    Keys << "Tone1ColorRed" << "Tone1ColorGreen" << "Tone1ColorBlue"
+         << "Tone2ColorRed" << "Tone2ColorGreen" << "Tone2ColorBlue";
+  if (m_Name == "TabGradualOverlay1")
+    Keys << "GradualOverlay1ColorRed" << "GradualOverlay1ColorGreen" << "GradualOverlay1ColorBlue";
+  if (m_Name == "TabGradualOverlay2")
+    Keys << "GradualOverlay2ColorRed" << "GradualOverlay2ColorGreen" << "GradualOverlay2ColorBlue";
+
+  // Additional for Crop
+  if (m_Name == "TabCrop" && Settings->GetInt("Crop")==1)
+    Keys << "CropX" << "CropY" << "CropW" << "CropH";
+
+  // Additional for texture overlay
+  if (m_Name == "TabTextureOverlay")
+    Keys << "TextureOverlayFile";
+  if (m_Name == "TabTextureOverlay2")
+    Keys << "TextureOverlay2File";
 
   QString SuggestedFileName = Settings->GetString("PresetDirectory") + "/preset.pts";
   QString FileName;
@@ -354,22 +343,16 @@ void ptGroupBox::WriteSettings(const short Append) {
         JobSettings.value("Magic") == "photivoSettingsFile" ||
         JobSettings.value("Magic") == "dlRawJobFile" ||
         JobSettings.value("Magic") == "dlRawSettingsFile" ||
-        JobSettings.value("Magic") == "photivoPresetFile"))
-  {
-    JobSettings.clear();
-  }
+        JobSettings.value("Magic") == "photivoPresetFile")) JobSettings.clear();
 
   if (JobSettings.value("Magic") == "photivoJobFile" ||
       JobSettings.value("Magic") == "dlRawJobFile")
-  {
     JobSettings.setValue("Magic","photivoJobFile");
-  } else if (JobSettings.value("Magic") == "photivoSettingsFile" ||
-             JobSettings.value("Magic") == "dlRawSettingsFile")
-  {
+  else if (JobSettings.value("Magic") == "photivoSettingsFile" ||
+      JobSettings.value("Magic") == "dlRawSettingsFile")
     JobSettings.setValue("Magic","photivoSettingsFile");
-  } else {
+  else
     JobSettings.setValue("Magic","photivoPresetFile");
-  }
 
 
   // e.g. a full settings file which should be altered should not get NextPhase
@@ -381,25 +364,15 @@ void ptGroupBox::WriteSettings(const short Append) {
     JobSettings.setValue("NextPhase",GetProcessorPhase(m_Name));
   }
 
-
-  if (hWhichSpotGroup == 1 /*local spots*/) {
-    WriteLocalSpots(&JobSettings);
-
-  } else if (hWhichSpotGroup == 2 /*repair spots*/) {
-    WriteRepairSpots(&JobSettings);
-
-  } else {
-    for (int i=0; i<Keys.size(); i++) {
-      QString Key = Keys[i];
-      if (!Settings->GetInJobFile(Key)) continue;
-      if (Keys.at(i) == "ChannelMixer") {// set ChannelMixer to manual if needed
-        JobSettings.setValue("ChannelMixer",MIN((Settings->GetValue(Key)).toInt(),1));
-        continue;
-      }
-      JobSettings.setValue(Key,Settings->GetValue(Key));
+  for (int i=0; i<Keys.size(); i++) {
+    QString Key = Keys[i];
+    if (!Settings->GetInJobFile(Key)) continue;
+    if (Keys.at(i) == "ChannelMixer") {// set ChannelMixer to manual if needed
+      JobSettings.setValue("ChannelMixer",MIN((Settings->GetValue(Key)).toInt(),1));
+      continue;
     }
-
-
+    JobSettings.setValue(Key,Settings->GetValue(Key));
+  }
 
   JobSettings.sync();
   if (JobSettings.status() != QSettings::NoError)
@@ -494,8 +467,7 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
   if (Position.x() > 0 && Position.x() < 14 &&
       Position.y() > 0 && Position.y() < 14 &&
       event->button()==Qt::LeftButton &&
-      m_HelpIcon->isVisible())
-  {
+      m_HelpIcon->isVisible()) {
     QDesktopServices::openUrl(m_HelpUri);
   } else if (event->y()<20 && event->x()<250) {
     if (event->button()==Qt::LeftButton) {

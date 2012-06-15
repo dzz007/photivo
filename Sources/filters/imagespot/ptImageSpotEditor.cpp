@@ -23,11 +23,10 @@
 #include <QHBoxLayout>
 
 #include "ptImageSpotEditor.h"
-#include "../ptMainWindow.h"
-#include "../ptTheme.h"
+#include <ptMainWindow.h>
+#include <ptTheme.h>
 
 extern ptMainWindow* MainWindow;
-extern ptTheme* Theme;
 
 //==============================================================================
 

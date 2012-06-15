@@ -27,8 +27,6 @@
 
 // std stuff needs to be declared apparently for jpeglib
 // which seems a bug in the jpeglib header ?
-#include <algorithm>
-#include <parallel/algorithm>
 #include <cstdlib>
 #include <cstdio>
 
@@ -1910,20 +1908,18 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve, const short Scaling) {
-  const double Threshold = 10.0/pow(2,Scaling);
-  const double Softness = 0.01;
-  const double Opacity = 1.0;
-  const double EdgeControl = 1.0;
-
   assert (m_ColorSpace == ptSpace_Lab);
-  // neutral value for a* and b* channel
-  const float WPH = 0x8080;
-
-  float ValueA = 0.0;
-  float ValueB = 0.0;
-  float m = 0.0;
 
   const short ChannelMask = 1;
+
+  const float Threshold   = 10.0/pow(2,Scaling);
+  const float Softness    = 0.01;
+  const float Opacity     = 1.0;
+  const float EdgeControl = 1.0;
+
+  float hValueA = 0.0;
+  float hValueB = 0.0;
+  float m       = 0.0;
 
   ptImage *ContrastLayer = new ptImage;
   ContrastLayer->Set(this);
@@ -1934,45 +1930,33 @@ ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve, const short Scaling) {
 #pragma omp parallel for schedule(static) private(ValueA, ValueB, m)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by hue
-      ValueA = (float)m_Image[i][1]-WPH;
-      ValueB = (float)m_Image[i][2]-WPH;
-      float Hue = 0;
-      if (ValueA == 0.0 && ValueB == 0.0) {
-        Hue = 0;   // value for grey pixel
-      } else {
-        Hue = atan2f(ValueB,ValueA);
-      }
-      while (Hue < 0) Hue += 2.*ptPI;
+      hValueA    = ToFloatABNeutral[m_Image[i][1]];
+      hValueB    = ToFloatABNeutral[m_Image[i][2]];
 
-      float Col = powf(ValueA * ValueA + ValueB * ValueB, 0.125);
-      Col /= 0x7; // normalizing to 0..2
+      float hHue = ToHue(hValueA, hValueB);
+      float hCol = powf(ptSqr(hValueA) + ptSqr(hValueB), 0.125f);
+      hCol /= 0x7; // normalizing to 0..2
 
-      float Factor = Curve->Curve[CLIP((int32_t)(Hue/ptPI*WPH))]/(float)0x3fff - 1.0;
-      m = 20.0 * Factor * Col;
-      float Scaling = 1.0/(1.0+exp(-0.5*m))-1.0/(1.0+exp(0.5*m));
-      float Offset = -1.0/(1.0+exp(0.5*m));
+      float Factor = Curve->Curve[CLIP((int32_t)(hHue/ptPI*ptWPHf))]/(float)0x3fff - 1.0f;
+      m = 20.0f * Factor * hCol;
 
-      ContrastLayer->m_Image[i][0] = CLIP((int32_t) ((WPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
-      if (Factor < 0) ContrastLayer->m_Image[i][0] = 0xffff-ContrastLayer->m_Image[i][0];
-      if (fabsf(Factor*Col)<0.1) continue;
-      ContrastLayer->m_Image[i][0] = CLIP((int32_t)((((1.0/(1.0+
-        exp(m*(0.5-(float)ContrastLayer->m_Image[i][0]/(float)0xffff))))+Offset)/Scaling)*0xffff));
+      ContrastLayer->m_Image[i][0] = CLIP((int32_t) ((ptWPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
+      if (Factor < 0) ContrastLayer->m_Image[i][0] = ToInvertTable[ContrastLayer->m_Image[i][0]];
+      if (fabsf(Factor*hCol)<0.1f) continue;
+      ContrastLayer->m_Image[i][0] = Sigmoidal_4_Value(ContrastLayer->m_Image[i][0], m);
     }
 
   } else { // by luma
-#pragma omp parallel for schedule(static) private(ValueA, ValueB, m)
+#pragma omp parallel for schedule(static) private(m)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by luminance
       float Factor = Curve->Curve[m_Image[i][0]]/(float)0x3fff - 1.0;
-      m = 20.0 * Factor;
-      float Scaling = 1.0/(1.0+exp(-0.5*m))-1.0/(1.0+exp(0.5*m));
-      float Offset = -1.0/(1.0+exp(0.5*m));
+      m = 20.0f * Factor;
 
-      ContrastLayer->m_Image[i][0] = CLIP((int32_t) ((WPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
-      if (Factor < 0) ContrastLayer->m_Image[i][0] = 0xffff-ContrastLayer->m_Image[i][0];
-      if (fabsf(Factor)<0.1) continue;
-      ContrastLayer->m_Image[i][0] = CLIP((int32_t)((((1.0/(1.0+
-        exp(m*(0.5-(float)ContrastLayer->m_Image[i][0]/(float)0xffff))))+Offset)/Scaling)*0xffff));
+      ContrastLayer->m_Image[i][0] = CLIP((int32_t) ((ptWPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
+      if (Factor < 0) ContrastLayer->m_Image[i][0] = ToInvertTable[ContrastLayer->m_Image[i][0]];
+      if (fabsf(Factor)<0.1f) continue;
+      ContrastLayer->m_Image[i][0] = Sigmoidal_4_Value(ContrastLayer->m_Image[i][0], m);
     }
   }
 
@@ -1985,7 +1969,6 @@ ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve, const short Scaling) {
 
   return this;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -2086,7 +2069,7 @@ _Pragma("omp parallel for default(shared) private(Source, Blend, Multiply, Scree
       }
 
 ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
-                          const double  Amount,
+                          const float  Amount,
                           const float  *Mask,
                           const short   Mode /* SoftLight */,
                           const short   Swap /* = 0 */) {
@@ -2161,7 +2144,7 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
-            m_Image[i][Ch] = CLIP((int32_t) (MAX(Blend*Amount, Source)));
+            m_Image[i][Ch] = CLIP((int32_t) (ptMax((uint16_t)(Blend*Amount), Source)));
           }
         }
       } else {
@@ -2173,7 +2156,7 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
             if (Mask[i] == 0.0f) continue;
             Source   = SourceImage[i][Ch];
             Blend    = BlendImage[i][Ch];
-            m_Image[i][Ch] = CLIP((int32_t) (MAX(Blend*Mask[i] + Source*(1.0f-Mask[i])*Amount,Source)));
+            m_Image[i][Ch] = CLIP((int32_t) (ptMax((uint16_t)(Blend*Mask[i] + Source*(1.0f-Mask[i])*Amount),Source)));
           }
         }
       }
@@ -2188,7 +2171,7 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
         for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
           Source   = SourceImage[i][Ch];
           Blend    = BlendImage[i][Ch];
-          m_Image[i][Ch] = CLIP((int32_t) (MIN(Blend*Amount, Source)));
+          m_Image[i][Ch] = CLIP((int32_t) (ptMin((uint16_t)(Blend*Amount), Source)));
         }
       }
     } else {
@@ -2200,7 +2183,7 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
           if (Mask[i] == 0.0f) continue;
           Source   = SourceImage[i][Ch];
           Blend    = BlendImage[i][Ch];
-          m_Image[i][Ch] = CLIP((int32_t) (MIN(Blend*Mask[i]+Source*(1.0f-Mask[i])*Amount,Source)));
+          m_Image[i][Ch] = CLIP((int32_t) (ptMin((uint16_t)(Blend*Mask[i]+Source*(1.0f-Mask[i])*Amount),Source)));
         }
       }
     }
@@ -2739,12 +2722,12 @@ ptImage* ptImage::ColorBoost(const double ValueA,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::LumaAdjust(const double LC1, // 8 colors for L
-                            const double LC2,
-                            const double LC3,
-                            const double LC4,
-                            const double LC5,
-                            const double LC6,
-                            const double LC7,
+                          const double LC2,
+                          const double LC3,
+                          const double LC4,
+                          const double LC5,
+                          const double LC6,
+                          const double LC7,
                             const double LC8)
 {
   assert (m_ColorSpace == ptSpace_Lab);
@@ -2960,11 +2943,11 @@ ptImage* ptImage::ColorEnhance(const double Shadows,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::LMHLightRecovery(const short   MaskType,
-                                   const double  Amount,
-                                   const double  LowerLimit,
-                                   const double  UpperLimit,
-                                   const double  Softness) {
-
+                                   const float  Amount,
+                                   const float  LowerLimit,
+                                   const float  UpperLimit,
+                                   const float  Softness)
+{
   const float ExposureFactor = pow(2,Amount);
   const float InverseExposureFactor = 1/ExposureFactor;
 
@@ -2987,9 +2970,9 @@ ptImage* ptImage::LMHLightRecovery(const short   MaskType,
   double SoftTable[0x100]; // Assuming a 256 table is fine grained enough.
   for (int16_t i=0; i<0x100; i++) {
     if (Soft>1.0) {
-      SoftTable[i] = LIM(pow(i/(float)0xff,Soft),0.0f,1.0f);
+      SoftTable[i] = ptBound((float)(pow(i/(float)0xff,Soft)), 0.0f, 1.0f);
     } else {
-      SoftTable[i] = LIM(i/(float)0xff/Soft,0.0f,1.0f);
+      SoftTable[i] = ptBound((float)(i/(float)0xff/Soft),0.0f,1.0f);
     }
   }
 
@@ -4909,9 +4892,9 @@ float *ptImage::GetMask(const short MaskType,
          break;
     }
     if (Soft>1.0) {
-      MaskTable[i] = LIM(powf(MaskTable[i]/(float)0xffff,Soft),0.0f,1.0f);
+      MaskTable[i] = ptBound((float)(pow(MaskTable[i]/0xffff,Soft)), 0.0f, 1.0f);
     } else {
-      MaskTable[i] = LIM(MaskTable[i]/(float)0xffff/(float)Soft,0.0f,1.0f);
+      MaskTable[i] = ptBound((float)(MaskTable[i]/0xffff/Soft), 0.0f, 1.0f);
     }
     FactorRTable[i] = i*FactorR;
     FactorGTable[i] = i*FactorG;
@@ -5079,7 +5062,7 @@ ptImage *ptImage::MaskedColorAdjust(const int       Ax,
   assert (m_ColorSpace == ptSpace_LCH);
 
   float *hMask = FillMask(Ax, Ay, AThreshold*2.0f, AChromaWeight, AMaxRadius, AHasMaxRadius);
-  const bool     hSatAdjust   = ASaturation() != 0.0f;
+  const bool     hSatAdjust   = ASaturation != 0.0f;
   const bool     hHueAdjust   = AHueShift != 0.0f;
   const float    hHueShift    = AHueShift * pt2PI;
 
@@ -5345,6 +5328,7 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       MyContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,30);
       ApplyCurve(MyContrastCurve,1);
 
+      //~ ptCimgEdgeDetection(this,1);
 #pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][1]=0x8080;
@@ -6031,49 +6015,6 @@ static void hat_transform (float *temp, float *base, int st, int size, int sc) {
   for (; i < size; i++)
     temp[i] = 2 * base[st * i] + base[st * (i - sc)]
         + base[st * (2 * size - 2 - (i + sc))];
-}
-
-TAnchorList ptImage::createAmpAnchors(const double Amount,
-                                               const double HaloControl)
-{
-// TODO: mike: Anpassen der Verstärkungskurve an den Sigmoidalen Kontrast.
-// Der Berech mit Halocontrol soll linear sein, der andere sigmoidal.
-// Wichtig ist, dass bei kleinen Werten der Halocontrol im schwächeren Bereich
-// keine Verstärkung auftritt, da evtl die Ableitung der sigmoidalen Kurve
-// schwächer ist, als bei der linearen Kurve.
-// Anpassen bei allen Filtern, die dieses Verfahren benutzen.
-
-  const double  t     = (1.0 - Amount)/2;
-  const double  mHC   = Amount*(1.0-fabs(HaloControl)); // m with HaloControl
-  const double  tHC   = (1.0 - mHC)/2; // t with HaloControl
-  const int     Steps = 20;
-
-  TAnchorList hAnchors;
-  for (int i = 0; i<= Steps; i++) {
-    auto x = (float)i/(float)Steps;
-    float YAnchor = 0;
-    if (x < 0.5) {
-      if (HaloControl > 0) YAnchor=mHC*x+tHC;
-      else                 YAnchor=Amount*x+t;
-    } else if (x > 0.5) {
-      if (HaloControl < 0) YAnchor=mHC*x+tHC;
-      else                 YAnchor=Amount*x+t;
-    } else {
-      YAnchor=0.5;
-    }
-    hAnchors.push_back(TAnchor(x, YAnchor));
-  }
-  return hAnchors;
-}
-
-void ptImage::setCurrentRGB(const short ARGB)
-{
-  CurrentRGBMode = ARGB;
-}
-
-short ptImage::getCurrentRGB()
-{
-  return CurrentRGBMode;
 }
 
 TAnchorList ptImage::createAmpAnchors(const double Amount,

@@ -39,7 +39,7 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsDropShadowEffect>
 
-#include "../ptAbstractInteraction.h"
+#include <ptAbstractInteraction.h>
 #include "ptRepairSpot.h"
 #include "ptImageSpotModel.h"
 

@@ -20,11 +20,30 @@
 **
 *******************************************************************************/
 
+#include <functional>
+
 #include "ptFilter_SpotTuning.h"
 #include "ptTuningSpot.h"
-#include "ptCfgItem.h"
+#include <filters/ptCfgItem.h>
 #include <ptImage.h>
 #include <ptCurve.h>
+#include <ptProcessor.h>
+#include <ptSettings.h>
+#include <ptMessageBox.h>
+#include <ptViewWindow.h>
+
+extern ptProcessor  *TheProcessor;
+extern ptViewWindow *ViewWindow;
+
+void ReportProgress(const QString Message);
+void BlockTools(const ptBlockToolsMode NewState);
+void Update(short Phase,
+            short SubPhase       = -1,
+            short WithIdentify   = 1,
+            short ProcessorMode  = ptProcessorMode_Preview);
+void UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
+                        const short    OnlyHistogram = 0);
+
 
 //==============================================================================
 
@@ -37,7 +56,8 @@ const QString CSpotLumaCurveWinId = "CurveWin";
 
 ptFilter_SpotTuning::ptFilter_SpotTuning()
 : ptFilterBase(),
-  FSpots(ptImageSpotList(&this->createSpot))
+  FInteractionOngoing(false),
+  FSpotList(ptImageSpotList(std::bind(&ptFilter_SpotTuning::createSpot, this)))
 {
   internalInit();
 }
@@ -67,7 +87,8 @@ void ptFilter_SpotTuning::doDefineControls() {
     << ptCfgItem({CSpotColorShiftId,     ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.001,      3,        false, false, tr("Color shift"), tr("")})
   ;
 
-  FConfig->insertComplexStore(CSpotListId, &FSpots);
+  FNullSpot = make_unique<ptTuningSpot>(&FCfgItems);
+  FConfig->insertComplexStore(CSpotListId, &FSpotList);
 }
 
 //==============================================================================
@@ -78,9 +99,11 @@ QWidget *ptFilter_SpotTuning::doCreateGui() {
 
   FGui->setupUi(hGuiBody);
   this->initDesignerGui(hGuiBody);
-
-  FGui->SpotList->init(&FSpots);
   FGui->CurveWin->setCaption(tr("Luminance curve"));
+
+  FGui->SpotList->init(&FSpotList);
+  connect(FGui->SpotList, SIGNAL(rowChanged(int)), this, SLOT(updateSpotDetailsGui(int)));
+  connect(FGui->SpotList, SIGNAL(dataChanged()), this, SLOT(updatePreview()));
 
   return hGuiBody;
 }
@@ -88,16 +111,16 @@ QWidget *ptFilter_SpotTuning::doCreateGui() {
 //==============================================================================
 
 bool ptFilter_SpotTuning::doCheckHasActiveCfg() {
-  return FSpots.hasEnabledSpots();
+  return FSpotList.hasEnabledSpots();
 }
 
 //==============================================================================
 
 void ptFilter_SpotTuning::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  for (auto hSpot: *FSpots) {
-    if (hSpot->isEnabled()) {
-      ptTuningSpot *hTSpot = static_cast<ptTuningSpot*>(hSpot);
+  for (int i = 0; i < FSpotList.count(); ++i) {
+    ptTuningSpot *hTSpot = static_cast<ptTuningSpot*>(FSpotList.at(i));
+    if (hTSpot->isEnabled()) {
       AImage->MaskedColorAdjust(hTSpot->x(),
                                 hTSpot->y(),
                                 hTSpot->getValue(CSpotThresholdId).toFloat(),
@@ -116,6 +139,74 @@ void ptFilter_SpotTuning::doRunFilter(ptImage *AImage) const {
 
 ptImageSpot *ptFilter_SpotTuning::createSpot() {
   return new ptTuningSpot(&FCfgItems);
+}
+
+//==============================================================================
+
+void ptFilter_SpotTuning::startInteraction() {
+  if (!ViewWindow)
+    return;
+
+  if (Settings->GetInt("HaveImage") == 0) {
+    ptMessageBox::information(nullptr,
+      QObject::tr("No image opened"),
+      QObject::tr("Open an image before editing spots."));
+    return;
+  }
+
+  FGui->SpotList->setEditMode(true);
+  ViewWindow->ShowStatus(QObject::tr("Prepare"));
+  ReportProgress(QObject::tr("Prepare for local adjust"));
+  TheProcessor->RunLocalEdit(ptProcessorStopBefore::LocalAdjust);
+  this->updatePreview();
+
+  // Allow to be selected in the view window. And deactivate main.
+  ViewWindow->ShowStatus(QObject::tr("Local adjust"));
+  ReportProgress(QObject::tr("Local adjust"));
+  BlockTools(btmBlockForLocalAdjust);
+
+  ViewWindow->StartLocalAdjust(std::bind(&ptFilter_SpotTuning::cleanupAfterInteraction, this));
+  QObject::connect(ViewWindow->localAdjust(), SIGNAL(clicked(QPoint)),
+                   FGui->SpotList, SLOT(processCoordinates(QPoint)));
+  ViewWindow->setFocus();
+}
+
+//==============================================================================
+
+void ptFilter_SpotTuning::cleanupAfterInteraction() {
+  BlockTools(btmUnblock);
+  FGui->SpotList->setEditMode(false);
+  Update(ptProcessorPhase_LocalEdit);
+}
+
+//==============================================================================
+
+void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx) {
+  ptTuningSpot *hSpot =
+    isBetween(ASpotIdx, 0, FSpotList.count()) ? (ptTuningSpot*)FSpotList.at(ASpotIdx) : FNullSpot.get();
+
+  for (ptCfgItem hCfgItem: FCfgItems) {
+    ptWidget *hWidget = findPtWidget(hCfgItem.Id, FGuiContainer);
+    hWidget->setValue(hSpot->getValue(hCfgItem.Id));
+  }
+}
+
+//==============================================================================
+
+void ptFilter_SpotTuning::updatePreview() {
+  if (FInteractionOngoing) {
+    // We’re in interactive mode: only recalc spots
+    std::unique_ptr<ptImage> hImage(new ptImage);
+    hImage->Set(TheProcessor->m_Image_AfterLocalEdit);
+    hImage->RGBToLch();
+    this->runFilter(hImage.get());
+    hImage->LchToRGB(Settings->GetInt("WorkColor"));
+    UpdatePreviewImage(hImage.get());
+
+  } else {
+    // not in interactive mode: run pipe
+    Update(ptProcessorPhase_LocalEdit);
+  }
 }
 
 //==============================================================================

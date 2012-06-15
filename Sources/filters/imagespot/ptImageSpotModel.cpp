@@ -22,6 +22,7 @@
 
 #include "ptImageSpotModel.h"
 #include "ptImageSpotList.h"
+#include <ptSettings.h>
 
 //==============================================================================
 
@@ -30,7 +31,6 @@ ptImageSpotModel::ptImageSpotModel(const QSize ASizeHint,
                                    QObject *AParent /*= nullptr*/)
 : QStandardItemModel(AParent),
   FLastChangedRole(Qt::DisplayRole),
-  FPtsName(APtsSectionName),
   FSizeHint(ASizeHint),
   FSpotList(ASpotList)
 {
@@ -96,10 +96,10 @@ bool ptImageSpotModel::setData(const QModelIndex &index,
   // update underlying spot data structure
   auto hSpot = FSpotList->at(index.row());
   if (role == Qt::DisplayRole) {            // spot name
-    hSpot.setName(value.toString());
+    hSpot->setName(value.toString());
 
   } else if (role == Qt::CheckStateRole) { // en/disabled switch
-    hSpot.setEnabled(value.toBool());
+    hSpot->setEnabled(value.toBool());
   }
 
   // update model data
@@ -117,8 +117,8 @@ void ptImageSpotModel::setSpot(const int AIndex, ptImageSpot *ASpotData) {
 //==============================================================================
 
 void ptImageSpotModel::setSpotPos(const int AIndex, const int Ax, const int Ay) {
-  FSpotList->at(AIndex)->setPos((uint)Ax, (uint)Ay);
-  this->setData(this->index(AIndex,0), createToolTip(FSpotList->at(AIndex)), Qt::ToolTipRole);
+  FSpotList->at(AIndex)->setPos(QPoint(Ax, Ay));
+  this->setData(this->index(AIndex,0), createToolTip(*FSpotList->at(AIndex)), Qt::ToolTipRole);
 }
 
 //==============================================================================
@@ -141,7 +141,7 @@ void ptImageSpotModel::rebuildModel() {
   this->clear();  // clears the model, NOT the list of spot data
 
   for (int i = 0; i < FSpotList->size(); ++i) {
-    this->appendRow(createSpotItem(FSpotList->at(i)));
+    this->appendRow(createSpotItem(*FSpotList->at(i)));
   }
 }
 
@@ -164,7 +164,7 @@ QStandardItem *ptImageSpotModel::createSpotItem(const ptImageSpot &ASpot) {
 
 QString ptImageSpotModel::createToolTip(const ptImageSpot &ASpot) {
   return
-    QString(tr("%1\nx=%2, y=%3 (1:1 pipe size)",))
+    QString(tr("%1\nx=%2, y=%3 (1:1 pipe size)"))
       .arg(ASpot.name())
       .arg(ASpot.x() << Settings->GetInt("Scaled"))
       .arg(ASpot.y() << Settings->GetInt("Scaled"));

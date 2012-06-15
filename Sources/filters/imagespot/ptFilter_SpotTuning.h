@@ -26,8 +26,9 @@
 //==============================================================================
 
 #include "ui_ptFilter_SpotTuning.h"
-#include "ptFilterBase.h"
+#include <filters/ptFilterBase.h>
 #include "ptImageSpotList.h"
+#include "ptTuningSpot.h"
 
 //==============================================================================
 
@@ -39,26 +40,33 @@ public:
 
 
 protected:
-  /*! Reimplemented from base class. */
+  /*! \group Reimplemented from base class */
+  ///@{
   void      doDefineControls();
-
-  /*! Reimplemented from base class. */
   QWidget  *doCreateGui();
-
-  /*! Reimplemented from base class. */
   bool      doCheckHasActiveCfg();
-
-  /*! Reimplemented from base class. Processing */
   void      doRunFilter(ptImage *AImage) const;
+  ///@}
 
 
 private:
   ptFilter_SpotTuning();
 
-  ptImageSpot *createSpot();
+  ptImageSpot  *createSpot();
+  void          startInteraction();
+  void          cleanupAfterInteraction();
 
-  std::unique_ptr<Ui::Form> FGui;
-  ptImageSpotList           FSpots;
+  std::unique_ptr<ptTuningSpot> FNullSpot;
+  std::unique_ptr<Ui::Form>     FGui;
+  bool                          FInteractionOngoing;
+  ptImageSpotList               FSpotList;
+
+private slots:
+  void updateSpotDetailsGui(int ASpotIdx);
+  /*! Updates the preview image in the ViewWindow and takes into account if the ViewWindow
+      interaction is running or not.
+   */
+  void updatePreview();
 
 };
 

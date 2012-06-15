@@ -20,13 +20,11 @@
 **
 *******************************************************************************/
 
-#include "../ptConstants.h"
-#include "../ptTheme.h"
+#include <ptConstants.h>
+#include <ptTheme.h>
 #include "ptSpotListWidget.h"
 #include "ptImageSpotItemDelegate.h"
 #include "ptImageSpotEditor.h"
-
-extern ptTheme* Theme;
 
 //==============================================================================
 

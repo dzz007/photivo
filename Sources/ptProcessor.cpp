@@ -92,9 +92,6 @@ double ExposureFunction(double r, double Exposure, double) {
 
 //==============================================================================
 
-static ptImageSpotModel *LocalSpotModel = nullptr;
-static ptImageSpotModel *RepairSpotModel = nullptr;
-
 ptProcessor::ptProcessor(PReportProgressFunc AReportProgress)
 {
   // We work with a callback to avoid dependency on ptMainWindow
@@ -612,10 +609,6 @@ void ptProcessor::Run(short Phase,
           m_ReportProgress(tr("Normalization"));
 
           m_Image_AfterRGB->ptGMNormalize(Settings->GetDouble("NormalizationOpacity"));
-  //        ptIMContrastStretch(m_Image_AfterRGB,
-  //                           Settings->GetDouble("NormalizationBlackPoint"),
-  //                           Settings->GetDouble("NormalizationWhitePoint"),
-  //                           Settings->GetDouble("NormalizationOpacity"));
 
         }
 
@@ -1672,6 +1665,8 @@ void ptProcessor::Run(short Phase,
           m_ReportProgress(tr("Applying L curve"));
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
           TRACEMAIN("Done L Curve at %d ms.",FRunTimer.elapsed());
+        }
+
         //***************************************************************************
         // a b Curves
 
@@ -1679,7 +1674,7 @@ void ptProcessor::Run(short Phase,
         if (hFilter->isActive()) {
           m_ReportProgress(tr("Applying a* b* curves"));
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
-          TRACEMAIN("Done a* b* curves at %d ms.",m_RunTimer.elapsed());
+          TRACEMAIN("Done a* b* curves at %d ms.",FRunTimer.elapsed());
         }
 
         
@@ -2400,10 +2395,7 @@ return;
       m_ReportProgress(tr("Local spot adjustments"));
     }
 
-    assert(LocalSpotModel != nullptr);
 //    m_Image_AfterLocalEdit->RGBToLch();
-
-    LocalSpotModel->RunFiltering(m_Image_AfterLocalEdit);
 
     if (StopBefore == ptProcessorStopBefore::NoStop) {
       TRACEMAIN("Done local spot adjustments at %d ms.",FRunTimer.elapsed());
@@ -2792,14 +2784,6 @@ void ptProcessor::RunGeometry(ptProcessorStopBefore StopBefore) {
     }
   }
 
-}
-
-//==============================================================================
-
-void ptProcessor::setSpotModels(ptImageSpotModel *ALocalSpotModel, ptImageSpotModel *ARepairSpotModel)
-{
-  LocalSpotModel = ALocalSpotModel;
-  RepairSpotModel = ARepairSpotModel;
 }
 
 //==============================================================================

@@ -21,16 +21,18 @@
 *******************************************************************************/
 
 #include "ptImageSpotList.h"
+#include <ptDefines.h>
 
-ptImageSpotList::ptImageSpotList(ptImageSpot::PCreateSpotFunc ASpotCreator)
+ptImageSpotList::ptImageSpotList(PCreateSpotFunc ASpotCreator)
 : ptStorable(),
   FSpotCreator(ASpotCreator)
 {}
 
 //==============================================================================
 
-ptImageSpotList::~ptImageSpotList()
-{}
+ptImageSpotList::~ptImageSpotList() {
+  this->clear();
+}
 
 //==============================================================================
 
@@ -51,9 +53,18 @@ void ptImageSpotList::loadConfig(const TConfigStore &AConfig, const QString &APr
   FSpots.clear();
   int hSpotCount = AConfig.value(APrefix+"Spot/size").toInt();
   for (int i = 0; i < hSpotCount; ++i) {
-    FSpots.append(std::unique_ptr<ptImageSpot>(FSpotCreator()));
+    FSpots.append(FSpotCreator());
     FSpots.last()->loadConfig(AConfig, QString(APrefix+"Spot/%1/").arg(i));
   }
+}
+
+//==============================================================================
+
+void ptImageSpotList::clear() {
+  for (auto &hSpot: FSpots) {
+    DelAndNull(hSpot);
+  }
+  FSpots.clear();
 }
 
 //==============================================================================

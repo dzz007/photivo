@@ -56,7 +56,6 @@
 #include "ptWiener.h"
 #include "ptParseCli.h"
 #include "ptImageHelper.h"
-#include "filters/imagespot/ptRepairSpot.h"
 #include "filters/imagespot/ptTuningSpot.h"
 #include "qtsingleapplication/qtsingleapplication.h"
 #include "filemgmt/ptFileMgrWindow.h"
@@ -295,6 +294,8 @@ bool GBusy = false;
 
 void CreateAllFilters() {
   //                   Filter ID                unique name                         caption postfix
+  // Local Edit tab
+  GFilterDM->NewFilter("SpotTuning",            Fuid::SpotTuning_Local);
   // RGB tab
   GFilterDM->NewFilter("Highlights",            Fuid::Highlights_RGB);
   GFilterDM->NewFilter("GammaTool",             Fuid::GammaTool_RGB);
@@ -843,9 +844,6 @@ int photivoMain(int Argc, char *Argv[]) {
 
   HistogramWindow =
       new ptHistogramWindow(NULL,MainWindow->HistogramFrameCentralWidget);
-
-  // We are in GUI mode and MainWindow is created -> Set spot models.
-  TheProcessor->setSpotModels(MainWindow->LocalSpotModel, MainWindow->RepairSpotModel);
 
 #ifndef PT_WITHOUT_FILEMGR
   FileMgrWindow = new ptFileMgrWindow(MainWindow->FileManagerPage);
@@ -4104,232 +4102,6 @@ void CB_ClipParameterInput(const QVariant Value) {
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Highlights);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to local adjust (Local tab)
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LocalSpotButton() {
-  if (Settings->GetInt("HaveImage") == 0) {
-    ptMessageBox::information(MainWindow,
-      QObject::tr("No image opened"),
-      QObject::tr("Open an image before editing spots."));
-    return;
-  }
-
-  MainWindow->LocalSpotButton->hide();
-  MainWindow->ConfirmLocalSpotButton->show();
-  ViewWindow->ShowStatus(QObject::tr("Prepare"));
-  ReportProgress(QObject::tr("Prepare for local adjust"));
-
-  TheProcessor->RunLocalEdit(ptProcessorStopBefore::LocalAdjust);
-  MainWindow->LocalSpotListView->setInteractionOngoing(true);
-  // No UpdatePreviewImage(), that is handled by setInteractionOngoing()
-
-  // Allow to be selected in the view window. And deactivate main.
-  ViewWindow->ShowStatus(QObject::tr("Local adjust"));
-  ReportProgress(QObject::tr("Local adjust"));
-  BlockTools(btmBlockForLocalAdjust);
-
-  ViewWindow->StartLocalAdjust();
-  QObject::connect(ViewWindow->localAdjust(), SIGNAL(clicked(QPoint)),
-                   MainWindow->LocalSpotListView, SLOT(processCoordinates(QPoint)));
-  ViewWindow->setFocus();
-}
-
-//==============================================================================
-
-void CleanupAfterLocalAdjust() {
-  BlockTools(btmUnblock);
-  MainWindow->LocalSpotListView->setInteractionOngoing(false);
-  MainWindow->LocalSpotButton->show();
-  MainWindow->ConfirmLocalSpotButton->hide();
-  if (MainWindow->LocalSpotListView->appendMode()) {
-    MainWindow->ToggleLocalSpotAppendMode();
-  }
-  Update(ptProcessorPhase_LocalEdit);
-}
-
-//==============================================================================
-
-void CB_ConfirmLocalSpotButton() {
-  ViewWindow->localAdjust()->stop();
-}
-
-//==============================================================================
-
-/* Move/del buttons are directly connected to the LocalSpotListView slots. */
-
-//==============================================================================
-
-void CB_LocalModeChoice(const QVariant Value) {
-  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("LocalMode", Value);
-  static_cast<ptTuningSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
-      ->setMode((ptLocalAdjustMode)Value.toInt());
-  MainWindow->LocalSpotListView->UpdatePreview();
-}
-
-//==============================================================================
-
-void CB_LocalMaskThresholdInput(const QVariant Value) {
-  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("LocalMaskThreshold", Value);
-  static_cast<ptTuningSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
-      ->setThreshold(Value.toFloat());
-  MainWindow->LocalSpotListView->UpdatePreview();
-}
-
-//==============================================================================
-
-void CB_LocalMaskLumaWeightInput(const QVariant Value) {
-  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("LocalMaskLumaWeight", Value);
-  static_cast<ptTuningSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
-      ->setLumaWeight(Value.toFloat());
-  MainWindow->LocalSpotListView->UpdatePreview();
-}
-
-//==============================================================================
-
-void CB_LocalEgdeAwareThresholdCheck(const QVariant Value) {
-  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("LocalEgdeAwareThreshold", Value);
-  static_cast<ptTuningSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
-      ->setEdgeAware(Value.toBool());
-  MainWindow->LocalSpotListView->UpdatePreview();
-}
-
-//==============================================================================
-
-void CB_LocalMaxRadiusCheckCheck(const QVariant Value) {
-  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("LocalMaxRadiusCheck", Value);
-  static_cast<ptTuningSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
-      ->setHasMaxRadius(Value.toBool());
-  MainWindow->LocalMaxRadiusWidget->setEnabled(Value.toBool());
-  MainWindow->LocalSpotListView->UpdatePreview();
-}
-
-//==============================================================================
-
-void CB_LocalMaxRadiusInput(const QVariant Value) {
-  // The individual spot needs pipe size values, so we transform the value here.
-  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("LocalMaxRadius", Value);
-  static_cast<ptTuningSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
-      ->setMaxRadius(Value.toUInt()>>Settings->GetInt("PipeSize"));
-  MainWindow->LocalSpotListView->UpdatePreview();
-}
-
-//==============================================================================
-
-void CB_LocalSaturationInput(const QVariant Value) {
-  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("LocalSaturation", Value);
-  static_cast<ptTuningSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
-      ->setSaturation(Value.toFloat());
-  MainWindow->LocalSpotListView->UpdatePreview();
-}
-
-//==============================================================================
-
-void CB_LocalAdaptiveSaturationCheck(const QVariant Value) {
-  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("LocalAdaptiveSaturation", Value);
-  static_cast<ptTuningSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
-      ->setAdaptiveSaturation(Value.toBool());
-  MainWindow->LocalSpotListView->UpdatePreview();
-}
-
-//==============================================================================
-
-void CB_LocalColorShiftInput(const QVariant Value) {
-  int hSpotIdx = MainWindow->LocalSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("LocalColorShift", Value);
-  static_cast<ptTuningSpot*>(MainWindow->LocalSpotModel->spot(hSpotIdx))
-      ->setColorShift(Value.toFloat());
-  MainWindow->LocalSpotListView->UpdatePreview();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to spot repair (Local tab)
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_SpotRepairButton() {
-  if (Settings->GetInt("HaveImage")==0) {
-    ptMessageBox::information(MainWindow,
-      QObject::tr("No image opened"),
-      QObject::tr("Open an image before editing repair spots."));
-    return;
-  }
-
-  ViewWindow->ShowStatus(QObject::tr("Prepare"));
-  ReportProgress(QObject::tr("Prepare for spot repair"));
-
-  TheProcessor->RunLocalEdit(ptProcessorStopBefore::SpotRepair);
-  UpdatePreviewImage(TheProcessor->m_Image_AfterLocalEdit); // Calculate in any case.
-
-  // Allow to be selected in the view window. And deactivate main.
-  ViewWindow->ShowStatus(QObject::tr("Spot repair"));
-  ReportProgress(QObject::tr("Spot repair"));
-  BlockTools(btmBlockForSpotRepair);
-
-  // always start the interaction first, *then* update main window
-  ViewWindow->StartSpotRepair();
-  MainWindow->UpdateSpotRepairUI();
-  ViewWindow->setFocus();
-}
-
-void CleanupAfterSpotRepair() {
-  BlockTools(btmUnblock);
-  MainWindow->UpdateSpotRepairUI();
-  Update(ptProcessorPhase_LocalEdit);
-}
-
-void CB_ConfirmSpotRepairButton() {
-  ViewWindow->spotRepair()->stop();
-}
-
-void CB_SpotAlgorithmChoice(const QVariant Value) {
-  int hSpotIdx = MainWindow->RepairSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("SpotAlgorithm", Value);
-  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hSpotIdx))
-      ->setAlgorithm((ptSpotRepairAlgo)Value.toInt());
-  Update(ptProcessorPhase_LocalEdit);
-}
-
-void CB_SpotOpacityInput(const QVariant Value) {
-  int hSpotIdx = MainWindow->RepairSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("SpotOpacity", Value);
-  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hSpotIdx))
-      ->setOpacity(Value.toFloat());
-  Update(ptProcessorPhase_LocalEdit);
-}
-
-void CB_SpotEdgeSoftnessInput(const QVariant Value) {
-  int hSpotIdx = MainWindow->RepairSpotListView->currentIndex().row();
-  if (hSpotIdx < 0) return;
-  Settings->SetValue("SpotEdgeSoftness", Value);
-  static_cast<ptRepairSpot*>(MainWindow->RepairSpotModel->spot(hSpotIdx))
-      ->setEdgeSoftness(Value.toFloat());
-  Update(ptProcessorPhase_LocalEdit);
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -7324,20 +7096,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(ClipModeChoice)
   M_Dispatch(ClipParameterInput)
 
-  M_Dispatch(LocalModeChoice)
-  M_Dispatch(LocalMaskThresholdInput)
-  M_Dispatch(LocalMaskLumaWeightInput)
-  M_Dispatch(LocalEgdeAwareThresholdCheck)
-  M_Dispatch(LocalMaxRadiusCheckCheck)
-  M_Dispatch(LocalMaxRadiusInput)
-  M_Dispatch(LocalSaturationInput)
-  M_Dispatch(LocalColorShiftInput)
-  M_Dispatch(LocalAdaptiveSaturationCheck)
-
-  M_Dispatch(SpotAlgorithmChoice)
-  M_Dispatch(SpotOpacityInput)
-  M_Dispatch(SpotEdgeSoftnessInput)
-
   M_Dispatch(LfunFocalInput)
   M_Dispatch(LfunApertureInput)
   M_Dispatch(LfunDistanceInput)
@@ -7890,30 +7648,3 @@ ptImageType CheckImageType(QString filename,
 }
 
 //==============================================================================
-
-// Hack to pass current number of spots to ptSettings for determining
-// the tool active state. Used there in ToolInfo(). Avoids making the MainWindow
-// known to ptSettings.
-bool HasActiveLocalSpots() {
-  if (!MainWindow) return false;
-  return MainWindow->LocalSpotModel->hasEnabledSpots();
-}
-
-bool HasActiveRepairSpots() {
-  if (!MainWindow) return false;
-  return MainWindow->RepairSpotModel->hasEnabledSpots();
-}
-
-//==============================================================================
-
-// Another hack to avoid making MainWindow known to ptGroupBox.
-void WriteLocalSpots(QSettings *APtsFile) {
-  MainWindow->LocalSpotModel->WriteToFile(APtsFile);
-}
-
-void WriteRepairSpots(QSettings *APtsFile) {
-  MainWindow->RepairSpotModel->WriteToFile(APtsFile);
-}
-
-//==============================================================================
-

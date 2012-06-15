@@ -25,7 +25,6 @@
 #include <iostream>
 
 #include "ptDefines.h"
-#include "filters/imagespot/ptRepairSpot.h"
 #include "filters/imagespot/ptTuningSpot.h"
 #include "filters/imagespot/ptImageSpotItemDelegate.h"
 #include "ptChannelMixer.h"
@@ -105,8 +104,7 @@ void Update(const QString GuiName);
 //==============================================================================
 
 ptMainWindow::ptMainWindow(const QString Title)
-: QMainWindow(NULL),
-  FEmptyCurve(new ptCurve(ptCurveChannel_SpotLuma))
+: QMainWindow(NULL)
 {
   // Setup from the Gui builder.
   setupUi(this);
@@ -358,74 +356,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(SpotWB);
 
   //
-  // TAB : Local Edits
-  //
-
-  // "local adjust"
-  FSpotCurveWindow = new ptCurveWindow(FEmptyCurve.get(),
-                                       ptCurveChannel_SpotLuma,
-                                       LocalLumaCurveWidget,
-                                       tr("Luminance curve"));
-  Macro_ConnectSomeButton(LocalSpot);
-  Macro_ConnectSomeButton(ConfirmLocalSpot);
-  ConfirmLocalSpotButton->hide();
-
-  LocalSpotListView = new ptImageSpotListView(this, ptTuningSpot::CreateSpot);
-  LocalSpotListView->setObjectName("LocalSpotListView");  // needed for save/append preset menu
-  LocalSpotListView->setFixedHeight(132);
-  LocalSpotListLayout->addWidget(LocalSpotListView);
-  LocalSpotModel = new ptImageSpotModel(
-                         QSize(0, (int)(LocalSpotListView->fontMetrics().lineSpacing()*1.5)),
-                         CLocalAdjustName,
-                         this
-                       );
-  LocalSpotListView->setModel(LocalSpotModel);
-  LocalSpotListView->setItemDelegate(new ptImageSpotItemDelegate(LocalSpotListView));
-  connect(LocalSpotListView, SIGNAL(rowChanged(QModelIndex)),
-          this, SLOT(UpdateLocalSpotUI(QModelIndex)));
-
-  connect(LocalSpotDownButton, SIGNAL(clicked()), LocalSpotListView, SLOT(moveSpotDown()));
-  connect(LocalSpotUpButton, SIGNAL(clicked()), LocalSpotListView, SLOT(moveSpotUp()));
-  connect(LocalSpotAddButton, SIGNAL(clicked()), this, SLOT(ToggleLocalSpotAppendMode()));
-  connect(LocalSpotDelButton, SIGNAL(clicked()), LocalSpotListView, SLOT(deleteSpot()));
-
-  UpdateLocalSpotUI(QModelIndex());
-
-  //TODO: Temporarily disabled widgets that don’t have an implementation yet.
-  LocalModeLabel->hide();
-  LocalModeWidget->hide();
-  LocalEgdeAwareThresholdWidget->hide();
-
-
-  // "spot repair"
-  Macro_ConnectSomeButton(SpotRepair);
-  Macro_ConnectSomeButton(ConfirmSpotRepair);
-  ConfirmSpotRepairButton->hide();
-
-  RepairSpotListView = new ptImageSpotListView(this, ptRepairSpot::CreateSpot);
-  RepairSpotListView->setObjectName("RepairSpotListView");
-  SpotRepairVLayout->insertWidget(1, RepairSpotListView);
-  RepairSpotModel = new ptImageSpotModel(
-                          QSize(0, (int)(LocalSpotListView->fontMetrics().lineSpacing()*1.5)),
-                          CRepairSpotName,
-                          this
-                        );
-  RepairSpotListView->setModel(RepairSpotModel);
-  RepairSpotListView->setItemDelegate(new ptImageSpotItemDelegate(RepairSpotListView));
-  connect(RepairSpotListView, SIGNAL(rowChanged(QModelIndex)),
-          this, SLOT(UpdateRepairSpotUI(QModelIndex)));
-  UpdateRepairSpotUI(QModelIndex());
-  // TODO: BJ Hide the unfinished spot repair tab so we can release local adjust alone first.
-//  printf("### %d\n", this->ProcessingTabBook->indexOf(LocalTab));
-//  this->ProcessingTabBook->widget(1)->findChild<ptGroupBox*>("TabSpotRepair")->Hide();
-//  findChild<ptGroupBox *>(QString("TabSpotRepair"))->Hide();
-//  m_GroupBox->value("TabSpotRepair")->setVisible(0);
-//  m_GroupBox->remove("TabSpotRepair");
-  m_GroupBox->value("TabSpotRepair")->setVisible(0);
-  m_GroupBox->remove("TabSpotRepair");
-  m_GroupBoxesOrdered->removeOne("TabSpotRepair");
-
-  //
   // TAB : Geometry
   //
 
@@ -433,8 +363,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
 
-  Macro_ConnectSomeButton(SpotRepair);
-  Macro_ConnectSomeButton(ConfirmSpotRepair);
   Macro_ConnectSomeButton(RotateLeft);
   Macro_ConnectSomeButton(RotateRight);
   Macro_ConnectSomeButton(RotateAngle);
@@ -690,10 +618,8 @@ ptMainWindow::ptMainWindow(const QString Title)
           this,
           SLOT(Event0TimerExpired()));
 
-  ConfirmSpotRepairButton->hide();
   FileMgrThumbMaxRowColWidget->setEnabled(Settings->GetInt("FileMgrUseThumbMaxRowCol"));
 
-  UpdateSpotRepairUI();
   UpdateCropToolUI();
   UpdateLfunDistUI();
   UpdateLfunCAUI();
@@ -963,83 +889,7 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
   }
 }
 
-
 //==============================================================================
-
-void ptMainWindow::UpdateLocalSpotUI(const QModelIndex &ANewIdx) {
-  if (!ANewIdx.isValid()) {
-    // empty spot list or none selected
-    FSpotCurveWindow->UpdateView(FEmptyCurve.get());
-    ToggleLocalAdjustWidgets(false, -1);
-
-  } else {
-    // update UI elements with actual spot data
-    ToggleLocalAdjustWidgets(true, ANewIdx.row());
-    ptTuningSpot* hSpot = static_cast<ptTuningSpot*>(LocalSpotModel->spot(ANewIdx.row()));
-    Settings->SetValue("LocalMode", hSpot->mode());
-    Settings->SetValue("LocalMaskThreshold", hSpot->threshold());
-    Settings->SetValue("LocalMaskLumaWeight", hSpot->lumaWeight());
-    Settings->SetValue("LocalEgdeAwareThreshold", (int)hSpot->isEdgeAware());
-    Settings->SetValue("LocalMaxRadiusCheck", (int)hSpot->hasMaxRadius());
-    Settings->SetValue("LocalMaxRadius", hSpot->maxRadius() << Settings->GetInt("Scaled"));
-    FSpotCurveWindow->UpdateView(hSpot->lumaCurve());
-    Settings->SetValue("LocalSaturation", hSpot->saturation());
-    Settings->SetValue("LocalAdaptiveSaturation", (int)hSpot->isAdaptiveSaturation());
-    Settings->SetValue("LocalColorShift", hSpot->colorShift());
-  }
-}
-
-//==============================================================================
-
-void ptMainWindow::ToggleLocalAdjustWidgets(const bool AEnabled, const int ARow) {
-  LocalSpotDownButton->setEnabled(AEnabled && (ARow < LocalSpotModel->rowCount()-1));
-  LocalSpotUpButton->setEnabled(AEnabled && (ARow > 0));
-  // LocalSpotAddButton: no need to set here, is always enabled
-  LocalSpotDelButton->setEnabled(AEnabled && (ARow > -1));
-  LocalSpotButton->setEnabled(AEnabled && (ARow > -1));
-  LocalMaxRadiusWidget->setEnabled(
-      AEnabled &&
-      (static_cast<ptTuningSpot*>(LocalSpotModel->spot(LocalSpotListView->currentIndex().row()))
-          ->hasMaxRadius() )
-  );
-  LocalMaxRadiusCheckWidget->setEnabled(AEnabled);
-  LocalModeLabel->setEnabled(AEnabled);
-  LocalModeWidget->setEnabled(AEnabled);
-  LocalMaskThresholdWidget->setEnabled(AEnabled);
-  LocalMaskLumaWeightWidget->setEnabled(AEnabled);
-  LocalEgdeAwareThresholdWidget->setEnabled(AEnabled);
-  LocalLumaCurveWidget->setEnabled(AEnabled);
-  LocalSaturationWidget->setEnabled(AEnabled);
-  LocalAdaptiveSaturationWidget->setEnabled(AEnabled);
-  LocalColorShiftWidget->setEnabled(AEnabled);
-}
-
-//==============================================================================
-
-void ptMainWindow::UpdateRepairSpotUI(const QModelIndex &ANewIdx) {
-  if (!ANewIdx.isValid()) {
-    // empty spot list or none selected
-    ToggleSpotRepairWidgets(false);
-
-  } else {
-    // update with values from selected spot
-    ToggleSpotRepairWidgets(true);
-    ptRepairSpot* hSpot = static_cast<ptRepairSpot*>(RepairSpotModel->spot(ANewIdx.row()));
-    Settings->SetValue("SpotAlgorithm", hSpot->algorithm());
-    Settings->SetValue("SpotOpacity", hSpot->opactiy());
-    Settings->SetValue("SpotEdgeSoftness", hSpot->edgeSoftness());
-    // TODO: some settings still missing, also from the UI
-  }
-}
-
-//==============================================================================
-
-void ptMainWindow::ToggleSpotRepairWidgets(const bool AEnabled) {
-  SpotAlgorithmWidget->setEnabled(AEnabled);
-  SpotOpacityWidget->setEnabled(AEnabled);
-  SpotEdgeSoftnessWidget->setEnabled(AEnabled);
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1478,51 +1328,6 @@ void ptMainWindow::OnOpenPresetFileButtonClicked() {
 void CB_SpotWBButton();
 void ptMainWindow::OnSpotWBButtonClicked() {
   ::CB_SpotWBButton();
-}
-
-//
-// Tab : Local Edit
-//
-
-void CB_LocalSpotButton();
-void ptMainWindow::OnLocalSpotButtonClicked() {
-  ::CB_LocalSpotButton();
-}
-
-void ptMainWindow::ToggleLocalSpotAppendMode() {
-  // For the button “checked” means append mode is on, “unchecked” means append mode is off.
-  if (LocalSpotListView->appendMode()) {
-    // cancel appending a spot
-    LocalSpotListView->setAppendMode(false);
-    LocalSpotAddButton->setChecked(false);
-    LocalSpotAddButton->setToolTip(tr("Append spot mode"));
-
-  } else {
-    // start appending a spot
-    LocalSpotListView->setAppendMode(true);
-    LocalSpotAddButton->setChecked(true);
-    LocalSpotAddButton->setToolTip(tr("Exit append spot mode"));
-
-    if (ViewWindow->interaction() == iaNone) {
-      // Appending is only possible in editing mode. Start it if it is not already active.
-      ::CB_LocalSpotButton();
-    }
-  }
-}
-
-void CB_ConfirmLocalSpotButton();
-void ptMainWindow::OnConfirmLocalSpotButtonClicked() {
-  ::CB_ConfirmLocalSpotButton();
-}
-
-void CB_SpotRepairButton();
-void ptMainWindow::OnSpotRepairButtonClicked() {
-  ::CB_SpotRepairButton();
-}
-
-void CB_ConfirmSpotRepairButton();
-void ptMainWindow::OnConfirmSpotRepairButtonClicked() {
-  ::CB_ConfirmSpotRepairButton();
 }
 
 //
@@ -3185,27 +2990,6 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
   LqrWHContainter->setVisible(Scaling == ptLqr_ScaleAbsolute);
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////
-//
-// Update spot repair UI elements
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptMainWindow::UpdateSpotRepairUI() {
-  // interactive mode buttons
-  if (ViewWindow == NULL) {
-    SpotRepairButton->setVisible(true);
-    ConfirmSpotRepairButton->setVisible(false);
-  } else {
-    SpotRepairButton->setVisible(ViewWindow->interaction() != iaSpotRepair);
-    ConfirmSpotRepairButton->setVisible(!SpotRepairButton->isVisible());
-  }
-
-  // additional config sliders at the bottom
-  SpotOpacityWidget->setEnabled(RepairSpotListView->currentIndex().row() > -1);
-  SpotEdgeSoftnessWidget->setEnabled(SpotOpacityWidget->isEnabled());
-}
 
 /////////////////////////////////////////////////////////////////////////////
 //
