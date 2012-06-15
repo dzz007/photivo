@@ -34,7 +34,7 @@
 
 class ptImageSpotList: public ptStorable {
 public:
-  ptImageSpotList(ptImageSpot::PCreateSpotFunc ASpotCreator);
+  ptImageSpotList(PCreateSpotFunc ASpotCreator);
   ~ptImageSpotList();
 
   /*! \group Implementation of the ptStorable interface. */
@@ -45,18 +45,22 @@ public:
 
   /*! \group QList functionality needed on the outside. */
   ///@{
-  ptImageSpot  &at(int i)     { &(FSpots[i].get()); }
-  void          clear()       { FSpots.clear(); }
-  int           count() const { FSpots.count(); }
-  int           size() const  { FSpots.size(); }
+  void            append(ptImageSpot *spot)  { FSpots.append(spot); }
+  ptImageSpot    *at(int i) const             { return FSpots[i]; }
+  void            clear();
+  int             count() const               { return FSpots.count(); }
+  void            move(int from, int to)      { FSpots.move(from, to); }
+  void            removeAt(int i)             { FSpots.removeAt(i); }
+  void            replace(int i, ptImageSpot *spot) { FSpots.replace(i, spot); }
+  int             size() const                { return FSpots.size(); }
   ///@}
 
   bool          hasEnabledSpots();
 
 
 private:
-  QList<std::unique_ptr<ptImageSpot> > FSpots;
-  ptImageSpot::PCreateSpotFunc         FSpotCreator;
+  QList<ptImageSpot*> FSpots;
+  PCreateSpotFunc     FSpotCreator;
 
 };
 

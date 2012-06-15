@@ -30,8 +30,8 @@
 // Choose "version 4: random".
 // Variable names should be "FilterName_ProcessingTabName".
 namespace Fuid {
-  const QString SpotTuning_Local               = "ef42f985-8686-42e6-b15d-9bc8dffdcde3";
-  const QString SpotRepair_Local               = "a1be4f8b-448d-40c1-b576-abd3ee1affb0";
+  const QString SpotTuning_Local                = "ef42f985-8686-42e6-b15d-9bc8dffdcde3";
+  const QString SpotRepair_Local                = "a1be4f8b-448d-40c1-b576-abd3ee1affb0";
 
   const QString Highlights_RGB                  = "8daccb81-5dd3-4664-bf3c-1fefe7ad084e";
   const QString GammaTool_RGB                   = "a63b08df-36ee-4678-9e25-9c53467c502b";

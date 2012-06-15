@@ -324,6 +324,16 @@ void ptFilterBase::internalInit() {
 
 //==============================================================================
 
+ptWidget *ptFilterBase::findPtWidget(const QString &AId, QWidget *AWidget) {
+  ptWidget *hWidget = AWidget->findChild<ptWidget*>(AId);
+  if (!hWidget)
+    GInfo->Raise(QString("Widget \"%1\" not found.").arg(AId),
+                 QString(FFilterName+"/"+FUniqueName+": "+AT).toAscii().data());
+  return hWidget;
+}
+
+//==============================================================================
+
 void ptFilterBase::connectCommonDispatch() {
   GInfo->Assert(!FGuiContainer, "The filter's ("+FFilterName+") GUI must be created first.", AT);
 
@@ -346,12 +356,7 @@ int ptFilterBase::cfgIdx(const QString &AId) const {
 
 void ptFilterBase::initDesignerGui(QWidget *AGuiBody) {
   for (ptCfgItem hCfgItem: FCfgItems) {
-    // find the widget for each config item
-    ptWidget *hWidget = AGuiBody->findChild<ptWidget*>(hCfgItem.Id);
-    if (!hWidget)
-      GInfo->Raise(QString("Widget \"%1\" not found.").arg(hCfgItem.Id),
-                   QString(FFilterName+"/"+FUniqueName+": "+AT).toAscii().data());
-
+    ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiBody);
     // init the widget with default values and connect signals/slots
     hWidget->init(hCfgItem);
     this->performCommonConnect(hCfgItem, hWidget);

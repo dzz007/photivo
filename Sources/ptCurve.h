@@ -139,7 +139,7 @@ public:
   void            loadConfig(const TConfigStore &AConfig, const QString &APrefix = "");
 
   /*! Returns the curve’s configuration in config store format usable by \c ptFilterConfig. */
-  TConfigStore    storeConfig(const QString &APrefix = "");
+  TConfigStore    storeConfig(const QString &APrefix = "") const;
 
   /*! Read a curve from an old-style curve file. This function is the only way to load a
       curve with type \c FullPrecalcType, i.e. a file where the complete 16bit lookup table
@@ -186,15 +186,6 @@ private:
   double  spline_cubic_val(int n, const std::vector<double> t, double tval,
                            const std::vector<double> y, double ypp[], double *ypval, double *yppval);
   ///@}
-
-
-  TAnchorList         FAnchors;
-  TAnchorList         FNullAnchors;
-  TType               FCurveType;   // use setCurveType() to change it
-  TMask               FCurrentMask;
-  TMasks              FSupportedMasks;
-  TInterpolation      FInterpolType;
-  QString             FFileName;  // only used for the FullPrecalc curve type
 
 
   TAnchorList         FAnchors;

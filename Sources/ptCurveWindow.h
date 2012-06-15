@@ -34,10 +34,10 @@
 
 #include "ptImage8.h"
 #include "ptWidget.h"
+#include "ptCurve.h"
 
 class QLabel;
 class QActionGroup;
-class ptCurve;
 class ptFilterBase;
 
 //==============================================================================

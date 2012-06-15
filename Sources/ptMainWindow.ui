@@ -339,7 +339,7 @@
                           <enum>QTabWidget::West</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>4</number>
+                          <number>1</number>
                          </property>
                          <property name="iconSize">
                           <size>
@@ -1209,7 +1209,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>380</width>
+                                <width>445</width>
                                 <height>589</height>
                                </rect>
                               </property>
@@ -1224,370 +1224,14 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>362</width>
-                                    <height>517</height>
+                                    <width>427</width>
+                                    <height>544</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Local adjust</string>
+                                   <string notr="true">ef42f985-8686-42e6-b15d-9bc8dffdcde3</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_282">
-                                   <item>
-                                    <widget class="QWidget" name="widget_180" native="true">
-                                     <layout class="QVBoxLayout" name="LocalAdjustVLayout">
-                                      <item>
-                                       <layout class="QHBoxLayout" name="LocalSpotListLayout">
-                                        <item>
-                                         <layout class="QVBoxLayout" name="verticalLayout_284">
-                                          <property name="spacing">
-                                           <number>2</number>
-                                          </property>
-                                          <item>
-                                           <widget class="QToolButton" name="LocalSpotUpButton">
-                                            <property name="icon">
-                                             <iconset resource="../qrc/photivo.qrc">
-                                              <normaloff>:/dark/icons/move-object-up.png</normaloff>
-                                              <disabledoff>:/dark/icons/move-object-up-disabled.png</disabledoff>:/dark/icons/move-object-up.png</iconset>
-                                            </property>
-                                           </widget>
-                                          </item>
-                                          <item>
-                                           <widget class="QToolButton" name="LocalSpotDownButton">
-                                            <property name="icon">
-                                             <iconset resource="../qrc/photivo.qrc">
-                                              <normaloff>:/dark/icons/move-object-down.png</normaloff>
-                                              <disabledoff>:/dark/icons/move-object-down-disabled.png</disabledoff>:/dark/icons/move-object-down.png</iconset>
-                                            </property>
-                                           </widget>
-                                          </item>
-                                          <item>
-                                           <spacer name="LocalSpotButtonSpacer">
-                                            <property name="orientation">
-                                             <enum>Qt::Vertical</enum>
-                                            </property>
-                                            <property name="sizeType">
-                                             <enum>QSizePolicy::Fixed</enum>
-                                            </property>
-                                            <property name="sizeHint" stdset="0">
-                                             <size>
-                                              <width>10</width>
-                                              <height>6</height>
-                                             </size>
-                                            </property>
-                                           </spacer>
-                                          </item>
-                                          <item>
-                                           <widget class="QToolButton" name="LocalSpotDelButton">
-                                            <property name="toolTip">
-                                             <string>Delete spot</string>
-                                            </property>
-                                            <property name="icon">
-                                             <iconset resource="../qrc/photivo.qrc">
-                                              <normaloff>:/dark/icons/delete.png</normaloff>:/dark/icons/delete.png</iconset>
-                                            </property>
-                                           </widget>
-                                          </item>
-                                          <item>
-                                           <widget class="QToolButton" name="LocalSpotAddButton">
-                                            <property name="toolTip">
-                                             <string>Append spot mode</string>
-                                            </property>
-                                            <property name="icon">
-                                             <iconset resource="../qrc/photivo.qrc">
-                                              <normaloff>:/dark/icons/add-spot.png</normaloff>
-                                              <normalon>:/dark/icons/add-spot-stop.png</normalon>:/dark/icons/add-spot.png</iconset>
-                                            </property>
-                                            <property name="checkable">
-                                             <bool>true</bool>
-                                            </property>
-                                           </widget>
-                                          </item>
-                                          <item>
-                                           <widget class="QToolButton" name="LocalSpotButton">
-                                            <property name="minimumSize">
-                                             <size>
-                                              <width>18</width>
-                                              <height>18</height>
-                                             </size>
-                                            </property>
-                                            <property name="toolTip">
-                                             <string>Edit spots</string>
-                                            </property>
-                                            <property name="icon">
-                                             <iconset resource="../qrc/photivo.qrc">
-                                              <normaloff>:/dark/icons/edit-spot.png</normaloff>:/dark/icons/edit-spot.png</iconset>
-                                            </property>
-                                           </widget>
-                                          </item>
-                                          <item>
-                                           <widget class="QToolButton" name="ConfirmLocalSpotButton">
-                                            <property name="minimumSize">
-                                             <size>
-                                              <width>18</width>
-                                              <height>18</height>
-                                             </size>
-                                            </property>
-                                            <property name="icon">
-                                             <iconset resource="../qrc/photivo.qrc">
-                                              <normaloff>:/dark/icons/dialog-ok.png</normaloff>:/dark/icons/dialog-ok.png</iconset>
-                                            </property>
-                                           </widget>
-                                          </item>
-                                         </layout>
-                                        </item>
-                                       </layout>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LocalSpotMaskContainer" native="true">
-                                        <layout class="QVBoxLayout" name="verticalLayout_283">
-                                         <property name="margin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <layout class="QHBoxLayout" name="horizontalLayout_103">
-                                           <item>
-                                            <widget class="QLabel" name="label_18">
-                                             <property name="font">
-                                              <font>
-                                               <weight>75</weight>
-                                               <bold>true</bold>
-                                              </font>
-                                             </property>
-                                             <property name="text">
-                                              <string>Mask</string>
-                                             </property>
-                                            </widget>
-                                           </item>
-                                           <item>
-                                            <spacer name="horizontalSpacer_83">
-                                             <property name="orientation">
-                                              <enum>Qt::Horizontal</enum>
-                                             </property>
-                                             <property name="sizeHint" stdset="0">
-                                              <size>
-                                               <width>40</width>
-                                               <height>20</height>
-                                              </size>
-                                             </property>
-                                            </spacer>
-                                           </item>
-                                           <item>
-                                            <layout class="QHBoxLayout" name="horizontalLayout_102">
-                                             <property name="sizeConstraint">
-                                              <enum>QLayout::SetMaximumSize</enum>
-                                             </property>
-                                             <item>
-                                              <widget class="QLabel" name="LocalModeLabel">
-                                               <property name="sizePolicy">
-                                                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                                                 <horstretch>0</horstretch>
-                                                 <verstretch>0</verstretch>
-                                                </sizepolicy>
-                                               </property>
-                                               <property name="text">
-                                                <string>Mode</string>
-                                               </property>
-                                              </widget>
-                                             </item>
-                                             <item>
-                                              <widget class="QWidget" name="LocalModeWidget" native="true">
-                                               <property name="sizePolicy">
-                                                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                                                 <horstretch>0</horstretch>
-                                                 <verstretch>0</verstretch>
-                                                </sizepolicy>
-                                               </property>
-                                              </widget>
-                                             </item>
-                                            </layout>
-                                           </item>
-                                          </layout>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="LocalMaxRadiusCheckWidget" native="true">
-                                           <property name="minimumSize">
-                                            <size>
-                                             <width>0</width>
-                                             <height>10</height>
-                                            </size>
-                                           </property>
-                                          </widget>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="LocalMaxRadiusWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="LocalMaskLumaWeightWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="LocalMaskThresholdWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="LocalEgdeAwareThresholdWidget" native="true"/>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QFrame" name="LocalLumaCurveWidget">
-                                        <property name="frameShape">
-                                         <enum>QFrame::StyledPanel</enum>
-                                        </property>
-                                        <property name="frameShadow">
-                                         <enum>QFrame::Sunken</enum>
-                                        </property>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <spacer name="verticalSpacer_141">
-                                        <property name="orientation">
-                                         <enum>Qt::Vertical</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                         <enum>QSizePolicy::Fixed</enum>
-                                        </property>
-                                        <property name="sizeHint" stdset="0">
-                                         <size>
-                                          <width>20</width>
-                                          <height>5</height>
-                                         </size>
-                                        </property>
-                                       </spacer>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LocalSaturationWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LocalAdaptiveSaturationWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LocalColorShiftWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_140">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>40</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
-                                 </widget>
-                                 <widget class="QWidget" name="TabSpotRepair">
-                                  <property name="geometry">
-                                   <rect>
-                                    <x>0</x>
-                                    <y>0</y>
-                                    <width>110</width>
-                                    <height>124</height>
-                                   </rect>
-                                  </property>
-                                  <attribute name="label">
-                                   <string>Spot repair (Unfinished! DO NOT USE!)</string>
-                                  </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_281">
-                                   <item>
-                                    <widget class="QWidget" name="SpotRepairContainer" native="true">
-                                     <layout class="QVBoxLayout" name="SpotRepairVLayout">
-                                      <item>
-                                       <widget class="QWidget" name="widget_1721" native="true">
-                                        <layout class="QHBoxLayout" name="horizontalLayout_951">
-                                         <property name="margin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <spacer name="horizontalSpacer_731">
-                                           <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                           </property>
-                                           <property name="sizeHint" stdset="0">
-                                            <size>
-                                             <width>20</width>
-                                             <height>10</height>
-                                            </size>
-                                           </property>
-                                          </spacer>
-                                         </item>
-                                         <item>
-                                          <widget class="QToolButton" name="SpotRepairButton">
-                                           <property name="icon">
-                                            <iconset resource="../qrc/photivo.qrc">
-                                             <normaloff>:/dark/icons/edit-spot.png</normaloff>:/dark/icons/edit-spot.png</iconset>
-                                           </property>
-                                          </widget>
-                                         </item>
-                                         <item>
-                                          <widget class="QToolButton" name="ConfirmSpotRepairButton">
-                                           <property name="text">
-                                            <string/>
-                                           </property>
-                                           <property name="icon">
-                                            <iconset resource="../qrc/photivo.qrc">
-                                             <normaloff>:/dark/icons/tool-show.png</normaloff>:/dark/icons/tool-show.png</iconset>
-                                           </property>
-                                          </widget>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <layout class="QHBoxLayout" name="horizontalLayout_104">
-                                        <item>
-                                         <widget class="QLabel" name="label_19">
-                                          <property name="text">
-                                           <string>Repair mode</string>
-                                          </property>
-                                         </widget>
-                                        </item>
-                                        <item>
-                                         <widget class="QWidget" name="SpotAlgorithmWidget" native="true"/>
-                                        </item>
-                                        <item>
-                                         <spacer name="horizontalSpacer_86">
-                                          <property name="orientation">
-                                           <enum>Qt::Horizontal</enum>
-                                          </property>
-                                          <property name="sizeHint" stdset="0">
-                                           <size>
-                                            <width>40</width>
-                                            <height>20</height>
-                                           </size>
-                                          </property>
-                                         </spacer>
-                                        </item>
-                                       </layout>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="SpotOpacityWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="SpotEdgeSoftnessWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_139">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>419</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_282"/>
                                  </widget>
                                 </widget>
                                </item>
@@ -3943,7 +3587,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>362</width>
+                                    <width>98</width>
                                     <height>28</height>
                                    </rect>
                                   </property>
@@ -4170,7 +3814,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>362</width>
+                                    <width>98</width>
                                     <height>28</height>
                                    </rect>
                                   </property>
@@ -5089,8 +4733,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>85</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5099,6 +4743,14 @@
                                   <layout class="QVBoxLayout" name="verticalLayout_260"/>
                                  </widget>
                                  <widget class="QWidget" name="LumaDenoise2">
+                                  <property name="geometry">
+                                   <rect>
+                                    <x>0</x>
+                                    <y>0</y>
+                                    <width>427</width>
+                                    <height>85</height>
+                                   </rect>
+                                  </property>
                                   <attribute name="label">
                                    <string>530aab8e-65e4-4bb8-b391-46f6673ac53d</string>
                                   </attribute>
@@ -5298,8 +4950,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>112</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5312,8 +4964,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>362</width>
-                                    <height>112</height>
+                                    <width>98</width>
+                                    <height>78</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6645,7 +6297,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>345</width>
+                                    <width>146</width>
                                     <height>232</height>
                                    </rect>
                                   </property>
@@ -7830,8 +7482,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>362</width>
-                                    <height>328</height>
+                                    <width>266</width>
+                                    <height>244</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -10387,9 +10039,6 @@
                                   <item>
                                    <widget class="QWidget" name="FileMgrStartupOpenWidget" native="true"/>
                                   </item>
-                                  <item>
-                                   <widget class="QWidget" name="FileMgrStartupOpenWidget" native="true"/>
-                                  </item>
                                  </layout>
                                 </widget>
                                </item>
@@ -10820,8 +10469,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>600</width>
-                      <height>858</height>
+                      <width>543</width>
+                      <height>841</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_240">

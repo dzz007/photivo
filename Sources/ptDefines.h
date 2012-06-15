@@ -56,6 +56,15 @@ std::unique_ptr<T> make_unique(Args&& ...args) {
 
 //==============================================================================
 
+/*! Returns `true` if `AValue` lies between `ALowBound` and `AHighBound`, `false` otherwise.
+    Lower boundary is included in the range, higher boundary is not. */
+template<typename T>
+inline bool isBetween(const T &AValue, const T &ALowBound, const T &AHighBound) {
+  return AValue >= ALowBound && AValue < AHighBound;
+}
+
+//==============================================================================
+
 // Some macro's (most cannot go efficiently in functions).
 
 #ifndef SQR

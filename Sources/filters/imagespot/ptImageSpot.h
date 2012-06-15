@@ -38,6 +38,7 @@
 #include <functional>
 
 #include <QVariant>
+#include <QPoint>
 
 #include <filters/ptStorable.h>
 
@@ -51,13 +52,8 @@ const QString CSpotPosId       = "Pos";
 
 class ptImageSpot: public ptStorable {
 public:
-  /*! Type definition for the function pointer to the spot factory method.
-     There is no factory method returning a \c ptImageSpot because we only use
-     specialised spots in derived classes. */
-  typedef std::function<ptImageSpot*()> PCreateSpotFunc;
+  virtual ~ptImageSpot();
 
-
-public:
   /*! \group Standard getters and setters.
       These members can also be accessed via the generic getValue() and setValue() functions. */
   ///@{
@@ -84,7 +80,6 @@ public:
 protected:
   /*! Creates an enabled spot with no name at position (0,0). */
   ptImageSpot();
-  ~ptImageSpot();
 
 // Pragmas are here to stop the compiler complaining about unused parameters in the default
 // implementations. Removing the parameter names would work too but be too obscure.
@@ -92,7 +87,7 @@ protected:
 #pragma GCC diagnostic ignored "-Wunused-parameter"
   virtual TConfigStore  doStoreConfig(const QString &APrefix) const = 0;
   virtual void          doLoadConfig(const TConfigStore &AConfig, const QString &APrefix) = 0;
-  virtual bool          doGetValue(const QString &AKey) const { return QVariant(); }
+  virtual QVariant      doGetValue(const QString &AKey) const { return QVariant(); }
   virtual bool          doSetValue(const QString &AKey, const QVariant AValue) { return false; }
 #pragma GCC diagnostic pop
 
@@ -102,5 +97,12 @@ protected:
   QPoint                  FPos;
 
 };
+
+//==============================================================================
+
+/*! Type definition for the function pointer to the spot factory method.
+   There is no factory method returning a \c ptImageSpot because we only use
+   specialised spots in derived classes. */
+typedef std::function<ptImageSpot*()> PCreateSpotFunc;
 
 #endif // PTIMAGESPOT_H

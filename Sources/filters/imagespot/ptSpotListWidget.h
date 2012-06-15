@@ -29,7 +29,6 @@
 #include <QListView>
 
 #include "ptImageSpot.h"
-#include "ptSpotListWidgetHelper.h"
 #include "ui_ptSpotListWidget.h"
 
 class ptImageSpotModel;
@@ -54,22 +53,19 @@ public:
   /*! Returns \c true if spot append action is in progress, \c false otherwise. */
   bool appendMode() { return FAppendOngoing; }
 
-  ptImageSpotModel* model() { return FModel; }
-
-
   /*! Appends a new spot, selects and focuses it in the list. */
   void setAppendMode(const bool AAppendOngoing) { FAppendOngoing = AAppendOngoing; }
+
+  bool editMode() { return EditButton->isChecked(); }
+  void setEditMode(bool AIsEdit);
+
+  ptImageSpotModel* model() { return FModel; }
 
   /*! Deletes all spots from the ListView and model. */
   void clear();
 
   /*! Reimplemented from base class. */
-  virtual bool eventFilter(QObject *watched, QEvent *event);
-
-  /*! Updates the preview image in the ViewWindow and takes into account if the ViewWindow
-      interaction is running or not.
-   */
-  void UpdatePreview();
+  bool eventFilter(QObject *watched, QEvent *event);
 
 
 public slots:
@@ -90,25 +86,28 @@ public slots:
 
 
 private:
-  bool                          FAppendOngoing;     // when true, “add spot” button was clicked
-  ptSpotListView               *ListView;
-  ptImageSpotModel             *FModel;
-  bool                          FInteractionOngoing;    // ViewWindow interaction
-  ptImageSpot::PCreateSpotFunc  FSpotCreator;  // pointer to spot factory method
-  ptImageSpotList              *FSpotList;
+  void updatePreview();
+
+  bool                  FAppendOngoing;     // when true, “add spot” button was clicked
+  ptSpotListView       *ListView;
+  ptImageSpotModel     *FModel;
+  bool                  FInteractionOngoing;    // ViewWindow interaction
+  PCreateSpotFunc       FSpotCreator;  // pointer to spot factory method
+  ptImageSpotList      *FSpotList;
 
 
 private slots:
-  void ActiveSpotsChanged();
-  void UpdateButtonStates();
-  void UpdateToolActiveState();
-  void ToggleAppendMode();
-  void ToggleEditMode();
+  void activeSpotsChanged();
+  void emitRowChanged(const QModelIndex &AIdx);
+  void updateButtonStates();
+  void toggleAppendMode();
+  void toggleEditMode();
 
 
 signals:
-  void editModeChanged(const bool AEditEnabled);
-  void rowChanged(const QModelIndex &ANewIdx);
+  void editModeChanged(bool AEditEnabled);
+  void rowChanged(int ASpotIdx);
+  void dataChanged();
 
 };
 
@@ -125,22 +124,17 @@ Q_OBJECT
 public:
   explicit ptSpotListView(QWidget *AParent);
   ~ptSpotListView();
-
   void setModel(ptImageSpotModel *AModel);
-
 
 protected:
   virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-
 
 protected slots:
   /*! Qt event triggered when the focused spot in the list changes. */
   void currentChanged(const QModelIndex &current, const QModelIndex &previous);
 
-
 private:
   ptImageSpotModel *FModel;
-
 
 signals:
   /*! \c QListView does not emit a signal when the focused row changes. So we use our own signal. */

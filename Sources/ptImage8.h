@@ -72,8 +72,6 @@ ptImage8(const uint16_t Width,
 
 void setSize(const uint16_t AWidth, const uint16_t AHeight, const int AColorCount);
 
-void setSize(const uint16_t AWidth, const uint16_t AHeight, const int AColorCount);
-
 // Destructor
 ~ptImage8();
 

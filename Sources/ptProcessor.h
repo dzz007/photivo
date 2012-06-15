@@ -83,8 +83,6 @@ public:
    Use the ptProcessorStopBefore_{Rotate|Crop} constants to stop early.*/
   void RunGeometry(ptProcessorStopBefore StopBefore = ptProcessorStopBefore::NoStop);
 
-  void setSpotModels(ptImageSpotModel *ALocalSpotModel, ptImageSpotModel *ARepairSpotModel);
-
   // Exif Related
   Exiv2::ExifData m_ExifData;
   unsigned char*  m_ExifBuffer;

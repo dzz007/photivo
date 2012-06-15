@@ -250,7 +250,7 @@ void ptCurve::setCurveType(const ptCurve::TType AType) {
 
 //==============================================================================
 
-TConfigStore ptCurve::storeConfig(const QString &APrefix /*=""*/) {
+TConfigStore ptCurve::storeConfig(const QString &APrefix /*=""*/) const {
   TConfigStore hStore;
 
   hStore.insert(APrefix+"CurveType",     (int)FCurveType);

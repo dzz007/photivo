@@ -22,22 +22,15 @@
 
 #include <memory>
 
+#include <QKeyEvent>
+
 #include "ptSpotListWidget.h"
 #include "ptImageSpotModel.h"
 #include "ptImageSpotItemDelegate.h"
 #include <ptTheme.h>
 #include <ptImage.h>
-#include <ptProcessor.h>
 #include <ptInfo.h>
 
-extern ptProcessor *TheProcessor;
-
-extern void Update(short Phase,
-                   short SubPhase       = -1,
-                   short WithIdentify   = 1,
-                   short ProcessorMode  = ptProcessorMode_Preview);
-extern void UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
-                               const short    OnlyHistogram = 0);
 
 //==============================================================================
 
@@ -73,29 +66,37 @@ void ptSpotListWidget::init(ptImageSpotList *ASpotList) {
   ListView->installEventFilter(this);
 
   FModel = new ptImageSpotModel(QSize(0, (int)(ListView->fontMetrics().lineSpacing()*1.5)),
-                                ASpotList, this);
+                                FSpotList, this);
 
   ListView->setModel(FModel);
   ListView->setItemDelegate(new ptImageSpotItemDelegate(this));
 
-  connect(ListView,   SIGNAL(rowChanged(QModelIndex)),  this,     SLOT(UpdateButtonStates()));
-  connect(ListView,   SIGNAL(rowChanged(QModelIndex)),  this,     SIGNAL(rowChanged(QModelIndex)));
-  connect(ListView,   SIGNAL(activeSpotsChanged()),     this,     SLOT(ActiveSpotsChanged()));
+  connect(ListView,   SIGNAL(rowChanged(QModelIndex)),  this,     SLOT(updateButtonStates()));
+  connect(ListView,   SIGNAL(rowChanged(QModelIndex)),  this,     SLOT(emitRowChanged(QModelIndex)));
+  connect(ListView,   SIGNAL(activeSpotsChanged()),     this,     SLOT(activeSpotsChanged()));
   connect(DownButton, SIGNAL(clicked()),                this,     SLOT(moveSpotDown()));
   connect(UpButton,   SIGNAL(clicked()),                this,     SLOT(moveSpotUp()));
   connect(DelButton,  SIGNAL(clicked()),                this,     SLOT(deleteSpot()));
-  connect(AddButton,  SIGNAL(clicked()),                this,     SLOT(ToggleAppendMode()));
-  connect(EditButton, SIGNAL(clicked()),                this,     SLOT(ToggleEditMode()));
+  connect(AddButton,  SIGNAL(clicked()),                this,     SLOT(toggleAppendMode()));
+  connect(EditButton, SIGNAL(clicked()),                this,     SLOT(toggleEditMode()));
 
-  UpdateButtonStates();
+  updateButtonStates();
+}
+
+//==============================================================================
+
+void ptSpotListWidget::setEditMode(bool AIsEdit) {
+  EditButton->setChecked(AIsEdit);
+  if (!AIsEdit)
+    FAppendOngoing = false;
+  updateButtonStates();
 }
 
 //==============================================================================
 
 void ptSpotListWidget::clear() {
   FModel->removeAll();
-  UpdateToolActiveState();
-  UpdatePreview();
+  updatePreview();
 }
 
 //==============================================================================
@@ -125,7 +126,7 @@ bool ptSpotListWidget::eventFilter(QObject *watched, QEvent *event) {
 
 //==============================================================================
 
-void ptSpotListWidget::ToggleAppendMode() {
+void ptSpotListWidget::toggleAppendMode() {
   // For the add button “checked” means append mode is on, “unchecked” means append mode is off.
 
   if (FAppendOngoing) {
@@ -149,7 +150,7 @@ void ptSpotListWidget::ToggleAppendMode() {
 
 //==============================================================================
 
-void ptSpotListWidget::ToggleEditMode() {
+void ptSpotListWidget::toggleEditMode() {
   if (FInteractionOngoing) {
     // turn edit mode OFF
     EditButton->setToolTip(tr("Edit spots"));
@@ -167,7 +168,7 @@ void ptSpotListWidget::ToggleEditMode() {
       // Pipe stops *before* spot processing to provide a clean basis for the quick
       // preview in interactive mode. To make present spots immediately visibe when
       // entering the interaction, we trigger spot processing now.
-      UpdatePreview();
+      updatePreview();
     }
   }
 
@@ -175,45 +176,10 @@ void ptSpotListWidget::ToggleEditMode() {
 
 //==============================================================================
 
-void ptSpotListWidget::UpdatePreview() {
-  UpdateButtonStates();
-
-  if (FInteractionOngoing) {
-    // We’re in interactive mode: only recalc spots
-    std::unique_ptr<ptImage> hImage(new ptImage);
-    hImage->Set(TheProcessor->m_Image_AfterLocalEdit);
-    hImage->RGBToLch();
-    FModel->RunFiltering(hImage.get());
-    hImage->LchToRGB(Settings->GetInt("WorkColor"));
-    UpdatePreviewImage(hImage.get());
-
-  } else {
-    // not in interactive mode: run pipe
-    Update(ptProcessorPhase_LocalEdit);
-  }
-}
-
-//==============================================================================
-
-void ptSpotListWidget::UpdateToolActiveState() {
-  // Copied from ptMain::Standard_CB_SetAndRun().
-  QWidget* CurrentControl = this->parentWidget();
-  ptGroupBox* CurrentTool = dynamic_cast<ptGroupBox*>(CurrentControl);
-
-  while (CurrentTool == NULL) {
-    CurrentControl = CurrentControl->parentWidget();
-    CurrentTool = dynamic_cast<ptGroupBox*>(CurrentControl);
-  }
-
-  CurrentTool->SetActive(FModel->hasEnabledSpots());
-}
-
-//==============================================================================
-
 void ptSpotListWidget::deleteSpot() {
   FModel->removeRows(ListView->currentIndex().row(), 1, QModelIndex());
-  emit rowChanged(ListView->currentIndex());
-  UpdatePreview();
+  emit rowChanged(ListView->currentIndex().row());
+  updatePreview();
 }
 
 //==============================================================================
@@ -222,7 +188,7 @@ void ptSpotListWidget::moveSpotDown() {
   int hNewRow = FModel->moveRow(ListView->currentIndex(), +1);
   if (hNewRow > -1) {
     ListView->setCurrentIndex(FModel->index(hNewRow, 0));
-    UpdatePreview();
+    updatePreview();
   }
 }
 
@@ -232,7 +198,7 @@ void ptSpotListWidget::moveSpotUp() {
   int hNewRow = FModel->moveRow(ListView->currentIndex(), -1);
   if (hNewRow > -1) {
     ListView->setCurrentIndex(FModel->index(hNewRow, 0));
-    UpdatePreview();
+    updatePreview();
   }
 }
 
@@ -242,7 +208,7 @@ void ptSpotListWidget::processCoordinates(const QPoint &APos) {
   if (FAppendOngoing) {
     // append new spot after append-spot button was clicked
     ptImageSpot *hSpot = FSpotCreator();
-    hSpot->setPos(APos.x(), APos.y());
+//    hSpot->setPos(APos.x(), APos.y());
     hSpot->setName(tr("Spot"));
 
     FModel->appendSpot(hSpot);
@@ -253,19 +219,30 @@ void ptSpotListWidget::processCoordinates(const QPoint &APos) {
     FModel->setSpotPos(ListView->currentIndex().row(), APos.x(), APos.y());
   }
 
-  UpdatePreview();
+  updatePreview();
 }
 
 //==============================================================================
 
-void ptSpotListWidget::ActiveSpotsChanged() {
-  UpdateToolActiveState();
-  UpdatePreview();
+void ptSpotListWidget::updatePreview() {
+  emit dataChanged();
 }
 
 //==============================================================================
 
-void ptSpotListWidget::UpdateButtonStates() {
+void ptSpotListWidget::emitRowChanged(const QModelIndex &AIdx) {
+  emit rowChanged(AIdx.row());
+}
+
+//==============================================================================
+
+void ptSpotListWidget::activeSpotsChanged() {
+  updatePreview();
+}
+
+//==============================================================================
+
+void ptSpotListWidget::updateButtonStates() {
   bool hIdxValid = ListView->currentIndex().isValid();
   DownButton->setEnabled(hIdxValid && (ListView->currentIndex().row() < FModel->rowCount()-1));
   UpButton->setEnabled(hIdxValid && (ListView->currentIndex().row() > 0));
