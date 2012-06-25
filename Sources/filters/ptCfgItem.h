@@ -24,11 +24,9 @@
 #ifndef PTCFGITEM_H
 #define PTCFGITEM_H
 
-//==============================================================================
-
 #include <memory>
 
-#include <QStringList>
+#include <QList>
 #include <QVariant>
 
 class ptCurve;
@@ -48,10 +46,18 @@ public:
     SpinEdit,         /*!< ptInput: Simple input field for numbers. */
     Slider,           /*!< ptInput: Input of numbers via a slider. */
     HueSlider,        /*!< ptInput: Slider with an added hue bar. */
-    // Widgets stored in in a curstom store
+    // Widgets stored in in a custom store
     CurveWin = CFirstCustomType,   /*!< ptCurveWindow */
   };
 
+  struct TComboEntry {
+    QString   caption;
+    int       value;
+    QString   storableId;
+  };
+
+
+public:
   struct TButton {
     // TODO: Unfinished dummy. Add icons etc. Might we need a ptButton class? Do we need it at all?
     QString       Id;
@@ -75,14 +81,14 @@ public:
   };
 
   struct TCombo {
-    QString       Id;
-    TType         Type;
-    int           Default;
-    QStringList   EntryList;
-    bool          UseCommonDispatch;
-    bool          Storeable;
-    QString       Caption;
-    QString       ToolTip;
+    QString             Id;
+    TType               Type;
+    int                 Default;
+    QList<TComboEntry>  EntryList;
+    bool                UseCommonDispatch;
+    bool                Storeable;
+    QString             Caption;
+    QString             ToolTip;
   };
 
   struct TInput {
@@ -121,6 +127,10 @@ public:
   ptCfgItem(const TCurve &AValues);
   ///@}
 
+  /*! Performs a type and range check of `AValue` according to the requirements of this `ptCfgItem`
+      object and returns a `QVariant` with valid type and value. When validation is not possible
+      raises a `ptInfo` exception. */
+  QVariant validate(QVariant AValue);
 
   /*! \group Members
       Simple members for easy access */
@@ -141,7 +151,7 @@ public:
   bool          Checkable;
 
   // specific to TCombo
-  QStringList   EntryList;
+  QList<TComboEntry>   EntryList;
 
   // specific to TInput
   QVariant      Min;
@@ -152,6 +162,15 @@ public:
   // specific to TCurve
   std::shared_ptr<ptCurve>  Curve;
   ///@}
+
+
+private:
+  void  init();
+  void  ensureVariantType(QVariant &AValue);
+  void  setVariantType();
+
+  QVariant::Type  FIntendedType;
+
 };
 
 #endif // PTCFGIITEM_H

@@ -5731,7 +5731,7 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="133"/>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="134"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="133"/>
         <source>RGB</source>
         <translation>RGB</translation>
     </message>
@@ -8443,6 +8443,7 @@ Pellicola 35mm = 1.0</translation>
         <location filename="../Sources/ptSettings.cpp" line="108"/>
         <location filename="../Sources/ptSettings.cpp" line="111"/>
         <location filename="../Sources/ptSettings.cpp" line="112"/>
+        <location filename="../Sources/ptSettings.cpp" line="99"/>
         <source>k1</source>
         <translation>k1</translation>
     </message>
@@ -8814,12 +8815,12 @@ Usata per la correzione della geometria.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="163"/>
-        <location filename="../Sources/ptSettings.cpp" line="167"/>
+        <location filename="../Sources/ptSettings.cpp" line="165"/>
         <location filename="../Sources/ptSettings.cpp" line="171"/>
         <location filename="../Sources/ptSettings.cpp" line="178"/>
         <location filename="../Sources/ptSettings.cpp" line="185"/>
         <location filename="../Sources/ptSettings.cpp" line="191"/>
-        <location filename="../Sources/ptSettings.cpp" line="194"/>
+        <location filename="../Sources/ptSettings.cpp" line="189"/>
         <location filename="../Sources/ptSettings.cpp" line="198"/>
         <location filename="../Sources/ptSettings.cpp" line="202"/>
         <location filename="../Sources/ptSettings.cpp" line="208"/>
@@ -8828,7 +8829,7 @@ Usata per la correzione della geometria.</translation>
         <location filename="../Sources/ptSettings.cpp" line="237"/>
         <location filename="../Sources/ptSettings.cpp" line="293"/>
         <location filename="../Sources/ptSettings.cpp" line="296"/>
-        <location filename="../Sources/ptSettings.cpp" line="309"/>
+        <location filename="../Sources/ptSettings.cpp" line="305"/>
         <location filename="../Sources/ptSettings.cpp" line="312"/>
         <location filename="../Sources/ptSettings.cpp" line="315"/>
         <location filename="../Sources/ptSettings.cpp" line="318"/>
@@ -8965,8 +8966,6 @@ Usata per la correzione della geometria.</translation>
         <location filename="../Sources/ptSettings.cpp" line="211"/>
         <location filename="../Sources/ptSettings.cpp" line="216"/>
         <location filename="../Sources/ptSettings.cpp" line="223"/>
-        <location filename="../Sources/ptSettings.cpp" line="230"/>
-        <location filename="../Sources/ptSettings.cpp" line="234"/>
         <location filename="../Sources/ptSettings.cpp" line="236"/>
         <location filename="../Sources/ptSettings.cpp" line="249"/>
         <location filename="../Sources/ptSettings.cpp" line="266"/>
@@ -9010,7 +9009,7 @@ Usata per la correzione della geometria.</translation>
         <location filename="../Sources/ptSettings.cpp" line="184"/>
         <location filename="../Sources/ptSettings.cpp" line="214"/>
         <location filename="../Sources/ptSettings.cpp" line="221"/>
-        <location filename="../Sources/ptSettings.cpp" line="228"/>
+        <location filename="../Sources/ptSettings.cpp" line="246"/>
         <location filename="../Sources/ptSettings.cpp" line="232"/>
         <location filename="../Sources/ptSettings.cpp" line="259"/>
         <location filename="../Sources/ptSettings.cpp" line="292"/>
@@ -10732,6 +10731,44 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
         <location filename="../Sources/filemgmt/ptSingleDirModel.cpp" line="158"/>
         <source>My Computer</source>
         <translation>Il mio computer</translation>
+    </message>
+</context>
+<context>
+    <name>ptToolBox</name>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="148"/>
+        <source>Open help page in web browser.</source>
+        <translation>Apri pagina di aiuto nel browser web.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="154"/>
+        <source>Complex filter. Might be slow.</source>
+        <translation>Filtro complesso. Può essere lento.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="241"/>
+        <source>&amp;Reset</source>
+        <translation>&amp;Resetta</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="245"/>
+        <source>&amp;Save preset</source>
+        <translation>&amp;Salva preset</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="249"/>
+        <source>&amp;Append preset</source>
+        <translation>&amp;Aggiungi a preset</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="257"/>
+        <source>&amp;Hide</source>
+        <translation>&amp;Nascondi</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="298"/>
+        <source>Add to &amp;favourites</source>
+        <translation>Aggiungi a &amp;preferiti</translation>
     </message>
 </context>
 <context>

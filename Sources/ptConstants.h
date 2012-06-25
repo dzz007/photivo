@@ -399,6 +399,10 @@ const short ptMaskType_All        = 4;
 const short ptMaskType_Screen     = 5;
 const short ptMaskType_Multiply   = 6;
 
+const short ptSaturationMode_Absolute = 0;
+const short ptSaturationMode_Adaptive = 1;
+
+
 // Special Preview
 
 const short ptSpecialPreview_RGB       = 0;
