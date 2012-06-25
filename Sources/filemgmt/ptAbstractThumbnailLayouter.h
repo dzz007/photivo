@@ -40,6 +40,7 @@ public:
   /*! This is an abstract class! Do not instantiate! */
   explicit ptAbstractThumbnailLayouter(QGraphicsView* view)
     : m_LazyInit(false), m_ThumbCount(0), m_View(view) {}
+  virtual ~ptAbstractThumbnailLayouter() {}
 
   /*! Initializes the layouter. You must initialize before calling \c Layout().
       \ param font
