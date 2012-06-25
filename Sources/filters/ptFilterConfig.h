@@ -72,24 +72,27 @@ public:
 
   /*! \group Management of additional custom data stores. */
   ///@{
-  TConfigStore       *newStore(const QString &AId, const TConfigStore ADefaults = TConfigStore());
-  TConfigStore       *getStore(const QString &AId);
-  const QStringList   storeIds() const { return FCustomStoreIds; }
-  void                clearCustomStores();
+  TConfigStore       *newSimpleStore(const QString &AId, const TConfigStore ADefaults = TConfigStore());
+  TConfigStore       *getSimpleStore(const QString &AId);
+  const QStringList   simpleStoreIds() const { return FSimpleStoreIds; }
+  void                clearSimpleStores();
   ///@}
 
-  /*! \group Management of complex custom stores that implement the ptStorable interface. */
+  /*! \group Management of complex custom stores that implement the ptStorable interface.
+        `ptFilterConfig` does *not* take ownership of the stores. */
   ///@{
-  void insertComplexStore(const QString &AId, ptStorable *AStore);
+  void                insertStore(const QString &AId, ptStorable *AStore);
+  ptStorable         *getStore(const QString &AId);
+  const QStringList   storeIds() const { return FStoreIds; }
   ///@}
 
 
 private:
-  TConfigStore         FDataStore;
-  QList<TConfigStore>  FCustomStores;
-  QStringList          FCustomStoreIds;
-  QList<ptStorable*>   FComplexStores;
-  QStringList          FComplexStoreIds;
+  TConfigStore         FDefaultStore;
+  QList<TConfigStore>  FSimpleStores;
+  QStringList          FSimpleStoreIds;
+  QList<ptStorable*>   FStores;
+  QStringList          FStoreIds;
 
 };
 

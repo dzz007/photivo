@@ -7203,8 +7203,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(Reinhard05LightInput)
 
   M_Dispatch(NormalizationOpacityInput)
-//  M_Dispatch(NormalizationBlackPointInput)
-//  M_Dispatch(NormalizationWhitePointInput)
 
   M_Dispatch(LMHLightRecovery1MaskTypeChoice)
   M_Dispatch(LMHLightRecovery1AmountInput)

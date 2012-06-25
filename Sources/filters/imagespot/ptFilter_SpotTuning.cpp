@@ -88,7 +88,7 @@ void ptFilter_SpotTuning::doDefineControls() {
   ;
 
   FNullSpot = make_unique<ptTuningSpot>(&FCfgItems);
-  FConfig->insertComplexStore(CSpotListId, &FSpotList);
+  FConfig->insertStore(CSpotListId, &FSpotList);
 }
 
 //==============================================================================

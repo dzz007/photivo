@@ -82,7 +82,7 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
   if (!hStoreIds.isEmpty()) {
     APreset->setValue(CCustomStores, FConfig->storeIds());
     for (QString hId: FConfig->storeIds()) {
-      TConfigStore *hList = FConfig->getStore(hId);
+      TConfigStore *hList = FConfig->getSimpleStore(hId);
       APreset->beginGroup(hId);
       for (auto hItem = hList->constBegin(); hItem != hList->constEnd(); ++hItem) {
         APreset->setValue(hItem.key(), hItem.value());
@@ -119,15 +119,26 @@ void ptFilterBase::importPreset(QSettings *APreset, const bool ARequestPipeRun /
   // *** custom stores *** //
   // Read list of store names, create and fill each one
   for (QString hId: APreset->value(CCustomStores).toStringList()) {
-    TConfigStore *hList = FConfig->getStore(hId);
+    TConfigStore *hList = FConfig->getSimpleStore(hId);
     if (!hList)
-      hList = FConfig->newStore(hId);
+      hList = FConfig->newSimpleStore(hId);
 
     APreset->beginGroup(hId);
     for (QString hKey: APreset->allKeys()) {
       hList->insert(hKey, APreset->value(hKey));  // read one store item from preset
     }
     APreset->endGroup();
+  }
+
+  // *** complex stores ***
+  for (QString hStoreId: FConfig->storeIds()) {
+    APreset->beginGroup(hStoreId);
+    TConfigStore hConfig;
+    for (QString hKey: APreset->allKeys()) {
+      hConfig.insert(hStoreId+"/"+hKey, APreset->value(hKey));
+    }
+    APreset->endGroup();
+    FConfig->getStore(hStoreId)->loadConfig(hConfig);
   }
 
   // flags and derived’s custom stuff
@@ -149,7 +160,7 @@ void ptFilterBase::reset(const bool ARequestPipeRun /*=false*/) {
   // Call the children reset method
   doReset();
 
-  FConfig->clearCustomStores();
+  FConfig->clearSimpleStores();
   createConfig();
   updateGui(ARequestPipeRun);
 }
@@ -406,7 +417,7 @@ void ptFilterBase::commonDispatch(const QString AId, const QVariant ANewValue) {
   } else if ((FCfgItems.at(hIdx).Type >= ptCfgItem::CFirstCustomType) &&
              (ANewValue.type() == QVariant::Map))
   { // item that has a custom store
-    (*FConfig->getStore(FCfgItems.at(hIdx).Id)) = ANewValue.toMap();
+    (*FConfig->getSimpleStore(FCfgItems.at(hIdx).Id)) = ANewValue.toMap();
     requestPipeRun();
   }
 }
@@ -423,7 +434,7 @@ void ptFilterBase::createConfig() {
     if (hCfgItem.Type < ptCfgItem::CFirstCustomType)
       hDefaultStore.insert(hCfgItem.Id, hCfgItem.Default);
      else
-      FConfig->newStore(hCfgItem.Id, hCfgItem.Default.toMap());
+      FConfig->newSimpleStore(hCfgItem.Id, hCfgItem.Default.toMap());
   }
 
   doAddCustomConfig(hDefaultStore);
@@ -480,7 +491,7 @@ void ptFilterBase::updateGui(const bool ARequestPipeRun /*= true*/) {
                           .arg(uniqueName(), hCfgItem.Id), AT);
 
       } else if (hCfgItem.Type >= ptCfgItem::CFirstCustomType) {
-        hWidget->setValue(*FConfig->getStore(hCfgItem.Id));
+        hWidget->setValue(*FConfig->getSimpleStore(hCfgItem.Id));
 
       } else {
         hWidget->setValue(FConfig->getValue(hCfgItem.Id));
