@@ -4981,12 +4981,10 @@ float *ptImage::FillMask(const uint16_t APointX,
   float hThreshold     = AThreshold*0x5555;
   float hRadiusOut     = ptSqr((float)AMaxRadius);
   float hRadiusIn      = ptSqr(AMaxRadius/3.0f);
-  float hRadiusDiff    = hRadiusOut - hRadiusIn;
   float hLumaWeight    = 1.0f - AColorWeight;
   float hColorWeight   = AColorWeight*(float)0x7FFF;
 
-  float hResult  = 0.0f,
-        hValueL  = 0.0f,
+  float hValueL  = 0.0f,
         hValueC  = 0.0f,
         hValueH  = 0.0f;
   float    hDiff = 0;
@@ -5018,25 +5016,23 @@ float *ptImage::FillMask(const uint16_t APointX,
   fill4stack(FillMask, APointX, APointY, m_Width, m_Height,
              [&](uint16_t X, uint16_t Y) -> float {
 
-    hResult = 1.0f;
+    float hResult = 1.0f;
     if (AUseMaxRadius) {
       hRad = ptSqr(std::abs((int32_t)X-APointX)) + ptSqr(std::abs((int32_t)Y-APointY));
-      if (hRad > hRadiusIn) {
-        if (hRad < hRadiusOut) hResult = ptSqr((hRadiusOut - hRad)/hRadiusDiff);
-        else                   hResult = 0.0f;
-      }
+      if (hRad < hRadiusOut) hResult = ptSqr((hRadiusOut - hRad)/hRadiusOut);
+      else                   hResult = 0.0f;
     }
 
     if (hResult == 0.0f) return hResult;
 
     hIdx  = (int32_t)Y*m_Width + X;
 
-    hDiff = std::abs((float)m_ImageC[hIdx] - hValueC) +
+    hDiff = std::abs((float)m_ImageC[hIdx] - hValueC)             +
             std::abs((float)m_ImageL[hIdx] - hValueL)*hLumaWeight +
-            std::abs((float)m_ImageH[hIdx] - hValueH)*hColorWeight;
+            std::abs((float)m_ImageH[hIdx] - hValueH)*hColorWeight*(float)m_ImageC[hIdx]/(float)0x1fff;
 
     if (hDiff > hThresholdHalf) {
-      if (hDiff < hThreshold) hResult = hResult*(hThreshold - hDiff)/hThresholdHalf;
+      if (hDiff < hThreshold) hResult = hResult*powf((hThreshold - hDiff)/hThresholdHalf, 4.0f);
       else                    hResult = 0.0f;
     }
 
