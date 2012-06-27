@@ -353,6 +353,7 @@ TRANSLATIONS += ../Translations/photivo_Italian.ts
 TRANSLATIONS += ../Translations/photivo_Polish.ts
 TRANSLATIONS += ../Translations/photivo_Russian.ts
 TRANSLATIONS += ../Translations/photivo_Spanish.ts
+TRANSLATIONS += ../Translations/photivo_Czech.ts
 
 ################################################################################
 
