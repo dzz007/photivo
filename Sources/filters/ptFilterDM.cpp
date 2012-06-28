@@ -527,6 +527,9 @@ ptFilterBase *ptFilterDM::NewFilter(const QString &AFilterId,
   ptFilterBase *hFilter = FFactory->CreateFilterFromName(AFilterId);
   hFilter->init(AUniqueName, AGuiNamePostfix);
 
+  if (hFilter->filterName() == nullptr)
+    GInfo->Raise("Filter "+AFilterId+" ("+AUniqueName+") has no FFilterName!");
+
   FFilters.insert(AUniqueName, hFilter);
   return hFilter;
 }
