@@ -229,7 +229,8 @@ HEADERS += \
     ../Sources/ptWiener.h \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
-    ../Sources/qtsingleapplication/qtsingleapplication.h
+    ../Sources/qtsingleapplication/qtsingleapplication.h \
+    ../Sources/metadata/ptXmpSettings.h
 
 
 SOURCES += \
@@ -335,7 +336,8 @@ SOURCES += \
     ../Sources/vcd/es_median_filter.c \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
-    ../Sources/vcd/vcd_interpolate.c
+    ../Sources/vcd/vcd_interpolate.c \
+    ../Sources/metadata/ptXmpSettings.cpp
 
 
 FORMS += \

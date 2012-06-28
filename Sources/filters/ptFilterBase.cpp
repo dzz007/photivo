@@ -102,6 +102,41 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
 
 //==============================================================================
 
+std::unordered_map<std::string, std::string>
+ptFilterBase::exportPreset(const bool AIncludeFlags /*= true*/) const {
+  std::unordered_map<std::string, std::string> map;
+
+  // store default TFilterConfig from FCfgItems list
+  for (ptCfgItem hSetting: FCfgItems) {
+    if (hSetting.Storeable) {
+      map[hSetting.Id.toStdString()] = FConfig->getValue(hSetting.Id).toString().toStdString();
+    }
+  }
+
+  //TODO!!!
+//  // store additional custom config lists (e.g. used for curve anchors)
+//  QStringList hStoreIds = FConfig->storeIds();
+//  if (!hStoreIds.isEmpty()) {
+//    APreset->setValue(CCustomStores, FConfig->storeIds());
+//    for (QString hId: FConfig->storeIds()) {
+//      TConfigStore *hList = FConfig->getStore(hId);
+//      APreset->beginGroup(hId);
+//      for (auto hItem = hList->constBegin(); hItem != hList->constEnd(); ++hItem) {
+//        APreset->setValue(hItem.key(), hItem.value());
+//      }
+//      APreset->endGroup();
+//    }
+//  }
+
+  if (AIncludeFlags) map[CIsBlocked.toStdString()] = FIsBlocked ? "1" : "0";
+
+  //TODO!!!
+//  doExportCustomConfig(APreset, AIncludeFlags);
+  return map;
+}
+
+//==============================================================================
+
 void ptFilterBase::importPreset(QSettings *APreset, const bool ARequestPipeRun /*=false*/) {
   FPreventPipeRun = !ARequestPipeRun;
   APreset->beginGroup(this->FFilterName + "/" + this->uniqueName());
@@ -247,6 +282,15 @@ QString ptFilterBase::uniqueName() const {
                 QString("No unique name set for filter \"%1\".") .arg(FFilterName), AT);
 
   return FUniqueName;
+}
+
+//==============================================================================
+
+QString ptFilterBase::filterName() const {
+  GInfo->Assert(!FFilterName.isEmpty(),
+                QString("No filter name set for unique name \"%1\".").arg(FUniqueName),
+                AT);
+  return FFilterName;
 }
 
 //==============================================================================
