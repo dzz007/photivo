@@ -114,7 +114,7 @@ public:
   void StartLocalAdjust(std::function<void()> ACleanupFunc);
 
   ptRichRectInteraction *crop() const { return FCrop; }
-  ptSpotInteraction     *localAdjust() const { return FSpotTuning; }
+  ptSpotInteraction     *spotTuning() const { return FSpotTuning; }
   ptRepairInteraction   *spotRepair() const { return FSpotRepair; }
 
   void setGrid(const short enabled, const uint linesX, const uint linesY);

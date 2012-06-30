@@ -104,6 +104,8 @@ QWidget *ptFilter_SpotTuning::doCreateGui() {
   FGui->SpotList->init(&FSpotList);
   connect(FGui->SpotList, SIGNAL(rowChanged(int)), this, SLOT(updateSpotDetailsGui(int)));
   connect(FGui->SpotList, SIGNAL(dataChanged()), this, SLOT(updatePreview()));
+  connect(FGui->SpotList, SIGNAL(editModeChanged(bool)), this, SLOT(setupInteraction(bool)));
+  this->updateSpotDetailsGui(-1, hGuiBody);
 
   return hGuiBody;
 }
@@ -166,7 +168,7 @@ void ptFilter_SpotTuning::startInteraction() {
   BlockTools(btmBlockForLocalAdjust);
 
   ViewWindow->StartLocalAdjust(std::bind(&ptFilter_SpotTuning::cleanupAfterInteraction, this));
-  QObject::connect(ViewWindow->localAdjust(), SIGNAL(clicked(QPoint)),
+  QObject::connect(ViewWindow->spotTuning(), SIGNAL(clicked(QPoint)),
                    FGui->SpotList, SLOT(processCoordinates(QPoint)));
   ViewWindow->setFocus();
 }
@@ -181,12 +183,21 @@ void ptFilter_SpotTuning::cleanupAfterInteraction() {
 
 //==============================================================================
 
-void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx) {
-  ptTuningSpot *hSpot =
-    isBetween(ASpotIdx, 0, FSpotList.count()) ? (ptTuningSpot*)FSpotList.at(ASpotIdx) : FNullSpot.get();
+void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget /*=nullptr*/) {
+  ptTuningSpot *hSpot = nullptr;
+  if (isBetween(ASpotIdx, 0, FSpotList.count())) {
+    hSpot = (ptTuningSpot*)FSpotList.at(ASpotIdx);
+    FGui->SpotDetailsGroup->setEnabled(true);
+  } else {
+    hSpot = FNullSpot.get();
+    FGui->SpotDetailsGroup->setEnabled(false);
+  }
+
+  if (AGuiWidget == nullptr)
+    AGuiWidget = FGuiContainer;
 
   for (ptCfgItem hCfgItem: FCfgItems) {
-    ptWidget *hWidget = findPtWidget(hCfgItem.Id, FGuiContainer);
+    ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiWidget);
     hWidget->setValue(hSpot->getValue(hCfgItem.Id));
   }
 }
@@ -206,6 +217,19 @@ void ptFilter_SpotTuning::updatePreview() {
   } else {
     // not in interactive mode: run pipe
     Update(ptProcessorPhase_LocalEdit);
+  }
+}
+
+//==============================================================================
+
+void ptFilter_SpotTuning::setupInteraction(bool AEnable) {
+  if (AEnable == FInteractionOngoing)
+    return;
+
+  if (AEnable) {
+    startInteraction();
+  } else {
+    ViewWindow->spotTuning()->stop();
   }
 }
 

@@ -80,7 +80,18 @@ ptCurveWindow::ptCurveWindow(QWidget *AParent)
 //==============================================================================
 
 ptCurveWindow::ptCurveWindow(const ptCfgItem &ACfgItem, QWidget *AParent)
-: ptWidget(AParent)
+: ptWidget(AParent),
+  FCaptionLabel(nullptr),
+  FWheelTimer(new QTimer(this)),
+  FMouseAction(NoAction),
+  FMovingAnchor(-1),
+  FLinearIpolAction(nullptr),
+  FSplineIpolAction(nullptr),
+  FCosineIpolAction(nullptr),
+  FIpolGroup(nullptr),
+  FByLumaAction(nullptr),
+  FByChromaAction(nullptr),
+  FMaskGroup(nullptr)
 {
   this->init(ACfgItem);
 }
