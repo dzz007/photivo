@@ -208,7 +208,7 @@ void ptSpotListWidget::processCoordinates(const QPoint &APos) {
   if (FAppendOngoing) {
     // append new spot after append-spot button was clicked
     ptImageSpot *hSpot = FSpotCreator();
-//    hSpot->setPos(APos.x(), APos.y());
+    hSpot->setPos(APos);
     hSpot->setName(tr("Spot"));
 
     FModel->appendSpot(hSpot);
