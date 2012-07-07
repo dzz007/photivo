@@ -352,23 +352,33 @@ bool ptFilterDM::WritePresetFile(const QString       &AFileName,
                                  const bool           AIncludeFlags,
                                  const ptFilterBase  *AFilter)
 {
-  auto hFileName = AFileName;
+  QString hFileName = "";
 
-  if (hFileName.isEmpty()) {
+  if (AFileName.isEmpty() || AFileName.endsWith(".")) {
+    QString hSuggestion = "";
+    if (AFileName.isEmpty()) {
+      hSuggestion = Settings->GetString("PresetDirectory") + "/preset.pts";
+    } else {
+      hSuggestion = AFileName + "pts";
+    }
+
     QString hAppendCaption = QObject::tr("Append settings file");
     QString hSaveCaption   = QObject::tr("Save settings file");
     hFileName = QFileDialog::getSaveFileName(
                           nullptr,
                           AAppend ? hAppendCaption : hSaveCaption,
-                          Settings->GetString("PresetDirectory") + "/preset.pts",
+                          hSuggestion,
                           SettingsFilePattern,
                           nullptr,
                           AAppend ? QFileDialog::DontConfirmOverwrite : (QFileDialog::Option)0
                         );
 
     // Empty file name means user aborted
-    if (hFileName.isEmpty())
+    if (hFileName.isEmpty()) {
       return false;
+    }
+  } else {
+    hFileName = AFileName;
   }
 
   return PerformWritePreset(hFileName, AAppend, AIncludeFlags, false, AFilter);
