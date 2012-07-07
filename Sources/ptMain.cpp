@@ -6873,6 +6873,16 @@ inline void BlockSave(bool Block) {
 
 //==============================================================================
 
+QString GetCurrentImageBaseName() {
+  if (Settings->GetInt("HaveImage")==0) return "";
+
+  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+  QFileInfo PathInfo(InputFileNameList[0]);
+  return PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName() + ".";
+}
+
+//==============================================================================
+
 void SaveOutput(const short mode) {
   BlockSave(true);
 
@@ -6886,7 +6896,7 @@ void SaveOutput(const short mode) {
     GFilterDM->WriteJobFile();
 
   } else if (mode==ptOutputMode_Settingsfile) {
-    GFilterDM->WritePresetFile();
+    GFilterDM->WritePresetFile(GetCurrentImageBaseName());
   }
 
   BlockSave(false);
