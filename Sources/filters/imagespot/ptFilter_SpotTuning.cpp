@@ -36,7 +36,7 @@ extern ptProcessor  *TheProcessor;
 extern ptViewWindow *ViewWindow;
 
 void ReportProgress(const QString Message);
-void BlockTools(const ptBlockToolsMode NewState);
+void BlockTools(const ptBlockToolsMode ANewState, QStringList AExcludeIds = QStringList());
 void Update(short Phase,
             short SubPhase       = -1,
             short WithIdentify   = 1,
@@ -101,7 +101,7 @@ QWidget *ptFilter_SpotTuning::doCreateGui() {
   this->initDesignerGui(hGuiBody);
   FGui->CurveWin->setCaption(tr("Luminance curve"));
 
-  FGui->SpotList->init(&FSpotList);
+  FGui->SpotList->init(&FSpotList, std::bind(&ptFilter_SpotTuning::createSpot, this));
   connect(FGui->SpotList, SIGNAL(rowChanged(int)), this, SLOT(updateSpotDetailsGui(int)));
   connect(FGui->SpotList, SIGNAL(dataChanged()), this, SLOT(updatePreview()));
   connect(FGui->SpotList, SIGNAL(editModeChanged(bool)), this, SLOT(setupInteraction(bool)));
@@ -119,7 +119,7 @@ bool ptFilter_SpotTuning::doCheckHasActiveCfg() {
 //==============================================================================
 
 void ptFilter_SpotTuning::doRunFilter(ptImage *AImage) const {
-  AImage->toRGB();
+  AImage->RGBToLch();
   for (int i = 0; i < FSpotList.count(); ++i) {
     ptTuningSpot *hTSpot = static_cast<ptTuningSpot*>(FSpotList.at(i));
     if (hTSpot->isEnabled()) {
@@ -159,13 +159,13 @@ void ptFilter_SpotTuning::startInteraction() {
   FGui->SpotList->setEditMode(true);
   ViewWindow->ShowStatus(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for local adjust"));
-  TheProcessor->RunLocalEdit(ptProcessorStopBefore::LocalAdjust);
+  TheProcessor->RunLocalEdit(ptProcessorStopBefore::SpotTuning);
   this->updatePreview();
 
   // Allow to be selected in the view window. And deactivate main.
   ViewWindow->ShowStatus(QObject::tr("Local adjust"));
   ReportProgress(QObject::tr("Local adjust"));
-  BlockTools(btmBlockForLocalAdjust);
+  BlockTools(btmBlockForSpotTuning, QStringList(this->uniqueName()));
 
   ViewWindow->StartLocalAdjust(std::bind(&ptFilter_SpotTuning::cleanupAfterInteraction, this));
   QObject::connect(ViewWindow->spotTuning(), SIGNAL(clicked(QPoint)),
@@ -176,7 +176,7 @@ void ptFilter_SpotTuning::startInteraction() {
 //==============================================================================
 
 void ptFilter_SpotTuning::cleanupAfterInteraction() {
-  BlockTools(btmUnblock);
+  BlockTools(btmUnblock, QStringList(this->uniqueName()));
   FGui->SpotList->setEditMode(false);
   Update(ptProcessorPhase_LocalEdit);
 }
@@ -209,7 +209,6 @@ void ptFilter_SpotTuning::updatePreview() {
     // We’re in interactive mode: only recalc spots
     std::unique_ptr<ptImage> hImage(new ptImage);
     hImage->Set(TheProcessor->m_Image_AfterLocalEdit);
-    hImage->RGBToLch();
     this->runFilter(hImage.get());
     hImage->LchToRGB(Settings->GetInt("WorkColor"));
     UpdatePreviewImage(hImage.get());
@@ -226,6 +225,7 @@ void ptFilter_SpotTuning::setupInteraction(bool AEnable) {
   if (AEnable == FInteractionOngoing)
     return;
 
+  FInteractionOngoing = AEnable;
   if (AEnable) {
     startInteraction();
   } else {

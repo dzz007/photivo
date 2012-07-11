@@ -2338,6 +2338,8 @@ void ptProcessor::Run(short Phase,
 //==============================================================================
 
 void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
+  ptFilterBase *hFilter = nullptr;
+
   // We fetch the image from the input processing
   if (Settings->GetInt("IsRAW") == 0) {
     // image is a bitmap
@@ -2383,54 +2385,30 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
       m_Image_AfterLocalEdit->Set(m_Image_AfterDcRaw);
     }
   }
-// TODO: spot processing
-return;
+
   // We have the image for the pipe in linear RGB.
 
-  if (StopBefore == ptProcessorStopBefore::LocalAdjust) return;
+  if (StopBefore == ptProcessorStopBefore::SpotTuning) return;
 
   // execute local adjust spots
-  if (Settings->ToolIsActive("TabLocalAdjust")) {
+  hFilter = GFilterDM->GetFilterFromName(Fuid::SpotTuning_Local);
+  if (hFilter->isActive()) {
     if (StopBefore == ptProcessorStopBefore::NoStop) {
-      m_ReportProgress(tr("Local spot adjustments"));
+      m_ReportProgress(tr("Spot tuning"));
     }
 
-//    m_Image_AfterLocalEdit->RGBToLch();
-
-    if (StopBefore == ptProcessorStopBefore::NoStop) {
-      TRACEMAIN("Done local spot adjustments at %d ms.",FRunTimer.elapsed());
-    }
+    hFilter->runFilter(m_Image_AfterLocalEdit);
   }
 
-//  // execute spot repair
-//  if (StopBefore == ptProcessorStopBefore::SpotRepair) {
-//    m_Image_AfterLocalEdit->LchToRGB(Settings->GetInt("WorkColor"));
-//    return;
-//  }
-//  if (StopBefore == ptProcessorStopBefore::NoStop) {
-//    m_ReportProgress(tr("Spot repair"));
-//  }
-
-//  assert(RepairSpotModel != nullptr);
-//  RepairSpotModel->RunFiltering(m_Image_AfterLocalEdit);
-
-//  if (StopBefore == ptProcessorStopBefore::NoStop) {
-//    TRACEMAIN("Done spot repair at %d ms.",FRunTimer.elapsed());
-//  }
-
-  // Currently we assume that we only have LCH color space for local edits.
-//  m_Image_AfterLocalEdit->LchToRGB(Settings->GetInt("WorkColor"));
+  // Output of “Local” tab is Lch, but we need RGB for the following “Geometry” tab.
+  m_Image_AfterLocalEdit->LchToRGB(Settings->GetInt("WorkColor"));
 }
 
 //==============================================================================
 
 void ptProcessor::RunGeometry(ptProcessorStopBefore StopBefore) {
   if (!m_Image_AfterGeometry) m_Image_AfterGeometry = new ptImage();
-// TODO: Set() fails with an Lch image. Fix and re-enable colour conversions.
   m_Image_AfterGeometry->Set(m_Image_AfterLocalEdit);
-
-  // Output of “Local” tab is Lch, but we need RGB for the “Geometry” tab.
-//  m_Image_AfterGeometry->LchToRGB(Settings->GetInt("WorkColor"));
 
   // Often used.
   int TmpScaled = Settings->GetInt("Scaled");

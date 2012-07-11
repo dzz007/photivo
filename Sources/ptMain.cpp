@@ -1352,24 +1352,21 @@ void Update(const QString GuiName) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void BlockTools(const ptBlockToolsMode NewState) {
+void BlockTools(const ptBlockToolsMode ANewState, QStringList AExcludeIds = QStringList()) {
   // Set the object name of the widget that is excluded from blocking.
-  QString ExcludeTool = "";
-  switch (NewState) {
+  switch (ANewState) {
     case btmBlockForCrop:
-      ExcludeTool = "TabCrop";
+      AExcludeIds << "TabCrop";
       break;
     case btmBlockForSpotRepair:
-      ExcludeTool = "TabSpotRepair";
+      AExcludeIds << "TabSpotRepair";
       break;
-    case btmBlockForLocalAdjust:
-      ExcludeTool = "TabLocalAdjust";
     default:
       // nothing to do
       break;
   }
 
-  bool EnabledStatus = NewState == btmUnblock;
+  bool EnabledStatus = ANewState == btmUnblock;
 
   // Handle all necessary widgets outside the processing tabbook
   MainWindow->HistogramFrameCentralWidget->setEnabled(EnabledStatus);
@@ -1382,7 +1379,7 @@ void BlockTools(const ptBlockToolsMode NewState) {
       We just cycle through the list of currently visible tools and en/disable them.
     */
     for (QWidget *hToolBox: *MainWindow->m_MovedTools) {
-      if (hToolBox->objectName() != ExcludeTool) {
+      if (!AExcludeIds.contains(hToolBox->objectName())) {
         if (hToolBox->objectName().contains("/"))  //new-style
           hToolBox->setEnabled(EnabledStatus);
         else                                       // old-style
@@ -1408,18 +1405,18 @@ void BlockTools(const ptBlockToolsMode NewState) {
     QList<ptToolBox*> NewToolList =
         MainWindow->ProcessingTabBook->widget(CurrentTab)->findChildren<ptToolBox*>();
     foreach (ptToolBox* Tool, NewToolList) {
-      if (Tool->objectName() != ExcludeTool)
+      if (!AExcludeIds.contains(Tool->objectName()))
         Tool->setEnabled(EnabledStatus);
     }
     QList<ptGroupBox*> ToolList =
         MainWindow->ProcessingTabBook->widget(CurrentTab)->findChildren<ptGroupBox*>();
     foreach (ptGroupBox* Tool, ToolList) {
-      if (Tool->objectName() != ExcludeTool)
+      if (!AExcludeIds.contains(Tool->objectName()))
         Tool->SetEnabled(EnabledStatus);
     }
   }
 
-  Settings->SetValue("BlockTools", NewState);
+  Settings->SetValue("BlockTools", ANewState);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -48,7 +48,7 @@ public:
   explicit ptSpotListWidget(QWidget *AParent);
   ~ptSpotListWidget();
 
-  void init(ptImageSpotList *ASpotList);
+  void init(ptImageSpotList *ASpotList, PCreateSpotFunc ASpotCreator);
 
   /*! Returns \c true if spot append action is in progress, \c false otherwise. */
   bool appendMode() { return FAppendOngoing; }

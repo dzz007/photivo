@@ -105,7 +105,7 @@ const short ptProcessorPhase_ToGimp        = 13;
 // spamming while crop preview
 enum class ptProcessorStopBefore {
   NoStop       = 0,
-  LocalAdjust  = 1,
+  SpotTuning   = 1,
   SpotRepair   = 2,
   Rotate       = 3,
   Crop         = 4
@@ -835,7 +835,7 @@ enum ptBlockToolsMode {
   btmBlockAll            = 1,
   btmBlockForCrop        = 2,
   btmBlockForSpotRepair  = 3,
-  btmBlockForLocalAdjust = 4
+  btmBlockForSpotTuning = 4
 };
 
 /*! This enum defines the different modes for loading a pipe configuration
