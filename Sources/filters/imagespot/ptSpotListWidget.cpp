@@ -58,8 +58,9 @@ ptSpotListWidget::~ptSpotListWidget() {
 
 //==============================================================================
 
-void ptSpotListWidget::init(ptImageSpotList *ASpotList) {
+void ptSpotListWidget::init(ptImageSpotList *ASpotList, PCreateSpotFunc ASpotCreator) {
   FSpotList = ASpotList;
+  FSpotCreator = ASpotCreator;
   ListView = new ptSpotListView(this);
   ListView->setFixedHeight(this->maximumHeight());
   HorizontalLayout->addWidget(ListView);
