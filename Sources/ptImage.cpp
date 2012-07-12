@@ -1927,7 +1927,7 @@ ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve, const short Scaling) {
   ptFastBilateralChannel(ContrastLayer, Threshold, Softness, 2, ChannelMask);
 
   if (Curve->mask() == ptCurve::ChromaMask) {
-#pragma omp parallel for schedule(static) private(ValueA, ValueB, m)
+#pragma omp parallel for schedule(static) private(hValueA, hValueB, m)
     for(uint32_t i = 0; i < (uint32_t) m_Width*m_Height; i++) {
       // Factor by hue
       hValueA    = ToFloatABNeutral[m_Image[i][1]];
