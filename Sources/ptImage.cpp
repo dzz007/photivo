@@ -1023,10 +1023,11 @@ ptImage *ptImage::LabToLch()
     m_ImageC.at(i) = powf(hValueA*hValueA + hValueB*hValueB, 0.5f);
   }
 
-  FREE(m_Image);
-  m_Image      = nullptr;
+  setSize(0);
   m_ColorSpace = ptSpace_LCH;
 }
+
+//==============================================================================
 
 ptImage *ptImage::toRGB()
 {
@@ -1050,6 +1051,8 @@ ptImage *ptImage::toLab()
   return this;
 }
 
+//==============================================================================
+
 ptImage *ptImage::LchToLab() {
   if (m_ColorSpace == ptSpace_Lab) return this;
 
@@ -1057,9 +1060,7 @@ ptImage *ptImage::LchToLab() {
   assert (m_Image      == 0);
 
   uint32_t hSize = (uint32_t)m_Width*m_Height;
-
-  m_Image = (uint16_t (*)[3]) CALLOC(hSize,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
+  setSize((size_t)hSize);
 
 #pragma omp parallel for schedule(static)
   for (uint32_t i = 0; i < hSize; i++) {
@@ -5693,94 +5694,6 @@ short ptImage::WriteAsJpeg(const char*    FileName,
   return 0;
 }
 #endif
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Refocus
-//
-// Taken (and slightly reworked) from DigiKam
-// Copyright (C) 2005-2007 by Gilles Caulier
-// (which in turn took it from http://refocus.sourceforge.net/)
-//
-////////////////////////////////////////////////////////////////////////////////
-/*
-ptImage* ptImage::Refocus(const uint8_t ChannelMask,
-                          const short   MatrixRadius,
-                          const double  Radius,
-                          const double  Gauss,
-                          const double  Correlation,
-                          const double  Noise) {
-
-  assert ((ChannelMask == 1) || (m_ColorSpace != ptSpace_Lab));
-
-  // Copy of the original message.
-  uint16_t (*OriginalImage)[3] = NULL;
-
-  // Copy original image
-  OriginalImage = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(OriginalImage,__FILE__,__LINE__);
-  memcpy(OriginalImage,m_Image,m_Width*m_Height*sizeof(*m_Image));
-
-  //
-  ptCMat *Matrix = NULL;
-
-  ptCMat CircleMatrix;
-  ptCMat GaussianMatrix;
-  ptCMat ConvolutionMatrix;
-
-  ptRefocusMatrix::MakeGaussianConvolution(Gauss,&GaussianMatrix,MatrixRadius);
-  ptRefocusMatrix::MakeCircleConvolution(Radius,&CircleMatrix,MatrixRadius);
-  ptRefocusMatrix::InitCMatrix(&ConvolutionMatrix,MatrixRadius);
-  ptRefocusMatrix::ConvolveStarMatrix(&ConvolutionMatrix,
-                                      &GaussianMatrix,
-                                      &CircleMatrix);
-  Matrix = ptRefocusMatrix::ComputeGMatrix(&ConvolutionMatrix,
-                                           MatrixRadius,
-                                           Correlation,
-                                           Noise,
-                                           0.0,
-                                           1);
-  ptRefocusMatrix::FinishCMatrix(&ConvolutionMatrix);
-  ptRefocusMatrix::FinishCMatrix(&GaussianMatrix);
-  ptRefocusMatrix::FinishCMatrix(&CircleMatrix);
-
-
-  const uint32_t ImageSize = m_Height*m_Width;
-
-  const short MatrixSize   = 1+2*MatrixRadius;
-  const short MatrixOffset = MatrixSize/2;
-
-  double   Value[3];
-
-  for (uint16_t Row=0; Row<m_Height; Row++) {
-    for (uint16_t Col=0; Col<m_Width; Col++) {
-
-      uint32_t Index = Row*m_Width+Col;
-
-      for (short c=0; c<3; c++) {
-        // Is it a channel we are supposed to handle ?
-        if  (! (ChannelMask & (1<<c))) continue;
-        Value[c] = 0;
-        for(short y=0; y<MatrixSize; y++) {
-          for(short x=0; x<MatrixSize; x++) {
-            int32_t OtherIndex = Index+m_Width*(y-MatrixOffset)+x-MatrixOffset;
-            if (OtherIndex >= 0 && (uint32_t)OtherIndex < ImageSize) {
-              Value[c] += Matrix->Data[y*MatrixSize+x] *
-                          OriginalImage[OtherIndex][c];
-            }
-          }
-        }
-        m_Image[Index][c] = CLIP((int32_t)Value[c]);
-      }
-    }
-  }
-
-  delete Matrix;
-  FREE(OriginalImage);
-
-  return this;
-}
-*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //
