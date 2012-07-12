@@ -1,0 +1,72 @@
+NOTES
+=====
+Red and green colour ist done on the grey PNGs in Gimp:
+a) "Colors/Color Balance": Midtones, +100 green or red, preserve luminosity
+b) "Colors/Hue-Saturation": -20 Lightness, +20 Saturation
+
+
+FILE DETAILS
+============
+Photivo file name     Faenza file name
+
+SEARCH BAR
+bookmarked-tools      <bookmark-new without the plus sign>
+visible-tools         view-list-details-symbolic
+active-tools          system-run
+
+PIPE
+indicator-active-tab  <modified gtk-yes>
+load-image            insert-image
+move-object-up        <arrow from document-save>
+move-object-down      <arrow from document-save>
+add-spot              <list-add in green>
+add-spot-stop         <combined from process-stop and list-add>
+edit-spot             <combined from gtk-yes and format-text-direction-ltr>
+spot-wb               <format-text-direction-ltr without the arrow>
+rotate-left           object-rotate-left
+rotate-right          object-rotate-right
+rotate-angle          <bits and pieces>
+crop                  edit-cut
+switch-orientation    <modified add-files-to-archive.png>
+image-center-hor      <bits and pieces>
+image-center-vert     <bits and pieces>
+dialog-cancel         window-close
+
+TOOL PANE BOTTOM CONTROLS
+preview-mode-tabs     go-bottom
+preview-mode-full     go-down
+run-pipe              media-playback-start
+load-config           extract-archive
+save-image            document-save
+export-image          <arrow from document-save>
+processing-pane       system-run
+settings-pane         preferences-desktop
+info-pane             help-about
+
+GROUPBOX HEADERS
+bubble-attention            dialog-warning-symbolic
+bubble-question             dialog-question-symbolic
+indicator-expanded-active   |
+indicator-expanded-blocked  |
+indicator-expanded-normal   | <modified media-playback-start>
+indicator-folded-active     |
+indicator-folded-blocked    |
+indicator-folded-normal     |
+
+PIPE CONTEXT MENU
+indicator-allow     <modified gtk-yes>
+indicator-block     <modified gtk-yes>
+reset               view-refresh
+bookmark-remove     <modified bookmark-new>
+tool-hide           <modified window-close>
+tool-show           <modified dialog-ok>
+
+BOTTOM BAR
+file-manager        folder-copy
+
+FILE MANAGER
+broken-image-48px   <process-stop in greyscale>
+folder-48px         <folder-new without plus sign>
+go-up               <rotated dialog-apply>
+go-up-48px          <modified dialog-apply>
+my-computer         go-home

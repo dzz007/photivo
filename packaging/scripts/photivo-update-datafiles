@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [[ "$PhotivoRepoPath"  == "" ]];            then printf "PhotivoRepoPath not set!\n"    ; exit 1 ; fi
+if [[ "$PhotivoBuildPath" == "" ]];            then printf "PhotivoBuildPath not set!\n"   ; exit 1 ; fi
+if [[ "$GccArch"       == "" ]];               then printf "GccArch not set!\n"            ; exit 1 ; fi
+if [[ ($GccArch != 64) && ($GccArch != 32) ]]; then printf "Wrong GccArch (${GccArch})!\n" ; exit 1 ; fi
+
+if [ "$1" = "" ]; then
+  THEBINDIR=$PhotivoBuildPath
+else
+  THEBINDIR=$1
+fi
+
+if [ ! -d $THEBINDIR ]; then mkdir $THEBINDIR ; fi
+
+echo "Updating data files in \"$THEBINDIR\" ..."
+
+cd $THEBINDIR && \
+rm -rf ChannelMixers Curves LensfunDatabase Presets Profiles Themes Translations UISettings && \
+mkdir  ChannelMixers Curves LensfunDatabase Presets Profiles Themes Translations UISettings && \
+cd $PhotivoRepoPath && \
+cp -r ./ChannelMixers/*    $THEBINDIR/ChannelMixers && \
+cp -r ./Curves/*           $THEBINDIR/Curves && \
+cp -r ./LensfunDatabase/*  $THEBINDIR/LensfunDatabase && \
+cp -r ./Presets/*          $THEBINDIR/Presets && \
+cp -r ./Profiles/*         $THEBINDIR/Profiles && \
+cp -r ./Themes/*           $THEBINDIR/Themes && \
+cp -r ./Translations/*.qm  $THEBINDIR/Translations && \
+cp -r ./UISettings/*       $THEBINDIR/UISettings
+
+exitstatus=$?
+if [ ! ${exitstatus} -eq 0 ] && [ "$1" == "" ]; then echo "Failed!" ; fi
+exit ${exitstatus}

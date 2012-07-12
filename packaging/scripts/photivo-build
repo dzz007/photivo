@@ -1,0 +1,76 @@
+#!/bin/bash
+ColorRed='\e[1;31m'
+ColorGreen='\e[0;32m'
+ColorNone='\e[00m'
+
+# Additional C++ compiler flags.
+#export CXXFLAGS="$CXXFLAGS "
+
+if [[ ("$PhotivoRepoPath" == "") || ("$PhotivoBuildPath" == "") ]]; then 
+  printf "No repo set. Cannot continue."
+  exit 1
+fi
+
+if [ ! -d "$PhotivoRepoPath" ]; then
+  printf "Path to repository \"$PhotivoRepoPath\" not found."
+  exit 1
+fi
+
+
+if [[ "$1" == "all" ]]; then
+  ActionMsg="Complete re-build of Photivo ${GccArch}bit"
+  QmakeCli="qmake ../photivo.pro CONFIG+=WithoutGimp CONFIG+=WithoutClear CONFIG+=console CONFIG-=debug"
+elif [[ "$1" == "q" ]]; then
+  ActionMsg="Updating Photivo ${GccArch}bit\n Rebuilding makefiles"
+  QmakeCli="qmake ../photivo.pro CONFIG+=console CONFIG+=WithoutGimp CONFIG+=WithoutClear CONFIG-=debug"
+elif [[ "$1" == "" ]]; then
+  ActionMsg="Updating Photivo ${GccArch}bit"
+  QmakeCli=""
+else
+  printf "Unrecognized mode: \"$1\".\n\n"
+  printf "Usage: photivo-build [all|q]\n"
+  printf "This script only build Photivo itself, not builds ptClear, the Gimp plugin,\n"
+  printf "Adobe profiler or Curves creator."\n
+  printf "all\n"
+  printf "  Full build: First removes all makefiles and object files. Then runs\n"
+  printf "  qmake (console enabled) and make.\n"
+  printf "[no option]\n"
+  printf "  Update build: Runs make and copies photivo.exe to $PT_BINDIR.\n"
+  printf "q\n"
+  printf "  Update build: Runs qmake to enable the console and disable ptClear.\n"
+  printf "  then runs make and copies photivo.exe to $PT_BINDIR.\n"
+  exit 1
+fi
+
+
+printf "–––––––––––––––––––––––––––––––––––––\n"
+printf " $ActionMsg\n"
+printf " $PhotivoRepoPath\n"
+printf "–––––––––––––––––––––––––––––––––––––\n\n"
+
+if [[ -e "$PhotivoBuildPath" ]]; then
+  if [ "$1" = "all" ]; then
+    printf "Cleaning ...\n"
+    cd "$PhotivoBuildPath" && rm -rf Makefile* photivoProject/* Objects/*
+  else
+    cd "$PhotivoBuildPath"
+    if [ "$1" = "q" ]; then
+      rm -f Makefile* photivoProject/Makefile* Objects/ptMain.o
+    fi
+  fi
+else
+  mkdir "$PhotivoBuildPath"
+  cd "$PhotivoBuildPath"
+fi
+
+printf "Building ...\n\n"
+$QmakeCli
+make -j$JobsForMake
+
+if [[ $? == 0 ]]; then
+  printf "\n${ColorGreen}Make finished successfully.$ColorNone\n"
+  exit 0
+else
+  printf "\n${ColorRed}Error. Build not finished.$ColorNone\n"
+  exit 1
+fi

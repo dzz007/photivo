@@ -1,0 +1,38 @@
+/*******************************************************************************
+**
+** Photivo
+**
+** Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2010-2011 Bernd Schoeler <brjohn@brother-john.net>
+**
+** This file is part of Photivo.
+**
+** Photivo is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License version 3
+** as published by the Free Software Foundation.
+**
+** Photivo is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
+**
+******************************************************************************/
+@Variables {
+  AltBase             : #333333;
+  Base                : #1E1E1E;
+  Emphasized          : #464646;
+  Gradient            : #282828;
+  SliderStart         : #464646;
+  SliderStartDisabled : #3C3C3C;
+  SliderStop          : #3C3C3C;
+  SliderStopDisabled  : #323232;
+  SliderStripe        : ":/patterns/slider-stripe-darkgrey.png";
+  SliderStripeDisabled: ":/patterns/slider-stripe-grey.png";
+  Strong              : #969696;
+  Text                : #C8C8C8;
+  TextDisabled        : #888888;
+}
+@import "Photivo";
