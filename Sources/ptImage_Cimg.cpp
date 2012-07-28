@@ -359,7 +359,8 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
     }
   }
   m_Data.swap(TempData);
+  m_Image  = (uint16_t (*)[3]) m_Data.data();
   m_Height = NewHeight;
-  m_Width = NewWidth;
+  m_Width  = NewWidth;
   return this;
 }
