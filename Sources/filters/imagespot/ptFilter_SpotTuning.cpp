@@ -82,6 +82,10 @@ void ptFilter_SpotTuning::doDefineControls() {
     << ptCfgItem({CSpotMaxRadiusId,      ptCfgItem::Slider,        500,        1,            7000,         10,         0,        false, false, tr("Maximum radius"), tr("Pixels outside this radius will never be included in the mask.")})
     << ptCfgItem({CSpotChromaWeightId,   ptCfgItem::Slider,        0.5,        0.0,          1.0,          0.1,        2,        false, false, tr("Brightness/color ratio"), tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")})
     << ptCfgItem({CSpotThresholdId,      ptCfgItem::Slider,        0.25,       0.0,          1.0,          0.05,       3,        false, false, tr("Threshold"), tr("Maximum amount a pixel may differ from the spot's source pixel to get included in the mask.")})
+    << ptCfgItem({CSpotLumaCurveWinId,   ptCfgItem::CurveWin,      std::make_shared<ptCurve>(hNullAnchors,
+                                                                                             ptCurve::LumaMask,
+                                                                                             ptCurve::LumaMask,
+                                                                                             ptCurve::SplineInterpol), ""})
     << ptCfgItem({CSpotSaturationId,     ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        false, false, tr("Saturation"), tr("")})
     << ptCfgItem({CSpotIsAdaptiveSatId,  ptCfgItem::Check,         0,                                                            false, false, tr("Adaptive saturation"), tr("Prevent clipping when adjusting saturation")})
     << ptCfgItem({CSpotColorShiftId,     ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.001,      3,        false, false, tr("Color shift"), tr("")})
@@ -89,6 +93,18 @@ void ptFilter_SpotTuning::doDefineControls() {
 
   FNullSpot = make_unique<ptTuningSpot>(&FCfgItems);
   FConfig->insertStore(CSpotListId, &FSpotList);
+}
+
+//==============================================================================
+
+void ptFilter_SpotTuning::connectWidgets(QWidget *AGuiWidget) {
+  for (auto hCfgItem: FCfgItems) {
+    auto hWidget = AGuiWidget->findChild<QWidget*>(hCfgItem.Id);
+    if (hWidget) {
+      connect(hWidget, SIGNAL(valueChanged(QString,QVariant)),
+              this,    SLOT(spotDispatch(QString,QVariant)));
+    }
+  }
 }
 
 //==============================================================================
@@ -105,6 +121,7 @@ QWidget *ptFilter_SpotTuning::doCreateGui() {
   connect(FGui->SpotList, SIGNAL(rowChanged(int)), this, SLOT(updateSpotDetailsGui(int)));
   connect(FGui->SpotList, SIGNAL(dataChanged()), this, SLOT(updatePreview()));
   connect(FGui->SpotList, SIGNAL(editModeChanged(bool)), this, SLOT(setupInteraction(bool)));
+  this->connectWidgets(hGuiBody);
   this->updateSpotDetailsGui(-1, hGuiBody);
 
   return hGuiBody;
@@ -200,6 +217,8 @@ void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget
     ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiWidget);
     hWidget->setValue(hSpot->getValue(hCfgItem.Id));
   }
+
+  FGui->MaxRadius->setEnabled(hSpot->getValue("HasMaxRadius").toBool());
 }
 
 //==============================================================================
@@ -231,6 +250,20 @@ void ptFilter_SpotTuning::setupInteraction(bool AEnable) {
   } else {
     ViewWindow->spotTuning()->stop();
   }
+}
+
+//==============================================================================
+
+void ptFilter_SpotTuning::spotDispatch(const QString AId, const QVariant AValue) {
+  if (!AValue.isValid()) return;
+
+  auto hListIdx = FGui->SpotList->currentIndex();
+  if (hListIdx < 0) return;
+
+  auto hSpot = (ptTuningSpot*)FSpotList.at(hListIdx);
+  hSpot->setValue(AId, AValue);
+
+  this->updatePreview();
 }
 
 //==============================================================================

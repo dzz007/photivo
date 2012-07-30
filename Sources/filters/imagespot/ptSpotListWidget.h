@@ -59,6 +59,8 @@ public:
   bool editMode() { return EditButton->isChecked(); }
   void setEditMode(bool AIsEdit);
 
+  int currentIndex() const;
+
   ptImageSpotModel* model() { return FModel; }
 
   /*! Deletes all spots from the ListView and model. */
