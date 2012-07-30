@@ -53,6 +53,7 @@ private:
   ptFilter_SpotTuning();
 
   ptImageSpot  *createSpot();
+  void          connectWidgets(QWidget *AGuiWidget);
   void          startInteraction();
   void          cleanupAfterInteraction();
 
@@ -68,6 +69,7 @@ private slots:
    */
   void updatePreview();
   void setupInteraction(bool AEnable);
+  void spotDispatch(const QString AId, const QVariant AValue);
 
 };
 

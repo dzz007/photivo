@@ -95,6 +95,12 @@ void ptSpotListWidget::setEditMode(bool AIsEdit) {
 
 //==============================================================================
 
+int ptSpotListWidget::currentIndex() const {
+  return ListView->currentIndex().row();
+}
+
+//==============================================================================
+
 void ptSpotListWidget::clear() {
   FModel->removeAll();
   updatePreview();
