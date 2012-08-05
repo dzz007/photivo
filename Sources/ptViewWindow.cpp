@@ -366,7 +366,9 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   // Also Ctrl needed in crop mode
   short ImgDragging = m_LeftMousePressed && (m_Interaction == iaNone);
   if (m_Interaction == iaCrop) {
-    ImgDragging = m_LeftMousePressed && (m_CtrlIsPressed != 0);
+    // m_CtrlIsPressed sometimes gives the wrong value, so we read the current state.
+    bool hCtrlIsPressed = (event->modifiers() & Qt::ControlModifier);
+    ImgDragging = m_LeftMousePressed && hCtrlIsPressed;
   }
 
   if (ImgDragging) {
@@ -445,7 +447,6 @@ void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
     emit keyChanged(event);
   }
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -946,6 +947,7 @@ void ptViewWindow::Menu_ShowTools() {
 }
 
 void ptViewWindow::Menu_OpenFileMgr() {
+  m_CtrlIsPressed = 0;
   emit openFileMgr();
 }
 
