@@ -65,12 +65,10 @@ void ptInfo::Log(const char *AMsg, const short AMode)
 {
   QString hTemp = QString(AMsg);
   if (!hTemp.trimmed().isEmpty()) {
-    if (AMode == 0) {
+    if (AMode == 0 || !qApp->activeWindow()) {
       std::cout << hTemp.toAscii().data() << std::endl;
     } else if (AMode == 1) {
-      if (qApp) {
-        QMessageBox::information(nullptr, "Photivo log", hTemp);
-      }
+      QMessageBox::information(nullptr, "Photivo log", hTemp);
     }
   }
 }
@@ -174,6 +172,26 @@ void ptInfo::StopTimer(const char *AMsg)
   hTemp += QString::number(FTimerComplete->elapsed());
 
   Log(hTemp, 1);
+}
+
+//==============================================================================
+
+void ptInfo::ShowMsg(const char *AMsg, const char *ALocation)
+{
+  QString hTemp = QString(AMsg);
+  if (QString(ALocation).trimmed() != "") {
+    hTemp += CRLF;
+    hTemp += QString(ALocation);
+  }
+
+  Log(hTemp, 1);
+}
+
+//==============================================================================
+
+void ptInfo::ShowMsg(const QString AMsg, const char *ALocation)
+{
+  ShowMsg(AMsg.toAscii().data(), ALocation);
 }
 
 //==============================================================================

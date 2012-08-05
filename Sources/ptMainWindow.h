@@ -143,25 +143,29 @@ protected:
 #endif
 
 private :
-  QTabBar* Tabbar;
-  QAction* m_AtnSavePipe;
-  QAction* m_AtnSaveFull;
-  QAction* m_AtnSaveSettings;
-  QAction* m_AtnSaveJobfile;
-  QAction* m_AtnGimpSavePipe;
-  QAction* m_AtnGimpSaveFull;
-  QAction* m_AtnMenuFullReset;
-  QAction* m_AtnMenuUserReset;
-  QAction* m_AtnMenuOpenPreset;
-  QAction* m_AtnMenuOpenSettings;
-  short    m_ContextMenuOnTab;
-  QAction* m_AtnShowTools;
+  QTabBar*  Tabbar;
+  QAction*  m_AtnSavePipe;
+  QAction*  m_AtnSaveFull;
+  QAction*  m_AtnSaveSettings;
+  QAction*  m_AtnSaveJobfile;
+  QAction*  m_AtnGimpSavePipe;
+  QAction*  m_AtnGimpSaveFull;
+  QAction*  m_AtnMenuFullReset;
+  QAction*  m_AtnMenuUserReset;
+  QAction*  m_AtnMenuOpenPreset;
+  QAction*  m_AtnMenuOpenSettings;
+  short     m_ContextMenuOnTab;
+  QAction*  m_AtnShowTools;
+  ptUIState FUIState;
 
   ptVisibleToolsModel* m_VisibleToolsModel;
 
   void AnalyzeToolBoxStructure();
   void ShowMovedTools(const QString ATitle);
   void InitVisibleTools();
+
+  /*! We switch to the respective UI state. */
+  void SwitchUIState(const ptUIState AState);
 
 public slots:
   // Toggle file manager window
