@@ -824,7 +824,7 @@ int photivoMain(int Argc, char *Argv[]) {
   }
 
 #ifndef PT_WITHOUT_FILEMGR
-  if (cli.NoOpenFileMgr) Settings->SetValue("PreventFileMgrStartup", 1);
+  Settings->SetValue("PreventFileMgrStartup", int(cli.NoOpenFileMgr));
 #endif
 
   // Construct windows
