@@ -49,10 +49,10 @@
 ///////////////////////////////////////////////////////////////////////////
 
 enum ptInteraction {
-  iaNone = 0,
-  iaCrop = 1,
+  iaNone       = 0,
+  iaCrop       = 1,
   iaSelectRect = 2, // simple rectangle selection: e.g. for spot WB
-  iaDrawLine = 3    // draw a single straight line: e.g. for rotate angle
+  iaDrawLine   = 3  // draw a single straight line: e.g. for rotate angle
 };
 
 enum ptPixelReading {
@@ -133,7 +133,7 @@ private:
   ptRichRectInteraction* m_Crop;
   ptGridInteraction* m_Grid;
   ptInteraction m_Interaction;
-  short m_LeftMousePressed;
+  bool  m_LeftMousePressed;
   void (*m_CB_SimpleRect)(const ptStatus, QRect);
   short m_ZoomIsSaved;
   float m_ZoomFactor;
