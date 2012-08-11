@@ -4170,6 +4170,8 @@ void CLASS pre_interpolate()
   if (m_Filters && m_Colors == 3) {
     if (m_MixGreen) { // 4 color demosaicer will follow
       m_Colors++;
+      // Change from dcraw 1.445 to 1.447 
+      m_MixGreen = !m_UserSetting_HalfSize;
     } else {
       // RG1BG2 -> RGB
 #pragma omp parallel for schedule(static) default(shared) private(row, col)
@@ -6634,6 +6636,7 @@ void CLASS identify() {
     {  2937856, "CASIO",    "EX-S20"          ,1 },
     {  4948608, "CASIO",    "EX-S100"         ,1 },
     {  7542528, "CASIO",    "EX-Z50"          ,1 },
+    {  7562048, "CASIO",    "EX-Z500"         ,1 },
     {  7753344, "CASIO",    "EX-Z55"          ,1 },
     {  7816704, "CASIO",    "EX-Z60"          ,1 },
     { 10843712, "CASIO",    "EX-Z75"          ,1 },
@@ -7144,6 +7147,11 @@ canon_a5:
     m_LeftMargin = 192;
     goto canon_cr2;
   } else if (l_IsCanon && m_RawWidth == 4312) {
+    m_Height = 3048;
+    m_Width  = 4048;
+    m_TopMargin  = 11;
+    m_LeftMargin = 104;
+  } else if (l_IsCanon && m_RawWidth == 4312) {
     m_TopMargin  = 18;
     m_LeftMargin = 22;
     m_Height -= 2;
@@ -7257,6 +7265,8 @@ canon_cr2:
     m_Filters = 0x94949494;
     if (m_CameraModel[9] == '7' && m_IsoSpeed >= 400)
       m_BlackLevel = 255;
+  } else if (!strncmp(m_CameraModel,"1 ",2)) {
+    m_Height -= 2;
   } else if (l_FileSize == 1581060) {
     m_Height = 963;
     m_Width = 1287;
@@ -7369,6 +7379,8 @@ cp_e2500:
       m_Width = 3262;
       m_LeftMargin = 34;
     }
+    if (!strcmp(m_CameraModel,"X10"))
+      m_Filters = 0x16161616;
     if (fuji_layout) m_RawWidth *= m_IsRaw;
     if (m_LoadRawFunction == &CLASS fuji_load_raw) {
       m_Fuji_Width = m_Width >> !fuji_layout;
@@ -7473,6 +7485,12 @@ konica_400z:
     m_Height -= m_TopMargin = 8;
     m_Width -= 2 * (m_LeftMargin = 8);
     m_Load_Flags = 32;
+  } else if (!strcmp(m_CameraModel,"NX200")) {
+    m_ByteOrder = 0x4949;
+    m_Height = 3662;
+    m_Width  = 5528;
+    m_TopMargin = 2;
+    m_LeftMargin = 46;
   } else if (!strcmp(m_CameraModel,"EX1")) {
     m_ByteOrder = 0x4949;
     m_Height -= 20;
@@ -7952,6 +7970,11 @@ c603:
     m_Height = 1931;
     m_Width  = 2570;
     m_RawWidth = 3904;
+  } else if (!strcmp(m_CameraModel,"EX-Z500")) {
+    m_Height = 1937;
+    m_Width  = 2577;
+    m_RawWidth = 3904;
+    m_Filters = 0x16161616;
   } else if (!strcmp(m_CameraModel,"EX-Z55")) {
     m_Height = 1960;
     m_Width  = 2570;
