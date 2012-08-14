@@ -4170,7 +4170,7 @@ void CLASS pre_interpolate()
   if (m_Filters && m_Colors == 3) {
     if (m_MixGreen) { // 4 color demosaicer will follow
       m_Colors++;
-      // Change from dcraw 1.445 to 1.447 
+      // Change from dcraw 1.445 to 1.447
       m_MixGreen = !m_UserSetting_HalfSize;
     } else {
       // RG1BG2 -> RGB
@@ -7146,7 +7146,7 @@ canon_a5:
     m_TopMargin  = 12;
     m_LeftMargin = 192;
     goto canon_cr2;
-  } else if (l_IsCanon && m_RawWidth == 4312) {
+  } else if (l_IsCanon && m_RawWidth == 4160) {
     m_Height = 3048;
     m_Width  = 4048;
     m_TopMargin  = 11;
