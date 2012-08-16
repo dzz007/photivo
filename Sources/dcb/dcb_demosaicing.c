@@ -98,7 +98,7 @@ void CLASS hid()
   for (row=2; row < m_Height-2; row++) {
     for (col=2, indx=row*m_Width+col; col < m_Width-2; col++, indx++) {
 
-      c =  fc(row,col);
+      c =  fcol(row,col);
       if(c != 1) {
         m_Image[indx][1] = CLIP((int32_t)((m_Image[indx+u][1] + m_Image[indx-u][1] + m_Image[indx-1][1] + m_Image[indx+1][1])/4.0f +
                  (m_Image[indx][c] - ( m_Image[indx+v][c] + m_Image[indx-v][c] + m_Image[indx-2][c] + m_Image[indx+2][c])/4.0f)/2.f));
@@ -116,7 +116,7 @@ void CLASS hid2()
   for (row=4; row < m_Height-4; row++) {
     for (col=4, indx=row*m_Width+col; col < m_Width-4; col++, indx++) {
 
-      c =  fc(row,col);
+      c =  fcol(row,col);
 
       if (c != 1) {
         m_Image[indx][1] = CLIP((int32_t)((m_Image[indx+v][1] + m_Image[indx-v][1] + m_Image[indx-2][1] + m_Image[indx+2][1])/4.0f +
@@ -334,7 +334,7 @@ void CLASS fbdd_green2()
 #pragma omp parallel for schedule(static) private(row, col, c, indx, current, min, max, g1, g2)
   for (row=4; row < m_Height-4; row++) {
     for (col=4, indx=row*m_Width+col; col < m_Width-4; col++, indx++) {
-      c =  fc(row,col);
+      c =  fcol(row,col);
       if(c != 1) {
         current = m_Image[indx][c] - (m_Image[indx+v][c] + m_Image[indx-v][c] + m_Image[indx-2][c] + m_Image[indx+2][c])/4.0;
 
@@ -360,7 +360,7 @@ void CLASS fbdd_correction()
 #pragma omp parallel for schedule(static) private(row, col, c, indx)
   for (row=2; row < m_Height-2; row++) {
     for (col=2, indx=row*m_Width+col; col < m_Width-2; col++, indx++) {
-      c = fc(row,col);
+      c = fcol(row,col);
       m_Image[indx][c] = ULIM(m_Image[indx][c],
         MAX(m_Image[indx-1][c], MAX(m_Image[indx+1][c], MAX(m_Image[indx-u][c], m_Image[indx+u][c]))),
         MIN(m_Image[indx-1][c], MIN(m_Image[indx+1][c], MIN(m_Image[indx-u][c], m_Image[indx+u][c]))));
