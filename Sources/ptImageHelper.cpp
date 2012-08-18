@@ -36,6 +36,7 @@
 #include "ptImageHelper.h"
 #include "ptSettings.h"
 #include "ptMessageBox.h"
+#include "metadata/ptXmp.h"
 
 //==============================================================================
 
@@ -176,10 +177,23 @@ bool ptImageHelper::WriteExif(const QString AFileName, uint8_t *AExifBuffer, con
       xmpData["Xmp.tiff.Copyright"]           = CopyrightWorking.toStdString();
     }
 
+    // Identification properties (xmpMM)
+    ptXmp xmp(AFileName, xmpData);//output file
+    ptXmp xmpOrig(Settings->GetStringList("InputFileNameList")[0]);//input file
+    //xmp.addFilterCfg();
+    xmp.addIdentification(xmpOrig);
+    xmpOrig.save();
+    xmp.printXMP();
+    xmp.registerIDs();
+    xmpOrig.registerIDs();
+
+
     Exiv2Image->setExifData(outExifData);
     Exiv2Image->setIptcData(iptcData);
-    Exiv2Image->setXmpData( xmpData);
+//    Exiv2Image->setXmpData( xmpData);
+    Exiv2Image->setXmpData( xmp.xmpData());
     Exiv2Image->writeMetadata();
+
     return true;
 #endif
   } catch (Exiv2::AnyError& Error) {
