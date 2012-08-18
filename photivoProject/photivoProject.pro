@@ -230,7 +230,12 @@ HEADERS += \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
     ../Sources/qtsingleapplication/qtsingleapplication.h \
-    ../Sources/metadata/ptXmpSettings.h
+    ../Sources/metadata/ptXmpID.h \
+    ../Sources/metadata/ptXmpIDMap.h \
+    ../Sources/metadata/ptXmpMM.h \
+    ../Sources/metadata/ptMetadataUtil.h \
+    ../Sources/metadata/ptXmp.h \
+    ../Sources/metadata/ptXmpBase.h
 
 
 SOURCES += \
@@ -337,7 +342,10 @@ SOURCES += \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
     ../Sources/vcd/vcd_interpolate.c \
-    ../Sources/metadata/ptXmpSettings.cpp
+    ../Sources/metadata/ptXmpID.cpp \
+    ../Sources/metadata/ptXmpMM.cpp \
+    ../Sources/metadata/ptXmp.cpp \
+    ../Sources/metadata/ptXmpBase.cpp
 
 
 FORMS += \
