@@ -27,6 +27,8 @@
 //==============================================================================
 
 #include <memory>
+#include <unordered_map>
+#include <string>
 
 #include <QObject>
 #include <QList>
@@ -91,6 +93,12 @@ public:
         When \c true includes status flags (like isBlocked status) in the exported preset.
    */
   void                  exportPreset(QSettings *APreset, const bool AIncludeFlags = true) const;
+
+
+  /*! TODO
+   *
+   */
+  std::unordered_map<std::string, std::string> exportPreset(const bool AIncludeFlags = true) const;
 
   /*! Import preset from \c APreset. */
   void                  importPreset(QSettings *APreset, const bool ARequestPipeRun = false);
@@ -198,6 +206,10 @@ public:
 
   /*! Returns the filter’s unique name. */
   QString               uniqueName() const;
+
+  /*! Returns the name of the filter. This name is not necessarily unique as it
+      at is does not name a specific instance of a filter. */
+  QString               filterName() const;
   ///@}
 
   //---
