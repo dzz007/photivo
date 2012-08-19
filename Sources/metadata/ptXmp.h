@@ -25,17 +25,15 @@
 
 // Qt includes
 #include <QString>
-#include <QSettings>
 
 // local includes
 #include "ptXmpBase.h"
 #include "ptXmpMM.h"
 
 //forward declarations
-class ptFilterDM;
 namespace Exiv2 { class XmpData; class Xmpdatum; }
 
-// -----------------------------------------------------------------------------
+//==============================================================================
 
 class ptXmp : public ptXmpBase
 {
@@ -46,7 +44,7 @@ public: ////////////////////////////////////////////////////////////////////////
   ptXmp(const QString  &filePath,
         Exiv2::XmpData &xmpData,
         XmpLocation    location = XmpLocation::Embedded);
-  ptXmp(const QString &filePath);
+  ptXmp(const QString  &filePath);
 
   void saveSettings();
 
@@ -56,8 +54,6 @@ public: ////////////////////////////////////////////////////////////////////////
 
   void addIdentification(ptXmp &origin);
 
-  //Exiv2::XmpData readXMP(const QString &filePath);//TODO: fn neccessary?
-
   void loadXmp();
   void save();
   void registerIDs();
@@ -65,13 +61,11 @@ public: ////////////////////////////////////////////////////////////////////////
   static void printXMP(const Exiv2::XmpData &xmpData);
          void printXMP() const;
 
-  //void copyHistoryFromOrig(const ptXmp &original);//TODO: remove?
-
   static QString sidecarFilePathForFile(const QString &imageFilePath);
          QString sidecarFilePath() const;
 
 protected: /////////////////////////////////////////////////////////////////////
-  //QSettings IDMap;
+
   QString        m_FilePath;
   QString        m_SidecarPath;
   Exiv2::XmpData m_XmpData;
@@ -79,22 +73,20 @@ protected: /////////////////////////////////////////////////////////////////////
   XmpLocation    m_XmpLocation;
 
 private: ///////////////////////////////////////////////////////////////////////
+
   static const std::string CnsURI,
                            Cns;
   static const std::string CFCfgNode,
                            CFCfgKey,
                            CFCfgItem,
                            CFCfgValue;
-  //unsigned long historyCounter;//TODO: remove?
 
   void fetchSettings(Exiv2::XmpData &xmp);
-  ///void updateIDs();
   void updateIDs(ptXmp &orign);
-  ///std::string updateInputXmp();//TODO: remove?
   void header();
   void registerMyNs();
 };//ptXmp
 
-// -----------------------------------------------------------------------------
+//==============================================================================
 
 #endif // PTXMP_H

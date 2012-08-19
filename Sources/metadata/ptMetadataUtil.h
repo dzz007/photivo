@@ -23,14 +23,18 @@
 #ifndef PTMETADATAUTIL_H
 #define PTMETADATAUTIL_H
 
+//==============================================================================
+
 template<class T>
 std::string num2str(const T number) //static
 {
   static_assert(std::is_integral<T>::value,
-      "num2str() is thought to convert only numbers of integral types.");
+      "num2str() is ment to convert only numbers of integral types.");
   std::stringstream ss;
   ss << number;
   return ss.str();
 }
+
+//==============================================================================
 
 #endif // PTMETADATAUTIL_H

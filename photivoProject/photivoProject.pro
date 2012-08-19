@@ -345,7 +345,8 @@ SOURCES += \
     ../Sources/metadata/ptXmpID.cpp \
     ../Sources/metadata/ptXmpMM.cpp \
     ../Sources/metadata/ptXmp.cpp \
-    ../Sources/metadata/ptXmpBase.cpp
+    ../Sources/metadata/ptXmpBase.cpp \
+    ../Sources/metadata/ptXmpIDMap.cpp
 
 
 FORMS += \

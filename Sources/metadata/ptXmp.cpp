@@ -35,9 +35,6 @@
 #include "ptXmpID.h"
 #include "ptXmpIDMap.h"
 #include "ptInfo.h"
-#include "filters/ptFilterDM.h"
-#include "filters/ptFilterBase.h"
-#include "ptSettings.h" //Needed for input file name
 
 /* NOTE:
  * For JPEG images Exiv2 currently limits size of XMP packages.
@@ -342,3 +339,5 @@ void ptXmp::registerMyNs()
     registered = true;
   }
 }
+
+//==============================================================================
