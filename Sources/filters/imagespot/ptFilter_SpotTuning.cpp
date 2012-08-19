@@ -77,7 +77,7 @@ void ptFilter_SpotTuning::doDefineControls() {
   TAnchorList hNullAnchors = { TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0) };
   FCfgItems = QList<ptCfgItem>()                                         //--- Combo: list of entries               ---//
                                                                          //--- Check: not available                 ---//
-    //            Id               Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
+    //            Id                     Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CSpotHasMaxRadiusId,   ptCfgItem::Check,         0,                                                            false, false, tr("Use maximum radius"), tr("")})
     << ptCfgItem({CSpotMaxRadiusId,      ptCfgItem::Slider,        500,        1,            7000,         10,         0,        false, false, tr("Maximum radius"), tr("Pixels outside this radius will never be included in the mask.")})
     << ptCfgItem({CSpotChromaWeightId,   ptCfgItem::Slider,        0.5,        0.0,          1.0,          0.1,        2,        false, false, tr("Brightness/color ratio"), tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")})
@@ -226,6 +226,7 @@ void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget
 //==============================================================================
 
 void ptFilter_SpotTuning::updatePreview() {
+  this->checkActiveChanged(true);
   if (FInteractionOngoing) {
     // We’re in interactive mode: only recalc spots
     std::unique_ptr<ptImage> hImage(new ptImage);
@@ -264,6 +265,9 @@ void ptFilter_SpotTuning::spotDispatch(const QString AId, const QVariant AValue)
 
   auto hSpot = (ptTuningSpot*)FSpotList.at(hListIdx);
   hSpot->setValue(AId, AValue);
+
+  if (AId == CSpotHasMaxRadiusId)
+    FGui->MaxRadius->setEnabled(hSpot->getValue("HasMaxRadius").toBool());
 
   this->updatePreview();
 }
