@@ -51,7 +51,7 @@ struct XmpMMDerivedFrom;
 class ptXmpMM : public ptXmpBase
 {
 
-public:
+public: ////////////////////////////////////////////////////////////////////////
 
   ptXmpID origDocumentID;
   ptXmpID documentID;
@@ -62,13 +62,13 @@ public:
   ptXmpMM()                        = default;
   ptXmpMM(Exiv2::XmpData &xmpData) { load(xmpData); }
 
+  bool hasChanges();
+
   void load(Exiv2::XmpData &xmpData);
 
   void syncToXmpData(Exiv2::XmpData &xmpData);
 
-  bool hasChanges();
-
-private:
+private:  //////////////////////////////////////////////////////////////////////
 
   unsigned int histSizeAtLoad;
   unsigned int derivSizeAtLoad;

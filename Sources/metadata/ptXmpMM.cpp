@@ -26,14 +26,6 @@
 
 // public /////////////////////////////////////////////////////////////////////
 
-//ptXmpMM()
-//  : origDocumentID { ptXmpID::did },
-//    documentID { ptXmpID::did },
-//    instanceID
-//    {}
-
-//==============================================================================
-
 void ptXmpMM::load(Exiv2::XmpData &xmpData)
 {
     loadIDs    (xmpData);
@@ -43,12 +35,16 @@ void ptXmpMM::load(Exiv2::XmpData &xmpData)
     ensureMinData();
 }
 
+//==============================================================================
+
 void ptXmpMM::syncToXmpData(Exiv2::XmpData &xmpData)
 {
     syncIDs    (xmpData);
     syncHistory(xmpData);
     syncDerived(xmpData);
 }
+
+//==============================================================================
 
 bool ptXmpMM::hasChanges()
 {
@@ -73,20 +69,16 @@ void ptXmpMM::loadDerived(Exiv2::XmpData &xmpData)
   }
 
   derivSizeAtLoad = derivedFrom.size(); // save for hasChanges();
-  std::cout << "derivedFrom.size():" << derivedFrom.size();
 }
 
 //==============================================================================
 
 void ptXmpMM::loadHistory(Exiv2::XmpData &xmpData)
 {
-  //XmpList list = getList(xmpData, "Xmp.xmpMM.History");
   const unsigned long size = arraySize(xmpData, "Xmp.xmpMM.History");
 
-  //for (Exiv2::Xmpdatum &item : list) {
   unsigned long i = 0;
   while (++i <= size) {//Exiv2 counts beginning at 1
-    //std::string node  = item.key() + "/stEvt:";
     std::string node = "Xmp.xmpMM.History[" + num2str(i) + "]/stEvt:";
 
     // Missing key/value pairs will result as an empty string
@@ -97,7 +89,6 @@ void ptXmpMM::loadHistory(Exiv2::XmpData &xmpData)
   }
 
   histSizeAtLoad = history.size(); // save for hasChanges();
-  std::cout << "history.size():" << history.size();
 }
 
 //==============================================================================

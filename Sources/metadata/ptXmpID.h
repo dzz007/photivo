@@ -26,6 +26,8 @@
 // Qt includes
 #include <QString>
 
+//==============================================================================
+
 class ptXmpID
 {
 public: ////////////////////////////////////////////////////////////////////////
@@ -49,13 +51,15 @@ protected: /////////////////////////////////////////////////////////////////////
   QString id_;
   QString prefix_;
 
-  static const QString IID;// = "xmp.iid";
-  static const QString DID;// = "xmp.did";
+  static const QString IID; //= "xmp.iid"
+  static const QString DID; //= "xmp.did"
 
  QString typeAsString(const Types &type);
 
 private: ///////////////////////////////////////////////////////////////////////
 
 };
+
+//==============================================================================
 
 #endif // PTXMPID_H

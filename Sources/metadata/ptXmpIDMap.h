@@ -24,12 +24,10 @@
 #define PTXMPIDMAP_H
 
 // Qt includes
-#include <QString>
 #include <QMutex>
 #include <QSettings>
 
-// local includes
-#include "ptSettings.h"
+//==============================================================================
 
 /*! Thread-safe singelton wrapper around QSettings */
 class ptXmpIDMap
@@ -40,58 +38,36 @@ public: ////////////////////////////////////////////////////////////////////////
   /*! **************************************************************************
    * Get singleton intance
    */
-  static ptXmpIDMap &getMap()
-  {
-    static ptXmpIDMap map;
-    return map;
-  }
+  static ptXmpIDMap& getMap();
 
   /*! **************************************************************************
    * Set value by key. If this key already exists the value gets replaced,
    *  otherwise the key-value-pair gets added.
    */
-  void setValue(const QString &key, const QString &value)
-  {
-    QMutexLocker locker(&mutex);
-    settings.setValue(key, QVariant(value));
-    settings.sync();
-  }
+  void setValue(const QString &key, const QString &value);
 
   /*!  *************************************************************************
    * Get value by key
    */
-  QString value(const QString &key) const
-  {
-    QMutexLocker locker(&mutex);
-    return settings.value(key).toString();
-  }
+  QString value(const QString &key) const;
 
 private: ///////////////////////////////////////////////////////////////////////
 
   QSettings      settings;
-  QDateTime      lastModified;
   mutable QMutex mutex;
 
   /*! **************************************************************************
    * Initialize settings file path (<code>%UserDirectory%/xmpmmid.ini</code>)
    * and format (INI-Format, UTF-8)
    */
-  ptXmpIDMap()
-    : settings(settingsFilePath(), QSettings::IniFormat)
-  {
-    settings.setIniCodec("UTF-8");
-  }
+  ptXmpIDMap();
 
   /*! **************************************************************************
    * Helper to make initialization of <code>settings</code> in ctor less ugly
    */
-  static QString settingsFilePath()
-  {
-    const QString filename = "xmpmmid.ini";
-    const QString userDir  = Settings->GetString("UserDirectory");
-
-    return QFileInfo(userDir).dir().absoluteFilePath(filename);
-  }
+  static QString settingsFilePath();
 };
+
+//==============================================================================
 
 #endif // PTXMPIDMAP_H

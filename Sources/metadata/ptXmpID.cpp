@@ -30,15 +30,6 @@
 
 // public //////////////////////////////////////////////////////////////////////
 
-ptXmpID::Types ptXmpID::type()
-{
-  if (prefix_ == IID) return iid;
-  if (prefix_ == DID) return did;
-  return other;
-}
-
-//==============================================================================
-
 ptXmpID::ptXmpID(const ptXmpID::Types &type)
   : id_(createUuid()),
     prefix_(typeAsString(type))
@@ -57,7 +48,6 @@ ptXmpID::ptXmpID(const QString &id)
     id_     = id.mid(split + 1);
     prefix_ = id.left(split);
   }
-
 }
 
 //==============================================================================
@@ -98,7 +88,18 @@ ptXmpID::ptXmpID()
     prefix_ { "unknown" }
 {}
 
+
 //==============================================================================
+
+ptXmpID::Types ptXmpID::type()
+{
+  if (prefix_ == IID) return iid;
+  if (prefix_ == DID) return did;
+
+  return other;
+}
+
+    //==============================================================================
 
 QString ptXmpID::createUuid() //static
 {
