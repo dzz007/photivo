@@ -34,7 +34,8 @@ ptTuningSpot::ptTuningSpot(const QList<ptCfgItem> *ADefaults)
     FDataStore.insert(hCfgItem.Id, hCfgItem.Default);
   }
 
-  FCurve = std::make_shared<ptCurve>({TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0)},
+  TAnchorList hAnchors = {TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0)};
+  FCurve = std::make_shared<ptCurve>(hAnchors,
                                      ptCurve::LumaMask,
                                      ptCurve::LumaMask,
                                      ptCurve::SplineInterpol);
