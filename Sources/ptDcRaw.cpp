@@ -8537,7 +8537,10 @@ short CLASS RunDcRaw_Phase1() {
     m_MetaData = (char *) MALLOC (m_MetaLength);
     merror (m_MetaData, "main()");
   }
-
+  if (m_Filters || m_Colors == 1) {
+    m_Raw_Image = (uint16_t *) CALLOC ((m_RawHeight+7)*m_RawWidth, 2);
+    merror (m_Image, "main().m_Raw_Image");
+  }
   TRACEKEYVALS("CameraMake","%s",m_CameraMake);
   TRACEKEYVALS("CameraModel","%s",m_CameraModel);
   TRACEKEYVALS("InputFile","%s",m_UserSetting_InputFileName);
@@ -8549,6 +8552,11 @@ short CLASS RunDcRaw_Phase1() {
   // That's the hook into the real workhorse.
 
   (*this.*m_LoadRawFunction)();
+
+  if (m_Raw_Image) {
+    crop_masked_pixels();
+    FREE (m_Raw_Image);
+  }
 
   if (m_ZeroIsBad) remove_zeroes();
   bad_pixels (m_UserSetting_BadPixelsFileName);
@@ -8657,6 +8665,7 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
   for (int c=0; c<4; c++) m_CBlackLevel[c] -= i;
   m_BlackLevel += i;
   if (m_UserSetting_BlackPoint >= 0) m_BlackLevel = m_UserSetting_BlackPoint;
+  for (int c=0; c<4; c++) m_CBlackLevel[c] += m_BlackLevel;
   if (m_UserSetting_Saturation > 0)  m_WhiteLevel = m_UserSetting_Saturation;
 
   // If m_UserSetting_HalfSize then the BAYER(row,col) macro
