@@ -4253,8 +4253,9 @@ void CLASS pre_interpolate()
   if (m_Filters > 1000 && m_Colors == 3) {
     if (m_MixGreen) { // 4 color demosaicer will follow
       m_Colors++;
-      // Change from dcraw 1.445 to 1.447
-      m_MixGreen = !m_UserSetting_HalfSize;
+      // Change from dcraw 1.445 to 1.447 wanted "m_MixGreen = !m_UserSetting_HalfSize;"
+      // but this doesn't work in Photivo, since we don't run the full pipe of dcraw,
+      // since most of the time we start with phase2
     } else {
       // RG1BG2 -> RGB
 #pragma omp parallel for schedule(static) default(shared) private(row, col)
