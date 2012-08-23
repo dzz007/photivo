@@ -5838,6 +5838,7 @@ void CLASS apply_tiff()
   (unsigned)(m_Tiff_IFD[i].width * m_Tiff_IFD[i].height / SQR(m_Tiff_IFD[i].bps+1)) >
         m_ThumbWidth * m_ThumbHeight / SQR(m_ThumbMisc+1)
   && m_Tiff_IFD[i].comp != 34892) {
+      m_ThumbWidth  = m_Tiff_IFD[i].width;
       m_ThumbHeight = m_Tiff_IFD[i].height;
       m_ThumbOffset = m_Tiff_IFD[i].offset;
       m_ThumbLength = m_Tiff_IFD[i].bytes;
