@@ -2294,24 +2294,24 @@ void CLASS lossy_dng_load_raw()
   jpeg_create_decompress (&cinfo);
   while (trow < m_RawHeight) {
     fseek (m_InputFile, save+=4, SEEK_SET);
-    if (tile_length < INT_MAX)
+    if (m_TileLength < INT_MAX)
       fseek (m_InputFile, get4(), SEEK_SET);
     jpeg_stdio_src (&cinfo, m_InputFile);
     jpeg_read_header (&cinfo, TRUE);
     jpeg_start_decompress (&cinfo);
     buf = (*cinfo.mem->alloc_sarray)
-  ((j_common_ptr) &cinfo, JPOOL_IMAGE, cinfo.output_m_Width*3, 1);
-    while (cinfo.output_scanline < cinfo.output_m_Height &&
+  ((j_common_ptr) &cinfo, JPOOL_IMAGE, cinfo.output_width*3, 1);
+    while (cinfo.output_scanline < cinfo.output_height &&
   (row = trow + cinfo.output_scanline) < m_Height) {
       jpeg_read_scanlines (&cinfo, buf, 1);
       pixel = (JSAMPLE (*)[3]) buf[0];
-      for (col=0; col < cinfo.output_m_Width && tcol+col < m_Width; col++) {
+      for (col=0; col < cinfo.output_width && tcol+col < m_Width; col++) {
   for (c=0; c<3; c++) m_Image[row*m_Width+tcol+col][c] = m_Curve[c][pixel[col][c]];
       }
     }
     jpeg_abort_decompress (&cinfo);
-    if ((tcol += m_Tile_Width) >= m_RawWidth)
-      trow += m_Tile_Length + (tcol = 0);
+    if ((tcol += m_TileWidth) >= m_RawWidth)
+      trow += m_TileLength + (tcol = 0);
   }
   jpeg_destroy_decompress (&cinfo);
   m_WhiteLevel = 0xffff;
