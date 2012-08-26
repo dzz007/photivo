@@ -2267,7 +2267,7 @@ void CLASS lossy_dng_load_raw()
   JSAMPLE (*pixel)[3];
   unsigned sm_ByteOrder=m_ByteOrder, ntags, opcode, deg, i, j, c;
   unsigned save=m_Data_Offset-4, trow=0, tcol=0, row, col;
-  uint16_t curve[3][256];
+  ushort curve[3][256];
   double coeff[9], tot;
 
   fseek (m_InputFile, meta_offset, SEEK_SET);
@@ -2306,7 +2306,7 @@ void CLASS lossy_dng_load_raw()
       jpeg_read_scanlines (&cinfo, buf, 1);
       pixel = (JSAMPLE (*)[3]) buf[0];
       for (col=0; col < cinfo.output_width && tcol+col < m_Width; col++) {
-  for (c=0; c<3; c++) m_Image[row*m_Width+tcol+col][c] = m_Curve[c][(uint16_t)pixel[col][c]];
+  for (c=0; c<3; c++) m_Image[row*m_Width+tcol+col][c] = curve[c][pixel[col][c]];
       }
     }
     jpeg_abort_decompress (&cinfo);
