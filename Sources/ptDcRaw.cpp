@@ -2306,7 +2306,7 @@ void CLASS lossy_dng_load_raw()
       jpeg_read_scanlines (&cinfo, buf, 1);
       pixel = (JSAMPLE (*)[3]) buf[0];
       for (col=0; col < cinfo.output_width && tcol+col < m_Width; col++) {
-  for (c=0; c<3; c++) m_Image[row*m_Width+tcol+col][c] = m_Curve[c][pixel[col][c]];
+  for (c=0; c<3; c++) m_Image[row*m_Width+tcol+col][c] = m_Curve[c][(uint16_t)pixel[col][c]];
       }
     }
     jpeg_abort_decompress (&cinfo);
