@@ -58,6 +58,7 @@ BUILD_ADOBE=no
 BUILD_CURVES=no
 BUILD_GIMP=no
 BUILD_CLEAR=no
+
 CONFIG(WithAdobeProfiles) {
   SUBDIRS += ptCreateAdobeProfilesProject
   BUILD_ADOBE=yes
@@ -81,6 +82,14 @@ system(echo "Build ptClear                : $${BUILD_CLEAR}")
 system(echo "Build Gimp plugin            : $${BUILD_GIMP}")
 system(echo "Build curves creator         : $${BUILD_CURVES}")
 system(echo "Build Adobe profiles creator : $${BUILD_ADOBE}")
+
+unix {
+  SYSTEM_CIMG=no
+  CONFIG(WithSystemCImg) {
+    SYSTEM_CIMG=yes
+  }
+  system(echo "Use system CImg              : $${SYSTEM_CIMG}")
+}
 
 ###############################################################################
 

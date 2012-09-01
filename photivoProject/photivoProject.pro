@@ -61,6 +61,16 @@ unix {
   QMAKE_CC    = ccache /usr/bin/gcc
   QMAKE_CXX   = ccache /usr/bin/g++
 
+  # use a CImg include provided by the system instead of the local copy
+  message($$CONFIG)
+  CONFIG(WithSystemCImg) {
+    PKGCONFIG  += CImg
+    QMAKE_CXXFLAGS_RELEASE     += -DSYSTEM_CIMG
+    QMAKE_CXXFLAGS_DEBUG       += -DSYSTEM_CIMG
+
+    system(echo "Using system supplied CImg library")
+  }
+
   QMAKE_CFLAGS_RELEASE    += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
   QMAKE_CXXFLAGS_RELEASE  += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CFLAGS_DEBUG      += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
