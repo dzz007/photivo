@@ -77,7 +77,11 @@ ptGreycCount *GreycCount;
   #define cimg_display 0
 #endif
 
-#include "greyc/CImg.h"
+#ifdef SYSTEM_CIMG
+  #include <CImg.h>
+#else
+  #include "greyc/CImg.h"
+#endif
 
 
 using namespace cimg_library;
