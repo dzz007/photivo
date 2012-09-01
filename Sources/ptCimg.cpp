@@ -319,7 +319,7 @@ void ptCimgEdgeTensors(ptImage* Image,
   }
 
   for (short Threads=0; Threads < NumberOfThreads; Threads++) {
-    CImage[Threads].edge_tensors(Sharpness,Anisotropy,Alpha,Sigma);
+    CImage[Threads].diffusion_tensors(Sharpness,Anisotropy,Alpha,Sigma);
     if (Blur) CImage[Threads].blur(Blur,true);
 
   }
