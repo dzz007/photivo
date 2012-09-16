@@ -715,9 +715,9 @@ void CompressDynamicRange(float *I, uint32_t w, uint32_t h, float alpha, float b
 }
 
 
-ptImage* ptImage::DRC(const double alpha,
-                      const double beta,
-                      const double color) {
+ptImage* ptImage::DRC(const float alpha,
+                      const float beta,
+                      const float color) {
 
   float (*In) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*In));
   ptMemoryError(In,__FILE__,__LINE__);

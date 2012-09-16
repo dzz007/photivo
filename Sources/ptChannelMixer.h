@@ -35,7 +35,7 @@
 class ptChannelMixer {
 public :
 
-double m_Mixer[3][3]; // [To][From]
+float m_Mixer[3][3]; // [To][From]
 
 // Reading and writing function (compatible).
 // Header is a free text that is inserted as comment to describe

@@ -2389,15 +2389,15 @@ ptImage* ptImage::Flip(const short FlipMode) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Levels(const double BlackPoint,
-                         const double WhitePoint) {
+ptImage* ptImage::Levels(const float BlackPoint,
+                         const float WhitePoint) {
 
-  const double WP = 0xffff;
+  const float WP = 0xffff;
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
 
   if (fabs(BlackPoint-WhitePoint)>0.001) {
-    double m = 1.0/(WhitePoint-BlackPoint);
-    double t = -BlackPoint/(WhitePoint-BlackPoint)*WP;
+    float m = 1.0/(WhitePoint-BlackPoint);
+    float t = -BlackPoint/(WhitePoint-BlackPoint)*WP;
 #pragma omp parallel for
     for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
       for (short Ch=0; Ch<NrChannels; Ch++) {
@@ -2632,17 +2632,17 @@ ptImage* ptImage::DenoiseImpulse(const double ThresholdL,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Reinhard05(const double Brightness,
-                             const double Chromatic,
-                             const double Light) {
-
+ptImage* ptImage::Reinhard05(const float Brightness,
+                             const float Chromatic,
+                             const float Light)
+{
   assert (m_ColorSpace != ptSpace_Lab);
   // OpenMP is done for RGB
   // const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
   const short NrChannels = 3;
 
-  const double DChromatic = 1 - Chromatic;
-  const double DLight = 1 - Light;
+  const float DChromatic = 1 - Chromatic;
+  const float DLight = 1 - Light;
 
   uint32_t m_Size = m_Width * m_Height;
   float (*Temp)[3] = (float (*)[3]) CALLOC(m_Size,sizeof(*Temp));
@@ -2766,6 +2766,42 @@ ptImage* ptImage::Reinhard05(const double Brightness,
 
   FREE (Temp);
   FREE (Y);
+
+  return this;
+}
+
+//------------------------------------------------------------------------------
+
+ptImage *ptImage::ColorIntensity(int AVibrance, int ARed, int AGreen, int ABlue) {
+  float hMixer[3][3];
+
+  if (AVibrance != 0) {
+    hMixer[0][0] = 1.0 + (AVibrance/150.0);
+    hMixer[0][1] = -(AVibrance/300.0);
+    hMixer[0][2] = hMixer[0][1];
+    hMixer[1][0] = hMixer[0][1];
+    hMixer[1][1] = hMixer[0][0];
+    hMixer[1][2] = hMixer[0][1];
+    hMixer[2][0] = hMixer[0][1];
+    hMixer[2][1] = hMixer[0][1];
+    hMixer[2][2] = hMixer[0][0];
+
+    this->MixChannels(hMixer);
+  }
+
+  if ((ARed != 0) || (AGreen != 0) || (ABlue != 0)) {
+    hMixer[0][0] = 1.0 + (ARed/150.0);
+    hMixer[0][1] = -(ARed/300.0);
+    hMixer[0][2] = hMixer[0][1];
+    hMixer[1][0] = -(AGreen/300.0);
+    hMixer[1][1] = 1.0+(AGreen/150.0);;
+    hMixer[1][2] = hMixer[1][0];
+    hMixer[2][0] = -(ABlue/300.0);
+    hMixer[2][1] = hMixer[2][0];
+    hMixer[2][2] = 1.0+(ABlue/150.0);
+
+    this->MixChannels(hMixer);
+  }
 
   return this;
 }
@@ -2980,13 +3016,13 @@ ptImage* ptImage::Outline(const short Mode,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::ColorEnhance(const double Shadows,
-                               const double Highlights) {
-
+ptImage* ptImage::ColorEnhance(const float AShadows,
+                               const float AHighlights)
+{
   assert (m_ColorSpace != ptSpace_Lab);
   uint16_t WP = 0xffff;
 
-  if (Shadows) {
+  if (AShadows) {
     ptImage *ShadowsLayer = new ptImage;
     ShadowsLayer->Set(this);
 
@@ -3000,13 +3036,13 @@ ptImage* ptImage::ColorEnhance(const double Shadows,
     }
 
     ShadowsLayer->Overlay(m_Image, 1.0, NULL, ptOverlayMode_ColorDodge, 1 /*Swap */);
-    Overlay(ShadowsLayer->m_Image, Shadows, NULL, ptOverlayMode_ColorBurn);
+    Overlay(ShadowsLayer->m_Image, AShadows, NULL, ptOverlayMode_ColorBurn);
     delete ShadowsLayer;
   }
   // I trade processing time for memory, so invert and greyscale will be
   // recalculated to save another parallel memory instance
 
-  if (Highlights) {
+  if (AHighlights) {
     ptImage *HighlightsLayer = new ptImage;
     HighlightsLayer->Set(this);
 
@@ -3020,7 +3056,7 @@ ptImage* ptImage::ColorEnhance(const double Shadows,
     }
 
     HighlightsLayer->Overlay(m_Image, 1.0, NULL, ptOverlayMode_ColorBurn, 1 /*Swap */);
-    Overlay(HighlightsLayer->m_Image, Highlights, NULL, ptOverlayMode_ColorDodge);
+    Overlay(HighlightsLayer->m_Image, AHighlights, NULL, ptOverlayMode_ColorDodge);
     delete HighlightsLayer;
   }
   return this;
@@ -3032,11 +3068,11 @@ ptImage* ptImage::ColorEnhance(const double Shadows,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::LMHLightRecovery(const short   MaskType,
-                                   const double  Amount,
-                                   const double  LowerLimit,
-                                   const double  UpperLimit,
-                                   const double  Softness) {
+ptImage* ptImage::LMHRecovery(const short  MaskType,
+                              const double Amount,
+                              const double LowerLimit,
+                              const double UpperLimit,
+                              const double Softness) {
 
   const double WP = 0xffff;
 
@@ -4218,7 +4254,7 @@ ptImage* ptImage::BWStyler(const short FilmType,
          const double MultB,
          const double Opacity) {
 
-  double Mixer[3][3];
+  float Mixer[3][3];
   double R = 0,G = 0,B = 0;
   double FR = 0, FG = 0, FB = 0;
   switch (FilmType) {
@@ -5015,7 +5051,7 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
   // Desaturate
   if (Saturation != 0) {
     int Value = Saturation;
-    double VibranceMixer[3][3];
+    float VibranceMixer[3][3];
     VibranceMixer[0][0] = 1.0+(Value/150.0);
     VibranceMixer[0][1] = -(Value/300.0);
     VibranceMixer[0][2] = VibranceMixer[0][1];
@@ -5516,7 +5552,7 @@ ptImage* ptImage::SpecialPreview(const short Mode, const int Intent) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::MixChannels(const double MixFactors[3][3]) {
+ptImage* ptImage::MixChannels(const float MixFactors[3][3]) {
 
   assert (m_ColorSpace != ptSpace_Lab);
   double Value[3];

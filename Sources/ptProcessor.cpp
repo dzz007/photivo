@@ -4,7 +4,7 @@
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -436,7 +436,7 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::Highlights_RGB);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Highlights"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterRGB);
         }
 
@@ -444,84 +444,20 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Vibrance
 
-        if (Settings->GetInt("Vibrance") &&
-            Settings->ToolIsActive("TabColorIntensity")) {
-
-          m_ReportProgress(tr("Vibrance"));
-          int Value = (Settings->GetInt("Vibrance"));
-          double VibranceMixer[3][3];
-
-          VibranceMixer[0][0] = 1.0+(Value/150.0);
-          VibranceMixer[0][1] = -(Value/300.0);
-          VibranceMixer[0][2] = VibranceMixer[0][1];
-          VibranceMixer[1][0] = VibranceMixer[0][1];
-          VibranceMixer[1][1] = VibranceMixer[0][0];
-          VibranceMixer[1][2] = VibranceMixer[0][1];
-          VibranceMixer[2][0] = VibranceMixer[0][1];
-          VibranceMixer[2][1] = VibranceMixer[0][1];
-          VibranceMixer[2][2] = VibranceMixer[0][0];
-
-          m_Image_AfterRGB->MixChannels(VibranceMixer);
-        }
-
-        if ((Settings->GetInt("IntensityRed")   ||
-            Settings->GetInt("IntensityGreen") ||
-            Settings->GetInt("IntensityBlue")) &&
-            Settings->ToolIsActive("TabColorIntensity")) {
-
-          m_ReportProgress(tr("IntensityRGB"));
-          int ValueR=(Settings->GetInt("IntensityRed"));
-          int ValueG=(Settings->GetInt("IntensityGreen"));
-          int ValueB=(Settings->GetInt("IntensityBlue"));
-          double IntensityMixer[3][3];
-          IntensityMixer[0][0] = 1.0+(ValueR/150.0);
-          IntensityMixer[0][1] = -(ValueR/300.0);
-          IntensityMixer[0][2] = IntensityMixer[0][1];
-          IntensityMixer[1][0] = -(ValueG/300.0);
-          IntensityMixer[1][1] = 1.0+(ValueG/150.0);;
-          IntensityMixer[1][2] = IntensityMixer[1][0];
-          IntensityMixer[2][0] = -(ValueB/300.0);
-          IntensityMixer[2][1] = IntensityMixer[2][0];
-          IntensityMixer[2][2] = 1.0+(ValueB/150.0);;
-
-          m_Image_AfterRGB->MixChannels(IntensityMixer);
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ColorIntensity_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
         //***************************************************************************
         // Brightness
 
-        if (Settings->ToolIsActive("TabBrightness")) {
-          m_ReportProgress(tr("Brightness"));
-
-          TAnchorList hAnchors;
-          if (Settings->GetDouble("CatchBlack") > 0) {
-            hAnchors.push_back(TAnchor(0.0, 0.02*Settings->GetDouble("CatchBlack")));
-          } else {
-            hAnchors.push_back(TAnchor(-0.02*Settings->GetDouble("CatchBlack"), 0.0));
-          }
-          for (int i=3; i<12; i++) {
-            hAnchors.push_back(TAnchor((double) i/20.0, (double) i/20.0));
-          }
-          if (Settings->GetDouble("CatchWhite") > 0) {            
-            hAnchors.push_back(TAnchor(1.0, 1.0-0.40*Settings->GetDouble("CatchWhite")));
-          } else {
-            hAnchors.push_back(TAnchor(1.0+0.40*Settings->GetDouble("CatchWhite"), 1.0));
-          }
-          auto CatchWhiteCurve = new ptCurve(hAnchors);
-          m_Image_AfterRGB->ApplyCurve(CatchWhiteCurve,7);
-
-          ptCurve* ExposureGainCurve = new ptCurve(
-              {TAnchor(0.0, 0.0),
-               TAnchor(0.5-0.2*Settings->GetDouble("ExposureGain"),
-                                0.5+0.2*Settings->GetDouble("ExposureGain")),
-               TAnchor(1.0, 1.0)});
-          // Merging these two curves results in bad results, no clue
-          // ExposureGainCurve->ApplyCurve(CatchWhiteCurve,0);
-
-          m_Image_AfterRGB->ApplyCurve(ExposureGainCurve,7);
-          delete ExposureGainCurve;
-          delete CatchWhiteCurve;
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Brightness_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
@@ -553,13 +489,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Reinhard 05
 
-        if (Settings->ToolIsActive("TabReinhard05")) {
-
-          m_ReportProgress(tr("Brighten"));
-
-          m_Image_AfterRGB->Reinhard05(Settings->GetDouble("Reinhard05Brightness"),
-                                       Settings->GetDouble("Reinhard05Chroma"),
-                                       Settings->GetDouble("Reinhard05Light"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ReinhardBrighten_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
@@ -568,7 +501,7 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::GammaTool_RGB);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying RGB Gamma"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterRGB);
         }
 
@@ -576,63 +509,31 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Normalization
 
-        if (Settings->ToolIsActive("TabNormalization")) {
-
-          m_ReportProgress(tr("Normalization"));
-
-          m_Image_AfterRGB->ptGMNormalize(Settings->GetDouble("NormalizationOpacity"));
-  //        ptIMContrastStretch(m_Image_AfterRGB,
-  //                           Settings->GetDouble("NormalizationBlackPoint"),
-  //                           Settings->GetDouble("NormalizationWhitePoint"),
-  //                           Settings->GetDouble("NormalizationOpacity"));
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Normalization_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
         //***************************************************************************
         // Color Enhancement
 
-        if (Settings->ToolIsActive("TabColorEnhance")) {
-          m_ReportProgress(tr("Color enhance"));
-
-          m_Image_AfterRGB->ColorEnhance(Settings->GetDouble("ColorEnhanceShadows"),
-                                         Settings->GetDouble("ColorEnhanceHighlights"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ColorEnhancement_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
         //***************************************************************************
-        // LMHLightRecovery
+        // LMHRecovery
 
-        if (Settings->GetInt("LMHLightRecovery1MaskType") &&
-            Settings->ToolIsActive("TabRGBRecovery")) {
-
-          m_ReportProgress(tr("Local Exposure"));
-
-          m_Image_AfterRGB->LMHLightRecovery(
-            Settings->GetInt("LMHLightRecovery1MaskType"),
-            Settings->GetDouble("LMHLightRecovery1Amount"),
-            pow(Settings->GetDouble("LMHLightRecovery1LowerLimit"),
-                Settings->GetDouble("InputPowerFactor")),
-            pow(Settings->GetDouble("LMHLightRecovery1UpperLimit"),
-                Settings->GetDouble("InputPowerFactor")),
-            Settings->GetDouble("LMHLightRecovery1Softness"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LMHRecovery_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
-
-        if (Settings->GetInt("LMHLightRecovery2MaskType") &&
-            Settings->ToolIsActive("TabRGBRecovery")) {
-
-          m_ReportProgress(tr("Local Exposure"));
-
-          m_Image_AfterRGB->LMHLightRecovery(
-            Settings->GetInt("LMHLightRecovery2MaskType"),
-            Settings->GetDouble("LMHLightRecovery2Amount"),
-            pow(Settings->GetDouble("LMHLightRecovery2LowerLimit"),
-                Settings->GetDouble("InputPowerFactor")),
-            pow(Settings->GetDouble("LMHLightRecovery2UpperLimit"),
-                Settings->GetDouble("InputPowerFactor")),
-            Settings->GetDouble("LMHLightRecovery2Softness"));
-        }
-
 
         //***************************************************************************
         // RGB Texturecontrast
@@ -690,23 +591,18 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::SigContrastRgb_RGB);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying RGB contrast"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
         //***************************************************************************
         // Levels
-        if (Settings->ToolIsActive("TabRGBLevels")) {
 
-          m_ReportProgress(tr("Levels"));
-
-          double BP = Settings->GetDouble("LevelsBlackPoint");
-          double WP = Settings->GetDouble("LevelsWhitePoint");
-          BP = (BP>0)? pow(BP,Settings->GetDouble("InputPowerFactor")):
-                      -pow(-BP,Settings->GetDouble("InputPowerFactor"));
-          WP = pow(WP,Settings->GetDouble("InputPowerFactor"));
-          m_Image_AfterRGB->Levels(BP,WP);
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Levels_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
@@ -715,10 +611,12 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::RgbCurve_RGB);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying RGB curve"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterRGB);
           TRACEMAIN("Done RGB Curve at %d ms.",m_RunTimer.elapsed());
         }
+
+
 
       case ptProcessorPhase_LabCC : // Run everything in LAB.
 
@@ -734,11 +632,10 @@ void ptProcessor::Run(short Phase,
         // LAB Transform, this has to be the first filter
         // in the LAB series, because it needs RGB input
 
-        if (Settings->ToolIsActive("TabLABTransform")) {
-
-          m_ReportProgress(tr("Lab transform"));
-
-          m_Image_AfterLabCC->LABTransform(Settings->GetInt("LABTransform"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LabTransform_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
 
@@ -747,7 +644,7 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::ShadowsHighlights_LabCC);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Shadows and Highlights"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabCC);
         }
 
@@ -755,67 +652,20 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // LabLMHLightRecovery
 
-        if (Settings->GetInt("LabLMHLightRecovery1MaskType") &&
-            Settings->ToolIsActive("TabLABRecovery")) {
-
-          m_ReportProgress(tr("LabLocal Exposure"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->LMHLightRecovery(
-            Settings->GetInt("LabLMHLightRecovery1MaskType"),
-            Settings->GetDouble("LabLMHLightRecovery1Amount"),
-            Settings->GetDouble("LabLMHLightRecovery1LowerLimit"),
-            Settings->GetDouble("LabLMHLightRecovery1UpperLimit"),
-            Settings->GetDouble("LabLMHLightRecovery1Softness"));
-        }
-
-        if (Settings->GetInt("LabLMHLightRecovery2MaskType") &&
-            Settings->ToolIsActive("TabLABRecovery")) {
-
-          m_ReportProgress(tr("LabLocal Exposure"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->LMHLightRecovery(
-            Settings->GetInt("LabLMHLightRecovery2MaskType"),
-            Settings->GetDouble("LabLMHLightRecovery2Amount"),
-            Settings->GetDouble("LabLMHLightRecovery2LowerLimit"),
-            Settings->GetDouble("LabLMHLightRecovery2UpperLimit"),
-            Settings->GetDouble("LabLMHLightRecovery2Softness"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LMHRecovery_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
 
         //***************************************************************************
         // Dynamic Range Compression
 
-        if (Settings->ToolIsActive("TabLABDRC")) {
-
-          m_ReportProgress(tr("Dynamic Range Compression"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->DRC(Settings->GetDouble("DRCAlpha"),
-                                  Settings->GetDouble("DRCBeta"),
-                                  Settings->GetDouble("DRCColor"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Drc_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
 
@@ -971,7 +821,7 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::SigContrastLab_LabCC);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying Lab contrast"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabCC);
         }
 
@@ -979,57 +829,33 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Saturation
 
-        if (Settings->ToolIsActive("TabLABSaturation")) {
-
-          m_ReportProgress(tr("Applying Lab saturation"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->SigmoidalContrast(Settings->GetDouble("SaturationAmount"),0.5,6);
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Saturation_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
 
         //***************************************************************************
         // Color Boost
 
-        if (Settings->ToolIsActive("TabLABColorBoost")) {
-
-          m_ReportProgress(tr("Applying Color Boost"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->ColorBoost(Settings->GetDouble("ColorBoostValueA"),Settings->GetDouble("ColorBoostValueB"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ColorBoost_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
 
         //***************************************************************************
         // Levels
-        if (Settings->ToolIsActive("TabLABLevels")) {
 
-          m_ReportProgress(tr("LabLevels"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->Levels(Settings->GetDouble("LabLevelsBlackPoint"),Settings->GetDouble("LabLevelsWhitePoint"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Levels_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
+
+
 
       case ptProcessorPhase_LabSN : // Run everything in LABSN.
 
@@ -1660,7 +1486,7 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::ColorContrast_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Colorcontrast"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
@@ -1670,13 +1496,13 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::ToneAdjust1_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("LAB tone adjustments 1"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::ToneAdjust2_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("LAB tone adjustments 2"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
@@ -1686,7 +1512,7 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::LumaAdjust_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Luminance adjustment"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
@@ -1696,7 +1522,7 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::SatAdjust_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Saturation adjustment"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
@@ -1704,83 +1530,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // LAB Tone second stage
 
-        if ((Settings->GetDouble("LABToneAmount") != 0.0 ||
-            Settings->GetDouble("LABToneSaturation") != 1.0) &&
-            Settings->ToolIsActive("TabLABTone")) {
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
-          }
-
-          m_ReportProgress(tr("LAB toning"));
-
-          m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneAmount"),
-              Settings->GetDouble("LABToneHue"),
-              Settings->GetDouble("LABToneSaturation"));
-        }
-
-        if ((Settings->GetDouble("LABToneSAmount") != 0.0 ||
-            Settings->GetDouble("LABToneSSaturation") != 1.0) &&
-            Settings->ToolIsActive("TabLABTone")) {
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
-          }
-
-          m_ReportProgress(tr("LAB shadows toning"));
-
-          m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneSAmount"),
-              Settings->GetDouble("LABToneSHue"),
-              Settings->GetDouble("LABToneSSaturation"),
-              ptMaskType_Shadows);
-        }
-
-        if ((Settings->GetDouble("LABToneMAmount") != 0.0 ||
-            Settings->GetDouble("LABToneMSaturation") != 1.0) &&
-            Settings->ToolIsActive("TabLABTone")) {
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
-          }
-
-          m_ReportProgress(tr("LAB midtones toning"));
-
-          m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneMAmount"),
-              Settings->GetDouble("LABToneMHue"),
-              Settings->GetDouble("LABToneMSaturation"),
-              ptMaskType_Midtones);
-        }
-
-        if ((Settings->GetDouble("LABToneHAmount") != 0.0 ||
-            Settings->GetDouble("LABToneHSaturation") != 1.0) &&
-            Settings->ToolIsActive("TabLABTone")) {
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      m_RunTimer.elapsed());
-          }
-
-          m_ReportProgress(tr("LAB highlights toning"));
-
-          m_Image_AfterLabEyeCandy->LABTone(Settings->GetDouble("LABToneHAmount"),
-              Settings->GetDouble("LABToneHHue"),
-              Settings->GetDouble("LABToneHSaturation"),
-              ptMaskType_Highlights);
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Tone_LabEyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
 
@@ -1810,6 +1563,9 @@ void ptProcessor::Run(short Phase,
             Settings->GetDouble("LabVignetteSoftness"));
 
         }
+
+
+
 
       case ptProcessorPhase_EyeCandy : // Run EyeCandy.
 
@@ -1967,8 +1723,8 @@ void ptProcessor::Run(short Phase,
                                     m_Image_AfterEyeCandy->m_Height,
                                     ptIMFilter_Catrom);
 
-            double Value = ((Settings->GetDouble("TextureOverlaySaturation")-1.0)*100);
-            double VibranceMixer[3][3];
+            float Value = ((Settings->GetDouble("TextureOverlaySaturation")-1.0)*100);
+            float VibranceMixer[3][3];
 
             VibranceMixer[0][0] = 1.0+(Value/150.0);
             VibranceMixer[0][1] = -(Value/300.0);
@@ -2048,8 +1804,8 @@ void ptProcessor::Run(short Phase,
                                     m_Image_AfterEyeCandy->m_Height,
                                     ptIMFilter_Catrom);
 
-            double Value = ((Settings->GetDouble("TextureOverlay2Saturation")-1.0)*100);
-            double VibranceMixer[3][3];
+            float Value = ((Settings->GetDouble("TextureOverlay2Saturation")-1.0)*100);
+            float VibranceMixer[3][3];
 
             VibranceMixer[0][0] = 1.0+(Value/150.0);
             VibranceMixer[0][1] = -(Value/300.0);
@@ -2224,7 +1980,7 @@ void ptProcessor::Run(short Phase,
 
           m_ReportProgress(tr("Vibrance 2"));
           int Value = (Settings->GetInt("Vibrance2"));
-          double VibranceMixer[3][3];
+          float VibranceMixer[3][3];
 
           VibranceMixer[0][0] = 1.0+(Value/150.0);
           VibranceMixer[0][1] = -(Value/300.0);
@@ -2248,7 +2004,7 @@ void ptProcessor::Run(short Phase,
           int ValueR=(Settings->GetInt("Intensity2Red"));
           int ValueG=(Settings->GetInt("Intensity2Green"));
           int ValueB=(Settings->GetInt("Intensity2Blue"));
-          double IntensityMixer[3][3];
+          float IntensityMixer[3][3];
           IntensityMixer[0][0] = 1.0+(ValueR/150.0);
           IntensityMixer[0][1] = -(ValueR/300.0);
           IntensityMixer[0][2] = IntensityMixer[0][1];
