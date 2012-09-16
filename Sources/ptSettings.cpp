@@ -119,10 +119,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LqrWidth"                      ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Width")              ,tr("Width")},
     {"LqrHeight"                     ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Height")},
     {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("pixels")               ,tr("Image size")},
-    {"LevelsBlackPoint"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.002,3 ,tr("Blackpoint")         ,tr("Levels Blackpoint")},
-    {"LevelsWhitePoint"              ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.002,3 ,tr("Whitepoint")         ,tr("Levels Whitepoint")},
-    {"LabLevelsBlackPoint"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.002,3 ,tr("Blackpoint")         ,tr("Levels Blackpoint")},
-    {"LabLevelsWhitePoint"           ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.002,3 ,tr("Whitepoint")         ,tr("Levels Whitepoint")},
     {"ChannelMixerR2R"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to red")},
     {"ChannelMixerG2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to red")},
     {"ChannelMixerB2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to red")},
@@ -132,29 +128,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ChannelMixerR2B"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to blue")},
     {"ChannelMixerG2B"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to blue")},
     {"ChannelMixerB2B"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to blue")},
-    {"Vibrance"                      ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Vibrance")           ,tr("Vibrance")},
-    {"IntensityRed"                  ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Red")                ,tr("Intensity red")},
-    {"IntensityGreen"                ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Green")              ,tr("Intensity green")},
-    {"IntensityBlue"                 ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Blue")               ,tr("Intensity blue")},
-    {"ColorEnhanceShadows"           ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0    ,0.1,1 ,tr("Enhance shadows")    ,tr("Enhance shadows only")},
-    {"ColorEnhanceHighlights"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0    ,0.1,1 ,tr("Enhance highlights") ,tr("Enhance highlights only")},
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"ExposureGain"                  ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0  ,0.05,2  ,tr("Gain")               ,tr("Exposure gain")},
-    {"Reinhard05Brightness"          ,ptGT_InputSlider     ,2,1,1 ,-10.0,-90.0 ,10.0 ,2.0  ,0  ,tr("Brightness")         ,tr("Brightness")},
-    {"Reinhard05Chroma"              ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0   ,1.0  ,0.1  ,2 ,tr("Chrominance")        ,tr("Chrominance adaption")},
-    {"Reinhard05Light"               ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0   ,1.0  ,0.05 ,2 ,tr("Light")              ,tr("Light adaption")},
-    {"CatchWhite"                    ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0  ,0.05,2  ,tr("Catch white")        ,tr("Darken just the brightest parts")},
-    {"CatchBlack"                    ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0  ,0.05,2  ,tr("Catch black")        ,tr("Brighten just the darkest parts")},
-    {"LMHLightRecovery1Amount"       ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-3.0 ,3.0   ,0.1  ,2  ,tr("Amount")             ,tr("Amount of recovery")},
-    {"LMHLightRecovery1LowerLimit"   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.002,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"LMHLightRecovery1UpperLimit"   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.002,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"LMHLightRecovery1Softness"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"LMHLightRecovery2Amount"       ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-3.0 ,3.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount of recovery")},
-    {"LMHLightRecovery2LowerLimit"   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.002,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"LMHLightRecovery2UpperLimit"   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.002,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"LMHLightRecovery2Softness"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
     {"RGBTextureContrastAmount"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-10.0  ,40.0   ,1.0,1 ,tr("Amount")           ,tr("Amount")},
     {"RGBTextureContrastThreshold"   ,ptGT_InputSlider     ,2,1,1 ,20.0  ,0.0  ,50.0   ,4.0,1 ,tr("Scale")        ,tr("Scale")},
     {"RGBTextureContrastSoftness"    ,ptGT_InputSlider     ,2,1,1 ,0.14  ,0.0  ,1.0    ,0.01,2 ,tr("Threshold")         ,tr("Threshold")},
@@ -175,17 +151,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Microcontrast2LowerLimit"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"Microcontrast2UpperLimit"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
     {"Microcontrast2Softness"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"DRCBeta"                       ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05 ,2 ,tr("Amount")             ,tr("Amount of compression")},
-    {"DRCAlpha"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.01 ,2 ,tr("Bias")               ,tr("Bias of compression")},
-    {"DRCColor"                      ,ptGT_InputSlider     ,2,1,1 ,0.25 ,0.0  ,1.0   ,0.05 ,2 ,tr("Color Adaption")     ,tr("Color adaption")},
-    {"LabLMHLightRecovery1Amount"    ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-3.0 ,3.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount of recovery")},
-    {"LabLMHLightRecovery1LowerLimit",ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.002,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"LabLMHLightRecovery1UpperLimit",ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.002,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"LabLMHLightRecovery1Softness"  ,ptGT_InputSlider     ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"LabLMHLightRecovery2Amount"    ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-3.0 ,3.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount of recovery")},
-    {"LabLMHLightRecovery2LowerLimit",ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.002,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"LabLMHLightRecovery2UpperLimit",ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.002,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"LabLMHLightRecovery2Softness"  ,ptGT_InputSlider     ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
     {"TextureContrast1Amount"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-10.0  ,40.0   ,1.0,1 ,tr("Amount")           ,tr("Amount")},
     {"TextureContrast1Threshold"     ,ptGT_InputSlider     ,2,1,1 ,20.0  ,0.0  ,50.0   ,4.0,1 ,tr("Scale")        ,tr("Scale")},
     {"TextureContrast1Softness"      ,ptGT_InputSlider     ,2,1,1 ,0.14  ,0.0  ,1.0    ,0.01,2 ,tr("Threshold")         ,tr("Threshold")},
@@ -220,10 +185,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LC2Feather"                    ,ptGT_InputSlider     ,2,1,1 ,-0.3  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Feather")              ,tr("Feather")},
     {"LC2Opacity"                    ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1 ,2 ,tr("Opacity")              ,tr("Opacity")},
     {"LC2m"                          ,ptGT_InputSlider     ,2,1,1 ,1.0  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Masking")              ,tr("Masking")},
-    {"NormalizationOpacity"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0    ,0.05 ,2 ,tr("Opacity")            ,tr("Opacity")},
-    {"SaturationAmount"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-10.0  ,10.0  ,0.5  ,1 ,tr("Amount")             ,tr("Amount of saturation")},
-    {"ColorBoostValueA"              ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0  ,0.1  ,1 ,tr("Value A")             ,tr("Amount of boosting A")},
-    {"ColorBoostValueB"              ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0  ,0.1  ,1 ,tr("Value B")             ,tr("Amount of boosting B")},
     {"EAWMaster"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Master")              ,tr("Quick setup for the levels")},
     {"ImpulseDenoiseThresholdL"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,5.0  ,0.2  ,1 ,tr("Threshold on L")      ,tr("Threshold on L")},
     {"ImpulseDenoiseThresholdAB"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,5.0  ,0.2  ,1 ,tr("Threshold on color")  ,tr("Threshold on color")},
@@ -292,18 +253,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Grain2Opacity"                 ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity for film grain")},
     {"Grain2LowerLimit"              ,ptGT_InputSlider     ,2,1,1 ,0.1  ,0.0  ,1.0   ,0.002,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"Grain2UpperLimit"              ,ptGT_InputSlider     ,2,1,1 ,0.4  ,0.0  ,1.0   ,0.002,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"LABToneSaturation"             ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0   ,4.0   ,0.1 ,2  ,tr("Saturation")        ,tr("Saturation")},
-    {"LABToneAmount"                 ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05,2  ,tr("Amount")            ,tr("Amount")},
-    {"LABToneHue"                    ,ptGT_InputSliderHue  ,2,1,1 ,60.0 ,0.0  ,360.0  ,10.0,0  ,tr("Hue")               ,tr("Hue")},
-    {"LABToneSSaturation"            ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0   ,4.0   ,0.1 ,2  ,tr("Saturation")        ,tr("Saturation")},
-    {"LABToneSAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05,2  ,tr("Amount")            ,tr("Amount")},
-    {"LABToneSHue"                   ,ptGT_InputSliderHue  ,2,1,1 ,240.0,0.0  ,360.0  ,10.0,0  ,tr("Hue")               ,tr("Hue")},
-    {"LABToneMSaturation"            ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0   ,4.0   ,0.1 ,2  ,tr("Saturation")        ,tr("Saturation")},
-    {"LABToneMAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05,2  ,tr("Amount")            ,tr("Amount")},
-    {"LABToneMHue"                   ,ptGT_InputSliderHue  ,2,1,1 ,60.0 ,0.0  ,360.0  ,10.0,0  ,tr("Hue")               ,tr("Hue")},
-    {"LABToneHSaturation"            ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0   ,4.0   ,0.1 ,2  ,tr("Saturation")        ,tr("Saturation")},
-    {"LABToneHAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05,2  ,tr("Amount")            ,tr("Amount")},
-    {"LABToneHHue"                   ,ptGT_InputSliderHue  ,2,1,1 ,60.0 ,0.0  ,360.0  ,10.0,0  ,tr("Hue")               ,tr("Hue")},
     {"LabVignette"                   ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0  ,tr("Shape")             ,tr("Shape of the vignette")},
     {"LabVignetteAmount"             ,ptGT_InputSlider     ,2,1,1 ,0.3  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Amount")            ,tr("Amount")},
     {"LabVignetteInnerRadius"        ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2  ,tr("Inner Radius")      ,tr("Inner Radius")},
@@ -387,10 +336,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"SoftglowAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,1  ,tr("Amount")        ,tr("Amount")},
     {"SoftglowSaturation"            ,ptGT_InputSlider     ,2,1,1 ,-50  ,-100  ,100    ,5  ,0 ,tr("Saturation")     ,tr("Saturation")},
     {"SoftglowContrast"              ,ptGT_InputSlider     ,2,1,1 ,5.0  ,0.0  ,20.0  ,0.5  ,1 ,tr("Contrast")           ,tr("Contrast")},
-    {"Vibrance2"                     ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Vibrance")           ,tr("Vibrance")},
-    {"Intensity2Red"                 ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Red")                ,tr("Intensity red")},
-    {"Intensity2Green"               ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Green")              ,tr("Intensity green")},
-    {"Intensity2Blue"                ,ptGT_InputSlider     ,2,1,1 ,0    ,-100  ,100    ,5  ,0 ,tr("Blue")               ,tr("Intensity blue")},
     {"OutputGamma"                   ,ptGT_InputSlider     ,1,1,1 ,0.33  ,0.1  ,1.0   ,0.01 ,3 ,tr("Gamma")              ,tr("Gamma")},
     {"OutputLinearity"               ,ptGT_InputSlider     ,1,1,1 ,0.06  ,0.0  ,1.0   ,0.01 ,3 ,tr("Linearity")          ,tr("Linearity")},
     {"WebResizeScale"                ,ptGT_Input           ,1,1,1 ,1200  ,200 ,2600  ,100  ,0 ,tr("pixels")             ,tr("Image size")},
@@ -451,13 +396,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ChannelMixer"                ,ptGT_Choice       ,2,1,1 ,ptChannelMixerChoice_None   ,GuiOptions->ChannelMixer              ,tr("ChannelMixer")},
     {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
     {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
-    {"LABTransform"                ,ptGT_Choice       ,2,1,1 ,ptLABTransform_L            ,GuiOptions->LABTransformMode          ,tr("LAB Transform mode")},
-    {"LMHLightRecovery1MaskType"   ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for recovery")},
-    {"LMHLightRecovery2MaskType"   ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for recovery")},
     {"Microcontrast1MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
     {"Microcontrast2MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
-    {"LabLMHLightRecovery1MaskType",ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for recovery")},
-    {"LabLMHLightRecovery2MaskType",ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for recovery")},
     {"LabMicrocontrast1MaskType"   ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
     {"LabMicrocontrast2MaskType"   ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
     {"GREYCLab"                    ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->EnableGreyC               ,tr("Enable GreyCStoration on L")},
@@ -525,7 +465,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Resize"                     ,ptGT_Check ,9,1,0,tr("Resize")          ,tr("Enable resize")},
     {"AutomaticPipeSize"          ,ptGT_Check ,1,1,0,tr("Automatic pipe size") ,tr("Automatic pipe size")},
     {"GeometryBlock"              ,ptGT_Check ,9,0,0,tr("Block pipe")      ,tr("Disable the pipe")},
-    {"Reinhard05"                 ,ptGT_Check ,2,1,0,tr("Enable")          ,tr("Enable Reinhard 05")},
     {"GREYCLabFast"               ,ptGT_Check ,2,1,1,tr("Enable 'fast'")   ,tr("Enable GREYC 'fast'")},
     {"DefringeColor1"             ,ptGT_Check ,1,1,1,tr("Red")             ,tr("Red")},
     {"DefringeColor2"             ,ptGT_Check ,1,1,1,tr("Yellow")          ,tr("Yellow")},
@@ -534,8 +473,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"DefringeColor5"             ,ptGT_Check ,1,1,1,tr("Blue")            ,tr("Blue")},
     {"DefringeColor6"             ,ptGT_Check ,1,1,1,tr("Purple")          ,tr("Purple")},
     {"InverseDiffusionUseEdgeMask",ptGT_Check ,2,1,1,tr("Only edges")      ,tr("Sharpen only edges")},
-    //{"GREYC"                    ,ptGT_Check ,2,1,0,tr("Enable")          ,tr("Enable GREYC restoration")},
-    //{"GREYCFast"                ,ptGT_Check ,2,1,1,tr("Enable 'fast'")   ,tr("Enable GREYC 'fast'")},
     {"WebResizeBeforeGamma"       ,ptGT_Check ,1,1,0,tr("before gamma")    ,tr("Webresizing before gamma compensation")},
     {"OutputGammaCompensation"    ,ptGT_Check ,1,1,0,tr("sRGB gamma compensation")    ,tr("sRGB gamma compensation")},
     {"IncludeExif"                ,ptGT_Check ,2,1,1,tr("Include metadata"),tr("Include metadata (only in jpeg and tiff)")},
@@ -1633,34 +1570,9 @@ sToolInfo ToolInfo (const QString GuiName) {
   else if (GuiName == "TabChannelMixer") {
       Info.Name = "Channel mixer";
       Info.IsActive = Settings->GetInt("ChannelMixer");
-  } else if (GuiName == "TabColorIntensity") {
-      Info.Name = "RGB color intensity";
-      Info.IsActive = (Settings->GetInt("Vibrance") ||
-                       Settings->GetInt("IntensityRed") ||
-                       Settings->GetInt("IntensityGreen") ||
-                       Settings->GetInt("IntensityBlue"))!=0?1:0;
-  } else if (GuiName == "TabBrightness") {
-      Info.Name = "RGB brightness";
-      Info.IsActive = (Settings->GetDouble("CatchWhite")!=0.0 ||
-                       Settings->GetDouble("CatchBlack")!=0.0 ||
-                       Settings->GetDouble("ExposureGain")!=0.0)!=0?1:0;
   } else if (GuiName == "TabExposure") {
       Info.Name = "Exposure";
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
-  } else if (GuiName == "TabReinhard05") {
-      Info.Name = "Reinhard 05";
-      Info.IsActive = Settings->GetInt("Reinhard05");
-  } else if (GuiName == "TabNormalization") {
-      Info.Name = "Normalization";
-      Info.IsActive = Settings->GetDouble("NormalizationOpacity")!=0.0?1:0;
-  } else if (GuiName == "TabColorEnhance") {
-      Info.Name = "RGB color enhancement";
-      Info.IsActive = (Settings->GetDouble("ColorEnhanceShadows")!=0.0 ||
-                       Settings->GetDouble("ColorEnhanceHighlights")!=0.0)!=0?1:0;
-  } else if (GuiName == "TabRGBRecovery") {
-      Info.Name = "RGB Low/Mid/Highlight Recovery";
-      Info.IsActive = Settings->GetInt("LMHLightRecovery1MaskType") ||
-                      Settings->GetInt("LMHLightRecovery2MaskType");
   } else if (GuiName == "TabRGBTextureContrast") {
       Info.Name = "RGB texture contrast";
       Info.IsActive = (Settings->GetDouble("RGBTextureContrastAmount")!=0.0 &&
@@ -1671,23 +1583,9 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabRGBLocalContrast2") {
       Info.Name = "RGB Local Contrast 2";
       Info.IsActive = Settings->GetInt("Microcontrast2MaskType");
-  } else if (GuiName == "TabRGBLevels") {
-      Info.Name = "RGB Levels";
-      Info.IsActive = (Settings->GetDouble("LevelsBlackPoint")!=0.0 ||
-                      (Settings->GetDouble("LevelsWhitePoint")-1.0)!=0.0)?1:0;
   }
   // Lab Color and Contrast
-  else if (GuiName == "TabLABTransform") {
-      Info.Name = "Lab Transform";
-      Info.IsActive = Settings->GetInt("LABTransform");
-  } else if (GuiName == "TabLABRecovery") {
-      Info.Name = "Lab Low/Mid/Highlight Recovery";
-      Info.IsActive = Settings->GetInt("LabLMHLightRecovery1MaskType") ||
-                      Settings->GetInt("LabLMHLightRecovery2MaskType");
-  } else if (GuiName == "TabLABDRC") {
-      Info.Name = "Lab Dynamic Range Compression";
-      Info.IsActive = Settings->GetDouble("DRCBeta")!=1.0?1:0;
-  } else if (GuiName == "TabLABTexture1") {
+  else if (GuiName == "TabLABTexture1") {
       Info.Name = "Lab Texture Contrast 1";
       Info.IsActive = (Settings->GetDouble("TextureContrast1Amount")!=0.0 &&
                       Settings->GetDouble("TextureContrast1Opacity")!=0.0)?1:0;
@@ -1707,17 +1605,6 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabLABLCStretch2") {
       Info.Name = "Lab Local Contrast Stretch 2";
       Info.IsActive = Settings->GetDouble("LC2Opacity")!=0.0?1:0;
-  } else if (GuiName == "TabLABSaturation") {
-      Info.Name = "Lab Saturation";
-      Info.IsActive = Settings->GetDouble("SaturationAmount")!=0.0?1:0;
-  } else if (GuiName == "TabLABColorBoost") {
-      Info.Name = "Lab Color Boost";
-      Info.IsActive = ((Settings->GetDouble("ColorBoostValueA")-1)!=0.0 ||
-                      (Settings->GetDouble("ColorBoostValueB")-1)!=0.0)?1:0;
-  } else if (GuiName == "TabLABLevels") {
-      Info.Name = "Lab Levels";
-      Info.IsActive = (Settings->GetDouble("LabLevelsBlackPoint")!=0.0 ||
-                      (Settings->GetDouble("LabLevelsWhitePoint")-1.0)!=0.0)?1:0;
   }
   // Lab Sharpen and Noise
   else if (GuiName == "TabLABImpulseDenoise") {
@@ -1783,17 +1670,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetInt("ViewLAB")!=0?1:0;
   }
   // Tab Lab EyeCandy
-  else if (GuiName == "TabLABTone") {
-      Info.Name = "Lab toning";
-      Info.IsActive = (Settings->GetDouble("LABToneAmount")!=0.0 ||
-                       Settings->GetDouble("LABToneSaturation") != 1.0 ||
-                       Settings->GetDouble("LABToneSAmount") != 0.0 ||
-                       Settings->GetDouble("LABToneSSaturation") != 1.0 ||
-                       Settings->GetDouble("LABToneMAmount")!=0.0 ||
-                       Settings->GetDouble("LABToneMSaturation") != 1.0 ||
-                       Settings->GetDouble("LABToneHAmount")!=0.0 ||
-                       Settings->GetDouble("LABToneHSaturation") != 1.0)!=0?1:0;
-  } else if (GuiName == "TabLABVignette") {
+  else if (GuiName == "TabLABVignette") {
       Info.Name = "Lab vignette";
       Info.IsActive = (Settings->GetInt("LabVignetteMode") != 0 &&
                        Settings->GetDouble("LabVignetteAmount") != 0.0)!=0?1:0;
@@ -1846,12 +1723,6 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Softglow / Orton";
       Info.IsActive = (Settings->GetInt("SoftglowMode") &&
                        Settings->GetDouble("SoftglowAmount")!=0.0)!=0?1:0;
-  } else if (GuiName == "TabECColorIntensity") {
-      Info.Name = "Eyecandy color intensity";
-      Info.IsActive = (Settings->GetInt("Vibrance2") ||
-                       Settings->GetInt("Intensity2Red") ||
-                       Settings->GetInt("Intensity2Green") ||
-                       Settings->GetInt("Intensity2Blue"))!=0?1:0;
   }
   // Tab Output
   else if (GuiName == "TabGammaCompensation") {

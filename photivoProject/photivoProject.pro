@@ -239,7 +239,19 @@ HEADERS += \
     ../Sources/ptWiener.h \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
-    ../Sources/qtsingleapplication/qtsingleapplication.h
+    ../Sources/qtsingleapplication/qtsingleapplication.h \
+    ../Sources/filters/ptFilter_ColorIntensity.h \
+    ../Sources/filters/ptFilter_Brightness.h \
+    ../Sources/filters/ptFilter_ReinhardBrighten.h \
+    ../Sources/filters/ptFilter_Normalization.h \
+    ../Sources/filters/ptFilter_ColorEnhancement.h \
+    ../Sources/filters/ptFilter_Levels.h \
+    ../Sources/filters/ptFilter_LMHRecovery.h \
+    ../Sources/filters/ptFilter_Drc.h \
+    ../Sources/filters/ptFilter_LabTransform.h \
+    ../Sources/filters/ptFilter_Saturation.h \
+    ../Sources/filters/ptFilter_ColorBoost.h \
+    ../Sources/filters/ptFilter_Tone.h
 
 
 SOURCES += \
@@ -345,14 +357,29 @@ SOURCES += \
     ../Sources/vcd/es_median_filter.c \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
-    ../Sources/vcd/vcd_interpolate.c
+    ../Sources/vcd/vcd_interpolate.c \
+    ../Sources/filters/ptFilter_ColorIntensity.cpp \
+    ../Sources/filters/ptFilter_Brightness.cpp \
+    ../Sources/filters/ptFilter_ReinhardBrighten.cpp \
+    ../Sources/filters/ptFilter_Normalization.cpp \
+    ../Sources/filters/ptFilter_ColorEnhancement.cpp \
+    ../Sources/filters/ptFilter_Levels.cpp \
+    ../Sources/filters/ptFilter_LMHRecovery.cpp \
+    ../Sources/filters/ptFilter_Drc.cpp \
+    ../Sources/filters/ptFilter_LabTransform.cpp \
+    ../Sources/filters/ptFilter_Saturation.cpp \
+    ../Sources/filters/ptFilter_ColorBoost.cpp \
+    ../Sources/filters/ptFilter_Tone.cpp
 
 
 FORMS += \
     ../Sources/filemgmt/ptFileMgrWindow.ui \
     ../Sources/filters/ptFilter_Outline.ui \
     ../Sources/filters/ptFilter_Wiener.ui \
-    ../Sources/ptMainWindow.ui
+    ../Sources/ptMainWindow.ui \
+    ../Sources/filters/ptFilter_ColorIntensity.ui \
+    ../Sources/filters/ptFilter_LMHRecovery.ui \
+    ../Sources/filters/ptFilter_Tone.ui
 
 RESOURCES += ../qrc/photivo.qrc
 

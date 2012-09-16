@@ -167,7 +167,7 @@ public:
 
   // MixChannels
   // MixFactors[To][From]
-  ptImage* MixChannels(const double MixFactors[3][3]);
+  ptImage* MixChannels(const float MixFactors[3][3]);
 
   ptImage* Highlights(const float AHlRed, const float AHlGreen, const float AHlBlue);
 
@@ -184,8 +184,8 @@ public:
   ptImage* Flip(const short FlipMode);
 
   // Levels
-  ptImage* Levels(const double BlackP,
-                  const double WhiteP);
+  ptImage* Levels(const float BlackP,
+                  const float WhiteP);
 
   // DeFringe
   ptImage* DeFringe(const double Radius,
@@ -198,9 +198,14 @@ public:
                           const double ThresholdAB);
 
   // Reinhard 05
-  ptImage* Reinhard05(const double Brightness,
-                      const double Chromatic,
-                      const double Light);
+  ptImage* Reinhard05(const float Brightness,
+                      const float Chromatic,
+                      const float Light);
+
+  ptImage* ColorIntensity(int AVibrance,
+                          int ARed,
+                          int AGreen,
+                          int ABlue);
 
   // Color Boost
   ptImage* ColorBoost(const double ValueA,
@@ -234,15 +239,15 @@ public:
                    const short SwitchLayer);
 
   // Color Enhance
-  ptImage* ColorEnhance(const double Shadows,
-                        const double Highlights);
+  ptImage* ColorEnhance(const float AShadows,
+                        const float AHighlights);
 
   // LMHLightRecovery
-  ptImage* LMHLightRecovery(const short   MaskType,
-                            const double  Amount,
-                            const double  LowerLimit,
-                            const double  UpperLimit,
-                            const double  Softness);
+  ptImage* LMHRecovery(const short   MaskType,
+                            const double Amount,
+                            const double LowerLimit,
+                            const double UpperLimit,
+                            const double Softness);
 
   // Highpass
   ptImage* Highpass(const double Radius,
@@ -537,9 +542,9 @@ public:
                     const unsigned ExifBufferLen = 0);
 
   // ptImage_DRC.cpp
-  ptImage* DRC(const double alpha,
-               const double beta,
-               const double color);
+  ptImage* DRC(const float alpha,
+               const float beta,
+               const float color);
 
   // ptImage_EAW.cpp
   ptImage* EAWChannel(const double scaling,
