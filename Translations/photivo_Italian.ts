@@ -59,7 +59,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../Sources/ptCimg.cpp" line="89"/>
+        <location filename="../Sources/ptCimg.cpp" line="93"/>
         <source>GreycStoration iteration </source>
         <translation>Iterazione GreycStoration</translation>
     </message>
@@ -1358,7 +1358,7 @@
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="537"/>
-        <location filename="../Sources/ptMain.cpp" line="3772"/>
+        <location filename="../Sources/ptMain.cpp" line="3792"/>
         <source>Open preset</source>
         <translation>Apri preset</translation>
     </message>
@@ -1378,8 +1378,8 @@
         <translation type="obsolete">Utilizzo: Photivo  [-i Immagine] [-j File di lavorazione] [-g Immagine (con pulitura, non per uso normale!)]</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="528"/>
-        <location filename="../Sources/ptMain.cpp" line="831"/>
+        <location filename="../Sources/ptMain.cpp" line="543"/>
+        <location filename="../Sources/ptMain.cpp" line="846"/>
         <source>Photivo</source>
         <translation>Photivo</translation>
     </message>
@@ -1396,63 +1396,63 @@
         <translation type="obsolete">Errore lettura curva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1125"/>
-        <location filename="../Sources/ptMain.cpp" line="1275"/>
-        <location filename="../Sources/ptMain.cpp" line="1439"/>
-        <location filename="../Sources/ptMain.cpp" line="1477"/>
-        <location filename="../Sources/ptMain.cpp" line="1704"/>
-        <location filename="../Sources/ptMain.cpp" line="2026"/>
-        <location filename="../Sources/ptMain.cpp" line="2357"/>
-        <location filename="../Sources/ptMain.cpp" line="3001"/>
+        <location filename="../Sources/ptMain.cpp" line="1140"/>
+        <location filename="../Sources/ptMain.cpp" line="1290"/>
+        <location filename="../Sources/ptMain.cpp" line="1454"/>
+        <location filename="../Sources/ptMain.cpp" line="1492"/>
+        <location filename="../Sources/ptMain.cpp" line="1719"/>
+        <location filename="../Sources/ptMain.cpp" line="2041"/>
+        <location filename="../Sources/ptMain.cpp" line="2372"/>
+        <location filename="../Sources/ptMain.cpp" line="3021"/>
         <source>Ready</source>
         <translation>Pronto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1076"/>
+        <location filename="../Sources/ptMain.cpp" line="1091"/>
         <source>Loading channelmixers</source>
         <translation>Caricamento Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1086"/>
-        <location filename="../Sources/ptMain.cpp" line="2066"/>
-        <location filename="../Sources/ptMain.cpp" line="4835"/>
+        <location filename="../Sources/ptMain.cpp" line="1101"/>
+        <location filename="../Sources/ptMain.cpp" line="2081"/>
+        <location filename="../Sources/ptMain.cpp" line="4839"/>
         <source>Cannot read channelmixer </source>
         <translation>Non posso leggere miscelatore canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1092"/>
-        <location filename="../Sources/ptMain.cpp" line="2065"/>
-        <location filename="../Sources/ptMain.cpp" line="4840"/>
+        <location filename="../Sources/ptMain.cpp" line="1107"/>
+        <location filename="../Sources/ptMain.cpp" line="2080"/>
+        <location filename="../Sources/ptMain.cpp" line="4844"/>
         <source>Channelmixer read error</source>
         <translation>Errore lettura miscelatore canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1466"/>
+        <location filename="../Sources/ptMain.cpp" line="1481"/>
         <source>Selection too small</source>
         <translation>Selezione troppo piccola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1467"/>
+        <location filename="../Sources/ptMain.cpp" line="1482"/>
         <source>Selection rectangle needs to be at least 50x50 pixels in size.
 No crop, try again.</source>
         <translation>La selezione rettangolare deve avere una dimensione di almeno 50x50 pixels.
 Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1437"/>
-        <location filename="../Sources/ptMain.cpp" line="1475"/>
-        <location filename="../Sources/ptMain.cpp" line="1788"/>
-        <location filename="../Sources/ptMain.cpp" line="1859"/>
+        <location filename="../Sources/ptMain.cpp" line="1452"/>
+        <location filename="../Sources/ptMain.cpp" line="1490"/>
+        <location filename="../Sources/ptMain.cpp" line="1803"/>
+        <location filename="../Sources/ptMain.cpp" line="1874"/>
         <source>Updating histogram</source>
         <translation>Aggiornamento istogramma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="462"/>
+        <location filename="../Sources/ptMain.cpp" line="477"/>
         <source>Photivo crashed</source>
         <translation>Photivo è andato in crash</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="463"/>
+        <location filename="../Sources/ptMain.cpp" line="478"/>
         <source>Photivo crashed. You can get help on our flickr forum at
 &lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;http://www.flickr.com/groups/photivo/discuss/&lt;/a&gt;
 When you post there make sure to describe your last actions before the crash occurred.</source>
@@ -1461,7 +1461,7 @@ When you post there make sure to describe your last actions before the crash occ
 Nel tuo post ricordati di descrivere le ultime azioni che hai compiuto prima del crash.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="477"/>
+        <location filename="../Sources/ptMain.cpp" line="492"/>
         <source>Fatal error: Wrong GraphicsMagick quantum depth!
 Found quantum depth %1. Photivo needs at least %2.
 </source>
@@ -1469,48 +1469,48 @@ Found quantum depth %1. Photivo needs at least %2.
 Trovato quantum depth %1. Photivo necessita almeno di %2.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="482"/>
+        <location filename="../Sources/ptMain.cpp" line="497"/>
         <source>Photivo: Fatal Error</source>
         <translation>Photivo: Errore Fatale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="964"/>
+        <location filename="../Sources/ptMain.cpp" line="979"/>
         <source>Clean up input file</source>
         <translation>Pulisci file di input</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1506"/>
-        <location filename="../Sources/ptMain.cpp" line="1561"/>
+        <location filename="../Sources/ptMain.cpp" line="1521"/>
+        <location filename="../Sources/ptMain.cpp" line="1576"/>
         <source>WebResizing</source>
         <translation>Ridimensionamento Web</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1519"/>
+        <location filename="../Sources/ptMain.cpp" line="1534"/>
         <source>Applying base curve</source>
         <translation>Applicazione curva base</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1525"/>
+        <location filename="../Sources/ptMain.cpp" line="1540"/>
         <source>Applying gamma compensation</source>
         <translation>Applicazione compensazione del gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1546"/>
+        <location filename="../Sources/ptMain.cpp" line="1561"/>
         <source>Applying RGB Contrast</source>
         <translation>Applicazione contrasto RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1553"/>
+        <location filename="../Sources/ptMain.cpp" line="1568"/>
         <source>Applying after gamma curve</source>
         <translation>Applicazione curva dopo gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1571"/>
+        <location filename="../Sources/ptMain.cpp" line="1586"/>
         <source>Wiener Filter</source>
         <translation>Filtro Wiener</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1709"/>
+        <location filename="../Sources/ptMain.cpp" line="1724"/>
         <source>Updating preview image</source>
         <translation>Aggiornamento anteprima immagine</translation>
     </message>
@@ -1524,87 +1524,87 @@ No crop, try again.</source>
         <translation type="obsolete">Rettangolo di ritaglio troppo largo. Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1801"/>
-        <location filename="../Sources/ptMain.cpp" line="1919"/>
-        <location filename="../Sources/ptMain.cpp" line="1983"/>
+        <location filename="../Sources/ptMain.cpp" line="1816"/>
+        <location filename="../Sources/ptMain.cpp" line="1934"/>
+        <location filename="../Sources/ptMain.cpp" line="1998"/>
         <source>Histogram selection outside the image</source>
         <translation>Selezione istogramma al di fuori dell&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1802"/>
-        <location filename="../Sources/ptMain.cpp" line="1920"/>
-        <location filename="../Sources/ptMain.cpp" line="1984"/>
+        <location filename="../Sources/ptMain.cpp" line="1817"/>
+        <location filename="../Sources/ptMain.cpp" line="1935"/>
+        <location filename="../Sources/ptMain.cpp" line="1999"/>
         <source>Histogram selection rectangle too large.
 No crop, try again.</source>
         <translation>Rettangolo selezione istogramma troppo largo.
 Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1824"/>
+        <location filename="../Sources/ptMain.cpp" line="1839"/>
         <source>Indicating exposure</source>
         <translation>Indicazione esposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1866"/>
-        <location filename="../Sources/ptMain.cpp" line="2284"/>
-        <location filename="../Sources/ptMain.cpp" line="2881"/>
+        <location filename="../Sources/ptMain.cpp" line="1881"/>
+        <location filename="../Sources/ptMain.cpp" line="2299"/>
+        <location filename="../Sources/ptMain.cpp" line="2901"/>
         <source>Converting to output space</source>
         <translation>Conversione a spazio colore di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1936"/>
+        <location filename="../Sources/ptMain.cpp" line="1951"/>
         <source>Converting to screen space</source>
         <translation>Conversione a spazio colore schermo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2140"/>
-        <location filename="../Sources/ptMain.cpp" line="2605"/>
+        <location filename="../Sources/ptMain.cpp" line="2155"/>
+        <location filename="../Sources/ptMain.cpp" line="2620"/>
         <source>Cannot decode</source>
         <translation>Impossibile decodificare</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2312"/>
+        <location filename="../Sources/ptMain.cpp" line="2327"/>
         <source>Writing output</source>
         <translation>Scrittura output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2326"/>
+        <location filename="../Sources/ptMain.cpp" line="2341"/>
         <source>Writing output (exif)</source>
         <translation>Scrittura output (exif)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2341"/>
+        <location filename="../Sources/ptMain.cpp" line="2356"/>
         <source>Writing output (settings)</source>
         <translation>Scrittura output (impostazioni)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2376"/>
-        <location filename="../Sources/ptMain.cpp" line="2719"/>
+        <location filename="../Sources/ptMain.cpp" line="2391"/>
+        <location filename="../Sources/ptMain.cpp" line="2734"/>
         <source>Jpg images (*.jpg *.jpeg);;All files (*.*)</source>
         <translation>immagini jpg (*.jpg *.jpeg);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2381"/>
-        <location filename="../Sources/ptMain.cpp" line="2724"/>
+        <location filename="../Sources/ptMain.cpp" line="2396"/>
+        <location filename="../Sources/ptMain.cpp" line="2739"/>
         <source>PNG images(*.png);;All files (*.*)</source>
         <translation>immagini PNG(*.png);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2386"/>
-        <location filename="../Sources/ptMain.cpp" line="2729"/>
+        <location filename="../Sources/ptMain.cpp" line="2401"/>
+        <location filename="../Sources/ptMain.cpp" line="2744"/>
         <source>Tiff images (*.tif *.tiff);;All files (*.*)</source>
         <translation>immagini Tiff (*.tif *.tiff);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2390"/>
-        <location filename="../Sources/ptMain.cpp" line="2733"/>
+        <location filename="../Sources/ptMain.cpp" line="2405"/>
+        <location filename="../Sources/ptMain.cpp" line="2748"/>
         <source>Ppm images (*.ppm);;All files (*.*)</source>
         <translation>Immagini Ppm (*.ppm);;Tutti i file (*.*)</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="516"/>
-        <location filename="../Sources/ptMain.cpp" line="2397"/>
-        <location filename="../Sources/ptMain.cpp" line="2740"/>
+        <location filename="../Sources/ptMain.cpp" line="2412"/>
+        <location filename="../Sources/ptMain.cpp" line="2755"/>
         <source>Save File</source>
         <translation>Salva file</translation>
     </message>
@@ -1629,32 +1629,32 @@ Nessun ritaglio, prova di nuovo.</translation>
         <translation>I dati Exif non possono essere scritti.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2567"/>
+        <location filename="../Sources/ptMain.cpp" line="2582"/>
         <source>Open Raw</source>
         <translation>Apri Raw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2592"/>
+        <location filename="../Sources/ptMain.cpp" line="2607"/>
         <source>Reading file</source>
         <translation>Lettura file</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="358"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="365"/>
         <source>Append settings file</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="385"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="395"/>
         <source>Select input file(s)</source>
         <translation>Seleziona file di input</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="397"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="407"/>
         <source>Select output directory</source>
         <translation>Selezione cartella di destinazione</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="411"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="421"/>
         <source>Select job file</source>
         <translation>Seleziona file di lavorazione</translation>
     </message>
@@ -1671,55 +1671,55 @@ Nessun ritaglio, prova di nuovo.</translation>
         <translation type="obsolete">Per favore finisci il ritaglio prima di chiudere Photivo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2849"/>
+        <location filename="../Sources/ptMain.cpp" line="2869"/>
         <source>Writing tmp image for gimp</source>
         <translation>Scrittura immagine tmp per gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2920"/>
+        <location filename="../Sources/ptMain.cpp" line="2940"/>
         <source>Writing tmp exif for gimp</source>
         <translation>Scrittura exif tmp per gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2933"/>
+        <location filename="../Sources/ptMain.cpp" line="2953"/>
         <source>Writing tmp icc for gimp</source>
         <translation>Scrittura icc tmp per gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2965"/>
+        <location filename="../Sources/ptMain.cpp" line="2985"/>
         <source>Writing gimp interface file</source>
         <translation>Scrittura file interfaccia gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3063"/>
-        <location filename="../Sources/ptMain.cpp" line="3064"/>
+        <location filename="../Sources/ptMain.cpp" line="3083"/>
+        <location filename="../Sources/ptMain.cpp" line="3084"/>
         <source>Please load a profile first</source>
         <translation>Per favore, carica prima un profilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3072"/>
+        <location filename="../Sources/ptMain.cpp" line="3092"/>
         <source>Not yet implemented</source>
         <translation>Non ancora implementato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3073"/>
+        <location filename="../Sources/ptMain.cpp" line="3093"/>
         <source>Not yet implemented. Reverting to Adobe.</source>
         <translation>Non ancora implementato. Riconverti ad Adobe.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3083"/>
-        <location filename="../Sources/ptMain.cpp" line="3126"/>
-        <location filename="../Sources/ptMain.cpp" line="3166"/>
+        <location filename="../Sources/ptMain.cpp" line="3103"/>
+        <location filename="../Sources/ptMain.cpp" line="3146"/>
+        <location filename="../Sources/ptMain.cpp" line="3186"/>
         <source>Open Profile</source>
         <translation>Apri profilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3271"/>
+        <location filename="../Sources/ptMain.cpp" line="3291"/>
         <source>Open Image</source>
         <translation>Apri immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3273"/>
+        <location filename="../Sources/ptMain.cpp" line="3293"/>
         <source>CSS files (*.css *.qss);;All files(*.*)</source>
         <translation>File CSS (*.css *.qss);;Tutti i file(*.*)</translation>
     </message>
@@ -1776,7 +1776,7 @@ http://photivo.org/photivo/start</translation>
         <translation type="obsolete">Opzioni linea di comando non riconosciute</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2578"/>
+        <location filename="../Sources/ptMain.cpp" line="2593"/>
         <source>File not found</source>
         <translation>File non trovato</translation>
     </message>
@@ -1823,7 +1823,7 @@ Per maggiore documentazione visita il wiki:
 http://photivo.org/photivo/start</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="488"/>
+        <location filename="../Sources/ptMain.cpp" line="503"/>
         <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
                 [-h] [--new-instance]
 Options:
@@ -1880,220 +1880,220 @@ file di input
 Per ulteriore documentazione visita il wiki: http://photivo.org/photivo/start</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1433"/>
+        <location filename="../Sources/ptMain.cpp" line="1448"/>
         <source>Selection</source>
         <translation>Selezione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2210"/>
+        <location filename="../Sources/ptMain.cpp" line="2225"/>
         <source>Memory error, no conversion for file:</source>
         <translation>Errore di memoria, nessuna conversione per il file:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2324"/>
+        <location filename="../Sources/ptMain.cpp" line="2339"/>
         <source>GraphicsMagick Error</source>
         <translation>Errore GraphicsMagick</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2324"/>
+        <location filename="../Sources/ptMain.cpp" line="2339"/>
         <source>No output file written.</source>
         <translation>Nessun file di output è stato scritto.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2332"/>
+        <location filename="../Sources/ptMain.cpp" line="2347"/>
         <source>Exif Error</source>
         <translation>Errore Exif</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2332"/>
+        <location filename="../Sources/ptMain.cpp" line="2347"/>
         <source>No exif data written.</source>
         <translation>Nessun dato Exif è stato scritto.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2352"/>
+        <location filename="../Sources/ptMain.cpp" line="2367"/>
         <source>Written %L1 bytes (%L2 MByte)</source>
         <translation>Scritti %L1 bytes (%L2 MByte)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2579"/>
+        <location filename="../Sources/ptMain.cpp" line="2594"/>
         <source>Input file does not exist.</source>
         <translation>Il file di input non esiste.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3307"/>
+        <location filename="../Sources/ptMain.cpp" line="3327"/>
         <source>Are you sure?</source>
         <translation>Sei sicuro?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3308"/>
+        <location filename="../Sources/ptMain.cpp" line="3328"/>
         <source>If you don&apos;t stop me, I will waste %1 MB of memory.</source>
         <translation>Se non mi fermi sprecherò %1 MB di memoria.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3329"/>
+        <location filename="../Sources/ptMain.cpp" line="3349"/>
         <source>Really switch to 1:1 pipe?</source>
         <translation>Voui veramente cambiare il formato di lavoro in 1:1?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3330"/>
+        <location filename="../Sources/ptMain.cpp" line="3350"/>
         <source>Switching to 1:1 pipe will increase memory usage and processing time greatly.
 Are you sure?</source>
         <translation>Cambiare il formato di lavoro in 1:1 aumenterà notevolmente l&apos;uso della memoria ed il tempo necessario. Sei sicuro?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3332"/>
-        <location filename="../Sources/ptMain.cpp" line="3369"/>
+        <location filename="../Sources/ptMain.cpp" line="3352"/>
+        <location filename="../Sources/ptMain.cpp" line="3389"/>
         <source>Detail view</source>
         <translation>Vista dettaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3501"/>
-        <location filename="../Sources/ptMain.cpp" line="3516"/>
+        <location filename="../Sources/ptMain.cpp" line="3521"/>
+        <location filename="../Sources/ptMain.cpp" line="3536"/>
         <source>Reset?</source>
         <translation>Vuoi resettare?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3502"/>
+        <location filename="../Sources/ptMain.cpp" line="3522"/>
         <source>Reset to neutral values?
 </source>
         <translation>Resetto a valori neutri?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3517"/>
+        <location filename="../Sources/ptMain.cpp" line="3537"/>
         <source>Reset to start up settings?
 </source>
         <translation>Resetto a impostazioni di avvio?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3546"/>
+        <location filename="../Sources/ptMain.cpp" line="3566"/>
         <source>Get Gimp command</source>
         <translation>Ottieni comando Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3577"/>
+        <location filename="../Sources/ptMain.cpp" line="3597"/>
         <source>Get preset file</source>
         <translation>Ottieni file di preset</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3705"/>
+        <location filename="../Sources/ptMain.cpp" line="3725"/>
         <source>Save full size image</source>
         <translation>Salva immagine in pieno formato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3707"/>
+        <location filename="../Sources/ptMain.cpp" line="3727"/>
         <source>Save current pipe</source>
         <translation>Salva immagine nel formato di lavoro corrente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3709"/>
+        <location filename="../Sources/ptMain.cpp" line="3729"/>
         <source>Save job file</source>
         <translation>Salva file di lavorazione</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="359"/>
-        <location filename="../Sources/ptMain.cpp" line="3711"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="366"/>
+        <location filename="../Sources/ptMain.cpp" line="3731"/>
         <source>Save settings file</source>
         <translation>Salva file impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3757"/>
-        <location filename="../Sources/ptMain.cpp" line="3769"/>
+        <location filename="../Sources/ptMain.cpp" line="3777"/>
+        <location filename="../Sources/ptMain.cpp" line="3789"/>
         <source>Settings files (*.pts *.ptj);;All files (*.*)</source>
         <translation>File impostazioni (*.pts *.ptj);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3760"/>
+        <location filename="../Sources/ptMain.cpp" line="3780"/>
         <source>Open setting file</source>
         <translation>Apri file impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3786"/>
+        <location filename="../Sources/ptMain.cpp" line="3806"/>
         <source>Open &apos;bad pixels&apos; file</source>
         <translation>Apri file &apos;bad pixel&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3810"/>
+        <location filename="../Sources/ptMain.cpp" line="3830"/>
         <source>Open &apos;dark frame&apos; file</source>
         <translation>Apri file &apos;dark frame&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3858"/>
-        <location filename="../Sources/ptMain.cpp" line="3859"/>
+        <location filename="../Sources/ptMain.cpp" line="3878"/>
+        <location filename="../Sources/ptMain.cpp" line="3879"/>
         <source>Spot WB</source>
         <translation>Bilanciamento Bianco Spot</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4310"/>
+        <location filename="../Sources/ptMain.cpp" line="4330"/>
         <source>No selection</source>
         <translation>Nessuna selezione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4311"/>
-        <location filename="../Sources/ptMain.cpp" line="4510"/>
+        <location filename="../Sources/ptMain.cpp" line="4331"/>
+        <location filename="../Sources/ptMain.cpp" line="4530"/>
         <source>Open an image first.</source>
         <translation>Apri prima un&apos;immagine.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4323"/>
-        <location filename="../Sources/ptMain.cpp" line="4324"/>
+        <location filename="../Sources/ptMain.cpp" line="4343"/>
+        <location filename="../Sources/ptMain.cpp" line="4344"/>
         <source>Get angle</source>
         <translation>Imposta l&apos;angolo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4509"/>
+        <location filename="../Sources/ptMain.cpp" line="4529"/>
         <source>No crop possible</source>
         <translation>Impossibile effettuare il ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4514"/>
+        <location filename="../Sources/ptMain.cpp" line="4534"/>
         <source>Prepare</source>
         <translation>Preparazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4515"/>
+        <location filename="../Sources/ptMain.cpp" line="4535"/>
         <source>Prepare for cropping</source>
         <translation>Preparazione per il ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4523"/>
-        <location filename="../Sources/ptMain.cpp" line="4524"/>
+        <location filename="../Sources/ptMain.cpp" line="4543"/>
+        <location filename="../Sources/ptMain.cpp" line="4544"/>
         <source>Crop</source>
         <translation>Ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4558"/>
+        <location filename="../Sources/ptMain.cpp" line="4578"/>
         <source>Crop too small</source>
         <translation>Ritaglio troppo piccolo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4559"/>
+        <location filename="../Sources/ptMain.cpp" line="4579"/>
         <source>Crop rectangle needs to be at least 4x4 pixels in size.
 No crop, try again.</source>
         <translation>La selezione rettangolare deve avere una dimensione di almeno 4x4 pixels. Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4619"/>
+        <location filename="../Sources/ptMain.cpp" line="4639"/>
         <source>No previous crop found</source>
         <translation>Nessun ritaglio precedente trovato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4620"/>
+        <location filename="../Sources/ptMain.cpp" line="4640"/>
         <source>Set a crop rectangle now.</source>
         <translation>Imposta ora un rettangolo di ritaglio.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4821"/>
+        <location filename="../Sources/ptMain.cpp" line="4825"/>
         <source>Open Channelmixer</source>
         <translation>Apri Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4868"/>
-        <location filename="../Sources/ptMain.cpp" line="4883"/>
+        <location filename="../Sources/ptMain.cpp" line="4872"/>
+        <location filename="../Sources/ptMain.cpp" line="4887"/>
         <source>Save Channelmixer</source>
         <translation>Salva Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4884"/>
+        <location filename="../Sources/ptMain.cpp" line="4888"/>
         <source>Give a description</source>
         <translation>Dai una descrizione</translation>
     </message>
@@ -2122,8 +2122,8 @@ No crop, try again.</source>
         <translation type="obsolete">Salva Curva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="6595"/>
-        <location filename="../Sources/ptMain.cpp" line="6669"/>
+        <location filename="../Sources/ptMain.cpp" line="6239"/>
+        <location filename="../Sources/ptMain.cpp" line="6313"/>
         <source>Get texture bitmap file</source>
         <translation>Seleziona file texture bitmap</translation>
     </message>
@@ -2139,344 +2139,30 @@ No crop, try again.</source>
         <location filename="../Sources/ptWhiteBalances.cpp" line="264"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="294"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="324"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="342"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="368"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="394"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="420"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="450"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="480"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="510"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="536"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="562"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="604"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="610"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="636"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="662"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="688"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="714"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="740"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="766"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="800"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="826"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="852"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="878"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="908"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="934"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="960"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="982"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1008"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1034"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1060"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1086"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1112"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1138"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1164"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1190"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1216"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1242"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1268"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1294"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1320"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1346"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1372"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1402"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1428"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1450"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1476"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1502"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1528"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1554"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1576"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1610"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1628"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1654"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1680"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1706"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1732"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1758"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1784"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1810"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1836"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1862"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1884"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1914"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2124"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2326"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2348"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2494"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2516"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2530"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2548"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2570"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2600"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2622"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2644"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2666"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2692"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3246"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4498"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4852"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4878"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4912"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4992"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5046"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5092"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5106"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5364"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5642"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5656"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5686"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5716"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5746"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5788"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5818"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5848"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6106"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6140"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6174"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6204"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6238"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6496"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6518"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6544"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6566"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6588"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6634"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6652"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6674"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6696"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6718"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6864"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6878"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6896"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6918"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6952"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6986"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7020"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7054"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7088"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7122"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7156"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7190"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7224"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7298"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7336"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7370"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7408"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7426"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7460"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7494"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7520"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7550"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7576"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7618"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7644"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7670"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7696"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7722"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7748"/>
-        <source>Daylight</source>
-        <translation>Luce diurna</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="56"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="78"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="104"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="134"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="160"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="186"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="212"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="238"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="268"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="298"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="328"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="346"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="354"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="372"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="398"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="424"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="454"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="484"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="514"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="450"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="480"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="510"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="540"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="566"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="596"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="618"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="644"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="670"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="696"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="722"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="748"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="774"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="808"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="834"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="860"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="886"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="924"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="950"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="976"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="990"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1016"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1042"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1068"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1094"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1120"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1146"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1172"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1198"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1224"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1250"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1276"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1302"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1328"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1354"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1380"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1398"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1424"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1458"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1558"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1580"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1618"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1788"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1814"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1840"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1880"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1922"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2132"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2330"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2352"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2506"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2512"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2542"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2564"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2582"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2596"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2626"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2648"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2674"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2700"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3034"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3060"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3086"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3112"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3254"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3456"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3606"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3756"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3782"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3956"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4098"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4148"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4326"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4352"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4378"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4396"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4454"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4480"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4506"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4568"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4710"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4760"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4810"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4864"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4890"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4908"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4946"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4988"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5050"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5096"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5114"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5372"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5646"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5660"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5690"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5720"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5754"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5792"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5826"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5856"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6114"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6148"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6182"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6212"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6246"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6500"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6522"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6548"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6570"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6592"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6638"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6656"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6678"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6700"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6722"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6868"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6882"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6900"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6926"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6960"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6994"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7028"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7062"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7096"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7130"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7164"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7198"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7232"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7306"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7344"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7378"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7412"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7434"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7468"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7502"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7528"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7558"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7584"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7626"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7652"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7678"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7704"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7730"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7756"/>
-        <source>Cloudy</source>
-        <translation>Nuvoloso</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="60"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="82"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="108"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="138"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="164"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="190"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="216"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="242"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="272"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="302"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="332"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="350"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="376"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="402"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="428"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="458"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="488"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="518"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="544"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="570"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="592"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="622"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="648"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="674"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="600"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="626"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="652"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="694"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="700"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="726"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="752"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="778"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="812"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="838"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="864"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="890"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="904"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="930"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="956"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="804"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="830"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="856"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="882"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="916"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="942"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="968"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="994"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1020"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1046"/>
@@ -2493,273 +2179,178 @@ No crop, try again.</source>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1332"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1358"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1384"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1418"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1444"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1462"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1852"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1866"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1900"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2524"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2534"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2552"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2574"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2616"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2630"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2656"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2678"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2704"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5020"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5860"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6508"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6942"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6976"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7010"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7044"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7078"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7112"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7146"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7180"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7214"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7252"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7326"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7360"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7398"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7450"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7484"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7506"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7532"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7562"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7588"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7630"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7656"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7682"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7708"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7734"/>
-        <source>Tungsten</source>
-        <translation>Tungsteno</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="64"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="86"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="112"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="142"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="168"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="194"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="220"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="246"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="276"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="306"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="354"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="380"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="406"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="432"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="462"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="492"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="522"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="548"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="574"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="588"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="626"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="678"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="704"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="730"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="756"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="816"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="842"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="868"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="894"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="912"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="938"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="964"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1076"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1102"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1128"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1154"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1180"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1206"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1310"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1336"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1362"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1388"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1410"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1436"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1466"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1606"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1856"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1870"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1892"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1910"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2120"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2502"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2520"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2538"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2578"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2608"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2634"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2652"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2682"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2708"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3022"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3048"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3074"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3100"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3266"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3594"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3744"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3770"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4314"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4340"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4366"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4442"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4468"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4494"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4860"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4886"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6512"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7420"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7510"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7536"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7566"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7600"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7634"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7660"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7686"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7712"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7738"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7764"/>
-        <source>Fluorescent</source>
-        <translation>Fluorescente</translation>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1462"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1488"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1514"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1540"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1566"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1592"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1618"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1644"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1670"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1700"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1726"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1748"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1774"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1800"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1826"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1852"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1878"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1904"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1938"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1956"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1982"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2008"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2034"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2060"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2086"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2112"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2138"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2164"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2190"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2216"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2370"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2396"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2418"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2452"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2478"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2688"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2890"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2912"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3058"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3080"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3094"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3112"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3134"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3164"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3186"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3208"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3230"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3256"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3840"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5284"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5738"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5764"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5798"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5878"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5932"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5978"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5992"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6250"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6504"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6782"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6796"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6826"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6856"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6886"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6928"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6958"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6988"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7246"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7280"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7314"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7344"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7374"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7408"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7434"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7692"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7942"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8196"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8218"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8244"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8270"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8292"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8314"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8360"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8378"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8400"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8422"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8444"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8582"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8604"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8626"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8672"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8818"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8832"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8850"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8872"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8894"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8928"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8962"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8996"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9030"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9064"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9098"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9132"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9166"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9200"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9274"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9312"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9346"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9384"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9422"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9440"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9474"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9508"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9550"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9580"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9606"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9636"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9662"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9688"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9730"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9756"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9782"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9808"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9834"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9860"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9886"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9912"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9938"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9964"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9990"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="10016"/>
+        <source>Daylight</source>
+        <translation>Luce diurna</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="68"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="116"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="146"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="172"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="198"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="224"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="250"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="280"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="310"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="56"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="78"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="104"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="134"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="160"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="186"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="212"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="238"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="268"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="298"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="328"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="358"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="384"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="410"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="436"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="466"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="496"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="526"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="552"/>
-        <source>FluorescentHigh</source>
-        <translation>Fluorescente forte</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="90"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1484"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1510"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1536"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1562"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1588"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1636"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1662"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1688"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1714"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1740"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1766"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1792"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1818"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3440"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3940"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4130"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4180"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4428"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4552"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4742"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4792"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4842"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4920"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4958"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5004"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5042"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5088"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5130"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5388"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5638"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5680"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5710"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5740"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5812"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5842"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5872"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6130"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6164"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6198"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6228"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6262"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6538"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6930"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6964"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6998"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7032"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7066"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7100"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7134"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7168"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7202"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7236"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7310"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7348"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7382"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7438"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7472"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7612"/>
-        <source>DaylightFluorescent</source>
-        <translation>Fluorescente luce diurna</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="94"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="120"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="258"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="288"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="318"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="444"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="474"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="504"/>
-        <source>Underwater</source>
-        <translation>Sottomarina</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="124"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="150"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="176"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="202"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="228"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="254"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="284"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="314"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="336"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="362"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="388"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="414"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="440"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="470"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="500"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="530"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="556"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="578"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="584"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="376"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="402"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="428"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="454"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="484"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="514"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="544"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="574"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="604"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="630"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="656"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="682"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="686"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="708"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="734"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="760"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="786"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="820"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="846"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="872"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="898"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="920"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="946"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="972"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="812"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="838"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="864"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="890"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="924"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="950"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="976"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1002"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1028"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1054"/>
@@ -2776,1783 +2367,2738 @@ No crop, try again.</source>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1340"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1366"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1392"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1406"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1432"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1418"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1444"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1470"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1584"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1614"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1888"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1918"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2128"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2338"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2364"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2590"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2604"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2638"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2660"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2686"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2712"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3030"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3056"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3082"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3108"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3250"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3452"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1496"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1522"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1548"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1574"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1600"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1626"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1652"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1678"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1696"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1722"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1756"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1882"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1908"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1946"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2116"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2142"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2168"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2374"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2414"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2460"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2486"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2696"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2894"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2916"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3070"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3076"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3106"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3128"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3146"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3160"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3190"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3212"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3238"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3264"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="3602"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3752"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3778"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3952"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4094"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4144"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4322"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4348"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3628"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3654"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3680"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3706"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3848"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4050"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4200"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="4374"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4392"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4450"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4476"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4502"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4564"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4706"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4756"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4806"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4868"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4894"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5134"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5392"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5770"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5876"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6134"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6168"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6232"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4516"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4542"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4716"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4858"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4908"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5086"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5112"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5138"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5164"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5182"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5240"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5266"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5292"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5354"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5496"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5546"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5596"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5646"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5696"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5750"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5776"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5794"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5832"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5874"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5936"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5982"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6000"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6258"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6512"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6786"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6800"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6830"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6860"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6894"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6932"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6966"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6996"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7254"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7288"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7322"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7352"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7382"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7416"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7442"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7700"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7950"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8200"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8222"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8252"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8274"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8296"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8318"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8364"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8382"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8404"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8426"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8448"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8586"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8608"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8630"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8676"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8822"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8836"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8854"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8876"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8902"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8936"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8970"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9004"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9038"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9072"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9106"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9140"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9174"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9208"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9282"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9320"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9354"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9392"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9426"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9448"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9482"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9512"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9554"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9588"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9614"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9644"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9670"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9696"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9738"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9764"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9790"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9816"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9842"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9868"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9894"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9920"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9946"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9972"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9998"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="10024"/>
+        <source>Cloudy</source>
+        <translation>Nuvoloso</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="60"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="82"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="108"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="138"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="164"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="190"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="216"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="242"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="272"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="302"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="332"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="362"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="380"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="406"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="432"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="458"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="488"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="518"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="548"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="578"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="608"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="634"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="660"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="682"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="712"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="738"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="764"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="790"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="816"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="842"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="868"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="894"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="928"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="954"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="980"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1006"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1032"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1058"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1084"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1110"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1136"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1162"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1188"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1214"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1240"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1266"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1292"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1318"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1344"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1370"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1396"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1422"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1448"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1474"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1500"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1526"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1552"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1578"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1604"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1630"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1656"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1682"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1716"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1742"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1760"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2386"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2400"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2434"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2440"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3088"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3098"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3116"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3138"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3180"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3194"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3220"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3242"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3268"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5906"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7000"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7704"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7954"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8208"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8918"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8952"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8986"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9020"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9054"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9088"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9122"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9156"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9190"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9228"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9302"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9336"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9374"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9412"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9464"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9498"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9528"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9570"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9592"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9618"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9648"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9674"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9700"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9742"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9768"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9794"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9820"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9846"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9872"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9898"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9976"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="10028"/>
+        <source>Tungsten</source>
+        <translation>Tungsteno</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="64"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="86"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="112"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="142"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="168"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="194"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="220"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="246"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="276"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="306"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="336"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="384"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="410"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="436"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="462"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="492"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="522"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="552"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="582"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="612"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="638"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="664"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="678"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="716"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="742"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="794"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="820"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="846"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="872"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="932"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="958"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="984"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1010"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1036"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1062"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1088"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1192"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1218"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1244"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1270"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1296"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1322"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1504"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1530"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1556"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1660"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1686"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1708"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1734"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1764"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1934"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2390"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2404"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2426"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2444"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2474"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2684"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3066"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3084"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3102"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3142"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3172"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3198"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3216"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3246"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3272"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3616"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3642"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3668"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3694"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3860"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4188"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4504"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4530"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5100"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5126"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5152"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5228"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5254"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5280"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5746"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5772"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="6266"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6560"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6582"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6604"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6646"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6668"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6690"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6712"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6734"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6908"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6946"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6980"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7014"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7048"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7082"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7116"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7150"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7184"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7218"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7256"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="7330"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7364"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7424"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7708"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7958"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8212"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8260"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9434"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9596"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9622"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9652"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9678"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9712"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9746"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9772"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9798"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9824"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9850"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9876"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9902"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9928"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9954"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9980"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="10006"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="10032"/>
+        <source>Fluorescent</source>
+        <translation>Fluorescente</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="68"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="116"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="146"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="172"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="198"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="224"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="250"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="280"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="310"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="340"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="388"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="414"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="440"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="466"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="496"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="526"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="556"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="586"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="616"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="642"/>
+        <source>FluorescentHigh</source>
+        <translation>Fluorescente forte</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="90"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1782"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1808"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1834"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1860"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1886"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1916"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1964"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1990"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2016"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2042"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2068"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2094"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2120"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2146"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2172"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2198"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2224"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2448"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3598"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4034"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4358"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4700"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4890"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4940"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5214"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5338"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5528"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5578"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5628"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5678"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5728"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5806"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5844"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5890"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5928"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5974"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6016"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6528"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6778"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6820"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6850"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6880"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6952"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6982"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7012"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7270"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7304"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7368"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7398"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7458"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8238"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8906"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8940"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8974"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9008"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9042"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9076"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9110"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9144"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9178"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9212"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9286"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9324"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9358"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9396"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9452"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9486"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9524"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9566"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9724"/>
+        <source>DaylightFluorescent</source>
+        <translation>Fluorescente luce diurna</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="94"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="120"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="258"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="288"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="318"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="348"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="474"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="504"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="534"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="564"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="594"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2240"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6270"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7334"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7962"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8264"/>
+        <source>Underwater</source>
+        <translation>Sottomarina</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="124"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="150"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="176"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="202"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="228"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="254"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="284"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="314"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="344"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="366"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="392"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="418"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="444"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="470"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="500"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="530"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="560"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="590"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="620"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="646"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="668"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="674"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="720"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="746"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="772"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="798"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="824"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="850"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="876"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="902"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="936"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="962"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="988"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1014"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1040"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1066"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1092"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1118"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1144"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1170"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1196"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1222"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1248"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1274"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1300"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1326"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1352"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1378"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1404"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1430"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1456"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1482"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1508"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1534"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1560"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1586"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1612"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1638"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1664"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1690"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1704"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1730"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1768"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1912"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1942"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2422"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2456"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2482"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2692"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2902"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2928"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3154"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3168"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3202"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3224"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3250"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3276"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3606"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3624"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3650"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3676"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3702"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3844"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4046"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4196"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4370"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4512"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4538"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4712"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4854"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4904"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5082"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5108"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5134"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5160"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5178"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5236"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5262"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5288"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5350"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5492"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5542"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5592"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5642"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5692"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5754"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5780"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6020"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6274"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6532"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6910"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7016"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7274"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7308"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7338"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="7402"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7454"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7488"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7514"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7540"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7570"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7592"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7638"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7664"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7690"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7716"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7742"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7768"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7428"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7462"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7712"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7966"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8286"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8308"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8330"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8372"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8394"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8416"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8438"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8460"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8598"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8620"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8642"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8688"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8862"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8884"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8922"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8956"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8990"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9024"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9058"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9092"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9126"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9160"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9194"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9232"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9306"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9340"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9378"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9416"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9468"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9502"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9532"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9574"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9600"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9626"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9656"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9682"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9704"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9750"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9776"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9802"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9828"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9854"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9880"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9906"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9932"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9958"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9984"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="10010"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="10036"/>
         <source>Flash</source>
         <translation>Flash</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="600"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="614"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="640"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="666"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="692"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="718"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="744"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="770"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="804"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="830"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="856"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="882"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="916"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="942"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="968"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="986"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1012"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1038"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1064"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1090"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1116"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1142"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1168"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1194"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1220"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1246"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1272"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1298"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1324"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1350"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1376"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1414"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1440"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1454"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1480"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1506"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1532"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1622"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1632"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1658"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1684"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1710"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1736"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1762"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1844"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1874"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1896"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1926"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2136"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2356"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2586"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2612"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2670"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2696"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3038"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3064"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3090"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3116"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3258"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3460"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3610"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3760"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3786"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3960"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4102"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4152"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4330"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4356"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4382"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4400"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4458"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4484"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4510"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4572"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4714"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4764"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4814"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4872"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4898"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4904"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4942"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4984"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5054"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5100"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5110"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5368"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5650"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5664"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5694"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5724"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5750"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5796"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5822"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5852"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6110"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6144"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6178"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6208"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6242"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6552"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6574"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6596"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6660"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6682"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6704"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6726"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6886"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6904"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6922"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6956"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6990"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7024"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7058"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7092"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7126"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7160"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7194"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7228"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7302"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7340"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7374"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7430"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7464"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7498"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7524"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7554"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7580"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7622"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7648"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7674"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7700"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7726"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7752"/>
-        <source>Shade</source>
-        <translation>Ombra</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="652"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="690"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="704"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="730"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="756"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="782"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="808"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="834"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="860"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="886"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="920"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="946"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="972"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="998"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1024"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1050"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1076"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1102"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1128"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1154"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1180"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1206"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1232"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1258"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1284"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2556"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3428"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3928"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4118"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4168"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4416"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4540"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4730"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4780"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4830"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4932"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4970"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5016"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5034"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5084"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5122"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5380"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5630"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5672"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5702"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5732"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5762"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5804"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5834"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5864"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6122"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6156"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6190"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6220"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6254"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6530"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6938"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6972"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7006"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7040"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7074"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7108"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7142"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7176"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7210"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7240"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7356"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7386"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7446"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7480"/>
-        <source>WhiteFluorescent</source>
-        <translation>Fluorescente bianca</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="790"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2026"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2236"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2440"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2816"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3200"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3354"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3544"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3694"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3870"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4044"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4264"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4518"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4656"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5270"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5528"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6012"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6402"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6616"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6810"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7272"/>
-        <source>5000K</source>
-        <translation>5000K</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="794"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2464"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2876"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6834"/>
-        <source>6500K</source>
-        <translation>6500K</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1488"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1514"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1540"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1566"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1592"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1640"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1666"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1692"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1718"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1744"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1770"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1796"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1822"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3424"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3924"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4114"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4164"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4412"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4536"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4726"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4776"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4826"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7248"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7322"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7394"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7604"/>
-        <source>WarmWhiteFluorescent</source>
-        <translation>Fluorescente bianca calda</translation>
-    </message>
-    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1310"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1336"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1362"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1388"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1414"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1440"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1466"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1492"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1518"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1544"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1570"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1596"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1644"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1670"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1696"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1722"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1748"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1774"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1800"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1826"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2560"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3432"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3932"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4122"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4172"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4420"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4544"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4734"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4784"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4834"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4928"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4966"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5012"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7244"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7318"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7390"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7596"/>
-        <source>CoolWhiteFluorescent</source>
-        <translation>Fluorescente bianca fredda</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1496"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1522"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1548"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1602"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1622"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1648"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1674"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1700"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1726"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1712"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1738"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1752"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1778"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1804"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="1830"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1906"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2116"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2334"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2360"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2498"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3018"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3044"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3070"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3096"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3262"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3416"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3590"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3740"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3766"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3916"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4106"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4156"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4310"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4336"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4362"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4404"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4438"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4464"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4490"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4528"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4718"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4768"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4818"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4856"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4882"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4936"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4974"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5026"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5076"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5118"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5376"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5622"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5668"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5698"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5728"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1856"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1950"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1960"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1986"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2012"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2038"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2064"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2090"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2194"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2220"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2378"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2408"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2430"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2464"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2490"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2700"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2920"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3150"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3176"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3234"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3260"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3632"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3658"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3684"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3710"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3852"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4054"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4204"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4378"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4520"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4546"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4720"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4862"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4912"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5090"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5116"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5142"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5168"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5186"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5244"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5270"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5296"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5358"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5500"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5550"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5600"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5650"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5700"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="5758"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5800"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5830"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6118"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6152"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6186"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6216"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6250"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6526"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6556"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6578"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6600"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6642"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6664"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6686"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6708"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6730"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6872"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5784"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5790"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5828"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5870"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5940"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5986"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5996"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6254"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6508"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6790"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6804"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6834"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6864"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="6890"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6912"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7416"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7760"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6936"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6962"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6992"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7250"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7284"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7318"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7348"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7378"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7412"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7438"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7696"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7946"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8248"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8278"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8300"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8322"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8386"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8408"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8430"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8452"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8590"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8612"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8634"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8680"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8840"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8858"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8880"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8898"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8932"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8966"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9000"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9034"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9068"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9102"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9136"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9170"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9204"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9278"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9316"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9350"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9388"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9444"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9478"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9584"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9610"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9640"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9666"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9692"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9734"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9760"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9786"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9812"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9838"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9864"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9890"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9916"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9942"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9968"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9994"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="10020"/>
+        <source>Shade</source>
+        <translation>Ombra</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="768"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="898"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1114"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1140"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1166"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1348"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1374"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1400"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1426"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1452"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1478"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1582"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1608"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1634"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3120"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3590"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4022"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4346"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4688"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4878"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4928"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5202"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5326"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5516"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5566"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5616"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5666"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5716"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5818"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5856"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5902"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5920"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5970"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6008"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6520"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6770"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6812"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6842"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6872"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6902"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6944"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6974"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7004"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7262"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7296"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7360"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7390"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7450"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8230"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8914"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8948"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8982"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9016"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9050"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9084"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9118"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9152"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9186"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9216"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9332"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9362"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9400"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9460"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9494"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9516"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9558"/>
+        <source>WhiteFluorescent</source>
+        <translation>Fluorescente bianca</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="906"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2324"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2590"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2800"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3004"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3380"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3794"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3948"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4138"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4288"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4442"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4630"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4804"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5024"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5304"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5442"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6156"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6410"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6668"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7152"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7598"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7848"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8102"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8342"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8528"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8658"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8764"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9248"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9536"/>
+        <source>5000K</source>
+        <translation>5000K</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="910"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3028"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3440"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4462"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8548"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8666"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8788"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9544"/>
+        <source>6500K</source>
+        <translation>6500K</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1786"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1812"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1838"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1864"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1890"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1920"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1968"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1994"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2020"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2046"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2072"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2098"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2124"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2150"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2176"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2202"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2228"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4018"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4342"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4684"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4874"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4924"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5198"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5322"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5512"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5562"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5612"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5662"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5712"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9224"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9298"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9370"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9408"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9716"/>
+        <source>WarmWhiteFluorescent</source>
+        <translation>Fluorescente bianca calda</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1790"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1816"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1842"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1868"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1894"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1924"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1972"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1998"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2024"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2050"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2076"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2102"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2128"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2154"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2180"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2206"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2232"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3124"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4026"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4350"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4692"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4882"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4932"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5074"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5206"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5330"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5520"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5570"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5620"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5670"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5720"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5814"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5852"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5898"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9220"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9294"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9366"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9404"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9708"/>
+        <source>CoolWhiteFluorescent</source>
+        <translation>Fluorescente bianca fredda</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1794"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1820"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1846"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1872"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1898"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1930"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="1976"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2002"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2028"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2054"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2080"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2106"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2132"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2158"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2184"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2210"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2236"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2470"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2680"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2898"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2924"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3062"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3586"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3612"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3638"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3664"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3690"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3856"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4010"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4184"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4334"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4500"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4526"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4676"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4866"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4916"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5070"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5096"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5122"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5148"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5190"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5224"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5250"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5276"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5314"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5504"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5554"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5604"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5654"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5704"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5742"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5768"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5822"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5860"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5912"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5962"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6004"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6262"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6516"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6762"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6808"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6838"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6868"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6898"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6940"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6970"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7258"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7292"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7326"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7356"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7386"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7420"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7446"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8226"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8256"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8282"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8304"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8326"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8368"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8390"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8412"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8434"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8456"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8594"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8616"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8638"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8684"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8826"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8844"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8866"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8888"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9430"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9924"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9950"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="10002"/>
         <source>Incandescent</source>
         <translation>Incandescente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1848"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4916"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4954"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4996"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6504"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2382"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5802"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5840"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5882"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8204"/>
         <source>EveningSun</source>
         <translation>Sole al tramonto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1930"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2140"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2372"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2720"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5186"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5444"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5928"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6318"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6742"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2494"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2704"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2936"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3284"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4386"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6072"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6326"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6584"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7068"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7514"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7764"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8018"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8468"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8696"/>
         <source>2600K</source>
         <translation>2600K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1934"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2144"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2376"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2724"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3132"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3282"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3476"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3626"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3802"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3976"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4200"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4588"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5194"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5452"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5936"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6326"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6746"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2256"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2498"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2708"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2940"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3288"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3726"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3876"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4070"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4220"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4390"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4562"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4736"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4960"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5374"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6080"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6334"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6592"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7076"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7522"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7772"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8026"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8472"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8646"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8700"/>
         <source>2700K</source>
         <translation>2700K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1938"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2148"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2380"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2728"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3136"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3806"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5202"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5460"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5944"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6334"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6750"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2260"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2502"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2712"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2944"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3292"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3730"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4394"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4566"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6088"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6342"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6600"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7084"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7530"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7780"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8034"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8476"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8704"/>
         <source>2800K</source>
         <translation>2800K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1942"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2152"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2384"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2732"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5206"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5464"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5948"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6338"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6754"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2506"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2716"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2948"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3296"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4398"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6092"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6346"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6604"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7088"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7534"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7784"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8038"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8480"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8708"/>
         <source>2900K</source>
         <translation>2900K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1946"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2156"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2388"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2736"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3148"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3298"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3818"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5210"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5468"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5952"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6342"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2272"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2510"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2720"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2952"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3300"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3742"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3892"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4402"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4578"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6096"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6350"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="6608"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6758"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7264"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7092"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7538"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7788"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8042"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8334"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8484"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8650"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8712"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9240"/>
         <source>3000K</source>
         <translation>3000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1950"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2160"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2392"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2740"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3152"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3822"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5214"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5472"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5956"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6346"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6762"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2276"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2514"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2724"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2956"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3304"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3746"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4582"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6100"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6354"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6612"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7096"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7542"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7792"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8046"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8488"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8716"/>
         <source>3100K</source>
         <translation>3100K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1954"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2164"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2396"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2744"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3156"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3826"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5218"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5476"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5960"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6350"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6766"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2280"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2518"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2728"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2960"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3308"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3750"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4406"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4586"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6104"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6358"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6616"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7100"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7546"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7796"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8050"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8492"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8720"/>
         <source>3200K</source>
         <translation>3200K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1958"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2168"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2400"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2748"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3160"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3830"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5058"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5222"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5480"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5964"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6354"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6770"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2284"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2522"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2732"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2964"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3312"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3754"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4590"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5944"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6108"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6362"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6620"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7104"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7550"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7800"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8054"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8496"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8654"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8724"/>
         <source>3300K</source>
         <translation>3300K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1962"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2172"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2404"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2752"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3164"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3834"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5226"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5484"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5968"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6358"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6774"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2288"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2526"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2736"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2968"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3316"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3758"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4410"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4594"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6112"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6366"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6624"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7108"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7554"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7804"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8058"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8500"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8728"/>
         <source>3400K</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1966"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2176"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2408"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2756"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5230"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5488"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5972"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6362"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6778"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2530"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2740"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2972"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3320"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6116"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6370"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6628"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7112"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7558"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7808"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8062"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8504"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8732"/>
         <source>3500K</source>
         <translation>3500K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1970"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2180"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2412"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2760"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3168"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3838"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5234"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5492"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5976"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6366"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6782"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2292"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2534"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2744"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2976"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3324"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3762"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4414"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4598"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6120"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6374"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6632"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7116"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7562"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7812"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8066"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8736"/>
         <source>3600K</source>
         <translation>3600K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1974"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2184"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2764"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3172"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3326"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3516"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3666"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3842"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4016"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4240"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4628"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5238"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5496"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5980"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6370"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2296"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2538"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2748"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3328"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3766"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3920"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4110"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4260"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4602"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4776"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5000"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5414"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6124"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6378"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6636"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7120"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7566"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7816"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8070"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8508"/>
         <source>3700K</source>
         <translation>3700K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1978"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2188"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2416"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2768"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3176"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3846"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5242"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5500"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5984"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6374"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6786"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2300"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2542"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2752"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2980"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3332"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3770"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4418"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4606"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6128"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6382"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6640"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7124"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7570"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7820"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8074"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8740"/>
         <source>3800K</source>
         <translation>3800K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1982"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2192"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2772"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5062"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5246"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5504"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5988"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6378"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2546"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2756"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3336"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5948"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6132"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6386"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6644"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7128"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7574"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7824"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8078"/>
         <source>3900K</source>
         <translation>3900K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1986"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2196"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2420"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2776"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3180"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3334"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3524"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3674"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3850"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4024"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4248"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4636"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5250"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5508"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5992"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6382"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6612"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6790"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7268"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2304"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2550"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2760"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2984"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3340"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3774"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3928"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4118"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4268"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4422"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4610"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4784"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5008"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5422"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6136"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6390"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6648"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7132"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7578"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7828"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8082"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8338"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8512"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8744"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9244"/>
         <source>4000K</source>
         <translation>4000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1990"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2200"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2780"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2554"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2764"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3344"/>
         <source>4100K</source>
         <translation>4100K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1994"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2204"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2424"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2784"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3184"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3854"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5254"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5512"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5996"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6386"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6794"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2308"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2558"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2768"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2988"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3348"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3778"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4426"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4614"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6140"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6394"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6652"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7136"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7582"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7832"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8086"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8516"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8748"/>
         <source>4200K</source>
         <translation>4200K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="1998"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2208"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2788"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3188"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3858"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4514"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5066"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2312"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2562"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2772"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3352"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3782"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4618"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5300"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5952"/>
         <source>4300K</source>
         <translation>4300K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2002"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2212"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2428"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2792"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5258"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5516"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6000"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6390"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6798"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2566"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2776"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2992"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3356"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4430"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6144"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6398"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6656"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7140"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7586"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7836"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8090"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8752"/>
         <source>4400K</source>
         <translation>4400K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2006"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2216"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2796"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3192"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3862"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2316"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2570"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2780"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3360"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3786"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4622"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8520"/>
         <source>4500K</source>
         <translation>4500K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2010"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2220"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2432"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2800"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5262"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5520"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6004"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6394"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6802"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2574"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2784"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2996"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3364"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4434"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6148"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6402"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6660"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7144"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7590"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7840"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8094"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8756"/>
         <source>4600K</source>
         <translation>4600K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2014"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2224"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2804"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2578"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2788"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3368"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8524"/>
         <source>4700K</source>
         <translation>4700K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2018"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2228"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2436"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2808"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3196"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3866"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5070"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5266"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5524"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6008"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6398"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6806"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2320"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2582"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2792"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3000"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3372"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3790"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4438"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4626"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5956"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6152"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6406"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6664"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7148"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7594"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7844"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8098"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8760"/>
         <source>4800K</source>
         <translation>4800K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2022"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2232"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2812"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2586"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2796"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3376"/>
         <source>4900K</source>
         <translation>4900K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2030"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2240"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2824"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3358"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5274"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5532"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6016"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6406"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2594"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2804"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3388"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3952"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6160"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6414"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6672"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7156"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7602"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7852"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8106"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8532"/>
         <source>5200K</source>
         <translation>5200K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2034"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2244"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2832"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5278"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5536"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6020"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6410"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2598"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2808"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3396"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6164"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6418"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6676"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7160"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7606"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7856"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8110"/>
         <source>5400K</source>
         <translation>5400K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2038"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2248"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2840"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3208"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3878"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5282"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5540"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6024"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6414"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7544"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2332"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2602"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2812"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3404"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3802"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4450"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4638"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6168"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6422"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6680"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7164"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7610"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7860"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8114"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9630"/>
         <source>5600K</source>
         <translation>5600K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2042"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2252"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2452"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2848"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5286"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5544"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6028"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6418"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6822"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2606"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2816"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3016"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3412"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6172"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6426"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6684"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7168"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7614"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7864"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8118"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8776"/>
         <source>5800K</source>
         <translation>5800K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2046"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2256"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2456"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2856"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3374"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5290"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5548"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6032"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6422"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6620"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6826"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7276"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2610"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2820"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3020"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3420"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3968"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6176"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6430"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6688"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7172"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7618"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7868"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8122"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8346"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8544"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8780"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9252"/>
         <source>6000K</source>
         <translation>6000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2050"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2260"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2864"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5294"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5552"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6036"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6426"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2614"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2824"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3428"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4458"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6180"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6434"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6692"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7176"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7622"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7872"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8126"/>
         <source>6200K</source>
         <translation>6200K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2054"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2264"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2872"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3382"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5298"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5556"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6040"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6430"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2618"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2828"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3436"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3976"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6184"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6438"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6696"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7180"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7626"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7876"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8130"/>
         <source>6400K</source>
         <translation>6400K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2058"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2268"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2880"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5302"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5560"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6044"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6434"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2622"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2832"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3444"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6188"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6442"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6700"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7184"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7630"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7880"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8134"/>
         <source>6600K</source>
         <translation>6600K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2062"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2272"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2468"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2888"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5306"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5564"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6048"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6438"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6838"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2626"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2836"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3032"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3452"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4466"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6192"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6446"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6704"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7188"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7634"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7884"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8138"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8792"/>
         <source>6800K</source>
         <translation>6800K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2066"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2276"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2896"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5310"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5568"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5778"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6052"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6442"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6624"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7280"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2630"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2840"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3460"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6196"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6450"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6708"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6918"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7192"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7638"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7888"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8142"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8350"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8552"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9256"/>
         <source>7000K</source>
         <translation>7000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2070"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2280"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2904"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2634"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2844"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3468"/>
         <source>7200K</source>
         <translation>7200K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2074"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2284"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2912"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5314"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5572"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6056"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6446"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2638"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2848"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3476"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6200"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6454"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6712"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7196"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7642"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7892"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8146"/>
         <source>7400K</source>
         <translation>7400K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2078"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2288"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2920"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2642"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2852"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3484"/>
         <source>7600K</source>
         <translation>7600K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2082"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2292"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2476"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2928"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5318"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5576"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6060"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6450"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6846"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2646"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2856"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3040"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3492"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6204"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6458"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6716"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7200"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7646"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7896"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8150"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8800"/>
         <source>7800K</source>
         <translation>7800K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2086"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2296"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2936"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3398"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6628"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7284"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2650"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2860"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3500"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3992"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4478"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8354"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8560"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9260"/>
         <source>8000K</source>
         <translation>8000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2090"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2300"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2480"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2948"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3232"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3902"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6850"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2356"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2654"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2864"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3044"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3512"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3826"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4662"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8804"/>
         <source>8300K</source>
         <translation>8300K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2094"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2304"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2960"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5326"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5584"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6068"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6458"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2658"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2868"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3524"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6212"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6466"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6724"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7208"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7654"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7904"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8158"/>
         <source>8600K</source>
         <translation>8600K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2098"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2308"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2972"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2662"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2872"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3536"/>
         <source>8900K</source>
         <translation>8900K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2102"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2312"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2984"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2666"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2876"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3548"/>
         <source>9200K</source>
         <translation>9200K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2106"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2316"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2996"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2670"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2880"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3560"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4490"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8572"/>
         <source>9500K</source>
         <translation>9500K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2110"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2320"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3008"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5338"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5596"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6080"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6470"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2674"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2884"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3572"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6224"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6478"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6736"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7220"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7666"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7916"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8170"/>
         <source>9800K</source>
         <translation>9800K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2342"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2906"/>
         <source>BlackNWhite</source>
         <translation>Bianco e Nero</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2368"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2716"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3120"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3270"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3464"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3614"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3790"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3964"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4188"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4576"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5178"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5436"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5920"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6310"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6738"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7260"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2244"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2932"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3280"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3714"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3864"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4058"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4208"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4382"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4550"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4724"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4948"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5362"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6064"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6318"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6576"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7060"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7506"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7756"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8010"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8464"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8692"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9236"/>
         <source>2500K</source>
         <translation>2500K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2444"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2828"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3204"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3874"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6814"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2328"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3008"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3392"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3798"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4446"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4634"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8768"/>
         <source>5300K</source>
         <translation>5300K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2448"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2836"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6818"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3012"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3400"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8536"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8662"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8772"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9540"/>
         <source>5500K</source>
         <translation>5500K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2460"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2868"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3216"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3886"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6830"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2340"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3024"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3432"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3810"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4646"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8784"/>
         <source>6300K</source>
         <translation>6300K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2472"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2908"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6842"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3036"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3472"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8796"/>
         <source>7300K</source>
         <translation>7300K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2484"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2976"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5330"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5588"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6072"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6462"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6854"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7288"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3048"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3540"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4486"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6216"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6470"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6728"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7212"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7658"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7908"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8162"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8568"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8808"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9264"/>
         <source>9000K</source>
         <translation>9000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2488"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3240"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3410"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3584"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3734"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3910"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4084"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4304"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4696"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5342"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5600"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6084"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6474"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6858"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7292"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2364"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3052"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3834"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4004"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4178"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4328"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4494"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4670"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4844"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5064"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5482"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6228"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6482"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6740"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7224"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7670"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7920"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8174"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8576"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8812"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9268"/>
         <source>10000K</source>
         <translation>10000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2820"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3384"/>
         <source>5100K</source>
         <translation>5100K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2844"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3408"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8540"/>
         <source>5700K</source>
         <translation>5700K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2852"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3212"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3882"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4522"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2336"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3416"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3806"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4454"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4642"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5308"/>
         <source>5900K</source>
         <translation>5900K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2860"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3424"/>
         <source>6100K</source>
         <translation>6100K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2884"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3220"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3890"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2344"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3448"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3814"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4650"/>
         <source>6700K</source>
         <translation>6700K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2892"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3456"/>
         <source>6900K</source>
         <translation>6900K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2900"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3224"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3894"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2348"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3464"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3818"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4470"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4654"/>
         <source>7100K</source>
         <translation>7100K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2916"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3480"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4474"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8556"/>
         <source>7500K</source>
         <translation>7500K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2924"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3228"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3898"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2352"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3488"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3822"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4658"/>
         <source>7700K</source>
         <translation>7700K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2932"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3496"/>
         <source>7900K</source>
         <translation>7900K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2940"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3504"/>
         <source>8100K</source>
         <translation>8100K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2944"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5322"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5580"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6064"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6454"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3508"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6208"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6462"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6720"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7204"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7650"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7900"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8154"/>
         <source>8200K</source>
         <translation>8200K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2952"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3516"/>
         <source>8400K</source>
         <translation>8400K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2956"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3520"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4482"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8564"/>
         <source>8500K</source>
         <translation>8500K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2964"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3528"/>
         <source>8700K</source>
         <translation>8700K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2968"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3532"/>
         <source>8800K</source>
         <translation>8800K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2980"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3236"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2360"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3544"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3830"/>
         <source>9100K</source>
         <translation>9100K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2988"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3906"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3552"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4666"/>
         <source>9300K</source>
         <translation>9300K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="2992"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5334"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5592"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6076"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6466"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3556"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6220"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6474"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6732"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7216"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7662"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7912"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8166"/>
         <source>9400K</source>
         <translation>9400K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3000"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3564"/>
         <source>9600K</source>
         <translation>9600K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3004"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3568"/>
         <source>9700K</source>
         <translation>0700K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3012"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3576"/>
         <source>9900K</source>
         <translation>9900K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3026"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3052"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3078"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3104"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3448"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3598"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3748"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3774"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3948"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4090"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4140"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4318"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4344"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4370"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4388"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4446"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4472"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4560"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4702"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4752"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4802"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4950"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3582"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3620"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3646"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3672"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3698"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4042"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4192"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4366"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4508"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4534"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4708"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4850"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4900"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5078"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5104"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5130"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5156"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5174"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5232"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5258"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5346"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5488"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5538"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5588"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5638"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5688"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5836"/>
         <source>DirectSunlight</source>
         <translation>Luce solare diretta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3124"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3794"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5182"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5440"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5924"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6314"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2248"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3718"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4554"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6068"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6322"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6580"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7064"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7510"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7760"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8014"/>
         <source>2550K</source>
         <translation>2550K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3128"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3798"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5190"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5448"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5932"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6322"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2252"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3722"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4558"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6076"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6330"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6588"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7072"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7518"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7768"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8022"/>
         <source>2650K</source>
         <translation>2650K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3140"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3810"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2264"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3734"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4570"/>
         <source>2850K</source>
         <translation>2850K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3144"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3814"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="2268"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3738"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4574"/>
         <source>2950K</source>
         <translation>2950K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3274"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3468"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3618"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3968"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4192"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4580"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3868"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4062"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4212"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4728"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4952"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5366"/>
         <source>2560K</source>
         <translation>2560K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3278"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3472"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3622"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3972"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4196"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4584"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3872"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4066"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4216"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4732"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4956"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5370"/>
         <source>2630K</source>
         <translation>2630K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3286"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3480"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3630"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3980"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4204"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4592"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3880"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4074"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4224"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4740"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4964"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5378"/>
         <source>2780K</source>
         <translation>2780K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3290"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3484"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3634"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3984"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4208"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4596"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3884"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4078"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4228"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4744"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4968"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5382"/>
         <source>2860K</source>
         <translation>2860K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3294"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3488"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3638"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3988"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4212"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4600"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3888"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4082"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4232"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4748"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4972"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5386"/>
         <source>2940K</source>
         <translation>2940K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3302"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3492"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3642"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3992"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4216"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4604"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3896"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4086"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4236"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4752"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4976"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5390"/>
         <source>3030K</source>
         <translation>3030K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3306"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3496"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3646"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3996"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4220"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4608"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3900"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4090"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4240"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4756"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4980"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5394"/>
         <source>3130K</source>
         <translation>3130K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3310"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3500"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3650"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4000"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4224"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4612"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3904"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4094"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4244"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4760"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4984"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5398"/>
         <source>3230K</source>
         <translation>3230K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3314"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3504"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3654"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4004"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4228"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4616"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3908"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4098"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4248"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4764"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4988"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5402"/>
         <source>3330K</source>
         <translation>3330K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3318"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3508"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3658"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4008"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4232"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4620"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3912"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4102"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4252"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4768"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4992"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5406"/>
         <source>3450K</source>
         <translation>3450K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3322"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3512"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3662"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4012"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4236"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4624"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3916"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4106"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4256"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4772"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4996"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5410"/>
         <source>3570K</source>
         <translation>3570K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3330"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3520"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3670"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4020"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4244"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4632"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3924"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4114"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4264"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4780"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5004"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5418"/>
         <source>3850K</source>
         <translation>3850K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3338"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3528"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3678"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4028"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4252"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4640"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3932"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4122"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4272"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4788"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5012"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5426"/>
         <source>4170K</source>
         <translation>4170K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3342"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3532"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3682"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4032"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4256"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4644"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3936"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4126"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4276"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4792"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5016"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5430"/>
         <source>4350K</source>
         <translation>4350K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3346"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3536"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3686"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4036"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4648"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3940"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4130"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4280"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4796"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5434"/>
         <source>4550K</source>
         <translation>4550K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3350"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3540"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3690"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4040"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4260"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4652"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3944"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4134"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4284"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4800"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5020"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5438"/>
         <source>4760K</source>
         <translation>4760K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3362"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3548"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3698"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4048"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4268"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4660"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3956"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4142"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4292"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4808"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5028"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5446"/>
         <source>5260K</source>
         <translation>5260K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3366"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3552"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3702"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4052"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4272"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4664"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3960"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4146"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4296"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4812"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5032"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5450"/>
         <source>5560K</source>
         <translation>5560K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3370"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3556"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3706"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4056"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4276"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4668"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3964"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4150"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4300"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4816"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5036"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5454"/>
         <source>5880K</source>
         <translation>5880K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3378"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3560"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3710"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4060"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4280"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4672"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3972"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4154"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4304"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4820"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5040"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5458"/>
         <source>6250K</source>
         <translation>6250K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3386"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3564"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3714"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4064"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4284"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4676"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3980"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4158"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4308"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4824"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5044"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5462"/>
         <source>6670K</source>
         <translation>6670K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3390"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3568"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3718"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4068"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4288"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4680"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3984"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4162"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4312"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4828"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5048"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5466"/>
         <source>7140K</source>
         <translation>7140K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3394"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3572"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3722"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4072"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4292"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4684"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3988"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4166"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4316"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4832"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5052"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5470"/>
         <source>7690K</source>
         <translation>7690K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3402"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3576"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3726"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4076"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4296"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4688"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3996"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4170"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4320"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4836"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5056"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5474"/>
         <source>8330K</source>
         <translation>8330K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3406"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3580"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3730"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4080"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4300"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4692"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4000"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4174"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4324"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4840"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5060"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5478"/>
         <source>9090K</source>
         <translation>9090K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3420"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3920"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4110"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4160"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4408"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4532"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4722"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4772"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4822"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4014"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4338"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4680"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4870"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4920"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5194"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5318"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5508"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5558"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5608"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5658"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5708"/>
         <source>SodiumVaporFluorescent</source>
         <translation>Fluorescente ai vapori di Sodio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3436"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3936"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4126"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4176"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4424"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4548"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4738"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4788"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4838"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7608"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="3594"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4030"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4354"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4696"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4886"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4936"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5210"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5334"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5524"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5574"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5624"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5674"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5724"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9720"/>
         <source>DayWhiteFluorescent</source>
         <translation>Fluorescente luce diurna</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3444"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="3944"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4134"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4184"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4432"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4556"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4746"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4796"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4846"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4038"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4362"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4704"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4894"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="4944"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5218"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5342"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5532"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5582"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5632"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5682"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5732"/>
         <source>HighTempMercuryVaporFluorescent</source>
         <translation>Fluorescente alta temperatura ai vapori di Mercurio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4924"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4962"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5008"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5038"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5126"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5384"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5634"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5676"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5706"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5736"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5766"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5808"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5838"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5868"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6126"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6160"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6194"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6224"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6258"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6534"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6934"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6968"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7002"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7036"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7070"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7104"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7138"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7172"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7206"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7314"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7352"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7442"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="7476"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5810"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5848"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5894"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5924"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6012"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6524"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6774"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6816"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6846"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6876"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6906"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6948"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6978"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7008"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7266"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7300"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7364"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7394"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7454"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8234"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8910"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8944"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8978"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9012"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9046"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9080"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9114"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9148"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9182"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9290"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9328"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9456"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9490"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9520"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="9562"/>
         <source>NeutralFluorescent</source>
         <translation>Fluorescente Neutra</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="4978"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5000"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5864"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5886"/>
         <source>FlashAuto</source>
         <translation>Flash Auto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5030"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5080"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5626"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5916"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="5966"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6766"/>
         <source>IncandescentWarm</source>
         <translation>Incandescente calda</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5138"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5396"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5774"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5880"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6270"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6024"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6278"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6536"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6914"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7020"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7466"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7716"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7970"/>
         <source>2000K</source>
         <translation>2000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5142"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5400"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5884"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6274"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6028"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6282"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6540"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7024"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7470"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7720"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7974"/>
         <source>2050K</source>
         <translation>2050K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5146"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5404"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5888"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6278"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6032"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6286"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6544"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7028"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7474"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7724"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7978"/>
         <source>2100K</source>
         <translation>2100K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5150"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5408"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5892"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6282"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6036"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6290"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6548"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7032"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7478"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7728"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7982"/>
         <source>2150K</source>
         <translation>2150K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5154"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5412"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5896"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6286"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6040"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6294"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6552"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7036"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7482"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7732"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7986"/>
         <source>2200K</source>
         <translation>2200K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5158"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5416"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5900"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6290"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6044"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6298"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6556"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7040"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7486"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7736"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7990"/>
         <source>2250K</source>
         <translation>2250K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5162"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5420"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5904"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6294"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6048"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6302"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6560"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7044"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7490"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7740"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7994"/>
         <source>2300K</source>
         <translation>2300K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5166"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5424"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5908"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6298"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6052"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6306"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6564"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7048"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7494"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7744"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7998"/>
         <source>2350K</source>
         <translation>2350K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5170"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5428"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5912"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6302"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6056"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6310"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6568"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7052"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7498"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7748"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8002"/>
         <source>2400K</source>
         <translation>2400K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5174"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5432"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5916"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6306"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6060"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6314"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6572"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7056"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7502"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7752"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8006"/>
         <source>2450K</source>
         <translation>2450K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5198"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5456"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5940"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6330"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6084"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6338"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6596"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7080"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7526"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7776"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8030"/>
         <source>2750K</source>
         <translation>2750K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5346"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5604"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6088"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6478"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6232"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6486"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6744"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7228"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7674"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7924"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8178"/>
         <source>11000K</source>
         <translation>11000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5350"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5608"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6092"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6482"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6236"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6490"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6748"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7232"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7678"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7928"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8182"/>
         <source>12000K</source>
         <translation>12000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5354"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5612"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6096"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6486"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6240"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6494"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6752"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7236"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7682"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7932"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8186"/>
         <source>13000K</source>
         <translation>13000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5358"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5616"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="5782"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6100"/>
-        <location filename="../Sources/ptWhiteBalances.cpp" line="6490"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6244"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6498"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6756"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="6922"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7240"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7686"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="7936"/>
+        <location filename="../Sources/ptWhiteBalances.cpp" line="8190"/>
         <source>14000K</source>
         <translation>14000K</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="497"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="498"/>
         <source>Done</source>
         <translation>Fatto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="503"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="504"/>
         <source>Updating</source>
         <translation>Aggiornamento</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="509"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="510"/>
         <source>Processing</source>
         <translation>Elaborazione</translation>
     </message>
@@ -4631,6 +5177,29 @@ The error occurred in line %1.</source>
         <location filename="../Sources/ptCurve.cpp" line="307"/>
         <source>Load curve file</source>
         <translation>Carica file curva</translation>
+    </message>
+</context>
+<context>
+    <name>ToneForm</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Tone.ui" line="18"/>
+        <source>All values</source>
+        <translation>Tutti i valori</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Tone.ui" line="62"/>
+        <source>Shadows</source>
+        <translation>Ombre</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Tone.ui" line="106"/>
+        <source>Midtones</source>
+        <translation>Mezzitoni</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Tone.ui" line="150"/>
+        <source>Highlights</source>
+        <translation>Alteluci</translation>
     </message>
 </context>
 <context>
@@ -4839,6 +5408,62 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ptFilter_Brightness</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="49"/>
+        <source>Brightness</source>
+        <translation>Luminosità</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
+        <source>Catch white</source>
+        <translation>Cattura bianco</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
+        <source>Darken the bright parts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
+        <source>Catch black</source>
+        <translation>Cattura nero</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
+        <source>Brighten the dark parts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="60"/>
+        <source>Gain</source>
+        <translation>Guadagno</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="60"/>
+        <source>Exposure gain</source>
+        <translation>Guadagno Esposizione</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_ColorBoost</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="48"/>
+        <source>Color boost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="57"/>
+        <source>Strength in a</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="58"/>
+        <source>Strength in b</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_ColorContrast</name>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorContrast.cpp" line="49"/>
@@ -4867,6 +5492,52 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ptFilter_ColorEnhancement</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="48"/>
+        <source>Color enhancement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="57"/>
+        <source>Enhance shadows</source>
+        <translation>Migliora le ombre</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="58"/>
+        <source>Enhance highlights</source>
+        <translation>Migliora le alteluci</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_ColorIntensity</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorIntensity.cpp" line="51"/>
+        <source>Color Intensity</source>
+        <translation>Intensità Colore</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorIntensity.cpp" line="60"/>
+        <source>Vibrance</source>
+        <translation>Vibranza</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorIntensity.cpp" line="61"/>
+        <source>Red</source>
+        <translation>Rosso</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorIntensity.cpp" line="62"/>
+        <source>Green</source>
+        <translation>Verde</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ColorIntensity.cpp" line="63"/>
+        <source>Blue</source>
+        <translation>Blu</translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_DetailCurve</name>
     <message>
         <location filename="../Sources/filters/ptFilter_DetailCurve.cpp" line="50"/>
@@ -4887,6 +5558,29 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_DetailCurve.cpp" line="69"/>
         <source>Anti badpixel</source>
         <translation>Anti badpixel</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Drc</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Drc.cpp" line="50"/>
+        <source>Dynamic range compression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Drc.cpp" line="59"/>
+        <source>Strength</source>
+        <translation>Intensità</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Drc.cpp" line="60"/>
+        <source>Bias</source>
+        <translation>Disturbo</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Drc.cpp" line="61"/>
+        <source>Color adaption</source>
+        <translation>Adattamento colore</translation>
     </message>
 </context>
 <context>
@@ -4943,6 +5637,122 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="59"/>
         <source>Adjusts brightness of highlights in B channel</source>
         <translation>Regolazione luminosità alteluci nel canale B</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LMHRecovery</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="61"/>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="69"/>
+        <source>Low/mid/highlight recovery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="76"/>
+        <source>Disabled</source>
+        <translation>Disabilitato</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="77"/>
+        <source>Shadows</source>
+        <translation>Ombre</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="78"/>
+        <source>Midtones</source>
+        <translation>Mezzitoni</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="79"/>
+        <source>Highlights</source>
+        <translation>Alteluci</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="80"/>
+        <source>All values</source>
+        <translation>Tutti i valori</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="84"/>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="89"/>
+        <source>Mask type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="85"/>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="90"/>
+        <source>Strength</source>
+        <translation>Intensità</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="86"/>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="91"/>
+        <source>Lower limit</source>
+        <translation>Limite inferiore</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="87"/>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="92"/>
+        <source>Upper limit</source>
+        <translation>Limite superiore</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="88"/>
+        <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="93"/>
+        <source>Softness</source>
+        <translation>Morbidezza</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LabTransform</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="46"/>
+        <source>Lab transform</source>
+        <translation>Trasformazione LAB</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="54"/>
+        <source>Regular L*</source>
+        <translation>L* regolare</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="55"/>
+        <source>R -&gt; L*</source>
+        <translation>R -&gt; L*</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="56"/>
+        <source>G -&gt; L*</source>
+        <translation>G -&gt; L*</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="57"/>
+        <source>B -&gt; L*</source>
+        <translation>B -&gt; L*</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="61"/>
+        <source>Transformation</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Levels</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Levels.cpp" line="51"/>
+        <location filename="../Sources/filters/ptFilter_Levels.cpp" line="59"/>
+        <source>Levels</source>
+        <translation>Livelli</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Levels.cpp" line="68"/>
+        <source>Blackpoint</source>
+        <translation>Punto di Nero</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Levels.cpp" line="69"/>
+        <source>Whitepoint</source>
+        <translation>Punto di Bianco</translation>
     </message>
 </context>
 <context>
@@ -5014,6 +5824,19 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_LumaSatAdjust.cpp" line="82"/>
         <source>Magenta</source>
         <translation>Magenta</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Normalization</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Normalization.cpp" line="47"/>
+        <source>Normalization</source>
+        <translation>Normalizzazione</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Normalization.cpp" line="56"/>
+        <source>Opacity</source>
+        <translation>Opacità</translation>
     </message>
 </context>
 <context>
@@ -5150,6 +5973,34 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ptFilter_ReinhardBrighten</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="50"/>
+        <source>Reinhard brighten</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="60"/>
+        <source>Enable</source>
+        <translation>Abilita</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="61"/>
+        <source>Brightness</source>
+        <translation>Luminosità</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="62"/>
+        <source>Chrominance</source>
+        <translation>Crominanza</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="63"/>
+        <source>Lightness tweak</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_SatCurve</name>
     <message>
         <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="49"/>
@@ -5170,6 +6021,19 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="67"/>
         <source>Saturation mode</source>
         <translation>Modalità saturazione</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Saturation</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Saturation.cpp" line="46"/>
+        <source>Saturation adjustment</source>
+        <translation>Regolazione Saturazione</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Saturation.cpp" line="55"/>
+        <source>Strength</source>
+        <translation>Intensità</translation>
     </message>
 </context>
 <context>
@@ -5264,6 +6128,38 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="226"/>
         <source>After gamma curve</source>
         <translation>Curva dopo gamma</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Tone</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="62"/>
+        <source>Tone</source>
+        <translation>Tono</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="71"/>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="74"/>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="77"/>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="80"/>
+        <source>Saturation</source>
+        <translation>Saturazione</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="72"/>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="75"/>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="78"/>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="81"/>
+        <source>Strength</source>
+        <translation>Intensità</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="73"/>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="76"/>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="79"/>
+        <location filename="../Sources/filters/ptFilter_Tone.cpp" line="82"/>
+        <source>Hue</source>
+        <translation>Tonalità</translation>
     </message>
 </context>
 <context>
@@ -5623,7 +6519,7 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="245"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="1860"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1856"/>
         <source>Favourite tools</source>
         <translation>Strumenti preferiti</translation>
     </message>
@@ -5639,7 +6535,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="358"/>
         <location filename="../Sources/ptMainWindow.ui" line="1247"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8173"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7582"/>
         <source>Camera</source>
         <translation>Camera</translation>
     </message>
@@ -5666,7 +6562,7 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="530"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="563"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="565"/>
         <source>Open preset</source>
         <translation>Apri Preset</translation>
     </message>
@@ -5677,134 +6573,111 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="598"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8927"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9079"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8336"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8488"/>
         <source>Load a camera profile</source>
         <translation>Carica un profilo colore Camera</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2888"/>
         <source>8daccb81-5dd3-4664-bf3c-1fefe7ad084e</source>
-        <translation>8daccb81-5dd3-4664-bf3c-1fefe7ad084e</translation>
+        <translation type="obsolete">8daccb81-5dd3-4664-bf3c-1fefe7ad084e</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3150"/>
         <source>a63b08df-36ee-4678-9e25-9c53467c502b</source>
-        <translation>a63b08df-36ee-4678-9e25-9c53467c502b</translation>
+        <translation type="obsolete">a63b08df-36ee-4678-9e25-9c53467c502b</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3489"/>
         <source>25b0402c-1668-4800-aab8-028160a08087</source>
-        <translation>25b0402c-1668-4800-aab8-028160a08087</translation>
+        <translation type="obsolete">25b0402c-1668-4800-aab8-028160a08087</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3542"/>
         <source>786384c5-ded7-4669-b748-e40ebabcdf2c</source>
-        <translation>786384c5-ded7-4669-b748-e40ebabcdf2c</translation>
+        <translation type="obsolete">786384c5-ded7-4669-b748-e40ebabcdf2c</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3632"/>
         <source>946311d6-64fb-46b8-a70e-bc9e8dcba56d</source>
-        <translation>946311d6-64fb-46b8-a70e-bc9e8dcba56d</translation>
+        <translation type="obsolete">946311d6-64fb-46b8-a70e-bc9e8dcba56d</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3769"/>
         <source>02ffc2a8-1fc6-4f50-940a-924da85efa1e</source>
-        <translation>02ffc2a8-1fc6-4f50-940a-924da85efa1e</translation>
+        <translation type="obsolete">02ffc2a8-1fc6-4f50-940a-924da85efa1e</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4082"/>
         <source>2f4b0f7a-d720-41e0-b2fc-20dff3a02fcf</source>
-        <translation>02ffc2a8-1fc6-4f50-940a-924da85efa1e</translation>
+        <translation type="obsolete">02ffc2a8-1fc6-4f50-940a-924da85efa1e</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4688"/>
         <source>e0310479-993f-4018-a80a-ac2d8c6c1ee4</source>
-        <translation>e0310479-993f-4018-a80a-ac2d8c6c1ee4</translation>
+        <translation type="obsolete">e0310479-993f-4018-a80a-ac2d8c6c1ee4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4694"/>
         <source>530aab8e-65e4-4bb8-b391-46f6673ac53d</source>
-        <translation>530aab8e-65e4-4bb8-b391-46f6673ac53d</translation>
+        <translation type="obsolete">530aab8e-65e4-4bb8-b391-46f6673ac53d</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4799"/>
         <source>bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</source>
-        <translation>bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</translation>
+        <translation type="obsolete">bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4897"/>
         <source>f2d800db-1d7a-42bc-970c-9a89597f34a4</source>
-        <translation>f2d800db-1d7a-42bc-970c-9a89597f34a4</translation>
+        <translation type="obsolete">f2d800db-1d7a-42bc-970c-9a89597f34a4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5295"/>
         <source>1d3e2630-de72-46b8-b1f9-7169cd1b3832</source>
-        <translation>1d3e2630-de72-46b8-b1f9-7169cd1b3832</translation>
+        <translation type="obsolete">1d3e2630-de72-46b8-b1f9-7169cd1b3832</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5309"/>
         <source>1f5f1b76-71b7-4dda-9db3-89ffce1c7981</source>
-        <translation>1f5f1b76-71b7-4dda-9db3-89ffce1c7981</translation>
+        <translation type="obsolete">1f5f1b76-71b7-4dda-9db3-89ffce1c7981</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5323"/>
         <source>0a462e7c-5764-4ed5-bb28-e583aabbf292</source>
-        <translation>0a462e7c-5764-4ed5-bb28-e583aabbf292</translation>
+        <translation type="obsolete">0a462e7c-5764-4ed5-bb28-e583aabbf292</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5337"/>
         <source>960ada58-c073-4603-acad-f4894bb3fe91</source>
-        <translation>960ada58-c073-4603-acad-f4894bb3fe91</translation>
+        <translation type="obsolete">960ada58-c073-4603-acad-f4894bb3fe91</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5351"/>
         <source>2fea9112-1a10-4466-8ef9-0918a09ea3d6</source>
-        <translation>2fea9112-1a10-4466-8ef9-0918a09ea3d6</translation>
+        <translation type="obsolete">2fea9112-1a10-4466-8ef9-0918a09ea3d6</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5365"/>
         <source>ee8167f2-1c78-4ae3-843d-4a3a0b807db8</source>
-        <translation>ee8167f2-1c78-4ae3-843d-4a3a0b807db8</translation>
+        <translation type="obsolete">ee8167f2-1c78-4ae3-843d-4a3a0b807db8</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5379"/>
         <source>6dc120c5-e8ec-430e-9c5e-40ba217559d5</source>
-        <translation>6dc120c5-e8ec-430e-9c5e-40ba217559d5</translation>
+        <translation type="obsolete">6dc120c5-e8ec-430e-9c5e-40ba217559d5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5393"/>
         <source>f532185f-281a-4503-b96b-37c05bbcabf3</source>
-        <translation>f532185f-281a-4503-b96b-37c05bbcabf3</translation>
+        <translation type="obsolete">f532185f-281a-4503-b96b-37c05bbcabf3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5407"/>
         <source>25489dc0-8d77-4f39-bc42-1b91a0d1054d</source>
-        <translation>25489dc0-8d77-4f39-bc42-1b91a0d1054d</translation>
+        <translation type="obsolete">25489dc0-8d77-4f39-bc42-1b91a0d1054d</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5421"/>
         <source>61b61fd7-c891-4d78-92c2-3290c190be65</source>
-        <translation>61b61fd7-c891-4d78-92c2-3290c190be65</translation>
+        <translation type="obsolete">61b61fd7-c891-4d78-92c2-3290c190be65</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5435"/>
         <source>fb3f0bbc-6255-43ec-947c-4bd43e115379</source>
-        <translation>fb3f0bbc-6255-43ec-947c-4bd43e115379</translation>
+        <translation type="obsolete">fb3f0bbc-6255-43ec-947c-4bd43e115379</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6063"/>
         <source>6e7db630-310f-4f04-82e0-b668babfe8c9</source>
-        <translation>6e7db630-310f-4f04-82e0-b668babfe8c9</translation>
+        <translation type="obsolete">6e7db630-310f-4f04-82e0-b668babfe8c9</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6159"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6326"/>
-        <location filename="../Sources/ptMainWindow.ui" line="7225"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8716"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8810"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8930"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9082"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5616"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5783"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6634"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8125"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8219"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8339"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8491"/>
         <source>Load</source>
         <translation>Carica</translation>
     </message>
@@ -5902,7 +6775,7 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="2069"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9229"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8638"/>
         <source>Crop</source>
         <translation>Ritaglio</translation>
     </message>
@@ -6007,13 +6880,13 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="2718"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10851"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10260"/>
         <source>Open</source>
         <translation>Apri</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="2735"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8830"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8239"/>
         <source>Save</source>
         <translation>Salva</translation>
     </message>
@@ -6022,61 +6895,53 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2902"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6966"/>
         <source>Color Intensity</source>
-        <translation>Intensità Colore</translation>
+        <translation type="obsolete">Intensità Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2964"/>
         <source>Brightness</source>
-        <translation>Luminosità</translation>
+        <translation type="obsolete">Luminosità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3007"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8113"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2930"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7522"/>
         <source>Exposure</source>
         <translation>Esposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3104"/>
         <source>Brighten</source>
-        <translation>Schiarisci</translation>
+        <translation type="obsolete">Schiarisci</translation>
     </message>
     <message>
         <source>GammaTool</source>
         <translation type="obsolete">Strumento Gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3164"/>
         <source>Normalization</source>
-        <translation>Normalizzazione</translation>
+        <translation type="obsolete">Normalizzazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3201"/>
         <source>Color Enhancement</source>
-        <translation>Miglioramento Colore</translation>
+        <translation type="obsolete">Miglioramento Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3241"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3646"/>
         <source>Low/Mid/Highlight Recovery</source>
-        <translation>Recupero Basse/Medie/Alteluci</translation>
+        <translation type="obsolete">Recupero Basse/Medie/Alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3321"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3097"/>
         <source>Texture Contrast</source>
         <translation>Contrasto Texture</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3373"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3887"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3149"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3519"/>
         <source>Local Contrast I</source>
         <translation>Contrasto Locale I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3431"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3932"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3207"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3564"/>
         <source>Local Contrast II</source>
         <translation>Contrasto Locale II</translation>
     </message>
@@ -6089,55 +6954,51 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Aumenta il contrasto RGB tramite una curva sigmoidale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3502"/>
-        <location filename="../Sources/ptMainWindow.ui" line="4179"/>
         <source>Levels</source>
-        <translation>Livelli</translation>
+        <translation type="obsolete">Livelli</translation>
     </message>
     <message>
         <source>RGB Curve</source>
         <translation type="obsolete">Curva RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3556"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3306"/>
         <source>Lab Color/Contrast</source>
         <translation>Colore/Contrasto Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3595"/>
         <source>LAB Transform</source>
-        <translation>Trasformazione Lab</translation>
+        <translation type="obsolete">Trasformazione Lab</translation>
     </message>
     <message>
         <source>Shadows / Highlights</source>
         <translation type="obsolete">Ombre / Alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3726"/>
         <source>Dynamic Range Compression (*)</source>
-        <translation>Compressione Estensione Dinamica (*)</translation>
+        <translation type="obsolete">Compressione Estensione Dinamica (*)</translation>
     </message>
     <message>
         <source>Texture curve (*)</source>
         <translation type="obsolete">Curva Texture (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3783"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3415"/>
         <source>Texture Contrast I</source>
         <translation>Contrasto Texture I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3835"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3467"/>
         <source>Texture Contrast II</source>
         <translation>Contrasto Texture II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3990"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3622"/>
         <source>Local Contrast Stretch I (*)</source>
         <translation>Estendi Contrasto Locale I (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4036"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3668"/>
         <source>Local Contrast Stretch II (*)</source>
         <translation>Estendi Contrasto Locale II (*)</translation>
     </message>
@@ -6146,57 +7007,55 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Contrasto Luminosità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4085"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3717"/>
         <source>Increase contrast on L by a sigmoidal curve</source>
         <translation>Aumenta il contrasto su L tramite curva sigmoidale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4099"/>
         <source>Saturation</source>
-        <translation>Saturazione</translation>
+        <translation type="obsolete">Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4102"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3734"/>
         <source>Increase saturation by a sigmoidal curve</source>
         <translation>Aumenta saturazione mediante una curva sigmoidale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4139"/>
         <source>Color Boost</source>
-        <translation>Accentua colore</translation>
+        <translation type="obsolete">Accentua colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4219"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3776"/>
         <source>Lab Sharpen/Noise</source>
         <translation>Nitidezza/Rumore Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4258"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3815"/>
         <source>Impulse noise reduction</source>
         <translation>Riduzione rumore Impulse</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4298"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3855"/>
         <source>Edge avoiding wavelets</source>
         <translation>Wavelets Evita Margini</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4369"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3926"/>
         <source>GreyCStoration on L (*)</source>
         <translation>GreyCStoration su L (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4470"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4027"/>
         <source>Defringe</source>
         <translation>Elimina margine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4562"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4119"/>
         <source>Wavelet Denoising</source>
         <translation>Riduzione rumore Wavelet</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4642"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4199"/>
         <source>Luminance Denoising (*)</source>
         <translation>Riduzione rumore Luminanza (*)</translation>
     </message>
@@ -6205,12 +7064,12 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Curva riduzione rumore Luminanza (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4707"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4272"/>
         <source>Pyramid Denoising</source>
         <translation>Riduzione rumore Piramide</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4753"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4318"/>
         <source>Color Denoising (*)</source>
         <translation>Riduzione rumore Colore (*)</translation>
     </message>
@@ -6219,7 +7078,7 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Curva di dettaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4813"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4378"/>
         <source>Gradient Sharpen</source>
         <translation>Nitidezza Gradiente</translation>
     </message>
@@ -6228,32 +7087,32 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Filtro Wiener (Nitidezza) (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4911"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4476"/>
         <source>Inverse Diffusion Sharpen</source>
         <translation>Nitidezza Diffusione Inversa</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4982"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4547"/>
         <source>Unsharp Mask (USM)</source>
         <translation>Maschera di Contrasto (USM)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5028"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4593"/>
         <source>Highpass Sharpen</source>
         <translation>Nitidezza Accentua Passaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5074"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4639"/>
         <source>Film grain simulation</source>
         <translation>Simulazione grana pellicola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5216"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4781"/>
         <source>View LAB</source>
         <translation>Visualizza LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5253"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4818"/>
         <source>Lab EyeCandy</source>
         <translation>Miglioramenti LAB</translation>
     </message>
@@ -6262,107 +7121,100 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Outline</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5816"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5273"/>
         <source>Tone I</source>
         <translation>Tonalità I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5918"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5375"/>
         <source>Tone II</source>
         <translation>Tonalità II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6077"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5534"/>
         <source>Texture overlay I</source>
         <translation>Sovrapposizione Texture I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6244"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5701"/>
         <source>Texture overlay II</source>
         <translation>Sovrapposizione Texture II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6707"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6164"/>
         <source>Gradual Blur I (*)</source>
         <translation>Sfocatura graduale I (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6812"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6269"/>
         <source>Gradual Blur II (*)</source>
         <translation>Sfocatura graduale II (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7028"/>
         <source>6e3971ac-f640-4628-8aa0-ae07620f8ca4</source>
-        <translation>6e3971ac-f640-4628-8aa0-ae07620f8ca4</translation>
+        <translation type="obsolete">6e3971ac-f640-4628-8aa0-ae07620f8ca4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7042"/>
         <source>9e99b7ee-1e5f-4f4d-821f-efbfc0d6bffa</source>
-        <translation>9e99b7ee-1e5f-4f4d-821f-efbfc0d6bffa</translation>
+        <translation type="obsolete">9e99b7ee-1e5f-4f4d-821f-efbfc0d6bffa</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7056"/>
         <source>44112e0a-81df-4ae5-aee8-18a17d0ac810</source>
-        <translation>44112e0a-81df-4ae5-aee8-18a17d0ac810</translation>
+        <translation type="obsolete">44112e0a-81df-4ae5-aee8-18a17d0ac810</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7112"/>
         <source>221fa750-226c-4a48-a94b-e8b516865aca</source>
-        <translation>221fa750-226c-4a48-a94b-e8b516865aca</translation>
+        <translation type="obsolete">221fa750-226c-4a48-a94b-e8b516865aca</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7285"/>
         <source>88b24988-7fcf-47b6-b9a2-8600c992f3f3</source>
-        <translation>88b24988-7fcf-47b6-b9a2-8600c992f3f3</translation>
+        <translation type="obsolete">88b24988-7fcf-47b6-b9a2-8600c992f3f3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7299"/>
         <source>71999980-5530-4a91-996e-43e752099870</source>
-        <translation>71999980-5530-4a91-996e-43e752099870</translation>
+        <translation type="obsolete">71999980-5530-4a91-996e-43e752099870</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7415"/>
         <source>7c2a63e3-50be-476c-9364-7c442c2662fa</source>
-        <translation>7c2a63e3-50be-476c-9364-7c442c2662fa</translation>
+        <translation type="obsolete">7c2a63e3-50be-476c-9364-7c442c2662fa</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7649"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7058"/>
         <source>Copyright</source>
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8910"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8319"/>
         <source>Export command</source>
         <translation>Comando Esporta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10143"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9552"/>
         <source>Load template</source>
         <translation>Carica template</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10163"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9572"/>
         <source>Save image</source>
         <translation>Salva immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10183"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9592"/>
         <source>Send image to external editor</source>
         <translation>Invia immagine a editor esterno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10277"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9686"/>
         <source>Processing pane</source>
         <translation>Pannello strumenti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10300"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9709"/>
         <source>Info pane</source>
         <translation>Pannello informazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10323"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9732"/>
         <source>Photivo settings</source>
         <translation>Impostazioni Photivo</translation>
     </message>
@@ -6407,62 +7259,57 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Regolazione Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5449"/>
         <source>Tone</source>
-        <translation>Tono</translation>
+        <translation type="obsolete">Tono</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5464"/>
         <source>All values</source>
-        <translation>Tutti i valori</translation>
+        <translation type="obsolete">Tutti i valori</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5486"/>
         <source>Shadows</source>
-        <translation>Ombre</translation>
+        <translation type="obsolete">Ombre</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5508"/>
         <source>Midtones</source>
-        <translation>Mezzitoni</translation>
+        <translation type="obsolete">Mezzitoni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5530"/>
         <source>Lights</source>
-        <translation>Luci</translation>
+        <translation type="obsolete">Luci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5571"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6621"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5028"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6078"/>
         <source>Vignette</source>
         <translation>Vignettatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5657"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5114"/>
         <source>EyeCandy</source>
         <translation>Miglioramenti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5696"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5153"/>
         <source>Black and White</source>
         <translation>Bianco e Nero</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5773"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5230"/>
         <source>Simple tone</source>
         <translation>Tono semplice</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5852"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5954"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6447"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6552"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9476"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5309"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5411"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5904"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6009"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8885"/>
         <source>Color</source>
         <translation>Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6020"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5477"/>
         <source>Cross processing</source>
         <translation>Cross processing</translation>
     </message>
@@ -6475,36 +7322,36 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Sovrapposizione Texture</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6123"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6290"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5580"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5747"/>
         <source>Clear image</source>
         <translation>Cancella immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6126"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6293"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5583"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5750"/>
         <source>Clear</source>
         <translation>Cancella</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="415"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6156"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6323"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5613"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5780"/>
         <source>Load image</source>
         <translation>Carica immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6411"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5868"/>
         <source>Gradual overlay I</source>
         <translation>Sovrapposizione Filtro Graduato I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6516"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5973"/>
         <source>Gradual overlay II</source>
         <translation>Sovrapposizione Filtro Graduato II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6917"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6374"/>
         <source>Softglow / Orton</source>
         <translation>Chiarore sfumato / Orton</translation>
     </message>
@@ -6521,7 +7368,7 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Curva tono B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7070"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6479"/>
         <source>Output</source>
         <translation>Output</translation>
     </message>
@@ -6530,33 +7377,33 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Curva base</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7126"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6535"/>
         <source>sRGB gamma compensation</source>
         <translation>Compensazione gamma sRGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7169"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6578"/>
         <source>Output Colorspace</source>
         <translation>Spazio colore di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7189"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6598"/>
         <source>Reset profile</source>
         <translation>Resetta profilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7192"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10747"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6601"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10156"/>
         <source>Full</source>
         <translation>Pieno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7212"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6621"/>
         <source>Embedded profile</source>
         <translation>Profilo incorporato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7222"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6631"/>
         <source>Load icc profile</source>
         <translation>Carica profilo ICC</translation>
     </message>
@@ -6569,7 +7416,7 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Contrasto sigmoidale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7313"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6722"/>
         <source>Resize for web</source>
         <translation>Ridimensiona per il web</translation>
     </message>
@@ -6578,22 +7425,22 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Filtro Wiener (Nitidezza)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7429"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6838"/>
         <source>Output Parameters</source>
         <translation>Parametri di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7572"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6981"/>
         <source>Title</source>
         <translation>Titolo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7723"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7132"/>
         <source>Tags</source>
         <translation>Etichette</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7767"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7176"/>
         <source>Tags for the photo (IPTC and XMP)</source>
         <translation>Etichette per la foto (IPTC e XMP)</translation>
     </message>
@@ -6602,64 +7449,64 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Salva il file di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7839"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7248"/>
         <source>About Photivo</source>
         <translation>Info su Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7914"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7323"/>
         <source>Photivo photo processor</source>
         <translation>Photivo Elaboratore Fotografico</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7924"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10563"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7333"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9972"/>
         <source>Rev:</source>
         <translation>Versione:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7934"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7343"/>
         <source>&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7988"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7397"/>
         <source>File info</source>
         <translation>Informazioni File</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8015"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7424"/>
         <source>File name:</source>
         <translation>Nome File:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8022"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7431"/>
         <source>File name of the currently loaded image</source>
         <translation>Nome dell&apos;immagine correntemente caricata</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8053"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7462"/>
         <source>Path:</source>
         <translation>Percorso:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8060"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7469"/>
         <source>Path of the currently loaded image</source>
         <translation>percorso dell&apos;immagine correntemente caricata</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8098"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7507"/>
         <source>Exif info</source>
         <translation>Informazioni Exif</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8144"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7553"/>
         <source>Focal length</source>
         <translation>Lunghezza focale</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1270"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8222"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7631"/>
         <source>Lens</source>
         <translation>Obiettivo</translation>
     </message>
@@ -6755,102 +7602,102 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Luminanza tramite curva di tono</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8253"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7662"/>
         <source>Time of original</source>
         <translation>Data del file originale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8281"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7690"/>
         <source>Flash</source>
         <translation>Flash</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8309"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7718"/>
         <source>Whitebalance</source>
         <translation>Bilanciamento del bianco</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8337"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7746"/>
         <source>dcraw info</source>
         <translation>Informazioni dcraw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8384"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7793"/>
         <source>Size info</source>
         <translation>Informazioni dimensione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8411"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7820"/>
         <source>Input:</source>
         <translation>Input:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8423"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7832"/>
         <source>Size of the image at the beginning</source>
         <translation>Dimensioni originali dell&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8454"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7863"/>
         <source>1:1 pipe:</source>
         <translation>1:1 flusso di lavoro:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8466"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7875"/>
         <source>Size of the image at the end of the full pipe (without webresize)</source>
         <translation>Dimensione dell&apos;immagine alla fine dell&apos;intero flusso di lavoro (senza ridimensionamento web)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8497"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7906"/>
         <source>Current:</source>
         <translation>Attuale:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8509"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7918"/>
         <source>Size of the image at the end of the current pipe (without webresize)</source>
         <translation>Dimensione dell&apos;immagine alla fine del corrente flusso di lavoro (senza ridimensionamento web)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8572"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7981"/>
         <source>TextLabel</source>
         <translation>Etichetta di testo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8652"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8061"/>
         <source>Work Colorspace</source>
         <translation>Spazio Colore di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8689"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8098"/>
         <source>Preview Colorspace</source>
         <translation>Anteprima Spazio Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8713"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8122"/>
         <source>Load an icc profile</source>
         <translation>Carica un profilo icc</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8796"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8205"/>
         <source>UI settings</source>
         <translation>Impostazioni interfaccia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8807"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8216"/>
         <source>Load UI settings from file</source>
         <translation>Carica impostazioni interfaccia da file</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8827"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8236"/>
         <source>Save UI settings to file</source>
         <translation>Salva impostazioni interfaccia in un file</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8860"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8269"/>
         <source>Discard all changes</source>
         <translation>Elimina tutte le modifiche</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8863"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8272"/>
         <source>Discard</source>
         <translation>Elimina</translation>
     </message>
@@ -6859,117 +7706,117 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Comando Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9006"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8415"/>
         <source>Remember settings</source>
         <translation>Ricorda impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9043"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8452"/>
         <source>Startup settings</source>
         <translation>Impostazioni all&apos;avvio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9139"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8548"/>
         <source>Tool pane mode</source>
         <translation>Modalità strumento riquadro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9169"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8578"/>
         <source>Pipe size</source>
         <translation>Formato in lavorazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9244"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8653"/>
         <source>Initial zoom</source>
         <translation>Zoom iniziale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9295"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8704"/>
         <source>Inputs</source>
         <translation>Inputs</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9332"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8741"/>
         <source>ToolBoxes</source>
         <translation>Riquadro strumenti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9369"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8778"/>
         <source>Tab status indicator</source>
         <translation>Scheda indicatore stato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9406"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8815"/>
         <source>Preview</source>
         <translation>Anteprima</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9443"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8852"/>
         <source>Theming</source>
         <translation>Tema</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9517"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8926"/>
         <source>Set new CSS style</source>
         <translation>Imposta nuovo stile CSS</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9520"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8929"/>
         <source>CSS</source>
         <translation>CSS</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9587"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8996"/>
         <source>Button modes</source>
         <translation>Modalità pulsanti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9626"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9035"/>
         <source>Save button:</source>
         <translation>Salva:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9669"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9078"/>
         <source>Reset button:</source>
         <translation>Ripristina:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9707"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9116"/>
         <source>Searchbar</source>
         <translation>Barra di ricerca</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9744"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9153"/>
         <source>Show confirmation dialogs</source>
         <translation>Mostra finestra di conferma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9787"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9196"/>
         <source>Backup settings</source>
         <translation>Backup impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9824"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9233"/>
         <source>Translation</source>
         <translation>Traduzione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9842"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9251"/>
         <source>Switch Photivo&apos;s language</source>
         <translation>Cambia la lingua di Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9903"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9312"/>
         <source>Memory test</source>
         <translation>Test della memoria</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9940"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9349"/>
         <source>File Manager</source>
         <translation>File Manager</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10046"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9455"/>
         <source>Change preview mode</source>
         <translation>Cambia modalità anteprima</translation>
     </message>
@@ -6978,7 +7825,7 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Modalità anteprima</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10104"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9513"/>
         <source>Run pipe</source>
         <translation>Esegui flusso di lavoro</translation>
     </message>
@@ -7008,7 +7855,7 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Esporta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10251"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9660"/>
         <source>Status</source>
         <translation>Stato</translation>
     </message>
@@ -7025,37 +7872,37 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Mostra informazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10515"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9924"/>
         <source>Open image</source>
         <translation>Apri immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10553"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9962"/>
         <source>&lt;p align=&quot;center&quot;&gt;Photivo photo processor&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;Photivo photo processor&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10573"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9982"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10586"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9995"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Forum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Issues&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Forum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Problemi&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10690"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10099"/>
         <source>Zoom in</source>
         <translation>Zoom +</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10701"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10110"/>
         <source>Zoom out</source>
         <translation>Zoom -</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10724"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10133"/>
         <source>Zoom fit</source>
         <translation>Adatta allo spazio di lavoro</translation>
     </message>
@@ -7064,117 +7911,117 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Adatta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10744"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10153"/>
         <source>Zoom Full</source>
         <translation>Dimensione 1:1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10786"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10195"/>
         <source>File manager</source>
         <translation>File manager</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10797"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10206"/>
         <source>Fullscreen</source>
         <translation>Schermo intero</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10856"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10265"/>
         <source>Exit</source>
         <translation>Esci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10864"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10273"/>
         <source>TabMode</source>
         <translation>Modalità schede</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10869"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10278"/>
         <source>Save Output</source>
         <translation>Salva output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10874"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10283"/>
         <source>Write Job</source>
         <translation>Scrivi file di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10882"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10291"/>
         <source>Enabled</source>
         <translation>Abilitato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10893"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10302"/>
         <source>Add power law</source>
         <translation>Aggiungi &quot;Power law&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="543"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="545"/>
         <source>Save current pipe</source>
         <translation>Salva flusso di lavoro corrente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="545"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="547"/>
         <source>Save full size</source>
         <translation>Salva pieno formato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="547"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="549"/>
         <source>Save settings file</source>
         <translation>Salva file impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="549"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="551"/>
         <source>Save job file</source>
         <translation>Salva file di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="553"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="555"/>
         <source>Export current pipe</source>
         <translation>Esporta flusso di lavoro corrente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="555"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="557"/>
         <source>Export full size</source>
         <translation>Esporta a dimensione intera</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="559"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="561"/>
         <source>Neutral reset</source>
         <translation>Resetta a Neutro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="561"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="563"/>
         <source>User reset</source>
         <translation>Resetta a impostazioni utente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="565"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="567"/>
         <source>Open settings</source>
         <translation>Apri impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="569"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="571"/>
         <source>&amp;Show hidden tools</source>
         <translation>&amp;Mostra strumenti nascosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="582"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="584"/>
         <source>Search</source>
         <translation>Cerca</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="663"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="665"/>
         <source>English (Default)</source>
         <translation>Inglese (Default)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="672"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="674"/>
         <source>Restart Photivo to change the language.</source>
         <translation>Riavvia Photivo per cambiare la lingua.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1835"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1831"/>
         <source>No tools visible!</source>
         <translation>Nessuno strumento visibile!</translation>
     </message>
@@ -7189,37 +8036,37 @@ The error occurred in line %1.</source>
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1692"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1688"/>
         <source>No tools hidden!</source>
         <translation>Nessuno strumento nascosto!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1693"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1689"/>
         <source>Hidden tools</source>
         <translation>Strumenti nascosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1711"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1707"/>
         <source>No tools blocked!</source>
         <translation>Nessuno strumento bloccato!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1712"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1708"/>
         <source>Blocked tools</source>
         <translation>Strumenti bloccati</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1788"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1784"/>
         <source>Search results:</source>
         <translation>Risultati di ricerca:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1810"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1806"/>
         <source>No tools active!</source>
         <translation>Nessuno strumento attivo!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1812"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1808"/>
         <source>Active tools:</source>
         <translation>Strumenti attivi:</translation>
     </message>
@@ -7232,48 +8079,48 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Nessuno strumento visibile!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1837"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1833"/>
         <source>All visible tools:</source>
         <translation>Tutti gli strumenti visibili:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1860"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1856"/>
         <source>No favourite tools!</source>
         <translation>Nessuno strumento preferito!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1864"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1860"/>
         <source>Favourite tools:</source>
         <translation>Strumenti preferiti:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2475"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2471"/>
         <source> at </source>
         <translation> a </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2494"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2490"/>
         <source> with ISO </source>
         <translation> con ISO </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2535"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2531"/>
         <source> (35mm equiv.: </source>
         <translation> (35mm equiv.: </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2905"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="2929"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2923"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2947"/>
         <source>Photivo UI file (*.ptu);;All files (*.*)</source>
         <translation>File interfaccia Photivo (*.ptu);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2907"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2925"/>
         <source>Open UI</source>
         <translation>Apri interfaccia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2931"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2949"/>
         <source>Save UI</source>
         <translation>Salva interfaccia</translation>
     </message>
@@ -7328,7 +8175,7 @@ You could try an external profile.</source>
         <translation type="obsolete">da RGB a RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2325"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2081"/>
         <source>Transfer Bitmap</source>
         <translation>Trasferisci Bitmap</translation>
     </message>
@@ -7337,43 +8184,43 @@ You could try an external profile.</source>
         <translation type="obsolete">Rotazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2376"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2132"/>
         <source>Lensfun corrections</source>
         <translation>Correzioni Lensfun</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2526"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2282"/>
         <source>Defish correction</source>
         <translation>Correzione defish</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2585"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2341"/>
         <source>Perspective transform</source>
         <translation>Trasformazione prospettica</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2628"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2384"/>
         <source>Crop outside the image</source>
         <translation>Ritaglio al di fuori dell&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2629"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2385"/>
         <source>Crop rectangle too large.
 No crop, try again.</source>
         <translation>Rettangolo di ritaglio troppo largo. Nessun ritaglio, prova di nuovo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2639"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2395"/>
         <source>Cropping</source>
         <translation>Ritaglio in corso</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2689"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2445"/>
         <source>Resize image</source>
         <translation>Ridimensiona immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2709"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2465"/>
         <source>Flip image</source>
         <translation>Rifletti immagine</translation>
     </message>
@@ -7387,7 +8234,7 @@ No crop, try again.</source>
         <translation type="obsolete">Prossimo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2666"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2422"/>
         <source>Seam carving</source>
         <translation>Ridimensionamento liquido</translation>
     </message>
@@ -7397,310 +8244,286 @@ No crop, try again.</source>
         <translation>Miscelazione canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="450"/>
         <source>Vibrance</source>
-        <translation>Vibranza</translation>
+        <translation type="obsolete">Vibranza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="472"/>
         <source>IntensityRGB</source>
-        <translation>Intensità RGB</translation>
+        <translation type="obsolete">Intensità RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="495"/>
         <source>Brightness</source>
-        <translation>Luminosità</translation>
+        <translation type="obsolete">Luminosità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="533"/>
+        <location filename="../Sources/ptProcessor.cpp" line="469"/>
         <source>Correcting Exposure</source>
         <translation>Correzione esposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="558"/>
         <source>Brighten</source>
-        <translation>Schiarisci</translation>
+        <translation type="obsolete">Schiarisci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="571"/>
         <source>Applying RGB Gamma</source>
-        <translation>Applicazione Gamma RGB</translation>
+        <translation type="obsolete">Applicazione Gamma RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="581"/>
         <source>Normalization</source>
-        <translation>Normalizzazione</translation>
+        <translation type="obsolete">Normalizzazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="596"/>
         <source>Color enhance</source>
-        <translation>Migliora colore</translation>
+        <translation type="obsolete">Migliora colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="609"/>
-        <location filename="../Sources/ptProcessor.cpp" line="624"/>
         <source>Local Exposure</source>
-        <translation>Esposizione locale</translation>
+        <translation type="obsolete">Esposizione locale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="642"/>
+        <location filename="../Sources/ptProcessor.cpp" line="543"/>
         <source>RGB Texture contrast</source>
         <translation>Contrasto Texture RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="659"/>
+        <location filename="../Sources/ptProcessor.cpp" line="560"/>
         <source>Microcontrast 1</source>
         <translation>Microcontrasto 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="674"/>
+        <location filename="../Sources/ptProcessor.cpp" line="575"/>
         <source>Microcontrast 2</source>
         <translation>Microcontrasto 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1652"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1478"/>
         <source>Applying a* b* curves</source>
         <translation>Applicazione curve a* b*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1689"/>
         <source>Luminance adjustment</source>
-        <translation>Regolazione Luminanza</translation>
+        <translation type="obsolete">Regolazione Luminanza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1699"/>
         <source>Saturation adjustment</source>
-        <translation>Regolazione Saturazione</translation>
+        <translation type="obsolete">Regolazione Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1928"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1684"/>
         <source>Applying RGB Contrast</source>
         <translation>Applicazione Contrasto RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="702"/>
         <source>Levels</source>
-        <translation>Livelli</translation>
+        <translation type="obsolete">Livelli</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="439"/>
         <source>Highlights</source>
-        <translation>Alteluci</translation>
+        <translation type="obsolete">Alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="693"/>
         <source>Applying RGB contrast</source>
-        <translation>Applicazione contrasto RGB</translation>
+        <translation type="obsolete">Applicazione contrasto RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="718"/>
         <source>Applying RGB curve</source>
-        <translation>Applicazione curva RGB</translation>
+        <translation type="obsolete">Applicazione curva RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="739"/>
         <source>Lab transform</source>
-        <translation>Trasformazione LAB</translation>
+        <translation type="obsolete">Trasformazione LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="750"/>
         <source>Shadows and Highlights</source>
-        <translation>Ombre e alteluci</translation>
+        <translation type="obsolete">Ombre e alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="761"/>
-        <location filename="../Sources/ptProcessor.cpp" line="782"/>
         <source>LabLocal Exposure</source>
-        <translation>Esposizione locale LAB</translation>
+        <translation type="obsolete">Esposizione locale LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="806"/>
         <source>Dynamic Range Compression</source>
-        <translation>Compressione Estensione Dinamica</translation>
+        <translation type="obsolete">Compressione Estensione Dinamica</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="827"/>
+        <location filename="../Sources/ptProcessor.cpp" line="677"/>
         <source>Texture curve</source>
         <translation>Curva Texture</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="838"/>
+        <location filename="../Sources/ptProcessor.cpp" line="688"/>
         <source>Texture contrast 1</source>
         <translation>Contrasto Texture 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="859"/>
+        <location filename="../Sources/ptProcessor.cpp" line="709"/>
         <source>Texture contrast 2</source>
         <translation>Contrasto Texture 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="884"/>
+        <location filename="../Sources/ptProcessor.cpp" line="734"/>
         <source>LabMicrocontrast 1</source>
         <translation>Microcontrasto Lab 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="907"/>
+        <location filename="../Sources/ptProcessor.cpp" line="757"/>
         <source>LabMicrocontrast 2</source>
         <translation>Microcontrasto Lab 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="934"/>
+        <location filename="../Sources/ptProcessor.cpp" line="784"/>
         <source>Local Contrast 1</source>
         <translation>Contrasto Locale 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="952"/>
+        <location filename="../Sources/ptProcessor.cpp" line="802"/>
         <source>Local Contrast 2</source>
         <translation>Contrasto Locale 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="974"/>
         <source>Applying Lab contrast</source>
-        <translation>Applicazione contrasto Lab</translation>
+        <translation type="obsolete">Applicazione contrasto Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="984"/>
         <source>Applying Lab saturation</source>
-        <translation>Applicazione saturazione Lab</translation>
+        <translation type="obsolete">Applicazione saturazione Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1003"/>
         <source>Applying Color Boost</source>
-        <translation>Applicazione Accentua Colore</translation>
+        <translation type="obsolete">Applicazione Accentua Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1021"/>
         <source>LabLevels</source>
-        <translation>Livelli Lab</translation>
+        <translation type="obsolete">Livelli Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1048"/>
+        <location filename="../Sources/ptProcessor.cpp" line="874"/>
         <source>Impulse denoise</source>
         <translation>Riduzione rumore Impulse</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1069"/>
+        <location filename="../Sources/ptProcessor.cpp" line="895"/>
         <source>Edge avoiding wavelets</source>
         <translation>Wavelets Evita Margini</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1097"/>
-        <location filename="../Sources/ptProcessor.cpp" line="1128"/>
+        <location filename="../Sources/ptProcessor.cpp" line="923"/>
+        <location filename="../Sources/ptProcessor.cpp" line="954"/>
         <source>GreyCStoration on L</source>
         <translation>GreyCStoration su L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1153"/>
+        <location filename="../Sources/ptProcessor.cpp" line="979"/>
         <source>Defringe</source>
         <translation>Elimina margine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1182"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1008"/>
         <source>Wavelet L denoising</source>
         <translation>Riduzione rumore Wavelet L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1208"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1034"/>
         <source>Wavelet A denoising</source>
         <translation>Riduzione rumore Wavelet A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1230"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1056"/>
         <source>Wavelet B denoising</source>
         <translation>Riduzione rumore Wavelet B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1253"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1079"/>
         <source>Luminance denoising</source>
         <translation>Riduzione rumore Luminanza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1277"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1103"/>
         <source>Denoise curve</source>
         <translation>Curva riduzione rumore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1287"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1113"/>
         <source>Pyramid denoising</source>
         <translation>Riduzione rumore Piramide</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1312"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1138"/>
         <source>Color A denoising</source>
         <translation>Riduzione rumore Colore A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1334"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1160"/>
         <source>Color B denoising</source>
         <translation>Riduzione rumore Colore B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1359"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1185"/>
         <source>Detail curve</source>
         <translation>Curva Dettaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1370"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1196"/>
         <source>Gradient Sharpen</source>
         <translation>Nitidezza gradiente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1398"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1224"/>
         <source>Wiener Filter</source>
         <translation>Filtro Wiener</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1409"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1235"/>
         <source>Inverse Diffusion Sharpen</source>
         <translation>Nitidezza Diffusione Inversa</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1434"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1260"/>
         <source>USM sharpening</source>
         <translation>Nitidezza USM</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1464"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1290"/>
         <source>Highpass</source>
         <translation>Accentua Passaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1491"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1317"/>
         <source>Film grain 1</source>
         <translation>Grana pellicola 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1515"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1341"/>
         <source>Film grain 2</source>
         <translation>Grana pellicola 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1549"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1375"/>
         <source>View LAB</source>
         <translation>Visualizza LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1599"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1425"/>
         <source>Applying Outline</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1609"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1435"/>
         <source>Applying L by Hue curve</source>
         <translation>Applicazione L mediante curva di Tonalità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1620"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1446"/>
         <source>Applying saturation curve</source>
         <translation>Applicazione curva di saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1630"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1456"/>
         <source>Applying hue curve</source>
         <translation>Applicazione curva di tono</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1641"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1467"/>
         <source>Applying L curve</source>
         <translation>Applicazione curva L</translation>
     </message>
@@ -7713,71 +8536,64 @@ No crop, try again.</source>
         <translation type="obsolete">Applicazione curva b</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1663"/>
         <source>Colorcontrast</source>
-        <translation>Contrasto colore</translation>
+        <translation type="obsolete">Contrasto colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1673"/>
         <source>LAB tone adjustments 1</source>
-        <translation>Regolazione tono LAB 1</translation>
+        <translation type="obsolete">Regolazione tono LAB 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1679"/>
         <source>LAB tone adjustments 2</source>
-        <translation>Regolazione tono LAB 2</translation>
+        <translation type="obsolete">Regolazione tono LAB 2</translation>
     </message>
     <message>
         <source>Luminance and saturation adjustment</source>
         <translation type="obsolete">Regolazione Luminanza e Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1719"/>
         <source>LAB toning</source>
-        <translation>Tonalità LAB</translation>
+        <translation type="obsolete">Tonalità LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1738"/>
         <source>LAB shadows toning</source>
-        <translation>Tonalità ombre LAB</translation>
+        <translation type="obsolete">Tonalità ombre LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1758"/>
         <source>LAB midtones toning</source>
-        <translation>Tonalità mezzitoni LAB</translation>
+        <translation type="obsolete">Tonalità mezzitoni LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1778"/>
         <source>LAB highlights toning</source>
-        <translation>Tonalità alteluci LAB</translation>
+        <translation type="obsolete">Tonalità alteluci LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1800"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1553"/>
         <source>Lab Vignette</source>
         <translation>Vignettatura LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1826"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1582"/>
         <source>Lab to RGB</source>
         <translation>Da Lab a RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1837"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1593"/>
         <source>Black and White</source>
         <translation>Bianco e Nero</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1853"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1609"/>
         <source>Simple Toning</source>
         <translation>Tonalità singola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1866"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1622"/>
         <source>Toning 1</source>
         <translation>Tonalità 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1889"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1645"/>
         <source>Toning 2</source>
         <translation>Tonalità 2</translation>
     </message>
@@ -7786,77 +8602,77 @@ No crop, try again.</source>
         <translation type="obsolete">Tonalità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1915"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1671"/>
         <source>Crossprocessing</source>
         <translation>Crossprocessing</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1938"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1694"/>
         <source>Texture Overlay</source>
         <translation>Sovrapposizione Texture</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2019"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1775"/>
         <source>Texture Overlay 2</source>
         <translation>Sovrapposizione Texture 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2100"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1856"/>
         <source>Gradual Overlay 1</source>
         <translation>Filtro Graduato 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2123"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1879"/>
         <source>Gradual Overlay 2</source>
         <translation>Filtro Graduato 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2150"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1906"/>
         <source>Vignette</source>
         <translation>Vignettatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2167"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1923"/>
         <source>Gradual Blur 1</source>
         <translation>Sfocatura graduale 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2186"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1942"/>
         <source>Gradual Blur 2</source>
         <translation>Sfocatura graduale 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2208"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1964"/>
         <source>Softglow</source>
         <translation>Chiarore sfumato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2225"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1981"/>
         <source>Vibrance 2</source>
         <translation>Vibranza 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2247"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2003"/>
         <source>Intensity RGB 2</source>
         <translation>Intensità RGB 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2271"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2027"/>
         <source>Applying R curve</source>
         <translation>Applicazione curva R</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2278"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2034"/>
         <source>Applying G curve</source>
         <translation>Applicazione curva G</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2285"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2041"/>
         <source>Applying B curve</source>
         <translation>Applicazione curva B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2307"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2063"/>
         <source>Ready</source>
         <translation>Pronto</translation>
     </message>
@@ -8025,13 +8841,13 @@ No crop, try again.</source>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="78"/>
-        <location filename="../Sources/ptSettings.cpp" line="276"/>
+        <location filename="../Sources/ptSettings.cpp" line="237"/>
         <source>Automatic badpixel reduction</source>
         <translation>Riduzione automatica pixel difettosi</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="79"/>
-        <location filename="../Sources/ptSettings.cpp" line="271"/>
+        <location filename="../Sources/ptSettings.cpp" line="232"/>
         <source>Passes</source>
         <translation>Passaggi</translation>
     </message>
@@ -8090,9 +8906,9 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="86"/>
         <location filename="../Sources/ptSettings.cpp" line="107"/>
-        <location filename="../Sources/ptSettings.cpp" line="159"/>
-        <location filename="../Sources/ptSettings.cpp" line="190"/>
-        <location filename="../Sources/ptSettings.cpp" line="196"/>
+        <location filename="../Sources/ptSettings.cpp" line="135"/>
+        <location filename="../Sources/ptSettings.cpp" line="155"/>
+        <location filename="../Sources/ptSettings.cpp" line="161"/>
         <source>Scale</source>
         <translation>Scala</translation>
     </message>
@@ -8284,155 +9100,129 @@ Usata per la correzione della geometria.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="121"/>
-        <location filename="../Sources/ptSettings.cpp" line="396"/>
+        <location filename="../Sources/ptSettings.cpp" line="341"/>
         <source>Image size</source>
         <translation>Dimensione immagine</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="121"/>
-        <location filename="../Sources/ptSettings.cpp" line="396"/>
+        <location filename="../Sources/ptSettings.cpp" line="341"/>
         <source>pixels</source>
         <translation>pixel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="122"/>
-        <location filename="../Sources/ptSettings.cpp" line="124"/>
         <source>Blackpoint</source>
-        <translation>Punto di Nero</translation>
+        <translation type="obsolete">Punto di Nero</translation>
+    </message>
+    <message>
+        <source>Levels Blackpoint</source>
+        <translation type="obsolete">Livelli Punto di Nero</translation>
+    </message>
+    <message>
+        <source>Whitepoint</source>
+        <translation type="obsolete">Punto di Bianco</translation>
+    </message>
+    <message>
+        <source>Levels Whitepoint</source>
+        <translation type="obsolete">Livelli Punto di Bianco</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="122"/>
-        <location filename="../Sources/ptSettings.cpp" line="124"/>
-        <source>Levels Blackpoint</source>
-        <translation>Livelli Punto di Nero</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="123"/>
-        <location filename="../Sources/ptSettings.cpp" line="125"/>
-        <source>Whitepoint</source>
-        <translation>Punto di Bianco</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="123"/>
-        <location filename="../Sources/ptSettings.cpp" line="125"/>
-        <source>Levels Whitepoint</source>
-        <translation>Livelli Punto di Bianco</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="126"/>
         <source>Contribution of red to red</source>
         <translation>Contribuzione del rosso al rosso</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="127"/>
+        <location filename="../Sources/ptSettings.cpp" line="123"/>
         <source>Contribution of green to red</source>
         <translation>Contribuzione del verde al rosso</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="128"/>
+        <location filename="../Sources/ptSettings.cpp" line="124"/>
         <source>Contribution of blue to red</source>
         <translation>Contribuzione del blu al rosso</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="129"/>
+        <location filename="../Sources/ptSettings.cpp" line="125"/>
         <source>Contribution of red to green</source>
         <translation>Contribuzione del rosso al verde</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="130"/>
+        <location filename="../Sources/ptSettings.cpp" line="126"/>
         <source>Contribution of green to green</source>
         <translation>Contribuzione del verde al verde</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="131"/>
+        <location filename="../Sources/ptSettings.cpp" line="127"/>
         <source>Contribution of blue to green</source>
         <translation>Contribuzionde del blu al verde</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="132"/>
+        <location filename="../Sources/ptSettings.cpp" line="128"/>
         <source>Contribution of red to blue</source>
         <translation>Contribuzione del rosso al blu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="133"/>
+        <location filename="../Sources/ptSettings.cpp" line="129"/>
         <source>Contribution of green to blue</source>
         <translation>Contribuzione del verde al blu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="134"/>
+        <location filename="../Sources/ptSettings.cpp" line="130"/>
         <source>Contribution of blue to blue</source>
         <translation>Contribuzione del blu al blu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="135"/>
-        <location filename="../Sources/ptSettings.cpp" line="390"/>
         <source>Vibrance</source>
-        <translation>Vibranza</translation>
+        <translation type="obsolete">Vibranza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="136"/>
-        <location filename="../Sources/ptSettings.cpp" line="316"/>
-        <location filename="../Sources/ptSettings.cpp" line="319"/>
-        <location filename="../Sources/ptSettings.cpp" line="391"/>
-        <location filename="../Sources/ptSettings.cpp" line="530"/>
+        <location filename="../Sources/ptSettings.cpp" line="265"/>
+        <location filename="../Sources/ptSettings.cpp" line="268"/>
+        <location filename="../Sources/ptSettings.cpp" line="469"/>
         <source>Red</source>
         <translation>Rosso</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="136"/>
-        <location filename="../Sources/ptSettings.cpp" line="391"/>
         <source>Intensity red</source>
-        <translation>Intensità del rosso</translation>
+        <translation type="obsolete">Intensità del rosso</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="137"/>
-        <location filename="../Sources/ptSettings.cpp" line="317"/>
-        <location filename="../Sources/ptSettings.cpp" line="320"/>
-        <location filename="../Sources/ptSettings.cpp" line="392"/>
-        <location filename="../Sources/ptSettings.cpp" line="532"/>
+        <location filename="../Sources/ptSettings.cpp" line="266"/>
+        <location filename="../Sources/ptSettings.cpp" line="269"/>
+        <location filename="../Sources/ptSettings.cpp" line="471"/>
         <source>Green</source>
         <translation>Verde</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="137"/>
-        <location filename="../Sources/ptSettings.cpp" line="392"/>
         <source>Intensity green</source>
-        <translation>Intensità del verde</translation>
+        <translation type="obsolete">Intensità del verde</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="138"/>
-        <location filename="../Sources/ptSettings.cpp" line="318"/>
-        <location filename="../Sources/ptSettings.cpp" line="321"/>
-        <location filename="../Sources/ptSettings.cpp" line="393"/>
-        <location filename="../Sources/ptSettings.cpp" line="534"/>
+        <location filename="../Sources/ptSettings.cpp" line="267"/>
+        <location filename="../Sources/ptSettings.cpp" line="270"/>
+        <location filename="../Sources/ptSettings.cpp" line="473"/>
         <source>Blue</source>
         <translation>Blu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="138"/>
-        <location filename="../Sources/ptSettings.cpp" line="393"/>
         <source>Intensity blue</source>
-        <translation>Intensità del blu</translation>
+        <translation type="obsolete">Intensità del blu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="139"/>
         <source>Enhance shadows</source>
-        <translation>Migliora le ombre</translation>
+        <translation type="obsolete">Migliora le ombre</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="139"/>
         <source>Enhance shadows only</source>
-        <translation>Migliora solo le ombre</translation>
+        <translation type="obsolete">Migliora solo le ombre</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="140"/>
         <source>Enhance highlights</source>
-        <translation>Migliora le alteluci</translation>
+        <translation type="obsolete">Migliora le alteluci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="140"/>
         <source>Enhance highlights only</source>
-        <translation>Migliora solo le alteluci</translation>
+        <translation type="obsolete">Migliora solo le alteluci</translation>
     </message>
     <message>
         <source>Highlights R</source>
@@ -8459,257 +9249,219 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Aggiusta la luminosità delle alteluci in B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="141"/>
+        <location filename="../Sources/ptSettings.cpp" line="131"/>
         <source>% white</source>
         <translation>% bianco</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="141"/>
+        <location filename="../Sources/ptSettings.cpp" line="131"/>
         <source>Percentage of white aimed at</source>
         <translation>Percentuale di bianco volto a</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="142"/>
+        <location filename="../Sources/ptSettings.cpp" line="132"/>
         <source>WhiteLevel</source>
         <translation>Livello Bianco</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="143"/>
+        <location filename="../Sources/ptSettings.cpp" line="133"/>
         <source>EV</source>
         <translation>EV</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="143"/>
+        <location filename="../Sources/ptSettings.cpp" line="133"/>
         <source>Exposure in EV</source>
         <translation>Esposizione in EV</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="144"/>
         <source>Gain</source>
-        <translation>Guadagno</translation>
+        <translation type="obsolete">Guadagno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="144"/>
         <source>Exposure gain</source>
-        <translation>Guadagno Esposizione</translation>
+        <translation type="obsolete">Guadagno Esposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="145"/>
         <source>Brightness</source>
-        <translation>Luminosità</translation>
+        <translation type="obsolete">Luminosità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="146"/>
         <source>Chrominance</source>
-        <translation>Crominanza</translation>
+        <translation type="obsolete">Crominanza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="146"/>
         <source>Chrominance adaption</source>
-        <translation>Adattamento Crominanza</translation>
+        <translation type="obsolete">Adattamento Crominanza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="147"/>
         <source>Light</source>
-        <translation>Luce</translation>
+        <translation type="obsolete">Luce</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="147"/>
         <source>Light adaption</source>
-        <translation>Adattamento Luce</translation>
+        <translation type="obsolete">Adattamento Luce</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="148"/>
         <source>Catch white</source>
-        <translation>Cattura bianco</translation>
+        <translation type="obsolete">Cattura bianco</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="148"/>
         <source>Darken just the brightest parts</source>
-        <translation>Scurisci solo le parti più luminose</translation>
+        <translation type="obsolete">Scurisci solo le parti più luminose</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="149"/>
         <source>Catch black</source>
-        <translation>Cattura nero</translation>
+        <translation type="obsolete">Cattura nero</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="149"/>
         <source>Brighten just the darkest parts</source>
-        <translation>Schiarisci solo le parti più scure</translation>
+        <translation type="obsolete">Schiarisci solo le parti più scure</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="150"/>
+        <location filename="../Sources/ptSettings.cpp" line="134"/>
+        <location filename="../Sources/ptSettings.cpp" line="141"/>
+        <location filename="../Sources/ptSettings.cpp" line="148"/>
         <location filename="../Sources/ptSettings.cpp" line="154"/>
-        <location filename="../Sources/ptSettings.cpp" line="158"/>
-        <location filename="../Sources/ptSettings.cpp" line="165"/>
-        <location filename="../Sources/ptSettings.cpp" line="172"/>
-        <location filename="../Sources/ptSettings.cpp" line="178"/>
-        <location filename="../Sources/ptSettings.cpp" line="181"/>
-        <location filename="../Sources/ptSettings.cpp" line="185"/>
-        <location filename="../Sources/ptSettings.cpp" line="189"/>
-        <location filename="../Sources/ptSettings.cpp" line="195"/>
-        <location filename="../Sources/ptSettings.cpp" line="202"/>
-        <location filename="../Sources/ptSettings.cpp" line="209"/>
-        <location filename="../Sources/ptSettings.cpp" line="224"/>
-        <location filename="../Sources/ptSettings.cpp" line="280"/>
-        <location filename="../Sources/ptSettings.cpp" line="283"/>
-        <location filename="../Sources/ptSettings.cpp" line="296"/>
+        <location filename="../Sources/ptSettings.cpp" line="160"/>
+        <location filename="../Sources/ptSettings.cpp" line="167"/>
+        <location filename="../Sources/ptSettings.cpp" line="174"/>
+        <location filename="../Sources/ptSettings.cpp" line="241"/>
+        <location filename="../Sources/ptSettings.cpp" line="244"/>
+        <location filename="../Sources/ptSettings.cpp" line="257"/>
+        <location filename="../Sources/ptSettings.cpp" line="271"/>
+        <location filename="../Sources/ptSettings.cpp" line="275"/>
         <location filename="../Sources/ptSettings.cpp" line="299"/>
-        <location filename="../Sources/ptSettings.cpp" line="302"/>
-        <location filename="../Sources/ptSettings.cpp" line="305"/>
-        <location filename="../Sources/ptSettings.cpp" line="308"/>
-        <location filename="../Sources/ptSettings.cpp" line="322"/>
-        <location filename="../Sources/ptSettings.cpp" line="326"/>
-        <location filename="../Sources/ptSettings.cpp" line="350"/>
-        <location filename="../Sources/ptSettings.cpp" line="355"/>
-        <location filename="../Sources/ptSettings.cpp" line="361"/>
-        <location filename="../Sources/ptSettings.cpp" line="387"/>
+        <location filename="../Sources/ptSettings.cpp" line="304"/>
+        <location filename="../Sources/ptSettings.cpp" line="310"/>
+        <location filename="../Sources/ptSettings.cpp" line="336"/>
         <source>Amount</source>
         <translation>Quantità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="150"/>
-        <location filename="../Sources/ptSettings.cpp" line="154"/>
-        <location filename="../Sources/ptSettings.cpp" line="181"/>
-        <location filename="../Sources/ptSettings.cpp" line="185"/>
         <source>Amount of recovery</source>
-        <translation>Quantità del recupero</translation>
+        <translation type="obsolete">Quantità del recupero</translation>
     </message>
     <message>
+        <location filename="../Sources/ptSettings.cpp" line="144"/>
         <location filename="../Sources/ptSettings.cpp" line="151"/>
-        <location filename="../Sources/ptSettings.cpp" line="155"/>
-        <location filename="../Sources/ptSettings.cpp" line="168"/>
-        <location filename="../Sources/ptSettings.cpp" line="175"/>
-        <location filename="../Sources/ptSettings.cpp" line="182"/>
-        <location filename="../Sources/ptSettings.cpp" line="186"/>
-        <location filename="../Sources/ptSettings.cpp" line="205"/>
-        <location filename="../Sources/ptSettings.cpp" line="212"/>
-        <location filename="../Sources/ptSettings.cpp" line="288"/>
-        <location filename="../Sources/ptSettings.cpp" line="293"/>
-        <location filename="../Sources/ptSettings.cpp" line="323"/>
-        <location filename="../Sources/ptSettings.cpp" line="327"/>
+        <location filename="../Sources/ptSettings.cpp" line="170"/>
+        <location filename="../Sources/ptSettings.cpp" line="177"/>
+        <location filename="../Sources/ptSettings.cpp" line="249"/>
+        <location filename="../Sources/ptSettings.cpp" line="254"/>
+        <location filename="../Sources/ptSettings.cpp" line="272"/>
+        <location filename="../Sources/ptSettings.cpp" line="276"/>
         <source>Lower Limit</source>
         <translation>Limite inferiore</translation>
     </message>
     <message>
+        <location filename="../Sources/ptSettings.cpp" line="145"/>
         <location filename="../Sources/ptSettings.cpp" line="152"/>
-        <location filename="../Sources/ptSettings.cpp" line="156"/>
-        <location filename="../Sources/ptSettings.cpp" line="169"/>
-        <location filename="../Sources/ptSettings.cpp" line="176"/>
-        <location filename="../Sources/ptSettings.cpp" line="183"/>
-        <location filename="../Sources/ptSettings.cpp" line="187"/>
-        <location filename="../Sources/ptSettings.cpp" line="206"/>
-        <location filename="../Sources/ptSettings.cpp" line="213"/>
-        <location filename="../Sources/ptSettings.cpp" line="289"/>
-        <location filename="../Sources/ptSettings.cpp" line="294"/>
-        <location filename="../Sources/ptSettings.cpp" line="324"/>
-        <location filename="../Sources/ptSettings.cpp" line="328"/>
+        <location filename="../Sources/ptSettings.cpp" line="171"/>
+        <location filename="../Sources/ptSettings.cpp" line="178"/>
+        <location filename="../Sources/ptSettings.cpp" line="250"/>
+        <location filename="../Sources/ptSettings.cpp" line="255"/>
+        <location filename="../Sources/ptSettings.cpp" line="273"/>
+        <location filename="../Sources/ptSettings.cpp" line="277"/>
         <source>Upper Limit</source>
         <translation>Limite superiore</translation>
     </message>
     <message>
+        <location filename="../Sources/ptSettings.cpp" line="146"/>
         <location filename="../Sources/ptSettings.cpp" line="153"/>
-        <location filename="../Sources/ptSettings.cpp" line="157"/>
-        <location filename="../Sources/ptSettings.cpp" line="170"/>
-        <location filename="../Sources/ptSettings.cpp" line="177"/>
-        <location filename="../Sources/ptSettings.cpp" line="184"/>
-        <location filename="../Sources/ptSettings.cpp" line="188"/>
-        <location filename="../Sources/ptSettings.cpp" line="207"/>
-        <location filename="../Sources/ptSettings.cpp" line="214"/>
-        <location filename="../Sources/ptSettings.cpp" line="314"/>
-        <location filename="../Sources/ptSettings.cpp" line="325"/>
+        <location filename="../Sources/ptSettings.cpp" line="172"/>
+        <location filename="../Sources/ptSettings.cpp" line="179"/>
+        <location filename="../Sources/ptSettings.cpp" line="263"/>
+        <location filename="../Sources/ptSettings.cpp" line="274"/>
+        <location filename="../Sources/ptSettings.cpp" line="278"/>
+        <location filename="../Sources/ptSettings.cpp" line="289"/>
+        <location filename="../Sources/ptSettings.cpp" line="298"/>
+        <location filename="../Sources/ptSettings.cpp" line="303"/>
+        <location filename="../Sources/ptSettings.cpp" line="308"/>
+        <location filename="../Sources/ptSettings.cpp" line="316"/>
+        <location filename="../Sources/ptSettings.cpp" line="320"/>
         <location filename="../Sources/ptSettings.cpp" line="329"/>
-        <location filename="../Sources/ptSettings.cpp" line="340"/>
-        <location filename="../Sources/ptSettings.cpp" line="349"/>
-        <location filename="../Sources/ptSettings.cpp" line="354"/>
-        <location filename="../Sources/ptSettings.cpp" line="359"/>
-        <location filename="../Sources/ptSettings.cpp" line="367"/>
-        <location filename="../Sources/ptSettings.cpp" line="371"/>
-        <location filename="../Sources/ptSettings.cpp" line="380"/>
         <source>Softness</source>
         <translation>Morbidezza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="160"/>
-        <location filename="../Sources/ptSettings.cpp" line="191"/>
-        <location filename="../Sources/ptSettings.cpp" line="197"/>
-        <location filename="../Sources/ptSettings.cpp" line="247"/>
-        <location filename="../Sources/ptSettings.cpp" line="281"/>
+        <location filename="../Sources/ptSettings.cpp" line="136"/>
+        <location filename="../Sources/ptSettings.cpp" line="156"/>
+        <location filename="../Sources/ptSettings.cpp" line="162"/>
+        <location filename="../Sources/ptSettings.cpp" line="208"/>
+        <location filename="../Sources/ptSettings.cpp" line="242"/>
         <source>Threshold</source>
         <translation>Soglia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="161"/>
-        <location filename="../Sources/ptSettings.cpp" line="166"/>
-        <location filename="../Sources/ptSettings.cpp" line="173"/>
-        <location filename="../Sources/ptSettings.cpp" line="192"/>
-        <location filename="../Sources/ptSettings.cpp" line="198"/>
-        <location filename="../Sources/ptSettings.cpp" line="203"/>
-        <location filename="../Sources/ptSettings.cpp" line="210"/>
-        <location filename="../Sources/ptSettings.cpp" line="217"/>
-        <location filename="../Sources/ptSettings.cpp" line="221"/>
-        <location filename="../Sources/ptSettings.cpp" line="223"/>
-        <location filename="../Sources/ptSettings.cpp" line="236"/>
+        <location filename="../Sources/ptSettings.cpp" line="137"/>
+        <location filename="../Sources/ptSettings.cpp" line="142"/>
+        <location filename="../Sources/ptSettings.cpp" line="149"/>
+        <location filename="../Sources/ptSettings.cpp" line="157"/>
+        <location filename="../Sources/ptSettings.cpp" line="163"/>
+        <location filename="../Sources/ptSettings.cpp" line="168"/>
+        <location filename="../Sources/ptSettings.cpp" line="175"/>
+        <location filename="../Sources/ptSettings.cpp" line="182"/>
+        <location filename="../Sources/ptSettings.cpp" line="186"/>
+        <location filename="../Sources/ptSettings.cpp" line="197"/>
+        <location filename="../Sources/ptSettings.cpp" line="214"/>
+        <location filename="../Sources/ptSettings.cpp" line="248"/>
         <location filename="../Sources/ptSettings.cpp" line="253"/>
-        <location filename="../Sources/ptSettings.cpp" line="287"/>
-        <location filename="../Sources/ptSettings.cpp" line="292"/>
-        <location filename="../Sources/ptSettings.cpp" line="315"/>
-        <location filename="../Sources/ptSettings.cpp" line="332"/>
-        <location filename="../Sources/ptSettings.cpp" line="341"/>
+        <location filename="../Sources/ptSettings.cpp" line="264"/>
+        <location filename="../Sources/ptSettings.cpp" line="281"/>
+        <location filename="../Sources/ptSettings.cpp" line="290"/>
         <source>Opacity</source>
         <translation>Opacità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="162"/>
-        <location filename="../Sources/ptSettings.cpp" line="193"/>
-        <location filename="../Sources/ptSettings.cpp" line="199"/>
-        <location filename="../Sources/ptSettings.cpp" line="284"/>
+        <location filename="../Sources/ptSettings.cpp" line="138"/>
+        <location filename="../Sources/ptSettings.cpp" line="158"/>
+        <location filename="../Sources/ptSettings.cpp" line="164"/>
+        <location filename="../Sources/ptSettings.cpp" line="245"/>
         <source>Denoise</source>
         <translation>Riduzione rumore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="162"/>
-        <location filename="../Sources/ptSettings.cpp" line="163"/>
-        <location filename="../Sources/ptSettings.cpp" line="193"/>
-        <location filename="../Sources/ptSettings.cpp" line="194"/>
-        <location filename="../Sources/ptSettings.cpp" line="199"/>
-        <location filename="../Sources/ptSettings.cpp" line="200"/>
+        <location filename="../Sources/ptSettings.cpp" line="138"/>
+        <location filename="../Sources/ptSettings.cpp" line="139"/>
+        <location filename="../Sources/ptSettings.cpp" line="158"/>
+        <location filename="../Sources/ptSettings.cpp" line="159"/>
+        <location filename="../Sources/ptSettings.cpp" line="164"/>
+        <location filename="../Sources/ptSettings.cpp" line="165"/>
         <source>Don&apos;t amplify noise</source>
         <translation>Non amplificare il rumore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="163"/>
-        <location filename="../Sources/ptSettings.cpp" line="194"/>
-        <location filename="../Sources/ptSettings.cpp" line="200"/>
-        <location filename="../Sources/ptSettings.cpp" line="218"/>
-        <location filename="../Sources/ptSettings.cpp" line="222"/>
+        <location filename="../Sources/ptSettings.cpp" line="139"/>
+        <location filename="../Sources/ptSettings.cpp" line="159"/>
+        <location filename="../Sources/ptSettings.cpp" line="165"/>
+        <location filename="../Sources/ptSettings.cpp" line="183"/>
+        <location filename="../Sources/ptSettings.cpp" line="187"/>
         <source>Masking</source>
         <translation>Mascheratura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="164"/>
-        <location filename="../Sources/ptSettings.cpp" line="171"/>
-        <location filename="../Sources/ptSettings.cpp" line="201"/>
-        <location filename="../Sources/ptSettings.cpp" line="208"/>
-        <location filename="../Sources/ptSettings.cpp" line="215"/>
-        <location filename="../Sources/ptSettings.cpp" line="219"/>
-        <location filename="../Sources/ptSettings.cpp" line="246"/>
-        <location filename="../Sources/ptSettings.cpp" line="279"/>
-        <location filename="../Sources/ptSettings.cpp" line="282"/>
-        <location filename="../Sources/ptSettings.cpp" line="286"/>
-        <location filename="../Sources/ptSettings.cpp" line="291"/>
-        <location filename="../Sources/ptSettings.cpp" line="368"/>
-        <location filename="../Sources/ptSettings.cpp" line="377"/>
-        <location filename="../Sources/ptSettings.cpp" line="386"/>
+        <location filename="../Sources/ptSettings.cpp" line="140"/>
+        <location filename="../Sources/ptSettings.cpp" line="147"/>
+        <location filename="../Sources/ptSettings.cpp" line="166"/>
+        <location filename="../Sources/ptSettings.cpp" line="173"/>
+        <location filename="../Sources/ptSettings.cpp" line="180"/>
+        <location filename="../Sources/ptSettings.cpp" line="184"/>
+        <location filename="../Sources/ptSettings.cpp" line="207"/>
+        <location filename="../Sources/ptSettings.cpp" line="240"/>
+        <location filename="../Sources/ptSettings.cpp" line="243"/>
+        <location filename="../Sources/ptSettings.cpp" line="247"/>
+        <location filename="../Sources/ptSettings.cpp" line="252"/>
+        <location filename="../Sources/ptSettings.cpp" line="317"/>
+        <location filename="../Sources/ptSettings.cpp" line="326"/>
+        <location filename="../Sources/ptSettings.cpp" line="335"/>
         <source>Radius</source>
         <translation>Raggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="167"/>
-        <location filename="../Sources/ptSettings.cpp" line="174"/>
-        <location filename="../Sources/ptSettings.cpp" line="204"/>
-        <location filename="../Sources/ptSettings.cpp" line="211"/>
+        <location filename="../Sources/ptSettings.cpp" line="143"/>
+        <location filename="../Sources/ptSettings.cpp" line="150"/>
+        <location filename="../Sources/ptSettings.cpp" line="169"/>
+        <location filename="../Sources/ptSettings.cpp" line="176"/>
         <source>Halo Control</source>
         <translation>Controllo alone</translation>
     </message>
@@ -8722,49 +9474,44 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Dettaglio grezzo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="178"/>
         <source>Amount of compression</source>
-        <translation>Quantità della compressione</translation>
+        <translation type="obsolete">Quantità della compressione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="179"/>
         <source>Bias</source>
-        <translation>Disturbo</translation>
+        <translation type="obsolete">Disturbo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="179"/>
         <source>Bias of compression</source>
-        <translation>Disturbo di compressione</translation>
+        <translation type="obsolete">Disturbo di compressione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="180"/>
         <source>Color Adaption</source>
-        <translation>Adattamento Colore</translation>
+        <translation type="obsolete">Adattamento Colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="180"/>
         <source>Color adaption</source>
-        <translation>Adattamento colore</translation>
+        <translation type="obsolete">Adattamento colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="216"/>
-        <location filename="../Sources/ptSettings.cpp" line="220"/>
+        <location filename="../Sources/ptSettings.cpp" line="181"/>
+        <location filename="../Sources/ptSettings.cpp" line="185"/>
         <source>Feather</source>
         <translation>Feather</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="251"/>
-        <location filename="../Sources/ptSettings.cpp" line="394"/>
+        <location filename="../Sources/ptSettings.cpp" line="212"/>
+        <location filename="../Sources/ptSettings.cpp" line="339"/>
         <source>Gamma</source>
         <translation>Gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="395"/>
+        <location filename="../Sources/ptSettings.cpp" line="340"/>
         <source>Linearity</source>
         <translation>Linearità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="389"/>
+        <location filename="../Sources/ptSettings.cpp" line="338"/>
         <source>Contrast</source>
         <translation>Contrasto</translation>
     </message>
@@ -8777,386 +9524,381 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Soglia per Contrasto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="224"/>
         <source>Amount of saturation</source>
-        <translation>Quantità di Saturazione</translation>
+        <translation type="obsolete">Quantità di Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="225"/>
         <source>Value A</source>
-        <translation>Valore A</translation>
+        <translation type="obsolete">Valore A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="225"/>
         <source>Amount of boosting A</source>
-        <translation>Quantità di potenziamento A</translation>
+        <translation type="obsolete">Quantità di potenziamento A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="226"/>
         <source>Value B</source>
-        <translation>Valore B</translation>
+        <translation type="obsolete">Valore B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="226"/>
         <source>Amount of boosting B</source>
-        <translation>Quantità di potenziamento B</translation>
+        <translation type="obsolete">Quantità di potenziamento B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="227"/>
+        <location filename="../Sources/ptSettings.cpp" line="188"/>
         <source>Master</source>
         <translation>Master</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="227"/>
+        <location filename="../Sources/ptSettings.cpp" line="188"/>
         <source>Quick setup for the levels</source>
         <translation>Configurazione rapida per i livelli</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="228"/>
+        <location filename="../Sources/ptSettings.cpp" line="189"/>
         <source>Threshold on L</source>
         <translation>Soglia su L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="229"/>
+        <location filename="../Sources/ptSettings.cpp" line="190"/>
         <source>Threshold on color</source>
         <translation>Soglia sul colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="230"/>
+        <location filename="../Sources/ptSettings.cpp" line="191"/>
         <source>Level 1</source>
         <translation>Livello 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="230"/>
+        <location filename="../Sources/ptSettings.cpp" line="191"/>
         <source>Boosting of level 1</source>
         <translation>Potenziamento livello 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="231"/>
+        <location filename="../Sources/ptSettings.cpp" line="192"/>
         <source>Level 2</source>
         <translation>Livello 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="231"/>
+        <location filename="../Sources/ptSettings.cpp" line="192"/>
         <source>Boosting of level 2</source>
         <translation>Potenziamento livello 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="232"/>
+        <location filename="../Sources/ptSettings.cpp" line="193"/>
         <source>Level 3</source>
         <translation>Livello 3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="232"/>
+        <location filename="../Sources/ptSettings.cpp" line="193"/>
         <source>Boosting of level 3</source>
         <translation>Potenziamento livello 3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="194"/>
         <source>Level 4</source>
         <translation>Livello 4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="194"/>
         <source>Boosting of level 4</source>
         <translation>Potenziamento livello 4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="234"/>
+        <location filename="../Sources/ptSettings.cpp" line="195"/>
         <source>Level 5</source>
         <translation>Livello 5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="234"/>
+        <location filename="../Sources/ptSettings.cpp" line="195"/>
         <source>Boosting of level 5</source>
         <translation>Potenziamento livello 5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="235"/>
+        <location filename="../Sources/ptSettings.cpp" line="196"/>
         <source>Level 6</source>
         <translation>Livello 6</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="235"/>
+        <location filename="../Sources/ptSettings.cpp" line="196"/>
         <source>Boosting of level 6</source>
         <translation>Potenziamento livello 6</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="237"/>
-        <location filename="../Sources/ptSettings.cpp" line="278"/>
+        <location filename="../Sources/ptSettings.cpp" line="198"/>
+        <location filename="../Sources/ptSettings.cpp" line="239"/>
         <source>Amplitude</source>
         <translation>Ampiezza</translation>
     </message>
     <message>
+        <location filename="../Sources/ptSettings.cpp" line="199"/>
         <location filename="../Sources/ptSettings.cpp" line="238"/>
-        <location filename="../Sources/ptSettings.cpp" line="277"/>
         <source>Iterations</source>
         <translation>Iterazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="239"/>
-        <location filename="../Sources/ptSettings.cpp" line="263"/>
+        <location filename="../Sources/ptSettings.cpp" line="200"/>
+        <location filename="../Sources/ptSettings.cpp" line="224"/>
         <source>Sharpness</source>
         <translation>Nitidezza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="240"/>
-        <location filename="../Sources/ptSettings.cpp" line="264"/>
+        <location filename="../Sources/ptSettings.cpp" line="201"/>
+        <location filename="../Sources/ptSettings.cpp" line="225"/>
         <source>Anisotropy</source>
         <translation>Anisotropia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="241"/>
-        <location filename="../Sources/ptSettings.cpp" line="265"/>
+        <location filename="../Sources/ptSettings.cpp" line="202"/>
+        <location filename="../Sources/ptSettings.cpp" line="226"/>
         <source>Gradient smoothness</source>
         <translation>Sfumatura Gradiente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="241"/>
-        <location filename="../Sources/ptSettings.cpp" line="265"/>
+        <location filename="../Sources/ptSettings.cpp" line="202"/>
+        <location filename="../Sources/ptSettings.cpp" line="226"/>
         <source>Alpha</source>
         <translation>Alpha</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="242"/>
-        <location filename="../Sources/ptSettings.cpp" line="266"/>
+        <location filename="../Sources/ptSettings.cpp" line="203"/>
+        <location filename="../Sources/ptSettings.cpp" line="227"/>
         <source>Tensor smoothness</source>
         <translation>Sfumatura tensor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="242"/>
-        <location filename="../Sources/ptSettings.cpp" line="266"/>
+        <location filename="../Sources/ptSettings.cpp" line="203"/>
+        <location filename="../Sources/ptSettings.cpp" line="227"/>
         <source>Sigma</source>
         <translation>Sigma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="243"/>
+        <location filename="../Sources/ptSettings.cpp" line="204"/>
         <source>Spacial precision</source>
         <translation>Precisione spaziale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="243"/>
+        <location filename="../Sources/ptSettings.cpp" line="204"/>
         <source>dl</source>
         <translation>dl</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="244"/>
+        <location filename="../Sources/ptSettings.cpp" line="205"/>
         <source>Angular precision</source>
         <translation>Precisione angolare</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="244"/>
+        <location filename="../Sources/ptSettings.cpp" line="205"/>
         <source>da</source>
         <translation>da</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="245"/>
+        <location filename="../Sources/ptSettings.cpp" line="206"/>
         <source>Value precision</source>
         <translation>Precisione del valore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="245"/>
+        <location filename="../Sources/ptSettings.cpp" line="206"/>
         <source>Gauss</source>
         <translation>Gauss</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="248"/>
+        <location filename="../Sources/ptSettings.cpp" line="209"/>
         <source>Tune masks</source>
         <translation>Regolazione maschere</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="248"/>
+        <location filename="../Sources/ptSettings.cpp" line="209"/>
         <source>Fine tune the color masks</source>
         <translation>Regolazione fine maschere colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="249"/>
-        <location filename="../Sources/ptSettings.cpp" line="256"/>
-        <location filename="../Sources/ptSettings.cpp" line="261"/>
+        <location filename="../Sources/ptSettings.cpp" line="210"/>
+        <location filename="../Sources/ptSettings.cpp" line="217"/>
+        <location filename="../Sources/ptSettings.cpp" line="222"/>
         <source>L amount</source>
         <translation>Quantità L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="249"/>
+        <location filename="../Sources/ptSettings.cpp" line="210"/>
         <source>Denoise amount on L</source>
         <translation>Quantità riduzione rumore su L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="250"/>
+        <location filename="../Sources/ptSettings.cpp" line="211"/>
         <source>Color amount</source>
         <translation>Quantità colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="250"/>
+        <location filename="../Sources/ptSettings.cpp" line="211"/>
         <source>Denoise amount on AB</source>
         <translation>Quantità riduzione rumore su AB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="252"/>
+        <location filename="../Sources/ptSettings.cpp" line="213"/>
         <source>Levels</source>
         <translation>Livelli</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="253"/>
+        <location filename="../Sources/ptSettings.cpp" line="214"/>
         <source>Opacity of denoising on L</source>
         <translation>Opacità di riduzione rumore su L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="254"/>
+        <location filename="../Sources/ptSettings.cpp" line="215"/>
         <source>Edge Threshold</source>
         <translation>Soglia bordo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="254"/>
+        <location filename="../Sources/ptSettings.cpp" line="215"/>
         <source>Edge thresholding for denoising on L</source>
         <translation>Soglia bordo per riduzione rumore su L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="255"/>
+        <location filename="../Sources/ptSettings.cpp" line="216"/>
         <source>L scale</source>
         <translation>Scala L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="255"/>
+        <location filename="../Sources/ptSettings.cpp" line="216"/>
         <source>Denoise scale on L</source>
         <translation>Scala riduzione rumore su L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="256"/>
+        <location filename="../Sources/ptSettings.cpp" line="217"/>
         <source>Denoise on L</source>
         <translation>Riduzione rumore su L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="257"/>
-        <location filename="../Sources/ptSettings.cpp" line="267"/>
+        <location filename="../Sources/ptSettings.cpp" line="218"/>
+        <location filename="../Sources/ptSettings.cpp" line="228"/>
         <source>A amount</source>
         <translation>Quantità A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="257"/>
+        <location filename="../Sources/ptSettings.cpp" line="218"/>
         <source>Color A denoise</source>
         <translation>Riduzione rumore colore A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="258"/>
+        <location filename="../Sources/ptSettings.cpp" line="219"/>
         <source>A scale</source>
         <translation>Scala A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="258"/>
+        <location filename="../Sources/ptSettings.cpp" line="219"/>
         <source>Denoise scale on A</source>
         <translation>Scala riduzione rumore su A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="259"/>
-        <location filename="../Sources/ptSettings.cpp" line="269"/>
+        <location filename="../Sources/ptSettings.cpp" line="220"/>
+        <location filename="../Sources/ptSettings.cpp" line="230"/>
         <source>B amount</source>
         <translation>Quantità B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="259"/>
+        <location filename="../Sources/ptSettings.cpp" line="220"/>
         <source>Color B denoise</source>
         <translation>Riduzione rumore colore B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="260"/>
+        <location filename="../Sources/ptSettings.cpp" line="221"/>
         <source>B scale</source>
         <translation>Scala B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="260"/>
+        <location filename="../Sources/ptSettings.cpp" line="221"/>
         <source>Denoise scale on B</source>
         <translation>Scala riduzione rumore su B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="261"/>
+        <location filename="../Sources/ptSettings.cpp" line="222"/>
         <source>Threshold for wavelet L denoise (with edge mask)</source>
         <translation>Soglia per riduzione rumore wavelet L (con maschera bordo)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="262"/>
+        <location filename="../Sources/ptSettings.cpp" line="223"/>
         <source>L softness</source>
         <translation>Morbidezza L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="262"/>
+        <location filename="../Sources/ptSettings.cpp" line="223"/>
         <source>Softness for wavelet L denoise (with edge mask)</source>
         <translation>Morbidezza per riduzione rumore wavelet L (con maschera bordo)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="267"/>
+        <location filename="../Sources/ptSettings.cpp" line="228"/>
         <source>Threshold for wavelet A denoise</source>
         <translation>Soglia per riduzione rumore wavelet A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="268"/>
+        <location filename="../Sources/ptSettings.cpp" line="229"/>
         <source>A softness</source>
         <translation>Morbidezza A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="268"/>
+        <location filename="../Sources/ptSettings.cpp" line="229"/>
         <source>Softness for wavelet A denoise</source>
         <translation>Morbidezza per riduzione rumore wavelet A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="269"/>
+        <location filename="../Sources/ptSettings.cpp" line="230"/>
         <source>Threshold for wavelet B denoise</source>
         <translation>Soglia per riduzione rumore wavelet B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="270"/>
+        <location filename="../Sources/ptSettings.cpp" line="231"/>
         <source>B softness</source>
         <translation>Morbidezza B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="270"/>
+        <location filename="../Sources/ptSettings.cpp" line="231"/>
         <source>Softness for wavelet B denoise</source>
         <translation>Morbidezza per riduzione rumore wavelet B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="271"/>
+        <location filename="../Sources/ptSettings.cpp" line="232"/>
         <source>Number of passes</source>
         <translation>Numero di passaggi</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="272"/>
-        <location filename="../Sources/ptSettings.cpp" line="285"/>
-        <location filename="../Sources/ptSettings.cpp" line="290"/>
+        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="246"/>
+        <location filename="../Sources/ptSettings.cpp" line="251"/>
         <source>Strength</source>
         <translation>Intensità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="274"/>
+        <location filename="../Sources/ptSettings.cpp" line="235"/>
         <source>Halo control</source>
         <translation>Controllo alone</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="275"/>
+        <location filename="../Sources/ptSettings.cpp" line="236"/>
         <source>Weight</source>
         <translation>Pesantezza</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="276"/>
+        <location filename="../Sources/ptSettings.cpp" line="237"/>
         <source>Clean up</source>
         <translation>Pulisci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="273"/>
+        <location filename="../Sources/ptSettings.cpp" line="234"/>
         <source>Microcontrast</source>
         <translation>Microcontrasto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="273"/>
+        <location filename="../Sources/ptSettings.cpp" line="234"/>
         <source>Microcontrast strength</source>
         <translation>Intensità microcontrasto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="274"/>
+        <location filename="../Sources/ptSettings.cpp" line="235"/>
         <source>Microcontrast Halo control</source>
         <translation>Controllo alone microcontrasto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="275"/>
+        <location filename="../Sources/ptSettings.cpp" line="236"/>
         <source>Microcontrast weight</source>
         <translation>Pesantezza microcontrasto</translation>
     </message>
@@ -9173,55 +9915,55 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Sfocatura obiettivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="277"/>
+        <location filename="../Sources/ptSettings.cpp" line="238"/>
         <source>Number of iterations</source>
         <translation>Numero di iterazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="279"/>
+        <location filename="../Sources/ptSettings.cpp" line="240"/>
         <source>Radius for USM</source>
         <translation>Raggio per USM</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="280"/>
+        <location filename="../Sources/ptSettings.cpp" line="241"/>
         <source>Amount for USM</source>
         <translation>Quantità per USM</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="281"/>
+        <location filename="../Sources/ptSettings.cpp" line="242"/>
         <source>Threshold for USM</source>
         <translation>Soglia per USM</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="282"/>
+        <location filename="../Sources/ptSettings.cpp" line="243"/>
         <source>Radius for Highpass</source>
         <translation>Raggio per Accentua passaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="283"/>
+        <location filename="../Sources/ptSettings.cpp" line="244"/>
         <source>Amount for Highpass</source>
         <translation>Quantità per Accentua passaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="284"/>
+        <location filename="../Sources/ptSettings.cpp" line="245"/>
         <source>Denoise for Highpass</source>
         <translation>Riduzione rumore per Accentua passaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="285"/>
-        <location filename="../Sources/ptSettings.cpp" line="290"/>
+        <location filename="../Sources/ptSettings.cpp" line="246"/>
+        <location filename="../Sources/ptSettings.cpp" line="251"/>
         <source>Strength for film grain</source>
         <translation>Intensità per grana pellicola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="286"/>
-        <location filename="../Sources/ptSettings.cpp" line="291"/>
+        <location filename="../Sources/ptSettings.cpp" line="247"/>
+        <location filename="../Sources/ptSettings.cpp" line="252"/>
         <source>Radius for film grain</source>
         <translation>Raggio per grana pellicola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="287"/>
-        <location filename="../Sources/ptSettings.cpp" line="292"/>
+        <location filename="../Sources/ptSettings.cpp" line="248"/>
+        <location filename="../Sources/ptSettings.cpp" line="253"/>
         <source>Opacity for film grain</source>
         <translation>Opacità per grana pellicola</translation>
     </message>
@@ -9238,30 +9980,22 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Raggio sfocatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="295"/>
-        <location filename="../Sources/ptSettings.cpp" line="298"/>
-        <location filename="../Sources/ptSettings.cpp" line="301"/>
-        <location filename="../Sources/ptSettings.cpp" line="304"/>
-        <location filename="../Sources/ptSettings.cpp" line="333"/>
-        <location filename="../Sources/ptSettings.cpp" line="342"/>
-        <location filename="../Sources/ptSettings.cpp" line="388"/>
+        <location filename="../Sources/ptSettings.cpp" line="282"/>
+        <location filename="../Sources/ptSettings.cpp" line="291"/>
+        <location filename="../Sources/ptSettings.cpp" line="337"/>
         <source>Saturation</source>
         <translation>Saturazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="297"/>
-        <location filename="../Sources/ptSettings.cpp" line="300"/>
-        <location filename="../Sources/ptSettings.cpp" line="303"/>
-        <location filename="../Sources/ptSettings.cpp" line="306"/>
         <source>Hue</source>
-        <translation>Tonalità</translation>
+        <translation type="obsolete">Tonalità</translation>
     </message>
     <message>
         <source>Orange</source>
         <translation type="obsolete">Arancio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="531"/>
+        <location filename="../Sources/ptSettings.cpp" line="470"/>
         <source>Yellow</source>
         <translation>Giallo</translation>
     </message>
@@ -9274,7 +10008,7 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Verde scuro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="533"/>
+        <location filename="../Sources/ptSettings.cpp" line="472"/>
         <source>Cyan</source>
         <translation>Cyan</translation>
     </message>
@@ -9283,320 +10017,320 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Magenta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="307"/>
-        <location filename="../Sources/ptSettings.cpp" line="334"/>
-        <location filename="../Sources/ptSettings.cpp" line="343"/>
-        <location filename="../Sources/ptSettings.cpp" line="360"/>
-        <location filename="../Sources/ptSettings.cpp" line="373"/>
-        <location filename="../Sources/ptSettings.cpp" line="382"/>
+        <location filename="../Sources/ptSettings.cpp" line="256"/>
+        <location filename="../Sources/ptSettings.cpp" line="283"/>
+        <location filename="../Sources/ptSettings.cpp" line="292"/>
+        <location filename="../Sources/ptSettings.cpp" line="309"/>
+        <location filename="../Sources/ptSettings.cpp" line="322"/>
+        <location filename="../Sources/ptSettings.cpp" line="331"/>
         <source>Shape</source>
         <translation>Forma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="307"/>
-        <location filename="../Sources/ptSettings.cpp" line="360"/>
-        <location filename="../Sources/ptSettings.cpp" line="373"/>
-        <location filename="../Sources/ptSettings.cpp" line="382"/>
+        <location filename="../Sources/ptSettings.cpp" line="256"/>
+        <location filename="../Sources/ptSettings.cpp" line="309"/>
+        <location filename="../Sources/ptSettings.cpp" line="322"/>
+        <location filename="../Sources/ptSettings.cpp" line="331"/>
         <source>Shape of the vignette</source>
         <translation>Forma della vignettatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="309"/>
-        <location filename="../Sources/ptSettings.cpp" line="335"/>
-        <location filename="../Sources/ptSettings.cpp" line="344"/>
-        <location filename="../Sources/ptSettings.cpp" line="362"/>
+        <location filename="../Sources/ptSettings.cpp" line="258"/>
+        <location filename="../Sources/ptSettings.cpp" line="284"/>
+        <location filename="../Sources/ptSettings.cpp" line="293"/>
+        <location filename="../Sources/ptSettings.cpp" line="311"/>
         <source>Inner Radius</source>
         <translation>Raggio interno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="310"/>
-        <location filename="../Sources/ptSettings.cpp" line="336"/>
-        <location filename="../Sources/ptSettings.cpp" line="345"/>
-        <location filename="../Sources/ptSettings.cpp" line="363"/>
+        <location filename="../Sources/ptSettings.cpp" line="259"/>
+        <location filename="../Sources/ptSettings.cpp" line="285"/>
+        <location filename="../Sources/ptSettings.cpp" line="294"/>
+        <location filename="../Sources/ptSettings.cpp" line="312"/>
         <source>Outer Radius</source>
         <translation>Raggio esterno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="311"/>
-        <location filename="../Sources/ptSettings.cpp" line="337"/>
-        <location filename="../Sources/ptSettings.cpp" line="346"/>
-        <location filename="../Sources/ptSettings.cpp" line="364"/>
-        <location filename="../Sources/ptSettings.cpp" line="374"/>
-        <location filename="../Sources/ptSettings.cpp" line="383"/>
+        <location filename="../Sources/ptSettings.cpp" line="260"/>
+        <location filename="../Sources/ptSettings.cpp" line="286"/>
+        <location filename="../Sources/ptSettings.cpp" line="295"/>
+        <location filename="../Sources/ptSettings.cpp" line="313"/>
+        <location filename="../Sources/ptSettings.cpp" line="323"/>
+        <location filename="../Sources/ptSettings.cpp" line="332"/>
         <source>Roundness</source>
         <translation>Rotondità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="312"/>
-        <location filename="../Sources/ptSettings.cpp" line="338"/>
-        <location filename="../Sources/ptSettings.cpp" line="347"/>
-        <location filename="../Sources/ptSettings.cpp" line="365"/>
-        <location filename="../Sources/ptSettings.cpp" line="375"/>
-        <location filename="../Sources/ptSettings.cpp" line="384"/>
+        <location filename="../Sources/ptSettings.cpp" line="261"/>
+        <location filename="../Sources/ptSettings.cpp" line="287"/>
+        <location filename="../Sources/ptSettings.cpp" line="296"/>
+        <location filename="../Sources/ptSettings.cpp" line="314"/>
+        <location filename="../Sources/ptSettings.cpp" line="324"/>
+        <location filename="../Sources/ptSettings.cpp" line="333"/>
         <source>Center X</source>
         <translation>Centro X</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="313"/>
-        <location filename="../Sources/ptSettings.cpp" line="339"/>
-        <location filename="../Sources/ptSettings.cpp" line="348"/>
-        <location filename="../Sources/ptSettings.cpp" line="366"/>
-        <location filename="../Sources/ptSettings.cpp" line="376"/>
-        <location filename="../Sources/ptSettings.cpp" line="385"/>
+        <location filename="../Sources/ptSettings.cpp" line="262"/>
+        <location filename="../Sources/ptSettings.cpp" line="288"/>
+        <location filename="../Sources/ptSettings.cpp" line="297"/>
+        <location filename="../Sources/ptSettings.cpp" line="315"/>
+        <location filename="../Sources/ptSettings.cpp" line="325"/>
+        <location filename="../Sources/ptSettings.cpp" line="334"/>
         <source>Center Y</source>
         <translation>Centro Y</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="316"/>
+        <location filename="../Sources/ptSettings.cpp" line="265"/>
         <source>Red multiplicity</source>
         <translation>Molteplicità del rosso</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="317"/>
+        <location filename="../Sources/ptSettings.cpp" line="266"/>
         <source>Green multiplicity</source>
         <translation>Molteplicità del verde</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="318"/>
+        <location filename="../Sources/ptSettings.cpp" line="267"/>
         <source>Blue multiplicity</source>
         <translation>Molteplicità del blu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="319"/>
+        <location filename="../Sources/ptSettings.cpp" line="268"/>
         <source>Red toning</source>
         <translation>Viraggio rosso</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="320"/>
+        <location filename="../Sources/ptSettings.cpp" line="269"/>
         <source>Green toning</source>
         <translation>Viraggio verde</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="321"/>
+        <location filename="../Sources/ptSettings.cpp" line="270"/>
         <source>Blue toning</source>
         <translation>Viraggio blu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="322"/>
-        <location filename="../Sources/ptSettings.cpp" line="326"/>
+        <location filename="../Sources/ptSettings.cpp" line="271"/>
+        <location filename="../Sources/ptSettings.cpp" line="275"/>
         <source>Amount of toning</source>
         <translation>Quantità del viraggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="330"/>
+        <location filename="../Sources/ptSettings.cpp" line="279"/>
         <source>Main color</source>
         <translation>Colore principale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="330"/>
+        <location filename="../Sources/ptSettings.cpp" line="279"/>
         <source>Intensity of the main color</source>
         <translation>Intensità del colore principale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="331"/>
+        <location filename="../Sources/ptSettings.cpp" line="280"/>
         <source>Second color</source>
         <translation>Colore secondario</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="331"/>
+        <location filename="../Sources/ptSettings.cpp" line="280"/>
         <source>Intensity of the second color</source>
         <translation>Intensità del colore secondario</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="334"/>
-        <location filename="../Sources/ptSettings.cpp" line="343"/>
+        <location filename="../Sources/ptSettings.cpp" line="283"/>
+        <location filename="../Sources/ptSettings.cpp" line="292"/>
         <source>Shape of the mask</source>
         <translation>Forma della maschera</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="351"/>
-        <location filename="../Sources/ptSettings.cpp" line="356"/>
-        <location filename="../Sources/ptSettings.cpp" line="372"/>
-        <location filename="../Sources/ptSettings.cpp" line="381"/>
+        <location filename="../Sources/ptSettings.cpp" line="300"/>
+        <location filename="../Sources/ptSettings.cpp" line="305"/>
+        <location filename="../Sources/ptSettings.cpp" line="321"/>
+        <location filename="../Sources/ptSettings.cpp" line="330"/>
         <source>Angle</source>
         <translation>Angolo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="352"/>
-        <location filename="../Sources/ptSettings.cpp" line="357"/>
-        <location filename="../Sources/ptSettings.cpp" line="369"/>
-        <location filename="../Sources/ptSettings.cpp" line="378"/>
+        <location filename="../Sources/ptSettings.cpp" line="301"/>
+        <location filename="../Sources/ptSettings.cpp" line="306"/>
+        <location filename="../Sources/ptSettings.cpp" line="318"/>
+        <location filename="../Sources/ptSettings.cpp" line="327"/>
         <source>Lower Level</source>
         <translation>Livello inferiore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="353"/>
-        <location filename="../Sources/ptSettings.cpp" line="358"/>
-        <location filename="../Sources/ptSettings.cpp" line="370"/>
-        <location filename="../Sources/ptSettings.cpp" line="379"/>
+        <location filename="../Sources/ptSettings.cpp" line="302"/>
+        <location filename="../Sources/ptSettings.cpp" line="307"/>
+        <location filename="../Sources/ptSettings.cpp" line="319"/>
+        <location filename="../Sources/ptSettings.cpp" line="328"/>
         <source>Upper Level</source>
         <translation>Livello superiore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="368"/>
-        <location filename="../Sources/ptSettings.cpp" line="377"/>
+        <location filename="../Sources/ptSettings.cpp" line="317"/>
+        <location filename="../Sources/ptSettings.cpp" line="326"/>
         <source>Maximal radius for the blur</source>
         <translation>Raggio massimo sfocatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="406"/>
+        <location filename="../Sources/ptSettings.cpp" line="351"/>
         <source>Quality</source>
         <translation>Qualità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="407"/>
+        <location filename="../Sources/ptSettings.cpp" line="352"/>
         <source>dpi</source>
         <translation>dpi</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="407"/>
+        <location filename="../Sources/ptSettings.cpp" line="352"/>
         <source>Resolution in dpi</source>
         <translation>Risoluzione in dpi</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="408"/>
+        <location filename="../Sources/ptSettings.cpp" line="353"/>
         <source>Rating</source>
         <translation>Valutazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="408"/>
+        <location filename="../Sources/ptSettings.cpp" line="353"/>
         <source>Image rating</source>
         <translation>Valutazione immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="414"/>
+        <location filename="../Sources/ptSettings.cpp" line="359"/>
         <source>Remember setting level</source>
         <translation>Ricorda livello di impostazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="415"/>
+        <location filename="../Sources/ptSettings.cpp" line="360"/>
         <source>Transform camera RGB to working space RGB</source>
         <translation>Trasforma Camera RGB in spazio RGB di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="416"/>
-        <location filename="../Sources/ptSettings.cpp" line="420"/>
-        <location filename="../Sources/ptSettings.cpp" line="421"/>
+        <location filename="../Sources/ptSettings.cpp" line="361"/>
+        <location filename="../Sources/ptSettings.cpp" line="365"/>
+        <location filename="../Sources/ptSettings.cpp" line="366"/>
         <source>Intent of the profile</source>
         <translation>Intento del profilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="417"/>
+        <location filename="../Sources/ptSettings.cpp" line="362"/>
         <source>Gamma that was applied before this profile</source>
         <translation>Gamma applicata prima di questo profilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="418"/>
+        <location filename="../Sources/ptSettings.cpp" line="363"/>
         <source>Working colorspace</source>
         <translation>Spazio colore di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="419"/>
+        <location filename="../Sources/ptSettings.cpp" line="364"/>
         <source>Color management quality</source>
         <translation>Qualità gestione colore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="422"/>
+        <location filename="../Sources/ptSettings.cpp" line="367"/>
         <source>Output mode of save button</source>
         <translation>Modalità di output del pulsante Salva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="423"/>
+        <location filename="../Sources/ptSettings.cpp" line="368"/>
         <source>Output mode of reset button</source>
         <translation>Modalità di output del pulsante Ripristina</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="424"/>
+        <location filename="../Sources/ptSettings.cpp" line="369"/>
         <source>Set the theme.</source>
         <translation>Imposta il tema.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="425"/>
+        <location filename="../Sources/ptSettings.cpp" line="370"/>
         <source>Set the highlight color of the theme.</source>
         <translation>Imposta il colore di evidenziazione del tema.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="426"/>
+        <location filename="../Sources/ptSettings.cpp" line="371"/>
         <source>Set the start up mode for the UI.</source>
         <translation>Seleziona modalità avvio interfaccia grafica.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="427"/>
+        <location filename="../Sources/ptSettings.cpp" line="372"/>
         <source>Size of image processed vs original.</source>
         <translation>Dimensione immagine processata contro originale.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="428"/>
+        <location filename="../Sources/ptSettings.cpp" line="373"/>
         <source>Initial pipe size when Photivo starts.</source>
         <translation>Dimensione iniziale flusso di lavoro all&apos;avvio di Photivo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="429"/>
+        <location filename="../Sources/ptSettings.cpp" line="374"/>
         <source>Special preview for image analysis</source>
         <translation>Anteprima speciale per analisi immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="430"/>
+        <location filename="../Sources/ptSettings.cpp" line="375"/>
         <source>Bad pixels file</source>
         <translation>File pixel difettosi</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="431"/>
+        <location filename="../Sources/ptSettings.cpp" line="376"/>
         <source>Darkframe file</source>
         <translation>File Darkframe</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="432"/>
+        <location filename="../Sources/ptSettings.cpp" line="377"/>
         <source>WhiteBalance</source>
         <translation>Bilanciamento del Bianco</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="433"/>
+        <location filename="../Sources/ptSettings.cpp" line="378"/>
         <source>CA correction</source>
         <translation>Correzione AC</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="434"/>
+        <location filename="../Sources/ptSettings.cpp" line="379"/>
         <source>Demosaicing algorithm</source>
         <translation>Algoritmo di demosaicizzazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="435"/>
+        <location filename="../Sources/ptSettings.cpp" line="380"/>
         <source>Denosie on Bayer pattern</source>
         <translation>Rduzione rumore su pattern di Bayer</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="436"/>
+        <location filename="../Sources/ptSettings.cpp" line="381"/>
         <source>Guide lines for crop</source>
         <translation>Linee guida per il ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="437"/>
+        <location filename="../Sources/ptSettings.cpp" line="382"/>
         <source>Dim areas outside the crop rectangle</source>
         <translation>Aree oscurate al di fuori del rettangolo di ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="438"/>
+        <location filename="../Sources/ptSettings.cpp" line="383"/>
         <source>How to handle clipping</source>
         <translation>Come gestire il tosaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="501"/>
+        <location filename="../Sources/ptSettings.cpp" line="441"/>
         <source>Open file manager on startup</source>
         <translation>Apri il file manager all&apos;avvio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="501"/>
+        <location filename="../Sources/ptSettings.cpp" line="441"/>
         <source>Opens the file manager when Photivo starts without an image</source>
         <translation>Apri il file manager quando Photivo viene avviato senza un&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="546"/>
+        <location filename="../Sources/ptSettings.cpp" line="483"/>
         <source>Esc key exits Photivo</source>
         <translation>Usare il tasto Esc per chiudere Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="546"/>
+        <location filename="../Sources/ptSettings.cpp" line="483"/>
         <source>Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.</source>
         <translation>Usare il tasto Esc non solo per uscire da modalità di visualizzazione speciali (ad esempio schermo intero) ma anche per chiudere Photivo.</translation>
     </message>
@@ -9617,143 +10351,138 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Nessuno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="439"/>
+        <location filename="../Sources/ptSettings.cpp" line="384"/>
         <source>Mathematical model for CA correction</source>
         <translation>Modello matematico per la correzione AC</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="440"/>
+        <location filename="../Sources/ptSettings.cpp" line="385"/>
         <source>Mathematical model for vignetting correction</source>
         <translation>Modello matematico per la correzione della vignettatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="441"/>
+        <location filename="../Sources/ptSettings.cpp" line="386"/>
         <source>Geometry of the lens the image was taken with</source>
         <translation>Geometria dell&apos;obiettivo con cui è stata ripresa l&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="442"/>
+        <location filename="../Sources/ptSettings.cpp" line="387"/>
         <source>Convert image to this lens geometry</source>
         <translation>Converti l&apos;immagine alla geometria di questo obiettivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="443"/>
+        <location filename="../Sources/ptSettings.cpp" line="388"/>
         <source>Mathematical distortion model to apply to the image</source>
         <translation>Modello matematico di distorsione da applicare all&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="444"/>
+        <location filename="../Sources/ptSettings.cpp" line="389"/>
         <source>Energy method for liquid rescale</source>
         <translation>Metodo energia per ridimensionamento liquido</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="445"/>
+        <location filename="../Sources/ptSettings.cpp" line="390"/>
         <source>Scaling method for liquid rescale</source>
         <translation>Metodo ridimensionamento per ridimensionamento liquido</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="446"/>
-        <location filename="../Sources/ptSettings.cpp" line="491"/>
+        <location filename="../Sources/ptSettings.cpp" line="391"/>
+        <location filename="../Sources/ptSettings.cpp" line="431"/>
         <source>Filter to be used for resizing</source>
         <translation>Filtro da usare per il ridimensionamento</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="447"/>
-        <location filename="../Sources/ptSettings.cpp" line="490"/>
+        <location filename="../Sources/ptSettings.cpp" line="392"/>
+        <location filename="../Sources/ptSettings.cpp" line="430"/>
         <source>Image dimension the resize value applies to</source>
         <translation>Dimensione immagine a cui applicare i valori dimensionali</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="448"/>
+        <location filename="../Sources/ptSettings.cpp" line="393"/>
         <source>Flip mode</source>
         <translation>Modalità di riflessione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="449"/>
+        <location filename="../Sources/ptSettings.cpp" line="394"/>
         <source>Aspect width</source>
         <translation>Larghezza aspetto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="450"/>
+        <location filename="../Sources/ptSettings.cpp" line="395"/>
         <source>Aspect height</source>
         <translation>Altezza aspetto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="451"/>
+        <location filename="../Sources/ptSettings.cpp" line="396"/>
         <source>ChannelMixer</source>
         <translation>Miscelatore Canale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="452"/>
+        <location filename="../Sources/ptSettings.cpp" line="397"/>
         <source>Clip mode</source>
         <translation>Modalità di tosaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="453"/>
+        <location filename="../Sources/ptSettings.cpp" line="398"/>
         <source>Auto exposure mode</source>
         <translation>Modalità auto esposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="454"/>
         <source>LAB Transform mode</source>
-        <translation>Modalità trasformazione LAB</translation>
+        <translation type="obsolete">Modalità trasformazione LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="455"/>
-        <location filename="../Sources/ptSettings.cpp" line="456"/>
-        <location filename="../Sources/ptSettings.cpp" line="459"/>
-        <location filename="../Sources/ptSettings.cpp" line="460"/>
         <source>Values for recovery</source>
-        <translation>Valori per il recupero</translation>
+        <translation type="obsolete">Valori per il recupero</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="457"/>
-        <location filename="../Sources/ptSettings.cpp" line="458"/>
-        <location filename="../Sources/ptSettings.cpp" line="461"/>
-        <location filename="../Sources/ptSettings.cpp" line="462"/>
+        <location filename="../Sources/ptSettings.cpp" line="399"/>
+        <location filename="../Sources/ptSettings.cpp" line="400"/>
+        <location filename="../Sources/ptSettings.cpp" line="401"/>
+        <location filename="../Sources/ptSettings.cpp" line="402"/>
         <source>Values for microcontrast</source>
         <translation>Valori per il microcontrasto</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="463"/>
+        <location filename="../Sources/ptSettings.cpp" line="403"/>
         <source>Enable GreyCStoration on L</source>
         <translation>Abilita GreyCStoration su L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="464"/>
+        <location filename="../Sources/ptSettings.cpp" line="404"/>
         <source>Shadow mask for denoising</source>
         <translation>Maschera ombreggiatura per rimozione rumore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="465"/>
+        <location filename="../Sources/ptSettings.cpp" line="405"/>
         <source>GREYC Interpolation</source>
         <translation>Interpolazione GREYC</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="466"/>
+        <location filename="../Sources/ptSettings.cpp" line="406"/>
         <source>Enable USM sharpening</source>
         <translation>Abilita nitidezza USM</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="467"/>
+        <location filename="../Sources/ptSettings.cpp" line="407"/>
         <source>Enable Highpass sharpening</source>
         <translation>Abilita nitidezza Accentua passaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="468"/>
-        <location filename="../Sources/ptSettings.cpp" line="470"/>
+        <location filename="../Sources/ptSettings.cpp" line="408"/>
+        <location filename="../Sources/ptSettings.cpp" line="410"/>
         <source>Values for film grain</source>
         <translation>Valori per grana pellicola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="469"/>
-        <location filename="../Sources/ptSettings.cpp" line="471"/>
+        <location filename="../Sources/ptSettings.cpp" line="409"/>
+        <location filename="../Sources/ptSettings.cpp" line="411"/>
         <source>Mode for film grain</source>
         <translation>Modalità per grana pellicola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="472"/>
-        <location filename="../Sources/ptSettings.cpp" line="485"/>
+        <location filename="../Sources/ptSettings.cpp" line="412"/>
+        <location filename="../Sources/ptSettings.cpp" line="425"/>
         <source>Mode for Vignette</source>
         <translation>Modalità per vignettatura</translation>
     </message>
@@ -9826,7 +10555,7 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Curva riduzione rumore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="473"/>
+        <location filename="../Sources/ptSettings.cpp" line="413"/>
         <source>View seperate LAB channels</source>
         <translation>Visualizza canali LAB separati</translation>
     </message>
@@ -9843,67 +10572,67 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Valori per regolazione tono</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="474"/>
+        <location filename="../Sources/ptSettings.cpp" line="414"/>
         <source>Film emulation</source>
         <translation>Emulazione pellicola</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="475"/>
+        <location filename="../Sources/ptSettings.cpp" line="415"/>
         <source>Color filter emulation</source>
         <translation>Emulazione filtro colorato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="476"/>
-        <location filename="../Sources/ptSettings.cpp" line="477"/>
+        <location filename="../Sources/ptSettings.cpp" line="416"/>
+        <location filename="../Sources/ptSettings.cpp" line="417"/>
         <source>Values for Toning</source>
         <translation>Valori per tonalità</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="478"/>
+        <location filename="../Sources/ptSettings.cpp" line="418"/>
         <source>Colors for cross processing</source>
         <translation>Colori per Cross Processing</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="479"/>
-        <location filename="../Sources/ptSettings.cpp" line="481"/>
+        <location filename="../Sources/ptSettings.cpp" line="419"/>
+        <location filename="../Sources/ptSettings.cpp" line="421"/>
         <source>Mode for Texture Overlay</source>
         <translation>Modalità per sovrapposizione texture</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="480"/>
-        <location filename="../Sources/ptSettings.cpp" line="482"/>
+        <location filename="../Sources/ptSettings.cpp" line="420"/>
+        <location filename="../Sources/ptSettings.cpp" line="422"/>
         <source>Mask for Texture Overlay</source>
         <translation>Maschera per sovrapposizione texture</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="483"/>
-        <location filename="../Sources/ptSettings.cpp" line="484"/>
+        <location filename="../Sources/ptSettings.cpp" line="423"/>
+        <location filename="../Sources/ptSettings.cpp" line="424"/>
         <source>Mode for Gradual Overlay</source>
         <translation>Modalità per filtro graduato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="486"/>
-        <location filename="../Sources/ptSettings.cpp" line="487"/>
+        <location filename="../Sources/ptSettings.cpp" line="426"/>
+        <location filename="../Sources/ptSettings.cpp" line="427"/>
         <source>Mode for the gradual blur</source>
         <translation>Modalità per sfocatura graduale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="488"/>
+        <location filename="../Sources/ptSettings.cpp" line="428"/>
         <source>Mode for Softglow</source>
         <translation>Modalità per Chiarore sfumato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="489"/>
+        <location filename="../Sources/ptSettings.cpp" line="429"/>
         <source>Enable web resizing</source>
         <translation>Abilita ridimensionamento web</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="492"/>
+        <location filename="../Sources/ptSettings.cpp" line="432"/>
         <source>Output format</source>
         <translation>Formato di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="493"/>
+        <location filename="../Sources/ptSettings.cpp" line="433"/>
         <source>JPEG color sampling</source>
         <translation>Campionamento colore JPEG</translation>
     </message>
@@ -9912,97 +10641,97 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Modalità di output</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="494"/>
+        <location filename="../Sources/ptSettings.cpp" line="434"/>
         <source>Switch to this zoom level when starting to crop.</source>
         <translation>Passa a questo livello di zoom all&apos;avvio di Photivo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="500"/>
+        <location filename="../Sources/ptSettings.cpp" line="440"/>
         <source>At most</source>
         <translation>Al massimo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="503"/>
+        <location filename="../Sources/ptSettings.cpp" line="443"/>
         <source>User settings</source>
         <translation>Impostazioni Utente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="503"/>
+        <location filename="../Sources/ptSettings.cpp" line="443"/>
         <source>Load user settings on startup</source>
         <translation>Carica impostazioni utente all&apos;avvio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="504"/>
+        <location filename="../Sources/ptSettings.cpp" line="444"/>
         <source>Reset on new image</source>
         <translation>Resetta all&apos;apertura di una nuova immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="504"/>
+        <location filename="../Sources/ptSettings.cpp" line="444"/>
         <source>Reset to user settings when new image is opened</source>
         <translation>Ripristina le impostazioni utente quando si apre una nuova immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="505"/>
+        <location filename="../Sources/ptSettings.cpp" line="445"/>
         <source>Adjust aspect ratio</source>
         <translation>Adatta proporzioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="505"/>
+        <location filename="../Sources/ptSettings.cpp" line="445"/>
         <source>Adjust crop aspect ratio to image aspect ratio</source>
         <translation>Adatta proporzioni ritaglio a proporzioni immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="506"/>
+        <location filename="../Sources/ptSettings.cpp" line="446"/>
         <source>Nonlinear slider response</source>
         <translation>Risposta non lineare dei cursori</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="506"/>
+        <location filename="../Sources/ptSettings.cpp" line="446"/>
         <source>Alter the slider behaviour</source>
         <translation>Modifica il comportamento dei cursori</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="507"/>
+        <location filename="../Sources/ptSettings.cpp" line="447"/>
         <source>Use gimp plugin</source>
         <translation>Usa il plugin Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="507"/>
+        <location filename="../Sources/ptSettings.cpp" line="447"/>
         <source>Use gimp plugin for export</source>
         <translation>Usa il plugin Gimp per esportare</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="508"/>
+        <location filename="../Sources/ptSettings.cpp" line="448"/>
         <source>Enabled</source>
         <translation>Abilitato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="508"/>
+        <location filename="../Sources/ptSettings.cpp" line="448"/>
         <source>Show seperate toolboxes</source>
         <translation>Mostra caselle strumenti separate</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="509"/>
+        <location filename="../Sources/ptSettings.cpp" line="449"/>
         <source>Tab mode</source>
         <translation>Modalità Scheda</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="509"/>
+        <location filename="../Sources/ptSettings.cpp" line="449"/>
         <source>Show the preview after the active tab</source>
         <translation>Mostra l&apos;anteprima dopo la scheda attiva</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="510"/>
+        <location filename="../Sources/ptSettings.cpp" line="450"/>
         <source>Override default</source>
         <translation>Sovrascrivi predefinito</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="510"/>
+        <location filename="../Sources/ptSettings.cpp" line="450"/>
         <source>Override the default color</source>
         <translation>Sovrascrivi il colore predefinito</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="511"/>
+        <location filename="../Sources/ptSettings.cpp" line="451"/>
         <source>Display search bar</source>
         <translation>Mostra la barra di ricerca</translation>
     </message>
@@ -10011,57 +10740,57 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Traduci photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="512"/>
+        <location filename="../Sources/ptSettings.cpp" line="452"/>
         <source>Backup settings</source>
         <translation>Backup impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="512"/>
+        <location filename="../Sources/ptSettings.cpp" line="452"/>
         <source>Write backup settings during processing</source>
         <translation>Scrivi impostazioni di backup durante l&apos;elaborazione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="513"/>
+        <location filename="../Sources/ptSettings.cpp" line="453"/>
         <source>manual</source>
         <translation>manuale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="513"/>
+        <location filename="../Sources/ptSettings.cpp" line="453"/>
         <source>manual or automatic pipe</source>
         <translation>flusso di lavoro automatico o manuale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="514"/>
+        <location filename="../Sources/ptSettings.cpp" line="454"/>
         <source>Intensify</source>
         <translation>Intensifica</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="514"/>
+        <location filename="../Sources/ptSettings.cpp" line="454"/>
         <source>Normalize lowest channel to 1</source>
         <translation>Normalizza il canale più basso a 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="515"/>
+        <location filename="../Sources/ptSettings.cpp" line="455"/>
         <source>Manual BP</source>
         <translation>Punto di Nero manuale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="515"/>
+        <location filename="../Sources/ptSettings.cpp" line="455"/>
         <source>Manual black point setting enabled</source>
         <translation>Impostazione Punto di Nero manuale abilitata</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="516"/>
+        <location filename="../Sources/ptSettings.cpp" line="456"/>
         <source>Manual WP</source>
         <translation>Punto di Bianco manuale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="516"/>
+        <location filename="../Sources/ptSettings.cpp" line="456"/>
         <source>Manual white point setting enabled</source>
         <translation>Impostazione Punto di Bianco manuale abilitata</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="517"/>
+        <location filename="../Sources/ptSettings.cpp" line="457"/>
         <source>Eeci refinement</source>
         <translation>Raffinamento Eeci</translation>
     </message>
@@ -10090,63 +10819,62 @@ Usata per la correzione della geometria.</translation>
         <translation type="obsolete">Abilita correzione geometria</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="521"/>
+        <location filename="../Sources/ptSettings.cpp" line="461"/>
         <source>Grid</source>
         <translation>Griglia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="521"/>
+        <location filename="../Sources/ptSettings.cpp" line="461"/>
         <source>Enable the overlay grid</source>
         <translation>Abilita sovrapposizione griglia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="522"/>
+        <location filename="../Sources/ptSettings.cpp" line="462"/>
         <source>Crop</source>
         <translation>Ritaglia</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="522"/>
+        <location filename="../Sources/ptSettings.cpp" line="462"/>
         <source>Enable to make a crop</source>
         <translation>Abilita per effettuare un ritaglio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="523"/>
+        <location filename="../Sources/ptSettings.cpp" line="463"/>
         <source>Aspect Ratio</source>
         <translation>Rapporto dimensioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="523"/>
+        <location filename="../Sources/ptSettings.cpp" line="463"/>
         <source>Crop with a fixed aspect ratio</source>
         <translation>Ritaglia con un rapporto tra dimensioni fisso</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="525"/>
+        <location filename="../Sources/ptSettings.cpp" line="465"/>
         <source>Resize</source>
         <translation>Ridimensiona</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="525"/>
+        <location filename="../Sources/ptSettings.cpp" line="465"/>
         <source>Enable resize</source>
         <translation>Abilita ridimensionamento</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="526"/>
+        <location filename="../Sources/ptSettings.cpp" line="466"/>
         <source>Automatic pipe size</source>
         <translation>Dimensione flusso di lavoro automatica</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="527"/>
+        <location filename="../Sources/ptSettings.cpp" line="467"/>
         <source>Block pipe</source>
         <translation>Blocca flusso di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="527"/>
+        <location filename="../Sources/ptSettings.cpp" line="467"/>
         <source>Disable the pipe</source>
         <translation>Disabilita il flusso di lavoro</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="519"/>
-        <location filename="../Sources/ptSettings.cpp" line="528"/>
+        <location filename="../Sources/ptSettings.cpp" line="459"/>
         <source>Enable</source>
         <translation>Abilita</translation>
     </message>
@@ -10176,7 +10904,7 @@ Usata per la correzione della geometria.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="59"/>
-        <location filename="../Sources/ptSettings.cpp" line="500"/>
+        <location filename="../Sources/ptSettings.cpp" line="440"/>
         <source>Maximum number of thumbnails that should be placed in a row or column.</source>
         <translation>Numero massimo di miniature da inserire in una riga o colonna.</translation>
     </message>
@@ -10224,53 +10952,52 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
         <translation>Scala verticale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="518"/>
-        <location filename="../Sources/ptSettings.cpp" line="520"/>
+        <location filename="../Sources/ptSettings.cpp" line="458"/>
+        <location filename="../Sources/ptSettings.cpp" line="460"/>
         <source>Auto scale</source>
         <translation>Ridimensionamento automatico</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="518"/>
+        <location filename="../Sources/ptSettings.cpp" line="458"/>
         <source>Auto scale to avoid black borders after distortion correction or geometry conversion.</source>
         <translation>Ridimensionamento automatico per evitare bordi neri dopo la correzone distorsione o la conversione geometria.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="519"/>
+        <location filename="../Sources/ptSettings.cpp" line="459"/>
         <source>Enable defishing</source>
         <translation>Abilita defishing</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="520"/>
+        <location filename="../Sources/ptSettings.cpp" line="460"/>
         <source>Auto scale to avoid black borders</source>
         <translation>Ridimensionamento automatico per evitare bordi neri</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="524"/>
+        <location filename="../Sources/ptSettings.cpp" line="464"/>
         <source>Vertical first</source>
         <translation>Prima verticale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="524"/>
+        <location filename="../Sources/ptSettings.cpp" line="464"/>
         <source>Resizing starts with vertical direction</source>
         <translation>Il ridimensionamento comincia con direzione verticale</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="528"/>
         <source>Enable Reinhard 05</source>
-        <translation>Abilita Reinhard 05</translation>
+        <translation type="obsolete">Abilita Reinhard 05</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="529"/>
+        <location filename="../Sources/ptSettings.cpp" line="468"/>
         <source>Enable &apos;fast&apos;</source>
         <translation>Abilita &apos;veloce&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="529"/>
+        <location filename="../Sources/ptSettings.cpp" line="468"/>
         <source>Enable GREYC &apos;fast&apos;</source>
         <translation>Abilita GREYC &apos;veloce&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="535"/>
+        <location filename="../Sources/ptSettings.cpp" line="474"/>
         <source>Purple</source>
         <translation>Viola</translation>
     </message>
@@ -10279,12 +11006,12 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
         <translation type="obsolete">Abilita filtro Wiener</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="536"/>
+        <location filename="../Sources/ptSettings.cpp" line="475"/>
         <source>Only edges</source>
         <translation>Solo bordi</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="536"/>
+        <location filename="../Sources/ptSettings.cpp" line="475"/>
         <source>Sharpen only edges</source>
         <translation>Nitidezza solo bordi</translation>
     </message>
@@ -10297,67 +11024,67 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
         <translation type="obsolete">Outline o immagine sopra</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="539"/>
+        <location filename="../Sources/ptSettings.cpp" line="476"/>
         <source>before gamma</source>
         <translation>prima del gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="539"/>
+        <location filename="../Sources/ptSettings.cpp" line="476"/>
         <source>Webresizing before gamma compensation</source>
         <translation>Ridimensionamento web prima della compensazione gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="540"/>
+        <location filename="../Sources/ptSettings.cpp" line="477"/>
         <source>sRGB gamma compensation</source>
         <translation>Compensazione gamma sRGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="541"/>
+        <location filename="../Sources/ptSettings.cpp" line="478"/>
         <source>Include metadata</source>
         <translation>Includi metadata</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="541"/>
+        <location filename="../Sources/ptSettings.cpp" line="478"/>
         <source>Include metadata (only in jpeg and tiff)</source>
         <translation>Includi metadata (solo in jpeg e tiff)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="542"/>
+        <location filename="../Sources/ptSettings.cpp" line="479"/>
         <source>Erase thumbnail</source>
         <translation>Cancella miniatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="542"/>
+        <location filename="../Sources/ptSettings.cpp" line="479"/>
         <source>Erase the exif thumbnail (only in jpeg and tiff)</source>
         <translation>Cancella miniatura exif (solo in jpeg e tiff)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="543"/>
+        <location filename="../Sources/ptSettings.cpp" line="480"/>
         <source>Save image</source>
         <translation>Salva immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="543"/>
+        <location filename="../Sources/ptSettings.cpp" line="480"/>
         <source>Confirm any action that would discard an unsaved image</source>
         <translation>Conferma ogni azione che porterebbe a perdere un&apos;immagine non salvata</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="544"/>
+        <location filename="../Sources/ptSettings.cpp" line="481"/>
         <source>Reset settings</source>
         <translation>Resetta impostazioni</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="544"/>
+        <location filename="../Sources/ptSettings.cpp" line="481"/>
         <source>Confirm resetting settings or dropping a settings file onto an image</source>
         <translation>Conferma il ripristino delle impostazioni o l&apos;eliminazione di un file di impostazioni su un&apos;immagine</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="545"/>
+        <location filename="../Sources/ptSettings.cpp" line="482"/>
         <source>Switch to 1:1 pipe</source>
         <translation>Passa al flusso di lavoro 1:1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="545"/>
+        <location filename="../Sources/ptSettings.cpp" line="482"/>
         <source>Confirm switch to the full sized pipe</source>
         <translation>Conferma il passaggio al flusso di lavoro a dimensione piena</translation>
     </message>
@@ -10411,152 +11138,152 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
 <context>
     <name>ptViewWindow</name>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="674"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="675"/>
         <source>Zoom &amp;fit</source>
         <translation>Adatta alla &amp;pagina</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="674"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="675"/>
         <source>4</source>
         <translation>4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="666"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="667"/>
         <source>Zoom &amp;100%</source>
         <translation>Zoom &amp;100%</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="662"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="663"/>
         <source>Zoom &amp;in</source>
         <translation>Zoom &amp;+</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="662"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="663"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="666"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="667"/>
         <source>2</source>
         <translation>2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="670"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="671"/>
         <source>Zoom &amp;out</source>
         <translation>Zoom &amp;-</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="670"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="671"/>
         <source>3</source>
         <translation>3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="679"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="680"/>
         <source>&amp;RGB</source>
         <translation>&amp;RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="679"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="680"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="683"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="684"/>
         <source>9</source>
         <translation>9</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="687"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="688"/>
         <source>&amp;L*</source>
         <translation>&amp;L*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="687"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="688"/>
         <source>8</source>
         <translation>8</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="691"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="692"/>
         <source>&amp;a*</source>
         <translation>&amp;a*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="691"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="692"/>
         <source>7</source>
         <translation>7</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="695"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="696"/>
         <source>&amp;b*</source>
         <translation>&amp;b*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="695"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="696"/>
         <source>6</source>
         <translation>6</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="699"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="700"/>
         <source>5</source>
         <translation>5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="711"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="712"/>
         <source>&amp;disabled</source>
         <translation>&amp;disabilitato</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="715"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="716"/>
         <source>&amp;linear</source>
         <translation>&amp;lineare</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="719"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="720"/>
         <source>&amp;preview</source>
         <translation>&amp;anteprima</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="734"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="735"/>
         <source>Highlight &amp;clipped pixels</source>
         <translation>Evidenzia &amp;pixel tosati</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="734"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="735"/>
         <source>C</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="749"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="750"/>
         <source>&amp;R</source>
         <translation>&amp;R</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="754"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="755"/>
         <source>&amp;G</source>
         <translation>&amp;G</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="759"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="760"/>
         <source>&amp;B</source>
         <translation>&amp;B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="764"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="765"/>
         <source>&amp;Sensor</source>
         <translation>&amp;Sensore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="771"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="772"/>
         <source>Show &amp;bottom bar</source>
         <translation>Mostra &amp;barra inferiore</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="786"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="787"/>
         <source>F11</source>
         <translation>F11</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="828"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="829"/>
         <source>Pixel values</source>
         <translation>Valori pixel</translation>
     </message>
@@ -10569,12 +11296,12 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
         <translation type="obsolete">Evidenzia tosaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="739"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="740"/>
         <source>&amp;Over exposure</source>
         <translation>S&amp;ovraesposizione</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="744"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="745"/>
         <source>&amp;Under exposure</source>
         <translation>So&amp;ttoesposizione</translation>
     </message>
@@ -10599,27 +11326,27 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
         <translation type="obsolete">Mostra barra dello zoom</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="776"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="777"/>
         <source>Show &amp;tool pane</source>
         <translation>Mostra p&amp;annello strumenti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="776"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="777"/>
         <source>Space</source>
         <translation>Spazio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="782"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="783"/>
         <source>Open file m&amp;anager</source>
         <translation>Apri file m&amp;anager</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="782"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="783"/>
         <source>Ctrl+M</source>
         <translation>Ctrl+M</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="786"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="787"/>
         <source>Full&amp;screen</source>
         <translation>Schermo &amp;intero</translation>
     </message>
@@ -10645,12 +11372,12 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
         <translation type="obsolete">b*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="699"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="700"/>
         <source>&amp;Gradient</source>
         <translation>&amp;Gradiente</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="683"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="684"/>
         <source>&amp;Structure</source>
         <translation>&amp;Struttura</translation>
     </message>
@@ -10677,12 +11404,12 @@ Utile per evitare la perdita di parte dell&apos;immagine durante la correzione d
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="816"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="817"/>
         <source>Show &amp;clipping</source>
         <translation>Mostra &amp;tosaggio</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="806"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="807"/>
         <source>Display &amp;mode</source>
         <translation>Mostra &amp;modalità</translation>
     </message>
