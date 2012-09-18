@@ -5422,7 +5422,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
         <source>Darken the bright parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Scurisci le zone luminose</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
@@ -5432,7 +5432,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
         <source>Brighten the dark parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Schiarisci le zone scure</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="60"/>
@@ -5450,17 +5450,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="48"/>
         <source>Color boost</source>
-        <translation type="unfinished"></translation>
+        <translation>Aumento colore</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="57"/>
         <source>Strength in a</source>
-        <translation type="unfinished"></translation>
+        <translation>Intensità in a</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="58"/>
         <source>Strength in b</source>
-        <translation type="unfinished"></translation>
+        <translation>Intensità in b</translation>
     </message>
 </context>
 <context>
@@ -5496,7 +5496,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="48"/>
         <source>Color enhancement</source>
-        <translation type="unfinished"></translation>
+        <translation>Miglioramento colore</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="57"/>
@@ -5565,7 +5565,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Drc.cpp" line="50"/>
         <source>Dynamic range compression</source>
-        <translation type="unfinished"></translation>
+        <translation>Compressione estensione dinamica</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Drc.cpp" line="59"/>
@@ -5645,7 +5645,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="61"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="69"/>
         <source>Low/mid/highlight recovery</source>
-        <translation type="unfinished"></translation>
+        <translation>Recupero basse/medie/alte luci</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="76"/>
@@ -5676,7 +5676,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="84"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="89"/>
         <source>Mask type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo di maschera</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="85"/>
@@ -5708,7 +5708,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="46"/>
         <source>Lab transform</source>
-        <translation>Trasformazione LAB</translation>
+        <translation>Trasformazione Lab</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="54"/>
@@ -5733,7 +5733,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="61"/>
         <source>Transformation</source>
-        <translation type="unfinished"></translation>
+        <translation>Trasformazione</translation>
     </message>
 </context>
 <context>
@@ -5977,7 +5977,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="50"/>
         <source>Reinhard brighten</source>
-        <translation type="unfinished"></translation>
+        <translation>Schiarimento Reinhard</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="60"/>
@@ -5997,7 +5997,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="63"/>
         <source>Lightness tweak</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifica luminosità</translation>
     </message>
 </context>
 <context>
