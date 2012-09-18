@@ -5048,7 +5048,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptCurve.cpp" line="307"/>
         <source>Load curve file</source>
-        <translation type="unfinished">Загрузка файла кривой</translation>
+        <translation>Загрузка файла кривой</translation>
     </message>
 </context>
 <context>
@@ -5319,12 +5319,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="57"/>
         <source>Strength in a</source>
-        <translation type="unfinished">Сила подавления в a</translation>
+        <translation>Усиление в канале a</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="58"/>
         <source>Strength in b</source>
-        <translation type="unfinished">Сила подавления в b</translation>
+        <translation>Усиление в канале b</translation>
     </message>
 </context>
 <context>
@@ -5421,7 +5421,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_DetailCurve.cpp" line="69"/>
         <source>Anti badpixel</source>
-        <translation type="unfinished">Удаление &quot;плохих&quot; пикселей</translation>
+        <translation>Удаление &quot;плохих&quot; пикселей</translation>
     </message>
 </context>
 <context>
@@ -5540,7 +5540,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="84"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="89"/>
         <source>Mask type</source>
-        <translation type="unfinished">Тип маски</translation>
+        <translation>Тип маски</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="85"/>
@@ -5597,7 +5597,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="61"/>
         <source>Transformation</source>
-        <translation type="unfinished">Преобразование</translation>
+        <translation>Преобразование</translation>
     </message>
 </context>
 <context>
@@ -5841,7 +5841,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="50"/>
         <source>Reinhard brighten</source>
-        <translation type="unfinished">Осветление (Reinhard)</translation>
+        <translation>Осветление (Reinhard)</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="60"/>
@@ -5861,7 +5861,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="63"/>
         <source>Lightness tweak</source>
-        <translation type="unfinished">Подстройка яркости</translation>
+        <translation>Подстройка яркости</translation>
     </message>
 </context>
 <context>
@@ -6007,7 +6007,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="77"/>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="80"/>
         <source>Saturation</source>
-        <translation type="unfinished">Насыщенность</translation>
+        <translation>Насыщенность</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="72"/>
