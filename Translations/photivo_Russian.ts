@@ -1746,7 +1746,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/filters/ptFilterDM.cpp" line="365"/>
         <source>Append settings file</source>
-        <translation type="unfinished">Добавить к файлу настроек</translation>
+        <translation>Добавить к файлу настроек</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilterDM.cpp" line="395"/>
@@ -5036,13 +5036,13 @@ Are you sure?</source>
     <message>
         <location filename="../Sources/ptCurve.cpp" line="305"/>
         <source>Failed to load curve file %1.</source>
-        <translation type="unfinished">Не удалось загрузить файл кривой %1.</translation>
+        <translation>Не удалось загрузить файл кривой %1.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurve.cpp" line="306"/>
         <source>
 The error occurred in line %1.</source>
-        <translation type="unfinished">
+        <translation>
 Возникла ошибка в строке %1.</translation>
     </message>
     <message>
@@ -5056,22 +5056,22 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.ui" line="18"/>
         <source>All values</source>
-        <translation type="unfinished">Все значения</translation>
+        <translation>Все значения</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.ui" line="62"/>
         <source>Shadows</source>
-        <translation type="unfinished">Тени</translation>
+        <translation>Тени</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.ui" line="106"/>
         <source>Midtones</source>
-        <translation type="unfinished">Полутона</translation>
+        <translation>Полутона</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.ui" line="150"/>
         <source>Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Света</translation>
     </message>
 </context>
 <context>
@@ -5286,7 +5286,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
         <source>Darken the bright parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Затемнить яркие участки</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
@@ -5296,7 +5296,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
         <source>Brighten the dark parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Осветлить тёмные участки</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="60"/>
@@ -5314,17 +5314,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="48"/>
         <source>Color boost</source>
-        <translation type="unfinished"></translation>
+        <translation>Усиление цвета</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="57"/>
         <source>Strength in a</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Сила подавления в a</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="58"/>
         <source>Strength in b</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Сила подавления в b</translation>
     </message>
 </context>
 <context>
@@ -5360,7 +5360,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="48"/>
         <source>Color enhancement</source>
-        <translation type="unfinished"></translation>
+        <translation>Улучшение цвета</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="57"/>
@@ -5429,7 +5429,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Drc.cpp" line="50"/>
         <source>Dynamic range compression</source>
-        <translation type="unfinished"></translation>
+        <translation>Сжатие динамического диапазона</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Drc.cpp" line="59"/>
@@ -5452,7 +5452,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_GammaTool.cpp" line="47"/>
         <source>Gamma adjustment</source>
-        <translation type="unfinished">Гамма</translation>
+        <translation>Гамма</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_GammaTool.cpp" line="56"/>
@@ -5470,37 +5470,37 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="48"/>
         <source>Highlights</source>
-        <translation type="unfinished">Пересветы</translation>
+        <translation>Пересветы</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="57"/>
         <source>Reg highlights</source>
-        <translation type="unfinished">Пересветы в красном</translation>
+        <translation>Пересветы в красном</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="57"/>
         <source>Adjusts brightness of highlights in R channel</source>
-        <translation type="unfinished">Настройка яркости пересветов в красном канале</translation>
+        <translation>Настройка яркости пересветов в красном канале</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="58"/>
         <source>Green highlights</source>
-        <translation type="unfinished">Пересветы в зелёном</translation>
+        <translation>Пересветы в зелёном</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="58"/>
         <source>Adjusts brightness of highlights in G channel</source>
-        <translation type="unfinished">Настройка яркости пересветов в зелёном канале</translation>
+        <translation>Настройка яркости пересветов в зелёном канале</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="59"/>
         <source>Blue highlights</source>
-        <translation type="unfinished">Пересветы в синем</translation>
+        <translation>Пересветы в синем</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="59"/>
         <source>Adjusts brightness of highlights in B channel</source>
-        <translation type="unfinished">Настройка яркости пересветов в синем канале</translation>
+        <translation>Настройка яркости пересветов в синем канале</translation>
     </message>
 </context>
 <context>
@@ -5509,7 +5509,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="61"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="69"/>
         <source>Low/mid/highlight recovery</source>
-        <translation type="unfinished"></translation>
+        <translation>Восстановление Теней/Светов</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="76"/>
@@ -5529,7 +5529,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="79"/>
         <source>Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Света</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="80"/>
@@ -5540,7 +5540,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="84"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="89"/>
         <source>Mask type</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Тип маски</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="85"/>
@@ -5582,22 +5582,22 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="55"/>
         <source>R -&gt; L*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="56"/>
         <source>G -&gt; L*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="57"/>
         <source>B -&gt; L*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="61"/>
         <source>Transformation</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Преобразование</translation>
     </message>
 </context>
 <context>
@@ -5768,17 +5768,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="85"/>
         <source>Overlay mode</source>
-        <translation type="unfinished">Режим наложения</translation>
+        <translation>Режим наложения</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="86"/>
         <source>Image on top</source>
-        <translation type="unfinished">Изображение сверху</translation>
+        <translation>Изображение сверху</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="86"/>
         <source>Overlay the image on top of the outlines instead of vice versa</source>
-        <translation type="unfinished">Накладывать изображение поверх контура, а не наоборот</translation>
+        <translation>Накладывать изображение поверх контура, а не наоборот</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="75"/>
@@ -5813,22 +5813,22 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="87"/>
         <source>Outlines mode</source>
-        <translation type="unfinished">Режим оконтуривания</translation>
+        <translation>Режим оконтуривания</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="87"/>
         <source>Method for calculating the outline gradients</source>
-        <translation type="unfinished">Метод вычисления градиентов для получения контура</translation>
+        <translation>Метод вычисления градиентов для получения контура</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="88"/>
         <source>Color weight</source>
-        <translation type="unfinished">Цветовой вес</translation>
+        <translation>Цветовой вес</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="88"/>
         <source>Weight of the A/B channels in the outlines calculation</source>
-        <translation type="unfinished">Вес A/B каналов при вычислении контура</translation>
+        <translation>Вес A/B каналов при вычислении контура</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="89"/>
@@ -5841,7 +5841,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="50"/>
         <source>Reinhard brighten</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Осветление (Reinhard)</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="60"/>
@@ -5861,7 +5861,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="63"/>
         <source>Lightness tweak</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Подстройка яркости</translation>
     </message>
 </context>
 <context>
@@ -5879,12 +5879,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="58"/>
         <source>Adaptive</source>
-        <translation type="unfinished">Адаптивная</translation>
+        <translation>Адаптивная</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="67"/>
         <source>Saturation mode</source>
-        <translation type="unfinished">Режим насыщения</translation>
+        <translation>Режим насыщения</translation>
     </message>
 </context>
 <context>
@@ -5905,17 +5905,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="50"/>
         <source>Shadows/Highlights</source>
-        <translation type="unfinished">Тени / Света</translation>
+        <translation>Тени / Света</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="60"/>
         <source>Fine detail</source>
-        <translation type="unfinished">Мелкие детали</translation>
+        <translation>Мелкие детали</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="61"/>
         <source>Coarse detail</source>
-        <translation type="unfinished">Крупные детали</translation>
+        <translation>Крупные детали</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="62"/>
@@ -5938,7 +5938,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_SigContrast.cpp" line="97"/>
         <source>Lightness contrast</source>
-        <translation type="unfinished">Яркостный контраст</translation>
+        <translation>Яркостный контраст</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_SigContrast.cpp" line="107"/>
@@ -6007,7 +6007,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="77"/>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="80"/>
         <source>Saturation</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Насыщенность</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="72"/>
@@ -6031,7 +6031,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="53"/>
         <source>Tone adjustment</source>
-        <translation type="unfinished">Настройка тона</translation>
+        <translation>Настройка тона</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="68"/>
@@ -6051,7 +6051,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="63"/>
         <source>Highlights</source>
-        <translation type="unfinished">Света</translation>
+        <translation>Света</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="64"/>
@@ -6061,12 +6061,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="69"/>
         <source>Mask mode</source>
-        <translation type="unfinished">Режим маски</translation>
+        <translation>Режим маски</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="70"/>
         <source>Saturation</source>
-        <translation type="unfinished">Насыщенность</translation>
+        <translation>Насыщенность</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="71"/>
@@ -6076,12 +6076,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="72"/>
         <source>Lower limit</source>
-        <translation type="unfinished">Нижняя граница</translation>
+        <translation>Нижняя граница</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="73"/>
         <source>Upper limit</source>
-        <translation type="unfinished">Верхняя граница</translation>
+        <translation>Верхняя граница</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="74"/>
@@ -6094,7 +6094,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="54"/>
         <source>Wiener sharpen</source>
-        <translation type="unfinished">Фильтр Винера (Резкость)</translation>
+        <translation>Фильтр Винера (Резкость)</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="63"/>
@@ -6104,7 +6104,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="63"/>
         <source>Switch filter on and off</source>
-        <translation type="unfinished">Включение/выключение фильтра</translation>
+        <translation>Включение/выключение фильтра</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="64"/>
@@ -7587,7 +7587,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="571"/>
         <source>&amp;Show hidden tools</source>
-        <translation type="unfinished">Показать &amp;скрытые инструменты</translation>
+        <translation>&amp;Показать скрытые инструменты</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="584"/>
@@ -7642,7 +7642,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="1831"/>
         <source>No tools visible!</source>
-        <translation type="unfinished">Нет видимых инструментов!</translation>
+        <translation>Нет видимых инструментов!</translation>
     </message>
     <message>
         <source>All tools hidden</source>
@@ -7868,7 +7868,7 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1478"/>
         <source>Applying a* b* curves</source>
-        <translation type="unfinished">Кривые a* b*</translation>
+        <translation>Кривые a* b*</translation>
     </message>
     <message>
         <source>Luminance adjustment</source>
@@ -10043,12 +10043,12 @@ No crop, try again.</source>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="441"/>
         <source>Open file manager on startup</source>
-        <translation type="unfinished">Открывать файловый менеджер при запуске</translation>
+        <translation>Открывать файловый менеджер при запуске</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="441"/>
         <source>Opens the file manager when Photivo starts without an image</source>
-        <translation type="unfinished">Открывать файловый менеджер при запуске Photivo без изображения</translation>
+        <translation>Открывать файловый менеджер при запуске Photivo без изображения</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="443"/>
