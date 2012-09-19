@@ -614,7 +614,9 @@ ptFilterDM::~ptFilterDM() {
 
 //==============================================================================
 
+extern short JobMode;
 void ptFilterDM::InsertToList(const TListType AListType, ptFilterBase *AFilter) {
+  if (JobMode) return;
   TCacheGroup *hCacheGroup = nullptr;
 
   switch (AListType) {
