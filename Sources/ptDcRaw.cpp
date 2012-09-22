@@ -5768,6 +5768,7 @@ void CLASS apply_tiff()
   }
   if (!m_TileWidth ) m_TileWidth  = INT_MAX;
   if (!m_TileLength) m_TileLength = INT_MAX;
+  for (i=m_Tiff_NrIFDs; i--; )
     if (m_Tiff_IFD[i].flip) m_Tiff_Flip = m_Tiff_IFD[i].flip;
 
   if (l_Raw >= 0 && !m_LoadRawFunction)
@@ -8208,6 +8209,7 @@ dng_skip:
     m_Filters |= ((m_Filters >> 2 & 0x22222222) |
       (m_Filters << 2 & 0x88888888)) & m_Filters << 1;
 notraw:
+  // Somehow Nikon D90 files give a corrupt value here... although they shouldn't.
   if (m_Flip == -1) m_Flip = m_Tiff_Flip;
   if (m_Flip == -1) m_Flip = 0;
 }
@@ -8547,6 +8549,7 @@ short CLASS RunDcRaw_Phase1() {
   TRACEKEYVALS("CameraModel","%s",m_CameraModel);
   TRACEKEYVALS("InputFile","%s",m_UserSetting_InputFileName);
   TRACEKEYVALS("Filters","%x",m_Filters);
+  TRACEKEYVALS("Flip","%x",m_Flip);
 
   fseek (m_InputFile, m_Data_Offset, SEEK_SET);
 
@@ -8610,6 +8613,7 @@ short CLASS RunDcRaw_Phase1() {
 #endif
   TRACEKEYVALS("Colors","%d",m_Colors);
   TRACEKEYVALS("Filters","%x",m_Filters);
+  TRACEKEYVALS("Flip","%x",m_Flip);
 
   // Cache the image after Phase1.
   FREE(m_Image_AfterPhase1);
