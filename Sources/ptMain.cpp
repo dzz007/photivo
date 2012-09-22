@@ -141,10 +141,6 @@ ptSettings    *Settings = NULL;
 // Lensfun database.
 //ptLensfun*  LensfunData = NULL;    // TODO BJ: implement lensfun DB
 
-// Screen position
-QPoint MainWindowPos;
-QSize  MainWindowSize;
-
 // Run mode
 short NextPhase;
 short NextSubPhase;
@@ -877,21 +873,34 @@ int photivoMain(int Argc, char *Argv[]) {
 
   //-------------------------------------
   // Initialize main window geometry and position
+  // If the screen is not longer present, we move the window to the standard screen
 
-  QRect DesktopRect = (QApplication::desktop())->availableGeometry(MainWindow);
-  MainWindowPos = Settings->m_IniSettings->value("MainWindowPos", DesktopRect.topLeft()).toPoint();
+  int      Screen        = Settings->m_IniSettings->value("MainWindowScreen", -1).toInt();
+  if (Screen >= qApp->desktop()->screenCount()) {
+    Screen = -1;
+  }
+  QRect    DesktopRect   = qApp->desktop()->screenGeometry(Screen);
+  QPoint   UpperLeft     = DesktopRect.topLeft() + QPoint(30, 30);
+  QPoint   MainWindowPos = Settings->m_IniSettings->value("MainWindowPos", UpperLeft).toPoint();
+  QVariant WinSize       = Settings->m_IniSettings->value("MainWindowSize");
+  QSize    MainWindowSize;
 
-  QVariant WinSize = Settings->m_IniSettings->value("MainWindowSize");
-  if(!WinSize.isValid()) {
+  if (!DesktopRect.contains(MainWindowPos)) {
+    MainWindowPos = UpperLeft;
+  }
+
+  if(!WinSize.isValid() ||
+     !(WinSize.toSize().width()  < DesktopRect.width()  + 50 &&
+       WinSize.toSize().height() < DesktopRect.height() + 50   )) {
     // ensure a reasonable size if we don’t get one from Settings
-    MainWindowSize = QSize(qMin(1200, (int)(DesktopRect.width() * 0.8)),
-                           qMin(900, (int)(DesktopRect.height() * 0.8)) );
+    MainWindowSize = QSize(qMin(1200, (int)(DesktopRect.width()  * 0.8)),
+                           qMin( 900, (int)(DesktopRect.height() * 0.8)) );
   } else {
     MainWindowSize = WinSize.toSize();
   }
 
   MainWindow->resize(MainWindowSize);
-  MainWindow->move(MainWindowPos);
+  MainWindow->move(  MainWindowPos);
 
   // MainSplitter is the one between tool pane and image pane.
   // ControlSplitter is the one between histogram and tools tabwidget.
@@ -911,11 +920,10 @@ int photivoMain(int Argc, char *Argv[]) {
   }
 
   if (Settings->m_IniSettings->value("IsMaximized",0).toBool()) {
-      MainWindow->showMaximized();
+    MainWindow->showMaximized();
   } else {
-      MainWindow->show();
+    MainWindow->show();
   }
-
   //-------------------------------------
 
 
@@ -2833,9 +2841,11 @@ void CB_MenuFileExit(const short) {
     setValue("MainSplitter",MainWindow->MainSplitter->saveState());
   Settings->m_IniSettings->
     setValue("ControlSplitter",MainWindow->ControlSplitter->saveState());
-  Settings->m_IniSettings->setValue("MainWindowPos",MainWindow->pos());
-  Settings->m_IniSettings->setValue("MainWindowSize",MainWindow->size());
-  Settings->m_IniSettings->setValue("IsMaximized", MainWindow->windowState() == Qt::WindowMaximized);
+  Settings->m_IniSettings->setValue("MainWindowPos",    MainWindow->pos());
+  Settings->m_IniSettings->setValue("MainWindowSize",   MainWindow->size());
+  Settings->m_IniSettings->setValue("IsMaximized",      MainWindow->windowState() == Qt::WindowMaximized);
+  Settings->m_IniSettings->setValue("MainWindowScreen", qApp->desktop()->screenNumber(MainWindow));
+
   // Store the version of the settings and files
   Settings->m_IniSettings->setValue("SettingsVersion",PhotivoSettingsVersion);
 
