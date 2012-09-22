@@ -73,7 +73,7 @@ void ptFilter_Levels::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_Levels::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CBlackpoint).toFloat() != 0.0f) &&
+  return (FConfig->getValue(CBlackpoint).toFloat() != 0.0f) ||
          (FConfig->getValue(CWhitepoint).toFloat() != 1.0f);
 }
 
