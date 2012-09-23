@@ -427,11 +427,11 @@ const ptGuiOptionsItem ptGuiOptions::CrossprocessMode[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::VignetteMode[] = {
-  {ptVignetteMode_None,              QObject::tr("Disabled") },
-  {ptVignetteMode_Soft,              QObject::tr("Soft") },
-  {ptVignetteMode_Hard,              QObject::tr("Hard") },
-  {ptVignetteMode_Fancy,             QObject::tr("Fancy") },
-  {ptVignetteMode_Mask,              QObject::tr("Show Mask") },
+  {NoVignetteMask,              QObject::tr("Disabled") },
+  {SoftVignetteMask,              QObject::tr("Soft") },
+  {HardVignetteMask,              QObject::tr("Hard") },
+  {FancyVignetteMask,             QObject::tr("Fancy") },
+  {MaskVignetteMask,              QObject::tr("Show Mask") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::SoftglowMode[] = {
@@ -475,9 +475,9 @@ const ptGuiOptionsItem ptGuiOptions::AspectRatio[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::ExposureClipMode[] = {
-  {ptExposureClipMode_None,   QObject::tr("None")                },
-  {ptExposureClipMode_Ratio,  QObject::tr("Ratio")               },
-  {ptExposureClipMode_Curve,  QObject::tr("Film curve")          },
+  {NoExposureClip,   QObject::tr("None")                },
+  {RatioExposureClip,  QObject::tr("Ratio")               },
+  {CurveExposureClip,  QObject::tr("Film curve")          },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::AutoExposureMode[] = {

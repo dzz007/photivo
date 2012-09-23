@@ -328,8 +328,10 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("LumaAdjust",            Fuid::LumaAdjust_LabEyeCandy);
   GFilterDM->NewFilter("SatAdjust",             Fuid::SatAdjust_LabEyeCandy);
   GFilterDM->NewFilter("Tone",                  Fuid::Tone_LabEyeCandy);
-  // Eyecandy tab
+  GFilterDM->NewFilter("VignetteLab",           Fuid::Vignette_LabEyeCandy);
+  // RGB Eyecandy tab
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
+  GFilterDM->NewFilter("VignetteRgb",           Fuid::Vignette_EyeCandy);
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_EyeCandy);
   GFilterDM->NewFilter("RToneCurve",            Fuid::RTone_EyeCandy);
   GFilterDM->NewFilter("GToneCurve",            Fuid::GTone_EyeCandy);
@@ -1060,10 +1062,10 @@ void CB_Event0() {
     Temp << "TabWhiteBalance"
          << "TabRotation"
          << "TabCrop"
-         << "TabReinhard05"
+         << Fuid::ReinhardBrighten_RGB
          << "TabLABTexture2"
-         << "TabDetailCurve"
-         << "TabLABVignette"
+         << Fuid::DetailCurve_LabSN
+         << Fuid::Vignette_LabEyeCandy
          << "TabOutContrast";
     Settings->SetValue("FavouriteTools", Temp);
   }
@@ -1710,7 +1712,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     PreviewImage->Set(ForcedImage);
     if (Settings->GetDouble("CropExposure") != 0.0) {
       float Factor = powf(2,Settings->GetDouble("CropExposure"));
-      PreviewImage->Expose(Factor,ptExposureClipMode_Ratio);
+      PreviewImage->Expose(Factor,RatioExposureClip);
     }
     BeforeGamma(PreviewImage,0,0);
 
@@ -6098,29 +6100,6 @@ void CB_ViewLABChoice(const QVariant Choice) {
   Update(ptProcessorPhase_LabSN);
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabEyeCandy Tab
-// Partim Vignette
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LabVignetteInnerRadiusInput(const QVariant Value) {
-  Settings->SetValue("LabVignetteInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("LabVignetteOuterRadius")));
-  if (Settings->ToolIsActive("TabLABVignette")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-
-void CB_LabVignetteOuterRadiusInput(const QVariant Value) {
-  Settings->SetValue("LabVignetteOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("LabVignetteInnerRadius")));
-  if (Settings->ToolIsActive("TabLABVignette")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the EyeCandy Tab
@@ -6453,28 +6432,6 @@ void CB_GradualOverlay2LowerLevelInput(const QVariant Value) {
 void CB_GradualOverlay2UpperLevelInput(const QVariant Value) {
   Settings->SetValue("GradualOverlay2UpperLevel",MAX(Value.toDouble(), Settings->GetDouble("GradualOverlay2LowerLevel")));
   if (Settings->ToolIsActive("TabGradualOverlay2")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the EyeCandy Tab
-// Partim Vignette
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_VignetteInnerRadiusInput(const QVariant Value) {
-  Settings->SetValue("VignetteInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("VignetteOuterRadius")));
-  if (Settings->ToolIsActive("TabRGBVignette")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-
-void CB_VignetteOuterRadiusInput(const QVariant Value) {
-  Settings->SetValue("VignetteOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("VignetteInnerRadius")));
-  if (Settings->ToolIsActive("TabRGBVignette")) {
     Update(ptProcessorPhase_EyeCandy);
   }
 }
@@ -7003,16 +6960,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(ViewLABChoice)
 
-  M_SetAndRunDispatch(LabVignetteModeChoice)
-  M_SetAndRunDispatch(LabVignetteInput)
-  M_SetAndRunDispatch(LabVignetteAmountInput)
-  M_Dispatch(LabVignetteInnerRadiusInput)
-  M_Dispatch(LabVignetteOuterRadiusInput)
-  M_SetAndRunDispatch(LabVignetteRoundnessInput)
-  M_SetAndRunDispatch(LabVignetteCenterXInput)
-  M_SetAndRunDispatch(LabVignetteCenterYInput)
-  M_SetAndRunDispatch(LabVignetteSoftnessInput)
-
   M_Dispatch(BWStylerFilmTypeChoice)
   M_SetAndRunDispatch(BWStylerColorFilterTypeChoice)
   M_SetAndRunDispatch(BWStylerMultRInput)
@@ -7076,16 +7023,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GradualOverlay2LowerLevelInput)
   M_Dispatch(GradualOverlay2UpperLevelInput)
   M_SetAndRunDispatch(GradualOverlay2SoftnessInput)
-
-  M_SetAndRunDispatch(VignetteModeChoice)
-  M_SetAndRunDispatch(VignetteInput)
-  M_SetAndRunDispatch(VignetteAmountInput)
-  M_Dispatch(VignetteInnerRadiusInput)
-  M_Dispatch(VignetteOuterRadiusInput)
-  M_SetAndRunDispatch(VignetteRoundnessInput)
-  M_SetAndRunDispatch(VignetteCenterXInput)
-  M_SetAndRunDispatch(VignetteCenterYInput)
-  M_SetAndRunDispatch(VignetteSoftnessInput)
 
   M_SetAndRunDispatch(GradBlur1Choice)
   M_SetAndRunDispatch(GradBlur1RadiusInput)
