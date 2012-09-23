@@ -64,7 +64,7 @@ void ptFilter_SatCurve::doDefineControls() {
                                                                                     ptCurve::LumaMask|ptCurve::ChromaMask,
                                                                                     ptCurve::ChromaMask,
                                                                                     ptCurve::CosineInterpol), ""})
-    << ptCfgItem({CMode,        ptCfgItem::Combo,         ptSaturationMode_Absolute, hModes, true, true, tr("Saturation mode"),   tr("")})
+    << ptCfgItem({CMode,        ptCfgItem::Combo,         ptSaturationMode_Adaptive, hModes, true, true, tr("Saturation mode"),   tr("")})
   ;
 }
 
