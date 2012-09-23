@@ -398,15 +398,15 @@ public:
               const double Softness);
 
   // Vignette
-  ptImage* Vignette(const short VignetteMode,
-            const short Exponent,
-            const double Amount,
-            const double InnerRadius,
-            const double OuterRadius,
-            const double Roundness,
-            const double CenterX,
-            const double CenterY,
-            const double Softness);
+  ptImage* Vignette(const TVignetteMask AVignetteMask,
+            const short AExponent,
+            const double AStrength,
+            const double AInnerRadius,
+            const double AOuterRadius,
+            const double ARoundness,
+            const double ACenterX,
+            const double ACenterY,
+            const double ASoftness);
 
   // Softglow
   ptImage* Softglow(const short SoftglowMode,

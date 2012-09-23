@@ -251,7 +251,9 @@ HEADERS += \
     ../Sources/filters/ptFilter_LabTransform.h \
     ../Sources/filters/ptFilter_Saturation.h \
     ../Sources/filters/ptFilter_ColorBoost.h \
-    ../Sources/filters/ptFilter_Tone.h
+    ../Sources/filters/ptFilter_Tone.h \
+    ../Sources/filters/ptFilter_Vignette.h \
+    ../Sources/filters/ptFilter_Exposure.h
 
 
 SOURCES += \
@@ -369,7 +371,9 @@ SOURCES += \
     ../Sources/filters/ptFilter_LabTransform.cpp \
     ../Sources/filters/ptFilter_Saturation.cpp \
     ../Sources/filters/ptFilter_ColorBoost.cpp \
-    ../Sources/filters/ptFilter_Tone.cpp
+    ../Sources/filters/ptFilter_Tone.cpp \
+    ../Sources/filters/ptFilter_Vignette.cpp \
+    ../Sources/filters/ptFilter_Exposure.cpp
 
 
 FORMS += \
@@ -379,7 +383,9 @@ FORMS += \
     ../Sources/ptMainWindow.ui \
     ../Sources/filters/ptFilter_ColorIntensity.ui \
     ../Sources/filters/ptFilter_LMHRecovery.ui \
-    ../Sources/filters/ptFilter_Tone.ui
+    ../Sources/filters/ptFilter_Tone.ui \
+    ../Sources/filters/ptFilter_Vignette.ui \
+    ../Sources/filters/ptFilter_Exposure.ui
 
 RESOURCES += ../qrc/photivo.qrc
 

@@ -261,6 +261,9 @@ protected:
   /*! Init: Every derived class has to call it in its constructor.*/
   void              internalInit();
 
+  /*! Must be called whenever the filter needs to run. */
+  void            requestPipeRun(const bool AUnconditional = false);
+
 // Pragmas are here to stop the compiler complaining about unused parameters in the default
 // implementations. Removing the parameter names would work too but be too obscure.
 #pragma GCC diagnostic push
@@ -329,9 +332,6 @@ private:
   /*! Helper method that performs the commonDispatch() connection for \c AObject
       if the object exists and \c ACfgItem.UseCommonDispatch is \c true. */
   void            performCommonConnect(const ptCfgItem &ACfgItem, QObject *AObject);
-
-  /*! Must be called whenever the filter needs to run. */
-  void            requestPipeRun(const bool AUnconditional = false);
 
   /*! Updates all widgets with values from config. Also takes care of activity status and
       pipe run request. */

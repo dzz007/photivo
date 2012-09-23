@@ -30,12 +30,16 @@
 #include <lensfun.h>
 
 #include <QString>
+#include <QMetaType>
 
 //==============================================================================
 
 /* !!!
   IMPORTANT: Photivo uses groups of const short for historical reasons.
   They are deprecated for new constants groups! Use enums insteads.
+
+  When you add a new enum also add a Q_DECLARE_METATYPE() declaration so the enum
+  can be used with QVariant.
 !!! */
 
 //==============================================================================
@@ -268,9 +272,12 @@ const short ptChannelMixerChoice_Manual = 1;
 const short ptChannelMixerChoice_File   = 2;
 
 // Exposure Clip Modes
-const short ptExposureClipMode_None  = 0;
-const short ptExposureClipMode_Ratio = 1;
-const short ptExposureClipMode_Curve = 2;
+enum TExposureClip {
+  NoExposureClip    = 0,
+  RatioExposureClip = 1,
+  CurveExposureClip = 2
+};
+Q_DECLARE_METATYPE(TExposureClip)
 
 // Auto Exposure Modes
 const short ptAutoExposureMode_Auto     = 0;
@@ -463,13 +470,28 @@ const short ptOverlayMaskMode_FullImage   = 0;
 const short ptOverlayMaskMode_Vignette    = 1;
 const short ptOverlayMaskMode_InvVignette = 2;
 
-// VignetteMode
+enum TVignetteMask {
+  NoVignetteMask    = 0,
+  SoftVignetteMask  = 1,
+  HardVignetteMask  = 2,
+  FancyVignetteMask = 3,
+  MaskVignetteMask  = 4
+};
+Q_DECLARE_METATYPE(TVignetteMask)
 
-const short ptVignetteMode_None  = 0;
-const short ptVignetteMode_Soft  = 1;
-const short ptVignetteMode_Hard  = 2;
-const short ptVignetteMode_Fancy = 3;
-const short ptVignetteMode_Mask  = 4;
+enum TVignetteShape {
+  DiamondVignetteShape = 1,
+  CircleVignetteShape  = 2,
+  Rect1VignetteShape   = 3,
+  Rect2VignetteShape   = 4,
+  Rect3VignetteShape   = 5,
+  Rect4VignetteShape   = 6,
+  Rect5VignetteShape   = 7,
+  Rect6VignetteShape   = 8,
+  Rect7VignetteShape   = 9,
+  Rect8VignetteShape   = 10
+};
+Q_DECLARE_METATYPE(TVignetteShape)
 
 // SoftglowMode
 
