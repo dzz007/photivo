@@ -543,7 +543,7 @@ void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
     if (isCyclicCurve()) {
       if (FMovingAnchor == 0)
         FCurve->setAnchorY(FCurve->anchorCount()-1, hNormPos.second);
-      else if (FMovingAnchor == FCurve->anchorCount())
+      else if (FMovingAnchor == FCurve->anchorCount()-1)
         FCurve->setAnchorY(0, hNormPos.second);
     }
 
