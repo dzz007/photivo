@@ -852,7 +852,7 @@ void ptProcessor::Run(short Phase,
         hFilter = GFilterDM->GetFilterFromName(Fuid::Levels_LabCC);
         if (hFilter->isActive()) {
           m_ReportProgress(hFilter->caption());
-          hFilter->runFilter(m_Image_AfterRGB);
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
 
@@ -1975,47 +1975,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Vibrance
 
-        if (Settings->ToolIsActive("TabECColorIntensity") &&
-            Settings->GetInt("Vibrance2")) {
-
-          m_ReportProgress(tr("Vibrance 2"));
-          int Value = (Settings->GetInt("Vibrance2"));
-          float VibranceMixer[3][3];
-
-          VibranceMixer[0][0] = 1.0+(Value/150.0);
-          VibranceMixer[0][1] = -(Value/300.0);
-          VibranceMixer[0][2] = VibranceMixer[0][1];
-          VibranceMixer[1][0] = VibranceMixer[0][1];
-          VibranceMixer[1][1] = VibranceMixer[0][0];
-          VibranceMixer[1][2] = VibranceMixer[0][1];
-          VibranceMixer[2][0] = VibranceMixer[0][1];
-          VibranceMixer[2][1] = VibranceMixer[0][1];
-          VibranceMixer[2][2] = VibranceMixer[0][0];
-
-          m_Image_AfterEyeCandy->MixChannels(VibranceMixer);
-        }
-
-        if (Settings->ToolIsActive("TabECColorIntensity") &&
-            (Settings->GetInt("Intensity2Red")   ||
-             Settings->GetInt("Intensity2Green") ||
-             Settings->GetInt("Intensity2Blue"))) {
-
-          m_ReportProgress(tr("Intensity RGB 2"));
-          int ValueR=(Settings->GetInt("Intensity2Red"));
-          int ValueG=(Settings->GetInt("Intensity2Green"));
-          int ValueB=(Settings->GetInt("Intensity2Blue"));
-          float IntensityMixer[3][3];
-          IntensityMixer[0][0] = 1.0+(ValueR/150.0);
-          IntensityMixer[0][1] = -(ValueR/300.0);
-          IntensityMixer[0][2] = IntensityMixer[0][1];
-          IntensityMixer[1][0] = -(ValueG/300.0);
-          IntensityMixer[1][1] = 1.0+(ValueG/150.0);;
-          IntensityMixer[1][2] = IntensityMixer[1][0];
-          IntensityMixer[2][0] = -(ValueB/300.0);
-          IntensityMixer[2][1] = IntensityMixer[2][0];
-          IntensityMixer[2][2] = 1.0+(ValueB/150.0);;
-
-          m_Image_AfterEyeCandy->MixChannels(IntensityMixer);
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ColorIntensity_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
 
