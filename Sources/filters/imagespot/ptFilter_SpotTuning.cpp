@@ -214,10 +214,12 @@ void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget
     AGuiWidget = FGuiContainer;
 
   for (ptCfgItem hCfgItem: FCfgItems) {
-    ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiWidget);
-    hWidget->blockSignals(true);
-    hWidget->setValue(hSpot->getValue(hCfgItem.Id));
-    hWidget->blockSignals(false);
+    if (hCfgItem.Type != ptCfgItem::CurveWin){
+      ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiWidget);
+      hWidget->blockSignals(true);
+      hWidget->setValue(hSpot->getValue(hCfgItem.Id));
+      hWidget->blockSignals(false);
+    }
   }
 
   FGui->MaxRadius->setEnabled(hSpot->getValue("HasMaxRadius").toBool());
