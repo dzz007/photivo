@@ -78,16 +78,38 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
   }
 
   // store additional custom config lists (e.g. used for curve anchors)
-  QStringList hStoreIds = FConfig->storeIds();
-  if (!hStoreIds.isEmpty()) {
-    APreset->setValue(CCustomStores, FConfig->storeIds());
-    for (QString hId: FConfig->storeIds()) {
+  // First find out if the available stores should go into the config file
+  QStringList hStorableStores;
+  for (QString hId: FConfig->simpleStoreIds()) {
+    if (FCfgItems.at(cfgIdx(hId)).Storeable)
+      hStorableStores.append(hId);
+  }
+
+  // save list of store names and stores’ contents
+  if (!hStorableStores.isEmpty()) {
+    APreset->setValue(CCustomStores, hStorableStores);
+
+    for (QString hId: hStorableStores) {
       TConfigStore *hList = FConfig->getSimpleStore(hId);
       APreset->beginGroup(hId);
       for (auto hItem = hList->constBegin(); hItem != hList->constEnd(); ++hItem) {
         APreset->setValue(hItem.key(), hItem.value());
       }
       APreset->endGroup();
+    }
+  }
+
+  // store additional custom config lists (e.g. used for curve anchors)
+  QStringList hStoreIds = FConfig->storeIds();
+  if (!hStoreIds.isEmpty()) {
+    for (QString hId: hStoreIds) {
+      ptStorable* hStore = FConfig->getStore(hId);
+      if (!hStore) continue;
+      TConfigStore hList = hStore->storeConfig(hId);
+
+      for (auto hItem = hList.constBegin(); hItem != hList.constEnd(); ++hItem) {
+        APreset->setValue(hItem.key(), hItem.value());
+      }
     }
   }
 

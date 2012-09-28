@@ -30,15 +30,25 @@ ptTuningSpot::ptTuningSpot(const QList<ptCfgItem> *ADefaults)
 : ptImageSpot(),
   FDefaults(ADefaults)
 {
+  int hCurveIdx = -1;
+  int i = -1;
   for (ptCfgItem hCfgItem: *FDefaults) {
-    FDataStore.insert(hCfgItem.Id, hCfgItem.Default);
+    ++i;
+    if (hCfgItem.Type != ptCfgItem::CurveWin)
+      FDataStore.insert(hCfgItem.Id, hCfgItem.Default);
+    else
+      hCurveIdx = i;
   }
 
-  TAnchorList hAnchors = {TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0)};
-  FCurve = std::make_shared<ptCurve>(hAnchors,
-                                     ptCurve::LumaMask,
-                                     ptCurve::LumaMask,
-                                     ptCurve::SplineInterpol);
+  if (hCurveIdx > -1) {
+    FCurve = FDefaults->at(hCurveIdx).Curve;
+  } else {
+    TAnchorList hAnchors = {TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0)};
+    FCurve = std::make_shared<ptCurve>(hAnchors,
+                                       ptCurve::LumaMask,
+                                       ptCurve::LumaMask,
+                                       ptCurve::SplineInterpol);
+  }
 }
 
 //==============================================================================
