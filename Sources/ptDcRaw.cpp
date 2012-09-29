@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2009-2012 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
@@ -2953,7 +2953,7 @@ void CLASS foveon_huff (uint16_t *huff)
 void CLASS foveon_dp_load_raw()
 {
   unsigned c, roff[4], row, col, diff;
-  uint16_t huff[258], vpred, hpred;
+  uint16_t huff[258], vpred[2][2], hpred[2];
 
   fseek (m_InputFile, 8, SEEK_CUR);
   foveon_huff (huff);
@@ -2962,13 +2962,13 @@ void CLASS foveon_dp_load_raw()
   for (c=0; c<3; c++) {
     fseek (m_InputFile, m_Data_Offset+roff[c], SEEK_SET);
     getbits(-1);
-    vpred = 1024;
+    vpred[0][0] = vpred[0][1] = vpred[1][0] = vpred[1][1] = 512;
     for (row=0; row < m_Height; row++) {
       for (col=0; col < m_Width; col++) {
   diff = ljpeg_diff(huff);
-  if (col) hpred += diff;
-  else hpred = vpred += diff;
-  m_Image[row*m_Width+col][c] = hpred;
+	if (col < 2) hpred[col] = vpred[row & 1][col] += diff;
+	else hpred[col & 1] += diff;
+	m_Image[row*m_Width+col][c] = hpred[col & 1];
       }
     }
   }
@@ -4832,13 +4832,11 @@ void CLASS parse_makernote (int base, int uptag)
       ASSIGN(m_CameraMultipliers[2], getreal(type));
     }
     if (tag == 0xd && type == 7 && get2() == 0xaaaa) {
-      ptfread (buf97, 1, sizeof buf97, m_InputFile);
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wwrite-strings"
-      i = (uint8_t *) memmem ((char*)buf97, sizeof buf97,"\xbb\xbb",2) - buf97 + 10;
-#pragma GCC diagnostic pop
-      if (i < 70 && buf97[i] < 3)
-        m_Flip = "065"[buf97[i]]-'0';
+      for (c=i=2; (uint16_t) c != 0xbbbb && i < len; i++)
+	c = c << 8 | fgetc(m_InputFile);
+      while ((i+=4) < len-5)
+	if (get4() == 257 && (i=len) && (c = (get4(),fgetc(m_InputFile))) < 3)
+	  m_Flip = "065"[c]-'0';
     }
     if (tag == 0x10 && type == 4)
       unique_id = get4();
@@ -7304,6 +7302,12 @@ canon_a5:
     m_Height -= m_TopMargin = 45;
     m_LeftMargin = 142;
     m_Width = 4916;
+  } else if (l_IsCanon && m_RawWidth == 5280) {
+    m_TopMargin  = 52;
+    m_LeftMargin = 72;
+    if (unique_id == 0x80000301)
+      adobe_coeff ("Canon","EOS 650D");
+    goto canon_cr2;
   } else if (l_IsCanon && m_RawWidth == 5344) {
     m_TopMargin = 51;
     m_LeftMargin = 142;
@@ -7611,11 +7615,11 @@ konica_400z:
     m_RawWidth = l_FileSize/m_Height/2;
     m_ByteOrder = 0x4d4d;
     m_LoadRawFunction = &CLASS unpacked_load_raw;
-  } else if (!strncmp(m_CameraModel,"NX1",3)) {
+  } else if (!strcmp(m_CameraMake,"SAMSUNG") && m_RawWidth == 4704) {
     m_Height -= m_TopMargin = 8;
     m_Width -= 2 * (m_LeftMargin = 8);
     m_Load_Flags = 32;
-  } else if (!strcmp(m_CameraModel,"NX200")) {
+  } else if (!strcmp(m_CameraMake,"SAMSUNG") && m_RawWidth == 5632) {
     m_ByteOrder = 0x4949;
     m_Height = 3694;
     m_TopMargin = 2;
@@ -7884,6 +7888,8 @@ wb550:
     adobe_coeff ("SONY","DSC-R1");
     m_Width = 3925;
     m_ByteOrder = 0x4d4d;
+  } else if (!strcmp(m_CameraMake,"SONY") && m_RawWidth == 5504) {
+    m_Width -= 8;
   } else if (!strcmp(m_CameraMake,"SONY") && m_RawWidth == 6048) {
     m_Width -= 24;
   } else if (!strcmp(m_CameraModel,"DSLR-A100")) {
