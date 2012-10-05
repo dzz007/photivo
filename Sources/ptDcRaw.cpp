@@ -4269,7 +4269,7 @@ void CLASS pre_interpolate()
   // If m_UserSetting_HalfSize is set no interpolation will
   // be needed. This is registered by m_Filters = 0.
   // (no Bayer array anymore, this means)
-  if (m_UserSetting_HalfSize) {
+  if (m_UserSetting_HalfSize && m_Filters != 2) {
     m_Filters = 0;
   }
 }
@@ -8748,7 +8748,7 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
 
   // not 1:1 pipe, use FC marco instead of interpolation
   uint16_t    (*TempImage)[4];
-  if (m_Shrink) { // -> m_Filters == 0
+  if (m_Shrink && m_Filters != 2) { // -> preinterpolate will set m_Filters = 0 if != 2
     m_OutHeight = (m_Height + 1) / 2;
     m_OutWidth  = (m_Width + 1) / 2;
     TempImage = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *TempImage);
@@ -8776,7 +8776,9 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
       if (m_UserSetting_BayerDenoise==1) fbdd(0);
       else if (m_UserSetting_BayerDenoise==2) fbdd(1);
     }
-    if (m_UserSetting_Quality == ptInterpolation_Linear)
+    if (m_Filters == 2) // for 3x3 pattern we fix to VNG
+      vng_interpolate();
+    else if (m_UserSetting_Quality == ptInterpolation_Linear)
       lin_interpolate();
     else if (m_UserSetting_Quality == ptInterpolation_VNG ||
              m_UserSetting_Quality == ptInterpolation_VNG4)
@@ -8814,12 +8816,11 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
   TRACEKEYVALS("Interpolation type","%d",m_UserSetting_Quality);
 
   // Additional photivo stuff. Other halvings on request.
-  if (m_UserSetting_HalfSize > 1 ||
-      // 3 channel RAWs
-      (m_Shrink == 0 && m_UserSetting_HalfSize == 1)) {
-
-    short Factor = m_UserSetting_HalfSize-1;
-    if (m_Shrink == 0) Factor+=1;
+  if (m_UserSetting_HalfSize > 1                      ||
+      (m_UserSetting_HalfSize == 1 && m_Shrink  == 0) || // 3 channel RAWs
+      (m_UserSetting_HalfSize == 1 && m_Filters == 2)) { // 3x3 pattern
+    short Factor = m_UserSetting_HalfSize - 1;
+    if (m_Shrink == 0 || m_Filters == 2) Factor += 1;
 
     uint16_t NewHeight = m_Height >> Factor;
     uint16_t NewWidth = m_Width >> Factor;
@@ -8857,7 +8858,7 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
   }
 
   // Green mixing
-  if (m_MixGreen) {
+  if (m_MixGreen && m_Colors != 3) {
 #pragma omp parallel for schedule(static) default(shared)
     for (uint32_t i=0; i < (uint32_t) m_Height*m_Width; i++)
       m_Image[i][1] = (m_Image[i][1] + m_Image[i][3]) >> 1;
@@ -9137,6 +9138,10 @@ void CLASS ptHotpixelReductionBayer() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+inline uint16_t MultOf6(uint16_t AValue) {
+  return ptMax(AValue - (AValue % 6), 0);
+}
+
 void CLASS ptCrop() {
   assert (m_UserSetting_HalfSize == 0);
 
@@ -9145,6 +9150,13 @@ void CLASS ptCrop() {
   uint16_t CropH = m_UserSetting_DetailViewCropH;
   uint16_t CropX = m_UserSetting_DetailViewCropX;
   uint16_t CropY = m_UserSetting_DetailViewCropY;
+
+  if (m_Filters == 2) { // for 3x3 pattern
+    CropW = MultOf6(CropW);
+    CropH = MultOf6(CropH);
+    CropX = MultOf6(CropX);
+    CropY = MultOf6(CropY);
+  }
 
   if (m_Flip & 2) {
     CropX = m_Height - CropX - CropW;
