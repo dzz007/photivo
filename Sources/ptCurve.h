@@ -149,7 +149,8 @@ public:
         0 when successful, -1 when an undetermined error occured, or the line number
         in the file where parsing failed.
    */
-  int             readCurveFile(const QString &AFileName);
+  int             readCurveFile(const QString &AFileName,
+                                const bool     AOnlyAnchors);
 
 
   /*! \group Standard setters and getters. */
