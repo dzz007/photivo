@@ -300,7 +300,7 @@ void ptCurve::setFromFilterConfig(TConfigStore *AConfig) {
     calcCurve();
 
   } else {  // curve from old-style curve file
-    int hError = readCurveFile(FFileName);
+    int hError = readCurveFile(FFileName, false);
     if (hError != 0) {
       QString hErrMsg = QString(QObject::tr("Failed to load curve file %1.")).arg(FFileName);
       if (hError > 0) hErrMsg += QString(QObject::tr("\nThe error occurred in line %1.")).arg(hError);
@@ -329,7 +329,7 @@ void ptCurve::setFromFunc(double(*Function)(double r, double Arg1, double Arg2),
 
 //==============================================================================
 
-int ptCurve::readCurveFile(const QString &AFileName) {
+int ptCurve::readCurveFile(const QString &AFileName, const bool AOnlyAnchors) {
   // No members are updated until the curve file is completely and successfully read.
   // That way we can error-return safely at any point.
 
@@ -351,6 +351,9 @@ int ptCurve::readCurveFile(const QString &AFileName) {
   int hCurveType = hCurveData.at(hNextIdx).right(1).toInt(&ok);
   if (!ok || (hCurveType < 0) || (hCurveType > 1))
     return hNextIdx;
+
+  if (hCurveType == 0 && AOnlyAnchors)
+    return -2;
 
   // temporary containers for the actual data
   std::array<uint16_t, 0x10000> hCurveArray;
@@ -386,7 +389,9 @@ int ptCurve::readCurveFile(const QString &AFileName) {
   }
 
   // When we arrive here the file was successfully and completely read.
-  FFileName  = AFileName;
+  if (!AOnlyAnchors) {
+    FFileName  = AFileName;
+  }
   this->setCurveType((TType)hCurveType);
 
   if (FCurveType == FullPrecalcType) {
