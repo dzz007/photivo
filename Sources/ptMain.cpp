@@ -1835,6 +1835,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     // In case of histogram update only, we're done.
     if (OnlyHistogram) {
+      HistogramWindow->UpdateView(HistogramImage);
       ViewWindow->ShowStatus(ptStatus_Done);
       return;
     }
@@ -1951,6 +1952,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       }
     }
     if (OnlyHistogram) {
+      HistogramWindow->UpdateView(HistogramImage);
       ViewWindow->ShowStatus(ptStatus_Done);
       return;
     }
@@ -2048,9 +2050,11 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
   ReportProgress(QObject::tr("Ready"));
 
-  if (!OnlyHistogram)
-    if (Settings->GetInt("WriteBackupSettings"))
+  if (!OnlyHistogram) {
+    if (Settings->GetInt("WriteBackupSettings")) {
       GFilterDM->WritePresetFile(Settings->GetString("UserDirectory")+"backup.pts");
+    }
+  }
 } // UpdatePreviewImage
 
 ////////////////////////////////////////////////////////////////////////////////
