@@ -24,7 +24,7 @@ MsysBasePath=/C/Projekte/Photivo
 RealBasePath=C:/Projekte/Photivo
 
 # Additional C++ compiler flags.
-MORECXXFLAGS=""
+# export CXXFLAGS="$CXXFLAGS "
 
 #============================= End user config =================================
 
@@ -34,7 +34,6 @@ ColorGreen='\e[0;32m'
 ColorNone='\e[00m'
 
 ScriptPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export CXXFLAGS="$CXXFLAGS $MORECXXFLAGS"
 
 #===============================================================================
 
@@ -161,7 +160,7 @@ fi
 echo "Copying binaries ..."
 cp $BUILDDIR/photivo.exe $BUILDDIR/ptClear.exe $BINDIR
 
-if ! photivo-update-libs $BINDIR ; then
+if ! ptuplibs $BINDIR ; then
   # Success/failure message is handled by the update libs script
   exit 1
 fi
@@ -169,7 +168,7 @@ fi
 echo "Stripping debug symbols ..."
 strip $BINDIR/*.dll $BINDIR/*.exe
 
-photivo-update-datafiles $BINDIR
+ptupdata $BINDIR
 if [ ! $? -eq 0 ]; then
   Error "Copying data files failed!"
   exit 1

@@ -96,7 +96,7 @@ win32 {
 
   LIBS += \
       -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick \
-      libole32 -lwsock32 -lexpat -lregex -lgdi32 -liconv \
+      libole32 -lwsock32 -lexpat -lgdi32 -liconv \
 
   HEADERS +=  ../Sources/ptEcWin7.h \
               ../Sources/ptWinApi.h

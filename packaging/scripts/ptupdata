@@ -6,12 +6,12 @@ if [[ "$GccArch"       == "" ]];               then printf "GccArch not set!\n" 
 if [[ ($GccArch != 64) && ($GccArch != 32) ]]; then printf "Wrong GccArch (${GccArch})!\n" ; exit 1 ; fi
 
 if [ "$1" = "" ]; then
-  THEBINDIR=$PhotivoBuildPath
+    THEBINDIR=$PhotivoBuildPath
 else
-  THEBINDIR=$1
+    THEBINDIR=$1
 fi
 
-if [ ! -d $THEBINDIR ]; then mkdir $THEBINDIR ; fi
+if [ ! -d $THEBINDIR ]; then mkdir -p $THEBINDIR ; fi
 
 echo "Updating data files in \"$THEBINDIR\" ..."
 
