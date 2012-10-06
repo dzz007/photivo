@@ -63,7 +63,7 @@ cp libexiv2.dll \
    $TheBindir $cpDestOpts
 Status=$?
 
-if [[ Status == 0 ]]; then
+if [[ $Status == 0 ]]; then
     if [[ "$GccArch" == "64" ]]; then
         cp libintl-8.dll \
            $TheBindir $cpDestOpts && \
@@ -88,10 +88,10 @@ if [[ Status == 0 ]]; then
     Status=$?
 fi
 
-if [[ Status == 0 ]]; then
+if [[ $Status == 0 ]]; then
     printf "\e[0;32mUpdating DLLs succeeded!\e[00m\n"
     exit 0
 else
     printf "\e[1;31mUpdating DLLs failed!\e[00m\n"
-    exit Status
+    exit $Status
 fi
