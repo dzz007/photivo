@@ -61,6 +61,16 @@ unix {
   QMAKE_CC    = ccache /usr/bin/gcc
   QMAKE_CXX   = ccache /usr/bin/g++
 
+  # use a CImg include provided by the system instead of the local copy
+  message($$CONFIG)
+  CONFIG(WithSystemCImg) {
+    PKGCONFIG  += CImg
+    QMAKE_CXXFLAGS_RELEASE     += -DSYSTEM_CIMG
+    QMAKE_CXXFLAGS_DEBUG       += -DSYSTEM_CIMG
+
+    system(echo "Using system supplied CImg library")
+  }
+
   QMAKE_CFLAGS_RELEASE    += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
   QMAKE_CXXFLAGS_RELEASE  += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
   QMAKE_CFLAGS_DEBUG      += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
@@ -86,7 +96,7 @@ win32 {
 
   LIBS += \
       -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick \
-      libole32 -lwsock32 -lexpat -lregex -lgdi32 -liconv \
+      libole32 -lwsock32 -lexpat -lgdi32 -liconv \
 
   HEADERS +=  ../Sources/ptEcWin7.h \
               ../Sources/ptWinApi.h
@@ -241,6 +251,18 @@ HEADERS += \
     ../Sources/filters/imagespot/ptSpotListWidget.h \
     ../Sources/ptTempFile.h \
     ../Sources/filters/ptStorable.h \
+    ../Sources/filters/ptFilter_ColorIntensity.h \
+    ../Sources/filters/ptFilter_Brightness.h \
+    ../Sources/filters/ptFilter_ReinhardBrighten.h \
+    ../Sources/filters/ptFilter_Normalization.h \
+    ../Sources/filters/ptFilter_ColorEnhancement.h \
+    ../Sources/filters/ptFilter_Levels.h \
+    ../Sources/filters/ptFilter_LMHRecovery.h \
+    ../Sources/filters/ptFilter_Drc.h \
+    ../Sources/filters/ptFilter_LabTransform.h \
+    ../Sources/filters/ptFilter_Saturation.h \
+    ../Sources/filters/ptFilter_ColorBoost.h \
+    ../Sources/filters/ptFilter_Tone.h \
     ../Sources/filters/imagespot/ptImageSpotList.h
 
 
@@ -358,7 +380,19 @@ SOURCES += \
     ../Sources/filters/imagespot/ptSpotInteraction.cpp \
     ../Sources/filters/imagespot/ptSpotListWidget.cpp \
     ../Sources/ptTempFile.cpp \
-    ../Sources/filters/imagespot/ptImageSpotList.cpp
+    ../Sources/filters/imagespot/ptImageSpotList.cpp \
+    ../Sources/filters/ptFilter_ColorIntensity.cpp \
+    ../Sources/filters/ptFilter_Brightness.cpp \
+    ../Sources/filters/ptFilter_ReinhardBrighten.cpp \
+    ../Sources/filters/ptFilter_Normalization.cpp \
+    ../Sources/filters/ptFilter_ColorEnhancement.cpp \
+    ../Sources/filters/ptFilter_Levels.cpp \
+    ../Sources/filters/ptFilter_LMHRecovery.cpp \
+    ../Sources/filters/ptFilter_Drc.cpp \
+    ../Sources/filters/ptFilter_LabTransform.cpp \
+    ../Sources/filters/ptFilter_Saturation.cpp \
+    ../Sources/filters/ptFilter_ColorBoost.cpp \
+    ../Sources/filters/ptFilter_Tone.cpp
 
 
 FORMS += \
@@ -367,7 +401,10 @@ FORMS += \
     ../Sources/filters/ptFilter_Wiener.ui \
     ../Sources/filters/ptFilter_Outline.ui \
     ../Sources/filters/imagespot/ptFilter_SpotTuning.ui \
-    ../Sources/filters/imagespot/ptSpotListWidget.ui
+    ../Sources/filters/imagespot/ptSpotListWidget.ui \
+    ../Sources/filters/ptFilter_ColorIntensity.ui \
+    ../Sources/filters/ptFilter_LMHRecovery.ui \
+    ../Sources/filters/ptFilter_Tone.ui
 
 RESOURCES += ../qrc/photivo.qrc
 
@@ -378,6 +415,7 @@ TRANSLATIONS += ../Translations/photivo_Italian.ts
 TRANSLATIONS += ../Translations/photivo_Polish.ts
 TRANSLATIONS += ../Translations/photivo_Russian.ts
 TRANSLATIONS += ../Translations/photivo_Spanish.ts
+TRANSLATIONS += ../Translations/photivo_Czech.ts
 
 ################################################################################
 

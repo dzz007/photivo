@@ -2179,6 +2179,25 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ToneForm</name>
+    <message>
+        <source>All values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shadows</source>
+        <translation>Sombras</translation>
+    </message>
+    <message>
+        <source>Midtones</source>
+        <translation>Tonos medios</translation>
+    </message>
+    <message>
+        <source>Highlights</source>
+        <translation>Luces altas</translation>
+    </message>
+</context>
+<context>
     <name>ptCurveWindow</name>
     <message>
         <source>A&amp;daptive</source>
@@ -2344,6 +2363,52 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ptFilter_Brightness</name>
+    <message>
+        <source>Brightness</source>
+        <translation>Brillo</translation>
+    </message>
+    <message>
+        <source>Catch white</source>
+        <translation>Ajustar blanco</translation>
+    </message>
+    <message>
+        <source>Darken the bright parts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Catch black</source>
+        <translation>Ajustar negro</translation>
+    </message>
+    <message>
+        <source>Brighten the dark parts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gain</source>
+        <translation>Ganancia</translation>
+    </message>
+    <message>
+        <source>Exposure gain</source>
+        <translation>Ganancia exposición</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_ColorBoost</name>
+    <message>
+        <source>Color boost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strength in a</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strength in b</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_ColorContrast</name>
     <message>
         <source>Color contrast</source>
@@ -2367,6 +2432,44 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ptFilter_ColorEnhancement</name>
+    <message>
+        <source>Color enhancement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enhance shadows</source>
+        <translation>Mejorar sombras</translation>
+    </message>
+    <message>
+        <source>Enhance highlights</source>
+        <translation>Mejorar luces altas</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_ColorIntensity</name>
+    <message>
+        <source>Color Intensity</source>
+        <translation>Intensidad de color</translation>
+    </message>
+    <message>
+        <source>Vibrance</source>
+        <translation>Vitalidad</translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation>Rojo</translation>
+    </message>
+    <message>
+        <source>Green</source>
+        <translation>Verde</translation>
+    </message>
+    <message>
+        <source>Blue</source>
+        <translation>Azul</translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_DetailCurve</name>
     <message>
         <source>Detail curve</source>
@@ -2383,6 +2486,25 @@ The error occurred in line %1.</source>
     <message>
         <source>Anti badpixel</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Drc</name>
+    <message>
+        <source>Dynamic range compression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strength</source>
+        <translation>Fuerza</translation>
+    </message>
+    <message>
+        <source>Bias</source>
+        <translation>Parcialidad</translation>
+    </message>
+    <message>
+        <source>Color adaption</source>
+        <translation>Adaptación del color</translation>
     </message>
 </context>
 <context>
@@ -2429,6 +2551,95 @@ The error occurred in line %1.</source>
     <message>
         <source>Adjusts brightness of highlights in B channel</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LMHRecovery</name>
+    <message>
+        <source>Low/mid/highlight recovery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Deshabilitado</translation>
+    </message>
+    <message>
+        <source>Shadows</source>
+        <translation>Sombras</translation>
+    </message>
+    <message>
+        <source>Midtones</source>
+        <translation>Tonos medios</translation>
+    </message>
+    <message>
+        <source>Highlights</source>
+        <translation>Luces altas</translation>
+    </message>
+    <message>
+        <source>All values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mask type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strength</source>
+        <translation>Fuerza</translation>
+    </message>
+    <message>
+        <source>Lower limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upper limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Softness</source>
+        <translation>Suavidad</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LabTransform</name>
+    <message>
+        <source>Lab transform</source>
+        <translation>Transformación Lab</translation>
+    </message>
+    <message>
+        <source>Regular L*</source>
+        <translation>Regular L*</translation>
+    </message>
+    <message>
+        <source>R -&gt; L*</source>
+        <translation>R -&gt; L*</translation>
+    </message>
+    <message>
+        <source>G -&gt; L*</source>
+        <translation>G -&gt; L*</translation>
+    </message>
+    <message>
+        <source>B -&gt; L*</source>
+        <translation>B -&gt; L*</translation>
+    </message>
+    <message>
+        <source>Transformation</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Levels</name>
+    <message>
+        <source>Levels</source>
+        <translation>Niveles</translation>
+    </message>
+    <message>
+        <source>Blackpoint</source>
+        <translation>Punto negro</translation>
+    </message>
+    <message>
+        <source>Whitepoint</source>
+        <translation>Punto blanco</translation>
     </message>
 </context>
 <context>
@@ -2487,6 +2698,17 @@ The error occurred in line %1.</source>
     <message>
         <source>Magenta</source>
         <translation>Magenta</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Normalization</name>
+    <message>
+        <source>Normalization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Opacity</source>
+        <translation>Opacidad</translation>
     </message>
 </context>
 <context>
@@ -2597,6 +2819,29 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ptFilter_ReinhardBrighten</name>
+    <message>
+        <source>Reinhard brighten</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable</source>
+        <translation>Habilitado</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation>Brillo</translation>
+    </message>
+    <message>
+        <source>Chrominance</source>
+        <translation>Crominancia</translation>
+    </message>
+    <message>
+        <source>Lightness tweak</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_SatCurve</name>
     <message>
         <source>Saturation curve</source>
@@ -2613,6 +2858,17 @@ The error occurred in line %1.</source>
     <message>
         <source>Saturation mode</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Saturation</name>
+    <message>
+        <source>Saturation adjustment</source>
+        <translation>Ajsute saturación</translation>
+    </message>
+    <message>
+        <source>Strength</source>
+        <translation>Fuerza</translation>
     </message>
 </context>
 <context>
@@ -2690,6 +2946,25 @@ The error occurred in line %1.</source>
     <message>
         <source>After gamma curve</source>
         <translation>Curva tras gamma</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_Tone</name>
+    <message>
+        <source>Tone</source>
+        <translation>Tono</translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation>Saturación</translation>
+    </message>
+    <message>
+        <source>Strength</source>
+        <translation>Fuerza</translation>
+    </message>
+    <message>
+        <source>Hue</source>
+        <translation>Color</translation>
     </message>
 </context>
 <context>
@@ -3179,11 +3454,11 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <source>Color Intensity</source>
-        <translation>Intensidad de color</translation>
+        <translation type="obsolete">Intensidad de color</translation>
     </message>
     <message>
         <source>Brightness</source>
-        <translation>Brillo</translation>
+        <translation type="obsolete">Brillo</translation>
     </message>
     <message>
         <source>Exposure</source>
@@ -3191,7 +3466,7 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <source>Brighten</source>
-        <translation>Iluminar</translation>
+        <translation type="obsolete">Iluminar</translation>
     </message>
     <message>
         <source>GammaTool</source>
@@ -3199,15 +3474,15 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <source>Normalization</source>
-        <translation>Normalizar</translation>
+        <translation type="obsolete">Normalizar</translation>
     </message>
     <message>
         <source>Color Enhancement</source>
-        <translation>Mejora de color</translation>
+        <translation type="obsolete">Mejora de color</translation>
     </message>
     <message>
         <source>Low/Mid/Highlight Recovery</source>
-        <translation>Recuperación luces bajas/medias/altas</translation>
+        <translation type="obsolete">Recuperación luces bajas/medias/altas</translation>
     </message>
     <message>
         <source>Texture Contrast</source>
@@ -3231,7 +3506,7 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <source>Levels</source>
-        <translation>Niveles</translation>
+        <translation type="obsolete">Niveles</translation>
     </message>
     <message>
         <source>RGB Curve</source>
@@ -3243,7 +3518,7 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <source>LAB Transform</source>
-        <translation>Transformación LAB</translation>
+        <translation type="obsolete">Transformación LAB</translation>
     </message>
     <message>
         <source>Shadows / Highlights</source>
@@ -3251,7 +3526,7 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <source>Dynamic Range Compression (*)</source>
-        <translation>Compresión de rango dinámico (*)</translation>
+        <translation type="obsolete">Compresión de rango dinámico (*)</translation>
     </message>
     <message>
         <source>Texture curve (*)</source>
@@ -3283,7 +3558,7 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <source>Saturation</source>
-        <translation>Saturación</translation>
+        <translation type="obsolete">Saturación</translation>
     </message>
     <message>
         <source>Increase saturation by a sigmoidal curve</source>
@@ -3291,7 +3566,7 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <source>Color Boost</source>
-        <translation>Levantar color</translation>
+        <translation type="obsolete">Levantar color</translation>
     </message>
     <message>
         <source>Lab Sharpen/Noise</source>
@@ -3415,23 +3690,23 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <source>Tone</source>
-        <translation>Tono</translation>
+        <translation type="obsolete">Tono</translation>
     </message>
     <message>
         <source>All values</source>
-        <translation>Todos loa valores</translation>
+        <translation type="obsolete">Todos loa valores</translation>
     </message>
     <message>
         <source>Shadows</source>
-        <translation>Sombras</translation>
+        <translation type="obsolete">Sombras</translation>
     </message>
     <message>
         <source>Midtones</source>
-        <translation>Tonos medios</translation>
+        <translation type="obsolete">Tonos medios</translation>
     </message>
     <message>
         <source>Lights</source>
-        <translation>Luces</translation>
+        <translation type="obsolete">Luces</translation>
     </message>
     <message>
         <source>Vignette</source>
@@ -4038,126 +4313,6 @@ The error occurred in line %1.</source>
         <translation>Guardar IU</translation>
     </message>
     <message>
-        <source>8daccb81-5dd3-4664-bf3c-1fefe7ad084e</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>a63b08df-36ee-4678-9e25-9c53467c502b</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>25b0402c-1668-4800-aab8-028160a08087</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>786384c5-ded7-4669-b748-e40ebabcdf2c</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>946311d6-64fb-46b8-a70e-bc9e8dcba56d</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>02ffc2a8-1fc6-4f50-940a-924da85efa1e</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2f4b0f7a-d720-41e0-b2fc-20dff3a02fcf</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e0310479-993f-4018-a80a-ac2d8c6c1ee4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>530aab8e-65e4-4bb8-b391-46f6673ac53d</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>f2d800db-1d7a-42bc-970c-9a89597f34a4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1d3e2630-de72-46b8-b1f9-7169cd1b3832</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1f5f1b76-71b7-4dda-9db3-89ffce1c7981</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0a462e7c-5764-4ed5-bb28-e583aabbf292</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>960ada58-c073-4603-acad-f4894bb3fe91</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2fea9112-1a10-4466-8ef9-0918a09ea3d6</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ee8167f2-1c78-4ae3-843d-4a3a0b807db8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>6dc120c5-e8ec-430e-9c5e-40ba217559d5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>f532185f-281a-4503-b96b-37c05bbcabf3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>25489dc0-8d77-4f39-bc42-1b91a0d1054d</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>61b61fd7-c891-4d78-92c2-3290c190be65</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>fb3f0bbc-6255-43ec-947c-4bd43e115379</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>6e7db630-310f-4f04-82e0-b668babfe8c9</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>6e3971ac-f640-4628-8aa0-ae07620f8ca4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>9e99b7ee-1e5f-4f4d-821f-efbfc0d6bffa</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>44112e0a-81df-4ae5-aee8-18a17d0ac810</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>221fa750-226c-4a48-a94b-e8b516865aca</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>88b24988-7fcf-47b6-b9a2-8600c992f3f3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>71999980-5530-4a91-996e-43e752099870</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>7c2a63e3-50be-476c-9364-7c442c2662fa</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No tools visible!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4204,15 +4359,15 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Vibrance</source>
-        <translation>Vitalidad</translation>
+        <translation type="obsolete">Vitalidad</translation>
     </message>
     <message>
         <source>IntensityRGB</source>
-        <translation>IntensidadRGB</translation>
+        <translation type="obsolete">IntensidadRGB</translation>
     </message>
     <message>
         <source>Brightness</source>
-        <translation>Brillo</translation>
+        <translation type="obsolete">Brillo</translation>
     </message>
     <message>
         <source>Correcting Exposure</source>
@@ -4220,23 +4375,23 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Brighten</source>
-        <translation>Brillo</translation>
+        <translation type="obsolete">Brillo</translation>
     </message>
     <message>
         <source>Applying RGB Gamma</source>
-        <translation>Plicando gamma RGB</translation>
+        <translation type="obsolete">Plicando gamma RGB</translation>
     </message>
     <message>
         <source>Normalization</source>
-        <translation>Normalización</translation>
+        <translation type="obsolete">Normalización</translation>
     </message>
     <message>
         <source>Color enhance</source>
-        <translation>Mejora de color</translation>
+        <translation type="obsolete">Mejora de color</translation>
     </message>
     <message>
         <source>Local Exposure</source>
-        <translation>Exposición local</translation>
+        <translation type="obsolete">Exposición local</translation>
     </message>
     <message>
         <source>RGB Texture contrast</source>
@@ -4256,27 +4411,27 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Levels</source>
-        <translation>Niveles</translation>
+        <translation type="obsolete">Niveles</translation>
     </message>
     <message>
         <source>Applying RGB curve</source>
-        <translation>Aplicando curva RGB</translation>
+        <translation type="obsolete">Aplicando curva RGB</translation>
     </message>
     <message>
         <source>Lab transform</source>
-        <translation>Transformación Lab</translation>
+        <translation type="obsolete">Transformación Lab</translation>
     </message>
     <message>
         <source>Shadows and Highlights</source>
-        <translation>Sombras y luces altas</translation>
+        <translation type="obsolete">Sombras y luces altas</translation>
     </message>
     <message>
         <source>LabLocal Exposure</source>
-        <translation>Exposición Lab local</translation>
+        <translation type="obsolete">Exposición Lab local</translation>
     </message>
     <message>
         <source>Dynamic Range Compression</source>
-        <translation>Compresión de rango dinámico</translation>
+        <translation type="obsolete">Compresión de rango dinámico</translation>
     </message>
     <message>
         <source>Texture curve</source>
@@ -4308,19 +4463,19 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Applying Lab contrast</source>
-        <translation>Aplicando contraste Lab</translation>
+        <translation type="obsolete">Aplicando contraste Lab</translation>
     </message>
     <message>
         <source>Applying Lab saturation</source>
-        <translation>Aplicando saturación Lab</translation>
+        <translation type="obsolete">Aplicando saturación Lab</translation>
     </message>
     <message>
         <source>Applying Color Boost</source>
-        <translation>Aplicando mejora de color</translation>
+        <translation type="obsolete">Aplicando mejora de color</translation>
     </message>
     <message>
         <source>LabLevels</source>
-        <translation>Niveles Lab</translation>
+        <translation type="obsolete">Niveles Lab</translation>
     </message>
     <message>
         <source>Impulse denoise</source>
@@ -4436,15 +4591,15 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Colorcontrast</source>
-        <translation>Contraste color</translation>
+        <translation type="obsolete">Contraste color</translation>
     </message>
     <message>
         <source>LAB tone adjustments 1</source>
-        <translation>Ajustes tono LAB 1</translation>
+        <translation type="obsolete">Ajustes tono LAB 1</translation>
     </message>
     <message>
         <source>LAB tone adjustments 2</source>
-        <translation>Ajustes tono LAB 2</translation>
+        <translation type="obsolete">Ajustes tono LAB 2</translation>
     </message>
     <message>
         <source>Luminance and saturation adjustment</source>
@@ -4452,19 +4607,19 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>LAB toning</source>
-        <translation>Tonificación LAB</translation>
+        <translation type="obsolete">Tonificación LAB</translation>
     </message>
     <message>
         <source>LAB shadows toning</source>
-        <translation>Tonificación sombras LAB</translation>
+        <translation type="obsolete">Tonificación sombras LAB</translation>
     </message>
     <message>
         <source>LAB midtones toning</source>
-        <translation>Tonificación tonos medios LAB</translation>
+        <translation type="obsolete">Tonificación tonos medios LAB</translation>
     </message>
     <message>
         <source>LAB highlights toning</source>
-        <translation>Tonificación luces altas LAB</translation>
+        <translation type="obsolete">Tonificación luces altas LAB</translation>
     </message>
     <message>
         <source>Lab Vignette</source>
@@ -4594,11 +4749,7 @@ No recorte, inténtelo de nuevo.</translation>
     </message>
     <message>
         <source>Highlights</source>
-        <translation>Luces altas</translation>
-    </message>
-    <message>
-        <source>Applying RGB contrast</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Luces altas</translation>
     </message>
     <message>
         <source>Applying a* b* curves</source>
@@ -4606,11 +4757,11 @@ No recorte, inténtelo de nuevo.</translation>
     </message>
     <message>
         <source>Luminance adjustment</source>
-        <translation>Ajuste luminancia</translation>
+        <translation type="obsolete">Ajuste luminancia</translation>
     </message>
     <message>
         <source>Saturation adjustment</source>
-        <translation>Ajsute saturación</translation>
+        <translation type="obsolete">Ajsute saturación</translation>
     </message>
 </context>
 <context>
@@ -4967,19 +5118,19 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Blackpoint</source>
-        <translation>Punto negro</translation>
+        <translation type="obsolete">Punto negro</translation>
     </message>
     <message>
         <source>Levels Blackpoint</source>
-        <translation>Niveles punto negro</translation>
+        <translation type="obsolete">Niveles punto negro</translation>
     </message>
     <message>
         <source>Whitepoint</source>
-        <translation>Punto blanco</translation>
+        <translation type="obsolete">Punto blanco</translation>
     </message>
     <message>
         <source>Levels Whitepoint</source>
-        <translation>Niveles punto blanco</translation>
+        <translation type="obsolete">Niveles punto blanco</translation>
     </message>
     <message>
         <source>Contribution of red to red</source>
@@ -5019,7 +5170,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Vibrance</source>
-        <translation>Vitalidad</translation>
+        <translation type="obsolete">Vitalidad</translation>
     </message>
     <message>
         <source>Red</source>
@@ -5027,7 +5178,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Intensity red</source>
-        <translation>Intensidad rojo</translation>
+        <translation type="obsolete">Intensidad rojo</translation>
     </message>
     <message>
         <source>Green</source>
@@ -5035,7 +5186,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Intensity green</source>
-        <translation>Intensidad verde</translation>
+        <translation type="obsolete">Intensidad verde</translation>
     </message>
     <message>
         <source>Blue</source>
@@ -5043,23 +5194,23 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Intensity blue</source>
-        <translation>Intensidad azul</translation>
+        <translation type="obsolete">Intensidad azul</translation>
     </message>
     <message>
         <source>Enhance shadows</source>
-        <translation>Mejorar sombras</translation>
+        <translation type="obsolete">Mejorar sombras</translation>
     </message>
     <message>
         <source>Enhance shadows only</source>
-        <translation>Mejorar solo sombras</translation>
+        <translation type="obsolete">Mejorar solo sombras</translation>
     </message>
     <message>
         <source>Enhance highlights</source>
-        <translation>Mejorar luces altas</translation>
+        <translation type="obsolete">Mejorar luces altas</translation>
     </message>
     <message>
         <source>Enhance highlights only</source>
-        <translation>Mejorar solo luces altas</translation>
+        <translation type="obsolete">Mejorar solo luces altas</translation>
     </message>
     <message>
         <source>Highlights R</source>
@@ -5107,47 +5258,47 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Gain</source>
-        <translation>Ganancia</translation>
+        <translation type="obsolete">Ganancia</translation>
     </message>
     <message>
         <source>Exposure gain</source>
-        <translation>Ganancia exposición</translation>
+        <translation type="obsolete">Ganancia exposición</translation>
     </message>
     <message>
         <source>Brightness</source>
-        <translation>Brillo</translation>
+        <translation type="obsolete">Brillo</translation>
     </message>
     <message>
         <source>Chrominance</source>
-        <translation>Crominancia</translation>
+        <translation type="obsolete">Crominancia</translation>
     </message>
     <message>
         <source>Chrominance adaption</source>
-        <translation>Adaptación crominancia</translation>
+        <translation type="obsolete">Adaptación crominancia</translation>
     </message>
     <message>
         <source>Light</source>
-        <translation>Luz</translation>
+        <translation type="obsolete">Luz</translation>
     </message>
     <message>
         <source>Light adaption</source>
-        <translation>Adaptación luz</translation>
+        <translation type="obsolete">Adaptación luz</translation>
     </message>
     <message>
         <source>Catch white</source>
-        <translation>Ajustar blanco</translation>
+        <translation type="obsolete">Ajustar blanco</translation>
     </message>
     <message>
         <source>Darken just the brightest parts</source>
-        <translation>Oscurecer solo las partes brillantes</translation>
+        <translation type="obsolete">Oscurecer solo las partes brillantes</translation>
     </message>
     <message>
         <source>Catch black</source>
-        <translation>Ajustar negro</translation>
+        <translation type="obsolete">Ajustar negro</translation>
     </message>
     <message>
         <source>Brighten just the darkest parts</source>
-        <translation>Iluminar solo partes oscuras</translation>
+        <translation type="obsolete">Iluminar solo partes oscuras</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -5155,7 +5306,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Amount of recovery</source>
-        <translation>Cantidad de recuperación</translation>
+        <translation type="obsolete">Cantidad de recuperación</translation>
     </message>
     <message>
         <source>Lower Limit</source>
@@ -5207,23 +5358,23 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Amount of compression</source>
-        <translation>Cantidad de comrpesión</translation>
+        <translation type="obsolete">Cantidad de comrpesión</translation>
     </message>
     <message>
         <source>Bias</source>
-        <translation>Parcialidad</translation>
+        <translation type="obsolete">Parcialidad</translation>
     </message>
     <message>
         <source>Bias of compression</source>
-        <translation>Parcialidad de la compresión</translation>
+        <translation type="obsolete">Parcialidad de la compresión</translation>
     </message>
     <message>
         <source>Color Adaption</source>
-        <translation>Adaptación del color</translation>
+        <translation type="obsolete">Adaptación del color</translation>
     </message>
     <message>
         <source>Color adaption</source>
-        <translation>Adaptación del color</translation>
+        <translation type="obsolete">Adaptación del color</translation>
     </message>
     <message>
         <source>Feather</source>
@@ -5251,23 +5402,23 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Amount of saturation</source>
-        <translation>Cantidad de saturación</translation>
+        <translation type="obsolete">Cantidad de saturación</translation>
     </message>
     <message>
         <source>Value A</source>
-        <translation>Valor A</translation>
+        <translation type="obsolete">Valor A</translation>
     </message>
     <message>
         <source>Amount of boosting A</source>
-        <translation>Cantidad de impulso A</translation>
+        <translation type="obsolete">Cantidad de impulso A</translation>
     </message>
     <message>
         <source>Value B</source>
-        <translation>Valor B</translation>
+        <translation type="obsolete">Valor B</translation>
     </message>
     <message>
         <source>Amount of boosting B</source>
-        <translation>Cantidad de impulso B</translation>
+        <translation type="obsolete">Cantidad de impulso B</translation>
     </message>
     <message>
         <source>Master</source>
@@ -5615,7 +5766,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Hue</source>
-        <translation>Color</translation>
+        <translation type="obsolete">Color</translation>
     </message>
     <message>
         <source>Orange</source>
@@ -5907,11 +6058,11 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>LAB Transform mode</source>
-        <translation>Modo transformación LAB</translation>
+        <translation type="obsolete">Modo transformación LAB</translation>
     </message>
     <message>
         <source>Values for recovery</source>
-        <translation>Valores de recuperación</translation>
+        <translation type="obsolete">Valores de recuperación</translation>
     </message>
     <message>
         <source>Values for microcontrast</source>
@@ -6279,7 +6430,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Enable Reinhard 05</source>
-        <translation>Habilitar Reinhard 05</translation>
+        <translation type="obsolete">Habilitar Reinhard 05</translation>
     </message>
     <message>
         <source>Enable &apos;fast&apos;</source>

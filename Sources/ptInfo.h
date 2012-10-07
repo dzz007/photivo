@@ -68,6 +68,10 @@ public:
   /*! Stop global timer.*/
   void StopTimer(const char* AMsg = "");
 
+  /*! Show a MsgBox.*/
+  void ShowMsg(const char* AMsg, const char *ALocation = "");
+  void ShowMsg(const QString AMsg, const char *ALocation = "");
+
 private:
   ptInfo();
   ~ptInfo();

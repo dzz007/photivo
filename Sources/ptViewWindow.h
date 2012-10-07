@@ -72,7 +72,7 @@ enum ptInteraction {
   iaSelectRect  = 2,  // simple rectangle selection: e.g. for spot WB
   iaDrawLine    = 3,  // draw a single straight line: e.g. for rotate angle
   iaSpotRepair  = 4,
-  iaSpotTuning = 5
+  iaSpotTuning  = 5
 };
 
 enum ptPixelReading {

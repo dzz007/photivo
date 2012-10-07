@@ -77,7 +77,11 @@ ptGreycCount *GreycCount;
   #define cimg_display 0
 #endif
 
-#include "greyc/CImg.h"
+#ifdef SYSTEM_CIMG
+  #include <CImg.h>
+#else
+  #include "greyc/CImg.h"
+#endif
 
 
 using namespace cimg_library;
@@ -315,7 +319,7 @@ void ptCimgEdgeTensors(ptImage* Image,
   }
 
   for (short Threads=0; Threads < NumberOfThreads; Threads++) {
-    CImage[Threads].edge_tensors(Sharpness,Anisotropy,Alpha,Sigma);
+    CImage[Threads].diffusion_tensors(Sharpness,Anisotropy,Alpha,Sigma);
     if (Blur) CImage[Threads].blur(Blur,true);
 
   }

@@ -102,7 +102,7 @@ void CLASS hid_old()
   for (row=2; row < m_Height-2; row++) {
     for (col=2; col < m_Width-2; col++) {
 
-      c =  fc(row,col);
+      c =  fcol(row,col);
       if(c != 1)
       {
         pix=m_Image+row*u+col;
@@ -127,7 +127,7 @@ void CLASS hid2_old()
   for (row=2; row < m_Height-2; row++) {
   for (col=2; col < m_Width-2; col++) {
 
-    c =  fc(row,col);
+    c =  fcol(row,col);
 
     if (c != 1)
     {
