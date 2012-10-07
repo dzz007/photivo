@@ -869,6 +869,13 @@ enum ptFSOType {
   fsoDrive      = 5    // A drive with an assigned letter, only relevant on Windows
 };
 
+/*! This enum defines the state of the UI. */
+enum ptUIState {
+  uisNone       = 0,
+  uisProcessing = 1,
+  uisFileMgr    = 2
+};
+
 
 //==============================================================================
 #endif

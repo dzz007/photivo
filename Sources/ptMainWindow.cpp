@@ -106,6 +106,8 @@ void Update(const QString GuiName);
 ptMainWindow::ptMainWindow(const QString Title)
 : QMainWindow(NULL)
 {
+  FUIState = uisNone;
+
   // Setup from the Gui builder.
   setupUi(this);
   setWindowTitle(Title);
@@ -640,12 +642,12 @@ ptMainWindow::ptMainWindow(const QString Title)
       Settings->GetInt("FileMgrStartupOpen") &&
       !Settings->GetInt("PreventFileMgrStartup"))
   {
-    OpenFileMgrWindow();
+    SwitchUIState(uisFileMgr);
   } else {
-    MainStack->setCurrentWidget(ProcessingPage);
+    SwitchUIState(uisProcessing);
   }
 #else
-  MainStack->setCurrentWidget(ProcessingPage);
+  SwitchUIMode(uisProcessing);
   findChild<ptGroupBox *>(QString("TabFileMgrSettings"))->setVisible(0);
 #endif
 }
@@ -929,17 +931,11 @@ short ptMainWindow::GetCurrentTab() {
 // Show/hide file manager window
 
 void ptMainWindow::OpenFileMgrWindow() {
-#ifndef PT_WITHOUT_FILEMGR
-  MainStack->setCurrentWidget(FileManagerPage);
-  Settings->SetValue("FileMgrIsOpen", 1);
-#endif
+  SwitchUIState(uisFileMgr);
 }
 
 void ptMainWindow::CloseFileMgrWindow() {
-#ifndef PT_WITHOUT_FILEMGR
-  MainStack->setCurrentWidget(ProcessingPage);
-  Settings->SetValue("FileMgrIsOpen", 0);
-#endif
+  SwitchUIState(uisProcessing);
 }
 
 //==============================================================================
@@ -1626,7 +1622,7 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         SearchInputWidget->setFocus();
       }
     } else if (Event->key() == Qt::Key_M && Event->modifiers() == Qt::ControlModifier) {
-      OpenFileMgrWindow();
+      SwitchUIState(uisFileMgr);
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::ControlModifier) {
       CB_OpenPresetFileButton();
     } else if (Event->key()==Qt::Key_Q && Event->modifiers()==Qt::ControlModifier) {
@@ -2663,6 +2659,28 @@ void ptMainWindow::InitVisibleTools() {
   VisibleToolsView->setItemDelegate(new ptVisibleToolsItemDelegate);
 }
 
+//==============================================================================
+
+void ptMainWindow::SwitchUIState(const ptUIState AState)
+{
+  if (FUIState == AState) return;
+
+  FUIState = AState;
+
+  if (AState == uisProcessing) {
+    // Processing
+    MainStack->setCurrentWidget(ProcessingPage);
+    Settings->SetValue("FileMgrIsOpen", 0);
+  } else if (AState == uisFileMgr) {
+    // Filemanager
+#ifndef PT_WITHOUT_FILEMGR
+    MainStack->setCurrentWidget(FileManagerPage);
+    Settings->SetValue("FileMgrIsOpen", 1);
+#endif
+  } else {
+    GInfo->Raise("Unknown UI state", AT);
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //

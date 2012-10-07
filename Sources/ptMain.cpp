@@ -141,10 +141,6 @@ ptSettings    *Settings = NULL;
 // Lensfun database.
 //ptLensfun*  LensfunData = NULL;    // TODO BJ: implement lensfun DB
 
-// Screen position
-QPoint MainWindowPos;
-QSize  MainWindowSize;
-
 // Run mode
 short NextPhase;
 short NextSubPhase;
@@ -298,13 +294,26 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("SpotTuning",            Fuid::SpotTuning_Local);
   // RGB tab
   GFilterDM->NewFilter("Highlights",            Fuid::Highlights_RGB);
+  GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_RGB);
+  GFilterDM->NewFilter("Brightness",            Fuid::Brightness_RGB);
+  GFilterDM->NewFilter("ReinhardBrighten",      Fuid::ReinhardBrighten_RGB);
   GFilterDM->NewFilter("GammaTool",             Fuid::GammaTool_RGB);
+  GFilterDM->NewFilter("Normalization",         Fuid::Normalization_RGB);
+  GFilterDM->NewFilter("ColorEnhancement",      Fuid::ColorEnhancement_RGB);
+  GFilterDM->NewFilter("LMHRecoveryRgb",        Fuid::LMHRecovery_RGB);
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_RGB);
+  GFilterDM->NewFilter("LevelsRgb",             Fuid::Levels_RGB);
   GFilterDM->NewFilter("RgbCurve",              Fuid::RgbCurve_RGB);
   // Lab Color/contrast tab
+  GFilterDM->NewFilter("LabTransform",          Fuid::LabTransform_LabCC);
   GFilterDM->NewFilter("ShadowsHighlights",     Fuid::ShadowsHighlights_LabCC);
+  GFilterDM->NewFilter("LMHRecoveryLab",        Fuid::LMHRecovery_LabCC);
+  GFilterDM->NewFilter("Drc",                   Fuid::Drc_LabCC);
   GFilterDM->NewFilter("SigContrastLab",        Fuid::SigContrastLab_LabCC);
   GFilterDM->NewFilter("TextureCurve",          Fuid::TextureCurve_LabCC);
+  GFilterDM->NewFilter("Saturation",            Fuid::Saturation_LabCC);
+  GFilterDM->NewFilter("ColorBoost",            Fuid::ColorBoost_LabCC);
+  GFilterDM->NewFilter("LevelsLab",             Fuid::Levels_LabCC);
   // Lab sharpen/noise tab
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve2_LabSN,      " II");
@@ -322,8 +331,10 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("ToneAdjust",            Fuid::ToneAdjust2_LabEyeCandy,      " II");
   GFilterDM->NewFilter("LumaAdjust",            Fuid::LumaAdjust_LabEyeCandy);
   GFilterDM->NewFilter("SatAdjust",             Fuid::SatAdjust_LabEyeCandy);
+  GFilterDM->NewFilter("Tone",                  Fuid::Tone_LabEyeCandy);
   // Eyecandy tab
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
+  GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_EyeCandy);
   GFilterDM->NewFilter("RToneCurve",            Fuid::RTone_EyeCandy);
   GFilterDM->NewFilter("GToneCurve",            Fuid::GTone_EyeCandy);
   GFilterDM->NewFilter("BToneCurve",            Fuid::BTone_EyeCandy);
@@ -828,7 +839,7 @@ int photivoMain(int Argc, char *Argv[]) {
   }
 
 #ifndef PT_WITHOUT_FILEMGR
-  if (cli.NoOpenFileMgr) Settings->SetValue("PreventFileMgrStartup", 1);
+  Settings->SetValue("PreventFileMgrStartup", int(cli.NoOpenFileMgr));
 #endif
 
   // Construct windows
@@ -866,21 +877,34 @@ int photivoMain(int Argc, char *Argv[]) {
 
   //-------------------------------------
   // Initialize main window geometry and position
+  // If the screen is not longer present, we move the window to the standard screen
 
-  QRect DesktopRect = (QApplication::desktop())->availableGeometry(MainWindow);
-  MainWindowPos = Settings->m_IniSettings->value("MainWindowPos", DesktopRect.topLeft()).toPoint();
+  int      Screen        = Settings->m_IniSettings->value("MainWindowScreen", -1).toInt();
+  if (Screen >= qApp->desktop()->screenCount()) {
+    Screen = -1;
+  }
+  QRect    DesktopRect   = qApp->desktop()->screenGeometry(Screen);
+  QPoint   UpperLeft     = DesktopRect.topLeft() + QPoint(30, 30);
+  QPoint   MainWindowPos = Settings->m_IniSettings->value("MainWindowPos", UpperLeft).toPoint();
+  QVariant WinSize       = Settings->m_IniSettings->value("MainWindowSize");
+  QSize    MainWindowSize;
 
-  QVariant WinSize = Settings->m_IniSettings->value("MainWindowSize");
-  if(!WinSize.isValid()) {
+  if (!DesktopRect.contains(MainWindowPos)) {
+    MainWindowPos = UpperLeft;
+  }
+
+  if(!WinSize.isValid() ||
+     !(WinSize.toSize().width()  < DesktopRect.width()  + 50 &&
+       WinSize.toSize().height() < DesktopRect.height() + 50   )) {
     // ensure a reasonable size if we don’t get one from Settings
-    MainWindowSize = QSize(qMin(1200, (int)(DesktopRect.width() * 0.8)),
-                           qMin(900, (int)(DesktopRect.height() * 0.8)) );
+    MainWindowSize = QSize(qMin(1200, (int)(DesktopRect.width()  * 0.8)),
+                           qMin( 900, (int)(DesktopRect.height() * 0.8)) );
   } else {
     MainWindowSize = WinSize.toSize();
   }
 
   MainWindow->resize(MainWindowSize);
-  MainWindow->move(MainWindowPos);
+  MainWindow->move(  MainWindowPos);
 
   // MainSplitter is the one between tool pane and image pane.
   // ControlSplitter is the one between histogram and tools tabwidget.
@@ -900,11 +924,10 @@ int photivoMain(int Argc, char *Argv[]) {
   }
 
   if (Settings->m_IniSettings->value("IsMaximized",0).toBool()) {
-      MainWindow->showMaximized();
+    MainWindow->showMaximized();
   } else {
-      MainWindow->show();
+    MainWindow->show();
   }
-
   //-------------------------------------
 
 
@@ -1818,6 +1841,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     // In case of histogram update only, we're done.
     if (OnlyHistogram) {
+      HistogramWindow->UpdateView(HistogramImage);
       ViewWindow->ShowStatus(ptStatus_Done);
       return;
     }
@@ -1934,6 +1958,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       }
     }
     if (OnlyHistogram) {
+      HistogramWindow->UpdateView(HistogramImage);
       ViewWindow->ShowStatus(ptStatus_Done);
       return;
     }
@@ -2031,9 +2056,11 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
   ReportProgress(QObject::tr("Ready"));
 
-  if (!OnlyHistogram)
-    if (Settings->GetInt("WriteBackupSettings"))
+  if (!OnlyHistogram) {
+    if (Settings->GetInt("WriteBackupSettings")) {
       GFilterDM->WritePresetFile(Settings->GetString("UserDirectory")+"backup.pts");
+    }
+  }
 } // UpdatePreviewImage
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2825,9 +2852,11 @@ void CB_MenuFileExit(const short) {
     setValue("MainSplitter",MainWindow->MainSplitter->saveState());
   Settings->m_IniSettings->
     setValue("ControlSplitter",MainWindow->ControlSplitter->saveState());
-  Settings->m_IniSettings->setValue("MainWindowPos",MainWindow->pos());
-  Settings->m_IniSettings->setValue("MainWindowSize",MainWindow->size());
-  Settings->m_IniSettings->setValue("IsMaximized", MainWindow->windowState() == Qt::WindowMaximized);
+  Settings->m_IniSettings->setValue("MainWindowPos",    MainWindow->pos());
+  Settings->m_IniSettings->setValue("MainWindowSize",   MainWindow->size());
+  Settings->m_IniSettings->setValue("IsMaximized",      MainWindow->windowState() == Qt::WindowMaximized);
+  Settings->m_IniSettings->setValue("MainWindowScreen", qApp->desktop()->screenNumber(MainWindow));
+
   // Store the version of the settings and files
   Settings->m_IniSettings->setValue("SettingsVersion",PhotivoSettingsVersion);
 
@@ -4797,22 +4826,6 @@ void CB_AutomaticPipeSizeCheck(const QVariant Check) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
-// Partim Levels
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LevelsBlackPointInput(const QVariant Value) {
-  Settings->SetValue("LevelsBlackPoint",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_LevelsWhitePointInput(const QVariant Value) {
-  Settings->SetValue("LevelsWhitePoint",Value);
-  Update(ptProcessorPhase_RGB);
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -5007,28 +5020,6 @@ void CB_ChannelMixerB2BInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the RGB Tab
-// Partim Brightness
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_ExposureGainInput(const QVariant Value) {
-  Settings->SetValue("ExposureGain",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_CatchWhiteInput(const QVariant Value) {
-  Settings->SetValue("CatchWhite",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_CatchBlackInput(const QVariant Value) {
-  Settings->SetValue("CatchBlack",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
 // Partim Exposure
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -5080,159 +5071,6 @@ void CB_ExposureClipModeChoice(const QVariant Value) {
   Settings->SetValue("ExposureClipMode",Value);
   // if (!Settings->ToolIsBlocked(MainWindow->ExposureWidget->parent()->parent()->parent()->objectName()))
   Update(ptProcessorPhase_RGB);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
-// Partim RGB Reinhard05
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_Reinhard05Check(const QVariant State) {
-  Settings->SetValue("Reinhard05",State);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_Reinhard05BrightnessInput(const QVariant Value) {
-  Settings->SetValue("Reinhard05Brightness",Value);
-  if (Settings->GetInt("Reinhard05"))
-    Update(ptProcessorPhase_RGB);
-}
-
-void CB_Reinhard05ChromaInput(const QVariant Value) {
-  Settings->SetValue("Reinhard05Chroma",Value);
-  if (Settings->GetInt("Reinhard05"))
-    Update(ptProcessorPhase_RGB);
-}
-
-void CB_Reinhard05LightInput(const QVariant Value) {
-  Settings->SetValue("Reinhard05Light",Value);
-  if (Settings->GetInt("Reinhard05"))
-    Update(ptProcessorPhase_RGB);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
-// Partim RGB Normalization
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_NormalizationOpacityInput(const QVariant Value) {
-  Settings->SetValue("NormalizationOpacity",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
-// Partim Intensitytool
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_VibranceInput(const QVariant Value) {
-  Settings->SetValue("Vibrance",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_IntensityRedInput(const QVariant Value) {
-  Settings->SetValue("IntensityRed",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_IntensityGreenInput(const QVariant Value) {
-  Settings->SetValue("IntensityGreen",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_IntensityBlueInput(const QVariant Value) {
-  Settings->SetValue("IntensityBlue",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_ColorEnhanceShadowsInput(const QVariant Value) {
-  Settings->SetValue("ColorEnhanceShadows",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_ColorEnhanceHighlightsInput(const QVariant Value) {
-  Settings->SetValue("ColorEnhanceHighlights",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
-// Local Exposure
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LMHLightRecovery1MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("LMHLightRecovery1MaskType",Choice);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_LMHLightRecovery1AmountInput(const QVariant Value) {
-  Settings->SetValue("LMHLightRecovery1Amount",Value);
-  if (Settings->GetInt("LMHLightRecovery1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_LMHLightRecovery1LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("LMHLightRecovery1LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("LMHLightRecovery1UpperLimit")-0.01));
-  if (Settings->GetInt("LMHLightRecovery1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_LMHLightRecovery1UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("LMHLightRecovery1UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("LMHLightRecovery1LowerLimit")+0.01));
-  if (Settings->GetInt("LMHLightRecovery1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_LMHLightRecovery1SoftnessInput(const QVariant Value) {
-  Settings->SetValue("LMHLightRecovery1Softness",Value);
-  if (Settings->GetInt("LMHLightRecovery1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_LMHLightRecovery2MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("LMHLightRecovery2MaskType",Choice);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_LMHLightRecovery2AmountInput(const QVariant Value) {
-  Settings->SetValue("LMHLightRecovery2Amount",Value);
-  if (Settings->GetInt("LMHLightRecovery2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_LMHLightRecovery2LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("LMHLightRecovery2LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("LMHLightRecovery2UpperLimit")-0.01));
-  if (Settings->GetInt("LMHLightRecovery2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_LMHLightRecovery2UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("LMHLightRecovery2UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("LMHLightRecovery2LowerLimit")+0.01));
-  if (Settings->GetInt("LMHLightRecovery2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_LMHLightRecovery2SoftnessInput(const QVariant Value) {
-  Settings->SetValue("LMHLightRecovery2Softness",Value);
-  if (Settings->GetInt("LMHLightRecovery2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -5394,117 +5232,6 @@ void CB_Microcontrast2SoftnessInput(const QVariant Value) {
   Settings->SetValue("Microcontrast2Softness",Value);
   if (Settings->GetInt("Microcontrast2MaskType")) {
     Update(ptProcessorPhase_RGB);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabCC Tab
-// LAB Transform
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LABTransformChoice(const QVariant Choice) {
-  Settings->SetValue("LABTransform",Choice);
-  Update(ptProcessorPhase_LabCC);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabCC Tab
-// Dynamic Range Compression
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_DRCBetaInput(const QVariant Value) {
-  Settings->SetValue("DRCBeta",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_DRCAlphaInput(const QVariant Value) {
-  Settings->SetValue("DRCAlpha",Value);
-  if (Settings->GetDouble("DRCBeta")!=1.0) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_DRCColorInput(const QVariant Value) {
-  Settings->SetValue("DRCColor",Value);
-  if (Settings->GetDouble("DRCBeta")!=1.0) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabCC Tab
-// Local Exposure
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LabLMHLightRecovery1MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("LabLMHLightRecovery1MaskType",Choice);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_LabLMHLightRecovery1AmountInput(const QVariant Value) {
-  Settings->SetValue("LabLMHLightRecovery1Amount",Value);
-  if (Settings->GetInt("LabLMHLightRecovery1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabLMHLightRecovery1LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("LabLMHLightRecovery1LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("LabLMHLightRecovery1UpperLimit")-0.01));
-  if (Settings->GetInt("LabLMHLightRecovery1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabLMHLightRecovery1UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("LabLMHLightRecovery1UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("LabLMHLightRecovery1LowerLimit")+0.01));
-  if (Settings->GetInt("LabLMHLightRecovery1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabLMHLightRecovery1SoftnessInput(const QVariant Value) {
-  Settings->SetValue("LabLMHLightRecovery1Softness",Value);
-  if (Settings->GetInt("LabLMHLightRecovery1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabLMHLightRecovery2MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("LabLMHLightRecovery2MaskType",Choice);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_LabLMHLightRecovery2AmountInput(const QVariant Value) {
-  Settings->SetValue("LabLMHLightRecovery2Amount",Value);
-  if (Settings->GetInt("LabLMHLightRecovery2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabLMHLightRecovery2LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("LabLMHLightRecovery2LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("LabLMHLightRecovery2UpperLimit")-0.01));
-  if (Settings->GetInt("LabLMHLightRecovery2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabLMHLightRecovery2UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("LabLMHLightRecovery2UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("LabLMHLightRecovery2LowerLimit")+0.01));
-  if (Settings->GetInt("LabLMHLightRecovery2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabLMHLightRecovery2SoftnessInput(const QVariant Value) {
-  Settings->SetValue("LabLMHLightRecovery2Softness",Value);
-  if (Settings->GetInt("LabLMHLightRecovery2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
   }
 }
 
@@ -6381,80 +6108,6 @@ void CB_ViewLABChoice(const QVariant Choice) {
   Update(ptProcessorPhase_LabSN);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabEyeCandy Tab
-// Partim LAB Tone
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LABToneSaturationInput(const QVariant Value) {
-  Settings->SetValue("LABToneSaturation",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LABToneAmountInput(const QVariant Value) {
-  Settings->SetValue("LABToneAmount",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LABToneHueInput(const QVariant Value) {
-  Settings->SetValue("LABToneHue",Value);
-  if (Settings->GetDouble("LABToneAmount")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-void CB_LABToneSSaturationInput(const QVariant Value) {
-  Settings->SetValue("LABToneSSaturation",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LABToneSAmountInput(const QVariant Value) {
-  Settings->SetValue("LABToneSAmount",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LABToneSHueInput(const QVariant Value) {
-  Settings->SetValue("LABToneSHue",Value);
-  if (Settings->GetDouble("LABToneSAmount")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-void CB_LABToneMSaturationInput(const QVariant Value) {
-  Settings->SetValue("LABToneMSaturation",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LABToneMAmountInput(const QVariant Value) {
-  Settings->SetValue("LABToneMAmount",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LABToneMHueInput(const QVariant Value) {
-  Settings->SetValue("LABToneMHue",Value);
-  if (Settings->GetDouble("LABToneMAmount")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-void CB_LABToneHSaturationInput(const QVariant Value) {
-  Settings->SetValue("LABToneHSaturation",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LABToneHAmountInput(const QVariant Value) {
-  Settings->SetValue("LABToneHAmount",Value);
-  Update(ptProcessorPhase_LabEyeCandy);
-}
-
-void CB_LABToneHHueInput(const QVariant Value) {
-  Settings->SetValue("LABToneHHue",Value);
-  if (Settings->GetDouble("LABToneHAmount")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -6879,6 +6532,16 @@ inline void BlockSave(bool Block) {
 
 //==============================================================================
 
+QString GetCurrentImageBaseName() {
+  if (Settings->GetInt("HaveImage")==0) return "";
+
+  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+  QFileInfo PathInfo(InputFileNameList[0]);
+  return PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName() + ".";
+}
+
+//==============================================================================
+
 void SaveOutput(const short mode) {
   BlockSave(true);
 
@@ -6892,7 +6555,7 @@ void SaveOutput(const short mode) {
     GFilterDM->WriteJobFile();
 
   } else if (mode==ptOutputMode_Settingsfile) {
-    GFilterDM->WritePresetFile();
+    GFilterDM->WritePresetFile(GetCurrentImageBaseName());
   }
 
   BlockSave(false);
@@ -7168,9 +6831,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(GeometryBlockCheck)
 
-  M_Dispatch(LevelsBlackPointInput)
-  M_Dispatch(LevelsWhitePointInput)
-
   M_Dispatch(ChannelMixerChoice)
   M_Dispatch(ChannelMixerR2RInput)
   M_Dispatch(ChannelMixerG2RInput)
@@ -7182,41 +6842,11 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(ChannelMixerG2BInput)
   M_Dispatch(ChannelMixerB2BInput)
 
-  M_Dispatch(VibranceInput)
-  M_Dispatch(IntensityRedInput)
-  M_Dispatch(IntensityGreenInput)
-  M_Dispatch(IntensityBlueInput)
-  M_Dispatch(ColorEnhanceShadowsInput)
-  M_Dispatch(ColorEnhanceHighlightsInput)
-
-  M_Dispatch(ExposureGainInput)
-  M_Dispatch(CatchWhiteInput)
-  M_Dispatch(CatchBlackInput)
-
   M_Dispatch(AutoExposureChoice)
   M_Dispatch(WhiteFractionInput)
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
-
-  M_Dispatch(Reinhard05Check)
-  M_Dispatch(Reinhard05BrightnessInput)
-  M_Dispatch(Reinhard05ChromaInput)
-  M_Dispatch(Reinhard05LightInput)
-
-  M_Dispatch(NormalizationOpacityInput)
-
-  M_Dispatch(LMHLightRecovery1MaskTypeChoice)
-  M_Dispatch(LMHLightRecovery1AmountInput)
-  M_Dispatch(LMHLightRecovery1LowerLimitInput)
-  M_Dispatch(LMHLightRecovery1UpperLimitInput)
-  M_Dispatch(LMHLightRecovery1SoftnessInput)
-
-  M_Dispatch(LMHLightRecovery2MaskTypeChoice)
-  M_Dispatch(LMHLightRecovery2AmountInput)
-  M_Dispatch(LMHLightRecovery2LowerLimitInput)
-  M_Dispatch(LMHLightRecovery2UpperLimitInput)
-  M_Dispatch(LMHLightRecovery2SoftnessInput)
 
   M_Dispatch(RGBTextureContrastThresholdInput)
   M_Dispatch(RGBTextureContrastSoftnessInput)
@@ -7243,24 +6873,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(Microcontrast2UpperLimitInput)
   M_Dispatch(Microcontrast2SoftnessInput)
 
-  M_Dispatch(LABTransformChoice)
-
-  M_Dispatch(DRCBetaInput)
-  M_Dispatch(DRCAlphaInput)
-  M_Dispatch(DRCColorInput)
-
-  M_Dispatch(LabLMHLightRecovery1MaskTypeChoice)
-  M_Dispatch(LabLMHLightRecovery1AmountInput)
-  M_Dispatch(LabLMHLightRecovery1LowerLimitInput)
-  M_Dispatch(LabLMHLightRecovery1UpperLimitInput)
-  M_Dispatch(LabLMHLightRecovery1SoftnessInput)
-
-  M_Dispatch(LabLMHLightRecovery2MaskTypeChoice)
-  M_Dispatch(LabLMHLightRecovery2AmountInput)
-  M_Dispatch(LabLMHLightRecovery2LowerLimitInput)
-  M_Dispatch(LabLMHLightRecovery2UpperLimitInput)
-  M_Dispatch(LabLMHLightRecovery2SoftnessInput)
-
   M_Dispatch(TextureContrast1ThresholdInput)
   M_Dispatch(TextureContrast1SoftnessInput)
   M_Dispatch(TextureContrast1AmountInput)
@@ -7283,10 +6895,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(LC2OpacityInput)
   M_SetAndRunDispatch(LC2mInput)
 
-  M_SetAndRunDispatch(SaturationAmountInput)
-  M_SetAndRunDispatch(ColorBoostValueAInput)
-  M_SetAndRunDispatch(ColorBoostValueBInput)
-
   M_Dispatch(LabMicrocontrast1MaskTypeChoice)
   M_Dispatch(LabMicrocontrast1RadiusInput)
   M_Dispatch(LabMicrocontrast1AmountInput)
@@ -7304,9 +6912,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LabMicrocontrast2LowerLimitInput)
   M_Dispatch(LabMicrocontrast2UpperLimitInput)
   M_Dispatch(LabMicrocontrast2SoftnessInput)
-
-  M_SetAndRunDispatch(LabLevelsBlackPointInput)
-  M_SetAndRunDispatch(LabLevelsWhitePointInput)
 
   M_SetAndRunDispatch(ImpulseDenoiseThresholdLInput)
   M_SetAndRunDispatch(ImpulseDenoiseThresholdABInput)
@@ -7406,19 +7011,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(Grain2UpperLimitInput)
 
   M_Dispatch(ViewLABChoice)
-
-  M_Dispatch(LABToneSaturationInput)
-  M_Dispatch(LABToneAmountInput)
-  M_Dispatch(LABToneHueInput)
-  M_Dispatch(LABToneSSaturationInput)
-  M_Dispatch(LABToneSAmountInput)
-  M_Dispatch(LABToneSHueInput)
-  M_Dispatch(LABToneMSaturationInput)
-  M_Dispatch(LABToneMAmountInput)
-  M_Dispatch(LABToneMHueInput)
-  M_Dispatch(LABToneHSaturationInput)
-  M_Dispatch(LABToneHAmountInput)
-  M_Dispatch(LABToneHHueInput)
 
   M_SetAndRunDispatch(LabVignetteModeChoice)
   M_SetAndRunDispatch(LabVignetteInput)
@@ -7530,11 +7122,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(SoftglowAmountInput)
   M_SetAndRunDispatch(SoftglowContrastInput)
   M_SetAndRunDispatch(SoftglowSaturationInput)
-
-  M_SetAndRunDispatch(Vibrance2Input)
-  M_SetAndRunDispatch(Intensity2RedInput)
-  M_SetAndRunDispatch(Intensity2GreenInput)
-  M_SetAndRunDispatch(Intensity2BlueInput)
 
   M_SetAndRunDispatch(OutputGammaCompensationCheck)
   M_SetAndRunDispatch(OutputGammaInput)

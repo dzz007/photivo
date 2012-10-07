@@ -36,9 +36,12 @@
 #include "ptCurve.h"
 #include "ptTheme.h"
 #include "ptInfo.h"
+#include "ptSettings.h"
 #include <filters/ptCfgItem.h>
 
 //==============================================================================
+
+extern QString CurveFilePattern;
 
 // How many pixels will be considered as 'bingo' for having the anchor ?
 const int CSnapDelta = 6;
@@ -65,7 +68,8 @@ ptCurveWindow::ptCurveWindow(QWidget *AParent)
   FIpolGroup(nullptr),
   FByLumaAction(nullptr),
   FByChromaAction(nullptr),
-  FMaskGroup(nullptr)
+  FMaskGroup(nullptr),
+  FOpenCurveAction(nullptr)
 {
   // Timer for the wheel interaction
   FWheelTimer->setSingleShot(1);
@@ -91,7 +95,8 @@ ptCurveWindow::ptCurveWindow(const ptCfgItem &ACfgItem, QWidget *AParent)
   FIpolGroup(nullptr),
   FByLumaAction(nullptr),
   FByChromaAction(nullptr),
-  FMaskGroup(nullptr)
+  FMaskGroup(nullptr),
+  FOpenCurveAction(nullptr)
 {
   this->init(ACfgItem);
 }
@@ -109,6 +114,7 @@ ptCurveWindow::~ptCurveWindow() {
 //==============================================================================
 
 void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
+  FOpenCurveAction  = nullptr;
   this->setObjectName(ACfgItem.Id);  // Do not touch! Filter commonDispatch relies on this.
   FCurve = ACfgItem.Curve;
 
@@ -185,6 +191,25 @@ void ptCurveWindow::setInterpolationType() {
 
   updateView();
   requestPipeRun();
+}
+
+//==============================================================================
+
+void ptCurveWindow::openCurveFile()
+{
+  QString CurveFileName = QFileDialog::getOpenFileName(nullptr,
+                                                       QObject::tr("Open Curve"),
+                                                       Settings->GetString("CurvesDirectory"),
+                                                       CurveFilePattern);
+
+  if (CurveFileName.size() == 0) {
+    return;
+  } else {
+    if (FCurve->readCurveFile(CurveFileName, true) == 0) {
+      updateView();
+      requestPipeRun();
+    }
+  }
 }
 
 //==============================================================================
@@ -568,7 +593,7 @@ void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
     if (isCyclicCurve()) {
       if (FMovingAnchor == 0)
         FCurve->setAnchorY(FCurve->anchorCount()-1, hNormPos.second);
-      else if (FMovingAnchor == FCurve->anchorCount())
+      else if (FMovingAnchor == FCurve->anchorCount()-1)
         FCurve->setAnchorY(0, hNormPos.second);
     }
 
@@ -644,6 +669,9 @@ void ptCurveWindow::execContextMenu(const QPoint APos) {
     }
   }
 
+  hMenu.addSeparator();
+  hMenu.addAction(FOpenCurveAction);
+
   hMenu.exec(APos);
 }
 
@@ -685,6 +713,10 @@ void ptCurveWindow::createMenuActions() {
   FIpolGroup->addAction(FLinearIpolAction);
   FIpolGroup->addAction(FSplineIpolAction);
   FIpolGroup->addAction(FCosineIpolAction);
+
+  FOpenCurveAction = new QAction(tr("Open &file"), this);
+  FOpenCurveAction->setStatusTip(tr("Open anchor curve file"));
+  connect(FOpenCurveAction, SIGNAL(triggered()), this, SLOT(openCurveFile()));
 }
 
 //==============================================================================

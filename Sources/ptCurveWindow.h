@@ -117,6 +117,7 @@ private:
   QAction*            FByLumaAction;
   QAction*            FByChromaAction;
   QActionGroup*       FMaskGroup;
+  QAction*            FOpenCurveAction;
 
 
 private slots:
@@ -125,6 +126,7 @@ private slots:
   // context menu slots
   void setMaskType();
   void setInterpolationType();
+  void openCurveFile();
 
 };
 

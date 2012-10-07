@@ -267,7 +267,7 @@ void ptViewWindow::paintEvent(QPaintEvent* event) {
 void ptViewWindow::mousePressEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
     event->accept();
-    FLeftMousePressed = 1;
+    FLeftMousePressed = true;
     FDragDelta->setPoints(event->pos(), event->pos());
   }
 
@@ -281,7 +281,7 @@ void ptViewWindow::mousePressEvent(QMouseEvent* event) {
 
 void ptViewWindow::mouseReleaseEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton && FLeftMousePressed) {
-    FLeftMousePressed = 0;
+    FLeftMousePressed = true;
     event->accept();
   } else {
     event->ignore();
@@ -322,6 +322,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
   if (isImgDragging()) {
     // drag move visible image area
     FDragDelta->setP2(event->pos());
+
     horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
                                     FDragDelta->x2() +
                                     FDragDelta->x1());
@@ -419,7 +420,6 @@ void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
 }
 
 //==============================================================================
-
 // The two functions are necessary to enable d&d over the view window.
 // The actual d&d action is handled by the resp. main window events.
 
@@ -909,6 +909,7 @@ void ptViewWindow::Menu_ShowTools() {
 }
 
 void ptViewWindow::Menu_OpenFileMgr() {
+  m_CtrlIsPressed = 0;
   emit openFileMgr();
 }
 
