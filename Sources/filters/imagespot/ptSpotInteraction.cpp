@@ -33,7 +33,9 @@ ptSpotInteraction::ptSpotInteraction(QGraphicsView *AView)
 
 //==============================================================================
 
-ptSpotInteraction::~ptSpotInteraction() {}
+ptSpotInteraction::~ptSpotInteraction() {
+  FView->setCursor(Qt::ArrowCursor);
+}
 
 //==============================================================================
 

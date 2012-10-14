@@ -27,9 +27,12 @@
 #include "ptSpotListWidget.h"
 #include "ptImageSpotModel.h"
 #include "ptImageSpotItemDelegate.h"
-#include <ptTheme.h>
-#include <ptImage.h>
-#include <ptInfo.h>
+#include "ptImageSpotList.h"
+#include "../../ptTheme.h"
+#include "../../ptImage.h"
+#include "../../ptInfo.h"
+#include "../../ptSettings.h"
+#include "../../ptMessageBox.h"
 
 
 //==============================================================================
@@ -103,6 +106,7 @@ int ptSpotListWidget::currentIndex() const {
 
 void ptSpotListWidget::clear() {
   FModel->removeAll();
+  updateButtonStates();
   updatePreview();
 }
 
@@ -166,6 +170,13 @@ void ptSpotListWidget::toggleEditMode() {
     emit editModeChanged(FInteractionOngoing);
 
   } else {
+    if (Settings->GetInt("HaveImage") == 0) {
+      ptMessageBox::information(nullptr,
+        QObject::tr("No image opened"),
+        QObject::tr("Open an image before editing spots."));
+      return;
+    }
+
     // turn edit mode ON
     EditButton->setToolTip(tr("Leave edit mode"));
     FInteractionOngoing = true;

@@ -46,6 +46,7 @@ protected:
   QWidget  *doCreateGui();
   bool      doCheckHasActiveCfg();
   void      doRunFilter(ptImage *AImage) const;
+  void      doReset();
   ///@}
 
 
