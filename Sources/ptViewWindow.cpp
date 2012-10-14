@@ -909,7 +909,7 @@ void ptViewWindow::Menu_ShowTools() {
 }
 
 void ptViewWindow::Menu_OpenFileMgr() {
-  m_CtrlIsPressed = 0;
+  FCtrlIsPressed = 0;
   emit openFileMgr();
 }
 

@@ -24,13 +24,12 @@
 
 #include "ptFilter_SpotTuning.h"
 #include "ptTuningSpot.h"
-#include <filters/ptCfgItem.h>
-#include <ptImage.h>
-#include <ptCurve.h>
-#include <ptProcessor.h>
-#include <ptSettings.h>
-#include <ptMessageBox.h>
-#include <ptViewWindow.h>
+#include "../ptCfgItem.h"
+#include "../../ptImage.h"
+#include "../../ptCurve.h"
+#include "../../ptProcessor.h"
+#include "../../ptSettings.h"
+#include "../../ptViewWindow.h"
 
 extern ptProcessor  *TheProcessor;
 extern ptViewWindow *ViewWindow;
@@ -49,7 +48,6 @@ void UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
 
 const QString CSpotTuningId       = "SpotTuning";
 const QString CSpotListId         = "SpotList";
-const QString CSpotLumaCurveWinId = "CurveWin";
 // All other id constants are included from ptTuningSpot.h
 
 //==============================================================================
@@ -82,7 +80,7 @@ void ptFilter_SpotTuning::doDefineControls() {
     << ptCfgItem({CSpotMaxRadiusId,      ptCfgItem::Slider,        500,        1,            7000,         10,         0,        false, false, tr("Maximum radius"), tr("Pixels outside this radius will never be included in the mask.")})
     << ptCfgItem({CSpotChromaWeightId,   ptCfgItem::Slider,        0.5,        0.0,          1.0,          0.1,        2,        false, false, tr("Brightness/color ratio"), tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")})
     << ptCfgItem({CSpotThresholdId,      ptCfgItem::Slider,        0.25,       0.0,          1.0,          0.05,       3,        false, false, tr("Threshold"), tr("Maximum amount a pixel may differ from the spot's source pixel to get included in the mask.")})
-    << ptCfgItem({CSpotLumaCurveWinId,   ptCfgItem::CurveWin,      std::make_shared<ptCurve>(hNullAnchors,
+    << ptCfgItem({CSpotLumaCurveId,      ptCfgItem::CurveWin,      std::make_shared<ptCurve>(hNullAnchors,
                                                                                              ptCurve::LumaMask,
                                                                                              ptCurve::LumaMask,
                                                                                              ptCurve::SplineInterpol), ""})
@@ -91,6 +89,7 @@ void ptFilter_SpotTuning::doDefineControls() {
     << ptCfgItem({CSpotColorShiftId,     ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.001,      3,        false, false, tr("Color shift"), tr("")})
   ;
 
+  FCfgItems[4].UseCommonDispatch = false;
   FNullSpot = make_unique<ptTuningSpot>(&FCfgItems);
   FConfig->insertStore(CSpotListId, &FSpotList);
 }
@@ -114,6 +113,7 @@ QWidget *ptFilter_SpotTuning::doCreateGui() {
   FGui = make_unique<Ui::Form>();
 
   FGui->setupUi(hGuiBody);
+  FGui->CurveWin->setObjectName(CSpotLumaCurveId);
   this->initDesignerGui(hGuiBody);
   FGui->CurveWin->setCaption(tr("Luminance curve"));
 
@@ -154,6 +154,16 @@ void ptFilter_SpotTuning::doRunFilter(ptImage *AImage) const {
   }
 }
 
+//------------------------------------------------------------------------------
+
+void ptFilter_SpotTuning::doReset() {
+  FSpotList.clear();
+  if (FGuiContainer) {
+    FGui->SpotList->clear();
+    updateSpotDetailsGui(-1);
+  }
+}
+
 //==============================================================================
 
 ptImageSpot *ptFilter_SpotTuning::createSpot() {
@@ -165,13 +175,6 @@ ptImageSpot *ptFilter_SpotTuning::createSpot() {
 void ptFilter_SpotTuning::startInteraction() {
   if (!ViewWindow)
     return;
-
-  if (Settings->GetInt("HaveImage") == 0) {
-    ptMessageBox::information(nullptr,
-      QObject::tr("No image opened"),
-      QObject::tr("Open an image before editing spots."));
-    return;
-  }
 
   FGui->SpotList->setEditMode(true);
   ViewWindow->ShowStatus(QObject::tr("Prepare"));
@@ -214,12 +217,10 @@ void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget
     AGuiWidget = FGuiContainer;
 
   for (ptCfgItem hCfgItem: FCfgItems) {
-    if (hCfgItem.Type != ptCfgItem::CurveWin){
-      ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiWidget);
-      hWidget->blockSignals(true);
-      hWidget->setValue(hSpot->getValue(hCfgItem.Id));
-      hWidget->blockSignals(false);
-    }
+    ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiWidget);
+    hWidget->blockSignals(true);
+    hWidget->setValue(hSpot->getValue(hCfgItem.Id));
+    hWidget->blockSignals(false);
   }
 
   FGui->MaxRadius->setEnabled(hSpot->getValue("HasMaxRadius").toBool());

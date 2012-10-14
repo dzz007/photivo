@@ -369,7 +369,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"SaveButtonMode"              ,ptGT_Choice       ,1,0,1 ,ptOutputMode_Pipe           ,GuiOptions->OutputMode                ,tr("Output mode of save button")},
     {"ResetButtonMode"             ,ptGT_Choice       ,1,0,1 ,ptResetMode_User            ,GuiOptions->ResetMode                 ,tr("Output mode of reset button")},
     {"Style"                       ,ptGT_Choice       ,1,0,0 ,ptStyle_DarkGrey            ,GuiOptions->Style                     ,tr("Set the theme.")},
-    {"StyleHighLight"              ,ptGT_Choice       ,1,0,0 ,ptStyleHighLight_Blue       ,GuiOptions->StyleHighLight            ,tr("Set the highlight color of the theme.")},
+    {"StyleHighLight"              ,ptGT_Choice       ,1,0,0 ,ptStyleHighLight_Green      ,GuiOptions->StyleHighLight            ,tr("Set the highlight color of the theme.")},
     {"StartupUIMode"               ,ptGT_Choice       ,1,0,0 ,ptStartupUIMode_Tab         ,GuiOptions->StartupUIMode             ,tr("Set the start up mode for the UI.")},
     {"PipeSize"                    ,ptGT_Choice       ,2,0,1 ,ptPipeSize_Quarter          ,GuiOptions->PipeSize                  ,tr("Size of image processed vs original.")},
     {"StartupPipeSize"             ,ptGT_Choice       ,1,0,1 ,ptPipeSize_Quarter          ,GuiOptions->PipeSize                  ,tr("Initial pipe size when Photivo starts.")},

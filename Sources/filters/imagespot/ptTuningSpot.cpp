@@ -92,6 +92,9 @@ QVariant ptTuningSpot::doGetValue(const QString &AKey) const {
   if (AKey == CSpotMaxRadiusId) {
     return FDataStore.value(CSpotMaxRadiusId).toInt() >> Settings->GetInt("Scaled");
 
+  } else if (AKey == CSpotLumaCurveId) {
+    return FCurve->storeConfig();
+
   } else {
     return QVariant();
   }
@@ -102,6 +105,10 @@ QVariant ptTuningSpot::doGetValue(const QString &AKey) const {
 bool ptTuningSpot::doSetValue(const QString &AKey, const QVariant AValue) {
   if (AKey == CSpotMaxRadiusId) {
     FDataStore.insert(AKey, AValue.toInt() << Settings->GetInt("Scaled"));
+    return true;
+
+  } else if (AKey == CSpotLumaCurveId) {
+    FCurve->loadConfig(AValue.toMap());
     return true;
 
   } else {
