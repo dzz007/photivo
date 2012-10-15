@@ -45,6 +45,7 @@ protected:
   void      doDefineControls();
   QWidget  *doCreateGui();
   bool      doCheckHasActiveCfg();
+  void      doImportCustomConfig(QSettings*);
   void      doRunFilter(ptImage *AImage) const;
   void      doReset();
   ///@}
