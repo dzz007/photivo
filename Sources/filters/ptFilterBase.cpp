@@ -105,7 +105,7 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
     for (QString hId: hStoreIds) {
       ptStorable* hStore = FConfig->getStore(hId);
       if (!hStore) continue;
-      TConfigStore hList = hStore->storeConfig(hId);
+      TConfigStore hList = hStore->storeConfig(hId+"/");
 
       for (auto hItem = hList.constBegin(); hItem != hList.constEnd(); ++hItem) {
         APreset->setValue(hItem.key(), hItem.value());
@@ -159,7 +159,7 @@ void ptFilterBase::importPreset(QSettings *APreset, const bool ARequestPipeRun /
       hConfig.insert(hStoreId+"/"+hKey, APreset->value(hKey));
     }
     APreset->endGroup();
-    FConfig->getStore(hStoreId)->loadConfig(hConfig);
+    FConfig->getStore(hStoreId)->loadConfig(hConfig, hStoreId+"/");
   }
 
   // flags and derived’s custom stuff

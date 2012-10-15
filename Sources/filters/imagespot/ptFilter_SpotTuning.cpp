@@ -127,13 +127,21 @@ QWidget *ptFilter_SpotTuning::doCreateGui() {
   return hGuiBody;
 }
 
-//==============================================================================
+//------------------------------------------------------------------------------
 
 bool ptFilter_SpotTuning::doCheckHasActiveCfg() {
   return FSpotList.hasEnabledSpots();
 }
 
-//==============================================================================
+//------------------------------------------------------------------------------
+
+void ptFilter_SpotTuning::doImportCustomConfig(QSettings*) {
+  if (FGuiContainer) {
+    FGui->SpotList->model()->rebuildModel();
+  }
+}
+
+//------------------------------------------------------------------------------
 
 void ptFilter_SpotTuning::doRunFilter(ptImage *AImage) const {
   AImage->RGBToLch();
