@@ -1,0 +1,15 @@
+;
+; photivo Curve File
+;
+; This curve was written from within photivo
+;
+; va
+;
+Magic FLOSSCurveFile
+IntendedChannel 0
+CurveType 1
+0 0
+100 67
+500 540
+798 869
+1000 1000
