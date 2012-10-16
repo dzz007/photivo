@@ -12,44 +12,44 @@
         <translation type="obsolete">Photivo Einstellungsdatei (*.pts);;Alle Dateien (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="170"/>
+        <location filename="../Sources/ptMain.cpp" line="166"/>
         <source>Photivo channelmixer file (*.ptm);;All files (*.*)</source>
         <translation>Photivo Kanalmixerdatei (*.ptm);;Alle Dateien (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="172"/>
+        <location filename="../Sources/ptMain.cpp" line="168"/>
         <source>Photivo curve file (*.ptc);;All files (*.*)</source>
-        <translation>Photive Kurvendatei (*.ptc);;Alle Dateien (*.*)</translation>
+        <translation>Photivo Kurvendatei (*.ptc);;Alle Dateien (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="170"/>
+        <source>Photivo job file (*.ptj);;All files (*.*)</source>
+        <translation>Photivo Batchdatei (*.ptj);;Alle Dateien (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="172"/>
+        <source>Photivo settings file (*.pts);;All files (*.*)</source>
+        <translation>Photivo Entwicklungseinstellungen (*.pts);;Alle Dateien (*.*)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="174"/>
-        <source>Photivo job file (*.ptj);;All files (*.*)</source>
-        <translation>Photivo Jobdatei (*.ptj);;Alle Dateien (*.*)</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="176"/>
-        <source>Photivo settings file (*.pts);;All files (*.*)</source>
-        <translation>Photivo Einstellungsdatei (*.pts);;Alle Dateien (*.*)</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="178"/>
         <source>ICC colour profiles (*.icc *.icm);;All files (*.*)</source>
         <translation>ICC Farbprofile (*.icc *.icm);;Alle Dateien (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="182"/>
+        <location filename="../Sources/ptMain.cpp" line="178"/>
         <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Raw-Dateien (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="229"/>
+        <location filename="../Sources/ptMain.cpp" line="225"/>
         <source>Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="240"/>
+        <location filename="../Sources/ptMain.cpp" line="236"/>
         <source>Jpeg (*.jpg);;Tiff (*.tiff);;Png (*.png);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
@@ -75,7 +75,7 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="56"/>
         <source>Minimal: dirs, available curves ...</source>
-        <translation>Minimal: Verzeichnisse, zur Verfügung stehende Kurven ...</translation>
+        <translation>Mindestens: Verzeichnisse, zur Verfügung stehende Kurven ...</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="57"/>
@@ -639,17 +639,17 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="297"/>
         <source>R -&gt; L*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="298"/>
         <source>G -&gt; L*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="299"/>
         <source>B -&gt; L*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="303"/>
@@ -666,7 +666,7 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="39"/>
         <source>Current</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuell</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="40"/>
@@ -731,7 +731,7 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="93"/>
         <source>Fast sRGB preview</source>
-        <translation type="unfinished"></translation>
+        <translation>Schnelle sRGB-Vorschau</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="127"/>
@@ -792,7 +792,7 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="204"/>
         <source>Longer edge</source>
-        <translation type="unfinished"></translation>
+        <translation>Längere Seite</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="205"/>
@@ -942,17 +942,17 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="343"/>
         <source>Round</source>
-        <translation type="unfinished"></translation>
+        <translation>Rund</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="344"/>
         <source>Linear mask</source>
-        <translation type="unfinished"></translation>
+        <translation>Lineare Maske</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="345"/>
         <source>Round mask</source>
-        <translation type="unfinished"></translation>
+        <translation>Runde Maske</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="349"/>
@@ -1054,13 +1054,13 @@
         <location filename="../Sources/ptGuiOptions.cpp" line="390"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="405"/>
         <source>Color burn</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbe abdunkeln</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="391"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="406"/>
         <source>Color dodge</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbe aufhellen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="393"/>
@@ -1076,17 +1076,17 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="407"/>
         <source>Darken only</source>
-        <translation type="unfinished"></translation>
+        <translation>Nur abdunkeln</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="408"/>
         <source>Lighten only</source>
-        <translation type="unfinished"></translation>
+        <translation>Nur aufhellen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="409"/>
         <source>Show outlines</source>
-        <translation type="unfinished"></translation>
+        <translation>Konturen zeigen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="414"/>
@@ -1278,7 +1278,7 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="516"/>
         <source>TIFF 16-bit</source>
-        <translation>TITT16-bit</translation>
+        <translation>Tiff16-bit</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="517"/>
@@ -1288,12 +1288,12 @@
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="518"/>
         <source>PNG 8-bit</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="519"/>
         <source>PNG 16-bit</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>PNG</source>
@@ -1363,8 +1363,8 @@
         <translation type="obsolete">Automatische CA Korrektur</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4543"/>
-        <location filename="../Sources/ptMain.cpp" line="4544"/>
+        <location filename="../Sources/ptMain.cpp" line="4557"/>
+        <location filename="../Sources/ptMain.cpp" line="4558"/>
         <source>Crop</source>
         <translation>Zuschneiden</translation>
     </message>
@@ -1401,48 +1401,51 @@
         <translation type="obsolete">Fehler beim Lesen der Kurve</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1140"/>
-        <location filename="../Sources/ptMain.cpp" line="1290"/>
-        <location filename="../Sources/ptMain.cpp" line="1454"/>
-        <location filename="../Sources/ptMain.cpp" line="1492"/>
-        <location filename="../Sources/ptMain.cpp" line="1719"/>
-        <location filename="../Sources/ptMain.cpp" line="2041"/>
-        <location filename="../Sources/ptMain.cpp" line="2372"/>
-        <location filename="../Sources/ptMain.cpp" line="3021"/>
+        <location filename="../Sources/ptMain.cpp" line="1148"/>
+        <location filename="../Sources/ptMain.cpp" line="1298"/>
+        <location filename="../Sources/ptMain.cpp" line="1462"/>
+        <location filename="../Sources/ptMain.cpp" line="1500"/>
+        <location filename="../Sources/ptMain.cpp" line="1727"/>
+        <location filename="../Sources/ptMain.cpp" line="2051"/>
+        <location filename="../Sources/ptMain.cpp" line="2384"/>
+        <location filename="../Sources/ptMain.cpp" line="3035"/>
         <source>Ready</source>
         <translation>Bereit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1091"/>
+        <location filename="../Sources/ptMain.cpp" line="1099"/>
         <source>Loading channelmixers</source>
         <translation>Lade Kanalmixer</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="477"/>
+        <location filename="../Sources/ptMain.cpp" line="473"/>
         <source>Photivo crashed</source>
-        <translation type="unfinished"></translation>
+        <translation>Photivo ist abgestürzt</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="478"/>
+        <location filename="../Sources/ptMain.cpp" line="474"/>
         <source>Photivo crashed. You can get help on our flickr forum at
 &lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;http://www.flickr.com/groups/photivo/discuss/&lt;/a&gt;
 When you post there make sure to describe your last actions before the crash occurred.</source>
-        <translation type="unfinished"></translation>
+        <translation>Photivo ist abgestürzt. Sie können in unserem flickr Forum Hilfe bekommen unter
+&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;http://www.flickr.com/groups/photivo/discuss/&lt;/a&gt;
+Wenn Sie eine Frage stellen, stellen Sie bitte sicher, dass Sie Ihre letzten Aktionen beschreiben, bevor der Absturz auftrat.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="492"/>
+        <location filename="../Sources/ptMain.cpp" line="488"/>
         <source>Fatal error: Wrong GraphicsMagick quantum depth!
 Found quantum depth %1. Photivo needs at least %2.
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Schwerer Fehler: Falsche GraphicsMagic quantum depth!
+Gefundene quantum depth %1. Photivo benötigt mindesten %2.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="497"/>
+        <location filename="../Sources/ptMain.cpp" line="493"/>
         <source>Photivo: Fatal Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Photivo: Schwerer Fehler</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="503"/>
+        <location filename="../Sources/ptMain.cpp" line="499"/>
         <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
                 [-h] [--new-instance]
 Options:
@@ -1474,82 +1477,82 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="979"/>
+        <location filename="../Sources/ptMain.cpp" line="987"/>
         <source>Clean up input file</source>
-        <translation type="unfinished"></translation>
+        <translation>Eingabedatei säubern</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1101"/>
-        <location filename="../Sources/ptMain.cpp" line="2081"/>
-        <location filename="../Sources/ptMain.cpp" line="4839"/>
+        <location filename="../Sources/ptMain.cpp" line="1109"/>
+        <location filename="../Sources/ptMain.cpp" line="2093"/>
+        <location filename="../Sources/ptMain.cpp" line="4853"/>
         <source>Cannot read channelmixer </source>
         <translation>Kanalmixer kann nicht gelesen werden</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1107"/>
-        <location filename="../Sources/ptMain.cpp" line="2080"/>
-        <location filename="../Sources/ptMain.cpp" line="4844"/>
+        <location filename="../Sources/ptMain.cpp" line="1115"/>
+        <location filename="../Sources/ptMain.cpp" line="2092"/>
+        <location filename="../Sources/ptMain.cpp" line="4858"/>
         <source>Channelmixer read error</source>
         <translation>Fehler beim Lesen des Kanalmixers</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1448"/>
+        <location filename="../Sources/ptMain.cpp" line="1456"/>
         <source>Selection</source>
-        <translation type="unfinished"></translation>
+        <translation>Auswahl</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1816"/>
-        <location filename="../Sources/ptMain.cpp" line="1934"/>
-        <location filename="../Sources/ptMain.cpp" line="1998"/>
+        <location filename="../Sources/ptMain.cpp" line="1824"/>
+        <location filename="../Sources/ptMain.cpp" line="1943"/>
+        <location filename="../Sources/ptMain.cpp" line="2008"/>
         <source>Histogram selection outside the image</source>
         <translation>Histogrammauswahl außerhalb des Bildes</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1817"/>
-        <location filename="../Sources/ptMain.cpp" line="1935"/>
-        <location filename="../Sources/ptMain.cpp" line="1999"/>
+        <location filename="../Sources/ptMain.cpp" line="1825"/>
+        <location filename="../Sources/ptMain.cpp" line="1944"/>
+        <location filename="../Sources/ptMain.cpp" line="2009"/>
         <source>Histogram selection rectangle too large.
 No crop, try again.</source>
         <translation>Histogrammauswahlrechteck zu groß.
 Keine Zuschnitt, versuchen Sie es erneut.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2225"/>
+        <location filename="../Sources/ptMain.cpp" line="2237"/>
         <source>Memory error, no conversion for file:</source>
-        <translation type="unfinished"></translation>
+        <translation>Speicherfehler, keine Konvertierung für die Datei</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2339"/>
+        <location filename="../Sources/ptMain.cpp" line="2351"/>
         <source>GraphicsMagick Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler in GraphicsMagick</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2339"/>
+        <location filename="../Sources/ptMain.cpp" line="2351"/>
         <source>No output file written.</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Ausgabedatei geschrieben</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2347"/>
+        <location filename="../Sources/ptMain.cpp" line="2359"/>
         <source>Exif Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Exif-Fehler</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2347"/>
+        <location filename="../Sources/ptMain.cpp" line="2359"/>
         <source>No exif data written.</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Exif-Daten geschrieben</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2367"/>
+        <location filename="../Sources/ptMain.cpp" line="2379"/>
         <source>Written %L1 bytes (%L2 MByte)</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 Bytes geschrieben (%L2 MByte)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2593"/>
+        <location filename="../Sources/ptMain.cpp" line="2605"/>
         <source>File not found</source>
         <translation>Datei nicht gefunden</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2594"/>
+        <location filename="../Sources/ptMain.cpp" line="2606"/>
         <source>Input file does not exist.</source>
         <translation>Eingabedatei existiert nicht.</translation>
     </message>
@@ -1562,111 +1565,111 @@ Keine Zuschnitt, versuchen Sie es erneut.</translation>
         <translation type="obsolete">Bitte beenden Sie das Zuschneiden bevor Sie Photivo schließen.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3083"/>
-        <location filename="../Sources/ptMain.cpp" line="3084"/>
+        <location filename="../Sources/ptMain.cpp" line="3097"/>
+        <location filename="../Sources/ptMain.cpp" line="3098"/>
         <source>Please load a profile first</source>
         <translation>Bitte laden Sie erst ein Profil</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3349"/>
+        <location filename="../Sources/ptMain.cpp" line="3363"/>
         <source>Really switch to 1:1 pipe?</source>
         <translation>Wollen Sie wirklich zur 1:1-pipe Umschalten?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3350"/>
+        <location filename="../Sources/ptMain.cpp" line="3364"/>
         <source>Switching to 1:1 pipe will increase memory usage and processing time greatly.
 Are you sure?</source>
         <translation>Umschalten zur 1:1-pipe wird den Speicherbedarf und die Verarbeitungszeit sehr erhöhen.
 Sind Sie sicher?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3352"/>
-        <location filename="../Sources/ptMain.cpp" line="3389"/>
+        <location filename="../Sources/ptMain.cpp" line="3366"/>
+        <location filename="../Sources/ptMain.cpp" line="3403"/>
         <source>Detail view</source>
         <translation>Detailansicht</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3521"/>
-        <location filename="../Sources/ptMain.cpp" line="3536"/>
+        <location filename="../Sources/ptMain.cpp" line="3535"/>
+        <location filename="../Sources/ptMain.cpp" line="3550"/>
         <source>Reset?</source>
         <translation>Zurücksetzen?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3522"/>
+        <location filename="../Sources/ptMain.cpp" line="3536"/>
         <source>Reset to neutral values?
 </source>
         <translation>Auf neutrale Werte zurücksetzen?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3537"/>
+        <location filename="../Sources/ptMain.cpp" line="3551"/>
         <source>Reset to start up settings?
 </source>
         <translation>Auf Startwerte zurücksetzen?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3566"/>
+        <location filename="../Sources/ptMain.cpp" line="3580"/>
         <source>Get Gimp command</source>
         <translation>Hole Gimp-Befehl</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3878"/>
-        <location filename="../Sources/ptMain.cpp" line="3879"/>
+        <location filename="../Sources/ptMain.cpp" line="3892"/>
+        <location filename="../Sources/ptMain.cpp" line="3893"/>
         <source>Spot WB</source>
-        <translation type="unfinished"></translation>
+        <translation>Spot-Weißabgleich</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4330"/>
+        <location filename="../Sources/ptMain.cpp" line="4344"/>
         <source>No selection</source>
         <translation>Keine Auswahl</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4331"/>
-        <location filename="../Sources/ptMain.cpp" line="4530"/>
+        <location filename="../Sources/ptMain.cpp" line="4345"/>
+        <location filename="../Sources/ptMain.cpp" line="4544"/>
         <source>Open an image first.</source>
         <translation>Öffnen Sie zuerst ein Bild.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4343"/>
-        <location filename="../Sources/ptMain.cpp" line="4344"/>
+        <location filename="../Sources/ptMain.cpp" line="4357"/>
+        <location filename="../Sources/ptMain.cpp" line="4358"/>
         <source>Get angle</source>
         <translation>Hole Winkel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4529"/>
+        <location filename="../Sources/ptMain.cpp" line="4543"/>
         <source>No crop possible</source>
         <translation>Kein Zuschnitt möglich</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4534"/>
+        <location filename="../Sources/ptMain.cpp" line="4548"/>
         <source>Prepare</source>
         <translation>Vorbereitung</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4535"/>
+        <location filename="../Sources/ptMain.cpp" line="4549"/>
         <source>Prepare for cropping</source>
         <translation>Vorbereitung für Zuschnitt</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4578"/>
+        <location filename="../Sources/ptMain.cpp" line="4592"/>
         <source>Crop too small</source>
         <translation>Zuschnitt zu klein</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4888"/>
+        <location filename="../Sources/ptMain.cpp" line="4902"/>
         <source>Give a description</source>
-        <translation type="unfinished"></translation>
+        <translation>Beschreibung eingeben</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="6239"/>
-        <location filename="../Sources/ptMain.cpp" line="6313"/>
+        <location filename="../Sources/ptMain.cpp" line="6253"/>
+        <location filename="../Sources/ptMain.cpp" line="6327"/>
         <source>Get texture bitmap file</source>
         <translation>Hole Bitmaptextur-Datei</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1452"/>
-        <location filename="../Sources/ptMain.cpp" line="1490"/>
-        <location filename="../Sources/ptMain.cpp" line="1803"/>
-        <location filename="../Sources/ptMain.cpp" line="1874"/>
+        <location filename="../Sources/ptMain.cpp" line="1460"/>
+        <location filename="../Sources/ptMain.cpp" line="1498"/>
+        <location filename="../Sources/ptMain.cpp" line="1811"/>
+        <location filename="../Sources/ptMain.cpp" line="1883"/>
         <source>Updating histogram</source>
         <translation>Aktualisiere Histogramm</translation>
     </message>
@@ -1679,152 +1682,152 @@ Sind Sie sicher?</translation>
         <translation type="obsolete">Unbekannte Kommandozeilen-Option</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1521"/>
-        <location filename="../Sources/ptMain.cpp" line="1576"/>
+        <location filename="../Sources/ptMain.cpp" line="1529"/>
+        <location filename="../Sources/ptMain.cpp" line="1584"/>
         <source>WebResizing</source>
         <translation>Ändere Größe für Internet</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1534"/>
+        <location filename="../Sources/ptMain.cpp" line="1542"/>
         <source>Applying base curve</source>
         <translation>Wende Grundkurve an</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1540"/>
+        <location filename="../Sources/ptMain.cpp" line="1548"/>
         <source>Applying gamma compensation</source>
         <translation>Wende Gammakompensation an</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1568"/>
+        <location filename="../Sources/ptMain.cpp" line="1576"/>
         <source>Applying after gamma curve</source>
         <translation>Wende Nach-Gamma-Kurve an</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1724"/>
+        <location filename="../Sources/ptMain.cpp" line="1732"/>
         <source>Updating preview image</source>
         <translation>Aktualisiere Vorschaubild</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1839"/>
+        <location filename="../Sources/ptMain.cpp" line="1848"/>
         <source>Indicating exposure</source>
         <translation>Belichtung anzeigen</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1881"/>
-        <location filename="../Sources/ptMain.cpp" line="2299"/>
-        <location filename="../Sources/ptMain.cpp" line="2901"/>
+        <location filename="../Sources/ptMain.cpp" line="1890"/>
+        <location filename="../Sources/ptMain.cpp" line="2311"/>
+        <location filename="../Sources/ptMain.cpp" line="2915"/>
         <source>Converting to output space</source>
         <translation>Konvertiere zum Ausgaberaum</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1951"/>
+        <location filename="../Sources/ptMain.cpp" line="1961"/>
         <source>Converting to screen space</source>
         <translation>Konvertiere zum Bildschirmraum</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2327"/>
+        <location filename="../Sources/ptMain.cpp" line="2339"/>
         <source>Writing output</source>
         <translation>Schreibe Ausgabe</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2341"/>
+        <location filename="../Sources/ptMain.cpp" line="2353"/>
         <source>Writing output (exif)</source>
         <translation>Schreibe Ausgabe (exif)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2356"/>
+        <location filename="../Sources/ptMain.cpp" line="2368"/>
         <source>Writing output (settings)</source>
         <translation>Schreibe Ausgabe (Einstellungen)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2582"/>
+        <location filename="../Sources/ptMain.cpp" line="2594"/>
         <source>Open Raw</source>
         <translation>Öffne Raw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2607"/>
+        <location filename="../Sources/ptMain.cpp" line="2619"/>
         <source>Reading file</source>
         <translation>Lese Datei</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2155"/>
-        <location filename="../Sources/ptMain.cpp" line="2620"/>
+        <location filename="../Sources/ptMain.cpp" line="2167"/>
+        <location filename="../Sources/ptMain.cpp" line="2632"/>
         <source>Cannot decode</source>
         <translation>Kann nicht dekodiert werden</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2391"/>
-        <location filename="../Sources/ptMain.cpp" line="2734"/>
+        <location filename="../Sources/ptMain.cpp" line="2403"/>
+        <location filename="../Sources/ptMain.cpp" line="2746"/>
         <source>Jpg images (*.jpg *.jpeg);;All files (*.*)</source>
         <translation>Jpg-Bilder (*.jpg *.jpeg);;Alle Dateien (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="543"/>
-        <location filename="../Sources/ptMain.cpp" line="846"/>
+        <location filename="../Sources/ptMain.cpp" line="539"/>
+        <location filename="../Sources/ptMain.cpp" line="842"/>
         <source>Photivo</source>
         <translation>Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1481"/>
+        <location filename="../Sources/ptMain.cpp" line="1489"/>
         <source>Selection too small</source>
         <translation>Auswahl zu klein</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1482"/>
+        <location filename="../Sources/ptMain.cpp" line="1490"/>
         <source>Selection rectangle needs to be at least 50x50 pixels in size.
 No crop, try again.</source>
         <translation>Auswahlrechteck muss mindestens 50x50 Pixel umfassen.
 Kein Zuschnitt, versuchen Sie es erneut.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2396"/>
-        <location filename="../Sources/ptMain.cpp" line="2739"/>
+        <location filename="../Sources/ptMain.cpp" line="2408"/>
+        <location filename="../Sources/ptMain.cpp" line="2751"/>
         <source>PNG images(*.png);;All files (*.*)</source>
         <translation>PNG-Bilder(*.png);;Alle Dateien (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2401"/>
-        <location filename="../Sources/ptMain.cpp" line="2744"/>
+        <location filename="../Sources/ptMain.cpp" line="2413"/>
+        <location filename="../Sources/ptMain.cpp" line="2756"/>
         <source>Tiff images (*.tif *.tiff);;All files (*.*)</source>
         <translation>Tiff-Bilder (*.tif *.tiff);;Alle Dateien (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2405"/>
-        <location filename="../Sources/ptMain.cpp" line="2748"/>
+        <location filename="../Sources/ptMain.cpp" line="2417"/>
+        <location filename="../Sources/ptMain.cpp" line="2760"/>
         <source>Ppm images (*.ppm);;All files (*.*)</source>
         <translation>Ppm-Bilder (*.ppm);;Alle Dateien (*.*)</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="516"/>
-        <location filename="../Sources/ptMain.cpp" line="2412"/>
-        <location filename="../Sources/ptMain.cpp" line="2755"/>
+        <location filename="../Sources/ptMain.cpp" line="2424"/>
+        <location filename="../Sources/ptMain.cpp" line="2767"/>
         <source>Save File</source>
         <translation>Datei speichern</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="522"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehler</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="522"/>
         <source>Thumbnail could not be saved.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorschaubild konnte nicht gespeichert werden.</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="526"/>
         <source>Exif error</source>
-        <translation type="unfinished"></translation>
+        <translation>Exif-Fehler</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="526"/>
         <source>Exif data could not be written.</source>
-        <translation type="unfinished"></translation>
+        <translation>Exif-Daten konnten nicht geschrieben werden.</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilterDM.cpp" line="365"/>
         <source>Append settings file</source>
-        <translation type="unfinished"></translation>
+        <translation>Einstellungsdatei anhängen</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilterDM.cpp" line="395"/>
@@ -1850,146 +1853,147 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
         <translation type="obsolete">Einstellungsdatei</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2869"/>
+        <location filename="../Sources/ptMain.cpp" line="2883"/>
         <source>Writing tmp image for gimp</source>
         <translation>Schreibe temp. Bild für Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2940"/>
+        <location filename="../Sources/ptMain.cpp" line="2954"/>
         <source>Writing tmp exif for gimp</source>
         <translation>Schreibe temp. Exif für Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2953"/>
+        <location filename="../Sources/ptMain.cpp" line="2967"/>
         <source>Writing tmp icc for gimp</source>
         <translation>Schreibe temp. ICC für Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2985"/>
+        <location filename="../Sources/ptMain.cpp" line="2999"/>
         <source>Writing gimp interface file</source>
         <translation>Schreibe Übergabedatei für Gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3092"/>
+        <location filename="../Sources/ptMain.cpp" line="3106"/>
         <source>Not yet implemented</source>
         <translation>Noch nicht implementiert</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3093"/>
+        <location filename="../Sources/ptMain.cpp" line="3107"/>
         <source>Not yet implemented. Reverting to Adobe.</source>
         <translation>Noch nicht implementiert. Greife auf Adobe zurück.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3103"/>
-        <location filename="../Sources/ptMain.cpp" line="3146"/>
-        <location filename="../Sources/ptMain.cpp" line="3186"/>
+        <location filename="../Sources/ptMain.cpp" line="3117"/>
+        <location filename="../Sources/ptMain.cpp" line="3160"/>
+        <location filename="../Sources/ptMain.cpp" line="3200"/>
         <source>Open Profile</source>
         <translation>Profil öffnen</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3291"/>
+        <location filename="../Sources/ptMain.cpp" line="3305"/>
         <source>Open Image</source>
         <translation>Bild öffnen</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3293"/>
+        <location filename="../Sources/ptMain.cpp" line="3307"/>
         <source>CSS files (*.css *.qss);;All files(*.*)</source>
         <translation>CSS-Dateien (*.css *.qss);;Alle Dateien(*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3327"/>
+        <location filename="../Sources/ptMain.cpp" line="3341"/>
         <source>Are you sure?</source>
         <translation>Sind Sie sicher?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3328"/>
+        <location filename="../Sources/ptMain.cpp" line="3342"/>
         <source>If you don&apos;t stop me, I will waste %1 MB of memory.</source>
         <translation>Wenn Sie mich nicht anhalten, werde ich%1 MB Arbeitspeicher verschwenden.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3597"/>
+        <location filename="../Sources/ptMain.cpp" line="3611"/>
         <source>Get preset file</source>
         <translation>Voreinstellungsdatei laden</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3725"/>
+        <location filename="../Sources/ptMain.cpp" line="3739"/>
         <source>Save full size image</source>
         <translation>Speichere Bild in voller Größe</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3727"/>
+        <location filename="../Sources/ptMain.cpp" line="3741"/>
         <source>Save current pipe</source>
         <translation>Speicher aktuelle Pipe</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3729"/>
+        <location filename="../Sources/ptMain.cpp" line="3743"/>
         <source>Save job file</source>
         <translation>Speichere Job-Datei</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilterDM.cpp" line="366"/>
-        <location filename="../Sources/ptMain.cpp" line="3731"/>
+        <location filename="../Sources/ptMain.cpp" line="3745"/>
         <source>Save settings file</source>
         <translation>Speichere Voreinstellungsdatei</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3777"/>
-        <location filename="../Sources/ptMain.cpp" line="3789"/>
+        <location filename="../Sources/ptMain.cpp" line="3791"/>
+        <location filename="../Sources/ptMain.cpp" line="3803"/>
         <source>Settings files (*.pts *.ptj);;All files (*.*)</source>
         <translation>Voreinstellungsdateien (*.pts *.ptj);;Alle Dateien (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3780"/>
+        <location filename="../Sources/ptMain.cpp" line="3794"/>
         <source>Open setting file</source>
         <translation>Einstellungen öffnen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="537"/>
-        <location filename="../Sources/ptMain.cpp" line="3792"/>
+        <location filename="../Sources/ptMain.cpp" line="3806"/>
         <source>Open preset</source>
         <translation>Voreinstellung öffnen</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3806"/>
+        <location filename="../Sources/ptMain.cpp" line="3820"/>
         <source>Open &apos;bad pixels&apos; file</source>
         <translation>Öffne Datei mit &apos;Fehlerpixeln&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3830"/>
+        <location filename="../Sources/ptMain.cpp" line="3844"/>
         <source>Open &apos;dark frame&apos; file</source>
         <translation>Öffne Dunkelbilddatei</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4579"/>
+        <location filename="../Sources/ptMain.cpp" line="4593"/>
         <source>Crop rectangle needs to be at least 4x4 pixels in size.
 No crop, try again.</source>
         <translation>Beschneidungsviereck muss mind. 4x4 Pixel groß sein.
 Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4639"/>
+        <location filename="../Sources/ptMain.cpp" line="4653"/>
         <source>No previous crop found</source>
         <translation>Kein vorheriger Zuschnitt gefunden</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4640"/>
+        <location filename="../Sources/ptMain.cpp" line="4654"/>
         <source>Set a crop rectangle now.</source>
         <translation>Ziehen Sie jetzt ein Viereck für den Zuschnitt.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4825"/>
+        <location filename="../Sources/ptMain.cpp" line="4839"/>
         <source>Open Channelmixer</source>
         <translation>Öffne Kanalmixer</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4872"/>
-        <location filename="../Sources/ptMain.cpp" line="4887"/>
+        <location filename="../Sources/ptMain.cpp" line="4886"/>
+        <location filename="../Sources/ptMain.cpp" line="4901"/>
         <source>Save Channelmixer</source>
         <translation>Speichere Kanalmixer</translation>
     </message>
     <message>
+        <location filename="../Sources/ptCurveWindow.cpp" line="177"/>
         <source>Open Curve</source>
-        <translation type="obsolete">Öffne Kurve</translation>
+        <translation>Öffne Kurve</translation>
     </message>
     <message>
         <source>This curve is meant for channel </source>
@@ -2020,7 +2024,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
         <translation type="obsolete">Normalisierung</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1561"/>
+        <location filename="../Sources/ptMain.cpp" line="1569"/>
         <source>Applying RGB Contrast</source>
         <translation>RGB-Kontrast anwenden</translation>
     </message>
@@ -2033,7 +2037,7 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
         <translation type="obsolete">GreyCStoration auf L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1586"/>
+        <location filename="../Sources/ptMain.cpp" line="1594"/>
         <source>Wiener Filter</source>
         <translation>Wiener Filter</translation>
     </message>
@@ -5017,88 +5021,88 @@ Kein Zuschnitt, bitte versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/filemgmt/ptImageView.cpp" line="377"/>
         <source>Loading</source>
-        <translation type="unfinished"></translation>
+        <translation>Lade</translation>
     </message>
     <message>
         <location filename="../Sources/ptConfirmRequest.cpp" line="46"/>
         <source>Photivo: Load configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Photivo: Lade Konfiguration</translation>
     </message>
     <message>
         <location filename="../Sources/ptConfirmRequest.cpp" line="50"/>
         <source>Discard current configuration and load new settings?</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuelle Konfiguration verwerfen und neue Einstellungen laden?</translation>
     </message>
     <message>
         <location filename="../Sources/ptConfirmRequest.cpp" line="58"/>
         <source>Discard current configuration and reset to startup preset?
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuelle Konfiguration verwerfen und auf Starteinstellungen zurücksetzen?</translation>
     </message>
     <message>
         <location filename="../Sources/ptConfirmRequest.cpp" line="63"/>
         <source>Discard current configuration and reset to neutral preset?</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuelle Konfiguration verwerfen und auf neutrale Einstellungen zurücksetzen?</translation>
     </message>
     <message>
         <location filename="../Sources/ptConfirmRequest.cpp" line="67"/>
         <source>Discard current configuration and load preset file?
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuelle Konfiguration verwerfen und eine Voreinstellung laden?</translation>
     </message>
     <message>
         <location filename="../Sources/ptConfirmRequest.cpp" line="76"/>
         <source>Discard current configuration and load settings file?
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuelle Konfiguration verwerfen und eine Einstellungsdatei laden?</translation>
     </message>
     <message>
         <location filename="../Sources/ptConfirmRequest.cpp" line="117"/>
         <source>Photivo: Save image</source>
-        <translation type="unfinished"></translation>
+        <translation>Photivo: Speichere Bild</translation>
     </message>
     <message>
         <location filename="../Sources/ptConfirmRequest.cpp" line="118"/>
         <location filename="../Sources/ptConfirmRequest.cpp" line="130"/>
         <source>Do you want to save the current image?</source>
-        <translation type="unfinished"></translation>
+        <translation>Möchten Sie das aktuelle Bild speichern?</translation>
     </message>
     <message>
         <location filename="../Sources/ptConfirmRequest.cpp" line="122"/>
         <source>Photivo: Open image</source>
-        <translation type="unfinished"></translation>
+        <translation>Photivo: Öffne Bild</translation>
     </message>
     <message>
         <location filename="../Sources/ptConfirmRequest.cpp" line="123"/>
         <source>Before opening the image:
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Vor dem Öffnen des Bildes:</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurve.cpp" line="305"/>
         <source>Failed to load curve file %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Konnte Kurvendatei für %1 nicht laden.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurve.cpp" line="306"/>
         <source>
 The error occurred in line %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Der Fehler trat in Zeile %1 auf.</translation>
     </message>
     <message>
         <location filename="../Sources/ptCurve.cpp" line="307"/>
         <source>Load curve file</source>
-        <translation type="unfinished"></translation>
+        <translation>Lade Kurvendatei</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="498"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation>Fertig</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="504"/>
         <source>Updating</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktualisiere</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="510"/>
@@ -5164,44 +5168,54 @@ The error occurred in line %1.</source>
         <translation type="obsolete">Maskieren nach Farbe</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="631"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="657"/>
         <source>L&amp;uminance mask</source>
-        <translation type="unfinished"></translation>
+        <translation>L&amp;uminanzmaske</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="635"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="661"/>
         <source>C&amp;olor mask</source>
-        <translation type="unfinished"></translation>
+        <translation>F&amp;arbmaske</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="644"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="670"/>
         <source>&amp;Linear</source>
-        <translation>Linear</translation>
+        <translation>&amp;Linear</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="645"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="671"/>
         <source>Linear interpolation</source>
         <translation>Lineare Interpolation</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="649"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="675"/>
         <source>&amp;Spline</source>
-        <translation>Spline</translation>
+        <translation>&amp;Spline</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="650"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="676"/>
         <source>Spline interpolation</source>
         <translation>Spline-Interpolation</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="654"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="680"/>
         <source>&amp;Cosine</source>
-        <translation>Cosinus</translation>
+        <translation>&amp;Cosinus</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="655"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="681"/>
         <source>Cosine interpolation</source>
         <translation>Cosinus-Interpolation</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptCurveWindow.cpp" line="690"/>
+        <source>Open &amp;file</source>
+        <translation>Öffne &amp;Datei</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptCurveWindow.cpp" line="691"/>
+        <source>Open anchor curve file</source>
+        <translation>Öffne Ankerkurvendatei</translation>
     </message>
 </context>
 <context>
@@ -5210,112 +5224,112 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.ui" line="119"/>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="110"/>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Lesezeichen</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.ui" line="172"/>
         <source>Open bookmark list</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne Lesezeichenliste</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="78"/>
         <source>Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordner</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="80"/>
         <source>Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Verzeichnisse</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="87"/>
         <source>Bookmark current folder (Ctrl+B)</source>
-        <translation type="unfinished"></translation>
+        <translation>Speichere aktuellen Ordner als Lesezeichen (Strg+B)</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="89"/>
         <source>Bookmark current directory (Ctrl+B)</source>
-        <translation type="unfinished"></translation>
+        <translation>Speichere aktuelles Verzeichnis als Lesezeichen (Strg+B)</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="660"/>
         <source>&amp;Vertical</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vertikal</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="660"/>
         <source>Alt+1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="664"/>
         <source>&amp;Horizontal</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="664"/>
         <source>Alt+2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="668"/>
         <source>&amp;Details</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="668"/>
         <source>Alt+3</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="673"/>
         <source>Show &amp;folder thumbnails</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige &amp;Ordner-Vorschaubilder</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="675"/>
         <source>Show &amp;directory thumbnails</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige &amp;Verzeichnis-Vorschaubilder</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="687"/>
         <source>Show &amp;image preview</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige &amp;Bildvorschau</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="687"/>
         <source>F3</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="691"/>
         <source>Show &amp;sidebar</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige &amp;Seitenleiste</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="691"/>
         <source>F4</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="695"/>
         <source>&amp;Save thumbnail</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Speichere Vorschaubild</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="698"/>
         <source>&amp;Close file manager</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Schließe Dateimanager</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="698"/>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="708"/>
         <source>Thumbnail &amp;view</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vorschaubildansicht</translation>
     </message>
 </context>
 <context>
@@ -5341,7 +5355,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
         <source>Darken the bright parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Dunkle die hellen Partien ab</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
@@ -5351,7 +5365,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
         <source>Brighten the dark parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Helle die dunklen Partien auf</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="60"/>
@@ -5369,17 +5383,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="48"/>
         <source>Color boost</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbverstärkung</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="57"/>
         <source>Strength in a</source>
-        <translation type="unfinished"></translation>
+        <translation>Stärke in a</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="58"/>
         <source>Strength in b</source>
-        <translation type="unfinished"></translation>
+        <translation>Stärke in b</translation>
     </message>
 </context>
 <context>
@@ -5415,7 +5429,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="48"/>
         <source>Color enhancement</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbverbesserung</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="57"/>
@@ -5476,7 +5490,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_DetailCurve.cpp" line="69"/>
         <source>Anti badpixel</source>
-        <translation type="unfinished"></translation>
+        <translation>Anti-Fehlerpixel</translation>
     </message>
 </context>
 <context>
@@ -5484,7 +5498,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Drc.cpp" line="50"/>
         <source>Dynamic range compression</source>
-        <translation>Dynamickompression</translation>
+        <translation>Dynamikkompression</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Drc.cpp" line="59"/>
@@ -5494,7 +5508,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Drc.cpp" line="60"/>
         <source>Bias</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Drc.cpp" line="61"/>
@@ -5507,7 +5521,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_GammaTool.cpp" line="47"/>
         <source>Gamma adjustment</source>
-        <translation type="unfinished"></translation>
+        <translation>Gammaeinstellung</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_GammaTool.cpp" line="56"/>
@@ -5530,32 +5544,32 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="57"/>
         <source>Reg highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Rote Lichter</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="57"/>
         <source>Adjusts brightness of highlights in R channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Stellt die Helligkeit der Lichter im R-Kanal ein</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="58"/>
         <source>Green highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Grüne Lichter</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="58"/>
         <source>Adjusts brightness of highlights in G channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Stellt die Helligkeit der Lichter im G-Kanal ein</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="59"/>
         <source>Blue highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Blaue Lichter</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Highlights.cpp" line="59"/>
         <source>Adjusts brightness of highlights in B channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Stellt die Helligkeit der Lichter im B-Kanal ein</translation>
     </message>
 </context>
 <context>
@@ -5564,7 +5578,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="61"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="69"/>
         <source>Low/mid/highlight recovery</source>
-        <translation type="unfinished"></translation>
+        <translation>Partielle Belichtungskorrektur</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="76"/>
@@ -5595,7 +5609,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="84"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="89"/>
         <source>Mask type</source>
-        <translation type="unfinished"></translation>
+        <translation>Maskenart</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="85"/>
@@ -5607,13 +5621,13 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="86"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="91"/>
         <source>Lower limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Untere Grenze</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="87"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="92"/>
         <source>Upper limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Obere Grenze</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="88"/>
@@ -5637,22 +5651,22 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="55"/>
         <source>R -&gt; L*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="56"/>
         <source>G -&gt; L*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="57"/>
         <source>B -&gt; L*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="61"/>
         <source>Transformation</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -5661,7 +5675,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_Levels.cpp" line="51"/>
         <location filename="../Sources/filters/ptFilter_Levels.cpp" line="59"/>
         <source>Levels</source>
-        <translation type="unfinished"></translation>
+        <translation>Linearer Abgleich</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Levels.cpp" line="68"/>
@@ -5679,12 +5693,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_LumaDenoiseCurve.cpp" line="54"/>
         <source>Luminance denoise curve</source>
-        <translation type="unfinished"></translation>
+        <translation>Luminanz-Entrauschungskurve</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LumaDenoiseCurve.cpp" line="68"/>
         <source>L strength</source>
-        <translation type="unfinished"></translation>
+        <translation>Stärke in L</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LumaDenoiseCurve.cpp" line="69"/>
@@ -5763,7 +5777,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="54"/>
         <source>Outline</source>
-        <translation type="unfinished"></translation>
+        <translation>Kontur</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="62"/>
@@ -5798,97 +5812,97 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="68"/>
         <source>Color burn</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbe abdunkeln</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="69"/>
         <source>Color dodge</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbe aufhellen</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="70"/>
         <source>Darken only</source>
-        <translation type="unfinished"></translation>
+        <translation>Nur abdunkeln</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="71"/>
         <source>Lighten only</source>
-        <translation type="unfinished"></translation>
+        <translation>Nur aufhellen</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="72"/>
         <source>Show outlines</source>
-        <translation type="unfinished"></translation>
+        <translation>Konturen zeigen</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="85"/>
         <source>Overlay mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Überlagerungsmodus</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="86"/>
         <source>Image on top</source>
-        <translation type="unfinished"></translation>
+        <translation>Bild oben</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="86"/>
         <source>Overlay the image on top of the outlines instead of vice versa</source>
-        <translation type="unfinished"></translation>
+        <translation>Lege das Bild über die Kontur anstatt umgekehrt</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="75"/>
         <source>Backward finite differences</source>
-        <translation type="unfinished"></translation>
+        <translation>Finite Rückwärtsdifferenzen</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="76"/>
         <source>Centered finite differences</source>
-        <translation type="unfinished"></translation>
+        <translation>Zentrierte finite Differenzen</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="77"/>
         <source>Forward finite differences</source>
-        <translation type="unfinished"></translation>
+        <translation>Finite Vorwärtsdifferenzen</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="78"/>
         <source>Sobel masks</source>
-        <translation type="unfinished"></translation>
+        <translation>Sobel-Masken</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="79"/>
         <source>Rotation invariant masks</source>
-        <translation type="unfinished"></translation>
+        <translation>Drehung invarianter Masken</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="80"/>
         <source>Deriche recursive filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Deriche Rekursiv-Filter</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="87"/>
         <source>Outlines mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Konturenmodus</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="87"/>
         <source>Method for calculating the outline gradients</source>
-        <translation type="unfinished"></translation>
+        <translation>Methode zur Berechnung des Konturgradients</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="88"/>
         <source>Color weight</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbgewichtung</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="88"/>
         <source>Weight of the A/B channels in the outlines calculation</source>
-        <translation type="unfinished"></translation>
+        <translation>Gewichtung der A/B-Kanaäle in der Konturberechnung</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="89"/>
         <source>Blur radius</source>
-        <translation type="unfinished"></translation>
+        <translation>Unschärferadius</translation>
     </message>
 </context>
 <context>
@@ -5916,7 +5930,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="63"/>
         <source>Lightness tweak</source>
-        <translation type="unfinished"></translation>
+        <translation>Helligkeitsoptimierung</translation>
     </message>
 </context>
 <context>
@@ -5934,12 +5948,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="58"/>
         <source>Adaptive</source>
-        <translation type="unfinished"></translation>
+        <translation>Adaptiv</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_SatCurve.cpp" line="67"/>
         <source>Saturation mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Sättigungsmodus</translation>
     </message>
 </context>
 <context>
@@ -5960,17 +5974,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="50"/>
         <source>Shadows/Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Schatten/Lichter</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="60"/>
         <source>Fine detail</source>
-        <translation type="unfinished"></translation>
+        <translation>Feine Details</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="61"/>
         <source>Coarse detail</source>
-        <translation type="unfinished"></translation>
+        <translation>Grobe Details</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="62"/>
@@ -5993,7 +6007,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_SigContrast.cpp" line="97"/>
         <source>Lightness contrast</source>
-        <translation type="unfinished"></translation>
+        <translation>Helligkeitskontrast</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_SigContrast.cpp" line="107"/>
@@ -6031,17 +6045,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="187"/>
         <source>R tone curve</source>
-        <translation>R-Ton-Kurve</translation>
+        <translation>R-Tonwert-Kurve</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="200"/>
         <source>G tone curve</source>
-        <translation>G-Ton-Kurve</translation>
+        <translation>G-Tonwert-Kurve</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="213"/>
         <source>B tone curve</source>
-        <translation>Schwarzton-Kurve</translation>
+        <translation>B-Tonwert-Kurve</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="226"/>
@@ -6054,7 +6068,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="62"/>
         <source>Tone</source>
-        <translation>Tönen</translation>
+        <translation>Tonwerte</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="71"/>
@@ -6086,7 +6100,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="53"/>
         <source>Tone adjustment</source>
-        <translation type="unfinished"></translation>
+        <translation>Tonwertanpassung</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="68"/>
@@ -6116,7 +6130,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="69"/>
         <source>Mask mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Maskenmodus</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="70"/>
@@ -6131,12 +6145,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="72"/>
         <source>Lower limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Untere Grenze</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="73"/>
         <source>Upper limit</source>
-        <translation type="unfinished"></translation>
+        <translation>Obere Grenze</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="74"/>
@@ -6149,7 +6163,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="54"/>
         <source>Wiener sharpen</source>
-        <translation type="unfinished"></translation>
+        <translation>Wiener Filter</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="63"/>
@@ -6159,7 +6173,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="63"/>
         <source>Switch filter on and off</source>
-        <translation type="unfinished"></translation>
+        <translation>Schalte Filter ein und aus</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="64"/>
@@ -6211,27 +6225,27 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="130"/>
         <source>&amp;Hide</source>
-        <translation>Verstecken</translation>
+        <translation>&amp;Verstecken</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="487"/>
         <source>Bl&amp;ock</source>
-        <translation>Blockieren</translation>
+        <translation>Bl&amp;ockieren</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="140"/>
         <source>&amp;Reset</source>
-        <translation>Zurücksetzen</translation>
+        <translation>&amp;Zurücksetzen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="145"/>
         <source>&amp;Save preset</source>
-        <translation>Einstellungen speichern</translation>
+        <translation>Einstellungen &amp;speichern</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="150"/>
         <source>&amp;Append preset</source>
-        <translation>Einstellungen anhängen</translation>
+        <translation>Einstellungen &amp;anhängen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="331"/>
@@ -6241,21 +6255,21 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="484"/>
         <source>All&amp;ow</source>
-        <translation>Zulassen</translation>
+        <translation>Z&amp;ulassen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="502"/>
         <location filename="../Sources/ptGroupBox.cpp" line="524"/>
         <location filename="../Sources/ptGroupBox.cpp" line="539"/>
         <source>Add to &amp;favourites</source>
-        <translation type="unfinished"></translation>
+        <translation>Zu &amp;Favoriten hinzufügen</translation>
     </message>
     <message>
         <location filename="../Sources/ptGroupBox.cpp" line="505"/>
         <location filename="../Sources/ptGroupBox.cpp" line="527"/>
         <location filename="../Sources/ptGroupBox.cpp" line="542"/>
         <source>Remove from &amp;favourites</source>
-        <translation type="unfinished"></translation>
+        <translation>Aus &amp;Favoriten entfernen</translation>
     </message>
     <message>
         <source>Favourite tool</source>
@@ -6342,17 +6356,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="86"/>
         <source>Logarithmic &amp;X axis</source>
-        <translation type="unfinished"></translation>
+        <translation>Logarhythmische &amp;x-Achse</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="91"/>
         <source>Logarithmic &amp;Y axis</source>
-        <translation type="unfinished"></translation>
+        <translation>Logarhythmische &amp;y-Achse</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="96"/>
         <source>&amp;Selection</source>
-        <translation>Auswahl</translation>
+        <translation>&amp;Auswahl</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="97"/>
@@ -6362,7 +6376,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="105"/>
         <source>&amp;Linear</source>
-        <translation>Linear</translation>
+        <translation>&amp;Linear</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="106"/>
@@ -6372,7 +6386,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="110"/>
         <source>&amp;Preview</source>
-        <translation>Vorschau</translation>
+        <translation>&amp;Vorschau</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="111"/>
@@ -6382,7 +6396,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="115"/>
         <source>&amp;Output</source>
-        <translation>Ausgabe</translation>
+        <translation>&amp;Ausgabe</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="116"/>
@@ -6398,7 +6412,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="137"/>
         <source>&amp;R</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="138"/>
@@ -6408,7 +6422,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="142"/>
         <source>&amp;G</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="143"/>
@@ -6418,7 +6432,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="147"/>
         <source>&amp;B</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="148"/>
@@ -6428,12 +6442,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="533"/>
         <source>Display &amp;channels</source>
-        <translation>Kanal</translation>
+        <translation>&amp;Kanäle anzeigen</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="540"/>
         <source>Display &amp;mode</source>
-        <translation>Modus</translation>
+        <translation>&amp;Modus anzeigen</translation>
     </message>
 </context>
 <context>
@@ -6441,47 +6455,47 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filemgmt/ptImageView.cpp" line="115"/>
         <source>Zoom &amp;in</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vergrößern</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptImageView.cpp" line="115"/>
         <source>1</source>
-        <translation type="unfinished">1</translation>
+        <translation>1</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptImageView.cpp" line="119"/>
         <source>Zoom &amp;100%</source>
-        <translation type="unfinished">Zoom 100%</translation>
+        <translation>Zoom &amp;100%</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptImageView.cpp" line="119"/>
         <source>2</source>
-        <translation type="unfinished">2</translation>
+        <translation>2</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptImageView.cpp" line="123"/>
         <source>Zoom &amp;out</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Verkleinern</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptImageView.cpp" line="123"/>
         <source>3</source>
-        <translation type="unfinished">3</translation>
+        <translation>3</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptImageView.cpp" line="127"/>
         <source>Zoom &amp;fit</source>
-        <translation type="unfinished">Passend zoomen</translation>
+        <translation>&amp;Passend zoomen</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptImageView.cpp" line="127"/>
         <source>4</source>
-        <translation type="unfinished">4</translation>
+        <translation>4</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptImageView.cpp" line="317"/>
         <source>Fit</source>
-        <translation type="unfinished">Anpassen</translation>
+        <translation>Anpassen</translation>
     </message>
 </context>
 <context>
@@ -7007,12 +7021,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="695"/>
         <source>Darkframe image</source>
-        <translation type="unfinished"></translation>
+        <translation>Dunkelbild</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="727"/>
         <source>DcRaw bad pixel file</source>
-        <translation type="unfinished"></translation>
+        <translation>DcRaw Fehlerpixeldatei</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1374"/>
@@ -7277,7 +7291,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7343"/>
         <source>&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7397"/>
@@ -7307,12 +7321,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7507"/>
         <source>Exif info</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7746"/>
         <source>dcraw info</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7793"/>
@@ -7322,7 +7336,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7981"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation>TextMarke</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="8205"/>
@@ -7352,12 +7366,12 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="8319"/>
         <source>Export command</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportbefehl</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="8548"/>
         <source>Tool pane mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Werkzeugmodus</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="8578"/>
@@ -7367,7 +7381,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="8653"/>
         <source>Initial zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>Anfangszoom</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="8996"/>
@@ -7602,7 +7616,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7863"/>
         <source>1:1 pipe:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7875"/>
@@ -7637,32 +7651,32 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5273"/>
         <source>Tone I</source>
-        <translation type="unfinished"></translation>
+        <translation>Tonwert I</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5375"/>
         <source>Tone II</source>
-        <translation type="unfinished"></translation>
+        <translation>Tonwert II</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5534"/>
         <source>Texture overlay I</source>
-        <translation type="unfinished"></translation>
+        <translation>Texturüberlagerung I</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5701"/>
         <source>Texture overlay II</source>
-        <translation type="unfinished"></translation>
+        <translation>Texturüberlagerung II</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="6164"/>
         <source>Gradual Blur I (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Graduelles Weichzeichnen I (*)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="6269"/>
         <source>Gradual Blur II (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Graduelles Weichzeichnen II (*)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="6535"/>
@@ -7672,7 +7686,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="7058"/>
         <source>Copyright</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="8061"/>
@@ -7692,7 +7706,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9552"/>
         <source>Load template</source>
-        <translation type="unfinished"></translation>
+        <translation>Lade Vorlage</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9572"/>
@@ -7702,22 +7716,22 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9592"/>
         <source>Send image to external editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Bild an externen Editor senden</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9686"/>
         <source>Processing pane</source>
-        <translation type="unfinished"></translation>
+        <translation>Prozessansicht</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9709"/>
         <source>Info pane</source>
-        <translation type="unfinished"></translation>
+        <translation>Informationsansicht</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9732"/>
         <source>Photivo settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Photivo Einstellungen</translation>
     </message>
     <message>
         <source>Gimp command</source>
@@ -7781,7 +7795,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9349"/>
         <source>File Manager</source>
-        <translation type="unfinished"></translation>
+        <translation>Dateimanager</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9455"/>
@@ -7842,27 +7856,27 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9962"/>
         <source>&lt;p align=&quot;center&quot;&gt;Photivo photo processor&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9982"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9995"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Forum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Issues&lt;/a&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="10099"/>
         <source>Zoom in</source>
-        <translation type="unfinished"></translation>
+        <translation>Vergrößern</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="10110"/>
         <source>Zoom out</source>
-        <translation type="unfinished"></translation>
+        <translation>Verkleinern</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="10133"/>
@@ -7877,7 +7891,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="10195"/>
         <source>File manager</source>
-        <translation type="unfinished"></translation>
+        <translation>Dateimanager</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="10206"/>
@@ -7962,7 +7976,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="571"/>
         <source>&amp;Show hidden tools</source>
-        <translation>Zeige verborgene Werkzeuge</translation>
+        <translation>&amp;Zeige verborgene Werkzeuge</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="584"/>
@@ -7972,17 +7986,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="665"/>
         <source>English (Default)</source>
-        <translation type="unfinished"></translation>
+        <translation>Englisch (Standard)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="674"/>
         <source>Restart Photivo to change the language.</source>
-        <translation>Photivo neustarten, um Sprache zu ändern</translation>
+        <translation>Photivo neustarten, um Sprache zu ändern.</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="1831"/>
         <source>No tools visible!</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine sichtbaren Werkzeuge!</translation>
     </message>
     <message>
         <source>Settings file dropped!</source>
@@ -8064,7 +8078,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="2531"/>
         <source> (35mm equiv.: </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="2923"/>
@@ -8126,54 +8140,54 @@ Sie können ein externes Profil versuchen.</translation>
         <translation>Lade Bitmap</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2081"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2044"/>
         <source>Transfer Bitmap</source>
         <translation>Übergebe Bitmap</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2132"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2095"/>
         <source>Lensfun corrections</source>
         <translation>Lensfun-Korrekturen</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2282"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2245"/>
         <source>Defish correction</source>
         <translation>Defish-Korrektur</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2341"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2304"/>
         <source>Perspective transform</source>
         <translation>Perspektivtransformation</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2384"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2347"/>
         <source>Crop outside the image</source>
         <translation>Beschnitt außerhalb des Bildes</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2385"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2348"/>
         <source>Crop rectangle too large.
 No crop, try again.</source>
         <translation>Zuschnittsviereck zu groß.
 Kein Zuschnitt, versuchen Sie es erneut.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2395"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2358"/>
         <source>Cropping</source>
         <translation>Zuscheiden</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2422"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2385"/>
         <source>Seam carving</source>
         <translation>Inhaltssensitive Größenänderung</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2445"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2408"/>
         <source>Resize image</source>
         <translation>Bildgröße ändern</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2465"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2428"/>
         <source>Flip image</source>
         <translation>Bild spiegeln</translation>
     </message>
@@ -8242,7 +8256,7 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1478"/>
         <source>Applying a* b* curves</source>
-        <translation type="unfinished"></translation>
+        <translation>Wende a*b*-Kurven an</translation>
     </message>
     <message>
         <source>Luminance adjustment</source>
@@ -8255,12 +8269,12 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1622"/>
         <source>Toning 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Tönung I</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1645"/>
         <source>Toning 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Tönung II</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1684"/>
@@ -8455,7 +8469,7 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1425"/>
         <source>Applying Outline</source>
-        <translation type="unfinished"></translation>
+        <translation>Wende Konturen an</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1435"/>
@@ -8554,7 +8568,7 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1775"/>
         <source>Texture Overlay 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Texturüberlagerung 2</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1856"/>
@@ -8574,12 +8588,12 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1923"/>
         <source>Gradual Blur 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Graduelles Weichzeichnen 1</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1942"/>
         <source>Gradual Blur 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Graduelles Weichzeichnen 2</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1964"/>
@@ -8587,32 +8601,30 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
         <translation>Weichzeichnen</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1981"/>
         <source>Vibrance 2</source>
-        <translation>Dynamik 2</translation>
+        <translation type="obsolete">Dynamik 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2003"/>
         <source>Intensity RGB 2</source>
-        <translation>Intensität RGB 2</translation>
+        <translation type="obsolete">Intensität RGB 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2027"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1990"/>
         <source>Applying R curve</source>
         <translation>Wende R-Kurve an</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2034"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1997"/>
         <source>Applying G curve</source>
         <translation>Wende G-Kurve an</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2041"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2004"/>
         <source>Applying B curve</source>
         <translation>Wende B-Kurve an</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2063"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2026"/>
         <source>Ready</source>
         <translation>Bereit</translation>
     </message>
@@ -9285,7 +9297,7 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
         <location filename="../Sources/ptSettings.cpp" line="181"/>
         <location filename="../Sources/ptSettings.cpp" line="185"/>
         <source>Feather</source>
-        <translation type="unfinished"></translation>
+        <translation>Feder</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="212"/>
@@ -9467,7 +9479,7 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="204"/>
         <source>dl</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="205"/>
@@ -9477,7 +9489,7 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="205"/>
         <source>da</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="206"/>
@@ -9673,12 +9685,12 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="483"/>
         <source>Esc key exits Photivo</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc-Taste beendet Photivo</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="483"/>
         <source>Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutze die Esc-Taste nicht nur zum Beenden spezieller Modi (z.B. Vollbild), sondern auch zum beenden von Photivo.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="234"/>
@@ -9956,7 +9968,7 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
         <location filename="../Sources/ptSettings.cpp" line="317"/>
         <location filename="../Sources/ptSettings.cpp" line="326"/>
         <source>Maximal radius for the blur</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximaler Radius für Unschärfe</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="351"/>
@@ -10048,7 +10060,7 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="373"/>
         <source>Initial pipe size when Photivo starts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Anfängliche pipe-Größe beim Starten von Photivo.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="374"/>
@@ -10105,7 +10117,7 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
         <location filename="../Sources/ptSettings.cpp" line="392"/>
         <location filename="../Sources/ptSettings.cpp" line="430"/>
         <source>Image dimension the resize value applies to</source>
-        <translation type="unfinished"></translation>
+        <translation>Bilddimensionen, für die die Werte der Größenänderung gelten</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="393"/>
@@ -10524,43 +10536,43 @@ Kein Zuschnitt, versuchen Sie es erneut.</translation>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="57"/>
         <source>Thumbnail size</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorschaubildgröße</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="57"/>
         <source>Thumbnail size in pixel</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorschaubildgröße in Pixel</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="58"/>
         <source>Thumbnail padding</source>
-        <translation type="unfinished"></translation>
+        <translation>Abstand der Vorschaubilder</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="58"/>
         <source>Thumbnail padding in pixel</source>
-        <translation type="unfinished"></translation>
+        <translation>Abstand der Vorschaubilder in Pixel</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="59"/>
         <source>Thumbnails in a row/column</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorschaubilder in einer Reihe/Spalte</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="59"/>
         <location filename="../Sources/ptSettings.cpp" line="440"/>
         <source>Maximum number of thumbnails that should be placed in a row or column.</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximale Anzahl von Vorschaubildern, die in einer Reihe/Spalte plaziert werden sollen.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="60"/>
         <source>Thumbnail export size</source>
-        <translation type="unfinished"></translation>
+        <translation>Größe exportierter Vorschaubilder</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="60"/>
         <source>Thumbnail export size in pixel</source>
-        <translation type="unfinished"></translation>
+        <translation>Größe exportierter Vorschaubilder in Pixel</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="84"/>
@@ -10681,18 +10693,18 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptSettings.cpp" line="116"/>
         <source>Crop exposure</source>
-        <translation type="unfinished"></translation>
+        <translation>Beschneide Belichtung</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="116"/>
         <source>Temporary exposure in EV</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeitweise Belichtung in EV</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="121"/>
         <location filename="../Sources/ptSettings.cpp" line="341"/>
         <source>pixels</source>
-        <translation type="unfinished"></translation>
+        <translation>Pixel</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="384"/>
@@ -10722,58 +10734,58 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptSettings.cpp" line="389"/>
         <source>Energy method for liquid rescale</source>
-        <translation type="unfinished"></translation>
+        <translation>Energiemethode für Liquid Rescale</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="390"/>
         <source>Scaling method for liquid rescale</source>
-        <translation type="unfinished"></translation>
+        <translation>Skalierungsmethode für Liquid Rescale</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="426"/>
         <location filename="../Sources/ptSettings.cpp" line="427"/>
         <source>Mode for the gradual blur</source>
-        <translation type="unfinished"></translation>
+        <translation>Modus für graduelles Weichzeichnen</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="434"/>
         <source>Switch to this zoom level when starting to crop.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wechsle zu dieser Vergrößerungsstufe, wenn ein Bild beschnitten werden soll.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="440"/>
         <source>At most</source>
-        <translation type="unfinished"></translation>
+        <translation>Höchstens</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="441"/>
         <source>Open file manager on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne Dateimanager bei Programmstart</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="441"/>
         <source>Opens the file manager when Photivo starts without an image</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffnet den Dateimanager, wenn Photivo ohne ein Bild gestartet wird</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="445"/>
         <source>Adjust aspect ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Passe Seitenverhältnis an</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="445"/>
         <source>Adjust crop aspect ratio to image aspect ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Passe das Seitenverhältnis des Beschnitts an das des Bildes an</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="447"/>
         <source>Use gimp plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutze Gimp-Plugin</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="447"/>
         <source>Use gimp plugin for export</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutze Gimp-Plugin für den Export</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="458"/>
@@ -10932,27 +10944,27 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="241"/>
         <source>&amp;Reset</source>
-        <translation type="unfinished">Zurücksetzen</translation>
+        <translation>&amp;Zurücksetzen</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="245"/>
         <source>&amp;Save preset</source>
-        <translation type="unfinished">Einstellungen speichern</translation>
+        <translation>&amp;Einstellungen speichern</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="249"/>
         <source>&amp;Append preset</source>
-        <translation type="unfinished">Einstellungen anhängen</translation>
+        <translation>&amp;Einstellungen anhängen</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="257"/>
         <source>&amp;Hide</source>
-        <translation type="unfinished">Verstecken</translation>
+        <translation>&amp;Verbergen</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="298"/>
         <source>Add to &amp;favourites</source>
-        <translation type="unfinished"></translation>
+        <translation>Zu &amp;Favoriten hinzufügen</translation>
     </message>
 </context>
 <context>
@@ -10960,12 +10972,12 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="675"/>
         <source>Zoom &amp;fit</source>
-        <translation>Passend zoomen</translation>
+        <translation>&amp;Passend zoomen</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="667"/>
         <source>Zoom &amp;100%</source>
-        <translation>Zoom 100%</translation>
+        <translation>Zoom &amp;100%</translation>
     </message>
     <message>
         <source>Indicate</source>
@@ -10983,7 +10995,7 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="663"/>
         <source>Zoom &amp;in</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vergrößern</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="663"/>
@@ -10998,7 +11010,7 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="671"/>
         <source>Zoom &amp;out</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Verkleinern</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="671"/>
@@ -11013,7 +11025,7 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="680"/>
         <source>&amp;RGB</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;RGB</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="680"/>
@@ -11028,7 +11040,7 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="688"/>
         <source>&amp;L*</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;L*</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="688"/>
@@ -11038,7 +11050,7 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="692"/>
         <source>&amp;a*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="692"/>
@@ -11048,7 +11060,7 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="696"/>
         <source>&amp;b*</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="696"/>
@@ -11063,72 +11075,72 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="712"/>
         <source>&amp;disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;deaktiviert</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="716"/>
         <source>&amp;linear</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="720"/>
         <source>&amp;preview</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vorschau</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="735"/>
         <source>Highlight &amp;clipped pixels</source>
-        <translation type="unfinished"></translation>
+        <translation>Hebe &amp;abgeschnittene Pixel hervor</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="735"/>
         <source>C</source>
-        <translation type="unfinished"></translation>
+        <translation>C</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="740"/>
         <source>&amp;Over exposure</source>
-        <translation>Überbelichtung</translation>
+        <translation>&amp;Überbelichtung</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="745"/>
         <source>&amp;Under exposure</source>
-        <translation>Unterbelichtung</translation>
+        <translation>&amp;Unterbelichtung</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="750"/>
         <source>&amp;R</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="755"/>
         <source>&amp;G</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="760"/>
         <source>&amp;B</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="765"/>
         <source>&amp;Sensor</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="772"/>
         <source>Show &amp;bottom bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige &amp;untere Leiste</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="787"/>
         <source>F11</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="829"/>
         <source>Pixel values</source>
-        <translation type="unfinished"></translation>
+        <translation>Pixelwerte</translation>
     </message>
     <message>
         <source>R</source>
@@ -11153,27 +11165,27 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="777"/>
         <source>Show &amp;tool pane</source>
-        <translation>Zeige Werkzeuge</translation>
+        <translation>Zeige &amp;Werkzeuge</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="777"/>
         <source>Space</source>
-        <translation type="unfinished"></translation>
+        <translation>Raum</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="783"/>
         <source>Open file m&amp;anager</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne Dateim&amp;anager</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="783"/>
         <source>Ctrl+M</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="787"/>
         <source>Full&amp;screen</source>
-        <translation>Vollbild</translation>
+        <translation>Voll&amp;bild</translation>
     </message>
     <message>
         <source>RGB</source>
@@ -11194,12 +11206,12 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="700"/>
         <source>&amp;Gradient</source>
-        <translation>Gradient</translation>
+        <translation>&amp;Gradient</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="684"/>
         <source>&amp;Structure</source>
-        <translation>Struktur</translation>
+        <translation>&amp;Struktur</translation>
     </message>
     <message>
         <source>&lt;h1&gt; Done &lt;/h1&gt;</source>
@@ -11216,12 +11228,12 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="817"/>
         <source>Show &amp;clipping</source>
-        <translation>Clipping</translation>
+        <translation>Zeige &amp;Clipping</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="807"/>
         <source>Display &amp;mode</source>
-        <translation>Modus</translation>
+        <translation>Zeige &amp;Modus</translation>
     </message>
 </context>
 <context>
