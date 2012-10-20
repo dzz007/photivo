@@ -5319,7 +5319,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="698"/>
         <source>&amp;Close file manager</source>
-        <translation>&amp;Schließe Dateimanager</translation>
+        <translation>Schließe &amp;Dateimanager</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="698"/>
@@ -5675,7 +5675,7 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_Levels.cpp" line="51"/>
         <location filename="../Sources/filters/ptFilter_Levels.cpp" line="59"/>
         <source>Levels</source>
-        <translation>Linearer Abgleich</translation>
+        <translation>Schwarz-und Weißpunkt anpassen</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Levels.cpp" line="68"/>
@@ -10954,7 +10954,7 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="249"/>
         <source>&amp;Append preset</source>
-        <translation>&amp;Einstellungen anhängen</translation>
+        <translation>Einstellungen &amp;anhängen</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="257"/>
@@ -11010,7 +11010,7 @@ Nützlich, um den Verlust von Inhalten zu vermeiden bei der Benutzung der Verzei
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="671"/>
         <source>Zoom &amp;out</source>
-        <translation>&amp;Verkleinern</translation>
+        <translation>Ver&amp;kleinern</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="671"/>
