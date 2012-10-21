@@ -44,8 +44,8 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
   ptJobListItem* JobItem(int i) const;
-  void AddJob(const QString &file);
-  void RemoveJob(int row);
+  void AddJobToList(const QString &file);
+  void RemoveJobFromList(int row);
   
 signals:
   
