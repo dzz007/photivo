@@ -73,8 +73,12 @@ void ptBatchWindow::UpdateTheme()
 
 void ptBatchWindow::keyPressEvent(QKeyEvent *event)
 {
-  if (event->key() == Qt::Key_Escape && event->modifiers() == Qt::NoModifier)
+  if (event->key() == Qt::Key_Escape && event->modifiers() == Qt::NoModifier) {
     OnCloseWindow();
+  } else if (event->key() == Qt::Key_B && event->modifiers() == Qt::ControlModifier) {
+    // We close also on Ctrl+B to allow toggle.
+    OnCloseWindow();
+  }
 }
 
 //==============================================================================

@@ -861,6 +861,7 @@ int photivoMain(int Argc, char *Argv[]) {
                    MainWindow, SLOT(CloseFileMgrWindow()));
   QObject::connect(ViewWindow, SIGNAL(openFileMgr()), MainWindow, SLOT(OpenFileMgrWindow()));
 #endif
+  QObject::connect(ViewWindow, SIGNAL(openBatch()), MainWindow, SLOT(OpenBatchWindow()));
 
   BatchWindow = new ptBatchWindow(MainWindow->BatchPage);
   MainWindow->BatchLayout->addWidget(BatchWindow);
