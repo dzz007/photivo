@@ -572,6 +572,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TextureOverlay2File"                  ,2    ,""                                    ,1},
     {"DigikamTagsList"                      ,9    ,QStringList()                         ,1},
     {"TagsList"                             ,9    ,QStringList()                         ,1},
+    {"OutputFileNameSuffix"                 ,9    ,""                                    ,1},
     {"ImageTitle"                           ,9    ,""                                    ,1},
     {"Copyright"                            ,1    ,""                                    ,1},
     {"BackgroundRed"                        ,1    ,0                                     ,0},
@@ -630,6 +631,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FileMgrShowImageView"                 ,1    ,1                                     ,0},
     {"FileMgrShowSidebar"                   ,1    ,1                                     ,0},
     {"FileMgrThumbLayoutType"               ,1    ,tlVerticalByRow                       ,0},
+
+    {"BatchIsOpen"                          ,9    ,0                                     ,0},
+    {"BatchLogIsVisible"                    ,1    ,0                                     ,0}
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.

@@ -832,7 +832,8 @@ enum ptFSOType {
 enum ptUIState {
   uisNone       = 0,
   uisProcessing = 1,
-  uisFileMgr    = 2
+  uisFileMgr    = 2,
+  uisBatch      = 3
 };
 
 
