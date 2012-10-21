@@ -123,7 +123,7 @@ ptJobListItem* ptJobListModel::JobItem(int i) const
 
 //==============================================================================
 
-void ptJobListModel::AddJob(const QString &file)
+void ptJobListModel::AddJobToList(const QString &file)
 {
   ptJobListItem *item = nullptr;
   try {
@@ -147,7 +147,7 @@ void ptJobListModel::AddJob(const QString &file)
 
 //==============================================================================
 
-void ptJobListModel::RemoveJob(int row)
+void ptJobListModel::RemoveJobFromList(int row)
 {
   Q_ASSERT(row >= 0 && row < rowCount());
 

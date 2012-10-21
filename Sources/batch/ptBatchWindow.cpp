@@ -83,11 +83,6 @@ void ptBatchWindow::keyPressEvent(QKeyEvent *event)
 
 //==============================================================================
 
-#ifdef Q_OS_WIN32
-#  ifdef AddJob
-#    undef AddJob
-#  endif
-#endif
 void ptBatchWindow::OnAddJob()
 {
   QString SettingsFilePattern =
@@ -101,7 +96,7 @@ void ptBatchWindow::OnAddJob()
 
   Settings->SetValue("RawsDirectory", QFileInfo(SettingsFileNames.first()).absolutePath());
   foreach (QString fileName, SettingsFileNames)
-    m_BatchModel->AddJob(fileName);
+    m_BatchModel->AddJobToList(fileName);
 
   BTJobList->resizeColumnsToContents();
 }
@@ -118,7 +113,7 @@ void ptBatchWindow::OnRemoveJob()
   qSort(list.begin(), list.end(), qGreater<int>());
   // we should take into account that indexes will change after some of them are removed
   foreach (int i, list)
-    m_BatchModel->RemoveJob(i);
+    m_BatchModel->RemoveJobFromList(i);
 }
 
 //==============================================================================
