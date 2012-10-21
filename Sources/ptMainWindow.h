@@ -169,6 +169,8 @@ private :
 
 public slots:
   // Toggle file manager window
+  void OpenBatchWindow();
+  void CloseBatchWindow();
   void OpenFileMgrWindow();
   void CloseFileMgrWindow();
   void OtherInstanceMessage(const QString &msg);
@@ -224,6 +226,7 @@ private slots:
   void OnZoomInButtonClicked();
   void OnZoomOutButtonClicked();
   void OnZoomFullButtonClicked();
+  void OnBatchButtonClicked();
   void OnFileMgrButtonClicked();
   void OnFullScreenButtonClicked();
   void OnLoadStyleButtonClicked();
