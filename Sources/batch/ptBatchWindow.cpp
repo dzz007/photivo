@@ -83,6 +83,11 @@ void ptBatchWindow::keyPressEvent(QKeyEvent *event)
 
 //==============================================================================
 
+#ifdef Q_OS_WIN32
+#  ifdef AddJob
+#    undef AddJob
+#  endif
+#endif
 void ptBatchWindow::OnAddJob()
 {
   QString SettingsFilePattern =
