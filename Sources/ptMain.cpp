@@ -1409,7 +1409,7 @@ void BlockTools(const ptBlockToolsMode NewState) {
     */
     for (QWidget *hToolBox: *MainWindow->m_MovedTools) {
       if (hToolBox->objectName() != ExcludeTool) {
-        if (hToolBox->objectName().contains("/"))  //new-style
+        if (hToolBox->objectName().contains("-"))  //new-style
           hToolBox->setEnabled(EnabledStatus);
         else                                       // old-style
           ((ptGroupBox*)hToolBox)->SetEnabled(EnabledStatus);
