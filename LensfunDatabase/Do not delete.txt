@@ -1,0 +1,1 @@
+Photivo does not use the Lensfun database at the moment. But the presence or absence of this folder is used to detect some very old preset file versions.
