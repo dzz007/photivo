@@ -54,16 +54,16 @@ ptFilterBase *ptFilter_ColorEnhancement::createColorEnhancement() {
 void ptFilter_ColorEnhancement::doDefineControls() {
   FCfgItems = QList<ptCfgItem>()
     //            Id                       Type                      Default     Min           Max           Step       Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({CShadows,                ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.1,       1,        true, true, tr("Enhance shadows"), tr("")})
-    << ptCfgItem({CHighlights,             ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.1,       1,        true, true, tr("Enhance highlights"), tr("")})
+    << ptCfgItem({CShadows,                ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,      2,        true, true, tr("Enhance shadows"),    tr("")})
+    << ptCfgItem({CHighlights,             ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,      2,        true, true, tr("Enhance highlights"), tr("")})
   ;
 }
 
 //==============================================================================
 
 bool ptFilter_ColorEnhancement::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CShadows).toFloat() != 0.0f) &&
-         (FConfig->getValue(CHighlights).toFloat() != 0.0f);
+  return (FConfig->getValue(CShadows).toFloat()    > 0.0f) ||
+         (FConfig->getValue(CHighlights).toFloat() > 0.0f);
 }
 
 //==============================================================================
@@ -71,7 +71,7 @@ bool ptFilter_ColorEnhancement::doCheckHasActiveCfg() {
 void ptFilter_ColorEnhancement::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
   AImage->ColorEnhance(FConfig->getValue(CShadows).toFloat(),
-                       FConfig->getValue(CHighlights).toFloat() );
+                       FConfig->getValue(CHighlights).toFloat());
 }
 
 //==============================================================================
