@@ -2368,8 +2368,7 @@ void WriteOut() {
 
     if (Settings->GetInt("IncludeExif")) {
       if (!ptImageHelper::WriteExif(Settings->GetString("OutputFileName"),
-                                    TheProcessor->m_ExifBuffer,
-                                    TheProcessor->m_ExifBufferLength))
+                                    TheProcessor->m_ExifData))
         ptMessageBox::warning(MainWindow, QObject::tr("Exif Error"), QObject::tr("No exif data written."));
     }
   }
