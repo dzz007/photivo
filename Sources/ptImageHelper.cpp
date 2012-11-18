@@ -26,7 +26,6 @@
 #pragma GCC diagnostic pop
 #include <wand/magick_wand.h>
 
-#include <vector>
 #include <QStringList>
 
 #include "ptDefines.h"
@@ -39,6 +38,11 @@
 
 //==============================================================================
 
+const unsigned char CExifHeader[]    = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
+const unsigned int  CMaxHeaderLength = 65527;
+
+//==============================================================================
+
 void StringClean(QString& AString) {
   while (AString.contains("  "))
     AString.replace("  "," ");
@@ -48,26 +52,14 @@ void StringClean(QString& AString) {
 
 //==============================================================================
 
-bool ptImageHelper::WriteExif(const QString AFileName, uint8_t *AExifBuffer, const unsigned AExifBufferLength) {
-  if (AExifBufferLength == 0 || !AExifBuffer) return false;
-
+bool ptImageHelper::WriteExif(const QString AFileName, const Exiv2::ExifData AExifData) {
   try {
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-    const unsigned char ExifHeader[] = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
-
-    size_t               BufferLength = AExifBufferLength - sizeof(ExifHeader);
-    std::vector<uint8_t> Buffer;
-    Buffer.resize(BufferLength);
-
-    Exiv2::ExifData      exifData;
-
-    memcpy(Buffer.data(), AExifBuffer + sizeof(ExifHeader), BufferLength);
-
-    Exiv2::ExifParser::decode(exifData, Buffer.data(), BufferLength);
+    Exiv2::ExifData hInExifData = AExifData;
 
     // Reset orientation
-    Exiv2::ExifData::iterator pos = exifData.begin();
-    if ((pos=exifData.findKey(Exiv2::ExifKey("Exif.Image.Orientation")))!= exifData.end()) {
+    Exiv2::ExifData::iterator pos = hInExifData.begin();
+    if ((pos = hInExifData.findKey(Exiv2::ExifKey("Exif.Image.Orientation"))) != hInExifData.end()) {
       pos->setValue("1"); // Normal orientation
     }
 
@@ -89,17 +81,13 @@ bool ptImageHelper::WriteExif(const QString AFileName, uint8_t *AExifBuffer, con
               << "Exif.Image.ResolutionUnit";
 
     for (short i = 0; i < ExifKeys.count(); i++) {
-      if ((pos=exifData.findKey(Exiv2::ExifKey(ExifKeys.at(i).toAscii().data()))) != exifData.end())
-        exifData.erase(pos);
+      if ((pos = hInExifData.findKey(Exiv2::ExifKey(ExifKeys.at(i).toAscii().data()))) != hInExifData.end())
+        hInExifData.erase(pos);
     }
 
     if (Settings->GetInt("EraseExifThumbnail")) {
-#if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-      Exiv2::ExifThumb Thumb(exifData);
+      Exiv2::ExifThumb Thumb(hInExifData);
       Thumb.erase();
-#else
-      exifData.eraseThumbnail();
-#endif
     }
 
     QStringList JpegExtensions;
@@ -113,12 +101,11 @@ bool ptImageHelper::WriteExif(const QString AFileName, uint8_t *AExifBuffer, con
 
     Exiv2Image->readMetadata();
     Exiv2::ExifData outExifData = Exiv2Image->exifData();
-    pos = exifData.begin();
-    while ( !exifData.empty() ) {
-      if (!deleteDNGdata || (*pos).key() != "Exif.Image.DNGPrivateData") {
-        outExifData.add(*pos);
+
+    for (auto hPos = hInExifData.begin(); hPos != hInExifData.end(); hPos++) {
+      if (!deleteDNGdata || (*hPos).key() != "Exif.Image.DNGPrivateData") {
+        outExifData.add(*hPos);
       }
-      pos = exifData.erase(pos);
     }
 
     // IPTC data
@@ -146,7 +133,6 @@ bool ptImageHelper::WriteExif(const QString AFileName, uint8_t *AExifBuffer, con
     // Image rating
     outExifData["Exif.Image.Rating"] = Settings->GetInt("ImageRating");
     xmpData["Xmp.xmp.Rating"]        = Settings->GetInt("ImageRating");
-
 
     // Program name
     outExifData["Exif.Image.ProcessingSoftware"] = ProgramName;
@@ -219,18 +205,15 @@ bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData
 
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
     Exiv2::Blob               Blob;
-    Exiv2::ExifParser::encode(Blob,Exiv2::bigEndian,AExifData);
+    Exiv2::ExifParser::encode(Blob, Exiv2::bigEndian, AExifData);
     Size = Blob.size();
 #else
-    Exiv2::DataBuf            Buf(m_ExifData.copy());
+    Exiv2::DataBuf            Buf(AExifData.copy());
     Size = Buf.size_;
 #endif
 
-    const unsigned char  ExifHeader[]    = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
-    const unsigned short MaxHeaderLength = 65533;
-
     /* If buffer too big for JPEG, try deleting some stuff. */
-    if (Size + sizeof(ExifHeader) > MaxHeaderLength) {
+    if (Size + sizeof(CExifHeader) > CMaxHeaderLength) {
       if ((Pos = AExifData.findKey(Exiv2::ExifKey("Exif.Photo.MakerNote"))) != AExifData.end() ) {
         AExifData.erase(Pos);
         ptLogWarning(ptWarning_Argument, "Exif buffer too big, erasing Exif.Photo.MakerNote");
@@ -245,19 +228,19 @@ bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData
     }
 
     // Erase embedded thumbnail if needed
-    if (Settings->GetInt("EraseExifThumbnail") || Size + sizeof(ExifHeader) > MaxHeaderLength ) {
+    if (Settings->GetInt("EraseExifThumbnail") || Size + sizeof(CExifHeader) > CMaxHeaderLength ) {
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
       Exiv2::ExifThumb Thumb(AExifData);
       Thumb.erase();
 #else
-      m_ExifData.eraseThumbnail();
+      AExifData.eraseThumbnail();
 #endif
 
       if (!Settings->GetInt("EraseExifThumbnail"))
         ptLogWarning(ptWarning_Argument, "Exif buffer too big, erasing Thumbnail");
 
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-      Exiv2::ExifParser::encode(Blob,Exiv2::bigEndian,AExifData);
+      Exiv2::ExifParser::encode(Blob ,Exiv2::bigEndian, AExifData);
       Size = Blob.size();
 #else
       Buf = AExifData.copy();
@@ -265,16 +248,16 @@ bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData
 #endif
     }
 
-    AExifBufferLength = Size + sizeof(ExifHeader);
+    AExifBufferLength = Size + sizeof(CExifHeader);
     if (AExifBuffer) FREE(AExifBuffer);
     AExifBuffer = (unsigned char*) MALLOC(AExifBufferLength);
     ptMemoryError(AExifBuffer,__FILE__,__LINE__);
 
-    memcpy(AExifBuffer, ExifHeader, sizeof(ExifHeader));
+    memcpy(AExifBuffer, CExifHeader, sizeof(CExifHeader));
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-    memcpy(AExifBuffer+sizeof(ExifHeader), &Blob[0], Blob.size());
+    memcpy(AExifBuffer+sizeof(CExifHeader), &Blob[0], Blob.size());
 #else
-    memcpy(AExifBuffer+sizeof(ExifHeader), Buf.pData_, Buf.size_);
+    memcpy(AExifBuffer+sizeof(CExifHeader), Buf.pData_, Buf.size_);
 #endif
     return true;
 
