@@ -265,6 +265,9 @@ protected:
       found, raises an exception via ptInfo. */
   ptWidget         *findPtWidget(const QString &AId, QWidget* AWidget);
 
+  /*! Check and possibly convert a `QVariant` to avoid problems in `QSettings` storage. */
+  QVariant          makeStorageFriendly(const QVariant& AVariant) const;
+
 // Pragmas are here to stop the compiler complaining about unused parameters in the default
 // implementations. Removing the parameter names would work too but be too obscure.
 #pragma GCC diagnostic push

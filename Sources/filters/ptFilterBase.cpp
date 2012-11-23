@@ -67,13 +67,7 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
   // store default TFilterConfig from FCfgItems list
   for (ptCfgItem hSetting: FCfgItems) {
     if (hSetting.Storeable) {
-      auto hVariant = FConfig->getValue(hSetting.Id);
-
-      // Convert bool to int because that is more robust in a preset file
-      if (hVariant.type() == QVariant::Bool)
-        hVariant.convert(QVariant::Int);
-
-      APreset->setValue(hSetting.Id, hVariant);
+      APreset->setValue(hSetting.Id, makeStorageFriendly(FConfig->getValue(hSetting.Id)));
     }
   }
 
@@ -93,7 +87,7 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
       TConfigStore *hList = FConfig->getSimpleStore(hId);
       APreset->beginGroup(hId);
       for (auto hItem = hList->constBegin(); hItem != hList->constEnd(); ++hItem) {
-        APreset->setValue(hItem.key(), hItem.value());
+        APreset->setValue(hItem.key(), makeStorageFriendly(hItem.value()));
       }
       APreset->endGroup();
     }
@@ -108,13 +102,13 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
       TConfigStore hList = hStore->storeConfig(hId+"/");
 
       for (auto hItem = hList.constBegin(); hItem != hList.constEnd(); ++hItem) {
-        APreset->setValue(hItem.key(), hItem.value());
+        APreset->setValue(hItem.key(), makeStorageFriendly(hItem.value()));
       }
     }
   }
 
   if (AIncludeFlags) {
-    APreset->setValue(CIsBlocked, (int)FIsBlocked);
+    APreset->setValue(CIsBlocked, makeStorageFriendly(FIsBlocked));
   }
 
   doExportCustomConfig(APreset, AIncludeFlags);
@@ -356,7 +350,7 @@ void ptFilterBase::internalInit() {
   checkActiveChanged();
 }
 
-//==============================================================================
+//------------------------------------------------------------------------------
 
 ptWidget *ptFilterBase::findPtWidget(const QString &AId, QWidget *AWidget) {
   ptWidget *hWidget = AWidget->findChild<ptWidget*>(AId);
@@ -366,7 +360,19 @@ ptWidget *ptFilterBase::findPtWidget(const QString &AId, QWidget *AWidget) {
   return hWidget;
 }
 
-//==============================================================================
+//------------------------------------------------------------------------------
+
+QVariant ptFilterBase::makeStorageFriendly(const QVariant &AVariant) const {
+  auto hVariant = AVariant;
+
+  // Convert bool to int because that is more robust in a preset file
+  if (hVariant.type() == QVariant::Bool)
+    hVariant.convert(QVariant::Int);
+
+  return hVariant;
+}
+
+//------------------------------------------------------------------------------
 
 void ptFilterBase::connectCommonDispatch() {
   GInfo->Assert(!FGuiContainer, "The filter's ("+FFilterName+") GUI must be created first.", AT);

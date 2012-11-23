@@ -34,14 +34,15 @@ ptTuningSpot::ptTuningSpot(const QList<ptCfgItem> *ADefaults)
   int i = -1;
   for (ptCfgItem hCfgItem: *FDefaults) {
     ++i;
-    if (hCfgItem.Type != ptCfgItem::CurveWin)
-      FDataStore.insert(hCfgItem.Id, hCfgItem.Default);
-    else
+    if (hCfgItem.Type == ptCfgItem::CurveWin)
       hCurveIdx = i;
+    else
+      FDataStore.insert(hCfgItem.Id, hCfgItem.Default);
   }
 
   if (hCurveIdx > -1) {
-    FCurve = FDefaults->at(hCurveIdx).Curve;
+    FCurve = std::make_shared<ptCurve>();
+    FCurve->set(*(FDefaults->at(hCurveIdx).Curve.get()));
   } else {
     TAnchorList hAnchors = {TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0)};
     FCurve = std::make_shared<ptCurve>(hAnchors,
@@ -66,10 +67,7 @@ TConfigStore ptTuningSpot::doStoreConfig(const QString &APrefix) const {
   TConfigStore hConfig;
 
   for (auto iter = FDataStore.begin(); iter != FDataStore.end(); ++iter) {
-    if (iter.key() == CSpotMaxRadiusId)
-      hConfig.insert(APrefix+CSpotMaxRadiusId, iter.value().toInt() << Settings->GetInt("Scaled"));
-    else
-      hConfig.insert(APrefix+iter.key(), iter.value());
+    hConfig.insert(APrefix+iter.key(), iter.value());
   }
 
   hConfig.unite(FCurve->storeConfig(APrefix+CSpotLumaCurveId+"/"));
@@ -82,7 +80,10 @@ void ptTuningSpot::doLoadConfig(const TConfigStore &AConfig, const QString &APre
   FCurve->loadConfig(AConfig, APrefix+CSpotLumaCurveId+"/");
 
   for (ptCfgItem hCfgItem: *FDefaults) {
-    FDataStore.insert(hCfgItem.Id, AConfig.value(APrefix+hCfgItem.Id, hCfgItem.Default));
+    if (hCfgItem.Id != CSpotLumaCurveId) {
+      FDataStore.insert(hCfgItem.Id,
+                        hCfgItem.validate(AConfig.value(APrefix+hCfgItem.Id, hCfgItem.Default)));
+    }
   }
 }
 
@@ -93,7 +94,8 @@ QVariant ptTuningSpot::doGetValue(const QString &AKey) const {
     return FDataStore.value(CSpotMaxRadiusId).toInt() >> Settings->GetInt("Scaled");
 
   } else if (AKey == CSpotLumaCurveId) {
-    return FCurve->storeConfig();
+    QVariant hCurveCfg = FCurve->storeConfig();
+    return hCurveCfg;
 
   } else {
     return QVariant();

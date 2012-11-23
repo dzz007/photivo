@@ -501,6 +501,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabGradualBlur2"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#gradual_blur");
 
+  m_ActiveTabs.append(LocalTab);
   m_ActiveTabs.append(GeometryTab);
   m_ActiveTabs.append(RGBTab);
   m_ActiveTabs.append(LabCCTab);
