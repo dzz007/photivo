@@ -181,6 +181,10 @@ QLineEdit#m_PathInput {
   padding-top: 2px;
 }
 
+QWidget#ptBatchWindow QPlainTextEdit {
+  border: 1px solid #000;
+}
+
 
 /** QScrollArea ****************************************/
 QScrollArea {
@@ -191,6 +195,13 @@ QScrollArea {
 /** tree view ****************************************/
 QTreeView {
   border: 1px solid $AltBase$;
+}
+
+
+/** Table view ****************************************/
+QTableView {
+  border: 1px solid #000;
+  border-radius: 3px;
 }
 
 
@@ -277,6 +288,21 @@ QToolButton {
 QToolButton:hover {
   border: 1px solid $Highlight$;
   border-radius: 3px;
+}
+
+QPushButton {
+  border: 1px solid #000;
+  border-radius: 3px;
+  padding: 3px;
+}
+
+QPushButton:hover {
+  border: 1px solid $Highlight$;
+  border-radius: 3px;
+}
+
+QPushButton:checked {
+  background-color: $AltBase$;
 }
 
 

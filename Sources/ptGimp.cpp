@@ -21,6 +21,10 @@
 **
 *******************************************************************************/
 
+#define GDK_PIXBUF_DISABLE_DEPRECATED
+#define PANGO_DISABLE_DEPRECATED
+#define ATK_DISABLE_DEPRECATED
+
 extern "C"
 {
 #include <libgimp/gimp.h>

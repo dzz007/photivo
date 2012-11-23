@@ -263,7 +263,10 @@ HEADERS += \
     ../Sources/filters/ptFilter_Saturation.h \
     ../Sources/filters/ptFilter_ColorBoost.h \
     ../Sources/filters/ptFilter_Tone.h \
-    ../Sources/filters/imagespot/ptImageSpotList.h
+    ../Sources/filters/imagespot/ptImageSpotList.h \
+    ../Sources/batch/ptJobListItem.h \
+    ../Sources/batch/ptBatchWindow.h \
+    ../Sources/batch/ptJobListModel.h
 
 
 SOURCES += \
@@ -392,7 +395,10 @@ SOURCES += \
     ../Sources/filters/ptFilter_LabTransform.cpp \
     ../Sources/filters/ptFilter_Saturation.cpp \
     ../Sources/filters/ptFilter_ColorBoost.cpp \
-    ../Sources/filters/ptFilter_Tone.cpp
+    ../Sources/filters/ptFilter_Tone.cpp \
+    ../Sources/batch/ptJobListItem.cpp \
+    ../Sources/batch/ptBatchWindow.cpp \
+    ../Sources/batch/ptJobListModel.cpp
 
 
 FORMS += \
@@ -404,7 +410,8 @@ FORMS += \
     ../Sources/filters/imagespot/ptSpotListWidget.ui \
     ../Sources/filters/ptFilter_ColorIntensity.ui \
     ../Sources/filters/ptFilter_LMHRecovery.ui \
-    ../Sources/filters/ptFilter_Tone.ui
+    ../Sources/filters/ptFilter_Tone.ui \
+    ../Sources/batch/ptBatchWindow.ui
 
 RESOURCES += ../qrc/photivo.qrc
 

@@ -207,6 +207,7 @@ private:
   QAction       *ac_ShowTools;
   QAction       *ac_ShowZoomBar;
   QAction       *ac_OpenFileMgr;
+  QAction* ac_OpenBatch;
   QAction       *ac_Fullscreen;
   QActionGroup  *ac_ModeGroup;
   QActionGroup  *ac_PReadGroup;
@@ -237,6 +238,7 @@ private slots:
   void Menu_ZoomOut();
   void Menu_Mode();
   void Menu_OpenFileMgr();
+  void Menu_OpenBatch();
   void Menu_PixelReading();
 
 //------------------------------------------------------------------------------
@@ -245,6 +247,7 @@ signals:
   void keyChanged(QKeyEvent* event);
   void mouseChanged(QMouseEvent* event);
   void openFileMgr();
+  void openBatch();
 
 
 };

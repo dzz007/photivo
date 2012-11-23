@@ -755,6 +755,9 @@ void ptViewWindow::ConstructContextMenu() {
   connect(ac_OpenFileMgr, SIGNAL(triggered()), this, SLOT(Menu_OpenFileMgr()));
 #endif
 
+  ac_OpenBatch = new QAction(tr("Open &batch processing") + "\t" + tr("Ctrl+B"), this);
+  connect(ac_OpenBatch, SIGNAL(triggered()), this, SLOT(Menu_OpenBatch()));
+
   ac_Fullscreen = new QAction(tr("Full&screen") + "\t" + tr("F11"), this);
   ac_Fullscreen->setCheckable(true);
   ac_Fullscreen->setChecked(0);
@@ -820,6 +823,7 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
 #ifndef PT_WITHOUT_FILEMGR
   Menu.addAction(ac_OpenFileMgr);
 #endif
+  Menu.addAction(ac_OpenBatch);
   Menu.addSeparator();
   Menu.addAction(ac_Fullscreen);
 
@@ -911,6 +915,11 @@ void ptViewWindow::Menu_ShowTools() {
 void ptViewWindow::Menu_OpenFileMgr() {
   FCtrlIsPressed = 0;
   emit openFileMgr();
+}
+
+void ptViewWindow::Menu_OpenBatch() {
+  FCtrlIsPressed = 0;
+  emit openBatch();
 }
 
 void CB_FullScreenButton(const int State);
