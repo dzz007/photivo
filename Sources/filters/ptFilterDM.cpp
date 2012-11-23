@@ -1546,6 +1546,7 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("TextureOverlay2File",             "");
 //  FNameMap.insert("DigikamTagsList",                 "");
 //  FNameMap.insert("TagsList",                        "");
+//  FNameMap.insert("OutputFileNameSuffix",            "");
 //  FNameMap.insert("ImageTitle",                      "");
 //  FNameMap.insert("Copyright",                       "");
 //  FNameMap.insert("BackgroundRed",                   "");
@@ -1597,6 +1598,9 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("FileMgrShowImageView",            "");
 //  FNameMap.insert("FileMgrShowSidebar",              "");
 //  FNameMap.insert("FileMgrThumbLayoutType",          "");
+
+//  FNameMap.insert("BatchIsOpen",                     "");
+//  FNameMap.insert("BatchLogIsVisible",               "");
 }
 
 

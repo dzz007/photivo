@@ -59,6 +59,7 @@
 #include "filters/imagespot/ptTuningSpot.h"
 #include "qtsingleapplication/qtsingleapplication.h"
 #include "filemgmt/ptFileMgrWindow.h"
+#include "batch/ptBatchWindow.h"
 #include "filters/ptFilterDM.h"
 #include "filters/ptFilterBase.h"
 #include "ptToolBox.h"
@@ -125,6 +126,7 @@ ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
 ptFileMgrWindow*   FileMgrWindow   = NULL;
+ptBatchWindow*     BatchWindow     = NULL;
 
 // Error dialog for segfaults
 ptMessageBox* SegfaultErrorBox;
@@ -863,6 +865,11 @@ int photivoMain(int Argc, char *Argv[]) {
                    MainWindow, SLOT(CloseFileMgrWindow()));
   QObject::connect(ViewWindow, SIGNAL(openFileMgr()), MainWindow, SLOT(OpenFileMgrWindow()));
 #endif
+  QObject::connect(ViewWindow, SIGNAL(openBatch()), MainWindow, SLOT(OpenBatchWindow()));
+
+  BatchWindow = new ptBatchWindow(MainWindow->BatchPage);
+  MainWindow->BatchLayout->addWidget(BatchWindow);
+  QObject::connect(BatchWindow, SIGNAL(BatchWindowClosed()), MainWindow, SLOT(CloseBatchWindow()));
 
   // Populate Translations combobox
   MainWindow->PopulateTranslationsCombobox(UiLanguages, LangIdx);
@@ -1403,7 +1410,7 @@ void BlockTools(const ptBlockToolsMode ANewState, QStringList AExcludeIds = QStr
     */
     for (QWidget *hToolBox: *MainWindow->m_MovedTools) {
       if (!AExcludeIds.contains(hToolBox->objectName())) {
-        if (hToolBox->objectName().contains("/"))  //new-style
+        if (hToolBox->objectName().contains("-"))  //new-style
           hToolBox->setEnabled(EnabledStatus);
         else                                       // old-style
           ((ptGroupBox*)hToolBox)->SetEnabled(EnabledStatus);
@@ -2196,9 +2203,16 @@ void RunJob(const QString JobFileName) {
           Settings->SetValue("OutputFileName",
             PathInfo.dir().path() + "/" + PathInfo.completeBaseName());
         }
-        if (!Settings->GetInt("IsRAW")) {
+        if (!Settings->GetString("OutputFileNameSuffix").isEmpty()) {
           Settings->SetValue("OutputFileName",
-                             Settings->GetString("OutputFileName") + "-new");
+                             Settings->GetString("OutputFileName") +
+                             Settings->GetString("OutputFileNameSuffix"));
+        }
+        else {
+          if (!Settings->GetInt("IsRAW")) {
+            Settings->SetValue("OutputFileName",
+                               Settings->GetString("OutputFileName") + "-new");
+          }
         }
 
         // Here we have the OutputFileName, but extension still to add.
@@ -2361,8 +2375,7 @@ void WriteOut() {
 
     if (Settings->GetInt("IncludeExif")) {
       if (!ptImageHelper::WriteExif(Settings->GetString("OutputFileName"),
-                                    TheProcessor->m_ExifBuffer,
-                                    TheProcessor->m_ExifBufferLength))
+                                    TheProcessor->m_ExifData))
         ptMessageBox::warning(MainWindow, QObject::tr("Exif Error"), QObject::tr("No exif data written."));
     }
   }
@@ -2401,7 +2414,10 @@ void WritePipe(QString OutputName = "") {
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
   QFileInfo PathInfo(InputFileNameList[0]);
   QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName();
-  if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
+  if (!Settings->GetString("OutputFileNameSuffix").isEmpty())
+    SuggestedFileName += Settings->GetString("OutputFileNameSuffix");
+  else
+    if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
   QString Pattern;
 
   switch(Settings->GetInt("SaveFormat")) {
@@ -2744,7 +2760,10 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
     QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
     QFileInfo PathInfo(InputFileNameList[0]);
     QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName();
-    if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
+    if (!Settings->GetString("OutputFileNameSuffix").isEmpty())
+      SuggestedFileName += Settings->GetString("OutputFileNameSuffix");
+    else
+      if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
     QString Pattern;
 
     switch(Settings->GetInt("SaveFormat")) {
@@ -2846,6 +2865,8 @@ void CB_MenuFileExit(const short) {
   // this also writes settings.
   delete FileMgrWindow;
 #endif
+
+  delete BatchWindow;
 
   // Store the position of the splitter and main window
   Settings->m_IniSettings->
@@ -3069,6 +3090,9 @@ void CB_ZoomStep(int direction) {
   ViewWindow->ZoomStep(direction);
 }
 
+void CB_BatchButton() {
+  MainWindow->OpenBatchWindow();
+}
 
 void CB_FileMgrButton() {
 #ifndef PT_WITHOUT_FILEMGR
@@ -3297,6 +3321,7 @@ void CB_StyleChoice(const QVariant Choice) {
 #ifndef PT_WITHOUT_FILEMGR
   FileMgrWindow->UpdateTheme();
 #endif
+  BatchWindow->UpdateTheme();
 }
 
 void CB_StyleHighLightChoice(const QVariant Choice) {

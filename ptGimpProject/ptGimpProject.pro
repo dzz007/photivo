@@ -94,7 +94,7 @@ win32 {
   QMAKE_CFLAGS_RELEASE += $$(CFLAGS)
   QMAKE_LFLAGS_DEBUG += $$(LDFLAGS)
   QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
-  LIBS += -lwsock32 -lexpat -lregex -lgdi32
+  LIBS += -lwsock32 -lexpat -lgdi32
 }
 macx {
   QMAKE_CC = /usr/bin/gcc

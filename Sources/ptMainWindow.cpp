@@ -304,6 +304,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(ZoomIn);
   Macro_ConnectSomeButton(ZoomOut);
   Macro_ConnectSomeButton(ZoomFull);
+  Macro_ConnectSomeButton(Batch);
   Macro_ConnectSomeButton(FileMgr);
   Macro_ConnectSomeButton(FullScreen);
   FullScreenButton->setChecked(0);
@@ -434,9 +435,10 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : Output
   //
 
-  connect(TagsEditWidget, SIGNAL(textChanged()),     this, SLOT(OnTagsEditTextChanged()));
-  connect(edtImageTitle,  SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
-  connect(edtCopyright,   SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
+  connect(TagsEditWidget,  SIGNAL(textChanged()),     this, SLOT(OnTagsEditTextChanged()));
+  connect(edtOutputSuffix, SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
+  connect(edtImageTitle,   SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
+  connect(edtCopyright,    SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
 
 
   Macro_ConnectSomeButton(OutputColorProfileReset);
@@ -931,6 +933,14 @@ short ptMainWindow::GetCurrentTab() {
 //==============================================================================
 // Show/hide file manager window
 
+void ptMainWindow::OpenBatchWindow() {
+  SwitchUIState(uisBatch);
+}
+
+void ptMainWindow::CloseBatchWindow() {
+  SwitchUIState(uisProcessing);
+}
+
 void ptMainWindow::OpenFileMgrWindow() {
   SwitchUIState(uisFileMgr);
 }
@@ -1198,6 +1208,11 @@ void ptMainWindow::OnInputChanged(const QVariant Value) {
          __FILE__,__LINE__,Sender->objectName().toAscii().data());
   CB_InputChanged(Sender->objectName(),Value);
 
+}
+
+void CB_BatchButton();
+void ptMainWindow::OnBatchButtonClicked() {
+  ::CB_BatchButton();
 }
 
 void CB_FileMgrButton();
@@ -1624,6 +1639,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       }
     } else if (Event->key() == Qt::Key_M && Event->modifiers() == Qt::ControlModifier) {
       SwitchUIState(uisFileMgr);
+    } else if (Event->key() == Qt::Key_B && Event->modifiers() == Qt::ControlModifier) {
+      SwitchUIState(uisBatch);
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::ControlModifier) {
       CB_OpenPresetFileButton();
     } else if (Event->key()==Qt::Key_Q && Event->modifiers()==Qt::ControlModifier) {
@@ -2336,6 +2353,7 @@ void ptMainWindow::Settings_2_Form() {
   if (Settings->GetInt("JobMode") == 1) return;
 
   // Metadata
+  edtOutputSuffix->setText(Settings->GetString("OutputFileNameSuffix"));
   edtImageTitle->setText(Settings->GetString("ImageTitle"));
   edtCopyright->setText( Settings->GetString("Copyright"));
 }
@@ -2346,6 +2364,7 @@ void ptMainWindow::Form_2_Settings() {
   if (Settings->GetInt("JobMode") == 1) return;
 
   //Metadata
+  Settings->SetValue("OutputFileNameSuffix", edtOutputSuffix->text().trimmed());
   Settings->SetValue("ImageTitle", edtImageTitle->text().trimmed());
   Settings->SetValue("Copyright",  edtCopyright->text().trimmed());
 }
@@ -2668,18 +2687,26 @@ void ptMainWindow::SwitchUIState(const ptUIState AState)
 
   FUIState = AState;
 
-  if (AState == uisProcessing) {
-    // Processing
-    MainStack->setCurrentWidget(ProcessingPage);
-    Settings->SetValue("FileMgrIsOpen", 0);
-  } else if (AState == uisFileMgr) {
-    // Filemanager
-#ifndef PT_WITHOUT_FILEMGR
-    MainStack->setCurrentWidget(FileManagerPage);
-    Settings->SetValue("FileMgrIsOpen", 1);
-#endif
-  } else {
-    GInfo->Raise("Unknown UI state", AT);
+  switch (AState) {
+    case uisProcessing:
+      // Processing
+      MainStack->setCurrentWidget(ProcessingPage);
+      Settings->SetValue("FileMgrIsOpen", 0);
+      Settings->SetValue("BatchIsOpen", 0);
+      break;
+    case uisFileMgr:
+      // Filemanager
+  #ifndef PT_WITHOUT_FILEMGR
+      MainStack->setCurrentWidget(FileManagerPage);
+      Settings->SetValue("FileMgrIsOpen", 1);
+  #endif
+      break;
+    case uisBatch:
+      MainStack->setCurrentWidget(BatchPage);
+      Settings->SetValue("BatchIsOpen", 1);
+      break;
+    default:
+      GInfo->Raise("Unknown UI state", AT);
   }
 }
 

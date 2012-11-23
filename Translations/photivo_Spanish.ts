@@ -2,6 +2,21 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="es_ES" sourcelanguage="en">
 <context>
+    <name>Form</name>
+    <message>
+        <source>Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use maximum radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adaptive saturation</source>
+        <translation type="unfinished">Saturación adaptativa</translation>
+    </message>
+</context>
+<context>
     <name>Global Strings</name>
     <message>
         <source>Photivo channelmixer file (*.ptm);;All files (*.*)</source>
@@ -1158,7 +1173,7 @@ inputfile
 
 For more documentation visit the wiki: http://photivo.org/photivo/start
 </source>
-        <translation>Sintaxis: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile](new line)
+        <translation type="obsolete">Sintaxis: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile](new line)
 (sp)(sp)(sp)(sp)(sp)(sp)(sp)(sp)(sp)(sp)(sp)(sp)(sp)(sp)(sp)(sp)[-h] [--new-instance](new line)
 Opciones:(new line)
 fichero de entrada(new line)
@@ -1554,7 +1569,7 @@ No recorte, intentelo de nuevo.</translation>
     </message>
     <message>
         <source>Open Curve</source>
-        <translation type="obsolete">Abriendo curva</translation>
+        <translation type="unfinished">Abriendo curva</translation>
     </message>
     <message>
         <source>This curve is meant for channel </source>
@@ -2177,6 +2192,81 @@ The error occurred in line %1.</source>
         <source>Written %L1 bytes (%L2 MByte)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Open setting files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Prepare for local adjust</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local adjust</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No image opened</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open an image before editing spots.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flood fill</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Buscar</translation>
+    </message>
+    <message>
+        <source>C</source>
+        <translation type="unfinished">C</translation>
+    </message>
+    <message>
+        <source>H</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Heal (Dummy)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
+                [-h] [--new-instance]
+Options:
+inputfile
+      Specify the image or settings file to load. Works like -i for image files
+      and like --pts for settings files.
+-i imagefile
+      Specify image file to load.
+-j jobfile
+      Specify jobfile for batch processing. Job files are created
+ in Photivo
+      and then executed with this option.
+--load-and-delete imagefile
+      Specify temporary file used for Gimp-to-Photivo export. Internal option,
+      not intended for general use. BEWARE! This option deletes imagefile!
+--pts ptsfile
+      Specify settings file to load with the image. Must be used together
+      with -i.
+--new-instance
+      Allow opening another Photivo instance instead of using a currently
+      running Photivo. Job files are always opened in a new instance.
+--no-fmgr or -p
+      Prevent auto-open file manager when Photivo starts.
+--help or -h
+      Display this usage information.
+
+For more documentation visit the wiki: http://photivo.org/photivo/start
+</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ToneForm</name>
@@ -2195,6 +2285,57 @@ The error occurred in line %1.</source>
     <message>
         <source>Highlights</source>
         <translation>Luces altas</translation>
+    </message>
+</context>
+<context>
+    <name>ptBatchWindow</name>
+    <message>
+        <source>Add job to list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add job...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove jobs from list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove jobs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process jobs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort processing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show processing log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close batch manager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2261,6 +2402,14 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <source>C&amp;olor mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open &amp;file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open anchor curve file</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2910,6 +3059,62 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ptFilter_SpotTuning</name>
+    <message>
+        <source>Spot tuning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use maximum radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixels outside this radius will never be included in the mask.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brightness/color ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Defines how brightness and color affect the threshold.
+0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threshold</source>
+        <translation type="unfinished">Umbral</translation>
+    </message>
+    <message>
+        <source>Maximum amount a pixel may differ from the spot&apos;s source pixel to get included in the mask.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation type="unfinished">Saturación</translation>
+    </message>
+    <message>
+        <source>Adaptive saturation</source>
+        <translation type="unfinished">Saturación adaptativa</translation>
+    </message>
+    <message>
+        <source>Prevent clipping when adjusting saturation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color shift</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Luminance curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_StdCurve</name>
     <message>
         <source>RGB curve</source>
@@ -3184,6 +3389,21 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ptImageSpotEditor</name>
+    <message>
+        <source>Delete this spot</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ptImageSpotModel</name>
+    <message>
+        <source>%1
+x=%2, y=%3 (1:1 pipe size)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ptImageView</name>
     <message>
         <source>Zoom &amp;in</source>
@@ -3223,10 +3443,65 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ptJobListModel</name>
+    <message>
+        <source>Waiting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Processing</source>
+        <translation type="unfinished">Procesando</translation>
+    </message>
+    <message>
+        <source>Finished</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skipped</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Aborted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output suffix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation type="unfinished">Estado</translation>
+    </message>
+    <message>
+        <source>Invalid settings file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>is not a Photivo settings file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ptMainWindow</name>
     <message>
         <source>photivo</source>
-        <translation>photivo</translation>
+        <translation type="obsolete">photivo</translation>
     </message>
     <message>
         <source>Tool search</source>
@@ -4316,6 +4591,26 @@ The error occurred in line %1.</source>
         <source>No tools visible!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Photivo</source>
+        <translation type="unfinished">Photivo</translation>
+    </message>
+    <message>
+        <source>Local Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Suffix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Suffix to be added to the end of the output file name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Batch job processing</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ptProcessor</name>
@@ -4683,11 +4978,11 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Vibrance 2</source>
-        <translation>Vitalidad 2</translation>
+        <translation type="obsolete">Vitalidad 2</translation>
     </message>
     <message>
         <source>Intensity RGB 2</source>
-        <translation>Intensidad RGB 2</translation>
+        <translation type="obsolete">Intensidad RGB 2</translation>
     </message>
     <message>
         <source>Applying R curve</source>
@@ -4762,6 +5057,10 @@ No recorte, inténtelo de nuevo.</translation>
     <message>
         <source>Saturation adjustment</source>
         <translation type="obsolete">Ajsute saturación</translation>
+    </message>
+    <message>
+        <source>Spot tuning</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6541,6 +6840,33 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
 </context>
 <context>
+    <name>ptSpotListWidget</name>
+    <message>
+        <source>Delete spot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Append spot mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit spots</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit append spot mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Leave edit mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spot</source>
+        <translation type="unfinished">Punto</translation>
+    </message>
+</context>
+<context>
     <name>ptToolBox</name>
     <message>
         <source>Open help page in web browser.</source>
@@ -6740,6 +7066,14 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     <message>
         <source>Pixel values</source>
         <translation>Valor del pixel</translation>
+    </message>
+    <message>
+        <source>Open &amp;batch processing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+B</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
