@@ -66,6 +66,7 @@ private:
 
 private slots:
   void updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget = nullptr);
+
   /*! Updates the preview image in the ViewWindow and takes into account if the ViewWindow
       interaction is running or not.
    */

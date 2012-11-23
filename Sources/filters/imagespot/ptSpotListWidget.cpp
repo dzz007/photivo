@@ -146,6 +146,14 @@ void ptSpotListWidget::toggleAppendMode() {
   AddButton->setToolTip(tr("Append spot mode"));
 
   } else {
+    if (Settings->GetInt("HaveImage") == 0) {
+      AddButton->setChecked(false);
+      ptMessageBox::information(nullptr,
+        QObject::tr("No image opened"),
+        QObject::tr("Open an image before editing spots."));
+      return;
+    }
+
     // start appending a spot
     FAppendOngoing = true;
     AddButton->setToolTip(tr("Exit append spot mode"));
@@ -265,7 +273,7 @@ void ptSpotListWidget::updateButtonStates() {
   DownButton->setEnabled(hIdxValid && (ListView->currentIndex().row() < FModel->rowCount()-1));
   UpButton->setEnabled(hIdxValid && (ListView->currentIndex().row() > 0));
   DelButton->setEnabled(hIdxValid);
-  EditButton->setEnabled(hIdxValid || FAppendOngoing);
+  EditButton->setEnabled((hIdxValid || FAppendOngoing));
 }
 
 
