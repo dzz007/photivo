@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -28,7 +29,7 @@
 #include "ptRGBTemperature.h"
 #include "ptGuiOptions.h"
 #include "filemgmt/ptFileMgrConstants.h"
-#include <filters/ptFilterUids.h>
+#include "filters/ptFilterUids.h"
 
 // Macro for inserting a key into the hash and checking it is a new one.
 #define M_InsertKeyIntoHash(Key,Item)                      \
@@ -40,14 +41,7 @@
   }                                                        \
   m_Hash[Key] = Item;
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// Constructor
-//
-///////////////////////////////////////////////////////////////////////////////
-
 ptSettings::ptSettings(const short InitLevel, const QString Path) {
-
   assert(InitLevel<9); // 9 reserved for never to be remembered.
 
   // Load in the gui input elements
@@ -753,13 +747,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   SetValue("Scaled",GetValue("PipeSize"));
 };
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//------------------------------------------------------------------------------
 // Destructor
 // Basically dumping the whole Settings hash to ini files.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 ptSettings::~ptSettings() {
   QStringList Keys = m_Hash.keys();
   for (int i=0; i<Keys.size(); i++) {
@@ -771,13 +761,8 @@ ptSettings::~ptSettings() {
   delete m_IniSettings;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// GetValue
+//------------------------------------------------------------------------------
 // Access to the hash, but with protection on non existing key.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 const QVariant ptSettings::GetValue(const QString Key) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -788,12 +773,7 @@ const QVariant ptSettings::GetValue(const QString Key) {
   return m_Hash[Key]->Value;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// GetInt
-//
-////////////////////////////////////////////////////////////////////////////////
-
+//------------------------------------------------------------------------------
 int ptSettings::GetInt(const QString Key) {
   // Remark : UInt and Int are mixed here.
   // The only settings related type where u is important is uint16_t
@@ -813,12 +793,7 @@ int ptSettings::GetInt(const QString Key) {
   return Tmp.toInt();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// GetDouble
-//
-////////////////////////////////////////////////////////////////////////////////
-
+//------------------------------------------------------------------------------
 double ptSettings::GetDouble(const QString Key) {
   QVariant Tmp = GetValue(Key);
   if (static_cast<QMetaType::Type>(Tmp.type()) == QMetaType::Float)
@@ -832,12 +807,7 @@ double ptSettings::GetDouble(const QString Key) {
   return Tmp.toDouble();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// GetString
-//
-////////////////////////////////////////////////////////////////////////////////
-
+//------------------------------------------------------------------------------
 const QString ptSettings::GetString(const QString Key) {
   QVariant Tmp = GetValue(Key);
   if (Tmp.type() != QVariant::String) {
@@ -849,12 +819,7 @@ const QString ptSettings::GetString(const QString Key) {
   return Tmp.toString();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// GetStringList
-//
-////////////////////////////////////////////////////////////////////////////////
-
+//------------------------------------------------------------------------------
 const QStringList ptSettings::GetStringList(const QString Key) {
   QVariant Tmp = GetValue(Key);
   if (Tmp.type() != QVariant::StringList) {
@@ -866,13 +831,8 @@ const QStringList ptSettings::GetStringList(const QString Key) {
   return Tmp.toStringList();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetValue
+//------------------------------------------------------------------------------
 // Access to the hash, but with protection on non existing key.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptSettings::SetValue(const QString Key, const QVariant Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -902,13 +862,8 @@ void ptSettings::SetValue(const QString Key, const QVariant Value) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetEnabled
+//------------------------------------------------------------------------------
 // Enable the underlying gui element (if one)
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptSettings::SetEnabled(const QString Key, const short Enabled) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -937,13 +892,8 @@ void ptSettings::SetEnabled(const QString Key, const short Enabled) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetMaximum
+//------------------------------------------------------------------------------
 // Makes only sense for gui input element, which is asserted.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptSettings::SetMaximum(const QString Key, const QVariant Maximum) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -960,13 +910,8 @@ void ptSettings::SetMaximum(const QString Key, const QVariant Maximum) {
   return m_Hash[Key]->GuiInput->SetMaximum(Maximum);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Show (or hide)
+//------------------------------------------------------------------------------
 // Makes only sense for gui element, which is asserted.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void  ptSettings::Show(const QString Key, const short Show) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -995,13 +940,8 @@ void  ptSettings::Show(const QString Key, const short Show) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// AddOrReplaceOption
+//------------------------------------------------------------------------------
 // Makes only sense for gui choice (combo) element, which is asserted.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptSettings::AddOrReplaceOption(const QString  Key,
                                     const QString  Text,
                                     const QVariant Value) {
@@ -1022,13 +962,8 @@ void ptSettings::AddOrReplaceOption(const QString  Key,
   m_Hash[Key]->GuiChoice->AddOrReplaceItem(Text,Value);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ClearOptions
+//------------------------------------------------------------------------------
 // Makes only sense for gui choice (combo) element, which is asserted.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptSettings::ClearOptions(const QString  Key, const short WithDefault) {
   // In job mode there are no gui elements and we have to return.
   if (GetInt("JobMode")) return;
@@ -1047,13 +982,8 @@ void ptSettings::ClearOptions(const QString  Key, const short WithDefault) {
   m_Hash[Key]->GuiChoice->Clear(WithDefault);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// GetNrOptions
+//------------------------------------------------------------------------------
 // Makes only sense for gui choice (combo) element, which is asserted.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 int ptSettings::GetNrOptions(const QString Key) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -1070,13 +1000,8 @@ int ptSettings::GetNrOptions(const QString Key) {
   return m_Hash[Key]->GuiChoice->Count();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// GetOptionsValue (at index Index)
+//------------------------------------------------------------------------------
 // Makes only sense for gui choice (combo) element, which is asserted.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 const QVariant ptSettings::GetOptionsValue(const QString Key,const int Index){
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -1093,13 +1018,8 @@ const QVariant ptSettings::GetOptionsValue(const QString Key,const int Index){
   return m_Hash[Key]->GuiChoice->GetItemData(Index);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// GetCurrentText
+//------------------------------------------------------------------------------
 // Makes only sense for gui choice (combo) element, which is asserted.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 const QString ptSettings::GetCurrentText(const QString Key){
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -1116,12 +1036,7 @@ const QString ptSettings::GetCurrentText(const QString Key){
   return m_Hash[Key]->GuiChoice->CurrentText();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetGuiInput
-//
-////////////////////////////////////////////////////////////////////////////////
-
+//------------------------------------------------------------------------------
 void ptSettings::SetGuiInput(const QString Key, ptInput* Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -1130,16 +1045,11 @@ void ptSettings::SetGuiInput(const QString Key, ptInput* Value) {
     assert (m_Hash.contains(Key));
   }
   m_Hash[Key]->GuiInput  = Value;
-  m_Hash[Key]->GuiChoice = NULL;
-  m_Hash[Key]->GuiCheck  = NULL;
+  m_Hash[Key]->GuiChoice = nullptr;
+  m_Hash[Key]->GuiCheck  = nullptr;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetGuiChoice
-//
-////////////////////////////////////////////////////////////////////////////////
-
+//------------------------------------------------------------------------------
 void ptSettings::SetGuiChoice(const QString Key, ptChoice* Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -1147,17 +1057,12 @@ void ptSettings::SetGuiChoice(const QString Key, ptChoice* Value) {
                __FILE__,__LINE__,Key.toAscii().data());
     assert (m_Hash.contains(Key));
   }
-  m_Hash[Key]->GuiInput  = NULL;
+  m_Hash[Key]->GuiInput  = nullptr;
   m_Hash[Key]->GuiChoice = Value;
-  m_Hash[Key]->GuiCheck  = NULL;
+  m_Hash[Key]->GuiCheck  = nullptr;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// SetGuiCheck
-//
-////////////////////////////////////////////////////////////////////////////////
-
+//------------------------------------------------------------------------------
 void ptSettings::SetGuiCheck(const QString Key, ptCheck* Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -1165,18 +1070,12 @@ void ptSettings::SetGuiCheck(const QString Key, ptCheck* Value) {
                __FILE__,__LINE__,Key.toAscii().data());
     assert (m_Hash.contains(Key));
   }
-  m_Hash[Key]->GuiInput  = NULL;
-  m_Hash[Key]->GuiChoice = NULL;
+  m_Hash[Key]->GuiInput  = nullptr;
+  m_Hash[Key]->GuiChoice = nullptr;
   m_Hash[Key]->GuiCheck  = Value;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// GetGuiWidget
-// low level access to the underlying QWidget
-//
-////////////////////////////////////////////////////////////////////////////////
-
+//------------------------------------------------------------------------------
 QWidget* ptSettings::GetGuiWidget(const QString Key) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
@@ -1193,19 +1092,14 @@ QWidget* ptSettings::GetGuiWidget(const QString Key) {
   }
 
   assert (!"No Gui widget");
-  return NULL;
+  return nullptr;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//------------------------------------------------------------------------------
 // Transfer the settings from Settings To DcRaw UserSettings.
 // This is sometimes not straightforward as DcRaw assumes certain
 // combinations. That's taken care of here.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
-
   if (!TheDcRaw) return;
 
   // Relying on m_PipeSize being as defined in the constants ! (1<<Size)
@@ -1336,7 +1230,7 @@ void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
   // Bad pixels settings.
   switch(GetInt("HaveBadPixels")) {
     case 0 : // None
-      TheDcRaw->m_UserSetting_BadPixelsFileName = NULL;
+      TheDcRaw->m_UserSetting_BadPixelsFileName = nullptr;
       break;
     case 1 : // Load one : should not happen !
       assert(0);
@@ -1358,7 +1252,7 @@ void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
   // Dark frame settings.
   switch(GetInt("HaveDarkFrame")) {
     case 0 : // None
-      TheDcRaw->m_UserSetting_DarkFrameFileName = NULL;
+      TheDcRaw->m_UserSetting_DarkFrameFileName = nullptr;
       break;
     case 1 : // Load one : should not happen !
       assert(0);
@@ -1412,17 +1306,12 @@ void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
   TheDcRaw->m_UserSetting_photivo_ClipParameter  = GetInt("ClipParameter");
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//------------------------------------------------------------------------------
 // Transfers the settings from DcRaw back to the Gui.
 // In some situations , DcRaw can overwrite or calculate values.
 // The output of those are here fed back to the Gui settings such
 // that they are correctly reflected.
-//
-////////////////////////////////////////////////////////////////////////////////
-
 void ptSettings::FromDcRaw(ptDcRaw* TheDcRaw) {
-
   if (!TheDcRaw) return;
 
   // Copy make and model to our gui settings (f.i.
@@ -1513,13 +1402,8 @@ void ptSettings::FromDcRaw(ptDcRaw* TheDcRaw) {
   TRACEKEYVALS("ExposureNorm(EV)","%f", GetDouble("ExposureNormalization"));
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Tool Info
+//------------------------------------------------------------------------------
 // IsActive contains, if the filter will be processed!
-//
-////////////////////////////////////////////////////////////////////////////////
-
 struct sToolInfo {
   QString               Name;
   short                 IsActive;
@@ -1750,6 +1634,7 @@ sToolInfo ToolInfo (const QString GuiName) {
   return Info;
 }
 
+//------------------------------------------------------------------------------
 int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
   QStringList VisibleTools =
   (QStringList()
@@ -1791,23 +1676,26 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
   return 0;
 }
 
+//------------------------------------------------------------------------------
 QString ptSettings::ToolGetName (const QString GuiName) const {
   sToolInfo Info = ToolInfo(GuiName);
   return Info.Name;
 }
 
+//------------------------------------------------------------------------------
 int ptSettings::ToolIsActive (const QString GuiName) const {
   sToolInfo Info = ToolInfo(GuiName);
   return (Info.IsHidden || Info.IsBlocked || Info.IsDisabled)?0:Info.IsActive;
 }
 
+//------------------------------------------------------------------------------
 int ptSettings::ToolIsBlocked (const QString GuiName) const {
   sToolInfo Info = ToolInfo(GuiName);
   return Info.IsBlocked;
 }
 
+//------------------------------------------------------------------------------
 int ptSettings::ToolIsHidden (const QString GuiName) const {
   sToolInfo Info = ToolInfo(GuiName);
   return Info.IsHidden;
 }
-///////////////////////////////////////////////////////////////////////////////
