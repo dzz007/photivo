@@ -21,6 +21,10 @@
 **
 *******************************************************************************/
 
+#define GDK_PIXBUF_DISABLE_DEPRECATED
+#define PANGO_DISABLE_DEPRECATED
+#define ATK_DISABLE_DEPRECATED
+
 extern "C"
 {
 #include <libgimp/gimp.h>
@@ -211,7 +215,7 @@ void ptRun(const gchar*     Name,
 #if GIMP_MINOR_VERSION<=6
     gimp_image_add_layer(GimpImage,GimpLayer,0);
 #else
-    gimp_image_insert_layer(GimpImage,GimpLayer,NULL,0);
+    gimp_image_insert_layer(GimpImage,GimpLayer,0,0);
 #endif
     GimpDrawable* Drawable = gimp_drawable_get(GimpLayer);
     GimpPixelRgn PixelRegion;
@@ -225,7 +229,7 @@ void ptRun(const gchar*     Name,
                         false);
     unsigned short TileHeight = gimp_tile_height();
     for (unsigned short Row=0; Row<Height; Row+=TileHeight) {
-      unsigned short NrRows = MIN(Height-Row,TileHeight);
+      unsigned short NrRows = MIN(Height-Row, (int)TileHeight);
       guint8* Buffer = g_new(guint8,TileHeight*Width*3);
       for (unsigned short i=0; i<NrRows; i++) {
         for (unsigned short j=0; j<Width; j++) {

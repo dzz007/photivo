@@ -40,7 +40,7 @@ extern QString     ShareDirectory;
 
 ptTheme::ptTheme(const QApplication* app,
                  Theme newTheme /*= thDarkGrey*/,
-                 Highlight newHighlight /*= hlBlue*/)
+                 Highlight newHighlight /*= hlGreen*/)
 : IconAddBookmark (QPixmap(QString::fromUtf8(":/dark/icons/bookmark-new.png"))),
   IconGoNext      (QPixmap(QString::fromUtf8(":/dark/icons/go-next.png"))),
   IconGoPrevious  (QPixmap(QString::fromUtf8(":/dark/icons/go-previous.png"))),

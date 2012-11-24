@@ -1,16 +1,31 @@
 #!/bin/bash
-if [ "$1" = "" ]; then
-  echo "Unset PT_REPO_PATH."
-  unset PT_REPO_PATH
-  export PT_REPO_ID=none
+
+if [[ "$1" == "" ]]; then
+    printf "Unset Photivo repo."
+    unset PhotivoRepoPath
+    unset PhotivoBuildPath
+    export PhotivoRepoId=none
 
 else
-  if [ "$1" = "def" ]; then
-    export PT_REPO_PATH=/photivo/repository
-  else
-    export PT_REPO_PATH=/photivo/branch-$1
-  fi
+    if [[ "$1" == "def" ]]; then
+        ptTempPath=$ProjectsBasePath/Photivo/$RepoDefaultDir
+    else
+        if [[ -e $ProjectsBasePath/Photivo/branch-$1 ]]; then
+            ptTempPath=$ProjectsBasePath/Photivo/branch-$1
+        else
+            ptTempPath=$ProjectsBasePath/Photivo/$1
+        fi
+    fi
 
-  export PT_REPO_ID=$1
-  echo "PT_REPO_PATH is now \"$PT_REPO_PATH\""
+    if [[ ! -e $ptTempPath ]]; then
+        echo "Folder \"$ptTempPath\" does not exist."
+    else
+        export PhotivoRepoPath=$ptTempPath
+        export PhotivoBuildPath=$ptTempPath/build-$GccArch
+        export PhotivoRepoId=$1
+        printf "\n\$PhotivoRepoPath  is now \"$PhotivoRepoPath\"\n"
+        printf   "\$PhotivoBuildPath is now \"$PhotivoBuildPath\"\n"
+        unset ptTempPath
+        mkdir -p $PhotivoBuildPath
+    fi
 fi

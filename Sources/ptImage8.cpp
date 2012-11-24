@@ -30,48 +30,45 @@
 #include "ptImage.h"
 #include "ptResizeFilters.h"
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptImage8::ptImage8() {
-m_Width              = 0;
-m_Height             = 0;
-m_Image              = NULL;
-m_Colors             = 0;
-m_ColorSpace         = ptSpace_sRGB_D65;
-};
+  m_Width              = 0;
+  m_Height             = 0;
+  m_Image              = NULL;
+  m_Colors             = 0;
+  m_ColorSpace         = ptSpace_sRGB_D65;
+}
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptImage8::ptImage8(const uint16_t Width,
                    const uint16_t Height,
-                   const short    NrColors) {
-  m_Width              = Width;
-  m_Height             = Height;
-  m_Image              = NULL;
-  m_Colors             = NrColors;
+                   const short    NrColors)
+{
+  m_Image              = nullptr;
   m_ColorSpace         = ptSpace_sRGB_D65;
+  setSize(Width, Height, NrColors);
+}
+
+//==============================================================================
+
+void ptImage8::setSize(const uint16_t AWidth, const uint16_t AHeight, const int AColorCount) {
+  m_Width              = AWidth;
+  m_Height             = AHeight;
+  m_Colors             = AColorCount;
+
+  if (m_Image) FREE(m_Image);
 
   m_Image = (uint8_t (*)[4]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
   ptMemoryError(m_Image,__FILE__,__LINE__);
-};
+}
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptImage8::~ptImage8() {
   FREE(m_Image);
-};
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -323,7 +320,7 @@ ptImage8* ptImage8::FilteredScale(const float Factor,
   // Fill the image from the DstImage.
   for (uint32_t c=0; c<(uint32_t)NewHeight*NewWidth; c++) {
     for (short cl=0; cl<3; cl++) {
-      m_Image[c][cl] = (uint16_t)CLIP(DstImageY[c][cl]+0.5);
+      m_Image[c][cl] = CLIP((int32_t)(DstImageY[c][cl]+0.5));
     }
     m_Image[c][3] = 0xff;
   }

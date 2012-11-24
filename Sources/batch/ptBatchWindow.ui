@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ptBatchWindow</class>
+ <widget class="QWidget" name="ptBatchWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1014</width>
+    <height>690</height>
+   </rect>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QWidget" name="BTSidebar" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QPushButton" name="BTAddJob">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Add job to list</string>
+        </property>
+        <property name="text">
+         <string>Add job...</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../qrc/photivo.qrc">
+          <normaloff>:/dark/icons/job-add.png</normaloff>:/dark/icons/job-add.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="BTRemoveJob">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Remove jobs from list</string>
+        </property>
+        <property name="text">
+         <string>Remove jobs</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../qrc/photivo.qrc">
+          <normaloff>:/dark/icons/job-remove.png</normaloff>:/dark/icons/job-remove.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="BTRun">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Process jobs</string>
+        </property>
+        <property name="text">
+         <string>Run</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../qrc/photivo.qrc">
+          <normaloff>:/dark/icons/processing-pane.png</normaloff>:/dark/icons/processing-pane.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="BTAbort">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Abort processing</string>
+        </property>
+        <property name="text">
+         <string>Abort</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../qrc/photivo.qrc">
+          <normaloff>:/dark/icons/processing-abort.png</normaloff>:/dark/icons/processing-abort.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="BTShowLog">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Show processing log</string>
+        </property>
+        <property name="text">
+         <string>Show log</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../qrc/photivo.qrc">
+          <normaloff>:/dark/icons/visible-tools.png</normaloff>:/dark/icons/visible-tools.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>80</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="BTClose">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Close batch manager</string>
+        </property>
+        <property name="text">
+         <string>Close</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../qrc/photivo.qrc">
+          <normaloff>:/dark/icons/dialog-cancel.png</normaloff>:/dark/icons/dialog-cancel.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QSplitter" name="BTLogSplitter">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QTableView" name="BTJobList">
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>150</number>
+      </attribute>
+      <attribute name="horizontalHeaderHighlightSections">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="horizontalHeaderMinimumSectionSize">
+       <number>100</number>
+      </attribute>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>true</bool>
+      </attribute>
+     </widget>
+     <widget class="QPlainTextEdit" name="BTLog">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../../qrc/photivo.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>BTClose</sender>
+   <signal>clicked()</signal>
+   <receiver>ptBatchWindow</receiver>
+   <slot>OnCloseWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>49</x>
+     <y>620</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>50</x>
+     <y>691</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>BTAbort</sender>
+   <signal>clicked()</signal>
+   <receiver>ptBatchWindow</receiver>
+   <slot>OnAbortProcessing()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>29</x>
+     <y>158</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>164</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>BTRun</sender>
+   <signal>clicked()</signal>
+   <receiver>ptBatchWindow</receiver>
+   <slot>OnRunJobs()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>25</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>2</x>
+     <y>130</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>BTAddJob</sender>
+   <signal>clicked()</signal>
+   <receiver>ptBatchWindow</receiver>
+   <slot>OnAddJob()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>37</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-3</x>
+     <y>17</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>BTRemoveJob</sender>
+   <signal>clicked()</signal>
+   <receiver>ptBatchWindow</receiver>
+   <slot>OnRemoveJob()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>55</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>OnCloseWindow()</slot>
+  <slot>OnAddJob()</slot>
+  <slot>OnRemoveJob()</slot>
+  <slot>OnRunJobs()</slot>
+  <slot>OnAbortProcessing()</slot>
+ </slots>
+</ui>
