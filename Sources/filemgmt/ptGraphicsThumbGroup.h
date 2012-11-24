@@ -54,7 +54,7 @@ public:
   */
   static int RemoveRef(ptGraphicsThumbGroup* group);
 
-//------------------------------------------------------------------------------
+//-------------------------------------
 
   /*! Adds informative items to the thumbnail group.
     \param fullPath

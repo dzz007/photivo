@@ -47,16 +47,16 @@ RCC_DIR         = ../Objects_Gimp
 #prevent qmake from adding -arch flags
 macx{
   QMAKE_CFLAGS_X86_64 =-m64
-  QMAKE_CXXFLAGS_X86_64 =-m64
+  QMAKE_CXXFLAGS_X86_64 =-m64 -std=gnu++0x
   QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
   QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
 }
 
 # Bit funky for the gimp.
-QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gimp-2.0)
+QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gimp-2.0) -std=gnu++0x
 QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I gtk+-2.0)
 QMAKE_CXXFLAGS_RELEASE += -DDLRAW_GIMP_PLUGIN
-QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I gimp-2.0)
+QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I gimp-2.0) -std=gnu++0x
 QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I gtk+-2.0)
 QMAKE_CXXFLAGS_DEBUG += -DDLRAW_GIMP_PLUGIN
 QMAKE_CXXFLAGS_RELEASE += -O3
@@ -94,7 +94,7 @@ win32 {
   QMAKE_CFLAGS_RELEASE += $$(CFLAGS)
   QMAKE_LFLAGS_DEBUG += $$(LDFLAGS)
   QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
-  LIBS += -lwsock32 -lexpat -lregex -lgdi32
+  LIBS += -lwsock32 -lexpat -lgdi32
 }
 macx {
   QMAKE_CC = /usr/bin/gcc

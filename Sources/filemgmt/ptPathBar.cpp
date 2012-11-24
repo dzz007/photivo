@@ -50,7 +50,7 @@ ptPathBar::ptPathBar(QWidget* parent)
   m_DirInfo.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Drives);
   m_DirInfo.setSorting(QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   m_PrettyDisplay = new QWidget(this);
   m_PrettyDisplay->setObjectName("PBPrettyDisplay");
@@ -70,7 +70,7 @@ ptPathBar::ptPathBar(QWidget* parent)
   m_WidgetStack->setCurrentIndex(0);
   this->setLayout(m_WidgetStack);
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   // tolbuttons to navigate through paths too long to display
   m_GoLeftButton = new QToolButton(m_PrettyDisplay);
@@ -98,7 +98,7 @@ ptPathBar::ptPathBar(QWidget* parent)
   l->addWidget(m_GoRightButton);
   m_PrettyDisplay->setLayout(l);
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   m_Tokens = new QWidget(m_InnerContainer);
 
@@ -108,7 +108,7 @@ ptPathBar::ptPathBar(QWidget* parent)
   m_TokenLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
   m_Tokens->setLayout(m_TokenLayout);
 
-  //------------------------------------------------------------------------------
+  //-------------------------------------
 
   m_Animation.setTargetObject(m_Tokens);
   m_Animation.setPropertyName("pos");

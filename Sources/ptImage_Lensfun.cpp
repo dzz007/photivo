@@ -45,7 +45,7 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
   /**
    * Stage 1 and/or 3: CA and lens geometry/distortion correction
    * Processing row by row to avoid *huge* memory requirements.
-   * Note that lensfun’s ApplySubpixelGeometryDistortion() always returns separated
+   * Note that lensfunâ€™s ApplySubpixelGeometryDistortion() always returns separated
    * RGB channels in contrast to what the docu says.
    *
    * NewCoords
@@ -53,10 +53,14 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
    *     position in the input image. Pixels are split into R, G, and B channels. Memory
    *     layout for each pixel is as follows: Rx, Ry, Gx, Gy, Bx, By
    */
-  if (((LfunActions & LF_MODIFY_TCA) || (LfunActions & LF_MODIFY_DISTORTION) || (LfunActions & LF_MODIFY_GEOMETRY)) ||
-      (LfunActions == LF_MODIFY_ALL) )
+  if (((LfunActions &  LF_MODIFY_TCA) ||
+       (LfunActions &  LF_MODIFY_DISTORTION) ||
+       (LfunActions &  LF_MODIFY_GEOMETRY)) ||
+       (LfunActions == LF_MODIFY_ALL) )
   {
-    uint16_t (*TempImage)[3] = (uint16_t (*)[3]) CALLOC((int32_t)m_Width * m_Height, sizeof(*TempImage));
+    std::vector<std::array<uint16_t, 3> > TempData;
+    TempData.resize((size_t) m_Width*m_Height);
+    uint16_t (*TempImage)[3] = (uint16_t (*)[3]) TempData.data();
     bool LfunSuccess = true;
 
 #pragma omp parallel
@@ -113,11 +117,10 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
 
 
     if (LfunSuccess) {
-      FREE(m_Image);
-      m_Image = TempImage;
+      m_Data.swap(TempData);
+      m_Image = (uint16_t (*)[3]) m_Data.data();
     } else {
       ptLogError(ptError_Lensfun, "Could not apply geometry/distortion correction.");
-      FREE(TempImage);
     }
   }
 

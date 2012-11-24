@@ -40,6 +40,7 @@
 #include "ptGroupBox.h"
 #include "ptVisibleToolsView.h"
 
+#include "ptTempFilterBase.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -113,10 +114,10 @@ public:
   QTimer* m_SearchInputTimer;
 
   // ToolBoxes
-  QMap<QString, ptGroupBox*>* m_GroupBox;
+  QMap<QString, ptTempFilterBase*>* m_GroupBox;
   QList<QString>*             m_GroupBoxesOrdered;
   QList<QVBoxLayout*>*        m_TabLayouts;
-  QList<ptGroupBox*>*         m_MovedTools;
+  QList<QWidget*>*            m_MovedTools;
   QIcon                       m_StatusIcon;
   QList<QWidget*>             m_ActiveTabs;
 
@@ -142,28 +143,34 @@ protected:
 #endif
 
 private :
-  QTabBar* Tabbar;
-  QAction* m_AtnSavePipe;
-  QAction* m_AtnSaveFull;
-  QAction* m_AtnSaveSettings;
-  QAction* m_AtnSaveJobfile;
-  QAction* m_AtnGimpSavePipe;
-  QAction* m_AtnGimpSaveFull;
-  QAction* m_AtnMenuFullReset;
-  QAction* m_AtnMenuUserReset;
-  QAction* m_AtnMenuOpenPreset;
-  QAction* m_AtnMenuOpenSettings;
-  short    m_ContextMenuOnTab;
-  QAction* m_AtnShowTools;
+  QTabBar*  Tabbar;
+  QAction*  m_AtnSavePipe;
+  QAction*  m_AtnSaveFull;
+  QAction*  m_AtnSaveSettings;
+  QAction*  m_AtnSaveJobfile;
+  QAction*  m_AtnGimpSavePipe;
+  QAction*  m_AtnGimpSaveFull;
+  QAction*  m_AtnMenuFullReset;
+  QAction*  m_AtnMenuUserReset;
+  QAction*  m_AtnMenuOpenPreset;
+  QAction*  m_AtnMenuOpenSettings;
+  short     m_ContextMenuOnTab;
+  QAction*  m_AtnShowTools;
+  ptUIState FUIState;
 
   ptVisibleToolsModel* m_VisibleToolsModel;
 
   void AnalyzeToolBoxStructure();
-  void ShowMovedTools(const QString Title);
+  void ShowMovedTools(const QString ATitle);
   void InitVisibleTools();
+
+  /*! We switch to the respective UI state. */
+  void SwitchUIState(const ptUIState AState);
 
 public slots:
   // Toggle file manager window
+  void OpenBatchWindow();
+  void CloseBatchWindow();
   void OpenFileMgrWindow();
   void CloseFileMgrWindow();
   void OtherInstanceMessage(const QString &msg);
@@ -219,6 +226,7 @@ private slots:
   void OnZoomInButtonClicked();
   void OnZoomOutButtonClicked();
   void OnZoomFullButtonClicked();
+  void OnBatchButtonClicked();
   void OnFileMgrButtonClicked();
   void OnFullScreenButtonClicked();
   void OnLoadStyleButtonClicked();
@@ -248,38 +256,6 @@ private slots:
   void OnChannelMixerOpenButtonClicked();
   void OnChannelMixerSaveButtonClicked();
 
-  void OnCurveRGBOpenButtonClicked();
-  void OnCurveRGBSaveButtonClicked();
-  void OnCurveROpenButtonClicked();
-  void OnCurveRSaveButtonClicked();
-  void OnCurveGOpenButtonClicked();
-  void OnCurveGSaveButtonClicked();
-  void OnCurveBOpenButtonClicked();
-  void OnCurveBSaveButtonClicked();
-  void OnCurveLOpenButtonClicked();
-  void OnCurveLSaveButtonClicked();
-  void OnCurveaOpenButtonClicked();
-  void OnCurveaSaveButtonClicked();
-  void OnCurvebOpenButtonClicked();
-  void OnCurvebSaveButtonClicked();
-  void OnCurveOutlineOpenButtonClicked();
-  void OnCurveOutlineSaveButtonClicked();
-  void OnCurveLByHueOpenButtonClicked();
-  void OnCurveLByHueSaveButtonClicked();
-  void OnCurveHueOpenButtonClicked();
-  void OnCurveHueSaveButtonClicked();
-  void OnCurveTextureOpenButtonClicked();
-  void OnCurveTextureSaveButtonClicked();
-  void OnCurveShadowsHighlightsOpenButtonClicked();
-  void OnCurveShadowsHighlightsSaveButtonClicked();
-  void OnCurveDenoiseOpenButtonClicked();
-  void OnCurveDenoiseSaveButtonClicked();
-  void OnCurveSaturationOpenButtonClicked();
-  void OnCurveSaturationSaveButtonClicked();
-  void OnBaseCurveOpenButtonClicked();
-  void OnBaseCurveSaveButtonClicked();
-  void OnBaseCurve2OpenButtonClicked();
-  void OnBaseCurve2SaveButtonClicked();
 
   void OnTone1ColorButtonClicked();
   void OnTone2ColorButtonClicked();
@@ -293,7 +269,6 @@ private slots:
   void OnGradualOverlay2ColorButtonClicked();
 
   void OnOutputColorProfileResetButtonClicked();
-  void OnWriteOutputButtonClicked();
   void OnWritePipeButtonClicked();
 
   void OnVisibleToolsDiscardButtonClicked();

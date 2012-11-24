@@ -48,7 +48,7 @@ public:
   /*! Returns a hash key for the given \c file. */
   static ptThumbnailCacheKey GetKey(const QString fileName);
 
-//------------------------------------------------------------------------------
+//-------------------------------------
 
   /*! Creates a \c ptThumbnailCache instance.
     \param capacity

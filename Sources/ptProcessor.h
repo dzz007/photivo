@@ -26,6 +26,7 @@
 
 #include <QString>
 #include <QTime>
+#include <QCoreApplication>
 
 #include <exiv2/exif.hpp>
 

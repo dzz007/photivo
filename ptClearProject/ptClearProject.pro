@@ -43,8 +43,8 @@ MOC_DIR         = ../Objects
 UI_HEADERS_DIR  = ../Objects
 RCC_DIR         = ../Objects
 
-QMAKE_CXXFLAGS_RELEASE += -O3 -ffast-math $$(CXXFLAGS)
-QMAKE_CXXFLAGS_DEBUG +=  -O0 -g -ffast-math $$(CXXFLAGS)
+QMAKE_CXXFLAGS_RELEASE += -O3 -ffast-math $$(CXXFLAGS) -std=gnu++0x
+QMAKE_CXXFLAGS_DEBUG +=  -O0 -g -ffast-math $$(CXXFLAGS) -std=gnu++0x
 
 QMAKE_CFLAGS_RELEASE += $$QMAKE_CXXFLAGS_RELEASE
 QMAKE_CFLAGS_DEBUG += $$QMAKE_CXXFLAGS_DEBUG
@@ -68,7 +68,7 @@ macx {
   
   #prevent qmake from adding -arch flags
   QMAKE_CFLAGS_X86_64           = -m64
-  QMAKE_CXXFLAGS_X86_64         = -m64
+  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x
   QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
   QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
   QMAKE_LFLAGS_DEBUG           += -rdynamic

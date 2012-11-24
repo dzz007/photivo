@@ -23,7 +23,7 @@ HandleStatus () {
 
 #===============================================================================
 
-if [[ "$PT_BIT" != "64" && "$PT_BIT" != "32" ]]; then echo "Wrong PT_BIT (${PT_BIT})!" ; exit 1 ; fi
+if [[ "$GccArch" != "64" && "$GccArch" != "32" ]]; then echo "Wrong GccArch (${GccArch})!" ; exit 1 ; fi
 
 InstallCmd="make install"
 BuildDebug=false
@@ -164,9 +164,9 @@ done
 CurrentLib=GraphicsMagick
 printf "\n$ColorGreen========== $CurrentLib ==========$ColorNone\n"
 
-if [[ $PT_BIT == 64 ]]; then
+if [[ $GccArch == 64 ]]; then
   BasetsdFile=/mingw/x86_64-w64-mingw32/include/basetsd.h
-elif [[ $PT_BIT == 32 ]]; then
+elif [[ $GccArch == 32 ]]; then
   BasetsdFile=/mingw/include/basetsd.h
 fi
 if [[ $BuildDebug == true ]]; then
@@ -179,7 +179,7 @@ ExitStatus=1
 while [[ $ExitStatus != 0 ]]; do
   cd $BaseDir/GraphicsMagick-* && \
   cp $BasetsdFile basetsd.h.original && \
-  patch -u $BasetsdFile $ScriptDir/ptBuildDeps.basetsd.h.${PT_BIT}.patch && \
+  patch -u $BasetsdFile $ScriptDir/ptBuildDeps.basetsd.h.${GccArch}.patch && \
   ./configure --prefix=$Prefix --enable-shared --with-quantum-depth=16 --disable-static --without-modules --without-perl --without-lcms $GMDebugOpts && \
   make -j$ThreadsForMake && \
   $InstallCmd &&\

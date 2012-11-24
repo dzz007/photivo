@@ -67,5 +67,9 @@
         <file>dark/icons/file-manager.png</file>
         <file>dark/icons/zoom-in.png</file>
         <file>dark/icons/zoom-out.png</file>
+        <file>dark/icons/batch-processing.png</file>
+        <file>dark/icons/processing-abort.png</file>
+        <file>dark/icons/job-add.png</file>
+        <file>dark/icons/job-remove.png</file>
     </qresource>
 </RCC>
