@@ -94,6 +94,40 @@ private:
 };
 
 /*!
+   \brief The `TPhotivoDir` enum defines Photivo’s data directories.
+   When you change something in this enum you *MUST* update `InitLocations()` accordingly!
+ */
+enum TPhotivoDir {
+  ChannelMixersDir,
+  CurvesDir,
+  PresetsDir,
+  CameraProfilesDir,
+  PreviewProfilesDir,
+  OutputProfilesDir,
+  StdAdobeProfilesDir,
+  ThemesDir,
+  TranslationsDir,
+  UISettingsDir
+};
+
+/*!
+   \brief The `TPhotivoFile` enum defines Photivo’s config files.
+   When you change something in this enum you *MUST* update `InitLocations()` accordingly!
+ */
+enum TPhotivoFile {
+  Photivo_ini,
+  Tags_ini
+};
+
+enum TLocationType {
+  GlobalLocation = 0x1, //!< file/folder is allowed in the global location
+  UserLocation   = 0x2  //!< file/folder is allowed in the per-user location
+};
+typedef QFlags<TLocationType> TLocationTypes;
+Q_DECLARE_OPERATORS_FOR_FLAGS(TLocationTypes)
+
+//------------------------------------------------------------------------------
+/*!
   \class ptSettings
   This class finally works on underlying ptSettingItem, which
   are shielded. All access and changes via this one.
@@ -114,20 +148,29 @@ public:
   ptSettings(const short InitLevel, const QString Path);
   ~ptSettings();
 
+//  QString     Path(TPhotivoDir  ADir,  bool ANativeDelims = false);
+//  QStringList Paths(TPhotivoDir ADir, bool ANativeDelims = false);
+
+  QString         GlobalPath(TPhotivoDir ADir);
+  QString         UserPath(TPhotivoDir ADir);
+  QString         Path(TPhotivoFile AFile);
+  TLocationTypes  PathTypes(TPhotivoDir ADir);
+  QStringList     PathFilters(TPhotivoDir ADir);
+
   /*! \group accessors to the ptSettingItem characterized by 'Key' */
   ///@{
-  const QStringList GetKeys()                         { return m_Hash.keys(); }
-  short GetGuiType(const QString Key)                 { return m_Hash[Key]->GuiType;}
-  short GetHasDefaultValue(const QString Key)         { return m_Hash[Key]->HasDefaultValue;}
-  const QVariant GetDefaultValue(const QString Key)   { return m_Hash[Key]->DefaultValue;}
-  const QVariant GetMinimumValue(const QString Key)   { return m_Hash[Key]->MinimumValue;}
-  const QVariant GetMaximumValue(const QString Key)   { return m_Hash[Key]->MaximumValue;}
-  const QVariant GetStep(const QString Key)           { return m_Hash[Key]->Step;}
-  short GetNrDecimals(const QString Key)              { return m_Hash[Key]->NrDecimals;}
-  const QString GetLabel(const QString Key)           { return m_Hash[Key]->Label;}
-  const QString GetToolTip(const QString Key)         { return m_Hash[Key]->ToolTip;}
-  const ptGuiOptionsItem* GetInitialOptions(const QString Key)    { return m_Hash[Key]->InitialOptions;}
-  short GetInJobFile(const QString Key)               { return m_Hash[Key]->InJobFile;}
+  const QStringList GetKeys()                         { return FHash.keys(); }
+  short GetGuiType(const QString Key)                 { return FHash[Key]->GuiType;}
+  short GetHasDefaultValue(const QString Key)         { return FHash[Key]->HasDefaultValue;}
+  const QVariant GetDefaultValue(const QString Key)   { return FHash[Key]->DefaultValue;}
+  const QVariant GetMinimumValue(const QString Key)   { return FHash[Key]->MinimumValue;}
+  const QVariant GetMaximumValue(const QString Key)   { return FHash[Key]->MaximumValue;}
+  const QVariant GetStep(const QString Key)           { return FHash[Key]->Step;}
+  short GetNrDecimals(const QString Key)              { return FHash[Key]->NrDecimals;}
+  const QString GetLabel(const QString Key)           { return FHash[Key]->Label;}
+  const QString GetToolTip(const QString Key)         { return FHash[Key]->ToolTip;}
+  const ptGuiOptionsItem* GetInitialOptions(const QString Key)    { return FHash[Key]->InitialOptions;}
+  short GetInJobFile(const QString Key)               { return FHash[Key]->InJobFile;}
   ///@}
 
   /*! Low level access to the underlying QWidget */
@@ -190,8 +233,21 @@ public:
   QSettings* m_IniSettings;
 
 private:
-  // Hash with the setting items.
-  QHash <QString,ptSettingItem*> m_Hash;
+  struct TLocationInfo {
+    QString         Name;
+    TLocationTypes  Types;
+    QStringList     Filters;
+  };
+
+  void    InitLocations();
+  void    InstallTranslators();
+
+  QString                           FGlobalPath;
+  QString                           FUserPath;
+  QHash<TPhotivoDir, TLocationInfo> FDirs;
+  QHash<TPhotivoFile, QString>      FFiles;
+
+  QHash<QString, ptSettingItem*>  FHash;   // Hash with the setting items.
 };
 
 //------------------------------------------------------------------------------
