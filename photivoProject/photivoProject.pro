@@ -254,7 +254,8 @@ HEADERS += \
     ../Sources/filters/ptFilter_Tone.h \
     ../Sources/batch/ptJobListItem.h \
     ../Sources/batch/ptBatchWindow.h \
-    ../Sources/batch/ptJobListModel.h
+    ../Sources/batch/ptJobListModel.h \
+    ../Sources/ptAppDataModel.h
 
 
 SOURCES += \
@@ -375,7 +376,8 @@ SOURCES += \
     ../Sources/filters/ptFilter_Tone.cpp \
     ../Sources/batch/ptJobListItem.cpp \
     ../Sources/batch/ptBatchWindow.cpp \
-    ../Sources/batch/ptJobListModel.cpp
+    ../Sources/batch/ptJobListModel.cpp \
+    ../Sources/ptAppDataModel.cpp
 
 
 FORMS += \

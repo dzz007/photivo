@@ -672,20 +672,6 @@ int photivoMain(int Argc, char *Argv[]) {
 #endif
   ShareDirectory = NewShareDirectory;
 
-  QFileInfo SettingsFileInfo(SettingsFileName);
-//  short NeedInitialization = 1;
-  short FirstStart = 1;
-  if (SettingsFileInfo.exists() &&
-          SettingsFileInfo.isFile() &&
-          SettingsFileInfo.isReadable()) {
-      // photivo was initialized
-//      NeedInitialization = 0;
-      FirstStart = 0;
-      printf("Existing settingsfile '%s'\n",SettingsFileName.toAscii().data());
-  } else {
-      printf("New settingsfile '%s'\n",SettingsFileName.toAscii().data());
-  }
-
   printf("User directory: '%s'; \n",UserDirectory.toAscii().data());
   printf("Share directory: '%s'; \n",NewShareDirectory.toAscii().data());
 
@@ -728,26 +714,6 @@ int photivoMain(int Argc, char *Argv[]) {
 
       for (int i = 0; i < SourceFolders.size(); i++) {
           copyFolder(SourceFolders.at(i), DestFolders.at(i));
-      }
-  }
-
-
-  // Load Translation
-  int TranslMode = TempSettings->value("TranslationMode",0).toInt();
-  QDir TranslDir(UserDirectory + "Translations");
-  QStringList UiLanguages = TranslDir.entryList(QStringList("photivo_*.qm"), QDir::Files|QDir::Readable, QDir::Name).replaceInStrings(".qm", "", Qt::CaseInsensitive);
-  UiLanguages.replaceInStrings("photivo_", "", Qt::CaseInsensitive);
-  int LangIdx = -1;
-
-  if (TranslMode == 1) {
-      LangIdx = UiLanguages.indexOf(TempSettings->value("UiLanguage","").toString());
-      if (LangIdx >= 0) {
-          QTranslator qtTranslator;
-          appTranslator.load("photivo_" + UiLanguages[LangIdx], UserDirectory + "Translations");
-          TheApplication->installTranslator(&appTranslator);
-          qtTranslator.load("qt_" + UiLanguages[LangIdx], UserDirectory + "Translations");
-          TheApplication->installTranslator(&qtTranslator);
-          printf("Enabled translation: \"%s\".\n", UiLanguages[LangIdx].toAscii().data());
       }
   }
 

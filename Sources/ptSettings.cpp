@@ -22,28 +22,49 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
 #include "ptSettings.h"
+#include "ptWinApi.h"
 #include "ptError.h"
 #include "ptRGBTemperature.h"
 #include "ptGuiOptions.h"
 #include "filemgmt/ptFileMgrConstants.h"
 #include "filters/ptFilterUids.h"
+#include <QFSFileEngine>
+#include <cassert>
 
 // Macro for inserting a key into the hash and checking it is a new one.
 #define M_InsertKeyIntoHash(Key,Item)                      \
-  if (m_Hash.contains(Key)) {                              \
+  if (FHash.contains(Key)) {                               \
     ptLogError(ptError_Argument,                           \
                "Inserting an existing key (%s)",           \
                Key.toAscii().data());                      \
-    assert (!m_Hash.contains(Key));                        \
+    assert (!FHash.contains(Key));                         \
   }                                                        \
-  m_Hash[Key] = Item;
+  FHash[Key] = Item;
 
+QTranslator PhotivoTranslator;
+QTranslator QtTranslator;
+
+//------------------------------------------------------------------------------
 ptSettings::ptSettings(const short InitLevel, const QString Path) {
   assert(InitLevel<9); // 9 reserved for never to be remembered.
 
+  // First init the appdata paths related stuff. Immediately needed for path to photivo.ini.
+  this->InitLocations();
+
+  // Load ini file to provide low level access to settings. Needed to install translators.
+  auto hPhotivoIni = this->Path(Photivo_ini);
+  if (QFile::exists(hPhotivoIni))
+    printf("Existing settings file: %s\n", hPhotivoIni.toAscii().data());
+  else
+    printf("New settings file: %s\n", hPhotivoIni.toAscii().data());
+  m_IniSettings = new QSettings(hPhotivoIni, QSettings::IniFormat);
+
+  // Translators must be installed before filling the main settings data structures
+  // because it contains strings that need to be translated.
+  this->InstallTranslators();
+
+  // Initialize main data structures with defaults
   // Load in the gui input elements
   const ptGuiInputItem GuiInputItems[] = {
     // Attention : Default,Min,Max,Step should be consistent int or double. Double *always* in X.Y notation to indicate so.
@@ -699,13 +720,10 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   // In the second round we overwrite now with what's coming from the ini
   // files.
 
-  // Persistent settings.
-  m_IniSettings = new QSettings(Path + "photivo.ini", QSettings::IniFormat);
-
-  QStringList Keys = m_Hash.keys();
+  QStringList Keys = FHash.keys();
   for (int i=0; i<Keys.size(); i++) {
     QString Key = Keys[i];
-    ptSettingItem* Setting = m_Hash[Key];
+    ptSettingItem* Setting = FHash[Key];
 
     if (InitLevel > Setting->InitLevel) {
       // Default needs to be overwritten by something coming from ini file.
@@ -745,16 +763,84 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   PathInfo.setFile(GetValue("PreviewColorProfile").toString());
   SetValue("PreviewColorProfile",PathInfo.absoluteFilePath());
   SetValue("Scaled",GetValue("PipeSize"));
-};
+}
+
+//------------------------------------------------------------------------------
+void ptSettings::InitLocations() {
+#ifdef Q_OS_WIN
+  FGlobalPath = QCoreApplication::applicationDirPath();
+
+  if (QFile::exists("use-portable-profile")) {
+    printf("Photivo running in portable mode.\n");
+    FUserPath = FGlobalPath;
+  } else {
+    FUserPath = WinApi::AppdataFolder() + "/Photivo";
+  }
+#else
+  FGlobalPath = TOSTRING(PREFIX);
+  if (FGlobalPath.endsWith("/"))
+    FGlobalPath.chop(1);
+  FGlobalPath += "/share/photivo";
+
+  FUserPath = QDir::homePath();
+  if (QFile::exists(FUserPath + "/.config"))
+    FUserPath += "/.config/photivo";
+  else
+    FUserPath += "/.photivo";
+#endif
+
+  if (!QFile::exists(FUserPath))
+    QFSFileEngine().mkdir(FUserPath, true);
+
+  FDirs.insert(ChannelMixersDir,    {"/ChannelMixers",            GlobalLocation|UserLocation, {"*.ptm", "*.PTM", "*.Ptm"}});
+  FDirs.insert(CurvesDir,           {"/Curves",                   GlobalLocation|UserLocation, {"*.ptc", "*.PTC", "*.Ptc"}});
+  FDirs.insert(PresetsDir,          {"/Presets",                  GlobalLocation|UserLocation, {"*.pts", "*.PTS", "*.Pts"}});
+  FDirs.insert(CameraProfilesDir,   {"/Profiles/Camera",          GlobalLocation|UserLocation, {"*.icc", "*.ICC", "*.Icc"}});
+  FDirs.insert(PreviewProfilesDir,  {"/Profiles/Preview",         GlobalLocation|UserLocation, {"*.icc", "*.ICC", "*.Icc"}});
+  FDirs.insert(OutputProfilesDir,   {"/Profiles/Output",          GlobalLocation|UserLocation, {"*.icc", "*.ICC", "*.Icc"}});
+  FDirs.insert(StdAdobeProfilesDir, {"/Profiles/Camera/Standard", GlobalLocation|UserLocation, {"*.icc", "*.ICC", "*.Icc"}});
+  FDirs.insert(ThemesDir,           {"/Themes",                   GlobalLocation,              {"*.ptheme", "*.PTHEME", "*.Ptheme"}});
+  FDirs.insert(TranslationsDir,     {"/Translations",             GlobalLocation,              {"*.qm", "*.QM", "*.Qm"}});
+  FDirs.insert(UISettingsDir,       {"/UISettings",               GlobalLocation|UserLocation, {"*.ptu", "*.PTU", "*.Ptu"}});
+
+  FFiles.insert(Photivo_ini, FUserPath + "/photivo.ini");
+  FFiles.insert(Tags_ini,    FUserPath + "/tags.ini");
+}
+
+//------------------------------------------------------------------------------
+void ptSettings::InstallTranslators() {
+  int     hTranslMode    = m_IniSettings->value("TranslationMode", 0).toInt();
+  QString hTranslDirName = this->GlobalPath(TranslationsDir);
+
+  QDir hTranslDir(hTranslDirName);
+  QStringList hUiLanguages = hTranslDir.entryList(QStringList("photivo_*.qm"),
+                                                 QDir::Files|QDir::Readable, QDir::Name)
+                                .replaceInStrings(".qm", "", Qt::CaseInsensitive);
+  hUiLanguages.replaceInStrings("photivo_", "", Qt::CaseInsensitive);
+
+  int hLangIdx = -1;
+  if (hTranslMode == 1) {
+      hLangIdx = hUiLanguages.indexOf(m_IniSettings->value("UiLanguage", "").toString());
+      if (hLangIdx >= 0) {
+        // Translators are searched in reverse install order. Photivo’s own translator should be
+        // last for efficiency because it provides most of the translated strings.
+        QtTranslator.load("qt_" + hUiLanguages[hLangIdx], hTranslDirName);
+        QCoreApplication::installTranslator(&QtTranslator);
+        PhotivoTranslator.load("photivo_" + hUiLanguages[hLangIdx], hTranslDirName);
+        QCoreApplication::installTranslator(&PhotivoTranslator);
+        printf("Enabled translation: \"%s\".\n", hUiLanguages[hLangIdx].toAscii().data());
+      }
+  }
+}
 
 //------------------------------------------------------------------------------
 // Destructor
 // Basically dumping the whole Settings hash to ini files.
 ptSettings::~ptSettings() {
-  QStringList Keys = m_Hash.keys();
+  QStringList Keys = FHash.keys();
   for (int i=0; i<Keys.size(); i++) {
     QString Key = Keys[i];
-    ptSettingItem* Setting = m_Hash[Key];
+    ptSettingItem* Setting = FHash[Key];
     m_IniSettings->setValue(Key,Setting->Value);
   }
   // Explicit call destructor (such that synced to disk)
@@ -762,15 +848,46 @@ ptSettings::~ptSettings() {
 }
 
 //------------------------------------------------------------------------------
+QString ptSettings::GlobalPath(TPhotivoDir ADir) {
+  if (!(FDirs.value(ADir).Types & GlobalLocation))
+    GInfo->Raise(QString("Directory (%1) has no global location.").arg(ADir), AT);
+
+  return FGlobalPath + FDirs.value(ADir).Name;
+}
+
+//------------------------------------------------------------------------------
+QString ptSettings::UserPath(TPhotivoDir ADir) {
+  if (!(FDirs.value(ADir).Types & UserLocation))
+    GInfo->Raise(QString("Directory (%1) has no user location.").arg(ADir), AT);
+
+  return FGlobalPath + FDirs.value(ADir).Name;
+}
+
+//------------------------------------------------------------------------------
+QString ptSettings::Path(TPhotivoFile AFile) {
+  return FFiles.value(AFile);
+}
+
+//------------------------------------------------------------------------------
+TLocationTypes ptSettings::PathTypes(TPhotivoDir ADir) {
+  return FDirs.value(ADir).Types;
+}
+
+//------------------------------------------------------------------------------
+QStringList ptSettings::PathFilters(TPhotivoDir ADir) {
+  return FDirs.value(ADir).Filters;
+}
+
+//------------------------------------------------------------------------------
 // Access to the hash, but with protection on non existing key.
 const QVariant ptSettings::GetValue(const QString Key) {
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
                __FILE__,__LINE__,Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  return m_Hash[Key]->Value;
+  return FHash[Key]->Value;
 }
 
 //------------------------------------------------------------------------------
@@ -834,30 +951,30 @@ const QStringList ptSettings::GetStringList(const QString Key) {
 //------------------------------------------------------------------------------
 // Access to the hash, but with protection on non existing key.
 void ptSettings::SetValue(const QString Key, const QVariant Value) {
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
                __FILE__,__LINE__,Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  m_Hash[Key]->Value = Value;
+  FHash[Key]->Value = Value;
   // In job mode there are no gui elements and we have to return.
   if (GetInt("JobMode")) return;
   // If it's a gui element, we have to update it at once for consistency.
-  switch (m_Hash[Key]->GuiType) {
+  switch (FHash[Key]->GuiType) {
     case ptGT_Input :
     case ptGT_InputSlider :
     case ptGT_InputSliderHue :
-      m_Hash[Key]->GuiInput->SetValue(Value);
+      FHash[Key]->GuiInput->SetValue(Value);
       break;
     case ptGT_Choice :
-      m_Hash[Key]->GuiChoice->SetValue(Value);
+      FHash[Key]->GuiChoice->SetValue(Value);
       break;
     case ptGT_Check :
-      m_Hash[Key]->GuiCheck->SetValue(Value);
+      FHash[Key]->GuiCheck->SetValue(Value);
       break;
     default:
-      assert(m_Hash[Key]->GuiType == ptGT_None); // Else we missed a gui one
+      assert(FHash[Key]->GuiType == ptGT_None); // Else we missed a gui one
       break;
   }
 }
@@ -865,29 +982,29 @@ void ptSettings::SetValue(const QString Key, const QVariant Value) {
 //------------------------------------------------------------------------------
 // Enable the underlying gui element (if one)
 void ptSettings::SetEnabled(const QString Key, const short Enabled) {
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
                __FILE__,__LINE__,Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  switch (m_Hash[Key]->GuiType) {
+  switch (FHash[Key]->GuiType) {
     case ptGT_Input :
     case ptGT_InputSlider :
     case ptGT_InputSliderHue :
-      m_Hash[Key]->GuiInput->SetEnabled(Enabled);
+      FHash[Key]->GuiInput->SetEnabled(Enabled);
       break;
     case ptGT_Choice :
-      m_Hash[Key]->GuiChoice->SetEnabled(Enabled);
+      FHash[Key]->GuiChoice->SetEnabled(Enabled);
       break;
     case ptGT_Check :
-      m_Hash[Key]->GuiCheck->SetEnabled(Enabled);
+      FHash[Key]->GuiCheck->SetEnabled(Enabled);
       break;
     default:
       ptLogError(ptError_Argument,
                  "%s is no (expected) gui element.",
                  Key.toAscii().data());
-      assert(m_Hash[Key]->GuiType); // Should have gui type !
+      assert(FHash[Key]->GuiType); // Should have gui type !
       break;
   }
 }
@@ -895,47 +1012,47 @@ void ptSettings::SetEnabled(const QString Key, const short Enabled) {
 //------------------------------------------------------------------------------
 // Makes only sense for gui input element, which is asserted.
 void ptSettings::SetMaximum(const QString Key, const QVariant Maximum) {
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
                Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  if (!m_Hash[Key]->GuiInput) {
+  if (!FHash[Key]->GuiInput) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiInput\n",
                Key.toAscii().data());
-    assert (m_Hash[Key]->GuiChoice);
+    assert (FHash[Key]->GuiChoice);
   }
-  return m_Hash[Key]->GuiInput->SetMaximum(Maximum);
+  return FHash[Key]->GuiInput->SetMaximum(Maximum);
 }
 
 //------------------------------------------------------------------------------
 // Makes only sense for gui element, which is asserted.
 void  ptSettings::Show(const QString Key, const short Show) {
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
                __FILE__,__LINE__,Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  switch (m_Hash[Key]->GuiType) {
+  switch (FHash[Key]->GuiType) {
     case ptGT_Input :
     case ptGT_InputSlider :
     case ptGT_InputSliderHue :
-      m_Hash[Key]->GuiInput->Show(Show);
+      FHash[Key]->GuiInput->Show(Show);
       break;
     case ptGT_Choice :
-      m_Hash[Key]->GuiChoice->Show(Show);
+      FHash[Key]->GuiChoice->Show(Show);
       break;
     case ptGT_Check :
-      m_Hash[Key]->GuiCheck->Show(Show);
+      FHash[Key]->GuiCheck->Show(Show);
       break;
     default:
       ptLogError(ptError_Argument,
                  "%s is no (expected) gui element.",
                  Key.toAscii().data());
-      assert(m_Hash[Key]->GuiType);
+      assert(FHash[Key]->GuiType);
       break;
   }
 }
@@ -947,19 +1064,19 @@ void ptSettings::AddOrReplaceOption(const QString  Key,
                                     const QVariant Value) {
   // In job mode there are no gui elements and we have to return.
   if (GetInt("JobMode")) return;
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
                Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  if (!m_Hash[Key]->GuiChoice) {
+  if (!FHash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
                Key.toAscii().data());
-    assert (m_Hash[Key]->GuiChoice);
+    assert (FHash[Key]->GuiChoice);
   }
-  m_Hash[Key]->GuiChoice->AddOrReplaceItem(Text,Value);
+  FHash[Key]->GuiChoice->AddOrReplaceItem(Text,Value);
 }
 
 //------------------------------------------------------------------------------
@@ -967,128 +1084,128 @@ void ptSettings::AddOrReplaceOption(const QString  Key,
 void ptSettings::ClearOptions(const QString  Key, const short WithDefault) {
   // In job mode there are no gui elements and we have to return.
   if (GetInt("JobMode")) return;
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
                Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  if (!m_Hash[Key]->GuiChoice) {
+  if (!FHash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
                Key.toAscii().data());
-    assert (m_Hash[Key]->GuiChoice);
+    assert (FHash[Key]->GuiChoice);
   }
-  m_Hash[Key]->GuiChoice->Clear(WithDefault);
+  FHash[Key]->GuiChoice->Clear(WithDefault);
 }
 
 //------------------------------------------------------------------------------
 // Makes only sense for gui choice (combo) element, which is asserted.
 int ptSettings::GetNrOptions(const QString Key) {
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
                Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  if (!m_Hash[Key]->GuiChoice) {
+  if (!FHash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
                Key.toAscii().data());
-    assert (m_Hash[Key]->GuiChoice);
+    assert (FHash[Key]->GuiChoice);
   }
-  return m_Hash[Key]->GuiChoice->Count();
+  return FHash[Key]->GuiChoice->Count();
 }
 
 //------------------------------------------------------------------------------
 // Makes only sense for gui choice (combo) element, which is asserted.
 const QVariant ptSettings::GetOptionsValue(const QString Key,const int Index){
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
                Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  if (!m_Hash[Key]->GuiChoice) {
+  if (!FHash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
                Key.toAscii().data());
-    assert (m_Hash[Key]->GuiChoice);
+    assert (FHash[Key]->GuiChoice);
   }
-  return m_Hash[Key]->GuiChoice->GetItemData(Index);
+  return FHash[Key]->GuiChoice->GetItemData(Index);
 }
 
 //------------------------------------------------------------------------------
 // Makes only sense for gui choice (combo) element, which is asserted.
 const QString ptSettings::GetCurrentText(const QString Key){
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
                Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  if (!m_Hash[Key]->GuiChoice) {
+  if (!FHash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
                Key.toAscii().data());
-    assert (m_Hash[Key]->GuiChoice);
+    assert (FHash[Key]->GuiChoice);
   }
-  return m_Hash[Key]->GuiChoice->CurrentText();
+  return FHash[Key]->GuiChoice->CurrentText();
 }
 
 //------------------------------------------------------------------------------
 void ptSettings::SetGuiInput(const QString Key, ptInput* Value) {
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
                __FILE__,__LINE__,Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  m_Hash[Key]->GuiInput  = Value;
-  m_Hash[Key]->GuiChoice = nullptr;
-  m_Hash[Key]->GuiCheck  = nullptr;
+  FHash[Key]->GuiInput  = Value;
+  FHash[Key]->GuiChoice = nullptr;
+  FHash[Key]->GuiCheck  = nullptr;
 }
 
 //------------------------------------------------------------------------------
 void ptSettings::SetGuiChoice(const QString Key, ptChoice* Value) {
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
                __FILE__,__LINE__,Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  m_Hash[Key]->GuiInput  = nullptr;
-  m_Hash[Key]->GuiChoice = Value;
-  m_Hash[Key]->GuiCheck  = nullptr;
+  FHash[Key]->GuiInput  = nullptr;
+  FHash[Key]->GuiChoice = Value;
+  FHash[Key]->GuiCheck  = nullptr;
 }
 
 //------------------------------------------------------------------------------
 void ptSettings::SetGuiCheck(const QString Key, ptCheck* Value) {
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
                __FILE__,__LINE__,Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  m_Hash[Key]->GuiInput  = nullptr;
-  m_Hash[Key]->GuiChoice = nullptr;
-  m_Hash[Key]->GuiCheck  = Value;
+  FHash[Key]->GuiInput  = nullptr;
+  FHash[Key]->GuiChoice = nullptr;
+  FHash[Key]->GuiCheck  = Value;
 }
 
 //------------------------------------------------------------------------------
 QWidget* ptSettings::GetGuiWidget(const QString Key) {
-  if (!m_Hash.contains(Key)) {
+  if (!FHash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
                __FILE__,__LINE__,Key.toAscii().data());
-    assert (m_Hash.contains(Key));
+    assert (FHash.contains(Key));
   }
-  if (m_Hash[Key]->GuiInput) {
-    return (QWidget*)m_Hash[Key]->GuiInput;
-  } else if (m_Hash[Key]->GuiChoice) {
-    return (QWidget*)m_Hash[Key]->GuiChoice;
-  } else if (m_Hash[Key]->GuiCheck) {
-    return (QWidget*)m_Hash[Key]->GuiCheck;
+  if (FHash[Key]->GuiInput) {
+    return (QWidget*)FHash[Key]->GuiInput;
+  } else if (FHash[Key]->GuiChoice) {
+    return (QWidget*)FHash[Key]->GuiChoice;
+  } else if (FHash[Key]->GuiCheck) {
+    return (QWidget*)FHash[Key]->GuiCheck;
   }
 
   assert (!"No Gui widget");
