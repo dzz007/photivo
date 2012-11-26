@@ -33,6 +33,7 @@
 
 extern ptProcessor  *TheProcessor;
 extern ptViewWindow *ViewWindow;
+extern short NextPhase;
 
 void ReportProgress(const QString Message);
 void BlockTools(const ptBlockToolsMode ANewState, QStringList AExcludeIds = QStringList());
@@ -42,7 +43,6 @@ void Update(short Phase,
             short ProcessorMode  = ptProcessorMode_Preview);
 void UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
                         const short    OnlyHistogram = 0);
-
 
 //==============================================================================
 
@@ -206,7 +206,11 @@ void ptFilter_SpotTuning::startInteraction() {
 void ptFilter_SpotTuning::cleanupAfterInteraction() {
   BlockTools(btmUnblock, QStringList(this->uniqueName()));
   FGui->SpotList->setEditMode(false);
-  Update(ptProcessorPhase_LocalEdit);
+  if (Settings->GetInt("RunMode") == ptRunMode_Auto)
+    Update(ptProcessorPhase_LocalEdit);
+  else
+    UpdatePreviewImage();
+    NextPhase = ptProcessorPhase_LocalEdit;
 }
 
 //==============================================================================

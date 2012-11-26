@@ -25,8 +25,6 @@
 #include <iostream>
 
 #include "ptDefines.h"
-#include "filters/imagespot/ptTuningSpot.h"
-#include "filters/imagespot/ptImageSpotItemDelegate.h"
 #include "ptChannelMixer.h"
 #include "ptConfirmRequest.h"
 #include "ptConstants.h"
@@ -60,7 +58,6 @@ void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
 void CB_ZoomStep(int direction);
-void ReportProgress(const QString Message);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
