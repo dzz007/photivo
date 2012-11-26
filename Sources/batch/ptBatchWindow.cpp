@@ -21,6 +21,7 @@
 *******************************************************************************/
 
 #include "ptBatchWindow.h"
+#include "ptMessageBox.h"
 #include "ptSettings.h"
 #include "ptTheme.h"
 
@@ -32,7 +33,6 @@ ptBatchWindow::ptBatchWindow(QWidget *parent) :
   setupUi(this);
   UpdateTheme();
 
-  m_CurrentJob = nullptr;
   m_WasAborted = false;
   BTAbort->setEnabled(false);
 
@@ -40,16 +40,19 @@ ptBatchWindow::ptBatchWindow(QWidget *parent) :
   BTJobList->setModel(m_BatchModel);
   BTJobList->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
 
-  m_BatchProcess = new QProcess(this);
-  connect(m_BatchProcess, SIGNAL(finished(int)), SLOT(OnRunNextJob()));
-  connect(m_BatchProcess, SIGNAL(readyRead()), SLOT(OnLogReady()));
+  connect(m_BatchModel->m_BatchProcess, SIGNAL(finished(int)), SLOT(OnRunNextJob()));
+  connect(m_BatchModel->m_BatchProcess, SIGNAL(readyRead()), SLOT(OnLogReady()));
+  connect(m_BatchModel, SIGNAL(processingAborted()), SLOT(OnAbortProcessing()));
+  connect(BTAbort, SIGNAL(clicked()), m_BatchModel, SLOT(OnAbortProcessing()));
 
   connect(BTShowLog, SIGNAL(toggled(bool)), SLOT(OnLogVisibilityToggled(bool)));
   BTShowLog->setChecked(Settings->GetInt("BatchLogIsVisible"));
-  BTLog->setShown(Settings->GetInt("BatchLogIsVisible"));
+  BTLog->setVisible(Settings->GetInt("BatchLogIsVisible"));
 
   BTLogSplitter->setStretchFactor(BTLogSplitter->indexOf(BTJobList), 2);
   BTLogSplitter->setStretchFactor(BTLogSplitter->indexOf(BTLog), 1);
+
+  BTJobList->resizeColumnsToContents();
 }
 
 //==============================================================================
@@ -57,8 +60,6 @@ ptBatchWindow::ptBatchWindow(QWidget *parent) :
 ptBatchWindow::~ptBatchWindow()
 {
   delete m_BatchModel;
-  delete m_BatchProcess;
-  delete m_CurrentJob;
 }
 
 //==============================================================================
@@ -78,7 +79,23 @@ void ptBatchWindow::keyPressEvent(QKeyEvent *event)
   } else if (event->key() == Qt::Key_B && event->modifiers() == Qt::ControlModifier) {
     // We close also on Ctrl+B to allow toggle.
     OnCloseWindow();
+  } else if (event->key() == Qt::Key_S && event->modifiers() == Qt::ControlModifier) {
+    OnSaveJobList();
+  } else if (event->key() == Qt::Key_O && event->modifiers() == Qt::ControlModifier) {
+    OnOpenJobList();
+  } else if (event->key() == Qt::Key_R && event->modifiers() == Qt::ControlModifier) {
+    OnRunJobs();
+  } else if (event->key() == Qt::Key_Delete && event->modifiers() == Qt::NoModifier) {
+    OnRemoveJob();
   }
+}
+
+//==============================================================================
+
+void ptBatchWindow::showEvent(QShowEvent *event)
+{
+  QWidget::showEvent(event);
+  BTJobList->setFocus();
 }
 
 //==============================================================================
@@ -99,6 +116,7 @@ void ptBatchWindow::OnAddJob()
     m_BatchModel->AddJobToList(fileName);
 
   BTJobList->resizeColumnsToContents();
+  m_BatchModel->AutosaveJobList();
 }
 
 //==============================================================================
@@ -108,12 +126,73 @@ void ptBatchWindow::OnRemoveJob()
   QList<int> list;
   foreach (QModelIndex idx, BTJobList->selectionModel()->selectedRows())
     list.append(idx.row());
+  if (list.isEmpty())
+    return;
 
 //  sort in reverse order
   qSort(list.begin(), list.end(), qGreater<int>());
   // we should take into account that indexes will change after some of them are removed
   foreach (int i, list)
     m_BatchModel->RemoveJobFromList(i);
+
+  BTJobList->selectRow(list.last());
+  m_BatchModel->AutosaveJobList();
+}
+
+//==============================================================================
+
+void ptBatchWindow::OnRunJobs()
+{
+  for (int i=0; i < m_BatchModel->count(); i++)
+    if (m_BatchModel->JobItem(i)->Status() != jsFinished)
+      m_BatchModel->JobItem(i)->SetStatus(jsWaiting);
+
+  m_WasAborted = false;
+  BTRun->setEnabled(false);
+  BTAbort->setEnabled(true);
+  OnRunNextJob();
+}
+
+//==============================================================================
+
+void ptBatchWindow::OnAbortProcessing()
+{
+  m_WasAborted = true;
+  BTRun->setEnabled(true);
+  BTAbort->setEnabled(false);
+}
+
+//==============================================================================
+
+void ptBatchWindow::OnSaveJobList()
+{
+  QString batchPattern = tr("Job list files (*.ptb);;All files (*.*)");
+  QString batchFileName =
+      QFileDialog::getSaveFileName(nullptr,
+                                   tr("Save job list file"),
+                                   Settings->GetString("RawsDirectory"),
+                                   batchPattern);
+  if (batchFileName.isEmpty()) return;
+
+  m_BatchModel->SaveToSettings(batchFileName);
+}
+
+//==============================================================================
+
+void ptBatchWindow::OnOpenJobList()
+{
+  QString batchPattern = tr("Job list files (*.ptb);;All files (*.*)");
+  QStringList batchFileNames =
+      QFileDialog::getOpenFileNames(nullptr,
+                                   tr("Open job list files"),
+                                   Settings->GetString("RawsDirectory"),
+                                   batchPattern);
+  if (batchFileNames.isEmpty()) return;
+
+  foreach (QString file, batchFileNames)
+    m_BatchModel->LoadFromSettings(file);
+  m_BatchModel->AutosaveJobList();
+  BTJobList->resizeColumnsToContents();
 }
 
 //==============================================================================
@@ -130,74 +209,28 @@ void ptBatchWindow::OnRunNextJob()
   if (m_WasAborted)
     return;
 
-  int i;
-  for (i = 0; i < BTJobList->model()->rowCount(); i++) {
-    m_CurrentJob = qobject_cast<ptJobListModel*>(BTJobList->model())->JobItem(i);
-    if (m_CurrentJob->Status() == jsWaiting) {
-      QString fileName = m_CurrentJob->GetCallFileName();
-      if (fileName.isEmpty()) {
-//        invalid job
-        m_CurrentJob->SetStatus(jsSkipped);
-        continue;
-      }
+  bool all = m_BatchModel->RunNextJob();
 
-      QString photivoApp = QCoreApplication::applicationFilePath();
-      QStringList arguments = QStringList() << "-j" << fileName;
-      m_BatchProcess->start(photivoApp, arguments, QIODevice::ReadOnly);
-      connect(m_BatchProcess, SIGNAL(finished(int)), m_CurrentJob, SLOT(OnProcessingFinished(int)));
-
-      m_CurrentJob->SetStatus(jsProcessing);
-      break;
-    }
-  }
-
-  if (i == BTJobList->model()->rowCount()) {
+  if (all) {
 //    all jobs have been processed
     BTRun->setEnabled(true);
     BTAbort->setEnabled(false);
-  }
-  else
+  } else
     BTLog->clear();
-}
-
-//==============================================================================
-
-void ptBatchWindow::OnRunJobs()
-{
-  for (int i=0; i < BTJobList->model()->rowCount(); i++)
-    if (qobject_cast<ptJobListModel*>(BTJobList->model())->JobItem(i)->Status() != jsFinished)
-      qobject_cast<ptJobListModel*>(BTJobList->model())->JobItem(i)->SetStatus(jsWaiting);
-
-  m_WasAborted = false;
-  BTRun->setEnabled(false);
-  BTAbort->setEnabled(true);
-  OnRunNextJob();
-}
-
-//==============================================================================
-
-void ptBatchWindow::OnAbortProcessing()
-{
-  m_BatchProcess->terminate();
-  m_CurrentJob->SetStatus(jsAborted);
-
-  m_WasAborted = true;
-  BTRun->setEnabled(true);
-  BTAbort->setEnabled(false);
 }
 
 //==============================================================================
 
 void ptBatchWindow::OnLogReady()
 {
-  BTLog->appendPlainText(m_BatchProcess->readAll().data());
+  BTLog->appendPlainText(m_BatchModel->m_BatchProcess->readAll().data());
 }
 
 //==============================================================================
 
 void ptBatchWindow::OnLogVisibilityToggled(bool show)
 {
-  BTLog->setShown(show);
+  BTLog->setVisible(show);
   Settings->SetValue("BatchLogIsVisible", int(show));
 }
 

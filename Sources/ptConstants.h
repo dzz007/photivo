@@ -836,6 +836,12 @@ enum ptUIState {
   uisBatch      = 3
 };
 
+/*! This enum defines types of autosaving current batch list. */
+enum ptBatchSaveFile {
+  bsfStandard = 0,
+  bsfLocal    = 1
+};
+
 
 //==============================================================================
 #endif
