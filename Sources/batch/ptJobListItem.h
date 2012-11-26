@@ -25,23 +25,30 @@
 
 //==============================================================================
 
+#include <QDateTime>
+#include <QSettings>
 #include <QStringList>
 #include "ptTempFile.h"
 
 //==============================================================================
 
-/*! This enum corresponds to coloumns of the table in the batch window */
+/*!
+ * \brief The ptJobData enum numerates the coloumns of the job list view.
+ *
+ * \c jdMaxNumber is the number of coloumns. It should be the last in this enum.
+ */
 enum ptJobData {
   jdFileName         = 0,
   jdStatus           = 1,
   jdOutputPath       = 2,
   jdOutputFileSuffix = 3,
   jdInputFiles       = 4,
-  jdMaxNumber        = 5    // This constant gives us the number of coloumns.
-                            // It should be the last in this enum.
+  jdMaxNumber        = 5
 };
 
-/*! This enum corresponds to the current status of the job */
+/*!
+ * \brief The ptJobStatus enum describes the current status of the job.
+ */
 enum ptJobStatus {
   jsWaiting    = 0,
   jsProcessing = 1,
@@ -53,47 +60,134 @@ enum ptJobStatus {
 
 //==============================================================================
 
-extern QString RawPattern;
+extern QStringList FileExtsRaw;
 
 //==============================================================================
 
-/*! This class describes an element of the job list in batch window */
+/*!
+ * \class ptJobListItem
+ *
+ * \brief Element of the job list in the batch window.
+ */
 class ptJobListItem : public QObject
 {
   Q_OBJECT
 public:
-  explicit ptJobListItem(const QString &file);
+  /*!
+   * Creates a new \c ptJobListItem object.
+   *
+   * \param file is the path to the settings file
+   *        containing the processing instructions.
+   */
+  explicit ptJobListItem(const QString &file = QString());
   ~ptJobListItem();
 
+  /*!
+   * Initializes the ptJobListItem object.
+   * \param file is the path to the settings file
+   *        containing the processing instructions.
+   */
+  void InitFromFile(const QString &file);
+
+  /*!
+   * Returns the path to the settings file.
+   */
   const QString& FileName() const { return m_FileName; }
+
+  /*!
+   * Returns the path processed photoes will be saved to.
+   */
   const QString& OutputPath() const { return m_OutputPath; }
+
+  /*!
+   * Returns the suffix to be appended to the end of the saved files.
+   */
   const QString& OutputFileSuffix() const { return m_OutputFileSuffix; }
+
+  /*!
+   * Returns the list of files to be processed.
+   */
   const QStringList& InputFiles() const { return m_InputFiles; }
+
+  /*!
+   * Returns the current status of the job.
+   */
   ptJobStatus Status() const {return m_Status; }
 
+  /*!
+   * Sets the current status of the job to \c status.
+   */
   void SetStatus(ptJobStatus status);
 
-  /*! Returns true if file name, output path and input files list
-      aren't empty. Otherwise ruterns false.                      */
+  /*!
+   * Sets last processing  time to the current time.
+   */
+  void UpdateTime();
+
+  /*!
+   * Updates the current status of the job that was previously processed.
+   * Sets the status to \c Waiting if the job file was modified after last processing
+   * and to \c Finished otherwise.
+   */
+  void UpdateStatusByTime();
+
+  /*!
+   * Tests if the job corresponds to a settings file or a job file.
+   * \return \c true if it's a job file and \c false otherwise.
+   */
+  bool IsJobFile() const;
+
+  /*!
+   * Tests if the job is valid
+   * \return \c true if file name, output path and input files list
+     aren't empty and \c false otherwise.
+   */
   bool IsValid() const;
 
-  /*! Create a temporary job file from a settings file by adding
+  /*! Creates a temporary job file from a settings file by adding
       corresponding OutputDirectory and InputFileNameList values.
-      Returns empty string if file can't be created.              */
+      \return the temporary file name or an empty string if file can't be created.
+   */
   const QString CreateTempJobFile();
 
   /*! Returns file name to be provided to "photivo -j".
       Creates temporary file if necessary.
-      Returns empty string if something goes wrong.     */
+      \return the file name or an empty string the job is invalid.
+   */
   const QString GetCallFileName();
 
-  /*! Exeption class is used to check if settings file is correct. */
+  /*!
+   * Saves all job parameters to \c setting.
+   */
+  void SaveToSettings(QSettings *settings) const;
+
+  /*!
+   * Reads job parameters from \c setting.
+   */
+  void LoadFromSettings(QSettings *settings);
+
+  /*!
+   * Checks if two ptJobListItems are equal. They are considered equal
+   * if their settings file's names are equal.
+   */
+  bool operator ==(const ptJobListItem &item) const;
+
+  /*!
+   * Exeption class used to check if the loaded settings file is correct.
+   */
   class ptJobExeption {};
 
 public slots:
-  void OnProcessingFinished(int status);
+  /*!
+   * OnProcessingFinished is called when the processing of this job is finished.
+   * \param exitCode is the exit code of the external Photivo process.
+   */
+  void OnProcessingFinished(int exitCode);
 
 signals:
+  /*!
+   * itemChanged is emitted when some job parameters are changed.
+   */
   void itemChanged();
 
 private:
@@ -102,8 +196,9 @@ private:
   QString m_OutputFileSuffix;
   QStringList m_InputFiles;
   ptJobStatus m_Status;
-  bool m_IsJobFile;         // in other case it's a settings file
   ptTempFile *m_TempFile;
+  QDateTime m_ProcessingStarted;
+  QDateTime m_lastProcessing;
 };
 
 //==============================================================================

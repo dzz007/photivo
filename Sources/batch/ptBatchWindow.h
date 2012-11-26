@@ -25,14 +25,14 @@
 
 //==============================================================================
 
-#include <QAbstractTableModel>
-#include <QProcess>
 #include "ui_ptBatchWindow.h"
 #include "ptJobListModel.h"
 
 //==============================================================================
 
-/*! This is the window corresponding to the batch manager */
+/*!
+ * \brief The batch manager window.
+ */
 class ptBatchWindow : public QWidget, private Ui::ptBatchWindow
 {
   Q_OBJECT
@@ -45,15 +45,31 @@ public:
 
 protected:
   void keyPressEvent(QKeyEvent *event);
+  void showEvent(QShowEvent *event);
 
 private slots:
   void OnAddJob();
   void OnRemoveJob();
-  void OnCloseWindow();
-  void OnRunNextJob();
   void OnRunJobs();
   void OnAbortProcessing();
+  void OnSaveJobList();
+  void OnOpenJobList();
+  void OnCloseWindow();
+
+  /*!
+   * Starts processing of the first job with \c Waiting status.
+   */
+  void OnRunNextJob();
+
+  /*!
+   * OnLogReady is called when external Photivo process prints something
+   * to \c stdout.
+   */
   void OnLogReady();
+
+  /*!
+   * Handles Log button pressings.
+   */
   void OnLogVisibilityToggled(bool show);
 
 signals:
@@ -61,8 +77,6 @@ signals:
 
 private:
   ptJobListModel *m_BatchModel;
-  ptJobListItem *m_CurrentJob;
-  QProcess *m_BatchProcess;
   bool m_WasAborted;
 };
 
