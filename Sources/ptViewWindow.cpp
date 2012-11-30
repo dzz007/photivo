@@ -281,7 +281,7 @@ void ptViewWindow::mousePressEvent(QMouseEvent* event) {
 
 void ptViewWindow::mouseReleaseEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton && FLeftMousePressed) {
-    FLeftMousePressed = true;
+    FLeftMousePressed = false;
     event->accept();
   } else {
     event->ignore();
@@ -319,7 +319,7 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
     }
   }
 
-  if (isImgDragging()) {
+  if (this->isImgDragging()) {
     // drag move visible image area
     FDragDelta->setP2(event->pos());
 
@@ -347,8 +347,18 @@ void ptViewWindow::wheelEvent(QWheelEvent* event) {
   ZoomStep(event->delta());
 }
 
+//==============================================================================
+
 void ptViewWindow::leaveEvent(QEvent*) {
-  if (FPixelReader) FPixelReader(QPoint(), prNone);
+  if (FPixelReader)
+    FPixelReader(QPoint(), prNone);
+
+  // When mouse cursor leaves the viewwindow ctrl key should not be handled anymore.
+  // Reset related stuff to avoid problems when re-entering viewwindow. Qt mouse grabbing
+  // makes sure this event does not fire accidentally when the cursor leaves the window
+  // while dragging.
+  FCtrlIsPressed = 0;
+  this->setCursor(Qt::ArrowCursor);
 }
 
 //==============================================================================
@@ -404,11 +414,13 @@ void ptViewWindow::keyPressEvent(QKeyEvent* event) {
 
 void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
   if (event->key() == Qt::Key_Control) {
-    FCtrlIsPressed--;
+    if (FCtrlIsPressed > 0)
+      --FCtrlIsPressed;
+
     if (FCtrlIsPressed == 0 &&
       (FInteraction == iaNone || FInteraction == iaCrop || FInteraction == iaSpotRepair))
     {
-      setCursor(Qt::ArrowCursor);
+      this->setCursor(Qt::ArrowCursor);
     }
   } else {
     event->ignore();  // necessary to forward unhandled keys to main window
