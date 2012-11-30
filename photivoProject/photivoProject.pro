@@ -126,8 +126,8 @@ LIBS += \
     $$system(pkg-config --libs-only-l lqr-1) \
     -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
-RELEASE_SPECIFIC = -O3 -funroll-loops -ftree-vectorize -fopenmp
-DEBUG_SPECIFIC   = -O0 -g -Wno-unknown-pragmas
+RELEASE_SPECIFIC = -funroll-loops -ftree-vectorize -fopenmp
+DEBUG_SPECIFIC   = -g -Wno-unknown-pragmas
 COMMON_FLAGS = \
     $$system(pkg-config --cflags-only-I lqr-1) \
     -DAPPVERSION=\'$${APPVERSION}\' \
