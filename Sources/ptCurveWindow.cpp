@@ -33,7 +33,6 @@
 #include <QLabel>
 
 #include "ptCurveWindow.h"
-#include "ptCurve.h"
 #include "ptTheme.h"
 #include "ptInfo.h"
 #include "ptSettings.h"
@@ -57,46 +56,13 @@ const int CPipeDelay   = 300;
 // NOTE: ptCurveWindow would be a good place to use C++11’s ctor delegation.
 // Unfortunately it’s only available in GCC 4.7.
 ptCurveWindow::ptCurveWindow(QWidget *AParent)
-: ptWidget(AParent),
-  FCaptionLabel(nullptr),
-  FWheelTimer(new QTimer(this)),
-  FMouseAction(NoAction),
-  FMovingAnchor(-1),
-  FLinearIpolAction(nullptr),
-  FSplineIpolAction(nullptr),
-  FCosineIpolAction(nullptr),
-  FIpolGroup(nullptr),
-  FByLumaAction(nullptr),
-  FByChromaAction(nullptr),
-  FMaskGroup(nullptr),
-  FOpenCurveAction(nullptr)
-{
-  // Timer for the wheel interaction
-  FWheelTimer->setSingleShot(1);
-  FWheelTimer->setInterval(CPipeDelay);
-  connect(FWheelTimer, SIGNAL(timeout()), this, SLOT(wheelTimerExpired()));
-
-  QSizePolicy hPolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-  hPolicy.setHeightForWidth(true);
-  this->setSizePolicy(hPolicy);
-}
+: ptWidget(AParent)
+{}
 
 //==============================================================================
 
 ptCurveWindow::ptCurveWindow(const ptCfgItem &ACfgItem, QWidget *AParent)
-: ptWidget(AParent),
-  FCaptionLabel(nullptr),
-  FWheelTimer(new QTimer(this)),
-  FMouseAction(NoAction),
-  FMovingAnchor(-1),
-  FLinearIpolAction(nullptr),
-  FSplineIpolAction(nullptr),
-  FCosineIpolAction(nullptr),
-  FIpolGroup(nullptr),
-  FByLumaAction(nullptr),
-  FByChromaAction(nullptr),
-  FMaskGroup(nullptr),
-  FOpenCurveAction(nullptr)
+: ptWidget(AParent)
 {
   this->init(ACfgItem);
 }
@@ -114,7 +80,28 @@ ptCurveWindow::~ptCurveWindow() {
 //==============================================================================
 
 void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
+  FCaptionLabel     = nullptr;
+  FWheelTimer       = new QTimer(this);
+  FMouseAction      = NoAction;
+  FMovingAnchor     = -1;
+  FLinearIpolAction = nullptr;
+  FSplineIpolAction = nullptr;
+  FCosineIpolAction = nullptr;
+  FIpolGroup        = nullptr;
+  FByLumaAction     = nullptr;
+  FByChromaAction   = nullptr;
+  FMaskGroup        = nullptr;
   FOpenCurveAction  = nullptr;
+
+  // Timer for the wheel interaction
+  FWheelTimer->setSingleShot(1);
+  FWheelTimer->setInterval(CPipeDelay);
+  connect(FWheelTimer, SIGNAL(timeout()), this, SLOT(wheelTimerExpired()));
+
+  QSizePolicy hPolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+  hPolicy.setHeightForWidth(true);
+  this->setSizePolicy(hPolicy);
+
   this->setObjectName(ACfgItem.Id);  // Do not touch! Filter commonDispatch relies on this.
   FCurve = ACfgItem.Curve;
 
@@ -130,7 +117,7 @@ void ptCurveWindow::setValue(const QVariant &AValue) {
                     .arg(this->objectName()).arg(AValue.type()), AT);
 
   auto hTempMap = AValue.toMap();
-  FCurve->loadConfig(hTempMap);
+  FCurve->setFromFilterConfig(hTempMap);
   updateView();
   requestPipeRun();
 }
@@ -360,7 +347,7 @@ void ptCurveWindow::calcCurveImage() {
     }
   }
 
-  if (!FCurve) return;
+  if (!FCurve.get()) return;
 
   // Compute curve points. The vector stores the position of the display curve (y value)
   // for each display x value. Note that coordinates origin is topleft.
@@ -638,7 +625,7 @@ bool ptCurveWindow::isCyclicCurve() {
 //==============================================================================
 
 void ptCurveWindow::requestPipeRun() {
-  emit valueChanged(this->objectName(), FCurve->storeConfig());
+  emit valueChanged(this->objectName(), FCurve->filterConfig());
 }
 
 //==============================================================================

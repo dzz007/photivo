@@ -54,7 +54,10 @@ public:
   ptCurveWindow(const ptCfgItem &ACfgItem, QWidget *AParent);
   ~ptCurveWindow();
 
+  /*! Reimplemented from base class. */
   void init(const ptCfgItem &ACfgItem);
+
+  /*! Reimplemented from base class. */
   void setValue(const QVariant &AValue);
 
   void setCaption(const QString &ACaption);

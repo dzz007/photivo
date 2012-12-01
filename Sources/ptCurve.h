@@ -32,7 +32,6 @@
 #include <utility>
 
 #include <filters/ptFilterConfig.h>
-#include <filters/ptStorable.h>
 
 class ptImage;
 
@@ -43,7 +42,7 @@ typedef std::vector<TAnchor>     TAnchorList;
 
 //==============================================================================
 
-class ptCurve: public ptStorable {
+class ptCurve {
 public:
   // Don’t mess with the enum values!
   enum TInterpolation { LinearInterpol = 0, SplineInterpol = 1, CosineInterpol = 2 };
@@ -136,10 +135,10 @@ public:
         A pointer to the config store. Must be valid for the rest of the curve’s lifetime.
       \see assignFilterConfig()
    */
-  void            loadConfig(const TConfigStore &AConfig, const QString &APrefix = "");
+  void            setFromFilterConfig(const TConfigStore &AConfig, const QString &APrefix = "");
 
   /*! Returns the curve’s configuration in config store format usable by \c ptFilterConfig. */
-  TConfigStore    storeConfig(const QString &APrefix = "") const;
+  TConfigStore    filterConfig(const QString &APrefix = "") const;
 
   /*! Read a curve from an old-style curve file. This function is the only way to load a
       curve with type \c FullPrecalcType, i.e. a file where the complete 16bit lookup table
