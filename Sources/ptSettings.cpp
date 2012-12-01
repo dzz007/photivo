@@ -358,6 +358,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   // Load in the gui choice (combo) elements
   const ptGuiChoiceItem GuiChoiceItems[] = {
     // Unique Name          GuiElement,InitLevel,InJobFile,HasDefault, Default            Choices (from ptGuiOptions.h),         ToolTip
+    {"BatchMgrAutosaveFile"        ,ptGT_Choice       ,1,0,0 ,bsfStandard                 ,GuiOptions->BatchMgrAutosaveFile      ,tr("File for autosaving batch list")},
     {"RememberSettingLevel"        ,ptGT_Choice       ,1,0,0 ,2                           ,GuiOptions->RememberSettingLevel      ,tr("Remember setting level")},
     {"CameraColor"                 ,ptGT_Choice       ,1,1,1 ,ptCameraColor_Adobe_Profile ,GuiOptions->CameraColor               ,tr("Transform camera RGB to working space RGB")},
     {"CameraColorProfileIntent"    ,ptGT_Choice       ,1,1,1 ,INTENT_PERCEPTUAL           ,GuiOptions->CameraColorProfileIntent  ,tr("Intent of the profile")},
@@ -442,6 +443,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     // Name   GuiType,InitLevel,InJobFile,Default,Label,Tip
     {"FileMgrUseThumbMaxRowCol"   ,ptGT_Check ,1,0,0,tr("At most")         ,tr("Maximum number of thumbnails that should be placed in a row or column.")},
     {"FileMgrStartupOpen"         ,ptGT_Check ,1,0,0,tr("Open file manager on startup"), tr("Opens the file manager when Photivo starts without an image")},
+
+    {"BatchMgrAutosave"           ,ptGT_Check ,1,0,1,tr("Automatically save batch list"), tr("Automatically save current batch list")},
+    {"BatchMgrAutoload"           ,ptGT_Check ,1,0,0,tr("Automatically load batch list"), tr("Automatically load previous batch list saved to standard path on startup")},
 
     {"StartupSettings"            ,ptGT_Check ,1,0,1,tr("User settings")   ,tr("Load user settings on startup")},
     {"StartupSettingsReset"       ,ptGT_Check ,1,0,0,tr("Reset on new image") ,tr("Reset to user settings when new image is opened")},

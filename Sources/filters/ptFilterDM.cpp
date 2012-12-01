@@ -1340,6 +1340,7 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("ImageRating",                     "");
 
   // former combobox entries
+//  FNameMap.insert("BatchMgrAutosaveFile",            "");
 //  FNameMap.insert("CameraColor",                     "");
 //  FNameMap.insert("CameraColorProfileIntent",        "");
 //  FNameMap.insert("CameraColorGamma",                "");
@@ -1428,6 +1429,8 @@ void ptFilterDM::FillNameMap() {
 
     // former checkbox entries
 //  FNameMap.insert("FileMgrUseThumbMaxRowCol",        "");
+//  FNameMap.insert("BatchMgrAutosave",                "");
+//  FNameMap.insert("BatchMgrAutoload",                "");
 //  FNameMap.insert("StartupSettings",                 "");
 //  FNameMap.insert("StartupSettingsReset",            "");
 //  FNameMap.insert("StartupSwitchAR",                 "");
@@ -1592,13 +1595,12 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("CustomCSSFile",                   "");
 //  FNameMap.insert("FullscreenActive",                "");
 //  FNameMap.insert("FileMgrIsOpen",                   "");
-//  FNameMap.insert("FileMgrStartupOpen",            "");
+//  FNameMap.insert("FileMgrStartupOpen",              "");
 //  FNameMap.insert("LastFileMgrLocation",             "");
 //  FNameMap.insert("FileMgrShowDirThumbs",            "");
 //  FNameMap.insert("FileMgrShowImageView",            "");
 //  FNameMap.insert("FileMgrShowSidebar",              "");
 //  FNameMap.insert("FileMgrThumbLayoutType",          "");
-
 //  FNameMap.insert("BatchIsOpen",                     "");
 //  FNameMap.insert("BatchLogIsVisible",               "");
 }

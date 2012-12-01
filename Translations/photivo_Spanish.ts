@@ -2267,6 +2267,14 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
 </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Standard file in the Photivo directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The file batch list was previously saved to</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ToneForm</name>
@@ -2335,6 +2343,34 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
     </message>
     <message>
         <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save job list to file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open job list from files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Job list files (*.ptb);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save job list file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open job list files</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3493,7 +3529,32 @@ x=%2, y=%3 (1:1 pipe size)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>is not a Photivo settings file.</source>
+        <source>
+is not a Photivo settings file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove this job?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+job is being processed. Do you want to abort processing and remove it from the list?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error writing job list file
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error reading job list file
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+is not a job list file.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4609,6 +4670,10 @@ x=%2, y=%3 (1:1 pipe size)</source>
     </message>
     <message>
         <source>Batch job processing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Batch Manager</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6829,6 +6894,26 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Opens the file manager when Photivo starts without an image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File for autosaving batch list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically save batch list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically save current batch list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically load batch list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically load previous batch list saved to standard path on startup</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

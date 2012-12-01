@@ -56,6 +56,11 @@ const ptGuiOptionsItem ptGuiOptions::ZoomLevel[] = {
   {ptZoomLevel_400, QObject::tr("400%") },
   {-1,NULL}};
 
+const ptGuiOptionsItem ptGuiOptions::BatchMgrAutosaveFile[] = {
+  {bsfStandard, QObject::tr("Standard file in the Photivo directory")      },
+  {bsfLocal,    QObject::tr("The file batch list was previously saved to") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::RememberSettingLevel[] = {
   {0,    QObject::tr("None: even this setting is lost ...")  },
   {1,    QObject::tr("Minimal: dirs, available curves ...")     },

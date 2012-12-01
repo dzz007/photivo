@@ -392,7 +392,9 @@ void SegfaultAbort(int) {
   std::signal(SIGSEGV, SIG_DFL);
   std::signal(SIGABRT, SIG_DFL);
   SegfaultErrorBox->exec();
-  std::abort();
+//  std::abort();
+//  Batch manager needs Photivo to return a value to determine a crash
+  exit(EXIT_FAILURE);
 }
 
 int main(int Argc, char *Argv[]) {
@@ -6725,6 +6727,10 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_JustSetDispatch(FileMgrThumbMaxRowColInput)
   M_JustSetDispatch(FileMgrThumbSaveSizeInput)
   M_JustSetDispatch(FileMgrStartupOpenCheck)
+
+  M_JustSetDispatch(BatchMgrAutosaveCheck)
+  M_JustSetDispatch(BatchMgrAutosaveFileChoice)
+  M_JustSetDispatch(BatchMgrAutoloadCheck)
 
   M_Dispatch(MemoryTestInput)
 

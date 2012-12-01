@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1014</width>
-    <height>690</height>
+    <width>1010</width>
+    <height>686</height>
    </rect>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
@@ -125,6 +125,74 @@
         <property name="icon">
          <iconset resource="../../qrc/photivo.qrc">
           <normaloff>:/dark/icons/processing-abort.png</normaloff>:/dark/icons/processing-abort.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="BTSave">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Save job list to file</string>
+        </property>
+        <property name="text">
+         <string>Save...</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../qrc/photivo.qrc">
+          <normaloff>:/dark/icons/document-save.png</normaloff>:/dark/icons/document-save.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="BTOpen">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Open job list from files</string>
+        </property>
+        <property name="text">
+         <string>Open...</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../qrc/photivo.qrc">
+          <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -290,7 +358,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>50</x>
-     <y>691</y>
+     <y>687</y>
     </hint>
    </hints>
   </connection>
@@ -337,7 +405,7 @@
      <y>23</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-3</x>
+     <x>0</x>
      <y>17</y>
     </hint>
    </hints>
@@ -358,6 +426,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>BTSave</sender>
+   <signal>clicked()</signal>
+   <receiver>ptBatchWindow</receiver>
+   <slot>OnSaveJobList()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>65</x>
+     <y>236</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1</x>
+     <y>233</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>BTOpen</sender>
+   <signal>clicked()</signal>
+   <receiver>ptBatchWindow</receiver>
+   <slot>OnOpenJobList()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>43</x>
+     <y>270</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-2</x>
+     <y>269</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>OnCloseWindow()</slot>
@@ -365,5 +465,7 @@
   <slot>OnRemoveJob()</slot>
   <slot>OnRunJobs()</slot>
   <slot>OnAbortProcessing()</slot>
+  <slot>OnSaveJobList()</slot>
+  <slot>OnOpenJobList()</slot>
  </slots>
 </ui>
