@@ -357,8 +357,10 @@ void ptViewWindow::leaveEvent(QEvent*) {
   // Reset related stuff to avoid problems when re-entering viewwindow. Qt mouse grabbing
   // makes sure this event does not fire accidentally when the cursor leaves the window
   // while dragging.
-  FCtrlIsPressed = 0;
-  this->setCursor(Qt::ArrowCursor);
+  if (FCtrlIsPressed > 0){
+    FCtrlIsPressed = 0;
+    this->setCursor(Qt::ArrowCursor);
+  }
 }
 
 //==============================================================================

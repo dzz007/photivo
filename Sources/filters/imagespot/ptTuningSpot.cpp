@@ -70,14 +70,14 @@ TConfigStore ptTuningSpot::doStoreConfig(const QString &APrefix) const {
     hConfig.insert(APrefix+iter.key(), iter.value());
   }
 
-  hConfig.unite(FCurve->storeConfig(APrefix+CSpotLumaCurveId+"/"));
+  hConfig.unite(FCurve->filterConfig(APrefix+CSpotLumaCurveId+"/"));
   return hConfig;
 }
 
 //==============================================================================
 
 void ptTuningSpot::doLoadConfig(const TConfigStore &AConfig, const QString &APrefix) {
-  FCurve->loadConfig(AConfig, APrefix+CSpotLumaCurveId+"/");
+  FCurve->setFromFilterConfig(AConfig, APrefix+CSpotLumaCurveId+"/");
 
   for (ptCfgItem hCfgItem: *FDefaults) {
     if (hCfgItem.Id != CSpotLumaCurveId) {
@@ -94,7 +94,7 @@ QVariant ptTuningSpot::doGetValue(const QString &AKey) const {
     return FDataStore.value(CSpotMaxRadiusId).toInt() >> Settings->GetInt("Scaled");
 
   } else if (AKey == CSpotLumaCurveId) {
-    QVariant hCurveCfg = FCurve->storeConfig();
+    QVariant hCurveCfg = FCurve->filterConfig();
     return hCurveCfg;
 
   } else {
@@ -110,7 +110,7 @@ bool ptTuningSpot::doSetValue(const QString &AKey, const QVariant AValue) {
     return true;
 
   } else if (AKey == CSpotLumaCurveId) {
-    FCurve->loadConfig(AValue.toMap());
+    FCurve->setFromFilterConfig(AValue.toMap());
     return true;
 
   } else {

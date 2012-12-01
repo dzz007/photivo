@@ -175,6 +175,7 @@ void ptFilter_SpotTuning::doReset() {
 //==============================================================================
 
 ptImageSpot *ptFilter_SpotTuning::createSpot() {
+  FCfgItems[4].Curve->reset();
   return new ptTuningSpot(&FCfgItems);
 }
 
@@ -206,11 +207,13 @@ void ptFilter_SpotTuning::startInteraction() {
 void ptFilter_SpotTuning::cleanupAfterInteraction() {
   BlockTools(btmUnblock, QStringList(this->uniqueName()));
   FGui->SpotList->setEditMode(false);
-  if (Settings->GetInt("RunMode") == ptRunMode_Auto)
-    Update(ptProcessorPhase_LocalEdit);
-  else
+
+  if (Settings->GetInt("RunMode") == ptRunMode_Once) {
     UpdatePreviewImage();
     NextPhase = ptProcessorPhase_LocalEdit;
+  } else {
+    Update(ptProcessorPhase_LocalEdit);
+  }
 }
 
 //==============================================================================

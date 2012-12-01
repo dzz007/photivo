@@ -104,7 +104,7 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCurve &AValues):
   Caption(AValues.Caption),
   Curve(AValues.Curve)
 {
-  Default = QVariant(Curve->storeConfig());
+  Default = QVariant(Curve->filterConfig());
   init();
 }
 

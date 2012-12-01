@@ -250,7 +250,7 @@ void ptCurve::setCurveType(const ptCurve::TType AType) {
 
 //==============================================================================
 
-TConfigStore ptCurve::storeConfig(const QString &APrefix /*=""*/) const {
+TConfigStore ptCurve::filterConfig(const QString &APrefix) const {
   TConfigStore hStore;
 
   hStore.insert(APrefix+"CurveType",     (int)FCurveType);
@@ -276,7 +276,7 @@ TConfigStore ptCurve::storeConfig(const QString &APrefix /*=""*/) const {
 
 //==============================================================================
 
-void ptCurve::loadConfig(const TConfigStore &AConfig, const QString &APrefix) {
+void ptCurve::setFromFilterConfig(const TConfigStore &AConfig, const QString &APrefix) {
   FCurveType    = (TType)AConfig.value(APrefix+"CurveType", FCurveType).toInt();
   FCurrentMask  = (TMask)AConfig.value(APrefix+"Mask", FCurrentMask).toInt();
   FInterpolType = (TInterpolation)AConfig.value(APrefix+"Interpolation", FInterpolType).toInt();
