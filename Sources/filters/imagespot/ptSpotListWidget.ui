@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ptSpotListWidget</class>
+ <widget class="QWidget" name="ptSpotListWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>202</width>
+    <height>112</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>132</height>
+   </size>
+  </property>
+  <layout class="QHBoxLayout" name="HorizontalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QVBoxLayout" name="VertLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QToolButton" name="UpButton">
+       <property name="icon">
+        <iconset resource="../../../qrc/photivo.qrc">
+         <normaloff>:/dark/icons/move-object-up.png</normaloff>
+         <disabledoff>:/dark/icons/move-object-up-disabled.png</disabledoff>:/dark/icons/move-object-up.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="DownButton">
+       <property name="icon">
+        <iconset resource="../../../qrc/photivo.qrc">
+         <normaloff>:/dark/icons/move-object-down.png</normaloff>
+         <disabledoff>:/dark/icons/move-object-down-disabled.png</disabledoff>:/dark/icons/move-object-down.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="DelButton">
+       <property name="toolTip">
+        <string>Delete spot</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../qrc/photivo.qrc">
+         <normaloff>:/dark/icons/delete.png</normaloff>:/dark/icons/delete.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="AddButton">
+       <property name="toolTip">
+        <string>Append spot mode</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../qrc/photivo.qrc">
+         <normaloff>:/dark/icons/add-spot.png</normaloff>
+         <normalon>:/dark/icons/add-spot-stop.png</normalon>:/dark/icons/add-spot.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="EditButton">
+       <property name="toolTip">
+        <string>Edit spots</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../qrc/photivo.qrc">
+         <normaloff>:/dark/icons/edit-spot.png</normaloff>
+         <normalon>:/dark/icons/dialog-ok.png</normalon>:/dark/icons/edit-spot.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../../../qrc/photivo.qrc"/>
+ </resources>
+ <connections/>
+</ui>

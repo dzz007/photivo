@@ -33,7 +33,6 @@
 #include <QLabel>
 
 #include "ptCurveWindow.h"
-#include "ptCurve.h"
 #include "ptTheme.h"
 #include "ptInfo.h"
 #include "ptSettings.h"
@@ -107,13 +106,7 @@ void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
   FCurve = ACfgItem.Curve;
 
   // set up caption in topleft corner
-  if (!ACfgItem.Caption.isEmpty()) {
-    FCaptionLabel = new QLabel("<b style='color:#ffffff'>" + ACfgItem.Caption + "</b>", this);
-    FCaptionLabel->move(5,5);
-    FCaptionLabel->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-    FCaptionLabel->setAttribute(Qt::WA_NoSystemBackground, true);
-    FCaptionLabel->setAttribute(Qt::WA_OpaquePaintEvent, false);
-  }
+  this->setCaption(ACfgItem.Caption);
 }
 
 //==============================================================================
@@ -124,9 +117,27 @@ void ptCurveWindow::setValue(const QVariant &AValue) {
                     .arg(this->objectName()).arg(AValue.type()), AT);
 
   auto hTempMap = AValue.toMap();
-  FCurve->setFromFilterConfig(&hTempMap);
+  FCurve->setFromFilterConfig(hTempMap);
   updateView();
   requestPipeRun();
+}
+
+//==============================================================================
+
+void ptCurveWindow::setCaption(const QString &ACaption) {
+  if (ACaption.isEmpty()) {
+    DelAndNull(FCaptionLabel);
+
+  } else {
+    if (!FCaptionLabel) {
+      FCaptionLabel = new QLabel(this);
+      FCaptionLabel->move(5,5);
+      FCaptionLabel->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+      FCaptionLabel->setAttribute(Qt::WA_NoSystemBackground, true);
+      FCaptionLabel->setAttribute(Qt::WA_OpaquePaintEvent, false);
+    }
+    FCaptionLabel->setText("<b style='color:#ffffff'>" + ACaption + "</b>");
+  }
 }
 
 //==============================================================================
@@ -296,16 +307,6 @@ void ptCurveWindow::calcCurveImage() {
 
   FCanvas.setSize(hWidth, hHeight, 3);  // image is completely black afterwards
 
-  if (!FCurve.get()) return;
-
-  // Compute curve points. The vector stores the position of the display curve (y value)
-  // for each display x value. Note that coordinates origin is topleft.
-  std::vector<uint16_t> hLocalCurve(hWidth);
-  for (uint16_t LocalX = 0; LocalX < hWidth; ++LocalX) {
-    uint16_t CurveX = (uint16_t)(0.5f + (float)LocalX / (hWidth-1) * 0xffff);
-    hLocalCurve[LocalX] = hHeight-1 - (uint16_t)(0.5f + (float) FCurve->Curve[CurveX]/0xffff * (hHeight-1));
-  }
-
   QColor hCurveColor = QColor(200,200,200);
   QColor hGridColor  = QColor(53,53,53);
 
@@ -344,6 +345,16 @@ void ptCurveWindow::calcCurveImage() {
       FCanvas.m_Image[Temp][2] = hGridColor.red();
       Temp += hWidth;
     }
+  }
+
+  if (!FCurve.get()) return;
+
+  // Compute curve points. The vector stores the position of the display curve (y value)
+  // for each display x value. Note that coordinates origin is topleft.
+  std::vector<uint16_t> hLocalCurve(hWidth);
+  for (uint16_t LocalX = 0; LocalX < hWidth; ++LocalX) {
+    uint16_t CurveX = (uint16_t)(0.5f + (float)LocalX / (hWidth-1) * 0xffff);
+    hLocalCurve[LocalX] = hHeight-1 - (uint16_t)(0.5f + (float) FCurve->Curve[CurveX]/0xffff * (hHeight-1));
   }
 
   // paint the curve itself
@@ -444,6 +455,7 @@ void ptCurveWindow::paintEvent(QPaintEvent*) {
 //==============================================================================
 
 void ptCurveWindow::mousePressEvent(QMouseEvent *AEvent) {
+  if (!FCurve) return;
   FMouseAction  = NoAction;
   FMovingAnchor = -1;
 
@@ -509,6 +521,7 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *AEvent) {
 //==============================================================================
 
 void ptCurveWindow::mouseReleaseEvent(QMouseEvent*) {
+  if (!FCurve) return;
   if (FMouseAction == NoAction) return;
 
   if (FMouseAction != DragAction)  // for drag updating is done in move event
@@ -552,6 +565,7 @@ TAnchor ptCurveWindow::clampMovingAnchor(const TAnchor &APoint,
 //==============================================================================
 
 void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
+  if (!FCurve) return;
   if (FMouseAction == DragAction && FMovingAnchor > -1) {
     // mouse position normalised and clamped to (0.0-1.0) and inverted y axis = curve coordinates
     TAnchor hNormPos(AEvent->x()/(double)(this->width()-1),
