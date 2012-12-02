@@ -28,14 +28,12 @@
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
 
+#include <memory>
+
 // disable the file manager
 // #define PT_WITHOUT_FILEMGR
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Delete an object and null the pointer
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 template<class T>
 inline void DelAndNull(T*& p) {
@@ -43,11 +41,17 @@ inline void DelAndNull(T*& p) {
   p = 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
+//==============================================================================
+
+// Custom unique ptr creation. Because there is no std::make_unique().
+template<typename T, typename ...Args>
+std::unique_ptr<T> make_unique(Args&& ...args) {
+  return std::unique_ptr<T>(new T(std::forward<Args>(args)... ));
+}
+
+//==============================================================================
+
 // Some macro's (most cannot go efficiently in functions).
-//
-////////////////////////////////////////////////////////////////////////////////
 
 #ifndef SQR
   #define SQR(x) ((x)*(x))
@@ -56,15 +60,28 @@ inline void DelAndNull(T*& p) {
 #undef  MIN
 #undef  MAX
 #define ABS(x) (((int)(x) ^ ((int)(x) >> 31)) - ((int)(x) >> 31))
-#define MIN(a,b) ((a) < (b) ? (a) : (b))
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
-#define LIM(x,min,max) MAX(min,MIN(x,max))
-#define ULIM(x,y,z) ((y) < (z) ? LIM(x,y,z) : LIM(x,z,y))
-#define CLIP(x) LIM(x,0,0xffff)
 #define SWAP(a,b) { a=a+b; b=a-b; a=a-b; }
 #define SIGN(x) ((x) == 0 ? 0 : ((x) < 0 ? -1 : 1 ))
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
+#define AT __PRETTY_FUNCTION__
+//":" __FILE__ ":" TOSTRING(__LINE__)
+#define CRLF "\r\n"
+
+// Thanks QT
+template <typename T>
+inline const T &ptMin(const T &a, const T &b) { if (a < b) return a; return b; }
+template <typename T>
+inline const T &ptMax(const T &a, const T &b) { if (a < b) return b; return a; }
+template <typename T>
+inline const T &ptBound(const T &min, const T &val, const T &max)
+{ return ptMax(min, ptMin(max, val)); }
+
+#define MIN(a, b)         ptMin(a, b)
+#define MAX(a, b)         ptMax(a, b)
+#define LIM(x, min, max)  ptBound(min, x, max)
+#define ULIM(x, y, z)     ((y) < (z) ? LIM(x,y,z) : LIM(x,z,y))
+#define CLIP(x)           ptBound(0, x, 0xffff)
 
 ////////////////////////////////////////////////////////////////////////////////
 //

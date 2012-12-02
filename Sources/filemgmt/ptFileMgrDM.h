@@ -65,7 +65,7 @@ public:
   /*! Destroy the singleton instance of \c ptFileMgrDM */
   static void DestroyInstance();
 
-//------------------------------------------------------------------------------
+//-------------------------------------
 
   /*! Clear the data cache of \c ptFileMgrDM */
   void Clear();

@@ -2,8 +2,9 @@
 **
 ** Photivo
 **
-** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2008-2009 Jos De Laender <jos.de_laender@telenet.be>
+** Copyright (C) 2009-2012 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -21,453 +22,175 @@
 **
 *******************************************************************************/
 
+#include <vector>
+
+#include <QPainter>
+#include <QActionGroup>
+#include <QMenu>
+#include <QTimer>
+#include <QMouseEvent>
+#include <QWheelEvent>
+#include <QLabel>
+
 #include "ptCurveWindow.h"
-#include "ptSettings.h"
+#include "ptCurve.h"
 #include "ptTheme.h"
+#include "ptInfo.h"
+#include "ptSettings.h"
+#include <filters/ptCfgItem.h>
 
-#include <iostream>
-using namespace std;
+//==============================================================================
 
-extern void CB_CurveWindowManuallyChanged(const short Channel);
-extern void CB_CurveWindowRecalc(const short Channel, const short ForceUpdate = 0);
+extern QString CurveFilePattern;
 
-extern ptTheme* Theme;
+// How many pixels will be considered as 'bingo' for having the anchor ?
+const int CSnapDelta = 6;
+// Percentage to be close to a curve to get a new Anchor
+const double CCurveDelta = 0.12;
+// Distance to the next anchor
+const float CAnchorDelta = 0.005f;
+// Delays in ms before certain actions are triggered
+const int CPipeDelay   = 300;
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor.
-//
-// Instantiates a (also here defined) CurveWidget,
-// which acts as a central widget where the operations are finally done upon.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
-ptCurveWindow::ptCurveWindow(ptCurve*    RelatedCurve,
-                             const short Channel,
-                             QWidget*    Parent)
+// NOTE: ptCurveWindow would be a good place to use C++11’s ctor delegation.
+// Unfortunately it’s only available in GCC 4.7.
+ptCurveWindow::ptCurveWindow(QWidget *AParent)
+: ptWidget(AParent)
+{}
 
-  :QWidget(NULL) {
+//==============================================================================
 
-  m_RelatedCurve = RelatedCurve;
-  m_Channel      = Channel;
-
-  // Sizing and layout related.
-
-  QSizePolicy Policy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-  Policy.setHeightForWidth(1);
-  setSizePolicy(Policy);
-
-  QVBoxLayout *Layout = new QVBoxLayout;
-  Layout->setContentsMargins(0,0,0,0);
-  Layout->setSpacing(0);
-  Layout->addWidget(this);
-  Parent->setLayout(Layout);
-  m_Parent = Parent;
-  m_Parent->setStyleSheet("");
-
-  // Some other dynamic members we want to have clean.
-  m_OverlayAnchorX = 0;
-  m_OverlayAnchorY = 0;
-  m_QPixmap        = NULL;
-  m_Image8         = NULL;
-  // Nothing moving. (Event hanpting)
-  m_MovingAnchor   = -1;
-  m_ActiveAnchor   = -1;
-  m_MousePosX      = 0;
-  m_MousePosY      = 0;
-  m_BlockEvents    = 0;
-  m_RecalcNeeded   = 0;
-
-  // Timer to delay on resize operations.
-  // (avoiding excessive calculations)
-  m_ResizeTimer = new QTimer(this);
-  m_ResizeTimer->setSingleShot(1);
-  connect(m_ResizeTimer,
-          SIGNAL(timeout()),
-          this,
-          SLOT(ResizeTimerExpired()));
-
-  // Timer for the wheel interaction
-  m_WheelTimer = new QTimer(this);
-  m_WheelTimer->setSingleShot(1);
-  connect(m_WheelTimer,
-          SIGNAL(timeout()),
-          this,
-          SLOT(WheelTimerExpired()));
-
-
-
-  m_AtnAdaptive = new QAction(tr("A&daptive"), this);
-  m_AtnAdaptive->setStatusTip(tr("Adaptive saturation"));
-  m_AtnAdaptive->setCheckable(true);
-  connect(m_AtnAdaptive, SIGNAL(triggered()), this, SLOT(SetSatMode()));
-  m_AtnAbsolute = new QAction(tr("A&bsolute"), this);
-  m_AtnAbsolute->setStatusTip(tr("Absolute saturation"));
-  m_AtnAbsolute->setCheckable(true);
-  connect(m_AtnAbsolute, SIGNAL(triggered()), this, SLOT(SetSatMode()));
-
-  m_SatModeGroup = new QActionGroup(this);
-  m_SatModeGroup->addAction(m_AtnAdaptive);
-  m_SatModeGroup->addAction(m_AtnAbsolute);
-  m_AtnAdaptive->setChecked(Settings->GetInt("SatCurveMode")>0?true:false);
-  m_AtnAbsolute->setChecked(Settings->GetInt("SatCurveMode")>0?false:true);
-
-  m_AtnByLuma = new QAction(tr("By l&uminance"), this);
-  m_AtnByLuma->setStatusTip(tr("Mask by luminance"));
-  m_AtnByLuma->setCheckable(true);
-  connect(m_AtnByLuma, SIGNAL(triggered()), this, SLOT(SetType()));
-  m_AtnByChroma = new QAction(tr("By c&olor"), this);
-  m_AtnByChroma->setStatusTip(tr("Mask by color"));
-  m_AtnByChroma->setCheckable(true);
-  connect(m_AtnByChroma, SIGNAL(triggered()), this, SLOT(SetType()));
-
-  m_TypeGroup = new QActionGroup(this);
-  m_TypeGroup->addAction(m_AtnByLuma);
-  m_TypeGroup->addAction(m_AtnByChroma);
-  if (m_Channel == ptCurveChannel_Saturation) {
-    m_AtnByLuma->setChecked(Settings->GetInt("SatCurveType")>0?true:false);
-    m_AtnByChroma->setChecked(Settings->GetInt("SatCurveType")>0?false:true);
-  } else if (m_Channel == ptCurveChannel_Texture) {
-    m_AtnByLuma->setChecked(Settings->GetInt("TextureCurveType")>0?true:false);
-    m_AtnByChroma->setChecked(Settings->GetInt("TextureCurveType")>0?false:true);
-  } else if (m_Channel == ptCurveChannel_Denoise) {
-    m_AtnByLuma->setChecked(Settings->GetInt("DenoiseCurveType")>0?true:false);
-    m_AtnByChroma->setChecked(Settings->GetInt("DenoiseCurveType")>0?false:true);
-  } else if (m_Channel == ptCurveChannel_Denoise2) {
-    m_AtnByLuma->setChecked(Settings->GetInt("Denoise2CurveType")>0?true:false);
-    m_AtnByChroma->setChecked(Settings->GetInt("Denoise2CurveType")>0?false:true);
-  } else if (m_Channel == ptCurveChannel_Hue) {
-    m_AtnByLuma->setChecked(Settings->GetInt("HueCurveType")>0?true:false);
-    m_AtnByChroma->setChecked(Settings->GetInt("HueCurveType")>0?false:true);
-  } else {
-    m_AtnByLuma->setChecked(true);
-    m_AtnByChroma->setChecked(false);
-  }
-
-  m_AtnITLinear = new QAction(tr("&Linear"), this);
-  m_AtnITLinear->setStatusTip(tr("Linear interpolation"));
-  m_AtnITLinear->setCheckable(true);
-  connect(m_AtnITLinear, SIGNAL(triggered()), this, SLOT(SetInterpolationType()));
-  m_AtnITSpline = new QAction(tr("&Spline"), this);
-  m_AtnITSpline->setStatusTip(tr("Spline interpolation"));
-  m_AtnITSpline->setCheckable(true);
-  connect(m_AtnITSpline, SIGNAL(triggered()), this, SLOT(SetInterpolationType()));
-  m_AtnITCosine = new QAction(tr("&Cosine"), this);
-  m_AtnITCosine->setStatusTip(tr("Cosine interpolation"));
-  m_AtnITCosine->setCheckable(true);
-  connect(m_AtnITCosine, SIGNAL(triggered()), this, SLOT(SetInterpolationType()));
-
-  m_ITGroup = new QActionGroup(this);
-  m_ITGroup->addAction(m_AtnITLinear);
-  m_ITGroup->addAction(m_AtnITSpline);
-  m_ITGroup->addAction(m_AtnITCosine);
-  m_AtnITLinear->setChecked(
-    m_RelatedCurve->m_IntType==ptCurveIT_Linear?true:false);
-  m_AtnITSpline->setChecked(
-    m_RelatedCurve->m_IntType==ptCurveIT_Spline?true:false);
-  m_AtnITCosine->setChecked(
-    m_RelatedCurve->m_IntType==ptCurveIT_Cosine?true:false);
-
-  // Cyclic curve
-  if (m_Channel == ptCurveChannel_Saturation ||
-      m_Channel == ptCurveChannel_Texture ||
-      m_Channel == ptCurveChannel_Denoise ||
-      m_Channel == ptCurveChannel_Denoise2 ||
-      m_Channel == ptCurveChannel_Hue) {
-    m_CyclicCurve = (int)m_AtnByChroma->isChecked();
-  } else if (m_Channel == ptCurveChannel_LByHue) {
-    m_CyclicCurve = 1;
-  } else {
-    m_CyclicCurve = 0;
-  }
+ptCurveWindow::ptCurveWindow(const ptCfgItem &ACfgItem, QWidget *AParent)
+: ptWidget(AParent)
+{
+  this->init(ACfgItem);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptCurveWindow::~ptCurveWindow() {
-  //printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
-  delete m_QPixmap;
-  delete m_Image8;
+/*  Resources managed by Qt parent or external objects. Do not delete manually.
+      all QAction and QActionGroup
+      FCaptionLabel
+      FWheelTimer
+*/
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// resizeEvent.
-// Delay a resize via a timer.
-// ResizeTimerExpired upon expiration.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
-void ptCurveWindow::resizeEvent(QResizeEvent*) {
-  // Schedule the action 500ms from here to avoid multiple rescaling actions
-  // during multiple resizeEvents from a window resized by the user.
-  m_ResizeTimer->start(200); // 500 ms.
-}
+void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
+  FCaptionLabel     = nullptr;
+  FWheelTimer       = new QTimer(this);
+  FMouseAction      = NoAction;
+  FMovingAnchor     = -1;
+  FLinearIpolAction = nullptr;
+  FSplineIpolAction = nullptr;
+  FCosineIpolAction = nullptr;
+  FIpolGroup        = nullptr;
+  FByLumaAction     = nullptr;
+  FByChromaAction   = nullptr;
+  FMaskGroup        = nullptr;
+  FOpenCurveAction  = nullptr;
 
-void ptCurveWindow::ResizeTimerExpired() {
-  // m_RelatedCurve enforces update, even if it is the same image.
-  UpdateView(m_RelatedCurve);
-}
+  // Timer for the wheel interaction
+  FWheelTimer->setSingleShot(1);
+  FWheelTimer->setInterval(CPipeDelay);
+  connect(FWheelTimer, SIGNAL(timeout()), this, SLOT(wheelTimerExpired()));
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Set Curve State
-//
-////////////////////////////////////////////////////////////////////////////////
+  QSizePolicy hPolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+  hPolicy.setHeightForWidth(true);
+  this->setSizePolicy(hPolicy);
 
-void ptCurveWindow::SetCurveState(const short state) {
-  switch (m_Channel) {
-    case ptCurveChannel_RGB :
-      Settings->SetValue("CurveRGB",state); break;
-    case ptCurveChannel_R :
-      Settings->SetValue("CurveR",state); break;
-    case ptCurveChannel_G :
-      Settings->SetValue("CurveG",state); break;
-    case ptCurveChannel_B :
-      Settings->SetValue("CurveB",state); break;
-    case ptCurveChannel_L :
-      Settings->SetValue("CurveL",state); break;
-    case ptCurveChannel_a :
-      Settings->SetValue("CurveLa",state); break;
-    case ptCurveChannel_b :
-      Settings->SetValue("CurveLb",state); break;
-    case ptCurveChannel_Outline :
-      Settings->SetValue("CurveOutline",state); break;
-    case ptCurveChannel_LByHue :
-      Settings->SetValue("CurveLByHue",state); break;
-    case ptCurveChannel_Hue :
-      Settings->SetValue("CurveHue",state); break;
-    case ptCurveChannel_Texture :
-      Settings->SetValue("CurveTexture",state); break;
-    case ptCurveChannel_Saturation :
-      Settings->SetValue("CurveSaturation",state); break;
-    case ptCurveChannel_Base :
-      Settings->SetValue("BaseCurve",state); break;
-    case ptCurveChannel_Base2 :
-      Settings->SetValue("BaseCurve2",state); break;
-    case ptCurveChannel_ShadowsHighlights :
-      Settings->SetValue("CurveShadowsHighlights",state); break;
-    case ptCurveChannel_Denoise :
-      Settings->SetValue("CurveDenoise",state); break;
-    case ptCurveChannel_Denoise2 :
-      Settings->SetValue("CurveDenoise2",state); break;
-    default :
-      assert(0);
+  this->setObjectName(ACfgItem.Id);  // Do not touch! Filter commonDispatch relies on this.
+  FCurve = ACfgItem.Curve;
+
+  // set up caption in topleft corner
+  if (!ACfgItem.Caption.isEmpty()) {
+    FCaptionLabel = new QLabel("<b style='color:#ffffff'>" + ACfgItem.Caption + "</b>", this);
+    FCaptionLabel->move(5,5);
+    FCaptionLabel->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    FCaptionLabel->setAttribute(Qt::WA_NoSystemBackground, true);
+    FCaptionLabel->setAttribute(Qt::WA_OpaquePaintEvent, false);
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Get Curve State
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
-short ptCurveWindow::GetCurveState() {
-  short State = 0;
-  switch (m_Channel) {
-    case ptCurveChannel_RGB :
-      State = Settings->GetInt("CurveRGB"); break;
-    case ptCurveChannel_R :
-      State = Settings->GetInt("CurveR"); break;
-    case ptCurveChannel_G :
-      State = Settings->GetInt("CurveG"); break;
-    case ptCurveChannel_B :
-      State = Settings->GetInt("CurveB"); break;
-    case ptCurveChannel_L :
-      State = Settings->GetInt("CurveL"); break;
-    case ptCurveChannel_a :
-      State = Settings->GetInt("CurveLa"); break;
-    case ptCurveChannel_b :
-      State = Settings->GetInt("CurveLb"); break;
-    case ptCurveChannel_Outline :
-      State = Settings->GetInt("CurveOutline"); break;
-    case ptCurveChannel_LByHue :
-      State = Settings->GetInt("CurveLByHue"); break;
-    case ptCurveChannel_Hue :
-      State = Settings->GetInt("CurveHue"); break;
-    case ptCurveChannel_Texture :
-      State = Settings->GetInt("CurveTexture"); break;
-    case ptCurveChannel_Saturation :
-      State = Settings->GetInt("CurveSaturation"); break;
-    case ptCurveChannel_Base :
-      State = Settings->GetInt("BaseCurve"); break;
-    case ptCurveChannel_Base2 :
-      State = Settings->GetInt("BaseCurve2"); break;
-    case ptCurveChannel_ShadowsHighlights :
-      State = Settings->GetInt("CurveShadowsHighlights"); break;
-    case ptCurveChannel_Denoise :
-      State = Settings->GetInt("CurveDenoise"); break;
-    case ptCurveChannel_Denoise2 :
-      State = Settings->GetInt("CurveDenoise2"); break;
-    default :
-      assert(0);
-  }
-  return State;
+void ptCurveWindow::setValue(const QVariant &AValue) {
+  GInfo->Assert(AValue.type() == QVariant::Map,
+                QString("%1: Value must be of type QVariant::Map (8), but is (%2).")
+                    .arg(this->objectName()).arg(AValue.type()), AT);
+
+  auto hTempMap = AValue.toMap();
+  FCurve->setFromFilterConfig(&hTempMap);
+  updateView();
+  requestPipeRun();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Context menu and related
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
-void ptCurveWindow::ContextMenu(QMouseEvent* event) {
-  short TempSetting = GetCurveState();
+void ptCurveWindow::setMaskType() {
+  auto hOldMask = FCurve->mask();
 
-  if (m_Channel != ptCurveChannel_Saturation &&
-      !(TempSetting==ptCurveChoice_Manual ||
-        TempSetting==ptCurveChoice_None) )
+  if (FByLumaAction->isChecked())
+    FCurve->setMask(ptCurve::LumaMask);
+  else if (FByChromaAction->isChecked())
+    FCurve->setMask(ptCurve::ChromaMask);
+
+  if (hOldMask == FCurve->mask()) return;
+
+  if (isCyclicCurve()) {
+    // wrap-around/cyclic curve, i.e. left edge = right edge
+    FCurve->anchors()->back().second = FCurve->anchors()->front().second;
+    FCurve->calcCurve();
+  }
+
+  updateView();
+  requestPipeRun();
+}
+
+//==============================================================================
+
+void ptCurveWindow::setInterpolationType() {
+  auto hOldIPol = FCurve->interpolType();
+
+  if (FLinearIpolAction->isChecked())
+    FCurve->setInterpolType(ptCurve::LinearInterpol);
+  else if (FSplineIpolAction->isChecked())
+    FCurve->setInterpolType(ptCurve::SplineInterpol);
+  else if (FCosineIpolAction->isChecked())
+    FCurve->setInterpolType(ptCurve::CosineInterpol);
+
+  if (hOldIPol == FCurve->interpolType()) return;
+
+  updateView();
+  requestPipeRun();
+}
+
+//==============================================================================
+
+void ptCurveWindow::openCurveFile()
+{
+  QString CurveFileName = QFileDialog::getOpenFileName(nullptr,
+                                                       QObject::tr("Open Curve"),
+                                                       Settings->GetString("CurvesDirectory"),
+                                                       CurveFilePattern);
+
+  if (CurveFileName.size() == 0) {
     return;
-
-  QMenu Menu(NULL);
-  Menu.setStyle(Theme->style());
-  Menu.setPalette(Theme->menuPalette());
-  if ((TempSetting==ptCurveChoice_Manual ||
-        TempSetting==ptCurveChoice_None)) {
-    m_AtnITLinear->setChecked(
-      m_RelatedCurve->m_IntType==ptCurveIT_Linear?true:false);
-    m_AtnITSpline->setChecked(
-      m_RelatedCurve->m_IntType==ptCurveIT_Spline?true:false);
-    m_AtnITCosine->setChecked(
-      m_RelatedCurve->m_IntType==ptCurveIT_Cosine?true:false);
-    Menu.addAction(m_AtnITLinear);
-    Menu.addAction(m_AtnITSpline);
-    Menu.addAction(m_AtnITCosine);
-  }
-  if (m_Channel == ptCurveChannel_Saturation) {
-    m_AtnAdaptive->setChecked(Settings->GetInt("SatCurveMode")>0?true:false);
-    //~ m_AtnAbsolute->setChecked(Settings->GetInt("SatCurveMode")>0?false:true);
-    if ((TempSetting==ptCurveChoice_Manual ||
-        TempSetting==ptCurveChoice_None))
-      Menu.addSeparator();
-    Menu.addAction(m_AtnAbsolute);
-    Menu.addAction(m_AtnAdaptive);
-    Menu.addSeparator();
-    Menu.addAction(m_AtnByLuma);
-    Menu.addAction(m_AtnByChroma);
-  } else if (m_Channel == ptCurveChannel_Texture ||
-             m_Channel == ptCurveChannel_Denoise ||
-             m_Channel == ptCurveChannel_Denoise2 ||
-             m_Channel == ptCurveChannel_Hue) {
-    if ((TempSetting==ptCurveChoice_Manual ||
-        TempSetting==ptCurveChoice_None))
-      Menu.addSeparator();
-    Menu.addAction(m_AtnByLuma);
-    Menu.addAction(m_AtnByChroma);
-  }
-
-  Menu.exec(event->globalPos());
-}
-
-void ptCurveWindow::SetSatMode() {
-  if (Settings->GetInt("SatCurveMode") == (int)m_AtnAdaptive->isChecked())
-    return;
-  Settings->SetValue("SatCurveMode",(int)m_AtnAdaptive->isChecked());
-
-  if (Settings->GetInt("CurveSaturation")==ptCurveChoice_None) return;
-  if (m_BlockEvents) return;
-
-  m_BlockEvents  = 1;
-  CB_CurveWindowRecalc(m_Channel);
-  m_RecalcNeeded = 0;
-  m_BlockEvents  = 0;
-
-  return;
-}
-
-void ptCurveWindow::SetType() {
-  if (m_Channel == ptCurveChannel_Saturation) {
-    if (Settings->GetInt("SatCurveType") == (int)m_AtnByLuma->isChecked())
-      return;
-    Settings->SetValue("SatCurveType",(int)m_AtnByLuma->isChecked());
-  } else if (m_Channel == ptCurveChannel_Texture) {
-    if (Settings->GetInt("TextureCurveType") == (int)m_AtnByLuma->isChecked())
-      return;
-    Settings->SetValue("TextureCurveType",(int)m_AtnByLuma->isChecked());
-  } else if (m_Channel == ptCurveChannel_Denoise) {
-    if (Settings->GetInt("DenoiseCurveType") == (int)m_AtnByLuma->isChecked())
-      return;
-    Settings->SetValue("DenoiseCurveType",(int)m_AtnByLuma->isChecked());
-  } else if (m_Channel == ptCurveChannel_Denoise2) {
-    if (Settings->GetInt("Denoise2CurveType") == (int)m_AtnByLuma->isChecked())
-      return;
-    Settings->SetValue("Denoise2CurveType",(int)m_AtnByLuma->isChecked());
-  } else if (m_Channel == ptCurveChannel_Hue) {
-    if (Settings->GetInt("HueCurveType") == (int)m_AtnByLuma->isChecked())
-      return;
-    Settings->SetValue("HueCurveType",(int)m_AtnByLuma->isChecked());
-  }
-  if (m_Channel == ptCurveChannel_Saturation ||
-      m_Channel == ptCurveChannel_Texture ||
-      m_Channel == ptCurveChannel_Denoise ||
-      m_Channel == ptCurveChannel_Denoise2 ||
-      m_Channel == ptCurveChannel_Hue) {
-    m_CyclicCurve = (int)m_AtnByChroma->isChecked();
-    if (m_CyclicCurve == 1) {
-      m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1] = m_RelatedCurve->m_YAnchor[0];
-      m_RelatedCurve->SetCurveFromAnchors();
+  } else {
+    if (FCurve->readCurveFile(CurveFileName, true) == 0) {
+      updateView();
+      requestPipeRun();
     }
   }
-  CalculateCurve();
-  UpdateView();
-
-  if (Settings->GetInt("CurveSaturation")==ptCurveChoice_None &&
-      m_Channel == ptCurveChannel_Saturation) return;
-  if (Settings->GetInt("CurveTexture")==ptCurveChoice_None &&
-      m_Channel == ptCurveChannel_Texture) return;
-  if (Settings->GetInt("CurveDenoise")==ptCurveChoice_None &&
-      m_Channel == ptCurveChannel_Denoise) return;
-  if (Settings->GetInt("CurveDenoise2")==ptCurveChoice_None &&
-      m_Channel == ptCurveChannel_Denoise2) return;
-  if (Settings->GetInt("CurveHue")==ptCurveChoice_None &&
-      m_Channel == ptCurveChannel_Hue) return;
-  if (m_BlockEvents) return;
-
-  m_BlockEvents  = 1;
-  CB_CurveWindowRecalc(m_Channel);
-  m_RecalcNeeded = 0;
-  m_BlockEvents  = 0;
-
-  return;
 }
 
-void ptCurveWindow::SetInterpolationType() {
-  short Temp = 0;
-  if ((int)m_AtnITLinear->isChecked())
-    Temp = ptCurveIT_Linear;
-  if ((int)m_AtnITSpline->isChecked())
-    Temp = ptCurveIT_Spline;
-  if ((int)m_AtnITCosine->isChecked())
-    Temp = ptCurveIT_Cosine;
-  if (m_RelatedCurve->m_IntType==Temp) return;
+//==============================================================================
 
-  m_RelatedCurve->m_IntType = Temp;
-
-  if (m_BlockEvents) return;
-
-  m_BlockEvents  = 1;
-  m_RelatedCurve->SetCurveFromAnchors();
-  UpdateView();
-  CB_CurveWindowRecalc(m_Channel);
-  m_RecalcNeeded = 0;
-  m_BlockEvents  = 0;
-
-  return;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// CalculateCurve.
-//
-// Calculates the curve into an m_Image8.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptCurveWindow::SetBWGradient(ptImage8* Image) {
+void ptCurveWindow::setBWGradient(ptImage8* AImage) {
   int Width  = width();
   int Height = height();
 
@@ -476,14 +199,16 @@ void ptCurveWindow::SetBWGradient(ptImage8* Image) {
     for (uint16_t Row = Height-Height/20;
          Row <= Height-2;
          Row++) {
-      Image->m_Image[Row*Width+i][0] = Value;
-      Image->m_Image[Row*Width+i][1] = Value;
-      Image->m_Image[Row*Width+i][2] = Value;
+      AImage->m_Image[Row*Width+i][0] = Value;
+      AImage->m_Image[Row*Width+i][1] = Value;
+      AImage->m_Image[Row*Width+i][2] = Value;
     }
   }
 }
 
-void ptCurveWindow::SetBWGammaGradient(ptImage8* Image) {
+//==============================================================================
+
+void ptCurveWindow::setBWGammaGradient(ptImage8* AImage) {
   int Width  = width();
   int Height = height();
 
@@ -492,14 +217,16 @@ void ptCurveWindow::SetBWGammaGradient(ptImage8* Image) {
     for (uint16_t Row = Height-Height/20;
          Row <= Height-2;
          Row++) {
-      Image->m_Image[Row*Width+i][0] = Value;
-      Image->m_Image[Row*Width+i][1] = Value;
-      Image->m_Image[Row*Width+i][2] = Value;
+      AImage->m_Image[Row*Width+i][0] = Value;
+      AImage->m_Image[Row*Width+i][1] = Value;
+      AImage->m_Image[Row*Width+i][2] = Value;
     }
   }
 }
 
-void ptCurveWindow::SetColorGradient(ptImage8* Image) {
+//==============================================================================
+
+void ptCurveWindow::setColorGradient(ptImage8* AImage) {
   int Width  = width();
   int Height = height();
 
@@ -523,582 +250,447 @@ void ptCurveWindow::SetColorGradient(ptImage8* Image) {
     for (uint16_t Row = Height-Height/20;
          Row <= Height-2;
          Row++) {
-      Image->m_Image[Row*Width+i][0] = ValueB;
-      Image->m_Image[Row*Width+i][1] = ValueG;
-      Image->m_Image[Row*Width+i][2] = ValueR;
+      AImage->m_Image[Row*Width+i][0] = ValueB;
+      AImage->m_Image[Row*Width+i][1] = ValueG;
+      AImage->m_Image[Row*Width+i][2] = ValueR;
     }
   }
 }
 
+//==============================================================================
 
-void ptCurveWindow::CalculateCurve() {
+void ptCurveWindow::setColorBlocks(const QColor &ATopLeftColor, const QColor &ABottomRightColor) {
+  int hWidth  = this->width();
+  int hHeight = this->height();
 
-  if (!m_RelatedCurve) return;
-
-  if (m_Channel == ptCurveChannel_Saturation) {
-    m_AtnByLuma->setChecked(Settings->GetInt("SatCurveType")>0?true:false);
-    m_AtnByChroma->setChecked(Settings->GetInt("SatCurveType")>0?false:true);
-  } else if (m_Channel == ptCurveChannel_Texture) {
-    m_AtnByLuma->setChecked(Settings->GetInt("TextureCurveType")>0?true:false);
-    m_AtnByChroma->setChecked(Settings->GetInt("TextureCurveType")>0?false:true);
-  } else if (m_Channel == ptCurveChannel_Denoise) {
-    m_AtnByLuma->setChecked(Settings->GetInt("DenoiseCurveType")>0?true:false);
-    m_AtnByChroma->setChecked(Settings->GetInt("DenoiseCurveType")>0?false:true);
-  } else if (m_Channel == ptCurveChannel_Denoise2) {
-    m_AtnByLuma->setChecked(Settings->GetInt("Denoise2CurveType")>0?true:false);
-    m_AtnByChroma->setChecked(Settings->GetInt("Denoise2CurveType")>0?false:true);
-  } else if (m_Channel == ptCurveChannel_Hue) {
-    m_AtnByLuma->setChecked(Settings->GetInt("HueCurveType")>0?true:false);
-    m_AtnByChroma->setChecked(Settings->GetInt("HueCurveType")>0?false:true);
+  // topleft color block
+  for (uint16_t i=1;  i < 3*(hHeight-1)/10;  ++i) {
+    for (uint16_t Row = 1;  Row < 2*(hWidth-1)/10+1;  ++Row) {
+      int hImgIdx = Row*hWidth+i;
+      FCanvas.m_Image[hImgIdx][0] = ATopLeftColor.blue();
+      FCanvas.m_Image[hImgIdx][1] = ATopLeftColor.green();
+      FCanvas.m_Image[hImgIdx][2] = ATopLeftColor.red();
+    }
   }
 
-  int Width  = width();
-  int Height = height();
+  // bottom right color block
+  for (uint16_t i = 7*(hHeight-1)/10+1;  i < hWidth; ++i) {
+    for (uint16_t Row = 8*(hWidth-1)/10+1;  Row < hHeight;  ++Row) {
+      int hImgIdx = Row*hWidth+i;
+      FCanvas.m_Image[hImgIdx][0] = ABottomRightColor.blue();
+      FCanvas.m_Image[hImgIdx][1] = ABottomRightColor.green();
+      FCanvas.m_Image[hImgIdx][2] = ABottomRightColor.red();
+    }
+  }
+}
 
-  uint16_t LocalCurve[Width];
+//==============================================================================
 
-  // Zero the LocalCurve
-  memset(LocalCurve,0,sizeof(LocalCurve));
+void ptCurveWindow::calcCurveImage() {
+  // Viewport dimensions are needed very often -> local variables for quicker access.
+  int hWidth  = this->width();
+  int hHeight = this->height();
 
-  // Compute it. Take already the Y axis going down into account.
-  for (uint16_t x=0; x<Width; x++) {
-    uint16_t CurveX = (uint16_t)( 0.5 + (float)x/(Width-1) * 0xffff );
-    LocalCurve[x] = Height-1- (uint16_t)
-     ( 0.5 + (float) m_RelatedCurve->m_Curve[CurveX]/0xffff * (Height-1));
+  if (hHeight == 0 || hWidth == 0)
+    return;
+
+  FCanvas.setSize(hWidth, hHeight, 3);  // image is completely black afterwards
+
+  if (!FCurve.get()) return;
+
+  // Compute curve points. The vector stores the position of the display curve (y value)
+  // for each display x value. Note that coordinates origin is topleft.
+  std::vector<uint16_t> hLocalCurve(hWidth);
+  for (uint16_t LocalX = 0; LocalX < hWidth; ++LocalX) {
+    uint16_t CurveX = (uint16_t)(0.5f + (float)LocalX / (hWidth-1) * 0xffff);
+    hLocalCurve[LocalX] = hHeight-1 - (uint16_t)(0.5f + (float) FCurve->Curve[CurveX]/0xffff * (hHeight-1));
   }
 
-  delete m_Image8;
-  m_Image8 = new ptImage8(Width,Height,3);
+  QColor hCurveColor = QColor(200,200,200);
+  QColor hGridColor  = QColor(53,53,53);
 
-  // Colors from the palette should give more consistent results.
-  QColor FGColor = QColor(200,200,200);//palette().color(QPalette::WindowText);
-//  QColor BGColor = QColor(0,0,0);//palette().color(QPalette::Window);
-  QColor MColor  = QColor(53,53,53);//palette().color(QPalette::Mid);
-
-  // Gradient for saturation curve
-  if (m_Channel == ptCurveChannel_Saturation) {
-    if ((int)m_AtnByLuma->isChecked() == 1) {
-      SetBWGradient(m_Image8);
-    } else {
-      SetColorGradient(m_Image8);
-    }
-  } else if (m_Channel == ptCurveChannel_Texture ||
-             m_Channel == ptCurveChannel_Denoise ||
-             m_Channel == ptCurveChannel_Denoise2 ||
-             m_Channel == ptCurveChannel_Hue) {
-    if ((int)m_AtnByLuma->isChecked() == 1) {
-      SetBWGradient(m_Image8);
-    } else {
-      SetColorGradient(m_Image8);
-    }
-  } else if (m_Channel == ptCurveChannel_LByHue) {
-    SetColorGradient(m_Image8);
-  } else if (m_Channel == ptCurveChannel_a) {
-    for (uint16_t i=1;i < 3*(Height-1)/10;i++) {
-      for (uint16_t Row = 1;
-           Row < 2*(Width-1)/10+1;
-           Row++) {
-        m_Image8->m_Image[Row*Width+i][0] = 100;
-        m_Image8->m_Image[Row*Width+i][1] = 50;
-        m_Image8->m_Image[Row*Width+i][2] = 200;
-      }
-    }
-    for (uint16_t i = 7*(Height-1)/10+1;i < Width;i++) {
-      for (uint16_t Row = 8*(Width-1)/10+1;
-           Row < Height;
-           Row++) {
-        m_Image8->m_Image[Row*Width+i][0] = 50;
-        m_Image8->m_Image[Row*Width+i][1] = 150;
-        m_Image8->m_Image[Row*Width+i][2] = 50;
-      }
-    }
-  } else if (m_Channel == ptCurveChannel_b) {
-    for (uint16_t i=1;i < 3*(Height-1)/10;i++) {
-      for (uint16_t Row = 1;
-           Row < 2*(Width-1)/10+1;
-           Row++) {
-        m_Image8->m_Image[Row*Width+i][0] = 75;
-        m_Image8->m_Image[Row*Width+i][1] = 255;
-        m_Image8->m_Image[Row*Width+i][2] = 255;
-      }
-    }
-    for (uint16_t i = 7*(Height-1)/10+1;i < Width;i++) {
-      for (uint16_t Row = 8*(Width-1)/10+1;
-           Row < Height;
-           Row++) {
-        m_Image8->m_Image[Row*Width+i][0] = 200;
-        m_Image8->m_Image[Row*Width+i][1] = 100;
-        m_Image8->m_Image[Row*Width+i][2] = 50;
-      }
-    }
-  } else if (m_Channel == ptCurveChannel_L ||
-             m_Channel == ptCurveChannel_Outline ||
-             m_Channel == ptCurveChannel_Base2) {
-    SetBWGradient(m_Image8);
-  } else if (m_Channel == ptCurveChannel_RGB ||
-             m_Channel == ptCurveChannel_Base) {
-    SetBWGammaGradient(m_Image8);
+  // paint visual aids: gradient bar, colour blocks
+  switch (FCurve->mask()) {
+    case ptCurve::LumaMask:     setBWGradient(&FCanvas); break;
+    case ptCurve::ChromaMask:   setColorGradient(&FCanvas); break;
+    case ptCurve::GammaMask:    setBWGammaGradient(&FCanvas); break;
+    case ptCurve::AChannelMask: setColorBlocks(QColor(200,50,100), QColor(50,150,50)); break;
+    case ptCurve::BChannelMask: setColorBlocks(QColor(255,255,75), QColor(50,100,200)); break;
+    case ptCurve::NoMask:       // fall through
+    default:                    break; // nothing to do
   }
 
-
-  // Grid lines.
-  for (uint16_t Count = 0, Row = Height-1;
+  // paint grid lines producing a 10×10 grid
+  for (uint16_t Count = 0, Row = hHeight-1;
        Count <= 10;
-       Count++, Row = Height-1-Count*(Height-1)/10) {
-    uint32_t Temp = Row*Width;
-    for (uint16_t i=0;i<Width;i++) {
-      m_Image8->m_Image[Temp][0] = MColor.blue();
-      m_Image8->m_Image[Temp][1] = MColor.green();
-      m_Image8->m_Image[Temp][2] = MColor.red();
+       Count++, Row = hHeight-1-Count*(hHeight-1)/10)
+  {
+    uint32_t Temp = Row*hWidth;
+    for (uint16_t i=0;i<hWidth;i++) {
+      FCanvas.m_Image[Temp][0] = hGridColor.blue();
+      FCanvas.m_Image[Temp][1] = hGridColor.green();
+      FCanvas.m_Image[Temp][2] = hGridColor.red();
       ++Temp;
     }
   }
   for (uint16_t Count = 0, Column = 0;
        Count <= 10;
-       Count++, Column = Count*(Width-1)/10) {
+       Count++, Column = Count*(hWidth-1)/10)
+  {
     uint32_t Temp = Column;
-    for (uint16_t i=0;i<Height;i++) {
-      m_Image8->m_Image[Temp][0] = MColor.blue();
-      m_Image8->m_Image[Temp][1] = MColor.green();
-      m_Image8->m_Image[Temp][2] = MColor.red();
-      Temp += Width;
+    for (uint16_t i=0;i<hHeight;i++) {
+      FCanvas.m_Image[Temp][0] = hGridColor.blue();
+      FCanvas.m_Image[Temp][1] = hGridColor.green();
+      FCanvas.m_Image[Temp][2] = hGridColor.red();
+      Temp += hWidth;
     }
   }
 
-  // The curve
-  for (uint16_t i=0; i<Width; i++) {
-    int32_t Row      = LocalCurve[i];
-    int32_t NextRow  = LocalCurve[(i<(Width-1))?i+1:i];
-    uint16_t kStart = MIN(Row,NextRow);
-    uint16_t kEnd   = MAX(Row,NextRow);
-    uint32_t Temp = i+kStart*Width;
+  // paint the curve itself
+  for (uint16_t i=0; i<hWidth; i++) {
+    int32_t  Row      = hLocalCurve[i];
+    int32_t  NextRow  = hLocalCurve[(i<(hWidth-1))?i+1:i];
+    uint16_t kStart   = ptMin(Row,NextRow);
+    uint16_t kEnd     = ptMax(Row,NextRow);
+    uint32_t Temp     = i+kStart*hWidth;
+
     for(uint16_t k=kStart;k<=kEnd;k++) {
-      m_Image8->m_Image[Temp][0] = FGColor.blue();
-      m_Image8->m_Image[Temp][1] = FGColor.green();
-      m_Image8->m_Image[Temp][2] = FGColor.red();
-      Temp += Width;
+      FCanvas.m_Image[Temp][0] = hCurveColor.blue();
+      FCanvas.m_Image[Temp][1] = hCurveColor.green();
+      FCanvas.m_Image[Temp][2] = hCurveColor.red();
+      Temp += hWidth;
     }
   }
 
-  // Anchors in case of anchored curve.
-  if (m_RelatedCurve->m_Type == ptCurveType_Anchor) {
-    for (short Anchor=0;Anchor<m_RelatedCurve->m_NrAnchors;Anchor++) {
-      int32_t XSpot =
-        (uint16_t) (.5 + m_RelatedCurve->m_XAnchor[Anchor]*(Width-1));
-      int32_t YSpot =
-        (uint16_t) (.5 + Height-1-m_RelatedCurve->m_YAnchor[Anchor]*(Height-1));
-      // Remember it for faster event detection.
-      m_XSpot[Anchor] = XSpot;
-      m_YSpot[Anchor] = YSpot;
-      for (int32_t Row=YSpot-3; Row<YSpot+4 ; Row++) {
-        if (Row>=Height) continue;
-        if (Row<0) continue;
-        for (int32_t Column=XSpot-3; Column<XSpot+4; Column++) {
-           if (Column>=Width) continue;
-           if (Column<0) continue;
-           m_Image8->m_Image[Row*Width+Column][0] = FGColor.blue();
-           m_Image8->m_Image[Row*Width+Column][1] = FGColor.green();
-           m_Image8->m_Image[Row*Width+Column][2] = FGColor.red();
+  // paint anchors if we have an anchored curve
+  FDisplayAnchors.clear();
+  if (FCurve->curveType() == ptCurve::AnchorType) {
+    for (auto hAnchor: *FCurve->anchors()) {
+      int XSpot = 0.5 + hAnchor.first*(hWidth-1);
+      int YSpot = 0.5 + hHeight-1 - hAnchor.second*(hHeight-1);
+      FDisplayAnchors.push_back(TScreenAnchor(XSpot, YSpot));  // Remember anchors for fast UI access later
+
+      for (int32_t Row = YSpot-3; Row < YSpot+4; ++Row) {
+        if (Row >= hHeight) continue;
+        if (Row <  0)       continue;
+        for (int32_t Column = XSpot-3; Column < XSpot+4; ++Column) {
+           if (Column >= hWidth) continue;
+           if (Column <  0)      continue;
+           int hImgIdx = Row*hWidth+Column;
+           FCanvas.m_Image[hImgIdx][0] = hCurveColor.blue();
+           FCanvas.m_Image[hImgIdx][1] = hCurveColor.green();
+           FCanvas.m_Image[hImgIdx][2] = hCurveColor.red();
         }
       }
     }
   }
-
-  // If we have an anchor moving around, show it too.
-  if (m_MovingAnchor != -1) {
-    for (int32_t Row=m_OverlayAnchorY-3; Row<m_OverlayAnchorY+4 ; Row++) {
-      if (Row>=Height) continue;
-      if (Row<0) continue;
-      for (int32_t Column=m_OverlayAnchorX-3; Column<m_OverlayAnchorX+4;
-           Column++) {
-        if (Column>=Width) continue;
-        if (Column<0) continue;
-        m_Image8->m_Image[Row*Width+Column][0] = FGColor.blue();
-        m_Image8->m_Image[Row*Width+Column][1] = FGColor.green();
-        m_Image8->m_Image[Row*Width+Column][2] = FGColor.red();
-      }
-    }
-  }
-
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// UpdateView.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
-void ptCurveWindow::UpdateView(ptCurve* NewRelatedCurve) {
+void ptCurveWindow::updateView(const std::shared_ptr<ptCurve> ANewCurve) {
+  FCurve = ANewCurve;
+  updateView();
+}
 
-  if (NewRelatedCurve) m_RelatedCurve = NewRelatedCurve;
-  if (!m_RelatedCurve) return;
+//==============================================================================
 
-  CalculateCurve();
+void ptCurveWindow::updateView() {
+  calcCurveImage();
 
-  // The detour QImage=>QPixmap is needed to enjoy
-  // HW acceleration of QPixmap.
-  if (!m_Image8) return;
-  if (isEnabled()==0) {
-    for (uint16_t j = 0; j < m_Image8->m_Width; j++) {
-      for (uint16_t i = 0; i < m_Image8->m_Height; i++) {
-        m_Image8->m_Image[i*m_Image8->m_Width+j][0] >>= 1;
-        m_Image8->m_Image[i*m_Image8->m_Width+j][1] >>= 1;
-        m_Image8->m_Image[i*m_Image8->m_Width+j][2] >>= 1;
+  // grey out when curve windows is disabled
+  if (!this->isEnabled()) {
+    for (uint16_t j = 0; j < FCanvas.m_Width; j++) {
+      for (uint16_t i = 0; i < FCanvas.m_Height; i++) {
+        int hImgIdx = i*FCanvas.m_Width+j;
+        FCanvas.m_Image[hImgIdx][0] >>= 1;
+        FCanvas.m_Image[hImgIdx][1] >>= 1;
+        FCanvas.m_Image[hImgIdx][2] >>= 1;
       }
     }
   }
 
-  delete m_QPixmap;
-  m_QPixmap = new QPixmap(
-   QPixmap::fromImage(QImage((const uchar*) m_Image8->m_Image,
-                             m_Image8->m_Width,
-                             m_Image8->m_Height,
-                             QImage::Format_RGB32)));
+  // Prepare the curve image for display. We take the detour QImage=>QPixmap instead of drawing
+  // the QImage directly because QPixmap has HW accelerated drawing. Unfortunately the internal
+  // layout of ptImage8 is not suited to be loaded into a QPixmap directly.
+  FDisplayImage = QPixmap::fromImage(QImage((const uchar*) FCanvas.m_Image,
+                                            FCanvas.m_Width,
+                                            FCanvas.m_Height,
+                                            QImage::Format_RGB32));
   repaint();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// changeEvent handler.
-// To react on enable/disable
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
-void ptCurveWindow::changeEvent(QEvent* Event) {
-  if (Event->type() == QEvent::EnabledChange)
-    UpdateView(m_RelatedCurve);
+void ptCurveWindow::resizeEvent(QResizeEvent *) {
+  updateView();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// paintEvent handler.
-// Just draw the previously constructed m_QPixmap.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
+void ptCurveWindow::changeEvent(QEvent* Event) {
+  // react on enable/disable
+  if (Event->type() == QEvent::EnabledChange)
+    updateView();   // No pipe request!
+}
+
+//==============================================================================
 
 void ptCurveWindow::paintEvent(QPaintEvent*) {
   QPainter Painter(this);
-  Painter.save();
-  if (m_QPixmap) Painter.drawPixmap(0,0,*m_QPixmap);
-  Painter.restore();
+  Painter.drawPixmap(0, 0, FDisplayImage);
 }
 
-// How many pixels will be considered as 'bingo' for having the anchor ?
-const short SnapDelta = 6;
-// Percentage to be close to a curve to get a new Anchor
-const double CurveDelta = 0.12;
-// Distance to the next anchor
-const float Delta = 0.005;
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// mousePressEvent handler.
-// Implements part of the anchors creation/deletion/moving.
-//
-////////////////////////////////////////////////////////////////////////////////
+void ptCurveWindow::mousePressEvent(QMouseEvent *AEvent) {
+  FMouseAction  = NoAction;
+  FMovingAnchor = -1;
 
-void ptCurveWindow::mousePressEvent(QMouseEvent *Event) {
+  // only handle curves with minimum 2 anchors.
+  if ((FCurve->anchorCount() < 2) || (FCurve->curveType() == ptCurve::FullPrecalcType))
+    return;
 
-  // Reset the wheel status
-  if (m_ActiveAnchor != -1 &&
-      (abs((int)m_MousePosX-Event->x())>2 || abs((int)m_MousePosY-Event->y())>2)) {
-    m_ActiveAnchor = -1;
-    setMouseTracking(false);
-    m_MousePosX    = 0;
-    m_MousePosY    = 0;
-  }
+  int hCaughtIdx = hasCaughtAnchor(AEvent->pos());
+  if (hCaughtIdx > -1) {
+    // mouse caught one of the anchors
+    if (AEvent->buttons() == Qt::LeftButton) {
+      // Initialize anchor dragging
+      FMouseAction  = DragAction;
+      FMovingAnchor = hCaughtIdx;
+      return;
+    }
 
-  if (m_BlockEvents) return;
+    if ((AEvent->buttons() == Qt::RightButton) && (FCurve->anchorCount() > 2)) {
+      // Delete if still more than 2 anchors
+      FMouseAction = DeleteAction;
+      // std::vector can only erase element via an iterator :(
+      FCurve->anchors()->erase(FCurve->anchors()->begin() + hCaughtIdx);
 
-  // Do only hanlde curves with minimum 2 anchors.
-  if (m_RelatedCurve->m_Type != ptCurveType_Anchor) return;
-  if (m_RelatedCurve->m_NrAnchors < 2) return;
-
-  short Xd;
-  short Yd;
-  short i;
-  short Snapped  = 0; // got an anchor?
-  short XSnapped = 0; // in the same x range of an anchor?
-
-  // Did we snap one of the anchors ?
-  for (i=0; i<m_RelatedCurve->m_NrAnchors; i++) {
-    Xd =  abs(m_XSpot[i]-Event->x());
-    Yd =  abs(m_YSpot[i]-Event->y());
-    if (Xd<SnapDelta) XSnapped = 1;
-    if (XSnapped && (Yd<SnapDelta)) {
-      Snapped = 1;
-      if (Event->buttons() == 1) { // Left mouse. Start moving.
-        m_MovingAnchor = i;
-        m_RecalcNeeded = 1;
-      }
-      if (Event->buttons() == 2) { // Right mouse. Delete.
-        // Delete indeed if still more than 2 anchors.
-        if (m_RelatedCurve->m_NrAnchors > 2) {
-          short j;
-          for (j=i;j<m_RelatedCurve->m_NrAnchors-1;j++) {
-            m_RelatedCurve->m_XAnchor[j]=m_RelatedCurve->m_XAnchor[j+1];
-            m_RelatedCurve->m_YAnchor[j]=m_RelatedCurve->m_YAnchor[j+1];
-          }
-          m_RelatedCurve->m_NrAnchors--;
-          if (i == 0 && m_CyclicCurve == 1) {
-            m_RelatedCurve->m_YAnchor[0] = m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1];
-          } else if (i == m_RelatedCurve->m_NrAnchors && m_CyclicCurve == 1)  {
-            m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1] = m_RelatedCurve->m_YAnchor[0];
-          }
-          m_RelatedCurve->SetCurveFromAnchors();
-          // Notify we have a manual curve now ...
-          SetCurveState(ptCurveChoice_Manual);
-          UpdateView();
-          m_RecalcNeeded = 1;
+      // handle wrap-around curves
+      if (isCyclicCurve()) {
+        if (hCaughtIdx == 0) {
+          FCurve->anchors()->front().second = FCurve->anchors()->back().second;
+        } else if (hCaughtIdx == FCurve->anchorCount()) {
+          FCurve->anchors()->back().second = FCurve->anchors()->front().second;
         }
       }
-      break;
+
+      FCurve->calcCurve();
+      return;
     }
   }
 
-  // Insert a new anchor ? (Right mouse but not on an anchor).
-  if (m_RelatedCurve->m_NrAnchors < ptMaxAnchors &&
-      !XSnapped && Event->buttons() == 2 &&
-      // Close to the curve or far away?
-      fabs(((double)m_RelatedCurve->
-            m_Curve[(int32_t)((double)Event->x()/(double)width()*0xffff)]
-             /(double)0xffff) -
-            (((double)height()-(double)Event->y())/(double)height())) < CurveDelta) {
-    // Find out where to insert. (Initially the average of the
-    // neighbouring anchors).
-    if (Event->x() < m_XSpot[0]) {
-      for (short j=m_RelatedCurve->m_NrAnchors; j>0 ; j--) {
-        m_RelatedCurve->m_XAnchor[j] = m_RelatedCurve->m_XAnchor[j-1];
-        m_RelatedCurve->m_YAnchor[j] = m_RelatedCurve->m_YAnchor[j-1];
-      }
-      m_RelatedCurve->m_XAnchor[0] = (double)Event->x()/(double)width();
-      m_RelatedCurve->m_YAnchor[0] =
-        m_RelatedCurve->m_Curve[
-          (int32_t)(m_RelatedCurve->m_XAnchor[0]*0xffff)]/(double)0xffff;
-      m_RecalcNeeded = 1;
-    } else if (Event->x() > m_XSpot[m_RelatedCurve->m_NrAnchors-1]) {
-      m_RelatedCurve->m_XAnchor[m_RelatedCurve->m_NrAnchors] =
-        (double)Event->x()/(double)width();
-      m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors] =
-        m_RelatedCurve->m_Curve[(int32_t)(m_RelatedCurve->m_XAnchor[
-          m_RelatedCurve->m_NrAnchors]*0xffff)]/(double)0xffff;
-      m_RecalcNeeded = 1;
-    } else {
-      for (i=0; i<m_RelatedCurve->m_NrAnchors-1; i++) {
-        if (Event->x()>m_XSpot[i] && Event->x()<m_XSpot[i+1]) {
-          for (short j=m_RelatedCurve->m_NrAnchors; j>i+1 ; j--) {
-            m_RelatedCurve->m_XAnchor[j] = m_RelatedCurve->m_XAnchor[j-1];
-            m_RelatedCurve->m_YAnchor[j] = m_RelatedCurve->m_YAnchor[j-1];
-          }
-          m_RelatedCurve->m_XAnchor[i+1] =
-              (double)Event->x()/(double)width();
-          m_RelatedCurve->m_YAnchor[i+1] =
-            m_RelatedCurve->m_Curve[
-              (int32_t)(m_RelatedCurve->m_XAnchor[i+1]*0xffff)]/(double)0xffff;
-          break;
-        }
-      }
-      if ((int)m_AtnITCosine->isChecked()) m_RecalcNeeded = 1;
-    }
-    m_RelatedCurve->m_NrAnchors++;
-    m_RelatedCurve->SetCurveFromAnchors();
-    // Notify we have a manual curve now ...
-    SetCurveState(ptCurveChoice_Manual);
-    UpdateView();
-  } else if (!Snapped && Event->buttons() == 2) {
-    // no other interaction needed -> show ContextMenu
-    ContextMenu((QMouseEvent*)Event);
-  }
-  return;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// mouseWheelEvent handler
-// together with the expired timer
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptCurveWindow::wheelEvent(QWheelEvent *Event) {
-  if (m_BlockEvents) return;
-
-  // Do only hanlde curves with minimum 2 anchors.
-  if (m_RelatedCurve->m_Type != ptCurveType_Anchor) return;
-  if (m_RelatedCurve->m_NrAnchors < 2) return;
-
-  // anchor moving?
-  if (m_MovingAnchor != -1) return;
-
-  // we use the mose tracking to disable the wheel event
-  // with the next mouse move.
-  setMouseTracking(true);
-
-  int Width  = width();
-  int Height = height();
-  short Xd;
-  short Yd;
-
-  if (m_ActiveAnchor == -1) {
-    // Did we snap one of the anchors ?
-    for (short i = 0; i < m_RelatedCurve->m_NrAnchors; i++) {
-      Xd = abs(m_XSpot[i]-Event->x());
-      Yd = abs(m_YSpot[i]-Event->y());
-      if ((Xd<SnapDelta) && (Yd<SnapDelta)) {
-        m_ActiveAnchor = i;
-        m_MousePosX    = Event->x();
-        m_MousePosY    = Event->y();
+  if ((fabs(((double)FCurve->Curve[(uint16_t)((double)AEvent->x()/(double)width()*0xffff)]
+            / (double)0xffff) - (((double)height()-(double)AEvent->y())/(double)height()))
+       < CCurveDelta) && (AEvent->button() == Qt::RightButton))
+  {
+    // Insert a new anchor (Right mouse not on an anchor but close to the curve).
+    FMouseAction   = InsertAction;
+    int hInsertIdx = FDisplayAnchors.size();
+    for (size_t i = 0; i < FDisplayAnchors.size(); ++i) {
+      if (AEvent->x() < FDisplayAnchors.at(i).first) {
+        hInsertIdx = i;
         break;
       }
     }
-  }
 
-  if (m_ActiveAnchor != -1) {
-    float Temp = 0;
-    if (((QMouseEvent*)Event)->modifiers() & Qt::AltModifier) {
-      Temp = m_RelatedCurve->m_XAnchor[m_ActiveAnchor];
-      if (((QMouseEvent*)Event)->modifiers() & Qt::ControlModifier) {
-        Temp = Temp + Event->delta()/(float) Width/30.0f;
-      } else {
-        Temp = Temp + Event->delta()/(float) Width/120.0f;
-      }
-      // compare with neighbours
-      if (m_ActiveAnchor < m_RelatedCurve->m_NrAnchors - 1)
-        Temp = MIN(Temp, (m_XSpot[m_ActiveAnchor+1]/(float) (Width-1)) - Delta);
-      if (m_ActiveAnchor > 0)
-        Temp = MAX(Temp, (m_XSpot[m_ActiveAnchor-1]/(float) (Width-1)) + Delta);
-    } else {
-      Temp = m_RelatedCurve->m_YAnchor[m_ActiveAnchor];
-      if (((QMouseEvent*)Event)->modifiers() & Qt::ControlModifier) {
-        Temp = Temp + Event->delta()/(float) Height/30.0f;
-      } else {
-        Temp = Temp + Event->delta()/(float) Height/120.0f;
-      }
-    }
-    // out of range?
-    Temp = MAX(0.0, Temp);
-    Temp = MIN(1.0, Temp);
+    double hNewX = (double)AEvent->x() / (double)this->width();
+    double hNewY = (double)FCurve->Curve[(uint16_t)(hNewX*0xffff)] / (double)0xffff;
+    FCurve->anchors()->insert(FCurve->anchors()->begin()+hInsertIdx, TAnchor(hNewX, hNewY));
+    FCurve->calcCurve();
 
-    if (((QMouseEvent*)Event)->modifiers() & Qt::AltModifier) {
-      m_RelatedCurve->m_XAnchor[m_ActiveAnchor] = Temp;
-    } else {
-      m_RelatedCurve->m_YAnchor[m_ActiveAnchor] = Temp;
-    }
-
-    m_RelatedCurve->SetCurveFromAnchors();
-
-    // Notify we have a manual curve now ...
-    SetCurveState(ptCurveChoice_Manual);
-
-    m_OverlayAnchorX = (int32_t) (m_RelatedCurve->m_XAnchor[m_ActiveAnchor]*(Width-1));
-    m_OverlayAnchorY = (int32_t) ((1.0 - m_RelatedCurve->m_YAnchor[m_ActiveAnchor]) * (Height-1));
-    UpdateView();
-    m_WheelTimer->start(200);
+  } else if (AEvent->button() == Qt::RightButton) {
+    // right click outside curve/anchor => context menu
+    execContextMenu(AEvent->globalPos());
   }
 }
 
-void ptCurveWindow::WheelTimerExpired() {
-  m_BlockEvents  = 1;
-  CB_CurveWindowManuallyChanged(m_Channel);
-  m_RecalcNeeded = 0;
-  m_BlockEvents  = 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// mouseMoveEvent handler.
-// Move anchor around.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void ptCurveWindow::mouseMoveEvent(QMouseEvent *Event) {
-
-  // Reset the wheel status
-  if (m_ActiveAnchor != -1 &&
-      (abs((int)m_MousePosX-Event->x())>2 || abs((int)m_MousePosY-Event->y())>2)) {
-    m_ActiveAnchor = -1;
-    setMouseTracking(false);
-    m_MousePosX    = 0;
-    m_MousePosY    = 0;
-  }
-
-  if (m_BlockEvents) return;
-
-  // Do only hanlde curves with minimum 2 anchors.
-  if (m_RelatedCurve->m_Type != ptCurveType_Anchor) return;
-  if (m_RelatedCurve->m_NrAnchors < 2) return;
-
-  int Width  = width();
-  int Height = height();
-
-  if (m_MovingAnchor != -1) {
-    double X =  Event->x()/(double) (Width-1);
-    double Y = 1.0 - Event->y()/(double)(Height-1);
-
-    // Handle mouse out of range X coordinate
-    if (m_MovingAnchor == 0) {
-      if (Event->x() >= m_XSpot[1]) {
-        X = (m_XSpot[1]/(double) (Width-1)) - Delta;
-      }
-      X = MAX(0.0, X);
-    } else if (m_MovingAnchor == m_RelatedCurve->m_NrAnchors-1)  {
-      if (Event->x()<=m_XSpot[m_RelatedCurve->m_NrAnchors-2]) {
-        X = (m_XSpot[m_RelatedCurve->m_NrAnchors-2]/(double) (Width-1)) + Delta;
-      }
-      X=MIN(1.0,X);
-    } else if (Event->x()>=m_XSpot[m_MovingAnchor+1]) {
-      X = (m_XSpot[m_MovingAnchor+1]/(double) (Width-1)) - Delta;
-    } else if (Event->x()<=m_XSpot[m_MovingAnchor-1]) {
-      X = (m_XSpot[m_MovingAnchor-1]/(double) (Width-1)) + Delta;
-    }
-    Y = MAX(0.0, Y);  // Handle mouse out of range Y coordinate
-    Y = MIN(1.0, Y);
-
-    if (m_MovingAnchor == 0 && m_CyclicCurve == 1) {
-      m_RelatedCurve->m_XAnchor[0] = X;
-      m_RelatedCurve->m_YAnchor[0] = Y;
-      m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1] = Y;
-    } else if (m_MovingAnchor == m_RelatedCurve->m_NrAnchors-1 && m_CyclicCurve == 1)  {
-      m_RelatedCurve->m_XAnchor[m_RelatedCurve->m_NrAnchors-1] = X;
-      m_RelatedCurve->m_YAnchor[m_RelatedCurve->m_NrAnchors-1] = Y;
-      m_RelatedCurve->m_YAnchor[0] = Y;
-    } else {
-      m_RelatedCurve->m_XAnchor[m_MovingAnchor] = X;
-      m_RelatedCurve->m_YAnchor[m_MovingAnchor] = Y;
-    }
-    m_RelatedCurve->SetCurveFromAnchors();
-
-    // Notify we have a manual curve now ...
-    SetCurveState(ptCurveChoice_Manual);
-
-    m_OverlayAnchorX = (int32_t) (X*(Width-1));
-    m_OverlayAnchorY = (int32_t) ((1.0 - Y) * (Height-1));
-    UpdateView();
-  }
-  return;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// mouseReleaseEvent handler.
-// Install the newly placed anchor and finalize.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptCurveWindow::mouseReleaseEvent(QMouseEvent*) {
+  if (FMouseAction == NoAction) return;
 
-  if (m_BlockEvents) return;
+  if (FMouseAction != DragAction)  // for drag updating is done in move event
+    updateView();
 
-  m_MovingAnchor = -1;
-  // This recalculates the image at release of the button.
-  // As this takes time we block further events on this one
-  // at least.
-  if (m_RecalcNeeded) {
-    m_BlockEvents  = 1;
-    CB_CurveWindowManuallyChanged(m_Channel);
-    m_RecalcNeeded = 0;
-    m_BlockEvents  = 0;
-  }
-  return;
+  FMouseAction  = NoAction;
+  FMovingAnchor = -1;
+
+  requestPipeRun();
 }
 
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
+
+TAnchor ptCurveWindow::clampMovingAnchor(const TAnchor &APoint,
+                                         const QPoint &AMousePos)
+{
+  auto   hMaxX = (double)(this->width()-1);
+  double hNewX = APoint.first;
+
+  if (FMovingAnchor == 0) {
+    if (AMousePos.x() >= FDisplayAnchors[1].first) {
+      hNewX = (FDisplayAnchors[1].first / hMaxX) - CAnchorDelta;
+    }
+
+  } else if (FMovingAnchor == FCurve->anchorCount()-1)  {
+    if (AMousePos.x() <= FDisplayAnchors[FCurve->anchorCount()-2].first) {
+      hNewX = (FDisplayAnchors[FCurve->anchorCount()-1].first / hMaxX) + CAnchorDelta;
+    }
+
+  } else if (AMousePos.x() >= FDisplayAnchors[FMovingAnchor+1].first) {
+    hNewX = (FDisplayAnchors[FMovingAnchor+1].first / hMaxX) - CAnchorDelta;
+
+  } else if (AMousePos.x() <= FDisplayAnchors[FMovingAnchor-1].first) {
+    hNewX = (FDisplayAnchors[FMovingAnchor-1].first / hMaxX) + CAnchorDelta;
+  }
+
+  return TAnchor(ptBound(0.0, hNewX,         1.0),
+                 ptBound(0.0, APoint.second, 1.0));
+}
+
+//==============================================================================
+
+void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
+  if (FMouseAction == DragAction && FMovingAnchor > -1) {
+    // mouse position normalised and clamped to (0.0-1.0) and inverted y axis = curve coordinates
+    TAnchor hNormPos(AEvent->x()/(double)(this->width()-1),
+                              1.0 - AEvent->y()/(double)(this->height()-1) );
+
+    // Handle mouse out of range X and Y coordinates
+    hNormPos = clampMovingAnchor(hNormPos, AEvent->pos());
+
+    (*FCurve->anchors())[FMovingAnchor] = hNormPos;
+
+    // handle wrap-around curves
+    if (isCyclicCurve()) {
+      if (FMovingAnchor == 0)
+        FCurve->setAnchorY(FCurve->anchorCount()-1, hNormPos.second);
+      else if (FMovingAnchor == FCurve->anchorCount()-1)
+        FCurve->setAnchorY(0, hNormPos.second);
+    }
+
+    FCurve->calcCurve();
+    updateView();
+  }
+}
+
+//==============================================================================
+
+void ptCurveWindow::wheelTimerExpired() {
+  FMouseAction  = NoAction;
+  FMovingAnchor = -1;
+  requestPipeRun();
+}
+
+//==============================================================================
+
+int ptCurveWindow::hasCaughtAnchor(const QPoint APos) {
+  int hResult = -1;
+
+  int i = 0;
+  for (TScreenAnchor hAnchor: FDisplayAnchors) {
+    if ((abs(hAnchor.first  - APos.x()) < CSnapDelta) &&   // snap on x axis
+        (abs(hAnchor.second - APos.y()) < CSnapDelta))     // snap on y axis
+    {
+      hResult = i;
+      break;
+    }
+    ++i;
+  }
+
+  return hResult;
+}
+
+//==============================================================================
+
+bool ptCurveWindow::isCyclicCurve() {
+  return FCurve->mask() == ptCurve::ChromaMask;
+}
+
+//==============================================================================
+
+void ptCurveWindow::requestPipeRun() {
+  emit valueChanged(this->objectName(), FCurve->filterConfig());
+}
+
+//==============================================================================
+
+void ptCurveWindow::execContextMenu(const QPoint APos) {
+  createMenuActions();
+
+  // build the menu entries
+  QMenu hMenu(nullptr);
+  hMenu.setPalette(Theme->menuPalette());
+  hMenu.setStyle(Theme->style());
+
+  hMenu.addActions(FIpolGroup->actions());
+  switch (FCurve->interpolType()) {
+    case ptCurve::LinearInterpol: FLinearIpolAction->setChecked(true); break;
+    case ptCurve::SplineInterpol: FSplineIpolAction->setChecked(true); break;
+    case ptCurve::CosineInterpol: FCosineIpolAction->setChecked(true); break;
+    default: GInfo->Raise("Unhandled curve interpolation type: " + (int)FCurve->interpolType(), AT);
+  }
+
+  if (FCurve->supportedMasks() == (ptCurve::LumaMask | ptCurve::ChromaMask)) {
+    hMenu.addSeparator();
+    hMenu.addActions(FMaskGroup->actions());
+    switch (FCurve->mask()) {
+      case ptCurve::LumaMask: FByLumaAction->setChecked(true); break;
+      case ptCurve::ChromaMask: FByChromaAction->setChecked(true); break;
+      default: GInfo->Raise("Unhandled curve mask type: " + (int)FCurve->mask(), AT);
+    }
+  }
+
+  hMenu.addSeparator();
+  hMenu.addAction(FOpenCurveAction);
+
+  hMenu.exec(APos);
+}
+
+//==============================================================================
+
+void ptCurveWindow::createMenuActions() {
+  if (FByLumaAction) return;  // actions already created
+
+  // Mask type group
+  FByLumaAction = new QAction(tr("L&uminance mask"), this);
+  FByLumaAction->setCheckable(true);
+  connect(FByLumaAction, SIGNAL(triggered()), this, SLOT(setMaskType()));
+
+  FByChromaAction = new QAction(tr("C&olor mask"), this);
+  FByChromaAction->setCheckable(true);
+  connect(FByChromaAction, SIGNAL(triggered()), this, SLOT(setMaskType()));
+
+  FMaskGroup = new QActionGroup(this);
+  FMaskGroup->addAction(FByLumaAction);
+  FMaskGroup->addAction(FByChromaAction);
+
+  // Interpolation type group
+  FLinearIpolAction = new QAction(tr("&Linear"), this);
+  FLinearIpolAction->setStatusTip(tr("Linear interpolation"));
+  FLinearIpolAction->setCheckable(true);
+  connect(FLinearIpolAction, SIGNAL(triggered()), this, SLOT(setInterpolationType()));
+
+  FSplineIpolAction = new QAction(tr("&Spline"), this);
+  FSplineIpolAction->setStatusTip(tr("Spline interpolation"));
+  FSplineIpolAction->setCheckable(true);
+
+  connect(FSplineIpolAction, SIGNAL(triggered()), this, SLOT(setInterpolationType()));
+  FCosineIpolAction = new QAction(tr("&Cosine"), this);
+  FCosineIpolAction->setStatusTip(tr("Cosine interpolation"));
+  FCosineIpolAction->setCheckable(true);
+  connect(FCosineIpolAction, SIGNAL(triggered()), this, SLOT(setInterpolationType()));
+
+  FIpolGroup = new QActionGroup(this);
+  FIpolGroup->addAction(FLinearIpolAction);
+  FIpolGroup->addAction(FSplineIpolAction);
+  FIpolGroup->addAction(FCosineIpolAction);
+
+  FOpenCurveAction = new QAction(tr("Open &file"), this);
+  FOpenCurveAction->setStatusTip(tr("Open anchor curve file"));
+  connect(FOpenCurveAction, SIGNAL(triggered()), this, SLOT(openCurveFile()));
+}
+
+//==============================================================================
+

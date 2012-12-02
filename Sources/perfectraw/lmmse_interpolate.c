@@ -91,7 +91,7 @@ void CLASS lmmse_interpolate(int gamma_apply)
       if (rix[0][4] > 1.75*Y)
   rix[0][0] = ULIM(rix[0][0],rix[ -1][4],rix[ 1][4]);
       else
-  rix[0][0] = LIM(rix[0][0],0.0,1.0);
+  rix[0][0] = LIM(rix[0][0],0.0f,1.0f);
       rix[0][0] -= rix[0][4];
       // vertical
       rix[0][1] = -0.25*(rix[-w2][4] + rix[w2][4])
@@ -100,7 +100,7 @@ void CLASS lmmse_interpolate(int gamma_apply)
       if (rix[0][4] > 1.75*Y)
   rix[0][1] = ULIM(rix[0][1],rix[-w1][4],rix[w1][4]);
       else
-  rix[0][1] = LIM(rix[0][1],0.0,1.0);
+  rix[0][1] = LIM(rix[0][1],0.0f,1.0f);
       rix[0][1] -= rix[0][4]; }
     // G-R(B) at G location
     for (cc=2+(FC(rr,3)&1); cc < cc1-2; cc+=2) {
@@ -109,8 +109,8 @@ void CLASS lmmse_interpolate(int gamma_apply)
   - 0.5*(rix[ -1][4] + rix[0][4] + rix[ 1][4]);
       rix[0][1] = 0.25*(rix[-w2][4] + rix[w2][4])
   - 0.5*(rix[-w1][4] + rix[0][4] + rix[w1][4]);
-      rix[0][0] = LIM(rix[0][0],-1.0,0.0) + rix[0][4];
-      rix[0][1] = LIM(rix[0][1],-1.0,0.0) + rix[0][4];
+      rix[0][0] = LIM(rix[0][0],-1.0f,0.0f) + rix[0][4];
+      rix[0][1] = LIM(rix[0][1],-1.0f,0.0f) + rix[0][4];
     } }
   // apply low pass filter on differential colors
   for (rr=4; rr < rr1-4; rr++)

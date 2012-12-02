@@ -30,11 +30,7 @@
 #include "ptImage.h"
 #include "ptResizeFilters.h"
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptImage8::ptImage8() {
   m_Width      = 0;
@@ -44,30 +40,31 @@ ptImage8::ptImage8() {
   m_ColorSpace = ptSpace_sRGB_D65;
 };
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptImage8::ptImage8(const uint16_t Width,
                    const uint16_t Height,
-                   const short    NrColors) {
-  m_Width      = Width;
-  m_Height     = Height;
-  m_Image      = NULL;
-  m_Colors     = NrColors;
+                   const short    NrColors)
+{
+  m_Image              = nullptr;
   m_ColorSpace = ptSpace_sRGB_D65;
+  setSize(Width, Height, NrColors);
+}
+
+//==============================================================================
+
+void ptImage8::setSize(const uint16_t AWidth, const uint16_t AHeight, const int AColorCount) {
+  m_Width              = AWidth;
+  m_Height             = AHeight;
+  m_Colors             = AColorCount;
+
+  if (m_Image) FREE(m_Image);
 
   m_Image      = (uint8_t (*)[4]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
   ptMemoryError(m_Image,__FILE__,__LINE__);
-};
+}
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Destructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptImage8::~ptImage8() {
   FREE(m_Image);
@@ -85,7 +82,7 @@ void ptImage8::SetSize(const uint16_t Width, const uint16_t Height, const short 
 
   m_Image  = (uint8_t (*)[4]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
   ptMemoryError(m_Image,__FILE__,__LINE__);
-};
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //

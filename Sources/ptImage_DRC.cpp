@@ -517,7 +517,6 @@ float *HalfSize(float *I, uint32_t w, uint32_t h){
 //By explicitly specifying output size the off by one issue is handled. In is assumed w >> 1 by h >> 1.
 void DoubleSize(float *Out, uint32_t w, uint32_t h, float *In){
   uint32_t ws = w >> 1;
-  //~ uint32_t hs = h >> 1;
   uint32_t we = w - (w & 1);
   uint32_t he = h - (h & 1);
 
@@ -541,8 +540,6 @@ void DoubleSize(float *Out, uint32_t w, uint32_t h, float *In){
 //This function does what it's name describes using the parameter beta. beta < 1.0 corresponds to compression.
 //alpha <= 0.0 makes it automatically set (which seems to work pretty good).
 void CompressDynamicRange(float *I, uint32_t w, uint32_t h, float alpha, float beta, bool WorkOnLog){
-//~ printf("Dynamic range compression: \n");
-  //~ double t = (double)clock()/(double)CLOCKS_PER_SEC;
   float logadd = 0.001f;
 
   //Get the min and max values and optionally take the logarithm.
@@ -643,7 +640,6 @@ void CompressDynamicRange(float *I, uint32_t w, uint32_t h, float alpha, float b
 
   //Now solve smallest to largest.
   level = N;
-  //~ printf("solution done at level ");
   while(level != 0) {
     level--;
     w = W >> level;
@@ -667,8 +663,6 @@ void CompressDynamicRange(float *I, uint32_t w, uint32_t h, float alpha, float b
     //Note: typical number of iterates is 20 - 200; more for higher levels, less for lower.
 
     free(L[level]);
-    //~ if(level != 0) printf("%u, ", level);
-    //~ else  printf("and %u; ", level);
   }
   free(L);
 
@@ -718,14 +712,12 @@ void CompressDynamicRange(float *I, uint32_t w, uint32_t h, float alpha, float b
   float shift = IMin - OutIMin*scale;
 #pragma omp parallel for schedule(static) private(i)
   for(i = 0; i < n; i++) I[i] = I[i]*scale + shift;
-
-  //~ printf("took %.1f seconds.\n", (double)clock()/(double)CLOCKS_PER_SEC - t);
 }
 
 
-ptImage* ptImage::DRC(const double alpha,
-                      const double beta,
-                      const double color) {
+ptImage* ptImage::DRC(const float alpha,
+                      const float beta,
+                      const float color) {
 
   float (*In) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*In));
   ptMemoryError(In,__FILE__,__LINE__);
@@ -752,7 +744,7 @@ ptImage* ptImage::DRC(const double alpha,
     } else { // Chromatic adaption, not really nice at the moment.
       Value = CLIP((int32_t)(In[i]*0xffff));
       if (m_Image[i][0] == 0) continue;
-      Factor = MIN(2*powf((float)Value/(float)m_Image[i][0],0.5f),100);
+      Factor = MIN(2*powf((float)Value/(float)m_Image[i][0],0.5f),100.f);
       m_Image[i][0] = Value;
       if (1 || Factor < 1) {
         m_Image[i][1] = CLIP((int32_t)((m_Image[i][1]*Factor + 0x8080*(1.-Factor))*color

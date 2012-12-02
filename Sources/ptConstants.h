@@ -369,6 +369,10 @@ const short ptMaskType_All        = 4;
 const short ptMaskType_Screen     = 5;
 const short ptMaskType_Multiply   = 6;
 
+const short ptSaturationMode_Absolute = 0;
+const short ptSaturationMode_Adaptive = 1;
+
+
 // Special Preview
 
 const short ptSpecialPreview_RGB       = 0;
@@ -822,6 +826,20 @@ enum ptFSOType {
   fsoParentDir  = 3,
   fsoRoot       = 4,   // "My Computer" on Windows, "/" on Linux
   fsoDrive      = 5    // A drive with an assigned letter, only relevant on Windows
+};
+
+/*! This enum defines the state of the UI. */
+enum ptUIState {
+  uisNone       = 0,
+  uisProcessing = 1,
+  uisFileMgr    = 2,
+  uisBatch      = 3
+};
+
+/*! This enum defines types of autosaving current batch list. */
+enum ptBatchSaveFile {
+  bsfStandard = 0,
+  bsfLocal    = 1
 };
 
 

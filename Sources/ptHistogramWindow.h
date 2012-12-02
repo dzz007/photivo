@@ -77,7 +77,6 @@ public slots:
 private:
   const ptImage8* m_Image8;
   QPixmap*        m_QPixmap;
-  short           m_LogoActive;
   short           m_RecalcNeeded;
   uint32_t        m_HistoMax;
   short           m_PreviousHistogramGamma;

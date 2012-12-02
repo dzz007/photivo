@@ -58,6 +58,7 @@ tool-show           <modified dialog-ok>
 
 BOTTOM BAR
 file-manager        folder-copy
+batch-processing    gtk-copy
 
 FILE MANAGER
 broken-image-48px   <process-stop in greyscale>
@@ -65,3 +66,8 @@ folder-48px         <folder-new without plus sign>
 go-up               <rotated dialog-apply>
 go-up-48px          <modified dialog-apply>
 my-computer         go-home
+
+BATCH MANAGER
+processing-abort    gtk-stop
+job-add             gtk-add
+job-remove          gtk-remove

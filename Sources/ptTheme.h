@@ -56,7 +56,7 @@ public:
     hlOrange  = 4
   };
 
-  ptTheme(const QApplication* app, Theme newTheme = thDarkGrey, Highlight newHighlight = hlBlue);
+  ptTheme(const QApplication* app, Theme newTheme = thDarkGrey, Highlight newHighlight = hlGreen);
   ~ptTheme();
 
   // TODO: make private and write getter
@@ -141,5 +141,11 @@ private:
   QString g_SliderStripeDisabled;
 
 };
+
 //==============================================================================
+
+extern ptTheme *Theme;
+
+//==============================================================================
+
 #endif  // PTTHEME_H

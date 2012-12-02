@@ -47,6 +47,11 @@ MOC_DIR         = ../Objects
 UI_HEADERS_DIR  = ../Objects
 RCC_DIR         = ../Objects
 
+# Add path to sources folder to the include search paths.
+# Necessary for GCC to find the .h files of (in Designer) promoted widgets.
+# When you promote widgets you must specify the .h relative to the "Sources" folder.
+INCLUDEPATH    += $${_PRO_FILE_PWD_}/../Sources
+
 ################################################################################
 
 unix {
@@ -55,6 +60,16 @@ unix {
   PKGCONFIG  += GraphicsMagick++ GraphicsMagickWand
   QMAKE_CC    = ccache /usr/bin/gcc
   QMAKE_CXX   = ccache /usr/bin/g++
+
+  # use a CImg include provided by the system instead of the local copy
+  message($$CONFIG)
+  CONFIG(WithSystemCImg) {
+    PKGCONFIG  += CImg
+    QMAKE_CXXFLAGS_RELEASE     += -DSYSTEM_CIMG
+    QMAKE_CXXFLAGS_DEBUG       += -DSYSTEM_CIMG
+
+    system(echo "Using system supplied CImg library")
+  }
 
   QMAKE_CFLAGS_RELEASE    += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
   QMAKE_CXXFLAGS_RELEASE  += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
@@ -69,6 +84,9 @@ win32 {
   QT       += network
   RC_FILE   = photivo.rc
 
+  QMAKE_CC   = gcc
+  QMAKE_CXX  = g++
+
   QMAKE_CFLAGS_RELEASE    += $$(CFLAGS)
   QMAKE_CFLAGS_DEBUG      += $$(CFLAGS)
   QMAKE_CXXFLAGS_RELEASE  += $$(CXXFLAGS)
@@ -78,7 +96,7 @@ win32 {
 
   LIBS += \
       -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick \
-      libole32 -lwsock32 -lexpat -lregex -lgdi32 -liconv \
+      libole32 -lwsock32 -lexpat -lgdi32 -liconv \
 
   HEADERS +=  ../Sources/ptEcWin7.h \
               ../Sources/ptWinApi.h
@@ -93,7 +111,7 @@ macx{
 
   # prevent qmake from adding -arch flags
   QMAKE_CFLAGS_X86_64           = -m64
-  QMAKE_CXXFLAGS_X86_64         = -m64
+  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x
   QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
   QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
 
@@ -108,17 +126,21 @@ LIBS += \
     $$system(pkg-config --libs-only-l lqr-1) \
     -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
-RELEASE_SPECIFIC = -O3 -ftree-vectorize -fopenmp
+RELEASE_SPECIFIC = -O3 -funroll-loops -ftree-vectorize -fopenmp
 DEBUG_SPECIFIC   = -O0 -g
 COMMON_FLAGS = \
     $$system(pkg-config --cflags-only-I lqr-1) \
     -DAPPVERSION=\'$${APPVERSION}\' \
     -ffast-math -DDLRAW_HAVE_GIMP
 
+!contains(QMAKE_HOST.arch, x86_64) {
+  COMMON_FLAGS+=-march=i686
+}
+
 QMAKE_CFLAGS_RELEASE   += $${COMMON_FLAGS} $${RELEASE_SPECIFIC}
-QMAKE_CXXFLAGS_RELEASE += $${COMMON_FLAGS} $${RELEASE_SPECIFIC}
+QMAKE_CXXFLAGS_RELEASE += $${COMMON_FLAGS} $${RELEASE_SPECIFIC} -std=gnu++0x
 QMAKE_CFLAGS_DEBUG     += $${COMMON_FLAGS} $${DEBUG_SPECIFIC}
-QMAKE_CXXFLAGS_DEBUG   += $${COMMON_FLAGS} $${DEBUG_SPECIFIC}
+QMAKE_CXXFLAGS_DEBUG   += $${COMMON_FLAGS} $${DEBUG_SPECIFIC} -std=gnu++0x
 
 ################################################################################
 
@@ -147,6 +169,26 @@ HEADERS += \
     ../Sources/filemgmt/ptTagModel.h \
     ../Sources/filemgmt/ptThumbnailCache.h \
     ../Sources/filemgmt/ptThumbnailer.h \
+    ../Sources/filters/ptCfgItem.h \
+    ../Sources/filters/ptFilter_ABCurves.h \
+    ../Sources/filters/ptFilter_ColorContrast.h \
+    ../Sources/filters/ptFilter_DetailCurve.h \
+    ../Sources/filters/ptFilter_GammaTool.h \
+    ../Sources/filters/ptFilter_Highlights.h \
+    ../Sources/filters/ptFilter_LumaDenoiseCurve.h \
+    ../Sources/filters/ptFilter_LumaSatAdjust.h \
+    ../Sources/filters/ptFilter_Outline.h \
+    ../Sources/filters/ptFilter_SatCurve.h \
+    ../Sources/filters/ptFilter_ShadowsHighlights.h \
+    ../Sources/filters/ptFilter_SigContrast.h \
+    ../Sources/filters/ptFilter_StdCurve.h \
+    ../Sources/filters/ptFilter_ToneAdjust.h \
+    ../Sources/filters/ptFilter_Wiener.h \
+    ../Sources/filters/ptFilterBase.h \
+    ../Sources/filters/ptFilterConfig.h \
+    ../Sources/filters/ptFilterDM.h \
+    ../Sources/filters/ptFilterFactory.h \
+    ../Sources/filters/ptFilterUids.h \
     ../Sources/greyc/CImg.h \
     ../Sources/ptAdobeTable.h \
     ../Sources/ptCalloc.h \
@@ -168,7 +210,9 @@ HEADERS += \
     ../Sources/ptHistogramWindow.h \
     ../Sources/ptImage.h \
     ../Sources/ptImage8.h \
+    ../Sources/ptImageHelper.h \
     ../Sources/ptImageInteraction.h \
+    ../Sources/ptInfo.h \
     ../Sources/ptInput.h \
     ../Sources/ptKernel.h \
     ../Sources/ptLensfun.h \
@@ -184,15 +228,33 @@ HEADERS += \
     ../Sources/ptSettings.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptSlider.h \
+    ../Sources/ptTempFile.h \
+    ../Sources/ptTempFilterBase.h \
     ../Sources/ptTheme.h \
+    ../Sources/ptToolBox.h \
     ../Sources/ptViewWindow.h \
     ../Sources/ptVisibleToolsView.h \
     ../Sources/ptWhiteBalances.h \
+    ../Sources/ptWidget.h \
     ../Sources/ptWiener.h \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
     ../Sources/qtsingleapplication/qtsingleapplication.h \
-    ../Sources/ptImageHelper.h
+    ../Sources/filters/ptFilter_ColorIntensity.h \
+    ../Sources/filters/ptFilter_Brightness.h \
+    ../Sources/filters/ptFilter_ReinhardBrighten.h \
+    ../Sources/filters/ptFilter_Normalization.h \
+    ../Sources/filters/ptFilter_ColorEnhancement.h \
+    ../Sources/filters/ptFilter_Levels.h \
+    ../Sources/filters/ptFilter_LMHRecovery.h \
+    ../Sources/filters/ptFilter_Drc.h \
+    ../Sources/filters/ptFilter_LabTransform.h \
+    ../Sources/filters/ptFilter_Saturation.h \
+    ../Sources/filters/ptFilter_ColorBoost.h \
+    ../Sources/filters/ptFilter_Tone.h \
+    ../Sources/batch/ptJobListItem.h \
+    ../Sources/batch/ptBatchWindow.h \
+    ../Sources/batch/ptJobListModel.h
 
 
 SOURCES += \
@@ -211,6 +273,25 @@ SOURCES += \
     ../Sources/filemgmt/ptTagModel.cpp \
     ../Sources/filemgmt/ptThumbnailCache.cpp \
     ../Sources/filemgmt/ptThumbnailer.cpp \
+    ../Sources/filters/ptCfgItem.cpp \
+    ../Sources/filters/ptFilter_ABCurves.cpp \
+    ../Sources/filters/ptFilter_ColorContrast.cpp \
+    ../Sources/filters/ptFilter_DetailCurve.cpp \
+    ../Sources/filters/ptFilter_GammaTool.cpp \
+    ../Sources/filters/ptFilter_Highlights.cpp \
+    ../Sources/filters/ptFilter_LumaDenoiseCurve.cpp \
+    ../Sources/filters/ptFilter_LumaSatAdjust.cpp \
+    ../Sources/filters/ptFilter_Outline.cpp \
+    ../Sources/filters/ptFilter_SatCurve.cpp \
+    ../Sources/filters/ptFilter_ShadowsHighlights.cpp \
+    ../Sources/filters/ptFilter_SigContrast.cpp \
+    ../Sources/filters/ptFilter_StdCurve.cpp \
+    ../Sources/filters/ptFilter_ToneAdjust.cpp \
+    ../Sources/filters/ptFilter_Wiener.cpp \
+    ../Sources/filters/ptFilterBase.cpp \
+    ../Sources/filters/ptFilterConfig.cpp \
+    ../Sources/filters/ptFilterDM.cpp \
+    ../Sources/filters/ptFilterFactory.cpp \
     ../Sources/perfectraw/lmmse_interpolate.c \
     ../Sources/ptCalloc.cpp \
     ../Sources/ptChannelMixer.cpp \
@@ -237,7 +318,9 @@ SOURCES += \
     ../Sources/ptImage_Lqr.cpp \
     ../Sources/ptImage_Pyramid.cpp \
     ../Sources/ptImage8.cpp \
+    ../Sources/ptImageHelper.cpp \
     ../Sources/ptImageInteraction.cpp \
+    ../Sources/ptInfo.cpp \
     ../Sources/ptInput.cpp \
     ../Sources/ptKernel.cpp \
     ../Sources/ptLensfun.cpp \
@@ -254,10 +337,14 @@ SOURCES += \
     ../Sources/ptSettings.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptSlider.cpp \
+    ../Sources/ptTempFile.cpp \
+    ../Sources/ptTempFilterBase.cpp \
     ../Sources/ptTheme.cpp \
+    ../Sources/ptToolBox.cpp \
     ../Sources/ptViewWindow.cpp \
     ../Sources/ptVisibleToolsView.cpp \
     ../Sources/ptWhiteBalances.cpp \
+    ../Sources/ptWidget.cpp \
     ../Sources/ptWiener.cpp \
     ../Sources/qtsingleapplication/qtlocalpeer.cpp \
     ../Sources/qtsingleapplication/qtlockedfile.cpp \
@@ -274,12 +361,32 @@ SOURCES += \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
     ../Sources/vcd/vcd_interpolate.c \
-    ../Sources/ptImageHelper.cpp
+    ../Sources/filters/ptFilter_ColorIntensity.cpp \
+    ../Sources/filters/ptFilter_Brightness.cpp \
+    ../Sources/filters/ptFilter_ReinhardBrighten.cpp \
+    ../Sources/filters/ptFilter_Normalization.cpp \
+    ../Sources/filters/ptFilter_ColorEnhancement.cpp \
+    ../Sources/filters/ptFilter_Levels.cpp \
+    ../Sources/filters/ptFilter_LMHRecovery.cpp \
+    ../Sources/filters/ptFilter_Drc.cpp \
+    ../Sources/filters/ptFilter_LabTransform.cpp \
+    ../Sources/filters/ptFilter_Saturation.cpp \
+    ../Sources/filters/ptFilter_ColorBoost.cpp \
+    ../Sources/filters/ptFilter_Tone.cpp \
+    ../Sources/batch/ptJobListItem.cpp \
+    ../Sources/batch/ptBatchWindow.cpp \
+    ../Sources/batch/ptJobListModel.cpp
 
 
 FORMS += \
     ../Sources/filemgmt/ptFileMgrWindow.ui \
-    ../Sources/ptMainWindow.ui
+    ../Sources/filters/ptFilter_Outline.ui \
+    ../Sources/filters/ptFilter_Wiener.ui \
+    ../Sources/ptMainWindow.ui \
+    ../Sources/filters/ptFilter_ColorIntensity.ui \
+    ../Sources/filters/ptFilter_LMHRecovery.ui \
+    ../Sources/filters/ptFilter_Tone.ui \
+    ../Sources/batch/ptBatchWindow.ui
 
 RESOURCES += ../qrc/photivo.qrc
 
@@ -287,8 +394,10 @@ TRANSLATIONS += ../Translations/photivo_Dutch.ts
 TRANSLATIONS += ../Translations/photivo_French.ts
 TRANSLATIONS += ../Translations/photivo_German.ts
 TRANSLATIONS += ../Translations/photivo_Italian.ts
+TRANSLATIONS += ../Translations/photivo_Polish.ts
 TRANSLATIONS += ../Translations/photivo_Russian.ts
 TRANSLATIONS += ../Translations/photivo_Spanish.ts
+TRANSLATIONS += ../Translations/photivo_Czech.ts
 
 ################################################################################
 
@@ -299,5 +408,3 @@ TRANSLATIONS += ../Translations/photivo_Spanish.ts
 exists(../local-system-specific.pro) {
   include(../local-system-specific.pro)
 }
-
-

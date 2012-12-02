@@ -140,17 +140,6 @@ void ptThumbnailer::run() {
 
   ptFileMgrDM* DataModule = ptFileMgrDM::GetInstance();
 
-#if (QT_VERSION < 0x40700)
-  // hack for lack of QDir::NoDot in Qt < 4.7
-  QMutableListIterator<QFileInfo> i(files);
-  while(i.hasNext()) {
-    if (i.next().fileName() == ".") {
-      i.remove();
-      break;
-    }
-  }
-#endif
-
   int thumbMaxSize = Settings->GetInt("FileMgrThumbnailSize");
   QFileInfoList files;
 
@@ -166,6 +155,17 @@ void ptThumbnailer::run() {
   }
 #else
   files = m_Dir->entryInfoList();
+#endif
+
+#if (QT_VERSION < 0x40700)
+  // hack for lack of QDir::NoDot in Qt < 4.7
+  QMutableListIterator<QFileInfo> i(files);
+  while(i.hasNext()) {
+    if (i.next().fileName() == ".") {
+      i.remove();
+      break;
+    }
+  }
 #endif
 
   /***

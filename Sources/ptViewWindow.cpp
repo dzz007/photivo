@@ -56,7 +56,7 @@ ptViewWindow::ptViewWindow(QWidget* Parent, ptMainWindow* mainWin)
   m_SelectRect(NULL),
   m_Crop(NULL),
   m_Interaction(iaNone),
-  m_LeftMousePressed(0),
+  m_LeftMousePressed(false),
   m_ZoomIsSaved(0),
   m_ZoomFactor(1.0),
   m_ZoomFactorSav(0.0),
@@ -307,7 +307,7 @@ void ptViewWindow::paintEvent(QPaintEvent* event) {
 void ptViewWindow::mousePressEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
     event->accept();
-    m_LeftMousePressed = 1;
+    m_LeftMousePressed = true;
     m_DragDelta->setPoints(event->pos(), event->pos());
   }
 
@@ -320,7 +320,7 @@ void ptViewWindow::mousePressEvent(QMouseEvent* event) {
 
 void ptViewWindow::mouseReleaseEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton && m_LeftMousePressed) {
-    m_LeftMousePressed = 0;
+    m_LeftMousePressed = false;
     event->accept();
   } else {
     event->ignore();
@@ -364,9 +364,11 @@ void ptViewWindow::mouseMoveEvent(QMouseEvent* event) {
 
   // drag image with left mouse button to scroll
   // Also Ctrl needed in crop mode
-  short ImgDragging = m_LeftMousePressed && m_Interaction == iaNone;
+  short ImgDragging = m_LeftMousePressed && (m_Interaction == iaNone);
   if (m_Interaction == iaCrop) {
-    ImgDragging = m_LeftMousePressed && m_CtrlIsPressed;
+    // m_CtrlIsPressed sometimes gives the wrong value, so we read the current state.
+    bool hCtrlIsPressed = (event->modifiers() & Qt::ControlModifier);
+    ImgDragging = m_LeftMousePressed && hCtrlIsPressed;
   }
 
   if (ImgDragging) {
@@ -445,7 +447,6 @@ void ptViewWindow::keyReleaseEvent(QKeyEvent* event) {
     emit keyChanged(event);
   }
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -783,6 +784,9 @@ void ptViewWindow::ConstructContextMenu() {
   connect(ac_OpenFileMgr, SIGNAL(triggered()), this, SLOT(Menu_OpenFileMgr()));
 #endif
 
+  ac_OpenBatch = new QAction(tr("Open &batch processing") + "\t" + tr("Ctrl+B"), this);
+  connect(ac_OpenBatch, SIGNAL(triggered()), this, SLOT(Menu_OpenBatch()));
+
   ac_Fullscreen = new QAction(tr("Full&screen") + "\t" + tr("F11"), this);
   ac_Fullscreen->setCheckable(true);
   ac_Fullscreen->setChecked(0);
@@ -853,6 +857,7 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
 #ifndef PT_WITHOUT_FILEMGR
   Menu.addAction(ac_OpenFileMgr);
 #endif
+  Menu.addAction(ac_OpenBatch);
   Menu.addSeparator();
   Menu.addAction(ac_Fullscreen);
 
@@ -946,7 +951,13 @@ void ptViewWindow::Menu_ShowTools() {
 }
 
 void ptViewWindow::Menu_OpenFileMgr() {
+  m_CtrlIsPressed = 0;
   emit openFileMgr();
+}
+
+void ptViewWindow::Menu_OpenBatch() {
+  m_CtrlIsPressed = 0;
+  emit openBatch();
 }
 
 void CB_FullScreenButton(const int State);

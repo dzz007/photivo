@@ -49,10 +49,10 @@
 ///////////////////////////////////////////////////////////////////////////
 
 enum ptInteraction {
-  iaNone = 0,
-  iaCrop = 1,
+  iaNone       = 0,
+  iaCrop       = 1,
   iaSelectRect = 2, // simple rectangle selection: e.g. for spot WB
-  iaDrawLine = 3    // draw a single straight line: e.g. for rotate angle
+  iaDrawLine   = 3  // draw a single straight line: e.g. for rotate angle
 };
 
 enum ptPixelReading {
@@ -133,7 +133,7 @@ private:
   ptRichRectInteraction* m_Crop;
   ptGridInteraction* m_Grid;
   ptInteraction m_Interaction;
-  short m_LeftMousePressed;
+  bool  m_LeftMousePressed;
   void (*m_CB_SimpleRect)(const ptStatus, QRect);
   short m_ZoomIsSaved;
   float m_ZoomFactor;
@@ -174,6 +174,7 @@ private:
   QAction* ac_ShowTools;
   QAction* ac_ShowZoomBar;
   QAction* ac_OpenFileMgr;
+  QAction* ac_OpenBatch;
   QAction* ac_Fullscreen;
   QActionGroup* ac_ModeGroup;
   QActionGroup* ac_PReadGroup;
@@ -202,12 +203,14 @@ private slots:
   void Menu_ZoomOut();
   void Menu_Mode();
   void Menu_OpenFileMgr();
+  void Menu_OpenBatch();
   void Menu_PixelReading();
 
 signals:
   void keyChanged(QKeyEvent* event);
   void mouseChanged(QMouseEvent* event);
   void openFileMgr();
+  void openBatch();
 
 };
 
