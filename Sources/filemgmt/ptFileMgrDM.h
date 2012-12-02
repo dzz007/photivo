@@ -43,6 +43,10 @@
 
 //==============================================================================
 
+class ptImage8;
+
+//==============================================================================
+
 /*!
   \class ptFileMgrDM
 
@@ -111,8 +115,9 @@ public:
   QList<ptGraphicsThumbGroup*>* thumbList() { return m_ThumbList; }
 
   /*! Returns a pointer to the thumbnail.*/
-  QImage* getThumbnail(const QString FileName,
-                       const int     MaxSize);
+  bool getThumbnail(ptImage8     *&AImage,
+                    const QString &AFileName,
+                    const int      AMaxSize);
 
 private:
   static ptFileMgrDM* m_Instance;
@@ -122,7 +127,7 @@ private:
   ~ptFileMgrDM();
 
   // for thumbnails
-  QImage* GenerateThumbnail(MagickWand* image, const QSize tSize);
+  void GenerateThumbnail(MagickWand *AInImage, ptImage8 *AOutImage, const QSize tSize);
   void ScaleThumbSize(QSize* tSize, const int max);
 
   int                           m_FocusedThumb;

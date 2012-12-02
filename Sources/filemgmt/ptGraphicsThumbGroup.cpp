@@ -26,6 +26,7 @@
 #include "../ptDefines.h"
 #include "../ptTheme.h"
 #include "../ptSettings.h"
+#include "../ptImage8.h"
 #include "ptGraphicsThumbGroup.h"
 #include "ptGraphicsSceneEmitter.h"
 
@@ -145,17 +146,21 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 
 //==============================================================================
 
-void ptGraphicsThumbGroup::addImage(QImage* image) {
+void ptGraphicsThumbGroup::addImage(ptImage8* image) {
+  assert(NULL != image);
+
   qreal ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
-  if (m_Thumbnail) {
-    delete m_Thumbnail;
-  }
+//  if (m_Thumbnail) {
+//    delete m_Thumbnail;
+//  }
+//  m_Thumbnail = new ptImage8();
+//  m_Thumbnail->Set(image);
   m_Thumbnail = image;
 
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
-  m_ThumbPos.setX(ThumbSize/2 - image->width()/2  + InnerPadding + 0.5);
-  m_ThumbPos.setY(ThumbSize/2 - image->height()/2 + InnerPadding + 0.5);
+  m_ThumbPos.setX(ThumbSize/2 - image->m_Width/2  + InnerPadding + 0.5);
+  m_ThumbPos.setY(ThumbSize/2 - image->m_Height/2 + InnerPadding + 0.5);
   this->update();
 
 /*
@@ -245,7 +250,10 @@ void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsIt
   painter->setBrush(m_Brush);
   painter->drawRoundedRect(this->rect(), 5, 5);
   if (m_Thumbnail) {
-    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), *m_Thumbnail);
+    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), QImage((const uchar*) m_Thumbnail->m_Image,
+                                                                             m_Thumbnail->m_Width,
+                                                                             m_Thumbnail->m_Height,
+                                                                             QImage::Format_ARGB32));
   }
 }
 

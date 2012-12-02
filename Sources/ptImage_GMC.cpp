@@ -352,7 +352,7 @@ ptImage* ptImage::ptGMCOpenImage(const char* FileName,
 //==============================================================================
 
 // just write an image to disk
-bool ptImage8::DumpImage(const char* FileName) const {
+bool ptImage8::DumpImage(const char* FileName, const bool BGR) const {
 
   long unsigned int Width  = m_Width;
   long unsigned int Height = m_Height;
@@ -365,7 +365,10 @@ bool ptImage8::DumpImage(const char* FileName) const {
   MagickSetImageDepth(mw,8);
   MagickSetImageType(mw,TrueColorType);
 
-  MagickSetImagePixels(mw,0,0,Width,Height,"RGBA",CharPixel,(unsigned char*) m_Image);
+  if (BGR)
+    MagickSetImagePixels(mw,0,0,Width,Height,"BGRA",CharPixel,(unsigned char*) m_Image);
+  else
+    MagickSetImagePixels(mw,0,0,Width,Height,"RGBA",CharPixel,(unsigned char*) m_Image);
 
   MagickSetImageDepth(mw,8);
 

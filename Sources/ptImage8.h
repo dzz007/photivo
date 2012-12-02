@@ -68,23 +68,23 @@ void setSize(const uint16_t AWidth, const uint16_t AHeight, const int AColorCoun
 // Destructor
 ~ptImage8();
 
+// Alloc a new buffer
+void SetSize(const uint16_t Width,
+             const uint16_t Height,
+             const short    NrColors = 3);
+
 // Initialize it from a ptImage.
 // Copying is always deep (so including copying the image).
 ptImage8* Set(const ptImage *Origin);
 
-// Scale with Facto 0..1
-// Always in place !
-ptImage8* SimpleScale(const float Factor);
-ptImage8* FilteredScale(const float Factor,
-                        const short Filter = ptResizeFilter_Triangle);
+// Deep copy
+ptImage8* Set(const ptImage8 *Origin);
 
-// Write the image as a ppm file.
-// Be aware : the writing function does *not* add gamma, thus
-// it needs to be done before if needed.
-short WriteAsPpm(const char*  FileName);
+// We copy a QImage
+void FromQImage(const QImage AImage);
 
 // just write an image to disk
-bool DumpImage(const char* FileName) const;
+bool DumpImage(const char* FileName, const bool BGR) const;
 };
 
 #endif

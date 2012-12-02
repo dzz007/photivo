@@ -35,6 +35,10 @@
 
 //==============================================================================
 
+class ptImage8;
+
+//==============================================================================
+
 class ptGraphicsThumbGroup: public QGraphicsRectItem {
 public:
   /*! Creates a new \c ptGraphicsThumbGroup instance or increases the reference counter
@@ -75,7 +79,7 @@ public:
       \param pixmap
         A pointer to the \c QPixmap thumnail image.
   */
-  void addImage(QImage* image);
+  void addImage(ptImage8* image);
 
   /*! Returns the main font used in the thumbnail. */
   QFont font() const;
@@ -129,7 +133,7 @@ private:
   bool      m_hasHover;
   QPen      m_Pen;
   int       m_RefCount;
-  QImage*   m_Thumbnail;
+  ptImage8* m_Thumbnail;
   QPoint    m_ThumbPos;
 
   // Following objects don’t need to be destroyed explicitely in the destructor.
