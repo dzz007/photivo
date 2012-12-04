@@ -120,9 +120,7 @@ typedef unsigned long long UINT64;
 #define LONG_BIT (8 * sizeof (long))
 #endif
 
-#include <QDataStream>
-#include <QByteArray>
-#include <QPixmap>
+#include <QString>
 
 #include "ptDefines.h"
 

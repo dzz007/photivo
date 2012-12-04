@@ -3151,6 +3151,12 @@ void CLASS foveon_interpolate()
   char str[128];
   const char* cp;
 
+  memset(cam_xyz, 0, sizeof(cam_xyz));
+  memset(dscr,    0, sizeof(dscr));
+  memset(dstb,    0, sizeof(dstb));
+  memset(active,  0, sizeof(active));
+  memset(keep,    0, sizeof(keep));
+
   TRACEKEYVALS("Foveon interpolation","%s","");
 
   foveon_load_camf();
