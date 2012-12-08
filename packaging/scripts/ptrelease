@@ -175,9 +175,10 @@ if [ ! $? -eq 0 ]; then
 fi
 
 cp $PhotivoRepoPath/COPYING $BINDIR/License.txt && \
+cp $PhotivoRepoPath/COPYING.3rd.party "$BINDIR/Licenses 3rd party.txt" && \
 ln $PhotivoRepoPath/../Changelog.txt $BINDIR
 if [ ! $? -eq 0 ]; then
-  Error "Copying License.txt or linking Changelog.txt failed!"
+  Error "Copying license files or linking Changelog.txt failed!"
   exit 1
 fi
 
