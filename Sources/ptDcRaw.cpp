@@ -5832,11 +5832,19 @@ void CLASS apply_tiff()
           !strstr(m_CameraMake,"Kodak") &&
     !strstr(m_CameraModelBis,"DEBUG RAW")))
       m_IsRaw = 0;
-  for (i=0; (unsigned) i < m_Tiff_NrIFDs; i++)
-    if (i != l_Raw && m_Tiff_IFD[i].samples == l_MaxSample &&
-  (unsigned)(m_Tiff_IFD[i].width * m_Tiff_IFD[i].height / SQR(m_Tiff_IFD[i].bps+1)) >
-        m_ThumbWidth * m_ThumbHeight / SQR(m_ThumbMisc+1)
-  && m_Tiff_IFD[i].comp != 34892) {
+
+  for (i=0; (unsigned) i < m_Tiff_NrIFDs; i++) {
+    auto l_denom1 = SQR(m_Tiff_IFD[i].bps+1);
+    auto l_denom2 = SQR(m_ThumbMisc+1);
+    if (l_denom1 == 0 || l_denom2 == 0)
+      continue;   // prevent divide by zero crash
+
+    if (i != l_Raw &&
+        m_Tiff_IFD[i].samples == l_MaxSample &&
+        (unsigned)(m_Tiff_IFD[i].width * m_Tiff_IFD[i].height / l_denom1) >
+            m_ThumbWidth * m_ThumbHeight / l_denom2 &&
+        m_Tiff_IFD[i].comp != 34892)
+    {
       m_ThumbWidth  = m_Tiff_IFD[i].width;
       m_ThumbHeight = m_Tiff_IFD[i].height;
       m_ThumbOffset = m_Tiff_IFD[i].offset;
@@ -5844,6 +5852,7 @@ void CLASS apply_tiff()
       m_ThumbMisc   = m_Tiff_IFD[i].bps;
       l_Thumb = i;
     }
+  }
 
   if (l_Thumb >= 0) {
     m_ThumbMisc |= m_Tiff_IFD[l_Thumb].samples << 5;
