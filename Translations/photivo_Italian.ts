@@ -9886,7 +9886,7 @@ Usata per la correzione della geometria.</translation>
         <location filename="../Sources/ptSettings.cpp" line="273"/>
         <location filename="../Sources/ptSettings.cpp" line="277"/>
         <source></source>
-        <translation>Quantità del recupero</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="147"/>
