@@ -1025,6 +1025,7 @@ ptImage *ptImage::LabToLch()
 
   setSize(0);
   m_ColorSpace = ptSpace_LCH;
+  return this;
 }
 
 //==============================================================================
