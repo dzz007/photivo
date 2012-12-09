@@ -1401,7 +1401,7 @@
         <location filename="../Sources/ptMain.cpp" line="2406"/>
         <location filename="../Sources/ptMain.cpp" line="3064"/>
         <source>Ready</source>
-        <translation type="unfinished">Готово</translation>
+        <translation>Готово</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="1111"/>
@@ -1514,7 +1514,7 @@ http://photivo.org/photivo/start
         <location filename="../Sources/ptMain.cpp" line="546"/>
         <location filename="../Sources/ptMain.cpp" line="850"/>
         <source>Photivo</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="1539"/>
@@ -2036,13 +2036,13 @@ Are you sure?</source>
     <message>
         <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="190"/>
         <source>Prepare for local adjust</source>
-        <translation type="unfinished">Подготовка к локальной коррекции</translation>
+        <translation>Подготовка к локальной коррекции</translation>
     </message>
     <message>
         <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="195"/>
         <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="196"/>
         <source>Local adjust</source>
-        <translation type="unfinished">Локальная коррекция</translation>
+        <translation>Локальная коррекция</translation>
     </message>
     <message>
         <location filename="../Sources/ptMain.cpp" line="4583"/>
@@ -5135,13 +5135,13 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="152"/>
         <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="183"/>
         <source>No image opened</source>
-        <translation type="unfinished">Изображение не открыто</translation>
+        <translation>Изображение не открыто</translation>
     </message>
     <message>
         <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="153"/>
         <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="184"/>
         <source>Open an image before editing spots.</source>
-        <translation type="unfinished">Откройте изображение перед редактированием точек.</translation>
+        <translation>Откройте изображение перед редактированием точек.</translation>
     </message>
 </context>
 <context>
@@ -5172,42 +5172,42 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="26"/>
         <source>Add job to list</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить задание в список</translation>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="29"/>
         <source>Add job...</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить...</translation>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="52"/>
         <source>Remove jobs from list</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить задания из списка</translation>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="55"/>
         <source>Remove jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="94"/>
         <source>Process jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>Начать обработку</translation>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="97"/>
         <source>Run</source>
-        <translation type="unfinished"></translation>
+        <translation>Выполнить</translation>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="120"/>
         <source>Abort processing</source>
-        <translation type="unfinished"></translation>
+        <translation>Прервать обработку</translation>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="123"/>
         <source>Abort</source>
-        <translation type="unfinished"></translation>
+        <translation>Прервать</translation>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="162"/>
@@ -6121,7 +6121,7 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="68"/>
         <source>Spot tuning</source>
-        <translation type="unfinished">Точечная коррекция</translation>
+        <translation>Точечная коррекция</translation>
     </message>
     <message>
         <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="79"/>
@@ -7334,7 +7334,7 @@ is not a job list file.</source>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1195"/>
         <source>Local Edit</source>
-        <translation type="unfinished">Локальное редактирование</translation>
+        <translation>Локальное редактирование</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="1287"/>
@@ -7950,7 +7950,7 @@ You could try an external profile.</source>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="2120"/>
         <source>Spot tuning</source>
-        <translation type="unfinished">Точечная коррекция</translation>
+        <translation>Точечная коррекция</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="2354"/>
@@ -10580,12 +10580,12 @@ Useful to avoid losing content through the distortion/geometry tools.
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="772"/>
         <source>Open &amp;batch processing</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть &amp;пакетную обработку</translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="772"/>
         <source>Ctrl+B</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Sources/ptViewWindow.cpp" line="775"/>
