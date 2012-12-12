@@ -200,7 +200,7 @@ void ptProcessor::Run(short Phase,
     if (!Settings->GetInt("IsRAW")) {
       if (Phase == ptProcessorPhase_Raw &&
           SubPhase > ptProcessorPhase_Load) {
-        Phase = ptProcessorPhase_Geometry;
+        Phase = ptProcessorPhase_LocalEdit;
       }
     }
 
