@@ -1251,7 +1251,7 @@ void CLASS nikon_load_raw()
       if (col < 2) hpred[col] = vpred[row & 1][col] += diff;
       else     hpred[col & 1] += diff;
       if ((uint16_t)(hpred[col & 1] + min) >= max) derror();
-      RAW(row,col) = m_Curve[LIM((int32_t)hpred[col & 1],0,0x3fff)];
+      RAW(row,col) = m_Curve[LIM((int16_t)hpred[col & 1],(int16_t)0,(int16_t)0x3fff)];
     }
   }
   FREE(huff);
