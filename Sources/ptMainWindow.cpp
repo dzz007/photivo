@@ -301,6 +301,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(ZoomIn);
   Macro_ConnectSomeButton(ZoomOut);
   Macro_ConnectSomeButton(ZoomFull);
+  Macro_ConnectSomeButton(Batch);
   Macro_ConnectSomeButton(FileMgr);
   Macro_ConnectSomeButton(FullScreen);
   FullScreenButton->setChecked(0);
@@ -358,7 +359,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : Geometry
   //
 
-  // TODO BJ: Unhide when lensfun implementation has grown far enough
+  // TODO: BJ Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
 
@@ -431,9 +432,10 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : Output
   //
 
-  connect(TagsEditWidget, SIGNAL(textChanged()),     this, SLOT(OnTagsEditTextChanged()));
-  connect(edtImageTitle,  SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
-  connect(edtCopyright,   SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
+  connect(TagsEditWidget,  SIGNAL(textChanged()),     this, SLOT(OnTagsEditTextChanged()));
+  connect(edtOutputSuffix, SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
+  connect(edtImageTitle,   SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
+  connect(edtCopyright,    SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
 
 
   Macro_ConnectSomeButton(OutputColorProfileReset);
@@ -498,6 +500,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabGradualBlur2"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#gradual_blur");
 
+  m_ActiveTabs.append(LocalTab);
   m_ActiveTabs.append(GeometryTab);
   m_ActiveTabs.append(RGBTab);
   m_ActiveTabs.append(LabCCTab);
@@ -618,6 +621,7 @@ ptMainWindow::ptMainWindow(const QString Title)
           SLOT(Event0TimerExpired()));
 
   FileMgrThumbMaxRowColWidget->setEnabled(Settings->GetInt("FileMgrUseThumbMaxRowCol"));
+
   UpdateCropToolUI();
   UpdateLfunDistUI();
   UpdateLfunCAUI();
@@ -680,6 +684,7 @@ void ptMainWindow::OnTranslationChoiceChanged(int idx) {
     Settings->SetValue("UiLanguage", TranslationChoice->itemText(idx));
   }
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -886,6 +891,7 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
   }
 }
 
+//==============================================================================
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -898,14 +904,15 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
 short ptMainWindow::GetCurrentTab() {
   // I opt for matching onto widget name, rather than on
   // index, as I feel that this is more robust for change.
-  if (ProcessingTabBook->currentWidget()== CameraTab) return ptCameraTab;
-  else if (ProcessingTabBook->currentWidget()== GeometryTab) return ptGeometryTab;
-  else if (ProcessingTabBook->currentWidget()== RGBTab) return ptRGBTab;
-  else if (ProcessingTabBook->currentWidget()== LabCCTab) return ptLabCCTab;
-  else if (ProcessingTabBook->currentWidget()== LabSNTab) return ptLabSNTab;
-  else if (ProcessingTabBook->currentWidget()== LabEyeCandyTab) return ptLabEyeCandyTab;
-  else if (ProcessingTabBook->currentWidget()== EyeCandyTab) return ptEyeCandyTab;
-  else if (ProcessingTabBook->currentWidget()== OutTab) return ptOutTab;
+  if      (ProcessingTabBook->currentWidget() == CameraTab) return ptCameraTab;
+  else if (ProcessingTabBook->currentWidget() == LocalTab) return ptLocalTab;
+  else if (ProcessingTabBook->currentWidget() == GeometryTab) return ptGeometryTab;
+  else if (ProcessingTabBook->currentWidget() == RGBTab) return ptRGBTab;
+  else if (ProcessingTabBook->currentWidget() == LabCCTab) return ptLabCCTab;
+  else if (ProcessingTabBook->currentWidget() == LabSNTab) return ptLabSNTab;
+  else if (ProcessingTabBook->currentWidget() == LabEyeCandyTab) return ptLabEyeCandyTab;
+  else if (ProcessingTabBook->currentWidget() == EyeCandyTab) return ptEyeCandyTab;
+  else if (ProcessingTabBook->currentWidget() == OutTab) return ptOutTab;
   else {
      ptLogError(ptError_Argument,"Unforeseen tab.");
      assert(0);
@@ -922,6 +929,14 @@ short ptMainWindow::GetCurrentTab() {
 
 //==============================================================================
 // Show/hide file manager window
+
+void ptMainWindow::OpenBatchWindow() {
+  SwitchUIState(uisBatch);
+}
+
+void ptMainWindow::CloseBatchWindow() {
+  SwitchUIState(uisProcessing);
+}
 
 void ptMainWindow::OpenFileMgrWindow() {
   SwitchUIState(uisFileMgr);
@@ -1120,6 +1135,7 @@ void ptMainWindow::OnToolBoxesEnabledTriggered(const bool Enabled) {
   }
 }
 
+
 //
 // Gimp
 //
@@ -1189,6 +1205,11 @@ void ptMainWindow::OnInputChanged(const QVariant Value) {
          __FILE__,__LINE__,Sender->objectName().toAscii().data());
   CB_InputChanged(Sender->objectName(),Value);
 
+}
+
+void CB_BatchButton();
+void ptMainWindow::OnBatchButtonClicked() {
+  ::CB_BatchButton();
 }
 
 void CB_FileMgrButton();
@@ -1295,6 +1316,8 @@ void CB_StartupSettingsButton();
 void ptMainWindow::OnStartupSettingsButtonClicked() {
   ::CB_StartupSettingsButton();
 }
+
+
 //
 // Tab : Camera
 //
@@ -1513,6 +1536,7 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
             CloseFileMgrWindow();
           ImageFileToOpen = DropName;
           CB_MenuFileOpen(1);
+
         } else {
           if (!Settings->GetInt("FileMgrIsOpen")) {
             if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
@@ -1612,6 +1636,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       }
     } else if (Event->key() == Qt::Key_M && Event->modifiers() == Qt::ControlModifier) {
       SwitchUIState(uisFileMgr);
+    } else if (Event->key() == Qt::Key_B && Event->modifiers() == Qt::ControlModifier) {
+      SwitchUIState(uisBatch);
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::ControlModifier) {
       CB_OpenPresetFileButton();
     } else if (Event->key()==Qt::Key_Q && Event->modifiers()==Qt::ControlModifier) {
@@ -2324,6 +2350,7 @@ void ptMainWindow::Settings_2_Form() {
   if (Settings->GetInt("JobMode") == 1) return;
 
   // Metadata
+  edtOutputSuffix->setText(Settings->GetString("OutputFileNameSuffix"));
   edtImageTitle->setText(Settings->GetString("ImageTitle"));
   edtCopyright->setText( Settings->GetString("Copyright"));
 }
@@ -2334,6 +2361,7 @@ void ptMainWindow::Form_2_Settings() {
   if (Settings->GetInt("JobMode") == 1) return;
 
   //Metadata
+  Settings->SetValue("OutputFileNameSuffix", edtOutputSuffix->text().trimmed());
   Settings->SetValue("ImageTitle", edtImageTitle->text().trimmed());
   Settings->SetValue("Copyright",  edtCopyright->text().trimmed());
 }
@@ -2656,18 +2684,26 @@ void ptMainWindow::SwitchUIState(const ptUIState AState)
 
   FUIState = AState;
 
-  if (AState == uisProcessing) {
-    // Processing
-    MainStack->setCurrentWidget(ProcessingPage);
-    Settings->SetValue("FileMgrIsOpen", 0);
-  } else if (AState == uisFileMgr) {
-    // Filemanager
-#ifndef PT_WITHOUT_FILEMGR
-    MainStack->setCurrentWidget(FileManagerPage);
-    Settings->SetValue("FileMgrIsOpen", 1);
-#endif
-  } else {
-    GInfo->Raise("Unknown UI state", AT);
+  switch (AState) {
+    case uisProcessing:
+      // Processing
+      MainStack->setCurrentWidget(ProcessingPage);
+      Settings->SetValue("FileMgrIsOpen", 0);
+      Settings->SetValue("BatchIsOpen", 0);
+      break;
+    case uisFileMgr:
+      // Filemanager
+  #ifndef PT_WITHOUT_FILEMGR
+      MainStack->setCurrentWidget(FileManagerPage);
+      Settings->SetValue("FileMgrIsOpen", 1);
+  #endif
+      break;
+    case uisBatch:
+      MainStack->setCurrentWidget(BatchPage);
+      Settings->SetValue("BatchIsOpen", 1);
+      break;
+    default:
+      GInfo->Raise("Unknown UI state", AT);
   }
 }
 
@@ -2997,7 +3033,8 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
   LqrWHContainter->setVisible(Scaling == ptLqr_ScaleAbsolute);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
 //
 // Update gradual blur UI elements
 //

@@ -46,9 +46,8 @@ class ptImageHelper
 {
 public:
   /*! Write a given exif buffer to a file.*/
-  static bool WriteExif(const QString  AFileName,
-                        uint8_t       *AExifBuffer,
-                        const unsigned AExifBufferLength);
+  static bool WriteExif(const QString    AFileName,
+                        const Exiv2::ExifData AExifData);
 
   /*! Read exif data from file.*/
   static bool ReadExif(const QString    AFileName,

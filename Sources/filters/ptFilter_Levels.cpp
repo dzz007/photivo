@@ -84,14 +84,16 @@ void ptFilter_Levels::doRunFilter(ptImage *AImage) const {
     float hBlackP = FConfig->getValue(CBlackpoint).toFloat();
     float hWhiteP = FConfig->getValue(CWhitepoint).toFloat();
 
-    hBlackP = (hBlackP > 0.0f) ? pow(  hBlackP, Settings->GetDouble("InputPowerFactor")) :
-                                 -pow(-hBlackP, Settings->GetDouble("InputPowerFactor"));
-    hWhiteP = pow(hWhiteP, Settings->GetDouble("InputPowerFactor"));
+    if (hBlackP != 0.0f) {
+      hBlackP = (hBlackP > 0.0f) ? powf( hBlackP, Settings->GetDouble("InputPowerFactor")) :
+                                  -powf(-hBlackP, Settings->GetDouble("InputPowerFactor"));
+    }
+    if (hWhiteP != 0.0f) {
+      hWhiteP = powf(hWhiteP, Settings->GetDouble("InputPowerFactor"));
+    }
 
     AImage->toRGB();
     AImage->Levels(hBlackP, hWhiteP);
-
-
   } else if (FColorSpace == TColorSpace::Lab) {
     AImage->toLab();
     AImage->Levels(FConfig->getValue(CBlackpoint).toFloat(),

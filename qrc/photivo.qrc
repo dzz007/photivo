@@ -67,5 +67,17 @@
         <file>dark/icons/file-manager.png</file>
         <file>dark/icons/zoom-in.png</file>
         <file>dark/icons/zoom-out.png</file>
+        <file>dark/icons/delete.png</file>
+        <file>dark/icons/edit-spot.png</file>
+        <file>dark/icons/move-object-down.png</file>
+        <file>dark/icons/move-object-down-disabled.png</file>
+        <file>dark/icons/batch-processing.png</file>
+        <file>dark/icons/processing-abort.png</file>
+        <file>dark/icons/job-add.png</file>
+        <file>dark/icons/job-remove.png</file>
+        <file>dark/icons/move-object-up.png</file>
+        <file>dark/icons/move-object-up-disabled.png</file>
+        <file>dark/icons/add-spot.png</file>
+        <file>dark/icons/add-spot-stop.png</file>
     </qresource>
 </RCC>

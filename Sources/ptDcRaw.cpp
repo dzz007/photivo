@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2009-2012 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
@@ -1251,7 +1251,7 @@ void CLASS nikon_load_raw()
       if (col < 2) hpred[col] = vpred[row & 1][col] += diff;
       else     hpred[col & 1] += diff;
       if ((uint16_t)(hpred[col & 1] + min) >= max) derror();
-      RAW(row,col) = m_Curve[LIM((int32_t)hpred[col & 1],0,0x3fff)];
+      RAW(row,col) = m_Curve[LIM((int16_t)hpred[col & 1],(int16_t)0,(int16_t)0x3fff)];
     }
   }
   FREE(huff);
@@ -2953,7 +2953,7 @@ void CLASS foveon_huff (uint16_t *huff)
 void CLASS foveon_dp_load_raw()
 {
   unsigned c, roff[4], row, col, diff;
-  uint16_t huff[258], vpred, hpred;
+  uint16_t huff[258], vpred[2][2], hpred[2];
 
   fseek (m_InputFile, 8, SEEK_CUR);
   foveon_huff (huff);
@@ -2962,13 +2962,13 @@ void CLASS foveon_dp_load_raw()
   for (c=0; c<3; c++) {
     fseek (m_InputFile, m_Data_Offset+roff[c], SEEK_SET);
     getbits(-1);
-    vpred = 1024;
+    vpred[0][0] = vpred[0][1] = vpred[1][0] = vpred[1][1] = 512;
     for (row=0; row < m_Height; row++) {
       for (col=0; col < m_Width; col++) {
   diff = ljpeg_diff(huff);
-  if (col) hpred += diff;
-  else hpred = vpred += diff;
-  m_Image[row*m_Width+col][c] = hpred;
+	if (col < 2) hpred[col] = vpred[row & 1][col] += diff;
+	else hpred[col & 1] += diff;
+	m_Image[row*m_Width+col][c] = hpred[col & 1];
       }
     }
   }
@@ -4269,7 +4269,7 @@ void CLASS pre_interpolate()
   // If m_UserSetting_HalfSize is set no interpolation will
   // be needed. This is registered by m_Filters = 0.
   // (no Bayer array anymore, this means)
-  if (m_UserSetting_HalfSize) {
+  if (m_UserSetting_HalfSize && m_Filters != 2) {
     m_Filters = 0;
   }
 }
@@ -4832,13 +4832,11 @@ void CLASS parse_makernote (int base, int uptag)
       ASSIGN(m_CameraMultipliers[2], getreal(type));
     }
     if (tag == 0xd && type == 7 && get2() == 0xaaaa) {
-      ptfread (buf97, 1, sizeof buf97, m_InputFile);
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wwrite-strings"
-      i = (uint8_t *) memmem ((char*)buf97, sizeof buf97,"\xbb\xbb",2) - buf97 + 10;
-#pragma GCC diagnostic pop
-      if (i < 70 && buf97[i] < 3)
-        m_Flip = "065"[buf97[i]]-'0';
+      for (c=i=2; (uint16_t) c != 0xbbbb && i < len; i++)
+	c = c << 8 | fgetc(m_InputFile);
+      while ((i+=4) < len-5)
+	if (get4() == 257 && (i=len) && (c = (get4(),fgetc(m_InputFile))) < 3)
+	  m_Flip = "065"[c]-'0';
     }
     if (tag == 0x10 && type == 4)
       unique_id = get4();
@@ -5834,11 +5832,19 @@ void CLASS apply_tiff()
           !strstr(m_CameraMake,"Kodak") &&
     !strstr(m_CameraModelBis,"DEBUG RAW")))
       m_IsRaw = 0;
-  for (i=0; (unsigned) i < m_Tiff_NrIFDs; i++)
-    if (i != l_Raw && m_Tiff_IFD[i].samples == l_MaxSample &&
-  (unsigned)(m_Tiff_IFD[i].width * m_Tiff_IFD[i].height / SQR(m_Tiff_IFD[i].bps+1)) >
-        m_ThumbWidth * m_ThumbHeight / SQR(m_ThumbMisc+1)
-  && m_Tiff_IFD[i].comp != 34892) {
+
+  for (i=0; (unsigned) i < m_Tiff_NrIFDs; i++) {
+    auto l_denom1 = SQR(m_Tiff_IFD[i].bps+1);
+    auto l_denom2 = SQR(m_ThumbMisc+1);
+    if (l_denom1 == 0 || l_denom2 == 0)
+      continue;   // prevent divide by zero crash
+
+    if (i != l_Raw &&
+        m_Tiff_IFD[i].samples == l_MaxSample &&
+        (unsigned)(m_Tiff_IFD[i].width * m_Tiff_IFD[i].height / l_denom1) >
+            m_ThumbWidth * m_ThumbHeight / l_denom2 &&
+        m_Tiff_IFD[i].comp != 34892)
+    {
       m_ThumbWidth  = m_Tiff_IFD[i].width;
       m_ThumbHeight = m_Tiff_IFD[i].height;
       m_ThumbOffset = m_Tiff_IFD[i].offset;
@@ -5846,6 +5852,7 @@ void CLASS apply_tiff()
       m_ThumbMisc   = m_Tiff_IFD[i].bps;
       l_Thumb = i;
     }
+  }
 
   if (l_Thumb >= 0) {
     m_ThumbMisc |= m_Tiff_IFD[l_Thumb].samples << 5;
@@ -7304,6 +7311,12 @@ canon_a5:
     m_Height -= m_TopMargin = 45;
     m_LeftMargin = 142;
     m_Width = 4916;
+  } else if (l_IsCanon && m_RawWidth == 5280) {
+    m_TopMargin  = 52;
+    m_LeftMargin = 72;
+    if (unique_id == 0x80000301)
+      adobe_coeff ("Canon","EOS 650D");
+    goto canon_cr2;
   } else if (l_IsCanon && m_RawWidth == 5344) {
     m_TopMargin = 51;
     m_LeftMargin = 142;
@@ -7611,11 +7624,11 @@ konica_400z:
     m_RawWidth = l_FileSize/m_Height/2;
     m_ByteOrder = 0x4d4d;
     m_LoadRawFunction = &CLASS unpacked_load_raw;
-  } else if (!strncmp(m_CameraModel,"NX1",3)) {
+  } else if (!strcmp(m_CameraMake,"SAMSUNG") && m_RawWidth == 4704) {
     m_Height -= m_TopMargin = 8;
     m_Width -= 2 * (m_LeftMargin = 8);
     m_Load_Flags = 32;
-  } else if (!strcmp(m_CameraModel,"NX200")) {
+  } else if (!strcmp(m_CameraMake,"SAMSUNG") && m_RawWidth == 5632) {
     m_ByteOrder = 0x4949;
     m_Height = 3694;
     m_TopMargin = 2;
@@ -7884,6 +7897,8 @@ wb550:
     adobe_coeff ("SONY","DSC-R1");
     m_Width = 3925;
     m_ByteOrder = 0x4d4d;
+  } else if (!strcmp(m_CameraMake,"SONY") && m_RawWidth == 5504) {
+    m_Width -= 8;
   } else if (!strcmp(m_CameraMake,"SONY") && m_RawWidth == 6048) {
     m_Width -= 24;
   } else if (!strcmp(m_CameraModel,"DSLR-A100")) {
@@ -8742,7 +8757,7 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
 
   // not 1:1 pipe, use FC marco instead of interpolation
   uint16_t    (*TempImage)[4];
-  if (m_Shrink) { // -> m_Filters == 0
+  if (m_Shrink && m_Filters != 2) { // -> preinterpolate will set m_Filters = 0 if != 2
     m_OutHeight = (m_Height + 1) / 2;
     m_OutWidth  = (m_Width + 1) / 2;
     TempImage = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *TempImage);
@@ -8770,7 +8785,9 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
       if (m_UserSetting_BayerDenoise==1) fbdd(0);
       else if (m_UserSetting_BayerDenoise==2) fbdd(1);
     }
-    if (m_UserSetting_Quality == ptInterpolation_Linear)
+    if (m_Filters == 2) // for 3x3 pattern we fix to VNG
+      vng_interpolate();
+    else if (m_UserSetting_Quality == ptInterpolation_Linear)
       lin_interpolate();
     else if (m_UserSetting_Quality == ptInterpolation_VNG ||
              m_UserSetting_Quality == ptInterpolation_VNG4)
@@ -8808,12 +8825,11 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
   TRACEKEYVALS("Interpolation type","%d",m_UserSetting_Quality);
 
   // Additional photivo stuff. Other halvings on request.
-  if (m_UserSetting_HalfSize > 1 ||
-      // 3 channel RAWs
-      (m_Shrink == 0 && m_UserSetting_HalfSize == 1)) {
-
-    short Factor = m_UserSetting_HalfSize-1;
-    if (m_Shrink == 0) Factor+=1;
+  if (m_UserSetting_HalfSize > 1                      ||
+      (m_UserSetting_HalfSize == 1 && m_Shrink  == 0) || // 3 channel RAWs
+      (m_UserSetting_HalfSize == 1 && m_Filters == 2)) { // 3x3 pattern
+    short Factor = m_UserSetting_HalfSize - 1;
+    if (m_Shrink == 0 || m_Filters == 2) Factor += 1;
 
     uint16_t NewHeight = m_Height >> Factor;
     uint16_t NewWidth = m_Width >> Factor;
@@ -8851,7 +8867,7 @@ short CLASS RunDcRaw_Phase2(const short NoCache) {
   }
 
   // Green mixing
-  if (m_MixGreen) {
+  if (m_MixGreen && m_Colors != 3) {
 #pragma omp parallel for schedule(static) default(shared)
     for (uint32_t i=0; i < (uint32_t) m_Height*m_Width; i++)
       m_Image[i][1] = (m_Image[i][1] + m_Image[i][3]) >> 1;
@@ -9131,6 +9147,10 @@ void CLASS ptHotpixelReductionBayer() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+inline uint16_t MultOf6(uint16_t AValue) {
+  return ptMax(AValue - (AValue % 6), 0);
+}
+
 void CLASS ptCrop() {
   assert (m_UserSetting_HalfSize == 0);
 
@@ -9139,6 +9159,13 @@ void CLASS ptCrop() {
   uint16_t CropH = m_UserSetting_DetailViewCropH;
   uint16_t CropX = m_UserSetting_DetailViewCropX;
   uint16_t CropY = m_UserSetting_DetailViewCropY;
+
+  if (m_Filters == 2) { // for 3x3 pattern
+    CropW = MultOf6(CropW);
+    CropH = MultOf6(CropH);
+    CropX = MultOf6(CropX);
+    CropY = MultOf6(CropY);
+  }
 
   if (m_Flip & 2) {
     CropX = m_Height - CropX - CropW;

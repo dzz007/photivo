@@ -33,12 +33,14 @@
 #include <QLabel>
 
 #include "ptCurveWindow.h"
-#include "ptCurve.h"
 #include "ptTheme.h"
 #include "ptInfo.h"
+#include "ptSettings.h"
 #include <filters/ptCfgItem.h>
 
 //==============================================================================
+
+extern QString CurveFilePattern;
 
 // How many pixels will be considered as 'bingo' for having the anchor ?
 const int CSnapDelta = 6;
@@ -78,17 +80,18 @@ ptCurveWindow::~ptCurveWindow() {
 //==============================================================================
 
 void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
-  FCaptionLabel = nullptr;
-  FWheelTimer = new QTimer(this);
-  FMouseAction = NoAction;
-  FMovingAnchor = -1;
+  FCaptionLabel     = nullptr;
+  FWheelTimer       = new QTimer(this);
+  FMouseAction      = NoAction;
+  FMovingAnchor     = -1;
   FLinearIpolAction = nullptr;
   FSplineIpolAction = nullptr;
   FCosineIpolAction = nullptr;
-  FIpolGroup = nullptr;
-  FByLumaAction = nullptr;
-  FByChromaAction = nullptr;
-  FMaskGroup = nullptr;
+  FIpolGroup        = nullptr;
+  FByLumaAction     = nullptr;
+  FByChromaAction   = nullptr;
+  FMaskGroup        = nullptr;
+  FOpenCurveAction  = nullptr;
 
   // Timer for the wheel interaction
   FWheelTimer->setSingleShot(1);
@@ -103,13 +106,7 @@ void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
   FCurve = ACfgItem.Curve;
 
   // set up caption in topleft corner
-  if (!ACfgItem.Caption.isEmpty()) {
-    FCaptionLabel = new QLabel("<b style='color:#ffffff'>" + ACfgItem.Caption + "</b>", this);
-    FCaptionLabel->move(5,5);
-    FCaptionLabel->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-    FCaptionLabel->setAttribute(Qt::WA_NoSystemBackground, true);
-    FCaptionLabel->setAttribute(Qt::WA_OpaquePaintEvent, false);
-  }
+  this->setCaption(ACfgItem.Caption);
 }
 
 //==============================================================================
@@ -120,9 +117,27 @@ void ptCurveWindow::setValue(const QVariant &AValue) {
                     .arg(this->objectName()).arg(AValue.type()), AT);
 
   auto hTempMap = AValue.toMap();
-  FCurve->setFromFilterConfig(&hTempMap);
+  FCurve->setFromFilterConfig(hTempMap);
   updateView();
   requestPipeRun();
+}
+
+//==============================================================================
+
+void ptCurveWindow::setCaption(const QString &ACaption) {
+  if (ACaption.isEmpty()) {
+    DelAndNull(FCaptionLabel);
+
+  } else {
+    if (!FCaptionLabel) {
+      FCaptionLabel = new QLabel(this);
+      FCaptionLabel->move(5,5);
+      FCaptionLabel->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+      FCaptionLabel->setAttribute(Qt::WA_NoSystemBackground, true);
+      FCaptionLabel->setAttribute(Qt::WA_OpaquePaintEvent, false);
+    }
+    FCaptionLabel->setText("<b style='color:#ffffff'>" + ACaption + "</b>");
+  }
 }
 
 //==============================================================================
@@ -163,6 +178,25 @@ void ptCurveWindow::setInterpolationType() {
 
   updateView();
   requestPipeRun();
+}
+
+//==============================================================================
+
+void ptCurveWindow::openCurveFile()
+{
+  QString CurveFileName = QFileDialog::getOpenFileName(nullptr,
+                                                       QObject::tr("Open Curve"),
+                                                       Settings->GetString("CurvesDirectory"),
+                                                       CurveFilePattern);
+
+  if (CurveFileName.size() == 0) {
+    return;
+  } else {
+    if (FCurve->readCurveFile(CurveFileName, true) == 0) {
+      updateView();
+      requestPipeRun();
+    }
+  }
 }
 
 //==============================================================================
@@ -273,16 +307,6 @@ void ptCurveWindow::calcCurveImage() {
 
   FCanvas.setSize(hWidth, hHeight, 3);  // image is completely black afterwards
 
-  if (!FCurve.get()) return;
-
-  // Compute curve points. The vector stores the position of the display curve (y value)
-  // for each display x value. Note that coordinates origin is topleft.
-  std::vector<uint16_t> hLocalCurve(hWidth);
-  for (uint16_t LocalX = 0; LocalX < hWidth; ++LocalX) {
-    uint16_t CurveX = (uint16_t)(0.5f + (float)LocalX / (hWidth-1) * 0xffff);
-    hLocalCurve[LocalX] = hHeight-1 - (uint16_t)(0.5f + (float) FCurve->Curve[CurveX]/0xffff * (hHeight-1));
-  }
-
   QColor hCurveColor = QColor(200,200,200);
   QColor hGridColor  = QColor(53,53,53);
 
@@ -321,6 +345,16 @@ void ptCurveWindow::calcCurveImage() {
       FCanvas.m_Image[Temp][2] = hGridColor.red();
       Temp += hWidth;
     }
+  }
+
+  if (!FCurve.get()) return;
+
+  // Compute curve points. The vector stores the position of the display curve (y value)
+  // for each display x value. Note that coordinates origin is topleft.
+  std::vector<uint16_t> hLocalCurve(hWidth);
+  for (uint16_t LocalX = 0; LocalX < hWidth; ++LocalX) {
+    uint16_t CurveX = (uint16_t)(0.5f + (float)LocalX / (hWidth-1) * 0xffff);
+    hLocalCurve[LocalX] = hHeight-1 - (uint16_t)(0.5f + (float) FCurve->Curve[CurveX]/0xffff * (hHeight-1));
   }
 
   // paint the curve itself
@@ -421,6 +455,7 @@ void ptCurveWindow::paintEvent(QPaintEvent*) {
 //==============================================================================
 
 void ptCurveWindow::mousePressEvent(QMouseEvent *AEvent) {
+  if (!FCurve) return;
   FMouseAction  = NoAction;
   FMovingAnchor = -1;
 
@@ -486,6 +521,7 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *AEvent) {
 //==============================================================================
 
 void ptCurveWindow::mouseReleaseEvent(QMouseEvent*) {
+  if (!FCurve) return;
   if (FMouseAction == NoAction) return;
 
   if (FMouseAction != DragAction)  // for drag updating is done in move event
@@ -529,6 +565,7 @@ TAnchor ptCurveWindow::clampMovingAnchor(const TAnchor &APoint,
 //==============================================================================
 
 void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
+  if (!FCurve) return;
   if (FMouseAction == DragAction && FMovingAnchor > -1) {
     // mouse position normalised and clamped to (0.0-1.0) and inverted y axis = curve coordinates
     TAnchor hNormPos(AEvent->x()/(double)(this->width()-1),
@@ -543,7 +580,7 @@ void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
     if (isCyclicCurve()) {
       if (FMovingAnchor == 0)
         FCurve->setAnchorY(FCurve->anchorCount()-1, hNormPos.second);
-      else if (FMovingAnchor == FCurve->anchorCount())
+      else if (FMovingAnchor == FCurve->anchorCount()-1)
         FCurve->setAnchorY(0, hNormPos.second);
     }
 
@@ -619,6 +656,9 @@ void ptCurveWindow::execContextMenu(const QPoint APos) {
     }
   }
 
+  hMenu.addSeparator();
+  hMenu.addAction(FOpenCurveAction);
+
   hMenu.exec(APos);
 }
 
@@ -660,6 +700,10 @@ void ptCurveWindow::createMenuActions() {
   FIpolGroup->addAction(FLinearIpolAction);
   FIpolGroup->addAction(FSplineIpolAction);
   FIpolGroup->addAction(FCosineIpolAction);
+
+  FOpenCurveAction = new QAction(tr("Open &file"), this);
+  FOpenCurveAction->setStatusTip(tr("Open anchor curve file"));
+  connect(FOpenCurveAction, SIGNAL(triggered()), this, SLOT(openCurveFile()));
 }
 
 //==============================================================================

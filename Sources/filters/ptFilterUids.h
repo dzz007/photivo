@@ -30,6 +30,8 @@
 // Choose "version 4: random".
 // Variable names should be "FilterName_ProcessingTabName".
 namespace Fuid {
+  const QString SpotTuning_Local                = "ef42f985-8686-42e6-b15d-9bc8dffdcde3";
+  const QString SpotRepair_Local                = "a1be4f8b-448d-40c1-b576-abd3ee1affb0";
   const QString Input_Camera                    = "f2235922-9003-48d9-ae6d-5fdedd3d56c1"; // not yet ported
   const QString ColorSpace_Camera               = "fa250868-e988-4497-b5a2-de2fce17f606"; // not yet ported
   const QString GenericCorr_Camera              = "ce1ef13a-0d3c-42af-974f-78afdecb6d4f"; // not yet ported

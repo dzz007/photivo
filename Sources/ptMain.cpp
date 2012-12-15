@@ -56,8 +56,10 @@
 #include "ptWiener.h"
 #include "ptParseCli.h"
 #include "ptImageHelper.h"
+#include "filters/imagespot/ptTuningSpot.h"
 #include "qtsingleapplication/qtsingleapplication.h"
 #include "filemgmt/ptFileMgrWindow.h"
+#include "batch/ptBatchWindow.h"
 #include "filters/ptFilterDM.h"
 #include "filters/ptFilterBase.h"
 #include "ptToolBox.h"
@@ -101,7 +103,6 @@ cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
 
-
 //
 // The 'tee' towards the display.
 // Visualization :
@@ -125,6 +126,7 @@ ptMainWindow*      MainWindow      = NULL;
 ptViewWindow*      ViewWindow      = NULL;
 ptHistogramWindow* HistogramWindow = NULL;
 ptFileMgrWindow*   FileMgrWindow   = NULL;
+ptBatchWindow*     BatchWindow     = NULL;
 
 // Error dialog for segfaults
 ptMessageBox* SegfaultErrorBox;
@@ -149,6 +151,8 @@ short ImageCleanUp;
 
 // uint16_t (0,0xffff) to float (0.0, 1.0)
 float    ToFloatTable[0x10000];
+float    ToFloatABNeutral[0x10000];
+uint16_t ToInvertTable[0x10000];
 uint16_t ToSRGBTable[0x10000];
 
 // Filter patterns for the filechooser.
@@ -288,6 +292,8 @@ bool GBusy = false;
 
 void CreateAllFilters() {
   //                   Filter ID                unique name                         caption postfix
+  // Local Edit tab
+  GFilterDM->NewFilter("SpotTuning",            Fuid::SpotTuning_Local);
   // RGB tab
   GFilterDM->NewFilter("Highlights",            Fuid::Highlights_RGB);
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_RGB);
@@ -388,7 +394,9 @@ void SegfaultAbort(int) {
   std::signal(SIGSEGV, SIG_DFL);
   std::signal(SIGABRT, SIG_DFL);
   SegfaultErrorBox->exec();
-  std::abort();
+//  std::abort();
+//  Batch manager needs Photivo to return a value to determine a crash
+  exit(EXIT_FAILURE);
 }
 
 int main(int Argc, char *Argv[]) {
@@ -481,7 +489,6 @@ int photivoMain(int Argc, char *Argv[]) {
   std::signal(SIGSEGV, SegfaultAbort);
   std::signal(SIGABRT, SegfaultAbort);
 
-
   // Check for wrong GM quantum depth. We need the 16bit GraphicsMagick.
   ulong QDepth = 0;
   const ulong MinQD = 16;
@@ -498,7 +505,7 @@ int photivoMain(int Argc, char *Argv[]) {
 
 
   // Handle cli arguments
-  QString PhotivoCliUsageMsg = QObject::tr(
+  QString PhotivoCliUsageMsg = "<pre>" + QObject::tr(
 "Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
 "                [-h] [--new-instance]\n"
 "Options:\n"
@@ -519,12 +526,12 @@ int photivoMain(int Argc, char *Argv[]) {
 "--new-instance\n"
 "      Allow opening another Photivo instance instead of using a currently\n"
 "      running Photivo. Job files are always opened in a new instance.\n"
-"--no-filemgr\n"
+"--no-fmgr or -p\n"
 "      Prevent auto-open file manager when Photivo starts.\n"
-"-h\n"
+"--help or -h\n"
 "      Display this usage information.\n\n"
 "For more documentation visit the wiki: http://photivo.org/photivo/start\n"
-  );
+  ) + "</pre>";
 
   ptCliCommands cli = { cliNoAction, "", "", false, false };
 
@@ -795,7 +802,8 @@ int photivoMain(int Argc, char *Argv[]) {
   printf("Lensfun database: '%s'; \n",Settings->GetString("LensfunDatabaseDirectory").toAscii().data());
   //  LensfunData = new ptLensfun;    // TODO BJ: implement lensfun DB
 
-  // Instantiate the processor.
+  // Instantiate the processor. Spot models are not set here because we
+  // do not yet know if we are in GUI or batch mode.
   TheProcessor = new ptProcessor(ReportProgress);
 
   // ChannelMixer instance.
@@ -861,6 +869,11 @@ int photivoMain(int Argc, char *Argv[]) {
                    MainWindow, SLOT(CloseFileMgrWindow()));
   QObject::connect(ViewWindow, SIGNAL(openFileMgr()), MainWindow, SLOT(OpenFileMgrWindow()));
 #endif
+  QObject::connect(ViewWindow, SIGNAL(openBatch()), MainWindow, SLOT(OpenBatchWindow()));
+
+  BatchWindow = new ptBatchWindow(MainWindow->BatchPage);
+  MainWindow->BatchLayout->addWidget(BatchWindow);
+  QObject::connect(BatchWindow, SIGNAL(BatchWindowClosed()), MainWindow, SLOT(CloseBatchWindow()));
 
   // Populate Translations combobox
   MainWindow->PopulateTranslationsCombobox(UiLanguages, LangIdx);
@@ -1006,19 +1019,18 @@ void CB_Event0() {
   if (Settings->GetInt("JobMode") == 0)
     SaveButtonToolTip(Settings->GetInt("SaveButtonMode"));
 
-  // uint16_t (0,0xffff) to float (0.0, 1.0)
+  // Fill some look up tables
 #pragma omp parallel for
   for (uint32_t i=0; i<0x10000; i++) {
-    ToFloatTable[i] = (float)i/(float)0xffff;
-  }
-
-  // linear RGB to sRGB table
-#pragma omp parallel for
-  for (uint32_t i=0; i<0x10000; i++) {
-    if ((double)i/0xffff <= 0.0031308)
+    // uint16_t (0,0xffff) to float (0.0, 1.0)
+    ToFloatTable[i]     = (float)i*ptInvWP;
+    ToFloatABNeutral[i] = (float)i-ptWPHLab;
+    ToInvertTable[i]    = ptWP - i;
+    // linear RGB to sRGB table
+    if (ToFloatTable[i] <= 0.0031308)
       ToSRGBTable[i] = CLIP((int32_t)(12.92*i));
     else
-      ToSRGBTable[i] = CLIP((int32_t)((1.055*pow((double)i/0xffff,1.0/2.4)-0.055)*0xffff));
+      ToSRGBTable[i] = CLIP((int32_t)((1.055*pow(ToFloatTable[i],1.0/2.4)-0.055)*ptWPf));
   }
 
   // Init run mode
@@ -1343,15 +1355,15 @@ int GetProcessorPhase(const QString GuiName) {
   int Phase = 0;
   QString Tab = MainWindow->ProcessingTabBook->widget(
                   MainWindow->m_GroupBox->value(GuiName)->parentTabIdx() )->objectName();
-
-  if (Tab == "GeometryTab") Phase = ptProcessorPhase_Geometry;
-  else if (Tab == "RGBTab") Phase = ptProcessorPhase_RGB;
-  else if (Tab == "LabCCTab") Phase = ptProcessorPhase_LabCC;
-  else if (Tab == "LabSNTab") Phase = ptProcessorPhase_LabSN;
+  if      (Tab == "LocalTab")       Phase = ptProcessorPhase_LocalEdit;
+  else if (Tab == "GeometryTab")    Phase = ptProcessorPhase_Geometry;
+  else if (Tab == "RGBTab")         Phase = ptProcessorPhase_RGB;
+  else if (Tab == "LabCCTab")       Phase = ptProcessorPhase_LabCC;
+  else if (Tab == "LabSNTab")       Phase = ptProcessorPhase_LabSN;
   else if (Tab == "LabEyeCandyTab") Phase = ptProcessorPhase_LabEyeCandy;
-  else if (Tab == "EyeCandyTab") Phase = ptProcessorPhase_EyeCandy;
-  else if (Tab == "OutTab") Phase = ptProcessorPhase_Output;
-  else Phase = ptProcessorPhase_Raw;
+  else if (Tab == "EyeCandyTab")    Phase = ptProcessorPhase_EyeCandy;
+  else if (Tab == "OutTab")         Phase = ptProcessorPhase_Output;
+  else                              Phase = ptProcessorPhase_Raw;
   return Phase;
 }
 
@@ -1371,26 +1383,24 @@ void Update(const QString GuiName) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Block tools
-// 0: enable tools, 1: disable everything, 2: disable but keep crop tools enabled
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void BlockTools(const ptBlockToolsMode NewState) {
+void BlockTools(const ptBlockToolsMode ANewState, QStringList AExcludeIds = QStringList()) {
   // Set the object name of the widget that is excluded from blocking.
-  QString ExcludeTool = "";
-  switch (NewState) {
+  switch (ANewState) {
     case btmBlockForCrop:
-      ExcludeTool = "TabCrop";
+      AExcludeIds << "TabCrop";
       break;
     case btmBlockForSpotRepair:
-      ExcludeTool = "TabSpotRepair";
+      AExcludeIds << "TabSpotRepair";
       break;
     default:
       // nothing to do
       break;
   }
 
-  bool EnabledStatus = NewState == btmUnblock;
+  bool EnabledStatus = ANewState == btmUnblock;
 
   // Handle all necessary widgets outside the processing tabbook
   MainWindow->HistogramFrameCentralWidget->setEnabled(EnabledStatus);
@@ -1403,8 +1413,8 @@ void BlockTools(const ptBlockToolsMode NewState) {
       We just cycle through the list of currently visible tools and en/disable them.
     */
     for (QWidget *hToolBox: *MainWindow->m_MovedTools) {
-      if (hToolBox->objectName() != ExcludeTool) {
-        if (hToolBox->objectName().contains("/"))  //new-style
+      if (!AExcludeIds.contains(hToolBox->objectName())) {
+        if (hToolBox->objectName().contains("-"))  //new-style
           hToolBox->setEnabled(EnabledStatus);
         else                                       // old-style
           ((ptGroupBox*)hToolBox)->SetEnabled(EnabledStatus);
@@ -1429,18 +1439,18 @@ void BlockTools(const ptBlockToolsMode NewState) {
     QList<ptToolBox*> NewToolList =
         MainWindow->ProcessingTabBook->widget(CurrentTab)->findChildren<ptToolBox*>();
     foreach (ptToolBox* Tool, NewToolList) {
-      if (Tool->objectName() != ExcludeTool)
+      if (!AExcludeIds.contains(Tool->objectName()))
         Tool->setEnabled(EnabledStatus);
     }
     QList<ptGroupBox*> ToolList =
         MainWindow->ProcessingTabBook->widget(CurrentTab)->findChildren<ptGroupBox*>();
     foreach (ptGroupBox* Tool, ToolList) {
-      if (Tool->objectName() != ExcludeTool)
+      if (!AExcludeIds.contains(Tool->objectName()))
         Tool->SetEnabled(EnabledStatus);
     }
   }
 
-  Settings->SetValue("BlockTools", NewState);
+  Settings->SetValue("BlockTools", ANewState);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1467,7 +1477,7 @@ void HistogramGetCrop() {
 
 void HistogramCropDone(const ptStatus ExitStatus, QRect SelectionRect) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(btmUnblock);;
+  BlockTools(btmUnblock);
   if (ExitStatus == stFailure) {
     Settings->SetValue("HistogramCropX",0);
     Settings->SetValue("HistogramCropY",0);
@@ -1756,6 +1766,9 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
           PreviewImage->Set(TheProcessor->m_Image_AfterDcRaw);
         }
         break;
+      case ptLocalTab:
+        PreviewImage->Set(TheProcessor->m_Image_AfterLocalEdit);
+        break;
       case ptGeometryTab:
         PreviewImage->Set(TheProcessor->m_Image_AfterGeometry);
         break;
@@ -1795,6 +1808,8 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   } else if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output &&
              !(Settings->GetInt("HistogramCrop") && !Settings->GetInt("WebResize"))) {
     HistogramImage->Set(PreviewImage);
+
+
   } else if (Settings->GetInt("HistogramCrop")) {
     HistogramImage->Set(PreviewImage);
   }
@@ -1837,6 +1852,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     // In case of histogram update only, we're done.
     if (OnlyHistogram) {
+      HistogramWindow->UpdateView(HistogramImage);
       ViewWindow->ShowStatus(ptStatus_Done);
       return;
     }
@@ -1953,6 +1969,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
       }
     }
     if (OnlyHistogram) {
+      HistogramWindow->UpdateView(HistogramImage);
       ViewWindow->ShowStatus(ptStatus_Done);
       return;
     }
@@ -2050,9 +2067,11 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
   ReportProgress(QObject::tr("Ready"));
 
-  if (!OnlyHistogram)
-    if (Settings->GetInt("WriteBackupSettings"))
+  if (!OnlyHistogram) {
+    if (Settings->GetInt("WriteBackupSettings")) {
       GFilterDM->WritePresetFile(Settings->GetString("UserDirectory")+"backup.pts");
+    }
+  }
 } // UpdatePreviewImage
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2141,6 +2160,7 @@ void RunJob(const QString JobFileName) {
   // Read the gui settings from a file.
   short NextPhase = 1;
   short ReturnValue = GFilterDM->ReadPresetFile(JobFileName, NextPhase);
+  // TODO: BJ Implement spot processing
   if (ReturnValue) {
     printf("\nNo valid job file!\n\n");
     return;
@@ -2187,9 +2207,16 @@ void RunJob(const QString JobFileName) {
           Settings->SetValue("OutputFileName",
             PathInfo.dir().path() + "/" + PathInfo.completeBaseName());
         }
-        if (!Settings->GetInt("IsRAW")) {
+        if (!Settings->GetString("OutputFileNameSuffix").isEmpty()) {
           Settings->SetValue("OutputFileName",
-                             Settings->GetString("OutputFileName") + "-new");
+                             Settings->GetString("OutputFileName") +
+                             Settings->GetString("OutputFileNameSuffix"));
+        }
+        else {
+          if (!Settings->GetInt("IsRAW")) {
+            Settings->SetValue("OutputFileName",
+                               Settings->GetString("OutputFileName") + "-new");
+          }
         }
 
         // Here we have the OutputFileName, but extension still to add.
@@ -2352,8 +2379,7 @@ void WriteOut() {
 
     if (Settings->GetInt("IncludeExif")) {
       if (!ptImageHelper::WriteExif(Settings->GetString("OutputFileName"),
-                                    TheProcessor->m_ExifBuffer,
-                                    TheProcessor->m_ExifBufferLength))
+                                    TheProcessor->m_ExifData))
         ptMessageBox::warning(MainWindow, QObject::tr("Exif Error"), QObject::tr("No exif data written."));
     }
   }
@@ -2392,7 +2418,10 @@ void WritePipe(QString OutputName = "") {
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
   QFileInfo PathInfo(InputFileNameList[0]);
   QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName();
-  if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
+  if (!Settings->GetString("OutputFileNameSuffix").isEmpty())
+    SuggestedFileName += Settings->GetString("OutputFileNameSuffix");
+  else
+    if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
   QString Pattern;
 
   switch(Settings->GetInt("SaveFormat")) {
@@ -2735,7 +2764,10 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
     QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
     QFileInfo PathInfo(InputFileNameList[0]);
     QString SuggestedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName();
-    if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
+    if (!Settings->GetString("OutputFileNameSuffix").isEmpty())
+      SuggestedFileName += Settings->GetString("OutputFileNameSuffix");
+    else
+      if (!Settings->GetInt("IsRAW")) SuggestedFileName += "-new";
     QString Pattern;
 
     switch(Settings->GetInt("SaveFormat")) {
@@ -2838,6 +2870,8 @@ void CB_MenuFileExit(const short) {
   delete FileMgrWindow;
 #endif
 
+  delete BatchWindow;
+
   // Store the position of the splitter and main window
   Settings->m_IniSettings->
     setValue("MainSplitter",MainWindow->MainSplitter->saveState());
@@ -2853,7 +2887,6 @@ void CB_MenuFileExit(const short) {
 
   // Explicitly. The destructor of it cares for persistent settings.
   delete Settings;
-
 #ifdef Q_OS_WIN
   if (!JobMode)
     ptEcWin7::DestroyInstance();
@@ -3061,6 +3094,9 @@ void CB_ZoomStep(int direction) {
   ViewWindow->ZoomStep(direction);
 }
 
+void CB_BatchButton() {
+  MainWindow->OpenBatchWindow();
+}
 
 void CB_FileMgrButton() {
 #ifndef PT_WITHOUT_FILEMGR
@@ -3289,6 +3325,7 @@ void CB_StyleChoice(const QVariant Choice) {
 #ifndef PT_WITHOUT_FILEMGR
   FileMgrWindow->UpdateTheme();
 #endif
+  BatchWindow->UpdateTheme();
 }
 
 void CB_StyleHighLightChoice(const QVariant Choice) {
@@ -3405,7 +3442,7 @@ void CB_PipeSizeChoice(const QVariant Choice) {
       }
 
       // Selection is done at this point. Disallow it further and activate main.
-      BlockTools(btmUnblock);;
+      BlockTools(btmUnblock);
 
       if (DetailViewRect.width() >>4 <<4 > 19 &&
           DetailViewRect.height() >>4 <<4 > 19) {
@@ -3910,7 +3947,7 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
 
 void SelectSpotWBDone(const ptStatus ExitStatus, const QRect SelectionRect) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(btmUnblock);;
+  BlockTools(btmUnblock);
 
   if (ExitStatus == stSuccess) {
     Settings->SetValue("VisualSelectionX", SelectionRect.left());
@@ -4124,6 +4161,7 @@ void CB_ClipParameterInput(const QVariant Value) {
   Settings->SetValue("ClipParameter",Value);
   Update(ptProcessorPhase_Raw,ptProcessorPhase_Highlights);
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -4346,7 +4384,7 @@ void CB_RotateAngleButton() {
 
   // Rerun the part of geometry stage before rotate to get correct preview
   // image in TheProcessor->m_Image_AfterGeometry
-  TheProcessor->RunGeometry(ptProcessorStopBefore_Rotate);
+  TheProcessor->RunGeometry(ptProcessorStopBefore::Rotate);
   ViewWindow->SaveZoom();
   ViewWindow->ZoomToFit();
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
@@ -4362,7 +4400,7 @@ void CB_RotateAngleButton() {
 
 void RotateAngleDetermined(const ptStatus ExitStatus, double RotateAngle) {
   // Selection is done at this point. Disallow it further and activate main.
-  BlockTools(btmUnblock);;
+  BlockTools(btmUnblock);
 
   if (ExitStatus == stSuccess) {
     if (RotateAngle < -45.0) {
@@ -4548,7 +4586,7 @@ void CB_MakeCropButton() {
 
   // Rerun the part of geometry stage before crop to get correct preview
   // image in TheProcessor->m_Image_AfterGeometry
-  TheProcessor->RunGeometry(ptProcessorStopBefore_Crop);
+  TheProcessor->RunGeometry(ptProcessorStopBefore::Crop);
   UpdatePreviewImage(TheProcessor->m_Image_AfterGeometry); // Calculate in any case.
 
   // Allow to be selected in the view window. And deactivate main.
@@ -4605,7 +4643,6 @@ void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
       Settings->SetValue("CropY",CropRect.top() * YScale);
       Settings->SetValue("CropW",CropRect.width() * XScale);
       Settings->SetValue("CropH",CropRect.height() * YScale);
-//      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Checked);
     }
 
     TRACEKEYVALS("PreviewImageW","%d",PreviewImage->m_Width);
@@ -4622,7 +4659,6 @@ void CleanupAfterCrop(const ptStatus CropStatus, const QRect CropRect) {
   } else {
     if ((Settings->GetInt("CropW") < 4) || (Settings->GetInt("CropH") < 4)) {
       Settings->SetValue("Crop", 0);
-//      QCheckBox(MainWindow->CropWidget).setCheckState(Qt::Unchecked);
     }
   }
 
@@ -4707,6 +4743,7 @@ void CB_LqrVertFirstCheck(const QVariant Check) {
   if (Settings->ToolIsActive("TabLiquidRescale"))
     Update(ptProcessorPhase_Geometry);
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -6607,7 +6644,6 @@ void Standard_CB_SetAndRun (const QString ObjectName, const QVariant Value) {
 }
 
 void CB_InputChanged(const QString ObjectName, const QVariant Value) {
-
   // No CB processing while in startup phase. Too much
   // noise events otherwise.
   if (InStartup) return;
@@ -6648,6 +6684,10 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_JustSetDispatch(FileMgrThumbMaxRowColInput)
   M_JustSetDispatch(FileMgrThumbSaveSizeInput)
   M_JustSetDispatch(FileMgrStartupOpenCheck)
+
+  M_JustSetDispatch(BatchMgrAutosaveCheck)
+  M_JustSetDispatch(BatchMgrAutosaveFileChoice)
+  M_JustSetDispatch(BatchMgrAutoloadCheck)
 
   M_Dispatch(MemoryTestInput)
 

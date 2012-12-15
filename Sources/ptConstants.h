@@ -36,7 +36,10 @@
 
 /* !!!
   IMPORTANT: Photivo uses groups of const short for historical reasons.
-  They are deprecated for new constants groups! Use enums insteads.
+  They are deprecated for new constants groups! Use enums or C++11 enum classes
+  instead.
+  Up to at least v2.5 beta Qt Creator does not support enum classes properly.
+  Do not let red error underlining impress you. Compiling works fine. ;)
 
   When you add a new enum also add a Q_DECLARE_METATYPE() declaration so the enum
   can be used with QVariant.
@@ -61,28 +64,42 @@ const ptFiles PhotivoFile = { "photivo.ini",
 // Mathematical constants.
 const double ptPI     = 3.14159265358979323846264338327950288419716939937510;
 const double ptSQ2PI  = 2.50662827463100024161235523934010416269302368164062;
+const float  pt2PI    = 6.28318530717f;
 
 // Some program limits.
 const short ptMaxAnchors    = 50; // Curve anchors.
 const short ptMaxInputFiles = 2048;
 
-// Don't mess with the numbers of any of those constants.
-// Often there is relied upon , for instance as index in an array.
-// Or the numbers are assumptions from dcraw.
+// White point
+const uint16_t ptWP    = 0xffff;
+const float    ptWPf   = (float)ptWP;
+const float    ptInvWP = 1.0f/(float)ptWP;
 
-// Processor phases.
+const uint16_t ptWPH   = 0x7fff;
+const float    ptWPHf  = (float)ptWPH;
 
-const short ptProcessorPhase_Raw           = 1;
-const short ptProcessorPhase_Load          = 1; // Same constant, subphase !
-const short ptProcessorPhase_Demosaic      = 2; // Same constant, subphase !
-const short ptProcessorPhase_Highlights    = 3; // Same constant, subphase !
-const short ptProcessorPhase_Geometry      = 2;
-const short ptProcessorPhase_RGB           = 3;
-const short ptProcessorPhase_LabCC         = 4;
-const short ptProcessorPhase_LabSN         = 5;
-const short ptProcessorPhase_LabEyeCandy   = 6;
-const short ptProcessorPhase_EyeCandy      = 7;
-const short ptProcessorPhase_Output        = 8;
+// Neutral AB value
+const float ptWPHLab = 0x8080;
+
+/*! Processor phases.
+    Don't mess with the numbers of any of those constants.
+    Often they are relied upon, for instance as index in an array.
+    Or the numbers are assumptions from dcraw.
+*/
+const short ptProcessorPhase_Raw           = 1;   // dcraw
+  // subphases of Raw
+  const short ptProcessorPhase_Load          = 1; // Same constant, subphase !
+  const short ptProcessorPhase_Demosaic      = 2; // Same constant, subphase !
+  const short ptProcessorPhase_Highlights    = 3; // Same constant, subphase !
+const short ptProcessorPhase_LocalEdit     = 2;
+const short ptProcessorPhase_Geometry      = 3;
+const short ptProcessorPhase_RGB           = 4;
+const short ptProcessorPhase_LabCC         = 5;
+const short ptProcessorPhase_LabSN         = 6;
+const short ptProcessorPhase_LabEyeCandy   = 7;
+const short ptProcessorPhase_EyeCandy      = 8;
+const short ptProcessorPhase_Output        = 9;
+// special phases, not your usual pipe run
 const short ptProcessorPhase_Preview       = 10; // escape characters
 const short ptProcessorPhase_OnlyHistogram = 11;
 const short ptProcessorPhase_WriteOut      = 12;
@@ -90,9 +107,13 @@ const short ptProcessorPhase_ToGimp        = 13;
 
 // if stop is set, we have no console output of processing, to prevent
 // spamming while crop preview
-const short ptProcessorStopBefore_NoStop = 0;
-const short ptProcessorStopBefore_Rotate = 1;
-const short ptProcessorStopBefore_Crop   = 2;
+enum class ptProcessorStopBefore {
+  NoStop       = 0,
+  SpotTuning   = 1,
+  SpotRepair   = 2,
+  Rotate       = 3,
+  Crop         = 4
+};
 
 // Processor modes.
 
@@ -114,6 +135,7 @@ const short ptSpace_WideGamutRGB_D50 = 3;
 const short ptSpace_ProPhotoRGB_D50  = 4;
 const short ptSpace_Lab              = 10;
 const short ptSpace_XYZ              = 11;
+const short ptSpace_LCH              = 15;
 const short ptSpace_Profiled         = 20;
 
 // Color profiles.
@@ -180,6 +202,12 @@ const short ptStyleHighLight_Orange   = 4;
 const short ptStartupUIMode_Tab       = 0;
 const short ptStartupUIMode_Favourite = 1;
 const short ptStartupUIMode_AllTools  = 2;
+
+// local adjust modes
+enum ptLocalAdjustMode {
+  lamFloodFill    = 0,
+  lamSearch       = 1
+};
 
 // Lensfun
 const short ptLfunCAModel_None        = LF_TCA_MODEL_NONE;
@@ -287,6 +315,7 @@ const short ptAutoExposureMode_Zero     = 3;
 
 // Curves.
 
+// Beware the “channel”. It’s a historical name and not accurate anymore. Read: “curve type”
 const short ptCurveChannel_RGB               = 0;
 const short ptCurveChannel_R                 = 1;
 const short ptCurveChannel_G                 = 2;
@@ -304,6 +333,7 @@ const short ptCurveChannel_Denoise           = 13;
 const short ptCurveChannel_Hue               = 14;
 const short ptCurveChannel_Denoise2          = 15;
 const short ptCurveChannel_Outline           = 16;
+const short ptCurveChannel_SpotLuma          = 17;
 
 const short ptCurveType_Full         = 0;
 const short ptCurveType_Anchor       = 1;
@@ -403,6 +433,8 @@ const short ptViewLAB_L      = 1;
 const short ptViewLAB_A      = 2;
 const short ptViewLAB_B      = 3;
 const short ptViewLAB_L_Grad = 4;
+const short ptViewLAB_C      = 5;
+const short ptViewLAB_H      = 6;
 
 // Enable
 
@@ -539,15 +571,16 @@ const short ptResetMode_OpenSettings = 3;
 
 // Gui Tabs.
 
-const short ptGenericTab    = 0;
-const short ptCameraTab     = 1;
-const short ptGeometryTab    = 2;
-const short ptRGBTab        = 3;
-const short ptLabCCTab      = 4;
-const short ptLabSNTab      = 5;
-const short ptEyeCandyTab   = 6;
-const short ptLabEyeCandyTab  = 7;
-const short ptOutTab        = 8;
+const short ptGenericTab      = 0;
+const short ptCameraTab       = 1;
+const short ptLocalTab        = 2;
+const short ptGeometryTab     = 3;
+const short ptRGBTab          = 4;
+const short ptLabCCTab        = 5;
+const short ptLabSNTab        = 6;
+const short ptEyeCandyTab     = 7;
+const short ptLabEyeCandyTab  = 8;
+const short ptOutTab          = 9;
 
 // Resize filters
 
@@ -599,6 +632,13 @@ const short ptLqr_LumaGradNorm     = 6;
 // Liquid rescale scaling
 const short ptLqr_ScaleRelative    = 0;
 const short ptLqr_ScaleAbsolute    = 1;
+
+// Spot repair algos
+// indexes MUST be consecutive integers starting from 0
+enum ptSpotRepairAlgo {
+  SpotRepairAlgo_Clone = 0,
+  SpotRepairAlgo_Heal  = 1
+};
 
 // Zoom modes
 const short ptZoomMode_Fit    = 0;
@@ -816,7 +856,8 @@ enum ptBlockToolsMode {
   btmUnblock             = 0,
   btmBlockAll            = 1,
   btmBlockForCrop        = 2,
-  btmBlockForSpotRepair  = 3
+  btmBlockForSpotRepair  = 3,
+  btmBlockForSpotTuning = 4
 };
 
 /*! This enum defines the different modes for loading a pipe configuration
@@ -854,7 +895,14 @@ enum ptFSOType {
 enum ptUIState {
   uisNone       = 0,
   uisProcessing = 1,
-  uisFileMgr    = 2
+  uisFileMgr    = 2,
+  uisBatch      = 3
+};
+
+/*! This enum defines types of autosaving current batch list. */
+enum ptBatchSaveFile {
+  bsfStandard = 0,
+  bsfLocal    = 1
 };
 
 

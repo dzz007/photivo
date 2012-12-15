@@ -25,6 +25,7 @@
 #include "ptConstants.h"
 #include "ptHistogramWindow.h"
 #include "ptTheme.h"
+#include "ptImage.h"
 
 #include <iostream>
 
