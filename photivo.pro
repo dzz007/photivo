@@ -3,8 +3,8 @@
 ## Photivo
 ##
 ## Copyright (C) 2008 Jos De Laender
-## Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
-## Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
+## Copyright (C) 2010-2012 Michael Munzert <mail@mm-log.com>
+## Copyright (C) 2011-2012 Bernd Schoeler <brother.john@photivo.org>
 ##
 ## This file is part of Photivo.
 ##
@@ -30,6 +30,18 @@
 
 TEMPLATE = subdirs
 CONFIG += silent
+
+# When compiler is GCC check for at least version 4.6
+*g++* {
+  GCCVer = $$system($$QMAKE_CXX --version)
+  contains(GCCVer,[0-3]\\.[0-9]+.*) {
+    error("At least GCC 4.6 is required to build Photivo.")
+  } else {
+    contains(GCCVer,4\\.[0-5].*) {
+      error("At least GCC 4.6 is required to build Photivo.")
+    }
+  }
+}
 
 # Check for qmake version
 contains($$[QMAKE_VERSION],^2*) {
@@ -67,7 +79,7 @@ CONFIG(WithCurves) {
   SUBDIRS += ptCreateCurvesProject
   BUILD_CURVES=yes
 }
-!CONFIG(WithoutGimp) {
+CONFIG(WithGimp) {
   SUBDIRS += ptGimpProject
   BUILD_GIMP=yes
 }

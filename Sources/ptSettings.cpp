@@ -30,6 +30,8 @@
 #include "filemgmt/ptFileMgrConstants.h"
 #include <filters/ptFilterUids.h>
 
+//==============================================================================
+
 // Macro for inserting a key into the hash and checking it is a new one.
 #define M_InsertKeyIntoHash(Key,Item)                      \
   if (m_Hash.contains(Key)) {                              \
@@ -53,7 +55,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
   // Load in the gui input elements
   const ptGuiInputItem GuiInputItems[] = {
     // Attention : Default,Min,Max,Step should be consistent int or double. Double *always* in X.Y notation to indicate so.
-    // Unique Name,GuiElement,InitLevel,InJobFile,HasDefault (causes button too !),Default,Min,Max,Step,NrDecimals,Label,ToolTip
+    // Unique Name              uiElement,InitLevel,InJobFile,HasDefault  Default     Min       Max       Step    Decimals  Label,ToolTip
     {"FileMgrThumbnailSize"          ,ptGT_InputSlider     ,1,0,1 ,100  ,50   ,500   ,25   ,0 ,tr("Thumbnail size")     ,tr("Thumbnail size in pixel")},
     {"FileMgrThumbnailPadding"       ,ptGT_InputSlider     ,1,0,1 ,8    ,0    ,50    ,2    ,0 ,tr("Thumbnail padding")  ,tr("Thumbnail padding in pixel")},
     {"FileMgrThumbMaxRowCol"         ,ptGT_Input           ,1,0,1 ,3    ,1    ,1000  ,1    ,0 ,tr("Thumbnails in a row/column"), tr("Maximum number of thumbnails that should be placed in a row or column.")},
@@ -339,7 +341,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
 
   // Load in the gui choice (combo) elements
   const ptGuiChoiceItem GuiChoiceItems[] = {
-    // Unique Name,                 GuiElement,    InitLevel,InJobFile,HasDefault,Default, Choices (from ptGuiOptions.h),         ToolTip
+    // Unique Name          GuiElement,InitLevel,InJobFile,HasDefault, Default            Choices (from ptGuiOptions.h),         ToolTip
+    {"BatchMgrAutosaveFile"        ,ptGT_Choice       ,1,0,0 ,bsfStandard                 ,GuiOptions->BatchMgrAutosaveFile      ,tr("File for autosaving batch list")},
     {"RememberSettingLevel"        ,ptGT_Choice       ,1,0,0 ,2                           ,GuiOptions->RememberSettingLevel      ,tr("Remember setting level")},
     {"CameraColor"                 ,ptGT_Choice       ,1,1,1 ,ptCameraColor_Adobe_Profile ,GuiOptions->CameraColor               ,tr("Transform camera RGB to working space RGB")},
     {"CameraColorProfileIntent"    ,ptGT_Choice       ,1,1,1 ,INTENT_PERCEPTUAL           ,GuiOptions->CameraColorProfileIntent  ,tr("Intent of the profile")},
@@ -351,7 +354,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"SaveButtonMode"              ,ptGT_Choice       ,1,0,1 ,ptOutputMode_Pipe           ,GuiOptions->OutputMode                ,tr("Output mode of save button")},
     {"ResetButtonMode"             ,ptGT_Choice       ,1,0,1 ,ptResetMode_User            ,GuiOptions->ResetMode                 ,tr("Output mode of reset button")},
     {"Style"                       ,ptGT_Choice       ,1,0,0 ,ptStyle_DarkGrey            ,GuiOptions->Style                     ,tr("Set the theme.")},
-    {"StyleHighLight"              ,ptGT_Choice       ,1,0,0 ,ptStyleHighLight_Blue       ,GuiOptions->StyleHighLight            ,tr("Set the highlight color of the theme.")},
+    {"StyleHighLight"              ,ptGT_Choice       ,1,0,0 ,ptStyleHighLight_Green      ,GuiOptions->StyleHighLight            ,tr("Set the highlight color of the theme.")},
     {"StartupUIMode"               ,ptGT_Choice       ,1,0,0 ,ptStartupUIMode_Tab         ,GuiOptions->StartupUIMode             ,tr("Set the start up mode for the UI.")},
     {"PipeSize"                    ,ptGT_Choice       ,2,0,1 ,ptPipeSize_Quarter          ,GuiOptions->PipeSize                  ,tr("Size of image processed vs original.")},
     {"StartupPipeSize"             ,ptGT_Choice       ,1,0,1 ,ptPipeSize_Quarter          ,GuiOptions->PipeSize                  ,tr("Initial pipe size when Photivo starts.")},
@@ -362,6 +365,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CaCorrect"                   ,ptGT_Choice       ,2,1,1 ,ptCACorrect_Off             ,GuiOptions->CACorrect                 ,tr("CA correction")},
     {"Interpolation"               ,ptGT_Choice       ,2,1,1 ,ptInterpolation_DCB         ,GuiOptions->Interpolation             ,tr("Demosaicing algorithm")},
     {"BayerDenoise"                ,ptGT_Choice       ,2,1,1 ,ptBayerDenoise_None         ,GuiOptions->BayerDenoise              ,tr("Denosie on Bayer pattern")},
+
     {"CropGuidelines"              ,ptGT_Choice       ,1,0,0 ,ptGuidelines_GoldenRatio    ,GuiOptions->CropGuidelines            ,tr("Guide lines for crop")},
     {"LightsOut"                   ,ptGT_Choice       ,1,0,0 ,ptLightsOutMode_Dimmed      ,GuiOptions->LightsOutMode             ,tr("Dim areas outside the crop rectangle")},
     {"ClipMode"                    ,ptGT_Choice       ,1,1,1 ,ptClipMode_Blend            ,GuiOptions->ClipMode                  ,tr("How to handle clipping")},
@@ -418,9 +422,12 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
 
   // Load in the gui check elements
   const ptGuiCheckItem GuiCheckItems[] = {
-    // Name, GuiType,InitLevel,InJobFile,Default,Label,Tip
+    // Name   GuiType,InitLevel,InJobFile,Default,Label,Tip
     {"FileMgrUseThumbMaxRowCol"   ,ptGT_Check ,1,0,0,tr("At most")         ,tr("Maximum number of thumbnails that should be placed in a row or column.")},
     {"FileMgrStartupOpen"         ,ptGT_Check ,1,0,0,tr("Open file manager on startup"), tr("Opens the file manager when Photivo starts without an image")},
+
+    {"BatchMgrAutosave"           ,ptGT_Check ,1,0,1,tr("Automatically save batch list"), tr("Automatically save current batch list")},
+    {"BatchMgrAutoload"           ,ptGT_Check ,1,0,0,tr("Automatically load batch list"), tr("Automatically load previous batch list saved to standard path on startup")},
 
     {"StartupSettings"            ,ptGT_Check ,1,0,1,tr("User settings")   ,tr("Load user settings on startup")},
     {"StartupSettingsReset"       ,ptGT_Check ,1,0,0,tr("Reset on new image") ,tr("Reset to user settings when new image is opened")},
@@ -554,6 +561,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TextureOverlay2File"                  ,2    ,""                                    ,1},
     {"DigikamTagsList"                      ,9    ,QStringList()                         ,1},
     {"TagsList"                             ,9    ,QStringList()                         ,1},
+    {"OutputFileNameSuffix"                 ,9    ,""                                    ,1},
     {"ImageTitle"                           ,9    ,""                                    ,1},
     {"Copyright"                            ,1    ,""                                    ,1},
     {"BackgroundRed"                        ,1    ,0                                     ,0},
@@ -612,6 +620,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FileMgrShowImageView"                 ,1    ,1                                     ,0},
     {"FileMgrShowSidebar"                   ,1    ,1                                     ,0},
     {"FileMgrThumbLayoutType"               ,1    ,tlVerticalByRow                       ,0},
+
+    {"BatchIsOpen"                          ,9    ,0                                     ,0},
+    {"BatchLogIsVisible"                    ,1    ,0                                     ,0}
   };
 
    // Gui Numerical inputs. Copy them from the const array in ptSettingItem.
@@ -1508,6 +1519,7 @@ struct sToolInfo {
 
 sToolInfo ToolInfo (const QString GuiName) {
   sToolInfo Info = {"N.N.",0,0,0,0};
+
   // Tab Geometry
   if (GuiName == "TabLensfunCA") {
     Info.Name = "Chromatic Aberration (Lensfun)";
@@ -1721,9 +1733,11 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     // Settings tab
     << "TabWorkColorSpace"
     << "TabPreviewColorSpace"
+    << "TabUISettings"
     << "TabGimpCommand"
     << "TabRememberSettings"
     << "TabStartupSettings"
+    << "TabCropSettings"
     << "TabInputControl"
     << "TabToolBoxControl"
     << "TabTabStatusIndicator"
@@ -1736,6 +1750,7 @@ int ptSettings::ToolAlwaysVisible(const QString GuiName) const {
     << "TabTranslation"
     << "TabMemoryTest"
     << "TabVisibleTools"
+    << "TabFileMgrSettings"
     // Info tab
     << "TabInfoPhotivo"
     << "TabInfoFile"

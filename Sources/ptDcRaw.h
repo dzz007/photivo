@@ -33,9 +33,9 @@
 #define DLDCDRAW_H
 
 // Adaptation of dcraw.c stuff.
-#define DCRAW_VERSION "dcraw v9.12"    // Update along with dcraw syncing ...
-// $Revision: 1.447 $
-// $Date: 2011/07/23 20:33:32 $
+#define DCRAW_VERSION "dcraw v9.16"    // Update along with dcraw syncing ...
+// $Revision: 1.452 $
+// $Date: 2012/07/23 04:28:00 $
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif

@@ -23,19 +23,18 @@
 #ifndef PTRICHRECTINTERACTION_H
 #define PTRICHRECTINTERACTION_H
 
+//==============================================================================
+
 #include <QGraphicsRectItem>
+#include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QRectF>
 #include <QRect>
 
-#include "ptImageInteraction.h"
+#include "ptAbstractInteraction.h"
 
-///////////////////////////////////////////////////////////////////////////
-//
-// Custom types used by ptRichRectInteraction
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 // Position of the mouse when button pressed for dragging
 enum ptMovingEdge {
@@ -52,20 +51,11 @@ enum ptMovingEdge {
   meCenter = 9
 };
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptSimpleRectInteraction
-//
-///////////////////////////////////////////////////////////////////////////
-class ptRichRectInteraction : public ptImageInteraction {
+class ptRichRectInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
   explicit ptRichRectInteraction(QGraphicsView* View,
                                  const int x,
@@ -77,6 +67,15 @@ public:
                                  const uint AspectRatioH,
                                  const short CropGuidelines);
   ~ptRichRectInteraction();
+
+  /*! Reimplemented from base class. */
+  virtual Qt::KeyboardModifiers modifiers()    const { return Qt::NoModifier; }
+
+  /*! Reimplemented from base class. */
+  virtual ptMouseActions        mouseActions() const { return maDragDrop; }
+
+  /*! Reimplemented from base class. */
+  virtual Qt::MouseButtons      mouseButtons() const { return Qt::LeftButton; }
 
   inline ptStatus exitStatus() const { return m_ExitStatus; }
   inline short isDragging() const { return m_NowDragging; }
@@ -91,11 +90,8 @@ public:
   void setLightsOut(short mode);
   void stop(ptStatus exitStatus);
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
+
 private:
   const int EdgeThickness;
   const int TinyRectThreshold;
@@ -106,6 +102,8 @@ private:
   QGraphicsRectItem*  m_LightsOutRects[4];
   QRectF              m_Rect;
   QGraphicsRectItem*  m_RectItem;
+
+  QGraphicsDropShadowEffect*  m_Shadow;
 
   qreal       m_AspectRatio;        //  m_AspectRatioW / m_AspectRatioH
   uint        m_AspectRatioW;
@@ -134,15 +132,12 @@ private:
   void MouseDblClickHandler(const QMouseEvent* event);
   void MouseMoveHandler(const QMouseEvent* event);
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-///////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
+
 private slots:
   void keyAction(QKeyEvent* event);
   void mouseAction(QMouseEvent* event);
 
-};
 
+};
 #endif // PTRICHRECTINTERACTION_H

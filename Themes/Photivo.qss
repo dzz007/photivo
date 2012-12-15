@@ -74,7 +74,7 @@ ptSlider QAbstractSpinBox {
 }
 
 
-/** Checkbox ****************************************/
+/** Checkbox, QListView ****************************************/
 QCheckBox {
   border: 1px solid $Base$;
 
@@ -90,7 +90,8 @@ QCheckBox:hover {
   border: 1px solid $Highlight$;
 }
 
-QCheckBox::indicator {
+QCheckBox::indicator,
+QListView::indicator {
   background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 $Gradient$, stop: 1 $Base$);
   border: 1px solid #000;
 
@@ -99,10 +100,15 @@ QCheckBox::indicator {
   width: 0.8em;
 }
 
-QCheckBox::indicator:checked {
+QCheckBox::indicator:checked,
+QListView::indicator:checked {
   background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #555, stop:1 $Highlight$);
 }
 
+QListView {
+  border: 1px solid #000;
+  border-radius: 3px;
+}
 
 /** Combobox ****************************************/
 QComboBox {
@@ -175,6 +181,10 @@ QLineEdit#m_PathInput {
   padding-top: 2px;
 }
 
+QWidget#ptBatchWindow QPlainTextEdit {
+  border: 1px solid #000;
+}
+
 
 /** QScrollArea ****************************************/
 QScrollArea {
@@ -185,6 +195,13 @@ QScrollArea {
 /** tree view ****************************************/
 QTreeView {
   border: 1px solid $AltBase$;
+}
+
+
+/** Table view ****************************************/
+QTableView {
+  border: 1px solid #000;
+  border-radius: 3px;
 }
 
 
@@ -271,6 +288,21 @@ QToolButton {
 QToolButton:hover {
   border: 1px solid $Highlight$;
   border-radius: 3px;
+}
+
+QPushButton {
+  border: 1px solid #000;
+  border-radius: 3px;
+  padding: 3px;
+}
+
+QPushButton:hover {
+  border: 1px solid $Highlight$;
+  border-radius: 3px;
+}
+
+QPushButton:checked {
+  background-color: $AltBase$;
 }
 
 

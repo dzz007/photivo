@@ -261,8 +261,15 @@ protected:
   /*! Init: Every derived class has to call it in its constructor.*/
   void              internalInit();
 
-  /*! Must be called whenever the filter needs to run. */
+  /*! Returns a pointer to the `ptWidget` object identified by `AId`. If such a widget cannot be
+      found, raises an exception via ptInfo. */
+  ptWidget         *findPtWidget(const QString &AId, QWidget* AWidget);
+
+    /*! Must be called whenever the filter needs to run. */
   void            requestPipeRun(const bool AUnconditional = false);
+
+  /*! Check and possibly convert a `QVariant` to avoid problems in `QSettings` storage. */
+  QVariant          makeStorageFriendly(const QVariant& AVariant) const;
 
 // Pragmas are here to stop the compiler complaining about unused parameters in the default
 // implementations. Removing the parameter names would work too but be too obscure.

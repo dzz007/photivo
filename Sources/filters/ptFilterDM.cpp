@@ -593,8 +593,8 @@ void ptFilterDM::UpdateActivesList(ptFilterBase *AFilter) {
 //==============================================================================
 
 ptFilterDM::ptFilterDM() {
-  // init ordered filter lists. We know we have exactly 8 cache groups == gui tabs
-  for (int i = 0; i < 8; ++i) {
+  // init ordered filter lists. We know we have exactly 9 cache groups == gui tabs
+  for (int i = 0; i < 9; ++i) {
     FOrderedFilters.append(TCacheGroup());
     FActiveFilters.append(TCacheGroup());
   }
@@ -1340,6 +1340,7 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("ImageRating",                     "");
 
   // former combobox entries
+//  FNameMap.insert("BatchMgrAutosaveFile",            "");
 //  FNameMap.insert("CameraColor",                     "");
 //  FNameMap.insert("CameraColorProfileIntent",        "");
 //  FNameMap.insert("CameraColorGamma",                "");
@@ -1428,6 +1429,8 @@ void ptFilterDM::FillNameMap() {
 
     // former checkbox entries
 //  FNameMap.insert("FileMgrUseThumbMaxRowCol",        "");
+//  FNameMap.insert("BatchMgrAutosave",                "");
+//  FNameMap.insert("BatchMgrAutoload",                "");
 //  FNameMap.insert("StartupSettings",                 "");
 //  FNameMap.insert("StartupSettingsReset",            "");
 //  FNameMap.insert("StartupSwitchAR",                 "");
@@ -1546,6 +1549,7 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("TextureOverlay2File",             "");
 //  FNameMap.insert("DigikamTagsList",                 "");
 //  FNameMap.insert("TagsList",                        "");
+//  FNameMap.insert("OutputFileNameSuffix",            "");
 //  FNameMap.insert("ImageTitle",                      "");
 //  FNameMap.insert("Copyright",                       "");
 //  FNameMap.insert("BackgroundRed",                   "");
@@ -1591,12 +1595,14 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("CustomCSSFile",                   "");
 //  FNameMap.insert("FullscreenActive",                "");
 //  FNameMap.insert("FileMgrIsOpen",                   "");
-//  FNameMap.insert("FileMgrStartupOpen",            "");
+//  FNameMap.insert("FileMgrStartupOpen",              "");
 //  FNameMap.insert("LastFileMgrLocation",             "");
 //  FNameMap.insert("FileMgrShowDirThumbs",            "");
 //  FNameMap.insert("FileMgrShowImageView",            "");
 //  FNameMap.insert("FileMgrShowSidebar",              "");
 //  FNameMap.insert("FileMgrThumbLayoutType",          "");
+//  FNameMap.insert("BatchIsOpen",                     "");
+//  FNameMap.insert("BatchLogIsVisible",               "");
 }
 
 
