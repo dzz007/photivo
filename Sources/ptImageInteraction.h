@@ -19,52 +19,39 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-/**
-** Base class for image interactions (crop, spot repair etc.).
-** Do not instantiate directly.
-**/
+/*!
+  \class ptImageInteraction
+  \brief Abstract base class for image interactions (crop, spot repair etc.).
+         Do not instantiate directly!
+*/
 
 #ifndef PTIMAGEINTERACTION_H
 #define PTIMAGEINTERACTION_H
+
+//==============================================================================
 
 #include <QObject>
 #include <QGraphicsView>
 
 #include "ptConstants.h"
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptImageInteraction
-//
-///////////////////////////////////////////////////////////////////////////
-class ptImageInteraction : public QObject {
+//==============================================================================
+
+class ptImageInteraction: public QObject {
 Q_OBJECT
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
-  explicit ptImageInteraction(QGraphicsView* View);
+  explicit ptImageInteraction(QGraphicsView *AView);
 
+//------------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PROTECTED members
-//
-///////////////////////////////////////////////////////////////////////////
 protected:
-  QGraphicsView* m_View;
+  QGraphicsView *FView;
 
-///////////////////////////////////////////////////////////////////////////
-//
-// signals
-//
-///////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
+
 signals:
-  void finished(ptStatus ExitStatus);
+  void finished(ptStatus AExitStatus);
 
 };
-
 #endif // PTIMAGEINTERACTION_H

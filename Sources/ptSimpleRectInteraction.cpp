@@ -25,15 +25,10 @@
 #include "ptSimpleRectInteraction.h"
 #include "ptDefines.h"
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// constructor and destructor
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptSimpleRectInteraction::ptSimpleRectInteraction(QGraphicsView* View)
-: ptImageInteraction(View),
+: ptAbstractInteraction(View),
   m_CtrlPressed(0),
   m_NowDragging(0)
 {
@@ -42,22 +37,19 @@ ptSimpleRectInteraction::ptSimpleRectInteraction(QGraphicsView* View)
   m_RectItem = NULL;
 }
 
+//==============================================================================
+
 ptSimpleRectInteraction::~ptSimpleRectInteraction() {
   delete m_Rect;
   delete m_RectItem;
   delete m_DragDelta;
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Finalize()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptSimpleRectInteraction::Finalize(const ptStatus status) {
   if (m_RectItem != NULL) {
-    m_View->scene()->removeItem(m_RectItem);
+    FView->scene()->removeItem(m_RectItem);
     DelAndNull(m_RectItem);
   }
 
@@ -65,12 +57,7 @@ void ptSimpleRectInteraction::Finalize(const ptStatus status) {
   emit finished(status);
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Key actions
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptSimpleRectInteraction::keyAction(QKeyEvent* event) {
   switch (event->type()) {
@@ -83,8 +70,8 @@ void ptSimpleRectInteraction::keyAction(QKeyEvent* event) {
       } else if (event->key() == Qt::Key_Control && m_NowDragging) {
         event->accept();
         m_CtrlPressed++;
-        m_View->setCursor(Qt::SizeAllCursor);
-        m_DragDelta->setP1(m_View->mapFromGlobal(QCursor::pos()));
+        FView->setCursor(Qt::SizeAllCursor);
+        m_DragDelta->setP1(FView->mapFromGlobal(QCursor::pos()));
       }
       break;
     }
@@ -96,7 +83,7 @@ void ptSimpleRectInteraction::keyAction(QKeyEvent* event) {
         event->accept();
         m_CtrlPressed--;
         if (m_CtrlPressed == 0) {
-          m_View->setCursor(Qt::ArrowCursor);
+          FView->setCursor(Qt::ArrowCursor);
         }
       }
       break;
@@ -109,12 +96,7 @@ void ptSimpleRectInteraction::keyAction(QKeyEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Mouse actions: left press/release, move
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptSimpleRectInteraction::mouseAction(QMouseEvent* event) {
   switch (event->type()) {
@@ -125,13 +107,13 @@ void ptSimpleRectInteraction::mouseAction(QMouseEvent* event) {
         assert(m_RectItem == NULL);
 
         // map viewport coords to scene coords
-        QPointF pos(m_View->mapToScene(event->pos()));
+        QPointF pos(FView->mapToScene(event->pos()));
         m_Rect->setTopLeft(pos);
         m_Rect->setBottomRight(pos);
 
         QPen pen(QColor(150, 150, 150));
-        m_RectItem = m_View->scene()->addRect(*m_Rect, pen);
-        m_View->repaint();
+        m_RectItem = FView->scene()->addRect(*m_Rect, pen);
+        FView->repaint();
 
         m_NowDragging = 1;
       }
@@ -157,21 +139,21 @@ void ptSimpleRectInteraction::mouseAction(QMouseEvent* event) {
         // move rectangle
         if (m_CtrlPressed > 0) {
           m_DragDelta->setP2(event->pos());
-          qreal dx = m_DragDelta->dx() / m_View->transform().m11();
-          qreal dy = m_DragDelta->dy() / m_View->transform().m11();
-          m_Rect->moveTo(qBound(0.0, m_Rect->left() + dx, m_View->scene()->sceneRect().width() - m_Rect->width()),
-                         qBound(0.0, m_Rect->top() + dy, m_View->scene()->sceneRect().height() - m_Rect->height()) );
+          qreal dx = m_DragDelta->dx() / FView->transform().m11();
+          qreal dy = m_DragDelta->dy() / FView->transform().m11();
+          m_Rect->moveTo(qBound(0.0, m_Rect->left() + dx, FView->scene()->sceneRect().width() - m_Rect->width()),
+                         qBound(0.0, m_Rect->top() + dy, FView->scene()->sceneRect().height() - m_Rect->height()) );
           m_DragDelta->setP1(event->pos());
           m_RectItem->setRect(*m_Rect);
-          m_View->repaint();
+          FView->repaint();
 
         // change rectangle size
         } else {
-          QPointF point = m_View->mapToScene(event->pos());
-          m_Rect->setRight(qBound(0.0, point.x(), m_View->scene()->sceneRect().right()));
-          m_Rect->setBottom(qBound(0.0, point.y(), m_View->scene()->sceneRect().bottom()));
+          QPointF point = FView->mapToScene(event->pos());
+          m_Rect->setRight(qBound(0.0, point.x(), FView->scene()->sceneRect().right()));
+          m_Rect->setBottom(qBound(0.0, point.y(), FView->scene()->sceneRect().bottom()));
           m_RectItem->setRect(m_Rect->normalized());
-          m_View->repaint();
+          FView->repaint();
         }
       }
       break;
@@ -184,3 +166,5 @@ void ptSimpleRectInteraction::mouseAction(QMouseEvent* event) {
     }
   } //switch
 }
+
+//==============================================================================

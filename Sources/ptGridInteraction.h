@@ -19,7 +19,7 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-/**
+/*!
 ** Displays a rectangular grid on top of the preview image.
 **
 ** - Does not emit the finished() signal because no lengthy interaction is going
@@ -31,39 +31,40 @@
 #ifndef PTGRIDINTERACTION_H
 #define PTGRIDINTERACTION_H
 
+//==============================================================================
+
 #include <QList>
 
-#include "ptImageInteraction.h"
+#include "ptAbstractInteraction.h"
 #include <QGraphicsLineItem>
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptGridInteraction
-//
-///////////////////////////////////////////////////////////////////////////
-class ptGridInteraction : public ptImageInteraction {
+//==============================================================================
+
+class ptGridInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
-  explicit ptGridInteraction(QGraphicsView* View);
+  explicit ptGridInteraction(QGraphicsView* AView);
   ~ptGridInteraction();
 
-  void show(const uint linesX, const uint linesY);
+  /*! Reimplemented from base class. */
+  virtual Qt::KeyboardModifiers modifiers()    const { return Qt::NoModifier; }
+
+  /*! Reimplemented from base class. */
+  virtual ptMouseActions        mouseActions() const { return maNone; }
+
+  /*! Reimplemented from base class. */
+  virtual Qt::MouseButtons      mouseButtons() const { return Qt::NoButton; }
+
+  void show(const uint ALinesX, const uint ALinesY);
   inline void hide() { ClearList(); }
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
-private:
-  QList<QGraphicsLineItem*> m_GridLines;
-  void ClearList();
-};
+//------------------------------------------------------------------------------
 
+private:
+  QList<QGraphicsLineItem*> FGridLines;
+  void ClearList();
+
+
+};
 #endif // PTGRIDINTERACTION_H

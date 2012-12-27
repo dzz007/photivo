@@ -598,3 +598,6 @@ WienerFilterAmount=0.2
 530aab8e-65e4-4bb8-b391-46f6673ac53d\Curve\FileName=
 530aab8e-65e4-4bb8-b391-46f6673ac53d\Curve\Interpolation=2
 530aab8e-65e4-4bb8-b391-46f6673ac53d\Curve\Mask=4
+
+[SpotTuning]
+ef42f985-8686-42e6-b15d-9bc8dffdcde3\SpotList\Spot\size=0

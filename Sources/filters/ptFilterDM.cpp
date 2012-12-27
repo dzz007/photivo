@@ -593,8 +593,8 @@ void ptFilterDM::UpdateActivesList(ptFilterBase *AFilter) {
 //==============================================================================
 
 ptFilterDM::ptFilterDM() {
-  // init ordered filter lists. We know we have exactly 8 cache groups == gui tabs
-  for (int i = 0; i < 8; ++i) {
+  // init ordered filter lists. We know we have exactly 9 cache groups == gui tabs
+  for (int i = 0; i < 9; ++i) {
     FOrderedFilters.append(TCacheGroup());
     FActiveFilters.append(TCacheGroup());
   }

@@ -34,10 +34,10 @@
 
 #include "ptImage8.h"
 #include "ptWidget.h"
+#include "ptCurve.h"
 
 class QLabel;
 class QActionGroup;
-class ptCurve;
 class ptFilterBase;
 
 //==============================================================================
@@ -59,6 +59,8 @@ public:
 
   /*! Reimplemented from base class. */
   void setValue(const QVariant &AValue);
+
+  void setCaption(const QString &ACaption);
 
   /*! Recalcs the curve window image and repaints the viewport. Does *not* trigger a pipe run. */
   void updateView();
