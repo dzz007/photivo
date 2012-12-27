@@ -4976,8 +4976,8 @@ void fill4stack(float         *AMask,
     hStack.pop();
 
     // array bounds
-    if (hX < 0 || hX >= AWidth ||
-        hY < 0 || hY >= AHeight ) continue;
+    // hX, hY >= 0 by design
+    if (hX >= AWidth || hY >= AHeight ) continue;
 
     // already processed?
     if (AMask[hY*AWidth + hX] != 0.0f) continue;
@@ -4989,12 +4989,19 @@ void fill4stack(float         *AMask,
 
       hStack.push(hX);
       hStack.push(hY + 1);
-      hStack.push(hX);
-      hStack.push(hY - 1);
+
+      if (hY > 0) {
+        hStack.push(hX);
+        hStack.push(hY - 1);
+      }
+
       hStack.push(hX + 1);
       hStack.push(hY);
-      hStack.push(hX - 1);
-      hStack.push(hY);
+
+      if (hX > 0) {
+        hStack.push(hX - 1);
+        hStack.push(hY);
+      }
     }
   }
 }
@@ -5018,7 +5025,6 @@ float *ptImage::FillMask(const uint16_t APointX,
   float hThresholdHalf = AThreshold*0x2AAA;
   float hThreshold     = AThreshold*0x5555;
   float hRadiusOut     = ptSqr((float)AMaxRadius);
-  float hRadiusIn      = ptSqr(AMaxRadius/3.0f);
   float hLumaWeight    = 1.0f - AColorWeight;
   float hColorWeight   = AColorWeight*(float)0x7FFF;
 
