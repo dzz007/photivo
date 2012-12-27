@@ -17,6 +17,11 @@ active-tools          system-run
 PIPE
 indicator-active-tab  <modified gtk-yes>
 load-image            insert-image
+move-object-up        <arrow from document-save>
+move-object-down      <arrow from document-save>
+add-spot              <list-add in green>
+add-spot-stop         <combined from process-stop and list-add>
+edit-spot             <combined from gtk-yes and format-text-direction-ltr>
 spot-wb               <format-text-direction-ltr without the arrow>
 rotate-left           object-rotate-left
 rotate-right          object-rotate-right

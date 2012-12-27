@@ -250,23 +250,23 @@ void ptCurve::setCurveType(const ptCurve::TType AType) {
 
 //==============================================================================
 
-TConfigStore ptCurve::filterConfig() {
+TConfigStore ptCurve::filterConfig(const QString &APrefix) const {
   TConfigStore hStore;
 
-  hStore.insert("CurveType",     (int)FCurveType);
-  hStore.insert("Mask",          (int)FCurrentMask);
-  hStore.insert("Interpolation", (int)FInterpolType);
-  hStore.insert("FileName",      FFileName);
+  hStore.insert(APrefix+"CurveType",     (int)FCurveType);
+  hStore.insert(APrefix+"Mask",          (int)FCurrentMask);
+  hStore.insert(APrefix+"Interpolation", (int)FInterpolType);
+  hStore.insert(APrefix+"FileName",      FFileName);
 
   if (this->isNull()) {
-    hStore.insert("Anchor/size", 0);
+    hStore.insert(APrefix+"Anchor/size", 0);
 
   } else if (FCurveType == AnchorType) {
-    hStore.insert("Anchor/size", (int)FAnchors.size());
+    hStore.insert(APrefix+"Anchor/size", (int)FAnchors.size());
     int i = 0;
     for (TAnchor hAnchor: FAnchors) {
-      hStore.insert(QString("Anchor/%1/X").arg(i), hAnchor.first);
-      hStore.insert(QString("Anchor/%1/Y").arg(i), hAnchor.second);
+      hStore.insert(QString(APrefix+"Anchor/%1/X").arg(i), hAnchor.first);
+      hStore.insert(QString(APrefix+"Anchor/%1/Y").arg(i), hAnchor.second);
       ++i;
     }
   }
@@ -276,23 +276,23 @@ TConfigStore ptCurve::filterConfig() {
 
 //==============================================================================
 
-void ptCurve::setFromFilterConfig(TConfigStore *AConfig) {
-  FCurveType    = (TType)AConfig->value("CurveType", FCurveType).toInt();
-  FCurrentMask  = (TMask)AConfig->value("Mask", FCurrentMask).toInt();
-  FInterpolType = (TInterpolation)AConfig->value("Interpolation", FInterpolType).toInt();
-  FFileName     = AConfig->value("FileName", "").toString();
+void ptCurve::setFromFilterConfig(const TConfigStore &AConfig, const QString &APrefix) {
+  FCurveType    = (TType)AConfig.value(APrefix+"CurveType", FCurveType).toInt();
+  FCurrentMask  = (TMask)AConfig.value(APrefix+"Mask", FCurrentMask).toInt();
+  FInterpolType = (TInterpolation)AConfig.value(APrefix+"Interpolation", FInterpolType).toInt();
+  FFileName     = AConfig.value(APrefix+"FileName", "").toString();
 
   if (FCurveType == AnchorType) {
     FAnchors.clear();
-    int hSize = AConfig->value("Anchor/size", 0).toInt();
+    int hSize = AConfig.value(APrefix+"Anchor/size", 0).toInt();
 
     if (hSize < 2) {  // no/not enough anchors, fall back to null curve
       FAnchors = FNullAnchors;
 
     } else {  // read anchors
       for (int i = 0; i < hSize; ++i) {
-        FAnchors.push_back(TAnchor(AConfig->value(QString("Anchor/%1/X").arg(i), 0.0).toDouble(),
-                                   AConfig->value(QString("Anchor/%1/Y").arg(i), 0.0).toDouble()));
+        FAnchors.push_back(TAnchor(AConfig.value(QString(APrefix+"Anchor/%1/X").arg(i), 0.0).toDouble(),
+                                   AConfig.value(QString(APrefix+"Anchor/%1/Y").arg(i), 0.0).toDouble()));
       }
       FAnchors.shrink_to_fit();
     }
