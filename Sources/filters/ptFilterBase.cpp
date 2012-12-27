@@ -75,8 +75,7 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
   // First find out if the available stores should go into the config file
   QStringList hStorableStores;
   for (QString hId: FConfig->simpleStoreIds()) {
-    if (FCfgItems.at(cfgIdx(hId)).Storeable)
-      hStorableStores.append(hId);
+    hStorableStores.append(hId);
   }
 
   // save list of store names and stores’ contents
@@ -230,7 +229,7 @@ bool ptFilterBase::setHidden(const bool AIsHidden) {
         hHiddens.append(FUniqueName);
     } else {
       hHiddens.removeAll(FUniqueName);
-    }    
+    }
     Settings->SetValue("HiddenTools", hHiddens);
 
     bool hStatusChanged = this->checkActiveChanged(true);
