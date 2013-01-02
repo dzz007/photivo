@@ -537,16 +537,17 @@ const ptGuiOptionsItem ptGuiOptions::SaveSampling[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::OutputMode[] = {
-  {ptOutputMode_Full,      QObject::tr("Full size")    },
-  {ptOutputMode_Pipe,      QObject::tr("Pipe size")    },
-  {ptOutputMode_Jobfile,   QObject::tr("Only jobfile")    },
+  {ptOutputMode_Full,         QObject::tr("Full size")     },
+  {ptOutputMode_Pipe,         QObject::tr("Pipe size")     },
+  {ptOutputMode_Jobfile,      QObject::tr("Only jobfile")  },
   {ptOutputMode_Settingsfile, QObject::tr("Only settings") },
+  {ptOutputMode_Batch,        QObject::tr("Send to batch") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::ResetMode[] = {
-  {ptResetMode_Full,         QObject::tr("Neutral reset")    },
+  {ptResetMode_Full,         QObject::tr("Neutral reset") },
   {ptResetMode_User,         QObject::tr("User reset")    },
-  {ptResetMode_OpenPreset,   QObject::tr("Open preset")    },
+  {ptResetMode_OpenPreset,   QObject::tr("Open preset")   },
   {ptResetMode_OpenSettings, QObject::tr("Open settings") },
   {-1,NULL}};
 

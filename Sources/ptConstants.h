@@ -534,6 +534,7 @@ const short ptOutputMode_Full = 0;
 const short ptOutputMode_Pipe = 1;
 const short ptOutputMode_Jobfile = 2;
 const short ptOutputMode_Settingsfile = 3;
+const short ptOutputMode_Batch = 4;
 
 // Export modes
 

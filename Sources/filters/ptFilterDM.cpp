@@ -29,6 +29,7 @@
 #include <ptDefines.h>
 #include <ptInfo.h>
 #include <ptTempFile.h>
+#include "batch/ptBatchWindow.h"
 
 // deprecated: To be removed when transition to new settings system is complete.
 #include "../ptSettings.h"
@@ -414,7 +415,8 @@ bool ptFilterDM::WriteJobFile() {
 
   // And finally a dialog to obtain the output job file.
   QFileInfo PathInfo(InputFileNames[0]);
-  QString SuggestedJobFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".ptj";
+  QString SuggestedJobFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() +
+                                 Settings->GetString("OutputFileNameSuffix") + ".ptj";
 
   QString JobFileName =
     QFileDialog::getSaveFileName(NULL,
@@ -427,6 +429,29 @@ bool ptFilterDM::WriteJobFile() {
   if (JobFileName.size() == 0) return false;
 
   return PerformWritePreset(JobFileName, false, true, true, nullptr);
+}
+
+//==============================================================================
+
+extern ptBatchWindow *BatchWindow;
+bool ptFilterDM::SendToBatch(const QString &AFileName) {
+  QString hSuggestion = AFileName + "pts";
+
+  QString hSaveCaption = QObject::tr("Save settings file");
+  QString hFileName = QFileDialog::getSaveFileName(
+                        nullptr,
+                        hSaveCaption,
+                        hSuggestion,
+                        SettingsFilePattern,
+                        nullptr);
+
+  // Empty file name means user aborted
+  if (hFileName.isEmpty())
+    return false;
+
+  bool result = PerformWritePreset(hFileName, false, true, false, nullptr);
+  BatchWindow->AddJobs(QStringList(hFileName));
+  return result;
 }
 
 //==============================================================================

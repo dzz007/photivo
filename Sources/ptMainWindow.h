@@ -153,6 +153,7 @@ private:
   QAction*  m_AtnSaveFull;
   QAction*  m_AtnSaveSettings;
   QAction*  m_AtnSaveJobfile;
+  QAction*  m_AtnSendToBatch;
   QAction*  m_AtnGimpSavePipe;
   QAction*  m_AtnGimpSaveFull;
   QAction*  m_AtnMenuFullReset;
@@ -197,6 +198,7 @@ private slots:
   void SaveMenuFull();
   void SaveMenuSettings();
   void SaveMenuJobfile();
+  void SaveMenuBatch();
   void GimpSaveMenuPipe();
   void GimpSaveMenuFull();
   void MenuFullReset();

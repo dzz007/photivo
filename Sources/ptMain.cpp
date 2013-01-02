@@ -3776,6 +3776,8 @@ void SaveButtonToolTip(const short mode) {
     MainWindow->WritePipeButton->setToolTip(QObject::tr("Save job file"));
   } else if (mode==ptOutputMode_Settingsfile) {
     MainWindow->WritePipeButton->setToolTip(QObject::tr("Save settings file"));
+  } else if (mode==ptOutputMode_Batch) {
+    MainWindow->WritePipeButton->setToolTip(QObject::tr("Save and send to batch manager"));
   }
 }
 
@@ -6564,7 +6566,8 @@ QString GetCurrentImageBaseName() {
 
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
   QFileInfo PathInfo(InputFileNameList[0]);
-  return PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName() + ".";
+  return PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName() +
+      Settings->GetString("OutputFileNameSuffix") + ".";
 }
 
 //==============================================================================
@@ -6583,6 +6586,9 @@ void SaveOutput(const short mode) {
 
   } else if (mode==ptOutputMode_Settingsfile) {
     GFilterDM->WritePresetFile(GetCurrentImageBaseName());
+
+  } else if (mode==ptOutputMode_Batch) {
+    GFilterDM->SendToBatch(GetCurrentImageBaseName());
   }
 
   BlockSave(false);

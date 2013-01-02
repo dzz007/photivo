@@ -553,6 +553,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnSaveSettings, SIGNAL(triggered()), this, SLOT(SaveMenuSettings()));
   m_AtnSaveJobfile = new QAction(tr("Save job file"), this);
   connect(m_AtnSaveJobfile, SIGNAL(triggered()), this, SLOT(SaveMenuJobfile()));
+  m_AtnSendToBatch = new QAction(tr("Send to batch"), this);
+  connect(m_AtnSendToBatch, SIGNAL(triggered()), this, SLOT(SaveMenuBatch()));
 
   // context menu for gimp button
   m_AtnGimpSavePipe = new QAction(tr("Export current pipe"), this);
@@ -733,6 +735,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.addAction(m_AtnSaveFull);
       Menu.addAction(m_AtnSaveSettings);
       Menu.addAction(m_AtnSaveJobfile);
+      Menu.addAction(m_AtnSendToBatch);
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     } else if (obj == ToGimpButton) {
       QMenu Menu(NULL);
@@ -783,6 +786,9 @@ void ptMainWindow::SaveMenuSettings() {
 }
 void ptMainWindow::SaveMenuJobfile() {
   SaveOutput(ptOutputMode_Jobfile);
+}
+void ptMainWindow::SaveMenuBatch() {
+  SaveOutput(ptOutputMode_Batch);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -60,10 +60,6 @@ enum ptJobStatus {
 
 //==============================================================================
 
-extern QStringList FileExtsRaw;
-
-//==============================================================================
-
 /*!
  * \class ptJobListItem
  *
@@ -130,6 +126,12 @@ public:
    * and to \c Finished otherwise.
    */
   void UpdateStatusByTime();
+
+  /*!
+   * Updates current job to \c item, which corresponds to the same settings file
+   * but is more recent.
+   */
+  void UpdateFromJobItem(ptJobListItem *item);
 
   /*!
    * Tests if the job corresponds to a settings file or a job file.
