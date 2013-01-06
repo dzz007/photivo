@@ -57,7 +57,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
 
     if (MustBeFilename) {
       if (whichParam > -1 || cli.Filename != "") {
-        cli.ShowHelp++;
+        cli.ShowHelp = true;
         break;
       } else {
         cli.Filename = current;
@@ -69,7 +69,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
 
     if (MustBePtsName) {
       if (whichParam > -1 || cli.PtsFilename != "") {
-        cli.ShowHelp++;
+        cli.ShowHelp = true;
         break;
       } else {
         cli.PtsFilename = current;
@@ -95,7 +95,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
     } else if (whichParam == 5 || whichParam == 6) {
       cli.NoOpenFileMgr++;
     } else if (whichParam == 7 || whichParam == 8 || whichParam == 9) {
-      cli.ShowHelp++;
+      cli.ShowHelp = true;
       break;
     } else if (whichParam == -1) {  // can only be image file without -i param
       if (QFileInfo(current).suffix().toLower() == "pts") {
@@ -108,7 +108,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
     }
 
     if ((MustBeFilename || MustBePtsName) && (i >= argc - 1)) {
-      cli.ShowHelp++;
+      cli.ShowHelp = true;
       break;
     }
 

@@ -2581,12 +2581,14 @@ ptImage* ptImage::Reinhard05(const float Brightness,
       Y[i] = ToFloatTable[RGB_2_L(m_Image[i])];
     }
 
-  float max_lum = 0.0;
-  float min_lum = 0.0;
-  float world_lum = 0.0;
-  float Cav[] = { 0.0f, 0.0f, 0.0f};
-  float Cav1,Cav2,Cav3;
-  float Lav = 0.0f;
+  float max_lum   = 0.0f;
+  float min_lum   = 0.0f;
+  float world_lum = 0.0f;
+  float Cav[]     = {0.0f, 0.0f, 0.0f};
+  float Cav1      = 0.0f;
+  float Cav2      = 0.0f;
+  float Cav3      = 0.0f;
+  float Lav       = 0.0f;
 
 #pragma omp parallel
 {
@@ -3058,7 +3060,7 @@ ptImage* ptImage::LMHRecovery(const short  MaskType,
         break;
 
       default:
-        GInfo->Raise("Unknown mask type: " + MaskType, AT);
+        GInfo->Raise(QString("Unknown mask type: ") + QString::number(MaskType), AT);
     }
 
     // Softening the mask

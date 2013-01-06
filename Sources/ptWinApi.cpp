@@ -89,7 +89,7 @@ QString WinApi::VolumeName(QString drive) {
   }
 
   QString vName = QString::fromUtf16((const ushort*)szVolumeName);
-  vName.trimmed();
+  vName = vName.trimmed();
   return vName;
 }
 
