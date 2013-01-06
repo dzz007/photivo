@@ -1546,10 +1546,10 @@ sToolInfo ToolInfo (const QString GuiName) {
     Info.Name = "Vignetting (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunVignetteModel") != 0;
   } else if (GuiName == "TabLensfunDistortion") {
-    Info.Name == "Lens Distortion (Lensfun)";
+    Info.Name = "Lens Distortion (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunDistModel") != 0;
   } else if (GuiName == "TabLensfunGeometry") {
-    Info.Name == "Geometry Conversion (Lensfun)";
+    Info.Name = "Geometry Conversion (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunSrcGeo") != Settings->GetInt("LfunTargetGeo");
   } else if (GuiName == "TabDefish") {
       Info.Name = "Defish";

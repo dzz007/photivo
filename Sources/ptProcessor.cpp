@@ -399,7 +399,7 @@ void ptProcessor::Run(short Phase,
 
 
             default : // Should not happen.
-              assert(!"Processor subphase " + SubPhase + " does not exist.");
+              GInfo->Raise(QString("Processor subphase ") + QString::number(SubPhase) + QString(" does not exist."), AT);
           }
         }
 
