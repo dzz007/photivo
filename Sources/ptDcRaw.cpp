@@ -1068,9 +1068,11 @@ void CLASS canon_sraw_load_raw()
     if (row & (jh.sraw >> 1))
       for (col=0; col < m_Width; col+=2)
   for (c=1; c < 3; c++)
-    if (row == m_Height-1)
-         ip[col][c] =  ip[col-m_Width][c];
-    else ip[col][c] = (ip[col-m_Width][c] + ip[col+m_Width][c] + 1) >> 1;
+    if (row == m_Height-1) {
+      ip[col][c] =  ip[col-m_Width][c];
+    } else {
+      ip[col][c] = (ip[col-m_Width][c] + ip[col+m_Width][c] + 1) >> 1;
+    }
     for (col=1; col < m_Width; col+=2)
       for (c=1; c < 3; c++)
   if (col == m_Width-1)
@@ -3100,7 +3102,7 @@ short * CLASS foveon_make_curve (double max, double mul, double filt)
   double x;
 
   if (!filt) filt = 0.8;
-  size = (unsigned) (4*M_PI*max / filt);
+  size = (unsigned) (4*ptPI*max / filt);
   if (size == UINT_MAX) size--;
   curve = (short *) CALLOC (size+1, sizeof *curve);
   merror (curve, "foveon_make_curve()");
@@ -6839,7 +6841,7 @@ void CLASS identify() {
     parse_fuji (get4());
     if (m_ThumbOffset > 120) {
       fseek (m_InputFile, 120, SEEK_SET);
-      m_IsRaw += (i = get4()) && 1;
+      m_IsRaw += (i = get4());
       if (m_IsRaw == 2 && m_UserSetting_ShotSelect)
   parse_fuji (i);
     }

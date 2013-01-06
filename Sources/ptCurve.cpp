@@ -154,7 +154,8 @@ void ptCurve::calcCurve() {
     case SplineInterpol: calcSplineCurve(); break;
     case CosineInterpol: calcCosineCurve(); break;
     case LinearInterpol: calcLinearCurve(); break;
-    default: GInfo->Raise("Unhandled interpolation type: " + FInterpolType, AT);
+  default:
+    GInfo->Raise(QString("Unhandled interpolation type: ") + QString::number(FInterpolType), AT);
   }
 }
 

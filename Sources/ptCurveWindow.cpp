@@ -643,7 +643,8 @@ void ptCurveWindow::execContextMenu(const QPoint APos) {
     case ptCurve::LinearInterpol: FLinearIpolAction->setChecked(true); break;
     case ptCurve::SplineInterpol: FSplineIpolAction->setChecked(true); break;
     case ptCurve::CosineInterpol: FCosineIpolAction->setChecked(true); break;
-    default: GInfo->Raise("Unhandled curve interpolation type: " + (int)FCurve->interpolType(), AT);
+  default:
+    GInfo->Raise(QString("Unhandled curve interpolation type: ") + QString::number((int)FCurve->interpolType()), AT);
   }
 
   if (FCurve->supportedMasks() == (ptCurve::LumaMask | ptCurve::ChromaMask)) {
@@ -652,7 +653,8 @@ void ptCurveWindow::execContextMenu(const QPoint APos) {
     switch (FCurve->mask()) {
       case ptCurve::LumaMask: FByLumaAction->setChecked(true); break;
       case ptCurve::ChromaMask: FByChromaAction->setChecked(true); break;
-      default: GInfo->Raise("Unhandled curve mask type: " + (int)FCurve->mask(), AT);
+    default:
+      GInfo->Raise(QString("Unhandled curve mask type: ") + QString::number((int)FCurve->mask()), AT);
     }
   }
 

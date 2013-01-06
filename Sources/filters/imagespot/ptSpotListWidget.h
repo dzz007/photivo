@@ -127,6 +127,7 @@ public:
   explicit ptSpotListView(QWidget *AParent);
   ~ptSpotListView();
   void setModel(ptImageSpotModel *AModel);
+  using QListView::setModel;
 
 protected:
   virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
