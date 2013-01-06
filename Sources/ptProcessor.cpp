@@ -397,7 +397,7 @@ void ptProcessor::Run(short Phase,
               TRACEMAIN("Done m_Image_AfterDcRaw transfer to GUI at %d ms.",
                          FRunTimer.elapsed());
 
-
+              break;
             default : // Should not happen.
               GInfo->Raise(QString("Processor subphase ") + QString::number(SubPhase) + QString(" does not exist."), AT);
           }

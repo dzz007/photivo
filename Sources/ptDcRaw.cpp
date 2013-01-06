@@ -1080,19 +1080,21 @@ void CLASS canon_sraw_load_raw()
   else ip[col][c] = (ip[col-1][c] + ip[col+1][c] + 1) >> 1;
   }
   for ( ; rp < ip[0]; rp+=4) {
-    if (unique_id < 0x80000218) {
-      rp[0] -= 512;
-      goto next;
-    } else if (unique_id == 0x80000285) {
-next: pix[0] = rp[0] + rp[2];
-      pix[2] = rp[0] + rp[1];
-      pix[1] = rp[0] + ((-778*rp[1] - (rp[2] << 11)) >> 12);
-    } else {
+    if (unique_id == 0x80000218 ||
+	unique_id == 0x80000250 ||
+	unique_id == 0x80000261 ||
+	unique_id == 0x80000281 ||
+	unique_id == 0x80000287) {
       rp[1] = (rp[1] << 2) + hue;
       rp[2] = (rp[2] << 2) + hue;
       pix[0] = rp[0] + ((  200*rp[1] + 22929*rp[2]) >> 14);
       pix[1] = rp[0] + ((-5640*rp[1] - 11751*rp[2]) >> 14);
       pix[2] = rp[0] + ((29040*rp[1] -   101*rp[2]) >> 14);
+    } else {
+      if (unique_id < 0x80000218) rp[0] -= 512;
+      pix[0] = rp[0] + rp[2];
+      pix[2] = rp[0] + rp[1];
+      pix[1] = rp[0] + ((-778*rp[1] - (rp[2] << 11)) >> 12);
     }
     for (c=0;c<3;c++) rp[c] = CLIP(pix[c] * sraw_mul[c] >> 10);
   }
@@ -1259,23 +1261,6 @@ void CLASS nikon_load_raw()
     }
   }
   FREE(huff);
-}
-
-/*
-   Figure out if a NEF file is compressed.  These fancy heuristics
-   are only needed for the D100, thanks to a bug in some cameras
-   that tags all images as "compressed".
- */
-int CLASS nikon_is_compressed()
-{
-  uint8_t test[256];
-  int i;
-
-  fseek (m_InputFile, m_Data_Offset, SEEK_SET);
-  ptfread (test, 1, 256, m_InputFile);
-  for (i=15; i < 256; i+=16)
-    if (test[i]) return 1;
-  return 0;
 }
 
 /*
@@ -1751,9 +1736,7 @@ void CLASS hasselblad_load_raw()
   if ((diff & (1 << (len[c]-1))) == 0)
     diff -= (1 << len[c]) - 1;
   if (diff == 65535) diff = -32768;
-  pred[c] += diff;
-  if (row >= 0 && (unsigned)(col+c) < m_Width)
-    RAW(row,col+c) = pred[c];
+	RAW(row,col+c) = pred[c] += diff;
       }
     }
   }
@@ -1941,8 +1924,7 @@ void CLASS panasonic_load_raw()
   }
       } else if ((nonz[i & 1] = pana_bits(8)) || i > 11)
   pred[i & 1] = nonz[i & 1] << 4 | pana_bits(4);
-      if (col < m_Width)
-  if ((RAW(row,col) = pred[col & 1]) > 4098) derror();
+      if ((RAW(row,col) = pred[col & 1]) > 4098 && col < m_Width) derror();
     }
 }
 
@@ -2624,7 +2606,7 @@ void CLASS sony_arw2_load_raw()
     bit += 7;
   }
       for (i=0; i < 16; i++, col+=2)
-  if (col < m_Width) RAW(row,col) = m_Curve[pix[i] << 1] >> 2;
+	RAW(row,col) = m_Curve[pix[i] << 1] >> 2;
       col -= col & 1 ? 1:31;
     }
   }
@@ -3575,11 +3557,8 @@ void CLASS crop_masked_pixels()
     m_Mask[0][3] = -2;
     goto sides;
   }
-  if (m_LoadRawFunction == &CLASS sony_load_raw) {
-    m_Mask[0][3] = 9;
-    goto sides;
-  }
   if (m_LoadRawFunction == &CLASS canon_600_load_raw ||
+      m_LoadRawFunction == &CLASS sony_load_raw ||
      (m_LoadRawFunction == &CLASS eight_bit_load_raw && strncmp(m_CameraModel,"DC2",3)) ||
       m_LoadRawFunction == &CLASS kodak_262_load_raw ||
      (m_LoadRawFunction == &CLASS packed_load_raw && (m_Load_Flags & 32))) {
@@ -5006,7 +4985,7 @@ get2_256:
       fseek (m_InputFile, i, SEEK_CUR);
 get2_rggb:
       for (c=0; c < 4; c++) ASSIGN(m_CameraMultipliers[c ^ (c >> 1)], get2());
-      i = len == 1312 ? 112:22;
+      i = len >> 3 == 164 ? 112:22;
       fseek (m_InputFile, i, SEEK_CUR);
       for (c=0; c < 4; c++) sraw_mul[c ^ (c >> 1)] = get2();
     }
@@ -5811,7 +5790,15 @@ void CLASS apply_tiff()
       case 262:
   m_LoadRawFunction = &CLASS kodak_262_load_raw;			break;
       case 34713:
-  m_LoadRawFunction = &CLASS nikon_load_raw;			break;
+	if ((m_RawWidth+9)/10*16*m_RawHeight == m_Tiff_IFD[l_Raw].bytes) {
+	  m_LoadRawFunction = &CLASS packed_load_raw;
+	  m_Load_Flags = 1;
+	} else if (m_RawWidth*m_RawHeight*2 == m_Tiff_IFD[l_Raw].bytes) {
+	  m_LoadRawFunction = &CLASS unpacked_load_raw;
+	  m_Load_Flags = 4;
+	  m_ByteOrder = 0x4d4d;
+	} else
+	  m_LoadRawFunction = &CLASS nikon_load_raw;			break;
       case 34892:
   m_LoadRawFunction = &CLASS lossy_dng_load_raw;		break;
       case 65535:
@@ -5832,7 +5819,8 @@ void CLASS apply_tiff()
     }
   if (!m_DNG_Version)
     if ( (m_Tiff_Samples == 3 && m_Tiff_IFD[l_Raw].bytes &&
-    m_Tiff_bps != 14 && m_Tiff_bps != 2048 && m_Tiff_Compress != 32770)
+	  m_Tiff_bps != 14 && m_Tiff_bps != 2048 && 
+	  m_Tiff_Compress != 32769 && m_Tiff_Compress != 32770)
       || (m_Tiff_bps == 8 && !strstr(m_CameraMake,"KODAK") &&
           !strstr(m_CameraMake,"Kodak") &&
     !strstr(m_CameraModelBis,"DEBUG RAW")))
@@ -6262,7 +6250,7 @@ void CLASS parse_fuji (int offset)
     } else if (tag == 0xc000) {
       c = m_ByteOrder;
       m_ByteOrder = 0x4949;
-      m_Width  = get4();
+      if ((m_Width = get4()) > 10000) m_Width = get4();
       m_Height = get4();
       m_ByteOrder = c;
     }
@@ -6758,6 +6746,7 @@ void CLASS identify() {
     { 12310144, "CASIO",    "EX-Z850"         ,1 },
     { 12489984, "CASIO",    "EX-Z8"           ,1 },
     { 15499264, "CASIO",    "EX-Z1050"        ,1 },
+    { 18702336, "CASIO",    "EX-ZR100"        ,1 },
     {  7426656, "CASIO",    "EX-P505"         ,1 },
     {  9313536, "CASIO",    "EX-P600"         ,1 },
     { 10979200, "CASIO",    "EX-P700"         ,1 },
@@ -6950,7 +6939,7 @@ void CLASS identify() {
     { m_Height  = 3124;   m_Width  = 4688; m_Filters = 0x16161616; }
   if (m_Width == 4352 && (!strcmp(m_CameraModel,"K-r") || !strcmp(m_CameraModel,"K-x")))
     { m_Width  = 4309; m_Filters = 0x16161616; }
-  if (m_Width >= 4960 && !strcmp(m_CameraModel,"K-5"))
+  if (m_Width >= 4960 && !strncmp(m_CameraModel,"K-5",3))
     { m_LeftMargin = 10; m_Width  = 4950; m_Filters = 0x16161616; }
   if (m_Width == 4736 && !strcmp(m_CameraModel,"K-7"))
     { m_Height  = 3122;   m_Width  = 4684; m_Filters = 0x16161616; m_TopMargin = 2; }
@@ -6996,6 +6985,7 @@ void CLASS identify() {
       case 3344: m_Width -= 66;
       case 3872: m_Width -= 6;
     }
+    if (m_Height > m_Width) SWAP(m_Height,m_Width);
     m_Filters = 0;
     m_LoadRawFunction = &CLASS canon_sraw_load_raw;
   } else if (!strcmp(m_CameraModel,"PowerShot 600")) {
@@ -7274,6 +7264,14 @@ canon_a5:
     m_Width  = 4048;
     m_TopMargin  = 11;
     m_LeftMargin = 104;
+  } else if (l_IsCanon && m_RawWidth == 4176) {
+    m_Height = 3045;
+    m_Width  = 4072;
+    m_LeftMargin = 96;
+    m_Mask[0][0] = m_TopMargin = 17;
+    m_Mask[0][2] = m_RawHeight;
+    m_Mask[0][3] = 80;
+    m_Filters = 0x49494949;
   } else if (l_IsCanon && m_RawWidth == 4312) {
     m_TopMargin  = 18;
     m_LeftMargin = 22;
@@ -7340,6 +7338,10 @@ canon_a5:
     m_TopMargin = 51;
     m_LeftMargin = 158;
     goto canon_cr2;
+  } else if (l_IsCanon && m_RawWidth == 5568) {
+    m_TopMargin = 38;
+    m_LeftMargin = 72;
+    goto canon_cr2;
   } else if (l_IsCanon && m_RawWidth == 5712) {
     m_Height = 3752;
     m_Width  = 5640;
@@ -7383,6 +7385,7 @@ canon_cr2:
        !strcmp(m_CameraModel,"D7000")) {
     m_Width -= 44;
   } else if (!strcmp(m_CameraModel,"D3200") ||
+	     !strcmp(m_CameraModel,"D600")  ||
        !strcmp(m_CameraModel,"D800")) {
     m_Width -= 46;
   } else if (!strcmp(m_CameraModel,"D4")) {
@@ -7393,11 +7396,8 @@ canon_cr2:
        !strncmp(m_CameraModel,"D70",3)) {
     m_Width--;
   } else if (!strcmp(m_CameraModel,"D100")) {
-    if (m_Tiff_Compress == 34713 && !nikon_is_compressed()) {
-      m_LoadRawFunction = &CLASS packed_load_raw;
-      m_Load_Flags |= 1;
+    if (m_Load_Flags)
       m_RawWidth = (m_Width += 3) + 3;
-    }
   } else if (!strcmp(m_CameraModel,"D200")) {
     m_LeftMargin = 1;
     m_Width -= 4;
@@ -7410,6 +7410,8 @@ canon_cr2:
     else m_Width -= 8;
   } else if (!strncmp(m_CameraModel,"D300",4)) {
     m_Width -= 32;
+  } else if (!strcmp(m_CameraMake,"NIKON") && m_RawWidth == 4032) {
+    adobe_coeff ("NIKON","COOLPIX P7700");
   } else if (!strncmp(m_CameraModel,"COOLPIX P",9)) {
     m_Load_Flags = 24;
     m_Filters = 0x94949494;
@@ -7525,13 +7527,12 @@ cp_e2500:
       m_WhiteLevel = (m_IsRaw == 2 && m_UserSetting_ShotSelect) ? 0x2f00 : 0x3e00;
     m_TopMargin = (m_RawHeight - m_Height) >> 2 << 1;
     m_LeftMargin = (m_RawWidth - m_Width ) >> 2 << 1;
+    if (m_Width == 2848) m_Filters = 0x16161616;
     if (m_Width == 3328) {
       m_Width = 3262;
       m_LeftMargin = 34;
     }
-    if (!strcmp(m_CameraModel,"X10") || !strcmp(m_CameraModel,"X-S1"))
-      m_Filters = 0x16161616;
-    if (!strcmp(m_CameraModel,"X-Pro1")) {
+    if (m_Width == 4952) {
       m_LeftMargin = 0;
       m_Filters = 2;
     }
@@ -7670,6 +7671,13 @@ wb550:
     m_LoadRawFunction = &CLASS unpacked_load_raw;
     m_Load_Flags = 6;
     m_WhiteLevel = 0x3df;
+  } else if (!strcmp(m_CameraModel,"EX2F")) {
+    m_Height = 3045;
+    m_Width  = 4070;
+    m_TopMargin = 3;
+    m_ByteOrder = 0x4949;
+    m_Filters = 0x49494949;
+    m_LoadRawFunction = &CLASS unpacked_load_raw;
   } else if (!strcmp(m_CameraModel,"STV680 VGA")) {
     m_Height = 484;
     m_Width  = 644;
@@ -7878,6 +7886,9 @@ wb550:
       m_ThumbLength = l_FLen - (m_ThumbOffset = 0xa39800);
       m_ThumbHeight = 480;
       m_ThumbWidth  = 640;
+    } else if (!strcmp(m_CameraModel,"XZ-2")) {
+      m_LoadRawFunction = &CLASS packed_load_raw;
+      m_Load_Flags = 24;
     }
   } else if (!strcmp(m_CameraModel,"N Digital")) {
     m_Height = 2047;
@@ -7888,6 +7899,7 @@ wb550:
   } else if (!strcmp(m_CameraModel,"DSC-F828")) {
     m_Width = 3288;
     m_LeftMargin = 5;
+    m_Mask[1][3] = -17;
     m_Data_Offset = 862144;
     m_LoadRawFunction = &CLASS sony_load_raw;
     m_Filters = 0x9c9c9c9c;
@@ -7896,6 +7908,7 @@ wb550:
   } else if (!strcmp(m_CameraModel,"DSC-V3")) {
     m_Width = 3109;
     m_LeftMargin = 59;
+    m_Mask[0][1] = 9;
     m_Data_Offset = 787392;
     m_LoadRawFunction = &CLASS sony_load_raw;
   } else if (!strcmp(m_CameraMake,"SONY") && m_RawWidth == 3984) {
@@ -8165,6 +8178,11 @@ c603:
     m_Height = 2752;
     m_Width  = 3672;
     m_RawWidth = 5632;
+  } else if (!strcmp(m_CameraModel,"EX-ZR100")) {
+    m_Height = 3044;
+    m_Width  = 4072;
+    m_RawWidth = 4096;
+    m_Load_Flags = 80;
   } else if (!strcmp(m_CameraModel,"EX-P505")) {
     m_Height = 1928;
     m_Width  = 2568;
@@ -8552,10 +8570,8 @@ short CLASS RunDcRaw_Phase1() {
     m_RawColor = 0;
   }
 
-  // Basic image memory allocation @ 4 int per pixel happens here.
+  // Allocation is depending on m_Raw_Image below.
   FREE(m_Image);
-  m_Image = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *m_Image);
-  merror (m_Image, "main()");
 
   if (m_MetaLength) {
     FREE(m_MetaData);
@@ -8564,8 +8580,13 @@ short CLASS RunDcRaw_Phase1() {
   }
   if (m_Filters || m_Colors == 1) {
     m_Raw_Image = (uint16_t *) CALLOC ((m_RawHeight+7)*m_RawWidth, 2);
-    merror (m_Image, "main().m_Raw_Image");
+    merror (m_Raw_Image, "main().m_Raw_Image");
+  } else {
+    // Basic image memory allocation @ 4 int per pixel happens here.
+    m_Image = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *m_Image);
+    merror (m_Image, "main()");
   }
+
   TRACEKEYVALS("CameraMake","%s",m_CameraMake);
   TRACEKEYVALS("CameraModel","%s",m_CameraModel);
   TRACEKEYVALS("InputFile","%s",m_UserSetting_InputFileName);
@@ -8580,6 +8601,9 @@ short CLASS RunDcRaw_Phase1() {
   (*this.*m_LoadRawFunction)();
 
   if (m_Raw_Image) {
+    // Basic image memory allocation @ 4 int per pixel happens here.
+    m_Image = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *m_Image);
+    merror (m_Image, "main()");
     crop_masked_pixels();
     FREE (m_Raw_Image);
   }
