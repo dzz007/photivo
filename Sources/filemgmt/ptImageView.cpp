@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -42,17 +42,15 @@ extern ptTheme*     Theme;
 
 //==============================================================================
 
-void MyWorker::run() {
-  (m_ImageView->*m_Fct)();
-}
-
-//==============================================================================
-
 ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   QGraphicsView(parent),
   // constants
   MinZoom(0.05),
-  MaxZoom(4.0)
+  MaxZoom(4.0),
+  FNextImage(),
+  m_ResizeEventTimer(),
+  FCurrentImageId(),
+  FImage(nullptr)
 {
   assert(parent     != NULL);
   assert(DataModule != NULL);
@@ -82,9 +80,7 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   // Init
   m_PixmapItem        = m_Scene->addPixmap(QPixmap());
   m_PixmapItem->setPos(0,0);
-  m_Image             = NULL;
   m_FileName_Current  = "";
-  m_FileName_Next     = "";
   m_ZoomMode          = ptZoomMode_Fit;
   m_ZoomFactor        = 1.0;
   m_Zoom              = 100;
@@ -95,13 +91,6 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   m_StatusOverlay     = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
   m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255)); // blue
   m_StatusOverlay->setDuration(0);
-
-  // parallel worker
-  m_Worker = new MyWorker();
-  m_Worker->m_ImageView = this;
-  m_Worker->m_Fct       = &ptImageView::updateView;
-  m_Worker->m_FileName  = "";
-  connect(m_Worker, SIGNAL(finished()), this, SLOT(afterWorker()));
 
   // timer for decoupling the mouse wheel
   m_ResizeTimeOut = 50;
@@ -136,9 +125,6 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
 //==============================================================================
 
 ptImageView::~ptImageView() {
-  m_Worker->terminate();
-  DelAndNull(m_Worker);
-  DelAndNull(m_Image);
   DelAndNull(m_DragDelta);
   DelAndNull(m_ZoomSizeOverlay);
   DelAndNull(m_StatusOverlay);
@@ -148,48 +134,24 @@ ptImageView::~ptImageView() {
 
 //==============================================================================
 
-void ptImageView::ShowImage(const QString FileName) {
-  m_FileName_Next = FileName;
+void ptImageView::ShowImage(const QString AFileName) {
+  if (!isVisible()) {
+    return;
+  }
 
-  if (!isVisible() ||
-      m_FileName_Current == m_FileName_Next) return;
-
-  startWorker();
-}
-
-//==============================================================================
-
-void ptImageView::startWorker() {
-  if (m_FileName_Current == m_FileName_Next) {
+  if (FNextImage.FileName == AFileName) {
     m_StatusOverlay->stop();
     return;
   }
 
-  if (!m_Worker->isRunning()) {
-    m_StatusOverlay->exec(QObject::tr("Loading"));
-    m_Worker->m_FileName = m_FileName_Next;
-    m_FileName_Current   = m_FileName_Next;
-    m_Worker->start();
+  // We don't need that image any longer
+  ptFileMgrDM::GetInstance()->getThumbDM()->cancelThumb(FNextImage);
+  FNextImage.FileName = AFileName;
 
-    if (!m_Worker->isRunning())
-      ptMessageBox::critical(NULL, "Thread error", "Could not start thread for parallel image loading.");
-  }
-}
+  m_StatusOverlay->exec(QObject::tr("Loading"));
 
-//==============================================================================
-
-void ptImageView::afterWorker() {
-  if (m_FileName_Current != m_FileName_Next) {
-    startWorker();
-  } else {
-    m_StatusOverlay->stop();
-    if (m_Image != NULL) {
-      if (m_ZoomMode == ptZoomMode_Fit)
-        zoomFit(false);
-      else
-        ZoomTo(m_ZoomFactor, true);
-    }
-  }
+  // We order the new image.
+  ptFileMgrDM::GetInstance()->getThumbDM()->orderThumb(FNextImage, false);
 }
 
 //==============================================================================
@@ -317,6 +279,28 @@ void ptImageView::zoomOut() {
 
 //==============================================================================
 
+void ptImageView::getImage(const ptThumbId AThumbId,
+                           ptThumbPtr      AImage)
+{
+  // Check if it is the image we requested
+  if (!AThumbId.isEqual(FNextImage))
+    return;
+
+  if (!AImage)
+    return;
+
+  FImage = AImage;
+
+  m_StatusOverlay->stop();
+
+  if (m_ZoomMode == ptZoomMode_Fit)
+    zoomFit(false);
+  else
+    ZoomTo(m_ZoomFactor, true);
+}
+
+//==============================================================================
+
 void ptImageView::zoom100() {
   ZoomTo(1.0, true);
 }
@@ -341,8 +325,8 @@ void ptImageView::ZoomTo(float factor, const bool withMsg) {
 int ptImageView::zoomFit(const bool withMsg /*= true*/) {
   m_ZoomMode = ptZoomMode_Fit;
 
-  if (m_Image != NULL) {
-    m_Scene->setSceneRect(0, 0, m_Image->m_Width, m_Image->m_Height);
+  if (FImage) {
+    m_Scene->setSceneRect(0, 0, FImage->m_Width, FImage->m_Height);
   }
 
   fitInView(m_Scene->sceneRect(), Qt::KeepAspectRatio);
@@ -362,7 +346,7 @@ int ptImageView::zoomFit(const bool withMsg /*= true*/) {
 //==============================================================================
 
 void ptImageView::ImageToScene(const double Factor) {
-  if (m_Image != NULL) {
+  if (FImage) {
     resetTransform();
 
     Qt::TransformationMode Mode;
@@ -374,22 +358,16 @@ void ptImageView::ImageToScene(const double Factor) {
       // bilinear resize for all others
       Mode = Qt::SmoothTransformation;
     }
-    m_Scene->setSceneRect(0, 0, m_Image->m_Width*Factor, m_Image->m_Height*Factor);
-    m_PixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) m_Image->m_Image,
-                                                                     m_Image->m_Width,
-                                                                     m_Image->m_Height,
-                                                                     QImage::Format_RGB32).scaled(m_Image->m_Width*Factor,
-                                                                                                  m_Image->m_Height*Factor,
+    m_Scene->setSceneRect(0, 0, FImage->m_Width*Factor, FImage->m_Height*Factor);
+    m_PixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) FImage->m_Image,
+                                                                     FImage->m_Width,
+                                                                     FImage->m_Height,
+                                                                     QImage::Format_RGB32).scaled(FImage->m_Width*Factor,
+                                                                                                  FImage->m_Height*Factor,
                                                                                                   Qt::IgnoreAspectRatio,
                                                                                                   Mode)));
     m_PixmapItem->setTransformationMode(Mode);
   }
-}
-
-//==============================================================================
-
-void ptImageView::updateView() {
-  m_DataModule->getThumbnail(m_Image, m_FileName_Current, 0);
 }
 
 //==============================================================================
@@ -403,9 +381,19 @@ void ptImageView::ResizeTimerExpired() {
 void ptImageView::showEvent(QShowEvent* event) {
   QGraphicsView::showEvent(event);
 
-  if (!m_FileName_Next.isEmpty()) {
-    startWorker();
+  connect(ptFileMgrDM::GetInstance()->getThumbDM(), SIGNAL(thumbnail(ptThumbId, ptThumbPtr)),
+          this,                                     SLOT(  getImage( ptThumbId, ptThumbPtr)));
+
+  if (!FNextImage.FileName.isEmpty()) {
+    ShowImage(FNextImage.FileName);
   }
+}
+
+//==============================================================================
+
+void ptImageView::hideEvent(QHideEvent*)
+{
+  disconnect(ptFileMgrDM::GetInstance()->getThumbDM(), 0, this, 0);
 }
 
 //==============================================================================

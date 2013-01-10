@@ -254,7 +254,12 @@ HEADERS += \
     ../Sources/filters/ptFilter_Tone.h \
     ../Sources/batch/ptJobListItem.h \
     ../Sources/batch/ptBatchWindow.h \
-    ../Sources/batch/ptJobListModel.h
+    ../Sources/batch/ptJobListModel.h \
+    ../Sources/filemgmt/ptThumbCache.h \
+    ../Sources/filemgmt/ptThumbGen.h \
+    ../Sources/ptLock.h \
+    ../Sources/filemgmt/ptThumbDefines.h \
+    ../Sources/filemgmt/ptThumbDM.h
 
 
 SOURCES += \
@@ -375,7 +380,12 @@ SOURCES += \
     ../Sources/filters/ptFilter_Tone.cpp \
     ../Sources/batch/ptJobListItem.cpp \
     ../Sources/batch/ptBatchWindow.cpp \
-    ../Sources/batch/ptJobListModel.cpp
+    ../Sources/batch/ptJobListModel.cpp \
+    ../Sources/filemgmt/ptThumbCache.cpp \
+    ../Sources/filemgmt/ptThumbGen.cpp \
+    ../Sources/ptLock.cpp \
+    ../Sources/filemgmt/ptThumbDM.cpp \
+    ../Sources/filemgmt/ptThumbDefines.cpp
 
 
 FORMS += \

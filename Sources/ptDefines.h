@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2009-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -28,6 +28,8 @@
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
 
+#include <ctime>
+#include <chrono>
 #include <memory>
 
 // disable the file manager
@@ -82,6 +84,12 @@ inline const T &ptBound(const T &min, const T &val, const T &max)
 #define LIM(x, min, max)  ptBound(min, x, max)
 #define ULIM(x, y, z)     ((y) < (z) ? LIM(x,y,z) : LIM(x,z,y))
 #define CLIP(x)           ptBound(0, x, 0xffff)
+
+//==============================================================================
+
+inline std::time_t ptNow() {
+  return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 //

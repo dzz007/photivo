@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -55,8 +55,9 @@ void ptFileMgrDM::DestroyInstance() {
 
 //==============================================================================
 
-ptFileMgrDM::ptFileMgrDM()
-: QObject()
+ptFileMgrDM::ptFileMgrDM() :
+  QObject(),
+  FThumbDM(nullptr) // init of unique_ptr!
 {
   m_DirModel    = new ptSingleDirModel;
   m_TagModel    = new ptTagModel;
@@ -174,6 +175,17 @@ bool ptFileMgrDM::getThumbnail(ptImage8     *&AImage,
 
 //==============================================================================
 
+ptThumbDM *ptFileMgrDM::getThumbDM()
+{
+  if(!FThumbDM) {
+    FThumbDM = make_unique<ptThumbDM>();
+  }
+
+  return FThumbDM.get();
+}
+
+//==============================================================================
+
 void ptFileMgrDM::GenerateThumbnail(MagickWand* AInImage, ptImage8 *AOutImage, const QSize tSize)
 {
   // We want 8bit RGB data without alpha channel, scaled to thumbnail size
@@ -203,7 +215,7 @@ void ptFileMgrDM::GenerateThumbnail(MagickWand* AInImage, ptImage8 *AOutImage, c
   uint w = MagickGetImageWidth(AInImage);
   uint h = MagickGetImageHeight(AInImage);
 
-  AOutImage->SetSize(w, h, 3);
+  AOutImage->setSize(w, h, 3);
 
   MagickGetImagePixels(AInImage, 0, 0, w, h, "BGRA", CharPixel, (uchar*)(AOutImage->m_Image));
 }

@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -34,6 +34,8 @@
 
 #include "../ptReportOverlay.h"
 #include "ptFileMgrDM.h"
+#include "ptThumbDefines.h"
+#include "ptThumbCache.h"
 
 //==============================================================================
 
@@ -51,7 +53,7 @@ public:
   explicit ptImageView(QWidget *parent = 0, ptFileMgrDM* DataModule = 0);
   ~ptImageView();
 
-  void ShowImage(const QString FileName);
+  void ShowImage(const QString AFileName);
 
 
 protected:
@@ -62,6 +64,7 @@ protected:
   void mouseReleaseEvent(QMouseEvent* event);
   void resizeEvent(QResizeEvent* event);
   void showEvent(QShowEvent* event);
+  void hideEvent(QHideEvent*);
   void wheelEvent(QWheelEvent* event);
 
 
@@ -81,9 +84,8 @@ private:
   QList<float>          ZoomFactors;   // steps for wheel zoom
   QGridLayout*          m_parentLayout;
   QGraphicsScene*       m_Scene;
-  ptImage8*             m_Image;
   QString               m_FileName_Current;
-  QString               m_FileName_Next;
+  ptThumbId             FNextImage;
   int                   m_ZoomMode;
   float                 m_ZoomFactor;
   int                   m_Zoom;
@@ -91,7 +93,6 @@ private:
   bool                  m_LeftMousePressed;
   ptReportOverlay*      m_ZoomSizeOverlay;
   ptReportOverlay*      m_StatusOverlay;
-  MyWorker*             m_Worker;
   QGraphicsPixmapItem*  m_PixmapItem;
   int                   m_ResizeTimeOut;
   QTimer*               m_ResizeTimer;
@@ -103,6 +104,8 @@ private:
   QAction* ac_ZoomFit;
   QAction* ac_ZoomOut;
 
+  ptThumbId  FCurrentImageId;
+  ptThumbPtr FImage;
 
 public slots:
   int  zoomFit(const bool withMsg = true);  // fit complete image into viewport
@@ -110,26 +113,14 @@ public slots:
   void zoomIn();
   void zoomOut();
 
+  void getImage(const ptThumbId AThumbId,
+                ptThumbPtr      AImage);
+
 
 private slots:
-  void startWorker();
-  void afterWorker();
   void ResizeTimerExpired();
 };
 
 //==============================================================================
-
-typedef void (ptImageView::*updateView_ptr)();
-
-class MyWorker: public QThread {
-public:
-  QString        m_FileName;
-  updateView_ptr m_Fct;
-  ptImageView*   m_ImageView;
-#ifndef Q_OS_MAC
-protected:
-#endif
-  void run();
-};
 
 #endif // PTIMAGEVIEW_H

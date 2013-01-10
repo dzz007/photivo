@@ -3,6 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
+** Copyright (C) 2012-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -70,20 +71,6 @@ ptImage8::~ptImage8() {
   FREE(m_Image);
 }
 
-//==============================================================================
-
-void ptImage8::SetSize(const uint16_t Width, const uint16_t Height, const short NrColors)
-{
-  if (m_Image) FREE(m_Image);
-
-  m_Width  = Width;
-  m_Height = Height;
-  m_Colors = NrColors;
-
-  m_Image  = (uint8_t (*)[4]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Set
@@ -121,7 +108,7 @@ ptImage8 *ptImage8::Set(const ptImage8 *Origin)
 {
   assert(NULL != Origin);
 
-  SetSize(Origin->m_Width,
+  setSize(Origin->m_Width,
           Origin->m_Height,
           Origin->m_Colors);
 
@@ -136,7 +123,7 @@ ptImage8 *ptImage8::Set(const ptImage8 *Origin)
 
 void ptImage8::FromQImage(const QImage AImage)
 {
-  SetSize(AImage.width(), AImage.height(), 4);
+  setSize(AImage.width(), AImage.height(), 4);
 
   m_ColorSpace = ptSpace_sRGB_D65;
   memcpy(m_Image, AImage.bits(), m_Width*m_Height*sizeof(*m_Image));

@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -37,6 +37,7 @@
 
 #include "ptThumbnailer.h"
 #include "ptThumbnailCache.h"
+#include "ptThumbDM.h"
 #include "ptGraphicsThumbGroup.h"
 #include "ptSingleDirModel.h"
 #include "ptTagModel.h"
@@ -119,6 +120,7 @@ public:
                     const QString &AFileName,
                     const int      AMaxSize);
 
+  ptThumbDM* getThumbDM();
 private:
   static ptFileMgrDM* m_Instance;
 
@@ -137,8 +139,7 @@ private:
   ptTagModel*                   m_TagModel;
   ptThumbnailer*                m_Thumbnailer;
   QList<ptGraphicsThumbGroup*>* m_ThumbList;
-
-
+  std::unique_ptr<ptThumbDM>    FThumbDM;
 };
 
 //==============================================================================
