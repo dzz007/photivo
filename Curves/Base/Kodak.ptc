@@ -1,0 +1,15 @@
+;
+; photivo Curve File
+;
+; This is an experimental base curve for Kodak Easyshare cameras.
+; Original values are from the darktable project.
+;
+Magic FLOSSCurveFile
+IntendedChannel 8
+CurveType 1
+0 0
+44 20
+133 154
+209 300
+572 753
+1000 1000

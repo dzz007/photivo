@@ -1,0 +1,13 @@
+--- basetsd.h	2011-11-21 21:19:12 +0100
++++ basetsd-01.h	2011-11-22 19:05:17 +0100
+@@ -53,8 +53,8 @@
+ #ifndef XFree86Server
+ typedef int INT32, *PINT32;
+ #endif /* ndef XFree86Server */
+-typedef unsigned char UINT8;
+-typedef unsigned short UINT16;
++//typedef unsigned char UINT8;
++//typedef unsigned short UINT16;
+ typedef unsigned int ULONG32, *PULONG32;
+ typedef unsigned int DWORD32, *PDWORD32;
+ typedef unsigned int UINT32, *PUINT32;
