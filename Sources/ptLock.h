@@ -47,7 +47,9 @@ public:
   void unlock();
 private:
   static const std::vector<ptLockData> FLockData;
+
   ptLockType                           FCurrentType;
+  bool                                 FUnlocked;
 
   void WorkOnCurrentType(std::function<void(ptLockData &)> AFunction);
 };

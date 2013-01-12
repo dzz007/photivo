@@ -31,22 +31,24 @@
 struct ptLockData {
   ptLockType              Type;
   std::shared_ptr<QMutex> Lock;
-  bool                    Unlocked;
 };
+// The QMutex is in a shared pointer, to have someone, who cares for construction
+// and destruction.
 
 //==============================================================================
 
 const std::vector<ptLockData> ptLock::FLockData = {
-  {ptLockType::ThumbCache, std::make_shared<QMutex>(QMutex::NonRecursive), false},
-  {ptLockType::ThumbQueue, std::make_shared<QMutex>(QMutex::NonRecursive), false}
+  {ptLockType::ThumbCache, std::make_shared<QMutex>(QMutex::NonRecursive)},
+  {ptLockType::ThumbQueue, std::make_shared<QMutex>(QMutex::NonRecursive)}
 };
 
 //==============================================================================
 
 ptLock::ptLock(const ptLockType ALockType) :
-  FCurrentType(ALockType)
+  FCurrentType(ALockType),
+  FUnlocked(false)
 {
-  WorkOnCurrentType([](ptLockData ALockData){
+  WorkOnCurrentType([&](ptLockData ALockData){
     (ALockData.Lock)->lock();
   });
 }
@@ -54,9 +56,9 @@ ptLock::ptLock(const ptLockType ALockType) :
 //==============================================================================
 
 ptLock::~ptLock()
-{
-  WorkOnCurrentType([](ptLockData ALockData){
-    if (!ALockData.Unlocked) {
+{  
+  WorkOnCurrentType([&](ptLockData ALockData){
+    if (!FUnlocked) {
       (ALockData.Lock)->unlock();
     }
   });
@@ -66,10 +68,10 @@ ptLock::~ptLock()
 
 void ptLock::unlock()
 {
-  WorkOnCurrentType([](ptLockData ALockData){
-    if (!ALockData.Unlocked) {
+  WorkOnCurrentType([&](ptLockData ALockData){
+    if (!FUnlocked) {
       (ALockData.Lock)->unlock();
-      ALockData.Unlocked = true;
+      FUnlocked = true;
     }
   });
 }
