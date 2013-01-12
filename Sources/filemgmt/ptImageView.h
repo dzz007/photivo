@@ -85,7 +85,6 @@ private:
   QGridLayout*          m_parentLayout;
   QGraphicsScene*       m_Scene;
   QString               m_FileName_Current;
-  ptThumbId             FNextImage;
   int                   m_ZoomMode;
   float                 m_ZoomFactor;
   int                   m_Zoom;
@@ -104,8 +103,9 @@ private:
   QAction* ac_ZoomFit;
   QAction* ac_ZoomOut;
 
-  ptThumbId  FCurrentImageId;
-  ptThumbPtr FImage;
+  ptThumbId             FNextImage;
+  ptThumbId             FCurrentImage;
+  ptThumbPtr            FImage;
 
 public slots:
   int  zoomFit(const bool withMsg = true);  // fit complete image into viewport
@@ -113,12 +113,10 @@ public slots:
   void zoomIn();
   void zoomOut();
 
-  void getImage(const ptThumbId AThumbId,
-                ptThumbPtr      AImage);
-
-
 private slots:
   void ResizeTimerExpired();
+  void getImage(const ptThumbId AThumbId,
+                ptThumbPtr      AImage);
 };
 
 //==============================================================================
