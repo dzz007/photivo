@@ -47,9 +47,9 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   // constants
   MinZoom(0.05),
   MaxZoom(4.0),
-  FNextImage(),
   m_ResizeEventTimer(),
-  FCurrentImageId(),
+  FNextImage(),
+  FCurrentImage(),
   FImage(nullptr)
 {
   assert(parent     != NULL);
@@ -80,7 +80,6 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   // Init
   m_PixmapItem        = m_Scene->addPixmap(QPixmap());
   m_PixmapItem->setPos(0,0);
-  m_FileName_Current  = "";
   m_ZoomMode          = ptZoomMode_Fit;
   m_ZoomFactor        = 1.0;
   m_Zoom              = 100;
@@ -191,7 +190,7 @@ void ptImageView::mouseReleaseEvent(QMouseEvent* event) {
 
 void ptImageView::mouseDoubleClickEvent(QMouseEvent* event) {
   event->accept();
-  ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FileName_Current);
+  ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, FCurrentImage.FileName);
 }
 
 //==============================================================================
@@ -289,7 +288,8 @@ void ptImageView::getImage(const ptThumbId AThumbId,
   if (!AImage)
     return;
 
-  FImage = AImage;
+  FImage        = AImage;
+  FCurrentImage = AThumbId;
 
   m_StatusOverlay->stop();
 
