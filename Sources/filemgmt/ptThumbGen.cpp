@@ -75,11 +75,13 @@ void ptThumbGen::run()
 
 void ptThumbGen::generateThumb(const ptThumbId AThumbId)
 {
+  const QString hFileName = AThumbId.FileName; //"d:\photivoLogo.png";
+
   ptDcRaw     dcRaw;
   MagickWand* image = NewMagickWand();
   QSize       hSize = QSize(AThumbId.MaxSize, AThumbId.MaxSize);
 
-  if (dcRaw.Identify(AThumbId.FileName) == 0 ) {
+  if (dcRaw.Identify(hFileName) == 0 ) {
     // we have a raw image
     std::vector<char> ImgData;
     if (dcRaw.thumbnail(ImgData)) {
@@ -92,12 +94,12 @@ void ptThumbGen::generateThumb(const ptThumbId AThumbId)
     }
   } else {
     // no raw, try for bitmap
-    MagickPingImage(image, AThumbId.FileName.toAscii().data());
+    MagickPingImage(image, hFileName.toAscii().data());
     hSize.setWidth(MagickGetImageWidth(image));
     hSize.setHeight(MagickGetImageHeight(image));
     ScaleThumbSize(hSize, AThumbId.MaxSize);
     MagickSetSize(image, 2*hSize.width(), 2*hSize.height());
-    MagickReadImage(image, AThumbId.FileName.toAscii().data());
+    MagickReadImage(image, hFileName.toAscii().data());
   }
 
   FThumbnail = std::make_shared<ptImage8>();
@@ -108,12 +110,14 @@ void ptThumbGen::generateThumb(const ptThumbId AThumbId)
     // error occurred: no raw thumbnail, no supported image type, any other GM error
     printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
     DestroyMagickWand(image);
-    FThumbnail.get()->FromQImage(QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png")));
+    GInfo->Raise("Bähh");
+    // FThumbnail.get()->FromQImage(QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png")));
     return;
   } else {
     // no error: scale and rotate thumbnail
     TransformImage(image, FThumbnail.get(), hSize);
     DestroyMagickWand(image);
+    printf("Thread done \n");
     return;
   }
 }

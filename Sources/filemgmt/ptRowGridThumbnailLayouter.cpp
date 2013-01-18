@@ -24,6 +24,8 @@
 #include <QScrollBar>
 
 #include "ptRowGridThumbnailLayouter.h"
+#include "../ptDefines.h"
+#include "../ptLock.h"
 
 //==============================================================================
 
@@ -75,6 +77,7 @@ void ptRowGridThumbnailLayouter::Init(const int thumbCount, const QFont& font) {
 //==============================================================================
 
 void ptRowGridThumbnailLayouter::Layout(ptGraphicsThumbGroup* thumb) {
+  ptLock hLock(ptLockType::ThumbLayout);
   if (m_LazyInit) {
     m_LazyInit = false;
     Init(m_ThumbCount, thumb->font());

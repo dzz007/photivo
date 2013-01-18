@@ -27,9 +27,12 @@
 #include <ctime>
 #include <QString>
 
+#include "ptFileMgrConstants.h"
+
 //==============================================================================
 
 class ptImage8;
+class ptGraphicsThumbGroup;
 
 //==============================================================================
 
@@ -39,13 +42,17 @@ typedef std::shared_ptr<ptImage8> ptThumbPtr;
 
 struct ptThumbId {
   explicit ptThumbId();
-  explicit ptThumbId(QString AFileName, uint16_t AMaxSize);
+  explicit ptThumbId(const QString        &AFileName,
+                     const uint16_t        AMaxSize,
+                     ptGraphicsThumbGroup *AThumbGroup);
 
   void init();
   bool isEqual(const ptThumbId AId) const;
 
   QString  FileName;
-  uint16_t MaxSize;
+  uint16_t MaxSize; // longest edge in pixel
+  // Metadata
+  ptGraphicsThumbGroup* ThumbGroup;
 };
 
 //==============================================================================
@@ -56,6 +63,26 @@ struct ptThumbData {
   std::time_t LastAccess;
 
   void init();
+};
+
+//==============================================================================
+// Interface for synchronous events
+class ptThumbGroupEvents {
+public:
+  virtual void thumbnailAction(const ptThumbnailAction AAction,
+                               const QString           AFilename) = 0;
+
+  virtual void currentThumbnail(const QString AFilename) = 0;
+
+  virtual bool focusChanged() = 0;
+};
+
+//==============================================================================
+// Interface for distributing the thumbnail
+class ptThumbReciever {
+public:
+  virtual void thumbnail(const ptThumbId  AThumbId,
+                         const ptThumbPtr AThumb) = 0;
 };
 
 //==============================================================================

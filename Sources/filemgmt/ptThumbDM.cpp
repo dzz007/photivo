@@ -32,9 +32,17 @@ ptThumbDM::ptThumbDM() :
   FThumbCache(),
   FThumbGen(),
   FNeededThumbs(),
-  FAsync(true)
+  FAsync(true),
+  FThreadRunning(false),
+  FThumbReciever(),
+  FRestartTimer()
 {
-  connect(&FThumbGen, SIGNAL(finished()), this, SLOT(finishedThumbGen()));
+  connect(&FThumbGen, SIGNAL(finished()),   this, SLOT(finishedThumbGen()));
+//  connect(this,       SIGNAL(startAsync()), this, SLOT(startThumbGen()));
+
+  FRestartTimer.setSingleShot(true);
+  FRestartTimer.setInterval(5);
+  connect(&FRestartTimer, SIGNAL(timeout()), this, SLOT(startThumbGen()));
 }
 
 //==============================================================================
@@ -49,6 +57,9 @@ ptThumbDM::~ptThumbDM()
 // Otherwise we generate it.
 void ptThumbDM::orderThumb(const ptThumbId AThumbId, const bool ACacheThumb)
 {
+//  return;
+//  if (AThumbId.MaxSize > 0) return;
+
   ptThumbData hThumb;
   hThumb.init();
   hThumb.Id = AThumbId;
@@ -64,9 +75,14 @@ void ptThumbDM::orderThumb(const ptThumbId AThumbId, const bool ACacheThumb)
     hCacheLock.unlock();
     { // Access to the thumb queue is serialized
       ptLock hLock(ptLockType::ThumbQueue);
-      FNeededThumbs.push_back({AThumbId, ACacheThumb});
+      if (AThumbId.MaxSize == 0) {
+        FNeededThumbs.push_front({AThumbId, ACacheThumb});
+      } else {
+        FNeededThumbs.push_back({AThumbId, ACacheThumb});
+      }
+      hLock.unlock();
     }
-    startThumbGen();
+    FRestartTimer.start();
   }
 }
 
@@ -91,9 +107,38 @@ void ptThumbDM::setSyncMode(const bool AAsync)
 }
 
 //==============================================================================
+
+void ptThumbDM::addThumbReciever(ptThumbReciever *AReciever)
+{
+  if (!AReciever) {
+    GInfo->Raise("No valid thumbnail reciever", AT);
+  }
+
+  for (auto it = FThumbReciever.begin(); it != FThumbReciever.end(); ++it) {
+    if (*it == AReciever) {
+      return;
+    }
+  }
+  FThumbReciever.push_back(AReciever);
+}
+
+//==============================================================================
+
+void ptThumbDM::removeThumbReciever(ptThumbReciever *AReciever)
+{
+  for (auto it = FThumbReciever.begin(); it != FThumbReciever.end(); ++it) {
+    if (*it == AReciever) {
+      FThumbReciever.erase(it);
+      return;
+    }
+  }
+}
+
+//==============================================================================
 // We distribute the new thumb and we insert it into the cache, if needed.
 void ptThumbDM::finishedThumbGen()
 {
+  printf("begin finished\n");
   ptThumbData hThumb;
   hThumb.init();
 
@@ -103,17 +148,25 @@ void ptThumbDM::finishedThumbGen()
 
   distributeThumbnail(hThumb);
 
-  startThumbGen();
+  ptLock hThreadLock(ptLockType::ThumbGen);
+  FThreadRunning = false;
+  hThreadLock.unlock();
+  FRestartTimer.start();
 }
 
 //==============================================================================
 // If the thread is not running: get the first needed thumb and start ThumbGen.
 void ptThumbDM::startThumbGen()
 {
-  if (!FThumbGen.isRunning()) {
+  ptLock hThreadLock(ptLockType::ThumbGen);
+  if (!FThreadRunning) {
     ptLock hLock(ptLockType::ThumbQueue);
-    if (FNeededThumbs.empty())
+    if (FNeededThumbs.empty()) {
       return;
+    }
+
+    FThreadRunning = true;
+    hThreadLock.unlock();
 
     FThumbGen.setCurrentThumb(FNeededThumbs.front().Id);
     FNeededThumbs.pop_front();
@@ -140,5 +193,7 @@ void ptThumbDM::distributeThumbnail(const ptThumbData AThumbData)
   // generate a copy and distribute it
   ptThumbPtr hCopy = std::make_shared<ptImage8>();
   hCopy->Set(AThumbData.Thumbnail.get());
-  emit thumbnail(AThumbData.Id, hCopy);
+  for (auto it = FThumbReciever.begin(); it != FThumbReciever.end(); ++it) {
+    (*it)->thumbnail(AThumbData.Id, hCopy);
+  }
 }

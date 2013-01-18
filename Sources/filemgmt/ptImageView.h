@@ -43,18 +43,24 @@ class MyWorker;
 
 //==============================================================================
 
-class ptImageView: public QGraphicsView {
+class ptImageView: public QGraphicsView,
+                   public ptThumbReciever {
 Q_OBJECT
 public:
   /*! Creates a \c ptImageView instance.
     \param parent
       The image view’s parent widget.
   */
-  explicit ptImageView(QWidget *parent = 0, ptFileMgrDM* DataModule = 0);
+  explicit ptImageView(QWidget            *AParent,
+                       ptFileMgrDM        *ADataModule,
+                       ptThumbGroupEvents *AEventHandler = nullptr);
   ~ptImageView();
 
   void ShowImage(const QString AFileName);
 
+  /*! Implementation of the thumb reciever interface.*/
+  virtual void thumbnail(const ptThumbId AThumbId,
+                         ptThumbPtr      AImage);
 
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
@@ -75,10 +81,8 @@ private:
   /*! Put the QImage in the scene */
   void ImageToScene(const double Factor);
 
-  /*! This function performs the actual thumbnail generation. */
-  void updateView();
-
   ptFileMgrDM*          m_DataModule;
+  ptThumbGroupEvents*   FEventHandler;
   const float           MinZoom;
   const float           MaxZoom;
   QList<float>          ZoomFactors;   // steps for wheel zoom
@@ -115,8 +119,6 @@ public slots:
 
 private slots:
   void ResizeTimerExpired();
-  void getImage(const ptThumbId AThumbId,
-                ptThumbPtr      AImage);
 };
 
 //==============================================================================

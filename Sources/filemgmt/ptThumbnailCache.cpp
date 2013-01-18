@@ -61,7 +61,7 @@ ptThumbnailCache::~ptThumbnailCache() {
 void ptThumbnailCache::Clear() {
   QHashIterator<ptThumbnailCacheKey, ptThumbnailCacheObject*> i(*m_Data);
   while (i.hasNext()) {
-    ptGraphicsThumbGroup::RemoveRef(i.next().value()->Thumbnail);
+//    ptGraphicsThumbGroup::RemoveRef(i.next().value()->Thumbnail);
     delete i.value();
   }
   m_Data->clear();
@@ -76,7 +76,7 @@ void ptThumbnailCache::CacheThumbnail(ptGraphicsThumbGroup* thumbnail) {
   ptThumbnailCacheObject* obj = new ptThumbnailCacheObject;
   obj->key = GetKey(thumbnail->fullPath());
   obj->lastHit = GetIdx();
-  obj->Thumbnail = ptGraphicsThumbGroup::AddRef(thumbnail);
+//  obj->Thumbnail = ptGraphicsThumbGroup::AddRef(thumbnail);
   m_Data->insert(obj->key, obj);
 
   //
@@ -168,7 +168,7 @@ ptGraphicsThumbGroup* ptThumbnailCache::RequestThumbnail(const ptThumbnailCacheK
 void ptThumbnailCache::RemoveThumbnail(const ptThumbnailCacheKey key) {
   ptThumbnailCacheObject* obj = m_Data->take(key);
   if (obj) {
-    ptGraphicsThumbGroup::RemoveRef(obj->Thumbnail);
+//    ptGraphicsThumbGroup::RemoveRef(obj->Thumbnail);
     delete obj;
   }
 }

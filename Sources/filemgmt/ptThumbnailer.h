@@ -67,13 +67,6 @@ public:
   /*! Sets the cache for thumbnail objects. */
   void setCache(ptThumbnailCache* cache);
 
-  /*! Sets the directory for thumbnail generation.
-    Returns the total number of applicable entries in that directory.
-    Returns \c -1 and does not set the directory if the thumbnailer is
-    currently running.
-  */
-  int setDir(const QString dir);
-
   /*! Sets the list where the thumbnails are written to.
       Note that the buffer is taken as is, i.e. it is not cleared by the
       thumbnailer.
@@ -90,8 +83,6 @@ private:
 
   bool                            m_AbortRequested;
   ptThumbnailCache*               m_Cache;
-  QDir*                           m_Dir;
-  bool                            m_IsMyComputer;
   QList<ptGraphicsThumbGroup*>*   m_ThumbList;
 
 
