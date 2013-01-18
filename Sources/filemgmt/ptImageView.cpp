@@ -33,7 +33,6 @@
 #include "../ptImage8.h"
 #include "ptImageView.h"
 #include "ptFileMgrWindow.h"
-#include "ptGraphicsSceneEmitter.h"
 
 //==============================================================================
 
@@ -42,9 +41,13 @@ extern ptTheme*     Theme;
 
 //==============================================================================
 
-ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
-  QGraphicsView(parent),
+ptImageView::ptImageView(QWidget            *AParent,
+                         ptFileMgrDM        *ADataModule,
+                         ptThumbGroupEvents *AEventHandler) :
+  QGraphicsView(AParent),
   // constants
+  m_DataModule(ADataModule),
+  FEventHandler(AEventHandler),
   MinZoom(0.05),
   MaxZoom(4.0),
   m_ResizeEventTimer(),
@@ -52,12 +55,10 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   FCurrentImage(),
   FImage(nullptr)
 {
-  assert(parent     != NULL);
-  assert(DataModule != NULL);
+  assert(AParent     != NULL);
+  assert(ADataModule != NULL);
   assert(Theme      != NULL);
   assert(Settings   != NULL);
-
-  m_DataModule = DataModule;
 
   ZoomFactors << MinZoom << 0.08 << 0.10 << 0.15 << 0.20 << 0.25 << 0.33 << 0.50 << 0.66 << 1.00
               << 1.50 << 2.00 << 3.00 << MaxZoom;
@@ -67,7 +68,7 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   this->setFocusPolicy(Qt::NoFocus);
 
   // Layout to always fill the complete image pane with ViewWindow
-  m_parentLayout = new QGridLayout(parent);
+  m_parentLayout = new QGridLayout(AParent);
   m_parentLayout->setContentsMargins(9,9,9,9);
   m_parentLayout->setSpacing(0);
   m_parentLayout->addWidget(this);
@@ -190,7 +191,9 @@ void ptImageView::mouseReleaseEvent(QMouseEvent* event) {
 
 void ptImageView::mouseDoubleClickEvent(QMouseEvent* event) {
   event->accept();
-  ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, FCurrentImage.FileName);
+  if (FEventHandler) {
+    FEventHandler->thumbnailAction(tnaLoadImage, FCurrentImage.FileName);
+  }
 }
 
 //==============================================================================
@@ -278,8 +281,8 @@ void ptImageView::zoomOut() {
 
 //==============================================================================
 
-void ptImageView::getImage(const ptThumbId AThumbId,
-                           ptThumbPtr      AImage)
+void ptImageView::thumbnail(const ptThumbId AThumbId,
+                            ptThumbPtr      AImage)
 {
   // Check if it is the image we requested
   if (!AThumbId.isEqual(FNextImage))
@@ -381,8 +384,7 @@ void ptImageView::ResizeTimerExpired() {
 void ptImageView::showEvent(QShowEvent* event) {
   QGraphicsView::showEvent(event);
 
-  connect(ptFileMgrDM::GetInstance()->getThumbDM(), SIGNAL(thumbnail(ptThumbId, ptThumbPtr)),
-          this,                                     SLOT(  getImage( ptThumbId, ptThumbPtr)));
+  ptFileMgrDM::GetInstance()->getThumbDM()->addThumbReciever(this);
 
   if (!FNextImage.FileName.isEmpty()) {
     ShowImage(FNextImage.FileName);
@@ -393,7 +395,7 @@ void ptImageView::showEvent(QShowEvent* event) {
 
 void ptImageView::hideEvent(QHideEvent*)
 {
-  disconnect(ptFileMgrDM::GetInstance()->getThumbDM(), 0, this, 0);
+  ptFileMgrDM::GetInstance()->getThumbDM()->removeThumbReciever(this);
 }
 
 //==============================================================================

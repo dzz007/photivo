@@ -21,16 +21,18 @@
 *******************************************************************************/
 
 #include <memory>
+#include <cstdio>
 #include <QMutex>
+#include <QString>
 
 #include "ptLock.h"
-#include "ptInfo.h"
 
 //==============================================================================
 
 struct ptLockData {
   ptLockType              Type;
   std::shared_ptr<QMutex> Lock;
+  QString                 Name;
 };
 // The QMutex is in a shared pointer, to have someone, who cares for construction
 // and destruction.
@@ -38,8 +40,12 @@ struct ptLockData {
 //==============================================================================
 
 const std::vector<ptLockData> ptLock::FLockData = {
-  {ptLockType::ThumbCache, std::make_shared<QMutex>(QMutex::NonRecursive)},
-  {ptLockType::ThumbQueue, std::make_shared<QMutex>(QMutex::NonRecursive)}
+  {ptLockType::ThumbCache,   std::make_shared<QMutex>(QMutex::NonRecursive), "Cache"},
+  {ptLockType::ThumbQueue,   std::make_shared<QMutex>(QMutex::NonRecursive), "Queue"},
+  {ptLockType::ThumbDisplay, std::make_shared<QMutex>(QMutex::NonRecursive), "Display"},
+  {ptLockType::TracCounter,  std::make_shared<QMutex>(QMutex::NonRecursive), "Trac"},
+  {ptLockType::ThumbLayout,  std::make_shared<QMutex>(QMutex::NonRecursive), "Layout"},
+  {ptLockType::ThumbGen,     std::make_shared<QMutex>(QMutex::NonRecursive), "ThumbGen"}
 };
 
 //==============================================================================
@@ -50,6 +56,7 @@ ptLock::ptLock(const ptLockType ALockType) :
 {
   WorkOnCurrentType([&](ptLockData ALockData){
     (ALockData.Lock)->lock();
+    printf("Lock %s\n", ALockData.Name.toAscii().data());
   });
 }
 
@@ -60,6 +67,7 @@ ptLock::~ptLock()
   WorkOnCurrentType([&](ptLockData ALockData){
     if (!FUnlocked) {
       (ALockData.Lock)->unlock();
+      printf("UnLock %s\n\n", ALockData.Name.toAscii().data());
     }
   });
 }
@@ -71,6 +79,7 @@ void ptLock::unlock()
   WorkOnCurrentType([&](ptLockData ALockData){
     if (!FUnlocked) {
       (ALockData.Lock)->unlock();
+      printf("UnLock %s\n\n", ALockData.Name.toAscii().data());
       FUnlocked = true;
     }
   });
@@ -88,7 +97,8 @@ void ptLock::WorkOnCurrentType(std::function<void(ptLockData &)> AFunction)
     }
   }
   // We only get here, if we haven't found the type...
-  GInfo->Raise("Type was not found in FLockData.", AT);
+  printf("Type was not found in FLockData.");
+  throw;
 }
 
 //==============================================================================

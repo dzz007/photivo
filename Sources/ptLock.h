@@ -30,7 +30,12 @@
 
 //==============================================================================
 
-enum class ptLockType {ThumbCache, ThumbQueue};
+enum class ptLockType {ThumbCache,
+                       ThumbQueue,
+                       ThumbDisplay,
+                       TracCounter,
+                       ThumbLayout,
+                       ThumbGen};
 
 //==============================================================================
 

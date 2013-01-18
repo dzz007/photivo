@@ -26,6 +26,7 @@
 
 //==============================================================================
 
+#include <vector>
 #include <QWidget>
 #include <QGraphicsScene>
 
@@ -40,21 +41,25 @@
 #include "ptImageView.h"
 #include "ptPathBar.h"
 #include "ptTagList.h"
+#include "ptThumbDefines.h"
 
 //==============================================================================
 
-class ptImage8;
+class  ptImage8;
+struct ptThumbGroupData;
 
 //==============================================================================
 
-class ptFileMgrWindow: public QWidget, private Ui::ptFileMgrWindow {
+class ptFileMgrWindow: public  QWidget,
+                       public  ptThumbGroupEvents,
+                       public  ptThumbReciever,
+                       private Ui::ptFileMgrWindow {
 Q_OBJECT
 
 public:
   /*! Creates a \c ptFileMgrWindow instance.
     \param parent
-      The file manager’s parent window.
-  */
+      The file manager’s parent window.  */
   explicit ptFileMgrWindow(QWidget* parent = 0);
 
   /*! Destroys a \c ptFileMgrWindow instance. */
@@ -67,16 +72,27 @@ public:
     \param fsoType
       Only relevant on Windows to indicate if the folder is “My Computer”. If that is
       the case, set to \c fsoRoot. Then \c path will be ignored and no thumbnails
-      displayed. Do \b not use as a general flag to prevent thumbnail display!
-  */
+      displayed. Do \b not use as a general flag to prevent thumbnail display! */
   void DisplayThumbnails(QString path = "", ptFSOType fsoType = fsoDir);
 
   /*! Updates the file manager’s visual appearance.
-      Call this once every time Photivo’s theme changes.
-  */
+      Call this once every time Photivo’s theme changes. */
   void UpdateTheme();
 
 
+  /*! Implementation of the event handler interface for the thumbnails.*/
+  virtual void thumbnailAction(const ptThumbnailAction AAction,
+                               const QString           AFilename);
+
+  /*! Implementation of the event handler interface for the thumbnails.*/
+  virtual void currentThumbnail(const QString AFilename);
+
+  /*! Implementation of the event handler interface for the thumbnails.*/
+  virtual bool focusChanged();
+
+  /*! Implementation of the thumb reciever interface.*/
+  virtual void thumbnail(const ptThumbId AThumbId,
+                         ptThumbPtr      AImage);
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
   bool eventFilter(QObject* obj, QEvent* event);
@@ -92,6 +108,7 @@ private:
   void LayoutAll();
   void setLayouter(const ptThumbnailLayout layout);
   void ConstructContextMenu();
+  bool generateThumbGroups(const QString &APath);
 
   ptFileMgrDM*            m_DataModel;
   QGraphicsScene*         m_FilesScene;
@@ -101,9 +118,11 @@ private:
   ptTagList*              m_TagList;      // bookmarks in sidebar
   ptTagList*              m_TagMenuList;  // bookmarks in popup menu
   QMenu*                  m_TagMenu;
-  int                     m_ThumbCount;
   int                     m_ThumbListIdx;
   ptImageView*            m_ImageView;
+
+  std::vector<ptThumbGroupData> FThumbGroupData;
+  QString                       FCurrentThumb;
 
   // context menu actions
   QAction*      ac_VerticalThumbs;
@@ -116,9 +135,6 @@ private:
   QAction*      ac_CloseFileMgr;
   QAction*      ac_SaveThumb;
 
-
-public slots:
-
 private slots:
   void bookmarkCurrentDir();
   void bookmarkDataChanged(QStandardItem*);
@@ -128,10 +144,8 @@ private slots:
   void changeDir(const QString& path);
   void closeWindow();
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
-  void fetchNewImages(ptGraphicsThumbGroup* group, ptImage8* pix);
-  void fetchNewThumbs(const bool isLast);
   void on_m_BookmarkButton_clicked();
-  void thumbFocusChanged();
+  bool thumbFocusChanged();
   void saveThumbnail();
 
   // context menu slots
@@ -141,7 +155,6 @@ private slots:
   void toggleDirThumbs();
   void toggleSidebar();
   void toggleImageView();
-
 
 signals:
   void FileMgrWindowClosed();

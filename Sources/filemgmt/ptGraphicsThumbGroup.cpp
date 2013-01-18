@@ -28,51 +28,26 @@
 #include "../ptSettings.h"
 #include "../ptImage8.h"
 #include "ptGraphicsThumbGroup.h"
-#include "ptGraphicsSceneEmitter.h"
 
 extern ptSettings* Settings;
 extern ptTheme* Theme;
 
 //==============================================================================
 
-/*static*/
-ptGraphicsThumbGroup* ptGraphicsThumbGroup::AddRef(ptGraphicsThumbGroup* group /*== NULL*/) {
-  if (group == NULL) {
-    return new ptGraphicsThumbGroup;
-  } else {
-    group->m_RefCount++;
-    return group;
-  }
-}
-
-//==============================================================================
-
-/*static*/
-int ptGraphicsThumbGroup::RemoveRef(ptGraphicsThumbGroup* group) {
-  int result = --group->m_RefCount;
-
-  if (group->m_RefCount == 0) {
-    delete group;
-    group = NULL;
-  }
-  return result;
-}
-
-//==============================================================================
-
-ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
-: QGraphicsRectItem(parent),
+ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem      *AParent       /*= nullptr*/,
+                                           ptThumbGroupEvents *AEventHandler /*= nullptr*/)
+: QGraphicsRectItem(AParent),
+  FEventHandler(AEventHandler),
   m_Brush(Qt::SolidPattern),
   m_hasHover(false),
-  m_Pen(Qt::DashLine)
+  m_Pen(Qt::DashLine),
+  FImage(nullptr)
 {
   m_FSOType = fsoUnknown;
   m_FullPath = "";
-//  m_Pixmap = NULL;
   m_ImgTypeText = NULL;
   m_InfoText = NULL;
-  m_RefCount = 1;
-  m_Thumbnail = NULL;
+  m_Pixmap = NULL;
 
   setFlags(QGraphicsItem::ItemIsFocusable);
   setAcceptHoverEvents(true);
@@ -82,12 +57,12 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
 
   m_Pen.setCosmetic(true);
   SetupPenAndBrush();
+  m_ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
 }
 
 //==============================================================================
 
 ptGraphicsThumbGroup::~ptGraphicsThumbGroup() {
-  DelAndNull(m_Thumbnail);
 }
 
 //==============================================================================
@@ -142,48 +117,34 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
                 0,
                 ThumbSize + InnerPadding*2,
                 ThumbSize + InnerPadding*3 + m_InfoText->boundingRect().height());
+
+  if (m_FSOType == fsoParentDir || m_FSOType == fsoDir) {
+    std::shared_ptr<ptImage8> thumbImage = std::make_shared<ptImage8>();
+    if (m_FSOType == fsoParentDir) {
+      // we have a parent directory (dirs are not cached!)
+      thumbImage->FromQImage(QImage(QString::fromUtf8(":/dark/icons/go-up-48px.png")));
+    } else if (m_FSOType == fsoDir) {
+      // we have a subdirectory (dirs are not cached!)
+      thumbImage->FromQImage(QImage(QString::fromUtf8(":/dark/icons/folder-48px.png")));
+    }
+    addImage(thumbImage);
+  }
 }
 
 //==============================================================================
 
-void ptGraphicsThumbGroup::addImage(ptImage8* image) {
-  assert(NULL != image);
+void ptGraphicsThumbGroup::addImage(ptThumbPtr AImage) {
+  if (!AImage) {
+    return;
+  }
 
-  qreal ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
-//  if (m_Thumbnail) {
-//    delete m_Thumbnail;
-//  }
-//  m_Thumbnail = new ptImage8();
-//  m_Thumbnail->Set(image);
-  m_Thumbnail = image;
+  FImage = AImage;
 
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
-  m_ThumbPos.setX(ThumbSize/2 - image->m_Width/2  + InnerPadding + 0.5);
-  m_ThumbPos.setY(ThumbSize/2 - image->m_Height/2 + InnerPadding + 0.5);
+  m_ThumbPos.setX(m_ThumbSize/2 - FImage->m_Width/2  + InnerPadding + 0.5);
+  m_ThumbPos.setY(m_ThumbSize/2 - FImage->m_Height/2 + InnerPadding + 0.5);
   this->update();
-
-/*
-  When working with QPixmap/QPixmapItem Photivo hangs on Linux as soon as the
-  pixmap item is parented to the group and the thumbnail cache is full. Why?
-  Very good question! As a workaround we keep the QImage from the thumbnailer
-  and paint it manually in the paint() method, see below.
-*/
-
-//  qreal ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
-//  if (!m_Pixmap) {
-//    m_Pixmap = new QGraphicsPixmapItem();
-//    m_Pixmap->setZValue(-1);
-//  }
-//  m_Pixmap->setPixmap(QPixmap::fromImage(*image));
-
-//  // center pixmap in the cell if it is not square
-//  // the +2 offset is for the hover border
-//  m_Pixmap->setPos(ThumbSize/2 - image->width()/2  + InnerPadding + 0.5,
-//                   ThumbSize/2 - image->height()/2 + InnerPadding + 0.5);
-
-//  m_Pixmap->setParentItem(this);
-//  DelAndNull(image);
 }
 
 //==============================================================================
@@ -215,8 +176,14 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
 
     case QEvent::GraphicsSceneMouseRelease: {
       // set focus, FM window takes care of showing image in the viewer if necessary
-      this->setFocus(Qt::MouseFocusReason);
-      ptGraphicsSceneEmitter::EmitFocusChanged();
+      setFocus(Qt::MouseFocusReason);
+      if (FEventHandler) {
+        if (m_FSOType == fsoFile) {
+          FEventHandler->thumbnailAction(tnaViewImage, m_FullPath);
+          FEventHandler->currentThumbnail(m_FullPath);
+        }
+        FEventHandler->focusChanged();
+      }
       return true;
     }
 
@@ -231,8 +198,13 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
 
   case QEvent::GraphicsSceneContextMenu: {
       // We set the focus but we don't accept the event
-      this->setFocus(Qt::MouseFocusReason);
-      ptGraphicsSceneEmitter::EmitFocusChanged();
+      setFocus(Qt::MouseFocusReason);
+      if (FEventHandler) {
+        if (m_FSOType == fsoFile) {
+          FEventHandler->currentThumbnail(m_FullPath);
+        }
+        FEventHandler->focusChanged();
+      }
     }
 
     default:
@@ -249,10 +221,10 @@ void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsIt
   painter->setPen(m_Pen);
   painter->setBrush(m_Brush);
   painter->drawRoundedRect(this->rect(), 5, 5);
-  if (m_Thumbnail) {
-    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), QImage((const uchar*) m_Thumbnail->m_Image,
-                                                                             m_Thumbnail->m_Width,
-                                                                             m_Thumbnail->m_Height,
+  if (FImage) {
+    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), QImage((const uchar*) FImage->m_Image,
+                                                                             FImage->m_Width,
+                                                                             FImage->m_Height,
                                                                              QImage::Format_ARGB32));
   }
 }
@@ -270,11 +242,11 @@ QFont ptGraphicsThumbGroup::font() const {
 //==============================================================================
 
 void ptGraphicsThumbGroup::exec() {
-  if (m_InfoText) {
+  if (m_InfoText && FEventHandler) {
     if (m_FSOType == fsoFile) {
-      ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
+      FEventHandler->thumbnailAction(tnaLoadImage, m_FullPath);
     } else {
-      ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
+      FEventHandler->thumbnailAction(tnaChangeDir, m_FullPath);
     }
   }
 }

@@ -29,6 +29,8 @@
 #include "ptFileMgrConstants.h"
 
 extern ptSettings* Settings;
+extern QStringList FileExtsRaw;
+extern QStringList FileExtsBitmap;
 
 //==============================================================================
 
@@ -57,30 +59,22 @@ void ptFileMgrDM::DestroyInstance() {
 
 ptFileMgrDM::ptFileMgrDM() :
   QObject(),
-  FThumbDM(nullptr) // init of unique_ptr!
+  FThumbDM(nullptr), // init of unique_ptr!
+  FIsMyComputer(false)
 {
   m_DirModel    = new ptSingleDirModel;
   m_TagModel    = new ptTagModel;
 
-  // Init stuff for thumbnail generation
-  m_ThumbList   = new QList<ptGraphicsThumbGroup*>;
-  m_Thumbnailer = new ptThumbnailer();
-  m_Thumbnailer->setThumbList(m_ThumbList);
-
-  // Init thumbnail cache
-  m_Cache = new ptThumbnailCache(1000);
-  m_Thumbnailer->setCache(m_Cache);
-
   m_FocusedThumb = -1;
+
+  FDir.setSorting(QDir::DirsFirst | QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
+  FDir.setNameFilters(FileExtsRaw + FileExtsBitmap);
+  FDir.setFilter(QDir::AllDirs | QDir::NoDot | QDir::Files);
 }
 
 //==============================================================================
 
 ptFileMgrDM::~ptFileMgrDM() {
-  StopThumbnailer();
-  DelAndNull(m_ThumbList);
-  DelAndNull(m_Thumbnailer);
-  DelAndNull(m_Cache);
   DelAndNull(m_DirModel);
   DelAndNull(m_TagModel);
 }
@@ -88,33 +82,6 @@ ptFileMgrDM::~ptFileMgrDM() {
 //==============================================================================
 
 void ptFileMgrDM::Clear() {
-  StopThumbnailer();
-  m_Cache->Clear();
-}
-
-//==============================================================================
-
-int ptFileMgrDM::setThumbnailDir(const QString path) {
-  m_CurrentDir = path;
-  return m_Thumbnailer->setDir(path);
-}
-
-//==============================================================================
-
-void ptFileMgrDM::StartThumbnailer() {
-#ifdef Q_OS_MAC
-  m_Thumbnailer->run();
-#else
-  m_Thumbnailer->start();
-#endif
-}
-
-//==============================================================================
-
-void ptFileMgrDM::StopThumbnailer() {
-  m_Thumbnailer->blockSignals(true);
-  m_Thumbnailer->Abort();
-  m_Thumbnailer->blockSignals(false);
 }
 
 //==============================================================================
@@ -185,6 +152,32 @@ ptThumbDM *ptFileMgrDM::getThumbDM()
 }
 
 //==============================================================================
+// Set the directory and get the list of thumbs.
+QFileInfoList ptFileMgrDM::getThumbsFileList(const QString &APath)
+{
+#ifdef Q_OS_WIN
+  FIsMyComputer = (APath == MyComputerIdString);
+#endif
+
+  if (FIsMyComputer) {
+    if (Settings->GetInt("FileMgrShowDirThumbs")) {
+      return FDir.drives();
+    }
+    return QFileInfoList();
+  } else {
+    FDir.setPath(APath);
+
+    QDir::Filters hFilters = QDir::Files;
+    if (Settings->GetInt("FileMgrShowDirThumbs")) {
+      hFilters = hFilters | QDir::AllDirs | QDir::NoDot;
+    }
+    FDir.setFilter(hFilters);
+
+    return FDir.entryInfoList();
+  }
+}
+
+//==============================================================================
 
 void ptFileMgrDM::GenerateThumbnail(MagickWand* AInImage, ptImage8 *AOutImage, const QSize tSize)
 {
@@ -239,20 +232,19 @@ void ptFileMgrDM::ScaleThumbSize(QSize* tSize, const int max) {
 
 //==============================================================================
 
-ptGraphicsThumbGroup* ptFileMgrDM::MoveFocus(const int index) {
+void ptFileMgrDM::MoveFocus(const int index) {
   m_FocusedThumb = index;
-  return m_ThumbList->at(index);
 }
 
 //==============================================================================
 
 int ptFileMgrDM::focusedThumb(QGraphicsItem* group) {
-  for (int i = 0; i < m_ThumbList->count(); i++) {
-    if (m_ThumbList->at(i) == group) {
-      m_FocusedThumb = i;
-      return i;
-    }
-  }
+//  for (int i = 0; i < m_ThumbList->count(); i++) {
+//    if (m_ThumbList->at(i) == group) {
+//      m_FocusedThumb = i;
+//      return i;
+//    }
+//  }
   m_FocusedThumb = -1;
   return -1;
 }

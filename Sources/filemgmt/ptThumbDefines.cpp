@@ -34,9 +34,12 @@ ptThumbId::ptThumbId() :
 
 //==============================================================================
 
-ptThumbId::ptThumbId(QString AFileName, uint16_t AMaxSize) :
+ptThumbId::ptThumbId(const QString        &AFileName,
+                     const uint16_t        AMaxSize,
+                     ptGraphicsThumbGroup *AThumbGroup) :
   FileName(AFileName),
-  MaxSize(AMaxSize)
+  MaxSize(AMaxSize),
+  ThumbGroup(AThumbGroup)
 {
 }
 
@@ -44,8 +47,9 @@ ptThumbId::ptThumbId(QString AFileName, uint16_t AMaxSize) :
 
 void ptThumbId::init()
 {
-  FileName = "";
-  MaxSize  = 0;
+  FileName   = "";
+  MaxSize    = 0;
+  ThumbGroup = nullptr;
 }
 
 //==============================================================================

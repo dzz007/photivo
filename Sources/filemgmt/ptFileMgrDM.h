@@ -32,11 +32,11 @@
 #include <QGraphicsItemGroup>
 #include <QList>
 #include <QHash>
+#include <QDir>
+#include <QFileInfoList>
 
 #include <wand/magick_wand.h>
 
-#include "ptThumbnailer.h"
-#include "ptThumbnailCache.h"
 #include "ptThumbDM.h"
 #include "ptGraphicsThumbGroup.h"
 #include "ptSingleDirModel.h"
@@ -80,40 +80,14 @@ public:
   int focusedThumb() { return m_FocusedThumb; }
   int focusedThumb(QGraphicsItem* group);
 
-  ptGraphicsThumbGroup* MoveFocus(const int index);
+  void MoveFocus(const int index);
 
   /*! Sets the folder for thumbnail display. Does not trigger the thumbnailer.
       You probably need this only once to init the folder. */
   void setCurrentDir(const QString absolutePath) { m_CurrentDir = absolutePath; }
 
-  /*! Sets the directory for thumbnail generation.
-    Returns the total number of applicable entries in that directory.
-    Returns \c -1 and does not set the directory if the thumbnailer is
-    currently running.
-    \param path
-      Sets the directory for thumbnail generation. Must be an absolute path.
-  */
-  int setThumbnailDir(const QString path);
-
-  /*! Starts image thumbnail generation. */
-  void StartThumbnailer();
-
-  /*! Aborts a running thumbnailer thread.
-    Calling this function when the thumbnailer is not currently running
-    does not do any harm. The function will then essentially do nothing.
-  */
-  void StopThumbnailer();
-
   /*! Returns a pointer to the tag model. */
   ptTagModel* tagModel() { return m_TagModel; }
-
-  /*! Returns a pointer to the thumbnailer.
-      Use this to connect to the thumbnailer’s \c newThumbsNotify signal
-  */
-  ptThumbnailer* thumbnailer() const { return m_Thumbnailer; }
-
-  /*! Returns a pointer to the list of currently displayed thumbnail images. */
-  QList<ptGraphicsThumbGroup*>* thumbList() { return m_ThumbList; }
 
   /*! Returns a pointer to the thumbnail.*/
   bool getThumbnail(ptImage8     *&AImage,
@@ -121,6 +95,9 @@ public:
                     const int      AMaxSize);
 
   ptThumbDM* getThumbDM();
+
+  /*! Get list of all thumbs. */
+  QFileInfoList getThumbsFileList(const QString &APath);
 private:
   static ptFileMgrDM* m_Instance;
 
@@ -133,13 +110,12 @@ private:
   void ScaleThumbSize(QSize* tSize, const int max);
 
   int                           m_FocusedThumb;
-  ptThumbnailCache*             m_Cache;
   QString                       m_CurrentDir;
   ptSingleDirModel*             m_DirModel;
   ptTagModel*                   m_TagModel;
-  ptThumbnailer*                m_Thumbnailer;
-  QList<ptGraphicsThumbGroup*>* m_ThumbList;
   std::unique_ptr<ptThumbDM>    FThumbDM;
+  QDir                          FDir;
+  bool                          FIsMyComputer;
 };
 
 //==============================================================================
