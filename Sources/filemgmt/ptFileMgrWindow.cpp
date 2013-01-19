@@ -841,8 +841,10 @@ void ptFileMgrWindow::thumbnail(const ptThumbId AThumbId, ptThumbPtr AImage)
       hData.ThumbGroup->addImage(AImage);
       m_Progressbar->setValue(m_Progressbar->value() + 1);
       if (m_Progressbar->value() == m_Progressbar->maximum()) {
+        setUpdatesEnabled(false);
         m_PathContainer->show();
         m_Progressbar->hide();
+        setUpdatesEnabled(true);
       }
       return;
     }

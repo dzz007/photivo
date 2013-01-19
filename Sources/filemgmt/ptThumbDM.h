@@ -27,7 +27,6 @@
 
 #include <deque>
 #include <QObject>
-#include <QTimer>
 
 #include "ptThumbDefines.h"
 #include "ptThumbCache.h"
@@ -56,10 +55,10 @@ public:
 
   void addThumbReciever(   ptThumbReciever *AReciever);
   void removeThumbReciever(ptThumbReciever *AReciever);
-signals:
-  void startAsync();
-
     
+signals:
+  void restart();
+
 private slots:
   void finishedThumbGen();
   void startThumbGen();
@@ -78,7 +77,6 @@ private:
   bool                         FAsync;
   bool                         FThreadRunning;
   std::deque<ptThumbReciever*> FThumbReciever;
-  QTimer                       FRestartTimer;
 
   void distributeThumbnail(const ptThumbData AThumbData);
 };
