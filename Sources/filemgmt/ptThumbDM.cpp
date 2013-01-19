@@ -34,15 +34,10 @@ ptThumbDM::ptThumbDM() :
   FNeededThumbs(),
   FAsync(true),
   FThreadRunning(false),
-  FThumbReciever(),
-  FRestartTimer()
+  FThumbReciever()
 {
-  connect(&FThumbGen, SIGNAL(finished()),   this, SLOT(finishedThumbGen()));
-//  connect(this,       SIGNAL(startAsync()), this, SLOT(startThumbGen()));
-
-  FRestartTimer.setSingleShot(true);
-  FRestartTimer.setInterval(5);
-  connect(&FRestartTimer, SIGNAL(timeout()), this, SLOT(startThumbGen()));
+  connect(&FThumbGen, SIGNAL(finished()), this, SLOT(finishedThumbGen()), Qt::QueuedConnection);
+  connect(this,       SIGNAL(restart()),  this, SLOT(startThumbGen()),    Qt::QueuedConnection);
 }
 
 //==============================================================================
@@ -57,9 +52,6 @@ ptThumbDM::~ptThumbDM()
 // Otherwise we generate it.
 void ptThumbDM::orderThumb(const ptThumbId AThumbId, const bool ACacheThumb)
 {
-//  return;
-//  if (AThumbId.MaxSize > 0) return;
-
   ptThumbData hThumb;
   hThumb.init();
   hThumb.Id = AThumbId;
@@ -82,7 +74,7 @@ void ptThumbDM::orderThumb(const ptThumbId AThumbId, const bool ACacheThumb)
       }
       hLock.unlock();
     }
-    FRestartTimer.start();
+    emit restart();
   }
 }
 
@@ -138,7 +130,7 @@ void ptThumbDM::removeThumbReciever(ptThumbReciever *AReciever)
 // We distribute the new thumb and we insert it into the cache, if needed.
 void ptThumbDM::finishedThumbGen()
 {
-  printf("begin finished\n");
+  printf("finished\n");
   ptThumbData hThumb;
   hThumb.init();
 
@@ -151,7 +143,7 @@ void ptThumbDM::finishedThumbGen()
   ptLock hThreadLock(ptLockType::ThumbGen);
   FThreadRunning = false;
   hThreadLock.unlock();
-  FRestartTimer.start();
+  emit restart();
 }
 
 //==============================================================================

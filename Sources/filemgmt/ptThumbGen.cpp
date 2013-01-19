@@ -69,6 +69,7 @@ ptThumbPtr ptThumbGen::getThumbnail() const
 void ptThumbGen::run()
 {
   generateThumb(FCurrentThumb);
+  printf("thread done\n");
 }
 
 //==============================================================================
@@ -110,14 +111,13 @@ void ptThumbGen::generateThumb(const ptThumbId AThumbId)
     // error occurred: no raw thumbnail, no supported image type, any other GM error
     printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
     DestroyMagickWand(image);
-    GInfo->Raise("Bähh");
+    GInfo->Raise("Image could not be read");
     // FThumbnail.get()->FromQImage(QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png")));
     return;
   } else {
     // no error: scale and rotate thumbnail
     TransformImage(image, FThumbnail.get(), hSize);
     DestroyMagickWand(image);
-    printf("Thread done \n");
     return;
   }
 }

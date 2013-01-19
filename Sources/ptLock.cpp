@@ -56,7 +56,7 @@ ptLock::ptLock(const ptLockType ALockType) :
 {
   WorkOnCurrentType([&](ptLockData ALockData){
     (ALockData.Lock)->lock();
-    printf("Lock %s\n", ALockData.Name.toAscii().data());
+    //printf("Lock %s\n", ALockData.Name.toAscii().data());
   });
 }
 
@@ -67,7 +67,7 @@ ptLock::~ptLock()
   WorkOnCurrentType([&](ptLockData ALockData){
     if (!FUnlocked) {
       (ALockData.Lock)->unlock();
-      printf("UnLock %s\n\n", ALockData.Name.toAscii().data());
+      //printf("UnLock %s\n\n", ALockData.Name.toAscii().data());
     }
   });
 }
@@ -79,7 +79,7 @@ void ptLock::unlock()
   WorkOnCurrentType([&](ptLockData ALockData){
     if (!FUnlocked) {
       (ALockData.Lock)->unlock();
-      printf("UnLock %s\n\n", ALockData.Name.toAscii().data());
+      //printf("UnLock %s\n\n", ALockData.Name.toAscii().data());
       FUnlocked = true;
     }
   });
