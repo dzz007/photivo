@@ -398,10 +398,32 @@ void SegfaultAbort(int) {
 }
 
 int main(int Argc, char *Argv[]) {
+#ifdef Q_OS_WIN
+  // On Windows you can either always or never get a console window. I.e. you either get an annoying
+  // additional window or no console output even when Photivo was started from an existing console.
+  // The following takes care of that problem by trying to attach to the parent process’s console.
+  // On success we have a console window to output to. If not no additional window appears.
+  if (AttachConsole(ATTACH_PARENT_PROCESS)) {
+    // Attaching succeeded. Reopen output streams to be able to write to the parent’s console.
+    freopen("CONOUT$", "wb", stdout);
+    freopen("CONOUT$", "wb", stderr);
+    // Done. printf, cout, cerr now use the attached console.
+  }
+#endif
+
   int RV = photivoMain(Argc,Argv);
   DestroyMagick();
   DelAndNull(SegfaultErrorBox);
   CleanupResources(); // Not necessary , for debug.
+
+#ifdef Q_OS_WIN
+  // Close output channels to a possibly attached console and detach from it.
+  // Not sure if this is strictly necessary, but it does not hurt either.
+  fclose(stdout);
+  fclose(stderr);
+  FreeConsole();
+#endif
+
   return RV;
 }
 #endif
