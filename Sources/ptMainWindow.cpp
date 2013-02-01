@@ -649,7 +649,7 @@ ptMainWindow::ptMainWindow(const QString Title)
     SwitchUIState(uisProcessing);
   }
 #else
-  SwitchUIMode(uisProcessing);
+  SwitchUIState(uisProcessing);
   findChild<ptGroupBox *>(QString("TabFileMgrSettings"))->setVisible(0);
 #endif
 }
