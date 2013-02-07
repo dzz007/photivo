@@ -95,8 +95,12 @@ def ptCheckGCCVersion(BuildEnv,MinVersion):
     return False;
   if (ptCCVersion[1] < ptMinVersion[1] or ptCXXVersion[1] < ptMinVersion[1]):
     return False;
-  if (ptCCVersion[2] < ptMinVersion[2] or ptCXXVersion[2] < ptMinVersion[2]):
-    return False;
+  # Some report 4.7 for 4.7.2
+  try:
+    if (ptCCVersion[2] < ptMinVersion[2] or ptCXXVersion[2] < ptMinVersion[2]):
+      return False;
+  except IndexError:
+    pass
   return True;
 
 ################################################################################
