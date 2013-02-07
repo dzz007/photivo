@@ -157,6 +157,16 @@ exec open(ptBuildConfFile, 'rU').read() in {}, ptBuildValues
 # A default environment to start from.
 ptDefaultEnv  = Environment()
 
+# Do we have CC and CXX ?
+if (ptDefaultEnv['CC'] == None) :
+  print ptBoldRed + 'CC not defined' + ptNoAttrs
+  print ptBoldRed + 'Giving up' + ptNoAttrs
+  Exit(1)
+if (ptDefaultEnv['CXX'] == None) :
+  print ptBoldRed + 'CXX not defined' + ptNoAttrs
+  print ptBoldRed + 'Giving up' + ptNoAttrs
+  Exit(1)
+
 # For later reference. The unaltered one.
 ptDefaultEnv['PT_DEFAULT_PATH'] = ptDefaultEnv['ENV']['PATH']
 
@@ -552,7 +562,6 @@ if ptDefaultEnv['PT_WITH_SYSTEMCIMG']:
 # FileMgr
 if not ptDefaultEnv['PT_WITH_FILEMGR']:
   ptConf.env.Append(CPPDEFINES = ['-DPT_WITHOUT_FILEMGR'])
-
 
 # XXX CHECKME.
 if ptDefaultEnv['PT_TARGET_PLATFORM'] == 'win32':
