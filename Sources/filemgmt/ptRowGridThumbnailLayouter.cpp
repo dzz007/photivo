@@ -62,7 +62,6 @@ void ptRowGridThumbnailLayouter::Init(const int thumbCount, const QFont& font) {
        m_View->style()->pixelMetric(QStyle::PM_ScrollBarExtent))
     { // empty space on the right is not wide enough for scrollbar
       m_ThumbMetrics.MaxCol--;
-      printf("Blubb\n");
       FullHeight = qCeil((qreal)thumbCount / (qreal)(m_ThumbMetrics.MaxCol)) *
                    m_ThumbMetrics.CellHeight;
     }
