@@ -8,6 +8,8 @@
     <y>0</y>
     <width>1029</width>
     <height>875</height>
+    <width>1039</width>
+    <height>885</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,7 +19,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>photivo</string>
+   <string>Photivo</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../qrc/photivo.qrc">
@@ -339,7 +341,7 @@
                           <enum>QTabWidget::West</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>7</number>
+                          <number>1</number>
                          </property>
                          <property name="iconSize">
                           <size>
@@ -1179,6 +1181,59 @@
                                     </spacer>
                                    </item>
                                   </layout>
+                                 </widget>
+                                </widget>
+                               </item>
+                              </layout>
+                             </widget>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                         <widget class="QWidget" name="LocalTab">
+                          <attribute name="title">
+                           <string>Local Edit</string>
+                          </attribute>
+                          <layout class="QVBoxLayout" name="verticalLayout_279">
+                           <item>
+                            <widget class="QScrollArea" name="scrollArea_11">
+                             <property name="frameShape">
+                              <enum>QFrame::NoFrame</enum>
+                             </property>
+                             <property name="frameShadow">
+                              <enum>QFrame::Plain</enum>
+                             </property>
+                             <property name="widgetResizable">
+                              <bool>true</bool>
+                             </property>
+                             <widget class="QWidget" name="scrollAreaWidgetContents_9">
+                              <property name="geometry">
+                               <rect>
+                                <x>0</x>
+                                <y>0</y>
+                                <width>445</width>
+                                <height>589</height>
+                               </rect>
+                              </property>
+                              <layout class="QVBoxLayout" name="verticalLayout_280">
+                               <item>
+                                <widget class="QToolBox" name="toolBox">
+                                 <property name="currentIndex">
+                                  <number>0</number>
+                                 </property>
+                                 <widget class="QWidget" name="TabLocalAdjust">
+                                  <property name="geometry">
+                                   <rect>
+                                    <x>0</x>
+                                    <y>0</y>
+                                    <width>427</width>
+                                    <height>544</height>
+                                   </rect>
+                                  </property>
+                                  <attribute name="label">
+                                   <string notr="true">ef42f985-8686-42e6-b15d-9bc8dffdcde3</string>
+                                  </attribute>
+                                  <layout class="QVBoxLayout" name="verticalLayout_282"/>
                                  </widget>
                                 </widget>
                                </item>

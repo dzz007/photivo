@@ -2,9 +2,9 @@
 ##
 ## Photivo
 ##
-## Copyright (C) 2008,2009 Jos De Laender
-## Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
-## Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
+## Copyright (C) 2008-2009 Jos De Laender
+## Copyright (C) 2009-2012 Michael Munzert <mail@mm-log.com>
+## Copyright (C) 2011-2012 Bernd Schoeler <brother.john@photivo.org>
 ##
 ## This file is part of Photivo.
 ##
@@ -126,8 +126,8 @@ LIBS += \
     $$system(pkg-config --libs-only-l lqr-1) \
     -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
-RELEASE_SPECIFIC = -O3 -funroll-loops -ftree-vectorize -fopenmp
-DEBUG_SPECIFIC   = -O0 -g
+RELEASE_SPECIFIC = -funroll-loops -ftree-vectorize -fopenmp
+DEBUG_SPECIFIC   = -g -Wno-unknown-pragmas
 COMMON_FLAGS = \
     $$system(pkg-config --cflags-only-I lqr-1) \
     -DAPPVERSION=\'$${APPVERSION}\' \
@@ -135,6 +135,10 @@ COMMON_FLAGS = \
 
 !contains(QMAKE_HOST.arch, x86_64) {
   COMMON_FLAGS+=-march=i686
+}
+
+contains(LIBS, -llcms) {
+  LIBS -= -llcms
 }
 
 QMAKE_CFLAGS_RELEASE   += $${COMMON_FLAGS} $${RELEASE_SPECIFIC}
@@ -208,8 +212,8 @@ HEADERS += \
     ../Sources/ptHistogramWindow.h \
     ../Sources/ptImage.h \
     ../Sources/ptImage8.h \
+    ../Sources/ptAbstractInteraction.h \
     ../Sources/ptImageHelper.h \
-    ../Sources/ptImageInteraction.h \
     ../Sources/ptInfo.h \
     ../Sources/ptInput.h \
     ../Sources/ptKernel.h \
@@ -226,7 +230,6 @@ HEADERS += \
     ../Sources/ptSettings.h \
     ../Sources/ptSimpleRectInteraction.h \
     ../Sources/ptSlider.h \
-    ../Sources/ptTempFile.h \
     ../Sources/ptTempFilterBase.h \
     ../Sources/ptTheme.h \
     ../Sources/ptToolBox.h \
@@ -238,6 +241,18 @@ HEADERS += \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
     ../Sources/qtsingleapplication/qtsingleapplication.h \
+    ../Sources/filters/imagespot/ptFilter_SpotTuning.h \
+    ../Sources/filters/imagespot/ptImageSpot.h \
+    ../Sources/filters/imagespot/ptImageSpotEditor.h \
+    ../Sources/filters/imagespot/ptImageSpotItemDelegate.h \
+    ../Sources/filters/imagespot/ptImageSpotModel.h \
+    ../Sources/filters/imagespot/ptTuningSpot.h \
+#    ../Sources/filters/imagespot/ptRepairInteraction.h \
+#    ../Sources/filters/imagespot/ptRepairSpot.h \
+    ../Sources/filters/imagespot/ptSpotInteraction.h \
+    ../Sources/filters/imagespot/ptSpotListWidget.h \
+    ../Sources/ptTempFile.h \
+    ../Sources/filters/ptStorable.h \
     ../Sources/filters/ptFilter_ColorIntensity.h \
     ../Sources/filters/ptFilter_Brightness.h \
     ../Sources/filters/ptFilter_ReinhardBrighten.h \
@@ -250,6 +265,7 @@ HEADERS += \
     ../Sources/filters/ptFilter_Saturation.h \
     ../Sources/filters/ptFilter_ColorBoost.h \
     ../Sources/filters/ptFilter_Tone.h \
+    ../Sources/filters/imagespot/ptImageSpotList.h \
     ../Sources/batch/ptJobListItem.h \
     ../Sources/batch/ptBatchWindow.h \
     ../Sources/batch/ptJobListModel.h \
@@ -319,8 +335,8 @@ SOURCES += \
     ../Sources/ptImage_Lqr.cpp \
     ../Sources/ptImage_Pyramid.cpp \
     ../Sources/ptImage8.cpp \
+    ../Sources/ptAbstractInteraction.cpp \
     ../Sources/ptImageHelper.cpp \
-    ../Sources/ptImageInteraction.cpp \
     ../Sources/ptInfo.cpp \
     ../Sources/ptInput.cpp \
     ../Sources/ptKernel.cpp \
@@ -338,7 +354,6 @@ SOURCES += \
     ../Sources/ptSettings.cpp \
     ../Sources/ptSimpleRectInteraction.cpp \
     ../Sources/ptSlider.cpp \
-    ../Sources/ptTempFile.cpp \
     ../Sources/ptTempFilterBase.cpp \
     ../Sources/ptTheme.cpp \
     ../Sources/ptToolBox.cpp \
@@ -362,6 +377,18 @@ SOURCES += \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
     ../Sources/vcd/vcd_interpolate.c \
+    ../Sources/filters/imagespot/ptFilter_SpotTuning.cpp \
+    ../Sources/filters/imagespot/ptImageSpot.cpp \
+    ../Sources/filters/imagespot/ptImageSpotEditor.cpp \
+    ../Sources/filters/imagespot/ptImageSpotItemDelegate.cpp \
+    ../Sources/filters/imagespot/ptImageSpotModel.cpp \
+    ../Sources/filters/imagespot/ptTuningSpot.cpp \
+#    ../Sources/filters/imagespot/ptRepairInteraction.cpp \
+#    ../Sources/filters/imagespot/ptRepairSpot.cpp \
+    ../Sources/filters/imagespot/ptSpotInteraction.cpp \
+    ../Sources/filters/imagespot/ptSpotListWidget.cpp \
+    ../Sources/ptTempFile.cpp \
+    ../Sources/filters/imagespot/ptImageSpotList.cpp \
     ../Sources/filters/ptFilter_ColorIntensity.cpp \
     ../Sources/filters/ptFilter_Brightness.cpp \
     ../Sources/filters/ptFilter_ReinhardBrighten.cpp \
@@ -386,9 +413,11 @@ SOURCES += \
 
 FORMS += \
     ../Sources/filemgmt/ptFileMgrWindow.ui \
-    ../Sources/filters/ptFilter_Outline.ui \
-    ../Sources/filters/ptFilter_Wiener.ui \
     ../Sources/ptMainWindow.ui \
+    ../Sources/filters/ptFilter_Wiener.ui \
+    ../Sources/filters/ptFilter_Outline.ui \
+    ../Sources/filters/imagespot/ptFilter_SpotTuning.ui \
+    ../Sources/filters/imagespot/ptSpotListWidget.ui \
     ../Sources/filters/ptFilter_ColorIntensity.ui \
     ../Sources/filters/ptFilter_LMHRecovery.ui \
     ../Sources/filters/ptFilter_Tone.ui \

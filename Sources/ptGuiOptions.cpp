@@ -35,6 +35,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+const ptGuiOptionsItem ptGuiOptions::LocalAdjustMode[] = {
+  {lamFloodFill,    QObject::tr("Flood fill") },
+  {lamSearch,       QObject::tr("Search") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::ZoomLevel[] = {
   {ptZoomLevel_Current, QObject::tr("Current") },
   {ptZoomLevel_Fit,     QObject::tr("Zoom fit") },
@@ -512,6 +517,8 @@ const ptGuiOptionsItem ptGuiOptions::ViewLAB[] = {
   {ptViewLAB_L_Grad,      QObject::tr("Structure on L") },
   {ptViewLAB_A,           QObject::tr("A") },
   {ptViewLAB_B,           QObject::tr("B") },
+  {ptViewLAB_C,           QObject::tr("C") },
+  {ptViewLAB_H,           QObject::tr("H") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::SaveFormat[] = {
@@ -530,16 +537,17 @@ const ptGuiOptionsItem ptGuiOptions::SaveSampling[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::OutputMode[] = {
-  {ptOutputMode_Full,      QObject::tr("Full size")    },
-  {ptOutputMode_Pipe,      QObject::tr("Pipe size")    },
-  {ptOutputMode_Jobfile,   QObject::tr("Only jobfile")    },
+  {ptOutputMode_Full,         QObject::tr("Full size")     },
+  {ptOutputMode_Pipe,         QObject::tr("Pipe size")     },
+  {ptOutputMode_Jobfile,      QObject::tr("Only jobfile")  },
   {ptOutputMode_Settingsfile, QObject::tr("Only settings") },
+  {ptOutputMode_Batch,        QObject::tr("Send to batch") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::ResetMode[] = {
-  {ptResetMode_Full,         QObject::tr("Neutral reset")    },
+  {ptResetMode_Full,         QObject::tr("Neutral reset") },
   {ptResetMode_User,         QObject::tr("User reset")    },
-  {ptResetMode_OpenPreset,   QObject::tr("Open preset")    },
+  {ptResetMode_OpenPreset,   QObject::tr("Open preset")   },
   {ptResetMode_OpenSettings, QObject::tr("Open settings") },
   {-1,NULL}};
 
@@ -552,5 +560,10 @@ const ptGuiOptionsItem ptGuiOptions::BadPixels[] = {
   {0, QObject::tr("None")   },
   {1, QObject::tr("Load one")   },
   {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::SpotRepair[] = {
+  {SpotRepairAlgo_Clone,     QObject::tr("Clone")},
+  {SpotRepairAlgo_Heal,      QObject::tr("Heal (Dummy)")},
+  {-1, NULL}};
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -263,7 +263,7 @@ void ptCimgEdgeTensors(ptImage* Image,
                        const double    Blur,
                        const short     MaskType) {
 
-  int NumberOfThreads = 1;
+  constexpr int NumberOfThreads = 1;
 
   uint16_t FullWidth  = Image->m_Width;
   uint16_t Width  = (int) ((double)Image->m_Width/(double)NumberOfThreads+0.5);

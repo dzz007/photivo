@@ -79,7 +79,7 @@ CONFIG(WithCurves) {
   SUBDIRS += ptCreateCurvesProject
   BUILD_CURVES=yes
 }
-!CONFIG(WithoutGimp) {
+CONFIG(WithGimp) {
   SUBDIRS += ptGimpProject
   BUILD_GIMP=yes
 }

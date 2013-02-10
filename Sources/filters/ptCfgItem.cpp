@@ -100,7 +100,7 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCurve &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(true),
-  Storeable(false),
+  Storeable(false),  // Curves have an extra default store
   Caption(AValues.Caption),
   Curve(AValues.Curve)
 {

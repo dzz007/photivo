@@ -67,32 +67,47 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
   // store default TFilterConfig from FCfgItems list
   for (ptCfgItem hSetting: FCfgItems) {
     if (hSetting.Storeable) {
-      auto hVariant = FConfig->getValue(hSetting.Id);
+      APreset->setValue(hSetting.Id, makeStorageFriendly(FConfig->getValue(hSetting.Id)));
+    }
+  }
 
-      // Convert bool to int because that is more robust in a preset file
-      if (hVariant.type() == QVariant::Bool)
-        hVariant.convert(QVariant::Int);
+  // store additional custom config lists (e.g. used for curve anchors)
+  // First find out if the available stores should go into the config file
+  QStringList hStorableStores;
+  for (QString hId: FConfig->simpleStoreIds()) {
+    hStorableStores.append(hId);
+  }
 
-      APreset->setValue(hSetting.Id, hVariant);
+  // save list of store names and stores’ contents
+  if (!hStorableStores.isEmpty()) {
+    APreset->setValue(CCustomStores, hStorableStores);
+
+    for (QString hId: hStorableStores) {
+      TConfigStore *hList = FConfig->getSimpleStore(hId);
+      APreset->beginGroup(hId);
+      for (auto hItem = hList->constBegin(); hItem != hList->constEnd(); ++hItem) {
+        APreset->setValue(hItem.key(), makeStorageFriendly(hItem.value()));
+      }
+      APreset->endGroup();
     }
   }
 
   // store additional custom config lists (e.g. used for curve anchors)
   QStringList hStoreIds = FConfig->storeIds();
   if (!hStoreIds.isEmpty()) {
-    APreset->setValue(CCustomStores, FConfig->storeIds());
-    for (QString hId: FConfig->storeIds()) {
-      TConfigStore *hList = FConfig->getStore(hId);
-      APreset->beginGroup(hId);
-      for (auto hItem = hList->constBegin(); hItem != hList->constEnd(); ++hItem) {
-        APreset->setValue(hItem.key(), hItem.value());
+    for (QString hId: hStoreIds) {
+      ptStorable* hStore = FConfig->getStore(hId);
+      if (!hStore) continue;
+      TConfigStore hList = hStore->storeConfig(hId+"/");
+
+      for (auto hItem = hList.constBegin(); hItem != hList.constEnd(); ++hItem) {
+        APreset->setValue(hItem.key(), makeStorageFriendly(hItem.value()));
       }
-      APreset->endGroup();
     }
   }
 
   if (AIncludeFlags) {
-    APreset->setValue(CIsBlocked, (int)FIsBlocked);
+    APreset->setValue(CIsBlocked, makeStorageFriendly(FIsBlocked));
   }
 
   doExportCustomConfig(APreset, AIncludeFlags);
@@ -118,15 +133,26 @@ void ptFilterBase::importPreset(QSettings *APreset, const bool ARequestPipeRun /
   // *** custom stores *** //
   // Read list of store names, create and fill each one
   for (QString hId: APreset->value(CCustomStores).toStringList()) {
-    TConfigStore *hList = FConfig->getStore(hId);
+    TConfigStore *hList = FConfig->getSimpleStore(hId);
     if (!hList)
-      hList = FConfig->newStore(hId);
+      hList = FConfig->newSimpleStore(hId);
 
     APreset->beginGroup(hId);
     for (QString hKey: APreset->allKeys()) {
       hList->insert(hKey, APreset->value(hKey));  // read one store item from preset
     }
     APreset->endGroup();
+  }
+
+  // *** complex stores ***
+  for (QString hStoreId: FConfig->storeIds()) {
+    APreset->beginGroup(hStoreId);
+    TConfigStore hConfig;
+    for (QString hKey: APreset->allKeys()) {
+      hConfig.insert(hStoreId+"/"+hKey, APreset->value(hKey));
+    }
+    APreset->endGroup();
+    FConfig->getStore(hStoreId)->loadConfig(hConfig, hStoreId+"/");
   }
 
   // flags and derived’s custom stuff
@@ -149,7 +175,7 @@ void ptFilterBase::reset(const bool ARequestPipeRun /*=false*/) {
   // Call the children reset method
   doReset();
 
-  FConfig->clearCustomStores();
+  FConfig->clearSimpleStores();
   createConfig();
   updateGui(ARequestPipeRun);
 }
@@ -203,7 +229,7 @@ bool ptFilterBase::setHidden(const bool AIsHidden) {
         hHiddens.append(FUniqueName);
     } else {
       hHiddens.removeAll(FUniqueName);
-    }    
+    }
     Settings->SetValue("HiddenTools", hHiddens);
 
     bool hStatusChanged = this->checkActiveChanged(true);
@@ -305,6 +331,7 @@ ptFilterBase::ptFilterBase()
 : /*QObject(),*/ptTempFilterBase(),
   FHasActiveCfg(false),
   FIsSlow(false),
+  FConfig(make_unique<ptFilterConfig>()),
   FGuiContainer(nullptr),
   FIsActive(false),
   FParentTabIdx(-1),
@@ -322,7 +349,29 @@ void ptFilterBase::internalInit() {
   checkActiveChanged();
 }
 
-//==============================================================================
+//------------------------------------------------------------------------------
+
+ptWidget *ptFilterBase::findPtWidget(const QString &AId, QWidget *AWidget) {
+  ptWidget *hWidget = AWidget->findChild<ptWidget*>(AId);
+  if (!hWidget)
+    GInfo->Raise(QString("Widget \"%1\" not found.").arg(AId),
+                 QString(FFilterName+"/"+FUniqueName+": "+AT).toAscii().data());
+  return hWidget;
+}
+
+//------------------------------------------------------------------------------
+
+QVariant ptFilterBase::makeStorageFriendly(const QVariant &AVariant) const {
+  auto hVariant = AVariant;
+
+  // Convert bool to int because that is more robust in a preset file
+  if (hVariant.type() == QVariant::Bool)
+    hVariant.convert(QVariant::Int);
+
+  return hVariant;
+}
+
+//------------------------------------------------------------------------------
 
 void ptFilterBase::connectCommonDispatch() {
   GInfo->Assert(!FGuiContainer, "The filter's ("+FFilterName+") GUI must be created first.", AT);
@@ -346,12 +395,7 @@ int ptFilterBase::cfgIdx(const QString &AId) const {
 
 void ptFilterBase::initDesignerGui(QWidget *AGuiBody) {
   for (ptCfgItem hCfgItem: FCfgItems) {
-    // find the widget for each config item
-    ptWidget *hWidget = AGuiBody->findChild<ptWidget*>(hCfgItem.Id);
-    if (!hWidget)
-      GInfo->Raise(QString("Widget \"%1\" not found.").arg(hCfgItem.Id),
-                   QString(FFilterName+"/"+FUniqueName+": "+AT).toAscii().data());
-
+    ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiBody);
     // init the widget with default values and connect signals/slots
     hWidget->init(hCfgItem);
     this->performCommonConnect(hCfgItem, hWidget);
@@ -401,7 +445,7 @@ void ptFilterBase::commonDispatch(const QString AId, const QVariant ANewValue) {
   } else if ((FCfgItems.at(hIdx).Type >= ptCfgItem::CFirstCustomType) &&
              (ANewValue.type() == QVariant::Map))
   { // item that has a custom store
-    (*FConfig->getStore(FCfgItems.at(hIdx).Id)) = ANewValue.toMap();
+    (*FConfig->getSimpleStore(FCfgItems.at(hIdx).Id)) = ANewValue.toMap();
     requestPipeRun();
   }
 }
@@ -409,7 +453,6 @@ void ptFilterBase::commonDispatch(const QString AId, const QVariant ANewValue) {
 //==============================================================================
 
 void ptFilterBase::createConfig() {
-  if (!FConfig) FConfig = make_unique<ptFilterConfig>();
   TConfigStore hDefaultStore;
 
   // NOTE: Not sure yet if buttons really need to be stored in settings.
@@ -419,7 +462,7 @@ void ptFilterBase::createConfig() {
     if (hCfgItem.Type < ptCfgItem::CFirstCustomType)
       hDefaultStore.insert(hCfgItem.Id, hCfgItem.Default);
      else
-      FConfig->newStore(hCfgItem.Id, hCfgItem.Default.toMap());
+      FConfig->newSimpleStore(hCfgItem.Id, hCfgItem.Default.toMap());
   }
 
   doAddCustomConfig(hDefaultStore);
@@ -477,7 +520,7 @@ void ptFilterBase::updateGui(const bool ARequestPipeRun /*= true*/) {
                           .arg(uniqueName(), hCfgItem.Id), AT);
 
       } else if (hCfgItem.Type >= ptCfgItem::CFirstCustomType) {
-        hWidget->setValue(*FConfig->getStore(hCfgItem.Id));
+        hWidget->setValue(*FConfig->getSimpleStore(hCfgItem.Id));
 
       } else {
         hWidget->setValue(FConfig->getValue(hCfgItem.Id));

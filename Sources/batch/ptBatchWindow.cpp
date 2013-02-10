@@ -70,6 +70,15 @@ void ptBatchWindow::UpdateTheme()
   setStyleSheet(Theme->stylesheet());
 }
 
+void ptBatchWindow::AddJobs(const QStringList &settingFiles)
+{
+  foreach (QString fileName, settingFiles)
+    m_BatchModel->AddJobToList(fileName);
+
+  BTJobList->resizeColumnsToContents();
+  m_BatchModel->AutosaveJobList();
+}
+
 //==============================================================================
 
 void ptBatchWindow::keyPressEvent(QKeyEvent *event)
@@ -112,11 +121,7 @@ void ptBatchWindow::OnAddJob()
   if (SettingsFileNames.isEmpty()) return;
 
   Settings->SetValue("RawsDirectory", QFileInfo(SettingsFileNames.first()).absolutePath());
-  foreach (QString fileName, SettingsFileNames)
-    m_BatchModel->AddJobToList(fileName);
-
-  BTJobList->resizeColumnsToContents();
-  m_BatchModel->AutosaveJobList();
+  AddJobs(SettingsFileNames);
 }
 
 //==============================================================================
@@ -160,6 +165,14 @@ void ptBatchWindow::OnAbortProcessing()
   m_WasAborted = true;
   BTRun->setEnabled(true);
   BTAbort->setEnabled(false);
+}
+
+//==============================================================================
+
+void ptBatchWindow::OnResetStatus()
+{
+  foreach (QModelIndex idx, BTJobList->selectionModel()->selectedRows())
+    m_BatchModel->JobItem(idx.row())->SetStatus(jsWaiting);
 }
 
 //==============================================================================
