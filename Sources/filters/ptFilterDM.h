@@ -129,6 +129,9 @@ public:
 
   /*! Writes a job file for batch processing. */
   bool          WriteJobFile();
+
+  /*! Saves a settings file and adds it to the batch list. */
+  bool          SendToBatch(const QString &AFileName = "");
   ///@}
 
   /*! \group Iterators

@@ -1,0 +1,251 @@
+################################################################################
+##
+## photivo
+##
+## Copyright (C) 2008-2013 Jos De Laender <jos@de-laender.be>
+##
+## This file is part of photivo.
+##
+## photivo is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License version 3
+## as published by the Free Software Foundation.
+##
+## photivo is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with photivo.  If not, see <http://www.gnu.org/licenses/>.
+##
+################################################################################
+
+import os.path
+Import('ptQtEnv')
+
+ptLocalEnv = ptQtEnv.Clone()
+
+ptLocalEnv.EnableQt4Modules(['QtGui','QtCore','QtNetwork'])
+
+ptForms  = Glob('*.ui')
+ptForms += Glob('*/*.ui')
+ptForms += Glob('*/*/*.ui')
+
+ptLocalEnv.Uic4(ptForms)
+ptLocalEnv.Append(CPPPATH = ['.'])
+
+################################################################################
+
+# rpath addition in case qt or tools is non default.
+
+# XXX JDLA CHECKME
+if ptLocalEnv['PT_TARGET_PLATFORM'] == 'posix' :
+  ptQtBin =  os.path.join(str(ptLocalEnv['QT4DIR']),'bin')
+  if not ptQtBin in ptLocalEnv['PT_DEFAULT_PATH']:
+    ptLocalEnv.Append(LINKFLAGS = ['-Wl,-rpath',ptLocalEnv['QT4_LIBPATH']])
+  if not ptLocalEnv['PT_TOOLS_DIR'] in ptLocalEnv['PT_DEFAULT_PATH']:
+    # TODO Currently roughly ok for linux. The libname needs 'variation'
+    ptCommand = ptLocalEnv['CC'] + ' --print-file-name=libstdc++.so'
+    ptLibStdc     = os.path.normpath(os.popen(ptCommand).read().rstrip())
+    ptLibStdcPath = os.path.dirname(ptLibStdc)
+    ptLocalEnv.Append(LINKFLAGS = ['-Wl,-rpath',ptLibStdcPath])
+
+
+################################################################################
+
+# Summary
+
+ptLogFile        = ptLocalEnv['PT_LOGFILE']
+ptVerboseConfig  = ptLocalEnv['PT_VERBOSECONFIG']
+
+ptDoPrint = False
+if ptVerboseConfig:
+  ptDoPrint = True
+
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,'Summary for Sources/SConscript')
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'QT4_BINPATH          : ' + str(ptLocalEnv['QT4_BINPATH']))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'QT4_LIBPATH          : ' + str(ptLocalEnv['QT4_LIBPATH']))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'QT4_MOC              : ' + str(ptLocalEnv['QT4_MOC']))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'QT4_UIC              : ' + str(ptLocalEnv['QT4_UIC']))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'QT4_RCC              : ' + str(ptLocalEnv['QT4_RCC']))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'CPPFLAGS             : ' + str(ptLocalEnv.get('CPPFLAGS')))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'CPPPATH              : ' + str(ptLocalEnv.get('CPPPATH')))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'CPPDEFINES           : ' + str(ptLocalEnv.get('CPPDEFINES')))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'CCFLAGS              : ' + str(ptLocalEnv.get('CCFLAGS')))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'CXXFLAGS             : ' + str(ptLocalEnv.get('CXXFLAGS')))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'LINKFLAGS            : ' + str(ptLocalEnv.get('LINKFLAGS')))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'LIBS                 : ' + str(ptLocalEnv.get('LIBS')))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+           'LIBPATH              : ' + str(ptLocalEnv.get('LIBPATH')))
+
+
+################################################################################
+
+# Fixed, not generated sources.
+# Currently this is cut/paste from photivoProject.pro.
+# Alternatively it can be generated from it (if some IDE would generate).
+# Or some intelligent Globbing can be done, in case not to many noise files
+# are in.
+
+# Check with Mike. Not 'standalone' but included I believe : 
+# ptSources += ['dcb/dcb_demosaicing.c']
+# ptSources += ['perfectraw/lmmse_interpolate.c']
+# ptSources += ['rawtherapee/amaze_interpolate.c']
+# ptSources += ['rawtherapee/ca_correct.c']
+# ptSources += ['rawtherapee/cfa_line_dn.c']
+# ptSources += ['rawtherapee/green_equil.c']
+# ptSources += ['vcd/ahd_interpolate_mod.c']
+# ptSources += ['vcd/ahd_partial_interpolate.c']
+# ptSources += ['vcd/es_median_filter.c']
+# ptSources += ['vcd/median_filter_new.c']
+# ptSources += ['vcd/refinement.c']
+# ptSources += ['vcd/vcd_interpolate.c']
+# ptSources += ['qtsingleapplication/qtlockedfile.cpp']
+# ptSources += ['qtsingleapplication/qtlockedfile_unix.cpp']
+# ptSources += ['qtsingleapplication/qtlockedfile_win.cpp']
+
+ptSources =  []
+ptSources += ['filemgmt/ptColumnGridThumbnailLayouter.cpp']
+ptSources += ['filemgmt/ptFileMgrDM.cpp']
+ptSources += ['filemgmt/ptFileMgrWindow.cpp']
+ptSources += ['filemgmt/ptGraphicsSceneEmitter.cpp']
+ptSources += ['filemgmt/ptGraphicsThumbGroup.cpp']
+ptSources += ['filemgmt/ptGridThumbnailLayouter.cpp']
+ptSources += ['filemgmt/ptImageView.cpp']
+ptSources += ['filemgmt/ptPathBar.cpp']
+ptSources += ['filemgmt/ptRowGridThumbnailLayouter.cpp']
+ptSources += ['filemgmt/ptSingleDirModel.cpp']
+ptSources += ['filemgmt/ptTagList.cpp']
+ptSources += ['filemgmt/ptTagModel.cpp']
+ptSources += ['filemgmt/ptThumbnailCache.cpp']
+ptSources += ['filemgmt/ptThumbnailer.cpp']
+ptSources += ['filters/ptCfgItem.cpp']
+ptSources += ['filters/ptFilter_ABCurves.cpp']
+ptSources += ['filters/ptFilter_ColorContrast.cpp']
+ptSources += ['filters/ptFilter_DetailCurve.cpp']
+ptSources += ['filters/ptFilter_GammaTool.cpp']
+ptSources += ['filters/ptFilter_Highlights.cpp']
+ptSources += ['filters/ptFilter_LumaDenoiseCurve.cpp']
+ptSources += ['filters/ptFilter_LumaSatAdjust.cpp']
+ptSources += ['filters/ptFilter_Outline.cpp']
+ptSources += ['filters/ptFilter_SatCurve.cpp']
+ptSources += ['filters/ptFilter_ShadowsHighlights.cpp']
+ptSources += ['filters/ptFilter_SigContrast.cpp']
+ptSources += ['filters/ptFilter_StdCurve.cpp']
+ptSources += ['filters/ptFilter_ToneAdjust.cpp']
+ptSources += ['filters/ptFilter_Wiener.cpp']
+ptSources += ['filters/ptFilterBase.cpp']
+ptSources += ['filters/ptFilterConfig.cpp']
+ptSources += ['filters/ptFilterDM.cpp']
+ptSources += ['filters/ptFilterFactory.cpp']
+ptSources += ['ptCalloc.cpp']
+ptSources += ['ptChannelMixer.cpp']
+ptSources += ['ptCheck.cpp']
+ptSources += ['ptChoice.cpp']
+ptSources += ['ptCimg.cpp']
+ptSources += ['ptConfirmRequest.cpp']
+ptSources += ['ptCurve.cpp']
+ptSources += ['ptCurveWindow.cpp']
+ptSources += ['ptDcRaw.cpp']
+ptSources += ['ptError.cpp']
+ptSources += ['ptFastBilateral.cpp']
+ptSources += ['ptGridInteraction.cpp']
+ptSources += ['ptGroupBox.cpp']
+ptSources += ['ptGuiOptions.cpp']
+ptSources += ['ptHistogramWindow.cpp']
+ptSources += ['ptImage.cpp']
+ptSources += ['ptImage_Cimg.cpp']
+ptSources += ['ptImage_DRC.cpp']
+ptSources += ['ptImage_EAW.cpp']
+ptSources += ['ptImage_GM.cpp']
+ptSources += ['ptImage_GMC.cpp']
+ptSources += ['ptImage_Lensfun.cpp']
+ptSources += ['ptImage_Lqr.cpp']
+ptSources += ['ptImage_Pyramid.cpp']
+ptSources += ['ptImage8.cpp']
+ptSources += ['ptAbstractInteraction.cpp']
+ptSources += ['ptImageHelper.cpp']
+ptSources += ['ptInfo.cpp']
+ptSources += ['ptInput.cpp']
+ptSources += ['ptKernel.cpp']
+ptSources += ['ptLensfun.cpp']
+ptSources += ['ptLineInteraction.cpp']
+ptSources += ['ptMain.cpp']
+ptSources += ['ptMainWindow.cpp']
+ptSources += ['ptMessageBox.cpp']
+ptSources += ['ptParseCli.cpp']
+ptSources += ['ptProcessor.cpp']
+ptSources += ['ptReportOverlay.cpp']
+ptSources += ['ptResizeFilters.cpp']
+ptSources += ['ptRGBTemperature.cpp']
+ptSources += ['ptRichRectInteraction.cpp']
+ptSources += ['ptSettings.cpp']
+ptSources += ['ptSimpleRectInteraction.cpp']
+ptSources += ['ptSlider.cpp']
+ptSources += ['ptTempFilterBase.cpp']
+ptSources += ['ptTheme.cpp']
+ptSources += ['ptToolBox.cpp']
+ptSources += ['ptViewWindow.cpp']
+ptSources += ['ptVisibleToolsView.cpp']
+ptSources += ['ptWhiteBalances.cpp']
+ptSources += ['ptWidget.cpp']
+ptSources += ['ptWiener.cpp']
+ptSources += ['qtsingleapplication/qtlocalpeer.cpp']
+ptSources += ['qtsingleapplication/qtsingleapplication.cpp']
+ptSources += ['filters/imagespot/ptFilter_SpotTuning.cpp']
+ptSources += ['filters/imagespot/ptImageSpot.cpp']
+ptSources += ['filters/imagespot/ptImageSpotEditor.cpp']
+ptSources += ['filters/imagespot/ptImageSpotItemDelegate.cpp']
+ptSources += ['filters/imagespot/ptImageSpotModel.cpp']
+ptSources += ['filters/imagespot/ptTuningSpot.cpp']
+#ptSources += ['filters/imagespot/ptRepairInteraction.cpp']
+#ptSources += ['filters/imagespot/ptRepairSpot.cpp']
+ptSources += ['filters/imagespot/ptSpotInteraction.cpp']
+ptSources += ['filters/imagespot/ptSpotListWidget.cpp']
+ptSources += ['ptTempFile.cpp']
+ptSources += ['filters/imagespot/ptImageSpotList.cpp']
+ptSources += ['filters/ptFilter_ColorIntensity.cpp']
+ptSources += ['filters/ptFilter_Brightness.cpp']
+ptSources += ['filters/ptFilter_ReinhardBrighten.cpp']
+ptSources += ['filters/ptFilter_Normalization.cpp']
+ptSources += ['filters/ptFilter_ColorEnhancement.cpp']
+ptSources += ['filters/ptFilter_Levels.cpp']
+ptSources += ['filters/ptFilter_LMHRecovery.cpp']
+ptSources += ['filters/ptFilter_Drc.cpp']
+ptSources += ['filters/ptFilter_LabTransform.cpp']
+ptSources += ['filters/ptFilter_Saturation.cpp']
+ptSources += ['filters/ptFilter_ColorBoost.cpp']
+ptSources += ['filters/ptFilter_Tone.cpp']
+ptSources += ['batch/ptJobListItem.cpp']
+ptSources += ['batch/ptBatchWindow.cpp']
+ptSources += ['batch/ptJobListModel.cpp']
+
+# TODO Check me. This is now outside build dir.
+# Maybe some copy action first or so ...
+ptSources += [ptLocalEnv.GetLaunchDir() + '/qrc/photivo.qrc']
+
+################################################################################
+
+ptObj = [ptLocalEnv.Object(i) for i in [ptSources]]
+
+ptPhotivo = ptLocalEnv.Program('photivo',ptObj)
+ptClear   = ptLocalEnv.Program('ptClear',['ptClear.cpp'])
+
+# Dependency via ptEmu.qrc and that is not scanned. XXX TODO REFINE
+# TODO Depends(photivo,Glob('Icons/*'))
+
+ptLocalEnv.Install(ptLocalEnv.GetLaunchDir(),[ptPhotivo,ptClear])
+
+################################################################################

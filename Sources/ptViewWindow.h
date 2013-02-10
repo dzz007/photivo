@@ -20,39 +20,59 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-/**
-** Displays the preview image and manages all interactions that happen directly
-** on the image itself, e.g. zoom, crop, spot repair
-**
-** - Create ptMainWindow and the global ptTheme BEFORE you create ptViewWindow.
+/*!
+  \class ptViewWindow
+
+  \brief Displays the preview image and manages all interactions that happen directly
+    on the image itself, e.g. zoom, crop, spot repair.
+
+  Usage notes:
+
+  The global instances of ptMainWindow and ptTheme must be created BEFORE
+  creating the global ptViewWindow instance.
+
+  Consider ptViewWindow to be a singleton. DO NOT create additional instances.
+
+  Current horizontal scale factor: this->transform().m11();
+  Current vertical scale factor: this->transform().m22();
+  Because we do not change aspect ratio both factors are always the same.
+  Use FZoomFactor whenever possible and m11() otherwise.
 **/
+
 #ifndef PTVIEWWINDOW_H
 #define PTVIEWWINDOW_H
+
+//==============================================================================
+
+#include <functional>
 
 #include <QLine>
 #include <QMenu>
 #include <QGraphicsView>
 
-#include "ptImage.h"
 #include "ptMainWindow.h"
 #include "ptReportOverlay.h"
 #include "ptLineInteraction.h"
 #include "ptSimpleRectInteraction.h"
 #include "ptRichRectInteraction.h"
 #include "ptGridInteraction.h"
+#include "filters/imagespot/ptSpotInteraction.h"
+#include "filters/imagespot/ptRepairInteraction.h"
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// Custom types used in ViewWindow
-//
-///////////////////////////////////////////////////////////////////////////
+// forward for faster compilation
+class ptImage;
+
+//==============================================================================
 
 enum ptInteraction {
-  iaNone       = 0,
-  iaCrop       = 1,
-  iaSelectRect = 2, // simple rectangle selection: e.g. for spot WB
-  iaDrawLine   = 3  // draw a single straight line: e.g. for rotate angle
+  iaNone        = 0,
+  iaCrop        = 1,
+  iaSelectRect  = 2,  // simple rectangle selection: e.g. for spot WB
+  iaDrawLine    = 3,  // draw a single straight line: e.g. for rotate angle
+  iaSpotRepair  = 4,
+  iaSpotTuning  = 5
 };
 
 enum ptPixelReading {
@@ -61,12 +81,8 @@ enum ptPixelReading {
   prPreview = 2
 };
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptViewWindow
-//
-///////////////////////////////////////////////////////////////////////////
 class ptViewWindow : public QGraphicsView {
 Q_OBJECT
 
@@ -74,9 +90,9 @@ public:
   ptViewWindow(QWidget* Parent, ptMainWindow* mainWin);
   ~ptViewWindow();
 
-  inline ptInteraction interaction() const { return m_Interaction; }
-  inline int zoomPercent() { return qRound(m_ZoomFactor * 100); }
-  inline float zoomFactor() const { return m_ZoomFactor; }
+  inline ptInteraction interaction() const { return FInteraction; }
+  inline int zoomPercent() { return qRound(FZoomFactor * 100); }
+  inline float zoomFactor() const { return FZoomFactor; }
 
   // Save (and later restore) current zoom settings. Takes care of
   // everything incl. ptSettings. RestoreZoom() also updates the
@@ -95,17 +111,23 @@ public:
   void StartLine();
   void StartSimpleRect(void (*CB_SimpleRect)(const ptStatus, QRect));
   void StartCrop();
-  ptRichRectInteraction* crop() const { return m_Crop; }
+  void StartLocalAdjust(std::function<void()> ACleanupFunc);
+
+  ptRichRectInteraction *crop() const { return FCrop; }
+  ptSpotInteraction     *spotTuning() const { return FSpotTuning; }
+  ptRepairInteraction   *spotRepair() const { return FSpotRepair; }
 
   void setGrid(const short enabled, const uint linesX, const uint linesY);
   void UpdateImage(const ptImage* relatedImage);
   void ZoomTo(float factor);  // 1.0 means 100%
-  int ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
+  int  ZoomToFit(const short withMsg = 1);  // fit complete image into viewport
   void ZoomStep(int direction);
 
-  ptPixelReading isPixelReading() const { return m_PixelReading; }
+  ptPixelReading isPixelReading() const { return FPixelReading; }
   void SetPixelReader(void (*PixelReader)(const QPointF Point, const ptPixelReading PixelReading))
-    { m_PixelReader = PixelReader; }
+    { FPixelReader = PixelReader; }
+
+//------------------------------------------------------------------------------
 
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
@@ -122,66 +144,79 @@ protected:
   void wheelEvent(QWheelEvent* event);
   void leaveEvent(QEvent*);
 
+//------------------------------------------------------------------------------
+
 private:
-  const float MinZoom;
-  const float MaxZoom;
-  QList<float> ZoomFactors;   // steps for wheel zoom
+  // Determine how/if visible image area can be moved with the mouse.
+  // Default is dragging the image, alternatively Ctrl+Drag depending on current interaction
+  bool isImgDragging();
 
-  short m_CtrlIsPressed;
-  ptLineInteraction* m_DrawLine;
-  ptSimpleRectInteraction* m_SelectRect;
-  ptRichRectInteraction* m_Crop;
-  ptGridInteraction* m_Grid;
-  ptInteraction m_Interaction;
-  bool  m_LeftMousePressed;
-  void (*m_CB_SimpleRect)(const ptStatus, QRect);
-  short m_ZoomIsSaved;
-  float m_ZoomFactor;
-  float m_ZoomFactorSav;
-  short m_ZoomModeSav;
-  ptPixelReading m_PixelReading;
-  QTimer* m_PReadTimer;
+  const float   MinZoom;
+  const float   MaxZoom;
+  QList<float>  ZoomFactors;   // steps for wheel zoom
 
-  QGraphicsPixmapItem* m_8bitImageItem;
-  QLine* m_DragDelta;
-  QGraphicsScene* m_ImageScene;
-  ptReportOverlay* m_StatusOverlay;
-  ptReportOverlay* m_ZoomSizeOverlay;
+  short                     FCtrlIsPressed;
+  bool                      FInteractionHasMousePress;
+  ptAbstractInteraction     *FCurrentInteraction;  // for easy basic access to current interaction
+  ptLineInteraction         *FDrawLine;
+  ptSpotInteraction         *FSpotTuning;
+  ptSimpleRectInteraction   *FSelectRect;
+  ptRichRectInteraction     *FCrop;
+  ptGridInteraction         *FGrid;
+  ptRepairInteraction       *FSpotRepair;
+  ptInteraction             FInteraction;
+  bool                      FLeftMousePressed;
+  void (*FCB_SimpleRect)(const ptStatus, QRect);
+  std::function<void()>     FSpotTuningCleanupFunc;
+  short                     FZoomIsSaved;
+  float                     FZoomFactor;
+  float                     FZoomFactorSav;
+  short                     FZoomModeSav;
+  ptPixelReading            FPixelReading;
+  QTimer                    *FPReadTimer;
+
+  QGraphicsPixmapItem       *F8bitImageItem;
+  QLine                     *FDragDelta;
+  QGraphicsScene            *FImageScene;
+  ptReportOverlay           *FStatusOverlay;
+  ptReportOverlay           *FZoomSizeOverlay;
 
   // context menu stuff
-  void ConstructContextMenu();
-  QAction* ac_ZoomFit;
-  QAction* ac_Zoom100;
-  QAction* ac_ZoomIn;
-  QAction* ac_ZoomOut;
-  QAction* ac_Mode_RGB;
-  QAction* ac_Mode_Structure;
-  QAction* ac_Mode_L;
-  QAction* ac_Mode_A;
-  QAction* ac_Mode_B;
-  QAction* ac_Mode_Gradient;
-  QAction* ac_PRead_None;
-  QAction* ac_PRead_Linear;
-  QAction* ac_PRead_Preview;
-  QAction* ac_Clip_Indicate;
-  QAction* ac_Clip_Over;
-  QAction* ac_Clip_Under;
-  QAction* ac_Clip_R;
-  QAction* ac_Clip_G;
-  QAction* ac_Clip_B;
-  QAction* ac_SensorClip;
-  QAction* ac_SensorClipSep;
-  QAction* ac_ShowTools;
-  QAction* ac_ShowZoomBar;
-  QAction* ac_OpenFileMgr;
+  void          ConstructContextMenu();
+  QAction       *ac_ZoomFit;
+  QAction       *ac_Zoom100;
+  QAction       *ac_ZoomIn;
+  QAction       *ac_ZoomOut;
+  QAction       *ac_Mode_RGB;
+  QAction       *ac_Mode_Structure;
+  QAction       *ac_Mode_L;
+  QAction       *ac_Mode_A;
+  QAction       *ac_Mode_B;
+  QAction       *ac_Mode_Gradient;
+  QAction       *ac_PRead_None;
+  QAction       *ac_PRead_Linear;
+  QAction       *ac_PRead_Preview;
+  QAction       *ac_Clip_Indicate;
+  QAction       *ac_Clip_Over;
+  QAction       *ac_Clip_Under;
+  QAction       *ac_Clip_R;
+  QAction       *ac_Clip_G;
+  QAction       *ac_Clip_B;
+  QAction       *ac_SensorClip;
+  QAction       *ac_SensorClipSep;
+  QAction       *ac_ShowTools;
+  QAction       *ac_ShowZoomBar;
+  QAction       *ac_OpenFileMgr;
   QAction* ac_OpenBatch;
-  QAction* ac_Fullscreen;
-  QActionGroup* ac_ModeGroup;
-  QActionGroup* ac_PReadGroup;
+  QAction       *ac_Fullscreen;
+  QActionGroup  *ac_ModeGroup;
+  QActionGroup  *ac_PReadGroup;
 
-  ptMainWindow* MainWindow;
+  ptMainWindow  *FMainWindow;
 
-  void (*m_PixelReader)(const QPointF Point, const ptPixelReading PixelReading);
+  void (*FPixelReader)(const QPointF Point, const ptPixelReading PixelReading);
+
+//------------------------------------------------------------------------------
 
 private slots:
   void finishInteraction(ptStatus ExitStatus);
@@ -206,12 +241,14 @@ private slots:
   void Menu_OpenBatch();
   void Menu_PixelReading();
 
+//------------------------------------------------------------------------------
+
 signals:
   void keyChanged(QKeyEvent* event);
   void mouseChanged(QMouseEvent* event);
   void openFileMgr();
   void openBatch();
 
-};
 
-#endif
+};
+#endif // PTVIEWWINDOW_H

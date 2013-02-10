@@ -49,15 +49,15 @@ ptFilterConfig::ptFilterConfig() {
 //==============================================================================
 
 ptFilterConfig::ptFilterConfig(const ptFilterConfig &AOther) {
-  this->FDataStore    = AOther.FDataStore;
-  this->FStoreIds     = AOther.FStoreIds;
-  this->FCustomStores = AOther.FCustomStores;
+  this->FDefaultStore    = AOther.FDefaultStore;
+  this->FSimpleStoreIds     = AOther.FSimpleStoreIds;
+  this->FSimpleStores = AOther.FSimpleStores;
 }
 
 //==============================================================================
 
 void ptFilterConfig::init(const TConfigStore &AInitData) {
-  FDataStore = AInitData;
+  FDefaultStore = AInitData;
 }
 
 //==============================================================================
@@ -66,8 +66,8 @@ void ptFilterConfig::update(const TConfigStore &AInitData) {
   // QMap::unite() is unsuitable to update an existing map with new data
   // because it creates duplicate keys. We have to use QMap::insert() manually.
   for (auto hItem = AInitData.constBegin(); hItem != AInitData.constEnd(); hItem++) {
-    if (FDataStore.contains(hItem.key())) {
-      FDataStore.insert(hItem.key(), hItem.value());
+    if (FDefaultStore.contains(hItem.key())) {
+      FDefaultStore.insert(hItem.key(), hItem.value());
     }
   }
 }
@@ -75,49 +75,71 @@ void ptFilterConfig::update(const TConfigStore &AInitData) {
 //==============================================================================
 
 QVariant ptFilterConfig::getValue(const QString &AKey) const {
-  if (!FDataStore.contains(AKey)) {
+  if (!FDefaultStore.contains(AKey)) {
     GInfo->Raise(QString("Key \"%1\" not found in FDataStore.").arg(AKey), AT);
   }
 
-  return FDataStore.value(AKey);
+  return FDefaultStore.value(AKey);
 }
 
 //==============================================================================
 
 void ptFilterConfig::setValue(const QString &AKey, const QVariant &AValue) {
-  if (!FDataStore.contains(AKey))
+  if (!FDefaultStore.contains(AKey))
     GInfo->Raise(QString("Key \"%1\" not found in FDataStore.").arg(AKey), AT);
 
-  FDataStore.insert(AKey, AValue);
+  FDefaultStore.insert(AKey, AValue);
 }
 
 //==============================================================================
 
-TConfigStore *ptFilterConfig::newStore(const QString &AId, const TConfigStore ADefaults) {
+TConfigStore *ptFilterConfig::newSimpleStore(const QString &AId, const TConfigStore ADefaults) {
+  if (FSimpleStoreIds.indexOf(AId) != -1)
+    GInfo->Raise("Id \"" + AId + "\" already defined. Must be unique!", AT);
+
+  FSimpleStoreIds.append(AId);
+  FSimpleStores.append(ADefaults);
+  return &FSimpleStores.last();
+}
+
+//==============================================================================
+
+TConfigStore *ptFilterConfig::getSimpleStore(const QString &AId) {
+  int hIdx = FSimpleStoreIds.indexOf(AId);
+
+  if (hIdx == -1)
+    return nullptr;
+  else
+    return &FSimpleStores[hIdx];
+}
+
+//==============================================================================
+
+void ptFilterConfig::clearSimpleStores() {
+  FSimpleStoreIds.clear();
+  FSimpleStores.clear();
+}
+
+//==============================================================================
+
+void ptFilterConfig::insertStore(const QString &AId, ptStorable *AStore) {
   if (FStoreIds.indexOf(AId) != -1)
     GInfo->Raise("Id \"" + AId + "\" already defined. Must be unique!", AT);
 
   FStoreIds.append(AId);
-  FCustomStores.append(ADefaults);
-  return &FCustomStores.last();
+  FStores.append(AStore);
 }
 
 //==============================================================================
 
-TConfigStore *ptFilterConfig::getStore(const QString &AId) {
+ptStorable *ptFilterConfig::getStore(const QString &AId) {
   int hIdx = FStoreIds.indexOf(AId);
 
   if (hIdx == -1)
     return nullptr;
   else
-    return &FCustomStores[hIdx];
+    return FStores[hIdx];
 }
 
 //==============================================================================
 
-void ptFilterConfig::clearCustomStores() {
-  FStoreIds.clear();
-  FCustomStores.clear();
-}
-
-//==============================================================================

@@ -359,7 +359,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : Geometry
   //
 
-  // TODO BJ: Unhide when lensfun implementation has grown far enough
+  // TODO: BJ Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
 
@@ -500,6 +500,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabGradualBlur2"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#gradual_blur");
 
+  m_ActiveTabs.append(LocalTab);
   m_ActiveTabs.append(GeometryTab);
   m_ActiveTabs.append(RGBTab);
   m_ActiveTabs.append(LabCCTab);
@@ -552,6 +553,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnSaveSettings, SIGNAL(triggered()), this, SLOT(SaveMenuSettings()));
   m_AtnSaveJobfile = new QAction(tr("Save job file"), this);
   connect(m_AtnSaveJobfile, SIGNAL(triggered()), this, SLOT(SaveMenuJobfile()));
+  m_AtnSendToBatch = new QAction(tr("Send to batch"), this);
+  connect(m_AtnSendToBatch, SIGNAL(triggered()), this, SLOT(SaveMenuBatch()));
 
   // context menu for gimp button
   m_AtnGimpSavePipe = new QAction(tr("Export current pipe"), this);
@@ -620,6 +623,7 @@ ptMainWindow::ptMainWindow(const QString Title)
           SLOT(Event0TimerExpired()));
 
   FileMgrThumbMaxRowColWidget->setEnabled(Settings->GetInt("FileMgrUseThumbMaxRowCol"));
+
   UpdateCropToolUI();
   UpdateLfunDistUI();
   UpdateLfunCAUI();
@@ -645,7 +649,7 @@ ptMainWindow::ptMainWindow(const QString Title)
     SwitchUIState(uisProcessing);
   }
 #else
-  SwitchUIMode(uisProcessing);
+  SwitchUIState(uisProcessing);
   findChild<ptGroupBox *>(QString("TabFileMgrSettings"))->setVisible(0);
 #endif
 }
@@ -682,6 +686,7 @@ void ptMainWindow::OnTranslationChoiceChanged(int idx) {
     Settings->SetValue("UiLanguage", TranslationChoice->itemText(idx));
   }
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -730,6 +735,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.addAction(m_AtnSaveFull);
       Menu.addAction(m_AtnSaveSettings);
       Menu.addAction(m_AtnSaveJobfile);
+      Menu.addAction(m_AtnSendToBatch);
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     } else if (obj == ToGimpButton) {
       QMenu Menu(NULL);
@@ -780,6 +786,9 @@ void ptMainWindow::SaveMenuSettings() {
 }
 void ptMainWindow::SaveMenuJobfile() {
   SaveOutput(ptOutputMode_Jobfile);
+}
+void ptMainWindow::SaveMenuBatch() {
+  SaveOutput(ptOutputMode_Batch);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -888,6 +897,7 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
   }
 }
 
+//==============================================================================
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -900,14 +910,15 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
 short ptMainWindow::GetCurrentTab() {
   // I opt for matching onto widget name, rather than on
   // index, as I feel that this is more robust for change.
-  if (ProcessingTabBook->currentWidget()== CameraTab) return ptCameraTab;
-  else if (ProcessingTabBook->currentWidget()== GeometryTab) return ptGeometryTab;
-  else if (ProcessingTabBook->currentWidget()== RGBTab) return ptRGBTab;
-  else if (ProcessingTabBook->currentWidget()== LabCCTab) return ptLabCCTab;
-  else if (ProcessingTabBook->currentWidget()== LabSNTab) return ptLabSNTab;
-  else if (ProcessingTabBook->currentWidget()== LabEyeCandyTab) return ptLabEyeCandyTab;
-  else if (ProcessingTabBook->currentWidget()== EyeCandyTab) return ptEyeCandyTab;
-  else if (ProcessingTabBook->currentWidget()== OutTab) return ptOutTab;
+  if      (ProcessingTabBook->currentWidget() == CameraTab) return ptCameraTab;
+  else if (ProcessingTabBook->currentWidget() == LocalTab) return ptLocalTab;
+  else if (ProcessingTabBook->currentWidget() == GeometryTab) return ptGeometryTab;
+  else if (ProcessingTabBook->currentWidget() == RGBTab) return ptRGBTab;
+  else if (ProcessingTabBook->currentWidget() == LabCCTab) return ptLabCCTab;
+  else if (ProcessingTabBook->currentWidget() == LabSNTab) return ptLabSNTab;
+  else if (ProcessingTabBook->currentWidget() == LabEyeCandyTab) return ptLabEyeCandyTab;
+  else if (ProcessingTabBook->currentWidget() == EyeCandyTab) return ptEyeCandyTab;
+  else if (ProcessingTabBook->currentWidget() == OutTab) return ptOutTab;
   else {
      ptLogError(ptError_Argument,"Unforeseen tab.");
      assert(0);
@@ -1130,6 +1141,7 @@ void ptMainWindow::OnToolBoxesEnabledTriggered(const bool Enabled) {
   }
 }
 
+
 //
 // Gimp
 //
@@ -1310,6 +1322,8 @@ void CB_StartupSettingsButton();
 void ptMainWindow::OnStartupSettingsButtonClicked() {
   ::CB_StartupSettingsButton();
 }
+
+
 //
 // Tab : Camera
 //
@@ -1528,6 +1542,7 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
             CloseFileMgrWindow();
           ImageFileToOpen = DropName;
           CB_MenuFileOpen(1);
+
         } else {
           if (!Settings->GetInt("FileMgrIsOpen")) {
             if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
@@ -3024,7 +3039,8 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
   LqrWHContainter->setVisible(Scaling == ptLqr_ScaleAbsolute);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
 //
 // Update gradual blur UI elements
 //

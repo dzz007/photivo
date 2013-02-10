@@ -158,8 +158,10 @@ void ptJobListModel::AddJobToList(const QString &file)
 void ptJobListModel::AddJobToList(ptJobListItem *item)
 {
   foreach (ptJobListItem *i, *m_JobList) {
-    if (*i == *item)
+    if (*i == *item) {
+      i->UpdateFromJobItem(item);
       return;
+    }
   }
   beginInsertRows(QModelIndex(), rowCount(), rowCount());
   m_JobList->append(item);

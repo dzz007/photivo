@@ -45,18 +45,19 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
   }
 
   QStringList params;
-  params << "-i" << "-j" << "--load-and-delete" << "--pts" << "--new-instance" << "--no-fmgr" << "-h";
+  params << "-i" << "-j" << "--load-and-delete" << "--pts" << "--new-instance" << "--no-fmgr" << "-p"
+         << "-h" << "--help" << "-help";
 
   int i = 1;
   bool MustBeFilename = false;
-  bool MustBePtsName = false;
+  bool MustBePtsName  = false;
   while (i < argc) {
     QString current = argv[i];
     int whichParam = params.indexOf(current.toLower());
 
     if (MustBeFilename) {
       if (whichParam > -1 || cli.Filename != "") {
-        cli.ShowHelp++;
+        cli.ShowHelp = true;
         break;
       } else {
         cli.Filename = current;
@@ -68,7 +69,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
 
     if (MustBePtsName) {
       if (whichParam > -1 || cli.PtsFilename != "") {
-        cli.ShowHelp++;
+        cli.ShowHelp = true;
         break;
       } else {
         cli.PtsFilename = current;
@@ -91,10 +92,10 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
       MustBePtsName = true;
     } else if (whichParam == 4) {
       cli.NewInstance++;
-    } else if (whichParam == 5) {
+    } else if (whichParam == 5 || whichParam == 6) {
       cli.NoOpenFileMgr++;
-    } else if (whichParam == 6) {
-      cli.ShowHelp++;
+    } else if (whichParam == 7 || whichParam == 8 || whichParam == 9) {
+      cli.ShowHelp = true;
       break;
     } else if (whichParam == -1) {  // can only be image file without -i param
       if (QFileInfo(current).suffix().toLower() == "pts") {
@@ -107,7 +108,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
     }
 
     if ((MustBeFilename || MustBePtsName) && (i >= argc - 1)) {
-      cli.ShowHelp++;
+      cli.ShowHelp = true;
       break;
     }
 
@@ -123,9 +124,9 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
     result.Mode = cliShowHelp;
 
   } else {
-    result.Filename = cli.Filename;
-    result.PtsFilename = cli.PtsFilename;
-    result.NewInstance = cli.NewInstance > 0;
+    result.Filename      = cli.Filename;
+    result.PtsFilename   = cli.PtsFilename;
+    result.NewInstance   = cli.NewInstance > 0;
     result.NoOpenFileMgr = cli.NoOpenFileMgr;
 
     if (cli.LoadFile > 0) {

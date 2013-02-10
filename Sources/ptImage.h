@@ -26,7 +26,9 @@
 
 #include <vector>
 #include <array>
+
 #include <lensfun.h>
+
 #include "ptDefines.h"
 #include "ptConstants.h"
 #include "ptDcRaw.h"
@@ -74,6 +76,11 @@ public:
 
   // Pointer to the data buffer, since most algorithms still use that.
   uint16_t (*m_Image)[3];
+
+  // LCH image data, m_Image is NULL when the image is in ptSpace_LCH
+  std::vector<uint16_t> m_ImageL;
+  std::vector<float>    m_ImageC;
+  std::vector<float>    m_ImageH;
 
   // Width and height of the image
   uint16_t m_Width;
@@ -164,6 +171,18 @@ public:
 
   ptImage* toRGB();
   ptImage* toLab();
+  
+  /*! Converts the image from RGB to Lch colour space. Returns a pointer to itself. */
+  ptImage* RGBToLch();
+
+  /*! Converts the image from Lch to RGB colour space. Returns a pointer to itself. */
+  ptImage* LchToRGB(const short To);
+
+  /*! Converts the image from Lab to Lch colour space. Returns a pointer to itself. */
+  ptImage* LabToLch();
+
+  /*! Converts the image from Lch to Lab colour space. Returns a pointer to itself. */
+  ptImage* LchToLab();
 
   // MixChannels
   // MixFactors[To][From]
@@ -244,10 +263,10 @@ public:
 
   // LMHLightRecovery
   ptImage* LMHRecovery(const short   MaskType,
-                            const double Amount,
-                            const double LowerLimit,
-                            const double UpperLimit,
-                            const double Softness);
+                            const float Amount,
+                            const float LowerLimit,
+                            const float UpperLimit,
+                            const float Softness);
 
   // Highpass
   ptImage* Highpass(const double Radius,
@@ -409,12 +428,12 @@ public:
             const double Softness);
 
   // Softglow
-  ptImage* Softglow(const short SoftglowMode,
-        const double  Radius,
+  ptImage* Softglow(const short   SoftglowMode,
+                    const double  Radius,
                     const double  Amount,
-        const uint8_t ChannelMask = 7,
-        const double  Contrast = 5,
-        const int     Saturation = -50);
+                    const uint8_t ChannelMask = 7,
+                    const double  Contrast = 5,
+                    const int     Saturation = -50);
 
   // GetMask
   // The FactorR/G/B values refer to the channelmixing for a black
@@ -429,6 +448,26 @@ public:
                  const double FactorR = 0.3,
                  const double FactorG = 0.59,
                  const double FactorB = 0.11);
+
+// FillMask
+float *FillMask(const uint16_t APointX,
+                const uint16_t APointY,
+                const float    AThreshold,
+                const float    AColorWeight,
+                const uint16_t AMaxRadius,
+                const bool     AUseMaxRadius);
+
+// MaskedContrast
+ptImage* MaskedColorAdjust(const int       Ax,
+                           const int       Ay,
+                           const float     AThreshold,
+                           const float     AChromaWeight,
+                           const int       AMaxRadius,
+                           const bool      AHasMaxRadius,
+                           const ptCurve  *ACurve,
+                           const bool      ASatAdaptive,
+                           float           ASaturation,
+                           const float     AHueShift);
 
   // GetVignetteMask
   float *GetVignetteMask(const short Inverted,
@@ -655,6 +694,9 @@ public:
    */
   ptImage* Lensfun(const int LfunActions,
                    const lfModifier* LfunData);
+
+private:
+  void ResizeLCH(size_t ASize);
 };
 
 #endif

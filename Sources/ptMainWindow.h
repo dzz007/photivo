@@ -24,6 +24,9 @@
 #ifndef DLMAINWINDOW_H
 #define DLMAINWINDOW_H
 
+#include <memory>
+using std::unique_ptr;
+
 #include <QTimer>
 
 #include <exiv2/exif.hpp>
@@ -34,6 +37,8 @@
 
 #include "ui_ptMainWindow.h"
 
+#include "ptCurve.h"
+#include "ptCurveWindow.h"
 #include "ptInput.h"
 #include "ptChoice.h"
 #include "ptCheck.h"
@@ -42,11 +47,7 @@
 
 #include "ptTempFilterBase.h"
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ptMainWindow is the main gui element, showing all menus and controls.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 class ptMainWindow : public QMainWindow, public Ui::ptMainWindow {
 
@@ -128,6 +129,8 @@ public:
 
   void OnToolBoxesEnabledTriggered(const bool Enabled);
 
+//--------------------------------------
+
 protected:
   void closeEvent(QCloseEvent * Event);
   void resizeEvent(QResizeEvent * Event);
@@ -142,12 +145,15 @@ protected:
   virtual bool winEvent(MSG *message, long *result);
 #endif
 
-private :
+//--------------------------------------
+
+private:
   QTabBar*  Tabbar;
   QAction*  m_AtnSavePipe;
   QAction*  m_AtnSaveFull;
   QAction*  m_AtnSaveSettings;
   QAction*  m_AtnSaveJobfile;
+  QAction*  m_AtnSendToBatch;
   QAction*  m_AtnGimpSavePipe;
   QAction*  m_AtnGimpSaveFull;
   QAction*  m_AtnMenuFullReset;
@@ -158,14 +164,18 @@ private :
   QAction*  m_AtnShowTools;
   ptUIState FUIState;
 
-  ptVisibleToolsModel* m_VisibleToolsModel;
+  ptVisibleToolsModel  *m_VisibleToolsModel;
+  ptCurveWindow        *FSpotCurveWindow;  // raw pointer because managed by Qt parent mechanism
 
   void AnalyzeToolBoxStructure();
   void ShowMovedTools(const QString ATitle);
   void InitVisibleTools();
+  void ToggleLocalAdjustWidgets(const bool AEnabled, const int ARow);
+  void ToggleSpotRepairWidgets(const bool AEnabled);
 
   /*! We switch to the respective UI state. */
   void SwitchUIState(const ptUIState AState);
+//--------------------------------------
 
 public slots:
   // Toggle file manager window
@@ -179,6 +189,8 @@ public slots:
   void Settings_2_Form();
   void Form_2_Settings();
 
+//--------------------------------------
+
 private slots:
   void ResizeTimerExpired();
   void Event0TimerExpired();
@@ -186,6 +198,7 @@ private slots:
   void SaveMenuFull();
   void SaveMenuSettings();
   void SaveMenuJobfile();
+  void SaveMenuBatch();
   void GimpSaveMenuPipe();
   void GimpSaveMenuFull();
   void MenuFullReset();

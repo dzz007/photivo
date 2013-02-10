@@ -37,6 +37,7 @@ ptJobListItem::ptJobListItem(const QString &file /* = QString()*/)
 
 //==============================================================================
 
+extern QStringList FileExtsRaw;
 void ptJobListItem::InitFromFile(const QString &file)
 {
   QSettings jobFile(file, QSettings::IniFormat);
@@ -96,6 +97,8 @@ void ptJobListItem::SetStatus(ptJobStatus status)
 //  we save the time when processing started, if it's succeded
   if (status == jsFinished)
     m_lastProcessing = m_ProcessingStarted;
+  else
+    m_lastProcessing = QDateTime();
   emit itemChanged();
 }
 
@@ -119,6 +122,28 @@ void ptJobListItem::UpdateStatusByTime()
     else
       m_Status = jsFinished;
   }
+}
+
+//==============================================================================
+
+void ptJobListItem::UpdateFromJobItem(ptJobListItem *item)
+{
+  Q_ASSERT(item->FileName() == m_FileName);
+
+  if (item->InputFiles() != m_InputFiles) {
+    m_InputFiles = item->InputFiles();
+    SetStatus(jsWaiting);
+  }
+  if (item->OutputPath() != m_OutputPath) {
+    m_OutputPath = item->OutputPath();
+    SetStatus(jsWaiting);
+  }
+  if (item->OutputFileSuffix() != m_OutputFileSuffix) {
+    m_OutputFileSuffix = item->OutputFileSuffix();
+    SetStatus(jsWaiting);
+  }
+  if (m_lastProcessing.isValid() && QFileInfo(item->FileName()).lastModified() > m_lastProcessing)
+    SetStatus(jsWaiting);
 }
 
 //==============================================================================
