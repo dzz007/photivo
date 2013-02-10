@@ -33,6 +33,7 @@
 #include <QThread>
 
 #include "../ptReportOverlay.h"
+#include "../ptImage8.h"
 #include "ptFileMgrDM.h"
 #include "ptThumbDefines.h"
 #include "ptThumbCache.h"
@@ -109,7 +110,9 @@ private:
 
   ptThumbId             FNextImage;
   ptThumbId             FCurrentImage;
-  ptThumbPtr            FImage;
+  QImage                FImage;
+  ptImage8              FImageData;
+  bool                  FHaveImage;
 
 public slots:
   int  zoomFit(const bool withMsg = true);  // fit complete image into viewport

@@ -33,9 +33,9 @@
 enum class ptLockType {ThumbCache,
                        ThumbQueue,
                        ThumbDisplay,
-                       TracCounter,
+                       ThumbGen,
                        ThumbLayout,
-                       ThumbGen};
+                       Progressbar};
 
 //==============================================================================
 

@@ -57,7 +57,14 @@ void ptThumbId::init()
 bool ptThumbId::isEqual(const ptThumbId AId) const
 {
   return (MaxSize  == AId.MaxSize) &&
-         (FileName == AId.FileName);
+      (FileName == AId.FileName);
+}
+
+//==============================================================================
+
+bool ptThumbId::isEmpty() const
+{
+  return FileName.isEmpty();
 }
 
 //==============================================================================
@@ -67,6 +74,13 @@ void ptThumbData::init()
   Id.init();
   Thumbnail  = nullptr;
   LastAccess = ptNow();
+}
+
+//==============================================================================
+
+bool ptThumbData::isEmpty() const
+{
+  return (Id.isEmpty() || !Thumbnail);
 }
 
 

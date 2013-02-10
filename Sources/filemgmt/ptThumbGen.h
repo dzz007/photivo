@@ -49,6 +49,9 @@ public:
   /*! run is public to allow sync work.*/
   void run();
 
+signals:
+  void myFinished();
+
 private:
   ptThumbId  FCurrentThumb;
   ptThumbPtr FThumbnail;

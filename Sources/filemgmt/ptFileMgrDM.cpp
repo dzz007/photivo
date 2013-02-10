@@ -86,62 +86,6 @@ void ptFileMgrDM::Clear() {
 
 //==============================================================================
 
-bool ptFileMgrDM::getThumbnail(ptImage8     *&AImage,
-                               const QString &AFileName,
-                               const int      AMaxSize) {
-
-  assert(!AFileName.isEmpty());
-
-  ptDcRaw dcRaw;
-  bool isRaw = false;
-  MagickWand* image = NewMagickWand();
-  QSize Size = QSize(AMaxSize, AMaxSize);
-
-  if (dcRaw.Identify(AFileName) == 0 ) {
-    // we have a raw image
-    isRaw = true;
-    std::vector<char> ImgData;
-    if (dcRaw.thumbnail(ImgData)) {
-      // raw thumbnail read successfully
-      Size.setWidth(dcRaw.m_ThumbWidth);
-      Size.setHeight(dcRaw.m_ThumbHeight);
-      ScaleThumbSize(&Size, AMaxSize);
-      MagickSetSize(image, 2*Size.width(), 2*Size.height());
-      MagickReadImageBlob(image, (const uchar*)ImgData.data(), (const size_t)ImgData.size());
-    }
-  }
-
-  if (!isRaw) {
-    // no raw, try for bitmap
-    MagickPingImage(image, AFileName.toAscii().data());
-    Size.setWidth(MagickGetImageWidth(image));
-    Size.setHeight(MagickGetImageHeight(image));
-    ScaleThumbSize(&Size, AMaxSize);
-    MagickSetSize(image, 2*Size.width(), 2*Size.height());
-    MagickReadImage(image, AFileName.toAscii().data());
-  }
-
-  ExceptionType MagickExcept;
-  char* MagickErrMsg = MagickGetException(image, &MagickExcept);
-  if (MagickExcept != UndefinedException) {
-    // error occurred: no raw thumbnail, no supported image type, any other GM error
-    printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
-    DestroyMagickWand(image);
-    if (!AImage) AImage = new ptImage8();
-    AImage->FromQImage(QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png")));
-    return false;
-
-  } else {
-    // no error: scale and rotate thumbnail
-    if (!AImage) AImage = new ptImage8();
-    GenerateThumbnail(image, AImage, Size);
-    DestroyMagickWand(image);
-    return true;
-  }
-}
-
-//==============================================================================
-
 ptThumbDM *ptFileMgrDM::getThumbDM()
 {
   if(!FThumbDM) {

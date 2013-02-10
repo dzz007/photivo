@@ -53,7 +53,8 @@ ptImageView::ptImageView(QWidget            *AParent,
   m_ResizeEventTimer(),
   FNextImage(),
   FCurrentImage(),
-  FImage(nullptr)
+  FImage(),
+  FHaveImage(false)
 {
   assert(AParent     != NULL);
   assert(ADataModule != NULL);
@@ -291,7 +292,14 @@ void ptImageView::thumbnail(const ptThumbId AThumbId,
   if (!AImage)
     return;
 
-  FImage        = AImage;
+  FImageData.Set(AImage.get());
+
+  FImage     = QImage((const uchar*) FImageData.m_Image,
+                      FImageData.m_Width,
+                      FImageData.m_Height,
+                      QImage::Format_ARGB32);
+
+  FHaveImage    = !FImage.isNull();
   FCurrentImage = AThumbId;
 
   m_StatusOverlay->stop();
@@ -328,8 +336,8 @@ void ptImageView::ZoomTo(float factor, const bool withMsg) {
 int ptImageView::zoomFit(const bool withMsg /*= true*/) {
   m_ZoomMode = ptZoomMode_Fit;
 
-  if (FImage) {
-    m_Scene->setSceneRect(0, 0, FImage->m_Width, FImage->m_Height);
+  if (FHaveImage) {
+    m_Scene->setSceneRect(0, 0, FImage.width(), FImage.height());
   }
 
   fitInView(m_Scene->sceneRect(), Qt::KeepAspectRatio);
@@ -349,7 +357,7 @@ int ptImageView::zoomFit(const bool withMsg /*= true*/) {
 //==============================================================================
 
 void ptImageView::ImageToScene(const double Factor) {
-  if (FImage) {
+  if (FHaveImage) {
     resetTransform();
 
     Qt::TransformationMode Mode;
@@ -361,14 +369,11 @@ void ptImageView::ImageToScene(const double Factor) {
       // bilinear resize for all others
       Mode = Qt::SmoothTransformation;
     }
-    m_Scene->setSceneRect(0, 0, FImage->m_Width*Factor, FImage->m_Height*Factor);
-    m_PixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) FImage->m_Image,
-                                                                     FImage->m_Width,
-                                                                     FImage->m_Height,
-                                                                     QImage::Format_RGB32).scaled(FImage->m_Width*Factor,
-                                                                                                  FImage->m_Height*Factor,
-                                                                                                  Qt::IgnoreAspectRatio,
-                                                                                                  Mode)));
+    m_Scene->setSceneRect(0, 0, FImage.width()*Factor, FImage.height()*Factor);
+    m_PixmapItem->setPixmap(QPixmap::fromImage(FImage.scaled(FImage.width()*Factor,
+                                                             FImage.height()*Factor,
+                                                             Qt::IgnoreAspectRatio,
+                                                             Mode)));
     m_PixmapItem->setTransformationMode(Mode);
   }
 }

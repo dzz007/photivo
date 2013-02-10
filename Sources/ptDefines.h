@@ -93,24 +93,6 @@ inline std::time_t ptNow() {
   return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 };
 
-//==============================================================================
-static int traccounter = 0;
-
-class ptTrac{
-public:
-  explicit ptTrac(const char* AMsg) {
-    ptLock hLock(ptLockType::TracCounter);
-    printf("%d Begin %s\n", traccounter++, AMsg);
-  }
-
-  ~ptTrac() {
-    ptLock hLock(ptLockType::TracCounter);
-    printf("%d End\n", --traccounter);
-  }
-};
-
-#define   TRAC(x) {ptTrac hTrac(AT); {x} printf("%s", AT);}
-#define NOTRAC(x) x
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Following 'functions' are macro implemented for :

@@ -31,13 +31,19 @@ ptThumbDM::ptThumbDM() :
   QObject(),
   FThumbCache(),
   FThumbGen(),
+  FThumbGenSync(),
   FNeededThumbs(),
   FAsync(true),
   FThreadRunning(false),
-  FThumbReciever()
+  FThumbReciever(),
+  FRestartTimer()
 {
   connect(&FThumbGen, SIGNAL(finished()), this, SLOT(finishedThumbGen()), Qt::QueuedConnection);
-  connect(this,       SIGNAL(restart()),  this, SLOT(startThumbGen()),    Qt::QueuedConnection);
+  //connect(this,       SIGNAL(restart()),  this, SLOT(startThumbGen()),    Qt::QueuedConnection);
+
+  FRestartTimer.setInterval(5);
+  FRestartTimer.setSingleShot(true);
+  connect(&FRestartTimer, SIGNAL(timeout()), this, SLOT(startThumbGen()));
 }
 
 //==============================================================================
@@ -74,7 +80,7 @@ void ptThumbDM::orderThumb(const ptThumbId AThumbId, const bool ACacheThumb)
       }
       hLock.unlock();
     }
-    emit restart();
+    FRestartTimer.start();
   }
 }
 
@@ -127,10 +133,27 @@ void ptThumbDM::removeThumbReciever(ptThumbReciever *AReciever)
 }
 
 //==============================================================================
+
+ptThumbData ptThumbDM::getThumbnail(const ptThumbId AThumbId)
+{
+  FThumbGenSync.setCurrentThumb(AThumbId);
+  FThumbGenSync.run();
+  FThumbGenSync.wait();
+
+  ptThumbData hThumb;
+  hThumb.init();
+
+  hThumb.Id         = FThumbGenSync.getCurrentThumb();
+  hThumb.Thumbnail  = FThumbGenSync.getThumbnail();
+  hThumb.LastAccess = ptNow();
+
+  return hThumb;
+}
+
+//==============================================================================
 // We distribute the new thumb and we insert it into the cache, if needed.
 void ptThumbDM::finishedThumbGen()
 {
-  printf("finished\n");
   ptThumbData hThumb;
   hThumb.init();
 
@@ -143,7 +166,7 @@ void ptThumbDM::finishedThumbGen()
   ptLock hThreadLock(ptLockType::ThumbGen);
   FThreadRunning = false;
   hThreadLock.unlock();
-  emit restart();
+  FRestartTimer.start();
 }
 
 //==============================================================================
