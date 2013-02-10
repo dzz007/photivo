@@ -875,8 +875,8 @@ void ptFileMgrWindow::toggleDirThumbs() {
 //==============================================================================
 
 void ptFileMgrWindow::bookmarkCurrentDir() {
-  m_DataModel->tagModel()->appendRow(QDir::toNativeSeparators(m_DataModel->currentDir()),
-                                     m_DataModel->currentDir());
+  m_DataModel->tagModel()->appendRow(QDir::toNativeSeparators(m_DataModel->dirModel()->absolutePath()),
+                                     m_DataModel->dirModel()->absolutePath());
   if (m_TagMenu->isVisible()) {
     AdjustBookmarkMenuSize();
   }
