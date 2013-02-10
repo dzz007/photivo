@@ -48,6 +48,7 @@ struct ptThumbId {
 
   void init();
   bool isEqual(const ptThumbId AId) const;
+  bool isEmpty() const;
 
   QString  FileName;
   uint16_t MaxSize; // longest edge in pixel
@@ -63,6 +64,7 @@ struct ptThumbData {
   std::time_t LastAccess;
 
   void init();
+  bool isEmpty() const;
 };
 
 //==============================================================================

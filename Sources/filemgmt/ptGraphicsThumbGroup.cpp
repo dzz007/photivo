@@ -26,7 +26,6 @@
 #include "../ptDefines.h"
 #include "../ptTheme.h"
 #include "../ptSettings.h"
-#include "../ptImage8.h"
 #include "ptGraphicsThumbGroup.h"
 
 extern ptSettings* Settings;
@@ -41,7 +40,9 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem      *AParent       /*=
   m_Brush(Qt::SolidPattern),
   m_hasHover(false),
   m_Pen(Qt::DashLine),
-  FImage(nullptr)
+  FImage(),
+  FHaveImage(false),
+  FIndex(-1)
 {
   m_FSOType = fsoUnknown;
   m_FullPath = "";
@@ -138,12 +139,21 @@ void ptGraphicsThumbGroup::addImage(ptThumbPtr AImage) {
     return;
   }
 
-  FImage = AImage;
+  FImageData.Set(AImage.get());
+  FImage     = QImage((const uchar*) FImageData.m_Image,
+                      FImageData.m_Width,
+                      FImageData.m_Height,
+                      QImage::Format_ARGB32);
+
+  FHaveImage = !FImage.isNull();
+
+  if (!FHaveImage) return;
 
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
-  m_ThumbPos.setX(m_ThumbSize/2 - FImage->m_Width/2  + InnerPadding + 0.5);
-  m_ThumbPos.setY(m_ThumbSize/2 - FImage->m_Height/2 + InnerPadding + 0.5);
+  m_ThumbPos.setX(m_ThumbSize/2 - FImage.width()/2  + InnerPadding + 0.5);
+  m_ThumbPos.setY(m_ThumbSize/2 - FImage.height()/2 + InnerPadding + 0.5);
+
   this->update();
 }
 
@@ -196,7 +206,7 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
       break;
     }
 
-  case QEvent::GraphicsSceneContextMenu: {
+    case QEvent::GraphicsSceneContextMenu: {
       // We set the focus but we don't accept the event
       setFocus(Qt::MouseFocusReason);
       if (FEventHandler) {
@@ -221,11 +231,8 @@ void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsIt
   painter->setPen(m_Pen);
   painter->setBrush(m_Brush);
   painter->drawRoundedRect(this->rect(), 5, 5);
-  if (FImage) {
-    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), QImage((const uchar*) FImage->m_Image,
-                                                                             FImage->m_Width,
-                                                                             FImage->m_Height,
-                                                                             QImage::Format_ARGB32));
+  if (FHaveImage) {
+    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), FImage);
   }
 }
 

@@ -89,11 +89,6 @@ public:
   /*! Returns a pointer to the tag model. */
   ptTagModel* tagModel() { return m_TagModel; }
 
-  /*! Returns a pointer to the thumbnail.*/
-  bool getThumbnail(ptImage8     *&AImage,
-                    const QString &AFileName,
-                    const int      AMaxSize);
-
   ptThumbDM* getThumbDM();
 
   /*! Get list of all thumbs. */

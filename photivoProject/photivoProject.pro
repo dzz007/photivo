@@ -167,8 +167,6 @@ HEADERS += \
     ../Sources/filemgmt/ptSingleDirModel.h \
     ../Sources/filemgmt/ptTagList.h \
     ../Sources/filemgmt/ptTagModel.h \
-    ../Sources/filemgmt/ptThumbnailCache.h \
-    ../Sources/filemgmt/ptThumbnailer.h \
     ../Sources/filters/ptCfgItem.h \
     ../Sources/filters/ptFilter_ABCurves.h \
     ../Sources/filters/ptFilter_ColorContrast.h \
@@ -276,8 +274,6 @@ SOURCES += \
     ../Sources/filemgmt/ptSingleDirModel.cpp \
     ../Sources/filemgmt/ptTagList.cpp \
     ../Sources/filemgmt/ptTagModel.cpp \
-    ../Sources/filemgmt/ptThumbnailCache.cpp \
-    ../Sources/filemgmt/ptThumbnailer.cpp \
     ../Sources/filters/ptCfgItem.cpp \
     ../Sources/filters/ptFilter_ABCurves.cpp \
     ../Sources/filters/ptFilter_ColorContrast.cpp \

@@ -32,11 +32,8 @@
 #include <QPoint>
 
 #include "../ptConstants.h"
+#include "../ptImage8.h"
 #include "ptThumbDefines.h"
-
-//==============================================================================
-
-class ptImage8;
 
 //==============================================================================
 
@@ -77,7 +74,7 @@ public:
   QString fullPath() { return m_FullPath; }
 
   /*! Returns \c true if a pixmap image is part of the thumbnail group. */
-  bool hasImage() { return FImage != nullptr; }
+  bool hasImage() { return FHaveImage; }
 
   /*! Paints the thumbnail group.
     Reimplements \c QGraphicsRectItem::paint() */
@@ -94,6 +91,8 @@ public:
       within the graphics view framework. */
   enum { Type = UserType + 1 };
 
+  void     setIndex(const uint16_t AIndex) {FIndex = AIndex;}
+  uint16_t getIndex() const                {return FIndex;}
 
 protected:
   /*! Event handler for the thumbnail group.
@@ -115,7 +114,10 @@ private:
   QPen                m_Pen;
   QPoint              m_ThumbPos;
   qreal               m_ThumbSize;
-  ptThumbPtr          FImage;
+  QImage              FImage;
+  ptImage8            FImageData;
+  bool                FHaveImage;
+  uint16_t            FIndex;
 
   // Following objects don’t need to be destroyed explicitely in the destructor.
   // Because they are children that happens automatically.

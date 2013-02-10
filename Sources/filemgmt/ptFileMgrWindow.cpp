@@ -153,7 +153,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   connect(m_PathBar, SIGNAL(changedPath(QString)), this, SLOT(changeDir(QString)));
   m_PathLayout->addWidget(m_PathBar);
   m_Progressbar->setValue(0);
-  m_Progressbar->hide();
+  HeaderBar->setCurrentWidget(PathPage);
 
   //-------------------------------------
 
@@ -219,7 +219,6 @@ ptFileMgrWindow::~ptFileMgrWindow() {
 //==============================================================================
 
 void ptFileMgrWindow::setLayouter(const ptThumbnailLayout layout) {
-  bool RestartThumbnailer = false;
   if (!InStartup) {
     if ((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType") == layout)
       return;
@@ -455,6 +454,8 @@ void ptFileMgrWindow::FocusThumbnail(int index) {
 //==============================================================================
 
 bool ptFileMgrWindow::thumbFocusChanged() {
+  return true;
+
   FocusThumbnail(m_DataModel->focusedThumb(m_FilesScene->focusItem()));
   // up to now, we don't know, if the focus was changed...
   return true;
@@ -466,9 +467,13 @@ void ptFileMgrWindow::saveThumbnail()
 {
   if (FCurrentThumb.isEmpty()) return;
 
-  QString   hFileName          = FCurrentThumb;
-  ptImage8* hImage             = new ptImage8();
-  m_DataModel->getThumbnail(hImage, hFileName, Settings->GetInt("FileMgrThumbSaveSize"));
+  QString     hFileName = FCurrentThumb;
+  ptThumbData hThumb    = m_DataModel->getThumbDM()->getThumbnail(
+    ptThumbId(hFileName,
+              static_cast<uint16_t>(Settings->GetInt("FileMgrThumbSaveSize")),
+              nullptr));
+
+  if (hThumb.isEmpty()) return;
 
   QFileInfo hPathInfo(hFileName);
   QString   hSuggestedFileName = hPathInfo.dir().path() + "/" + hPathInfo.completeBaseName() + "-thumb.jpg";
@@ -479,15 +484,13 @@ void ptFileMgrWindow::saveThumbnail()
                                                      SaveBitmapPattern);
   if (hOutputName.isEmpty()) return; // Operation cancelled.
 
-  if (!(hImage->DumpImage(hOutputName.toAscii().data(), true))) {
+  if (!((hThumb.Thumbnail)->DumpImage(hOutputName.toAscii().data(), true))) {
     ptMessageBox::warning(0, QObject::tr("Error"), QObject::tr("Thumbnail could not be saved."));
   }
 
   if (!ptImageHelper::TransferExif(hFileName, hOutputName)) {
     ptMessageBox::warning(0, QObject::tr("Exif error"), QObject::tr("Exif data could not be written."));
   }
-
-  delete hImage;
 }
 
 //==============================================================================
@@ -700,11 +703,17 @@ bool ptFileMgrWindow::generateThumbGroups(const QString &APath)
 
   m_Layouter->LazyInit(hThumbs.size());
 
+  if (hThumbs.size() > 0) {
+    m_Progressbar->setMaximum(hThumbs.size() - 1);
+    m_Progressbar->setValue(0);
+    HeaderBar->setCurrentWidget(ProgressPage);
+  }
+
   int hCount = 0;
-  hRetrieved = 0;
 
   for (const QFileInfo &hThumb: hThumbs) {
     auto      hThumbGroup = new ptGraphicsThumbGroup(nullptr, this);
+    hThumbGroup->setIndex(hCount++);
 
     ptFSOType hType;
     QString   hDescr;
@@ -713,6 +722,7 @@ bool ptFileMgrWindow::generateThumbGroups(const QString &APath)
       hType  = fsoDir;
       hDescr = WinApi::VolumeNamePretty(hThumb.absoluteFilePath());
       hThumbGroup->addInfoItems(hThumb.absoluteFilePath(), hDescr, hType);
+      updateProgressbar(hThumbGroup->getIndex());
 #else
       assert(!"Folder MyComputer must not happen on non-Windows systems!");
 #endif
@@ -732,6 +742,7 @@ bool ptFileMgrWindow::generateThumbGroups(const QString &APath)
         } else {
           hType = fsoDir;
         }
+        updateProgressbar(hThumbGroup->getIndex());
       } else {
         hType = fsoFile;
       }
@@ -741,24 +752,31 @@ bool ptFileMgrWindow::generateThumbGroups(const QString &APath)
     ptThumbId hThumbId(hThumb.absoluteFilePath(), hThumbMaxSize, hThumbGroup);
     FThumbGroupData.push_back({hThumbGroup, hThumbId});
     // this is for compatibility reasons with the legacy implementation
-//    m_DataModel->thumbList()->append(hThumbGroup);
+    //m_DataModel->thumbList()->append(hThumbGroup);
     // both calls are needed to put it into the scene
     m_Layouter->Layout(hThumbGroup);
     m_FilesScene->addItem(hThumbGroup);
+    //m_DataModel->getThumbDM()->setSyncMode(false);
     // we order the thumbnail
     if (hType == fsoFile) {
       m_DataModel->getThumbDM()->orderThumb(hThumbId, true);
-      hCount++;
       qApp->processEvents();
     }
   }
-  if (hCount) {
-    m_Progressbar->setMaximum(hCount);
-    m_Progressbar->setValue(0);
-    m_Progressbar->show();
-    m_PathContainer->hide();
-  }
+
   return true;
+}
+
+//==============================================================================
+
+void ptFileMgrWindow::updateProgressbar(const uint16_t AIndex)
+{
+  ptLock hLock(ptLockType::Progressbar);
+  m_Progressbar->setValue(m_Progressbar->value() + 1);
+  if (m_Progressbar->maximum() <= m_Progressbar->value() ||
+      m_Progressbar->maximum() == AIndex) {
+    HeaderBar->setCurrentWidget(PathPage);
+  }
 }
 
 //==============================================================================
@@ -838,14 +856,10 @@ void ptFileMgrWindow::thumbnail(const ptThumbId AThumbId, ptThumbPtr AImage)
   // we cannot use the pointer directly, since it needn't be valid any more...
   for (const ptThumbGroupData &hData : FThumbGroupData) {
     if (hData.ThumbGroup == AThumbId.ThumbGroup) {
+      m_FilesScene->blockSignals(true);
       hData.ThumbGroup->addImage(AImage);
-      m_Progressbar->setValue(m_Progressbar->value() + 1);
-      if (m_Progressbar->value() == m_Progressbar->maximum()) {
-        setUpdatesEnabled(false);
-        m_PathContainer->show();
-        m_Progressbar->hide();
-        setUpdatesEnabled(true);
-      }
+      updateProgressbar(hData.ThumbGroup->getIndex());
+      m_FilesScene->blockSignals(false);
       return;
     }
   }

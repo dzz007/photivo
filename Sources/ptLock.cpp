@@ -43,9 +43,9 @@ const std::vector<ptLockData> ptLock::FLockData = {
   {ptLockType::ThumbCache,   std::make_shared<QMutex>(QMutex::NonRecursive), "Cache"},
   {ptLockType::ThumbQueue,   std::make_shared<QMutex>(QMutex::NonRecursive), "Queue"},
   {ptLockType::ThumbDisplay, std::make_shared<QMutex>(QMutex::NonRecursive), "Display"},
-  {ptLockType::TracCounter,  std::make_shared<QMutex>(QMutex::NonRecursive), "Trac"},
-  {ptLockType::ThumbLayout,  std::make_shared<QMutex>(QMutex::NonRecursive), "Layout"},
-  {ptLockType::ThumbGen,     std::make_shared<QMutex>(QMutex::NonRecursive), "ThumbGen"}
+  {ptLockType::ThumbGen,     std::make_shared<QMutex>(QMutex::NonRecursive), "ThumbGen"},
+  {ptLockType::ThumbLayout,  std::make_shared<QMutex>(QMutex::NonRecursive), "ThumbLayout"},
+  {ptLockType::Progressbar,  std::make_shared<QMutex>(QMutex::NonRecursive), "Progressbar"}
 };
 
 //==============================================================================
@@ -56,7 +56,6 @@ ptLock::ptLock(const ptLockType ALockType) :
 {
   WorkOnCurrentType([&](ptLockData ALockData){
     (ALockData.Lock)->lock();
-    //printf("Lock %s\n", ALockData.Name.toAscii().data());
   });
 }
 
@@ -64,11 +63,8 @@ ptLock::ptLock(const ptLockType ALockType) :
 
 ptLock::~ptLock()
 {  
-  WorkOnCurrentType([&](ptLockData ALockData){
-    if (!FUnlocked) {
-      (ALockData.Lock)->unlock();
-      //printf("UnLock %s\n\n", ALockData.Name.toAscii().data());
-    }
+  WorkOnCurrentType([&](ptLockData ALockData) {
+    (ALockData.Lock)->unlock();
   });
 }
 
@@ -79,7 +75,6 @@ void ptLock::unlock()
   WorkOnCurrentType([&](ptLockData ALockData){
     if (!FUnlocked) {
       (ALockData.Lock)->unlock();
-      //printf("UnLock %s\n\n", ALockData.Name.toAscii().data());
       FUnlocked = true;
     }
   });

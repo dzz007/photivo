@@ -109,6 +109,7 @@ private:
   void setLayouter(const ptThumbnailLayout layout);
   void ConstructContextMenu();
   bool generateThumbGroups(const QString &APath);
+  void updateProgressbar(const uint16_t AIndex);
 
   ptFileMgrDM*            m_DataModel;
   QGraphicsScene*         m_FilesScene;
