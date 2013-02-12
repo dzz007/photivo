@@ -73,7 +73,7 @@ public:
 
 protected:
   void    mousePressEvent(QMouseEvent *AEvent);
-  void    mouseReleaseEvent(QMouseEvent *Event);
+  void    mouseReleaseEvent(QMouseEvent *);
   void    mouseMoveEvent(QMouseEvent *AEvent);
   void    changeEvent(QEvent* Event);
   void    paintEvent(QPaintEvent*);

@@ -456,6 +456,9 @@ void ptCurveWindow::paintEvent(QPaintEvent*) {
 
 void ptCurveWindow::mousePressEvent(QMouseEvent *AEvent) {
   if (!FCurve) return;
+
+  if (FMouseAction != NoAction) return;
+
   FMouseAction  = NoAction;
   FMovingAnchor = -1;
 
