@@ -2,7 +2,7 @@
 ##
 ## Photivo
 ##
-## Copyright (C) 2008-2013 Jos De Laender <jos@de-laender.be>
+## Copyright (C) 2013 Jos De Laender <jos@de-laender.be>
 ##
 ## This file is part of Photivo.
 ##
@@ -21,8 +21,9 @@
 ################################################################################
 
 import os
-import fnmatch
 import sys
+import platform 
+import fnmatch
 import glob
 import atexit
 
@@ -44,7 +45,12 @@ ptMinGimp20Version  = '2.6.10' # only when gimp plugin
 
 # Custom libjpeg checks. Has no pkg-config equivalent.
 ptMinLibJpegVersion = 62
-ptMaxLibJpegVersion = 79
+ptMaxLibJpegVersion = 80 # Until notice of problem we allow also up to jpeg 8.0
+
+################################################################################
+
+ptPlatforms     = ['darwin','posix','win32']
+ptArchitectures = ['x86','x86_64']
 
 ################################################################################
 
@@ -127,6 +133,7 @@ ptValidOptions = ['CC',
                   'PT_LOGFILE_NAME',
                   'PT_OMP',
                   'PT_RELEASE',
+                  'PT_TARGET_ARCHITECTURE',
                   'PT_TARGET_PLATFORM',
                   'PT_TOOLS_DIR',
                   'PT_WITH_CONSOLE',
@@ -157,18 +164,61 @@ exec open(ptBuildConfFile, 'rU').read() in {}, ptBuildValues
 # A default environment to start from.
 ptDefaultEnv  = Environment()
 
+# For later reference. The unaltered one.
+ptDefaultEnv['PT_DEFAULT_PATH'] = ptDefaultEnv['ENV']['PATH']
+
+# In case of mingw we pull in lots of the environment.
+# Forget the "isolated" environment in this case, but that's a minor issue
+# I guess in this context. Unless someone would start to crosscompile under 
+# mingw, but I don't believe we are going it to make as insane as that ..
+
+if sys.platform in ['win32'] :
+
+  print ptBoldBlue                                     + \
+        'I seem to be running on a windows platform. ' + \
+        'Please note I assume to work under MSYS '     + \
+        'set up as in the wiki. Anything else will '   + \
+        'currently fail.'                              + \
+        ptNoAttrs
+
+  ptOsEnv = dict(os.environ)
+
+  # Path from MSYS
+  ptDefaultEnv['ENV']['PATH'] = \
+      ptDefaultEnv['ENV']['PATH'] +  \
+      os.pathsep                  +  \
+      ptOsEnv['PATH'].replace("/","\\")
+
+  # Additional flags from MSYS (see wiki)
+  ptDefaultEnv.MergeFlags(ptDefaultEnv.ParseFlags(ptOsEnv['LDFLAGS']))
+  ptDefaultEnv.MergeFlags(ptDefaultEnv.ParseFlags(ptOsEnv['CFLAGS']))
+  ptDefaultEnv.MergeFlags(ptDefaultEnv.ParseFlags(ptOsEnv['CXXFLAGS']))
+
+  # Additional PKG_CONFIG_PATH from MSYS (see wiki)
+  if 'PKG_CONFIG_PATH' in ptOsEnv :
+    ptOsPkgConfigPath = ptOsEnv['PKG_CONFIG_PATH'].replace("/","\\")
+    if not 'PKG_CONFIG_PATH' in ptDefaultEnv['ENV']:
+      ptDefaultEnv['ENV']['PKG_CONFIG_PATH'] = ptOsPkgConfigPath
+    else:
+      ptDefaultEnv['ENV']['PKG_CONFIG_PATH'] = \
+         ptDefaultEnv['ENV']['PKG_CONFIG_PATH'] + os.pathsep + ptOsPkgConfigPath
+
+  # Local MSYS compatible workaround for long link line.
+  ptDefaultEnv['TEMPFILE'] = ptTempFileMunge
+  ptDefaultEnv['LINKCOM']  = '${TEMPFILE("%s")}' % (ptDefaultEnv['LINKCOM'])
+
+#print ptDefaultEnv.Dump()
+
 # Do we have CC and CXX ?
 if (ptDefaultEnv['CC'] == None) :
   print ptBoldRed + 'CC not defined' + ptNoAttrs
   print ptBoldRed + 'Giving up' + ptNoAttrs
   Exit(1)
+
 if (ptDefaultEnv['CXX'] == None) :
   print ptBoldRed + 'CXX not defined' + ptNoAttrs
   print ptBoldRed + 'Giving up' + ptNoAttrs
   Exit(1)
-
-# For later reference. The unaltered one.
-ptDefaultEnv['PT_DEFAULT_PATH'] = ptDefaultEnv['ENV']['PATH']
 
 # Throw everything that we recognize in the environment, overwriting.
 for ptBuildKey,ptBuildValue in ptBuildValues.items():
@@ -178,7 +228,7 @@ for ptBuildKey,ptBuildValue in ptBuildValues.items():
   else:
     print ptBoldRed                           + \
           'No such option : ' + ptBuildKey    + \
-          ' while reading ' + ptBuildConfFile ,\
+          ' while reading ' + ptBuildConfFile + \
           ptNoAttrs
     print ptNoAttrs + HelpText
     Exit(1)
@@ -226,31 +276,47 @@ if not 'PT_LOGFILE_NAME' in ptDefaultEnv:
   ptDefaultEnv['PT_LOGFILE_NAME'] = ptDefaultEnv['PT_BUILD_CONF_NAME'] + '.log'
 
 # Check PT_INSTALL_PATH
-if not os.path.isdir(ptDefaultEnv['PT_INSTALL_PATH']):
-  print ptBoldRed                                             + \
-        'PT_INSTALL_PATH (' + ptDefaultEnv['PT_INSTALL_PATH'] + \
-        ') does not exist.' ,                                   \
-        ptNoAttrs
-  Exit(1)
+if not sys.platform in ['win32'] :
+  if not os.path.isdir(ptDefaultEnv['PT_INSTALL_PATH']):
+    print ptBoldRed                                             + \
+          'PT_INSTALL_PATH (' + ptDefaultEnv['PT_INSTALL_PATH'] + \
+          ') does not exist.' ,                                   \
+          ptNoAttrs
+    Exit(1)
 
-# Target and host platform. Normally platform.
+# Target and host platform. Normally PLATFORM.
 if not 'PT_TARGET_PLATFORM' in ptDefaultEnv:
   ptDefaultEnv['PT_TARGET_PLATFORM'] = ptDefaultEnv['PLATFORM']
 
-if not ptDefaultEnv['PT_TARGET_PLATFORM'] in ['posix','win32']:
+if not ptDefaultEnv['PT_TARGET_PLATFORM'] in ptPlatforms :
   print ptBoldRed                                                   + \
         'PT_TARGET_PLATFORM (' + ptDefaultEnv['PT_TARGET_PLATFORM'] + \
-        ') should be \'posix\' or \'win32\'.'                       , \
+        ') should be in ' + str(ptPlatforms) + '.'                  + \
         ptNoAttrs
   Exit(1)
 
 if not 'PT_HOST_PLATFORM' in ptDefaultEnv:
   ptDefaultEnv['PT_HOST_PLATFORM'] = ptDefaultEnv['PLATFORM']
 
-if not ptDefaultEnv['PT_HOST_PLATFORM'] in ['posix','win32']:
+if not ptDefaultEnv['PT_HOST_PLATFORM'] in ptPlatforms :
   print ptBoldRed                                               + \
         'PT_HOST_PLATFORM (' + ptDefaultEnv['PT_HOST_PLATFORM'] + \
-        ') should be \'posix\' or \'win32\'.'                   , \
+        ') should be in ' + str(ptPlatforms) + '.'              + \
+        ptNoAttrs
+  Exit(1)
+
+# Target and host architecture. 
+if not 'PT_TARGET_ARCHITECTURE' in ptDefaultEnv:
+  ptArch = platform.architecture()[0]
+  if ptArch == '32bit' :
+    ptDefaultEnv['PT_TARGET_ARCHITECTURE'] = 'x86'
+  if ptArch == '64bit' :
+    ptDefaultEnv['PT_TARGET_ARCHITECTURE'] = 'x86_64'
+
+if not ptDefaultEnv['PT_TARGET_ARCHITECTURE'] in ptArchitectures :
+  print ptBoldRed                                                           + \
+        'PT_TARGET_ARCHITECTURE (' + ptDefaultEnv['PT_TARGET_ARCHITECTURE'] + \
+        ') should be in ' + str(ptArchitectures) + '.'                      + \
         ptNoAttrs
   Exit(1)
 
@@ -265,7 +331,9 @@ ptLogFile = open(ptDefaultEnv['PT_LOGFILE_NAME'],'w',1) # Line buffered
 ptDefaultEnv['PT_LOGFILE'] = ptLogFile
 
 # I hope to duplicate compile errors (via stderr) into the log this way.
-sys.stderr = os.popen('tee stderr.log','w')
+# TODO Find some win32 equivalent.
+if not sys.platform in ['win32'] :
+  sys.stderr = os.popen('tee stderr.log','w')
 
 atexit.register(ptAtExit,ptLogFile)
 
@@ -286,20 +354,19 @@ ptDefaultEnv['CXX']  = ptDefaultEnv['PT_CROSS'] + ptDefaultEnv['CXX']
 
 # Extend PATH with the found PT_TOOLS_DIR
 ptDefaultEnv['ENV']['PATH'] = \
-  ptDefaultEnv['PT_TOOLS_DIR'] + ':' + ptDefaultEnv['ENV']['PATH']
+    ptDefaultEnv['PT_TOOLS_DIR'] + os.pathsep + ptDefaultEnv['ENV']['PATH']
 
 # Add or extend PKG_CONFIG_PATH 
 # Assuming that it is only needed if QT4DIR is 'non standard'
 ptQtBin =  os.path.join(str(ptDefaultEnv['QT4DIR']),'bin')
 if not ptQtBin in ptDefaultEnv['PT_DEFAULT_PATH']:
-  # print "NON DEFAULT QT4DIR"
   ptPkgConfigPath = \
     os.path.join(os.path.join(str(ptDefaultEnv['QT4DIR']),'lib'),'pkgconfig')
   if not 'PKG_CONFIG_PATH' in ptDefaultEnv['ENV']:
     ptDefaultEnv['ENV']['PKG_CONFIG_PATH'] = ptPkgConfigPath
   else :
     ptDefaultEnv['ENV']['PKG_CONFIG_PATH'] = \
-        ptDefaultEnv['ENV']['PKG_CONFIG_PATH'] + ':' + ptPkgConfigPath
+        ptDefaultEnv['ENV']['PKG_CONFIG_PATH'] + os.pathsep + ptPkgConfigPath
 
 ################################################################################
 
@@ -310,43 +377,45 @@ if ptVerboseConfig:
   ptDoPrint = True
 
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'Configuration file   : ' + ptBuildConfFile)
+  'Configuration file     : ' + ptBuildConfFile)
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'CC                   : ' + str(ptDefaultEnv['CC']))
+  'CC                     : ' + str(ptDefaultEnv['CC']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'CXX                  : ' + str(ptDefaultEnv['CXX']))
+  'CXX                    : ' + str(ptDefaultEnv['CXX']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_BUILD_CONF_NAME   : ' + str(ptDefaultEnv['PT_BUILD_CONF_NAME']))
+  'PT_BUILD_CONF_NAME     : ' + str(ptDefaultEnv['PT_BUILD_CONF_NAME']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_CROSS             : ' + str(ptDefaultEnv['PT_CROSS']))
+  'PT_CROSS               : ' + str(ptDefaultEnv['PT_CROSS']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_HOST_PLATFORM     : ' + str(ptDefaultEnv['PT_HOST_PLATFORM']))
+  'PT_HOST_PLATFORM       : ' + str(ptDefaultEnv['PT_HOST_PLATFORM']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_INSTALL_PATH      : ' + str(ptDefaultEnv['PT_INSTALL_PATH']))
+  'PT_INSTALL_PATH        : ' + str(ptDefaultEnv['PT_INSTALL_PATH']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_LOGFILE_NAME      : ' + str(ptDefaultEnv['PT_LOGFILE_NAME']))
+  'PT_LOGFILE_NAME        : ' + str(ptDefaultEnv['PT_LOGFILE_NAME']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_OMP               : ' + str(ptDefaultEnv['PT_OMP']))
+  'PT_OMP                 : ' + str(ptDefaultEnv['PT_OMP']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_RELEASE           : ' + str(ptDefaultEnv['PT_RELEASE']))
+  'PT_RELEASE             : ' + str(ptDefaultEnv['PT_RELEASE']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_TARGET_PLATFORM   : ' + str(ptDefaultEnv['PT_TARGET_PLATFORM']))
+  'PT_TARGET_ARCHITECTURE : ' + str(ptDefaultEnv['PT_TARGET_ARCHITECTURE']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_TOOLS_DIR         : ' + str(ptDefaultEnv['PT_TOOLS_DIR']))
+  'PT_TARGET_PLATFORM     : ' + str(ptDefaultEnv['PT_TARGET_PLATFORM']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_WITH_CONSOLE      : ' + str(ptDefaultEnv['PT_WITH_CONSOLE']))
+  'PT_TOOLS_DIR           : ' + str(ptDefaultEnv['PT_TOOLS_DIR']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_WITH_FILEMGR      : ' + str(ptDefaultEnv['PT_WITH_FILEMGR']))
+  'PT_WITH_CONSOLE        : ' + str(ptDefaultEnv['PT_WITH_CONSOLE']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_WITH_GIMPPLUGIN   : ' + str(ptDefaultEnv['PT_WITH_GIMPPLUGIN']))
+  'PT_WITH_FILEMGR        : ' + str(ptDefaultEnv['PT_WITH_FILEMGR']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'PT_WITH_SYTSTEMCIMG  : ' + str(ptDefaultEnv['PT_WITH_SYSTEMCIMG']))
+  'PT_WITH_GIMPPLUGIN     : ' + str(ptDefaultEnv['PT_WITH_GIMPPLUGIN']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'ENV[PATH]            : ' + str(ptDefaultEnv['ENV']['PATH']))
+  'PT_WITH_SYTSTEMCIMG    : ' + str(ptDefaultEnv['PT_WITH_SYSTEMCIMG']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-    'ENV[PKG_CONFIG_PATH] : ' + str(ptDefaultEnv['ENV'].get('PKG_CONFIG_PATH')))
+  'ENV[PATH]              : ' + str(ptDefaultEnv['ENV']['PATH']))
 ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
-           'QT4DIR               : ' + str(ptDefaultEnv['QT4DIR']))
+  'ENV[PKG_CONFIG_PATH]   : ' + str(ptDefaultEnv['ENV'].get('PKG_CONFIG_PATH')))
+ptPrintLog(ptDoPrint,ptLogFile,ptBoldMagenta,
+  'QT4DIR                 : ' + str(ptDefaultEnv['QT4DIR']))
 
 ################################################################################
 
@@ -376,10 +445,12 @@ ptConf = Configure(ptDefaultEnv,
                    custom_tests = 
                        {'ptCheckPKGConfig'     : ptCheckPKGConfig,
                         'ptCheckPKG'           : ptCheckPKG ,
+                        'ptCheckQt'            : ptCheckQt ,
                         'ptCheckLibWithHeader' : ptCheckLibWithHeader,
                         'ptCheckHg'            : ptCheckHg,
                         'ptCheckLibJpeg'       : ptCheckLibJpeg,
-                        'ptGetPKGOutput'       : ptGetPKGOutput})
+                        'ptGetPKGOutput'       : ptGetPKGOutput,
+                        'ptGetQtOutput'        : ptGetQtOutput})
 
 # hg check
 if not ptConf.ptCheckHg():
@@ -407,11 +478,6 @@ if ptDefaultEnv['PT_TARGET_PLATFORM'] == ptDefaultEnv['PT_HOST_PLATFORM'] :
     ptPrintLog(True,ptLogFile,ptBoldRed,'Giving up.')
     Exit(1)
 
-# jasper (jpeg2000) check.
-if not ptConf.ptCheckLibWithHeader('jasper','jasper/jasper.h','cxx'):
-  ptPrintLog(True,ptLogFile,ptBoldRed,'Library jasper not found.')
-  ptPrintLog(True,ptLogFile,ptBoldRed,'Giving up.')
-  Exit(1)
 
 # png check.
 if not ptConf.ptCheckLibWithHeader('png','png.h','cxx'):
@@ -520,15 +586,15 @@ else :
   [ptGMWandVersionString,ptGMWandFlags] = ptConf.ptGetPKGOutput('GraphicsMagickWand')
 
 # QT check.
-if not ptConf.ptCheckPKG('QtCore >= ' + ptMinQtVersion):
+if not ptConf.ptCheckQt(ptMinQtVersion) :
+  ptPrintLog(True,ptLogFile, ptBoldRed,
+             'Qt >= ' + ptMinQtVersion + ' not found.')
   ptPrintLog(True,ptLogFile,ptBoldRed,
-             'QtCore >= ' + ptMinQtVersion + ' not found.')
-  ptPrintLog(True,ptLogFile,ptBoldRed,
-             'Found :  ' +  ptConf.ptGetPKGOutput('QtCore')[0])
+             'Found :  ' +  ptConf.ptGetQtOutput()[0])
   ptPrintLog(True,ptLogFile,ptBoldRed,'Giving up.')
   Exit(1)
 else :
-  [ptQtVersionString,ptQtFlags] = ptConf.ptGetPKGOutput('QtCore')
+  [ptQtVersionString,ptQtFlags] = ptConf.ptGetQtOutput()
 
 # libgimp check in case we are working with GIMPPLUGIN
 if ptDefaultEnv['PT_WITH_GIMPPLUGIN']:
@@ -563,14 +629,6 @@ if ptDefaultEnv['PT_WITH_SYSTEMCIMG']:
 if not ptDefaultEnv['PT_WITH_FILEMGR']:
   ptConf.env.Append(CPPDEFINES = ['-DPT_WITHOUT_FILEMGR'])
 
-# XXX CHECKME.
-if ptDefaultEnv['PT_TARGET_PLATFORM'] == 'win32':
-  if not ptConf.CheckLib('gnurx'):
-    ptPrintLog(True,ptLogFile,ptBoldRed,'Library gnurx not found.')
-    ptPrintLog(True,ptLogFile,ptBoldRed,'Giving up.')
-    Exit(1)
-  ptConf.env.Append(LIBS = ['gnurx'])
-  
 # Finalize configuration
 ptConf.Finish()
 
@@ -646,7 +704,6 @@ ptDefaultEnv.MergeFlags(ptParsedGMFlags)
 ptParsedGMWandFlags = ptDefaultEnv.ParseFlags(ptGMWandFlags)
 ptDefaultEnv.MergeFlags(ptParsedGMWandFlags)
 
-# qt4 tool (later) will do also, but I guess compatible.
 ptParsedQtFlags = ptDefaultEnv.ParseFlags(ptQtFlags)
 ptDefaultEnv.MergeFlags(ptParsedQtFlags)
 
@@ -671,11 +728,14 @@ ptDefaultEnv.Append(LINKFLAGS = ['-DSCONS_LINK'])
 
 ################################################################################
 
-ptDefaultEnv.Append(CXXFLAGS = ['-std=gnu++0x'])
+# Common settings for compiler and linker.
+
 ptDefaultEnv.Append(CCFLAGS  = ['-ffast-math'])
 ptDefaultEnv.Append(CCFLAGS  = ['-Wall'])
 ptDefaultEnv.Append(CCFLAGS  = ['-Werror'])
 ptDefaultEnv.Append(CCFLAGS  = ['-Wextra'])
+
+ptDefaultEnv.Append(CXXFLAGS = ['-std=gnu++0x'])
 
 if ptDefaultEnv['PT_OMP']:
   ptDefaultEnv.Append(CCFLAGS  = ['-fopenmp'])
@@ -685,17 +745,23 @@ if ptDefaultEnv['PT_RELEASE'] == True:
   ptDefaultEnv.Append(CCFLAGS  = ['-O3'])
   ptDefaultEnv.Append(CCFLAGS  = ['-funroll-loops', '-ftree-vectorize'])
   ptDefaultEnv.Append(CCFLAGS  = ['-DQT_NO_DEBUG'])
-  ptDefaultEnv.Append(LINKFLAGS = ['-Wl,-O1'])
+  if ptDefaultEnv['PT_TARGET_PLATFORM'] not in 'darwin' :
+    ptDefaultEnv.Append(LINKFLAGS = ['-Wl,-O1'])
 else:
-  ptDefaultEnv.Append(CCFLAGS  = ['-O1'])
   ptDefaultEnv.Append(CCFLAGS  = ['-g'])
   ptDefaultEnv.Append(CCFLAGS  = ['-DQT_DEBUG'])
+  if ptDefaultEnv['PT_TARGET_PLATFORM'] not in 'darwin' :
+    ptDefaultEnv.Append(CCFLAGS  = ['-O1'])
 
-if ptDefaultEnv['PT_TARGET_PLATFORM'] == 'win32':
+if ptDefaultEnv['PT_TARGET_PLATFORM'] in ['win32'] :
   if ptDefaultEnv['PT_WITH_CONSOLE'] == True:
     ptDefaultEnv.Append(LINKFLAGS = ['-Wl,-subsystem,console'])
   else:
     ptDefaultEnv.Append(LINKFLAGS = ['-Wl,-subsystem,windows'])
+
+if ptDefaultEnv['PT_TARGET_ARCHITECTURE'] not in ['x86_64'] :
+  # This can go wild ? XXX JDLA We set it i686 without actually knowing ?
+  ptDefaultEnv.Append(CCFLAGS  = ['-march=i686'])
 
 ################################################################################
 
@@ -726,14 +792,14 @@ if ptDefaultEnv['PT_INSTALL_MODE'] == 'Original' :
   ptTgtList = []
 
   # binaries.
-  if ptDefaultEnv['PT_TARGET_PLATFORM'] == 'posix':
+  if ptDefaultEnv['PT_TARGET_PLATFORM'] in ['darwin','posix'] :
     ptOrgList += ['photivo']
     ptOrgList += ['ptClear']
     ptTgtList += [ptDefaultEnv['PT_INSTALL_PATH'] + '/bin/photivo']
     ptTgtList += [ptDefaultEnv['PT_INSTALL_PATH'] + '/bin/ptclear']
-  if ptDefaultEnv['PT_TARGET_PLATFORM'] == 'win32':
-    ptBinOrgList += ['photivo.exe']
-    ptBinOrgList += ['ptClear.exe']
+  if ptDefaultEnv['PT_TARGET_PLATFORM'] in ['win32']:
+    ptOrgList += ['photivo.exe']
+    ptOrgList += ['ptClear.exe']
     ptTgtList += [ptDefaultEnv['PT_INSTALL_PATH'] + '/bin/photivo.exe']
     ptTgtList += [ptDefaultEnv['PT_INSTALL_PATH'] + '/bin/ptclear.exe']
 
@@ -761,5 +827,14 @@ if ptDefaultEnv['PT_INSTALL_MODE'] == 'Original' :
      ptDefaultEnv['PT_TARGET_PLATFORM'] == 'posix' :
     ptDefaultEnv.Alias('install',ptDefaultEnv['PT_INSTALL_PATH'])
     ptDefaultEnv.InstallAs(ptTgtList,ptOrgList)
+
+################################################################################
+
+# import script for building .app bundle
+
+# XXX JDLA TODO : Integrate better.
+
+if ptDefaultEnv['PT_TARGET_PLATFORM'] in ['darwin'] :  
+  import osx_app_bundle
 
 ################################################################################

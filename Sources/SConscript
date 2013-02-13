@@ -2,7 +2,7 @@
 ##
 ## photivo
 ##
-## Copyright (C) 2008-2013 Jos De Laender <jos@de-laender.be>
+## Copyright (C) 2013 Jos De Laender <jos@de-laender.be>
 ##
 ## This file is part of photivo.
 ##
@@ -21,6 +21,7 @@
 ################################################################################
 
 import os.path
+
 Import('ptQtEnv')
 
 ptLocalEnv = ptQtEnv.Clone()
@@ -32,6 +33,7 @@ ptForms += Glob('*/*.ui')
 ptForms += Glob('*/*/*.ui')
 
 ptLocalEnv.Uic4(ptForms)
+
 ptLocalEnv.Append(CPPPATH = ['.'])
 
 ################################################################################
@@ -232,16 +234,19 @@ ptSources += ['batch/ptJobListItem.cpp']
 ptSources += ['batch/ptBatchWindow.cpp']
 ptSources += ['batch/ptJobListModel.cpp']
 
+if ptLocalEnv['PT_TARGET_PLATFORM'] in ['win32'] :
+  ptSources += ['ptEcWin7.cpp']
+  ptSources += ['ptWinApi.cpp']
+
 # TODO Check me. This is now outside build dir.
 # Maybe some copy action first or so ...
 ptSources += [ptLocalEnv.GetLaunchDir() + '/qrc/photivo.qrc']
 
 ################################################################################
 
-ptObj = [ptLocalEnv.Object(i) for i in [ptSources]]
-
-ptPhotivo = ptLocalEnv.Program('photivo',ptObj)
 ptClear   = ptLocalEnv.Program('ptClear',['ptClear.cpp'])
+ptObj     = [ptLocalEnv.Object(i) for i in [ptSources]]
+ptPhotivo = ptLocalEnv.Program('photivo',ptObj)
 
 # Dependency via ptEmu.qrc and that is not scanned. XXX TODO REFINE
 # TODO Depends(photivo,Glob('Icons/*'))
