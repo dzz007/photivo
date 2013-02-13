@@ -83,9 +83,9 @@ public:
   ptJobListItem* JobItem(int i) const;
 
   /*!
-   * Creates a job from \c file and adds it to the list.
+   * Creates a job from \c file and adds it to the list. Sets the input file to \c inputFile.
    */
-  void AddJobToList(const QString &file);
+  void AddJobToList(const QString &file, const QString &inputFile = QString());
 
   /*!
    * Adds the job \c item to the list.

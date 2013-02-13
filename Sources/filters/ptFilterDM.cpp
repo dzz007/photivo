@@ -450,7 +450,7 @@ bool ptFilterDM::SendToBatch(const QString &AFileName) {
     return false;
 
   bool result = PerformWritePreset(hFileName, false, true, false, nullptr);
-  BatchWindow->AddJobs(QStringList(hFileName));
+  BatchWindow->AddJob(hFileName, Settings->GetStringList("InputFileNameList").first());
   return result;
 }
 
