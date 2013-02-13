@@ -754,6 +754,7 @@ else:
     ptDefaultEnv.Append(CCFLAGS  = ['-O1'])
 
 if ptDefaultEnv['PT_TARGET_PLATFORM'] in ['win32'] :
+  ptDefaultEnv.Append(LIBS = ['ole32','wsock32','expat','gdi32','iconv'])
   if ptDefaultEnv['PT_WITH_CONSOLE'] == True:
     ptDefaultEnv.Append(LINKFLAGS = ['-Wl,-subsystem,console'])
   else:
