@@ -70,6 +70,16 @@ void ptBatchWindow::UpdateTheme()
   setStyleSheet(Theme->stylesheet());
 }
 
+void ptBatchWindow::AddJob(const QString &settingFile, const QString &rawFile)
+{
+  m_BatchModel->AddJobToList(settingFile, rawFile);
+
+  BTJobList->resizeColumnsToContents();
+  m_BatchModel->AutosaveJobList();
+}
+
+//==============================================================================
+
 void ptBatchWindow::AddJobs(const QStringList &settingFiles)
 {
   foreach (QString fileName, settingFiles)
