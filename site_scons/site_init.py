@@ -331,7 +331,7 @@ def ptCheckQt(Context,MinVersion):
   for qm in qmakes : 
     if os.path.exists(qm) :
       qmake = qm
-    break
+      break
  
   if not qmake:
     ptPrintLog(True,Context.env['PT_LOGFILE'],ptBoldRed,
@@ -403,7 +403,7 @@ def ptGetQtOutput(Context):
   for qm in qmakes : 
     if os.path.exists(qm) :
       qmake = qm
-    break
+      break
  
   if not qmake:
     ptPrintLog(True,Context.env['PT_LOGFILE'],ptBoldRed,
