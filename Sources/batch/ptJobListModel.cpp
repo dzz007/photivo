@@ -150,7 +150,8 @@ void ptJobListModel::AddJobToList(const QString &file, const QString &inputFile)
 
 //  a valid settings file
   if (item != nullptr) {
-    item->SetInputFiles(QStringList(inputFile));
+    if (!inputFile.isEmpty())
+      item->SetInputFiles(QStringList(inputFile));
     AddJobToList(item);
   }
 }

@@ -1674,6 +1674,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       ProcessingTabBook->setCurrentIndex(6);
     } else if (Event->key()==Qt::Key_8 && Event->modifiers()==Qt::AltModifier) {
       ProcessingTabBook->setCurrentIndex(7);
+    } else if (Event->key()==Qt::Key_9 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(8);
     } else if (Event->key()==Qt::Key_Period && Event->modifiers()==Qt::NoModifier) {
       ProcessingTabBook->setCurrentIndex(MIN(ProcessingTabBook->currentIndex()+1,ProcessingTabBook->count()));
     } else if (Event->key()==Qt::Key_Comma && Event->modifiers()==Qt::NoModifier) {
