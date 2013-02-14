@@ -111,6 +111,11 @@ public:
   ptJobStatus Status() const {return m_Status; }
 
   /*!
+   * Sets m_InputFiles to \c inputFiles.
+   */
+  void SetInputFiles(const QStringList &inputFiles);
+
+  /*!
    * Sets the current status of the job to \c status.
    */
   void SetStatus(ptJobStatus status);
