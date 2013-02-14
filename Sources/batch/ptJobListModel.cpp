@@ -37,7 +37,7 @@ ptJobListModel::ptJobListModel(QObject *parent) :
   connect(this, SIGNAL(processingAborted()), SLOT(OnAbortProcessing()));
 
   m_DefaultAutosaveFileName = Settings->GetString("UserDirectory")+"currentBatch.ptb";
-  if (Settings->GetValue("BatchMgrAutoload").toBool())
+  if (Settings->GetValue("BatchMgrAutoload").toBool() && QFileInfo(m_DefaultAutosaveFileName).exists())
     LoadFromSettings(m_DefaultAutosaveFileName);
 }
 
@@ -135,7 +135,7 @@ ptJobListItem* ptJobListModel::JobItem(int i) const
 
 //==============================================================================
 
-void ptJobListModel::AddJobToList(const QString &file)
+void ptJobListModel::AddJobToList(const QString &file, const QString &inputFile)
 {
   ptJobListItem *item = nullptr;
   try {
@@ -149,8 +149,10 @@ void ptJobListModel::AddJobToList(const QString &file)
   }
 
 //  a valid settings file
-  if (item != nullptr)
+  if (item != nullptr) {
+    item->SetInputFiles(QStringList(inputFile));
     AddJobToList(item);
+  }
 }
 
 //==============================================================================

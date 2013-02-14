@@ -91,6 +91,13 @@ ptJobListItem::~ptJobListItem()
 
 //==============================================================================
 
+void ptJobListItem::SetInputFiles(const QStringList &inputFiles)
+{
+  m_InputFiles = inputFiles;
+}
+
+//==============================================================================
+
 void ptJobListItem::SetStatus(ptJobStatus status)
 {
   m_Status = status;
