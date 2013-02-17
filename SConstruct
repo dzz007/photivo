@@ -162,7 +162,7 @@ exec open(ptBuildConfFile, 'rU').read() in {}, ptBuildValues
 #  print key + ' => ' + str(value)
 
 # A default environment to start from.
-ptDefaultEnv  = Environment()
+ptDefaultEnv  = Environment(CC = 'gcc', CXX = 'g++')
 
 # For later reference. The unaltered one.
 ptDefaultEnv['PT_DEFAULT_PATH'] = ptDefaultEnv['ENV']['PATH']
