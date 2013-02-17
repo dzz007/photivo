@@ -120,7 +120,6 @@ QT4_WRAP_UI( photivo_UI_SRCS ${photivo_UI_HDRS} )
 QT4_WRAP_CPP( photivo_MOC_SRCS ${photivo_MOC_HDRS} )
 QT4_ADD_RESOURCES( photivo_RCC_SRCS ${photivo_RCCS} )
 
-ADD_DEFINITIONS( "-DPREFIX=${CMAKE_INSTALL_PREFIX}" )
 set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -Wno-unknown-pragmas" )
 set( CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -funroll-loops -fopenmp" )
 set( CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g -Wno-unknown-pragmas" )
@@ -129,7 +128,8 @@ set( CMAKE_L_FLAGS_RELWITHDEBINFO "-rdynamic" )
 set( CMAKE_L_FLAGS_DEBUG "-rdynamic" )
 
 add_executable( photivo ${photivo_SRCS} ${photivo_RCC_SRCS} ${photivo_MOC_SRCS} ${photivo_UI_SRCS} )
-set_target_properties( photivo PROPERTIES COMPILE_FLAGS "-ffast-math -std=gnu++0x -DAPPVERSION='${APPVERSION}'" )
+set_target_properties( photivo PROPERTIES COMPILE_FLAGS
+                       "-ffast-math -std=gnu++0x -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX} -DDLRAW_HAVE_GIMP" )
 target_link_libraries( photivo
                        ${GLIB2_LIBRARIES}
                        ${QT_LIBRARIES}
