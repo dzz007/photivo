@@ -527,6 +527,13 @@ void ptFilterBase::updateGui(const bool ARequestPipeRun /*= true*/) {
       }
     }
   }
+  else {
+    // loading curves in job mode
+    for(ptCfgItem hCfgItem: FCfgItems) {
+      if (hCfgItem.Type == ptCfgItem::CurveWin)
+        hCfgItem.Curve->setFromFilterConfig(*FConfig->getSimpleStore(hCfgItem.Id));
+    }
+  }
 
   if (ARequestPipeRun) {
     requestPipeRun();
