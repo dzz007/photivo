@@ -46,12 +46,12 @@ public:
   /*!
    * Adds job from \c settingFile to the list. Allows one to specify a \c rawFile.
    */
-  void AddJob(const QString &settingFile, const QString &rawFile = QString());
+  void AddJobToList(const QString &settingFile, const QString &rawFile = QString());
 
   /*!
    * Adds jobs from \c settingFiles to the list.
    */
-  void AddJobs(const QStringList &settingFiles);
+  void AddJobsToList(const QStringList &settingFiles);
 
 protected:
   void keyPressEvent(QKeyEvent *event);

@@ -70,7 +70,7 @@ void ptBatchWindow::UpdateTheme()
   setStyleSheet(Theme->stylesheet());
 }
 
-void ptBatchWindow::AddJob(const QString &settingFile, const QString &rawFile)
+void ptBatchWindow::AddJobToList(const QString &settingFile, const QString &rawFile)
 {
   m_BatchModel->AddJobToList(settingFile, rawFile);
 
@@ -80,7 +80,7 @@ void ptBatchWindow::AddJob(const QString &settingFile, const QString &rawFile)
 
 //==============================================================================
 
-void ptBatchWindow::AddJobs(const QStringList &settingFiles)
+void ptBatchWindow::AddJobsToList(const QStringList &settingFiles)
 {
   foreach (QString fileName, settingFiles)
     m_BatchModel->AddJobToList(fileName);
@@ -131,7 +131,7 @@ void ptBatchWindow::OnAddJob()
   if (SettingsFileNames.isEmpty()) return;
 
   Settings->SetValue("RawsDirectory", QFileInfo(SettingsFileNames.first()).absolutePath());
-  AddJobs(SettingsFileNames);
+  AddJobsToList(SettingsFileNames);
 }
 
 //==============================================================================
