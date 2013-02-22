@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2012 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
@@ -24,8 +24,7 @@
 #include "ptFilterConfig.h"
 #include "../ptInfo.h"
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 /* Strictly for debugging! Dumps all key/value pairs to stdout. */
 //#include <iostream>
 //void DumpConfig(TFilterConfig ADataStore) {
@@ -40,28 +39,45 @@
 //  }
 //}
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Creates a new ptFilterConfig object. */
 ptFilterConfig::ptFilterConfig() {
   /* nothing to do */
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Copy constructor. */
 ptFilterConfig::ptFilterConfig(const ptFilterConfig &AOther) {
-  this->FDefaultStore    = AOther.FDefaultStore;
-  this->FSimpleStoreIds     = AOther.FSimpleStoreIds;
-  this->FSimpleStores = AOther.FSimpleStores;
+  this->FDefaultStore   = AOther.FDefaultStore;
+  this->FSimpleStoreIds = AOther.FSimpleStoreIds;
+  this->FSimpleStores   = AOther.FSimpleStores;
 }
 
-//==============================================================================
+//------------------------------------------------------------------------------
+/*! Destroys a ptFilterConfig object. */
+ptFilterConfig::~ptFilterConfig() {
+  // nothing to do here
+}
 
+//------------------------------------------------------------------------------
+/*! Initializes the data store with new key/value pairs. All old data is removed.
+    \param AInitData
+      A *QMap* with all the keys handled by this *ptFilterConfig* instance set
+      to their default values. Also defines the valid keys for the getValue() and
+      setValue() methods.
+    \see update()
+ */
 void ptFilterConfig::init(const TConfigStore &AInitData) {
   FDefaultStore = AInitData;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Updates the data store with new key/value pairs. Existing keys are updated with the
+    new value, non-existing keys are ignored. Keys not present in *AInitData* are not touched.
+    \param AInitData
+      A *QMap* containing the new data.
+    \see init()
+ */
 void ptFilterConfig::update(const TConfigStore &AInitData) {
   // QMap::unite() is unsuitable to update an existing map with new data
   // because it creates duplicate keys. We have to use QMap::insert() manually.
@@ -72,8 +88,8 @@ void ptFilterConfig::update(const TConfigStore &AInitData) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Returns the value for the config item *AKey*. */
 QVariant ptFilterConfig::getValue(const QString &AKey) const {
   if (!FDefaultStore.contains(AKey)) {
     GInfo->Raise(QString("Key \"%1\" not found in FDataStore.").arg(AKey), AT);
@@ -82,8 +98,8 @@ QVariant ptFilterConfig::getValue(const QString &AKey) const {
   return FDefaultStore.value(AKey);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Updates the config item *AKey* with *AValue*. */
 void ptFilterConfig::setValue(const QString &AKey, const QVariant &AValue) {
   if (!FDefaultStore.contains(AKey))
     GInfo->Raise(QString("Key \"%1\" not found in FDataStore.").arg(AKey), AT);
@@ -91,8 +107,7 @@ void ptFilterConfig::setValue(const QString &AKey, const QVariant &AValue) {
   FDefaultStore.insert(AKey, AValue);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 TConfigStore *ptFilterConfig::newSimpleStore(const QString &AId, const TConfigStore ADefaults) {
   if (FSimpleStoreIds.indexOf(AId) != -1)
     GInfo->Raise("Id \"" + AId + "\" already defined. Must be unique!", AT);
@@ -102,8 +117,7 @@ TConfigStore *ptFilterConfig::newSimpleStore(const QString &AId, const TConfigSt
   return &FSimpleStores.last();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 TConfigStore *ptFilterConfig::getSimpleStore(const QString &AId) {
   int hIdx = FSimpleStoreIds.indexOf(AId);
 
@@ -113,15 +127,13 @@ TConfigStore *ptFilterConfig::getSimpleStore(const QString &AId) {
     return &FSimpleStores[hIdx];
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptFilterConfig::clearSimpleStores() {
   FSimpleStoreIds.clear();
   FSimpleStores.clear();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptFilterConfig::insertStore(const QString &AId, ptStorable *AStore) {
   if (FStoreIds.indexOf(AId) != -1)
     GInfo->Raise("Id \"" + AId + "\" already defined. Must be unique!", AT);
@@ -130,8 +142,7 @@ void ptFilterConfig::insertStore(const QString &AId, ptStorable *AStore) {
   FStores.append(AStore);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 ptStorable *ptFilterConfig::getStore(const QString &AId) {
   int hIdx = FStoreIds.indexOf(AId);
 
@@ -140,6 +151,4 @@ ptStorable *ptFilterConfig::getStore(const QString &AId) {
   else
     return FStores[hIdx];
 }
-
-//==============================================================================
 
