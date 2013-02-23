@@ -270,7 +270,9 @@ HEADERS += \
     ../Sources/filters/imagespot/ptImageSpotList.h \
     ../Sources/batch/ptJobListItem.h \
     ../Sources/batch/ptBatchWindow.h \
-    ../Sources/batch/ptJobListModel.h
+    ../Sources/batch/ptJobListModel.h \
+    ../Sources/filters/ptFilterConfigTools.h \
+    ../Sources/ptUtils.h
 
 
 SOURCES += \
@@ -402,7 +404,10 @@ SOURCES += \
     ../Sources/filters/ptFilter_Tone.cpp \
     ../Sources/batch/ptJobListItem.cpp \
     ../Sources/batch/ptBatchWindow.cpp \
-    ../Sources/batch/ptJobListModel.cpp
+    ../Sources/batch/ptJobListModel.cpp \
+    ../Sources/filters/ptFilterConfigTools.cpp \
+    ../Sources/filters/ptStorable.cpp \
+    ../Sources/ptUtils.cpp
 
 
 FORMS += \

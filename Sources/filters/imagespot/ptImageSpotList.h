@@ -19,32 +19,20 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
 #ifndef PTIMAGESPOTLIST_H
 #define PTIMAGESPOTLIST_H
 
-#include <memory>
-
-#include <QList>
-
 #include "ptImageSpot.h"
-#include <filters/ptStorable.h>
-
-//==============================================================================
+#include "../ptStorable.h"
+#include <QList>
+#include <memory>
 
 class ptImageSpotList: public ptStorable {
 public:
   ptImageSpotList(PCreateSpotFunc ASpotCreator);
   ~ptImageSpotList();
 
-  /*! \group Implementation of the ptStorable interface. */
-  ///@{
-  TConfigStore  storeConfig(const QString &APrefix = "") const;
-  void          loadConfig(const TConfigStore &AConfig, const QString &APrefix = "");
-  ///@}
-
-  /*! \group QList functionality needed on the outside. */
-  ///@{
+  /*! \name QList functionality needed on the outside. *//*! @{*/
   void            append(ptImageSpot *spot)  { FSpots.append(spot); }
   ptImageSpot    *at(int i) const             { return FSpots[i]; }
   void            clear();
@@ -53,10 +41,15 @@ public:
   void            removeAt(int i)             { FSpots.removeAt(i); }
   void            replace(int i, ptImageSpot *spot) { FSpots.replace(i, spot); }
   int             size() const                { return FSpots.size(); }
-  ///@}
+  /*! @}*/
 
   bool          hasEnabledSpots();
 
+protected:
+  /*! \name Implementation of the ptStorable interface. *//*! @{*/
+  TConfigStore  doStoreConfig(const QString &APrefix) const;
+  void          doLoadConfig(const TConfigStore &AConfig, const QString &APrefix);
+  /*! @}*/
 
 private:
   QList<ptImageSpot*> FSpots;
