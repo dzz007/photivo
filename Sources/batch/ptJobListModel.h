@@ -72,6 +72,11 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
   /*!
+   * Reimplements \c QAbstractItemModel's sort() function.
+   */
+  void sort(int column, Qt::SortOrder order);
+
+  /*!
    * A replacement fot rowCount() method. Added for convenience.
    * \return the number of jobs in the list.
    */

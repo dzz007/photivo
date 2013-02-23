@@ -53,6 +53,8 @@ ptBatchWindow::ptBatchWindow(QWidget *parent) :
   BTLogSplitter->setStretchFactor(BTLogSplitter->indexOf(BTLog), 1);
 
   BTJobList->resizeColumnsToContents();
+  BTJobList->setSortingEnabled(true);
+  BTJobList->sortByColumn(jdFileName, Qt::AscendingOrder);
 }
 
 //==============================================================================

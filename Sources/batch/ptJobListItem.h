@@ -210,4 +210,20 @@ private:
 
 //==============================================================================
 
+/*!
+ * Functions for sorting job list by corresponding coloumns.
+ */
+bool SortByFileName(ptJobListItem *i1, ptJobListItem *i2);
+bool ReverseSortByFileName(ptJobListItem *i1, ptJobListItem *i2);
+bool SortByStatus(ptJobListItem *i1, ptJobListItem *i2);
+bool ReverseSortByStatus(ptJobListItem *i1, ptJobListItem *i2);
+bool SortByOutputPath(ptJobListItem *i1, ptJobListItem *i2);
+bool ReverseSortByOutputPath(ptJobListItem *i1, ptJobListItem *i2);
+bool SortByOutputFileSuffix(ptJobListItem *i1, ptJobListItem *i2);
+bool ReverseSortByOutputFileSuffix(ptJobListItem *i1, ptJobListItem *i2);
+bool SortByInputFiles(ptJobListItem *i1, ptJobListItem *i2);
+bool ReverseSortByInputFiles(ptJobListItem *i1, ptJobListItem *i2);
+
+//==============================================================================
+
 #endif // PTJOBLISTITEM_H
