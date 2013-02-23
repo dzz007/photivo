@@ -63,7 +63,7 @@ ptTuningSpot::~ptTuningSpot() {
 
 //==============================================================================
 
-TConfigStore ptTuningSpot::doStoreConfig(const QString &APrefix) const {
+TConfigStore ptTuningSpot::dodoStoreConfig(const QString &APrefix) const {
   TConfigStore hConfig;
 
   for (auto iter = FDataStore.begin(); iter != FDataStore.end(); ++iter) {
@@ -76,7 +76,7 @@ TConfigStore ptTuningSpot::doStoreConfig(const QString &APrefix) const {
 
 //==============================================================================
 
-void ptTuningSpot::doLoadConfig(const TConfigStore &AConfig, const QString &APrefix) {
+void ptTuningSpot::dodoLoadConfig(const TConfigStore &AConfig, const QString &APrefix) {
   FCurve->setFromFilterConfig(AConfig, APrefix+CSpotLumaCurveId+"/");
 
   for (ptCfgItem hCfgItem: *FDefaults) {
@@ -89,7 +89,7 @@ void ptTuningSpot::doLoadConfig(const TConfigStore &AConfig, const QString &APre
 
 //==============================================================================
 
-QVariant ptTuningSpot::doGetValue(const QString &AKey) const {
+QVariant ptTuningSpot::doValue(const QString &AKey) const {
   if (AKey == CSpotMaxRadiusId) {
     return FDataStore.value(CSpotMaxRadiusId).toInt() >> Settings->GetInt("Scaled");
 

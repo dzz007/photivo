@@ -19,25 +19,12 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-#ifndef PTSTORABLE_H
-#define PTSTORABLE_H
+#ifndef PTUTILS_H
+#define PTUTILS_H
 
-#include "../ptUtils.h"
-#include <QVariant>
+#include <QString>
 
-typedef QMap<QString, QVariant> TConfigStore;
+QString trailingSlash(const QString &AText);
 
-class ptStorable {
-public:
-  ptStorable();
-  virtual ~ptStorable();
 
-  TConfigStore storeConfig(const QString &APrefix) const;
-  void         loadConfig(const TConfigStore &AConfig, const QString &APrefix);
-
-protected:
-  virtual TConfigStore doStoreConfig(const QString &APrefix) const = 0;
-  virtual void         doLoadConfig(const TConfigStore &AConfig, const QString &Prefix) = 0;
-};
-
-#endif // PTSTORABLE_H
+#endif // PTUTILS_H

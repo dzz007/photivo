@@ -19,25 +19,15 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-#ifndef PTSTORABLE_H
-#define PTSTORABLE_H
+#include "ptUtils.h"
 
-#include "../ptUtils.h"
-#include <QVariant>
-
-typedef QMap<QString, QVariant> TConfigStore;
-
-class ptStorable {
-public:
-  ptStorable();
-  virtual ~ptStorable();
-
-  TConfigStore storeConfig(const QString &APrefix) const;
-  void         loadConfig(const TConfigStore &AConfig, const QString &APrefix);
-
-protected:
-  virtual TConfigStore doStoreConfig(const QString &APrefix) const = 0;
-  virtual void         doLoadConfig(const TConfigStore &AConfig, const QString &Prefix) = 0;
-};
-
-#endif // PTSTORABLE_H
+/*!
+  Returns *AText* with exactly one trailing slash.
+  When *AText* is empty an empty string is returned.
+*/
+QString trailingSlash(const QString &AText) {
+  if (AText.endsWith('/') || AText.isEmpty())
+    return AText;
+  else
+    return AText + "/";
+}

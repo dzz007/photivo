@@ -62,8 +62,8 @@ int ptImageSpot::y() const {
 
 //==============================================================================
 
-QVariant ptImageSpot::getValue(const QString &AKey) const {
-  QVariant hResult = doGetValue(AKey);
+QVariant ptImageSpot::value(const QString &AKey) const {
+  QVariant hResult = doValue(AKey);
 
   if (hResult.isValid())              return hResult;
   else if (FDataStore.contains(AKey)) return FDataStore.value(AKey);
@@ -90,8 +90,8 @@ void ptImageSpot::setValue(const QString &AKey, const QVariant AValue) {
 
 //==============================================================================
 
-TConfigStore ptImageSpot::storeConfig(const QString &APrefix) const {
-  auto hConfig = doStoreConfig(APrefix);
+TConfigStore ptImageSpot::doStoreConfig(const QString &APrefix) const {
+  auto hConfig = this->dodoStoreConfig(APrefix);
 
   hConfig.insert(APrefix+CSpotIsEnabledId, FIsEnabled);
   hConfig.insert(APrefix+CSpotNameId, FName);
@@ -103,12 +103,13 @@ TConfigStore ptImageSpot::storeConfig(const QString &APrefix) const {
 
 //==============================================================================
 
-void ptImageSpot::loadConfig(const TConfigStore &AConfig, const QString &APrefix) {
+void ptImageSpot::doLoadConfig(const TConfigStore &AConfig, const QString &APrefix) {
   this->setEnabled(AConfig.value(APrefix+CSpotIsEnabledId, true).toBool());
   this->setName(AConfig.value(APrefix+CSpotNameId, "").toString());
   this->setPos(QPoint(AConfig.value(APrefix+CSpotPosId+"/X").toInt(),
                       AConfig.value(APrefix+CSpotPosId+"/Y").toInt()));
-  doLoadConfig(AConfig, APrefix);
+
+  this->dodoLoadConfig(AConfig, APrefix);
 }
 
 //==============================================================================
