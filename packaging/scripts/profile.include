@@ -1,0 +1,37 @@
+if [[ -e /mingw/x86_64-w64-mingw32 ]]; then
+  export GccArch=64
+else
+  export GccArch=32
+fi
+
+export GccVersion=`gcc --version|head -n1|sed 's/.*\([0-9]\.[0-9]\.[0-9]\)$/\1/'`
+
+export PS1='\[\033]0;(GCC $GccVersion ${GccArch}bit) \w\007
+\033[32m\]\t \033[0m($PhotivoRepoId) \[\033[33m\w\033[0m\]
+$ '
+
+export ProjectsBasePath=/C/Projekte
+export RepoDefaultDir=repository
+export PhotivoRepoId=none
+export JobsForMake=4
+
+export LDFLAGS=-L/my/lib
+export CFLAGS="-I/my/include -O3"
+export CXXFLAGS="-I/my/include -O3"
+export PKG_CONFIG_PATH=/my/lib/pkgconfig
+export PATH=$PATH:/my/bin:/mingw/qt/bin:/scriptbin:/c/bin/TortoiseHg:/c/bin32/Svn/bin:/c/Windows/System32:/c/bin/Perl/bin:/C/bin/Python/default
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias cdbin='cd $PhotivoBuildPath'
+alias pd=pushd
+alias b=popd
+alias dir='ls -lA | sort -k 1.1,1.2r -k 9.1 -f'
+alias clear=cls
+alias q=exit
+
+alias setrepo='. setrepo'
+alias lsflags='set|egrep "CFLAGS|CXXFLAGS|LDFLAGS|PKG_CONFIG_PATH"'
+alias ptrun='./photivo --new-instance --no-fmgr'
+
+cd $ProjectsBasePath

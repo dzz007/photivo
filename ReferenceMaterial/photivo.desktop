@@ -1,0 +1,18 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Name=Photivo
+GenericName=Photivo - photo processor
+Comment=Edit RAWs and bitmaps
+
+Type=Application
+Categories=Graphics;Photography;
+
+Exec=photivo %F
+TryExec=photivo
+Icon=photivo-appicon
+
+Terminal=false
+StartupNotify=true
+
+MimeType=application/x-photivo;image/x-dcraw;image/bmp;image/jpeg;image/png;image/tiff;
