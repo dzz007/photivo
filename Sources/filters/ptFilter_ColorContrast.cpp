@@ -65,17 +65,17 @@ void ptFilter_ColorContrast::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_ColorContrast::doCheckHasActiveCfg() {
-  return FConfig->getValue(COpacity).toDouble() != 0.0;
+  return FConfig.value(COpacity).toDouble() != 0.0;
 }
 
 //==============================================================================
 
 void ptFilter_ColorContrast::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->Colorcontrast(FConfig->getValue(CRadius).toInt(),
-                        FConfig->getValue(CStrength).toDouble(),
-                        FConfig->getValue(COpacity).toDouble(),
-                        FConfig->getValue(CHaloControl).toDouble());
+  AImage->Colorcontrast(FConfig.value(CRadius).toInt(),
+                        FConfig.value(CStrength).toDouble(),
+                        FConfig.value(COpacity).toDouble(),
+                        FConfig.value(CHaloControl).toDouble());
 }
 
 //==============================================================================

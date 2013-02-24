@@ -59,14 +59,14 @@ void ptFilter_Saturation::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_Saturation::doCheckHasActiveCfg() {
-  return FConfig->getValue(CStrength).toFloat() != 0.0f;
+  return FConfig.value(CStrength).toFloat() != 0.0f;
 }
 
 //==============================================================================
 
 void ptFilter_Saturation::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->SigmoidalContrast(FConfig->getValue(CStrength).toFloat(), 0.5, ChMask_a|ChMask_b);
+  AImage->SigmoidalContrast(FConfig.value(CStrength).toFloat(), 0.5, ChMask_a|ChMask_b);
 }
 
 //==============================================================================

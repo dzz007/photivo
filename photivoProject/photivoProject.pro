@@ -254,7 +254,7 @@ HEADERS += \
     ../Sources/filters/imagespot/ptSpotInteraction.h \
     ../Sources/filters/imagespot/ptSpotListWidget.h \
     ../Sources/ptTempFile.h \
-    ../Sources/filters/ptStorable.h \
+    ../Sources/ptStorable.h \
     ../Sources/filters/ptFilter_ColorIntensity.h \
     ../Sources/filters/ptFilter_Brightness.h \
     ../Sources/filters/ptFilter_ReinhardBrighten.h \
@@ -271,7 +271,7 @@ HEADERS += \
     ../Sources/batch/ptJobListItem.h \
     ../Sources/batch/ptBatchWindow.h \
     ../Sources/batch/ptJobListModel.h \
-    ../Sources/filters/ptFilterConfigTools.h \
+    ../Sources/ptUtils_Storage.h \
     ../Sources/ptUtils.h
 
 
@@ -405,8 +405,8 @@ SOURCES += \
     ../Sources/batch/ptJobListItem.cpp \
     ../Sources/batch/ptBatchWindow.cpp \
     ../Sources/batch/ptJobListModel.cpp \
-    ../Sources/filters/ptFilterConfigTools.cpp \
-    ../Sources/filters/ptStorable.cpp \
+    ../Sources/ptUtils_Storage.cpp \
+    ../Sources/ptStorable.cpp \
     ../Sources/ptUtils.cpp
 
 

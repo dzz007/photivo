@@ -33,7 +33,7 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TButton &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(AValues.UseCommonDispatch),
-  Storeable(AValues.Storeable),
+  Storable(AValues.Storable),
   Caption(AValues.Caption),
   ToolTip(AValues.ToolTip),
   Checkable(AValues.Checkable),
@@ -48,7 +48,7 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCheck &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(AValues.UseCommonDispatch),
-  Storeable(AValues.Storeable),
+  Storable(AValues.Storable),
   Caption(AValues.Caption),
   ToolTip(AValues.ToolTip),
   Default(AValues.Default),
@@ -64,7 +64,7 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCombo &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(AValues.UseCommonDispatch),
-  Storeable(AValues.Storeable),
+  Storable(AValues.Storable),
   Caption(AValues.Caption),
   ToolTip(AValues.ToolTip),
   Default(AValues.Default),
@@ -81,7 +81,7 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TInput &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(AValues.UseCommonDispatch),
-  Storeable(AValues.Storeable),
+  Storable(AValues.Storable),
   Caption(AValues.Caption),
   ToolTip(AValues.ToolTip),
   Default(AValues.Default),
@@ -100,7 +100,7 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCurve &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(true),
-  Storeable(false),  // Curves have an extra default store
+  Storable(false),  // Curves have an extra default store
   Caption(AValues.Caption),
   Curve(AValues.Curve)
 {
