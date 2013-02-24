@@ -84,7 +84,7 @@ QWidget *ptFilter_Wiener::doCreateGui() {
 //==============================================================================
 
 bool ptFilter_Wiener::doCheckHasActiveCfg() {
-  return FConfig->getValue(CEnabled).toBool();
+  return FConfig.value(CEnabled).toBool();
 }
 
 //==============================================================================
@@ -92,11 +92,11 @@ bool ptFilter_Wiener::doCheckHasActiveCfg() {
 void ptFilter_Wiener::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
   ptWienerFilterChannel(AImage,
-                        FConfig->getValue(CGaussian).toDouble(),
-                        FConfig->getValue(CBox).toDouble(),
-                        FConfig->getValue(CLensBlur).toDouble(),
-                        FConfig->getValue(CStrength).toDouble(),
-                        FConfig->getValue(COnlyEdges).toBool());
+                        FConfig.value(CGaussian).toDouble(),
+                        FConfig.value(CBox).toDouble(),
+                        FConfig.value(CLensBlur).toDouble(),
+                        FConfig.value(CStrength).toDouble(),
+                        FConfig.value(COnlyEdges).toBool());
 }
 
 //==============================================================================

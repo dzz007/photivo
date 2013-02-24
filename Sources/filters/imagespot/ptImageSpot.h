@@ -34,7 +34,7 @@
 #ifndef PTIMAGESPOT_H
 #define PTIMAGESPOT_H
 
-#include "../ptStorable.h"
+#include "../../ptStorable.h"
 #include <QVariant>
 #include <QPoint>
 #include <functional>

@@ -91,7 +91,7 @@ void ptFilter_SpotTuning::doDefineControls() {
 
   FCfgItems[4].UseCommonDispatch = false;
   FNullSpot = make_unique<ptTuningSpot>(&FCfgItems);
-  FConfig->insertStore(CSpotListId, &FSpotList);
+  FConfig.insertObject(CSpotListId, &FSpotList);
 }
 
 //==============================================================================

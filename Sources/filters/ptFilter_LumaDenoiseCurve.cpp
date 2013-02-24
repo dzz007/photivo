@@ -80,8 +80,8 @@ bool ptFilter_LumaDenoiseCurve::doCheckHasActiveCfg() {
 
 void ptFilter_LumaDenoiseCurve::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->ApplyDenoiseCurve(FConfig->getValue(CLScale).toDouble()*TheProcessor->m_ScaleFactor,
-                            FConfig->getValue(CLStrength).toDouble()/10,
+  AImage->ApplyDenoiseCurve(FConfig.value(CLScale).toDouble()*TheProcessor->m_ScaleFactor,
+                            FConfig.value(CLStrength).toDouble()/10,
                             FCfgItems[cfgIdx(CCurve)].Curve.get());
 }
 

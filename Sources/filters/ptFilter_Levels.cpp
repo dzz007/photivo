@@ -73,16 +73,16 @@ void ptFilter_Levels::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_Levels::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CBlackpoint).toFloat() != 0.0f) ||
-         (FConfig->getValue(CWhitepoint).toFloat() != 1.0f);
+  return (FConfig.value(CBlackpoint).toFloat() != 0.0f) ||
+         (FConfig.value(CWhitepoint).toFloat() != 1.0f);
 }
 
 //==============================================================================
 
 void ptFilter_Levels::doRunFilter(ptImage *AImage) const {
   if (FColorSpace == TColorSpace::Rgb) {
-    float hBlackP = FConfig->getValue(CBlackpoint).toFloat();
-    float hWhiteP = FConfig->getValue(CWhitepoint).toFloat();
+    float hBlackP = FConfig.value(CBlackpoint).toFloat();
+    float hWhiteP = FConfig.value(CWhitepoint).toFloat();
 
     if (hBlackP != 0.0f) {
       hBlackP = (hBlackP > 0.0f) ? powf( hBlackP, Settings->GetDouble("InputPowerFactor")) :
@@ -96,8 +96,8 @@ void ptFilter_Levels::doRunFilter(ptImage *AImage) const {
     AImage->Levels(hBlackP, hWhiteP);
   } else if (FColorSpace == TColorSpace::Lab) {
     AImage->toLab();
-    AImage->Levels(FConfig->getValue(CBlackpoint).toFloat(),
-                   FConfig->getValue(CWhitepoint).toFloat() );
+    AImage->Levels(FConfig.value(CBlackpoint).toFloat(),
+                   FConfig.value(CWhitepoint).toFloat() );
   }
 }
 

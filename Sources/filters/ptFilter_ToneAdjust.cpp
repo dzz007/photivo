@@ -78,21 +78,21 @@ void ptFilter_ToneAdjust::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_ToneAdjust::doCheckHasActiveCfg() {
-  return FConfig->getValue(CStrength).toFloat() != 0.0f;
+  return FConfig.value(CStrength).toFloat() != 0.0f;
 }
 
 //==============================================================================
 
 void ptFilter_ToneAdjust::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->LABTone(FConfig->getValue(CStrength).toDouble(),
-                  FConfig->getValue(CHue).toDouble(),
-                  FConfig->getValue(CSaturation).toDouble(),
-                  FConfig->getValue(CMaskMode).toInt(),
+  AImage->LABTone(FConfig.value(CStrength).toDouble(),
+                  FConfig.value(CHue).toDouble(),
+                  FConfig.value(CSaturation).toDouble(),
+                  FConfig.value(CMaskMode).toInt(),
                   true, // manual mask
-                  FConfig->getValue(CLowerLimit).toDouble(),
-                  FConfig->getValue(CUpperLimit).toDouble(),
-                  FConfig->getValue(CSoftness).toDouble() );
+                  FConfig.value(CLowerLimit).toDouble(),
+                  FConfig.value(CUpperLimit).toDouble(),
+                  FConfig.value(CSoftness).toDouble() );
 }
 
 //==============================================================================

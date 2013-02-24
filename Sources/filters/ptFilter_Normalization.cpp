@@ -60,14 +60,14 @@ void ptFilter_Normalization::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_Normalization::doCheckHasActiveCfg() {
-  return FConfig->getValue(COpacity).toFloat() != 0.0f;
+  return FConfig.value(COpacity).toFloat() != 0.0f;
 }
 
 //==============================================================================
 
 void ptFilter_Normalization::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  AImage->ptGMNormalize(FConfig->getValue(COpacity).toDouble());
+  AImage->ptGMNormalize(FConfig.value(COpacity).toDouble());
 }
 
 //==============================================================================

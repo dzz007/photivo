@@ -28,13 +28,11 @@ ptStorable::ptStorable()
 ptStorable::~ptStorable()
 {}
 
-
 TConfigStore ptStorable::storeConfig(const QString &APrefix) const {
   return this->doStoreConfig(trailingSlash(APrefix));
 }
 
-
 void ptStorable::loadConfig(const TConfigStore &AConfig, const QString &APrefix) {
-  this->loadConfig(AConfig, this->ensurePrefixSyntax(APrefix));
+  this->loadConfig(AConfig, trailingSlash(APrefix));
 }
 

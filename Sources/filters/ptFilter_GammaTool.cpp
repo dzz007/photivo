@@ -61,15 +61,15 @@ void ptFilter_GammaTool::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_GammaTool::doCheckHasActiveCfg() {
-  return FConfig->getValue(CGamma).toFloat() != 1.0f;
+  return FConfig.value(CGamma).toFloat() != 1.0f;
 }
 
 //==============================================================================
 
 void ptFilter_GammaTool::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  AImage->GammaTool(FConfig->getValue(CGamma).toFloat(),
-                    FConfig->getValue(CLinearity).toFloat());
+  AImage->GammaTool(FConfig.value(CGamma).toFloat(),
+                    FConfig.value(CLinearity).toFloat());
 }
 
 //==============================================================================

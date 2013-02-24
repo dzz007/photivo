@@ -62,16 +62,16 @@ void ptFilter_ColorEnhancement::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_ColorEnhancement::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CShadows).toFloat()    > 0.0f) ||
-         (FConfig->getValue(CHighlights).toFloat() > 0.0f);
+  return (FConfig.value(CShadows).toFloat()    > 0.0f) ||
+         (FConfig.value(CHighlights).toFloat() > 0.0f);
 }
 
 //==============================================================================
 
 void ptFilter_ColorEnhancement::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  AImage->ColorEnhance(FConfig->getValue(CShadows).toFloat(),
-                       FConfig->getValue(CHighlights).toFloat());
+  AImage->ColorEnhance(FConfig.value(CShadows).toFloat(),
+                       FConfig.value(CHighlights).toFloat());
 }
 
 //==============================================================================

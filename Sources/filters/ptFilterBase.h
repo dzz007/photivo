@@ -123,7 +123,6 @@ protected:
   void              initDesignerGui(QWidget *AGuiBody);
   void              internalInit();
   ptWidget         *findPtWidget(const QString &AId, QWidget* AWidget);
-  QVariant          makeStorageFriendly(const QVariant& AVariant) const;
 
 // Pragmas are here to stop the compiler complaining about unused parameters in the default
 // implementations. Removing the parameter names would work too but be too obscure.
@@ -137,15 +136,15 @@ protected:
   virtual void      doRunFilter(ptImage *AImage) const = 0;   //!< Children should do the work.
   virtual void      doReset() {}                              //!< Reset for the children
   virtual void      doDefineControls() = 0;                   //!< Children know which controls they need.
-  virtual void      doAddCustomConfig(TConfigStore &AConfig) {}  //!< Children may need additional config entries. Derived classes may reimplement this method to add custom entries to \c FConfig or their own additional config data structure.
+  virtual void      doAddCustomConfig(TFlaggedConfigStore &AConfig) {}  //!< Children may need additional config entries. Derived classes may reimplement this method to add custom entries to \c FConfig or their own additional config data structure.
 #pragma GCC diagnostic pop
 
+  ptFilterConfig    FConfig;
   QString           FFilterName;
   QString           FCaption;
   QString           FHelpUri;
   bool              FHasActiveCfg;
   bool              FIsSlow;
-  std::unique_ptr<ptFilterConfig>  FConfig;
   ptToolBox        *FGuiContainer;
   QList<ptCfgItem>  FCfgItems;
 

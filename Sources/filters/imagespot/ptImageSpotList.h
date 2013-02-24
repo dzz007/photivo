@@ -23,7 +23,7 @@
 #define PTIMAGESPOTLIST_H
 
 #include "ptImageSpot.h"
-#include "../ptStorable.h"
+#include "../../ptStorable.h"
 #include <QList>
 #include <memory>
 
