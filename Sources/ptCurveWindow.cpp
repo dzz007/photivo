@@ -4,7 +4,7 @@
 **
 ** Copyright (C) 2008-2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2012 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -21,9 +21,11 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
-#include <vector>
-
+#include "ptCurveWindow.h"
+#include "ptTheme.h"
+#include "ptInfo.h"
+#include "ptSettings.h"
+#include "ptCfgItem.h"
 #include <QPainter>
 #include <QActionGroup>
 #include <QMenu>
@@ -31,15 +33,10 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QLabel>
+#include <vector>
 
-#include "ptCurveWindow.h"
-#include "ptTheme.h"
-#include "ptInfo.h"
-#include "ptSettings.h"
-#include <filters/ptCfgItem.h>
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 extern QString CurveFilePattern;
 
 // How many pixels will be considered as 'bingo' for having the anchor ?
@@ -51,24 +48,21 @@ const float CAnchorDelta = 0.005f;
 // Delays in ms before certain actions are triggered
 const int CPipeDelay   = 300;
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 // NOTE: ptCurveWindow would be a good place to use C++11’s ctor delegation.
 // Unfortunately it’s only available in GCC 4.7.
 ptCurveWindow::ptCurveWindow(QWidget *AParent)
 : ptWidget(AParent)
 {}
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 ptCurveWindow::ptCurveWindow(const ptCfgItem &ACfgItem, QWidget *AParent)
 : ptWidget(AParent)
 {
   this->init(ACfgItem);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 ptCurveWindow::~ptCurveWindow() {
 /*  Resources managed by Qt parent or external objects. Do not delete manually.
       all QAction and QActionGroup
@@ -77,8 +71,7 @@ ptCurveWindow::~ptCurveWindow() {
 */
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
   FCaptionLabel     = nullptr;
   FWheelTimer       = new QTimer(this);
@@ -109,8 +102,7 @@ void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
   this->setCaption(ACfgItem.Caption);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setValue(const QVariant &AValue) {
   GInfo->Assert(AValue.type() == QVariant::Map,
                 QString("%1: Value must be of type QVariant::Map (8), but is (%2).")
@@ -122,8 +114,7 @@ void ptCurveWindow::setValue(const QVariant &AValue) {
   requestPipeRun();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setCaption(const QString &ACaption) {
   if (ACaption.isEmpty()) {
     DelAndNull(FCaptionLabel);
@@ -140,8 +131,7 @@ void ptCurveWindow::setCaption(const QString &ACaption) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setMaskType() {
   auto hOldMask = FCurve->mask();
 
@@ -162,8 +152,7 @@ void ptCurveWindow::setMaskType() {
   requestPipeRun();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setInterpolationType() {
   auto hOldIPol = FCurve->interpolType();
 
@@ -180,10 +169,8 @@ void ptCurveWindow::setInterpolationType() {
   requestPipeRun();
 }
 
-//==============================================================================
-
-void ptCurveWindow::openCurveFile()
-{
+//------------------------------------------------------------------------------
+void ptCurveWindow::openCurveFile() {
   QString CurveFileName = QFileDialog::getOpenFileName(nullptr,
                                                        QObject::tr("Open Curve"),
                                                        Settings->GetString("CurvesDirectory"),
@@ -199,8 +186,7 @@ void ptCurveWindow::openCurveFile()
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setBWGradient(ptImage8* AImage) {
   int Width  = width();
   int Height = height();
@@ -217,8 +203,7 @@ void ptCurveWindow::setBWGradient(ptImage8* AImage) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setBWGammaGradient(ptImage8* AImage) {
   int Width  = width();
   int Height = height();
@@ -235,8 +220,7 @@ void ptCurveWindow::setBWGammaGradient(ptImage8* AImage) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setColorGradient(ptImage8* AImage) {
   int Width  = width();
   int Height = height();
@@ -268,8 +252,7 @@ void ptCurveWindow::setColorGradient(ptImage8* AImage) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setColorBlocks(const QColor &ATopLeftColor, const QColor &ABottomRightColor) {
   int hWidth  = this->width();
   int hHeight = this->height();
@@ -295,8 +278,8 @@ void ptCurveWindow::setColorBlocks(const QColor &ATopLeftColor, const QColor &AB
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+// Calculate the GUI representation of the curve as a ptImage8.
 void ptCurveWindow::calcCurveImage() {
   // Viewport dimensions are needed very often -> local variables for quicker access.
   int hWidth  = this->width();
@@ -397,15 +380,17 @@ void ptCurveWindow::calcCurveImage() {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! This is an overloaded function. Assigns a new \c ptCurve object to the curve window,
+    then recalcs the curve window image and repaints the viewport. Does *not* trigger a pipe run.
+ */
 void ptCurveWindow::updateView(const std::shared_ptr<ptCurve> ANewCurve) {
   FCurve = ANewCurve;
   updateView();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Recalcs the curve window image and repaints the viewport. Does *not* trigger a pipe run. */
 void ptCurveWindow::updateView() {
   calcCurveImage();
 
@@ -431,29 +416,25 @@ void ptCurveWindow::updateView() {
   repaint();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::resizeEvent(QResizeEvent *) {
   updateView();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::changeEvent(QEvent* Event) {
   // react on enable/disable
   if (Event->type() == QEvent::EnabledChange)
     updateView();   // No pipe request!
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::paintEvent(QPaintEvent*) {
   QPainter Painter(this);
   Painter.drawPixmap(0, 0, FDisplayImage);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::mousePressEvent(QMouseEvent *AEvent) {
   if (!FCurve) return;
 
@@ -521,8 +502,7 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *AEvent) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::mouseReleaseEvent(QMouseEvent*) {
   if (!FCurve) return;
   if (FMouseAction == NoAction) return;
@@ -536,8 +516,7 @@ void ptCurveWindow::mouseReleaseEvent(QMouseEvent*) {
   requestPipeRun();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 TAnchor ptCurveWindow::clampMovingAnchor(const TAnchor &APoint,
                                          const QPoint &AMousePos)
 {
@@ -565,8 +544,7 @@ TAnchor ptCurveWindow::clampMovingAnchor(const TAnchor &APoint,
                  ptBound(0.0, APoint.second, 1.0));
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
   if (!FCurve) return;
   if (FMouseAction == DragAction && FMovingAnchor > -1) {
@@ -592,16 +570,14 @@ void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::wheelTimerExpired() {
   FMouseAction  = NoAction;
   FMovingAnchor = -1;
   requestPipeRun();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 int ptCurveWindow::hasCaughtAnchor(const QPoint APos) {
   int hResult = -1;
 
@@ -619,20 +595,17 @@ int ptCurveWindow::hasCaughtAnchor(const QPoint APos) {
   return hResult;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 bool ptCurveWindow::isCyclicCurve() {
   return FCurve->mask() == ptCurve::ChromaMask;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::requestPipeRun() {
   emit valueChanged(this->objectName(), FCurve->filterConfig());
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::execContextMenu(const QPoint APos) {
   createMenuActions();
 
@@ -667,8 +640,7 @@ void ptCurveWindow::execContextMenu(const QPoint APos) {
   hMenu.exec(APos);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::createMenuActions() {
   if (FByLumaAction) return;  // actions already created
 
@@ -710,6 +682,4 @@ void ptCurveWindow::createMenuActions() {
   FOpenCurveAction->setStatusTip(tr("Open anchor curve file"));
   connect(FOpenCurveAction, SIGNAL(triggered()), this, SLOT(openCurveFile()));
 }
-
-//==============================================================================
 

@@ -4,7 +4,7 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2010-2012 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -21,22 +21,25 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
-#include <array>
-#include <cmath>
-
-#include <QFile>
-#include <QTextStream>
-
 #include "ptCalloc.h"
 #include "ptError.h"
 #include "ptCurve.h"
 #include "ptInfo.h"
 #include "ptConstants.h"
 #include "ptMessageBox.h"
+#include <QFile>
+#include <QTextStream>
+#include <array>
+#include <cmath>
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*!
+  Creates a ptCurve object and immediately calculates the curve.
+  \param ANullAnchors     A list of anchor points defining the null curve.
+  \param ASupportedMasks  An OR combination of \c TMask flags.
+  \param ACurrentMask     The initially active mask.
+  \param AInterpolType    The inital interpolation type.
+ */
 ptCurve::ptCurve(const TAnchorList    &ANullAnchors,
                  const TMasks         &ASupportedMasks,
                  const TMask          &ACurrentMask,
@@ -51,8 +54,12 @@ ptCurve::ptCurve(const TAnchorList    &ANullAnchors,
   calcCurve();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*!
+  Creates a ptCurve object from a list of anchors.
+  The mask is set to *NoMask*, the interpolation type to *SplineInterpol*.
+  If *AImmediateCalc* is true immediately calculates the curve.
+*/
 ptCurve::ptCurve(const TAnchorList &AAnchors, const bool AImmediateCalc)
 : FAnchors(AAnchors),
   FCurveType(AnchorType),
@@ -64,8 +71,11 @@ ptCurve::ptCurve(const TAnchorList &AAnchors, const bool AImmediateCalc)
     calcCurve();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*!
+  Creates an anchor-type ptCurve object with no anchors set.
+  The mask is set to *NoMask*, the interpolation type to *SplineInterpol*.
+*/
 ptCurve::ptCurve()
 : FCurveType(AnchorType),
   FCurrentMask(NoMask),
@@ -73,8 +83,8 @@ ptCurve::ptCurve()
   FInterpolType(SplineInterpol)
 {}
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Destroys a ptCurve object. */
 ptCurve::~ptCurve() {
 /*
   Resources managed by Qt parent or other objects. Do not delete manually.
@@ -82,8 +92,8 @@ ptCurve::~ptCurve() {
 */
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Clones all values from another curves. */
 void ptCurve::set(const ptCurve &AOther) {
   Curve           = AOther.Curve;
   FAnchors        = AOther.FAnchors;
@@ -95,8 +105,10 @@ void ptCurve::set(const ptCurve &AOther) {
   calcCurve();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Sets the anchors for the null curve (the reset/fallback curve that does nothing).
+    Only sets the null curve; to activate it call \c reset().
+*/
 void ptCurve::setNullCurve(const TAnchorList &AAnchors) {
   this->setCurveType(AnchorType);
   FNullAnchors    = AAnchors;
@@ -109,16 +121,24 @@ void ptCurve::setNullCurve(const TAnchorList &AAnchors) {
     FNullAnchors.push_back(TAnchor(1.0, 1.0));
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Resets the curve to the null curve. Does nothing for \c FullPrecalcType curves.
+    \see setNullCurve()
+*/
 void ptCurve::reset() {
   FCurveType = AnchorType;
   FAnchors = FNullAnchors;
   calcCurve();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Replaces the current anchors with new ones. Then recalculates the curve.
+    \param AAnchors
+      The list of anchor points. Coordinates must be normalised to 0.0-1.0 range.
+      When the list is empty the default start (0.0,0.0) and end (1.0,1.0) are assumed.
+      When the list contains only a single entry, it is assumed to be the start and the
+      default end is added automatically.
+ */
 void ptCurve::setFromAnchors(const TAnchorList &AAnchors) {
   this->setCurveType(AnchorType);
   FAnchors = AAnchors;
@@ -133,20 +153,24 @@ void ptCurve::setFromAnchors(const TAnchorList &AAnchors) {
   calcCurve();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Changes one anchor. Does *not* automatically recalculate the curve. */
 void ptCurve::setAnchor(const int AIdx, const TAnchor &APoint) {
   FAnchors[AIdx] = APoint;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Changes one anchor’s Y coordinate. Does *not* automatically recalculate the curve. */
 void ptCurve::setAnchorY(const int AIdx, const float y) {
   FAnchors[AIdx].second = y;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Calculates the values for the lookup table from the current anchors. Most functions that
+    change the curve automatically trigger \c calcCurve(). The exceptions are \c setAnchor()
+    and \c setAnchorY() to avoid excessive calculations when you change several anchors
+    in a row.
+*/
 void ptCurve::calcCurve() {
   if ((FAnchors.size() < 2) || (FCurveType == FullPrecalcType)) return;
 
@@ -159,8 +183,7 @@ void ptCurve::calcCurve() {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurve::calcCosineCurve() {
   for(uint32_t a = 0; a < FAnchors[0].first * 0xffff; a++)
     Curve[a] = FAnchors[0].second * 0xffff;
@@ -181,8 +204,7 @@ void ptCurve::calcCosineCurve() {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurve::calcLinearCurve() {
   for(uint32_t a = 0; a < FAnchors[0].first * 0xffff; a++) {
     Curve[a] = FAnchors[0].second * 0xffff;
@@ -203,8 +225,7 @@ void ptCurve::calcLinearCurve() {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurve::calcSplineCurve() {
   std::vector<double> hXAnchors;
   std::vector<double> hYAnchors;
@@ -242,15 +263,14 @@ void ptCurve::calcSplineCurve() {
   FREE(ypp);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurve::setCurveType(const ptCurve::TType AType) {
   FCurveType = AType;
   if (AType == AnchorType) FFileName.clear();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Returns the curve’s configuration in config store format usable by \c ptFilterConfig. */
 TConfigStore ptCurve::filterConfig(const QString &APrefix) const {
   TConfigStore hStore;
 
@@ -275,8 +295,13 @@ TConfigStore ptCurve::filterConfig(const QString &APrefix) const {
   return hStore;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Sets the config store associated with this curve and updates the curve’s configuration
+    from the store. I.e. the store must contain a proper set of curve config items.
+    \param AConfig
+      A pointer to the config store. Must be valid for the rest of the curve’s lifetime.
+    \see assignFilterConfig()
+ */
 void ptCurve::setFromFilterConfig(const TConfigStore &AConfig, const QString &APrefix) {
   FCurveType    = (TType)AConfig.value(APrefix+"CurveType", FCurveType).toInt();
   FCurrentMask  = (TMask)AConfig.value(APrefix+"Mask", FCurrentMask).toInt();
@@ -311,8 +336,12 @@ void ptCurve::setFromFilterConfig(const TConfigStore &AConfig, const QString &AP
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Sets a curve from a mathematical function over the (0,0)..(1,1) box.
+    The function is passed as parameter Function who's first argument
+    will be the x (0..1) of the function.
+    Optional arguments in ... are passed to the Args part of Function.
+*/
 void ptCurve::setFromFunc(double(*Function)(double r, double Arg1, double Arg2),
                                double Arg1, double Arg2)
 {
@@ -328,8 +357,16 @@ void ptCurve::setFromFunc(double(*Function)(double r, double Arg1, double Arg2),
   calcCurve();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Read a curve from an old-style curve file. This function is the only way to load a
+    curve with type \c FullPrecalcType, i.e. a file where the complete 16bit lookup table
+    is pre-calculated and stored in the file. Such curves are read-only.
+    \param AFileName
+      The full path to the .ptc curve file.
+    \return
+      0 when successful, -1 when an undetermined error occured, or the line number
+      in the file where parsing failed.
+ */
 int ptCurve::readCurveFile(const QString &AFileName, const bool AOnlyAnchors) {
   // No members are updated until the curve file is completely and successfully read.
   // That way we can error-return safely at any point.
@@ -406,22 +443,19 @@ int ptCurve::readCurveFile(const QString &AFileName, const bool AOnlyAnchors) {
   return 0;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurve::setMask(const ptCurve::TMask AMask) {
   if (FSupportedMasks & AMask) {
     FCurrentMask = AMask;
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 bool ptCurve::isNull() const {
   return (FCurveType == AnchorType) && (FAnchors == FNullAnchors);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurve::setInterpolType(const ptCurve::TInterpolation AInterpolType) {
   if (FInterpolType != AInterpolType) {
     FInterpolType = AInterpolType;
@@ -429,26 +463,22 @@ void ptCurve::setInterpolType(const ptCurve::TInterpolation AInterpolType) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 TAnchorList ptCurve::diagonalNull() {
   return TAnchorList( { TAnchor(0.0, 0.0), TAnchor(0.5, 0.5), TAnchor(1.0, 1.0) } );
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 TAnchorList ptCurve::horizontalMidNull() {
   return TAnchorList( { TAnchor(0.0, 0.5), TAnchor(0.5, 0.5), TAnchor(1.0, 0.5) } );
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 TAnchorList ptCurve::horizontalQuarterNull() {
   return TAnchorList( { TAnchor(0.0, 0.25), TAnchor(0.5, 0.25), TAnchor(1.0, 0.25) } );
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 /*  Purpose:
 //
 //    D3_NP_FS factors and solves a D3 system.
@@ -529,8 +559,7 @@ double *ptCurve::d3_np_fs ( int n, double a[], double b[] ) {
   return x;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 /*  Purpose:
 //
 //    SPLINE_CUBIC_SET computes the second derivatives of a piecewise cubic spline.
@@ -733,8 +762,7 @@ double *ptCurve::spline_cubic_set (int n, const std::vector<double> t, const std
   return ypp;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 /*  Purpose:
 //
 //    SPLINE_CUBIC_VAL evaluates a piecewise cubic spline at a point.
@@ -833,8 +861,18 @@ double ptCurve::spline_cubic_val(int n, const std::vector<double> t, double tval
   return yval;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! 'gamma' functions operating in the (0,0)(1,1) box.
+   * GammaSRGB        is the correct one for sRGB encoding.
+   * GammaBT709       is the ITU-R BT.709 one, used by dcraw.
+   * GammaPure22      is a pure 2.2 gamma curve.
+   * GammaTool        based on Gamma and Linearity as used in ufraw.
+   * DeltaGammaTool   is the gamma function as used in ufraw, but
+                      sRGB 'subtracted' as it is added afterwards as standard part of the flow.
+   * InverseGammaSRGB is the inverse for sRGB encoding.
+   Args is sometimes dummy but required for matching general signature of
+   SetCurveFromFunction.
+*/
 double ptCurve::GammaTool(double r, double Gamma, double Linearity) {
   const double g = Gamma * (1 - Linearity) / (1-Gamma*Linearity);
   const double a = 1/(1 + Linearity*(g-1));
@@ -843,20 +881,18 @@ double ptCurve::GammaTool(double r, double Gamma, double Linearity) {
   return r<Linearity ? c*r : pow (a*r+b,g);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 double ptCurve::DeltaGammaTool(double r, double Gamma, double Linearity) {
   return InverseGammaSRGB(GammaTool(r,Gamma,Linearity),0,0);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 double ptCurve::InverseGammaSRGB(double r, double, double) {
   return (r <= 0.04045 ? r/12.92 : pow((r+0.055)/1.055,2.4) );
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! 'Sigmoidal' function operating in the (0,0)(1,1) box. */
 double ptCurve::Sigmoidal(double r, double Threshold, double Contrast) {
   float Scaling = 1.0/(1.0+exp(-0.5*Contrast))-1.0/(1.0+exp(0.5*Contrast));
   float Offset = -1.0/(1.0+exp(0.5*Contrast));
@@ -873,8 +909,7 @@ double ptCurve::Sigmoidal(double r, double Threshold, double Contrast) {
   return Value;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 #ifdef PT_CREATE_CURVES_PROJECT
 double ptCurve::GammaBT709(double r, double, double) {
   return (r <= 0.018 ? r*4.5 : pow(r,0.45)*1.099-0.099 );
@@ -889,8 +924,7 @@ double ptCurve::GammaPure22(double r, double, double) {
 }
 
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 short ptCurve::WriteCurve(const char *FileName,
                           const char *Header) {
 
@@ -927,8 +961,7 @@ short ptCurve::WriteCurve(const char *FileName,
   return 0;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 short ptCurve::ReadAnchors(const char *FileName) {
 
   m_NrAnchors = 0;
@@ -978,5 +1011,4 @@ short ptCurve::ReadAnchors(const char *FileName) {
 }
 #endif // PT_CREATE_CURVES_PROJECT
 
-//==============================================================================
 

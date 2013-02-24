@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2010-2012 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -20,32 +20,23 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
 #ifndef PTCURVEWINDOW_H
 #define PTCURVEWINDOW_H
-
-//==============================================================================
-
-#include <memory>
-#include <vector>
-#include <utility>
-
-#include <QPixmap>
 
 #include "ptImage8.h"
 #include "ptWidget.h"
 #include "ptCurve.h"
+#include <QPixmap>
+#include <memory>
+#include <vector>
+#include <utility>
 
+class ptFilterBase;
 class QLabel;
 class QActionGroup;
-class ptFilterBase;
-
-//==============================================================================
 
 typedef std::pair<int, int>        TScreenAnchor;
 typedef std::vector<TScreenAnchor> TScreenAnchorList;
-
-//==============================================================================
 
 class ptCurveWindow: public ptWidget {
 Q_OBJECT
@@ -54,22 +45,11 @@ public:
   ptCurveWindow(const ptCfgItem &ACfgItem, QWidget *AParent);
   ~ptCurveWindow();
 
-  /*! Reimplemented from base class. */
   void init(const ptCfgItem &ACfgItem);
-
-  /*! Reimplemented from base class. */
   void setValue(const QVariant &AValue);
-
   void setCaption(const QString &ACaption);
-
-  /*! Recalcs the curve window image and repaints the viewport. Does *not* trigger a pipe run. */
   void updateView();
-
-  /*! This is an overloaded function. Assigns a new \c ptCurve object to the curve window,
-      then recalcs the curve window image and repaints the viewport. Does *not* trigger a pipe run.
-   */
   void updateView(const std::shared_ptr<ptCurve> ANewCurve);
-
 
 protected:
   void    mousePressEvent(QMouseEvent *AEvent);
@@ -83,15 +63,11 @@ protected:
   QSize   minimumSizeHint()         const { return QSize(100, 100); }
   int     heightForWidth(int width) const { return width; }
 
-
 private:
   enum TUserAction { NoAction, InsertAction, DeleteAction, DragAction, WheelAction };
 
-
 private:
-  /*! Calculate the GUI representation of the curve as a ptImage8. */
   void          calcCurveImage();
-
   void          setBWGradient(ptImage8* AImage);
   void          setBWGammaGradient(ptImage8* AImage);
   void          setColorGradient(ptImage8* AImage);
@@ -121,7 +97,6 @@ private:
   QAction*            FByChromaAction;
   QActionGroup*       FMaskGroup;
   QAction*            FOpenCurveAction;
-
 
 private slots:
   void wheelTimerExpired();
