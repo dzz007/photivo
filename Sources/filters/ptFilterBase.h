@@ -20,28 +20,22 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
 #ifndef PTFILTERBASE_H
 #define PTFILTERBASE_H
 
-#include <memory>
-
+#include "ptFilterConfig.h"
+#include "ptTempFilterBase.h"
 #include <QObject>
 #include <QList>
 #include <QVariant>
 #include <QFlags>
 
-#include "ptFilterConfig.h"
-#include <ptTempFilterBase.h>
-
-// forward
-class QWidget;
-class QSettings;
-
 class ptCfgItem;
 class ptImage;
 class ptWidget;
 class ptToolBox;
+class QWidget;
+class QSettings;
 
 //------------------------------------------------------------------------------
 /*! Base class for all filters. Must not be instantiated directly. */

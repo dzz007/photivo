@@ -20,8 +20,6 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
-
 #include "ptFilterBase.h"
 #include "ptCfgItem.h"
 #include "ptFilterFactory.h"
@@ -35,7 +33,6 @@
 #include "../ptToolBox.h"
 #include "../ptCurveWindow.h"
 #include "../ptSettings.h"
-
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QMap>
