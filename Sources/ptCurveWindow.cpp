@@ -25,7 +25,7 @@
 #include "ptTheme.h"
 #include "ptInfo.h"
 #include "ptSettings.h"
-#include "ptCfgItem.h"
+#include "filters/ptCfgItem.h"
 #include <QPainter>
 #include <QActionGroup>
 #include <QMenu>
@@ -109,7 +109,7 @@ void ptCurveWindow::setValue(const QVariant &AValue) {
                     .arg(this->objectName()).arg(AValue.type()), AT);
 
   auto hTempMap = AValue.toMap();
-  FCurve->setFromFilterConfig(hTempMap);
+  FCurve->loadConfig(hTempMap, "");
   updateView();
   requestPipeRun();
 }
@@ -602,7 +602,7 @@ bool ptCurveWindow::isCyclicCurve() {
 
 //------------------------------------------------------------------------------
 void ptCurveWindow::requestPipeRun() {
-  emit valueChanged(this->objectName(), FCurve->filterConfig());
+  emit valueChanged(this->objectName(), FCurve->storeConfig(""));
 }
 
 //------------------------------------------------------------------------------

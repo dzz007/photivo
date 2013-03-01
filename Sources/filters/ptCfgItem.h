@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2012 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
@@ -20,15 +20,14 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
 #ifndef PTCFGITEM_H
 #define PTCFGITEM_H
 
-#include <memory>
-
 #include <QList>
 #include <QVariant>
+#include <memory>
 
+class ptStorable;
 class ptCurve;
 
 //==============================================================================
@@ -160,8 +159,11 @@ public:
   QVariant      StepSize;
   int           Decimals;
 
+  // specific to all custom types
+  ptStorable   *AssocObject;
+
   // specific to TCurve
-  std::shared_ptr<ptCurve>  Curve;
+  std::shared_ptr<ptCurve> Curve;
   ///@}
 
 

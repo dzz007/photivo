@@ -379,7 +379,6 @@ void ptFilterBase::internalInit() {
 }
 
 //------------------------------------------------------------------------------
-
 /*! Returns a pointer to the `ptWidget` object identified by `AId`. If such a widget cannot be
     found, raises an exception via ptInfo. */
 ptWidget *ptFilterBase::findPtWidget(const QString &AId, QWidget *AWidget) {
@@ -391,7 +390,6 @@ ptWidget *ptFilterBase::findPtWidget(const QString &AId, QWidget *AWidget) {
 }
 
 //------------------------------------------------------------------------------
-
 /*! Connects the commonDispach() slot to all applicable controls. The default implementation
     connects all controls from the common controls lists that have their \c UseCommonDispatch
     flag set to \c true.
@@ -403,8 +401,7 @@ void ptFilterBase::connectCommonDispatch() {
     performCommonConnect(hCfgItem, FGuiContainer->findChild<QWidget*>(hCfgItem.Id));
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 int ptFilterBase::cfgIdx(const QString &AId) const {
   for (int i = 0; i < FCfgItems.size(); ++i) {
     if (FCfgItems.at(i).Id == AId) {
@@ -466,34 +463,48 @@ ptWidget* ptFilterBase::createWidgetByType(const ptCfgItem &ACfgItem, QWidget *A
 
 //==============================================================================
 
-/*! Common dispatcher interfacing from UI control to config entry. Implemented as
-    a slot that connects to the control’s valueChanged() signal.
-    \param Id
-      The UI control’s ID string.
-    \param ANewValue
-      The new value as a \c QVariant.
- */
+/*!
+  Common dispatcher interfacing from UI control to config entry. Implemented as a slot that
+  connects to the control’s valueChanged() signal.
+  \param Id
+    The UI control’s ID string.
+  \param ANewValue
+    The new value as a *QVariant*.
+    + Must be valid for controls from FConfig’s default store. The method then updates the data
+      in FConfig and triggers a pipe run if necessary. An invalid *ANewValue* results in undefined
+      behaviour.
+    + May be empty for ptStorable objects from the custom store. The method always triggers a pipe
+      run if necessary. Before that:
+      + If *ANewValue* is valid it must be a TConfigStore structure as a QVariant. The method
+        calls the ptStorable object’s loadConfig method with that data.
+      + If *ANewValue* is invalid the method assumes that all changes to the object’s data
+        structure have taken place already. It does not update anything in FConfig.
+*/
 void ptFilterBase::commonDispatch(const QString AId, const QVariant ANewValue) {
-  if (!ANewValue.isValid()) return;
-
   // find the right config item
   int hIdx = cfgIdx(AId);
   if (hIdx == -1) return;
 
-  // handle items from default store
-  if ((FCfgItems.at(hIdx).Type < ptCfgItem::CFirstCustomType) &&
-      (FConfig.value(AId) != ANewValue))
-  {
-    FConfig.setValue(AId, ANewValue);
-    requestPipeRun();
+  if (FCfgItems.at(hIdx).Type < ptCfgItem::CFirstCustomType) {
+    // handle items from default store
+    if (FConfig.value(AId) != ANewValue) {
+      FConfig.setValue(AId, ANewValue);
+      this->requestPipeRun();
+    }
+
+  } else {
+    // handle items from custom store
+    if (ANewValue.isValid())
+      FConfig.object(AId)->loadConfig(ANewValue.toMap(), "");
+    this->requestPipeRun();
   }
 }
 
 //==============================================================================
 
-// Creates the \c FConfig object and initialises it with the default key/value pairs
-// from the common controls lists.
+// Initialises the FConfig object with the default key/value pairs from the common controls lists.
 void ptFilterBase::createConfig() {
+  FConfig.clear();
   TFlaggedConfigStore hDefaultStore;
 
   // NOTE: Not sure yet if buttons really need to be stored in settings.
@@ -502,16 +513,18 @@ void ptFilterBase::createConfig() {
   for (ptCfgItem hCfgItem: FCfgItems) {
     if ((hCfgItem.Type < ptCfgItem::CFirstCustomType))
       hDefaultStore.insert(hCfgItem.Id, {hCfgItem.Default, hCfgItem.Storable});
+    else
+      FConfig.insertObject(hCfgItem.Id, hCfgItem.AssocObject);
   }
 
   doAddCustomConfig(hDefaultStore);
-  FConfig.init(hDefaultStore);
+  FConfig.initDefaultStore(hDefaultStore);
 }
 
 //==============================================================================
 
-/*! Helper method that performs the commonDispatch() connection for \c AObject
-    if the object exists and \c ACfgItem.UseCommonDispatch is \c true. */
+/*! Helper method that performs the commonDispatch() connection for *AObject*
+    if the object exists and *ACfgItem.UseCommonDispatch* is *true*. */
 void ptFilterBase::performCommonConnect(const ptCfgItem &ACfgItem, QObject *AObject) {
   if (ACfgItem.UseCommonDispatch && AObject) {
     connect(AObject, SIGNAL(valueChanged(QString,QVariant)),

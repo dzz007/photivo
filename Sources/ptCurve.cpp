@@ -270,73 +270,6 @@ void ptCurve::setCurveType(const ptCurve::TType AType) {
 }
 
 //------------------------------------------------------------------------------
-/*! Returns the curve’s configuration in config store format usable by \c ptFilterConfig. */
-TConfigStore ptCurve::filterConfig(const QString &APrefix) const {
-  TConfigStore hStore;
-
-  hStore.insert(APrefix+"CurveType",     (int)FCurveType);
-  hStore.insert(APrefix+"Mask",          (int)FCurrentMask);
-  hStore.insert(APrefix+"Interpolation", (int)FInterpolType);
-  hStore.insert(APrefix+"FileName",      FFileName);
-
-  if (this->isNull()) {
-    hStore.insert(APrefix+"Anchor/size", 0);
-
-  } else if (FCurveType == AnchorType) {
-    hStore.insert(APrefix+"Anchor/size", (int)FAnchors.size());
-    int i = 0;
-    for (TAnchor hAnchor: FAnchors) {
-      hStore.insert(QString(APrefix+"Anchor/%1/X").arg(i), hAnchor.first);
-      hStore.insert(QString(APrefix+"Anchor/%1/Y").arg(i), hAnchor.second);
-      ++i;
-    }
-  }
-
-  return hStore;
-}
-
-//------------------------------------------------------------------------------
-/*! Sets the config store associated with this curve and updates the curve’s configuration
-    from the store. I.e. the store must contain a proper set of curve config items.
-    \param AConfig
-      A pointer to the config store. Must be valid for the rest of the curve’s lifetime.
-    \see assignFilterConfig()
- */
-void ptCurve::setFromFilterConfig(const TConfigStore &AConfig, const QString &APrefix) {
-  FCurveType    = (TType)AConfig.value(APrefix+"CurveType", FCurveType).toInt();
-  FCurrentMask  = (TMask)AConfig.value(APrefix+"Mask", FCurrentMask).toInt();
-  FInterpolType = (TInterpolation)AConfig.value(APrefix+"Interpolation", FInterpolType).toInt();
-  FFileName     = AConfig.value(APrefix+"FileName", "").toString();
-
-  if (FCurveType == AnchorType) {
-    FAnchors.clear();
-    int hSize = AConfig.value(APrefix+"Anchor/size", 0).toInt();
-
-    if (hSize < 2) {  // no/not enough anchors, fall back to null curve
-      FAnchors = FNullAnchors;
-
-    } else {  // read anchors
-      for (int i = 0; i < hSize; ++i) {
-        FAnchors.push_back(TAnchor(AConfig.value(QString(APrefix+"Anchor/%1/X").arg(i), 0.0).toDouble(),
-                                   AConfig.value(QString(APrefix+"Anchor/%1/Y").arg(i), 0.0).toDouble()));
-      }
-      FAnchors.shrink_to_fit();
-    }
-
-    calcCurve();
-
-  } else {  // curve from old-style curve file
-    int hError = readCurveFile(FFileName, false);
-    if (hError != 0) {
-      QString hErrMsg = QString(QObject::tr("Failed to load curve file %1.")).arg(FFileName);
-      if (hError > 0) hErrMsg += QString(QObject::tr("\nThe error occurred in line %1.")).arg(hError);
-      ptMessageBox::critical(nullptr, QObject::tr("Load curve file"), hErrMsg);
-      this->reset();
-    }
-  }
-}
-
-//------------------------------------------------------------------------------
 /*! Sets a curve from a mathematical function over the (0,0)..(1,1) box.
     The function is passed as parameter Function who's first argument
     will be the x (0..1) of the function.
@@ -460,6 +393,69 @@ void ptCurve::setInterpolType(const ptCurve::TInterpolation AInterpolType) {
   if (FInterpolType != AInterpolType) {
     FInterpolType = AInterpolType;
     calcCurve();
+  }
+}
+
+//------------------------------------------------------------------------------
+/*! Implements ptStorable::doStoreConfig. */
+TConfigStore ptCurve::doStoreConfig(const QString &APrefix) const {
+  TConfigStore hStore;
+
+  hStore.insert(APrefix+"CurveType",     static_cast<int>(FCurveType));
+  hStore.insert(APrefix+"Mask",          static_cast<int>(FCurrentMask));
+  hStore.insert(APrefix+"Interpolation", static_cast<int>(FInterpolType));
+  hStore.insert(APrefix+"FileName",      FFileName);
+
+  if (this->isNull()) {
+    hStore.insert(APrefix+"Anchor/size", 0);
+
+  } else if (FCurveType == AnchorType) {
+    hStore.insert(APrefix+"Anchor/size", static_cast<int>(FAnchors.size()));
+    int i = 0;
+    for (TAnchor hAnchor: FAnchors) {
+      hStore.insert(QString(APrefix+"Anchor/%1/X").arg(i), hAnchor.first);
+      hStore.insert(QString(APrefix+"Anchor/%1/Y").arg(i), hAnchor.second);
+      ++i;
+    }
+  }
+
+  return hStore;
+}
+
+//------------------------------------------------------------------------------
+/*! Implements ptStorable::doLoadConfig. */
+void ptCurve::doLoadConfig(const TConfigStore &AConfig, const QString &APrefix) {
+  FCurveType    = static_cast<TType>(AConfig.value(APrefix+"CurveType", FCurveType).toInt());
+  FCurrentMask  = static_cast<TMask>(AConfig.value(APrefix+"Mask", FCurrentMask).toInt());
+  FInterpolType = static_cast<TInterpolation>(AConfig.value(APrefix+"Interpolation", FInterpolType).toInt());
+  FFileName     = AConfig.value(APrefix+"FileName", "").toString();
+
+  if (FCurveType == AnchorType) {
+    FAnchors.clear();
+    int hSize = AConfig.value(APrefix+"Anchor/size", 0).toInt();
+
+    if (hSize < 2) {  // no/not enough anchors, fall back to null curve
+      FAnchors = FNullAnchors;
+
+    } else {  // read anchors
+      for (int i = 0; i < hSize; ++i) {
+        FAnchors.push_back(TAnchor(AConfig.value(QString(APrefix+"Anchor/%1/X").arg(i), 0.0).toDouble(),
+                                   AConfig.value(QString(APrefix+"Anchor/%1/Y").arg(i), 0.0).toDouble()));
+      }
+      FAnchors.shrink_to_fit();
+    }
+
+    this->calcCurve();
+
+  } else {  // curve from old-style curve file
+    int hError = this->readCurveFile(FFileName, false);
+    if (hError != 0) {
+      QString hErrMsg = QString(QObject::tr("Failed to load curve file %1.")).arg(FFileName);
+      if (hError > 0)
+        hErrMsg += QString(QObject::tr("\nThe error occurred in line %1.")).arg(hError);
+      ptMessageBox::critical(nullptr, QObject::tr("Load curve file"), hErrMsg);
+      this->reset();
+    }
   }
 }
 

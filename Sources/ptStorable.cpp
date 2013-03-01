@@ -33,6 +33,6 @@ TConfigStore ptStorable::storeConfig(const QString &APrefix) const {
 }
 
 void ptStorable::loadConfig(const TConfigStore &AConfig, const QString &APrefix) {
-  this->loadConfig(AConfig, trailingSlash(APrefix));
+  this->doLoadConfig(AConfig, trailingSlash(APrefix));
 }
 
