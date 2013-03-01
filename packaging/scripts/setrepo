@@ -13,7 +13,11 @@ else
         if [[ -e $ProjectsBasePath/Photivo/branch-$1 ]]; then
             ptTempPath=$ProjectsBasePath/Photivo/branch-$1
         else
-            ptTempPath=$ProjectsBasePath/Photivo/$1
+            if [[ -e $ProjectsBasePath/Photivo/clone-$1 ]]; then
+                ptTempPath=$ProjectsBasePath/Photivo/clone-$1
+            else
+                ptTempPath=$ProjectsBasePath/Photivo/$1
+            fi
         fi
     fi
 
