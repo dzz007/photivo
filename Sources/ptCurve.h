@@ -24,7 +24,7 @@
 #ifndef PTCURVE_H
 #define PTCURVE_H
 
-#include "ptFilterConfig.h"
+#include "ptStorable.h"
 #include <array>
 #include <vector>
 #include <utility>
@@ -34,7 +34,7 @@ class ptImage;
 typedef std::pair<double,double> TAnchor;
 typedef std::vector<TAnchor>     TAnchorList;
 
-class ptCurve {
+class ptCurve: public ptStorable {
 public:
   // Don’t mess with the enum values!
   enum TInterpolation { LinearInterpol = 0, SplineInterpol = 1, CosineInterpol = 2 };
@@ -76,10 +76,6 @@ public:
   void            setFromFunc(double(*Function)(double r, double Arg1, double Arg2),
                               double Arg1,
                               double Arg2);
-
-  void            setFromFilterConfig(const TConfigStore &AConfig, const QString &APrefix = "");
-  TConfigStore    filterConfig(const QString &APrefix = "") const;
-
   int             readCurveFile(const QString &AFileName,
                                 const bool     AOnlyAnchors);
 
@@ -99,6 +95,10 @@ public:
   /*! 16bit Lookup table between original channel value (array indexes)
       and curve processed value (array values). */
   std::array<uint16_t, 0x10000> Curve;
+
+protected:
+  TConfigStore doStoreConfig(const QString &APrefix) const;
+  void         doLoadConfig(const TConfigStore &AConfig, const QString &APrefix);
 
 private:
   void            calcCosineCurve();

@@ -63,6 +63,16 @@ ptFilterConfig::~ptFilterConfig() {
 
 //------------------------------------------------------------------------------
 /*!
+  Removes all entries from the default and custom stores. The ptFilterConfig object is
+  guaranteed to be completely empty after calling this method.
+*/
+void ptFilterConfig::clear() {
+  FDefaultStore.clear();
+  FCustomStore.clear();
+}
+
+//------------------------------------------------------------------------------
+/*!
   Exports the object’s config data from the default and custom stores into a *QSettings* structure.
   *APreset* must be set to the appropriate group before calling this method.
 */
@@ -121,34 +131,15 @@ bool ptFilterConfig::isEmpty() const {
 
 //------------------------------------------------------------------------------
 /*!
-  Clears both default and custom stores and initializes the default store with new key/value pairs.
+  Clears the default store and fills it with new key/value pairs.
     \param AInitData
       A *QMap* with all the keys handled by this *ptFilterConfig* instance set
       to their default values. Also defines the valid keys for the value() and
       setValue() methods.
-    \see update()
  */
-void ptFilterConfig::init(const TFlaggedConfigStore &AInitData) {
+void ptFilterConfig::initDefaultStore(const TFlaggedConfigStore &AInitData) {
   FDefaultStore = AInitData;
-  FCustomStore.clear();
 }
-
-//------------------------------------------------------------------------------
-/*! Updates the data store with new key/value pairs. Existing keys are updated with the
-    new value, non-existing keys are ignored. Keys not present in *AInitData* are not touched.
-    \param AInitData
-      A *QMap* containing the new data.
-    \see init()
- */
-//void ptFilterConfig::update(const TConfigStore &AInitData) {
-//  // QMap::unite() is unsuitable to update an existing map with new data
-//  // because it creates duplicate keys. We have to use QMap::insert() manually.
-//  for (auto hItem = AInitData.constBegin(); hItem != AInitData.constEnd(); hItem++) {
-//    if (FDefaultStore.contains(hItem.key())) {
-//      FDefaultStore.insert(hItem.key(), hItem.value());
-//    }
-//  }
-//}
 
 //------------------------------------------------------------------------------
 /*! Returns the value for the config item *AKey*. */

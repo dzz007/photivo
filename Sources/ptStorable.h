@@ -37,7 +37,7 @@ public:
 
 protected:
   virtual TConfigStore doStoreConfig(const QString &APrefix) const = 0;
-  virtual void         doLoadConfig(const TConfigStore &AConfig, const QString &Prefix) = 0;
+  virtual void         doLoadConfig(const TConfigStore &AConfig, const QString &APrefix) = 0;
 };
 
 #endif // PTSTORABLE_H

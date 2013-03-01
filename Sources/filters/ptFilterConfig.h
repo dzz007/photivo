@@ -46,13 +46,13 @@ public:
   ptFilterConfig(const ptFilterConfig &AOther);
   ~ptFilterConfig();
 
+  void clear();
   void exportPreset(QSettings *APreset) const;
   void importPreset(QSettings *APreset);
   bool isEmpty() const;
 
   /*! \name Management of the default data store. *//*! @{*/
-  void      init(const TFlaggedConfigStore &AInitData);
-//  void      update(const TConfigStore &AInitData);
+  void      initDefaultStore(const TFlaggedConfigStore &AInitData);
   QVariant  value(const QString &AKey) const;
   void      setValue(const QString &AKey, const QVariant &AValue);
   /*! @}*/
