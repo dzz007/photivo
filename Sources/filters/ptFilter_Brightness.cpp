@@ -64,9 +64,9 @@ void ptFilter_Brightness::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_Brightness::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CCatchWhite).toFloat() != 0.0f) ||
-         (FConfig->getValue(CCatchBlack).toFloat() != 0.0f) ||
-         (FConfig->getValue(CGain).toFloat() != 0.0f);
+  return (FConfig.value(CCatchWhite).toFloat() != 0.0f) ||
+         (FConfig.value(CCatchBlack).toFloat() != 0.0f) ||
+         (FConfig.value(CGain).toFloat() != 0.0f);
 }
 
 //==============================================================================
@@ -74,9 +74,9 @@ bool ptFilter_Brightness::doCheckHasActiveCfg() {
 void ptFilter_Brightness::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
 
-  float hWhite = FConfig->getValue(CCatchWhite).toFloat();
-  float hBlack = FConfig->getValue(CCatchBlack).toFloat();
-  float hGain  = FConfig->getValue(CGain).toFloat();
+  float hWhite = FConfig.value(CCatchWhite).toFloat();
+  float hBlack = FConfig.value(CCatchBlack).toFloat();
+  float hGain  = FConfig.value(CGain).toFloat();
 
   // catch white/black curve
   TAnchorList hAnchors;

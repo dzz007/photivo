@@ -70,8 +70,8 @@ void ptFilter_ShadowsHighlights::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_ShadowsHighlights::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CFineDetail).toFloat()   != 0.0f) ||
-         (FConfig->getValue(CCoarseDetail).toFloat() != 0.0f) ||
+  return (FConfig.value(CFineDetail).toFloat()   != 0.0f) ||
+         (FConfig.value(CCoarseDetail).toFloat() != 0.0f) ||
          (!FCfgItems[cfgIdx(CCurve)].Curve->isNull());
 }
 
@@ -80,9 +80,9 @@ bool ptFilter_ShadowsHighlights::doCheckHasActiveCfg() {
 void ptFilter_ShadowsHighlights::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
   AImage->ShadowsHighlights(FCfgItems[cfgIdx(CCurve)].Curve.get(),
-                            FConfig->getValue(CScale).toDouble(),
-                            FConfig->getValue(CCoarseDetail).toDouble(),
-                            FConfig->getValue(CFineDetail).toDouble() );
+                            FConfig.value(CScale).toDouble(),
+                            FConfig.value(CCoarseDetail).toDouble(),
+                            FConfig.value(CFineDetail).toDouble() );
 }
 
 //==============================================================================

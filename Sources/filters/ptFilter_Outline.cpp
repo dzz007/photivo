@@ -109,19 +109,19 @@ QWidget *ptFilter_Outline::doCreateGui() {
 //==============================================================================
 
 bool ptFilter_Outline::doCheckHasActiveCfg() {
-  return FConfig->getValue(COverlayMode).toInt() != 0;
+  return FConfig.value(COverlayMode).toInt() != 0;
 }
 
 //==============================================================================
 
 void ptFilter_Outline::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->Outline(FConfig->getValue(COverlayMode).toInt(),
-                  FConfig->getValue(CGradientMode).toInt(),
+  AImage->Outline(FConfig.value(COverlayMode).toInt(),
+                  FConfig.value(CGradientMode).toInt(),
                   FCfgItems[cfgIdx(CCurve)].Curve.get(),
-                  FConfig->getValue(CColorWeight).toDouble(),
-                  FConfig->getValue(CBlurRadius).toDouble(),
-                  FConfig->getValue(CImageOnTop).toBool());
+                  FConfig.value(CColorWeight).toDouble(),
+                  FConfig.value(CBlurRadius).toDouble(),
+                  FConfig.value(CImageOnTop).toBool());
 }
 
 //==============================================================================

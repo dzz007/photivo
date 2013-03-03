@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2012 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
@@ -24,76 +24,50 @@
 #ifndef PTFILTERCONFIG_H
 #define PTFILTERCONFIG_H
 
+#include "../ptStorable.h"
 #include <QMap>
 #include <QVariant>
 #include <QStringList>
 
-#include "ptStorable.h"
-
-//forwards
 class QSettings;
 
-//==============================================================================
+//------------------------------------------------------------------------------
+struct TFlaggedVariant {
+  QVariant  Value;
+  bool      Storable;
+};
 
+typedef QMap<QString, TFlaggedVariant> TFlaggedConfigStore;
+
+//------------------------------------------------------------------------------
 class ptFilterConfig {
 public:
-  /*! Creates a new \c ptFilterConfig instance. */
   ptFilterConfig();
-
-  /*! Copy constructor. */
   ptFilterConfig(const ptFilterConfig &AOther);
+  ~ptFilterConfig();
 
+  void clear();
+  void exportPreset(QSettings *APreset) const;
+  void importPreset(QSettings *APreset);
+  bool isEmpty() const;
 
-  /*! \group Management of the default data store. */
-  ///@{
-  /*! Initializes the data store with new key/value pairs. All old data is removed.
-      \param AInitData
-        A \c QMap with all the keys handled by this \c ptFilterConfig instance set
-        to their default values. Also defines the valid keys for the \c getValue() and
-        \c setValue() methods.
-      \see update()
-   */
-  void            init(const TConfigStore &AInitData);
+  /*! \name Management of the default data store. *//*! @{*/
+  void      initDefaultStore(const TFlaggedConfigStore &AInitData);
+  QVariant  value(const QString &AKey) const;
+  void      setValue(const QString &AKey, const QVariant &AValue);
+  /*! @}*/
 
-  /*! Updates the data store with new key/value pairs. Existing keys are updated with the
-      new value, non-existing keys are ignored. Keys not present in \c AInitData are not touched.
-      \param AInitData
-        A \c QMap containing the new data.
-      \see init()
-   */
-  void            update(const TConfigStore &AInitData);
-
-  /*! Returns the value for the config item \c AKey. */
-  QVariant        getValue(const QString &AKey) const;
-
-  /*! Updates the config item \c AKey with \c AValue. */
-  void            setValue(const QString &AKey, const QVariant &AValue);
-  ///@}
-
-  /*! \group Management of additional custom data stores. */
-  ///@{
-  TConfigStore       *newSimpleStore(const QString &AId, const TConfigStore ADefaults = TConfigStore());
-  TConfigStore       *getSimpleStore(const QString &AId);
-  const QStringList   simpleStoreIds() const { return FSimpleStoreIds; }
-  void                clearSimpleStores();
-  ///@}
-
-  /*! \group Management of complex custom stores that implement the ptStorable interface.
-        `ptFilterConfig` does *not* take ownership of the stores. */
-  ///@{
-  void                insertStore(const QString &AId, ptStorable *AStore);
-  ptStorable         *getStore(const QString &AId);
-  const QStringList   storeIds() const { return FStoreIds; }
-  ///@}
-
+  /*! \name Management of the custom store *//*! @{*/
+  bool        containsObject(const QString &AId) const;
+  void        insertObject(const QString &AId, ptStorable *AObject);
+  ptStorable *object(const QString &AId);
+  /*! @}*/
 
 private:
-  TConfigStore         FDefaultStore;
-  QList<TConfigStore>  FSimpleStores;
-  QStringList          FSimpleStoreIds;
-  QList<ptStorable*>   FStores;
-  QStringList          FStoreIds;
+  typedef QMap<QString, ptStorable*> TCustomStore;
 
+  TFlaggedConfigStore FDefaultStore;
+  TCustomStore        FCustomStore;
 };
 
 #endif // PTFILTERCONFIG_H

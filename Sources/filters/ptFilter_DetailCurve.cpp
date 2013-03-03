@@ -81,10 +81,10 @@ bool ptFilter_DetailCurve::doCheckHasActiveCfg() {
 void ptFilter_DetailCurve::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
   AImage->MLMicroContrast(0.15,
-                          FConfig->getValue(CHaloControl).toDouble(),
-                          FConfig->getValue(CWeight).toDouble(),
+                          FConfig.value(CHaloControl).toDouble(),
+                          FConfig.value(CWeight).toDouble(),
                           FCfgItems[cfgIdx(CCurve)].Curve.get());
-  AImage->HotpixelReduction(FConfig->getValue(CAntiBadpixel).toDouble());
+  AImage->HotpixelReduction(FConfig.value(CAntiBadpixel).toDouble());
 }
 
 //==============================================================================

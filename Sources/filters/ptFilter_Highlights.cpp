@@ -63,18 +63,18 @@ void ptFilter_Highlights::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_Highlights::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CHighlightsR).toFloat() != 0.0f) ||
-         (FConfig->getValue(CHighlightsG).toFloat() != 0.0f) ||
-         (FConfig->getValue(CHighlightsB).toFloat() != 0.0f);
+  return (FConfig.value(CHighlightsR).toFloat() != 0.0f) ||
+         (FConfig.value(CHighlightsG).toFloat() != 0.0f) ||
+         (FConfig.value(CHighlightsB).toFloat() != 0.0f);
 }
 
 //==============================================================================
 
 void ptFilter_Highlights::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  AImage->Highlights(FConfig->getValue(CHighlightsR).toFloat(),
-                     FConfig->getValue(CHighlightsG).toFloat(),
-                     FConfig->getValue(CHighlightsB).toFloat());
+  AImage->Highlights(FConfig.value(CHighlightsR).toFloat(),
+                     FConfig.value(CHighlightsG).toFloat(),
+                     FConfig.value(CHighlightsB).toFloat());
 }
 
 //==============================================================================

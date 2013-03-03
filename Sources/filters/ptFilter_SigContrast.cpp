@@ -68,7 +68,7 @@ void ptFilter_SigContrast::doDefineControls() {
 bool ptFilter_SigContrast::doCheckHasActiveCfg() {
   // The filter is off when the contrast slider sits at 0.0. Position of other
   // controls does not matter.
-  return (FConfig->getValue(CStrengthId).toFloat() != 0.0f);
+  return (FConfig.value(CStrengthId).toFloat() != 0.0f);
 }
 
 //==============================================================================
@@ -77,13 +77,13 @@ void ptFilter_SigContrast::doRunFilter(ptImage *AImage) const {
   if (FColorSpace == TColorSpace::Rgb) {
     if (!(AImage->m_ColorSpace == ptSpace_Profiled))
       AImage->toRGB();
-    AImage->SigmoidalContrast(FConfig->getValue(CStrengthId).toFloat(),
-                              FConfig->getValue(CThresholdId).toFloat(),
+    AImage->SigmoidalContrast(FConfig.value(CStrengthId).toFloat(),
+                              FConfig.value(CThresholdId).toFloat(),
                               ChMask_RGB);
   } else if (FColorSpace == TColorSpace::Lab) {
     AImage->toLab();
-    AImage->SigmoidalContrast(FConfig->getValue(CStrengthId).toFloat(),
-                              FConfig->getValue(CThresholdId).toFloat(),
+    AImage->SigmoidalContrast(FConfig.value(CStrengthId).toFloat(),
+                              FConfig.value(CThresholdId).toFloat(),
                               ChMask_L);
   }
 }
