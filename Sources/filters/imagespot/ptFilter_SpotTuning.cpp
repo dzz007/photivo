@@ -91,7 +91,7 @@ void ptFilter_SpotTuning::doDefineControls() {
 
   FCfgItems[4].UseCommonDispatch = false;
   FNullSpot = make_unique<ptTuningSpot>(&FCfgItems);
-  FConfig->insertStore(CSpotListId, &FSpotList);
+  FConfig.insertObject(CSpotListId, &FSpotList);
 }
 
 //==============================================================================
@@ -150,14 +150,14 @@ void ptFilter_SpotTuning::doRunFilter(ptImage *AImage) const {
     if (hTSpot->isEnabled()) {
       AImage->MaskedColorAdjust(hTSpot->x(),
                                 hTSpot->y(),
-                                hTSpot->getValue(CSpotThresholdId).toFloat(),
-                                hTSpot->getValue(CSpotChromaWeightId).toFloat(),
-                                hTSpot->getValue(CSpotMaxRadiusId).toInt(),
-                                hTSpot->getValue(CSpotHasMaxRadiusId).toBool(),
+                                hTSpot->value(CSpotThresholdId).toFloat(),
+                                hTSpot->value(CSpotChromaWeightId).toFloat(),
+                                hTSpot->value(CSpotMaxRadiusId).toInt(),
+                                hTSpot->value(CSpotHasMaxRadiusId).toBool(),
                                 hTSpot->curve(),
-                                hTSpot->getValue(CSpotIsAdaptiveSatId).toBool(),
-                                hTSpot->getValue(CSpotSaturationId).toFloat(),
-                                hTSpot->getValue(CSpotColorShiftId).toFloat());
+                                hTSpot->value(CSpotIsAdaptiveSatId).toBool(),
+                                hTSpot->value(CSpotSaturationId).toFloat(),
+                                hTSpot->value(CSpotColorShiftId).toFloat());
     }
   }
 }
@@ -234,11 +234,11 @@ void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget
   for (ptCfgItem hCfgItem: FCfgItems) {
     ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiWidget);
     hWidget->blockSignals(true);
-    hWidget->setValue(hSpot->getValue(hCfgItem.Id));
+    hWidget->setValue(hSpot->value(hCfgItem.Id));
     hWidget->blockSignals(false);
   }
 
-  FGui->MaxRadius->setEnabled(hSpot->getValue("HasMaxRadius").toBool());
+  FGui->MaxRadius->setEnabled(hSpot->value("HasMaxRadius").toBool());
 }
 
 //==============================================================================
@@ -285,7 +285,7 @@ void ptFilter_SpotTuning::spotDispatch(const QString AId, const QVariant AValue)
   hSpot->setValue(AId, AValue);
 
   if (AId == CSpotHasMaxRadiusId)
-    FGui->MaxRadius->setEnabled(hSpot->getValue("HasMaxRadius").toBool());
+    FGui->MaxRadius->setEnabled(hSpot->value("HasMaxRadius").toBool());
 
   this->updatePreview();
 }

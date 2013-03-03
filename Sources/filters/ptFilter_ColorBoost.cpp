@@ -62,16 +62,16 @@ void ptFilter_ColorBoost::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_ColorBoost::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CStrengthA).toFloat() != 1.0f) ||
-         (FConfig->getValue(CStrengthB).toFloat() != 1.0f);
+  return (FConfig.value(CStrengthA).toFloat() != 1.0f) ||
+         (FConfig.value(CStrengthB).toFloat() != 1.0f);
 }
 
 //==============================================================================
 
 void ptFilter_ColorBoost::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->ColorBoost(FConfig->getValue(CStrengthA).toFloat(),
-                     FConfig->getValue(CStrengthB).toFloat());
+  AImage->ColorBoost(FConfig.value(CStrengthA).toFloat(),
+                     FConfig.value(CStrengthB).toFloat());
 }
 
 //==============================================================================

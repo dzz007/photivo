@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2012 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
@@ -20,15 +20,14 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
 #ifndef PTCFGITEM_H
 #define PTCFGITEM_H
 
-#include <memory>
-
 #include <QList>
 #include <QVariant>
+#include <memory>
 
+class ptStorable;
 class ptCurve;
 
 //==============================================================================
@@ -65,7 +64,7 @@ public:
     bool          Default;
     bool          Checkable;
     bool          UseCommonDispatch;
-    bool          Storeable;
+    bool          Storable;
     QString       Caption;
     QString       ToolTip;
   };
@@ -75,7 +74,7 @@ public:
     TType         Type;
     bool          Default;
     bool          UseCommonDispatch;
-    bool          Storeable;
+    bool          Storable;
     QString       Caption;
     QString       ToolTip;
   };
@@ -86,7 +85,7 @@ public:
     int                 Default;
     QList<TComboEntry>  EntryList;
     bool                UseCommonDispatch;
-    bool                Storeable;
+    bool                Storable;
     QString             Caption;
     QString             ToolTip;
   };
@@ -100,7 +99,7 @@ public:
     QVariant      StepSize;
     int           Decimals;
     bool          UseCommonDispatch;
-    bool          Storeable;
+    bool          Storable;
     QString       Caption;
     QString       ToolTip;
   };
@@ -138,11 +137,12 @@ public:
   // used by all item types
   QString       Id;                 /*!< Internal ID. Used as key to identify this control in
                                          settings. Never shows up in GUI. */
-  TType         Type;               /*!< Type of input control. */
-  bool          UseCommonDispatch;  /*!< Defines if control uses the automatic signals/slots mechanism. */
-  bool          Storeable;          /*!< Defines if the control is stored in settings files. */
-  QString       Caption;            /*!< Caption text that appears in the GUI. */
-  QString       ToolTip;            /*!< Text for the GUI popup tooltip. */
+  TType         Type;               //!< Type of input control.
+  bool          UseCommonDispatch;  //!< Defines if control uses the automatic signals/slots mechanism.
+  bool          Storable;           /*!< Defines if the control is saved to the preset file.
+                                         Only applies to controls in the default store. */
+  QString       Caption;            //!< Caption text that appears in the GUI.
+  QString       ToolTip;            //!< Text for the GUI popup tooltip.
 
   // used by TCheck, TCombo, TInput, TCurve (via the constructor)
   QVariant      Default;
@@ -159,8 +159,11 @@ public:
   QVariant      StepSize;
   int           Decimals;
 
+  // specific to all custom types
+  ptStorable   *AssocObject;
+
   // specific to TCurve
-  std::shared_ptr<ptCurve>  Curve;
+  std::shared_ptr<ptCurve> Curve;
   ///@}
 
 

@@ -281,7 +281,9 @@ HEADERS += \
     ../Sources/ptWiener.h \
     ../Sources/qtsingleapplication/qtlocalpeer.h \
     ../Sources/qtsingleapplication/qtlockedfile.h \
-    ../Sources/qtsingleapplication/qtsingleapplication.h
+    ../Sources/qtsingleapplication/qtsingleapplication.h \
+    ../Sources/ptUtils_Storage.h \
+    ../Sources/ptUtils.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -410,7 +412,10 @@ SOURCES += \
     ../Sources/vcd/es_median_filter.c \
     ../Sources/vcd/median_filter_new.c \
     ../Sources/vcd/refinement.c \
-    ../Sources/vcd/vcd_interpolate.c
+    ../Sources/vcd/vcd_interpolate.c \
+    ../Sources/ptUtils_Storage.cpp \
+    ../Sources/ptStorable.cpp \
+    ../Sources/ptUtils.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \

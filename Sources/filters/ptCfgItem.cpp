@@ -33,11 +33,12 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TButton &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(AValues.UseCommonDispatch),
-  Storeable(AValues.Storeable),
+  Storable(AValues.Storable),
   Caption(AValues.Caption),
   ToolTip(AValues.ToolTip),
   Checkable(AValues.Checkable),
-  Decimals(-1)
+  Decimals(-1),
+  AssocObject(nullptr)
 {
   init();
 }
@@ -48,12 +49,13 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCheck &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(AValues.UseCommonDispatch),
-  Storeable(AValues.Storeable),
+  Storable(AValues.Storable),
   Caption(AValues.Caption),
   ToolTip(AValues.ToolTip),
   Default(AValues.Default),
   Checkable(false),
-  Decimals(-1)
+  Decimals(-1),
+  AssocObject(nullptr)
 {
   init();
 }
@@ -64,13 +66,14 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCombo &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(AValues.UseCommonDispatch),
-  Storeable(AValues.Storeable),
+  Storable(AValues.Storable),
   Caption(AValues.Caption),
   ToolTip(AValues.ToolTip),
   Default(AValues.Default),
   Checkable(false),
   EntryList(AValues.EntryList),
-  Decimals(-1)
+  Decimals(-1),
+  AssocObject(nullptr)
 {
   init();
 }
@@ -81,7 +84,7 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TInput &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(AValues.UseCommonDispatch),
-  Storeable(AValues.Storeable),
+  Storable(AValues.Storable),
   Caption(AValues.Caption),
   ToolTip(AValues.ToolTip),
   Default(AValues.Default),
@@ -89,7 +92,8 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TInput &AValues):
   Min(AValues.Min),
   Max(AValues.Max),
   StepSize(AValues.StepSize),
-  Decimals(AValues.Decimals)
+  Decimals(AValues.Decimals),
+  AssocObject(nullptr)
 {
   init();
 }
@@ -100,11 +104,12 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCurve &AValues):
   Id(AValues.Id),
   Type(AValues.Type),
   UseCommonDispatch(true),
-  Storeable(false),  // Curves have an extra default store
+  Storable(false),  // Curves have an extra default store
   Caption(AValues.Caption),
+  AssocObject(AValues.Curve.get()),
   Curve(AValues.Curve)
 {
-  Default = QVariant(Curve->filterConfig());
+  Default = QVariant(AssocObject->storeConfig(""));
   init();
 }
 

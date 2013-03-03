@@ -65,14 +65,14 @@ void ptFilter_LabTransform::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_LabTransform::doCheckHasActiveCfg() {
-  return FConfig->getValue(CMode).toInt() != ptLABTransform_L;
+  return FConfig.value(CMode).toInt() != ptLABTransform_L;
 }
 
 //==============================================================================
 
 void ptFilter_LabTransform::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();  // Yes, this filter needs RGB input
-  AImage->LABTransform(FConfig->getValue(CMode).toInt());
+  AImage->LABTransform(FConfig.value(CMode).toInt());
 }
 
 //==============================================================================

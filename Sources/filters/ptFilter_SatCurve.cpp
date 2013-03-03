@@ -79,7 +79,7 @@ bool ptFilter_SatCurve::doCheckHasActiveCfg() {
 void ptFilter_SatCurve::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
   AImage->ApplySaturationCurve(FCfgItems[0].Curve.get(),
-                               FConfig->getValue(CMode).toInt());
+                               FConfig.value(CMode).toInt());
 }
 
 //==============================================================================

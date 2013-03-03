@@ -65,16 +65,16 @@ void ptFilter_Drc::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_Drc::doCheckHasActiveCfg() {
-  return FConfig->getValue(CStrength).toFloat() != 1.0f;
+  return FConfig.value(CStrength).toFloat() != 1.0f;
 }
 
 //==============================================================================
 
 void ptFilter_Drc::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->DRC(FConfig->getValue(CBias).toFloat(),
-              FConfig->getValue(CStrength).toFloat(),
-              FConfig->getValue(CColorAdapt).toFloat() );
+  AImage->DRC(FConfig.value(CBias).toFloat(),
+              FConfig.value(CStrength).toFloat(),
+              FConfig.value(CColorAdapt).toFloat() );
 }
 
 //==============================================================================

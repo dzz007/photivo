@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2013 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -19,24 +19,12 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+#ifndef PTUTILS_H
+#define PTUTILS_H
 
-#ifndef PTSTORABLE_H
-#define PTSTORABLE_H
+#include <QString>
 
-#include <QVariant>
+QString trailingSlash(const QString &AText);
 
-typedef QMap<QString, QVariant> TConfigStore;
 
-//==============================================================================
-
-class ptStorable {
-public:
-  ptStorable() {}
-  virtual ~ptStorable() {}
-
-  virtual TConfigStore storeConfig(const QString &APrefix = "") const = 0;
-  virtual void         loadConfig(const TConfigStore &AConfig, const QString &APrefix = "") = 0;
-
-};
-
-#endif // PTSTORABLE_H
+#endif // PTUTILS_H

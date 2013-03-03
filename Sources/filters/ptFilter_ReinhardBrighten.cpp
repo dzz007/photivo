@@ -67,16 +67,16 @@ void ptFilter_ReinhardBrighten::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_ReinhardBrighten::doCheckHasActiveCfg() {
-  return FConfig->getValue(CEnabled).toBool();
+  return FConfig.value(CEnabled).toBool();
 }
 
 //==============================================================================
 
 void ptFilter_ReinhardBrighten::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  AImage->Reinhard05(FConfig->getValue(CBrightness).toFloat(),
-                     FConfig->getValue(CChroma).toFloat(),
-                     FConfig->getValue(CLightTweak).toFloat() );
+  AImage->Reinhard05(FConfig.value(CBrightness).toFloat(),
+                     FConfig.value(CChroma).toFloat(),
+                     FConfig.value(CLightTweak).toFloat() );
 }
 
 //==============================================================================
