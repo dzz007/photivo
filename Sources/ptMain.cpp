@@ -403,12 +403,12 @@ int main(int Argc, char *Argv[]) {
   // additional window or no console output even when Photivo was started from an existing console.
   // The following takes care of that problem by trying to attach to the parent process’s console.
   // On success we have a console window to output to. If not no additional window appears.
-  if (AttachConsole(ATTACH_PARENT_PROCESS)) {
-    // Attaching succeeded. Reopen output streams to be able to write to the parent’s console.
-    freopen("CONOUT$", "wb", stdout);
-    freopen("CONOUT$", "wb", stderr);
-    // Done. printf, cout, cerr now use the attached console.
-  }
+//  if (AttachConsole(ATTACH_PARENT_PROCESS)) {
+//    // Attaching succeeded. Reopen output streams to be able to write to the parent’s console.
+//    freopen("CONOUT$", "wb", stdout);
+//    freopen("CONOUT$", "wb", stderr);
+//    // Done. printf, cout, cerr now use the attached console.
+//  }
 #endif
 
   int RV = photivoMain(Argc,Argv);

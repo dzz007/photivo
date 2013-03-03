@@ -308,14 +308,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(LoadStyle);
 
   //
-  // Gimp related
+  // Connect Export button (not only for Gimp like the name suggests)
   //
-
-#if defined (DLRAW_GIMP_PLUGIN) || defined (DLRAW_HAVE_GIMP)
   Macro_ConnectSomeButton(ToGimp);
-#else
-  ToGimpButton->hide();
-#endif
 
   //
   // Settings related
