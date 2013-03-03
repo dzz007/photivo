@@ -33,6 +33,7 @@
 #ifdef Q_OS_WIN
 namespace WinApi {
   QString AppdataFolder();
+  void AttachToParentConsole();
   QStringList DrivesListPretty();
   QString VolumeName(QString driveLetter);
   QString VolumeNamePretty(QString drive);
