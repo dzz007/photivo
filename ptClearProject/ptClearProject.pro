@@ -37,14 +37,14 @@ isEmpty(PREFIX) {
   PREFIX = $$[QT_INSTALL_PREFIX]
 }
 
-QMAKE_CXXFLAGS += $$(CXXFLAGS) -std=gnu++0x -std=gnu++11
+QMAKE_CXXFLAGS += $$(CXXFLAGS) -std=gnu++0x
 QMAKE_CFLAGS   += $$(CFLAGS)
 QMAKE_LFLAGS   += $$(LDFLAGS)
 
 macx {
   #prevent qmake from adding -arch flags
   QMAKE_CFLAGS_X86_64           = -m64
-  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x -std=gnu++11
+  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x
   QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
   QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
   

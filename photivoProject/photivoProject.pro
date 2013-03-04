@@ -108,7 +108,7 @@ QMAKE_CXXFLAGS_DEBUG   += $$(CXXFLAGS)
 QMAKE_CFLAGS_DEBUG     += $$(CFLAGS)
 QMAKE_LFLAGS_DEBUG     += $$(LDFLAGS)
 
-QMAKE_CXXFLAGS += $${COMPILERFLAGS_ALL} -std=gnu++0x -std=gnu++11
+QMAKE_CXXFLAGS += $${COMPILERFLAGS_ALL} -std=gnu++0x
 QMAKE_CFLAGS   += $${COMPILERFLAGS_ALL}
 QMAKE_LFLAGS   += $${COMPILERFLAGS_ALL}
 
@@ -139,7 +139,7 @@ macx {
 
   # prevent qmake from adding -arch flags
   QMAKE_CFLAGS_X86_64           = -m64
-  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x -std=gnu++11
+  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x
   QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
   QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
 
