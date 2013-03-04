@@ -1,0 +1,303 @@
+#!/bin/bash
+
+#============================= Start user config ===============================
+
+### Do not use spaces in any of the paths! ###
+
+# Qmake, Mercurial and Inno Setup compiler commands
+QmakeCmd=qmake
+MakeCmd=make
+HgCmd=hg
+IsscCmd=/c/bin32/InnoSetup/ISCC
+
+# Zip program for creating the troubleshooter. 7-zip strongly recommended.
+# Must accept a command line of the form:
+# $ZipCmd output.zip inputfile1 inputfile2 inputfile3 ...
+ZipCmd="/c/bin32/7-Zip/7z a"
+
+# Software archive on the local hard disk.
+# Path (Msys notation) where the finished installers go during the cleanup stage.
+ArchivePath=/d/Software/Anwendungen/Photivo
+
+# Location of the Photivo base folder as Msys and native path. Use forward slashes!
+MsysBasePath=/C/Projekte/Photivo
+RealBasePath=C:/Projekte/Photivo
+
+# Additional C++ compiler flags.
+# export CXXFLAGS="$CXXFLAGS "
+
+#============================= End user config =================================
+
+ScriptVersion=1.0
+ColorRed='\e[1;31m'
+ColorGreen='\e[0;32m'
+ColorNone='\e[00m'
+
+ScriptPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+#===============================================================================
+
+AbortOrNot() {
+  read -n 1 -p "$1 (y/n)" PT_CONT
+  if [ $PT_CONT = y ] || [ $PT_CONT = Y ]; then
+    printf "\n"
+    unset PT_CONT
+  else
+    exit 1
+  fi
+}
+
+FileYesNo() {
+  if [ -s "$1" ]; then
+    echo -e "${ColorGreen}Yes${ColorNone}"
+  else
+    echo -e "${ColorRed}No${ColorNone}"
+  fi
+}
+
+Error() {
+  echo -e "${ColorRed}$1${ColorNone}"
+}
+
+Cleanup() {
+  echo -e "\nMoving setups ..."
+  cp $PKGDIR/photivo-setup-${RELEASEDATE}-win64.exe \
+     $PKGDIR/photivo-setup-${RELEASEDATE}-win32.exe \
+     $ArchivePath
+  if [ ! $? -eq 0 ]; then
+    Error "Copying setups failed. Aborting cleanup."
+    echo "To clean up delete \"build-win-installer*\" folders manually."
+    exit 1
+  fi
+
+  echo "Deleting temporary stuff ..."
+  rm -rf $PhotivoRepoPath/build-win-installer-64 && \
+  rm -rf $PhotivoRepoPath/build-win-installer-32 && \
+  rm -rf $TSHOOTDIR && \
+  rm -rf $PKGDIR
+  if [ $? -eq 0 ]; then
+    echo -e "${ColorGreen}All done.${ColorNone}"
+    exit 0
+  else
+    Error "Cleanup failed."
+    echo "To clean up delete \"build-win-installer*\" folders manually."
+    exit 1
+  fi
+}
+
+#===============================================================================
+
+echo ""
+echo "Create Photivo for Windows release package v$ScriptVersion"
+echo "---------------------------------------------------------------------------"
+
+if [[ ("$PhotivoRepoPath" == "") || ("$PhotivoBuildPath" == "") ]]; then 
+  printf "No repo set. Cannot continue."
+  exit 1
+fi
+if [[ ("$GccArch" != "64") && ("$GccArch" != "32") ]]; then
+  echo "Wrong GccArch (${GccArch})!"
+  exit 1
+fi
+
+cd $PhotivoRepoPath
+HGBRANCH=$($HgCmd branch)
+if [ ! "$HGBRANCH" = "default" ]; then
+  echo -e "\nWorking copy is set to branch \"${HGBRANCH}\" instead of \"default\"."
+  AbortOrNot "Continue anyway?"
+fi
+
+$HgCmd summary|grep "commit: (clean)" > /dev/null
+if [ ! $? -eq 0 ]; then
+  echo -e "\nWorking copy has uncommitted changes."
+  AbortOrNot "Continue anyway?"
+fi
+
+RELEASEDATE=$( $HgCmd log -b ${HGBRANCH} -l 1 --style ${ScriptPath}/hg-shortdate.style )
+
+#===============================================================================
+
+# Prepare folders
+BUILDDIR=$PhotivoRepoPath/build-win-installer-$GccArch
+BINDIR=$BUILDDIR/bin
+TSHOOTDIR=$PhotivoRepoPath/build-win-installer-tshoot
+PKGDIR=$PhotivoRepoPath/build-win-installer-pkg
+
+if [ -d $BUILDDIR ]; then
+  rm -rf $BUILDDIR/*
+else
+  mkdir $BUILDDIR
+fi
+
+mkdir -p $BINDIR
+mkdir -p $TSHOOTDIR
+mkdir -p $PKGDIR
+cd $BUILDDIR
+
+# check for installer script
+ISSFILE=$PhotivoRepoPath/packaging/win-installer/photivo-setup-win${GccArch}.iss
+if [ ! -s $ISSFILE ]; then
+  Error "$ISSFILE is missing/corrupted!"
+  exit 1
+fi
+
+#===============================================================================
+
+# build Photivo
+echo "Building Photivo and ptClear ..."
+$QmakeCmd ../photivo.pro CONFIG+=WithoutGimp CONFIG-=debug && \
+$MakeCmd -j${JobsForMake}
+
+if [ ! $? -eq 0 ] || [ ! -s $BUILDDIR/photivo.exe ] || [ ! -s $BUILDDIR/ptClear.exe ]
+then
+  Error "Building Photivo failed!"
+  exit 1
+fi
+
+#===============================================================================
+
+# Build successful, fill binary folder
+echo "Copying binaries ..."
+cp $BUILDDIR/photivo.exe $BUILDDIR/ptClear.exe $BINDIR
+
+if ! ptuplibs $BINDIR ; then
+  # Success/failure message is handled by the update libs script
+  exit 1
+fi
+
+echo "Stripping debug symbols ..."
+strip $BINDIR/*.dll $BINDIR/*.exe
+
+ptupdata $BINDIR
+if [ ! $? -eq 0 ]; then
+  Error "Copying data files failed!"
+  exit 1
+fi
+
+cp $PhotivoRepoPath/COPYING $BINDIR/License.txt && \
+cp $PhotivoRepoPath/COPYING.3rd.party "$BINDIR/Licenses 3rd party.txt" && \
+ln $PhotivoRepoPath/../Changelog.txt $BINDIR
+if [ ! $? -eq 0 ]; then
+  Error "Copying license files or linking Changelog.txt failed!"
+  exit 1
+fi
+
+#===============================================================================
+
+# test for current changelog
+while :
+do
+  PT_CHLOG_DATE=$(stat -c %y $PhotivoRepoPath/../Changelog.txt)
+  PT_CHLOG_DATE=${PT_CHLOG_DATE%% *}
+  if [ "$(date +%Y-%m-%d)" == "$PT_CHLOG_DATE" ]; then
+    break
+  else
+    Error "\nChangelog not edited today, but on ${PT_CHLOG_DATE}."
+    read -n 1 -p "(R)etry, (c)ontinue or (a)bort?" PT_CONT
+    if [ "$PT_CONT" = "c" ] || [ "$PT_CONT" = "C" ]; then
+      printf "\n"
+      break
+    elif [ "$PT_CONT" = "a" ] || [ "$PT_CONT" = "A" ]; then
+      exit 1
+    fi
+  fi
+done
+
+# Create installer
+VERSTRING=$( $HgCmd log -b ${HGBRANCH} -l 1 --style ${ScriptPath}/hg-revdatenum.style )
+NATIVECHLOGPATH=$( echo $RealBasePath/Changelog.txt | sed 's|/|\\\\|g' )
+SETUPNAME=photivo-setup-${RELEASEDATE}-win${GccArch}
+NATIVEBINDIR=$( echo $BINDIR | sed "s|${MsysBasePath}|${RealBasePath}|I" | sed 's|/|\\\\|g' )
+NATIVEPKGDIR=$( echo $PKGDIR | sed "s|${MsysBasePath}|${RealBasePath}|I" | sed 's|/|\\\\|g' )
+
+printf "\nVariables for Inno installer\n"
+printf "VERSTRING = $VERSTRING\n"
+printf "NATIVECHLOGPATH = $NATIVECHLOGPATH\n"
+printf "SETUPNAME = $SETUPNAME\n"
+printf "NATIVEBINDIR = $NATIVEBINDIR\n"
+printf "NATIVEPKGDIR = $NATIVEPKGDIR\n\n"
+
+cat $PhotivoRepoPath/packaging/win-installer/photivo-setup-win${GccArch}.iss | \
+sed "s/{{versionstring}}/${VERSTRING}/" | \
+sed "s/{{changelogfile}}/${NATIVECHLOGPATH}/" | \
+sed "s/{{outputbasename}}/${SETUPNAME}/" | \
+sed "s/{{bindir}}/${NATIVEBINDIR}/" | \
+$IsscCmd /O$NATIVEPKGDIR -
+
+if [ ! $? -eq 0 ] || [ ! -s ${PKGDIR}/${SETUPNAME}.exe ]; then
+  Error "Creating installer failed!"
+  exit 1
+fi
+
+#===============================================================================
+
+# Build troubleshooter
+printf "\nBuilding ${GccArch}bit troubleshooter ...\n"
+cd $BUILDDIR
+rm -f ./photivo.exe ./Objects/ptMain.o
+$QmakeCmd ../photivo.pro "CONFIG+=WithoutGimp WithoutClear console" CONFIG-=debug && \
+$MakeCmd -j${JobsForMake}
+
+if [ ! $? -eq 0 ] || [ ! -s $BUILDDIR/photivo.exe ]
+then
+  Error "Building troubleshooter failed!"
+  exit 1
+fi
+
+cd $TSHOOTDIR
+cp $BUILDDIR/photivo.exe ./ptConsole${GccArch}.exe
+cp "$PhotivoRepoPath/packaging/troubleshooter/How to use.txt" \
+   "$PhotivoRepoPath/packaging/troubleshooter/ptTroubleshoot.bat" .
+
+rm -f $PKGDIR/photivo-win3264-troubleshooter*
+'ls' -1 "How to use.txt" ptTroubleshoot.bat ptConsole32.exe ptConsole64.exe > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+  $ZipCmd $PKGDIR/photivo-win3264-troubleshooter-${RELEASEDATE}.zip \
+          "How to use.txt" ptTroubleshoot.bat ptConsole32.exe ptConsole64.exe
+  if [ ! $? -eq 0 ]; then
+    Error "Creating troubleshooter archive failed!"
+    exit 1
+  fi
+fi
+
+#===============================================================================
+
+cd $PhotivoRepoPath
+echo    ""
+echo    "---------------------------------------------------------------------------"
+echo    "Final status"
+echo    "---------------------------------------------------------------------------"
+echo -e "Photivo setup 64bit   : \c"
+FileYesNo $PKGDIR/photivo-setup-${RELEASEDATE}-win64.exe
+echo -e "Photivo setup 32bit   : \c"
+FileYesNo $PKGDIR/photivo-setup-${RELEASEDATE}-win32.exe
+echo -e "Troubleshooter archive: \c"
+FileYesNo $PKGDIR/photivo-win3264-troubleshooter-${RELEASEDATE}.zip
+echo -e "\nChangeset info:"
+$HgCmd log -b ${HGBRANCH} -l 1
+echo    "---------------------------------------------------------------------------"
+
+if [ -s $PKGDIR/photivo-setup-${RELEASEDATE}-win64.exe ] && \
+   [ -s $PKGDIR/photivo-setup-${RELEASEDATE}-win32.exe ] && \
+   [ -s $PKGDIR/photivo-win3264-troubleshooter-${RELEASEDATE}.zip ]
+then
+  printf "\nEverything looks fine. You can test and upload the release now.\n"
+  printf "The packages are located in\n"
+  printf "$ColorGreen$PKGDIR$ColorNone\n\n"
+  
+  printf "Afterwards I can clean up automatically, i.e.:\n"
+  printf "* move installers to \"$ArchivePath\",\n"
+  printf "* delete everything else created in the build process.\n\n"
+  
+  read -n 1 -p "Shall I clean up now? (y/n)" ptcleanup
+
+  if [ "$ptcleanup" = "y" ] || [ "$ptcleanup" = "Y" ]; then
+    Cleanup
+  else
+    echo -e "\nOK. The mess stays!"
+    echo -e "${ColorGreen}All done.${ColorNone}"
+  fi
+
+else
+  exit 1
+fi
