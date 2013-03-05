@@ -60,21 +60,36 @@ if( ${WITH_GIMP} )
   pkg_check_modules( GTK2 REQUIRED gtk+-2.0 )
 endif( ${WITH_GIMP} )
 
-EXECUTE_PROCESS( COMMAND sh get_appversion
-                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/photivoProject"
-                 OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE APPVERSION )
-message( "\nPhotivo ${APPVERSION}\n" )
+# Determine Photivo version with mercurial. Use current date if mercurial is unavailable.
+find_program( MERCURIAL hg )
+if( MERCURIAL )
+  execute_process( COMMAND hg branch OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE BRANCH )
+  execute_process( COMMAND hg log --limit 1 --branch ${BRANCH} --template {date|shortdate}
+                   OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVDATE )
+  execute_process( COMMAND hg identify --id OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVISION )
+  set( APPVERSION "${REVDATE} (rev ${REVISION})" )
+else( MERCURIAL )
+  message( WARNING "Could not call Mercurial to determine Photivo's version info, using current date/time instead." )
+  execute_process( COMMAND date +%c OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE DATE )
+  set( APPVERSION "compiled at ${DATE}" )
+endif( MERCURIAL )
 
+message( "\nBuilding Photivo ${APPVERSION}\n" )
+
+# Choose Photivo parts to be built.
 option( WITH_CLEAR          "whether to build ptClear" ON )
 option( WITH_GIMP           "whether to build Gimp plugin" )
-option( WITH_CURVES         "whether to build curves creator" )
 option( WITH_ADOBE_PROFILES "whether to build Adobe profiles creator" )
 
 message( "Build Photivo                : ON" )
 message( "Build ptClear                : ${WITH_CLEAR}" )
 message( "Build Gimp plugin            : ${WITH_GIMP}" )
-message( "Build curves creator         : ${WITH_CURVES}" )
+message( "Build curves creator         : OFF - obsolete" )
 message( "Build Adobe profiles creator : ${WITH_ADOBE_PROFILES}\n" )
+
+set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -funroll-loops -fopenmp -std=gnu++0x" )
+set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=gnu++0x" )
+set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=gnu++0x" )
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Sources
                      ${CMAKE_CURRENT_BINARY_DIR}
@@ -88,16 +103,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Sources
                      ${GM_INCLUDE_DIRS}
                      ${GMW_INCLUDE_DIRS}
                      ${FFTW3_INCLUDE_DIRS}
-)
-link_directories( ${GLIB2_LIBRARY_DIRS}
-                  ${JPEG_LIBRARY_DIRS}
-                  ${EXIV2_LIBRARY_DIRS}
-                  ${LCMS2_LIBRARY_DIRS}
-                  ${LQR_LIBRARY_DIRS}
-                  ${LENSFUN_LIBRARY_DIRS}
-                  ${GM_LIBRARY_DIRS}
-                  ${GMW_LIBRARY_DIRS}
-                  ${FFTW3_LIBRARY_DIRS}
 )
 
 set( photivo_MOC_HDRS
@@ -120,16 +125,10 @@ QT4_WRAP_UI( photivo_UI_SRCS ${photivo_UI_HDRS} )
 QT4_WRAP_CPP( photivo_MOC_SRCS ${photivo_MOC_HDRS} )
 QT4_ADD_RESOURCES( photivo_RCC_SRCS ${photivo_RCCS} )
 
-set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -Wno-unknown-pragmas" )
-set( CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -funroll-loops -fopenmp" )
-set( CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g -Wno-unknown-pragmas" )
-set( CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG -funroll-loops -fopenmp" )
-set( CMAKE_L_FLAGS_RELWITHDEBINFO "-rdynamic" )
-set( CMAKE_L_FLAGS_DEBUG "-rdynamic" )
-
 add_executable( photivo ${photivo_SRCS} ${photivo_RCC_SRCS} ${photivo_MOC_SRCS} ${photivo_UI_SRCS} )
 set_target_properties( photivo PROPERTIES COMPILE_FLAGS
-                       "-ffast-math -std=gnu++0x -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX} -DDLRAW_HAVE_GIMP" )
+                       "-ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
+set_target_properties( photivo PROPERTIES LINK_FLAGS "-lgomp" )
 target_link_libraries( photivo
                        ${GLIB2_LIBRARIES}
                        ${QT_LIBRARIES}
@@ -165,30 +164,18 @@ endif( ${WITH_CLEAR} )
 
 if( ${WITH_GIMP} )
   include_directories( ${GIMP_INCLUDE_DIRS} ${GTK2_INCLUDE_DIRS} )
-  link_directories(    ${GIMP_LIBRARY_DIRS} ${GTK2_LIBRARY_DIRS} )
   add_executable( ptGimp Sources/ptCalloc.cpp
                          Sources/ptError.cpp
                          Sources/ptGimp.cpp )
-  set_target_properties( ptGimp PROPERTIES COMPILE_FLAGS "-ffast-math -std=gnu++0x" )
+  set_target_properties( ptGimp PROPERTIES COMPILE_FLAGS "-ffast-math" )
   target_link_libraries( ptGimp ${QT_LIBRARIES} ${GTK2_LIBRARIES} ${GIMP_LIBRARIES} )
   install( TARGETS   ptGimp                DESTINATION lib/gimp/2.0/plug-ins )
   install( PROGRAMS "mm extern photivo.py" DESTINATION lib/gimp/2.0/plug-ins )
 endif( ${WITH_GIMP} )
 
 
-if( ${WITH_CURVES} )
-  add_executable( ptCreateCurves Sources/ptCreateSomeCurves.cpp
-                                 Sources/ptCurve.cpp
-                                 Sources/ptError.cpp
-                                 Sources/ptCalloc.cpp )
-  target_link_libraries( ptCreateCurves ${QT_LIBRARIES} )
-  install( TARGETS ptCreateCurves DESTINATION bin )
-endif( ${WITH_CURVES} )
-
-
 if( ${WITH_ADOBE_PROFILES} )
   add_executable( ptCreateAdobeProfiles Sources/ptCreateAdobeProfiles.cpp )
-  set_target_properties( ptCreateAdobeProfiles PROPERTIES COMPILE_FLAGS "-std=gnu++0x" )
   target_link_libraries( ptCreateAdobeProfiles ${QT_LIBRARIES} ${LCMS2_LIBRARIES} )
   install( TARGETS ptCreateAdobeProfiles DESTINATION bin )
 endif( ${WITH_ADOBE_PROFILES} )

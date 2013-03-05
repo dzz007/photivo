@@ -60,21 +60,36 @@ if( ${WITH_GIMP} )
   pkg_check_modules( GTK2 REQUIRED gtk+-2.0 )
 endif( ${WITH_GIMP} )
 
-EXECUTE_PROCESS( COMMAND sh get_appversion
-                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/photivoProject"
-                 OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE APPVERSION )
-message( "\nPhotivo ${APPVERSION}\n" )
+# Determine Photivo version with mercurial. Use current date if mercurial is unavailable.
+find_program( MERCURIAL hg )
+if( MERCURIAL )
+  execute_process( COMMAND hg branch OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE BRANCH )
+  execute_process( COMMAND hg log --limit 1 --branch ${BRANCH} --template {date|shortdate}
+                   OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVDATE )
+  execute_process( COMMAND hg identify --id OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVISION )
+  set( APPVERSION "${REVDATE} (rev ${REVISION})" )
+else( MERCURIAL )
+  message( WARNING "Could not call Mercurial to determine Photivo's version info, using current date/time instead." )
+  execute_process( COMMAND date +%c OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE DATE )
+  set( APPVERSION "compiled at ${DATE}" )
+endif( MERCURIAL )
 
+message( "\nBuilding Photivo ${APPVERSION}\n" )
+
+# Choose Photivo parts to be built.
 option( WITH_CLEAR          "whether to build ptClear" ON )
 option( WITH_GIMP           "whether to build Gimp plugin" )
-option( WITH_CURVES         "whether to build curves creator" )
 option( WITH_ADOBE_PROFILES "whether to build Adobe profiles creator" )
 
 message( "Build Photivo                : ON" )
 message( "Build ptClear                : ${WITH_CLEAR}" )
 message( "Build Gimp plugin            : ${WITH_GIMP}" )
-message( "Build curves creator         : ${WITH_CURVES}" )
+message( "Build curves creator         : OFF - obsolete" )
 message( "Build Adobe profiles creator : ${WITH_ADOBE_PROFILES}\n" )
+
+set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -funroll-loops -fopenmp -std=gnu++0x" )
+set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=gnu++0x" )
+set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=gnu++0x" )
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Sources
                      ${CMAKE_CURRENT_BINARY_DIR}
@@ -89,18 +104,11 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Sources
                      ${GMW_INCLUDE_DIRS}
                      ${FFTW3_INCLUDE_DIRS}
 )
-link_directories( ${GLIB2_LIBRARY_DIRS}
-                  ${JPEG_LIBRARY_DIRS}
-                  ${EXIV2_LIBRARY_DIRS}
-                  ${LCMS2_LIBRARY_DIRS}
-                  ${LQR_LIBRARY_DIRS}
-                  ${LENSFUN_LIBRARY_DIRS}
-                  ${GM_LIBRARY_DIRS}
-                  ${GMW_LIBRARY_DIRS}
-                  ${FFTW3_LIBRARY_DIRS}
-)
 
 set( photivo_MOC_HDRS
+     Sources/batch/ptBatchWindow.h
+     Sources/batch/ptJobListItem.h
+     Sources/batch/ptJobListModel.h
      Sources/filemgmt/ptFileMgrDM.h
      Sources/filemgmt/ptFileMgrWindow.h
      Sources/filemgmt/ptGraphicsSceneEmitter.h
@@ -110,29 +118,47 @@ set( photivo_MOC_HDRS
      Sources/filemgmt/ptTagList.h
      Sources/filemgmt/ptTagModel.h
      Sources/filemgmt/ptThumbnailer.h
+     Sources/filters/imagespot/ptFilter_SpotTuning.h
+     Sources/filters/imagespot/ptImageSpotEditor.h
+     Sources/filters/imagespot/ptImageSpotItemDelegate.h
+     Sources/filters/imagespot/ptImageSpotModel.h
+     Sources/filters/imagespot/ptSpotInteraction.h
+     Sources/filters/imagespot/ptSpotListWidget.h
      Sources/filters/ptFilter_ABCurves.h
+     Sources/filters/ptFilter_Brightness.h
+     Sources/filters/ptFilter_ColorBoost.h
      Sources/filters/ptFilter_ColorContrast.h
+     Sources/filters/ptFilter_ColorEnhancement.h
+     Sources/filters/ptFilter_ColorIntensity.h
      Sources/filters/ptFilter_DetailCurve.h
+     Sources/filters/ptFilter_Drc.h
      Sources/filters/ptFilter_GammaTool.h
      Sources/filters/ptFilter_Highlights.h
+     Sources/filters/ptFilter_LabTransform.h
+     Sources/filters/ptFilter_Levels.h
+     Sources/filters/ptFilter_LMHRecovery.h
      Sources/filters/ptFilter_LumaDenoiseCurve.h
      Sources/filters/ptFilter_LumaSatAdjust.h
+     Sources/filters/ptFilter_Normalization.h
      Sources/filters/ptFilter_Outline.h
+     Sources/filters/ptFilter_ReinhardBrighten.h
      Sources/filters/ptFilter_SatCurve.h
+     Sources/filters/ptFilter_Saturation.h
      Sources/filters/ptFilter_ShadowsHighlights.h
      Sources/filters/ptFilter_SigContrast.h
      Sources/filters/ptFilter_StdCurve.h
+     Sources/filters/ptFilter_Tone.h
      Sources/filters/ptFilter_ToneAdjust.h
      Sources/filters/ptFilter_Wiener.h
      Sources/filters/ptFilterBase.h
      Sources/filters/ptFilterFactory.h
+     Sources/ptAbstractInteraction.h
      Sources/ptCheck.h
      Sources/ptChoice.h
      Sources/ptCurveWindow.h
      Sources/ptGridInteraction.h
      Sources/ptGroupBox.h
      Sources/ptHistogramWindow.h
-     Sources/ptAbstractInteraction.h
      Sources/ptInput.h
      Sources/ptLineInteraction.h
      Sources/ptMainWindow.h
@@ -148,30 +174,12 @@ set( photivo_MOC_HDRS
      Sources/ptWidget.h
      Sources/qtsingleapplication/qtlocalpeer.h
      Sources/qtsingleapplication/qtsingleapplication.h
-     Sources/filters/imagespot/ptFilter_SpotTuning.h
-     Sources/filters/imagespot/ptImageSpotEditor.h
-     Sources/filters/imagespot/ptImageSpotItemDelegate.h
-     Sources/filters/imagespot/ptImageSpotModel.h
-     Sources/filters/imagespot/ptSpotInteraction.h
-     Sources/filters/imagespot/ptSpotListWidget.h
-     Sources/filters/ptFilter_ColorIntensity.h
-     Sources/filters/ptFilter_Brightness.h
-     Sources/filters/ptFilter_ReinhardBrighten.h
-     Sources/filters/ptFilter_Normalization.h
-     Sources/filters/ptFilter_ColorEnhancement.h
-     Sources/filters/ptFilter_Levels.h
-     Sources/filters/ptFilter_LMHRecovery.h
-     Sources/filters/ptFilter_Drc.h
-     Sources/filters/ptFilter_LabTransform.h
-     Sources/filters/ptFilter_Saturation.h
-     Sources/filters/ptFilter_ColorBoost.h
-     Sources/filters/ptFilter_Tone.h
-     Sources/batch/ptJobListItem.h
-     Sources/batch/ptBatchWindow.h
-     Sources/batch/ptJobListModel.h
 )
 
 set( photivo_SRCS
+     Sources/batch/ptBatchWindow.cpp
+     Sources/batch/ptJobListItem.cpp
+     Sources/batch/ptJobListModel.cpp
      Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp
      Sources/filemgmt/ptFileMgrDM.cpp
      Sources/filemgmt/ptFileMgrWindow.cpp
@@ -186,25 +194,47 @@ set( photivo_SRCS
      Sources/filemgmt/ptTagModel.cpp
      Sources/filemgmt/ptThumbnailCache.cpp
      Sources/filemgmt/ptThumbnailer.cpp
+     Sources/filters/imagespot/ptFilter_SpotTuning.cpp
+     Sources/filters/imagespot/ptImageSpot.cpp
+     Sources/filters/imagespot/ptImageSpotEditor.cpp
+     Sources/filters/imagespot/ptImageSpotItemDelegate.cpp
+     Sources/filters/imagespot/ptImageSpotList.cpp
+     Sources/filters/imagespot/ptImageSpotModel.cpp
+     Sources/filters/imagespot/ptSpotInteraction.cpp
+     Sources/filters/imagespot/ptSpotListWidget.cpp
+     Sources/filters/imagespot/ptTuningSpot.cpp
      Sources/filters/ptCfgItem.cpp
      Sources/filters/ptFilter_ABCurves.cpp
+     Sources/filters/ptFilter_Brightness.cpp
+     Sources/filters/ptFilter_ColorBoost.cpp
      Sources/filters/ptFilter_ColorContrast.cpp
+     Sources/filters/ptFilter_ColorEnhancement.cpp
+     Sources/filters/ptFilter_ColorIntensity.cpp
      Sources/filters/ptFilter_DetailCurve.cpp
+     Sources/filters/ptFilter_Drc.cpp
      Sources/filters/ptFilter_GammaTool.cpp
      Sources/filters/ptFilter_Highlights.cpp
+     Sources/filters/ptFilter_LabTransform.cpp
+     Sources/filters/ptFilter_Levels.cpp
+     Sources/filters/ptFilter_LMHRecovery.cpp
      Sources/filters/ptFilter_LumaDenoiseCurve.cpp
      Sources/filters/ptFilter_LumaSatAdjust.cpp
+     Sources/filters/ptFilter_Normalization.cpp
      Sources/filters/ptFilter_Outline.cpp
+     Sources/filters/ptFilter_ReinhardBrighten.cpp
      Sources/filters/ptFilter_SatCurve.cpp
+     Sources/filters/ptFilter_Saturation.cpp
      Sources/filters/ptFilter_ShadowsHighlights.cpp
      Sources/filters/ptFilter_SigContrast.cpp
      Sources/filters/ptFilter_StdCurve.cpp
+     Sources/filters/ptFilter_Tone.cpp
      Sources/filters/ptFilter_ToneAdjust.cpp
      Sources/filters/ptFilter_Wiener.cpp
      Sources/filters/ptFilterBase.cpp
      Sources/filters/ptFilterConfig.cpp
      Sources/filters/ptFilterDM.cpp
      Sources/filters/ptFilterFactory.cpp
+     Sources/ptAbstractInteraction.cpp
      Sources/ptCalloc.cpp
      Sources/ptChannelMixer.cpp
      Sources/ptCheck.cpp
@@ -230,7 +260,6 @@ set( photivo_SRCS
      Sources/ptImage_Lqr.cpp
      Sources/ptImage_Pyramid.cpp
      Sources/ptImage8.cpp
-     Sources/ptAbstractInteraction.cpp
      Sources/ptImageHelper.cpp
      Sources/ptInfo.cpp
      Sources/ptInput.cpp
@@ -249,6 +278,7 @@ set( photivo_SRCS
      Sources/ptSettings.cpp
      Sources/ptSimpleRectInteraction.cpp
      Sources/ptSlider.cpp
+     Sources/ptTempFile.cpp
      Sources/ptTempFilterBase.cpp
      Sources/ptTheme.cpp
      Sources/ptToolBox.cpp
@@ -259,44 +289,19 @@ set( photivo_SRCS
      Sources/ptWiener.cpp
      Sources/qtsingleapplication/qtlocalpeer.cpp
      Sources/qtsingleapplication/qtsingleapplication.cpp
-     Sources/filters/imagespot/ptFilter_SpotTuning.cpp
-     Sources/filters/imagespot/ptImageSpot.cpp
-     Sources/filters/imagespot/ptImageSpotEditor.cpp
-     Sources/filters/imagespot/ptImageSpotItemDelegate.cpp
-     Sources/filters/imagespot/ptImageSpotModel.cpp
-     Sources/filters/imagespot/ptTuningSpot.cpp
-     Sources/filters/imagespot/ptSpotInteraction.cpp
-     Sources/filters/imagespot/ptSpotListWidget.cpp
-     Sources/ptTempFile.cpp
-     Sources/filters/imagespot/ptImageSpotList.cpp
-     Sources/filters/ptFilter_ColorIntensity.cpp
-     Sources/filters/ptFilter_Brightness.cpp
-     Sources/filters/ptFilter_ReinhardBrighten.cpp
-     Sources/filters/ptFilter_Normalization.cpp
-     Sources/filters/ptFilter_ColorEnhancement.cpp
-     Sources/filters/ptFilter_Levels.cpp
-     Sources/filters/ptFilter_LMHRecovery.cpp
-     Sources/filters/ptFilter_Drc.cpp
-     Sources/filters/ptFilter_LabTransform.cpp
-     Sources/filters/ptFilter_Saturation.cpp
-     Sources/filters/ptFilter_ColorBoost.cpp
-     Sources/filters/ptFilter_Tone.cpp
-     Sources/batch/ptJobListItem.cpp
-     Sources/batch/ptBatchWindow.cpp
-     Sources/batch/ptJobListModel.cpp
 )
 
 set( photivo_UI_HDRS
+     Sources/batch/ptBatchWindow.ui
      Sources/filemgmt/ptFileMgrWindow.ui
-     Sources/ptMainWindow.ui
-     Sources/filters/ptFilter_Wiener.ui
-     Sources/filters/ptFilter_Outline.ui
      Sources/filters/imagespot/ptFilter_SpotTuning.ui
      Sources/filters/imagespot/ptSpotListWidget.ui
      Sources/filters/ptFilter_ColorIntensity.ui
      Sources/filters/ptFilter_LMHRecovery.ui
+     Sources/filters/ptFilter_Outline.ui
      Sources/filters/ptFilter_Tone.ui
-     Sources/batch/ptBatchWindow.ui
+     Sources/filters/ptFilter_Wiener.ui
+     Sources/ptMainWindow.ui
 )
 
 set( photivo_RCCS
@@ -307,16 +312,10 @@ QT4_WRAP_UI( photivo_UI_SRCS ${photivo_UI_HDRS} )
 QT4_WRAP_CPP( photivo_MOC_SRCS ${photivo_MOC_HDRS} )
 QT4_ADD_RESOURCES( photivo_RCC_SRCS ${photivo_RCCS} )
 
-set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -Wno-unknown-pragmas" )
-set( CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -funroll-loops -fopenmp" )
-set( CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g -Wno-unknown-pragmas" )
-set( CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG -funroll-loops -fopenmp" )
-set( CMAKE_L_FLAGS_RELWITHDEBINFO "-rdynamic" )
-set( CMAKE_L_FLAGS_DEBUG "-rdynamic" )
-
 add_executable( photivo ${photivo_SRCS} ${photivo_RCC_SRCS} ${photivo_MOC_SRCS} ${photivo_UI_SRCS} )
 set_target_properties( photivo PROPERTIES COMPILE_FLAGS
-                       "-ffast-math -std=gnu++0x -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX} -DDLRAW_HAVE_GIMP" )
+                       "-ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
+set_target_properties( photivo PROPERTIES LINK_FLAGS "-lgomp" )
 target_link_libraries( photivo
                        ${GLIB2_LIBRARIES}
                        ${QT_LIBRARIES}
@@ -352,30 +351,18 @@ endif( ${WITH_CLEAR} )
 
 if( ${WITH_GIMP} )
   include_directories( ${GIMP_INCLUDE_DIRS} ${GTK2_INCLUDE_DIRS} )
-  link_directories(    ${GIMP_LIBRARY_DIRS} ${GTK2_LIBRARY_DIRS} )
   add_executable( ptGimp Sources/ptCalloc.cpp
                          Sources/ptError.cpp
                          Sources/ptGimp.cpp )
-  set_target_properties( ptGimp PROPERTIES COMPILE_FLAGS "-ffast-math -std=gnu++0x" )
+  set_target_properties( ptGimp PROPERTIES COMPILE_FLAGS "-ffast-math" )
   target_link_libraries( ptGimp ${QT_LIBRARIES} ${GTK2_LIBRARIES} ${GIMP_LIBRARIES} )
   install( TARGETS   ptGimp                DESTINATION lib/gimp/2.0/plug-ins )
   install( PROGRAMS "mm extern photivo.py" DESTINATION lib/gimp/2.0/plug-ins )
 endif( ${WITH_GIMP} )
 
 
-if( ${WITH_CURVES} )
-  add_executable( ptCreateCurves Sources/ptCreateSomeCurves.cpp
-                                 Sources/ptCurve.cpp
-                                 Sources/ptError.cpp
-                                 Sources/ptCalloc.cpp )
-  target_link_libraries( ptCreateCurves ${QT_LIBRARIES} )
-  install( TARGETS ptCreateCurves DESTINATION bin )
-endif( ${WITH_CURVES} )
-
-
 if( ${WITH_ADOBE_PROFILES} )
   add_executable( ptCreateAdobeProfiles Sources/ptCreateAdobeProfiles.cpp )
-  set_target_properties( ptCreateAdobeProfiles PROPERTIES COMPILE_FLAGS "-std=gnu++0x" )
   target_link_libraries( ptCreateAdobeProfiles ${QT_LIBRARIES} ${LCMS2_LIBRARIES} )
   install( TARGETS ptCreateAdobeProfiles DESTINATION bin )
 endif( ${WITH_ADOBE_PROFILES} )

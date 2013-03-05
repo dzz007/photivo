@@ -1145,9 +1145,7 @@ void ptMainWindow::OnToGimpButtonClicked() {
 #ifdef DLRAW_GIMP_PLUGIN
   ::CB_MenuFileExit(1);
 #endif
-#ifdef DLRAW_HAVE_GIMP
   GimpSaveMenuPipe();
-#endif
 }
 
 //
