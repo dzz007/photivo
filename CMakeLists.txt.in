@@ -105,6 +105,17 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Sources
                      ${FFTW3_INCLUDE_DIRS}
 )
 
+link_directories( ${GLIB2_LIBRARY_DIRS}
+                  ${JPEG_LIBRARY_DIRS}
+                  ${EXIV2_LIBRARY_DIRS}
+                  ${LCMS2_LIBRARY_DIRS}
+                  ${LQR_LIBRARY_DIRS}
+                  ${LENSFUN_LIBRARY_DIRS}
+                  ${GM_LIBRARY_DIRS}
+                  ${GMW_LIBRARY_DIRS}
+                  ${FFTW3_LIBRARY_DIRS}
+)
+
 set( photivo_MOC_HDRS
 
 )
@@ -164,6 +175,7 @@ endif( ${WITH_CLEAR} )
 
 if( ${WITH_GIMP} )
   include_directories( ${GIMP_INCLUDE_DIRS} ${GTK2_INCLUDE_DIRS} )
+  link_directories(    ${GIMP_LIBRARY_DIRS} ${GTK2_LIBRARY_DIRS} )
   add_executable( ptGimp Sources/ptCalloc.cpp
                          Sources/ptError.cpp
                          Sources/ptGimp.cpp )
