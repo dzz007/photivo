@@ -181,8 +181,10 @@ if( ${WITH_GIMP} )
                          Sources/ptGimp.cpp )
   set_target_properties( ptGimp PROPERTIES COMPILE_FLAGS "-ffast-math" )
   target_link_libraries( ptGimp ${QT_LIBRARIES} ${GTK2_LIBRARIES} ${GIMP_LIBRARIES} )
-  install( TARGETS   ptGimp                DESTINATION lib/gimp/2.0/plug-ins )
-  install( PROGRAMS "mm extern photivo.py" DESTINATION lib/gimp/2.0/plug-ins )
+  find_library( LIBGIMP gimp-2.0 )
+  string( REGEX MATCH "lib[0-9]*" LIBPATH ${LIBGIMP} )
+  install( TARGETS   ptGimp                DESTINATION ${LIBPATH}/gimp/2.0/plug-ins )
+  install( PROGRAMS "mm extern photivo.py" DESTINATION ${LIBPATH}/gimp/2.0/plug-ins )
 endif( ${WITH_GIMP} )
 
 
