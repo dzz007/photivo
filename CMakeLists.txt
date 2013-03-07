@@ -34,7 +34,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 PROJECT( photivo )
 
 if( NOT CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.6 )
-  message( SEND_ERROR "\nAt least GCC 4.6 is required to build Photivo." )
+  message( WARNING "\nAt least GCC 4.6 is required to build Photivo." )
 endif( NOT CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.6 )
 
 if( NOT CMAKE_BUILD_TYPE )
