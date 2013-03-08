@@ -47,7 +47,7 @@ find_package( Qt4 4.7 REQUIRED QtCore QtGui QtNetwork )
 include( ${QT_USE_FILE} )
 
 pkg_check_modules( GLIB2   REQUIRED glib-2.0>=2.18 )
-pkg_check_modules( LCMS2   REQUIRED lcms2>=2.1 )
+pkg_check_modules( LCMS2   REQUIRED lcms2 )
 pkg_check_modules( EXIV2   REQUIRED exiv2>=0.19 )
 pkg_check_modules( LQR     REQUIRED lqr-1>=0.4.1 )
 pkg_check_modules( LENSFUN REQUIRED lensfun>=0.2.5 )
@@ -138,7 +138,7 @@ QT4_ADD_RESOURCES( photivo_RCC_SRCS ${photivo_RCCS} )
 
 add_executable( photivo ${photivo_SRCS} ${photivo_RCC_SRCS} ${photivo_MOC_SRCS} ${photivo_UI_SRCS} )
 set_target_properties( photivo PROPERTIES COMPILE_FLAGS
-                       "-ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
+                       "-march=i686 -ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
 set_target_properties( photivo PROPERTIES LINK_FLAGS "-lgomp" )
 target_link_libraries( photivo
                        ${GLIB2_LIBRARIES}
