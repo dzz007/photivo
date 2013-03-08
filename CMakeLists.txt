@@ -324,8 +324,13 @@ QT4_WRAP_CPP( photivo_MOC_SRCS ${photivo_MOC_HDRS} )
 QT4_ADD_RESOURCES( photivo_RCC_SRCS ${photivo_RCCS} )
 
 add_executable( photivo ${photivo_SRCS} ${photivo_RCC_SRCS} ${photivo_MOC_SRCS} ${photivo_UI_SRCS} )
-set_target_properties( photivo PROPERTIES COMPILE_FLAGS
-                       "-march=i686 -ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
+if( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
+  set_target_properties( photivo PROPERTIES COMPILE_FLAGS
+                         "-ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
+else( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
+  set_target_properties( photivo PROPERTIES COMPILE_FLAGS
+                         "-march=i686 -ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
+endif( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
 set_target_properties( photivo PROPERTIES LINK_FLAGS "-lgomp" )
 target_link_libraries( photivo
                        ${GLIB2_LIBRARIES}
