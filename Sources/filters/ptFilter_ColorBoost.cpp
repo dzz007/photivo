@@ -52,11 +52,11 @@ ptFilterBase *ptFilter_ColorBoost::createColorBoost() {
 //==============================================================================
 
 void ptFilter_ColorBoost::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CStrengthA,              ptCfgItem::Slider,        1.0,        0.0,          3.0,          0.1 ,       1,        true, true, tr("Strength in a"), tr("")})
     << ptCfgItem({CStrengthB,              ptCfgItem::Slider,        1.0,        0.0,          3.0,          0.1,        1,        true, true, tr("Strength in b"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================

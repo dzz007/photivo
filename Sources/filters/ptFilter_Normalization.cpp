@@ -51,10 +51,10 @@ ptFilterBase *ptFilter_Normalization::createNormalization() {
 //==============================================================================
 
 void ptFilter_Normalization::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({COpacity,                ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,       2,        true, true, tr("Opacity"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================

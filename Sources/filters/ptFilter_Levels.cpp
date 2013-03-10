@@ -63,11 +63,11 @@ ptFilterBase *ptFilter_Levels::createLevelsLab() {
 //==============================================================================
 
 void ptFilter_Levels::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CBlackpoint,             ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.002,      3,        true, true, tr("Blackpoint"), tr("")})
     << ptCfgItem({CWhitepoint,             ptCfgItem::Slider,        1.0,        0.0,          2.0,          0.002,      3,        true, true, tr("Whitepoint"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================

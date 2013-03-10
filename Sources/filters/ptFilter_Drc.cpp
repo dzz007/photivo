@@ -54,12 +54,12 @@ ptFilterBase *ptFilter_Drc::createDrc() {
 //==============================================================================
 
 void ptFilter_Drc::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                   Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CStrength,           ptCfgItem::Slider,        1.0,        0.0,          1.0,          0.05,       2,        true, true, tr("Strength"), tr("")})
     << ptCfgItem({CBias,               ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.01,       2,        true, true, tr("Bias"), tr("")})
     << ptCfgItem({CColorAdapt,         ptCfgItem::Slider,        0.25,       0.0,          1.0,          0.05,       2,        true, true, tr("Color adaption"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================

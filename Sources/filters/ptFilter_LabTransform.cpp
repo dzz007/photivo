@@ -56,10 +56,10 @@ void ptFilter_LabTransform::doDefineControls() {
   hTransformMode.append({tr("G -> L*"),    ptLABTransform_G, "GtoL"});
   hTransformMode.append({tr("B -> L*"),    ptLABTransform_B, "BtoL"});
 
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id         Type                  Default                              commonConnect, storeable, caption, tooltip
     << ptCfgItem({CMode,     ptCfgItem::Combo,     ptLABTransform_L, hTransformMode,    true, true, tr("Transformation"),   tr("")})
-  ;
+  );
 }
 
 //==============================================================================

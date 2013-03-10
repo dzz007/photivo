@@ -55,13 +55,13 @@ ptFilterBase *ptFilter_ColorIntensity::createColorIntensity() {
 //==============================================================================
 
 void ptFilter_ColorIntensity::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default    Min           Max           Step     Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CVibrance,               ptCfgItem::Slider,        0,        -100,          100,          5,       0,        true, true, tr("Vibrance"), tr("")})
     << ptCfgItem({CRed,                    ptCfgItem::Slider,        0,        -100,          100,          5,       0,        true, true, tr("Red"), tr("")})
     << ptCfgItem({CGreen,                  ptCfgItem::Slider,        0,        -100,          100,          5,       0,        true, true, tr("Green"), tr("")})
     << ptCfgItem({CBlue,                   ptCfgItem::Slider,        0,        -100,          100,          5,       0,        true, true, tr("Blue"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================

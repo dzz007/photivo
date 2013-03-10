@@ -54,7 +54,7 @@ ptFilterBase *ptFilter_ShadowsHighlights::CreateShadowsHighlights() {
 //==============================================================================
 
 void ptFilter_ShadowsHighlights::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()                                                 //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
                                                                                  //--- Check: not available                 ---//
     //            Id                       Type                      Default     Min           Max           Step       Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CFineDetail,             ptCfgItem::Slider,        0.0,       -10.0,        10.0,          0.5,       1,        true, true, tr("Fine detail") ,tr("")})
@@ -64,7 +64,7 @@ void ptFilter_ShadowsHighlights::doDefineControls() {
                                                                                                ptCurve::NoMask,
                                                                                                ptCurve::NoMask,
                                                                                                ptCurve::SplineInterpol),          tr("")})
-  ;
+  );
 }
 
 //==============================================================================
@@ -72,14 +72,14 @@ void ptFilter_ShadowsHighlights::doDefineControls() {
 bool ptFilter_ShadowsHighlights::doCheckHasActiveCfg() {
   return (FConfig.value(CFineDetail).toFloat()   != 0.0f) ||
          (FConfig.value(CCoarseDetail).toFloat() != 0.0f) ||
-         (!FCfgItems[cfgIdx(CCurve)].Curve->isNull());
+         (!FConfig.items()[cfgIdx(CCurve)].Curve->isNull());
 }
 
 //==============================================================================
 
 void ptFilter_ShadowsHighlights::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->ShadowsHighlights(FCfgItems[cfgIdx(CCurve)].Curve.get(),
+  AImage->ShadowsHighlights(FConfig.items()[cfgIdx(CCurve)].Curve.get(),
                             FConfig.value(CScale).toDouble(),
                             FConfig.value(CCoarseDetail).toDouble(),
                             FConfig.value(CFineDetail).toDouble() );

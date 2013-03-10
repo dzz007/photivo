@@ -30,23 +30,26 @@
 class ptStorable;
 class ptCurve;
 
-//==============================================================================
+class ptCfgItem;
+typedef QList<ptCfgItem> TCfgItemList;
 
+//------------------------------------------------------------------------------
 class ptCfgItem {
 public:
   static const int CFirstCustomType = 100;
 
-  /*! \brief The \c TType enum contains the available types of GUI items. */
+  /*! \brief The \c TType enum contains the available types of items. */
   enum TType {
     // Widgets stored in ptFilterConfig’s default store
-    Button = 0,       /*!< QToolButton */
-    Check,            /*!< ptCheck */
-    Combo,            /*!< ptChoice */
-    SpinEdit,         /*!< ptInput: Simple input field for numbers. */
-    Slider,           /*!< ptInput: Input of numbers via a slider. */
-    HueSlider,        /*!< ptInput: Slider with an added hue bar. */
-    // Widgets stored in in a custom store
-    CurveWin = CFirstCustomType,   /*!< ptCurveWindow */
+    Button = 0,                     //!< QToolButton
+    Check,                          //!< ptCheck
+    Combo,                          //!< ptChoice
+    SpinEdit,                       //!< ptInput: Simple input field for numbers.
+    Slider,                         //!< ptInput: Input of numbers via a slider.
+    HueSlider,                      //!< ptInput: Slider with an added hue bar.
+    // Widgets stored in in the custom store
+    CurveWin = CFirstCustomType,    //!< ptCurveWindow
+    CustomType                      //!< any user defined type implementing ptStorable
   };
 
   struct TComboEntry {
@@ -111,6 +114,12 @@ public:
     QString                   Caption;
   };
 
+  struct TCustom {
+    QString                   Id;
+    TType                     Type;
+    ptStorable*               Object;
+  };
+
 
 public:
   /* NOTE: ptCfgItem basically does same thing that ptSettings does. The class is needed for nice
@@ -119,17 +128,18 @@ public:
   /*! \group Constructors.
       One for each type of GUI item. */
   ///@{
-  ptCfgItem(const TButton &AValues);
-  ptCfgItem(const TCheck &AValues);
-  ptCfgItem(const TCombo &AValues);
-  ptCfgItem(const TInput &AValues);
-  ptCfgItem(const TCurve &AValues);
+  ptCfgItem(const TButton& AValues);
+  ptCfgItem(const TCheck&  AValues);
+  ptCfgItem(const TCombo&  AValues);
+  ptCfgItem(const TInput&  AValues);
+  ptCfgItem(const TCurve&  AValues);
+  ptCfgItem(const TCustom& AValues);
   ///@}
 
   /*! Performs a type and range check of `AValue` according to the requirements of this `ptCfgItem`
       object and returns a `QVariant` with valid type and value. When validation is not possible
       raises a `ptInfo` exception. */
-  QVariant validate(QVariant AValue);
+  QVariant validate(const QVariant &AValue) const;
 
   /*! \group Members
       Simple members for easy access */
@@ -169,7 +179,7 @@ public:
 
 private:
   void  init();
-  void  ensureVariantType(QVariant &AValue);
+  void  ensureVariantType(QVariant &AValue) const;
   void  setVariantType();
 
   QVariant::Type  FIntendedType;

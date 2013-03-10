@@ -58,7 +58,7 @@ ptFilterBase *ptFilter_LumaDenoiseCurve::CreateLumaDenoiseCurve() {
 //==============================================================================
 
 void ptFilter_LumaDenoiseCurve::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()                                                 //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
                                                                                  //--- Check: not available                 ---//
     //            Id           Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CCurve,      ptCfgItem::CurveWin,      std::make_shared<ptCurve>(ptCurve::horizontalMidNull(),
@@ -67,13 +67,13 @@ void ptFilter_LumaDenoiseCurve::doDefineControls() {
                                                                                    ptCurve::CosineInterpol),           tr("")})
     << ptCfgItem({CLStrength,  ptCfgItem::Slider,        0.3,        0.0,          3.0,          0.02,       2,        true, true, tr("L strength"), tr("")})
     << ptCfgItem({CLScale,     ptCfgItem::Slider,        8.0,        4.0,         50.0,          4.0,        1,        true, true, tr("L scale"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_LumaDenoiseCurve::doCheckHasActiveCfg() {
-  return !FCfgItems[0].Curve->isNull();
+  return !FConfig.items()[0].Curve->isNull();
 }
 
 //==============================================================================
@@ -82,7 +82,7 @@ void ptFilter_LumaDenoiseCurve::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
   AImage->ApplyDenoiseCurve(FConfig.value(CLScale).toDouble()*TheProcessor->m_ScaleFactor,
                             FConfig.value(CLStrength).toDouble()/10,
-                            FCfgItems[cfgIdx(CCurve)].Curve.get());
+                            FConfig.items()[cfgIdx(CCurve)].Curve.get());
 }
 
 //==============================================================================

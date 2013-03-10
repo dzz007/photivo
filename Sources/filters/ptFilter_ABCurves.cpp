@@ -52,7 +52,7 @@ void ptFilter_ABCurves::doDefineControls() {
                                    TAnchor((double)0x8080/0xffff, (double)0x8080/0xffff),
                                    TAnchor(1.0, 1.0)});
 
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id       Type                 Curve          Caption
     << ptCfgItem({CACurve, ptCfgItem::CurveWin, std::make_shared<ptCurve>(hNullAnchors,
                                                                           ptCurve::AChannelMask,
@@ -62,21 +62,21 @@ void ptFilter_ABCurves::doDefineControls() {
                                                                           ptCurve::BChannelMask,
                                                                           ptCurve::BChannelMask,
                                                                           ptCurve::SplineInterpol), tr("")})
-  ;
+  );
 }
 
 //------------------------------------------------------------------------------
 bool ptFilter_ABCurves::doCheckHasActiveCfg() {
-  return (!FCfgItems[0].Curve->isNull() || !FCfgItems[1].Curve->isNull());
+  return (!FConfig.items()[0].Curve->isNull() || !FConfig.items()[1].Curve->isNull());
 }
 
 //------------------------------------------------------------------------------
 void ptFilter_ABCurves::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  if (!FCfgItems[0].Curve->isNull())
-    AImage->ApplyCurve(FCfgItems[0].Curve.get(), ChMask_a);
-  if (!FCfgItems[1].Curve->isNull())
-    AImage->ApplyCurve(FCfgItems[1].Curve.get(), ChMask_b);
+  if (!FConfig.items()[0].Curve->isNull())
+    AImage->ApplyCurve(FConfig.items()[0].Curve.get(), ChMask_a);
+  if (!FConfig.items()[1].Curve->isNull())
+    AImage->ApplyCurve(FConfig.items()[1].Curve.get(), ChMask_b);
 }
 
 //------------------------------------------------------------------------------

@@ -66,7 +66,7 @@ ptFilterBase *ptFilter_Tone::createTone() {
 //==============================================================================
 
 void ptFilter_Tone::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CSaturationAll,          ptCfgItem::Slider,        1.0,        0.0,          4.0,          0.1,        2,        true, true, tr("Saturation"), tr("")})
     << ptCfgItem({CStrengthAll,            ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,       2,        true, true, tr("Strength"), tr("")})
@@ -80,7 +80,7 @@ void ptFilter_Tone::doDefineControls() {
     << ptCfgItem({CSaturationLights,       ptCfgItem::Slider,        1.0,        0.0,          4.0,          0.1,        2,        true, true, tr("Saturation"), tr("")})
     << ptCfgItem({CStrengthLights,         ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,       2,        true, true, tr("Strength"), tr("")})
     << ptCfgItem({CHueLights,              ptCfgItem::HueSlider,     60,         0,            360,          10,         0,        true, true, tr("Hue"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================

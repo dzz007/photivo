@@ -21,11 +21,10 @@
 *******************************************************************************/
 
 #include "ptTuningSpot.h"
-#include <ptSettings.h>
-#include <filters/ptCfgItem.h>
+#include "../../ptSettings.h"
+#include "../ptCfgItem.h"
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 ptTuningSpot::ptTuningSpot(const QList<ptCfgItem> *ADefaults)
 : ptImageSpot(),
   FDefaults(ADefaults)
@@ -52,8 +51,7 @@ ptTuningSpot::ptTuningSpot(const QList<ptCfgItem> *ADefaults)
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 ptTuningSpot::~ptTuningSpot() {
 /*
   Resources managed by Qt parent or other objects. Do not delete manually.
@@ -61,8 +59,7 @@ ptTuningSpot::~ptTuningSpot() {
 */
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 TConfigStore ptTuningSpot::dodoStoreConfig(const QString &APrefix) const {
   TConfigStore hConfig;
 
@@ -74,8 +71,7 @@ TConfigStore ptTuningSpot::dodoStoreConfig(const QString &APrefix) const {
   return hConfig;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptTuningSpot::dodoLoadConfig(const TConfigStore &AConfig, const QString &APrefix) {
   FCurve->loadConfig(AConfig, APrefix+CSpotLumaCurveId);
 
@@ -87,8 +83,7 @@ void ptTuningSpot::dodoLoadConfig(const TConfigStore &AConfig, const QString &AP
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 QVariant ptTuningSpot::doValue(const QString &AKey) const {
   if (AKey == CSpotMaxRadiusId) {
     return FDataStore.value(CSpotMaxRadiusId).toInt() >> Settings->GetInt("Scaled");
@@ -102,8 +97,7 @@ QVariant ptTuningSpot::doValue(const QString &AKey) const {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 bool ptTuningSpot::doSetValue(const QString &AKey, const QVariant AValue) {
   if (AKey == CSpotMaxRadiusId) {
     FDataStore.insert(AKey, AValue.toInt() << Settings->GetInt("Scaled"));
@@ -118,5 +112,4 @@ bool ptTuningSpot::doSetValue(const QString &AKey, const QVariant AValue) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------

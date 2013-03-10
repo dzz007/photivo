@@ -57,7 +57,7 @@ void ptFilter_SatCurve::doDefineControls() {
   hModes.append({tr("Absolute"), ptSaturationMode_Absolute, "absolute"});
   hModes.append({tr("Adaptive"), ptSaturationMode_Adaptive, "adaptive"});
 
-  FCfgItems = QList<ptCfgItem>()                                      //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                   //--- Combo: list of entries               ---//
                                                                       //--- Check: not available                 ---//
     //            Id            Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CCurve,       ptCfgItem::CurveWin,      std::make_shared<ptCurve>(ptCurve::horizontalMidNull(),
@@ -65,20 +65,20 @@ void ptFilter_SatCurve::doDefineControls() {
                                                                                     ptCurve::ChromaMask,
                                                                                     ptCurve::CosineInterpol), ""})
     << ptCfgItem({CMode,        ptCfgItem::Combo,         ptSaturationMode_Adaptive, hModes, true, true, tr("Saturation mode"),   tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_SatCurve::doCheckHasActiveCfg() {
-  return !FCfgItems[0].Curve->isNull();
+  return !FConfig.items()[0].Curve->isNull();
 }
 
 //==============================================================================
 
 void ptFilter_SatCurve::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->ApplySaturationCurve(FCfgItems[0].Curve.get(),
+  AImage->ApplySaturationCurve(FConfig.items()[0].Curve.get(),
                                FConfig.value(CMode).toInt());
 }
 

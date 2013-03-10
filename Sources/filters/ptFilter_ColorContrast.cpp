@@ -53,13 +53,13 @@ ptFilterBase *ptFilter_ColorContrast::CreateColorContrast() {
 //==============================================================================
 
 void ptFilter_ColorContrast::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()                                      //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                   //--- Combo: list of entries               ---//
     //            Id             Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({COpacity,      ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.1,        2,        true, true, tr("Opacity"),    tr("")})
     << ptCfgItem({CRadius,       ptCfgItem::Slider,        100,          0,          2000,         50,         0,        true, true, tr("Radius"),  tr("")})
     << ptCfgItem({CStrength,     ptCfgItem::Slider,        4.0,        0.0,         20.0,          1.0,        1,        true, true, tr("Strength"),   tr("")})
     << ptCfgItem({CHaloControl,  ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.1,        1,        true, true, tr("Halo control"),   tr("")})
-  ;
+  );
 }
 
 //==============================================================================

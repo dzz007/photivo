@@ -23,17 +23,14 @@
 #ifndef PTLOCALSPOT_H
 #define PTLOCALSPOT_H
 
-#include <memory>
-
-#include <QList>
-
 #include "ptImageSpot.h"
-#include <ptCurve.h>
+#include "../../ptCurve.h"
+#include <QList>
+#include <memory>
 
 class ptCfgItem;
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 const QString CSpotHasMaxRadiusId  = "HasMaxRadius";
 const QString CSpotMaxRadiusId     = "MaxRadius";
 const QString CSpotChromaWeightId  = "ChromaWeight";
@@ -43,8 +40,7 @@ const QString CSpotSaturationId    = "Saturation";
 const QString CSpotIsAdaptiveSatId = "IsAdaptiveSat";
 const QString CSpotColorShiftId    = "ColorShift";
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 class ptTuningSpot: public ptImageSpot {
 public:
   explicit ptTuningSpot(const QList<ptCfgItem> *ADefaults);
