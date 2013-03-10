@@ -58,7 +58,7 @@ ptFilterBase *ptFilter_Wiener::CreateWiener() {
 //==============================================================================
 
 void ptFilter_Wiener::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CEnabled,                ptCfgItem::Check,         0,                                                            true, true, tr("Enable"), tr("Switch filter on and off")})
     << ptCfgItem({COnlyEdges,              ptCfgItem::Check,         1,                                                            true, true, tr("Only edges"), tr("Sharpen only edges")})
@@ -66,7 +66,7 @@ void ptFilter_Wiener::doDefineControls() {
     << ptCfgItem({CGaussian,               ptCfgItem::Slider,        0.6,        0.0,          5.0,          0.05,       2,        true, true, tr("Gaussian") ,tr("")})
     << ptCfgItem({CBox,                    ptCfgItem::Slider,        0.0,        0.0,          5.0,          0.05,       2,        true, true, tr("Box"), tr("")})
     << ptCfgItem({CLensBlur,               ptCfgItem::Slider,        0.0,        0.0,          5.0,          0.05,       2,        true, true, tr("Lens blur") ,tr("")})
-  ;
+  );
 }
 
 //==============================================================================

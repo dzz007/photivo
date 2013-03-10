@@ -51,11 +51,11 @@ ptFilterBase *ptFilter_GammaTool::CreateGammaTool() {
 //==============================================================================
 
 void ptFilter_GammaTool::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()                                                 //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CGamma,                 ptCfgItem::Slider,        1.0,        0.1,          2.0,          0.01,       2,        true, true, tr("Gamma"),    tr("")})
     << ptCfgItem({CLinearity,             ptCfgItem::Slider,        0.0,        0.0,          0.99,         0.01,       2,        true, true, tr("Linearity"),  tr("")})
-  ;
+  );
 }
 
 //==============================================================================

@@ -52,12 +52,12 @@ ptFilterBase *ptFilter_Highlights::CreateHighlights() {
 //==============================================================================
 
 void ptFilter_Highlights::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()                                                 //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CHighlightsR,            ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Reg highlights"),    tr("Adjusts brightness of highlights in R channel")})
     << ptCfgItem({CHighlightsG,            ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Green highlights"),  tr("Adjusts brightness of highlights in G channel")})
     << ptCfgItem({CHighlightsB,            ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Blue highlights"),   tr("Adjusts brightness of highlights in B channel")})
-  ;
+  );
 }
 
 //==============================================================================

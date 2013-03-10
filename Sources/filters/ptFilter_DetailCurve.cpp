@@ -57,7 +57,7 @@ void ptFilter_DetailCurve::doDefineControls() {
   auto hNullAnchors = TAnchorList({TAnchor(0.0, 0.2),
                                             TAnchor(0.5, 0.2),
                                             TAnchor(1.0, 0.2)});
-  FCfgItems = QList<ptCfgItem>()                                                 //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
                                                                                  //--- Check: not available                 ---//
     //            Id             Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CCurve,        ptCfgItem::CurveWin,      std::make_shared<ptCurve>(hNullAnchors,
@@ -67,13 +67,13 @@ void ptFilter_DetailCurve::doDefineControls() {
     << ptCfgItem({CHaloControl,  ptCfgItem::Slider,       40,          1,            200,         10,          0,        true, true, tr("Halo control"), tr("")})
     << ptCfgItem({CWeight,       ptCfgItem::Slider,        0.5,        0.0,            1.0,        0.05,       2,        true, true, tr("Weight"), tr("")})
     << ptCfgItem({CAntiBadpixel, ptCfgItem::Slider,        0.0,        0.0,            1.0,        0.1,        2,        true, true, tr("Anti badpixel"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_DetailCurve::doCheckHasActiveCfg() {
-  return !FCfgItems[0].Curve->isNull();
+  return !FConfig.items()[0].Curve->isNull();
 }
 
 //==============================================================================
@@ -83,7 +83,7 @@ void ptFilter_DetailCurve::doRunFilter(ptImage *AImage) const {
   AImage->MLMicroContrast(0.15,
                           FConfig.value(CHaloControl).toDouble(),
                           FConfig.value(CWeight).toDouble(),
-                          FCfgItems[cfgIdx(CCurve)].Curve.get());
+                          FConfig.items()[cfgIdx(CCurve)].Curve.get());
   AImage->HotpixelReduction(FConfig.value(CAntiBadpixel).toDouble());
 }
 

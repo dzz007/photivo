@@ -52,11 +52,11 @@ ptFilterBase *ptFilter_ColorEnhancement::createColorEnhancement() {
 //==============================================================================
 
 void ptFilter_ColorEnhancement::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step       Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CShadows,                ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,      2,        true, true, tr("Enhance shadows"),    tr("")})
     << ptCfgItem({CHighlights,             ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,      2,        true, true, tr("Enhance highlights"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================

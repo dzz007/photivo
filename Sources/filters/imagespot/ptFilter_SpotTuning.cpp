@@ -72,10 +72,16 @@ ptFilterBase *ptFilter_SpotTuning::CreateSpotTuning() {
 //==============================================================================
 
 void ptFilter_SpotTuning::doDefineControls() {
+  // Calling ptCfgItem’s TCustom ctor as usual with a braced initializer results in an
+  // “ambiguous call” compiler error. No idea why. If anyone figures it out please
+  // enlighten me. (Brother John)
+  const ptCfgItem::TCustom hSpotsCfgItem = {CSpotListId, ptCfgItem::CustomType, &FSpotList};
+
   TAnchorList hNullAnchors = { TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0) };
-  FCfgItems = QList<ptCfgItem>()                                         //--- Combo: list of entries               ---//
+  auto hCfgItems = TCfgItemList()                                        //--- Combo: list of entries               ---//
                                                                          //--- Check: not available                 ---//
     //            Id                     Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
+    << ptCfgItem(hSpotsCfgItem)
     << ptCfgItem({CSpotHasMaxRadiusId,   ptCfgItem::Check,         0,                                                            false, false, tr("Use maximum radius"), tr("")})
     << ptCfgItem({CSpotMaxRadiusId,      ptCfgItem::Slider,        500,        1,            7000,         10,         0,        false, false, tr("Maximum radius"), tr("Pixels outside this radius will never be included in the mask.")})
     << ptCfgItem({CSpotChromaWeightId,   ptCfgItem::Slider,        0.5,        0.0,          1.0,          0.1,        2,        false, false, tr("Brightness/color ratio"), tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")})
@@ -89,19 +95,21 @@ void ptFilter_SpotTuning::doDefineControls() {
     << ptCfgItem({CSpotColorShiftId,     ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.001,      3,        false, false, tr("Color shift"), tr("")})
   ;
 
-  FCfgItems[4].UseCommonDispatch = false;
-  FNullSpot = make_unique<ptTuningSpot>(&FCfgItems);
-  FConfig.insertObject(CSpotListId, &FSpotList);
+  hCfgItems[4].UseCommonDispatch = false;
+  FConfig.initStores(hCfgItems);
+  FNullSpot = make_unique<ptTuningSpot>(&FConfig.items());
 }
 
 //==============================================================================
 
 void ptFilter_SpotTuning::connectWidgets(QWidget *AGuiWidget) {
-  for (auto hCfgItem: FCfgItems) {
-    auto hWidget = AGuiWidget->findChild<QWidget*>(hCfgItem.Id);
-    if (hWidget) {
-      connect(hWidget, SIGNAL(valueChanged(QString,QVariant)),
-              this,    SLOT(spotDispatch(QString,QVariant)));
+  for (const auto& hCfgItem: FConfig.items()) {
+    if (hCfgItem.UseCommonDispatch) {
+      auto hWidget = AGuiWidget->findChild<QWidget*>(hCfgItem.Id);
+      if (hWidget) {
+        connect(hWidget, SIGNAL(valueChanged(QString,QVariant)),
+                this,    SLOT(spotDispatch(QString,QVariant)));
+      }
     }
   }
 }
@@ -175,8 +183,8 @@ void ptFilter_SpotTuning::doReset() {
 //==============================================================================
 
 ptImageSpot *ptFilter_SpotTuning::createSpot() {
-  FCfgItems[4].Curve->reset();
-  return new ptTuningSpot(&FCfgItems);
+  FConfig.items()[4].Curve->reset();
+  return new ptTuningSpot(&FConfig.items());
 }
 
 //==============================================================================
@@ -231,11 +239,13 @@ void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget
   if (AGuiWidget == nullptr)
     AGuiWidget = FGuiContainer;
 
-  for (ptCfgItem hCfgItem: FCfgItems) {
-    ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiWidget);
-    hWidget->blockSignals(true);
-    hWidget->setValue(hSpot->value(hCfgItem.Id));
-    hWidget->blockSignals(false);
+  for (const ptCfgItem &hCfgItem: FConfig.items()) {
+    if (hCfgItem.Type != ptCfgItem::CustomType) {
+      ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiWidget);
+      hWidget->blockSignals(true);
+      hWidget->setValue(hSpot->value(hCfgItem.Id));
+      hWidget->blockSignals(false);
+    }
   }
 
   FGui->MaxRadius->setEnabled(hSpot->value("HasMaxRadius").toBool());

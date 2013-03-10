@@ -63,7 +63,7 @@ void ptFilter_ToneAdjust::doDefineControls() {
   hMaskModes.append({tr("Highlights"), ptMaskType_Highlights, "highlights"});
   hMaskModes.append({tr("All values"), ptMaskType_All, "all"});
 
-  FCfgItems = QList<ptCfgItem>()                                                 //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CStrength,               ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,       2,        true, true, tr("Strength"),    tr("")})
     << ptCfgItem({CMaskMode,               ptCfgItem::Combo,         ptMaskType_Shadows, hMaskModes,                              true, true, tr("Mask mode"),   tr("")})
@@ -72,7 +72,7 @@ void ptFilter_ToneAdjust::doDefineControls() {
     << ptCfgItem({CLowerLimit,             ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,       3,        true, true, tr("Lower limit"), tr("")})
     << ptCfgItem({CUpperLimit,             ptCfgItem::Slider,        1.0,        0.0,          1.0,          0.05,       3,        true, true, tr("Upper limit"), tr("")})
     << ptCfgItem({CSoftness,               ptCfgItem::Slider,        0.0,       -2.0,          2.0,          0.1,        1,        true, true, tr("Softness"),    tr("")})
-  ;
+  );
 }
 
 //==============================================================================

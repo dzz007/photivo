@@ -24,50 +24,45 @@
 #ifndef PTFILTERCONFIG_H
 #define PTFILTERCONFIG_H
 
+#include "ptCfgItem.h"
 #include "../ptStorable.h"
-#include <QMap>
+#include <QHash>
 #include <QVariant>
 #include <QStringList>
 
 class QSettings;
 
-//------------------------------------------------------------------------------
-struct TFlaggedVariant {
-  QVariant  Value;
-  bool      Storable;
-};
-
-typedef QMap<QString, TFlaggedVariant> TFlaggedConfigStore;
-
-//------------------------------------------------------------------------------
+/*!
+  \brief The ptFilterConfig class manages the configuration of a filter and acts
+  as its data storage.
+*/
 class ptFilterConfig {
 public:
   ptFilterConfig();
-  ptFilterConfig(const ptFilterConfig &AOther);
   ~ptFilterConfig();
 
-  void clear();
-  void exportPreset(QSettings *APreset) const;
-  void importPreset(QSettings *APreset);
-  bool isEmpty() const;
+  void                clear();
+  void                exportPreset(QSettings* APreset) const;
+  void                importPreset(QSettings* APreset);
+  const TCfgItemList& items() const;
+  bool                isEmpty() const;
 
-  /*! \name Management of the default data store. *//*! @{*/
-  void      initDefaultStore(const TFlaggedConfigStore &AInitData);
-  QVariant  value(const QString &AKey) const;
-  void      setValue(const QString &AKey, const QVariant &AValue);
-  /*! @}*/
 
-  /*! \name Management of the custom store *//*! @{*/
-  bool        containsObject(const QString &AId) const;
-  void        insertObject(const QString &AId, ptStorable *AObject);
-  ptStorable *object(const QString &AId);
+  /*! \name Access to the data store. *//*! @{*/
+  void        initStores(const TCfgItemList& ACfgItemList);
+  void        loadDefaults();
+
+  QVariant    value(const QString& AKey) const;
+  void        setValue(const QString& AKey, const QVariant& AValue);
+
+  bool        containsObject(const QString& AId) const;
+  ptStorable* object(const QString& AId);
   /*! @}*/
 
 private:
-  typedef QMap<QString, ptStorable*> TCustomStore;
-
-  TFlaggedConfigStore FDefaultStore;
-  TCustomStore        FCustomStore;
+  TCfgItemList                FItems;
+  QHash<QString, QVariant>    FDefaultStore;
+  QHash<QString, ptStorable*> FCustomStore;
 };
 
 #endif // PTFILTERCONFIG_H

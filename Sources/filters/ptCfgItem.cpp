@@ -102,12 +102,24 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TInput &AValues):
 
 ptCfgItem::ptCfgItem(const ptCfgItem::TCurve &AValues):
   Id(AValues.Id),
-  Type(AValues.Type),
+  Type(CurveWin),
   UseCommonDispatch(true),
-  Storable(false),  // Curves have an extra default store
+  Storable(false),  // only meaningful for the default store
   Caption(AValues.Caption),
   AssocObject(AValues.Curve.get()),
   Curve(AValues.Curve)
+{
+  Default = QVariant(AssocObject->storeConfig(""));
+  init();
+}
+
+//------------------------------------------------------------------------------
+ptCfgItem::ptCfgItem(const ptCfgItem::TCustom& AValues):
+  Id(AValues.Id),
+  Type(CustomType),
+  UseCommonDispatch(false),
+  Storable(false),  // only meaningful for the default store
+  AssocObject(AValues.Object)
 {
   Default = QVariant(AssocObject->storeConfig(""));
   init();
@@ -121,36 +133,36 @@ void ptCfgItem::init() {
 
 //==============================================================================
 
-QVariant ptCfgItem::validate(QVariant AValue) {
-  ensureVariantType(AValue);
+QVariant ptCfgItem::validate(const QVariant &AValue) const {
+  auto hResult = QVariant(AValue);
+  this->ensureVariantType(hResult);
 
   switch (this->Type) {
     case SpinEdit:  // fall through
     case Slider:    // fall through
     case HueSlider: {
       if (this->Decimals > 0)
-        return ptBound(this->Min.toDouble(), AValue.toDouble(), this->Max.toDouble());
+        return ptBound(this->Min.toDouble(), hResult.toDouble(), this->Max.toDouble());
       else
-        return ptBound(this->Min.toInt(), AValue.toInt(), this->Max.toInt());
+        return ptBound(this->Min.toInt(), hResult.toInt(), this->Max.toInt());
     }
 
     case Combo: {
-      auto hValue = AValue.toInt();
-      for (TComboEntry &hEntry: this->EntryList) {
-        if (hValue == hEntry.value)
-          return hValue;
+      for (const TComboEntry &hEntry: this->EntryList) {
+        if (hResult.toInt() == hEntry.value)
+          return hResult;
       }
       return this->EntryList[0].value;
     }
 
     default:
-      return AValue;
+      return hResult;
   }
 }
 
 //==============================================================================
 
-void ptCfgItem::ensureVariantType(QVariant &AValue) {
+void ptCfgItem::ensureVariantType(QVariant &AValue) const {
   if (AValue.type() != FIntendedType) {
     if (!AValue.convert(FIntendedType)) {
       GInfo->Raise(QString("Could not cast QVariant with value \"%1\" from type \"%2\" to "
@@ -167,8 +179,8 @@ void ptCfgItem::setVariantType() {
   if (this->Type == Button) {
     FIntendedType = QVariant::Bool;
 
-  } else if (this->Type == CurveWin) {
-    FIntendedType = QVariant::UserType;
+  } else if (this->Type >= CFirstCustomType) {
+    FIntendedType = QVariant::Map;
 
   } else if ((this->Type == Check) || (this->Type == Combo) || (this->Decimals == 0)) {
     FIntendedType = QVariant::Int;

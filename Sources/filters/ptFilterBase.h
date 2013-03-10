@@ -30,7 +30,6 @@
 #include <QVariant>
 #include <QFlags>
 
-class ptCfgItem;
 class ptImage;
 class ptWidget;
 class ptToolBox;
@@ -130,7 +129,6 @@ protected:
   virtual void      doRunFilter(ptImage *AImage) const = 0;   //!< Children should do the work.
   virtual void      doReset() {}                              //!< Reset for the children
   virtual void      doDefineControls() = 0;                   //!< Children know which controls they need.
-  virtual void      doAddCustomConfig(TFlaggedConfigStore &AConfig) {}  //!< Children may need additional config entries. Derived classes may reimplement this method to add custom entries to \c FConfig or their own additional config data structure.
 #pragma GCC diagnostic pop
 
   ptFilterConfig    FConfig;
@@ -139,14 +137,12 @@ protected:
   QString           FHelpUri;
   bool              FHasActiveCfg;
   bool              FIsSlow;
-  ptToolBox        *FGuiContainer;
-  QList<ptCfgItem>  FCfgItems;
+  ptToolBox*        FGuiContainer;
 
 protected slots:
   void commonDispatch(const QString AId, const QVariant ANewValue);
 
 private:
-  void      createConfig();
   void      performCommonConnect(const ptCfgItem &ACfgItem, QObject *AObject);
   void      requestPipeRun(const bool AUnconditional = false);
   void      updateGui(const bool ARequestPipeRun = true);

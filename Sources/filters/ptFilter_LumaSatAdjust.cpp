@@ -70,7 +70,7 @@ ptFilterBase *ptFilter_LumaSatAdjust::createSatAdjust() {
 //==============================================================================
 
 void ptFilter_LumaSatAdjust::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()                                                 //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
       << ptCfgItem({CAdjustRed,              ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.05,       2,        true, true, tr("Red"),    tr("")})
       << ptCfgItem({CAdjustOrange,           ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.05,       2,        true, true, tr("Orange"),    tr("")})
@@ -80,7 +80,7 @@ void ptFilter_LumaSatAdjust::doDefineControls() {
       << ptCfgItem({CAdjustCyan,             ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.05,       2,        true, true, tr("Cyan"),    tr("")})
       << ptCfgItem({CAdjustBlue,             ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.05,       2,        true, true, tr("Blue"),    tr("")})
       << ptCfgItem({CAdjustMagenta,          ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.05,       2,        true, true, tr("Magenta"),    tr("")})
-  ;
+  );
 }
 
 //==============================================================================

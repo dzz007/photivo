@@ -33,7 +33,7 @@ public:
   ~ptImageSpotList();
 
   /*! \name QList functionality needed on the outside. *//*! @{*/
-  void            append(ptImageSpot *spot)  { FSpots.append(spot); }
+  void            append(ptImageSpot *spot)   { FSpots.append(spot); }
   ptImageSpot    *at(int i) const             { return FSpots[i]; }
   void            clear();
   int             count() const               { return FSpots.count(); }

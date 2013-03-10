@@ -109,10 +109,8 @@ void ptFilterBase::importPreset(QSettings *APreset, const bool ARequestPipeRun /
 
 /*! Resets the filter to default values. */
 void ptFilterBase::reset(const bool ARequestPipeRun /*=false*/) {
-  // Call the children reset method
-  doReset();
-
-  this->createConfig();
+  this->doReset();
+  FConfig.loadDefaults();
   this->updateGui(ARequestPipeRun);
 }
 
@@ -372,10 +370,8 @@ ptFilterBase::ptFilterBase():
 
 /*! Init: Every derived class has to call it in its constructor.*/
 void ptFilterBase::internalInit() {
-  doDefineControls();
-
-  createConfig();
-  checkActiveChanged();
+  this->doDefineControls();
+  this->checkActiveChanged();
 }
 
 //------------------------------------------------------------------------------
@@ -397,14 +393,14 @@ ptWidget *ptFilterBase::findPtWidget(const QString &AId, QWidget *AWidget) {
 void ptFilterBase::connectCommonDispatch() {
   GInfo->Assert(!FGuiContainer, "The filter's ("+FFilterName+") GUI must be created first.", AT);
 
-  for (auto hCfgItem: FCfgItems)
+  for (const ptCfgItem &hCfgItem: FConfig.items())
     performCommonConnect(hCfgItem, FGuiContainer->findChild<QWidget*>(hCfgItem.Id));
 }
 
 //------------------------------------------------------------------------------
 int ptFilterBase::cfgIdx(const QString &AId) const {
-  for (int i = 0; i < FCfgItems.size(); ++i) {
-    if (FCfgItems.at(i).Id == AId) {
+  for (int i = 0; i < FConfig.items().size(); ++i) {
+    if (FConfig.items().at(i).Id == AId) {
       return i;
     }
   }
@@ -422,11 +418,13 @@ int ptFilterBase::cfgIdx(const QString &AId) const {
       A valid pointer to the widget containing the uninitialized GUI controls.
  */
 void ptFilterBase::initDesignerGui(QWidget *AGuiBody) {
-  for (ptCfgItem hCfgItem: FCfgItems) {
-    ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiBody);
-    // init the widget with default values and connect signals/slots
-    hWidget->init(hCfgItem);
-    this->performCommonConnect(hCfgItem, hWidget);
+  for (const ptCfgItem &hCfgItem: FConfig.items()) {
+    if (hCfgItem.Type != ptCfgItem::CustomType) {
+      ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiBody);
+      // init the widget with default values and connect signals/slots
+      hWidget->init(hCfgItem);
+      this->performCommonConnect(hCfgItem, hWidget);
+    }
   }
 }
 
@@ -485,7 +483,7 @@ void ptFilterBase::commonDispatch(const QString AId, const QVariant ANewValue) {
   int hIdx = cfgIdx(AId);
   if (hIdx == -1) return;
 
-  if (FCfgItems.at(hIdx).Type < ptCfgItem::CFirstCustomType) {
+  if (FConfig.items().at(hIdx).Type < ptCfgItem::CFirstCustomType) {
     // handle items from default store
     if (FConfig.value(AId) != ANewValue) {
       FConfig.setValue(AId, ANewValue);
@@ -496,29 +494,9 @@ void ptFilterBase::commonDispatch(const QString AId, const QVariant ANewValue) {
     // handle items from custom store
     if (ANewValue.isValid())
       FConfig.object(AId)->loadConfig(ANewValue.toMap(), "");
+
     this->requestPipeRun();
   }
-}
-
-//==============================================================================
-
-// Initialises the FConfig object with the default key/value pairs from the common controls lists.
-void ptFilterBase::createConfig() {
-  FConfig.clear();
-  TFlaggedConfigStore hDefaultStore;
-
-  // NOTE: Not sure yet if buttons really need to be stored in settings.
-  // If not add exclusion code to for loop.
-
-  for (ptCfgItem hCfgItem: FCfgItems) {
-    if ((hCfgItem.Type < ptCfgItem::CFirstCustomType))
-      hDefaultStore.insert(hCfgItem.Id, {hCfgItem.Default, hCfgItem.Storable});
-    else
-      FConfig.insertObject(hCfgItem.Id, hCfgItem.AssocObject);
-  }
-
-  doAddCustomConfig(hDefaultStore);
-  FConfig.initDefaultStore(hDefaultStore);
 }
 
 //==============================================================================
@@ -580,7 +558,7 @@ void ptFilterBase::updateGui(const bool ARequestPipeRun /*= true*/) {
     // call the children.
     doUpdateGui();
 
-    for(ptCfgItem hCfgItem: FCfgItems) {
+    for(const ptCfgItem &hCfgItem: FConfig.items()) {
       ptWidget* hWidget = FGuiContainer->findChild<ptWidget*>(hCfgItem.Id);
 
       if (!hWidget) {
@@ -616,7 +594,7 @@ void ptFilterBase::createGui() {
     hGuiBody     = new QWidget;
     auto hLayout = new QVBoxLayout(hGuiBody);
 
-    for (ptCfgItem hCfgItem: FCfgItems) {
+    for (const ptCfgItem &hCfgItem: FConfig.items()) {
       ptWidget *hGuiWidget = createWidgetByType(hCfgItem, hGuiBody);
       if (hGuiWidget) {
         hLayout->addWidget(hGuiWidget);
@@ -630,8 +608,6 @@ void ptFilterBase::createGui() {
     FGuiContainer->hide();
   }
 }
-
-
 
 //==============================================================================
 

@@ -28,20 +28,21 @@
 #include <QSettings>
 
 //------------------------------------------------------------------------------
-/* Strictly for debugging! Dumps all key/value pairs to stdout. */
-//#include <iostream>
-//void DumpConfig(TFilterConfig ADataStore) {
-//  std::cout << std::endl << "Number of keys: " << ADataStore.size() << std::endl;
-//  for (auto hItem = ADataStore.constBegin(); hItem != ADataStore.constEnd(); hItem++) {
-//    std::cout << hItem.key().toAscii().data()
-//              << QString().fill('_', 30-hItem.key().length()).toAscii().data()
-//              << hItem.value().type()
-//              << "    "
-//              << hItem.value().toString().toAscii().data()
-//              << std::endl;
-//  }
-//}
-
+// Strictly for debugging! Dumps all key/value pairs to stdout.
+/*
+#include <iostream>
+void DumpConfig(QHash<QString, QVariant>& ADataStore) {
+  std::cout << std::endl << "Number of keys: " << ADataStore.size() << std::endl;
+  for (auto hItem = ADataStore.constBegin(); hItem != ADataStore.constEnd(); hItem++) {
+    std::cout << hItem.key().toAscii().data()
+              << QString().fill('_', 30-hItem.key().length()).toAscii().data()
+              << hItem.value().type()
+              << "    "
+              << hItem.value().toString().toAscii().data()
+              << std::endl;
+  }
+}
+*/
 //------------------------------------------------------------------------------
 /*! Creates a new ptFilterConfig object. */
 ptFilterConfig::ptFilterConfig() {
@@ -49,16 +50,15 @@ ptFilterConfig::ptFilterConfig() {
 }
 
 //------------------------------------------------------------------------------
-/*! Copy constructor. */
-ptFilterConfig::ptFilterConfig(const ptFilterConfig &AOther) {
-  FDefaultStore = AOther.FDefaultStore;
-  FCustomStore  = AOther.FCustomStore;
-}
-
-//------------------------------------------------------------------------------
 /*! Destroys a ptFilterConfig object. */
 ptFilterConfig::~ptFilterConfig() {
   // nothing to do here
+}
+
+//------------------------------------------------------------------------------
+/*! Returns a non-modifiable reference to the current list of config items. */
+const TCfgItemList &ptFilterConfig::items() const {
+  return FItems;
 }
 
 //------------------------------------------------------------------------------
@@ -78,10 +78,9 @@ void ptFilterConfig::clear() {
 */
 void ptFilterConfig::exportPreset(QSettings *APreset) const {
   // default store: export simple key/value list of config data to APreset
-  auto hDStoreEnd = FDefaultStore.constEnd();
-  for (auto hDStoreIter = FDefaultStore.constBegin(); hDStoreIter != hDStoreEnd; ++hDStoreIter) {
-    if (hDStoreIter.value().Storable)
-      APreset->setValue(hDStoreIter.key(), makeStorageFriendly(hDStoreIter.value().Value));
+  for (const ptCfgItem &hCfgItem: FItems) {
+    if ((hCfgItem.Type < ptCfgItem::CFirstCustomType) && (hCfgItem.Storable))
+      APreset->setValue(hCfgItem.Id, makeStorageFriendly(FDefaultStore.value(hCfgItem.Id)));
   }
 
   // custom store: Query the contained ptStorable objects for their key/value list of
@@ -106,11 +105,12 @@ void ptFilterConfig::exportPreset(QSettings *APreset) const {
 */
 void ptFilterConfig::importPreset(QSettings *APreset) {
   // Import data for the default key/value store
-  auto hDStoreEnd = FDefaultStore.constEnd();
-  for (auto hDStoreIter = FDefaultStore.constBegin(); hDStoreIter != hDStoreEnd; ++hDStoreIter) {
-    auto hValue = APreset->value(hDStoreIter.key()); // returns invalid QVariant if not present in preset
-    if (hValue.isValid()) {
-      FDefaultStore[hDStoreIter.key()].Value = hValue;
+  // Because QVariant validation is necessary we iterate over FItems instead of FDefaultStore.
+  for (const ptCfgItem &hCfgItem: FItems) {
+    if (hCfgItem.Type < ptCfgItem::CFirstCustomType) {
+      auto hValue = APreset->value(hCfgItem.Id); // returns invalid QVariant if not present in preset
+      if (hValue.isValid())
+        FDefaultStore[hCfgItem.Id] = hCfgItem.validate(hValue);
     }
   }
 
@@ -131,14 +131,32 @@ bool ptFilterConfig::isEmpty() const {
 
 //------------------------------------------------------------------------------
 /*!
-  Clears the default store and fills it with new key/value pairs.
-    \param AInitData
-      A *QMap* with all the keys handled by this *ptFilterConfig* instance set
-      to their default values. Also defines the valid keys for the value() and
-      setValue() methods.
+  Initializes the data stores with the data provided in *ACfgItemList*. All existing
+  entries in both data stores are discarded first.
+
+  The object keeps a copy of *ACfgItemList* that can be accessed via items().
  */
-void ptFilterConfig::initDefaultStore(const TFlaggedConfigStore &AInitData) {
-  FDefaultStore = AInitData;
+void ptFilterConfig::initStores(const TCfgItemList &ACfgItemList) {
+  this->clear();
+  FItems = ACfgItemList;
+
+  for (const ptCfgItem& hCfgItem: FItems) {
+    if (hCfgItem.Type < ptCfgItem::CFirstCustomType)
+      FDefaultStore.insert(hCfgItem.Id, hCfgItem.Default);
+    else
+      FCustomStore.insert(hCfgItem.Id, hCfgItem.AssocObject);
+  }
+}
+
+//------------------------------------------------------------------------------
+/*! Resets all entries in both data stores to their default values. */
+void ptFilterConfig::loadDefaults() {
+  for (const ptCfgItem& hCfgItem: FItems) {
+    if (hCfgItem.Type < ptCfgItem::CFirstCustomType)
+      FDefaultStore[hCfgItem.Id] = hCfgItem.Default;
+    else
+      FCustomStore[hCfgItem.Id]->loadConfig(hCfgItem.Default.toMap(), "");
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -148,7 +166,7 @@ QVariant ptFilterConfig::value(const QString &AKey) const {
     GInfo->Raise(QString("Key \"%1\" not found in FDataStore.").arg(AKey), AT);
   }
 
-  return FDefaultStore.value(AKey).Value;
+  return FDefaultStore.value(AKey);
 }
 
 //------------------------------------------------------------------------------
@@ -157,20 +175,12 @@ void ptFilterConfig::setValue(const QString &AKey, const QVariant &AValue) {
   if (!FDefaultStore.contains(AKey))
     GInfo->Raise(QString("Key \"%1\" not found in FDataStore.").arg(AKey), AT);
 
-  FDefaultStore[AKey].Value = AValue;
+  FDefaultStore[AKey] = AValue;
 }
 
 //------------------------------------------------------------------------------
 bool ptFilterConfig::containsObject(const QString &AId) const {
   return FCustomStore.contains(AId);
-}
-
-//------------------------------------------------------------------------------
-void ptFilterConfig::insertObject(const QString &AId, ptStorable *AObject) {
-  if (FCustomStore.contains(AId))
-    GInfo->Raise("Id \"" + AId + "\" already defined. Must be unique!", AT);
-
-  FCustomStore.insert(AId, AObject);
 }
 
 //------------------------------------------------------------------------------

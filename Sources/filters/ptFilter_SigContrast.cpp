@@ -56,11 +56,11 @@ void ptFilter_SigContrast::doDefineControls() {
 
   /* NOTE: No floats for now. The old custom widgets enforce double and it’s too much of
      a hassle to change. */
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CStrengthId,             ptCfgItem::Slider,        0.0,        -20.0,        20.0,         0.5,        1,  true,  true,  tr("Strength"), tr("")})
     << ptCfgItem({CThresholdId,            ptCfgItem::Slider,        ThreshDef,  0.05,         0.95,         0.05,       2,  true,  true,  tr("Threshold"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
