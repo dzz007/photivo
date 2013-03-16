@@ -73,8 +73,8 @@ ptFilterBase *ptFilter_SpotTuning::CreateSpotTuning() {
 
 void ptFilter_SpotTuning::doDefineControls() {
   // Calling ptCfgItem’s TCustom ctor as usual with a braced initializer results in an
-  // “ambiguous call” compiler error. No idea why. If anyone figures it out please
-  // enlighten me. (Brother John)
+  // “ambiguous call” compiler error. No idea why, I don’t see any ambiguity anywhere.
+  // If anyone figures it out please enlighten me. (Brother John)
   const ptCfgItem::TCustom hSpotsCfgItem = {CSpotListId, ptCfgItem::CustomType, &FSpotList};
 
   TAnchorList hNullAnchors = { TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0) };
@@ -95,8 +95,9 @@ void ptFilter_SpotTuning::doDefineControls() {
     << ptCfgItem({CSpotColorShiftId,     ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.001,      3,        false, false, tr("Color shift"), tr("")})
   ;
 
-  hCfgItems[4].UseCommonDispatch = false;
+  hCfgItems[5].UseCommonDispatch = false;
   FConfig.initStores(hCfgItems);
+
   FNullSpot = make_unique<ptTuningSpot>(&FConfig.items());
 }
 
@@ -104,7 +105,7 @@ void ptFilter_SpotTuning::doDefineControls() {
 
 void ptFilter_SpotTuning::connectWidgets(QWidget *AGuiWidget) {
   for (const auto& hCfgItem: FConfig.items()) {
-    if (hCfgItem.UseCommonDispatch) {
+    if (hCfgItem.Id != CSpotListId) {
       auto hWidget = AGuiWidget->findChild<QWidget*>(hCfgItem.Id);
       if (hWidget) {
         connect(hWidget, SIGNAL(valueChanged(QString,QVariant)),
@@ -183,7 +184,7 @@ void ptFilter_SpotTuning::doReset() {
 //==============================================================================
 
 ptImageSpot *ptFilter_SpotTuning::createSpot() {
-  FConfig.items()[4].Curve->reset();
+  FConfig.items()[5].Curve->reset();
   return new ptTuningSpot(&FConfig.items());
 }
 
@@ -228,7 +229,7 @@ void ptFilter_SpotTuning::cleanupAfterInteraction() {
 
 void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget /*=nullptr*/) {
   ptTuningSpot *hSpot = nullptr;
-  if (isBetween(ASpotIdx, 0, FSpotList.count())) {
+  if (isBetween(ASpotIdx, 0, FSpotList.count()-1)) {
     hSpot = (ptTuningSpot*)FSpotList.at(ASpotIdx);
     FGui->SpotDetailsGroup->setEnabled(true);
   } else {
@@ -291,7 +292,7 @@ void ptFilter_SpotTuning::spotDispatch(const QString AId, const QVariant AValue)
   auto hListIdx = FGui->SpotList->currentIndex();
   if (hListIdx < 0) return;
 
-  auto hSpot = (ptTuningSpot*)FSpotList.at(hListIdx);
+  auto hSpot = static_cast<ptTuningSpot*>(FSpotList.at(hListIdx));
   hSpot->setValue(AId, AValue);
 
   if (AId == CSpotHasMaxRadiusId)

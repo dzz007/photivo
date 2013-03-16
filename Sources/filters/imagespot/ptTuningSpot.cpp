@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -33,10 +33,11 @@ ptTuningSpot::ptTuningSpot(const QList<ptCfgItem> *ADefaults)
   int i = -1;
   for (ptCfgItem hCfgItem: *FDefaults) {
     ++i;
-    if (hCfgItem.Type == ptCfgItem::CurveWin)
+    if (hCfgItem.Type == ptCfgItem::CurveWin) {
       hCurveIdx = i;
-    else
-      FDataStore.insert(hCfgItem.Id, hCfgItem.Default);
+    } else if (hCfgItem.Type < ptCfgItem::CFirstCustomType) {
+        FDataStore.insert(hCfgItem.Id, hCfgItem.Default);
+    }
   }
 
   if (hCurveIdx > -1) {
@@ -76,7 +77,7 @@ void ptTuningSpot::dodoLoadConfig(const TConfigStore &AConfig, const QString &AP
   FCurve->loadConfig(AConfig, APrefix+CSpotLumaCurveId);
 
   for (ptCfgItem hCfgItem: *FDefaults) {
-    if (hCfgItem.Id != CSpotLumaCurveId) {
+    if(hCfgItem.Type < ptCfgItem::CFirstCustomType) {
       FDataStore.insert(hCfgItem.Id,
                         hCfgItem.validate(AConfig.value(APrefix+hCfgItem.Id, hCfgItem.Default)));
     }

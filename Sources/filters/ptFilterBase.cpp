@@ -77,7 +77,7 @@ void ptFilterBase::exportPreset(QSettings *APreset, const bool AIncludeFlags /*=
   }
 
   // Derived classes may store additional data that cannot go into FConfig.
-  doExportCustomConfig(APreset, AIncludeFlags);
+  this->doExportCustomConfig(APreset, AIncludeFlags);
 
   APreset->endGroup();
 }
@@ -97,7 +97,7 @@ void ptFilterBase::importPreset(QSettings *APreset, const bool ARequestPipeRun /
                  Settings->GetStringList("HiddenTools").contains(FUniqueName);
   }
 
-  doImportCustomConfig(APreset);
+  this->doImportCustomConfig(APreset);
 
   APreset->endGroup();
 
@@ -118,7 +118,7 @@ void ptFilterBase::reset(const bool ARequestPipeRun /*=false*/) {
 
 /*! Executes the filter on \c AImage. */
 void ptFilterBase::runFilter(ptImage *AImage) const {
-  doRunFilter(AImage);
+  this->doRunFilter(AImage);
 }
 
 //------------------------------------------------------------------------------
@@ -555,26 +555,34 @@ void ptFilterBase::requestPipeRun(const bool AUnconditional) {
     pipe run request. */
 void ptFilterBase::updateGui(const bool ARequestPipeRun /*= true*/) {
   if (FGuiContainer) {
-    // call the children.
-    doUpdateGui();
+    this->doUpdateGui();  // execute code from derived
 
     for(const ptCfgItem &hCfgItem: FConfig.items()) {
+      // CustomType has no default GUI representation
+      if (hCfgItem.Type == ptCfgItem::CustomType)
+        continue;
+
       ptWidget* hWidget = FGuiContainer->findChild<ptWidget*>(hCfgItem.Id);
 
       if (!hWidget) {
-        GInfo->Warning(QString("%1: Widget \"%2\" not found in GUI.")
-                          .arg(uniqueName(), hCfgItem.Id), AT);
+        GInfo->Warning(QString("%1: Widget \"%2\" not found in GUI.").arg(uniqueName(), hCfgItem.Id), AT);
+        continue;
+      }
 
-      } else if (hCfgItem.Type < ptCfgItem::CFirstCustomType) {
+      if (hCfgItem.Type < ptCfgItem::CFirstCustomType) {
         hWidget->setValue(FConfig.value(hCfgItem.Id));
+      } else if (hCfgItem.Type == ptCfgItem::CurveWin) {
+        static_cast<ptCurveWindow*>(hWidget)->updateView();
+      } else {
+        GInfo->Raise(QString("%1: Invalid widget type.").arg(this->uniqueName()));
       }
     }
   }
 
   if (ARequestPipeRun) {
-    requestPipeRun();
+    this->requestPipeRun();
   } else {
-    checkActiveChanged();
+    this->checkActiveChanged();
   }
 }
 
