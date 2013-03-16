@@ -26,9 +26,10 @@
 //==============================================================================
 
 #include "ui_ptFilter_SpotTuning.h"
-#include <filters/ptFilterBase.h>
 #include "ptImageSpotList.h"
 #include "ptTuningSpot.h"
+#include "../ptFilterBase.h"
+#include <memory>
 
 //==============================================================================
 
@@ -38,18 +39,13 @@ Q_OBJECT
 public:
   static ptFilterBase *CreateSpotTuning();
 
-
 protected:
-  /*! \group Reimplemented from base class */
-  ///@{
   void      doDefineControls();
   QWidget  *doCreateGui();
   bool      doCheckHasActiveCfg();
   void      doImportCustomConfig(QSettings*);
   void      doRunFilter(ptImage *AImage) const;
   void      doReset();
-  ///@}
-
 
 private:
   ptFilter_SpotTuning();
@@ -66,14 +62,10 @@ private:
 
 private slots:
   void updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget = nullptr);
-
-  /*! Updates the preview image in the ViewWindow and takes into account if the ViewWindow
-      interaction is running or not.
-   */
   void updatePreview();
   void setupInteraction(bool AEnable);
   void spotDispatch(const QString AId, const QVariant AValue);
-
+  void curveDispatch(const QString, const QVariant);
 };
 
 #endif // PTFILTER_SpotTuning_H

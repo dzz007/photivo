@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2013 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -19,24 +19,15 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-#ifndef PTFILTER_ABCurves_H
-#define PTFILTER_ABCurves_H
+#include "ptUtils.h"
 
-#include "ptFilterBase.h"
-
-class ptFilter_ABCurves: public ptFilterBase {
-Q_OBJECT
-
-public:
-  static ptFilterBase *CreateABCurves();
-
-protected:
-  void doDefineControls();
-  bool doCheckHasActiveCfg();
-  void doRunFilter(ptImage *AImage) const;
-
-private:
-  ptFilter_ABCurves();
-};
-
-#endif // PTFILTER_ABCurves_H
+/*!
+  Returns *AText* with exactly one trailing slash.
+  When *AText* is empty an empty string is returned.
+*/
+QString trailingSlash(const QString& AText) {
+  if (AText.endsWith('/') || AText.isEmpty())
+    return AText;
+  else
+    return AText + "/";
+}

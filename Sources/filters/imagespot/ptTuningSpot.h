@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -23,41 +23,37 @@
 #ifndef PTLOCALSPOT_H
 #define PTLOCALSPOT_H
 
-#include <memory>
-
-#include <QList>
-
 #include "ptImageSpot.h"
-#include <ptCurve.h>
+#include "../../ptCurve.h"
+#include <QList>
+#include <memory>
 
 class ptCfgItem;
 
-//==============================================================================
+//------------------------------------------------------------------------------
+const QString CSpotHasMaxRadiusId  = "HasMaxRadius";
+const QString CSpotMaxRadiusId     = "MaxRadius";
+const QString CSpotChromaWeightId  = "ChromaWeight";
+const QString CSpotThresholdId     = "Threshold";
+const QString CSpotLumaCurveId     = "LumaCurve";
+const QString CSpotSaturationId    = "Saturation";
+const QString CSpotIsAdaptiveSatId = "IsAdaptiveSat";
+const QString CSpotColorShiftId    = "ColorShift";
 
-const QString CSpotHasMaxRadiusId  ="HasMaxRadius";
-const QString CSpotMaxRadiusId     ="MaxRadius";
-const QString CSpotChromaWeightId  ="ChromaWeight";
-const QString CSpotThresholdId     ="Threshold";
-const QString CSpotLumaCurveId     ="LumaCurve";
-const QString CSpotSaturationId    ="Saturation";
-const QString CSpotIsAdaptiveSatId ="IsAdaptiveSat";
-const QString CSpotColorShiftId    ="ColorShift";
-
-//==============================================================================
-
+//------------------------------------------------------------------------------
 class ptTuningSpot: public ptImageSpot {
 public:
   explicit ptTuningSpot(const QList<ptCfgItem> *ADefaults);
   ~ptTuningSpot();
-  ptCurve *curve() { return FCurve.get(); }
 
+  ptCurve *curvePtr();
+  std::shared_ptr<ptCurve> curve();
 
 protected:
-  TConfigStore  doStoreConfig(const QString &APrefix) const;
-  void          doLoadConfig(const TConfigStore &AConfig, const QString &APrefix);
-  QVariant      doGetValue(const QString &AKey) const;
+  TConfigStore  dodoStoreConfig(const QString &APrefix) const;
+  void          dodoLoadConfig(const TConfigStore &AConfig, const QString &APrefix);
+  QVariant      doValue(const QString &AKey) const;
   bool          doSetValue(const QString &AKey, const QVariant AValue);
-
 
 private:
   std::shared_ptr<ptCurve>  FCurve;

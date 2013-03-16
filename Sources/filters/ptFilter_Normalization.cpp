@@ -51,23 +51,23 @@ ptFilterBase *ptFilter_Normalization::createNormalization() {
 //==============================================================================
 
 void ptFilter_Normalization::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({COpacity,                ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,       2,        true, true, tr("Opacity"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_Normalization::doCheckHasActiveCfg() {
-  return FConfig->getValue(COpacity).toFloat() != 0.0f;
+  return FConfig.value(COpacity).toFloat() != 0.0f;
 }
 
 //==============================================================================
 
 void ptFilter_Normalization::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  AImage->ptGMNormalize(FConfig->getValue(COpacity).toDouble());
+  AImage->ptGMNormalize(FConfig.value(COpacity).toDouble());
 }
 
 //==============================================================================

@@ -52,26 +52,26 @@ ptFilterBase *ptFilter_ColorEnhancement::createColorEnhancement() {
 //==============================================================================
 
 void ptFilter_ColorEnhancement::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step       Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CShadows,                ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,      2,        true, true, tr("Enhance shadows"),    tr("")})
     << ptCfgItem({CHighlights,             ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.05,      2,        true, true, tr("Enhance highlights"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_ColorEnhancement::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CShadows).toFloat()    > 0.0f) ||
-         (FConfig->getValue(CHighlights).toFloat() > 0.0f);
+  return (FConfig.value(CShadows).toFloat()    > 0.0f) ||
+         (FConfig.value(CHighlights).toFloat() > 0.0f);
 }
 
 //==============================================================================
 
 void ptFilter_ColorEnhancement::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  AImage->ColorEnhance(FConfig->getValue(CShadows).toFloat(),
-                       FConfig->getValue(CHighlights).toFloat());
+  AImage->ColorEnhance(FConfig.value(CShadows).toFloat(),
+                       FConfig.value(CHighlights).toFloat());
 }
 
 //==============================================================================
