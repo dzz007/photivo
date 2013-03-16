@@ -24,7 +24,18 @@
 
 #include <QString>
 
-QString trailingSlash(const QString &AText);
+//------------------------------------------------------------------------------
+/*!
+  Returns *true* if *AValue* lies between *ALowBound* and *AHighBound*, *false* otherwise.
+  Both boundary are included in the range.
+*/
+template<typename T>
+inline bool isBetween(const T& ALowBound, const T& AValue, const T& AHighBound) {
+  return (AValue >= ALowBound) && (AValue <= AHighBound);
+}
+
+//------------------------------------------------------------------------------
+QString trailingSlash(const QString& AText);
 
 
 #endif // PTUTILS_H

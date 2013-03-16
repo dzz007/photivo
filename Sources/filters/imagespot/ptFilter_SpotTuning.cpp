@@ -20,8 +20,6 @@
 **
 *******************************************************************************/
 
-#include <functional>
-
 #include "ptFilter_SpotTuning.h"
 #include "ptTuningSpot.h"
 #include "../ptCfgItem.h"
@@ -30,6 +28,8 @@
 #include "../../ptProcessor.h"
 #include "../../ptSettings.h"
 #include "../../ptViewWindow.h"
+#include "../../ptUtils.h"
+#include <functional>
 
 extern ptProcessor  *TheProcessor;
 extern ptViewWindow *ViewWindow;
@@ -105,7 +105,7 @@ void ptFilter_SpotTuning::doDefineControls() {
 
 void ptFilter_SpotTuning::connectWidgets(QWidget *AGuiWidget) {
   for (const auto& hCfgItem: FConfig.items()) {
-    if (hCfgItem.Id != CSpotListId) {
+    if (hCfgItem.Type < ptCfgItem::CFirstCustomType) {
       auto hWidget = AGuiWidget->findChild<QWidget*>(hCfgItem.Id);
       if (hWidget) {
         connect(hWidget, SIGNAL(valueChanged(QString,QVariant)),
@@ -127,9 +127,10 @@ QWidget *ptFilter_SpotTuning::doCreateGui() {
   FGui->CurveWin->setCaption(tr("Luminance curve"));
 
   FGui->SpotList->init(&FSpotList, std::bind(&ptFilter_SpotTuning::createSpot, this));
-  connect(FGui->SpotList, SIGNAL(rowChanged(int)), this, SLOT(updateSpotDetailsGui(int)));
-  connect(FGui->SpotList, SIGNAL(dataChanged()), this, SLOT(updatePreview()));
-  connect(FGui->SpotList, SIGNAL(editModeChanged(bool)), this, SLOT(setupInteraction(bool)));
+  connect(FGui->SpotList, SIGNAL(rowChanged(int)),                SLOT(updateSpotDetailsGui(int)));
+  connect(FGui->SpotList, SIGNAL(dataChanged()),                  SLOT(updatePreview()));
+  connect(FGui->SpotList, SIGNAL(editModeChanged(bool)),          SLOT(setupInteraction(bool)));
+  connect(FGui->CurveWin, SIGNAL(valueChanged(QString,QVariant)), SLOT(spotDispatch(QString,QVariant)));
   this->connectWidgets(hGuiBody);
   this->updateSpotDetailsGui(-1, hGuiBody);
 
@@ -147,6 +148,7 @@ bool ptFilter_SpotTuning::doCheckHasActiveCfg() {
 void ptFilter_SpotTuning::doImportCustomConfig(QSettings*) {
   if (FGuiContainer) {
     FGui->SpotList->model()->rebuildModel();
+    this->updateSpotDetailsGui(-1);
   }
 }
 
@@ -163,7 +165,7 @@ void ptFilter_SpotTuning::doRunFilter(ptImage *AImage) const {
                                 hTSpot->value(CSpotChromaWeightId).toFloat(),
                                 hTSpot->value(CSpotMaxRadiusId).toInt(),
                                 hTSpot->value(CSpotHasMaxRadiusId).toBool(),
-                                hTSpot->curve(),
+                                hTSpot->curvePtr(),
                                 hTSpot->value(CSpotIsAdaptiveSatId).toBool(),
                                 hTSpot->value(CSpotSaturationId).toFloat(),
                                 hTSpot->value(CSpotColorShiftId).toFloat());
@@ -229,8 +231,8 @@ void ptFilter_SpotTuning::cleanupAfterInteraction() {
 
 void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget /*=nullptr*/) {
   ptTuningSpot *hSpot = nullptr;
-  if (isBetween(ASpotIdx, 0, FSpotList.count()-1)) {
-    hSpot = (ptTuningSpot*)FSpotList.at(ASpotIdx);
+  if (isBetween(0, ASpotIdx, FSpotList.count()-1)) {
+    hSpot = static_cast<ptTuningSpot*>(FSpotList.at(ASpotIdx));
     FGui->SpotDetailsGroup->setEnabled(true);
   } else {
     hSpot = FNullSpot.get();
@@ -241,8 +243,12 @@ void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget
     AGuiWidget = FGuiContainer;
 
   for (const ptCfgItem &hCfgItem: FConfig.items()) {
-    if (hCfgItem.Type != ptCfgItem::CustomType) {
-      ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiWidget);
+    if (hCfgItem.Type == ptCfgItem::CurveWin) {
+      ptCurveWindow *hCurveWin = AGuiWidget->findChild<ptCurveWindow*>(hCfgItem.Id);
+      hCurveWin->updateView(hSpot->curve());
+
+    } else if (hCfgItem.Type != ptCfgItem::CustomType) {
+      ptWidget *hWidget = this->findPtWidget(hCfgItem.Id, AGuiWidget);
       hWidget->blockSignals(true);
       hWidget->setValue(hSpot->value(hCfgItem.Id));
       hWidget->blockSignals(false);
@@ -254,11 +260,13 @@ void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget
 
 //==============================================================================
 
+// Updates the preview image in the ViewWindow and takes into account if the ViewWindow
+// interaction is running or not.
 void ptFilter_SpotTuning::updatePreview() {
   this->checkActiveChanged(true);
   if (FInteractionOngoing) {
     // We’re in interactive mode: only recalc spots
-    std::unique_ptr<ptImage> hImage(new ptImage);
+    auto hImage = make_unique<ptImage>();
     hImage->Set(TheProcessor->m_Image_AfterLocalEdit);
     this->runFilter(hImage.get());
     hImage->LchToRGB(Settings->GetInt("WorkColor"));
@@ -298,6 +306,13 @@ void ptFilter_SpotTuning::spotDispatch(const QString AId, const QVariant AValue)
   if (AId == CSpotHasMaxRadiusId)
     FGui->MaxRadius->setEnabled(hSpot->value("HasMaxRadius").toBool());
 
+  this->updatePreview();
+}
+
+//------------------------------------------------------------------------------
+// The current spot’s ptCurve object is already updated to its new values as is the
+// curve window’s display. So this slot only needs to trigger a preview image update.
+void ptFilter_SpotTuning::curveDispatch(const QString, const QVariant) {
   this->updatePreview();
 }
 

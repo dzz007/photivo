@@ -61,6 +61,21 @@ ptTuningSpot::~ptTuningSpot() {
 }
 
 //------------------------------------------------------------------------------
+/*!
+  Returns a pointer to the spot’s ptCurve object. The pointer is only valid as
+  long as the spot lives.
+*/
+ptCurve* ptTuningSpot::curvePtr() {
+  return FCurve.get();
+}
+
+//------------------------------------------------------------------------------
+/*! Returns the spot’s curve. */
+std::shared_ptr<ptCurve> ptTuningSpot::curve() {
+  return FCurve;
+}
+
+//------------------------------------------------------------------------------
 TConfigStore ptTuningSpot::dodoStoreConfig(const QString &APrefix) const {
   TConfigStore hConfig;
 

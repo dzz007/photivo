@@ -25,7 +25,7 @@
   Returns *AText* with exactly one trailing slash.
   When *AText* is empty an empty string is returned.
 */
-QString trailingSlash(const QString &AText) {
+QString trailingSlash(const QString& AText) {
   if (AText.endsWith('/') || AText.isEmpty())
     return AText;
   else
