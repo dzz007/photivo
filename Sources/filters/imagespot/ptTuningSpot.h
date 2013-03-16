@@ -46,7 +46,8 @@ public:
   explicit ptTuningSpot(const QList<ptCfgItem> *ADefaults);
   ~ptTuningSpot();
 
-  ptCurve *curve() { return FCurve.get(); }
+  ptCurve *curvePtr();
+  std::shared_ptr<ptCurve> curve();
 
 protected:
   TConfigStore  dodoStoreConfig(const QString &APrefix) const;
