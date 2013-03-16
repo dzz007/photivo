@@ -31,16 +31,13 @@
   However, internally (and in the ini file) everything is stored in 1:1 pipe size scale.
   Derived classes are strongly recommended to do the same!
 */
-
 #ifndef PTIMAGESPOT_H
 #define PTIMAGESPOT_H
 
-#include <functional>
-
+#include "../../ptStorable.h"
 #include <QVariant>
 #include <QPoint>
-
-#include <filters/ptStorable.h>
+#include <functional>
 
 //==============================================================================
 
@@ -67,27 +64,26 @@ public:
   int             y() const;
   ///@}
 
-  QVariant getValue(const QString &AKey) const;
+  QVariant value(const QString &AKey) const;
   void     setValue(const QString &AKey, const QVariant AValue);
-
-  /*! \group Implementation of the ptStorable interface. */
-  ///@{
-  TConfigStore storeConfig(const QString &APrefix = "") const;
-  void         loadConfig(const TConfigStore &AConfig, const QString &APrefix = "");
-  ///@}
-
 
 protected:
   /*! Creates an enabled spot with no name at position (0,0). */
   ptImageSpot();
 
-// Pragmas are here to stop the compiler complaining about unused parameters in the default
+  /*! \group Implementation of the ptStorable interface. */
+  ///@{
+  TConfigStore doStoreConfig(const QString &APrefix) const;
+  void         doLoadConfig(const TConfigStore &AConfig, const QString &APrefix);
+  ///@}
+
+// Pragmas are here to stop the compiler from complaining about unused parameters in the default
 // implementations. Removing the parameter names would work too but be too obscure.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-  virtual TConfigStore  doStoreConfig(const QString &APrefix) const = 0;
-  virtual void          doLoadConfig(const TConfigStore &AConfig, const QString &APrefix) = 0;
-  virtual QVariant      doGetValue(const QString &AKey) const { return QVariant(); }
+  virtual TConfigStore  dodoStoreConfig(const QString &APrefix) const = 0;
+  virtual void          dodoLoadConfig(const TConfigStore &AConfig, const QString &APrefix) = 0;
+  virtual QVariant      doValue(const QString &AKey) const { return QVariant(); }
   virtual bool          doSetValue(const QString &AKey, const QVariant AValue) { return false; }
 #pragma GCC diagnostic pop
 

@@ -52,26 +52,26 @@ ptFilterBase *ptFilter_ColorBoost::createColorBoost() {
 //==============================================================================
 
 void ptFilter_ColorBoost::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CStrengthA,              ptCfgItem::Slider,        1.0,        0.0,          3.0,          0.1 ,       1,        true, true, tr("Strength in a"), tr("")})
     << ptCfgItem({CStrengthB,              ptCfgItem::Slider,        1.0,        0.0,          3.0,          0.1,        1,        true, true, tr("Strength in b"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_ColorBoost::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CStrengthA).toFloat() != 1.0f) ||
-         (FConfig->getValue(CStrengthB).toFloat() != 1.0f);
+  return (FConfig.value(CStrengthA).toFloat() != 1.0f) ||
+         (FConfig.value(CStrengthB).toFloat() != 1.0f);
 }
 
 //==============================================================================
 
 void ptFilter_ColorBoost::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->ColorBoost(FConfig->getValue(CStrengthA).toFloat(),
-                     FConfig->getValue(CStrengthB).toFloat());
+  AImage->ColorBoost(FConfig.value(CStrengthA).toFloat(),
+                     FConfig.value(CStrengthB).toFloat());
 }
 
 //==============================================================================

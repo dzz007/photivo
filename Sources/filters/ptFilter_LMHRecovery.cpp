@@ -79,7 +79,7 @@ void ptFilter_LMHRecovery::doDefineControls() {
   hMaskEntries.append({tr("Highlights"),  ptMaskType_Highlights, "highlights"});
   hMaskEntries.append({tr("All values"),  ptMaskType_All,        "allvalues"});
 
-  FCfgItems = QList<ptCfgItem>()                                                 //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CMaskType1,               ptCfgItem::Combo,         ptMaskType_None, hMaskEntries,                                true, true, tr("Mask type"), tr("")})
     << ptCfgItem({CStrength1,               ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.1,        2,        true, true, tr("Strength"), tr("")})
@@ -91,14 +91,14 @@ void ptFilter_LMHRecovery::doDefineControls() {
     << ptCfgItem({CLowerLimit2,             ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.002,      3,        true, true, tr("Lower limit"), tr("")})
     << ptCfgItem({CUpperLimit2,             ptCfgItem::Slider,        1.0,        0.0,          1.0,          0.002,      3,        true, true, tr("Upper limit"), tr("")})
     << ptCfgItem({CSoftness2,               ptCfgItem::Slider,        1.0,       -2.0,          2.0,          0.1,        1,        true, true, tr("Softness"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_LMHRecovery::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CMaskType1).toInt() != ptMaskType_None) ||
-         (FConfig->getValue(CMaskType2).toInt() != ptMaskType_None);
+  return (FConfig.value(CMaskType1).toInt() != ptMaskType_None) ||
+         (FConfig.value(CMaskType2).toInt() != ptMaskType_None);
 }
 
 //==============================================================================
@@ -106,19 +106,19 @@ bool ptFilter_LMHRecovery::doCheckHasActiveCfg() {
 void ptFilter_LMHRecovery::doRunFilter(ptImage *AImage) const {
   auto hInputFactor = Settings->GetDouble("InputPowerFactor");
 
-  auto hMaskType1   = FConfig->getValue(CMaskType1).toInt();
-  auto hStrength1   = FConfig->getValue(CStrength1).toDouble();
-  auto hLowerLimit1 = FConfig->getValue(CLowerLimit1).toDouble();
-  auto hUpperLimit1 = FConfig->getValue(CUpperLimit1).toDouble();
-  auto hSoftness1   = FConfig->getValue(CSoftness1).toDouble();
+  auto hMaskType1   = FConfig.value(CMaskType1).toInt();
+  auto hStrength1   = FConfig.value(CStrength1).toDouble();
+  auto hLowerLimit1 = FConfig.value(CLowerLimit1).toDouble();
+  auto hUpperLimit1 = FConfig.value(CUpperLimit1).toDouble();
+  auto hSoftness1   = FConfig.value(CSoftness1).toDouble();
   hLowerLimit1 = qMin(hLowerLimit1, hUpperLimit1-0.01);
   hUpperLimit1 = qMax(hUpperLimit1, hLowerLimit1+0.01);
 
-  auto hMaskType2   = FConfig->getValue(CMaskType2).toInt();
-  auto hStrength2   = FConfig->getValue(CStrength2).toDouble();
-  auto hLowerLimit2 = FConfig->getValue(CLowerLimit2).toDouble();
-  auto hUpperLimit2 = FConfig->getValue(CUpperLimit2).toDouble();
-  auto hSoftness2   = FConfig->getValue(CSoftness2).toDouble();
+  auto hMaskType2   = FConfig.value(CMaskType2).toInt();
+  auto hStrength2   = FConfig.value(CStrength2).toDouble();
+  auto hLowerLimit2 = FConfig.value(CLowerLimit2).toDouble();
+  auto hUpperLimit2 = FConfig.value(CUpperLimit2).toDouble();
+  auto hSoftness2   = FConfig.value(CSoftness2).toDouble();
   hLowerLimit2 = qMin(hLowerLimit2, hUpperLimit2-0.02);
   hUpperLimit2 = qMax(hUpperLimit2, hLowerLimit2+0.02);
 

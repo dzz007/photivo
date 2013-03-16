@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2013 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -19,24 +19,23 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-#ifndef PTFILTER_ABCurves_H
-#define PTFILTER_ABCurves_H
+#ifndef PTUTILS_H
+#define PTUTILS_H
 
-#include "ptFilterBase.h"
+#include <QString>
 
-class ptFilter_ABCurves: public ptFilterBase {
-Q_OBJECT
+//------------------------------------------------------------------------------
+/*!
+  Returns *true* if *AValue* lies between *ALowBound* and *AHighBound*, *false* otherwise.
+  Both boundary are included in the range.
+*/
+template<typename T>
+inline bool isBetween(const T& ALowBound, const T& AValue, const T& AHighBound) {
+  return (AValue >= ALowBound) && (AValue <= AHighBound);
+}
 
-public:
-  static ptFilterBase *CreateABCurves();
+//------------------------------------------------------------------------------
+QString trailingSlash(const QString& AText);
 
-protected:
-  void doDefineControls();
-  bool doCheckHasActiveCfg();
-  void doRunFilter(ptImage *AImage) const;
 
-private:
-  ptFilter_ABCurves();
-};
-
-#endif // PTFILTER_ABCurves_H
+#endif // PTUTILS_H
