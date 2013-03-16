@@ -119,7 +119,7 @@ void ptFilterConfig::importPreset(QSettings *APreset) {
   auto hCStoreEnd = FCustomStore.end();
   for (auto hCStoreIter = FCustomStore.begin(); hCStoreIter != hCStoreEnd; ++hCStoreIter) {
     TConfigStore hData = presetToMap(APreset, hCStoreIter.key());
-    hCStoreIter.value()->loadConfig(hData, trailingSlash(APreset->group())+hCStoreIter.key());
+    hCStoreIter.value()->loadConfig(hData, "");
   }
 }
 
