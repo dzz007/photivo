@@ -43,7 +43,7 @@ const QString CSpotColorShiftId    = "ColorShift";
 //------------------------------------------------------------------------------
 class ptTuningSpot: public ptImageSpot {
 public:
-  explicit ptTuningSpot(const QList<ptCfgItem> *ADefaults);
+  explicit ptTuningSpot(const QList<ptCfgItem>* ADefaults, const ptCurve& ANullCurve);
   ~ptTuningSpot();
 
   ptCurve *curvePtr();

@@ -21,35 +21,21 @@
 *******************************************************************************/
 
 #include "ptTuningSpot.h"
-#include "../../ptSettings.h"
 #include "../ptCfgItem.h"
+#include "../../ptSettings.h"
 
 //------------------------------------------------------------------------------
-ptTuningSpot::ptTuningSpot(const QList<ptCfgItem> *ADefaults)
+ptTuningSpot::ptTuningSpot(const QList<ptCfgItem>* ADefaults, const ptCurve& ANullCurve)
 : ptImageSpot(),
   FDefaults(ADefaults)
 {
-  int hCurveIdx = -1;
-  int i = -1;
   for (ptCfgItem hCfgItem: *FDefaults) {
-    ++i;
-    if (hCfgItem.Type == ptCfgItem::CurveWin) {
-      hCurveIdx = i;
-    } else if (hCfgItem.Type < ptCfgItem::CFirstCustomType) {
+    if (hCfgItem.Type < ptCfgItem::CFirstCustomType)
         FDataStore.insert(hCfgItem.Id, hCfgItem.Default);
-    }
   }
 
-  if (hCurveIdx > -1) {
-    FCurve = std::make_shared<ptCurve>();
-    FCurve->set(*(FDefaults->at(hCurveIdx).Curve.get()));
-  } else {
-    TAnchorList hAnchors = {TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0)};
-    FCurve = std::make_shared<ptCurve>(hAnchors,
-                                       ptCurve::LumaMask,
-                                       ptCurve::LumaMask,
-                                       ptCurve::SplineInterpol);
-  }
+  FCurve = std::make_shared<ptCurve>();
+  FCurve->set(ANullCurve);
 }
 
 //------------------------------------------------------------------------------

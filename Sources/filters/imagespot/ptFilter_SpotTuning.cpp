@@ -77,7 +77,6 @@ void ptFilter_SpotTuning::doDefineControls() {
   // If anyone figures it out please enlighten me. (Brother John)
   const ptCfgItem::TCustom hSpotsCfgItem = {CSpotListId, ptCfgItem::CustomType, &FSpotList};
 
-  TAnchorList hNullAnchors = { TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0) };
   auto hCfgItems = TCfgItemList()                                        //--- Combo: list of entries               ---//
                                                                          //--- Check: not available                 ---//
     //            Id                     Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
@@ -86,19 +85,19 @@ void ptFilter_SpotTuning::doDefineControls() {
     << ptCfgItem({CSpotMaxRadiusId,      ptCfgItem::Slider,        500,        1,            7000,         10,         0,        false, false, tr("Maximum radius"), tr("Pixels outside this radius will never be included in the mask.")})
     << ptCfgItem({CSpotChromaWeightId,   ptCfgItem::Slider,        0.5,        0.0,          1.0,          0.1,        2,        false, false, tr("Brightness/color ratio"), tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")})
     << ptCfgItem({CSpotThresholdId,      ptCfgItem::Slider,        0.25,       0.0,          1.0,          0.05,       3,        false, false, tr("Threshold"), tr("Maximum amount a pixel may differ from the spot's source pixel to get included in the mask.")})
-    << ptCfgItem({CSpotLumaCurveId,      ptCfgItem::CurveWin,      std::make_shared<ptCurve>(hNullAnchors,
-                                                                                             ptCurve::LumaMask,
-                                                                                             ptCurve::LumaMask,
-                                                                                             ptCurve::SplineInterpol), ""})
     << ptCfgItem({CSpotSaturationId,     ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        false, false, tr("Saturation"), tr("")})
     << ptCfgItem({CSpotIsAdaptiveSatId,  ptCfgItem::Check,         0,                                                            false, false, tr("Adaptive saturation"), tr("Prevent clipping when adjusting saturation")})
     << ptCfgItem({CSpotColorShiftId,     ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.001,      3,        false, false, tr("Color shift"), tr("")})
   ;
-
-  hCfgItems[5].UseCommonDispatch = false;
   FConfig.initStores(hCfgItems);
 
-  FNullSpot = make_unique<ptTuningSpot>(&FConfig.items());
+  // Create the null curve that gets loaded into the curve window whenever no spots are
+  // present or none is selected.
+  TAnchorList hNullAnchors = { TAnchor(0.0, 0.0), TAnchor(0.4, 0.6), TAnchor(1.0, 1.0) };
+  FNullSpot = make_unique<ptTuningSpot>(&FConfig.items(), ptCurve(hNullAnchors,
+                                                                  ptCurve::LumaMask,
+                                                                  ptCurve::LumaMask,
+                                                                  ptCurve::SplineInterpol));
 }
 
 //==============================================================================
@@ -122,11 +121,14 @@ QWidget *ptFilter_SpotTuning::doCreateGui() {
   FGui = make_unique<Ui::Form>();
 
   FGui->setupUi(hGuiBody);
-  FGui->CurveWin->setObjectName(CSpotLumaCurveId);
   this->initDesignerGui(hGuiBody);
-  FGui->CurveWin->setCaption(tr("Luminance curve"));
 
+  FGui->CurveWin->init(ptCfgItem({CSpotLumaCurveId,
+                                  ptCfgItem::CurveWin,
+                                  FNullSpot->curve(),
+                                  tr("Luminance curve")}));
   FGui->SpotList->init(&FSpotList, std::bind(&ptFilter_SpotTuning::createSpot, this));
+
   connect(FGui->SpotList, SIGNAL(rowChanged(int)),                SLOT(updateSpotDetailsGui(int)));
   connect(FGui->SpotList, SIGNAL(dataChanged()),                  SLOT(updatePreview()));
   connect(FGui->SpotList, SIGNAL(editModeChanged(bool)),          SLOT(setupInteraction(bool)));
@@ -186,8 +188,7 @@ void ptFilter_SpotTuning::doReset() {
 //==============================================================================
 
 ptImageSpot *ptFilter_SpotTuning::createSpot() {
-  FConfig.items()[5].Curve->reset();
-  return new ptTuningSpot(&FConfig.items());
+  return new ptTuningSpot(&FConfig.items(), *(FNullSpot->curvePtr()));
 }
 
 //==============================================================================
@@ -242,12 +243,10 @@ void ptFilter_SpotTuning::updateSpotDetailsGui(int ASpotIdx, QWidget *AGuiWidget
   if (AGuiWidget == nullptr)
     AGuiWidget = FGuiContainer;
 
-  for (const ptCfgItem &hCfgItem: FConfig.items()) {
-    if (hCfgItem.Type == ptCfgItem::CurveWin) {
-      ptCurveWindow *hCurveWin = AGuiWidget->findChild<ptCurveWindow*>(hCfgItem.Id);
-      hCurveWin->updateView(hSpot->curve());
+  FGui->CurveWin->updateView(hSpot->curve());
 
-    } else if (hCfgItem.Type != ptCfgItem::CustomType) {
+  for (const ptCfgItem &hCfgItem: FConfig.items()) {
+    if (hCfgItem.Type < ptCfgItem::CFirstCustomType) {
       ptWidget *hWidget = this->findPtWidget(hCfgItem.Id, AGuiWidget);
       hWidget->blockSignals(true);
       hWidget->setValue(hSpot->value(hCfgItem.Id));
