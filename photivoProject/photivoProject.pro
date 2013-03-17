@@ -230,7 +230,7 @@ HEADERS += \
     ../Sources/filters/ptFilterDM.h \
     ../Sources/filters/ptFilterFactory.h \
     ../Sources/filters/ptFilterUids.h \
-    ../Sources/filters/ptStorable.h \
+    ../Sources/ptStorable.h \
     ../Sources/greyc/CImg.h \
     ../Sources/ptAbstractInteraction.h \
     ../Sources/ptAdobeTable.h \
