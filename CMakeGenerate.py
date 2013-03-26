@@ -89,8 +89,8 @@ copy_ui = False
 
 for line in qmake_pro:
   line = line.strip()
-# if these lines correspond to win32 only and we don't need them they all are skipped
-  if re.match('win32', line) and (len(sys.argv) == 1 or not sys.argv[1] == '--win32'):
+# these lines correspond to win32 only and we skip them
+  if re.match('win32', line):
     skip = True
 # the end of the win32 section 
   if re.match('}', line):
