@@ -87,6 +87,8 @@ message( "Build Gimp plugin            : ${WITH_GIMP}" )
 message( "Build curves creator         : OFF - obsolete" )
 message( "Build Adobe profiles creator : ${WITH_ADOBE_PROFILES}\n" )
 
+set( CMAKE_CXX_FLAGS "" )
+set( CMAKE_C_FLAGS "" )
 set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -funroll-loops -fopenmp -std=gnu++0x" )
 set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=gnu++0x" )
 set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=gnu++0x" )
@@ -300,7 +302,18 @@ set( photivo_SRCS
      Sources/ptWiener.cpp
      Sources/qtsingleapplication/qtlocalpeer.cpp
      Sources/qtsingleapplication/qtsingleapplication.cpp
+     Sources/ptUtils_Storage.cpp
+     Sources/ptStorable.cpp
+     Sources/ptUtils.cpp
 )
+ 
+if( WIN32 )
+  set( photivo_SRCS
+       ${photivo_SRCS}
+       Sources/ptEcWin7.cpp
+       Sources/ptWinApi.cpp
+  )
+endif( WIN32 )
 
 set( photivo_UI_HDRS
      Sources/batch/ptBatchWindow.ui
@@ -323,15 +336,23 @@ QT4_WRAP_UI( photivo_UI_SRCS ${photivo_UI_HDRS} )
 QT4_WRAP_CPP( photivo_MOC_SRCS ${photivo_MOC_HDRS} )
 QT4_ADD_RESOURCES( photivo_RCC_SRCS ${photivo_RCCS} )
 
-add_executable( photivo ${photivo_SRCS} ${photivo_RCC_SRCS} ${photivo_MOC_SRCS} ${photivo_UI_SRCS} )
-if( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
+add_executable( photivo
+                ${photivo_SRCS}
+                ${photivo_RCC_SRCS}
+                ${photivo_MOC_SRCS}
+                ${photivo_UI_SRCS}
+)
+
+if( NOT ${CMAKE_SYSTEM_PROCESSOR} OR ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
   set_target_properties( photivo PROPERTIES COMPILE_FLAGS
                          "-ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
-else( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
+else( NOT ${CMAKE_SYSTEM_PROCESSOR} OR ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
   set_target_properties( photivo PROPERTIES COMPILE_FLAGS
                          "-march=i686 -ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
-endif( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
+endif( NOT ${CMAKE_SYSTEM_PROCESSOR} OR ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
+
 set_target_properties( photivo PROPERTIES LINK_FLAGS "-lgomp" )
+
 target_link_libraries( photivo
                        ${GLIB2_LIBRARIES}
                        ${QT_LIBRARIES}
