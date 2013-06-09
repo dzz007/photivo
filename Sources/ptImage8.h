@@ -3,7 +3,6 @@
 ** Photivo
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2012-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -73,12 +72,15 @@ ptImage8(const uint16_t Width,
          const uint16_t Height,
          const short    NrColors = 3);
 
-void setSize(const uint16_t AWidth,
-             const uint16_t AHeight,
-             const int      AColorCount);
+void setSize(const uint16_t AWidth, const uint16_t AHeight, const int AColorCount);
 
 // Destructor
 ~ptImage8();
+
+// Alloc a new buffer
+void SetSize(const uint16_t Width,
+             const uint16_t Height,
+             const short    NrColors = 3);
 
 // Initialize it from a ptImage.
 // Copying is always deep (so including copying the image).

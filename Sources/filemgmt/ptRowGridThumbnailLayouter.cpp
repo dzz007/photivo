@@ -24,8 +24,6 @@
 #include <QScrollBar>
 
 #include "ptRowGridThumbnailLayouter.h"
-#include "../ptDefines.h"
-#include "../ptLock.h"
 
 //==============================================================================
 
@@ -43,53 +41,56 @@ void ptRowGridThumbnailLayouter::Init(const int thumbCount, const QFont& font) {
 
   // max number of thumbs in a row
   // +Padding because we only take care of padding *between* thumbnails here.
+  // -1 because rows are 0 indexed
   // This calculation does not yet take scrollbar width/height into account
   int RestrictedMax = Settings->GetInt("FileMgrUseThumbMaxRowCol") == 0 ?
-                      INT_MAX : Settings->GetInt("FileMgrThumbMaxRowCol");
+                      INT_MAX-1 : Settings->GetInt("FileMgrThumbMaxRowCol")-1;
   m_ThumbMetrics.MaxCol =
       qMin(RestrictedMax,
-           (m_View->width() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellWidth);
+           (m_View->width() + m_ThumbMetrics.Padding) / m_ThumbMetrics.CellWidth - 1);
 
   // Calc complete height to set the scene’s rect appropriately
-  int FullHeight = qCeil((qreal)thumbCount / (qreal)(m_ThumbMetrics.MaxCol)) *
+  int FullHeight = qCeil((qreal)thumbCount / (qreal)(m_ThumbMetrics.MaxCol + 1)) *
                    m_ThumbMetrics.CellHeight;
 
   if (FullHeight >= m_View->height()) {
     // we have enough thumbs to produce a vertical scrollbar
     m_View->verticalScrollBar()->setSingleStep(m_ThumbMetrics.CellHeight);
 
-    if((m_View->width() - (m_ThumbMetrics.MaxCol)*m_ThumbMetrics.CellWidth) <
-       m_View->style()->pixelMetric(QStyle::PM_ScrollBarExtent))
+    if((m_View->width() - (m_ThumbMetrics.MaxCol + 1)*m_ThumbMetrics.CellWidth) <
+       m_View->verticalScrollBar()->width())
     { // empty space on the right is not wide enough for scrollbar
       m_ThumbMetrics.MaxCol--;
-      FullHeight = qCeil((qreal)thumbCount / (qreal)(m_ThumbMetrics.MaxCol)) *
+      FullHeight = qCeil((qreal)thumbCount / (qreal)(m_ThumbMetrics.MaxCol + 1)) *
                    m_ThumbMetrics.CellHeight;
     }
   }
 
   m_View->scene()->setSceneRect(
       0, 0,
-      m_ThumbMetrics.CellWidth*(m_ThumbMetrics.MaxCol) - m_ThumbMetrics.Padding,
+      m_ThumbMetrics.CellWidth*(m_ThumbMetrics.MaxCol + 1) - m_ThumbMetrics.Padding,
       FullHeight);
 }
 
 //==============================================================================
 
 void ptRowGridThumbnailLayouter::Layout(ptGraphicsThumbGroup* thumb) {
-  ptLock hLock(ptLockType::ThumbLayout);
   if (m_LazyInit) {
     m_LazyInit = false;
     Init(m_ThumbCount, thumb->font());
   }
 
-  uint16_t hIndex = thumb->getIndex();
-  uint16_t hCol   = hIndex % m_ThumbMetrics.MaxCol;
-  uint16_t hRow   = floor(hIndex / m_ThumbMetrics.MaxCol);
-
   // The +1 y position accounts for the 2px wide mouse hover border.
   // Without it that wouldn’t be shown completely on the first row.
-  thumb->setPos(hCol * m_ThumbMetrics.CellWidth,
-                (hRow * m_ThumbMetrics.CellHeight) + 1);
+  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth,
+                (m_ThumbMetrics.Row * m_ThumbMetrics.CellHeight) + 1);
+
+  if (m_ThumbMetrics.Col >= m_ThumbMetrics.MaxCol) {
+    m_ThumbMetrics.Col = 0;
+    m_ThumbMetrics.Row++;
+  } else {
+    m_ThumbMetrics.Col++;
+  }
 }
 
 //==============================================================================
@@ -97,7 +98,7 @@ void ptRowGridThumbnailLayouter::Layout(ptGraphicsThumbGroup* thumb) {
 int ptRowGridThumbnailLayouter::MoveIndex(const int currentIdx, QKeyEvent* event) {
   // See .h for full documentation of behaviour
   int idx = qMax(0, currentIdx);
-  int offset = idx % (m_ThumbMetrics.MaxCol);
+  int offset = idx % (m_ThumbMetrics.MaxCol+1);
   if (event->modifiers() == Qt::NoModifier) {
     switch (event->key()) {
       case Qt::Key_Left:
@@ -106,22 +107,22 @@ int ptRowGridThumbnailLayouter::MoveIndex(const int currentIdx, QKeyEvent* event
         return qMin(m_ThumbCount-1, idx+1);
       case Qt::Key_Up:
         if (idx > m_ThumbMetrics.MaxCol)
-          idx = idx - m_ThumbMetrics.MaxCol - 2;
+          idx = idx - m_ThumbMetrics.MaxCol - 1;
         return idx;
       case Qt::Key_Down:
-        return qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxCol);
+        return qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxCol + 1);
       case Qt::Key_Home:  // start of line
         return qMax(0, idx - offset);
       case Qt::Key_End:   // end of line
-        return qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxCol - 1 - offset);
+        return qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxCol - offset);
       case Qt::Key_PageUp:
         return
             qMax(0 + offset,
-                 idx - (int)(m_View->height()/m_ThumbMetrics.CellHeight)*(m_ThumbMetrics.MaxCol));
+                 idx - (int)(m_View->height()/m_ThumbMetrics.CellHeight)*(m_ThumbMetrics.MaxCol+1));
       case Qt::Key_PageDown:
         return
             qMin(m_ThumbCount-1,
-                 idx + (int)(m_View->height()/m_ThumbMetrics.CellHeight)*(m_ThumbMetrics.MaxCol));
+                 idx + (int)(m_View->height()/m_ThumbMetrics.CellHeight)*(m_ThumbMetrics.MaxCol+1));
       default:    // unrecognised key
         return -1;
     }
