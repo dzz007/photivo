@@ -399,16 +399,7 @@ void SegfaultAbort(int) {
 
 int main(int Argc, char *Argv[]) {
 #ifdef Q_OS_WIN
-  // On Windows you can either always or never get a console window. I.e. you either get an annoying
-  // additional window or no console output even when Photivo was started from an existing console.
-  // The following takes care of that problem by trying to attach to the parent process’s console.
-  // On success we have a console window to output to. If not no additional window appears.
-  if (AttachConsole(ATTACH_PARENT_PROCESS)) {
-    // Attaching succeeded. Reopen output streams to be able to write to the parent’s console.
-    freopen("CONOUT$", "wb", stdout);
-    freopen("CONOUT$", "wb", stderr);
-    // Done. printf, cout, cerr now use the attached console.
-  }
+  WinApi::AttachToParentConsole();
 #endif
 
   int RV = photivoMain(Argc,Argv);
@@ -2994,7 +2985,8 @@ void GimpExport(const short UsePipe) {
 
     QTemporaryFile ImageFile;
     ImageFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.ppm");
-    assert (ImageFile.open());
+    bool result = ImageFile.open();
+    assert (result);
     QString ImageFileName = ImageFile.fileName();
     ImageFile.setAutoRemove(false);
     ImageFile.close();
@@ -3005,7 +2997,8 @@ void GimpExport(const short UsePipe) {
     ReportProgress(QObject::tr("Writing tmp exif for gimp"));
 
     QTemporaryFile ExifFile;
-    assert (ExifFile.open());
+    result = ExifFile.open();
+    assert (result);
     QString ExifFileName = ExifFile.fileName();
     ExifFile.setAutoRemove(false);
     printf("(%s,%d) '%s'\n",
@@ -3018,7 +3011,8 @@ void GimpExport(const short UsePipe) {
     ReportProgress(QObject::tr("Writing tmp icc for gimp"));
 
     QTemporaryFile ICCFile;
-    assert (ICCFile.open());
+    result = ICCFile.open();
+    assert (result);
     QString ICCFileName = ICCFile.fileName();
     ICCFile.setAutoRemove(false);
     printf("(%s,%d) '%s'\n",
@@ -3051,7 +3045,8 @@ void GimpExport(const short UsePipe) {
 
     QTemporaryFile GimpFile;
     GimpFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.ptg");
-    assert (GimpFile.open());
+    result = GimpFile.open();
+    assert (result);
     QString GimpFileName = GimpFile.fileName();
     GimpFile.setAutoRemove(false);
     printf("(%s,%d) '%s'\n",

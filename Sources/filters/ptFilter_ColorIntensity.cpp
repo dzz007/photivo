@@ -55,13 +55,13 @@ ptFilterBase *ptFilter_ColorIntensity::createColorIntensity() {
 //==============================================================================
 
 void ptFilter_ColorIntensity::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default    Min           Max           Step     Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CVibrance,               ptCfgItem::Slider,        0,        -100,          100,          5,       0,        true, true, tr("Vibrance"), tr("")})
     << ptCfgItem({CRed,                    ptCfgItem::Slider,        0,        -100,          100,          5,       0,        true, true, tr("Red"), tr("")})
     << ptCfgItem({CGreen,                  ptCfgItem::Slider,        0,        -100,          100,          5,       0,        true, true, tr("Green"), tr("")})
     << ptCfgItem({CBlue,                   ptCfgItem::Slider,        0,        -100,          100,          5,       0,        true, true, tr("Blue"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
@@ -79,20 +79,20 @@ QWidget *ptFilter_ColorIntensity::doCreateGui() {
 //==============================================================================
 
 bool ptFilter_ColorIntensity::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CVibrance).toInt() != 0) ||
-         (FConfig->getValue(CRed).toInt() != 0) ||
-         (FConfig->getValue(CGreen).toInt() != 0) ||
-         (FConfig->getValue(CBlue).toInt() != 0);
+  return (FConfig.value(CVibrance).toInt() != 0) ||
+         (FConfig.value(CRed).toInt() != 0) ||
+         (FConfig.value(CGreen).toInt() != 0) ||
+         (FConfig.value(CBlue).toInt() != 0);
 }
 
 //==============================================================================
 
 void ptFilter_ColorIntensity::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  AImage->ColorIntensity(FConfig->getValue(CVibrance).toInt(),
-                         FConfig->getValue(CRed).toInt(),
-                         FConfig->getValue(CGreen).toInt(),
-                         FConfig->getValue(CBlue).toInt());
+  AImage->ColorIntensity(FConfig.value(CVibrance).toInt(),
+                         FConfig.value(CRed).toInt(),
+                         FConfig.value(CGreen).toInt(),
+                         FConfig.value(CBlue).toInt());
 }
 
 //==============================================================================

@@ -53,6 +53,8 @@ ptBatchWindow::ptBatchWindow(QWidget *parent) :
   BTLogSplitter->setStretchFactor(BTLogSplitter->indexOf(BTLog), 1);
 
   BTJobList->resizeColumnsToContents();
+  BTJobList->setSortingEnabled(true);
+  BTJobList->sortByColumn(jdFileName, Qt::AscendingOrder);
 }
 
 //==============================================================================
@@ -70,7 +72,17 @@ void ptBatchWindow::UpdateTheme()
   setStyleSheet(Theme->stylesheet());
 }
 
-void ptBatchWindow::AddJobs(const QStringList &settingFiles)
+void ptBatchWindow::AddJobToList(const QString &settingFile, const QString &rawFile)
+{
+  m_BatchModel->AddJobToList(settingFile, rawFile);
+
+  BTJobList->resizeColumnsToContents();
+  m_BatchModel->AutosaveJobList();
+}
+
+//==============================================================================
+
+void ptBatchWindow::AddJobsToList(const QStringList &settingFiles)
 {
   foreach (QString fileName, settingFiles)
     m_BatchModel->AddJobToList(fileName);
@@ -121,7 +133,7 @@ void ptBatchWindow::OnAddJob()
   if (SettingsFileNames.isEmpty()) return;
 
   Settings->SetValue("RawsDirectory", QFileInfo(SettingsFileNames.first()).absolutePath());
-  AddJobs(SettingsFileNames);
+  AddJobsToList(SettingsFileNames);
 }
 
 //==============================================================================

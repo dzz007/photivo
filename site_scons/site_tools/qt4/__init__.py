@@ -40,7 +40,7 @@ selection method.
 ##
 ## Photivo
 ##
-## Copyright (C) 2008-2013 Jos De Laender <jos@de-laender.be>
+## Copyright (C) 2013 Jos De Laender <jos@de-laender.be>
 ##
 ## This file is part of Photivo.
 ##
@@ -69,12 +69,6 @@ import SCons.Tool
 import SCons.Util
 
 import sys
-
-ptNoAttrs    = '\033[0m'
-ptBoldRed    = '\033[1;31m'
-
-if not sys.stdout.isatty():
-  ptBoldRed    = ''
 
 class ToolQt4Warning(SCons.Warnings.Warning):
     pass
@@ -715,6 +709,8 @@ def generate(env):
           ptDecoration = 'ID=DSCONS_LUPDATE'
         elif command == 'lrelease' :
           ptDecoration = 'ID=DSCONS_LRELEASE'
+        if sys.platform.startswith('win') :
+	  ptDecoration = ''
           
         suffixes = [
             '-qt4',
@@ -738,11 +734,9 @@ def generate(env):
         if not (fullpath is None) : return ptDecoration + ' ' + fullpath
 
         if command in ('lupdate','lrelease'):
-          print ptBoldRed                    + \
-                'Qt4 could not locate \''    + \
+          print 'Qt4 could not locate \''    + \
                 ptCrossCommand + '\' '       + \
-                '(This might be acceptable)' + \
-                ptNoAttrs
+                '(This might be acceptable)'
           return None
 
         raise Exception("Qt4 command '" + command + "' not found. Tried: " + ', '.join(triedPaths))
@@ -899,7 +893,7 @@ def generate(env):
         from SCons.Script.SConscript import SConsEnvironment
         SConsEnvironment.EnableQt4Modules = enable_modules
 
-def enable_modules(self, modules, debug=False, crosscompiling=False) :
+def enable_modules(self, modules, debug=False) :
     import sys
 
     validModules = [
@@ -959,8 +953,12 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
         try : self.AppendUnique(CPPDEFINES=moduleDefines[module])
         except: pass
     debugSuffix = ''
-    if sys.platform in ["darwin", "linux2"] and not crosscompiling :
-        if debug : debugSuffix = '_debug'
+    if sys.platform in ["darwin", "linux2", "win32"] :
+        if debug : 
+	  if sys.platform in ["win32"] :
+	    debugSuffix = 'd'
+	  else :
+	    debugSuffix = '_debug'
         for module in modules :
             if module not in pclessModules : continue
             self.AppendUnique(LIBS=[module+debugSuffix])
@@ -972,70 +970,12 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
             self.AppendUnique(CPPPATH=[os.path.join("$QT4DIR","include","qt4","QtDBus")])
         if "QtAssistant" in pcmodules:
             self.AppendUnique(CPPPATH=[os.path.join("$QT4DIR","include","qt4","QtAssistant")])
-            pcmodules.remove("QtAssistant")
-            pcmodules.append("QtAssistantClient")
-        ptPkgConfig = self['PT_CROSS'] + 'pkg-config'
-        self.ParseConfig(ptPkgConfig + ' %s --libs --cflags'%
-                         ' '.join(pcmodules))
         self["QT4_MOCCPPPATH"] = self["CPPPATH"]
         return
-    if sys.platform == "win32" or crosscompiling :
-        if crosscompiling:
-            transformedQtdir = transformToWinePath(self['QT4DIR'])
-            self['QT4_MOC'] = "QT4DIR=%s %s"%( transformedQtdir, self['QT4_MOC'])
-        self.AppendUnique(CPPPATH=[os.path.join("$QT4DIR","include")])
-        try: modules.remove("QtDBus")
-        except: pass
-        if debug : debugSuffix = 'd'
-        if "QtAssistant" in modules:
-            self.AppendUnique(CPPPATH=[os.path.join("$QT4DIR","include","QtAssistant")])
-            modules.remove("QtAssistant")
-            modules.append("QtAssistantClient")
-        self.AppendUnique(LIBS=['qtmain'+debugSuffix])
-        self.AppendUnique(LIBS=[lib+debugSuffix+'4' for lib in modules if lib not in staticModules])
-        self.PrependUnique(LIBS=[lib+debugSuffix for lib in modules if lib in staticModules])
-        if 'QtOpenGL' in modules:
-            self.AppendUnique(LIBS=['opengl32'])
-        self.AppendUnique(CPPPATH=[ '$QT4DIR/include/'])
-        self.AppendUnique(CPPPATH=[ '$QT4DIR/include/'+module for module in modules])
-        if crosscompiling :
-            self["QT4_MOCCPPPATH"] = [
-                path.replace('$QT4DIR', transformedQtdir)
-                    for path in self['CPPPATH'] ]
-        else :
-            self["QT4_MOCCPPPATH"] = self["CPPPATH"]
-        self.AppendUnique(LIBPATH=[os.path.join('$QT4DIR','lib')])
-        return
-    """
-    if sys.platform=="darwin" :
-        # TODO: Test debug version on Mac
-        self.AppendUnique(LIBPATH=[os.path.join('$QT4DIR','lib')])
-        self.AppendUnique(LINKFLAGS="-F$QT4DIR/lib")
-        self.AppendUnique(LINKFLAGS="-L$QT4DIR/lib") #TODO clean!
-        if debug : debugSuffix = 'd'
-        for module in modules :
-#            self.AppendUnique(CPPPATH=[os.path.join("$QT4DIR","include")])
-#            self.AppendUnique(CPPPATH=[os.path.join("$QT4DIR","include",module)])
-# port qt4-mac:
-            self.AppendUnique(CPPPATH=[os.path.join("$QT4DIR","include", "qt4")])
-            self.AppendUnique(CPPPATH=[os.path.join("$QT4DIR","include", "qt4", module)])
-            if module in staticModules :
-                self.AppendUnique(LIBS=[module+debugSuffix]) # TODO: Add the debug suffix
-                self.AppendUnique(LIBPATH=[os.path.join("$QT4DIR","lib")])
-            else :
-#                self.Append(LINKFLAGS=['-framework', module])
-# port qt4-mac:
-                self.Append(LIBS=module)
-        if 'QtOpenGL' in modules:
-            self.AppendUnique(LINKFLAGS="-F/System/Library/Frameworks")
-            self.Append(LINKFLAGS=['-framework', 'AGL']) #TODO ughly kludge to avoid quotes
-            self.Append(LINKFLAGS=['-framework', 'OpenGL'])
-        self["QT4_MOCCPPPATH"] = self["CPPPATH"]
-        return
-# This should work for mac but doesn't
-#    env.AppendUnique(FRAMEWORKPATH=[os.path.join(env['QT4DIR'],'lib')])
-#    env.AppendUnique(FRAMEWORKS=['QtCore','QtGui','QtOpenGL', 'AGL'])
-    """
+
+    else :
+      print "CHECK ME. SHOULDN'T"
+      Exit(1)
 
 
 def exists(env):

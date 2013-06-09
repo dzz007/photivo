@@ -35,12 +35,7 @@ CONFIG   += silent
 TEMPLATE  = app
 TARGET    = ptCreateAdobeProfiles
 
-DEPENDPATH     += .
-INCLUDEPATH    += $${PREFIX}/include
 DESTDIR         = ..
-OBJECTS_DIR     = ../Objects
-MOC_DIR         = ../Objects
-UI_HEADERS_DIR  = ../Objects
 
 #prevent qmake from adding -arch flags
 macx{

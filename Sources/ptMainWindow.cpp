@@ -308,14 +308,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(LoadStyle);
 
   //
-  // Gimp related
+  // Connect Export button (not only for Gimp like the name suggests)
   //
-
-#if defined (DLRAW_GIMP_PLUGIN) || defined (DLRAW_HAVE_GIMP)
   Macro_ConnectSomeButton(ToGimp);
-#else
-  ToGimpButton->hide();
-#endif
 
   //
   // Settings related
@@ -1150,9 +1145,7 @@ void ptMainWindow::OnToGimpButtonClicked() {
 #ifdef DLRAW_GIMP_PLUGIN
   ::CB_MenuFileExit(1);
 #endif
-#ifdef DLRAW_HAVE_GIMP
   GimpSaveMenuPipe();
-#endif
 }
 
 //
@@ -1674,6 +1667,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       ProcessingTabBook->setCurrentIndex(6);
     } else if (Event->key()==Qt::Key_8 && Event->modifiers()==Qt::AltModifier) {
       ProcessingTabBook->setCurrentIndex(7);
+    } else if (Event->key()==Qt::Key_9 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(8);
     } else if (Event->key()==Qt::Key_Period && Event->modifiers()==Qt::NoModifier) {
       ProcessingTabBook->setCurrentIndex(MIN(ProcessingTabBook->currentIndex()+1,ProcessingTabBook->count()));
     } else if (Event->key()==Qt::Key_Comma && Event->modifiers()==Qt::NoModifier) {
