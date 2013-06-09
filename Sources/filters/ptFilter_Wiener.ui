@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WienerForm</class>
+ <widget class="QWidget" name="WienerForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>162</width>
+    <height>127</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="ptCheck" name="Enabled">
+       <property name="text">
+        <string notr="true">Enabled</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="ptCheck" name="OnlyEdges">
+       <property name="text">
+        <string notr="true">Only edges</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>10</width>
+         <height>10</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="ptInput" name="Strength"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="Gaussian"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="Box"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="LensBlur"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ptCheck</class>
+   <extends>QCheckBox</extends>
+   <header>ptCheck.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptInput</class>
+   <extends>QProgressBar</extends>
+   <header>ptInput.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
