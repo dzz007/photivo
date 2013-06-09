@@ -468,6 +468,8 @@ const ptGuiOptionsItem ptGuiOptions::EnableGreyC[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::AspectRatio[] = {
+  {64,   "64"    },
+  {27,   "27"    },
   {21,   "21"    },
   {18,   "18"    },
   {16,   "16"    },

@@ -1111,7 +1111,7 @@
     </message>
     <message>
         <source>Open preset</source>
-        <translation>Abrir preajsute</translation>
+        <translation>Abrir preajuste</translation>
     </message>
     <message>
         <source>Open settings</source>
@@ -2850,7 +2850,7 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
     </message>
     <message>
         <source>Saturation adjustment</source>
-        <translation>Ajsute saturación</translation>
+        <translation>Ajuste saturación</translation>
     </message>
     <message>
         <source>Red</source>
@@ -3049,7 +3049,7 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
     <name>ptFilter_Saturation</name>
     <message>
         <source>Saturation adjustment</source>
-        <translation>Ajsute saturación</translation>
+        <translation>Ajuste saturación</translation>
     </message>
     <message>
         <source>Strength</source>
@@ -4022,7 +4022,7 @@ is not a job list file.</source>
     </message>
     <message>
         <source>Saturation adjustment</source>
-        <translation type="obsolete">Ajsute saturación</translation>
+        <translation type="obsolete">Ajuste saturación</translation>
     </message>
     <message>
         <source>Tone</source>
@@ -4406,7 +4406,7 @@ is not a job list file.</source>
     </message>
     <message>
         <source>Backup settings</source>
-        <translation>Ajsutes de copia de seguridad</translation>
+        <translation>Ajustes de copia de seguridad</translation>
     </message>
     <message>
         <source>Translation</source>
@@ -4458,7 +4458,7 @@ is not a job list file.</source>
     </message>
     <message>
         <source>Photivo settings</source>
-        <translation>Ajsutes photivo</translation>
+        <translation>Ajustes photivo</translation>
     </message>
     <message>
         <source>Open image</source>
@@ -4963,7 +4963,7 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Luminance and saturation adjustment</source>
-        <translation type="obsolete">Ajsutes de luminancia y saturación</translation>
+        <translation type="obsolete">Ajustes de luminancia y saturación</translation>
     </message>
     <message>
         <source>LAB toning</source>
@@ -5121,7 +5121,7 @@ No recorte, inténtelo de nuevo.</translation>
     </message>
     <message>
         <source>Saturation adjustment</source>
-        <translation type="obsolete">Ajsute saturación</translation>
+        <translation type="obsolete">Ajuste saturación</translation>
     </message>
     <message>
         <source>Spot tuning</source>
@@ -6270,7 +6270,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Remember setting level</source>
-        <translation>Recordar ajsutes del nivel</translation>
+        <translation>Recordar ajustes del nivel</translation>
     </message>
     <message>
         <source>Transform camera RGB to working space RGB</source>
@@ -6614,7 +6614,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Load user settings on startup</source>
-        <translation>Cargar ajsutes de usuario al inicio</translation>
+        <translation>Cargar ajustes de usuario al inicio</translation>
     </message>
     <message>
         <source>Reset on new image</source>
@@ -6622,7 +6622,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Reset to user settings when new image is opened</source>
-        <translation>Reiniciar a ajsutes de usuario cuando se abre una nueva imagen</translation>
+        <translation>Reiniciar a ajustes de usuario cuando se abre una nueva imagen</translation>
     </message>
     <message>
         <source>Adjust aspect ratio</source>
@@ -6630,7 +6630,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Adjust crop aspect ratio to image aspect ratio</source>
-        <translation>Ajsutar aspecto de recorte al ratio de aspecto de la imagen</translation>
+        <translation>Ajustar aspecto de recorte al ratio de aspecto de la imagen</translation>
     </message>
     <message>
         <source>Nonlinear slider response</source>
@@ -6682,7 +6682,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Write backup settings during processing</source>
-        <translation>Guardar ajsutes de copia de seguridad durante el proceso</translation>
+        <translation>Guardar ajustes de copia de seguridad durante el proceso</translation>
     </message>
     <message>
         <source>manual</source>
