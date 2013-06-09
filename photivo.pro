@@ -4,7 +4,7 @@
 ##
 ## Copyright (C) 2008 Jos De Laender
 ## Copyright (C) 2010-2012 Michael Munzert <mail@mm-log.com>
-## Copyright (C) 2011-2012 Bernd Schoeler <brother.john@photivo.org>
+## Copyright (C) 2011-2013 Bernd Schoeler <brother.john@photivo.org>
 ##
 ## This file is part of Photivo.
 ##
@@ -29,7 +29,7 @@
 ################################################################################
 
 TEMPLATE = subdirs
-CONFIG += silent
+CONFIG  += silent
 
 # When compiler is GCC check for at least version 4.6
 *g++* {
@@ -56,28 +56,22 @@ contains(QT_VERSION, ^4\\.[0-5]\\..*) {
 }
 
 # Remove subproject makefiles to make sure they are created again with current settings
-system(rm -f $$OUT_PWD/Makefile)
-system(rm -f $$OUT_PWD/photivoProject/Makefile)
-system(rm -f $$OUT_PWD/ptClearProject/Makefile)
-system(rm -f $$OUT_PWD/ptCreateAdobeProfilesProject/Makefile)
-system(rm -f $$OUT_PWD/ptCreateCurvesProject/Makefile)
-system(rm -f $$OUT_PWD/ptGimpProject/Makefile)
+system(rm -f $$OUT_PWD/Makefile*)
+system(rm -f $$OUT_PWD/photivoProject/Makefile*)
+system(rm -f $$OUT_PWD/ptClearProject/Makefile*)
+system(rm -f $$OUT_PWD/ptCreateAdobeProfilesProject/Makefile*)
+system(rm -f $$OUT_PWD/ptGimpProject/Makefile*)
 
-###############################################################################
+#------------------------------------------------------------------------------
+# --- Configure subprojects to build. Photivo itself is always included. ---
 
-# Configure subprojects to build. Photivo itself is always included.
 BUILD_ADOBE=no
-BUILD_CURVES=no
 BUILD_GIMP=no
 BUILD_CLEAR=no
 
 CONFIG(WithAdobeProfiles) {
   SUBDIRS += ptCreateAdobeProfilesProject
   BUILD_ADOBE=yes
-}
-CONFIG(WithCurves) {
-  SUBDIRS += ptCreateCurvesProject
-  BUILD_CURVES=yes
 }
 CONFIG(WithGimp) {
   SUBDIRS += ptGimpProject
@@ -92,7 +86,7 @@ SUBDIRS += photivoProject
 system(echo "Build Photivo                : yes")
 system(echo "Build ptClear                : $${BUILD_CLEAR}")
 system(echo "Build Gimp plugin            : $${BUILD_GIMP}")
-system(echo "Build curves creator         : $${BUILD_CURVES}")
+system(echo "Build curves creator         : no - obsolete")
 system(echo "Build Adobe profiles creator : $${BUILD_ADOBE}")
 
 unix {
@@ -103,23 +97,24 @@ unix {
   system(echo "Use system CImg              : $${SYSTEM_CIMG}")
 }
 
-###############################################################################
+#------------------------------------------------------------------------------
 
 isEmpty(PREFIX) {
   PREFIX = $$[QT_INSTALL_PREFIX]
 }
 
-# setup for "make install"
-unix {
-  QMAKE_STRIP = echo
+#------------------------------------------------------------------------------
+# --- setup for "make install" ---
 
-  # Did I mention that sometimes i *HATE* qmake!? Especially building out of source
-  # on Linux can be a PITA!
+unix {
+  # Did I mention that sometimes i *HATE* qmake!?
   # Qmake checks for the existence of files before creating the rules for make install.
   # Obviously in a fresh build folder there are no binaries present. So the rules
   # are not created and the binaries not installed. Great! Let's hack around it
   # and create dummy "binaries" when the files are not present. Now qmake is happy
   # and we get our binaries installed properly in any case.
+  # Yes, I know the cause of the problem is our custom output path for the executables.
+  # That doesn't make it less annoying.
   !exists($$OUT_PWD/photivo) {
     system(touch $$OUT_PWD/photivo)
   }
@@ -171,5 +166,5 @@ unix {
   themes.path         = $${PREFIX}/share/photivo/Themes
   themes.files        = Themes/*
   INSTALLS           += uisettings
-  INSTALLS += themes
+  INSTALLS           += themes
 }

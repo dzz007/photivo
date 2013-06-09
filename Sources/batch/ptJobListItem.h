@@ -111,6 +111,11 @@ public:
   ptJobStatus Status() const {return m_Status; }
 
   /*!
+   * Sets m_InputFiles to \c inputFiles.
+   */
+  void SetInputFiles(const QStringList &inputFiles);
+
+  /*!
    * Sets the current status of the job to \c status.
    */
   void SetStatus(ptJobStatus status);
@@ -202,6 +207,22 @@ private:
   QDateTime m_ProcessingStarted;
   QDateTime m_lastProcessing;
 };
+
+//==============================================================================
+
+/*!
+ * Functions for sorting job list by corresponding coloumns.
+ */
+bool SortByFileName(ptJobListItem *i1, ptJobListItem *i2);
+bool ReverseSortByFileName(ptJobListItem *i1, ptJobListItem *i2);
+bool SortByStatus(ptJobListItem *i1, ptJobListItem *i2);
+bool ReverseSortByStatus(ptJobListItem *i1, ptJobListItem *i2);
+bool SortByOutputPath(ptJobListItem *i1, ptJobListItem *i2);
+bool ReverseSortByOutputPath(ptJobListItem *i1, ptJobListItem *i2);
+bool SortByOutputFileSuffix(ptJobListItem *i1, ptJobListItem *i2);
+bool ReverseSortByOutputFileSuffix(ptJobListItem *i1, ptJobListItem *i2);
+bool SortByInputFiles(ptJobListItem *i1, ptJobListItem *i2);
+bool ReverseSortByInputFiles(ptJobListItem *i1, ptJobListItem *i2);
 
 //==============================================================================
 

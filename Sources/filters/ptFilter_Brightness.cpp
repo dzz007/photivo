@@ -21,8 +21,7 @@
 *******************************************************************************/
 
 #include "ptFilter_Brightness.h"
-#include "ptCfgItem.h"
-#include <ptImage.h>
+#include "../ptImage.h"
 
 //==============================================================================
 
@@ -53,20 +52,20 @@ ptFilterBase *ptFilter_Brightness::createBrightness() {
 //==============================================================================
 
 void ptFilter_Brightness::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CCatchWhite,             ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Catch white"), tr("Darken the bright parts")})
     << ptCfgItem({CCatchBlack,             ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Catch black"), tr("Brighten the dark parts")})
     << ptCfgItem({CGain,                   ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Gain"), tr("Exposure gain")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_Brightness::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CCatchWhite).toFloat() != 0.0f) ||
-         (FConfig->getValue(CCatchBlack).toFloat() != 0.0f) ||
-         (FConfig->getValue(CGain).toFloat() != 0.0f);
+  return (FConfig.value(CCatchWhite).toFloat() != 0.0f) ||
+         (FConfig.value(CCatchBlack).toFloat() != 0.0f) ||
+         (FConfig.value(CGain).toFloat() != 0.0f);
 }
 
 //==============================================================================
@@ -74,9 +73,9 @@ bool ptFilter_Brightness::doCheckHasActiveCfg() {
 void ptFilter_Brightness::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
 
-  float hWhite = FConfig->getValue(CCatchWhite).toFloat();
-  float hBlack = FConfig->getValue(CCatchBlack).toFloat();
-  float hGain  = FConfig->getValue(CGain).toFloat();
+  float hWhite = FConfig.value(CCatchWhite).toFloat();
+  float hBlack = FConfig.value(CCatchBlack).toFloat();
+  float hGain  = FConfig.value(CGain).toFloat();
 
   // catch white/black curve
   TAnchorList hAnchors;

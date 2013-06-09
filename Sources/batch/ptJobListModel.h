@@ -72,6 +72,11 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
   /*!
+   * Reimplements \c QAbstractItemModel's sort() function.
+   */
+  void sort(int column, Qt::SortOrder order);
+
+  /*!
    * A replacement fot rowCount() method. Added for convenience.
    * \return the number of jobs in the list.
    */
@@ -83,9 +88,9 @@ public:
   ptJobListItem* JobItem(int i) const;
 
   /*!
-   * Creates a job from \c file and adds it to the list.
+   * Creates a job from \c file and adds it to the list. Sets the input file to \c inputFile.
    */
-  void AddJobToList(const QString &file);
+  void AddJobToList(const QString &file, const QString &inputFile = QString());
 
   /*!
    * Adds the job \c item to the list.

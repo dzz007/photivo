@@ -450,7 +450,7 @@ bool ptFilterDM::SendToBatch(const QString &AFileName) {
     return false;
 
   bool result = PerformWritePreset(hFileName, false, true, false, nullptr);
-  BatchWindow->AddJobs(QStringList(hFileName));
+  BatchWindow->AddJobToList(hFileName, Settings->GetStringList("InputFileNameList").first());
   return result;
 }
 
@@ -743,7 +743,8 @@ void ptFilterDM::TranslateCurvesToNew(QSettings *APreset, QStringList *AKeys) {
     auto hNewCurveId = FCurveNameMap.value(hOldCurveId);
     int  hLastSep    = hNewCurveId.lastIndexOf("/");
     APreset->setValue(hNewCurveId.left(hLastSep)+"/CustomStores",
-                      QStringList(hNewCurveId.mid(hLastSep+1)));
+                      APreset->value(hNewCurveId.left(hLastSep)+"/CustomStores").toStringList() <<
+                      hNewCurveId.mid(hLastSep+1));
 
     // channel mask (only exists for some)
     auto hOldMask = FCurveMap.key(hNewCurveId+"/Mask"); // get old key

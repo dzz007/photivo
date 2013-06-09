@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -19,24 +19,20 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-#ifndef PTFILTER_ABCurves_H
-#define PTFILTER_ABCurves_H
+#include "ptStorable.h"
 
-#include "ptFilterBase.h"
 
-class ptFilter_ABCurves: public ptFilterBase {
-Q_OBJECT
+ptStorable::ptStorable()
+{}
 
-public:
-  static ptFilterBase *CreateABCurves();
+ptStorable::~ptStorable()
+{}
 
-protected:
-  void doDefineControls();
-  bool doCheckHasActiveCfg();
-  void doRunFilter(ptImage *AImage) const;
+TConfigStore ptStorable::storeConfig(const QString &APrefix) const {
+  return this->doStoreConfig(trailingSlash(APrefix));
+}
 
-private:
-  ptFilter_ABCurves();
-};
+void ptStorable::loadConfig(const TConfigStore &AConfig, const QString &APrefix) {
+  this->doLoadConfig(AConfig, trailingSlash(APrefix));
+}
 
-#endif // PTFILTER_ABCurves_H

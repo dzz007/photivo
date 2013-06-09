@@ -5666,8 +5666,8 @@ short ptImage::WriteAsPpm(const char*  FileName,
     if (16 == BitsPerColor && htons(0x55aa) != 0x55aa) {
       swab((char *)PpmRow,(char *)PpmRow,m_Width*m_Colors*2);
     }
-    assert
-      (m_Width == fwrite(PpmRow,m_Colors*BitsPerColor/8,m_Width,OutputFile));
+    uint16_t w = fwrite(PpmRow,m_Colors*BitsPerColor/8,m_Width,OutputFile);
+    assert(m_Width == w);
   }
 
   FREE(PpmRow);
