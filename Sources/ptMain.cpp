@@ -1095,7 +1095,7 @@ void CB_Event0() {
 
 #ifndef PT_WITHOUT_FILEMGR
   if (Settings->GetInt("FileMgrIsOpen")) {
-    FileMgrWindow->DisplayThumbnails();
+    FileMgrWindow->displayThumbnails();
     FileMgrWindow->setFocus(Qt::OtherFocusReason);
   }
 #endif
@@ -3338,7 +3338,7 @@ void CB_StyleChoice(const QVariant Choice) {
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
   CB_SliderWidthInput(Settings->GetInt("SliderWidth"));
 #ifndef PT_WITHOUT_FILEMGR
-  FileMgrWindow->UpdateTheme();
+  FileMgrWindow->updateTheme();
 #endif
   BatchWindow->UpdateTheme();
 }
