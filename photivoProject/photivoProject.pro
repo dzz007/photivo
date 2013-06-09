@@ -187,6 +187,8 @@ HEADERS += \
     ../Sources/filemgmt/ptSingleDirModel.h \
     ../Sources/filemgmt/ptTagList.h \
     ../Sources/filemgmt/ptTagModel.h \
+    ../Sources/filemgmt/ptThumbnailCache.h \
+    ../Sources/filemgmt/ptThumbnailer.h \
     ../Sources/filters/imagespot/ptFilter_SpotTuning.h \
     ../Sources/filters/imagespot/ptImageSpot.h \
     ../Sources/filters/imagespot/ptImageSpotEditor.h \
@@ -281,12 +283,7 @@ HEADERS += \
     ../Sources/qtsingleapplication/qtlockedfile.h \
     ../Sources/qtsingleapplication/qtsingleapplication.h \
     ../Sources/ptUtils_Storage.h \
-    ../Sources/ptUtils.h \
-    ../Sources/filemgmt/ptThumbCache.h \
-    ../Sources/filemgmt/ptThumbGen.h \
-    ../Sources/ptLock.h \
-    ../Sources/filemgmt/ptThumbDefines.h \
-    ../Sources/filemgmt/ptThumbDM.h
+    ../Sources/ptUtils.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -305,6 +302,8 @@ SOURCES += \
     ../Sources/filemgmt/ptSingleDirModel.cpp \
     ../Sources/filemgmt/ptTagList.cpp \
     ../Sources/filemgmt/ptTagModel.cpp \
+    ../Sources/filemgmt/ptThumbnailCache.cpp \
+    ../Sources/filemgmt/ptThumbnailer.cpp \
     ../Sources/filters/imagespot/ptFilter_SpotTuning.cpp \
     ../Sources/filters/imagespot/ptImageSpot.cpp \
     ../Sources/filters/imagespot/ptImageSpotEditor.cpp \
@@ -416,12 +415,7 @@ SOURCES += \
     ../Sources/vcd/vcd_interpolate.c \
     ../Sources/ptUtils_Storage.cpp \
     ../Sources/ptStorable.cpp \
-    ../Sources/ptUtils.cpp \
-    ../Sources/filemgmt/ptThumbCache.cpp \
-    ../Sources/filemgmt/ptThumbGen.cpp \
-    ../Sources/ptLock.cpp \
-    ../Sources/filemgmt/ptThumbDM.cpp \
-    ../Sources/filemgmt/ptThumbDefines.cpp
+    ../Sources/ptUtils.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \

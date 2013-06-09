@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -33,10 +33,7 @@
 #include <QThread>
 
 #include "../ptReportOverlay.h"
-#include "../ptImage8.h"
 #include "ptFileMgrDM.h"
-#include "ptThumbDefines.h"
-#include "ptThumbCache.h"
 
 //==============================================================================
 
@@ -44,24 +41,18 @@ class MyWorker;
 
 //==============================================================================
 
-class ptImageView: public QGraphicsView,
-                   public ptThumbReciever {
+class ptImageView: public QGraphicsView {
 Q_OBJECT
 public:
   /*! Creates a \c ptImageView instance.
     \param parent
       The image view’s parent widget.
   */
-  explicit ptImageView(QWidget            *AParent,
-                       ptFileMgrDM        *ADataModule,
-                       ptThumbGroupEvents *AEventHandler = nullptr);
+  explicit ptImageView(QWidget *parent = 0, ptFileMgrDM* DataModule = 0);
   ~ptImageView();
 
-  void ShowImage(const QString AFileName);
+  void ShowImage(const QString FileName);
 
-  /*! Implementation of the thumb reciever interface.*/
-  virtual void thumbnail(const ptThumbId AThumbId,
-                         ptThumbPtr      AImage);
 
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
@@ -71,7 +62,6 @@ protected:
   void mouseReleaseEvent(QMouseEvent* event);
   void resizeEvent(QResizeEvent* event);
   void showEvent(QShowEvent* event);
-  void hideEvent(QHideEvent*);
   void wheelEvent(QWheelEvent* event);
 
 
@@ -82,14 +72,18 @@ private:
   /*! Put the QImage in the scene */
   void ImageToScene(const double Factor);
 
+  /*! This function performs the actual thumbnail generation. */
+  void updateView();
+
   ptFileMgrDM*          m_DataModule;
-  ptThumbGroupEvents*   FEventHandler;
   const float           MinZoom;
   const float           MaxZoom;
   QList<float>          ZoomFactors;   // steps for wheel zoom
   QGridLayout*          m_parentLayout;
   QGraphicsScene*       m_Scene;
+  ptImage8*             m_Image;
   QString               m_FileName_Current;
+  QString               m_FileName_Next;
   int                   m_ZoomMode;
   float                 m_ZoomFactor;
   int                   m_Zoom;
@@ -97,6 +91,7 @@ private:
   bool                  m_LeftMousePressed;
   ptReportOverlay*      m_ZoomSizeOverlay;
   ptReportOverlay*      m_StatusOverlay;
+  MyWorker*             m_Worker;
   QGraphicsPixmapItem*  m_PixmapItem;
   int                   m_ResizeTimeOut;
   QTimer*               m_ResizeTimer;
@@ -108,11 +103,6 @@ private:
   QAction* ac_ZoomFit;
   QAction* ac_ZoomOut;
 
-  ptThumbId             FNextImage;
-  ptThumbId             FCurrentImage;
-  QImage                FImage;
-  ptImage8              FImageData;
-  bool                  FHaveImage;
 
 public slots:
   int  zoomFit(const bool withMsg = true);  // fit complete image into viewport
@@ -120,10 +110,26 @@ public slots:
   void zoomIn();
   void zoomOut();
 
+
 private slots:
+  void startWorker();
+  void afterWorker();
   void ResizeTimerExpired();
 };
 
 //==============================================================================
+
+typedef void (ptImageView::*updateView_ptr)();
+
+class MyWorker: public QThread {
+public:
+  QString        m_FileName;
+  updateView_ptr m_Fct;
+  ptImageView*   m_ImageView;
+#ifndef Q_OS_MAC
+protected:
+#endif
+  void run();
+};
 
 #endif // PTIMAGEVIEW_H

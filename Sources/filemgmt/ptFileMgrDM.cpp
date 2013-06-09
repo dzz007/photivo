@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -29,8 +29,6 @@
 #include "ptFileMgrConstants.h"
 
 extern ptSettings* Settings;
-extern QStringList FileExtsRaw;
-extern QStringList FileExtsBitmap;
 
 //==============================================================================
 
@@ -57,24 +55,31 @@ void ptFileMgrDM::DestroyInstance() {
 
 //==============================================================================
 
-ptFileMgrDM::ptFileMgrDM() :
-  QObject(),
-  FThumbDM(nullptr), // init of unique_ptr!
-  FIsMyComputer(false)
+ptFileMgrDM::ptFileMgrDM()
+: QObject()
 {
   m_DirModel    = new ptSingleDirModel;
   m_TagModel    = new ptTagModel;
 
-  m_FocusedThumb = -1;
+  // Init stuff for thumbnail generation
+  m_ThumbList   = new QList<ptGraphicsThumbGroup*>;
+  m_Thumbnailer = new ptThumbnailer();
+  m_Thumbnailer->setThumbList(m_ThumbList);
 
-  FDir.setSorting(QDir::DirsFirst | QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
-  FDir.setNameFilters(FileExtsRaw + FileExtsBitmap);
-  FDir.setFilter(QDir::AllDirs | QDir::NoDot | QDir::Files);
+  // Init thumbnail cache
+  m_Cache = new ptThumbnailCache(1000);
+  m_Thumbnailer->setCache(m_Cache);
+
+  m_FocusedThumb = -1;
 }
 
 //==============================================================================
 
 ptFileMgrDM::~ptFileMgrDM() {
+  StopThumbnailer();
+  DelAndNull(m_ThumbList);
+  DelAndNull(m_Thumbnailer);
+  DelAndNull(m_Cache);
   DelAndNull(m_DirModel);
   DelAndNull(m_TagModel);
 }
@@ -82,42 +87,88 @@ ptFileMgrDM::~ptFileMgrDM() {
 //==============================================================================
 
 void ptFileMgrDM::Clear() {
+  StopThumbnailer();
+  m_Cache->Clear();
 }
 
 //==============================================================================
 
-ptThumbDM *ptFileMgrDM::getThumbDM()
-{
-  if(!FThumbDM) {
-    FThumbDM = make_unique<ptThumbDM>();
+int ptFileMgrDM::setThumbnailDir(const QString path) {
+  m_CurrentDir = path;
+  return m_Thumbnailer->setDir(path);
+}
+
+//==============================================================================
+
+void ptFileMgrDM::StartThumbnailer() {
+#ifdef Q_OS_MAC
+  m_Thumbnailer->run();
+#else
+  m_Thumbnailer->start();
+#endif
+}
+
+//==============================================================================
+
+void ptFileMgrDM::StopThumbnailer() {
+  m_Thumbnailer->blockSignals(true);
+  m_Thumbnailer->Abort();
+  m_Thumbnailer->blockSignals(false);
+}
+
+//==============================================================================
+
+bool ptFileMgrDM::getThumbnail(ptImage8     *&AImage,
+                               const QString &AFileName,
+                               const int      AMaxSize) {
+
+  assert(!AFileName.isEmpty());
+
+  ptDcRaw dcRaw;
+  bool isRaw = false;
+  MagickWand* image = NewMagickWand();
+  QSize Size = QSize(AMaxSize, AMaxSize);
+
+  if (dcRaw.Identify(AFileName) == 0 ) {
+    // we have a raw image
+    isRaw = true;
+    std::vector<char> ImgData;
+    if (dcRaw.thumbnail(ImgData)) {
+      // raw thumbnail read successfully
+      Size.setWidth(dcRaw.m_ThumbWidth);
+      Size.setHeight(dcRaw.m_ThumbHeight);
+      ScaleThumbSize(&Size, AMaxSize);
+      MagickSetSize(image, 2*Size.width(), 2*Size.height());
+      MagickReadImageBlob(image, (const uchar*)ImgData.data(), (const size_t)ImgData.size());
+    }
   }
 
-  return FThumbDM.get();
-}
+  if (!isRaw) {
+    // no raw, try for bitmap
+    MagickPingImage(image, AFileName.toAscii().data());
+    Size.setWidth(MagickGetImageWidth(image));
+    Size.setHeight(MagickGetImageHeight(image));
+    ScaleThumbSize(&Size, AMaxSize);
+    MagickSetSize(image, 2*Size.width(), 2*Size.height());
+    MagickReadImage(image, AFileName.toAscii().data());
+  }
 
-//==============================================================================
-// Set the directory and get the list of thumbs.
-QFileInfoList ptFileMgrDM::getThumbsFileList(const QString &APath)
-{
-#ifdef Q_OS_WIN
-  FIsMyComputer = (APath == MyComputerIdString);
-#endif
+  ExceptionType MagickExcept;
+  char* MagickErrMsg = MagickGetException(image, &MagickExcept);
+  if (MagickExcept != UndefinedException) {
+    // error occurred: no raw thumbnail, no supported image type, any other GM error
+    printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
+    DestroyMagickWand(image);
+    if (!AImage) AImage = new ptImage8();
+    AImage->FromQImage(QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png")));
+    return false;
 
-  if (FIsMyComputer) {
-    if (Settings->GetInt("FileMgrShowDirThumbs")) {
-      return FDir.drives();
-    }
-    return QFileInfoList();
   } else {
-    FDir.setPath(APath);
-
-    QDir::Filters hFilters = QDir::Files;
-    if (Settings->GetInt("FileMgrShowDirThumbs")) {
-      hFilters = hFilters | QDir::AllDirs | QDir::NoDot;
-    }
-    FDir.setFilter(hFilters);
-
-    return FDir.entryInfoList();
+    // no error: scale and rotate thumbnail
+    if (!AImage) AImage = new ptImage8();
+    GenerateThumbnail(image, AImage, Size);
+    DestroyMagickWand(image);
+    return true;
   }
 }
 
@@ -152,7 +203,7 @@ void ptFileMgrDM::GenerateThumbnail(MagickWand* AInImage, ptImage8 *AOutImage, c
   uint w = MagickGetImageWidth(AInImage);
   uint h = MagickGetImageHeight(AInImage);
 
-  AOutImage->setSize(w, h, 3);
+  AOutImage->SetSize(w, h, 3);
 
   MagickGetImagePixels(AInImage, 0, 0, w, h, "BGRA", CharPixel, (uchar*)(AOutImage->m_Image));
 }
@@ -176,19 +227,20 @@ void ptFileMgrDM::ScaleThumbSize(QSize* tSize, const int max) {
 
 //==============================================================================
 
-void ptFileMgrDM::MoveFocus(const int index) {
+ptGraphicsThumbGroup* ptFileMgrDM::MoveFocus(const int index) {
   m_FocusedThumb = index;
+  return m_ThumbList->at(index);
 }
 
 //==============================================================================
 
 int ptFileMgrDM::focusedThumb(QGraphicsItem* group) {
-//  for (int i = 0; i < m_ThumbList->count(); i++) {
-//    if (m_ThumbList->at(i) == group) {
-//      m_FocusedThumb = i;
-//      return i;
-//    }
-//  }
+  for (int i = 0; i < m_ThumbList->count(); i++) {
+    if (m_ThumbList->at(i) == group) {
+      m_FocusedThumb = i;
+      return i;
+    }
+  }
   m_FocusedThumb = -1;
   return -1;
 }
