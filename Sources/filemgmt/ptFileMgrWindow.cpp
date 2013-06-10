@@ -143,10 +143,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_FilesView->verticalScrollBar()->installEventFilter(this);
   m_FilesView->horizontalScrollBar()->installEventFilter(this);
   m_FilesView->setScene(FFilesScene);
-  connect(FDataModel->thumbnailer(), SIGNAL(newThumbNotify(const bool)),
-          this, SLOT(fetchNewThumbs(const bool)));
-  connect(FDataModel->thumbnailer(), SIGNAL(newImageNotify(ptGraphicsThumbGroup*,ptImage8*)),
-          this, SLOT(fetchNewImages(ptGraphicsThumbGroup*,ptImage8*)));
+  FDataModel->connectThumbGen(this, SLOT(receiveThumb(uint,TThumbPtr)));
   setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
 
   FPathBar = new ptPathBar(m_PathContainer);
@@ -223,8 +220,8 @@ void ptFileMgrWindow::setLayouter(const ptThumbnailLayout layout) {
   if (!InStartup) {
     if ((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType") == layout)
       return;
-    RestartThumbnailer = FDataModel->thumbnailer()->isRunning();
-    FDataModel->StopThumbnailer();
+    RestartThumbnailer = FDataModel->thumbGenRunning();
+    FDataModel->abortThumbGen();
     DelAndNull(FLayouter);
     Settings->SetValue("FileMgrThumbLayoutType", layout);
   }
@@ -251,9 +248,9 @@ void ptFileMgrWindow::setLayouter(const ptThumbnailLayout layout) {
   }
 
   if (RestartThumbnailer) {
-    displayThumbnails();
+    this->displayThumbnails();
   } else {
-    layoutAll();
+    this->layoutAll();
   }
 }
 
@@ -309,22 +306,28 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
   }
 #endif
 
-  FPathBar->setPath(path);
-  FDataModel->StopThumbnailer();
-  clearScene();
+//  FDataModel->StopThumbnailer();
+//  this->clearScene();
   m_FilesView->horizontalScrollBar()->setValue(0);
   m_FilesView->verticalScrollBar()->setValue(0);
   FThumbListIdx = 0;
-  FThumbCount = FDataModel->setThumbnailDir(path);
+  FThumbCount = FDataModel->setThumDir(path);
+  FPathBar->setPath(path);
 
-  if (FThumbCount > 0) {
+  if (FThumbCount = 0) {
+    // setting scene to null dimensions disappears unneeded scrollbars
+    FFilesScene->setSceneRect(0,0,0,0);
+
+  } else {
     FLayouter->LazyInit(FThumbCount);
     m_Progressbar->setValue(0);
     m_Progressbar->setMaximum(FThumbCount);
-    FDataModel->StartThumbnailer();
-  } else {
-    // setting scene to null dimensions disappears unneeded scrollbars
-    FFilesScene->setSceneRect(0,0,0,0);
+
+    FDataModel->populateThumbs(FFilesScene);
+    this->layoutAll();
+
+    m_Progressbar->show();
+    m_PathContainer->hide();
   }
 }
 #ifdef Q_OS_UNIX
@@ -332,43 +335,51 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
 #endif
 
 //------------------------------------------------------------------------------
-void ptFileMgrWindow::fetchNewThumbs(const bool isLast) {
-  while (FThumbListIdx < FDataModel->thumbList()->count()) {
-    ptGraphicsThumbGroup* thumb = FDataModel->thumbList()->at(FThumbListIdx);
-    FThumbListIdx++;
-    FLayouter->Layout(thumb);
-    FFilesScene->addItem(thumb);
-  }
-
-  if (isLast) {
-    FThumbListIdx = 0;
-    m_Progressbar->show();
-    m_PathContainer->hide();
-  }
-}
-
-//------------------------------------------------------------------------------
-void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, ptImage8 *pix) {
-  m_Progressbar->setValue(m_Progressbar->value() + 1);
-  if (pix != NULL) {
-    // Adding the image to the group must be done from the main GUI thread.
-    group->addImage(pix);
-  }
-
-  if (m_Progressbar->value() >= FThumbCount) {
-    m_Progressbar->hide();
-    m_PathContainer->show();
-    FFilesScene->setFocus();
-    if (FFilesScene->focusItem() == NULL) {
-      focusThumbnail(0);
+void ptFileMgrWindow::receiveThumb(uint AReceiverId, TThumbPtr AImage) {
+  for (ptGraphicsThumbGroup* hThumbGroup: *FDataModel->thumbGroupList()) {
+    if (hThumbGroup->id() == AReceiverId) {
+      hThumbGroup->addImage(AImage);
+      break;
     }
   }
 }
 
+//  while (FThumbListIdx < FDataModel->thumbGroupList()->count()) {
+//    ptGraphicsThumbGroup* thumb = FDataModel->thumbGroupList()->at(FThumbListIdx);
+//    ++FThumbListIdx;
+//    FLayouter->Layout(thumb);
+//    FFilesScene->addItem(thumb);
+//  }
+
+//  if (isLast) {
+//    FThumbListIdx = 0;
+//    m_Progressbar->show();
+//    m_PathContainer->hide();
+//  }
+//}
+
+//------------------------------------------------------------------------------
+//void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, ptImage8 *pix) {
+//  m_Progressbar->setValue(m_Progressbar->value() + 1);
+//  if (pix != nullptr) {
+//    // Adding the image to the group must be done from the main GUI thread.
+//    group->addImage(pix);
+//  }
+
+//  if (m_Progressbar->value() >= FThumbCount) {
+//    m_Progressbar->hide();
+//    m_PathContainer->show();
+//    FFilesScene->setFocus();
+//    if (FFilesScene->focusItem() == nullptr) {
+//      focusThumbnail(0);
+//    }
+//  }
+//}
+
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::layoutAll() {
-  FLayouter->Init(FDataModel->thumbList()->count(), m_FilesView->font());
-  QListIterator<ptGraphicsThumbGroup*> i(*FDataModel->thumbList());
+  FLayouter->Init(FDataModel->thumbGroupList()->count(), m_FilesView->font());
+  QListIterator<ptGraphicsThumbGroup*> i(*FDataModel->thumbGroupList());
 
   while (i.hasNext()) {
     FLayouter->Layout(i.next());
@@ -497,10 +508,10 @@ void ptFileMgrWindow::saveThumbnail() {
   int hThumbIdx = FDataModel->focusedThumb();
 
   if (hThumbIdx > -1 &&
-      hThumbIdx < FDataModel->thumbList()->count()) {
-    QString   hFileName          = FDataModel->thumbList()->at(hThumbIdx)->fullPath();
+      hThumbIdx < FDataModel->thumbGroupList()->count()) {
+    QString   hFileName          = FDataModel->thumbGroupList()->at(hThumbIdx)->fullPath();
     ptImage8* hImage             = new ptImage8();
-    FDataModel->getThumbnail(hImage, hFileName, Settings->GetInt("FileMgrThumbSaveSize"));
+    // TODO BJ: FDataModel->getThumbnail(hImage, hFileName, Settings->GetInt("FileMgrThumbSaveSize"));
 
     QFileInfo hPathInfo(hFileName);
     QString   hSuggestedFileName = hPathInfo.dir().path() + "/" + hPathInfo.completeBaseName() + "-thumb.jpg";
@@ -561,7 +572,7 @@ void ptFileMgrWindow::closeWindow() {
 void ptFileMgrWindow::hideEvent(QHideEvent* event) {
   if (!event->spontaneous()) {
     event->accept();
-    FDataModel->StopThumbnailer();
+    FDataModel->abortThumbGen();
     // free memory occupied by thumbnails
     clearScene();
     FDataModel->Clear();
@@ -572,12 +583,8 @@ void ptFileMgrWindow::hideEvent(QHideEvent* event) {
 
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::clearScene() {
-  for (int i = 0; i < FDataModel->thumbList()->count(); i++) {
-    FFilesScene->removeItem(FDataModel->thumbList()->at(i));
-    ptGraphicsThumbGroup::RemoveRef(FDataModel->thumbList()->at(i));
-  }
-
-  FDataModel->thumbList()->clear();
+  FDataModel->thumbGroupList()->clear();
+  FFilesScene->clear();
 }
 
 //------------------------------------------------------------------------------

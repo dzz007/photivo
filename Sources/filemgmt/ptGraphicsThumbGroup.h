@@ -31,6 +31,7 @@
 #include <QBrush>
 #include <QPoint>
 
+#include "ptThumbDefines.h"
 #include "../ptConstants.h"
 
 //==============================================================================
@@ -41,24 +42,8 @@ class ptImage8;
 
 class ptGraphicsThumbGroup: public QGraphicsRectItem {
 public:
-  /*! Creates a new \c ptGraphicsThumbGroup instance or increases the reference counter
-    of an existing one. Returns the pointer to that instance.
-    \param group
-      A pointer to the \c ptGraphicsThumbGroup instance. If you omit this parameter
-      the function creates and returns a new \c ptGraphicsThumbGroup object with ref
-      count \c 1.
-  */
-  static ptGraphicsThumbGroup* AddRef(ptGraphicsThumbGroup* group = NULL);
-
-  /*! Decrease the reference counter of a \c ptGraphicsThumbGroup instance.
-    Returns the reference count \b after decreasing. If the counter becomes
-    \c 0 the function deletes the \c ptGraphicsThumbGroup object.
-    \param group
-      A pointer to the \c ptGraphicsThumbGroup instance.
-  */
-  static int RemoveRef(ptGraphicsThumbGroup* group);
-
-//-------------------------------------
+  ptGraphicsThumbGroup(uint AId, QGraphicsItem* parent = nullptr);
+  ~ptGraphicsThumbGroup();
 
   /*! Adds informative items to the thumbnail group.
     \param fullPath
@@ -79,7 +64,7 @@ public:
       \param pixmap
         A pointer to the \c QPixmap thumnail image.
   */
-  void addImage(ptImage8* image);
+  void addImage(TThumbPtr AImage);
 
   /*! Returns the main font used in the thumbnail. */
   QFont font() const;
@@ -112,6 +97,8 @@ public:
   */
   enum { Type = UserType + 1 };
 
+  uint id() const;
+
 
 protected:
   /*! Event handler for the thumbnail group.
@@ -121,15 +108,13 @@ protected:
 
 
 private:
-  ptGraphicsThumbGroup(QGraphicsItem* parent = 0);
-  ~ptGraphicsThumbGroup();
-
   void exec();
   void SetupPenAndBrush();
 
   QBrush    m_Brush;
   QString   m_FullPath;
   ptFSOType m_FSOType;
+  const uint FGroupId;
   bool      m_hasHover;
   QPen      m_Pen;
   int       m_RefCount;

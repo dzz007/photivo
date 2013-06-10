@@ -37,6 +37,7 @@
 #include "../ptConstants.h"
 #include <QWidget>
 #include <QGraphicsScene>
+#include <memory>
 
 class ptImage8;
 
@@ -102,8 +103,7 @@ private slots:
   void changeDir(const QString& path);
   void closeWindow();
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
-  void fetchNewImages(ptGraphicsThumbGroup* group, ptImage8* pix);
-  void fetchNewThumbs(const bool isLast);
+  void receiveThumb(uint AReceiverId, TThumbPtr AImage);
   void on_m_BookmarkButton_clicked();
   void thumbFocusChanged();
   void saveThumbnail();

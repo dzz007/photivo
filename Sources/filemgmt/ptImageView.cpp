@@ -389,7 +389,7 @@ void ptImageView::ImageToScene(const double Factor) {
 //==============================================================================
 
 void ptImageView::updateView() {
-  m_DataModule->getThumbnail(m_Image, m_FileName_Current, 0);
+  //TODO BJ: m_DataModule->getThumbnail(m_Image, m_FileName_Current, 0);
 }
 
 //==============================================================================
