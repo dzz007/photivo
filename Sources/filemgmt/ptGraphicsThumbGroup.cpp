@@ -35,36 +35,13 @@ extern ptTheme* Theme;
 
 //==============================================================================
 
-/*static*/
-ptGraphicsThumbGroup* ptGraphicsThumbGroup::AddRef(ptGraphicsThumbGroup* group /*== NULL*/) {
-  if (group == NULL) {
-    return new ptGraphicsThumbGroup;
-  } else {
-    group->m_RefCount++;
-    return group;
-  }
-}
-
-//==============================================================================
-
-/*static*/
-int ptGraphicsThumbGroup::RemoveRef(ptGraphicsThumbGroup* group) {
-  int result = --group->m_RefCount;
-
-  if (group->m_RefCount == 0) {
-    delete group;
-    group = NULL;
-  }
-  return result;
-}
-
-//==============================================================================
-
-ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
+ptGraphicsThumbGroup::ptGraphicsThumbGroup(uint AId, QGraphicsItem* parent /*= nullptr*/)
 : QGraphicsRectItem(parent),
   m_Brush(Qt::SolidPattern),
+  FGroupId(AId),
   m_hasHover(false),
-  m_Pen(Qt::DashLine)
+  m_Pen(Qt::DashLine),
+  m_Thumbnail(new ptImage8)
 {
   m_FSOType = fsoUnknown;
   m_FullPath = "";
@@ -72,7 +49,6 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
   m_ImgTypeText = NULL;
   m_InfoText = NULL;
   m_RefCount = 1;
-  m_Thumbnail = NULL;
 
   setFlags(QGraphicsItem::ItemIsFocusable);
   setAcceptHoverEvents(true);
@@ -146,21 +122,16 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 
 //==============================================================================
 
-void ptGraphicsThumbGroup::addImage(ptImage8* image) {
-  assert(NULL != image);
+void ptGraphicsThumbGroup::addImage(TThumbPtr AImage) {
+  assert(NULL != AImage);
 
-  qreal ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
-//  if (m_Thumbnail) {
-//    delete m_Thumbnail;
-//  }
-//  m_Thumbnail = new ptImage8();
-//  m_Thumbnail->Set(image);
-  m_Thumbnail = image;
+  m_Thumbnail->Set(AImage.get());
 
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
-  m_ThumbPos.setX(ThumbSize/2 - image->m_Width/2  + InnerPadding + 0.5);
-  m_ThumbPos.setY(ThumbSize/2 - image->m_Height/2 + InnerPadding + 0.5);
+  qreal ThumbSize = Settings->GetInt("FileMgrThumbnailSize");
+  m_ThumbPos.setX(ThumbSize/2 - AImage->m_Width/2  + InnerPadding + 0.5);
+  m_ThumbPos.setY(ThumbSize/2 - AImage->m_Height/2 + InnerPadding + 0.5);
   this->update();
 
 /*
@@ -255,6 +226,11 @@ void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsIt
                                                                              m_Thumbnail->m_Height,
                                                                              QImage::Format_ARGB32));
   }
+}
+
+//------------------------------------------------------------------------------
+uint ptGraphicsThumbGroup::id() const {
+  return FGroupId;
 }
 
 //==============================================================================
