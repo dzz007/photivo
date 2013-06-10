@@ -56,13 +56,11 @@ extern QString      SaveBitmapPattern;
 */
 ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 : QWidget(parent),
+  FDataModel(new ptFileMgrDM(this)),  // setup data model first because several UI elements need it
   FIsFirstShow(true),
   FThumbCount(-1),
   FThumbListIdx(0)
 {
-  // Setup data model first because several UI elements need it.
-  FDataModel = ptFileMgrDM::GetInstance();
-
   // Main UI init
   setupUi(this);
   setMouseTracking(true);
@@ -197,7 +195,6 @@ ptFileMgrWindow::~ptFileMgrWindow() {
   DelAndNull(FPathBar);
 
   // Make sure to destroy all thumbnail related things before the singletons!
-  ptFileMgrDM::DestroyInstance();
   ptGraphicsSceneEmitter::DestroyInstance();
 
   // context menu actions
@@ -314,7 +311,7 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
   FThumbCount = FDataModel->setThumDir(path);
   FPathBar->setPath(path);
 
-  if (FThumbCount = 0) {
+  if (FThumbCount == 0) {
     // setting scene to null dimensions disappears unneeded scrollbars
     FFilesScene->setSceneRect(0,0,0,0);
 
@@ -485,7 +482,7 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 void ptFileMgrWindow::focusThumbnail(int index) {
   if (index >= 0) {
     // focus new thumb
-    ptGraphicsThumbGroup* thumb = FDataModel->MoveFocus(index);
+    ptGraphicsThumbGroup* thumb = FDataModel->moveFocus(index);
     FFilesScene->setFocusItem(thumb);
     m_FilesView->ensureVisible(thumb, 0, 0);
     m_FilesView->setFocus();
@@ -575,7 +572,7 @@ void ptFileMgrWindow::hideEvent(QHideEvent* event) {
     FDataModel->abortThumbGen();
     // free memory occupied by thumbnails
     clearScene();
-    FDataModel->Clear();
+    FDataModel->clear();
   } else {
     event->ignore();
   }
@@ -603,7 +600,7 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
   }
   // Shift+F5: clear cache and refresh thumbnails
   else if (event->key() == Qt::Key_F5 && event->modifiers() == Qt::ShiftModifier) {
-    FDataModel->Clear();
+    FDataModel->clear();
     displayThumbnails();
   }
   // Ctrl+B: bookmark current folder

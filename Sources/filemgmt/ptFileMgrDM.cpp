@@ -2,8 +2,8 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011-2013 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -21,90 +21,94 @@
 **
 *******************************************************************************/
 
+#include "ptFileMgrDM.h"
+#include "ptFileMgrConstants.h"
+#include "ptThumbDefines.h"
 #include "../ptDefines.h"
 #include "../ptSettings.h"
 #include "../ptDcRaw.h"
 #include "../ptImage8.h"
 #include "../ptWinApi.h"
-#include "ptFileMgrDM.h"
-#include "ptFileMgrConstants.h"
-#include "ptThumbDefines.h"
 
 extern ptSettings* Settings;
 
-//==============================================================================
+//------------------------------------------------------------------------------
+ptFileMgrDM::ptFileMgrDM(QObject* AParent)
+: QObject(AParent),
+  FFocusedThumb(-1),
+  FDirModel(new ptSingleDirModel(this)),
+  FIsMyComputer(false),
+  FTagModel(new ptTagModel(this)),
+  FThumbGen(make_unique<ptThumbGen>()),
+  FThumbGroupList(new QList<ptGraphicsThumbGroup*>)
+{}
 
-ptFileMgrDM* ptFileMgrDM::m_Instance = nullptr;
-
-//==============================================================================
-
-/*static*/
-ptFileMgrDM* ptFileMgrDM::GetInstance() {
-  if (m_Instance == nullptr) {
-    m_Instance = new ptFileMgrDM();
-  }
-
-  return m_Instance;
-}
-
-//==============================================================================
-
-/*static*/
-void ptFileMgrDM::DestroyInstance() {
-  delete m_Instance;
-  m_Instance = nullptr;
-}
-
-//==============================================================================
-
-ptFileMgrDM::ptFileMgrDM()
-: QObject(),
-  m_IsMyComputer(false),
-  FThumbGen(make_unique<ptThumbGen>())
-{
-  m_DirModel    = new ptSingleDirModel;
-  m_TagModel    = new ptTagModel;
-
-  // Init stuff for thumbnail generation
-  FThumbGroupList = new QList<ptGraphicsThumbGroup*>;
-
-  m_FocusedThumb = -1;
-}
-
-//==============================================================================
-
+//------------------------------------------------------------------------------
 ptFileMgrDM::~ptFileMgrDM() {
   DelAndNull(FThumbGroupList);
-  DelAndNull(m_DirModel);
-  DelAndNull(m_TagModel);
 }
 
-//==============================================================================
-
-void ptFileMgrDM::Clear() {
+//------------------------------------------------------------------------------
+/*! Clear the data cache of \c ptFileMgrDM */
+void ptFileMgrDM::clear() {
   FThumbGroupList->clear();
 }
 
-//==============================================================================
+//------------------------------------------------------------------------------
+/*! Returns the current folder for thumbnail display. */
+QString ptFileMgrDM::currentDir() {
+  return FCurrentDir.absolutePath();
+}
 
-int ptFileMgrDM::setThumDir(const QString& hAbsolutePath) {
-  m_IsMyComputer = (hAbsolutePath == MyComputerIdString);
+//------------------------------------------------------------------------------
+/*! Returns a pointer to the model for the folder ListView. */
+ptSingleDirModel*ptFileMgrDM::dirModel() const {
+  return FDirModel;
+}
 
-  if (m_IsMyComputer) {
-    m_CurrentDir.setPath("");
-    return m_CurrentDir.drives().count();
+//------------------------------------------------------------------------------
+/*! Sets the directory for thumbnail generation.
+  Returns the total number of applicable entries in that directory.
+  Returns \c -1 and does not set the directory if the thumbnailer is
+  currently running.
+  \param path
+    Sets the directory for thumbnail generation. Must be an absolute path.
+*/
+int ptFileMgrDM::setThumDir(const QString& AAbsolutePath) {
+  FIsMyComputer = (AAbsolutePath == MyComputerIdString);
+
+  if (FIsMyComputer) {
+    FCurrentDir.setPath("");
+    return FCurrentDir.drives().count();
 
   } else {
-    m_CurrentDir.setPath(hAbsolutePath);
+    FCurrentDir.setPath(AAbsolutePath);
     QDir::Filters filters = QDir::Files;
 
     if (Settings->GetInt("FileMgrShowDirThumbs")) {
       filters = filters | QDir::AllDirs | QDir::NoDot;
     }
 
-    m_CurrentDir.setFilter(filters);
-    return m_CurrentDir.count();
+    FCurrentDir.setFilter(filters);
+    return FCurrentDir.count();
   }
+}
+
+//------------------------------------------------------------------------------
+int ptFileMgrDM::focusedThumb() {
+  return FFocusedThumb;
+}
+
+//------------------------------------------------------------------------------
+/*! Returns a pointer to the tag model. */
+ptTagModel*ptFileMgrDM::tagModel() {
+  return FTagModel;
+}
+
+//------------------------------------------------------------------------------
+/*! Returns a pointer to the list of currently displayed thumbnail images. */
+QList<ptGraphicsThumbGroup*>*ptFileMgrDM::thumbGroupList() {
+  return FThumbGroupList;
 }
 
 //------------------------------------------------------------------------------
@@ -122,10 +126,9 @@ void ptFileMgrDM::abortThumbGen() {
   FThumbGen->abort();
 }
 
-//==============================================================================
-
-ptGraphicsThumbGroup* ptFileMgrDM::MoveFocus(const int index) {
-  m_FocusedThumb = index;
+//------------------------------------------------------------------------------
+ptGraphicsThumbGroup* ptFileMgrDM::moveFocus(const int index) {
+  FFocusedThumb = index;
   return FThumbGroupList->at(index);
 }
 
@@ -136,15 +139,15 @@ void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
 
   QFileInfoList files;
 #ifdef Q_OS_WIN
-  if (m_IsMyComputer) {
+  if (FIsMyComputer) {
     if (Settings->GetInt("FileMgrShowDirThumbs")) {
-      files = m_CurrentDir.drives();
+      files = FCurrentDir.drives();
     }
   } else {
-    files = m_CurrentDir.entryInfoList();
+    files = FCurrentDir.entryInfoList();
   }
 #else
-  files = m_CurrentDir.entryInfoList();
+  files = FCurrentDir.entryInfoList();
 #endif
 
   auto hLongEdgeMax = Settings->GetInt("FileMgrThumbnailSize");
@@ -164,6 +167,13 @@ void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
 }
 
 //------------------------------------------------------------------------------
+/*! Sets the folder for thumbnail display. Does not trigger the thumbnailer.
+    You probably need this only once to init the folder. */
+void ptFileMgrDM::setCurrentDir(const QString& AAbsolutePath) {
+  FCurrentDir.setPath(AAbsolutePath);
+}
+
+//------------------------------------------------------------------------------
 /*!
   Creates a thumbgroup object for the specified file and adds it to the scene
   and to the DM’s FThumbGroupList.
@@ -174,7 +184,7 @@ void ptFileMgrDM::createThumbGroup(const QFileInfo& AFileInfo, uint AId, QGraphi
   ptFSOType type;
 
   QString descr;
-  if (m_IsMyComputer) {
+  if (FIsMyComputer) {
 #ifdef Q_OS_WIN
     type = fsoDir;
     descr = WinApi::VolumeNamePretty(AFileInfo.absoluteFilePath());
@@ -208,17 +218,15 @@ void ptFileMgrDM::createThumbGroup(const QFileInfo& AFileInfo, uint AId, QGraphi
   FThumbGroupList->append(thumbGroup);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 int ptFileMgrDM::focusedThumb(QGraphicsItem* group) {
   for (int i = 0; i < FThumbGroupList->count(); ++i) {
     if (FThumbGroupList->at(i) == group) {
-      m_FocusedThumb = i;
+      FFocusedThumb = i;
       return i;
     }
   }
-  m_FocusedThumb = -1;
+  FFocusedThumb = -1;
   return -1;
 }
 
-//==============================================================================
