@@ -2461,6 +2461,7 @@ void ptProcessor::RunGeometry(ptProcessorStopBefore StopBefore) {
     float WidthIn = m_Image_AfterGeometry->m_Width;
 
     m_Image_AfterGeometry->ptGMResize(Settings->GetInt("ResizeScale"),
+                                      Settings->GetInt("ResizeHeight"),
                                       Settings->GetInt("ResizeFilter"),
                                       Settings->GetInt("ResizeDimension"));
 

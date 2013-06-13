@@ -617,6 +617,7 @@ ptImage* MaskedColorAdjust(const int       Ax,
                           const int Intent);
   */
   ptImage* ptGMResize(const uint16_t Size,
+                      const uint16_t Height,
                       const short Filter,
                       const short Mode);
   ptImage* ptGMResizeWH(const uint16_t NewWidth,

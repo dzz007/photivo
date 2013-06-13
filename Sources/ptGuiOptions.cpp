@@ -214,7 +214,15 @@ const ptGuiOptionsItem ptGuiOptions::ResizeDimension[] = {
   {ptResizeDimension_LongerEdge,       QObject::tr("Longer edge") },
   {ptResizeDimension_Width,            QObject::tr("Width") },
   {ptResizeDimension_Height,           QObject::tr("Height") },
+  {ptResizeDimension_WidthHeight,      QObject::tr("Width x Height") },
   {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::WebResizeDimension[] = {
+  {ptResizeDimension_LongerEdge,       QObject::tr("Longer edge") },
+  {ptResizeDimension_Width,            QObject::tr("Width") },
+  {ptResizeDimension_Height,           QObject::tr("Height") },
+  {-1,NULL}};
+
 
 const ptGuiOptionsItem ptGuiOptions::IMResizeFilter[] = {
   {ptIMFilter_Point,              QObject::tr("Point filter") },

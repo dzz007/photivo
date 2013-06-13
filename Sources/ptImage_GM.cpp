@@ -358,7 +358,7 @@ extern float ToFloatTable[0x10000];
 //}
 
 // Resize
-ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const short Mode) {
+ptImage* ptImage::ptGMResize(const uint16_t Size, const uint16_t AHeight, const short Filter, const short Mode) {
 
   uint16_t Width  = m_Width;
   uint16_t Height = m_Height;
@@ -376,6 +376,9 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
              (Mode == ptResizeDimension_LongerEdge && !WidthLonger)) {
     NewWidth  = Width/(double)Height*Size+0.5;
     NewHeight = Size;
+  } else if (Mode == ptResizeDimension_WidthHeight) {
+    NewWidth  = Size;
+    NewHeight = AHeight;
   } else return this;
 
   Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
