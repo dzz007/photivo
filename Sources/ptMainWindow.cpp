@@ -2204,6 +2204,9 @@ void ptMainWindow::UpdateSettings() {
   BottomContainer->setVisible(Settings->GetInt("ShowBottomContainer"));
   ControlFrame->setVisible(Settings->GetInt("ShowToolContainer"));
 
+  // Geometry
+  ResizeHeightWidget->setVisible(Settings->GetInt("ResizeDimension") == ptResizeDimension_WidthHeight);
+
   // Exposure
   if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
     Settings->SetEnabled("WhiteFraction",1);

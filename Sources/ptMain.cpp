@@ -1551,6 +1551,7 @@ void BeforeGamma(ptImage* Image, const short FinalRun = 0, const short Resize = 
     if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
       Image->ptGMResize(Settings->GetInt("WebResizeScale"),
+                        0,
                         Settings->GetInt("WebResizeFilter"),
                         Settings->GetInt("WebResizeDimension"));
     }
@@ -1606,6 +1607,7 @@ void AfterAll(ptImage* Image, const short FinalRun = 0, const short Resize = 1) 
     if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
       Image->ptGMResize(Settings->GetInt("WebResizeScale"),
+                        0,
                         Settings->GetInt("WebResizeFilter"),
                         Settings->GetInt("WebResizeDimension"));
     }
@@ -4830,12 +4832,28 @@ void CB_ResizeDimensionChoice(const QVariant Choice) {
       Update(ptProcessorPhase_Geometry);
     }
     MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  } else {
+    MainWindow->UpdateSettings();
   }
 }
 
 void CB_ResizeScaleInput(const QVariant Value) {
   Settings->SetValue("ResizeScale",Value);
   if (Settings->GetInt("Resize")) {
+    if (Settings->GetInt("AutomaticPipeSize")) {
+      if (!CalculatePipeSize())
+        Update(ptProcessorPhase_Geometry);
+    } else {
+      Update(ptProcessorPhase_Geometry);
+    }
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  }
+}
+
+void CB_ResizeHeightInput(const QVariant Value) {
+  Settings->SetValue("ResizeHeight",Value);
+  if (Settings->GetInt("Resize") &&
+      Settings->GetInt("ResizeDimension") == ptResizeDimension_WidthHeight) {
     if (Settings->GetInt("AutomaticPipeSize")) {
       if (!CalculatePipeSize())
         Update(ptProcessorPhase_Geometry);
@@ -6878,6 +6896,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(ResizeCheck)
   M_Dispatch(ResizeDimensionChoice)
   M_Dispatch(ResizeScaleInput)
+  M_Dispatch(ResizeHeightInput)
   M_Dispatch(ResizeFilterChoice)
   M_Dispatch(AutomaticPipeSizeCheck)
 
