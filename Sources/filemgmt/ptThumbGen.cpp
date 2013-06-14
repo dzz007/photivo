@@ -51,6 +51,7 @@ ptThumbGen::ptThumbGen():
   FIsRunningMutex()
 {
   this->moveToThread(&FThread);
+  FThread.start(QThread::LowPriority);
 
   // create heap allocated members; must happen AFTER moveToThread()
 }
@@ -62,11 +63,24 @@ ptThumbGen::ptThumbGen():
   See the ctor’s comment for notes about creation/destruction order.
 */
 ptThumbGen::~ptThumbGen() {
-  // destroy heap allocated members; must happen BEFORE moveToThread()
+  if (this->isRunning())
+    this->abort();
+
+  // Destroy heap allocated members.
+  // Must happen AFTER abort() but BEFORE moveToThread()
 
   auto hGuiThread = QApplication::instance()->thread();
   if (hGuiThread != &FThread) {
     this->moveToThread(hGuiThread);
+  }
+
+  // Quit the thread. The loop makes sure the QThread object is not deleted before
+  // the thread has actually stopped. Deleting a QThread with a running thread is
+  // likely to produce a crash.
+  FThread.quit();
+  while (FThread.isRunning()) {
+    if (FThread.wait(100))
+      break;
   }
 }
 
