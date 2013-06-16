@@ -2,8 +2,8 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011-2013 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -21,27 +21,27 @@
 **
 *******************************************************************************/
 
-#include <cassert>
 
-#include <QGraphicsView>
-#include <QList>
-
+#include "ptImageView.h"
+//#include "ptFileMgrWindow.h"
+#include "ptGraphicsSceneEmitter.h"
 #include "../ptDefines.h"
 #include "../ptSettings.h"
 #include "../ptTheme.h"
 #include "../ptMessageBox.h"
 #include "../ptImage8.h"
-#include "ptImageView.h"
-#include "ptFileMgrWindow.h"
-#include "ptGraphicsSceneEmitter.h"
-
-//==============================================================================
+#include <QGraphicsView>
+#include <QList>
+#include <cassert>
 
 extern ptSettings*  Settings;
 extern ptTheme*     Theme;
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Creates a \c ptImageView instance.
+  \param parent
+    The image view’s parent widget.
+*/
 ptImageView::ptImageView(QWidget *AParent):
   QGraphicsView(AParent),
   // constants
@@ -59,32 +59,32 @@ ptImageView::ptImageView(QWidget *AParent):
   this->setFocusPolicy(Qt::NoFocus);
 
   // Layout to always fill the complete image pane with ViewWindow
-  m_parentLayout = new QGridLayout(AParent);
-  m_parentLayout->setContentsMargins(9,9,9,9);
-  m_parentLayout->setSpacing(0);
-  m_parentLayout->addWidget(this);
+  FParentLayout = new QGridLayout(AParent);
+  FParentLayout->setContentsMargins(9,9,9,9);
+  FParentLayout->setSpacing(0);
+  FParentLayout->addWidget(this);
   this->setStyleSheet("QGraphicsView { border: none; }");
 
   // We create a Graphicsscene and connect it.
-  m_Scene      = new QGraphicsScene(0, 0, 0, 0, this);
-  setScene(m_Scene);
+  FScene      = new QGraphicsScene(0, 0, 0, 0, this);
+  setScene(FScene);
 
   // Init
-  m_PixmapItem        = m_Scene->addPixmap(QPixmap());
-  m_PixmapItem->setPos(0,0);
-  m_Image             = NULL;
-  m_FileName_Current  = "";
-  m_FileName_Next     = "";
-  m_ZoomMode          = ptZoomMode_Fit;
-  m_ZoomFactor        = 1.0;
-  m_Zoom              = 100;
-  m_DragDelta         = new QLine();
-  m_LeftMousePressed  = false;
-  m_ZoomSizeOverlay   = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
+  FPixmapItem        = FScene->addPixmap(QPixmap());
+  FPixmapItem->setPos(0,0);
+  FImage             = NULL;
+  FFileNameCurrent  = "";
+  FFileNameNext     = "";
+  FZoomMode          = ptZoomMode_Fit;
+  FZoomFactor        = 1.0;
+  FZoom              = 100;
+  FDragDelta         = new QLine();
+  FLeftMousePressed  = false;
+  FZoomSizeOverlay   = new ptReportOverlay(this, "", QColor(75,150,255), QColor(190,220,255),
                                             1000, Qt::AlignRight, 20);
-  m_StatusOverlay     = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
-  m_StatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255)); // blue
-  m_StatusOverlay->setDuration(0);
+  FStatusOverlay     = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
+  FStatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255)); // blue
+  FStatusOverlay->setDuration(0);
 
   // parallel worker
   // TODO BJ
@@ -95,66 +95,63 @@ ptImageView::ptImageView(QWidget *AParent):
 //  connect(m_Worker, SIGNAL(finished()), this, SLOT(afterWorker()));
 
   // timer for decoupling the mouse wheel
-  m_ResizeTimeOut = 50;
-  m_ResizeTimer   = new QTimer(this);
-  m_ResizeTimer->setSingleShot(1);
-  connect(m_ResizeTimer,SIGNAL(timeout()), this,SLOT(ResizeTimerExpired()));
+  FResizeTimeOut = 50;
+  FResizeTimer   = new QTimer(this);
+  FResizeTimer->setSingleShot(1);
+  connect(FResizeTimer,SIGNAL(timeout()), this,SLOT(resizeTimerExpired()));
 
-  m_ResizeEventTimer.setSingleShot(true);
-  m_ResizeEventTimer.setInterval(100);
-  connect(&m_ResizeEventTimer, SIGNAL(timeout()), this, SLOT(zoomFit()));
+  FResizeEventTimer.setSingleShot(true);
+  FResizeEventTimer.setInterval(100);
+  connect(&FResizeEventTimer, SIGNAL(timeout()), this, SLOT(zoomFit()));
 
   //-------------------------------------
 
   // Create actions for context menu
-  ac_ZoomIn = new QAction(tr("Zoom &in") + "\t" + tr("1"), this);
-  ac_ZoomIn->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-in.png")));
-  connect(ac_ZoomIn, SIGNAL(triggered()), this, SLOT(zoomIn()));
+  FZoomInAction = new QAction(tr("Zoom &in") + "\t" + tr("1"), this);
+  FZoomInAction->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-in.png")));
+  connect(FZoomInAction, SIGNAL(triggered()), this, SLOT(zoomIn()));
 
-  ac_Zoom100 = new QAction(tr("Zoom &100%") + "\t" + tr("2"), this);
-  ac_Zoom100->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-original.png")));
-  connect(ac_Zoom100, SIGNAL(triggered()), this, SLOT(zoom100()));
+  FZoom100Action = new QAction(tr("Zoom &100%") + "\t" + tr("2"), this);
+  FZoom100Action->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-original.png")));
+  connect(FZoom100Action, SIGNAL(triggered()), this, SLOT(zoom100()));
 
-  ac_ZoomOut = new QAction(tr("Zoom &out") + "\t" + tr("3"), this);
-  ac_ZoomOut->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-out.png")));
-  connect(ac_ZoomOut, SIGNAL(triggered()), this, SLOT(zoomOut()));
+  FZoomOutAction = new QAction(tr("Zoom &out") + "\t" + tr("3"), this);
+  FZoomOutAction->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-out.png")));
+  connect(FZoomOutAction, SIGNAL(triggered()), this, SLOT(zoomOut()));
 
-  ac_ZoomFit = new QAction(tr("Zoom &fit") + "\t" + tr("4"), this);
-  ac_ZoomFit->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-fit.png")));
-  connect(ac_ZoomFit, SIGNAL(triggered()), this, SLOT(zoomFit()));
+  FZoomFitAction = new QAction(tr("Zoom &fit") + "\t" + tr("4"), this);
+  FZoomFitAction->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-fit.png")));
+  connect(FZoomFitAction, SIGNAL(triggered()), this, SLOT(zoomFit()));
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 ptImageView::~ptImageView() {
   // TODO BJ
 //  m_Worker->terminate();
 //  DelAndNull(m_Worker);
-  DelAndNull(m_Image);
-  DelAndNull(m_DragDelta);
-  DelAndNull(m_ZoomSizeOverlay);
-  DelAndNull(m_StatusOverlay);
-  DelAndNull(m_Scene);
-  DelAndNull(m_parentLayout);
+  DelAndNull(FImage);
+  DelAndNull(FDragDelta);
+  DelAndNull(FZoomSizeOverlay);
+  DelAndNull(FStatusOverlay);
+  DelAndNull(FScene);
+  DelAndNull(FParentLayout);
 }
 
-//==============================================================================
-
-void ptImageView::ShowImage(const QString FileName) {
-  m_FileName_Next = FileName;
+//------------------------------------------------------------------------------
+void ptImageView::showImage(const QString AFileName) {
+  FFileNameNext = AFileName;
 
   if (!isVisible() ||
-      m_FileName_Current == m_FileName_Next) return;
+      FFileNameCurrent == FFileNameNext) return;
 
   // TODO BJ
   startWorker();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::startWorker() {
-  if (m_FileName_Current == m_FileName_Next) {
-    m_StatusOverlay->stop();
+  if (FFileNameCurrent == FFileNameNext) {
+    FStatusOverlay->stop();
     return;
   }
 
@@ -170,76 +167,70 @@ void ptImageView::startWorker() {
 //  }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::afterWorker() {
-  if (m_FileName_Current != m_FileName_Next) {
+  if (FFileNameCurrent != FFileNameNext) {
     // TODO BJ
 //    startWorker();
   } else {
-    m_StatusOverlay->stop();
-    if (m_Image != NULL) {
-      if (m_ZoomMode == ptZoomMode_Fit)
+    FStatusOverlay->stop();
+    if (FImage != NULL) {
+      if (FZoomMode == ptZoomMode_Fit)
         zoomFit(false);
       else
-        ZoomTo(m_ZoomFactor, true);
+        zoomTo(FZoomFactor, true);
     }
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::resizeEvent(QResizeEvent* event) {
-  if (m_ZoomMode == ptZoomMode_Fit) {
+  if (FZoomMode == ptZoomMode_Fit) {
     // Only zoom fit after timer expires to avoid constant image resizing while
     // changing widget geometry. Prevents jerky UI response at the cost of
     // the image not being resized while the geometry change is ongoing.
-    m_ResizeEventTimer.start();
+    FResizeEventTimer.start();
   } else {
     // takes care of positioning the scene inside the viewport on non-fit zooms
     QGraphicsView::resizeEvent(event);
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::mousePressEvent(QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
     event->accept();
-    m_LeftMousePressed = true;
-    m_DragDelta->setPoints(event->pos(), event->pos());
+    FLeftMousePressed = true;
+    FDragDelta->setPoints(event->pos(), event->pos());
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::mouseReleaseEvent(QMouseEvent* event) {
-  if (event->button() == Qt::LeftButton && m_LeftMousePressed) {
-    m_LeftMousePressed = false;
+  if (event->button() == Qt::LeftButton && FLeftMousePressed) {
+    FLeftMousePressed = false;
   }
   event->accept();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::mouseDoubleClickEvent(QMouseEvent* event) {
   event->accept();
-  ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FileName_Current);
+  ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, FFileNameCurrent);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::mouseMoveEvent(QMouseEvent* event) {
   // drag image with left mouse button to scroll
-  if (m_LeftMousePressed) {
-    m_DragDelta->setP2(event->pos());
+  if (FLeftMousePressed) {
+    FDragDelta->setP2(event->pos());
     horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
-                                    m_DragDelta->x2() +
-                                    m_DragDelta->x1());
+                                    FDragDelta->x2() +
+                                    FDragDelta->x1());
     verticalScrollBar()->setValue(verticalScrollBar()->value() -
-                                  m_DragDelta->y2() +
-                                  m_DragDelta->y1());
-    m_DragDelta->setP1(event->pos());
+                                  FDragDelta->y2() +
+                                  FDragDelta->y1());
+    FDragDelta->setP1(event->pos());
     event->accept();
 
   } else {
@@ -247,43 +238,40 @@ void ptImageView::mouseMoveEvent(QMouseEvent* event) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::wheelEvent(QWheelEvent* event) {
-  ZoomStep(event->delta());
+  zoomStep(event->delta());
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::contextMenuEvent(QContextMenuEvent* event) {
   QMenu Menu(this);
   Menu.setPalette(Theme->menuPalette());
   Menu.setStyle(Theme->style());
-  Menu.addAction(ac_ZoomIn);
-  Menu.addAction(ac_Zoom100);
-  Menu.addAction(ac_ZoomOut);
-  Menu.addAction(ac_ZoomFit);
+  Menu.addAction(FZoomInAction);
+  Menu.addAction(FZoom100Action);
+  Menu.addAction(FZoomOutAction);
+  Menu.addAction(FZoomFitAction);
   Menu.exec(((QMouseEvent*)event)->globalPos());
 }
 
-//==============================================================================
-
-void ptImageView::ZoomStep(int direction) {
+//------------------------------------------------------------------------------
+void ptImageView::zoomStep(int ADirection) {
   int ZoomIdx = -1;
 
   // zoom larger
-  if (direction > 0) {
+  if (ADirection > 0) {
     for (int i = 0; i < ZoomFactors.size(); i++) {
-      if (ZoomFactors[i] > m_ZoomFactor) {
+      if (ZoomFactors[i] > FZoomFactor) {
         ZoomIdx = i;
         break;
       }
     }
 
   // zoom smaller
-  } else if (direction < 0) {
+  } else if (ADirection < 0) {
     for (int i = ZoomFactors.size() - 1; i >= 0; i--) {
-      if (ZoomFactors[i] < m_ZoomFactor) {
+      if (ZoomFactors[i] < FZoomFactor) {
         ZoomIdx = i;
         break;
       }
@@ -291,117 +279,107 @@ void ptImageView::ZoomStep(int direction) {
   }
 
   if (ZoomIdx != -1) {
-    m_ZoomFactor = ZoomFactors[ZoomIdx];
-    m_Zoom = qRound(m_ZoomFactor * 100);
-    m_ResizeTimer->start(m_ResizeTimeOut);
-    m_ZoomSizeOverlay->exec(QString::number(m_Zoom) + "%");
+    FZoomFactor = ZoomFactors[ZoomIdx];
+    FZoom = qRound(FZoomFactor * 100);
+    FResizeTimer->start(FResizeTimeOut);
+    FZoomSizeOverlay->exec(QString::number(FZoom) + "%");
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::zoomIn() {
-  ZoomStep(1);
+  zoomStep(1);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::zoomOut() {
-  ZoomStep(-1);
+  zoomStep(-1);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::zoom100() {
-  ZoomTo(1.0, true);
+  zoomTo(1.0, true);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 // ZoomTo() is also called by wheelEvent() for mouse wheel zoom.
-void ptImageView::ZoomTo(float factor, const bool withMsg) {
-  m_ZoomMode = ptZoomMode_NonFit;
-  factor = qBound(MinZoom, factor, MaxZoom);
+void ptImageView::zoomTo(float AFactor, bool AWithMsg) {
+  FZoomMode = ptZoomMode_NonFit;
+  AFactor = qBound(MinZoom, AFactor, MaxZoom);
 
-  ImageToScene(factor);
+  imageToScene(AFactor);
 
-  m_ZoomFactor = factor;//transform().m11();
-  m_Zoom = qRound(m_ZoomFactor * 100);
-  if (withMsg)
-    m_ZoomSizeOverlay->exec(QString::number(m_Zoom) + "%");
+  FZoomFactor = AFactor;//transform().m11();
+  FZoom = qRound(FZoomFactor * 100);
+  if (AWithMsg)
+    FZoomSizeOverlay->exec(QString::number(FZoom) + "%");
 }
 
-//==============================================================================
+//------------------------------------------------------------------------------
+int ptImageView::zoomFit(bool AWithMsg /*= true*/) {
+  FZoomMode = ptZoomMode_Fit;
 
-int ptImageView::zoomFit(const bool withMsg /*= true*/) {
-  m_ZoomMode = ptZoomMode_Fit;
-
-  if (m_Image != NULL) {
-    m_Scene->setSceneRect(0, 0, m_Image->m_Width, m_Image->m_Height);
+  if (FImage != NULL) {
+    FScene->setSceneRect(0, 0, FImage->m_Width, FImage->m_Height);
   }
 
-  fitInView(m_Scene->sceneRect(), Qt::KeepAspectRatio);
-  m_ZoomFactor = transform().m11();
+  fitInView(FScene->sceneRect(), Qt::KeepAspectRatio);
+  FZoomFactor = transform().m11();
 
   // we will reset the transform in the next step!
-  ImageToScene(m_ZoomFactor);
+  imageToScene(FZoomFactor);
 
-  if (withMsg) {
-    m_ZoomSizeOverlay->exec(tr("Fit"));
+  if (AWithMsg) {
+    FZoomSizeOverlay->exec(tr("Fit"));
   }
 
-  m_Zoom = qRound(m_ZoomFactor * 100);
-  return m_ZoomFactor;
+  FZoom = qRound(FZoomFactor * 100);
+  return FZoomFactor;
 }
 
-//==============================================================================
-
-void ptImageView::ImageToScene(const double Factor) {
-  if (m_Image != NULL) {
+//------------------------------------------------------------------------------
+void ptImageView::imageToScene(double AFactor) {
+  if (FImage != NULL) {
     resetTransform();
 
     Qt::TransformationMode Mode;
 
-    if(((uint)(Factor * 10000) % 10000) < 1) {
+    if(((uint)(AFactor * 10000) % 10000) < 1) {
       // nearest neighbour resize for 200%, 300%, 400% zoom
       Mode = Qt::FastTransformation;
     } else {
       // bilinear resize for all others
       Mode = Qt::SmoothTransformation;
     }
-    m_Scene->setSceneRect(0, 0, m_Image->m_Width*Factor, m_Image->m_Height*Factor);
-    m_PixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) m_Image->m_Image,
-                                                                     m_Image->m_Width,
-                                                                     m_Image->m_Height,
-                                                                     QImage::Format_RGB32).scaled(m_Image->m_Width*Factor,
-                                                                                                  m_Image->m_Height*Factor,
+    FScene->setSceneRect(0, 0, FImage->m_Width*AFactor, FImage->m_Height*AFactor);
+    FPixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) FImage->m_Image,
+                                                                     FImage->m_Width,
+                                                                     FImage->m_Height,
+                                                                     QImage::Format_RGB32).scaled(FImage->m_Width*AFactor,
+                                                                                                  FImage->m_Height*AFactor,
                                                                                                   Qt::IgnoreAspectRatio,
                                                                                                   Mode)));
-    m_PixmapItem->setTransformationMode(Mode);
+    FPixmapItem->setTransformationMode(Mode);
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::updateView() {
   //TODO BJ: m_DataModule->getThumbnail(m_Image, m_FileName_Current, 0);
 }
 
-//==============================================================================
-
-void ptImageView::ResizeTimerExpired() {
-  ZoomTo(m_ZoomFactor, false);
+//------------------------------------------------------------------------------
+void ptImageView::resizeTimerExpired() {
+  zoomTo(FZoomFactor, false);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptImageView::showEvent(QShowEvent* event) {
   QGraphicsView::showEvent(event);
 
-  if (!m_FileName_Next.isEmpty()) {
+  if (!FFileNameNext.isEmpty()) {
     // TODO BJ
 //    startWorker();
   }
 }
 
-//==============================================================================

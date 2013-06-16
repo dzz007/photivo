@@ -480,7 +480,7 @@ void ptFileMgrWindow::focusThumbnail(int index) {
     m_FilesView->ensureVisible(thumb, 0, 0);
     m_FilesView->setFocus();
     if (thumb->fsoType() == fsoFile) {
-      FImageView->ShowImage(thumb->fullPath());
+      FImageView->showImage(thumb->fullPath());
     }
 
   } else {
@@ -535,7 +535,7 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     FDataModel->dirModel()->ChangeAbsoluteDir(location);
     displayThumbnails(location, FDataModel->dirModel()->pathType());
   } else if (action == tnaViewImage) {
-    FImageView->ShowImage(location);
+    FImageView->showImage(location);
   }
 }
 
