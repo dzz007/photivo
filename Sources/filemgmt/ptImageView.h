@@ -26,18 +26,14 @@
 
 //==============================================================================
 
+#include "../ptReportOverlay.h"
+#include "../ptImage8.h"
 #include <QWidget>
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGridLayout>
 #include <QThread>
 
-#include "../ptReportOverlay.h"
-#include "ptFileMgrDM.h"
-
-//==============================================================================
-
-class MyWorker;
 
 //==============================================================================
 
@@ -48,7 +44,7 @@ public:
     \param parent
       The image view’s parent widget.
   */
-  explicit ptImageView(QWidget *parent = 0, ptFileMgrDM* DataModule = 0);
+  explicit ptImageView(QWidget* AParent = nullptr);
   ~ptImageView();
 
   void ShowImage(const QString FileName);
@@ -75,7 +71,6 @@ private:
   /*! This function performs the actual thumbnail generation. */
   void updateView();
 
-  ptFileMgrDM*          m_DataModule;
   const float           MinZoom;
   const float           MaxZoom;
   QList<float>          ZoomFactors;   // steps for wheel zoom
@@ -91,7 +86,7 @@ private:
   bool                  m_LeftMousePressed;
   ptReportOverlay*      m_ZoomSizeOverlay;
   ptReportOverlay*      m_StatusOverlay;
-  MyWorker*             m_Worker;
+//  MyWorker*             m_Worker;
   QGraphicsPixmapItem*  m_PixmapItem;
   int                   m_ResizeTimeOut;
   QTimer*               m_ResizeTimer;
@@ -115,21 +110,6 @@ private slots:
   void startWorker();
   void afterWorker();
   void ResizeTimerExpired();
-};
-
-//==============================================================================
-
-typedef void (ptImageView::*updateView_ptr)();
-
-class MyWorker: public QThread {
-public:
-  QString        m_FileName;
-  updateView_ptr m_Fct;
-  ptImageView*   m_ImageView;
-#ifndef Q_OS_MAC
-protected:
-#endif
-  void run();
 };
 
 #endif // PTIMAGEVIEW_H
