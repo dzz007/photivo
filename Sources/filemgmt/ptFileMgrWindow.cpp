@@ -153,7 +153,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   //-------------------------------------
 
   // construct the image view
-  FImageView = new ptImageView(FMImageViewPane, FDataModel);
+  FImageView = new ptImageView(FMImageViewPane);
   FImageView->installEventFilter(this);
   FMImageViewPane->setVisible((bool)Settings->GetInt("FileMgrShowImageView"));
 

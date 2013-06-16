@@ -42,24 +42,14 @@ extern ptTheme*     Theme;
 
 //==============================================================================
 
-void MyWorker::run() {
-  (m_ImageView->*m_Fct)();
-}
-
-//==============================================================================
-
-ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
-  QGraphicsView(parent),
+ptImageView::ptImageView(QWidget *AParent):
+  QGraphicsView(AParent),
   // constants
   MinZoom(0.05),
   MaxZoom(4.0)
 {
-  assert(parent     != NULL);
-  assert(DataModule != NULL);
-  assert(Theme      != NULL);
-  assert(Settings   != NULL);
-
-  m_DataModule = DataModule;
+  assert(Theme      != nullptr);
+  assert(Settings   != nullptr);
 
   ZoomFactors << MinZoom << 0.08 << 0.10 << 0.15 << 0.20 << 0.25 << 0.33 << 0.50 << 0.66 << 1.00
               << 1.50 << 2.00 << 3.00 << MaxZoom;
@@ -69,7 +59,7 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   this->setFocusPolicy(Qt::NoFocus);
 
   // Layout to always fill the complete image pane with ViewWindow
-  m_parentLayout = new QGridLayout(parent);
+  m_parentLayout = new QGridLayout(AParent);
   m_parentLayout->setContentsMargins(9,9,9,9);
   m_parentLayout->setSpacing(0);
   m_parentLayout->addWidget(this);
@@ -97,11 +87,12 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
   m_StatusOverlay->setDuration(0);
 
   // parallel worker
-  m_Worker = new MyWorker();
-  m_Worker->m_ImageView = this;
-  m_Worker->m_Fct       = &ptImageView::updateView;
-  m_Worker->m_FileName  = "";
-  connect(m_Worker, SIGNAL(finished()), this, SLOT(afterWorker()));
+  // TODO BJ
+//  m_Worker = new MyWorker();
+//  m_Worker->m_ImageView = this;
+//  m_Worker->m_Fct       = &ptImageView::updateView;
+//  m_Worker->m_FileName  = "";
+//  connect(m_Worker, SIGNAL(finished()), this, SLOT(afterWorker()));
 
   // timer for decoupling the mouse wheel
   m_ResizeTimeOut = 50;
@@ -136,8 +127,9 @@ ptImageView::ptImageView(QWidget *parent, ptFileMgrDM* DataModule) :
 //==============================================================================
 
 ptImageView::~ptImageView() {
-  m_Worker->terminate();
-  DelAndNull(m_Worker);
+  // TODO BJ
+//  m_Worker->terminate();
+//  DelAndNull(m_Worker);
   DelAndNull(m_Image);
   DelAndNull(m_DragDelta);
   DelAndNull(m_ZoomSizeOverlay);
@@ -154,6 +146,7 @@ void ptImageView::ShowImage(const QString FileName) {
   if (!isVisible() ||
       m_FileName_Current == m_FileName_Next) return;
 
+  // TODO BJ
   startWorker();
 }
 
@@ -165,22 +158,24 @@ void ptImageView::startWorker() {
     return;
   }
 
-  if (!m_Worker->isRunning()) {
-    m_StatusOverlay->exec(QObject::tr("Loading"));
-    m_Worker->m_FileName = m_FileName_Next;
-    m_FileName_Current   = m_FileName_Next;
-    m_Worker->start();
+  // TODO BJ
+//  if (!m_Worker->isRunning()) {
+//    m_StatusOverlay->exec(QObject::tr("Loading"));
+//    m_Worker->m_FileName = m_FileName_Next;
+//    m_FileName_Current   = m_FileName_Next;
+//    m_Worker->start();
 
-    if (!m_Worker->isRunning())
-      ptMessageBox::critical(NULL, "Thread error", "Could not start thread for parallel image loading.");
-  }
+//    if (!m_Worker->isRunning())
+//      ptMessageBox::critical(NULL, "Thread error", "Could not start thread for parallel image loading.");
+//  }
 }
 
 //==============================================================================
 
 void ptImageView::afterWorker() {
   if (m_FileName_Current != m_FileName_Next) {
-    startWorker();
+    // TODO BJ
+//    startWorker();
   } else {
     m_StatusOverlay->stop();
     if (m_Image != NULL) {
@@ -404,7 +399,8 @@ void ptImageView::showEvent(QShowEvent* event) {
   QGraphicsView::showEvent(event);
 
   if (!m_FileName_Next.isEmpty()) {
-    startWorker();
+    // TODO BJ
+//    startWorker();
   }
 }
 
