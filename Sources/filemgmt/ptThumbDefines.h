@@ -24,6 +24,7 @@
 #ifndef PTTHUMBDEFINES_H
 #define PTTHUMBDEFINES_H
 
+#include "../ptConstants.h"
 #include <QString>
 #include <QDateTime>
 #include <QMetaType>
@@ -33,19 +34,31 @@ class ptImage8;
 class ptGraphicsThumbGroup;
 
 //------------------------------------------------------------------------------
-
+/*! A smart pointer to transport ptImage8 data safely between thread boundaries. */
 typedef std::shared_ptr<ptImage8> TThumbPtr;
 Q_DECLARE_METATYPE(TThumbPtr)
 
+//------------------------------------------------------------------------------
+/*! The TThumbId struct is a unique identifier for a thumbnail image of a specific size. */
 struct TThumbId {
-  QString   FilePath;     // absolute path to the file. Case-sensitive!
-  QDateTime Timestamp;    // "last access" time of the file
-  int       LongEdgeSize; // length of the thumbnail’s long edge in pixels
+  QString   FilePath;     /*! absolute path to the file. Case-sensitive! */
+  QDateTime Timestamp;    /*! "last access" time of the file */
+  ptFSOType Type;         /*! marks the path as a directory */
+  int       LongEdgeSize; /*! length of the thumbnail’s long edge in pixels */
 };
 Q_DECLARE_METATYPE(TThumbId)
 // See also the .cpp for the qRegisterMetaType() call
 
 bool operator==(const TThumbId& lhs, const TThumbId& rhs);
 bool operator!=(const TThumbId& lhs, const TThumbId& rhs);
+
+//------------------------------------------------------------------------------
+/*! Struct to associate a specific thumbgroup object with a specific image file on disk. */
+struct TThumbAssoc {
+  TThumbId ThumbId;   /*! the thumbnail’s unique ID */
+  uint     GroupId;   /*! the ptGraphicsThumbGroup’s unique ID */
+};
+Q_DECLARE_METATYPE(TThumbAssoc)
+Q_DECLARE_METATYPE(QList<TThumbAssoc>)
 
 #endif // PTTHUMBDEFINES_H
