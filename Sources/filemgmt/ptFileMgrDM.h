@@ -27,7 +27,7 @@
 #include "ptGraphicsThumbGroup.h"
 #include "ptSingleDirModel.h"
 #include "ptTagModel.h"
-#include "ptThumbGen.h"
+#include "ptThumbGenMgr.h"
 #include <QObject>
 #include <QPixmap>
 #include <QFileSystemModel>
@@ -56,10 +56,10 @@ public:
 
   void clear();
 
-  QString currentDir();
+  QString currentDir() const;
   void setCurrentDir(const QString& AAbsolutePath);
   int setThumDir(const QString& AAbsolutePath);
-  int focusedThumb();
+  int focusedThumb() const;
   int focusedThumb(QGraphicsItem* group);
   ptGraphicsThumbGroup* moveFocus(const int index);
 
@@ -75,13 +75,13 @@ public:
 private:
   void createThumbGroup(const QFileInfo &AFileInfo, uint AId, QGraphicsScene* AScene);
 
-  int                           FFocusedThumb;
-  QDir                          FCurrentDir;
-  ptSingleDirModel*             FDirModel;
-  bool                          FIsMyComputer;
-  ptTagModel*                   FTagModel;
-  std::unique_ptr<ptThumbGen>   FThumbGen;
-  QList<ptGraphicsThumbGroup*>* FThumbGroupList;
+  int                             FFocusedThumb;
+  QDir                            FCurrentDir;
+  ptSingleDirModel*               FDirModel;
+  bool                            FIsMyComputer;
+  ptTagModel*                     FTagModel;
+  std::unique_ptr<ptThumbGenMgr>  FThumbGen;
+  QList<ptGraphicsThumbGroup*>*   FThumbGroupList;
 
 };
 

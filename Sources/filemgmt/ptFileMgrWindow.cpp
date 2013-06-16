@@ -309,6 +309,7 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
   m_FilesView->verticalScrollBar()->setValue(0);
   FThumbListIdx = 0;
   FThumbCount = FDataModel->setThumDir(path);
+  FThumbsReceived = 0;
   FPathBar->setPath(path);
 
   if (FThumbCount == 0) {
@@ -317,14 +318,9 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
 
   } else {
     FLayouter->LazyInit(FThumbCount);
-    m_Progressbar->setValue(0);
-    m_Progressbar->setMaximum(FThumbCount);
-
-    FDataModel->populateThumbs(FFilesScene);
+    this->initProgressbar();
+    FDataModel->populateThumbs(FFilesScene);  // non-blocking, returns almost immediately
     this->layoutAll();
-
-    m_Progressbar->show();
-    m_PathContainer->hide();
   }
 }
 #ifdef Q_OS_UNIX
@@ -332,46 +328,43 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
 #endif
 
 //------------------------------------------------------------------------------
+// Slot to receive thumbnail images from the generator and dispatch them to their thumb group.
+// Also updates the progress bar.
 void ptFileMgrWindow::receiveThumb(uint AReceiverId, TThumbPtr AImage) {
   for (ptGraphicsThumbGroup* hThumbGroup: *FDataModel->thumbGroupList()) {
     if (hThumbGroup->id() == AReceiverId) {
       hThumbGroup->addImage(AImage);
+      ++FThumbsReceived;
+      this->updateProgressbar();
       break;
     }
   }
 }
 
-//  while (FThumbListIdx < FDataModel->thumbGroupList()->count()) {
-//    ptGraphicsThumbGroup* thumb = FDataModel->thumbGroupList()->at(FThumbListIdx);
-//    ++FThumbListIdx;
-//    FLayouter->Layout(thumb);
-//    FFilesScene->addItem(thumb);
-//  }
-
-//  if (isLast) {
-//    FThumbListIdx = 0;
-//    m_Progressbar->show();
-//    m_PathContainer->hide();
-//  }
-//}
+//------------------------------------------------------------------------------
+// Sets progress bar range to current FThumbCount, shows the progressbar and hides the path bar.
+void ptFileMgrWindow::initProgressbar() {
+  m_Progressbar->setValue(0);
+  m_Progressbar->setMaximum(FThumbCount);
+  m_Progressbar->show();
+  m_PathContainer->hide();
+}
 
 //------------------------------------------------------------------------------
-//void ptFileMgrWindow::fetchNewImages(ptGraphicsThumbGroup* group, ptImage8 *pix) {
-//  m_Progressbar->setValue(m_Progressbar->value() + 1);
-//  if (pix != nullptr) {
-//    // Adding the image to the group must be done from the main GUI thread.
-//    group->addImage(pix);
-//  }
+// Updates the progress bar’s value. Switches display back to path bar when last thumbnail is reached.
+void ptFileMgrWindow::updateProgressbar() {
+  if (FThumbsReceived < FThumbCount) {
+    m_Progressbar->setValue(FThumbsReceived);
+  } else {
+    m_Progressbar->hide();
+    m_PathContainer->show();
 
-//  if (m_Progressbar->value() >= FThumbCount) {
-//    m_Progressbar->hide();
-//    m_PathContainer->show();
-//    FFilesScene->setFocus();
-//    if (FFilesScene->focusItem() == nullptr) {
-//      focusThumbnail(0);
-//    }
-//  }
-//}
+    FFilesScene->setFocus();
+    if (FFilesScene->focusItem() == nullptr) {
+      this->focusThumbnail(0);
+    }
+  }
+}
 
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::layoutAll() {

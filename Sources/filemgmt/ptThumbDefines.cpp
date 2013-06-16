@@ -25,18 +25,19 @@
 
 // Register user-defined types with the Qt meta object system.
 // Needed for communication between the thumbnail and GUI thread.
-auto MId_ThId  = qRegisterMetaType<TThumbId>("photivo_TThumbId");
-auto MId_ThPtr = qRegisterMetaType<TThumbPtr>("photivo_TThumbPtr");
+auto TThumbPtr_Dummy = qRegisterMetaType<TThumbPtr>("photivo_TThumbPtr");
+auto TThumbId_Dummy  = qRegisterMetaType<TThumbId>("photivo_TThumbId");
 
 
 //------------------------------------------------------------------------------
-bool operator ==(const TThumbId& lhs, const TThumbId& rhs) {
+bool operator==(const TThumbId& lhs, const TThumbId& rhs) {
   return (lhs.FilePath == rhs.FilePath) &&
          (lhs.Timestamp == rhs.Timestamp) &&
+         (lhs.Type == rhs.Type) &&
          (lhs.LongEdgeSize == rhs.LongEdgeSize);
 }
 
 //------------------------------------------------------------------------------
-bool operator !=(const TThumbId& lhs, const TThumbId& rhs) {
+bool operator!=(const TThumbId& lhs, const TThumbId& rhs) {
   return !(lhs == rhs);
 }

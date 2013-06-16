@@ -146,7 +146,6 @@ macx {
   LIBS += -framework QtCore -framework QtGui -framework QtNetwork
 }
 
-
 #------------------------------------------------------------------------------
 #--- Workarounds ---
 
@@ -284,9 +283,10 @@ HEADERS += \
     ../Sources/qtsingleapplication/qtsingleapplication.h \
     ../Sources/ptUtils_Storage.h \
     ../Sources/ptUtils.h \
-    ../Sources/filemgmt/ptThumbGen.h \
     ../Sources/filemgmt/ptThumbDefines.h \
-    ../Sources/ptMutexLocker.h
+    ../Sources/ptMutexLocker.h \
+    ../Sources/filemgmt/ptThumbGenMgr.h \
+    ../Sources/filemgmt/ptThumbGenWorker.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -418,9 +418,10 @@ SOURCES += \
     ../Sources/ptUtils_Storage.cpp \
     ../Sources/ptStorable.cpp \
     ../Sources/ptUtils.cpp \
-    ../Sources/filemgmt/ptThumbGen.cpp \
     ../Sources/filemgmt/ptThumbDefines.cpp \
-    ../Sources/ptMutexLocker.cpp
+    ../Sources/ptMutexLocker.cpp \
+    ../Sources/filemgmt/ptThumbGenMgr.cpp \
+    ../Sources/filemgmt/ptThumbGenWorker.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \

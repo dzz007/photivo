@@ -20,7 +20,7 @@
 **
 *******************************************************************************/
 
-#include "ptThumbGen.h"
+#include "ptThumbGenWorker.h"
 #include "../ptImage8.h"
 #include "../ptDcRaw.h"
 #include "../ptMutexLocker.h"
@@ -29,79 +29,34 @@
 #include <QImage>
 
 //------------------------------------------------------------------------------
-// Register user-defined types with the Qt meta object system.
-// Needed for communication between the thumbnail and GUI thread.
-auto MId_TA   = qRegisterMetaType<TThumbAssoc>("photivo_TThumbAssoc");
-auto MId_QLTA = qRegisterMetaType<QList<TThumbAssoc>>("photivo_QList_TThumbAssoc");
-
-//------------------------------------------------------------------------------
 /*!
-  Creates a ptThumbGen object and moves it to its own thread. Note that because of this
-  although ptThumbGen is derived from QObject the Qt parent mechanism cannot be used.
-
-  Creation and destruction of heap allocated members needs to be done on the same
-  thread where execution happens, otherwise the usual tools for thread-safe access
-  need to be used. Therefore the ctor first moves the fresh object to the worker
-  thread and then allocates all heap members. Destruction happens in reverse order.
+  Creates a ptThumbGen object. Note that because the worker is supposed to run in its own thread
+  the Qt parent mechanism cannot be used although ptThumbGen is derived from QObject.
 */
-ptThumbGen::ptThumbGen():
+ptThumbGenWorker::ptThumbGenWorker():
   QObject(nullptr),
   FAbortSignaled(false),
-  FAbortMutex(),
-  FIsRunning(false),
-  FIsRunningMutex()
-{
-  FThread.start(QThread::LowPriority);
-  this->moveToThread(&FThread);
+  FIsRunning(false)
+{}
 
-  // create heap allocated members; must happen AFTER moveToThread()
-}
+//------------------------------------------------------------------------------
+/*! Destroys a ptThumbGen object. */
+ptThumbGenWorker::~ptThumbGenWorker() {}
 
 //------------------------------------------------------------------------------
 /*!
-  Destroys a ptThumbGen object. The object is moved back to the main GUI thread during destruction.
-
-  See the ctor’s comment for notes about creation/destruction order.
+  Aborts the currently running thumbnail generation. When abort() returns it is *not*
+  guaranteed that processing has already stopped.
 */
-ptThumbGen::~ptThumbGen() {
-  if (this->isRunning())
-    this->abort();
-
-  // Destroy heap allocated members.
-  // Must happen AFTER abort() but BEFORE moveToThread()
-
-  auto hGuiThread = QApplication::instance()->thread();
-  if (hGuiThread != &FThread) {
-    this->moveToThread(hGuiThread);
-  }
-
-  // Quit the thread. The loop makes sure the QThread object is not deleted before
-  // the thread has actually stopped. Deleting a QThread with a running thread is
-  // likely to produce a crash.
-  FThread.quit();
-  while (FThread.isRunning()) {
-    if (FThread.wait(100))
-      break;
-  }
-}
-
-//------------------------------------------------------------------------------
-/*! Aborts the currently running thumbnail generation. */
-void ptThumbGen::abort() {
+void ptThumbGenWorker::abort() {
   if (this->isRunning()) {
-    // Processing stops after the current image is finished ...
+    // Tell the worker to abort as soon as possible.
+    // Processing will stop after the current image is finished
     ptMutexLocker hAbortLock(&FAbortMutex);
     FAbortSignaled = true;
 
-    // ... so we need to give generate() some time or we’d return too early.
-    QTime hTimer;
-    hTimer.start();
-    while (this->isRunning() && (hTimer.elapsed() < 5000)) {
-      QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-    }
-
   } else {
-    // when idle stopping can happen immediately
+    // when idle stopping happens immediately
     ptMutexLocker hAbortLock(&FAbortMutex);
     FAbortSignaled = false;
     this->stopProcessing();
@@ -109,7 +64,7 @@ void ptThumbGen::abort() {
 }
 
 //------------------------------------------------------------------------------
-bool ptThumbGen::isRunning() const {
+bool ptThumbGenWorker::isRunning() const {
   ptMutexLocker hRunLock(&FIsRunningMutex);
   return FIsRunning;
 }
@@ -119,29 +74,7 @@ bool ptThumbGen::isRunning() const {
   Requests a list of thumbnail images and returns immediately. When the actual image data
   is ready the broadcast() signal is emitted once for each image.
 */
-void ptThumbGen::request(QList<TThumbAssoc> AThumbList) {
-  /*
-    When you write a new public slot it MUST start with an *if* construct like the following.
-    It is required to hide the details of thread management. From the caller’s point of view
-    calling ptThumbGen methods looks like simple function calls even though they are queued
-    slot calls behind the scenes. In effect this approach ensures that any code that accesses
-    data on the thumbnail thread is always executed from within that thread, eliminating the
-    the need for any explict thread safety measures.
-    Alternatively the caller could define and properly connect its own signal and emit it where
-    the ptThumbGen method call would occur. However that approach is too error prone and awkward
-    to use.
-    How it works: When the methid is called from a different thread the only thing that happens
-    is the method posting a call to itself to the thumbnail thread’s message queue via Qt’s
-    meta object system. Only then execution happens for real.
-    Note that parameters of user-defined type must be registered with the meta object system first.
-    See the declaration of TThumbId for details.
-  */
-  if (QThread::currentThread() != &FThread) {
-    QMetaObject::invokeMethod(this, __FUNCTION__, Qt::QueuedConnection,
-                              Q_ARG(QList<TThumbAssoc>, AThumbList));
-    return;
-  }
-
+void ptThumbGenWorker::request(QList<TThumbAssoc> AThumbList) {
   for (TThumbAssoc& hThumbAssoc: AThumbList)
     FThumbQueue.enqueue(hThumbAssoc);
 
@@ -154,7 +87,7 @@ void ptThumbGen::request(QList<TThumbAssoc> AThumbList) {
 }
 
 //------------------------------------------------------------------------------
-void ptThumbGen::processRequests() {
+void ptThumbGenWorker::processRequests() {
   while (!FThumbQueue.isEmpty()) {
     // generate thumbnail image and broadcast to receiver(s)
     auto hThumbAssoc = FThumbQueue.dequeue();
@@ -178,7 +111,7 @@ void ptThumbGen::processRequests() {
 }
 
 //------------------------------------------------------------------------------
-void ptThumbGen::stopProcessing() {
+void ptThumbGenWorker::stopProcessing() {
   this->setIsRunning(false);
   FThumbQueue.clear();
 }
@@ -188,7 +121,27 @@ void ptThumbGen::stopProcessing() {
   Reads a thumbnail from disk, resizes to the specified size and returns the final
   thumbnail image as a ptImage8.
 */
-TThumbPtr ptThumbGen::generate(const TThumbId& AThumbId) {
+TThumbPtr ptThumbGenWorker::generate(const TThumbId& AThumbId) {
+  // Directories: not cached and no need to set dcraw or GM on them.
+  switch (AThumbId.Type) {
+    case fsoParentDir: {
+      auto hDirThumbnail = std::make_shared<ptImage8>();
+      hDirThumbnail->FromQImage(QImage(QString::fromUtf8(":/dark/icons/go-up-48px.png")));
+      return hDirThumbnail;
+    }
+
+    case fsoDir:
+    case fsoDrive:
+    case fsoRoot: {
+      auto hPDirThumbnail = std::make_shared<ptImage8>();
+      hPDirThumbnail->FromQImage(QImage(QString::fromUtf8(":/dark/icons/folder-48px.png")));
+      return hPDirThumbnail;
+    }
+
+    default: ; // other cases not handled here intentionally
+  }
+
+  // Actual image: First try the cache. On miss generate thumb via dcraw or GM
   auto hThumbnail = FThumbCache.find(AThumbId);
 
   // cache miss: generate thumbnail
@@ -199,6 +152,7 @@ TThumbPtr ptThumbGen::generate(const TThumbId& AThumbId) {
     ptDcRaw     hDcRaw;
     MagickWand* hGMImage = NewMagickWand();
     QSize       hSize = QSize(AThumbId.LongEdgeSize, AThumbId.LongEdgeSize);
+
 
     if (hDcRaw.Identify(hFilePath) == 0) {
       // we have a raw image
@@ -241,7 +195,7 @@ TThumbPtr ptThumbGen::generate(const TThumbId& AThumbId) {
 
 //------------------------------------------------------------------------------
 /*! Clamp ASize’s longer edge to a maximum of ALongEdge. */
-void ptThumbGen::scaleSize(QSize& ASize, int ALongEdge) {
+void ptThumbGenWorker::scaleSize(QSize& ASize, int ALongEdge) {
   if ((ASize.width() < ALongEdge) && (ASize.height() < ALongEdge))
     return;
 
@@ -260,14 +214,14 @@ void ptThumbGen::scaleSize(QSize& ASize, int ALongEdge) {
 }
 
 //------------------------------------------------------------------------------
-void ptThumbGen::setIsRunning(bool AValue) {
+void ptThumbGenWorker::setIsRunning(bool AValue) {
   ptMutexLocker hRunLock(&FIsRunningMutex);
   FIsRunning = AValue;
 }
 
 //------------------------------------------------------------------------------
 /*! Rotates and scales an image. To avoid scaling set width and height of ASize to <=0. */
-void ptThumbGen::transformImage(MagickWand* AInImage, ptImage8* AOutImage, const QSize& ASize) {
+void ptThumbGenWorker::transformImage(MagickWand* AInImage, ptImage8* AOutImage, const QSize& ASize) {
   // We want 8bit RGB data without alpha channel, scaled to thumbnail size
   MagickSetImageDepth(AInImage, 8);
   MagickSetImageFormat(AInImage, "RGB");

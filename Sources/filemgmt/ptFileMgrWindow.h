@@ -70,6 +70,8 @@ private:
   void layoutAll();
   void setLayouter(const ptThumbnailLayout layout);
   void constructContextMenu();
+  void initProgressbar();
+  void updateProgressbar();
 
   ptFileMgrDM*            FDataModel;
   QGraphicsScene*         FFilesScene;
@@ -80,6 +82,7 @@ private:
   ptTagList*              FTagMenuList;  // bookmarks in popup menu
   QMenu*                  FTagMenu;
   int                     FThumbCount;
+  int                     FThumbsReceived;  // num of thumbs received from the generator
   int                     FThumbListIdx;
   ptImageView*            FImageView;
 

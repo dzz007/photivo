@@ -39,7 +39,7 @@ ptFileMgrDM::ptFileMgrDM(QObject* AParent)
   FDirModel(new ptSingleDirModel(this)),
   FIsMyComputer(false),
   FTagModel(new ptTagModel(this)),
-  FThumbGen(make_unique<ptThumbGen>()),
+  FThumbGen(make_unique<ptThumbGenMgr>()),
   FThumbGroupList(new QList<ptGraphicsThumbGroup*>)
 {}
 
@@ -56,7 +56,7 @@ void ptFileMgrDM::clear() {
 
 //------------------------------------------------------------------------------
 /*! Returns the current folder for thumbnail display. */
-QString ptFileMgrDM::currentDir() {
+QString ptFileMgrDM::currentDir() const {
   return FCurrentDir.absolutePath();
 }
 
@@ -95,7 +95,8 @@ int ptFileMgrDM::setThumDir(const QString& AAbsolutePath) {
 }
 
 //------------------------------------------------------------------------------
-int ptFileMgrDM::focusedThumb() {
+/*! Returns the index in thumbGroupList() of the currently focused thumbnail. */
+int ptFileMgrDM::focusedThumb() const {
   return FFocusedThumb;
 }
 
@@ -112,27 +113,40 @@ QList<ptGraphicsThumbGroup*>*ptFileMgrDM::thumbGroupList() {
 }
 
 //------------------------------------------------------------------------------
+/*! Connects the signal emitted when a thumbnail image is generated with the given slot. */
 void ptFileMgrDM::connectThumbGen(const QObject* AReceiver, const char* ABroadcastSlot) {
-  connect(FThumbGen.get(), SIGNAL(broadcast(uint, TThumbPtr)), AReceiver, ABroadcastSlot);
+  FThumbGen->connectBroadcast(AReceiver, ABroadcastSlot);
 }
 
 //------------------------------------------------------------------------------
+/*! Returns true while thumbnails are being generated. */
 bool ptFileMgrDM::thumbGenRunning() const {
   return FThumbGen->isRunning();
 }
 
 //------------------------------------------------------------------------------
+/*!
+  Stops thumbnail generation. It is guaranteed that generation has actually stopped
+  when this method returns.
+*/
 void ptFileMgrDM::abortThumbGen() {
   FThumbGen->abort();
 }
 
 //------------------------------------------------------------------------------
+/*! Focusses the thumbgroup with the given index in thumbGroupList(). */
 ptGraphicsThumbGroup* ptFileMgrDM::moveFocus(const int index) {
   FFocusedThumb = index;
   return FThumbGroupList->at(index);
 }
 
 //------------------------------------------------------------------------------
+/*!
+  Clears the scene and starts thumbnail generation for the current directory.
+  Returns when all ptGraphicsThumbGroup objects are created. The actual thumbnail images
+  are generated asynchonously.
+  \see connectThumbGen()
+*/
 void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
   FThumbGen->abort();
   FThumbGroupList->clear();
@@ -160,7 +174,8 @@ void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
   uint hGroupId = 0;
   for (QFileInfo& file: files) {
     this->createThumbGroup(file, hGroupId, AScene);
-    hThumbIdList.append({{file.canonicalFilePath(), file.lastModified(), hLongEdgeMax}, hGroupId});
+    hThumbIdList.append({{file.canonicalFilePath(), file.lastModified(),
+                          FThumbGroupList->last()->fsoType(), hLongEdgeMax}, hGroupId});
     ++hGroupId;
   }
 
@@ -175,10 +190,8 @@ void ptFileMgrDM::setCurrentDir(const QString& AAbsolutePath) {
 }
 
 //------------------------------------------------------------------------------
-/*!
-  Creates a thumbgroup object for the specified file and adds it to the scene
-  and to the DM’s FThumbGroupList.
-*/
+// Creates a thumbgroup object for the specified file and adds it to the scene
+// and to the DM’s FThumbGroupList.
 void ptFileMgrDM::createThumbGroup(const QFileInfo& AFileInfo, uint AId, QGraphicsScene* AScene) {
   auto thumbGroup = new ptGraphicsThumbGroup(AId);
   AScene->addItem(thumbGroup);
@@ -220,6 +233,7 @@ void ptFileMgrDM::createThumbGroup(const QFileInfo& AFileInfo, uint AId, QGraphi
 }
 
 //------------------------------------------------------------------------------
+// TODO BJ: Might change FFocusedThumb. Either bad method naming or bad design. Needs to be changed.
 int ptFileMgrDM::focusedThumb(QGraphicsItem* group) {
   for (int i = 0; i < FThumbGroupList->count(); ++i) {
     if (FThumbGroupList->at(i) == group) {

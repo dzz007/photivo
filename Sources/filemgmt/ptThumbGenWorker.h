@@ -20,45 +20,34 @@
 **
 *******************************************************************************/
 
-#ifndef ptThumbGen_H
-#define ptThumbGen_H
+#ifndef PTTHUMBGENWORKER_H
+#define PTTHUMBGENWORKER_H
 
 #include "ptThumbDefines.h"
 #include "ptThumbCache.h"
 #include <QObject>
-#include <QThread>
-#include <QDateTime>
 #include <QSize>
 #include <QQueue>
 #include <QMutex>
 #include <wand/magick_wand.h>
 #include <memory>
 
-//------------------------------------------------------------------------------
-/*! Struct to associate a specific thumbgroup object with a specific image file on disk. */
-struct TThumbAssoc {
-  TThumbId ThumbId;
-  uint     GroupId;
-};
-Q_DECLARE_METATYPE(TThumbAssoc)
-Q_DECLARE_METATYPE(QList<TThumbAssoc>)
+/*!
+  The ptThumbGenWorker class generates thumbnail images, either from the thumbnail cache
+  or from files on disk, and also handles the thumbnails for broken/unsupported images
+  and directories.
 
-//------------------------------------------------------------------------------
-class ptThumbGen: public QObject {
+  It is a worker class for ptThumbGenMgr and not supposed to be used on its own.
+*/
+class ptThumbGenWorker: public QObject {
 Q_OBJECT
 
 public:
-  explicit ptThumbGen();
-  ~ptThumbGen();
-
-  // these are the exceptions to the "no plain public methods" rule
+  explicit ptThumbGenWorker();
+  ~ptThumbGenWorker();
+  
   void abort();
   bool isRunning() const;
-
-  // No plain public methods!
-  // Because a ptThumbGen object lives in its own separate thread all public access except
-  // ction and dtion MUST occur EXCLUSIVELY via queued signals/slots.
-  // See the comment at the top of requestThumb() for the correct way to write new public slots.
 
 public slots:
   void request(QList<TThumbAssoc> AThumbList);
@@ -81,9 +70,8 @@ private:
   bool   FIsRunning;
   mutable QMutex FIsRunningMutex;
 
-  QThread FThread;
   ptThumbCache FThumbCache;
   QQueue<TThumbAssoc> FThumbQueue;
 };
 
-#endif // ptThumbGen_H
+#endif // PTTHUMBGENWORKER_H
