@@ -25,7 +25,8 @@
 
 // Register user-defined types with the Qt meta object system.
 // Needed for communication between the thumbnail and GUI thread.
-auto TThumbId_MetaId_Dummy = qRegisterMetaType<TThumbId>("photivo_TThumbId");
+auto MId_ThId  = qRegisterMetaType<TThumbId>("photivo_TThumbId");
+auto MId_ThPtr = qRegisterMetaType<TThumbPtr>("photivo_TThumbPtr");
 
 
 //------------------------------------------------------------------------------

@@ -135,6 +135,7 @@ ptGraphicsThumbGroup* ptFileMgrDM::moveFocus(const int index) {
 //------------------------------------------------------------------------------
 void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
   FThumbGen->abort();
+  FThumbGroupList->clear();
   AScene->clear();
 
   QFileInfoList files;

@@ -876,7 +876,7 @@ int photivoMain(int Argc, char *Argv[]) {
 #ifndef PT_WITHOUT_FILEMGR
   FileMgrWindow = new ptFileMgrWindow(MainWindow->FileManagerPage);
   MainWindow->FileManagerLayout->addWidget(FileMgrWindow);
-  QObject::connect(FileMgrWindow, SIGNAL(FileMgrWindowClosed()),
+  QObject::connect(FileMgrWindow, SIGNAL(fileMgrWindowClosed()),
                    MainWindow, SLOT(CloseFileMgrWindow()));
   QObject::connect(ViewWindow, SIGNAL(openFileMgr()), MainWindow, SLOT(OpenFileMgrWindow()));
 #endif

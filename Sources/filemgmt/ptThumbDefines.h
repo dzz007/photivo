@@ -35,6 +35,7 @@ class ptGraphicsThumbGroup;
 //------------------------------------------------------------------------------
 
 typedef std::shared_ptr<ptImage8> TThumbPtr;
+Q_DECLARE_METATYPE(TThumbPtr)
 
 struct TThumbId {
   QString   FilePath;     // absolute path to the file. Case-sensitive!

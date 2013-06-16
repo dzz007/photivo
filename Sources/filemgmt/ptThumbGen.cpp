@@ -31,7 +31,8 @@
 //------------------------------------------------------------------------------
 // Register user-defined types with the Qt meta object system.
 // Needed for communication between the thumbnail and GUI thread.
-auto TThumbAssoc_MetaId_Dummy = qRegisterMetaType<TThumbAssoc>("photivo_TThumbAssoc");
+auto MId_TA   = qRegisterMetaType<TThumbAssoc>("photivo_TThumbAssoc");
+auto MId_QLTA = qRegisterMetaType<QList<TThumbAssoc>>("photivo_QList_TThumbAssoc");
 
 //------------------------------------------------------------------------------
 /*!
@@ -50,8 +51,8 @@ ptThumbGen::ptThumbGen():
   FIsRunning(false),
   FIsRunningMutex()
 {
-  this->moveToThread(&FThread);
   FThread.start(QThread::LowPriority);
+  this->moveToThread(&FThread);
 
   // create heap allocated members; must happen AFTER moveToThread()
 }
@@ -193,6 +194,7 @@ TThumbPtr ptThumbGen::generate(const TThumbId& AThumbId) {
   // cache miss: generate thumbnail
   if (!hThumbnail) {
     const QString hFilePath = AThumbId.FilePath;
+    hThumbnail.reset(new ptImage8);
 
     ptDcRaw     hDcRaw;
     MagickWand* hGMImage = NewMagickWand();

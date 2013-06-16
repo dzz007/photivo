@@ -41,6 +41,7 @@ struct TThumbAssoc {
   uint     GroupId;
 };
 Q_DECLARE_METATYPE(TThumbAssoc)
+Q_DECLARE_METATYPE(QList<TThumbAssoc>)
 
 //------------------------------------------------------------------------------
 class ptThumbGen: public QObject {
