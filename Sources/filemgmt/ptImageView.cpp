@@ -21,9 +21,7 @@
 **
 *******************************************************************************/
 
-
 #include "ptImageView.h"
-//#include "ptFileMgrWindow.h"
 #include "ptGraphicsSceneEmitter.h"
 #include "../ptDefines.h"
 #include "../ptSettings.h"
@@ -32,6 +30,7 @@
 #include "../ptImage8.h"
 #include <QGraphicsView>
 #include <QList>
+#include <limits>
 #include <cassert>
 
 extern ptSettings*  Settings;
@@ -44,9 +43,10 @@ extern ptTheme*     Theme;
 */
 ptImageView::ptImageView(QWidget *AParent):
   QGraphicsView(AParent),
-  // constants
   MinZoom(0.05),
-  MaxZoom(4.0)
+  MaxZoom(4.0),
+  MaxImageSize(std::numeric_limits<int>::max()),
+  FThumbGen(make_unique<ptThumbGenMgr>())
 {
   assert(Theme      != nullptr);
   assert(Settings   != nullptr);
@@ -66,13 +66,12 @@ ptImageView::ptImageView(QWidget *AParent):
   this->setStyleSheet("QGraphicsView { border: none; }");
 
   // We create a Graphicsscene and connect it.
-  FScene      = new QGraphicsScene(0, 0, 0, 0, this);
-  setScene(FScene);
+  FScene = new QGraphicsScene(0, 0, 0, 0, this);
+  this->setScene(FScene);
 
   // Init
   FPixmapItem        = FScene->addPixmap(QPixmap());
   FPixmapItem->setPos(0,0);
-  FImage             = NULL;
   FFileNameCurrent  = "";
   FFileNameNext     = "";
   FZoomMode          = ptZoomMode_Fit;
@@ -87,12 +86,7 @@ ptImageView::ptImageView(QWidget *AParent):
   FStatusOverlay->setDuration(0);
 
   // parallel worker
-  // TODO BJ
-//  m_Worker = new MyWorker();
-//  m_Worker->m_ImageView = this;
-//  m_Worker->m_Fct       = &ptImageView::updateView;
-//  m_Worker->m_FileName  = "";
-//  connect(m_Worker, SIGNAL(finished()), this, SLOT(afterWorker()));
+  FThumbGen->connectBroadcast(this, SLOT(receiveThumb(uint,TThumbPtr)));
 
   // timer for decoupling the mouse wheel
   FResizeTimeOut = 50;
@@ -126,14 +120,9 @@ ptImageView::ptImageView(QWidget *AParent):
 
 //------------------------------------------------------------------------------
 ptImageView::~ptImageView() {
-  // TODO BJ
-//  m_Worker->terminate();
-//  DelAndNull(m_Worker);
-  DelAndNull(FImage);
   DelAndNull(FDragDelta);
   DelAndNull(FZoomSizeOverlay);
   DelAndNull(FStatusOverlay);
-  DelAndNull(FScene);
   DelAndNull(FParentLayout);
 }
 
@@ -141,58 +130,30 @@ ptImageView::~ptImageView() {
 void ptImageView::showImage(const QString AFileName) {
   FFileNameNext = AFileName;
 
-  if (!isVisible() ||
-      FFileNameCurrent == FFileNameNext) return;
+  if (this->isVisible() && (FFileNameCurrent != FFileNameNext)) {
+    if (FThumbGen->isRunning())
+      FThumbGen->abort();
 
-  // TODO BJ
-  startWorker();
-}
+    QList<TThumbAssoc> hThumbList;
+    hThumbList.append({makeThumbId(FFileNameNext, MaxImageSize), 0});
+    FThumbGen->request(hThumbList);
 
-//------------------------------------------------------------------------------
-void ptImageView::startWorker() {
-  if (FFileNameCurrent == FFileNameNext) {
-    FStatusOverlay->stop();
-    return;
-  }
-
-  // TODO BJ
-//  if (!m_Worker->isRunning()) {
-//    m_StatusOverlay->exec(QObject::tr("Loading"));
-//    m_Worker->m_FileName = m_FileName_Next;
-//    m_FileName_Current   = m_FileName_Next;
-//    m_Worker->start();
-
-//    if (!m_Worker->isRunning())
-//      ptMessageBox::critical(NULL, "Thread error", "Could not start thread for parallel image loading.");
-//  }
-}
-
-//------------------------------------------------------------------------------
-void ptImageView::afterWorker() {
-  if (FFileNameCurrent != FFileNameNext) {
-    // TODO BJ
-//    startWorker();
-  } else {
-    FStatusOverlay->stop();
-    if (FImage != NULL) {
-      if (FZoomMode == ptZoomMode_Fit)
-        zoomFit(false);
-      else
-        zoomTo(FZoomFactor, true);
-    }
+    FStatusOverlay->exec(QObject::tr("Loading"));
   }
 }
 
 //------------------------------------------------------------------------------
 void ptImageView::resizeEvent(QResizeEvent* event) {
-  if (FZoomMode == ptZoomMode_Fit) {
-    // Only zoom fit after timer expires to avoid constant image resizing while
-    // changing widget geometry. Prevents jerky UI response at the cost of
-    // the image not being resized while the geometry change is ongoing.
-    FResizeEventTimer.start();
-  } else {
-    // takes care of positioning the scene inside the viewport on non-fit zooms
-    QGraphicsView::resizeEvent(event);
+  if (!FFileNameCurrent.isEmpty()) {
+    if (FZoomMode == ptZoomMode_Fit) {
+      // Only zoom fit after timer expires to avoid constant image resizing while
+      // changing widget geometry. Prevents jerky UI response at the cost of
+      // the image not being resized while the geometry change is ongoing.
+      FResizeEventTimer.start();
+    } else {
+      // takes care of positioning the scene inside the viewport on non-fit zooms
+      QGraphicsView::resizeEvent(event);
+    }
   }
 }
 
@@ -309,19 +270,28 @@ void ptImageView::zoomTo(float AFactor, bool AWithMsg) {
 
   imageToScene(AFactor);
 
-  FZoomFactor = AFactor;//transform().m11();
+  FZoomFactor = AFactor;
   FZoom = qRound(FZoomFactor * 100);
   if (AWithMsg)
     FZoomSizeOverlay->exec(QString::number(FZoom) + "%");
 }
 
 //------------------------------------------------------------------------------
+void ptImageView::receiveThumb(uint, TThumbPtr AImage) {
+  FImage.Set(AImage.get());
+
+  if (FZoomMode == ptZoomMode_Fit)
+    zoomFit(false);
+  else
+    zoomTo(FZoomFactor, true);
+
+  FStatusOverlay->stop();
+}
+
+//------------------------------------------------------------------------------
 int ptImageView::zoomFit(bool AWithMsg /*= true*/) {
   FZoomMode = ptZoomMode_Fit;
-
-  if (FImage != NULL) {
-    FScene->setSceneRect(0, 0, FImage->m_Width, FImage->m_Height);
-  }
+  FScene->setSceneRect(0, 0, FImage.m_Width, FImage.m_Height);
 
   fitInView(FScene->sceneRect(), Qt::KeepAspectRatio);
   FZoomFactor = transform().m11();
@@ -339,33 +309,26 @@ int ptImageView::zoomFit(bool AWithMsg /*= true*/) {
 
 //------------------------------------------------------------------------------
 void ptImageView::imageToScene(double AFactor) {
-  if (FImage != NULL) {
-    resetTransform();
+  resetTransform();
 
-    Qt::TransformationMode Mode;
+  Qt::TransformationMode Mode;
 
-    if(((uint)(AFactor * 10000) % 10000) < 1) {
-      // nearest neighbour resize for 200%, 300%, 400% zoom
-      Mode = Qt::FastTransformation;
-    } else {
-      // bilinear resize for all others
-      Mode = Qt::SmoothTransformation;
-    }
-    FScene->setSceneRect(0, 0, FImage->m_Width*AFactor, FImage->m_Height*AFactor);
-    FPixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) FImage->m_Image,
-                                                                     FImage->m_Width,
-                                                                     FImage->m_Height,
-                                                                     QImage::Format_RGB32).scaled(FImage->m_Width*AFactor,
-                                                                                                  FImage->m_Height*AFactor,
-                                                                                                  Qt::IgnoreAspectRatio,
-                                                                                                  Mode)));
-    FPixmapItem->setTransformationMode(Mode);
+  if(((uint)(AFactor * 10000) % 10000) < 1) {
+    // nearest neighbour resize for 200%, 300%, 400% zoom
+    Mode = Qt::FastTransformation;
+  } else {
+    // bilinear resize for all others
+    Mode = Qt::SmoothTransformation;
   }
-}
-
-//------------------------------------------------------------------------------
-void ptImageView::updateView() {
-  //TODO BJ: m_DataModule->getThumbnail(m_Image, m_FileName_Current, 0);
+  FScene->setSceneRect(0, 0, FImage.m_Width*AFactor, FImage.m_Height*AFactor);
+  FPixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) FImage.m_Image,
+                                                                   FImage.m_Width,
+                                                                   FImage.m_Height,
+                                                                   QImage::Format_RGB32).scaled(FImage.m_Width*AFactor,
+                                                                                                FImage.m_Height*AFactor,
+                                                                                                Qt::IgnoreAspectRatio,
+                                                                                                Mode)));
+  FPixmapItem->setTransformationMode(Mode);
 }
 
 //------------------------------------------------------------------------------
@@ -378,8 +341,7 @@ void ptImageView::showEvent(QShowEvent* event) {
   QGraphicsView::showEvent(event);
 
   if (!FFileNameNext.isEmpty()) {
-    // TODO BJ
-//    startWorker();
+    this->showImage(FFileNameNext);
   }
 }
 

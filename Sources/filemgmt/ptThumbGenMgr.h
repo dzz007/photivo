@@ -24,7 +24,9 @@
 #define ptThumbGenMgr_H
 
 #include "ptThumbDefines.h"
+#include "../ptConstants.h"
 #include <QThread>
+#include <QFileInfo>
 
 class ptThumbGenWorker;
 
@@ -54,5 +56,11 @@ private:
   ptThumbGenWorker* FWorker;
   QThread FThread;
 };
+
+//------------------------------------------------------------------------------
+/*! \name Utility functions to create a thumbnail ID *//*! @{ */
+TThumbId makeThumbId(const QString& AFilename, int ALongEdgeMax, ptFSOType AType = fsoUnknown);
+TThumbId makeThumbId(const QFileInfo& AFileInfo, int ALongEdgeMax, ptFSOType AType = fsoUnknown);
+/*! @} */
 
 #endif // ptThumbGenMgr_H

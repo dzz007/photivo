@@ -101,3 +101,17 @@ void ptThumbGenMgr::request(QList<TThumbAssoc> AThumbList) {
                             Q_ARG(QList<TThumbAssoc>, AThumbList));
 }
 
+//------------------------------------------------------------------------------
+TThumbId makeThumbId(const QString& AFilename, int ALongEdgeMax, ptFSOType AType) {
+  return makeThumbId(QFileInfo(AFilename), ALongEdgeMax, AType);
+}
+
+//------------------------------------------------------------------------------
+TThumbId makeThumbId(const QFileInfo& AFileInfo, int ALongEdgeMax, ptFSOType AType) {
+  TThumbId hThumbId { AFileInfo.canonicalFilePath(), AFileInfo.lastModified(), AType, ALongEdgeMax };
+
+  if (AType == fsoUnknown)
+    (AFileInfo.isFile()) ? hThumbId.Type = fsoFile : hThumbId.Type = fsoDir;
+
+  return hThumbId;
+}
