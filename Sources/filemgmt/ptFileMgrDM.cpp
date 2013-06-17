@@ -174,8 +174,8 @@ void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
   uint hGroupId = 0;
   for (QFileInfo& file: files) {
     this->createThumbGroup(file, hGroupId, AScene);
-    hThumbIdList.append({{file.canonicalFilePath(), file.lastModified(),
-                          FThumbGroupList->last()->fsoType(), hLongEdgeMax}, hGroupId});
+    hThumbIdList.append({makeThumbId(file, hLongEdgeMax, FThumbGroupList->last()->fsoType()),
+                         hGroupId});
     ++hGroupId;
   }
 

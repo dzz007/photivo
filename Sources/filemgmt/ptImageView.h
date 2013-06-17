@@ -24,13 +24,14 @@
 #ifndef PTIMAGEVIEW_H
 #define PTIMAGEVIEW_H
 
+#include "ptThumbGenMgr.h"
 #include "../ptReportOverlay.h"
 #include "../ptImage8.h"
 #include <QWidget>
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGridLayout>
-//#include <QThread>
+#include <memory>
 
 //------------------------------------------------------------------------------
 class ptImageView: public QGraphicsView {
@@ -60,18 +61,19 @@ protected:
 
 private:
   void imageToScene(double AFactor);    // Put the QImage in the scene
-  void updateView();  // This function performs the actual thumbnail generation.
   void zoomStep(int ADirection);
   void zoomTo(float AFactor, bool AWithMsg);  // 1.0 means 100%
 
   const float           MinZoom;
   const float           MaxZoom;
+  const int             MaxImageSize;
   QList<float>          ZoomFactors;   // steps for wheel zoom
   QGridLayout*          FParentLayout;
   QGraphicsScene*       FScene;
-  ptImage8*             FImage;
+  ptImage8              FImage;
   QString               FFileNameCurrent;
   QString               FFileNameNext;
+  std::unique_ptr<ptThumbGenMgr> FThumbGen;
   int                   FZoomMode;
   float                 FZoomFactor;
   int                   FZoom;
@@ -79,7 +81,6 @@ private:
   bool                  FLeftMousePressed;
   ptReportOverlay*      FZoomSizeOverlay;
   ptReportOverlay*      FStatusOverlay;
-//  MyWorker*             m_Worker;
   QGraphicsPixmapItem*  FPixmapItem;
   int                   FResizeTimeOut;
   QTimer*               FResizeTimer;
@@ -92,8 +93,7 @@ private:
   QAction* FZoomOutAction;
 
 private slots:
-  void startWorker();
-  void afterWorker();
+  void receiveThumb(uint, TThumbPtr AImage);
   void resizeTimerExpired();
 };
 
