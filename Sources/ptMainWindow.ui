@@ -374,8 +374,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>445</width>
-                                <height>589</height>
+                                <width>98</width>
+                                <height>249</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="CameraTabLayout">
@@ -389,8 +389,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>409</height>
+                                    <width>155</width>
+                                    <height>120</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1209,8 +1209,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>445</width>
-                                <height>589</height>
+                                <width>98</width>
+                                <height>114</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_280">
@@ -1224,8 +1224,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>544</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1419,8 +1419,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>247</height>
+                                    <width>98</width>
+                                    <height>183</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2602,7 +2602,7 @@
                                           </property>
                                           <property name="sizeHint" stdset="0">
                                            <size>
-                                            <width>40</width>
+                                            <width>5</width>
                                             <height>20</height>
                                            </size>
                                           </property>
@@ -2734,8 +2734,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>445</width>
-                                <height>589</height>
+                                <width>98</width>
+                                <height>519</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="RGBTabLayout">
@@ -3343,8 +3343,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>139</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3381,8 +3381,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>445</width>
-                                <height>589</height>
+                                <width>98</width>
+                                <height>492</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="LabCCTabLayout">
@@ -3813,8 +3813,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>166</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3851,8 +3851,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>445</width>
-                                <height>589</height>
+                                <width>98</width>
+                                <height>573</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="LabSNTabLayout">
@@ -4513,8 +4513,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>85</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4896,8 +4896,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>445</width>
-                                <height>589</height>
+                                <width>98</width>
+                                <height>438</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="LabEyeCandyTabLayout">
@@ -5065,8 +5065,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>220</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5189,8 +5189,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>445</width>
-                                <height>589</height>
+                                <width>98</width>
+                                <height>573</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="EyeCandyTabLayout">
@@ -6474,8 +6474,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>85</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6554,8 +6554,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>445</width>
-                                <height>589</height>
+                                <width>98</width>
+                                <height>303</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="OutTabLayout">
@@ -6586,8 +6586,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>427</width>
-                                    <height>355</height>
+                                    <width>98</width>
+                                    <height>84</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7370,8 +7370,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>473</width>
-                            <height>599</height>
+                            <width>98</width>
+                            <height>195</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_236">
@@ -7930,8 +7930,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>455</width>
-                                <height>473</height>
+                                <width>119</width>
+                                <height>93</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8137,8 +8137,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>473</width>
-                            <height>564</height>
+                            <width>98</width>
+                            <height>28</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_248"/>
@@ -8171,7 +8171,7 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>458</width>
+                            <width>98</width>
                             <height>627</height>
                            </rect>
                           </property>
@@ -9555,7 +9555,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>423</width>
+                                <width>98</width>
                                 <height>78</height>
                                </rect>
                               </property>
