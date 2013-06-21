@@ -94,6 +94,11 @@ void FromQImage(const QImage AImage);
 
 // just write an image to disk
 bool DumpImage(const char* FileName, const bool BGR) const;
+
+uint sizeBytes() const;
+
+private:
+  uint m_SizeBytes;
 };
 
 #endif

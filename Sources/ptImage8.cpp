@@ -32,13 +32,14 @@
 
 //==============================================================================
 
-ptImage8::ptImage8() {
-  m_Width      = 0;
-  m_Height     = 0;
-  m_Image      = NULL;
-  m_Colors     = 0;
-  m_ColorSpace = ptSpace_sRGB_D65;
-};
+ptImage8::ptImage8():
+  m_Width(0),
+  m_Height(0),
+  m_Image(nullptr),
+  m_Colors(0),
+  m_ColorSpace(ptSpace_sRGB_D65),
+  m_SizeBytes(0)
+{}
 
 //==============================================================================
 
@@ -80,7 +81,8 @@ void ptImage8::SetSize(const uint16_t Width, const uint16_t Height, const short 
   m_Height = Height;
   m_Colors = NrColors;
 
-  m_Image  = (uint8_t (*)[4]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
+  m_SizeBytes = m_Width * m_Height * sizeof(*m_Image);
+  m_Image  = (uint8_t (*)[4]) MALLOC(m_SizeBytes);
   ptMemoryError(m_Image,__FILE__,__LINE__);
 }
 
@@ -99,11 +101,12 @@ ptImage8* ptImage8::Set(const ptImage *Origin) { // Always deep
   m_Height     = Origin->m_Height;
   m_Colors     = Origin->m_Colors;
   m_ColorSpace = Origin->m_ColorSpace;
+  m_SizeBytes  = m_Width * m_Height * sizeof(*m_Image);
 
   // Free maybe preexisting.
   FREE(m_Image);
 
-  m_Image = (uint8_t (*)[4]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
+  m_Image = (uint8_t (*)[4]) MALLOC(m_SizeBytes);
   for (uint32_t i=0 ; i<(uint32_t)m_Width*m_Height; i++) {
     for (short c=0; c<3; c++) {
       // Mind the R<->B swap !
@@ -142,4 +145,7 @@ void ptImage8::FromQImage(const QImage AImage)
   memcpy(m_Image, AImage.bits(), m_Width*m_Height*sizeof(*m_Image));
 }
 
-////////////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
+uint ptImage8::sizeBytes() const {
+  return m_SizeBytes;
+}

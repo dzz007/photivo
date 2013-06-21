@@ -90,6 +90,7 @@ int ptFileMgrDM::setThumDir(const QString& AAbsolutePath) {
     }
 
     FCurrentDir.setFilter(filters);
+    FCurrentDir.setSorting(QDir::Name | QDir::DirsFirst);
     return FCurrentDir.count();
   }
 }

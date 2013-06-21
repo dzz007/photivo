@@ -36,7 +36,8 @@
 ptThumbGenWorker::ptThumbGenWorker():
   QObject(nullptr),
   FAbortSignaled(false),
-  FIsRunning(false)
+  FIsRunning(false),
+  FThumbCache(ptThumbCache(100*1024*1024)) // TODO BJ: RAM-size dependent/user-definable cache size
 {}
 
 //------------------------------------------------------------------------------
