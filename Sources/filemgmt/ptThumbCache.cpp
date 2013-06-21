@@ -46,6 +46,7 @@ ptThumbCache::~ptThumbCache() {}
 void ptThumbCache::clear() {
   FAccess.clear();
   FCache.clear();
+  FCache.squeeze();
   FOccupancy = 0;
 }
 

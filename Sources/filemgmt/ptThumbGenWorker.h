@@ -47,6 +47,7 @@ public:
   ~ptThumbGenWorker();
   
   void abort();
+  void clear();
   bool isRunning() const;
 
 public slots:

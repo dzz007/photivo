@@ -51,6 +51,7 @@ ptFileMgrDM::~ptFileMgrDM() {
 //------------------------------------------------------------------------------
 /*! Clear the data cache of \c ptFileMgrDM */
 void ptFileMgrDM::clear() {
+  FThumbGen->clear();
   FThumbGroupList->clear();
 }
 
