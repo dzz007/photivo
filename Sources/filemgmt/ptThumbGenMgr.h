@@ -24,6 +24,7 @@
 #define ptThumbGenMgr_H
 
 #include "ptThumbDefines.h"
+#include "ptThumbGenWorker.h"
 #include "../ptConstants.h"
 #include <QThread>
 #include <QFileInfo>
@@ -45,6 +46,7 @@ public:
   // the worker thread’s event loop to ensure thread-safety. See the request() implementation
   // for an example. abort() and isRunning() are the only exceptions from that rule.
   void abort();
+  void clear();
   void connectBroadcast(const QObject* AReceiver, const char* ABroadcastSlot);
   bool isRunning() const;
   void request(QList<TThumbAssoc> AThumbList);
@@ -53,7 +55,7 @@ public:
 private:
   // FWorker is a raw pointer because I’m not certain how well behaved smart pointers would be
   // accross thread boundaries in this scenario.
-  ptThumbGenWorker* FWorker;
+  ptThumbGenWorker FWorker;
   QThread FThread;
 };
 

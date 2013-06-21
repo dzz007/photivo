@@ -21,7 +21,6 @@
 *******************************************************************************/
 
 #include "ptThumbGenMgr.h"
-#include "ptThumbGenWorker.h"
 #include "../ptInfo.h"
 #include <QApplication>
 
@@ -34,23 +33,15 @@ auto QLTThumbAssoc_Dummy = qRegisterMetaType<QList<TThumbAssoc>>("photivo_QList_
 //------------------------------------------------------------------------------
 /*! Creates a ptThumbGenMgr object and starts the threaded worker. */
 ptThumbGenMgr::ptThumbGenMgr() {
-  FWorker = new ptThumbGenWorker;
-  try {
-    FThread.start(QThread::LowPriority);
-    FWorker->moveToThread(&FThread);
-  } catch (...) {
-    DelAndNull(FWorker);
-    throw;
-  }
+  FThread.start(QThread::LowPriority);
+  FWorker.moveToThread(&FThread);
 }
 
 //------------------------------------------------------------------------------
 /*! Destroys a ptThumbGenMgr object. Also stops processing and shuts down threads. */
 ptThumbGenMgr::~ptThumbGenMgr() {
-  if (FWorker->isRunning())
+  if (FWorker.isRunning())
     this->abort();
-
-  QMetaObject::invokeMethod(FWorker, "deleteLater", Qt::QueuedConnection);
 
   // Quit the thread. The loop makes sure the QThread object is not deleted before
   // the thread has actually stopped. Deleting a QThread with a running thread is
@@ -62,7 +53,7 @@ ptThumbGenMgr::~ptThumbGenMgr() {
 //------------------------------------------------------------------------------
 /*! Aborts the currently running thumbnail generation. */
 void ptThumbGenMgr::abort() {
-  FWorker->abort();
+  FWorker.abort();
 
   while (this->isRunning()) {
     QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
@@ -70,14 +61,20 @@ void ptThumbGenMgr::abort() {
 }
 
 //------------------------------------------------------------------------------
+/*! Aborts thumbnail generation and clears the thumbnail cache. */
+void ptThumbGenMgr::clear() {
+  FWorker.clear();
+}
+
+//------------------------------------------------------------------------------
 void ptThumbGenMgr::connectBroadcast(const QObject* AReceiver, const char* ABroadcastSlot) {
-  if (!QObject::connect(FWorker, SIGNAL(broadcast(uint,TThumbPtr)), AReceiver, ABroadcastSlot))
+  if (!QObject::connect(&FWorker, SIGNAL(broadcast(uint,TThumbPtr)), AReceiver, ABroadcastSlot))
     GInfo->Raise("Could not connect thumbnail worker's broadcast signal.", AT);
 }
 
 //------------------------------------------------------------------------------
 bool ptThumbGenMgr::isRunning() const {
-  return FWorker->isRunning();
+  return FWorker.isRunning();
 }
 
 //------------------------------------------------------------------------------
@@ -97,7 +94,7 @@ void ptThumbGenMgr::request(QList<TThumbAssoc> AThumbList) {
     Note that parameters of user-defined type must be registered with the meta object system first.
     See the declaration of TThumbId for details.
   */
-  QMetaObject::invokeMethod(FWorker, "request", Qt::QueuedConnection,
+  QMetaObject::invokeMethod(&FWorker, "request", Qt::QueuedConnection,
                             Q_ARG(QList<TThumbAssoc>, AThumbList));
 }
 

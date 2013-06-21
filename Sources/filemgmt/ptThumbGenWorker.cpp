@@ -65,6 +65,13 @@ void ptThumbGenWorker::abort() {
 }
 
 //------------------------------------------------------------------------------
+/*! Aborts processing and clears the thumbnail cache. */
+void ptThumbGenWorker::clear() {
+  this->abort();
+  FThumbCache.clear();
+}
+
+//------------------------------------------------------------------------------
 bool ptThumbGenWorker::isRunning() const {
   ptMutexLocker hRunLock(&FIsRunningMutex);
   return FIsRunning;

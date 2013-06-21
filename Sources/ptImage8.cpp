@@ -33,9 +33,9 @@
 //==============================================================================
 
 ptImage8::ptImage8():
+  m_Image(nullptr),
   m_Width(0),
   m_Height(0),
-  m_Image(nullptr),
   m_Colors(0),
   m_ColorSpace(ptSpace_sRGB_D65),
   m_SizeBytes(0)
