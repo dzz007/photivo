@@ -107,8 +107,9 @@ TThumbId makeThumbId(const QString& AFilename, int ALongEdgeMax, ptFSOType AType
 TThumbId makeThumbId(const QFileInfo& AFileInfo, int ALongEdgeMax, ptFSOType AType) {
   TThumbId hThumbId { AFileInfo.canonicalFilePath(), AFileInfo.lastModified(), AType, ALongEdgeMax };
 
-  if (AType == fsoUnknown)
-    (AFileInfo.isFile()) ? hThumbId.Type = fsoFile : hThumbId.Type = fsoDir;
+  if (AType == fsoUnknown) {
+    (AFileInfo.isFile()) ? (hThumbId.Type = fsoFile) : (hThumbId.Type = fsoDir);
+  }
 
   return hThumbId;
 }

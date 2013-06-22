@@ -83,15 +83,16 @@ bool ptThumbGenWorker::isRunning() const {
   is ready the broadcast() signal is emitted once for each image.
 */
 void ptThumbGenWorker::request(QList<TThumbAssoc> AThumbList) {
-  for (TThumbAssoc& hThumbAssoc: AThumbList)
+  for (TThumbAssoc& hThumbAssoc: AThumbList) {
     FThumbQueue.enqueue(hThumbAssoc);
+  }
 
-    ptMutexLocker hLock(&FIsRunningMutex);
-    if (!FIsRunning) {
-      FIsRunning = true;
-      hLock.unlock();
-      this->processRequests();
-    }
+  ptMutexLocker hLock(&FIsRunningMutex);
+  if (!FIsRunning) {
+    FIsRunning = true;
+    hLock.unlock();
+    this->processRequests();
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -170,7 +171,6 @@ TThumbPtr ptThumbGenWorker::generate(const TThumbId& AThumbId) {
         hSize.setWidth(hDcRaw.m_ThumbWidth);
         hSize.setHeight(hDcRaw.m_ThumbHeight);
         this->scaleSize(hSize, AThumbId.LongEdgeSize);
-        MagickSetSize(hGMImage, 2*hSize.width(), 2*hSize.height());
         MagickReadImageBlob(hGMImage, reinterpret_cast<const uchar*>(hImgData.data()), hImgData.size());
       }
     } else {
@@ -179,7 +179,6 @@ TThumbPtr ptThumbGenWorker::generate(const TThumbId& AThumbId) {
       hSize.setWidth(MagickGetImageWidth(hGMImage));
       hSize.setHeight(MagickGetImageHeight(hGMImage));
       this->scaleSize(hSize, AThumbId.LongEdgeSize);
-      MagickSetSize(hGMImage, 2*hSize.width(), 2*hSize.height());
       MagickReadImage(hGMImage, hFilePath.toAscii().data());
     }
 
