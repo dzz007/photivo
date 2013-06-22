@@ -53,8 +53,6 @@ public:
   /*! @}*/
 
 private:
-  // FWorker is a raw pointer because I’m not certain how well behaved smart pointers would be
-  // accross thread boundaries in this scenario.
   ptThumbGenWorker FWorker;
   QThread FThread;
 };
