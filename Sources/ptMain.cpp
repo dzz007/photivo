@@ -1768,7 +1768,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   } else if (Settings->GetInt("PreviewMode") == ptPreviewMode_End) {
     PreviewImage->Set(TheProcessor->m_Image_AfterEyeCandy);
   } else {
-    if (!Settings->GetInt("IsRAW")) ActiveTab = MAX(ptGeometryTab, ActiveTab);
+    if (!Settings->useRAWHandling()) ActiveTab = MAX(ptLocalTab, ActiveTab);
     switch (ActiveTab) {
       case ptCameraTab:
         Settings->SetValue("ShowExposureIndicatorSensor",1);
@@ -2209,7 +2209,10 @@ void RunJob(const QString JobFileName) {
           Settings->SetValue("IsRAW",1);
         } else {
           Settings->SetValue("IsRAW",0);
-          Settings->SetValue("ExposureNormalization",0.0);
+        }
+
+        if (!Settings->useRAWHandling()) {
+          Settings->SetValue("ExposureNormalization", 0.0);
         }
 
         QFileInfo PathInfo(InputFileNameList[0]);
@@ -2673,59 +2676,63 @@ void CB_MenuFileOpen(const short HaveFile) {
                          + " '"
                          + InputFileNameList[0]
                          + "'" ;
-    ptMessageBox::warning(MainWindow,"Decode error",ErrorMessage);
-    Settings->SetValue("InputFileNameList",OldInputFileNameList);
+    ptMessageBox::warning(MainWindow, "Decode error", ErrorMessage);
+    Settings->SetValue("InputFileNameList", OldInputFileNameList);
     delete TestDcRaw;
     return;
   }
 
-
   // Image type is supported: process the image
   if (InputType == itRaw) {
-    Settings->SetValue("IsRAW",1);
+    Settings->SetValue("IsRAW", 1);
   } else {
-    Settings->SetValue("IsRAW",0);
-    Settings->SetValue("ExposureNormalization",0.0);
+    Settings->SetValue("IsRAW", 0);
+  }
+
+  Settings->SetEnabled("UseThumbnail", Settings->GetInt("IsRAW") == 1);
+
+  if (!Settings->useRAWHandling()) {
+    Settings->SetValue("ExposureNormalization", 0.0);
   }
 
   if (Settings->GetInt("HaveImage") == 1) {
     // Catch 1:1 pipe size when opening
     if (Settings->GetInt("PipeSize") == 0)
-      Settings->SetValue("PipeSize",1);
+      Settings->SetValue("PipeSize", 1);
   }
 
   // TODO mike: need to delete the processor here?
   delete TheDcRaw;
   delete TheProcessor;
   // Load user settings
-  if (Settings->GetInt("StartupSettings")==1 &&
-      Settings->GetInt("StartupSettingsReset")==1 &&
-      Settings->GetInt("HaveImage")==1) {
-    Settings->SetValue("HaveImage",0);
+  if (Settings->GetInt("StartupSettings") == 1 &&
+      Settings->GetInt("StartupSettingsReset") == 1 &&
+      Settings->GetInt("HaveImage") == 1) {
+    Settings->SetValue("HaveImage", 0);
     CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
     // clean up
     QStringList Temp;
     Temp << "CropX" << "CropY" << "CropW" << "CropH";
     Temp << "RotateW" << "RotateH";
-    for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i),0);
+    for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i), 0);
   }
   // clean up possible detail view cache
-  if (Settings->GetInt("DetailViewActive")==1) {
-    Settings->SetValue("DetailViewActive",0);
-    Settings->SetValue("DetailViewCropX", 0);
-    Settings->SetValue("DetailViewCropY", 0);
-    Settings->SetValue("DetailViewCropW", 0);
-    Settings->SetValue("DetailViewCropH", 0);
+  if (Settings->GetInt("DetailViewActive") == 1) {
+    Settings->SetValue("DetailViewActive", 0);
+    Settings->SetValue("DetailViewCropX",  0);
+    Settings->SetValue("DetailViewCropY",  0);
+    Settings->SetValue("DetailViewCropW",  0);
+    Settings->SetValue("DetailViewCropH",  0);
     Settings->ToDcRaw(TestDcRaw);
   }
 
   TheDcRaw = TestDcRaw;
-  Settings->SetValue("ImageW",InputWidth);
-  Settings->SetValue("ImageH",InputHeight);
+  Settings->SetValue("ImageW", InputWidth);
+  Settings->SetValue("ImageH", InputHeight);
 
   if (Settings->GetInt("StartupSwitchAR")) {
     // portrait image
-    if ((Settings->GetInt("IsRAW")==0 &&
+    if ((!Settings->useRAWHandling() &&
          Settings->GetInt("ImageW") < Settings->GetInt("ImageH")) ||
         TheDcRaw->m_Flip & 4) {
       if (Settings->GetInt("AspectRatioW") > Settings->GetInt("AspectRatioH"))
@@ -2744,20 +2751,20 @@ void CB_MenuFileOpen(const short HaveFile) {
 
   Settings->SetValue("HaveImage", 1);
   short OldRunMode = Settings->GetInt("RunMode");
-  Settings->SetValue("RunMode",0);
+  Settings->SetValue("RunMode", 0);
 
   if (Settings->GetInt("AutomaticPipeSize") && Settings->ToolIsActive("TabResize")) {
     CalculatePipeSize(true);
   }
 
-  Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+  Update(ptProcessorPhase_Raw, ptProcessorPhase_Load, 0);
 
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-  Settings->SetValue("PerspectiveFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
-  Settings->SetValue("DefishFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
-  Settings->SetValue("LfunFocal", Settings->GetDouble("FocalLengthIn35mmFilm"));
+  Settings->SetValue("PerspectiveFocalLength", Settings->GetDouble("FocalLengthIn35mmFilm"));
+  Settings->SetValue("DefishFocalLength",      Settings->GetDouble("FocalLengthIn35mmFilm"));
+  Settings->SetValue("LfunFocal",              Settings->GetDouble("FocalLengthIn35mmFilm"));
   double TmpAprt = Settings->GetDouble("ApertureFromExif");
-  Settings->SetValue("LfunAperture", (TmpAprt==0.0) ? 8.0 : TmpAprt);
+  Settings->SetValue("LfunAperture",           (TmpAprt == 0.0) ? 8.0 : TmpAprt);
   MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
 
   QFileInfo finfo = QFileInfo((Settings->GetStringList("InputFileNameList"))[0]);
@@ -3424,17 +3431,17 @@ void CB_PipeSizeChoice(const QVariant Choice) {
     if (msgBox.clickedButton() == CancelButton ||
         (msgBox.clickedButton() == DetailButton &&
          Settings->GetInt("HaveImage")==0)) {
-      Settings->SetValue("PipeSize",PreviousPipeSize);
+      Settings->SetValue("PipeSize", PreviousPipeSize);
       return;
     } else if (msgBox.clickedButton() == DetailButton &&
-               Settings->GetInt("HaveImage")==1) {
+               Settings->GetInt("HaveImage") == 1) {
       short OldZoomMode = 0;
-      if (Settings->GetInt("DetailViewActive")==0) {
+      if (Settings->GetInt("DetailViewActive") == 0) {
         Settings->SetValue("DetailViewScale", PreviousPipeSize);
         if (TheProcessor->m_Image_DetailPreview == NULL)
           TheProcessor->m_Image_DetailPreview = new ptImage();
         // save a full image if we have several detail views without full view
-        if (Settings->GetInt("IsRAW")==0) {
+        if (!Settings->useRAWHandling()) {
           TheProcessor->m_Image_DetailPreview->SetScaled(TheProcessor->m_Image_AfterDcRaw,
                                                          Settings->GetInt("Scaled"));
         } else {
@@ -3864,8 +3871,17 @@ void CB_OpenPresetFileButton() {
   CB_OpenSettingsFile(SettingsFileName);
 }
 
+void CB_UseThumbnailCheck(const QVariant Check) {
+  Settings->SetValue("UseThumbnail", Check);
+
+  if (Settings->GetInt("IsRAW")) {
+    Update(ptProcessorPhase_Raw, ptProcessorPhase_Load);
+  }
+}
+
+
 void CB_BadPixelsChoice(const QVariant Choice) {
-  Settings->SetValue("HaveBadPixels",Choice);
+  Settings->SetValue("HaveBadPixels", Choice);
   short Cancelled = 0;
   if (Choice.toInt() == 1) {
     // Request to load one.
@@ -3922,7 +3938,7 @@ void SelectSpotWBDone(const ptStatus ExitStatus, const QRect SelectionRect);
 
 void CB_WhiteBalanceChoice(const QVariant Choice) {
   Settings->SetValue("WhiteBalance",Choice);
-  if (Settings->GetInt("HaveImage") == 0 || Settings->GetInt("IsRAW") == 0) return;
+  if (Settings->GetInt("HaveImage") == 0 || (!Settings->useRAWHandling())) return;
 
   switch (Choice.toInt()) {
     case ptWhiteBalance_Camera :
@@ -6802,6 +6818,8 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(RunModeCheck)
   M_Dispatch(SpecialPreviewChoice)
 
+  M_Dispatch(UseThumbnailCheck)
+
   M_Dispatch(BadPixelsChoice)
   M_Dispatch(DarkFrameChoice)
 
@@ -7273,8 +7291,13 @@ ptImageType CheckImageType(QString filename,
   if (LocalDcRaw->Identify() == 0) {
     // we have a raw file
     result = itRaw;
-    if (width != NULL) *width = LocalDcRaw->m_Width;
-    if (height != NULL) *height = LocalDcRaw->m_Height;
+    if (Settings->GetInt("UseThumbnail") == 0) {
+      if (width != NULL)  *width  = LocalDcRaw->m_Width;
+      if (height != NULL) *height = LocalDcRaw->m_Height;
+    } else {
+      if (width != NULL)  *width  = LocalDcRaw->m_ThumbWidth;
+      if (height != NULL) *height = LocalDcRaw->m_ThumbHeight;
+    }
 
   } else {
     // Not a raw image. We use GraphicsMagick to check for valid Bitmaps.

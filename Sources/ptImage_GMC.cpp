@@ -178,21 +178,27 @@ bool ptImage::DumpImage(const char* FileName) const {
 //==============================================================================
 
 // Open Image
-ptImage* ptImage::ptGMCOpenImage(const char* FileName,
-                                const short ColorSpace,
-                                const short Intent,
-                                const short ScaleFactor,
-                                int& Success)
+ptImage* ptImage::ptGMCOpenImage(const char*        FileName,
+                                 short              ColorSpace,
+                                 short              Intent,
+                                 short              ScaleFactor,
+                                 bool               IsRAW,
+                                 std::vector<char>* ImgData,
+                                 int&               Success)
 {
   Success = 0;
-  if (!QFile::exists(QString(FileName))) return this;
 
   MagickWand* image = NewMagickWand();
   ExceptionType MagickExcept;
 
-  MagickReadImage(image, FileName);
-  MagickGetException(image, &MagickExcept);
+  if (IsRAW) {
+    MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->size());
+  } else {
+    if (!QFile::exists(QString(FileName))) return this;
+    MagickReadImage(image, FileName);
+  }
 
+  MagickGetException(image, &MagickExcept);
   if (MagickExcept != UndefinedException) {
     return this;
   }
@@ -223,7 +229,7 @@ ptImage* ptImage::ptGMCOpenImage(const char* FileName,
 
   // Buffer for the data from Magick
   std::vector<std::array<float, 3> > ImageBuffer;
-  ImageBuffer.resize((size_t)NewWidth*NewHeight);
+  ImageBuffer.resize((size_t) NewWidth*NewHeight);
 
   MagickGetImagePixels(image, 0, 0, NewWidth, NewHeight, "RGB", FloatPixel, (uchar*)ImageBuffer.data());
 
@@ -265,9 +271,9 @@ ptImage* ptImage::ptGMCOpenImage(const char* FileName,
     NewImage = ImageBuffer;
   }
 
-  m_Width  = NewWidth;
-  m_Height = NewHeight;
-  m_Colors = 3;
+  m_Width      = NewWidth;
+  m_Height     = NewHeight;
+  m_Colors     = 3;
   m_ColorSpace = ColorSpace;
 
   // Alloc for the resulting image
