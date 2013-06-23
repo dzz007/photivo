@@ -56,7 +56,6 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
   m_RelatedImage = RelatedImage; // don't delete that at cleanup !
   // Some other dynamic members we want to have clean.
   m_QPixmap      = NULL;
-  m_Image8       = NULL;
 
   m_PreviousHistogramGamma = -1;
   m_PreviousHistogramLogX  = -1;
@@ -179,7 +178,6 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
 
 ptHistogramWindow::~ptHistogramWindow() {
   delete m_QPixmap;
-  delete m_Image8;
   delete m_LookUp;
   delete m_PixelInfoR;
   delete m_PixelInfoG;
@@ -355,8 +353,8 @@ void ptHistogramWindow::CalculateHistogram() {
   }
 
   // Instantiate an Image8 and put the histogram in it.
-  delete m_Image8;
-  m_Image8 = new ptImage8(WidgetWidth,WidgetHeight,3);
+  m_Image8.setSize(WidgetWidth, WidgetHeight, 3);
+  m_Image8.fillColor(0, 0, 0, 0);
 
   uint16_t RowLimit = WidgetHeight-1;
 
@@ -375,25 +373,25 @@ void ptHistogramWindow::CalculateHistogram() {
         Index = k*WidgetWidth+i+HistogramMargin;
         // 2- ! Image8[0]=B for QT !
         for (short z=0; z<3; z++) {
-          m_Image8->m_Image[Index][z] +=
+          m_Image8.image()[Index][z] +=
             ((z==(2-c)) || (MaxColor ==1))?0xff:0;
         }
       }
       // baselines. A grey colour.
-      Index = RowLimit*m_Image8->m_Width+i+HistogramMargin;
-      m_Image8->m_Image[Index][0] = 0x80;
-      m_Image8->m_Image[Index][1] = 0x80;
-      m_Image8->m_Image[Index][2] = 0x80;
+      Index = RowLimit*m_Image8.width()+i+HistogramMargin;
+      m_Image8.image()[Index][0] = 0x80;
+      m_Image8.image()[Index][1] = 0x80;
+      m_Image8.image()[Index][2] = 0x80;
       // Average line.
       r = HistoAverage/(double)(m_HistoMax);
       if (r>=0.99) r=0.99; // Safety.
       Row = RowLimit-(uint16_t)(r*WidgetHeight);
       // if (Row<0) Row = 0;
       if (Row >= WidgetHeight) Row=WidgetHeight-1;
-      Index = Row*m_Image8->m_Width+i+HistogramMargin;
-      m_Image8->m_Image[Index][0] = 0xa0;
-      m_Image8->m_Image[Index][1] = 0xa0;
-      m_Image8->m_Image[Index][2] = 0xa0;
+      Index = Row*m_Image8.width()+i+HistogramMargin;
+      m_Image8.image()[Index][0] = 0xa0;
+      m_Image8.image()[Index][1] = 0xa0;
+      m_Image8.image()[Index][2] = 0xa0;
     }
   }
 
@@ -405,12 +403,12 @@ void ptHistogramWindow::CalculateHistogram() {
     uint32_t Index = Row*WidgetWidth+HistogramMargin;
     for (short i=1; i<Sections; i++) {
       Index += Step;
-      if (m_Image8->m_Image[Index][0] == 0 &&
-          m_Image8->m_Image[Index][1] == 0 &&
-          m_Image8->m_Image[Index][2] == 0) {
-        m_Image8->m_Image[Index][0] =
-        m_Image8->m_Image[Index][1] =
-        m_Image8->m_Image[Index][2] = value;
+      if (m_Image8.image()[Index][0] == 0 &&
+          m_Image8.image()[Index][1] == 0 &&
+          m_Image8.image()[Index][2] == 0) {
+        m_Image8.image()[Index][0] =
+        m_Image8.image()[Index][1] =
+        m_Image8.image()[Index][2] = value;
       }
     }
   }
@@ -491,9 +489,9 @@ void ptHistogramWindow::UpdateView(const ptImage* NewRelatedImage) {
   // HW acceleration of QPixmap.
   delete m_QPixmap;
   m_QPixmap = new QPixmap(
-   QPixmap::fromImage(QImage((const uchar*) m_Image8->m_Image,
-                             m_Image8->m_Width,
-                             m_Image8->m_Height,
+   QPixmap::fromImage(QImage((const uchar*) m_Image8.image().data(),
+                             m_Image8.width(),
+                             m_Image8.height(),
                              QImage::Format_RGB32)));
   repaint();
 }

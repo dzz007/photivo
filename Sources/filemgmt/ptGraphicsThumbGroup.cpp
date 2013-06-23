@@ -130,8 +130,8 @@ void ptGraphicsThumbGroup::addImage(TThumbPtr AImage) {
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
   qreal ThumbSize = Settings->GetInt("FileMgrThumbnailSize");
-  m_ThumbPos.setX(ThumbSize/2 - AImage->m_Width/2  + InnerPadding + 0.5);
-  m_ThumbPos.setY(ThumbSize/2 - AImage->m_Height/2 + InnerPadding + 0.5);
+  m_ThumbPos.setX(ThumbSize/2 - AImage->width()/2  + InnerPadding + 0.5);
+  m_ThumbPos.setY(ThumbSize/2 - AImage->height()/2 + InnerPadding + 0.5);
   this->update();
 
 /*
@@ -221,9 +221,9 @@ void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsIt
   painter->setBrush(m_Brush);
   painter->drawRoundedRect(this->rect(), 5, 5);
   if (m_Thumbnail) {
-    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), QImage((const uchar*) m_Thumbnail->m_Image,
-                                                                             m_Thumbnail->m_Width,
-                                                                             m_Thumbnail->m_Height,
+    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), QImage((const uchar*) m_Thumbnail->image().data(),
+                                                                             m_Thumbnail->width(),
+                                                                             m_Thumbnail->height(),
                                                                              QImage::Format_ARGB32));
   }
 }
