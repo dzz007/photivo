@@ -387,10 +387,10 @@ void ptGroupBox::setActivityIcon(const bool AStatus) {
 
 //==============================================================================
 
-void ptGroupBox::SetEnabled(const short Enabled) {
+void ptGroupBox::SetEnabled(const bool Enabled) {
   QStringList Temp = Settings->GetStringList("DisabledTools");
   Temp.removeDuplicates();
-  if (Enabled == 0) {
+  if (!Enabled) {
     Temp.append(m_Name);
     m_IsEnabled = 0;
   } else {

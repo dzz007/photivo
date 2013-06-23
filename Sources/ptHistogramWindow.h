@@ -104,10 +104,12 @@ private:
   void CalculateHistogram();
   void FillLookUp();
   void InitOverlay();
+  void setInfoIconState(bool AIsActive);
 
   QLabel*         m_PixelInfoR;
   QLabel*         m_PixelInfoG;
   QLabel*         m_PixelInfoB;
+  QLabel*         m_InfoIcon;
   QTimer*         m_PixelInfoTimer;
   QPalette*       m_OverlayPalette;
 };

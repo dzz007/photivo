@@ -197,7 +197,7 @@ void ptProcessor::Run(short Phase,
     ::ViewWindowShowStatus(ptStatus_Processing);
 
     // correction for bitmaps
-    if (!Settings->GetInt("IsRAW")) {
+    if (!Settings->useRAWHandling()) {
       if (Phase == ptProcessorPhase_Raw &&
           SubPhase > ptProcessorPhase_Load) {
         Phase = ptProcessorPhase_LocalEdit;
@@ -228,9 +228,9 @@ void ptProcessor::Run(short Phase,
         // This will be equivalent to m_PipeSize EXCEPT if overwritten
         // by the FinalRun setting that will be always in full size.
         // 0 for full, 1 for half, 2 for quarter (useable in >> operators)
-        Settings->SetValue("Scaled",m_DcRaw->m_UserSetting_HalfSize);
+        Settings->SetValue("Scaled", m_DcRaw->m_UserSetting_HalfSize);
 
-        if (Settings->GetInt("IsRAW")==0) {
+        if (!Settings->useRAWHandling()) {
           m_ReportProgress(tr("Loading Bitmap"));
 
           TRACEMAIN("Start opening bitmap at %d ms.",
@@ -240,17 +240,36 @@ void ptProcessor::Run(short Phase,
 
           int Success = 0;
 
-          m_Image_AfterDcRaw->ptGMCOpenImage(
-            (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
-            Settings->GetInt("WorkColor"),
-            Settings->GetInt("PreviewColorProfileIntent"),
-            0,
-            Success);
+          if (Settings->GetInt("IsRAW") == 1) { // RAW image, we fetch the thumbnail
+            std::vector<char> ImgData;
+            m_DcRaw->thumbnail(ImgData);
+
+            m_Image_AfterDcRaw->ptGMCOpenImage(
+              (Settings->GetStringList("InputFileNameList"))[0].toLocal8Bit().data(),
+              Settings->GetInt("WorkColor"),
+              Settings->GetInt("PreviewColorProfileIntent"),
+              0,
+              true,
+              &ImgData,
+              Success);
+          } else {
+            m_Image_AfterDcRaw->ptGMCOpenImage(
+              (Settings->GetStringList("InputFileNameList"))[0].toLocal8Bit().data(),
+              Settings->GetInt("WorkColor"),
+              Settings->GetInt("PreviewColorProfileIntent"),
+              0,
+              false,
+              nullptr,
+              Success);
+          }
 
           if (Success == 0) {
             ptMessageBox::critical(0,"File not found","File not found!");
             return;
           }
+
+          Settings->SetValue("ImageW", m_Image_AfterDcRaw->m_Width);
+          Settings->SetValue("ImageH", m_Image_AfterDcRaw->m_Height);
 
           m_ReportProgress(tr("Reading exif info"));
 
@@ -275,7 +294,7 @@ void ptProcessor::Run(short Phase,
               // Not in DcRawToSettings as at this point it is
               // not yet influenced by HalfSize. Later it is and
               // it would be wrongly overwritten then.
-              if (Settings->GetInt("DetailViewActive")==0) {
+              if (Settings->GetInt("DetailViewActive") == 0) {
                 Settings->SetValue("ImageW",m_DcRaw->m_ReportedWidth);
                 Settings->SetValue("ImageH",m_DcRaw->m_ReportedHeight);
 
@@ -1731,6 +1750,8 @@ void ptProcessor::Run(short Phase,
               Settings->GetInt("WorkColor"),
               Settings->GetInt("PreviewColorProfileIntent"),
               0,
+              false,
+              nullptr,
               Success);
 
             if (Success == 0) {
@@ -1812,6 +1833,8 @@ void ptProcessor::Run(short Phase,
               Settings->GetInt("WorkColor"),
               Settings->GetInt("PreviewColorProfileIntent"),
               0,
+              false,
+              nullptr,
               Success);
 
             if (Success == 0) {
@@ -2064,19 +2087,21 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
   ptFilterBase *hFilter = nullptr;
 
   // We fetch the image from the input processing
-  if (Settings->GetInt("IsRAW") == 0) {
+  if (!Settings->useRAWHandling()) {
     // image is a bitmap
     if (StopBefore == ptProcessorStopBefore::NoStop) {
       m_ReportProgress(tr("Transfer Bitmap"));
     }
 
+    printf("\n%d, %d, %d\n\n", Settings->GetInt("DetailViewCropX"), Settings->GetInt("Scaled"), Settings->GetInt("PipeSize"));
+
     // This will be equivalent to m_PipeSize EXCEPT if overwritten
     // by the FinalRun setting that will be always in full size.
     // 0 for full, 1 for half, 2 for quarter (useable in >> operators)
-    Settings->SetValue("Scaled",Settings->GetInt("PipeSize"));
+    Settings->SetValue("Scaled", Settings->GetInt("PipeSize"));
 
     if (Settings->GetInt("JobMode") == 1) // FinalRun!
-      Settings->SetValue("Scaled",0);
+      Settings->SetValue("Scaled", 0);
 
     if (!m_Image_AfterLocalEdit)
       m_Image_AfterLocalEdit = new ptImage();
@@ -2086,9 +2111,9 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
 
     if (Settings->GetInt("DetailViewActive") == 1) {
       m_Image_AfterLocalEdit->Crop(Settings->GetInt("DetailViewCropX") >> Settings->GetInt("Scaled"),
-                                  Settings->GetInt("DetailViewCropY") >> Settings->GetInt("Scaled"),
-                                  Settings->GetInt("DetailViewCropW") >> Settings->GetInt("Scaled"),
-                                  Settings->GetInt("DetailViewCropH") >> Settings->GetInt("Scaled"));
+                                   Settings->GetInt("DetailViewCropY") >> Settings->GetInt("Scaled"),
+                                   Settings->GetInt("DetailViewCropW") >> Settings->GetInt("Scaled"),
+                                   Settings->GetInt("DetailViewCropH") >> Settings->GetInt("Scaled"));
     }
 
     // The full image width and height is already set.
@@ -2537,7 +2562,7 @@ void ptProcessor::ReadExifBuffer() {
 //      Settings->SetValue("LensfunFocalLength",FocalLength);
     }
 
-  } catch(Exiv2::Error& Error) {
+  } catch (Exiv2::Error& Error) {
     // Exiv2 errors are in this context hopefully harmless
     // (unsupported tags etc.)
 

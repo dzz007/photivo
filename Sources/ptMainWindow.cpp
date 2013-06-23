@@ -1955,9 +1955,9 @@ void ptMainWindow::UpdateToolBoxes() {
              << static_cast<ptGroupBox*>(m_GroupBox->value("TabWhiteBalance"))
              << static_cast<ptGroupBox*>(m_GroupBox->value("TabDemosaicing"))
              << static_cast<ptGroupBox*>(m_GroupBox->value("TabHighlightRecovery"));
-  short Temp = Settings->GetInt("IsRAW");
+  bool hTemp = Settings->useRAWHandling();
   for (int i = 0; i < m_RawTools.size(); i++) {
-    m_RawTools.at(i)->SetEnabled(Temp);
+    m_RawTools.at(i)->SetEnabled(hTemp);
   }
 
   // disable tools when we are in detail view
@@ -1972,9 +1972,9 @@ void ptMainWindow::UpdateToolBoxes() {
                     << static_cast<ptGroupBox*>(m_GroupBox->value("TabResize"))
                     << static_cast<ptGroupBox*>(m_GroupBox->value("TabWebResize"));
 
-  Temp = 1 - Settings->GetInt("DetailViewActive");
+  hTemp = !(Settings->GetInt("DetailViewActive") == 1);
   for (int i = 0; i < m_DetailViewTools.size(); i++) {
-    m_DetailViewTools.at(i)->SetEnabled(Temp);
+    m_DetailViewTools.at(i)->SetEnabled(hTemp);
   }
 }
 

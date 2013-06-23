@@ -459,6 +459,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"SearchBarEnable"            ,ptGT_Check ,1,0,1,tr("Display search bar"),tr("Display search bar")},
     {"WriteBackupSettings"        ,ptGT_Check ,1,0,0,tr("Backup settings") ,tr("Write backup settings during processing")},
     {"RunMode"                    ,ptGT_Check ,1,0,0,tr("manual")          ,tr("manual or automatic pipe")},
+    {"UseThumbnail"               ,ptGT_Check ,1,1,0,tr("Use thumbnail")   ,tr("Use the embedded thumbnail of RAW images")},
     {"MultiplierEnhance"          ,ptGT_Check ,1,1,0,tr("Intensify")       ,tr("Normalize lowest channel to 1")},
     {"ManualBlackPoint"           ,ptGT_Check ,2,1,0,tr("Manual BP")       ,tr("Manual black point setting enabled")},
     {"ManualWhitePoint"           ,ptGT_Check ,2,1,0,tr("Manual WP")       ,tr("Manual white point setting enabled")},
@@ -786,7 +787,7 @@ ptSettings::~ptSettings() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const QVariant ptSettings::GetValue(const QString Key) {
+const QVariant ptSettings::GetValue(const QString Key) const {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
@@ -802,7 +803,7 @@ const QVariant ptSettings::GetValue(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-int ptSettings::GetInt(const QString Key) {
+int ptSettings::GetInt(const QString Key) const {
   // Remark : UInt and Int are mixed here.
   // The only settings related type where u is important is uint16_t
   // (dimensions). uint16_t fits in an integer which is 32 bit.
@@ -827,7 +828,7 @@ int ptSettings::GetInt(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-double ptSettings::GetDouble(const QString Key) {
+double ptSettings::GetDouble(const QString Key) const {
   QVariant Tmp = GetValue(Key);
   if (static_cast<QMetaType::Type>(Tmp.type()) == QMetaType::Float)
     Tmp.convert(QVariant::Double);
@@ -846,7 +847,7 @@ double ptSettings::GetDouble(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const QString ptSettings::GetString(const QString Key) {
+const QString ptSettings::GetString(const QString Key) const {
   QVariant Tmp = GetValue(Key);
   if (Tmp.type() != QVariant::String) {
     ptLogError(ptError_Argument,
@@ -863,7 +864,7 @@ const QString ptSettings::GetString(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const QStringList ptSettings::GetStringList(const QString Key) {
+const QStringList ptSettings::GetStringList(const QString Key) const {
   QVariant Tmp = GetValue(Key);
   if (Tmp.type() != QVariant::StringList) {
     ptLogError(ptError_Argument,
@@ -1519,6 +1520,13 @@ void ptSettings::FromDcRaw(ptDcRaw* TheDcRaw) {
            log(EOSExposureNormalization/TheDcRaw->m_MinPreMulti)/log(2));
 
   TRACEKEYVALS("ExposureNorm(EV)","%f", GetDouble("ExposureNormalization"));
+}
+
+//==============================================================================
+
+bool ptSettings::useRAWHandling() const
+{
+  return (GetInt("IsRAW") == 1) && (GetInt("UseThumbnail") == 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
