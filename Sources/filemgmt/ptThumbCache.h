@@ -34,6 +34,7 @@
 #include <QMap>
 #include <QLinkedList>
 #include <QString>
+#include <QMutex>
 
 /*! ptThumbCache implements a least-recently-used cache for thumbnail images. */
 class ptThumbCache {
@@ -70,6 +71,7 @@ private:
   TThumbCache     FCache;
   uint            FCapacity;  // in bytes
   uint            FOccupancy; // in bytes
+  QMutex          FMutex;
 };
 
 #endif // PTTHUMBCACHE_H

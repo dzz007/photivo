@@ -286,7 +286,8 @@ HEADERS += \
     ../Sources/filemgmt/ptThumbDefines.h \
     ../Sources/ptMutexLocker.h \
     ../Sources/filemgmt/ptThumbGenMgr.h \
-    ../Sources/filemgmt/ptThumbGenWorker.h
+    ../Sources/filemgmt/ptThumbGenWorker.h \
+    ../Sources/filemgmt/ptThumbGenHelpers.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -421,7 +422,8 @@ SOURCES += \
     ../Sources/filemgmt/ptThumbDefines.cpp \
     ../Sources/ptMutexLocker.cpp \
     ../Sources/filemgmt/ptThumbGenMgr.cpp \
-    ../Sources/filemgmt/ptThumbGenWorker.cpp
+    ../Sources/filemgmt/ptThumbGenWorker.cpp \
+    ../Sources/filemgmt/ptThumbGenHelpers.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \

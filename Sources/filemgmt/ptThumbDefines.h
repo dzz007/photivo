@@ -45,6 +45,8 @@ struct TThumbId {
   QDateTime Timestamp;    /*! "last access" time of the file */
   ptFSOType Type;         /*! marks the path as a directory */
   int       LongEdgeSize; /*! length of the thumbnail’s long edge in pixels */
+
+  explicit operator bool() const;
 };
 Q_DECLARE_METATYPE(TThumbId)
 // See also the .cpp for the qRegisterMetaType() call
@@ -57,6 +59,8 @@ bool operator!=(const TThumbId& lhs, const TThumbId& rhs);
 struct TThumbAssoc {
   TThumbId ThumbId;   /*! the thumbnail’s unique ID */
   uint     GroupId;   /*! the ptGraphicsThumbGroup’s unique ID */
+
+  explicit operator bool() const;
 };
 Q_DECLARE_METATYPE(TThumbAssoc)
 Q_DECLARE_METATYPE(QList<TThumbAssoc>)

@@ -21,54 +21,40 @@
 *******************************************************************************/
 
 #include "ptThumbGenWorker.h"
+#include "ptThumbGenHelpers.h"
+#include "ptThumbCache.h"
 #include "../ptImage8.h"
 #include "../ptDcRaw.h"
-#include "../ptMutexLocker.h"
 #include "../ptInfo.h"
 #include <QApplication>
 #include <QImage>
+#include <QThread>
 
 //------------------------------------------------------------------------------
 /*!
   Creates a ptThumbGen object. Note that because the worker is supposed to run in its own thread
   the Qt parent mechanism cannot be used although ptThumbGen is derived from QObject.
+  AQueue, ACache and AAbortCtrl must be valid pointers and guaranteed to live at least as long
+  as the ptThumbGenWorker object. The object does *not* take ownership of either of those.
 */
-ptThumbGenWorker::ptThumbGenWorker():
+ptThumbGenWorker::ptThumbGenWorker(ptThumbQueue* AQueue,
+                                   ptThumbCache* ACache,
+                                   ptFlowController* AAbortCtrl):
   QObject(nullptr),
-  FAbortSignaled(false),
   FIsRunning(false),
-  FThumbCache(ptThumbCache(100*1024*1024)) // TODO BJ: RAM-size dependent/user-definable cache size
-{}
-
-//------------------------------------------------------------------------------
-/*! Destroys a ptThumbGen object. */
-ptThumbGenWorker::~ptThumbGenWorker() {}
-
-//------------------------------------------------------------------------------
-/*!
-  Aborts the currently running thumbnail generation. When abort() returns it is *not*
-  guaranteed that processing has already stopped.
-*/
-void ptThumbGenWorker::abort() {
-  if (this->isRunning()) {
-    // Tell the worker to abort as soon as possible.
-    // Processing will stop after the current image is finished
-    ptMutexLocker hAbortLock(&FAbortMutex);
-    FAbortSignaled = true;
-
-  } else {
-    // when idle stopping happens immediately
-    ptMutexLocker hAbortLock(&FAbortMutex);
-    FAbortSignaled = false;
-    this->stopProcessing();
-  }
+  FAbortCtrl(AAbortCtrl),
+  FThumbCache(ACache),
+  FThumbQueue(AQueue)
+{
+  Q_ASSERT_X(AAbortCtrl != nullptr, __PRETTY_FUNCTION__, "Pointer to thumbnail abort ctrler is null.");
+  Q_ASSERT_X(ACache != nullptr, __PRETTY_FUNCTION__, "Pointer to thumbnail cache is null.");
+  Q_ASSERT_X(AQueue != nullptr, __PRETTY_FUNCTION__, "Pointer to thumbnail queue is null.");
 }
 
 //------------------------------------------------------------------------------
-/*! Aborts processing and clears the thumbnail cache. */
-void ptThumbGenWorker::clear() {
-  this->abort();
-  FThumbCache.clear();
+/*! Destroys a ptThumbGen object. */
+ptThumbGenWorker::~ptThumbGenWorker() {
+  // See ctor comment for things you MUST NOT delete here.
 }
 
 //------------------------------------------------------------------------------
@@ -78,51 +64,41 @@ bool ptThumbGenWorker::isRunning() const {
 }
 
 //------------------------------------------------------------------------------
-/*!
-  Requests a list of thumbnail images and returns immediately. When the actual image data
-  is ready the broadcast() signal is emitted once for each image.
-*/
-void ptThumbGenWorker::request(QList<TThumbAssoc> AThumbList) {
-  for (TThumbAssoc& hThumbAssoc: AThumbList) {
-    FThumbQueue.enqueue(hThumbAssoc);
-  }
-
-  ptMutexLocker hLock(&FIsRunningMutex);
-  if (!FIsRunning) {
-    FIsRunning = true;
-    hLock.unlock();
-    this->processRequests();
-  }
+void ptThumbGenWorker::setIsRunning(bool AValue) {
+  ptMutexLocker hRunLock(&FIsRunningMutex);
+  FIsRunning = AValue;
 }
 
 //------------------------------------------------------------------------------
-void ptThumbGenWorker::processRequests() {
-  while (!FThumbQueue.isEmpty()) {
-    // generate thumbnail image and broadcast to receiver(s)
-    auto hThumbAssoc = FThumbQueue.dequeue();
-    auto hThumb = this->generate(hThumbAssoc.ThumbId);
+void ptThumbGenWorker::start() {
+  this->postProcessEvent();
+}
 
-    QApplication::processEvents();
+//------------------------------------------------------------------------------
+void ptThumbGenWorker::process() {
+  if (!FAbortCtrl->isOpen()) {
+    return;
+  }
 
-    {  // abort processing if requested
-      ptMutexLocker hAbortLock(&FAbortMutex);
-      if (FAbortSignaled) {
-        FAbortSignaled = false;
-        this->stopProcessing();
-        break;
-      }
+  // Generate thumbnail image (if an ID is available) and broadcast to receiver(s)
+  auto hThumbAssoc = FThumbQueue->dequeue();
+  if (hThumbAssoc) {
+    auto hThumb = this->generateThumb(hThumbAssoc.ThumbId);
+    if (FAbortCtrl->isOpen()) {
+      emit broadcast(hThumbAssoc.GroupId, hThumb);
     }
-
-    emit broadcast(hThumbAssoc.GroupId, hThumb);
   }
 
-  this->setIsRunning(false);
+  if (!FThumbQueue->isEmpty()) {
+    this->postProcessEvent();
+  } else {
+    this->setIsRunning(false);
+  }
 }
 
 //------------------------------------------------------------------------------
-void ptThumbGenWorker::stopProcessing() {
-  this->setIsRunning(false);
-  FThumbQueue.clear();
+void ptThumbGenWorker::postProcessEvent() {
+  QMetaObject::invokeMethod(this, Process_Func, Qt::QueuedConnection);
 }
 
 //------------------------------------------------------------------------------
@@ -130,7 +106,7 @@ void ptThumbGenWorker::stopProcessing() {
   Reads a thumbnail from disk, resizes to the specified size and returns the final
   thumbnail image as a ptImage8.
 */
-TThumbPtr ptThumbGenWorker::generate(const TThumbId& AThumbId) {
+TThumbPtr ptThumbGenWorker::generateThumb(const TThumbId& AThumbId) {
   // Directories: not cached and no need to set dcraw or GM on them.
   switch (AThumbId.Type) {
     case fsoParentDir: {
@@ -151,7 +127,7 @@ TThumbPtr ptThumbGenWorker::generate(const TThumbId& AThumbId) {
   }
 
   // Actual image: First try the cache. On miss generate thumb via dcraw or GM
-  auto hThumbnail = FThumbCache.find(AThumbId);
+  auto hThumbnail = FThumbCache->find(AThumbId);
 
   // cache miss: generate thumbnail
   if (!hThumbnail) {
@@ -171,6 +147,7 @@ TThumbPtr ptThumbGenWorker::generate(const TThumbId& AThumbId) {
         hSize.setWidth(hDcRaw.m_ThumbWidth);
         hSize.setHeight(hDcRaw.m_ThumbHeight);
         this->scaleSize(hSize, AThumbId.LongEdgeSize);
+        MagickSetSize(hGMImage, 2*hSize.width(), 2*hSize.height());
         MagickReadImageBlob(hGMImage, reinterpret_cast<const uchar*>(hImgData.data()), hImgData.size());
       }
     } else {
@@ -179,6 +156,7 @@ TThumbPtr ptThumbGenWorker::generate(const TThumbId& AThumbId) {
       hSize.setWidth(MagickGetImageWidth(hGMImage));
       hSize.setHeight(MagickGetImageHeight(hGMImage));
       this->scaleSize(hSize, AThumbId.LongEdgeSize);
+      MagickSetSize(hGMImage, 2*hSize.width(), 2*hSize.height());
       MagickReadImage(hGMImage, hFilePath.toAscii().data());
     }
 
@@ -194,7 +172,7 @@ TThumbPtr ptThumbGenWorker::generate(const TThumbId& AThumbId) {
     }
 
     DestroyMagickWand(hGMImage);
-    FThumbCache.insert(AThumbId, hThumbnail);
+    FThumbCache->insert(AThumbId, hThumbnail);
   }
 
   return hThumbnail;
@@ -218,12 +196,6 @@ void ptThumbGenWorker::scaleSize(QSize& ASize, int ALongEdge) {
     ASize.setWidth(ALongEdge);
     ASize.setHeight(ALongEdge);
   }
-}
-
-//------------------------------------------------------------------------------
-void ptThumbGenWorker::setIsRunning(bool AValue) {
-  ptMutexLocker hRunLock(&FIsRunningMutex);
-  FIsRunning = AValue;
 }
 
 //------------------------------------------------------------------------------

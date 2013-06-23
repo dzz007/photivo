@@ -27,6 +27,7 @@
 *******************************************************************************/
 
 #include "ptThumbCache.h"
+#include "../ptMutexLocker.h"
 #include "../ptImage8.h"
 
 //------------------------------------------------------------------------------
@@ -44,6 +45,7 @@ ptThumbCache::~ptThumbCache() {}
 //------------------------------------------------------------------------------
 /*! Immediately empties the entire cache. */
 void ptThumbCache::clear() {
+  ptMutexLocker hLock(&FMutex);
   FAccess.clear();
   FCache.clear();
   FCache.squeeze();
@@ -57,6 +59,7 @@ void ptThumbCache::clear() {
 */
 TThumbPtr ptThumbCache::find(const TThumbId& AThumbId) {
   const auto hIdHash = this->makeHashable(AThumbId);
+  ptMutexLocker hLock(&FMutex);
   auto hDataIter = FCache.find(hIdHash);
 
   // cache hit: move item to the end of the access tracker list, then return the thumbnail
@@ -74,9 +77,15 @@ TThumbPtr ptThumbCache::find(const TThumbId& AThumbId) {
 /*! Inserts a new image into the cache. The image must not already be present in the cache. */
 void ptThumbCache::insert(const TThumbId& AThumbId, TThumbPtr AThumbData) {
   const auto hIdHash = this->makeHashable(AThumbId);
+  ptMutexLocker hLock(&FMutex);
 
-  Q_ASSERT_X(!FCache.contains(hIdHash), __PRETTY_FUNCTION__,
-             QString("Item already exists in cache: " + hIdHash).toLocal8Bit().data());
+  // Abort when the cache already contains the item. Reasons:
+  // - Caching an item twice makes no sense, only wastes cache capacity.
+  // - Inserting into QHash would replace the existing item, but adding to the acces tracker
+  //   would not, thus making hash list and tracker go out of sync.
+  if (FCache.contains(hIdHash)) {
+    return;
+  }
 
   FOccupancy += AThumbData->sizeBytes();
   this->evict();

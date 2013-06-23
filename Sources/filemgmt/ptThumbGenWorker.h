@@ -24,13 +24,14 @@
 #define PTTHUMBGENWORKER_H
 
 #include "ptThumbDefines.h"
-#include "ptThumbCache.h"
 #include <QObject>
 #include <QSize>
-#include <QQueue>
 #include <QMutex>
 #include <wand/magick_wand.h>
-#include <memory>
+
+class ptThumbCache;
+class ptThumbQueue;
+class ptFlowController;
 
 /*!
   The ptThumbGenWorker class generates thumbnail images, either from the thumbnail cache
@@ -43,36 +44,36 @@ class ptThumbGenWorker: public QObject {
 Q_OBJECT
 
 public:
-  explicit ptThumbGenWorker();
+  explicit ptThumbGenWorker(ptThumbQueue* AQueue, ptThumbCache* ACache, ptFlowController* AAbortCtrl);
   ~ptThumbGenWorker();
   
-  void abort();
-  void clear();
   bool isRunning() const;
-
-public slots:
-  void request(QList<TThumbAssoc> AThumbList);
+  void start();
 
 signals:
   void broadcast(uint AReceiverId, TThumbPtr AImage);
 
 private:
-  TThumbPtr generate(const TThumbId& AThumbId);
-  void processRequests();
-  void stopProcessing();
+  void postProcessEvent();
+
+  TThumbPtr generateThumb(const TThumbId& AThumbId);
   void scaleSize(QSize& ASize, int ALongEdge);
   void setIsRunning(bool AValue);
   void transformImage(MagickWand* AInImage, ptImage8* AOutImage, const QSize& ASize);
 
   // Access to following bool variables MUST ALWAYS be protected via their respective mutexes.
   // Use ptMutexLocker for easy locking/unlocking. Do NOT use QMutexLocker.
-  bool   FAbortSignaled;
-  QMutex FAbortMutex;
   bool   FIsRunning;
   mutable QMutex FIsRunningMutex;
 
-  ptThumbCache FThumbCache;
-  QQueue<TThumbAssoc> FThumbQueue;
+  const ptFlowController* const FAbortCtrl;
+  ptThumbCache* const FThumbCache;
+  ptThumbQueue* const FThumbQueue;
+
+  const char* Process_Func = "process";
+
+private slots:
+  void process();
 };
 
 #endif // PTTHUMBGENWORKER_H

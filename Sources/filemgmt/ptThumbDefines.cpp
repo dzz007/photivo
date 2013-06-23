@@ -27,7 +27,16 @@
 // Needed for communication between the thumbnail and GUI thread.
 auto TThumbPtr_Dummy = qRegisterMetaType<TThumbPtr>("photivo_TThumbPtr");
 auto TThumbId_Dummy  = qRegisterMetaType<TThumbId>("photivo_TThumbId");
+auto TThumbAssoc_Dummy   = qRegisterMetaType<TThumbAssoc>("photivo_TThumbAssoc");
+auto QLTThumbAssoc_Dummy = qRegisterMetaType<QList<TThumbAssoc>>("photivo_QList_TThumbAssoc");
 
+//------------------------------------------------------------------------------
+TThumbId::operator bool() const {
+  return !FilePath.isEmpty() &&
+         Timestamp.isValid() &&
+         (Type != fsoUnknown) &&
+         (LongEdgeSize >= 0);
+}
 
 //------------------------------------------------------------------------------
 bool operator==(const TThumbId& lhs, const TThumbId& rhs) {
@@ -40,4 +49,9 @@ bool operator==(const TThumbId& lhs, const TThumbId& rhs) {
 //------------------------------------------------------------------------------
 bool operator!=(const TThumbId& lhs, const TThumbId& rhs) {
   return !(lhs == rhs);
+}
+
+//------------------------------------------------------------------------------
+TThumbAssoc::operator bool() const {
+  return (bool)ThumbId;
 }
