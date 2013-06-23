@@ -291,7 +291,7 @@ void ptImageView::receiveThumb(uint, TThumbPtr AImage) {
 //------------------------------------------------------------------------------
 int ptImageView::zoomFit(bool AWithMsg /*= true*/) {
   FZoomMode = ptZoomMode_Fit;
-  FScene->setSceneRect(0, 0, FImage.m_Width, FImage.m_Height);
+  FScene->setSceneRect(0, 0, FImage.width(), FImage.height());
 
   fitInView(FScene->sceneRect(), Qt::KeepAspectRatio);
   FZoomFactor = transform().m11();
@@ -320,14 +320,14 @@ void ptImageView::imageToScene(double AFactor) {
     // bilinear resize for all others
     Mode = Qt::SmoothTransformation;
   }
-  FScene->setSceneRect(0, 0, FImage.m_Width*AFactor, FImage.m_Height*AFactor);
-  FPixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) FImage.m_Image,
-                                                                   FImage.m_Width,
-                                                                   FImage.m_Height,
-                                                                   QImage::Format_RGB32).scaled(FImage.m_Width*AFactor,
-                                                                                                FImage.m_Height*AFactor,
-                                                                                                Qt::IgnoreAspectRatio,
-                                                                                                Mode)));
+  FScene->setSceneRect(0, 0, FImage.width()*AFactor, FImage.height()*AFactor);
+  FPixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) FImage.image().data(),
+                                                                  FImage.width(),
+                                                                  FImage.height(),
+                                                                  QImage::Format_RGB32).scaled(FImage.width()*AFactor,
+                                                                                               FImage.height()*AFactor,
+                                                                                               Qt::IgnoreAspectRatio,
+                                                                                               Mode)));
   FPixmapItem->setTransformationMode(Mode);
 }
 

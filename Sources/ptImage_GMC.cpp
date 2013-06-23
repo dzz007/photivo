@@ -366,9 +366,9 @@ bool ptImage8::DumpImage(const char* FileName, const bool BGR) const {
   MagickSetImageType(mw,TrueColorType);
 
   if (BGR)
-    MagickSetImagePixels(mw,0,0,Width,Height,"BGRA",CharPixel,(unsigned char*) m_Image);
+    MagickSetImagePixels(mw,0,0,Width,Height,"BGRA",CharPixel,(unsigned char*) m_Image.data());
   else
-    MagickSetImagePixels(mw,0,0,Width,Height,"RGBA",CharPixel,(unsigned char*) m_Image);
+    MagickSetImagePixels(mw,0,0,Width,Height,"RGBA",CharPixel,(unsigned char*) m_Image.data());
 
   MagickSetImageDepth(mw,8);
 

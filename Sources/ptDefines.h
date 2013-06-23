@@ -28,7 +28,9 @@
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
 
+#include <array>
 #include <memory>
+#include <vector>
 
 // disable the file manager
 // #define PT_WITHOUT_FILEMGR
@@ -56,7 +58,10 @@ std::unique_ptr<T> make_unique(Args&& ...args) {
 
 //==============================================================================
 
+typedef std::vector<std::array<uint16_t, 3>> TImageData;
+typedef std::vector<std::array<uint8_t,  4>> TImage8Data;
 
+//==============================================================================
 // Some macro's (most cannot go efficiently in functions).
 
 #ifndef SQR

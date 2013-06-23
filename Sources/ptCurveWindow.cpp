@@ -196,9 +196,9 @@ void ptCurveWindow::setBWGradient(ptImage8* AImage) {
     for (uint16_t Row = Height-Height/20;
          Row <= Height-2;
          Row++) {
-      AImage->m_Image[Row*Width+i][0] = Value;
-      AImage->m_Image[Row*Width+i][1] = Value;
-      AImage->m_Image[Row*Width+i][2] = Value;
+      AImage->image()[Row*Width+i][0] = Value;
+      AImage->image()[Row*Width+i][1] = Value;
+      AImage->image()[Row*Width+i][2] = Value;
     }
   }
 }
@@ -213,9 +213,9 @@ void ptCurveWindow::setBWGammaGradient(ptImage8* AImage) {
     for (uint16_t Row = Height-Height/20;
          Row <= Height-2;
          Row++) {
-      AImage->m_Image[Row*Width+i][0] = Value;
-      AImage->m_Image[Row*Width+i][1] = Value;
-      AImage->m_Image[Row*Width+i][2] = Value;
+      AImage->image()[Row*Width+i][0] = Value;
+      AImage->image()[Row*Width+i][1] = Value;
+      AImage->image()[Row*Width+i][2] = Value;
     }
   }
 }
@@ -245,9 +245,9 @@ void ptCurveWindow::setColorGradient(ptImage8* AImage) {
     for (uint16_t Row = Height-Height/20;
          Row <= Height-2;
          Row++) {
-      AImage->m_Image[Row*Width+i][0] = ValueB;
-      AImage->m_Image[Row*Width+i][1] = ValueG;
-      AImage->m_Image[Row*Width+i][2] = ValueR;
+      AImage->image()[Row*Width+i][0] = ValueB;
+      AImage->image()[Row*Width+i][1] = ValueG;
+      AImage->image()[Row*Width+i][2] = ValueR;
     }
   }
 }
@@ -261,9 +261,9 @@ void ptCurveWindow::setColorBlocks(const QColor &ATopLeftColor, const QColor &AB
   for (uint16_t i=1;  i < 3*(hHeight-1)/10;  ++i) {
     for (uint16_t Row = 1;  Row < 2*(hWidth-1)/10+1;  ++Row) {
       int hImgIdx = Row*hWidth+i;
-      FCanvas.m_Image[hImgIdx][0] = ATopLeftColor.blue();
-      FCanvas.m_Image[hImgIdx][1] = ATopLeftColor.green();
-      FCanvas.m_Image[hImgIdx][2] = ATopLeftColor.red();
+      FCanvas.image()[hImgIdx][0] = ATopLeftColor.blue();
+      FCanvas.image()[hImgIdx][1] = ATopLeftColor.green();
+      FCanvas.image()[hImgIdx][2] = ATopLeftColor.red();
     }
   }
 
@@ -271,9 +271,9 @@ void ptCurveWindow::setColorBlocks(const QColor &ATopLeftColor, const QColor &AB
   for (uint16_t i = 7*(hHeight-1)/10+1;  i < hWidth; ++i) {
     for (uint16_t Row = 8*(hWidth-1)/10+1;  Row < hHeight;  ++Row) {
       int hImgIdx = Row*hWidth+i;
-      FCanvas.m_Image[hImgIdx][0] = ABottomRightColor.blue();
-      FCanvas.m_Image[hImgIdx][1] = ABottomRightColor.green();
-      FCanvas.m_Image[hImgIdx][2] = ABottomRightColor.red();
+      FCanvas.image()[hImgIdx][0] = ABottomRightColor.blue();
+      FCanvas.image()[hImgIdx][1] = ABottomRightColor.green();
+      FCanvas.image()[hImgIdx][2] = ABottomRightColor.red();
     }
   }
 }
@@ -288,7 +288,8 @@ void ptCurveWindow::calcCurveImage() {
   if (hHeight == 0 || hWidth == 0)
     return;
 
-  FCanvas.setSize(hWidth, hHeight, 3);  // image is completely black afterwards
+  FCanvas.setSize(hWidth, hHeight, 3);
+  FCanvas.fillColor(0, 0, 0, 0);
 
   QColor hCurveColor = QColor(200,200,200);
   QColor hGridColor  = QColor(53,53,53);
@@ -311,9 +312,9 @@ void ptCurveWindow::calcCurveImage() {
   {
     uint32_t Temp = Row*hWidth;
     for (uint16_t i=0;i<hWidth;i++) {
-      FCanvas.m_Image[Temp][0] = hGridColor.blue();
-      FCanvas.m_Image[Temp][1] = hGridColor.green();
-      FCanvas.m_Image[Temp][2] = hGridColor.red();
+      FCanvas.image()[Temp][0] = hGridColor.blue();
+      FCanvas.image()[Temp][1] = hGridColor.green();
+      FCanvas.image()[Temp][2] = hGridColor.red();
       ++Temp;
     }
   }
@@ -323,9 +324,9 @@ void ptCurveWindow::calcCurveImage() {
   {
     uint32_t Temp = Column;
     for (uint16_t i=0;i<hHeight;i++) {
-      FCanvas.m_Image[Temp][0] = hGridColor.blue();
-      FCanvas.m_Image[Temp][1] = hGridColor.green();
-      FCanvas.m_Image[Temp][2] = hGridColor.red();
+      FCanvas.image()[Temp][0] = hGridColor.blue();
+      FCanvas.image()[Temp][1] = hGridColor.green();
+      FCanvas.image()[Temp][2] = hGridColor.red();
       Temp += hWidth;
     }
   }
@@ -349,9 +350,9 @@ void ptCurveWindow::calcCurveImage() {
     uint32_t Temp     = i+kStart*hWidth;
 
     for(uint16_t k=kStart;k<=kEnd;k++) {
-      FCanvas.m_Image[Temp][0] = hCurveColor.blue();
-      FCanvas.m_Image[Temp][1] = hCurveColor.green();
-      FCanvas.m_Image[Temp][2] = hCurveColor.red();
+      FCanvas.image()[Temp][0] = hCurveColor.blue();
+      FCanvas.image()[Temp][1] = hCurveColor.green();
+      FCanvas.image()[Temp][2] = hCurveColor.red();
       Temp += hWidth;
     }
   }
@@ -371,9 +372,9 @@ void ptCurveWindow::calcCurveImage() {
            if (Column >= hWidth) continue;
            if (Column <  0)      continue;
            int hImgIdx = Row*hWidth+Column;
-           FCanvas.m_Image[hImgIdx][0] = hCurveColor.blue();
-           FCanvas.m_Image[hImgIdx][1] = hCurveColor.green();
-           FCanvas.m_Image[hImgIdx][2] = hCurveColor.red();
+           FCanvas.image()[hImgIdx][0] = hCurveColor.blue();
+           FCanvas.image()[hImgIdx][1] = hCurveColor.green();
+           FCanvas.image()[hImgIdx][2] = hCurveColor.red();
         }
       }
     }
@@ -396,12 +397,12 @@ void ptCurveWindow::updateView() {
 
   // grey out when curve windows is disabled
   if (!this->isEnabled()) {
-    for (uint16_t j = 0; j < FCanvas.m_Width; j++) {
-      for (uint16_t i = 0; i < FCanvas.m_Height; i++) {
-        int hImgIdx = i*FCanvas.m_Width+j;
-        FCanvas.m_Image[hImgIdx][0] >>= 1;
-        FCanvas.m_Image[hImgIdx][1] >>= 1;
-        FCanvas.m_Image[hImgIdx][2] >>= 1;
+    for (uint16_t j = 0; j < FCanvas.width(); j++) {
+      for (uint16_t i = 0; i < FCanvas.height(); i++) {
+        int hImgIdx = i*FCanvas.width()+j;
+        FCanvas.image()[hImgIdx][0] >>= 1;
+        FCanvas.image()[hImgIdx][1] >>= 1;
+        FCanvas.image()[hImgIdx][2] >>= 1;
       }
     }
   }
@@ -409,9 +410,9 @@ void ptCurveWindow::updateView() {
   // Prepare the curve image for display. We take the detour QImage=>QPixmap instead of drawing
   // the QImage directly because QPixmap has HW accelerated drawing. Unfortunately the internal
   // layout of ptImage8 is not suited to be loaded into a QPixmap directly.
-  FDisplayImage = QPixmap::fromImage(QImage((const uchar*) FCanvas.m_Image,
-                                            FCanvas.m_Width,
-                                            FCanvas.m_Height,
+  FDisplayImage = QPixmap::fromImage(QImage((const uchar*) FCanvas.image().data(),
+                                            FCanvas.width(),
+                                            FCanvas.height(),
                                             QImage::Format_RGB32));
   repaint();
 }

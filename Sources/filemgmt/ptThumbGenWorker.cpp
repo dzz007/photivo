@@ -258,5 +258,5 @@ void ptThumbGenWorker::transformImage(MagickWand* AInImage, ptImage8* AOutImage,
 
   AOutImage->setSize(hOutWidth, hOutHeight, 3);
   MagickGetImagePixels(AInImage, 0, 0, hOutWidth, hOutHeight, "BGRA", CharPixel,
-                       reinterpret_cast<uchar*>(AOutImage->m_Image));
+                       reinterpret_cast<uchar*>(AOutImage->image().data()));
 }

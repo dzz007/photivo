@@ -79,7 +79,7 @@ public slots:
   void PixelInfoHide();
 
 private:
-  const ptImage8* m_Image8;
+  ptImage8        m_Image8;
   QPixmap*        m_QPixmap;
   short           m_RecalcNeeded;
   uint32_t        m_HistoMax;
