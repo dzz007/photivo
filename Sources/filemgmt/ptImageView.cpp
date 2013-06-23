@@ -46,7 +46,7 @@ ptImageView::ptImageView(QWidget *AParent):
   MinZoom(0.05),
   MaxZoom(4.0),
   MaxImageSize(std::numeric_limits<int>::max()),
-  FThumbGen(make_unique<ptThumbGenMgr>())
+  FThumbGen(/*make_unique<ptThumbGenMgr>()*/)
 {
   assert(Theme      != nullptr);
   assert(Settings   != nullptr);
@@ -86,7 +86,7 @@ ptImageView::ptImageView(QWidget *AParent):
   FStatusOverlay->setDuration(0);
 
   // parallel worker
-  FThumbGen->connectBroadcast(this, SLOT(receiveThumb(uint,TThumbPtr)));
+//  FThumbGen->connectBroadcast(this, SLOT(receiveThumb(uint,TThumbPtr)));
 
   // timer for decoupling the mouse wheel
   FResizeTimeOut = 50;
@@ -128,18 +128,18 @@ ptImageView::~ptImageView() {
 
 //------------------------------------------------------------------------------
 void ptImageView::showImage(const QString AFileName) {
-  FFileNameNext = AFileName;
+//  FFileNameNext = AFileName;
 
-  if (this->isVisible() && (FFileNameCurrent != FFileNameNext)) {
-    if (FThumbGen->isRunning())
-      FThumbGen->abort();
+//  if (this->isVisible() && (FFileNameCurrent != FFileNameNext)) {
+//    if (FThumbGen->isRunning())
+//      FThumbGen->abort();
 
-    QList<TThumbAssoc> hThumbList;
-    hThumbList.append({makeThumbId(FFileNameNext, MaxImageSize), 0});
-    FThumbGen->request(hThumbList);
+//    QList<TThumbAssoc> hThumbList;
+//    hThumbList.append({makeThumbId(FFileNameNext, MaxImageSize), 0});
+//    FThumbGen->request(hThumbList);
 
-    FStatusOverlay->exec(QObject::tr("Loading"));
-  }
+//    FStatusOverlay->exec(QObject::tr("Loading"));
+//  }
 }
 
 //------------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2013 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -24,12 +25,13 @@
 #define ptThumbGenMgr_H
 
 #include "ptThumbDefines.h"
+#include "ptThumbGenHelpers.h"
 #include "ptThumbGenWorker.h"
+#include "ptThumbCache.h"
 #include "../ptConstants.h"
+#include <QList>
 #include <QThread>
 #include <QFileInfo>
-
-class ptThumbGenWorker;
 
 //------------------------------------------------------------------------------
 /*!
@@ -42,19 +44,24 @@ public:
   ~ptThumbGenMgr();
 
   /*! \name Methods for controlling thumbnail generation *//*! @{*/
-  // When you add a method that calls into the worker you MUST route the call through
-  // the worker thread’s event loop to ensure thread-safety. See the request() implementation
-  // for an example. abort() and isRunning() are the only exceptions from that rule.
   void abort();
   void clear();
   void connectBroadcast(const QObject* AReceiver, const char* ABroadcastSlot);
   bool isRunning() const;
-  void request(QList<TThumbAssoc> AThumbList);
+  void request(const TThumbAssoc& AThumb);
+  void request(const QList<TThumbAssoc>& AThumbList);
   /*! @}*/
 
 private:
-  ptThumbGenWorker FWorker;
-  QThread FThread;
+  void start();
+
+  const int CMinWorkerThreads = 1;
+
+  ptFlowController          FAbortCtrl;
+  ptThumbCache              FThumbCache;
+  ptThumbQueue              FThumbQueue;
+  QList<QThread*>           FThreadpool;
+  QList<ptThumbGenWorker*>  FWorkers;
 };
 
 //------------------------------------------------------------------------------
