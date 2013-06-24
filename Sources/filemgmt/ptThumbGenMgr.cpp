@@ -29,7 +29,8 @@
 /*! Creates a ptThumbGenMgr object and starts the threaded workers. */
 ptThumbGenMgr::ptThumbGenMgr():
   FAbortCtrl(false),
-  FThumbCache(200*1024*1024) // TODO BJ: Make cache size configurable
+  FThumbCache(200*1024*1024), // TODO BJ: Make cache size configurable
+  FThumbQueue(1)  // high prio items for ptImageView: allow only 1 of those
 {
   // Determine worker count. Then create each worker object and an associated QThread object,
   // start the thread and move the worker to that thread.
@@ -134,18 +135,3 @@ void ptThumbGenMgr::start() {
   }
 }
 
-//------------------------------------------------------------------------------
-TThumbId makeThumbId(const QString& AFilename, int ALongEdgeMax, ptFSOType AType) {
-  return makeThumbId(QFileInfo(AFilename), ALongEdgeMax, AType);
-}
-
-//------------------------------------------------------------------------------
-TThumbId makeThumbId(const QFileInfo& AFileInfo, int ALongEdgeMax, ptFSOType AType) {
-  TThumbId hThumbId { AFileInfo.canonicalFilePath(), AFileInfo.lastModified(), AType, ALongEdgeMax };
-
-  if (AType == fsoUnknown) {
-    (AFileInfo.isFile()) ? (hThumbId.Type = fsoFile) : (hThumbId.Type = fsoDir);
-  }
-
-  return hThumbId;
-}
