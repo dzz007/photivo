@@ -32,11 +32,10 @@
 
 #include <exiv2/exif.hpp>
 
-#include "ptDcRaw.h"
-
 //==============================================================================
 
 // forward for faster compilation
+class ptDcRaw;
 class ptImage;
 
 //==============================================================================

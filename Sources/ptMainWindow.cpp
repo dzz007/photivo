@@ -46,6 +46,11 @@
   #include "ptEcWin7.h"
 #endif
 
+#include <QDesktopWidget>
+#include <QFileDialog>
+
+#include <cassert>
+
 using namespace std;
 
 extern ptTheme* Theme;
@@ -142,13 +147,13 @@ ptMainWindow::ptMainWindow(const QString Title)
   const QStringList Keys = Settings->GetKeys();
   for (int i=0; i<Keys.size(); i++) {
     const QString Key = Keys[i];
-    //printf("(%s,%d) '%s'\n",__FILE__,__LINE__,Key.toAscii().data());
+    //printf("(%s,%d) '%s'\n",__FILE__,__LINE__,Key.toLocal8Bit().data());
     switch (Settings->GetGuiType(Key)) {
 
       case ptGT_InputSlider :
       case ptGT_Input       :
         //printf("(%s,%d) Creating Input for '%s'\n",
-        //       __FILE__,__LINE__,Key.toAscii().data());
+        //       __FILE__,__LINE__,Key.toLocal8Bit().data());
         {
         QString ParentName = Key + "Widget";
         QString ObjectName = Key + "Input";
@@ -175,7 +180,7 @@ ptMainWindow::ptMainWindow(const QString Title)
         break;
       case ptGT_InputSliderHue :
         //printf("(%s,%d) Creating Input for '%s'\n",
-        //       __FILE__,__LINE__,Key.toAscii().data());
+        //       __FILE__,__LINE__,Key.toLocal8Bit().data());
         {
         QString ParentName = Key + "Widget";
         QString ObjectName = Key + "Input";
@@ -202,7 +207,7 @@ ptMainWindow::ptMainWindow(const QString Title)
         break;
       case ptGT_Choice :
         //printf("(%s,%d) Creating Choice for '%s'\n",
-        //       __FILE__,__LINE__,Key.toAscii().data());
+        //       __FILE__,__LINE__,Key.toLocal8Bit().data());
         {
         QString ParentName = Key + "Widget";
         QString ObjectName = Key + "Choice";
@@ -224,7 +229,7 @@ ptMainWindow::ptMainWindow(const QString Title)
 
       case ptGT_Check :
         //printf("(%s,%d) Creating Check for '%s'\n",
-        //       __FILE__,__LINE__,Key.toAscii().data());
+        //       __FILE__,__LINE__,Key.toLocal8Bit().data());
         {
         QString ParentName = Key + "Widget";
         QString ObjectName = Key + "Check";
@@ -244,7 +249,7 @@ ptMainWindow::ptMainWindow(const QString Title)
 
       default :
         //printf("(%s,%d) No widget for '%s'\n",
-        //       __FILE__,__LINE__,Key.toAscii().data());
+        //       __FILE__,__LINE__,Key.toLocal8Bit().data());
         continue;
     };
     // To sync the state of the now created gui element we have
@@ -1201,7 +1206,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value);
 void ptMainWindow::OnInputChanged(const QVariant Value) {
   QObject* Sender = sender();
   printf("(%s,%d) Sender : '%s'\n",
-         __FILE__,__LINE__,Sender->objectName().toAscii().data());
+         __FILE__,__LINE__,Sender->objectName().toLocal8Bit().data());
   CB_InputChanged(Sender->objectName(),Value);
 
 }
@@ -3045,7 +3050,7 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::UpdateGradualBlurUI() {
-  boolean Visible = Settings->GetInt("GradBlur1") == ptGradualBlur_Linear  ||
+  bool Visible = Settings->GetInt("GradBlur1") == ptGradualBlur_Linear  ||
                     Settings->GetInt("GradBlur1") == ptGradualBlur_MaskLinear;
   Settings->Show("GradBlur1Angle",      Visible);
   Settings->Show("GradBlur1Vignette",  !Visible);

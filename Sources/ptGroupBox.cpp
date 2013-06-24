@@ -28,6 +28,7 @@
 #include "ptConstants.h"
 #include "ptTheme.h"
 #include "ptViewWindow.h"
+#include <QFileDialog>
 
 extern QString SettingsFilePattern;
 extern ptViewWindow *ViewWindow;

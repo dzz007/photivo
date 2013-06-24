@@ -153,7 +153,7 @@ void ptAllocated(const int   MinimumToShow,
               "  Allocated at %s,%d (%p object)\n\n",
               TheAllocation->Size,
               TheAllocation->Pointer,
-              TheAllocation->FileName.toAscii().data(),
+              TheAllocation->FileName.toLocal8Bit().data(),
               TheAllocation->LineNumber,
               TheAllocation->ObjectPointer);
     }

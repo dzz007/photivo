@@ -381,7 +381,7 @@ ptWidget *ptFilterBase::findPtWidget(const QString &AId, QWidget *AWidget) {
   ptWidget *hWidget = AWidget->findChild<ptWidget*>(AId);
   if (!hWidget)
     GInfo->Raise(QString("Widget \"%1\" not found.").arg(AId),
-                 QString(FFilterName+"/"+FUniqueName+": "+AT).toAscii().data());
+                 QString(FFilterName+"/"+FUniqueName+": "+AT).toLocal8Bit().data());
   return hWidget;
 }
 

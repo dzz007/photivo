@@ -40,7 +40,7 @@ ptEcWin7* ptEcWin7::m_Instance = NULL;
 void ptEcWin7::CreateInstance(QWidget* window) {
   assert(m_Instance == NULL);
   m_Instance = new ptEcWin7;
-  m_Instance->init(window->winId());
+  m_Instance->init((HWND)(window->winId()));
 }
 
 //==============================================================================
@@ -77,7 +77,7 @@ ptEcWin7::ptEcWin7()
 ptEcWin7::~ptEcWin7() {}
 
 // Init taskbar communication
-void ptEcWin7::init(WId wid)
+void ptEcWin7::init(HWND wid)
 {
     mWindowId = wid;
 #ifdef Q_OS_WIN

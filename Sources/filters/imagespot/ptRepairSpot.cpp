@@ -159,13 +159,13 @@ void ptRepairSpot::setValue(const QString &AKey, const QVariant AValue) {
   else if (AKey == "RepairOpacity")       setOpacity(AValue.toFloat(&hConvertOk));
   else if (AKey == "RepairRadiusSync")    setRadiusSync(AValue.toBool());
   else {
-    printf("%s, line %d: Unrecognized member ID: %s\n", __FILE__, __LINE__, AKey.toAscii().data());
+    printf("%s, line %d: Unrecognized member ID: %s\n", __FILE__, __LINE__, AKey.toLocal8Bit().data());
     assert(false);
   }
 
   if (!hConvertOk) {
     printf("%s, line %d: Could not convert from QVariant for member ID: %s\n",
-           __FILE__, __LINE__, AKey.toAscii().data());
+           __FILE__, __LINE__, AKey.toLocal8Bit().data());
     assert(false);
   }
 }

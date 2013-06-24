@@ -22,6 +22,8 @@
 
 #include <QCursor>
 #include <QFontMetrics>
+#include <QPainter>
+#include <QKeyEvent>
 
 #include "../ptDefines.h"
 #include "../ptTheme.h"
@@ -29,6 +31,7 @@
 #include "../ptImage8.h"
 #include "ptGraphicsThumbGroup.h"
 #include "ptGraphicsSceneEmitter.h"
+#include <cassert>
 
 extern ptSettings* Settings;
 extern ptTheme* Theme;

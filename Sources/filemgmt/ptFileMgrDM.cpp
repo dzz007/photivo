@@ -145,19 +145,19 @@ bool ptFileMgrDM::getThumbnail(ptImage8     *&AImage,
 
   if (!isRaw) {
     // no raw, try for bitmap
-    MagickPingImage(image, AFileName.toAscii().data());
+    MagickPingImage(image, AFileName.toLocal8Bit().data());
     Size.setWidth(MagickGetImageWidth(image));
     Size.setHeight(MagickGetImageHeight(image));
     ScaleThumbSize(&Size, AMaxSize);
     MagickSetSize(image, 2*Size.width(), 2*Size.height());
-    MagickReadImage(image, AFileName.toAscii().data());
+    MagickReadImage(image, AFileName.toLocal8Bit().data());
   }
 
   ExceptionType MagickExcept;
   char* MagickErrMsg = MagickGetException(image, &MagickExcept);
   if (MagickExcept != UndefinedException) {
     // error occurred: no raw thumbnail, no supported image type, any other GM error
-    printf("%s\n", QString::fromAscii(MagickErrMsg).toAscii().data());
+    printf("%s\n", QString::fromLocal8Bit(MagickErrMsg).toLocal8Bit().data());
     DestroyMagickWand(image);
     if (!AImage) AImage = new ptImage8();
     AImage->FromQImage(QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png")));
@@ -185,7 +185,7 @@ void ptFileMgrDM::GenerateThumbnail(MagickWand* AInImage, ptImage8 *AOutImage, c
     MagickScaleImage(AInImage, tSize.width(), tSize.height());
 
   // read EXIF orientation and correct image
-  int orientation = QString::fromAscii(MagickGetImageAttribute(AInImage, "EXIF:Orientation")).toInt();
+  int orientation = QString::fromLocal8Bit(MagickGetImageAttribute(AInImage, "EXIF:Orientation")).toInt();
   PixelWand* pxWand = NewPixelWand();
   switch (orientation) {
     case 2: MagickFlopImage(AInImage); break;

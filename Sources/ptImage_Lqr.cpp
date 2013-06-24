@@ -29,6 +29,8 @@
   #include <omp.h>
 #endif
 
+#include <cassert>
+
 //==============================================================================
 
 ptImage* ptImage::LiquidRescaleRelative(const double HorScale,

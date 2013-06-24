@@ -31,6 +31,11 @@
 #include <QFileInfo>
 #include <QtGui>
 #include <QtCore>
+#include <QFileDialog>
+#include <QColorDialog>
+#include <QInputDialog>
+#include <QTextCodec>
+#include <QDesktopWidget>
 
 #include "ptDefines.h"
 #include "ptInfo.h"
@@ -359,7 +364,7 @@ void CreateAllFilters() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ReportProgress(const QString Message) {
-  printf("Progress : %s\n",Message.toAscii().data());
+  printf("Progress : %s\n",Message.toLocal8Bit().data());
   if (!MainWindow) return;
   MainWindow->StatusLabel->setText(Message);
   MainWindow->StatusLabel->repaint();
@@ -465,12 +470,9 @@ QtSingleApplication* TheApplication;
 
 int photivoMain(int Argc, char *Argv[]) {
   QString VerTemp(TOSTRING(APPVERSION));    //also used for the cli syntax error msg below!
-  printf("Photivo version %s\n", VerTemp.toAscii().data());
+  printf("Photivo version %s\n", VerTemp.toLocal8Bit().data());
 
   InitializeMagick(*Argv);
-
-  // TextCodec
-  QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 
   //QApplication TheApplication(Argc,Argv);
   QStringList environment = QProcess::systemEnvironment();
@@ -509,7 +511,7 @@ int photivoMain(int Argc, char *Argv[]) {
         "Fatal error: Wrong GraphicsMagick quantum depth!\n"
         "Found quantum depth %1. Photivo needs at least %2.\n")
         .arg(QDepth).arg(MinQD);
-    fprintf(stderr,"%s", WrongQDepthMsg.toAscii().data());
+    fprintf(stderr,"%s", WrongQDepthMsg.toLocal8Bit().data());
     ptMessageBox::critical(0, QObject::tr("Photivo: Fatal Error"), WrongQDepthMsg);
     exit(EXIT_FAILURE);
   }
@@ -558,7 +560,7 @@ int photivoMain(int Argc, char *Argv[]) {
   #ifdef Q_OS_WIN
     ptMessageBox::critical(0, QObject::tr("Photivo"), PhotivoCliUsageMsg);
   #else
-    fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
+    fprintf(stderr,"%s",PhotivoCliUsageMsg.toLocal8Bit().data());
   #endif
     exit(EXIT_FAILURE);
   }
@@ -699,13 +701,13 @@ int photivoMain(int Argc, char *Argv[]) {
       // photivo was initialized
 //      NeedInitialization = 0;
       FirstStart = 0;
-      printf("Existing settingsfile '%s'\n",SettingsFileName.toAscii().data());
+      printf("Existing settingsfile '%s'\n",SettingsFileName.toLocal8Bit().data());
   } else {
-      printf("New settingsfile '%s'\n",SettingsFileName.toAscii().data());
+      printf("New settingsfile '%s'\n",SettingsFileName.toLocal8Bit().data());
   }
 
-  printf("User directory: '%s'; \n",UserDirectory.toAscii().data());
-  printf("Share directory: '%s'; \n",NewShareDirectory.toAscii().data());
+  printf("User directory: '%s'; \n",UserDirectory.toLocal8Bit().data());
+  printf("Share directory: '%s'; \n",NewShareDirectory.toLocal8Bit().data());
 
   // We need to load the translation before the ptSettings
   QSettings* TempSettings = new QSettings(SettingsFileName, QSettings::IniFormat);
@@ -765,7 +767,7 @@ int photivoMain(int Argc, char *Argv[]) {
           TheApplication->installTranslator(&appTranslator);
           qtTranslator.load("qt_" + UiLanguages[LangIdx], UserDirectory + "Translations");
           TheApplication->installTranslator(&qtTranslator);
-          printf("Enabled translation: \"%s\".\n", UiLanguages[LangIdx].toAscii().data());
+          printf("Enabled translation: \"%s\".\n", UiLanguages[LangIdx].toLocal8Bit().data());
       }
   }
 
@@ -810,7 +812,7 @@ int photivoMain(int Argc, char *Argv[]) {
   CreateAllFilters();
 
   // Load also the LensfunDatabase.
-  printf("Lensfun database: '%s'; \n",Settings->GetString("LensfunDatabaseDirectory").toAscii().data());
+  printf("Lensfun database: '%s'; \n",Settings->GetString("LensfunDatabaseDirectory").toLocal8Bit().data());
   //  LensfunData = new ptLensfun;    // TODO BJ: implement lensfun DB
 
   // Instantiate the processor. Spot models are not set here because we
@@ -841,11 +843,11 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Open and keep open the profile for previewing.
   PreviewColorProfile = cmsOpenProfileFromFile(
-          Settings->GetString("PreviewColorProfile").toAscii().data(),
+          Settings->GetString("PreviewColorProfile").toLocal8Bit().data(),
           "r");
   if (!PreviewColorProfile) {
       ptLogError(ptError_FileOpen,
-              Settings->GetString("PreviewColorProfile").toAscii().data());
+              Settings->GetString("PreviewColorProfile").toLocal8Bit().data());
       return ptError_FileOpen;
   }
 
@@ -958,11 +960,11 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Open and keep open the profile for previewing.
   PreviewColorProfile = cmsOpenProfileFromFile(
-          Settings->GetString("PreviewColorProfile").toAscii().data(),
+          Settings->GetString("PreviewColorProfile").toLocal8Bit().data(),
           "r");
   if (!PreviewColorProfile) {
       ptLogError(ptError_FileOpen,
-              Settings->GetString("PreviewColorProfile").toAscii().data());
+              Settings->GetString("PreviewColorProfile").toLocal8Bit().data());
       assert(PreviewColorProfile);
   }
 
@@ -1130,7 +1132,7 @@ void InitChannelMixers() {
        Idx++) {
 
     if (ChannelMixer->ReadChannelMixer(
-                  ChannelMixerFileNames[Idx].toAscii().data())) {
+                  ChannelMixerFileNames[Idx].toLocal8Bit().data())) {
       QString ErrorMessage = QObject::tr("Cannot read channelmixer ")
                            + " '"
                            + ChannelMixerFileNames[Idx]
@@ -1921,10 +1923,10 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     cmsHPROFILE OutputColorProfile = NULL;
     OutputColorProfile = cmsOpenProfileFromFile(
-                         Settings->GetString("OutputColorProfile").toAscii().data(), "r");
+                         Settings->GetString("OutputColorProfile").toLocal8Bit().data(), "r");
     if (!OutputColorProfile) {
       ptLogError(ptError_FileOpen,
-        Settings->GetString("OutputColorProfile").toAscii().data());
+        Settings->GetString("OutputColorProfile").toLocal8Bit().data());
       assert(OutputColorProfile);
     }
 
@@ -2116,7 +2118,7 @@ void UpdateComboboxes(const QString Key) {
   if (Key == "ChannelMixer") {
     ptChannelMixer Tmp;
     for (int i = 0; i < FileNames.size(); i++) {
-      if (Tmp.ReadChannelMixer(FileNames.at(i).toAscii().data())) {
+      if (Tmp.ReadChannelMixer(FileNames.at(i).toLocal8Bit().data())) {
         if (Settings->GetInt("JobMode") == 0) {
           ptMessageBox::warning(MainWindow,
                                QObject::tr("Channelmixer read error"),
@@ -2199,7 +2201,7 @@ void RunJob(const QString JobFileName) {
                              + " '"
                              + InputFileNameList[0]
                              + "'" ;
-        printf("%s\n",ErrorMessage.toAscii().data());
+        printf("%s\n",ErrorMessage.toLocal8Bit().data());
         delete TestDcRaw;
 
 
@@ -2279,7 +2281,7 @@ void RunJob(const QString JobFileName) {
                            + " '"
                            + InputFileNameList[0]
                            + "'" ;
-      printf("%s\n",ErrorMessage.toAscii().data());
+      printf("%s\n",ErrorMessage.toLocal8Bit().data());
     }
 
     // Loop over the inputfiles by shifting the next one to index 0
@@ -2353,11 +2355,11 @@ void WriteOut() {
 
   // Prepare and open an output profile.
   OutputColorProfile = cmsOpenProfileFromFile(
-    Settings->GetString("OutputColorProfile").toAscii().data(),
+    Settings->GetString("OutputColorProfile").toLocal8Bit().data(),
     "r");
   if (!OutputColorProfile) {
     ptLogError(ptError_FileOpen,
-   Settings->GetString("OutputColorProfile").toAscii().data());
+   Settings->GetString("OutputColorProfile").toLocal8Bit().data());
     assert(OutputColorProfile);
   }
 
@@ -2380,12 +2382,12 @@ void WriteOut() {
   ReportProgress(QObject::tr("Writing output"));
 
   bool FileWritten =  OutImage->ptGMCWriteImage(
-    Settings->GetString("OutputFileName").toAscii().data(),
+    Settings->GetString("OutputFileName").toLocal8Bit().data(),
     Settings->GetInt("SaveFormat"),
     Settings->GetInt("SaveQuality"),
     Settings->GetInt("SaveSampling"),
     Settings->GetInt("SaveResolution"),
-    Settings->GetString("OutputColorProfile").toAscii().data(),
+    Settings->GetString("OutputColorProfile").toLocal8Bit().data(),
     Settings->GetInt("OutputColorProfileIntent"));
 
   if (!FileWritten) {
@@ -2967,11 +2969,11 @@ void GimpExport(const short UsePipe) {
 
     // Prepare and open an output profile.
     OutputColorProfile = cmsOpenProfileFromFile(
-      Settings->GetString("OutputColorProfile").toAscii().data(),
+      Settings->GetString("OutputColorProfile").toLocal8Bit().data(),
       "r");
     if (!OutputColorProfile) {
       ptLogError(ptError_FileOpen,
-     Settings->GetString("OutputColorProfile").toAscii().data());
+     Settings->GetString("OutputColorProfile").toLocal8Bit().data());
       assert(OutputColorProfile);
     }
 
@@ -3000,8 +3002,8 @@ void GimpExport(const short UsePipe) {
     ImageFile.setAutoRemove(false);
     ImageFile.close();
     printf("(%s,%d) '%s'\n",
-           __FILE__,__LINE__,ImageFileName.toAscii().data());
-    ImageForGimp->WriteAsPpm(ImageFileName.toAscii().data(),16);
+           __FILE__,__LINE__,ImageFileName.toLocal8Bit().data());
+    ImageForGimp->WriteAsPpm(ImageFileName.toLocal8Bit().data(),16);
 
     ReportProgress(QObject::tr("Writing tmp exif for gimp"));
 
@@ -3011,7 +3013,7 @@ void GimpExport(const short UsePipe) {
     QString ExifFileName = ExifFile.fileName();
     ExifFile.setAutoRemove(false);
     printf("(%s,%d) '%s'\n",
-           __FILE__,__LINE__,ExifFileName.toAscii().data());
+           __FILE__,__LINE__,ExifFileName.toLocal8Bit().data());
     QDataStream ExifOut(&ExifFile);
     ExifOut.writeRawData((char *) TheProcessor->m_ExifBuffer,
                          TheProcessor->m_ExifBufferLength);
@@ -3025,11 +3027,11 @@ void GimpExport(const short UsePipe) {
     QString ICCFileName = ICCFile.fileName();
     ICCFile.setAutoRemove(false);
     printf("(%s,%d) '%s'\n",
-           __FILE__,__LINE__,ICCFileName.toAscii().data());
+           __FILE__,__LINE__,ICCFileName.toLocal8Bit().data());
     QDataStream ICCOut(&ICCFile);
-    FILE* pFile = fopen ( Settings->GetString("OutputColorProfile").toAscii().data(), "rb" );
+    FILE* pFile = fopen ( Settings->GetString("OutputColorProfile").toLocal8Bit().data(), "rb" );
     if (pFile==NULL) {
-      ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toAscii().data());
+      ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toLocal8Bit().data());
       exit(EXIT_FAILURE);
     }
     fseek (pFile , 0 , SEEK_END);
@@ -3041,7 +3043,7 @@ void GimpExport(const short UsePipe) {
 
     size_t RV = fread (pchBuffer, 1, lSize, pFile);
     if (RV != (size_t) lSize) {
-      ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toAscii().data());
+      ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toLocal8Bit().data());
       exit(EXIT_FAILURE);
     }
     ICCOut.writeRawData(pchBuffer, lSize);
@@ -3059,7 +3061,7 @@ void GimpExport(const short UsePipe) {
     QString GimpFileName = GimpFile.fileName();
     GimpFile.setAutoRemove(false);
     printf("(%s,%d) '%s'\n",
-           __FILE__,__LINE__,GimpFileName.toAscii().data());
+           __FILE__,__LINE__,GimpFileName.toLocal8Bit().data());
     QTextStream Out(&GimpFile);
     Out << ImageFileName << "\n";
     Out << ExifFileName << "\n";
@@ -3234,11 +3236,11 @@ void CB_PreviewColorProfileButton() {
   // Close old profile and open new one.
   cmsCloseProfile(PreviewColorProfile);
   PreviewColorProfile = cmsOpenProfileFromFile(
-          Settings->GetString("PreviewColorProfile").toAscii().data(),
+          Settings->GetString("PreviewColorProfile").toLocal8Bit().data(),
           "r");
   if (!PreviewColorProfile) {
     ptLogError(ptError_FileOpen,
-         Settings->GetString("PreviewColorProfile").toAscii().data());
+         Settings->GetString("PreviewColorProfile").toLocal8Bit().data());
     assert(PreviewColorProfile);
   }
   PreCalcTransforms();
@@ -3281,7 +3283,7 @@ void CB_OutputColorProfileButton() {
 
 void CB_OutputColorProfileResetButton() {
   Settings->SetValue("OutputColorProfile",
-                     (Settings->GetString("UserDirectory") + "Profiles/Output/sRGB.icc").toAscii().data());
+                     (Settings->GetString("UserDirectory") + "Profiles/Output/sRGB.icc").toLocal8Bit().data());
   if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output) {
     if (Settings->GetInt("ExposureIndicator")==1) {
       Update(ptProcessorPhase_Preview);
@@ -4935,7 +4937,7 @@ void CB_ChannelMixerOpenButton() {
   }
   if (ChannelMixer->
       ReadChannelMixer(
-                  ChannelMixerFileNames[Index].toAscii().data())) {
+                  ChannelMixerFileNames[Index].toLocal8Bit().data())) {
     QString ErrorMessage = QObject::tr("Cannot read channelmixer ")
                            + " '"
                            + ChannelMixerFileNames[Index]
@@ -4993,8 +4995,8 @@ void CB_ChannelMixerSaveButton() {
     Header += "; " + Explanation + "\n;\n";
   }
 
-  ChannelMixer->WriteChannelMixer(ChannelMixerFileName.toAscii().data(),
-                                  Header.toAscii().data());
+  ChannelMixer->WriteChannelMixer(ChannelMixerFileName.toLocal8Bit().data(),
+                                  Header.toLocal8Bit().data());
 }
 
 void CB_ChannelMixerChoice(const QVariant Choice) {
@@ -5008,7 +5010,7 @@ void CB_ChannelMixerChoice(const QVariant Choice) {
         ReadChannelMixer(
          (Settings->GetStringList("ChannelMixerFileNames"))
            [Choice.toInt()-ptChannelMixerChoice_File].
-           toAscii().data())){
+           toLocal8Bit().data())){
       assert(0);
     }
   }
@@ -7236,7 +7238,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   } else {
     fprintf(stderr,"(%s,%d) Unexpected ObjectName '%s'\n",
-            __FILE__,__LINE__,ObjectName.toAscii().data());
+            __FILE__,__LINE__,ObjectName.toLocal8Bit().data());
     assert(0);
   }
 }
@@ -7283,9 +7285,9 @@ ptImageType CheckImageType(QString filename,
   if (filename != InputFileNameList[0]) {
     FREE(LocalDcRaw->m_UserSetting_InputFileName);
     LocalDcRaw->m_UserSetting_InputFileName =
-      (char*) MALLOC(1+strlen(filename.toAscii().data()));
+      (char*) MALLOC(1+strlen(filename.toLocal8Bit().data()));
     ptMemoryError(LocalDcRaw->m_UserSetting_InputFileName,__FILE__,__LINE__);
-    strcpy(LocalDcRaw->m_UserSetting_InputFileName,filename.toAscii().data());
+    strcpy(LocalDcRaw->m_UserSetting_InputFileName,filename.toLocal8Bit().data());
   }
 
   if (LocalDcRaw->Identify() == 0) {
@@ -7302,7 +7304,7 @@ ptImageType CheckImageType(QString filename,
   } else {
     // Not a raw image. We use GraphicsMagick to check for valid Bitmaps.
     MagickWand* image = NewMagickWand();
-    MagickPingImage(image, filename.toAscii().data());
+    MagickPingImage(image, filename.toLocal8Bit().data());
 
     ExceptionType MagickExcept;
     const char* MagickErrorMsg = MagickGetException(image, &MagickExcept);

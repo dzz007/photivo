@@ -30,6 +30,8 @@
 #include <ptInfo.h>
 #include <ptTempFile.h>
 #include "batch/ptBatchWindow.h"
+#include <QFileDialog>
+#include <cassert>
 
 // deprecated: To be removed when transition to new settings system is complete.
 #include "../ptSettings.h"
@@ -102,7 +104,7 @@ bool ptFilterDM::ReadPresetFile(const QString &AFileName, short &ANextPhase) {
   {
     ptLogError(ptError_FileFormat,
                "'%s' has wrong format\n",
-               AFileName.toAscii().data());
+               AFileName.toLocal8Bit().data());
     return ptError_FileFormat;
   }
 
@@ -315,7 +317,7 @@ bool ptFilterDM::ReadPresetFile(const QString &AFileName, short &ANextPhase) {
     if (ChannelMixer->ReadChannelMixer(
          (Settings->GetStringList("ChannelMixerFileNames"))
            [Settings->GetInt("ChannelMixer")-ptChannelMixerChoice_File].
-             toAscii().data())) {
+             toLocal8Bit().data())) {
       assert(0);
     }
   }

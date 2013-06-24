@@ -32,6 +32,8 @@
   #include <omp.h>
 #endif
 
+#include <cassert>
+
 #include "ptImage.h"
 #include "ptImage8.h"
 #include "ptError.h"

@@ -29,6 +29,8 @@
 
 #include <Magick++.h>
 
+#include <cassert>
+
 using namespace Magick;
 
 #ifdef _OPENMP

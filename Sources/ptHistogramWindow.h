@@ -24,9 +24,11 @@
 #ifndef DLHISTOGRAMWINDOW_H
 #define DLHISTOGRAMWINDOW_H
 
-#include <QtGui>
-
 #include "ptImage8.h"
+
+#include <QAction>
+#include <QTimer>
+#include <QLabel>
 
 //==============================================================================
 

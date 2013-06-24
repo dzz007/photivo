@@ -30,6 +30,8 @@
 #include <QMenu>
 #include <QAction>
 #include <QLabel>
+#include <QScrollBar>
+#include <QFileDialog>
 
 #include "../ptDefines.h"
 #include "../ptSettings.h"
@@ -519,7 +521,7 @@ void ptFileMgrWindow::saveThumbnail()
                                                SaveBitmapPattern);
     if (0 == hOutputName.size()) return; // Operation cancelled.
 
-    if (!(hImage->DumpImage(hOutputName.toAscii().data(), true))) {
+    if (!(hImage->DumpImage(hOutputName.toLocal8Bit().data(), true))) {
       ptMessageBox::warning(0, QObject::tr("Error"), QObject::tr("Thumbnail could not be saved."));
     }
 

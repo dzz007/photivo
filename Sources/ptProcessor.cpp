@@ -35,6 +35,7 @@
 #include "ptCurve.h"
 #include "ptChannelMixer.h"
 #include "ptCimg.h"
+#include "ptDcRaw.h"
 #include "ptFastBilateral.h"
 #include "ptMessageBox.h"
 #include "ptImageHelper.h"
@@ -354,7 +355,7 @@ void ptProcessor::Run(short Phase,
                   CameraProfileName = PathInfo.absoluteFilePath();
                   Settings->SetValue("CameraColorProfile",CameraProfileName);
                   TRACEKEYVALS("Found adobe profile","%s",
-                               CameraProfileName.toAscii().data());
+                               CameraProfileName.toLocal8Bit().data());
                   TRACEMAIN("Found profile at %d ms.",FRunTimer.elapsed());
                 } else {
                   ptMessageBox::information(0,
@@ -389,7 +390,7 @@ void ptProcessor::Run(short Phase,
                   TRACEMAIN("Found profile at %d ms.",FRunTimer.elapsed());
                 } else {
                   TRACEMAIN("Not found profile at %d ms.",FRunTimer.elapsed());
-                  printf("profile %s\n\n",InputFileName.toAscii().data());
+                  printf("profile %s\n\n",InputFileName.toLocal8Bit().data());
                   Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
                 }
               }
@@ -405,7 +406,7 @@ void ptProcessor::Run(short Phase,
                 m_DcRaw,
                 Settings->GetInt("WorkColor"),
                 (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
-                  NULL : CameraProfileName.toAscii().data(),
+                  NULL : CameraProfileName.toLocal8Bit().data(),
                 Settings->GetInt("CameraColorProfileIntent"),
                 Settings->GetInt("CameraColorGamma"));
 
@@ -1746,7 +1747,7 @@ void ptProcessor::Run(short Phase,
             int Success = 0;
 
             m_Image_TextureOverlay->ptGMCOpenImage(
-              (Settings->GetString("TextureOverlayFile")).toAscii().data(),
+              (Settings->GetString("TextureOverlayFile")).toLocal8Bit().data(),
               Settings->GetInt("WorkColor"),
               Settings->GetInt("PreviewColorProfileIntent"),
               0,
@@ -1829,7 +1830,7 @@ void ptProcessor::Run(short Phase,
             int Success = 0;
 
             m_Image_TextureOverlay2->ptGMCOpenImage(
-              (Settings->GetString("TextureOverlay2File")).toAscii().data(),
+              (Settings->GetString("TextureOverlay2File")).toLocal8Bit().data(),
               Settings->GetInt("WorkColor"),
               Settings->GetInt("PreviewColorProfileIntent"),
               0,
@@ -2092,8 +2093,6 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
     if (StopBefore == ptProcessorStopBefore::NoStop) {
       m_ReportProgress(tr("Transfer Bitmap"));
     }
-
-    printf("\n%d, %d, %d\n\n", Settings->GetInt("DetailViewCropX"), Settings->GetInt("Scaled"), Settings->GetInt("PipeSize"));
 
     // This will be equivalent to m_PipeSize EXCEPT if overwritten
     // by the FinalRun setting that will be always in full size.
