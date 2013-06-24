@@ -29,12 +29,13 @@
   #include <omp.h>
 #endif
 
+//==============================================================================
 
 ptImage* ptImage::LiquidRescaleRelative(const double HorScale,
                                         const double VertScale,
                                         const short Energy,
-                                        const short VertFirst) {
-
+                                        const short VertFirst)
+{
   uint16_t Width = m_Width * HorScale;
   uint16_t Height = m_Height * VertScale;
 
@@ -43,12 +44,17 @@ ptImage* ptImage::LiquidRescaleRelative(const double HorScale,
   return this;
 }
 
+//==============================================================================
+
 ptImage* ptImage::LiquidRescale(const uint16_t Width,
                                 const uint16_t Height,
                                 const short Energy,
-                                const short VertFirst) {
-
-  LqrCarver* carver = lqr_carver_new_ext((void*) m_Image,
+                                const short VertFirst)
+{
+  // Destroying the carver further down will also free the copied image.
+  LqrCarver* carver = lqr_carver_new_ext(memcpy(CALLOC(m_Width*m_Height,sizeof(*m_Image)),
+                                                m_Image,
+                                                m_Width*m_Height*sizeof(*m_Image)),
                                          m_Width,
                                          m_Height,
                                          3, // channels
@@ -85,12 +91,8 @@ ptImage* ptImage::LiquidRescale(const uint16_t Width,
   }
 
   lqr_carver_init(carver,1,0.0);
-
   lqr_carver_resize(carver, Width, Height);
-
-  // old m_Image will be freed by lqr
-  m_Image = (uint16_t (*)[3]) CALLOC(Width*Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
+  this->setSize((size_t)Width*Height);
 
   int Row, Col;
   void *rgb;
@@ -112,3 +114,5 @@ ptImage* ptImage::LiquidRescale(const uint16_t Width,
 
   return this;
 }
+
+//==============================================================================

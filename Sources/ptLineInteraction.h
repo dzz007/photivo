@@ -24,39 +24,36 @@
 #ifndef PTDRAWLINEINTERACTION_H
 #define PTDRAWLINEINTERACTION_H
 
+//==============================================================================
+
 #include <QMouseEvent>
 #include <QLine>
 #include <QGraphicsLineItem>
 
-#include "ptImageInteraction.h"
+#include "ptAbstractInteraction.h"
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptLineInteraction
-//
-///////////////////////////////////////////////////////////////////////////
-class ptLineInteraction : public ptImageInteraction {
+class ptLineInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
   explicit ptLineInteraction(QGraphicsView* View);
   ~ptLineInteraction();
 
+  /*! Reimplemented from base class. */
+  virtual Qt::KeyboardModifiers modifiers()    const { return Qt::NoModifier; }
+
+  /*! Reimplemented from base class. */
+  virtual ptMouseActions        mouseActions() const { return maDragDrop; }
+
+  /*! Reimplemented from base class. */
+  virtual Qt::MouseButtons      mouseButtons() const { return Qt::LeftButton; }
+
   double angle();
 
+//------------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
 private:
   QLineF* m_Line;
   short m_NowDragging;
@@ -64,16 +61,12 @@ private:
 
   void Finalize(const ptStatus status);
 
+//------------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-///////////////////////////////////////////////////////////////////////////
 private slots:
   void keyAction(QKeyEvent* event);
   void mouseAction(QMouseEvent* event);
 
-};
 
+};
 #endif // PTDRAWLINEINTERACTION_H

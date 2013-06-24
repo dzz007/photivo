@@ -27,14 +27,10 @@
 #include "ptSettings.h"
 #include "ptConstants.h"
 #include "ptTheme.h"
-#include "ptCurveWindow.h"
 #include "ptViewWindow.h"
 
-extern ptTheme* Theme;
-extern QStringList CurveKeys;
 extern QString SettingsFilePattern;
-extern ptCurve* Curve[17];
-extern ptViewWindow* ViewWindow;
+extern ptViewWindow *ViewWindow;
 
 //==============================================================================
 
@@ -233,7 +229,7 @@ void ptGroupBox::UpdateView() {
     m_HelpIcon->setObjectName("");
     m_Icon->setObjectName("");
   }
-  m_Header->setStyleSheet(Theme->ptStyleSheet);
+  m_Header->setStyleSheet(Theme->stylesheet());
 }
 
 //==============================================================================
@@ -293,7 +289,6 @@ void ptGroupBox::AppendSettings() {
 
 void ptGroupBox::WriteSettings(const short Append) {
   QStringList Keys;
-  QStringList Curves;
   QList <ptInput *> Inputs = findChildren <ptInput *> ();
   for (int i = 0; i < Inputs.size(); i++) {
     Keys << (Inputs.at(i))->GetName();
@@ -306,26 +301,11 @@ void ptGroupBox::WriteSettings(const short Append) {
   for (int i = 0; i < Checks.size(); i++) {
     Keys << (Checks.at(i))->GetName();
   }
-  QList <ptCurveWindow *> CurveWindows = findChildren <ptCurveWindow *> ();
-  for (int i = 0; i < CurveWindows.size(); i++) {
-    Curves << CurveKeys.at((CurveWindows.at(i))->m_Channel);
-  }
 
   // Additional for Camera color profile
   if (m_Name == "TabCameraColorSpace")
     Keys << "CameraColorProfile";
 
-  // Additional for Curves
-  if (Curves.contains("CurveSaturation"))
-    Keys << "SatCurveMode" << "SatCurveType";
-  if (Curves.contains("CurveTexture"))
-    Keys << "TextureCurveType";
-  if (Curves.contains("CurveDenoise"))
-    Keys << "DenoiseCurveType";
-  if (Curves.contains("CurveDenoise2"))
-    Keys << "Denoise2CurveType";
-  if (Curves.contains("CurveHue"))
-    Keys << "HueCurveType";
   if(m_Name == "TabRGBTone")
     Keys << "Tone1ColorRed" << "Tone1ColorGreen" << "Tone1ColorBlue"
          << "Tone2ColorRed" << "Tone2ColorGreen" << "Tone2ColorBlue";
@@ -334,14 +314,6 @@ void ptGroupBox::WriteSettings(const short Append) {
   if (m_Name == "TabGradualOverlay2")
     Keys << "GradualOverlay2ColorRed" << "GradualOverlay2ColorGreen" << "GradualOverlay2ColorBlue";
 
-  for (int i = 0; i < Curves.size(); i++) {
-    if (Settings->GetInt(Curves.at(i)) > ptCurveChoice_Manual) {
-      ptMessageBox::information(0,"Curve problem",
-        "Only manual curves are supported in presets.\nNo preset file will be written!");
-      return;
-    }
-  }
-
   // Additional for Crop
   if (m_Name == "TabCrop" && Settings->GetInt("Crop")==1)
     Keys << "CropX" << "CropY" << "CropW" << "CropH";
@@ -349,6 +321,8 @@ void ptGroupBox::WriteSettings(const short Append) {
   // Additional for texture overlay
   if (m_Name == "TabTextureOverlay")
     Keys << "TextureOverlayFile";
+  if (m_Name == "TabTextureOverlay2")
+    Keys << "TextureOverlay2File";
 
   QString SuggestedFileName = Settings->GetString("PresetDirectory") + "/preset.pts";
   QString FileName;
@@ -400,20 +374,15 @@ void ptGroupBox::WriteSettings(const short Append) {
     JobSettings.setValue(Key,Settings->GetValue(Key));
   }
 
-  // save the manual curves
-  for (int i = 0; i < Curves.size(); i++) {
-    if (Settings->GetInt(Curves.at(i))==ptCurveChoice_Manual) {
-      JobSettings.setValue(Curves.at(i) + "Counter",Curve[CurveKeys.indexOf(Curves.at(i))]->m_NrAnchors);
-      for (int j = 0; j < Curve[CurveKeys.indexOf(Curves.at(i))]->m_NrAnchors; j++) {
-        JobSettings.setValue(Curves.at(i) + "X" + QString::number(j),Curve[CurveKeys.indexOf(Curves.at(i))]->m_XAnchor[j]);
-        JobSettings.setValue(Curves.at(i) + "Y" + QString::number(j),Curve[CurveKeys.indexOf(Curves.at(i))]->m_YAnchor[j]);
-      }
-      JobSettings.setValue(Curves.at(i) + "Type",Curve[CurveKeys.indexOf(Curves.at(i))]->m_IntType);
-    }
-  }
   JobSettings.sync();
   if (JobSettings.status() != QSettings::NoError)
     ptMessageBox::critical(0,"Error","Error while writing preset file!");
+}
+
+//==============================================================================
+
+void ptGroupBox::setActivityIcon(const bool AStatus) {
+  this->SetActive(AStatus);
 }
 
 //==============================================================================
@@ -518,8 +487,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
           m_AtnBlock->setText(tr("Bl&ock"));
         }
         QMenu Menu(NULL);
-        Menu.setPalette(Theme->ptMenuPalette);
-        Menu.setStyle(Theme->ptStyle);
+        Menu.setPalette(Theme->menuPalette());
+        Menu.setStyle(Theme->style());
         Menu.addAction(m_AtnBlock);
         Menu.addSeparator();
         Menu.addAction(m_AtnReset);
@@ -544,8 +513,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
                  m_Name == "TabDemosaicing" ||
                  m_Name == "TabHighlightRecovery") {
         QMenu Menu(NULL);
-        Menu.setPalette(Theme->ptMenuPalette);
-        Menu.setStyle(Theme->ptStyle);
+        Menu.setPalette(Theme->menuPalette());
+        Menu.setStyle(Theme->style());
         Menu.addAction(m_AtnSavePreset);
         Menu.addAction(m_AtnAppendPreset);
         Menu.addSeparator();
@@ -562,8 +531,8 @@ void ptGroupBox::mousePressEvent(QMouseEvent *event) {
       } else if (parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName() != "TabSetting" &&
                  parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName() != "TabInfo") {
         QMenu Menu(NULL);
-        Menu.setPalette(Theme->ptMenuPalette);
-        Menu.setStyle(Theme->ptStyle);
+        Menu.setPalette(Theme->menuPalette());
+        Menu.setStyle(Theme->style());
         QStringList Temp = Settings->GetStringList("FavouriteTools");
         if (!Temp.contains(m_Name)) {
           m_AtnFav->setIcon(QIcon(*Theme->ptIconStar));
@@ -590,3 +559,15 @@ void ptGroupBox::paintEvent(QPaintEvent *)
 {}
 
 //==============================================================================
+
+bool ptGroupBox::isActive() const {
+  return Settings->ToolIsActive(objectName());
+}
+
+bool ptGroupBox::canHide() const {
+  return !Settings->ToolAlwaysVisible(objectName());
+}
+
+bool ptGroupBox::isBlocked() const {
+  return Settings->ToolIsBlocked(objectName());
+}

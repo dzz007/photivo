@@ -33,14 +33,15 @@
 #define DLDCDRAW_H
 
 // Adaptation of dcraw.c stuff.
-#define DCRAW_VERSION "9.10"    // Update along with dcraw syncing ...
-// $Revision: 1.444 $
-// $Date: 2011/07/23 20:33:32 $
+#define DCRAW_VERSION "dcraw v9.17"    // Update along with dcraw syncing ...
+// $Revision: 1.454 $
+// $Date: 2012/12/23 19:25:36 $
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
 
 #define _USE_MATH_DEFINES
+#include <vector>
 #include <cctype>
 #include <cerrno>
 #include <cfloat>
@@ -119,9 +120,7 @@ typedef unsigned long long UINT64;
 #define LONG_BIT (8 * sizeof (long))
 #endif
 
-#include <QDataStream>
-#include <QByteArray>
-#include <QPixmap>
+#include <QString>
 
 #include "ptDefines.h"
 
@@ -311,7 +310,7 @@ public:
   void  ptRebuildHighlights(const short Effort);
   void  ptBlendHighlights();
   void  ptCrop();
-  bool  thumbnail(QByteArray*& thumbnail);
+  bool  thumbnail(std::vector<char>& thumbnail);
 
 
   /*************************************************************************
@@ -322,8 +321,7 @@ public:
   The lower ones are questionable if they should be of interest to the user.
   *************************************************************************/
 
-  QDataStream* m_ThumbStream;
-  QByteArray*  m_ThumbData;
+  std::vector<char> m_Thumb;
 
   // The image !
   uint16_t    (*m_Image)[4];
@@ -476,7 +474,9 @@ public:
   uint16_t  m_IsFuji;
   int       m_Flip;
   int       m_Tiff_Flip;
+  int       m_Mask[8][4];
   uint16_t  m_Curve[0x10000];
+  uint16_t* m_Raw_Image;
   float     m_cmatrix[3][4];
   float     m_MatrixCamRGBToSRGB[3][4];
   double    m_MatrixSRGBToCamRGB[4][3]; // addon photivo
@@ -532,6 +532,7 @@ public:
 
   struct s_Tiff_IFD {
     int width, height, bps, comp, phint, offset, flip, samples, bytes;
+    int tile_width, tile_length;
   } m_Tiff_IFD[10];
 
   struct s_ph1 {
@@ -607,6 +608,7 @@ public:
   void  foveon_load_camf();
   void  foveon_thumb();
   void  foveon_decoder(unsigned size,unsigned code);
+  void  foveon_huff (uint16_t *huff);
   void  smal_v9_load_raw();
   void  redcine_load_raw();
   void  fill_holes(int holes);
@@ -650,7 +652,7 @@ public:
   void  phase_one_load_raw();
   void  phase_one_correct();
   void  phase_one_flat_field(int is_float,int nc);
-  int   bayer(unsigned row,unsigned col);
+  int   raw(unsigned row,unsigned col);
   void  rollei_load_raw();
   void  rollei_thumb();
   void  layer_thumb();
@@ -669,7 +671,7 @@ public:
   void  pentax_load_raw();
   void  adobe_dng_load_raw_nc();
   void  adobe_dng_load_raw_lj();
-  void  adobe_copy_pixel(int row,int col,uint16_t **rp);
+  void  adobe_copy_pixel(unsigned row, unsigned col, uint16_t **rp);
   void  canon_sraw_load_raw();
   void  lossless_jpeg_load_raw();
   uint16_t * ljpeg_row(int jrow,struct jhead *jh);
@@ -687,10 +689,19 @@ public:
   int   canon_s2is();
   void  remove_zeroes();
   void  canon_600_load_raw();
+  void  canon_600_correct();
   void  canon_600_coeff();
   void  canon_600_auto_wb();
   int   canon_600_color(int ratio[2],int mar);
   void  canon_600_fixed_wb(int temp);
+  void  canon_load_raw();
+  void  lossless_dng_load_raw();
+  void  lossy_dng_load_raw();
+  void  packed_dng_load_raw();
+  void  ppm16_thumb();
+  void  foveon_dp_load_raw();
+  void  foveon_sd_load_raw();
+  void  crop_masked_pixels();
   /* void  canon_black (double dark[2],int nblack); */
   void  read_shorts(uint16_t *pixel,int count);
   double  getreal(int type);
@@ -705,7 +716,7 @@ public:
   #if !defined(__GLIBC__)
   char *my_memmem(char *haystack,size_t haystacklen,char *neepte,size_t neeptelen);
   #endif
-  int  fc(int row,int col);
+  int  fcol(int row,int col);
   // functions for dcb
   void dcb_pp_old();
   void copy_to_buffer_old(float (*m_Image2)[3]);

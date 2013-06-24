@@ -2,7 +2,8 @@
 **
 ** Photivo
 **
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2013 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -23,43 +24,77 @@
 #ifndef PTIMAGEVIEW_H
 #define PTIMAGEVIEW_H
 
-//==============================================================================
-
+#include "ptThumbDefines.h"
+#include "../ptReportOverlay.h"
+#include "../ptImage8.h"
+#include <QWidget>
 #include <QGraphicsView>
 #include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
+#include <QGridLayout>
+#include <memory>
 
-#include "../ptReportOverlay.h"
-
-//==============================================================================
-
+//------------------------------------------------------------------------------
 class ptImageView: public QGraphicsView {
 Q_OBJECT
+
 public:
-  explicit ptImageView(QObject* parent = NULL);
+  explicit ptImageView(QWidget* AParent = nullptr);
   ~ptImageView();
 
-  void setImage(QImage* image);
+  void showImage(TThumbPtr AImage8);
+  QString currentFilename() const;
+  void setNextFilename(const QString& AFilename);
+
+public slots:
+  void zoom100();
+  int  zoomFit(bool AWithMsg = true);  // fit complete image into viewport
+  void zoomIn();
+  void zoomOut();
 
 protected:
+  void contextMenuEvent(QContextMenuEvent* event);
+  void mouseDoubleClickEvent(QMouseEvent* event);
+  void mouseMoveEvent(QMouseEvent* event);
+  void mousePressEvent(QMouseEvent* event);
+  void mouseReleaseEvent(QMouseEvent* event);
   void resizeEvent(QResizeEvent* event);
+  void showEvent(QShowEvent* event);
   void wheelEvent(QWheelEvent* event);
 
-
 private:
-  void ZoomTo(float factor);
-  int ZoomToFit(const bool withMsg = true);
+  void imageToScene(double AFactor);    // Put the QImage in the scene
+  void zoomStep(int ADirection);
+  void zoomTo(float AFactor, bool AWithMsg);  // 1.0 means 100%
 
-  const short MinZoom;
-  const short MaxZoom;
+  const float           MinZoom;
+  const float           MaxZoom;
+  const int             MaxImageSize;
+  QList<float>          ZoomFactors;   // steps for wheel zoom
+  QGridLayout*          FParentLayout;
+  QGraphicsScene*       FScene;
+  TThumbPtr             FImage;
+  QString               FFilenameCurrent;
+  QString               FFilenameNext;
+  int                   FZoomMode;
+  float                 FZoomFactor;
+  int                   FZoom;
+  QLine*                FDragDelta;
+  bool                  FLeftMousePressed;
+  ptReportOverlay*      FZoomSizeOverlay;
+  ptReportOverlay*      FStatusOverlay;
+  QGraphicsPixmapItem*  FPixmapItem;
+  int                   FResizeTimeOut;
+  QTimer*               FResizeTimer;
+  QTimer                FResizeEventTimer;  // to avoid jerky UI during widget resize
+                                             // in zoom fit mode
 
-  QGraphicsScene*       m_Scene;
-  ptReportOverlay*      m_ZoomSizeOverlay;
-  QGraphicsPixmapItem*  m_PixItem;
-  qreal                 m_ZoomFactor;
-  short                 m_ZoomMode;
+  QAction* FZoom100Action;
+  QAction* FZoomInAction;
+  QAction* FZoomFitAction;
+  QAction* FZoomOutAction;
 
-
-//==============================================================================
+private slots:
+  void resizeTimerExpired();
 };
+
 #endif // PTIMAGEVIEW_H

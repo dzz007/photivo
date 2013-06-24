@@ -1,92 +1,54 @@
 ################################################################################
 ##
-## photivo
+## Photivo
 ##
 ## Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
+## Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
 ##
-## This file is part of photivo.
+## This file is part of Photivo.
 ##
-## photivo is free software: you can redistribute it and/or modify
+## Photivo is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License version 3
-## as published by the Free Software Foundation.on.
+## as published by the Free Software Foundation.
 ##
-## photivo is distributed in the hope that it will be useful,
+## Photivo is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with photivo.  If not, see <http://www.gnu.org/licenses/>.
+## along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 ##
 ################################################################################
-
-######################################################################
 #
-# This is the Qt project file for photivo.
-# Don't let it overwrite by qmake -project !
-# A number of settings is tuned.
+# This is a Qt project file for Photivo.
+# All Photivo project files are heavily tuned.
+# Do not overwrite any with "qmake -project"!
 #
-# qmake will make a platform dependent makefile of it.
-#
-######################################################################
+################################################################################
 
-CONFIG += release silent
-TEMPLATE = app
-TARGET = ptClear
-DEPENDPATH += .
-INCLUDEPATH += $${PREFIX}/include
+TEMPLATE   = app
+TARGET     = ptClear
+CONFIG      += silent
 
-win32 {
-  BUILDDIR = $$system(cat ../builddir)
-  DESTDIR = ../$${BUILDDIR}
-  OBJECTS_DIR = ../$${BUILDDIR}/Objects
-  MOC_DIR = ../$${BUILDDIR}/Objects
-  UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
-  RCC_DIR = ../$${BUILDDIR}/Objects
+DESTDIR = ..
+
+isEmpty(PREFIX) {
+  PREFIX = $$[QT_INSTALL_PREFIX]
 }
-unix {
-  DESTDIR = ..
-  OBJECTS_DIR = ../Objects
-  MOC_DIR = ../Objects
-  UI_HEADERS_DIR = ../Objects
-  RCC_DIR = ../Objects
-}
-#prevent qmake from adding -arch flags
-macx{
-  QMAKE_CFLAGS_X86_64 =-m64
-  QMAKE_CXXFLAGS_X86_64 =-m64
-  QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
-  QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
-}
-QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP $${CXXFLAGS} -I$${PREFIX}/include
-QMAKE_CXXFLAGS_DEBUG += -ffast-math -O0 -g
-QMAKE_CXXFLAGS_RELEASE += -O3 -fopenmp $${CXXFLAGS} -I$${PREFIX}/include
-QMAKE_CXXFLAGS_RELEASE += -ffast-math
-QMAKE_CXXFLAGS_RELEASE += -DDLRAW_HAVE_GIMP
-QMAKE_CFLAGS_DEBUG += -DDLRAW_HAVE_GIMP $${CFLAGS} -I$${PREFIX}/include
-QMAKE_CFLAGS_DEBUG += -ffast-math -O0 -g
-QMAKE_CFLAGS_RELEASE += -O3 $${CFLAGS} -I$${PREFIX}/include
-QMAKE_CFLAGS_RELEASE += -ffast-math
-QMAKE_LFLAGS_RELEASE += $${LDFLAGS} -L$${PREFIX}/lib
-QMAKE_LFLAGS_DEBUG += -rdynamic $${LDFLAGS} -L$${PREFIX}/lib
-unix {
-  QMAKE_CC = ccache /usr/bin/gcc
-  QMAKE_CXX = ccache /usr/bin/g++
-  QMAKE_POST_LINK=strip $(TARGET)
-}
-win32 {
-  LIBS += -lwsock32 -lexpat -lgdi32
-  QMAKE_CXXFLAGS_RELEASE += -I/my/include
-  QMAKE_CFLAGS_RELEASE += -I/my/include
-  QMAKE_LFLAGS_RELEASE += -L/my/lib
-}
+
+QMAKE_CXXFLAGS += $$(CXXFLAGS) -std=gnu++0x
+QMAKE_CFLAGS   += $$(CFLAGS)
+QMAKE_LFLAGS   += $$(LDFLAGS)
+
 macx {
-  QMAKE_CC = /usr/bin/gcc
-  QMAKE_CXX = /usr/bin/g++
+  #prevent qmake from adding -arch flags
+  QMAKE_CFLAGS_X86_64           = -m64
+  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x
+  QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
+  QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
+  
+  LIBS += -framework QtCore -framework QtGui
 }
 
-# Input
 SOURCES += ../Sources/ptClear.cpp
-
-
-###############################################################################

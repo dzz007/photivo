@@ -24,10 +24,10 @@
 #include <iomanip>
 #include <iostream>
 
+#include "ptDefines.h"
 #include "ptChannelMixer.h"
 #include "ptConfirmRequest.h"
 #include "ptConstants.h"
-#include "ptDefines.h"
 #include "ptError.h"
 #include "ptGuiOptions.h"
 //#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
@@ -37,6 +37,10 @@
 #include "ptTheme.h"
 #include "ptViewWindow.h"
 #include "ptWhiteBalances.h"
+
+#include "filters/ptFilterDM.h"
+#include "filters/ptFilterBase.h"
+#include "ptToolBox.h"
 
 #ifdef Q_OS_WIN
   #include "ptEcWin7.h"
@@ -53,6 +57,7 @@ extern short ImageCleanUp;
 void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
+void CB_ZoomStep(int direction);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -93,16 +98,13 @@ void Update(short Phase,
 
 void Update(const QString GuiName);
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// ptMainWindow constructor.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptMainWindow::ptMainWindow(const QString Title)
 : QMainWindow(NULL)
 {
+  FUIState = uisNone;
+
   // Setup from the Gui builder.
   setupUi(this);
   setWindowTitle(Title);
@@ -117,23 +119,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   #ifdef Q_OS_MAC
     MacSpacer->setFixedWidth(16);
   #endif
-
-  // Setup splitter
-  //~ if (Settings->GetInt("SwitchLayout")) {
-    //~ QList SplitterSizes = MainSplitter.sizes();
-    //~ SplitterSizes.move(0,1);
-  //~
-    //~ MainSplitter->insertWidget(1,MainSplitter->widget(0));
-    //~ MainSplitter->setSizes(SplitterSizes);
-    //~ MainSplitter->setStretchFactor(0,1);
-  //~ }
-
-  //~ QDockWidget *ControlsDockWidget = new QDockWidget(tr("Controls"));
-  //~ ControlsDockWidget->setObjectName("ControlsDockWidget");
-  //~ ControlsDockWidget->setWidget(MainSplitter->widget(0));
-  //~ ControlsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  //~ ControlsDockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-  //~ addDockWidget(Qt::LeftDockWidgetArea, ControlsDockWidget);
 
   MainSplitter->setStretchFactor(1,1);
   ViewSplitter->setStretchFactor(0,1);
@@ -279,9 +264,18 @@ ptMainWindow::ptMainWindow(const QString Title)
   m_GroupBox = NULL;
   m_GroupBoxesOrdered = NULL;
   m_TabLayouts = NULL;
-  m_MovedTools = new QList<ptGroupBox*>;
-  // m_GroupBox is set in here
-  OnToolBoxesEnabledTriggered(Settings->GetInt("ToolBoxMode"));
+  m_MovedTools = new QList<QWidget*>;
+
+  // NOTE: Following function does the UI replacing and ptGroupBox creation.
+  // It also initializes new-style filters.
+  OnToolBoxesEnabledTriggered(0);
+
+  // Inserting new-style filters postponed to here because a fully functional m_TabLayouts
+  // is needed.
+  for (ptFilterBase *hFilter: *GFilterDM) {
+    m_TabLayouts->at(hFilter->parentTabIdx())->insertWidget(hFilter->idxInParentTab(),
+                                                            hFilter->gui());
+  }
 
   //
   // Run pipe related
@@ -304,20 +298,19 @@ ptMainWindow::ptMainWindow(const QString Title)
   BottomContainer->setVisible(Settings->GetInt("ShowBottomContainer"));
 
   Macro_ConnectSomeButton(ZoomFit);
+  Macro_ConnectSomeButton(ZoomIn);
+  Macro_ConnectSomeButton(ZoomOut);
   Macro_ConnectSomeButton(ZoomFull);
+  Macro_ConnectSomeButton(Batch);
+  Macro_ConnectSomeButton(FileMgr);
   Macro_ConnectSomeButton(FullScreen);
   FullScreenButton->setChecked(0);
   Macro_ConnectSomeButton(LoadStyle);
 
   //
-  // Gimp related
+  // Connect Export button (not only for Gimp like the name suggests)
   //
-
-#if defined (DLRAW_GIMP_PLUGIN) || defined (DLRAW_HAVE_GIMP)
   Macro_ConnectSomeButton(ToGimp);
-#else
-  ToGimpButton->hide();
-#endif
 
   //
   // Settings related
@@ -361,7 +354,7 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : Geometry
   //
 
-  // TODO BJ: Unhide when lensfun implementation has grown far enough
+  // TODO: BJ Unhide when lensfun implementation has grown far enough
   widget_158->setVisible(false);  //Camera
   widget_159->setVisible(false);  //Lens
 
@@ -391,39 +384,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   }
 
 
-  Macro_ConnectSomeButton(CurveRGBOpen);
-  Macro_ConnectSomeButton(CurveRGBSave);
-  Macro_ConnectSomeButton(CurveROpen);
-  Macro_ConnectSomeButton(CurveRSave);
-  Macro_ConnectSomeButton(CurveGOpen);
-  Macro_ConnectSomeButton(CurveGSave);
-  Macro_ConnectSomeButton(CurveBOpen);
-  Macro_ConnectSomeButton(CurveBSave);
-
-  //
-  // TAB : Lab
-  //
-
-  Macro_ConnectSomeButton(CurveLOpen);
-  Macro_ConnectSomeButton(CurveLSave);
-  Macro_ConnectSomeButton(CurveaOpen);
-  Macro_ConnectSomeButton(CurveaSave);
-  Macro_ConnectSomeButton(CurvebOpen);
-  Macro_ConnectSomeButton(CurvebSave);
-  Macro_ConnectSomeButton(CurveOutlineOpen);
-  Macro_ConnectSomeButton(CurveOutlineSave);
-  Macro_ConnectSomeButton(CurveLByHueOpen);
-  Macro_ConnectSomeButton(CurveLByHueSave);
-  Macro_ConnectSomeButton(CurveHueOpen);
-  Macro_ConnectSomeButton(CurveHueSave);
-  Macro_ConnectSomeButton(CurveTextureOpen);
-  Macro_ConnectSomeButton(CurveTextureSave);
-  Macro_ConnectSomeButton(CurveSaturationOpen);
-  Macro_ConnectSomeButton(CurveSaturationSave);
-  Macro_ConnectSomeButton(CurveShadowsHighlightsOpen);
-  Macro_ConnectSomeButton(CurveShadowsHighlightsSave);
-  Macro_ConnectSomeButton(CurveDenoiseOpen);
-  Macro_ConnectSomeButton(CurveDenoiseSave);
 
   //
   // TAB : EyeCandy
@@ -434,6 +394,8 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   Macro_ConnectSomeButton(TextureOverlay);
   Macro_ConnectSomeButton(TextureOverlayClear);
+  Macro_ConnectSomeButton(TextureOverlay2);
+  Macro_ConnectSomeButton(TextureOverlay2Clear);
 
   Macro_ConnectSomeButton(GradualOverlay1Color);
   Macro_ConnectSomeButton(GradualOverlay2Color);
@@ -465,17 +427,13 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : Output
   //
 
-  //~ connect(TagsEditWidget,SIGNAL(textChanged()),
-  //~ this,SLOT(OnTagsEditTextChanged()));
+  connect(TagsEditWidget,  SIGNAL(textChanged()),     this, SLOT(OnTagsEditTextChanged()));
+  connect(edtOutputSuffix, SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
+  connect(edtImageTitle,   SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
+  connect(edtCopyright,    SIGNAL(editingFinished()), this, SLOT(Form_2_Settings()));
 
-  Macro_ConnectSomeButton(BaseCurveOpen);
-  Macro_ConnectSomeButton(BaseCurveSave);
-
-  Macro_ConnectSomeButton(BaseCurve2Open);
-  Macro_ConnectSomeButton(BaseCurve2Save);
 
   Macro_ConnectSomeButton(OutputColorProfileReset);
-  Macro_ConnectSomeButton(WriteOutput);
 
   Macro_ConnectSomeButton(WritePipe);
 
@@ -498,48 +456,46 @@ ptMainWindow::ptMainWindow(const QString Title)
   findChild<ptGroupBox *>(QString("TabToolBoxControl"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabMemoryTest"))->setVisible(0);
   findChild<ptGroupBox *>(QString("TabRememberSettings"))->setVisible(0);
-  m_GroupBox->value("TabOutput")->setVisible(0);
-  m_GroupBox->remove("TabOutput");
-  m_GroupBoxesOrdered->removeOne("TabOutput");
 
   UpdateToolBoxes();
 
   // Set help pages
-  m_GroupBox->value("TabWhiteBalance")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabWhiteBalance"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/camera#white_balance");
 
-  m_GroupBox->value("TabLensfunLensParameters")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabLensfunLensParameters"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#lens_parameters");
-  m_GroupBox->value("TabLensfunCA")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabLensfunCA"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#chromatic_aberration");
-  m_GroupBox->value("TabLensfunVignette")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabLensfunVignette"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#vignetting");
-  m_GroupBox->value("TabLensfunDistortion")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabLensfunDistortion"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#lens_distortion");
-  m_GroupBox->value("TabLensfunGeometry")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabLensfunGeometry"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#geometry_conversion");
-  m_GroupBox->value("TabDefish")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabDefish"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#defish");
-  m_GroupBox->value("TabRotation")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabRotation"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#rotation_and_perspective");
-  m_GroupBox->value("TabCrop")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabCrop"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#crop");
-  m_GroupBox->value("TabLiquidRescale")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabLiquidRescale"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#seam_carving");
-  m_GroupBox->value("TabResize")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabResize"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#resize");
-  m_GroupBox->value("TabFlip")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabFlip"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#flip");
-  m_GroupBox->value("TabBlock")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabBlock"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#block");
 
-  m_GroupBox->value("TabBW")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabBW"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#black_and_white");
-  m_GroupBox->value("TabGradualBlur1")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabGradualBlur1"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#gradual_blur");
-  m_GroupBox->value("TabGradualBlur2")->
+  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabGradualBlur2"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#gradual_blur");
 
+  m_ActiveTabs.append(LocalTab);
   m_ActiveTabs.append(GeometryTab);
   m_ActiveTabs.append(RGBTab);
   m_ActiveTabs.append(LabCCTab);
@@ -592,6 +548,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnSaveSettings, SIGNAL(triggered()), this, SLOT(SaveMenuSettings()));
   m_AtnSaveJobfile = new QAction(tr("Save job file"), this);
   connect(m_AtnSaveJobfile, SIGNAL(triggered()), this, SLOT(SaveMenuJobfile()));
+  m_AtnSendToBatch = new QAction(tr("Send to batch"), this);
+  connect(m_AtnSendToBatch, SIGNAL(triggered()), this, SLOT(SaveMenuBatch()));
 
   // context menu for gimp button
   m_AtnGimpSavePipe = new QAction(tr("Export current pipe"), this);
@@ -660,6 +618,7 @@ ptMainWindow::ptMainWindow(const QString Title)
           SLOT(Event0TimerExpired()));
 
   FileMgrThumbMaxRowColWidget->setEnabled(Settings->GetInt("FileMgrUseThumbMaxRowCol"));
+
   UpdateCropToolUI();
   UpdateLfunDistUI();
   UpdateLfunCAUI();
@@ -675,17 +634,29 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   // Show the file manager if no image loaded at startup, the image editor otherwise.
   // Do this last in the constructor because it triggers thumbnail reading.
-  if (ImageFileToOpen == "") {
-    OpenFileMgrWindow();
+#ifndef PT_WITHOUT_FILEMGR
+  if (ImageFileToOpen == "" &&
+      Settings->GetInt("FileMgrStartupOpen") &&
+      !Settings->GetInt("PreventFileMgrStartup"))
+  {
+    SwitchUIState(uisFileMgr);
   } else {
-    MainStack->setCurrentWidget(ProcessingPage);
+    SwitchUIState(uisProcessing);
   }
+#else
+  SwitchUIState(uisProcessing);
+  findChild<ptGroupBox *>(QString("TabFileMgrSettings"))->setVisible(0);
+#endif
 }
+
+//==============================================================================
 
 void CB_Event0();
 void ptMainWindow::Event0TimerExpired() {
   ::CB_Event0();
 }
+
+//==============================================================================
 
 // Setup the UI language combobox. Only done once after constructing MainWindow.
 // The languages combobox is a regular QComboBox because its dynamic content (depends on
@@ -698,6 +669,8 @@ void ptMainWindow::PopulateTranslationsCombobox(const QStringList UiLanguages, c
   connect(TranslationChoice, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTranslationChoiceChanged(int)));
 }
 
+//==============================================================================
+
 void ptMainWindow::OnTranslationChoiceChanged(int idx) {
   TranslationLabel->setText(tr("Restart Photivo to change the language."));
   if (idx == 0) {   // no translation
@@ -708,6 +681,7 @@ void ptMainWindow::OnTranslationChoiceChanged(int idx) {
     Settings->SetValue("UiLanguage", TranslationChoice->itemText(idx));
   }
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -734,40 +708,41 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       // tools on this tab hidden?
       short HaveHiddenTools = 0;
       QStringList TempList = Settings->GetStringList("HiddenTools");
-      foreach (ptGroupBox* GroupBox, *m_GroupBox) {
+      foreach (ptTempFilterBase* GroupBox, *m_GroupBox) {
         if (TempList.contains(GroupBox->objectName())) {
-          short Tab = GroupBox->GetTabNumber();
+          short Tab = GroupBox->parentTabIdx();
           if (Tab == clickedItem) HaveHiddenTools = 1;
         }
       }
       if (clickedItem !=0 && HaveHiddenTools == 1) { // no hidden tools on camera tab
         m_ContextMenuOnTab = clickedItem;
         QMenu Menu(NULL);
-        Menu.setStyle(Theme->ptStyle);
-        Menu.setPalette(Theme->ptMenuPalette);
+        Menu.setStyle(Theme->style());
+        Menu.setPalette(Theme->menuPalette());
         Menu.addAction(m_AtnShowTools);
         Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
       }
     } else if (obj == WritePipeButton) {
       QMenu Menu(NULL);
-      Menu.setStyle(Theme->ptStyle);
-      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.setStyle(Theme->style());
+      Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnSavePipe);
       Menu.addAction(m_AtnSaveFull);
       Menu.addAction(m_AtnSaveSettings);
       Menu.addAction(m_AtnSaveJobfile);
+      Menu.addAction(m_AtnSendToBatch);
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     } else if (obj == ToGimpButton) {
       QMenu Menu(NULL);
-      Menu.setStyle(Theme->ptStyle);
-      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.setStyle(Theme->style());
+      Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnGimpSavePipe);
       Menu.addAction(m_AtnGimpSaveFull);
       Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
     } else if (obj == ResetButton) {
       QMenu Menu(NULL);
-      Menu.setStyle(Theme->ptStyle);
-      Menu.setPalette(Theme->ptMenuPalette);
+      Menu.setStyle(Theme->style());
+      Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnMenuUserReset);
       Menu.addAction(m_AtnMenuFullReset);
       Menu.addSeparator();
@@ -806,6 +781,9 @@ void ptMainWindow::SaveMenuSettings() {
 }
 void ptMainWindow::SaveMenuJobfile() {
   SaveOutput(ptOutputMode_Jobfile);
+}
+void ptMainWindow::SaveMenuBatch() {
+  SaveOutput(ptOutputMode_Batch);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -859,15 +837,19 @@ void ptMainWindow::ShowToolsOnTab() {
   QString TempString = "";
   QStringList TempList = Settings->GetStringList("HiddenTools");
   TempList.removeDuplicates();
-  foreach (ptGroupBox* GroupBox, *m_GroupBox) {
+
+  foreach (ptTempFilterBase* GroupBox, *m_GroupBox) {
     TempString = GroupBox->objectName();
+
     if (TempList.contains(TempString)) {
-      short Tab = GroupBox->GetTabNumber();
+      short Tab = GroupBox->parentTabIdx();
+
       if (m_ContextMenuOnTab==Tab) {
-        GroupBox->show();
+        GroupBox->guiWidget()->show();
         TempList.removeOne(TempString);
         Settings->SetValue("HiddenTools", TempList);
-        if (Settings->ToolIsActive(TempString)) {
+
+        if (GroupBox->isActive()) {
           ActiveTool = TempString;
         }
       }
@@ -910,6 +892,7 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
   }
 }
 
+//==============================================================================
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -922,15 +905,15 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
 short ptMainWindow::GetCurrentTab() {
   // I opt for matching onto widget name, rather than on
   // index, as I feel that this is more robust for change.
-  //~ if (ProcessingTabBook->currentWidget() == GenericTab) return ptGenericTab;
-  if (ProcessingTabBook->currentWidget()== CameraTab) return ptCameraTab;
-  else if (ProcessingTabBook->currentWidget()== GeometryTab) return ptGeometryTab;
-  else if (ProcessingTabBook->currentWidget()== RGBTab) return ptRGBTab;
-  else if (ProcessingTabBook->currentWidget()== LabCCTab) return ptLabCCTab;
-  else if (ProcessingTabBook->currentWidget()== LabSNTab) return ptLabSNTab;
-  else if (ProcessingTabBook->currentWidget()== LabEyeCandyTab) return ptLabEyeCandyTab;
-  else if (ProcessingTabBook->currentWidget()== EyeCandyTab) return ptEyeCandyTab;
-  else if (ProcessingTabBook->currentWidget()== OutTab) return ptOutTab;
+  if      (ProcessingTabBook->currentWidget() == CameraTab) return ptCameraTab;
+  else if (ProcessingTabBook->currentWidget() == LocalTab) return ptLocalTab;
+  else if (ProcessingTabBook->currentWidget() == GeometryTab) return ptGeometryTab;
+  else if (ProcessingTabBook->currentWidget() == RGBTab) return ptRGBTab;
+  else if (ProcessingTabBook->currentWidget() == LabCCTab) return ptLabCCTab;
+  else if (ProcessingTabBook->currentWidget() == LabSNTab) return ptLabSNTab;
+  else if (ProcessingTabBook->currentWidget() == LabEyeCandyTab) return ptLabEyeCandyTab;
+  else if (ProcessingTabBook->currentWidget() == EyeCandyTab) return ptEyeCandyTab;
+  else if (ProcessingTabBook->currentWidget() == OutTab) return ptOutTab;
   else {
      ptLogError(ptError_Argument,"Unforeseen tab.");
      assert(0);
@@ -948,14 +931,20 @@ short ptMainWindow::GetCurrentTab() {
 //==============================================================================
 // Show/hide file manager window
 
+void ptMainWindow::OpenBatchWindow() {
+  SwitchUIState(uisBatch);
+}
+
+void ptMainWindow::CloseBatchWindow() {
+  SwitchUIState(uisProcessing);
+}
+
 void ptMainWindow::OpenFileMgrWindow() {
-  MainStack->setCurrentWidget(FileManagerPage);
-  Settings->SetValue("FileMgrIsOpen", 1);
+  SwitchUIState(uisFileMgr);
 }
 
 void ptMainWindow::CloseFileMgrWindow() {
-  MainStack->setCurrentWidget(ProcessingPage);
-  Settings->SetValue("FileMgrIsOpen", 0);
+  SwitchUIState(uisProcessing);
 }
 
 //==============================================================================
@@ -966,11 +955,7 @@ void ptMainWindow::on_ProcessingTabBook_currentChanged(const int Index) {
   ::CB_Tabs(Index);
 }
 
-//
-// Menu structure
-//
-
-// menu removed ;-) mike
+//==============================================================================
 
 struct sToolBoxStructure {
   QToolBox*             ToolBox;
@@ -992,13 +977,17 @@ void ptMainWindow::AnalyzeToolBoxStructure() {
   // QMap for all processing group boxes (without settings and info!)
   // QMap Name -> ptGroupBox*
   if (m_GroupBox) delete m_GroupBox;
-  m_GroupBox = new QMap<QString, ptGroupBox*>;
+  m_GroupBox = new QMap<QString, ptTempFilterBase*>;
   if (m_GroupBoxesOrdered) delete m_GroupBoxesOrdered;
   m_GroupBoxesOrdered = new QList<QString>;
   if (m_TabLayouts) delete m_TabLayouts;
   m_TabLayouts = new QList<QVBoxLayout*>;
 
-  // Procedure
+  // Each processing tab has one QToolBox containing a list of QWidgets as direct children.
+  // Each of those is one filter and will become one groupbox.
+  // The settings page and info page are represented by QToolBox "SettingsToolBox" and
+  // "InfoToolBox". They are excluded from the m_GroupBox and m_GrouBoxesOrdered lists. I.e.
+  // those lists only contain the filters on the proccessing page.
   QList <QToolBox *> ToolBoxes;
   short NumberOfTabs = ProcessingTabBook->count();
   for (short i=0; i<NumberOfTabs; i++) {
@@ -1007,12 +996,13 @@ void ptMainWindow::AnalyzeToolBoxStructure() {
   ToolBoxes.append(SettingsToolBox);
   ToolBoxes.append(InfoToolBox);
 
-  for (short i=0; i<ToolBoxes.size(); i++) {
+  // iterate over the QToolBoxes
+  for (short itTab=0; itTab<ToolBoxes.size(); itTab++) {
     sToolBoxStructure* ToolBoxStructure = new sToolBoxStructure;
     ToolBoxStructureList.append(ToolBoxStructure);
-    ToolBoxStructure->ToolBox = ToolBoxes[i];
+    ToolBoxStructure->ToolBox = ToolBoxes[itTab];
     ToolBoxStructure->Parent =
-      qobject_cast <QWidget*>(ToolBoxes[i]->parent());
+      qobject_cast <QWidget*>(ToolBoxes[itTab]->parent());
     ToolBoxStructure->ParentLayout =
       qobject_cast <QVBoxLayout*>(ToolBoxStructure->Parent->layout());
     assert (ToolBoxStructure->ParentLayout);
@@ -1020,25 +1010,37 @@ void ptMainWindow::AnalyzeToolBoxStructure() {
         ToolBoxStructure->ToolBox != InfoToolBox) {
       m_TabLayouts->append(ToolBoxStructure->ParentLayout);
     }
-    for (short j=0; j<ToolBoxes[i]->count(); j++) {
-      QWidget* Page = ToolBoxes[i]->widget(j);
+
+    // iterate over the the QToolBox child widgets (i.e. the individual filters)
+    for (short itIdx=0; itIdx<ToolBoxes[itTab]->count(); itIdx++) {
+      // handle dummy entries for new-style filters
+      auto hNewFilter = GFilterDM->GetFilterFromName(ToolBoxes[itTab]->itemText(itIdx), false);
+      if (hNewFilter) {
+        hNewFilter->setPos(itTab, itIdx);
+        m_GroupBoxesOrdered->append(hNewFilter->uniqueName());
+        m_GroupBox->insert(hNewFilter->uniqueName(), hNewFilter);
+        continue;
+      }
+
+      // create groupboxes etc. for old-style filters
+      QWidget* Page = ToolBoxes[itTab]->widget(itIdx);
       QVBoxLayout* PageLayout = qobject_cast <QVBoxLayout*>(Page->layout());
       ToolBoxStructure->Pages.append(Page);
       ToolBoxStructure->PageLayouts.append(PageLayout);
       // Alternative groupboxes. The layout of which still needs to be created.
       ptGroupBox* GroupBox =
-        new ptGroupBox(ToolBoxStructure->ToolBox->itemText(j),
+        new ptGroupBox(ToolBoxStructure->ToolBox->itemText(itIdx),
                        this,
-                       ToolBoxStructure->ToolBox->widget(j)->objectName(),
-                       i<NumberOfTabs?ProcessingTabBook->widget(i)->objectName():"",
-                       i,
-                       j);
+                       ToolBoxStructure->ToolBox->widget(itIdx)->objectName(),
+                       itTab<NumberOfTabs?ProcessingTabBook->widget(itTab)->objectName():"",
+                       itTab,
+                       itIdx);
 
       if (ToolBoxStructure->ToolBox != SettingsToolBox &&
           ToolBoxStructure->ToolBox != InfoToolBox) {
-        m_GroupBox->insert(ToolBoxStructure->ToolBox->widget(j)->objectName(),
+        m_GroupBox->insert(ToolBoxStructure->ToolBox->widget(itIdx)->objectName(),
                            GroupBox);
-        m_GroupBoxesOrdered->append(ToolBoxStructure->ToolBox->widget(j)->objectName());
+        m_GroupBoxesOrdered->append(ToolBoxStructure->ToolBox->widget(itIdx)->objectName());
       }
 
       QVBoxLayout* GroupBoxLayout = new QVBoxLayout(GroupBox->m_Widget);
@@ -1056,14 +1058,18 @@ void ptMainWindow::AnalyzeToolBoxStructure() {
           k++;
         }
       }
-      assert(DirectChildrenOfPage.size() == 1);
+      GInfo->Assert(DirectChildrenOfPage.size() == 1,
+                    "Failed analyzing filter named " + ToolBoxes[itTab]->itemText(itIdx) +
+                    ". If you see a FUID as the name you probably forgot to create the "
+                    "corresponding new-style filter in ptMain::CreateAllFilters().", AT);
       ToolBoxStructure->Widgets.append(DirectChildrenOfPage[0]);
     }
   }
 }
 
-void ptMainWindow::OnToolBoxesEnabledTriggered(const bool Enabled) {
+//==============================================================================
 
+void ptMainWindow::OnToolBoxesEnabledTriggered(const bool Enabled) {
   if (ToolBoxStructureList.size() == 0) {
     AnalyzeToolBoxStructure();
   }
@@ -1126,20 +1132,10 @@ void ptMainWindow::OnToolBoxesEnabledTriggered(const bool Enabled) {
 
   // Layout for toolbox mode.
   if (Enabled) {
-    for (short Idx=0; Idx<ToolBoxStructureList.size(); Idx++) {
-      sToolBoxStructure* ToolBoxStructure = ToolBoxStructureList[Idx];
-      for (short j=0; j<ToolBoxStructure->Widgets.size(); j++) {
-        ToolBoxStructure->Widgets[j]->setParent(ToolBoxStructure->Pages[j]);
-        ToolBoxStructure->PageLayouts[j]->
-          addWidget(ToolBoxStructure->Widgets[j]);
-        ToolBoxStructure->PageLayouts[j]->addStretch();
-      }
-      ToolBoxStructure->ToolBox->setParent(ToolBoxStructure->Parent);
-      ToolBoxStructure->ParentLayout->addWidget(ToolBoxStructure->ToolBox);
-      ToolBoxStructure->Parent->show();
-    }
+    GInfo->Raise("Toolbox mode is ancient and dysfunctional!", AT);
   }
 }
+
 
 //
 // Gimp
@@ -1149,9 +1145,7 @@ void ptMainWindow::OnToGimpButtonClicked() {
 #ifdef DLRAW_GIMP_PLUGIN
   ::CB_MenuFileExit(1);
 #endif
-#ifdef DLRAW_HAVE_GIMP
   GimpSaveMenuPipe();
-#endif
 }
 
 //
@@ -1194,6 +1188,15 @@ void ptMainWindow::OnZoomFullButtonClicked() {
   ::CB_ZoomFullButton();
 }
 
+void ptMainWindow::OnZoomInButtonClicked() {
+  ViewWindow->ZoomStep(1);
+}
+
+void ptMainWindow::OnZoomOutButtonClicked() {
+  ViewWindow->ZoomStep(-1);
+}
+
+
 void CB_InputChanged(const QString ObjectName, const QVariant Value);
 void ptMainWindow::OnInputChanged(const QVariant Value) {
   QObject* Sender = sender();
@@ -1201,6 +1204,16 @@ void ptMainWindow::OnInputChanged(const QVariant Value) {
          __FILE__,__LINE__,Sender->objectName().toAscii().data());
   CB_InputChanged(Sender->objectName(),Value);
 
+}
+
+void CB_BatchButton();
+void ptMainWindow::OnBatchButtonClicked() {
+  ::CB_BatchButton();
+}
+
+void CB_FileMgrButton();
+void ptMainWindow::OnFileMgrButtonClicked() {
+  ::CB_FileMgrButton();
 }
 
 void CB_FullScreenButton(const int State);
@@ -1302,6 +1315,8 @@ void CB_StartupSettingsButton();
 void ptMainWindow::OnStartupSettingsButtonClicked() {
   ::CB_StartupSettingsButton();
 }
+
+
 //
 // Tab : Camera
 //
@@ -1388,165 +1403,6 @@ void ptMainWindow::OnChannelMixerSaveButtonClicked() {
   ::CB_ChannelMixerSaveButton();
 }
 
-void CB_CurveRGBOpenButton();
-void ptMainWindow::OnCurveRGBOpenButtonClicked() {
-  ::CB_CurveRGBOpenButton();
-}
-
-void CB_CurveRGBSaveButton();
-void ptMainWindow::OnCurveRGBSaveButtonClicked() {
-  ::CB_CurveRGBSaveButton();
-}
-
-void CB_CurveROpenButton();
-void ptMainWindow::OnCurveROpenButtonClicked() {
-  ::CB_CurveROpenButton();
-}
-
-void CB_CurveRSaveButton();
-void ptMainWindow::OnCurveRSaveButtonClicked() {
-  ::CB_CurveRSaveButton();
-}
-
-void CB_CurveGOpenButton();
-void ptMainWindow::OnCurveGOpenButtonClicked() {
-  ::CB_CurveGOpenButton();
-}
-
-void CB_CurveGSaveButton();
-void ptMainWindow::OnCurveGSaveButtonClicked() {
-  ::CB_CurveGSaveButton();
-}
-
-void CB_CurveBOpenButton();
-void ptMainWindow::OnCurveBOpenButtonClicked() {
-  ::CB_CurveBOpenButton();
-}
-
-void CB_CurveBSaveButton();
-void ptMainWindow::OnCurveBSaveButtonClicked() {
-  ::CB_CurveBSaveButton();
-}
-
-void CB_CurveLOpenButton();
-void ptMainWindow::OnCurveLOpenButtonClicked() {
-  ::CB_CurveLOpenButton();
-}
-
-void CB_CurveLSaveButton();
-void ptMainWindow::OnCurveLSaveButtonClicked() {
-  ::CB_CurveLSaveButton();
-}
-
-void CB_CurveaOpenButton();
-void ptMainWindow::OnCurveaOpenButtonClicked() {
-  ::CB_CurveaOpenButton();
-}
-
-void CB_CurveaSaveButton();
-void ptMainWindow::OnCurveaSaveButtonClicked() {
-  ::CB_CurveaSaveButton();
-}
-
-void CB_CurvebOpenButton();
-void ptMainWindow::OnCurvebOpenButtonClicked() {
-  ::CB_CurvebOpenButton();
-}
-
-void CB_CurvebSaveButton();
-void ptMainWindow::OnCurvebSaveButtonClicked() {
-  ::CB_CurvebSaveButton();
-}
-
-void CB_CurveOutlineOpenButton();
-void ptMainWindow::OnCurveOutlineOpenButtonClicked() {
-  ::CB_CurveOutlineOpenButton();
-}
-
-void CB_CurveOutlineSaveButton();
-void ptMainWindow::OnCurveOutlineSaveButtonClicked() {
-  ::CB_CurveOutlineSaveButton();
-}
-
-void CB_CurveLByHueOpenButton();
-void ptMainWindow::OnCurveLByHueOpenButtonClicked() {
-  ::CB_CurveLByHueOpenButton();
-}
-
-void CB_CurveLByHueSaveButton();
-void ptMainWindow::OnCurveLByHueSaveButtonClicked() {
-  ::CB_CurveLByHueSaveButton();
-}
-
-void CB_CurveHueOpenButton();
-void ptMainWindow::OnCurveHueOpenButtonClicked() {
-  ::CB_CurveHueOpenButton();
-}
-
-void CB_CurveHueSaveButton();
-void ptMainWindow::OnCurveHueSaveButtonClicked() {
-  ::CB_CurveHueSaveButton();
-}
-
-void CB_CurveTextureOpenButton();
-void ptMainWindow::OnCurveTextureOpenButtonClicked() {
-  ::CB_CurveTextureOpenButton();
-}
-
-void CB_CurveTextureSaveButton();
-void ptMainWindow::OnCurveTextureSaveButtonClicked() {
-  ::CB_CurveTextureSaveButton();
-}
-
-void CB_CurveShadowsHighlightsOpenButton();
-void ptMainWindow::OnCurveShadowsHighlightsOpenButtonClicked() {
-  ::CB_CurveShadowsHighlightsOpenButton();
-}
-
-void CB_CurveShadowsHighlightsSaveButton();
-void ptMainWindow::OnCurveShadowsHighlightsSaveButtonClicked() {
-  ::CB_CurveShadowsHighlightsSaveButton();
-}
-
-void CB_CurveDenoiseOpenButton();
-void ptMainWindow::OnCurveDenoiseOpenButtonClicked() {
-  ::CB_CurveDenoiseOpenButton();
-}
-
-void CB_CurveDenoiseSaveButton();
-void ptMainWindow::OnCurveDenoiseSaveButtonClicked() {
-  ::CB_CurveDenoiseSaveButton();
-}
-
-void CB_CurveSaturationOpenButton();
-void ptMainWindow::OnCurveSaturationOpenButtonClicked() {
-  ::CB_CurveSaturationOpenButton();
-}
-
-void CB_CurveSaturationSaveButton();
-void ptMainWindow::OnCurveSaturationSaveButtonClicked() {
-  ::CB_CurveSaturationSaveButton();
-}
-
-void CB_BaseCurveOpenButton();
-void ptMainWindow::OnBaseCurveOpenButtonClicked() {
-  ::CB_BaseCurveOpenButton();
-}
-
-void CB_BaseCurveSaveButton();
-void ptMainWindow::OnBaseCurveSaveButtonClicked() {
-  ::CB_BaseCurveSaveButton();
-}
-
-void CB_BaseCurve2OpenButton();
-void ptMainWindow::OnBaseCurve2OpenButtonClicked() {
-  ::CB_BaseCurve2OpenButton();
-}
-
-void CB_BaseCurve2SaveButton();
-void ptMainWindow::OnBaseCurve2SaveButtonClicked() {
-  ::CB_BaseCurve2SaveButton();
-}
 
 // Tab : EyeCandy
 
@@ -1571,6 +1427,16 @@ void ptMainWindow::OnTextureOverlayClearButtonClicked() {
   ::CB_TextureOverlayClearButton();
 }
 
+void CB_TextureOverlay2Button();
+void ptMainWindow::OnTextureOverlay2ButtonClicked() {
+  ::CB_TextureOverlay2Button();
+}
+
+void CB_TextureOverlay2ClearButton();
+void ptMainWindow::OnTextureOverlay2ClearButtonClicked() {
+  ::CB_TextureOverlay2ClearButton();
+}
+
 
 void CB_GradualOverlay1ColorButton();
 void ptMainWindow::OnGradualOverlay1ColorButtonClicked() {
@@ -1589,21 +1455,15 @@ void ptMainWindow::OnOutputColorProfileResetButtonClicked() {
   ::CB_OutputColorProfileResetButton();
 }
 
-void CB_WriteOutputButton();
-void ptMainWindow::OnWriteOutputButtonClicked() {
-  ::CB_WriteOutputButton();
-}
-
 void CB_WritePipeButton();
 void ptMainWindow::OnWritePipeButtonClicked() {
   ::CB_WritePipeButton();
 }
 
-//~ void CB_TagsEditTextEdit(const QString Text);
-//~ void ptMainWindow::OnTagsEditTextChanged() {
-  //~ ::CB_TagsEditTextEdit(TagsEditWidget->toPlainText());
-//~ }
-
+void PrepareTags(const QString TagsInput);
+void ptMainWindow::OnTagsEditTextChanged() {
+  PrepareTags(TagsEditWidget->toPlainText());
+}
 
 // Intercept close event and translate to a FileExit.
 void ptMainWindow::closeEvent(QCloseEvent *Event) {
@@ -1675,6 +1535,7 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
             CloseFileMgrWindow();
           ImageFileToOpen = DropName;
           CB_MenuFileOpen(1);
+
         } else {
           if (!Settings->GetInt("FileMgrIsOpen")) {
             if (ptConfirmRequest::loadConfig(lcmSettingsFile, DropName)) {
@@ -1717,7 +1578,9 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       ::CB_FullScreenButton(0);
       return;
     } else {
-      ::CB_MenuFileExit(1);
+      if (Settings->GetInt("EscToExit") == 1) {
+        ::CB_MenuFileExit(1);
+      }
       return;
     }
   }
@@ -1734,11 +1597,11 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     if (Event->key()==Qt::Key_F11) { // toggle full screen
       ::CB_FullScreenButton(!isFullScreen());
     } else if (Event->key()==Qt::Key_1 && Event->modifiers()==Qt::NoModifier) {
-      CB_InputChanged("ZoomInput",50);
+      CB_ZoomStep(1);
     } else if (Event->key()==Qt::Key_2 && Event->modifiers()==Qt::NoModifier) {
       CB_InputChanged("ZoomInput",100);
     } else if (Event->key()==Qt::Key_3 && Event->modifiers()==Qt::NoModifier) {
-      CB_InputChanged("ZoomInput",200);
+      CB_ZoomStep(-1);
     } else if (Event->key()==Qt::Key_4 && Event->modifiers()==Qt::NoModifier) {
       CB_ZoomFitButton();
     } else if (Event->key()==Qt::Key_Space) {
@@ -1771,7 +1634,9 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
         SearchInputWidget->setFocus();
       }
     } else if (Event->key() == Qt::Key_M && Event->modifiers() == Qt::ControlModifier) {
-      OpenFileMgrWindow();
+      SwitchUIState(uisFileMgr);
+    } else if (Event->key() == Qt::Key_B && Event->modifiers() == Qt::ControlModifier) {
+      SwitchUIState(uisBatch);
     } else if (Event->key()==Qt::Key_P && Event->modifiers()==Qt::ControlModifier) {
       CB_OpenPresetFileButton();
     } else if (Event->key()==Qt::Key_Q && Event->modifiers()==Qt::ControlModifier) {
@@ -1802,6 +1667,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       ProcessingTabBook->setCurrentIndex(6);
     } else if (Event->key()==Qt::Key_8 && Event->modifiers()==Qt::AltModifier) {
       ProcessingTabBook->setCurrentIndex(7);
+    } else if (Event->key()==Qt::Key_9 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(8);
     } else if (Event->key()==Qt::Key_Period && Event->modifiers()==Qt::NoModifier) {
       ProcessingTabBook->setCurrentIndex(MIN(ProcessingTabBook->currentIndex()+1,ProcessingTabBook->count()));
     } else if (Event->key()==Qt::Key_Comma && Event->modifiers()==Qt::NoModifier) {
@@ -1834,15 +1701,15 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       else ViewWindowShowStatus(ptStatus_Done);
     } else if (Event->key()==Qt::Key_C && Event->modifiers()==Qt::NoModifier) {
       Settings->SetValue("ExposureIndicator",1-Settings->GetInt("ExposureIndicator"));
-      Update(ptProcessorPhase_NULL);
+      Update(ptProcessorPhase_Preview);
     // hidden tools, needs GUI implementation
     } else if (Event->key()==Qt::Key_H && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
       QString Tab = "";
-      foreach (ptGroupBox* GroupBox, *m_GroupBox) {
+      foreach (ptTempFilterBase* GroupBox, *m_GroupBox) {
         if (Settings->ToolIsHidden(GroupBox->objectName())) {
-          Tab = GroupBox->GetTabName();
-          Tools = Tools + Tab + ": " + Settings->ToolGetName(GroupBox->objectName()) + "\n";
+          Tab = ProcessingTabBook->tabText(GroupBox->parentTabIdx());
+          Tools += Tab + ": " + GroupBox->caption() + "\n";
         }
       }
       if (Tools == "") Tools = tr("No tools hidden!");
@@ -1858,10 +1725,10 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (Event->key()==Qt::Key_B && Event->modifiers()==Qt::NoModifier) {
       QString Tools = "";
       QString Tab = "";
-      foreach (ptGroupBox* GroupBox, *m_GroupBox) {
-        if (Settings->ToolIsBlocked(GroupBox->objectName())) {
-          Tab = GroupBox->GetTabName();
-          Tools = Tools + Tab + ": " + Settings->ToolGetName(GroupBox->objectName()) + "\n";
+      foreach (ptTempFilterBase* GroupBox, *m_GroupBox) {
+        if (GroupBox->isBlocked()) {
+          Tab = ProcessingTabBook->tabText(GroupBox->parentTabIdx());
+          Tools += Tab + ": " + GroupBox->caption() + "\n";
         }
       }
       if (Tools == "") Tools = tr("No tools blocked!");
@@ -1888,26 +1755,36 @@ void ptMainWindow::OnSearchResetButtonClicked() {
   OnTabProcessingButtonClicked();
 }
 
+//==============================================================================
+
 void ptMainWindow::OnSearchActiveToolsButtonClicked() {
   ShowActiveTools();
 }
+
+//==============================================================================
 
 void ptMainWindow::OnSearchAllToolsButtonClicked() {
   ShowAllTools();
 }
 
+//==============================================================================
+
 void ptMainWindow::OnSearchFavouriteToolsButtonClicked() {
   ShowFavouriteTools();
 }
+
+//==============================================================================
 
 void ptMainWindow::StartSearchTimer(QString) {
   m_SearchInputTimer->start(50);
 }
 
-void ptMainWindow::Search() {
-  const QString SearchString = SearchInputWidget->text();
+//==============================================================================
 
-  if (SearchString == "") {
+void ptMainWindow::Search() {
+  const QString hSearchString = SearchInputWidget->text();
+
+  if (hSearchString == "") {
     OnTabProcessingButtonClicked();
     return;
   }
@@ -1917,20 +1794,24 @@ void ptMainWindow::Search() {
     ApplyVisibleTools();
 
   // clean up first!
-  if (m_MovedTools->size()>0) CleanUpMovedTools();
+  if (m_MovedTools->size()>0)
+    CleanUpMovedTools();
 
-  for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
-    if ((m_GroupBox->value(m_GroupBoxesOrdered->at(i))->GetTitle()).toLower().contains(SearchString.toLower())) {
-      m_MovedTools->append(m_GroupBox->value(m_GroupBoxesOrdered->at(i)));
+  // iterate through toolboxes and remember those whose caption matches the search text
+  for (QString hBoxName: *m_GroupBoxesOrdered) {
+    ptTempFilterBase *hBox = m_GroupBox->value(hBoxName);
+
+    // remember matching toolboxes
+    if (hBox->caption().contains(hSearchString, Qt::CaseInsensitive)) {
+      m_MovedTools->append(hBox->guiWidget());
     }
   }
 
-  if (m_MovedTools->size() == 0) {
-    return;
-  }
-
-  ShowMovedTools(tr("Search results:"));
+  if (m_MovedTools->size() > 0)
+    ShowMovedTools(tr("Search results:"));
 }
+
+//==============================================================================
 
 void ptMainWindow::ShowActiveTools() {
   // apply changes at VisibleTools box
@@ -1941,18 +1822,21 @@ void ptMainWindow::ShowActiveTools() {
   if (m_MovedTools->size()>0) CleanUpMovedTools();
   SearchInputWidget->setText("");
 
-  for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
-    if (Settings->ToolIsActive(m_GroupBoxesOrdered->at(i))) {
-      m_MovedTools->append(m_GroupBox->value(m_GroupBoxesOrdered->at(i)));
-    }
-  }
-  if (m_MovedTools->size() == 0) {
-    ptMessageBox::information(this,tr("Active tools"),tr("No tools active!"));
-    return;
+  for (QString hBoxName: *m_GroupBoxesOrdered) {
+    ptTempFilterBase *hBox = m_GroupBox->value(hBoxName);
+
+    if (hBox->isActive())
+      m_MovedTools->append(hBox->guiWidget());
   }
 
-  ShowMovedTools(tr("Active tools:"));
+  if (m_MovedTools->size() == 0) {
+    ShowMovedTools(tr("No tools active!"));
+  } else {
+    ShowMovedTools(tr("Active tools:"));
+  }
 }
+
+//==============================================================================
 
 void ptMainWindow::ShowAllTools() {
   // apply changes at VisibleTools box
@@ -1963,15 +1847,21 @@ void ptMainWindow::ShowAllTools() {
   if (m_MovedTools->size()>0) CleanUpMovedTools();
   SearchInputWidget->setText("");
 
-  for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
-    m_MovedTools->append(m_GroupBox->value(m_GroupBoxesOrdered->at(i)));
+  auto hHiddenTools = Settings->GetStringList("HiddenTools");
+  for (QString hBoxName: *m_GroupBoxesOrdered) {
+    if (!hHiddenTools.contains(hBoxName)) {
+      m_MovedTools->append(m_GroupBox->value(hBoxName)->guiWidget());
+    }
   }
+
   if (m_MovedTools->size() == 0) {
-    ptMessageBox::information(this,tr("All tools hidden"),tr("No visible tools!"));
-    return;
+    ShowMovedTools(tr("No tools visible!"));
+  } else {
+    ShowMovedTools(tr("All visible tools:"));
   }
-  ShowMovedTools(tr("All visible tools:"));
 }
+
+//==============================================================================
 
 void ptMainWindow::ShowFavouriteTools() {
   // apply changes at VisibleTools box
@@ -1982,12 +1872,13 @@ void ptMainWindow::ShowFavouriteTools() {
   if (m_MovedTools->size()>0) CleanUpMovedTools();
   SearchInputWidget->setText("");
 
-  QStringList FavTools = Settings->GetStringList("FavouriteTools");
-  for (short i=0; i<m_GroupBoxesOrdered->size(); i++) {
-    if (FavTools.contains(m_GroupBoxesOrdered->at(i))) {
-      m_MovedTools->append(m_GroupBox->value(m_GroupBoxesOrdered->at(i)));
+  auto hFavTools = Settings->GetStringList("FavouriteTools");
+  for (QString hBoxName: *m_GroupBoxesOrdered) {
+    if (hFavTools.contains(hBoxName)) {
+      m_MovedTools->append(m_GroupBox->value(hBoxName)->guiWidget());
     }
   }
+
   if (m_MovedTools->size() == 0) {
     ptMessageBox::information(this,tr("Favourite tools"),tr("No favourite tools!"));
     return;
@@ -1996,13 +1887,18 @@ void ptMainWindow::ShowFavouriteTools() {
   ShowMovedTools(tr("Favourite tools:"));
 }
 
-void ptMainWindow::ShowMovedTools(const QString Title) {
-  ToolContainerLabel->setText(Title);
+//==============================================================================
+
+void ptMainWindow::ShowMovedTools(const QString ATitle) {
+  ToolContainerLabel->setText(ATitle);
   MainTabBook->setCurrentWidget(TabMovedTools);
+
+  // clear previous contents from the moved tools page
   while (ToolContainer->layout()->count()!=0) {
     ToolContainer->layout()->takeAt(0);
   }
 
+  // add new tools from moved tools list
   for (short i=0; i<m_MovedTools->size(); i++) {
     ToolContainer->layout()->addWidget(m_MovedTools->at(i));
   }
@@ -2010,14 +1906,26 @@ void ptMainWindow::ShowMovedTools(const QString Title) {
   static_cast<QVBoxLayout*>(ToolContainer->layout())->addStretch();
   static_cast<QVBoxLayout*>(ToolContainer->layout())->setSpacing(0);
   static_cast<QVBoxLayout*>(ToolContainer->layout())->setContentsMargins(0,0,0,0);
-  static_cast<QVBoxLayout*>(ToolContainer->layout())->setMargin(0);
 }
 
+//==============================================================================
+
 void ptMainWindow::CleanUpMovedTools() {
-  for (short i=0; i<m_MovedTools->size(); i++) {
-    m_TabLayouts->at(m_MovedTools->at(i)->GetTabNumber())->
-      insertWidget(m_MovedTools->at(i)->GetIndexInTab(),m_MovedTools->at(i));
+  for (QWidget *hToolBox: *m_MovedTools) {
+    int hTabIdx   = -1;
+    int hIdxInTab = -1;
+    if (QString(hToolBox->metaObject()->className()) == "ptToolBox") {
+      auto hFilt = GFilterDM->GetFilterFromName(hToolBox->objectName());
+      hTabIdx    = hFilt->parentTabIdx();
+      hIdxInTab  = hFilt->idxInParentTab();
+    } else if (QString(hToolBox->metaObject()->className()) == "ptGroupBox") {
+      hTabIdx   = ((ptGroupBox*)hToolBox)->GetTabNumber();
+      hIdxInTab = ((ptGroupBox*)hToolBox)->GetIndexInTab();
+    }
+
+    m_TabLayouts->at(hTabIdx)->insertWidget(hIdxInTab, hToolBox);
   }
+
   m_MovedTools->clear();
 }
 
@@ -2028,22 +1936,25 @@ void ptMainWindow::CleanUpMovedTools() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::UpdateToolBoxes() {
-  foreach (ptGroupBox* GroupBox, *m_GroupBox) {
-    if (Settings->ToolIsHidden(GroupBox->objectName())) {
-      GroupBox->hide();
+  foreach (ptTempFilterBase* GroupBox, *m_GroupBox) {
+    auto hGroupBox = qobject_cast<ptGroupBox*>(GroupBox);
+    if (!hGroupBox) continue;
+
+    if (Settings->ToolIsHidden(hGroupBox->objectName())) {
+      hGroupBox->hide();
     } else {
-      GroupBox->show();
+      hGroupBox->show();
     }
-    GroupBox->Update();
+    hGroupBox->Update();
   }
 
   // disable Raw tools when we have a bitmap
   QList<ptGroupBox *> m_RawTools;
-  m_RawTools << m_GroupBox->value("TabCameraColorSpace")
-             << m_GroupBox->value("TabGenCorrections")
-             << m_GroupBox->value("TabWhiteBalance")
-             << m_GroupBox->value("TabDemosaicing")
-             << m_GroupBox->value("TabHighlightRecovery");
+  m_RawTools << static_cast<ptGroupBox*>(m_GroupBox->value("TabCameraColorSpace"))
+             << static_cast<ptGroupBox*>(m_GroupBox->value("TabGenCorrections"))
+             << static_cast<ptGroupBox*>(m_GroupBox->value("TabWhiteBalance"))
+             << static_cast<ptGroupBox*>(m_GroupBox->value("TabDemosaicing"))
+             << static_cast<ptGroupBox*>(m_GroupBox->value("TabHighlightRecovery"));
   short Temp = Settings->GetInt("IsRAW");
   for (int i = 0; i < m_RawTools.size(); i++) {
     m_RawTools.at(i)->SetEnabled(Temp);
@@ -2051,15 +1962,15 @@ void ptMainWindow::UpdateToolBoxes() {
 
   // disable tools when we are in detail view
   QList<ptGroupBox *> m_DetailViewTools;
-  m_DetailViewTools << m_GroupBox->value("TabLensfunCA")
-                    << m_GroupBox->value("TabLensfunVignette")
-                    << m_GroupBox->value("TabLensfunDistortion")
-                    << m_GroupBox->value("TabLensfunGeometry")
-                    << m_GroupBox->value("TabDefish")
-                    << m_GroupBox->value("TabCrop")
-                    << m_GroupBox->value("TabLiquidRescale")
-                    << m_GroupBox->value("TabResize")
-                    << m_GroupBox->value("TabWebResize");
+  m_DetailViewTools << static_cast<ptGroupBox*>(m_GroupBox->value("TabLensfunCA"))
+                    << static_cast<ptGroupBox*>(m_GroupBox->value("TabLensfunVignette"))
+                    << static_cast<ptGroupBox*>(m_GroupBox->value("TabLensfunDistortion"))
+                    << static_cast<ptGroupBox*>(m_GroupBox->value("TabLensfunGeometry"))
+                    << static_cast<ptGroupBox*>(m_GroupBox->value("TabDefish"))
+                    << static_cast<ptGroupBox*>(m_GroupBox->value("TabCrop"))
+                    << static_cast<ptGroupBox*>(m_GroupBox->value("TabLiquidRescale"))
+                    << static_cast<ptGroupBox*>(m_GroupBox->value("TabResize"))
+                    << static_cast<ptGroupBox*>(m_GroupBox->value("TabWebResize"));
 
   Temp = 1 - Settings->GetInt("DetailViewActive");
   for (int i = 0; i < m_DetailViewTools.size(); i++) {
@@ -2103,21 +2014,30 @@ void ptMainWindow::UpdateSettings() {
   #endif
 
   // State of Groupboxes
-  foreach (ptGroupBox* GroupBox, *m_GroupBox) {
-    GroupBox->SetActive(Settings->ToolIsActive(GroupBox->objectName()));
+  foreach (ptTempFilterBase* GroupBox, *m_GroupBox) {
+    auto hGroupBox = qobject_cast<ptGroupBox*>(GroupBox);
+    if (hGroupBox)
+      hGroupBox->SetActive(Settings->ToolIsActive(hGroupBox->objectName()));
   }
 
   // Status LED on tabs
   if(Settings->GetInt("TabStatusIndicator")) {
-    ProcessingTabBook->setIconSize(QSize(Settings->GetInt("TabStatusIndicator"),Settings->GetInt("TabStatusIndicator")));
+    ProcessingTabBook->setIconSize(QSize(Settings->GetInt("TabStatusIndicator"),
+                                         Settings->GetInt("TabStatusIndicator")));
     QList <ptGroupBox *> Temp;
     for (int j=0; j<m_ActiveTabs.size();j++) {
-      Temp = m_ActiveTabs.at(j)->findChildren <ptGroupBox *> ();
-      int k=0;
-      for (int i=0; i<Temp.size();i++)
-        if(Settings->ToolIsActive(Temp.at(i)->objectName())) k=1;
+      bool hIsActiveTab = GFilterDM->isActiveCacheGroup(j+1);  // +1 because Camera tab is not
+      if (!hIsActiveTab) {                                     // in m_ActiveTabs
+        Temp = m_ActiveTabs.at(j)->findChildren <ptGroupBox *> ();
+        for (int i=0; i<Temp.size();i++) {
+          if(Settings->ToolIsActive(Temp.at(i)->objectName())) {
+            hIsActiveTab = true;
+            break;
+          }
+        }
+      }
 
-      if (k>0)
+      if (hIsActiveTab)
         ProcessingTabBook->setTabIcon(ProcessingTabBook->indexOf(m_ActiveTabs.at(j)),m_StatusIcon);
       else
         ProcessingTabBook->setTabIcon(ProcessingTabBook->indexOf(m_ActiveTabs.at(j)),QIcon());
@@ -2127,21 +2047,6 @@ void ptMainWindow::UpdateSettings() {
       ProcessingTabBook->setTabIcon(ProcessingTabBook->indexOf(m_ActiveTabs.at(j)),QIcon());
   }
 
-// Added later next to the other fields
-  //~ // Zoom factor
-  //~ QString ZoomText;
-  //~ QString Tmp;
-  //~ int TmpZoom = Settings->GetInt("Zoom");
-  //~ int TmpScaled = Settings->GetInt("Scaled");
-  //~ ZoomText += Tmp.setNum((uint16_t)
-    //~ ((Settings->GetInt("ImageW") >> TmpScaled)*TmpZoom/100));
-  //~ ZoomText += " X ";
-  //~ ZoomText += Tmp.setNum((uint16_t)
-    //~ ((Settings->GetInt("ImageH") >> TmpScaled)*TmpZoom/100));
-  //~ ZoomText += " (";
-  //~ ZoomText += Tmp.setNum(TmpZoom >> TmpScaled);
-  //~ ZoomText += "%)";
-  //~ // ZoomLabel->setText(ZoomText); Moved down to account for startup situation
 
   // New Camera Color Space or profile ?
   int TmpCameraColor = Settings->GetInt("CameraColor");
@@ -2273,11 +2178,6 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("InterpolationPasses",0);
 
 
-
-  //~ // Resize
-  //~ Settings->SetMaximum("ResizeW",Settings->GetInt("CropW"));
-  //~ Settings->SetMaximum("ResizeH",Settings->GetInt("CropH"));
-
   // ChannelMixer
   Settings->SetValue("ChannelMixerR2R",ChannelMixer->m_Mixer[0][0]);
   Settings->SetValue("ChannelMixerG2R",ChannelMixer->m_Mixer[0][1]);
@@ -2326,7 +2226,7 @@ void ptMainWindow::UpdateSettings() {
 
   // Texture Overlay
   PathInfo.setFile(Settings->GetString("TextureOverlayFile"));
-  ShortFileName = PathInfo.baseName();
+  ShortFileName = PathInfo.completeBaseName();
   TextureOverlayText->setText(ShortFileName);
   if (Settings->GetInt("TextureOverlayMask") > 0) {
     Settings->SetEnabled("TextureOverlayExponent",1);
@@ -2344,6 +2244,26 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("TextureOverlayCenterX",0);
     Settings->SetEnabled("TextureOverlayCenterY",0);
     Settings->SetEnabled("TextureOverlaySoftness",0);
+  }
+  PathInfo.setFile(Settings->GetString("TextureOverlay2File"));
+  ShortFileName = PathInfo.completeBaseName();
+  TextureOverlay2Text->setText(ShortFileName);
+  if (Settings->GetInt("TextureOverlay2Mask") > 0) {
+    Settings->SetEnabled("TextureOverlay2Exponent",1);
+    Settings->SetEnabled("TextureOverlay2InnerRadius",1);
+    Settings->SetEnabled("TextureOverlay2OuterRadius",1);
+    Settings->SetEnabled("TextureOverlay2Roundness",1);
+    Settings->SetEnabled("TextureOverlay2CenterX",1);
+    Settings->SetEnabled("TextureOverlay2CenterY",1);
+    Settings->SetEnabled("TextureOverlay2Softness",1);
+  } else {
+    Settings->SetEnabled("TextureOverlay2Exponent",0);
+    Settings->SetEnabled("TextureOverlay2InnerRadius",0);
+    Settings->SetEnabled("TextureOverlay2OuterRadius",0);
+    Settings->SetEnabled("TextureOverlay2Roundness",0);
+    Settings->SetEnabled("TextureOverlay2CenterX",0);
+    Settings->SetEnabled("TextureOverlay2CenterY",0);
+    Settings->SetEnabled("TextureOverlay2Softness",0);
   }
 
   // Color buttons
@@ -2401,28 +2321,14 @@ void ptMainWindow::UpdateSettings() {
     Report += " x ";
     Report += Tmp.setNum(Settings->GetInt("ImageH"));
     Report += "     ";
-    //~ SizeLabel->setText(Report);
     SizeFullLabel->setText(Report);
 
     int TmpScaled = Settings->GetInt("Scaled");
-    //~ Report = "";
-    //~ Report += Tmp.setNum(Settings->GetInt("ImageW") >> TmpScaled);
-    //~ Report += " X ";
-    //~ Report += Tmp.setNum(Settings->GetInt("ImageH") >> TmpScaled);
-    //~ Report += " (";
-    //~ Report += Tmp.setNum(100>>TmpScaled);
-    //~ Report += "%)";
-    //~ PipeSizeLabel->setText(Report);
 
     Report = "";
     Report += Tmp.setNum(Settings->GetInt("PipeImageW") << TmpScaled);
     Report += " x ";
     Report += Tmp.setNum(Settings->GetInt("PipeImageH") << TmpScaled);
-    //~ Report += " (";
-    //~ Report += Tmp.setNum(100*(Settings->GetInt("PipeImageW") << TmpScaled)/
-    //~ Settings->GetInt("ImageW"));
-    //~ Report += "%)";
-    //~ ViewSizeLabel->setText(Report);
     Report += "     ";
     SizeFullCropLabel->setText(Report);
 
@@ -2430,25 +2336,8 @@ void ptMainWindow::UpdateSettings() {
     Report += Tmp.setNum(Settings->GetInt("PipeImageW"));
     Report += " x ";
     Report += Tmp.setNum(Settings->GetInt("PipeImageH"));
-    //~ Report += " (";
-    //~ Report += Tmp.setNum(100*Settings->GetInt("PipeImageW")/
-    //~ Settings->GetInt("ImageW"));
-    //~ Report += "%)";
-    //~ PipeViewSizeLabel->setText(Report);
     Report += "     ";
     SizeCurrentLabel->setText(Report);
-
-    //~ int TmpZoom = Settings->GetInt("Zoom");
-
-    //~ Report = "";
-    //~ Report += Tmp.setNum(Settings->GetInt("PipeImageW") * TmpZoom/100);
-    //~ Report += " X ";
-    //~ Report += Tmp.setNum(Settings->GetInt("PipeImageH") * TmpZoom/100);
-    //~ Report += " (";
-    //~ Report += Tmp.setNum(Settings->GetInt("PipeImageW") * TmpZoom /
-                         //~ Settings->GetInt("ImageW"));
-    //~ Report += "%)";
-    //~ ScreenSizeLabel->setText(Report);
 
   } else {
     // Startup.
@@ -2456,6 +2345,27 @@ void ptMainWindow::UpdateSettings() {
   }
 }
 
+//==============================================================================
+// Display strings from settings
+void ptMainWindow::Settings_2_Form() {
+  if (Settings->GetInt("JobMode") == 1) return;
+
+  // Metadata
+  edtOutputSuffix->setText(Settings->GetString("OutputFileNameSuffix"));
+  edtImageTitle->setText(Settings->GetString("ImageTitle"));
+  edtCopyright->setText( Settings->GetString("Copyright"));
+}
+
+//==============================================================================
+// Read settings from Form
+void ptMainWindow::Form_2_Settings() {
+  if (Settings->GetInt("JobMode") == 1) return;
+
+  //Metadata
+  Settings->SetValue("OutputFileNameSuffix", edtOutputSuffix->text().trimmed());
+  Settings->SetValue("ImageTitle", edtImageTitle->text().trimmed());
+  Settings->SetValue("Copyright",  edtCopyright->text().trimmed());
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -2682,6 +2592,8 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
   InfoDcrawLabel->setText(TheInfo);
 }
 
+//==============================================================================
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -2736,33 +2648,65 @@ void ptMainWindow::InitVisibleTools() {
   QStringList hiddenTools = Settings->GetStringList("HiddenTools");
   QStringList favouriteTools = Settings->GetStringList("FavouriteTools");
 
-  foreach (QString itGroupBox, *m_GroupBoxesOrdered) {
-    QStandardItem *item = new QStandardItem(m_GroupBox->value(itGroupBox)->GetTitle());
+  foreach (QString hBoxName, *m_GroupBoxesOrdered) {
+    auto hFilt = m_GroupBox->value(hBoxName);
+    auto item  = new QStandardItem(hFilt->caption());
 
     // set tool state and corresponding icon will be set automatically
-    if (hiddenTools.contains(itGroupBox))
+    if (hiddenTools.contains(hBoxName))
       item->setData(tsHidden, Qt::UserRole+1);
     else
-      if (favouriteTools.contains(itGroupBox))
+      if (favouriteTools.contains(hBoxName))
         item->setData(tsFavourite, Qt::UserRole+1);
       else
         item->setData(tsNormal, Qt::UserRole+1);
 
     // check if tool can be hidden and set corresponding flag
-    if (Settings->ToolAlwaysVisible(itGroupBox))
-      item->setData(1, Qt::UserRole+2);
-    else
+    if (hFilt->canHide())
       item->setData(0, Qt::UserRole+2);
+    else
+      item->setData(1, Qt::UserRole+2);
 
-    m_VisibleToolsModel->item(m_GroupBox->value(itGroupBox)->GetTabNumber())->appendRow(item);
+    m_VisibleToolsModel->item(hFilt->parentTabIdx())->appendRow(item);
   }
 
   // connect model with Visible Tools View
   VisibleToolsView->setModel(m_VisibleToolsModel);
-  VisibleToolsView->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::DoubleClicked);
+  VisibleToolsView->setEditTriggers(QAbstractItemView::CurrentChanged |
+                                    QAbstractItemView::DoubleClicked);
   VisibleToolsView->setItemDelegate(new ptVisibleToolsItemDelegate);
 }
 
+//==============================================================================
+
+void ptMainWindow::SwitchUIState(const ptUIState AState)
+{
+  if (FUIState == AState) return;
+
+  FUIState = AState;
+
+  switch (AState) {
+    case uisProcessing:
+      // Processing
+      MainStack->setCurrentWidget(ProcessingPage);
+      Settings->SetValue("FileMgrIsOpen", 0);
+      Settings->SetValue("BatchIsOpen", 0);
+      break;
+    case uisFileMgr:
+      // Filemanager
+  #ifndef PT_WITHOUT_FILEMGR
+      MainStack->setCurrentWidget(FileManagerPage);
+      Settings->SetValue("FileMgrIsOpen", 1);
+  #endif
+      break;
+    case uisBatch:
+      MainStack->setCurrentWidget(BatchPage);
+      Settings->SetValue("BatchIsOpen", 1);
+      break;
+    default:
+      GInfo->Raise("Unknown UI state", AT);
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -2773,18 +2717,22 @@ void ptMainWindow::InitVisibleTools() {
 void ptMainWindow::ApplyVisibleTools() {
   QString FirstActive;
 
-  foreach (QString itGroupBox, *m_GroupBoxesOrdered) {
+  foreach (QString hBoxName, *m_GroupBoxesOrdered) {
+    auto hFilt    = m_GroupBox->value(hBoxName);
+    auto hToolBox = hFilt->guiWidget();
+
     // find all items with necessary name (in different tabs)
-    QList<QStandardItem *> itemList = m_VisibleToolsModel->findItems(
-          m_GroupBox->value(itGroupBox)->GetTitle(), Qt::MatchExactly | Qt::MatchRecursive);
+    QList<QStandardItem *> itemList =
+        m_VisibleToolsModel->findItems(hFilt->caption(), Qt::MatchExactly | Qt::MatchRecursive);
 
     // find item corresponding to proper tab (maybe their is a simplier way)
     QStandardItem *item = NULL;
     foreach (QStandardItem *it, itemList) {
-      QString tabName = ProcessingTabBook->tabText(ProcessingTabBook->indexOf(
-                          ProcessingTabBook->findChild<QWidget *>(m_GroupBox->value(itGroupBox)->GetTabName())));
+      QString tabName = ProcessingTabBook->tabText(hFilt->parentTabIdx());
       if (m_VisibleToolsModel->indexFromItem(it).parent() ==
-          m_VisibleToolsModel->indexFromItem(m_VisibleToolsModel->findItems(tabName,  Qt::MatchExactly).first())) {
+          m_VisibleToolsModel->indexFromItem(
+              m_VisibleToolsModel->findItems(tabName, Qt::MatchExactly).first()) )
+      {
         item = it;
         break;
       }
@@ -2794,56 +2742,56 @@ void ptMainWindow::ApplyVisibleTools() {
     if (item->data(Qt::UserRole+1).toInt() == tsHidden) {
       QStringList hiddenTools = Settings->GetStringList("HiddenTools");
       // hide tool if it was visible
-      if (!hiddenTools.contains(itGroupBox)) {
-        hiddenTools.append(itGroupBox);
-        m_GroupBox->value(itGroupBox)->hide();
+      if (!hiddenTools.contains(hBoxName)) {
+        hiddenTools.append(hBoxName);
+        hToolBox->hide();
         // find first active tool, which changes it's state
-        if (Settings->ToolIsActive(itGroupBox) && FirstActive.size() == 0)
-          FirstActive = itGroupBox;
+        if (hFilt->isActive() && FirstActive.size() == 0)
+          FirstActive = hBoxName;
         Settings->SetValue("HiddenTools", hiddenTools);
       }
 
       QStringList favouriteTools = Settings->GetStringList("FavouriteTools");
-      if (favouriteTools.contains(itGroupBox)) {
-        favouriteTools.removeAll(itGroupBox);
+      if (favouriteTools.contains(hBoxName)) {
+        favouriteTools.removeAll(hBoxName);
         Settings->SetValue("FavouriteTools", favouriteTools);
       }
     }
 
     if (item->data(Qt::UserRole+1).toInt() == tsFavourite) {
       QStringList favouriteTools = Settings->GetStringList("FavouriteTools");
-      if (!favouriteTools.contains(itGroupBox)) {
-        favouriteTools.append(itGroupBox);
+      if (!favouriteTools.contains(hBoxName)) {
+        favouriteTools.append(hBoxName);
         Settings->SetValue("FavouriteTools", favouriteTools);
       }
 
       QStringList hiddenTools = Settings->GetStringList("HiddenTools");
       // show tool if it was hidden
-      if (hiddenTools.contains(itGroupBox)) {
-        hiddenTools.removeAll(itGroupBox);
-        m_GroupBox->value(itGroupBox)->show();
+      if (hiddenTools.contains(hBoxName)) {
+        hiddenTools.removeAll(hBoxName);
+        hToolBox->show();
         Settings->SetValue("HiddenTools", hiddenTools);
         // find first active tool, which changes it's state
-        if (Settings->ToolIsActive(itGroupBox) && FirstActive.size() == 0)
-          FirstActive = itGroupBox;
+        if (hFilt->isActive() && FirstActive.size() == 0)
+          FirstActive = hBoxName;
       }
     }
 
     if (item->data(Qt::UserRole+1).toInt() == tsNormal) {
       QStringList hiddenTools = Settings->GetStringList("HiddenTools");
       // show tool if it was hidden
-      if (hiddenTools.contains(itGroupBox)) {
-        hiddenTools.removeAll(itGroupBox);
-        m_GroupBox->value(itGroupBox)->show();
+      if (hiddenTools.contains(hBoxName)) {
+        hiddenTools.removeAll(hBoxName);
+        hToolBox->show();
         Settings->SetValue("HiddenTools", hiddenTools);
         // find first active tool, which changes it's state
-        if (Settings->ToolIsActive(itGroupBox) && FirstActive.size() == 0)
-          FirstActive = itGroupBox;
+        if (hFilt->isActive() && FirstActive.size() == 0)
+          FirstActive = hBoxName;
       }
 
       QStringList favouriteTools = Settings->GetStringList("FavouriteTools");
-      if (favouriteTools.contains(itGroupBox)) {
-        favouriteTools.removeAll(itGroupBox);
+      if (favouriteTools.contains(hBoxName)) {
+        favouriteTools.removeAll(hBoxName);
         Settings->SetValue("FavouriteTools", favouriteTools);
       }
     }
@@ -2866,30 +2814,38 @@ void ptMainWindow::UpdateVisibleTools() {
   QStringList favouriteTools = Settings->GetStringList("FavouriteTools");
 
   foreach (QString itGroupBox, *m_GroupBoxesOrdered) {
-    // find all TreeItems with necessary name (in different tabs)
-    QList<QStandardItem *> itemList = m_VisibleToolsModel->findItems(
-          m_GroupBox->value(itGroupBox)->GetTitle(), Qt::MatchExactly | Qt::MatchRecursive);
+    auto hFilt = m_GroupBox->value(itGroupBox);
 
-    // find item corresponding to proper tab (maybe their is a simplier way)
+    // find all TreeItems with necessary name (in different tabs)
+    QList<QStandardItem *> itemList =
+        m_VisibleToolsModel->findItems(hFilt->caption(), Qt::MatchExactly | Qt::MatchRecursive);
+
+    // find item corresponding to proper tab (maybe there is a simpler way)
     QStandardItem *item = NULL;
     foreach (QStandardItem *it, itemList) {
-      QString tabName = ProcessingTabBook->tabText(ProcessingTabBook->indexOf(
-                          ProcessingTabBook->findChild<QWidget *>(m_GroupBox->value(itGroupBox)->GetTabName())));
+      QString tabName = ProcessingTabBook->tabText(hFilt->parentTabIdx());
       if (m_VisibleToolsModel->indexFromItem(it).parent() ==
-          m_VisibleToolsModel->indexFromItem(m_VisibleToolsModel->findItems(tabName,  Qt::MatchExactly).first())) {
+          m_VisibleToolsModel->indexFromItem(
+              m_VisibleToolsModel->findItems(tabName, Qt::MatchExactly).first() ))
+      {
         item = it;
         break;
       }
     }
 
     // set tool state and corresponding icon will be set automatically
-    if (hiddenTools.contains(itGroupBox))
-      m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item), tsHidden, Qt::UserRole+1);
-    else
-      if (favouriteTools.contains(itGroupBox))
-        m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item), tsFavourite, Qt::UserRole+1);
-      else
-        m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item), tsNormal, Qt::UserRole+1);
+    if (hiddenTools.contains(itGroupBox)) {
+      m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item),
+                                   tsHidden, Qt::UserRole+1);
+    } else {
+      if (favouriteTools.contains(itGroupBox)) {
+        m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item),
+                                     tsFavourite, Qt::UserRole+1);
+      } else {
+        m_VisibleToolsModel->setData(m_VisibleToolsModel->indexFromItem(item),
+                                     tsNormal, Qt::UserRole+1);
+      }
+    }
 
     // check if tool can be hidden and set corresponding flag
     if (Settings->ToolAlwaysVisible(itGroupBox))
@@ -2921,40 +2877,44 @@ void ptMainWindow::LoadUISettings(const QString &fileName) {
 
   Settings->SetValue("FavouriteTools", UISettings.value("FavouriteTools").toStringList());
 
-  QStringList previousHiddenTools = Settings->GetStringList("HiddenTools");
-  QStringList currentHiddenTools = UISettings.value("HiddenTools").toStringList();
-  QStringList Temp = currentHiddenTools;
+  QStringList hOldHidden = Settings->GetStringList("HiddenTools");
+  QStringList hNewHidden = UISettings.value("HiddenTools").toStringList();
+  QStringList Temp = hNewHidden;
 
   // find difference between previous and current hidden tools list
-  previousHiddenTools.removeDuplicates();
-  currentHiddenTools.removeDuplicates();
-  foreach (QString str, previousHiddenTools)
-    if (currentHiddenTools.contains(str))
-    {
-      previousHiddenTools.removeOne(str);
-      currentHiddenTools.removeOne(str);
+  hOldHidden.removeDuplicates();
+  hNewHidden.removeDuplicates();
+  foreach (QString str, hOldHidden) {
+    if (hNewHidden.contains(str)) {
+      hOldHidden.removeOne(str);
+      hNewHidden.removeOne(str);
     }
+  }
 
   // create a list of active tools which change their state
-  QStringList ActiveTools;
-  foreach (QString str, currentHiddenTools) {
-    m_GroupBox->value(str)->hide();
-    if (Settings->ToolIsActive(str))
-      ActiveTools.append(str);
+  QStringList hActiveTools;
+  for (QString str: hNewHidden) {
+    auto hFilt = m_GroupBox->value(str);
+    hFilt->guiWidget()->hide();
+    if (hFilt->isActive())
+      hActiveTools.append(str);
   }
+
   Settings->SetValue("HiddenTools", Temp);
-  foreach (QString str, previousHiddenTools) {
-    m_GroupBox->value(str)->show();
-    if (Settings->ToolIsActive(str))
-      ActiveTools.append(str);
+  for (QString str: hOldHidden) {
+    auto hFilt = m_GroupBox->value(str);
+    hFilt->guiWidget()->show();
+    if (hFilt->isActive())
+      hActiveTools.append(str);
   }
 
   // Image need to be updated, if active tools have changed their state
-  foreach (QString str, *m_GroupBoxesOrdered)
-    if (ActiveTools.contains(str)) {
+  foreach (QString str, *m_GroupBoxesOrdered) {
+    if (hActiveTools.contains(str)) {
       Update(str);
       break;
     }
+  }
 }
 
 
@@ -3074,7 +3034,8 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
   LqrWHContainter->setVisible(Scaling == ptLqr_ScaleAbsolute);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
 //
 // Update gradual blur UI elements
 //
@@ -3105,10 +3066,6 @@ void ptMainWindow::UpdateGradualBlurUI() {
 ////////////////////////////////////////////////////////////////////////////////
 
 ptMainWindow::~ptMainWindow() {
-  //printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
-  for (short i=0; i<ToolBoxStructureList.size(); i++) {
-    //delete ToolBoxStructureList[i];
-  }
   while (ToolBoxStructureList.size()) {
     ToolBoxStructureList.removeAt(0);
   }
@@ -3120,4 +3077,5 @@ ptMainWindow::~ptMainWindow() {
 bool ptMainWindow::winEvent(MSG *message, long *result) {
   return ptEcWin7::GetInstance()->winEvent(message, result);
 }
+
 #endif

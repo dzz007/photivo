@@ -1,10 +1,29 @@
-PHOTIVO IMAGE PROCESSOR
+﻿PHOTIVO IMAGE PROCESSOR
+
+BUILD AND INSTALL
+-----------------
+
+Photivo has three build systems:
+* QMake
+* CMake
+* Scons
+
+CMake and Scons are experimental. They may or may not work for your individual 
+setup but are generally functional.
+
+The “official” standard way of building Photivo is via QMake. For a detailed
+guide see the wiki:
+    http://photivo.org/photivo/download_and_setup
+Pick the appropriate subpage for your operating system.
+
 
 LICENCE
 -------
 Photivo is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3
 as published by the Free Software Foundation.
+
+!!! Note version 3 only! Not: “or any later version” !!!
 
 Photivo is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,11 +33,3 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Photivo (see file COPYING).  If not, see 
 <http://www.gnu.org/licenses/>.
-
-
-BUILD AND INSTALL
------------------
-Do not use the cmake files! They haven�t been maintained in ages and 
-are broken. We only keep them around just in case. If you want to build
-Photivo, stick to the instructions in the wiki:
-http://photivo.org/photivo/download_and_setup

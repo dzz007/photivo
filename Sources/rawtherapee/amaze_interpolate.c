@@ -24,13 +24,38 @@
 //
 ////////////////////////////////////////////////////////////////
 
-#pragma GCC diagnostic ignored "-Wunused-variable"
-
 // adaptions for photivo
 // width -> m_Width
 // height -> m_Height
 // image -> m_Image
 //
+
+/* Amaze produces the following GCC compiler warnings:
+../../Sources/rawtherapee/amaze_interpolate.c:88:41: warning: unused variable 'dir' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:98:51: warning: unused variable 'gradp' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:98:58: warning: unused variable 'gradm' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:98:65: warning: unused variable 'gradv' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:98:72: warning: unused variable 'gradh' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:98:79: warning: unused variable 'gradpm' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:98:87: warning: unused variable 'gradhv' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:125:19: warning: variable 'Dgrbh1' set but not used [-Wunused-but-set-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:126:19: warning: variable 'Dgrbv1' set but not used [-Wunused-but-set-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:127:19: warning: variable 'Dgrbhsq1' set but not used [-Wunused-but-set-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:128:19: warning: variable 'Dgrbvsq1' set but not used [-Wunused-but-set-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:133:19: warning: variable 'Dgrbp1' set but not used [-Wunused-but-set-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:134:19: warning: variable 'Dgrbm1' set but not used [-Wunused-but-set-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:56:7: warning: unused variable 'nbr' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:63:22: warning: unused variable 'pmthresh' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:64:22: warning: unused variable 'lbd' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:64:31: warning: unused variable 'ubd' [-Wunused-variable]
+../../Sources/rawtherapee/amaze_interpolate.c:69:22: warning: unused variable 'gauss1' [-Wunused-variable]
+Since Amaze does not work correctly atm anyway, disable those warnings for the whole file.
+To be fixed later ...
+*/
+#pragma GCC diagnostic push
+// remember the pop at eof!
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 
 
 void CLASS amaze_demosaic() {
@@ -38,9 +63,10 @@ void CLASS amaze_demosaic() {
 #define SQR(x) ((x)*(x))
   //#define MIN(a,b) ((a) < (b) ? (a) : (b))
   //#define MAX(a,b) ((a) > (b) ? (a) : (b))
-#define LIM(x,min,max) MAX(min,MIN(x,max))
+//#define LIM(x,min,max) MAX(min,MIN(x,max))
 #define ULIM(x,y,z) ((y) < (z) ? LIM(x,y,z) : LIM(x,z,y))
   //#define CLIP(x) LIM(x,0,65535)
+
 
 #define ridata(x,y) m_Image[(x)*width+(y)][c]
 
@@ -628,8 +654,8 @@ void CLASS amaze_demosaic() {
               }
 
             //horizontal and vertical color differences, and adaptive weight
-            hcdvar=epssq+MAX(0, areawt*sumsqh-sumh*sumh);
-            vcdvar=epssq+MAX(0, areawt*sumsqv-sumv*sumv);
+            hcdvar=epssq+MAX(0.f, areawt*sumsqh-sumh*sumh);
+            vcdvar=epssq+MAX(0.f, areawt*sumsqv-sumv*sumv);
             hvwt[indx]=hcdvar/(vcdvar+hcdvar);
 
             // end of area interpolation
@@ -982,4 +1008,4 @@ void CLASS amaze_demosaic() {
 
 }
 
-#pragma GCC diagnostic warning "-Wunused-variable"
+#pragma GCC diagnostic pop

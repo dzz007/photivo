@@ -379,7 +379,6 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
   } else return this;
 
   Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
-  FREE(m_Image);
 
   switch (Filter) {
     case ptIMFilter_Point:
@@ -421,12 +420,6 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
     case ptIMFilter_Lanczos:
       image.filterType(LanczosFilter);
       break;
-    //~ case ptIMFilter_Bessel:
-      //~ image.filterType(BesselFilter);
-      //~ break;
-    //~ case ptIMFilter_Sinc:
-      //~ image.filterType(SincFilter);
-      //~ break;
     default:
       assert(0);
   }
@@ -438,8 +431,7 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
 
   m_Width  = image.columns();
   m_Height = image.rows();
-  m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
+  setSize((size_t) m_Width*m_Height);
 
   image.write(0,0,image.columns(),image.rows(),"RGB",ShortPixel,m_Image);
   return this;
@@ -448,14 +440,12 @@ ptImage* ptImage::ptGMResize(const uint16_t Size, const short Filter, const shor
 ptImage* ptImage::ptGMResizeWH(const uint16_t NewWidth,
                                const uint16_t NewHeight,
                                const short Filter) {
-
   uint16_t Width  = m_Width;
   uint16_t Height = m_Height;
 
   if (Width == NewWidth && Height == NewHeight) return this;
 
   Magick::Image image(Width,Height,"RGB",ShortPixel,m_Image);
-  FREE(m_Image);
 
   switch (Filter) {
     case ptIMFilter_Point:
@@ -497,12 +487,6 @@ ptImage* ptImage::ptGMResizeWH(const uint16_t NewWidth,
     case ptIMFilter_Lanczos:
       image.filterType(LanczosFilter);
       break;
-    //~ case ptIMFilter_Bessel:
-      //~ image.filterType(BesselFilter);
-      //~ break;
-    //~ case ptIMFilter_Sinc:
-      //~ image.filterType(SincFilter);
-      //~ break;
     default:
       assert(0);
   }
@@ -514,8 +498,7 @@ ptImage* ptImage::ptGMResizeWH(const uint16_t NewWidth,
 
   m_Width  = image.columns();
   m_Height = image.rows();
-  m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
+  setSize((size_t) m_Width*m_Height);
 
   image.write(0,0,image.columns(),image.rows(),"RGB",ShortPixel,m_Image);
   return this;

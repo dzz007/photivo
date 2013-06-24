@@ -79,7 +79,9 @@ void ptColumnGridThumbnailLayouter::Layout(ptGraphicsThumbGroup* thumb) {
     Init(m_ThumbCount, thumb->font());
   }
 
-  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth,
+  // The +1 y position accounts for the 2px wide mouse hover border.
+  // Without it that wouldn’t be shown completely on the first column.
+  thumb->setPos((m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth) + 1,
                 m_ThumbMetrics.Row * m_ThumbMetrics.CellHeight);
 
   if (m_ThumbMetrics.Row >= m_ThumbMetrics.MaxRow) {
@@ -87,6 +89,52 @@ void ptColumnGridThumbnailLayouter::Layout(ptGraphicsThumbGroup* thumb) {
     m_ThumbMetrics.Col++;
   } else {
     m_ThumbMetrics.Row++;
+  }
+}
+
+//==============================================================================
+
+int ptColumnGridThumbnailLayouter::MoveIndex(const int currentIdx, QKeyEvent* event) {
+  // See .h for full documentation of behaviour
+  int idx = qMax(0, currentIdx);
+  int offset = idx % (m_ThumbMetrics.MaxRow+1);
+  if (event->modifiers() == Qt::NoModifier) {
+    switch (event->key()) {
+      case Qt::Key_Left:
+        if (idx > m_ThumbMetrics.MaxRow)
+          idx = idx - m_ThumbMetrics.MaxRow - 1;
+        return idx;
+      case Qt::Key_Right:
+        return qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxRow + 1);
+      case Qt::Key_Up:
+        return qMax(0, idx-1);
+      case Qt::Key_Down:
+        return qMin(m_ThumbCount-1, idx+1);
+      case Qt::Key_Home:  // start of column
+        return qMax(0, idx - offset);
+      case Qt::Key_End:   // end of column
+        return qMin(m_ThumbCount-1, idx + m_ThumbMetrics.MaxRow - offset);
+      case Qt::Key_PageUp:
+        return
+            qMax(0 + offset,
+                 idx - (int)(m_View->width()/m_ThumbMetrics.CellWidth)*(m_ThumbMetrics.MaxRow+1));
+      case Qt::Key_PageDown:
+        return
+            qMin(m_ThumbCount-1,
+                 idx + (int)(m_View->width()/m_ThumbMetrics.CellWidth)*(m_ThumbMetrics.MaxRow+1));
+      default:    // unrecognised key
+        return -1;
+    }
+
+  } else if (event->modifiers() == Qt::ControlModifier) {
+    switch (event->key()) {
+      case Qt::Key_Home: return 0;                // first thumbnail in list
+      case Qt::Key_End:  return m_ThumbCount-1;   // last thumbnail in list
+      default:           return -1;               // unrecognised key
+    }
+
+  } else {
+    return -1;    // unrecognised key
   }
 }
 

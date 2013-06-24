@@ -41,7 +41,11 @@
   #define cimg_display 0
 #endif
 
-#include "greyc/CImg.h"
+#ifdef SYSTEM_CIMG
+  #include <CImg.h>
+#else
+  #include "greyc/CImg.h"
+#endif
 
 
 using namespace cimg_library;
@@ -289,8 +293,8 @@ void idirpyr(ptImage* data_coarse, ptImage* data_fine, int level, float * nrwt_l
         //do midpoint first
         double norm=0.0,wtdsum[3]={0.0,0.0,0.0};
         //wtdsum[0]=wtdsum[1]=wtdsum[2]=0.0;
-        for(uint16_t ix=i; ix<MIN(height,i+3); ix+=2) {
-          for (uint16_t jx=j; jx<MIN(width,j+3); jx+=2) {
+        for(uint16_t ix=i; ix<MIN((int)height,i+3); ix+=2) {
+          for (uint16_t jx=j; jx<MIN((int)width,j+3); jx+=2) {
             uint32_t Temp2 = ix*width+jx;
             wtdsum[0] += smooth->m_Image[Temp2][0];
             wtdsum[1] += smooth->m_Image[Temp2][1];
@@ -313,14 +317,14 @@ void idirpyr(ptImage* data_coarse, ptImage* data_fine, int level, float * nrwt_l
         double norm=0.0,wtdsum[3]={0.0,0.0,0.0};
         //now right neighbor
         if (j+1<width) {
-          for (int jx=j; jx<MIN(width,j+3); jx+=2) {
+          for (int jx=j; jx<MIN((int)width,j+3); jx+=2) {
             Temp = i*width+jx;
             wtdsum[0] += smooth->m_Image[Temp][0];
             wtdsum[1] += smooth->m_Image[Temp][1];
             wtdsum[2] += smooth->m_Image[Temp][2];
             norm++;
           }
-          for (int ix=i>0?i-1:1; ix<MIN(height,i+2); ix+=2) {
+          for (int ix=i>0?i-1:1; ix<MIN((int)height,i+2); ix+=2) {
             Temp = ix*width+j+1;
             wtdsum[0] += smooth->m_Image[Temp][0];
             wtdsum[1] += smooth->m_Image[Temp][1];
@@ -337,14 +341,14 @@ void idirpyr(ptImage* data_coarse, ptImage* data_fine, int level, float * nrwt_l
         //now down neighbor
         if (i+1<height) {
           norm=0.0;wtdsum[0]=wtdsum[1]=wtdsum[2]=0.0;
-          for (int ix=i; ix<MIN(height,i+3); ix+=2) {
+          for (int ix=i; ix<MIN((int)height,i+3); ix+=2) {
             Temp = ix*width+j;
             wtdsum[0] += smooth->m_Image[Temp][0];
             wtdsum[1] += smooth->m_Image[Temp][1];
             wtdsum[2] += smooth->m_Image[Temp][2];
             norm++;
           }
-          for (int jx=j>0?j-1:1; jx<MIN(width,j+2); jx+=2) {
+          for (int jx=j>0?j-1:1; jx<MIN((int)width,j+2); jx+=2) {
             Temp = (i+1)*width+jx;
             wtdsum[0] += smooth->m_Image[Temp][0];
             wtdsum[1] += smooth->m_Image[Temp][1];

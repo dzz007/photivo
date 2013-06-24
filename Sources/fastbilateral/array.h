@@ -961,7 +961,7 @@ Array_2D<T,A>::offset(const size_type& x,const size_type& y) const{
 
 
 template<typename T,typename A>
-Array_3D<T,A>::Array_3D(const A& a)
+Array_3D<T,A>::Array_3D(const A&)
   :x_dim(0),y_dim(0),z_dim(0),storage(){}
 
 

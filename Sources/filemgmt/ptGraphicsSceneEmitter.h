@@ -43,6 +43,18 @@ class ptGraphicsSceneEmitter: public QObject {
 Q_OBJECT
 
 public:
+  /*! Connects the signal that is emitted when a new thumbnail gets focused.
+    Works similar to \c QObject::connect().
+    \param receiver
+      A pointer to the receiver object for the signal.
+    \param method
+      The slot the signal should be connected to. Use the SLOT() macro in the
+      same way as with QObject::connect().
+  */
+  static bool ConnectFocusChanged(const QObject* receiver, const char* method);
+  /*! Emits the signal indicating that a new thumbnail has the focus. */
+  static void EmitFocusChanged();
+
   /*! Connects the signal that triggers an action when a thumbnail is clicked.
     Works similar to \c QObject::connect().
     \param receiver
@@ -51,17 +63,14 @@ public:
       The slot the signal should be connected to. Use the SLOT() macro in the
       same way as with QObject::connect().
   */
-  static bool ConnectThumbnailAction(const QObject* receiver,
-                                     const char* method);
-
+  static bool ConnectThumbnailAction(const QObject* receiver, const char* method);
   /*! Emits the signal that triggers an action when a thumbnail is clicked.
     \param action
       The type of action to be performed.
     \param location
       The file name or directory name for the action.
   */
-  static void EmitThumbnailAction(const ptThumbnailAction action,
-                                  const QString location);
+  static void EmitThumbnailAction(const ptThumbnailAction action, const QString location);
 
   /*! Destroys the ptGraphicsSceneEmitter singleton object. */
   static void DestroyInstance();
@@ -70,15 +79,13 @@ public:
 private:
   explicit ptGraphicsSceneEmitter();
   ~ptGraphicsSceneEmitter();
-
   static ptGraphicsSceneEmitter* GetInstance();
-
   static ptGraphicsSceneEmitter* m_Instance;
 
 
 signals:
-  void thumbnailAction(const ptThumbnailAction action,
-                       const QString location);
+  void focusChanged();
+  void thumbnailAction(const ptThumbnailAction action, const QString location);
 };
 
 //==============================================================================

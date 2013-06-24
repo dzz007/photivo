@@ -35,6 +35,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+const ptGuiOptionsItem ptGuiOptions::LocalAdjustMode[] = {
+  {lamFloodFill,    QObject::tr("Flood fill") },
+  {lamSearch,       QObject::tr("Search") },
+  {-1,NULL}};
+
 const ptGuiOptionsItem ptGuiOptions::ZoomLevel[] = {
   {ptZoomLevel_Current, QObject::tr("Current") },
   {ptZoomLevel_Fit,     QObject::tr("Zoom fit") },
@@ -49,6 +54,11 @@ const ptGuiOptionsItem ptGuiOptions::ZoomLevel[] = {
   {ptZoomLevel_200, QObject::tr("200%") },
   {ptZoomLevel_300, QObject::tr("300%") },
   {ptZoomLevel_400, QObject::tr("400%") },
+  {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::BatchMgrAutosaveFile[] = {
+  {bsfStandard, QObject::tr("Standard file in the Photivo directory")      },
+  {bsfLocal,    QObject::tr("The file batch list was previously saved to") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::RememberSettingLevel[] = {
@@ -410,15 +420,6 @@ const ptGuiOptionsItem ptGuiOptions::OutlineMode[] = {
 //  {ptOverlayMode_Overlay,           QObject::tr("Overlay") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::OutlineGradientMode[] = {
-  {ptGradientMode_Backward,         QObject::tr("Backward finite differences") },
-  {ptGradientMode_Centered,         QObject::tr("Centered finite differences") },
-  {ptGradientMode_Forward,          QObject::tr("Forward finite differences") },
-  {ptGradientMode_Sobel,            QObject::tr("Sobel masks") },
-  {ptGradientMode_RotInv,           QObject::tr("Rotation invariant masks") },
-  {ptGradientMode_Deriche,          QObject::tr("Deriche recursive filter") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::OverlayMaskMode[] = {
   {ptOverlayMaskMode_FullImage,     QObject::tr("Full image") },
   {ptOverlayMaskMode_Vignette,      QObject::tr("Vignette") },
@@ -466,24 +467,11 @@ const ptGuiOptionsItem ptGuiOptions::EnableGreyC[] = {
   {ptEnable_ShowMask,          QObject::tr("Show mask") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::AspectRatioW[] = {
+const ptGuiOptionsItem ptGuiOptions::AspectRatio[] = {
   {21,   "21"    },
+  {18,   "18"    },
   {16,   "16"    },
-  {10,   "10"    },
-  {9,    "9"     },
-  {8,    "8"     },
-  {7,    "7"     },
-  {6,    "6"     },
-  {5,    "5"     },
-  {4,    "4"     },
-  {3,    "3"     },
-  {2,    "2"     },
-  {1,    "1"     },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::AspectRatioH[] = {
-  {21,   "21"    },
-  {16,   "16"    },
+  {13,   "13"    },
   {10,   "10"    },
   {9,    "9"     },
   {8,    "8"     },
@@ -514,11 +502,6 @@ const ptGuiOptionsItem ptGuiOptions::ChannelMixer[] = {
   {ptChannelMixerChoice_Manual,  QObject::tr("Manual") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::Curve[] = {
-  {ptCurveChoice_None,    QObject::tr("None") },
-  {ptCurveChoice_Manual,  QObject::tr("Manual") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::SpecialPreview[] = {
   {ptSpecialPreview_RGB,        QObject::tr("RGB") },
   {ptSpecialPreview_Structure,  QObject::tr("Structure") },
@@ -534,6 +517,8 @@ const ptGuiOptionsItem ptGuiOptions::ViewLAB[] = {
   {ptViewLAB_L_Grad,      QObject::tr("Structure on L") },
   {ptViewLAB_A,           QObject::tr("A") },
   {ptViewLAB_B,           QObject::tr("B") },
+  {ptViewLAB_C,           QObject::tr("C") },
+  {ptViewLAB_H,           QObject::tr("H") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::SaveFormat[] = {
@@ -552,16 +537,17 @@ const ptGuiOptionsItem ptGuiOptions::SaveSampling[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::OutputMode[] = {
-  {ptOutputMode_Full,      QObject::tr("Full size")    },
-  {ptOutputMode_Pipe,      QObject::tr("Pipe size")    },
-  {ptOutputMode_Jobfile,   QObject::tr("Only jobfile")    },
+  {ptOutputMode_Full,         QObject::tr("Full size")     },
+  {ptOutputMode_Pipe,         QObject::tr("Pipe size")     },
+  {ptOutputMode_Jobfile,      QObject::tr("Only jobfile")  },
   {ptOutputMode_Settingsfile, QObject::tr("Only settings") },
+  {ptOutputMode_Batch,        QObject::tr("Send to batch") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::ResetMode[] = {
-  {ptResetMode_Full,         QObject::tr("Neutral reset")    },
+  {ptResetMode_Full,         QObject::tr("Neutral reset") },
   {ptResetMode_User,         QObject::tr("User reset")    },
-  {ptResetMode_OpenPreset,   QObject::tr("Open preset")    },
+  {ptResetMode_OpenPreset,   QObject::tr("Open preset")   },
   {ptResetMode_OpenSettings, QObject::tr("Open settings") },
   {-1,NULL}};
 
@@ -574,5 +560,10 @@ const ptGuiOptionsItem ptGuiOptions::BadPixels[] = {
   {0, QObject::tr("None")   },
   {1, QObject::tr("Load one")   },
   {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::SpotRepair[] = {
+  {SpotRepairAlgo_Clone,     QObject::tr("Clone")},
+  {SpotRepairAlgo_Heal,      QObject::tr("Heal (Dummy)")},
+  {-1, NULL}};
 
 ////////////////////////////////////////////////////////////////////////////////

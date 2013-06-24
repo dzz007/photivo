@@ -29,7 +29,10 @@
 //==============================================================================
 
 #ifndef CSIDL_APPDATA
-  #define CSIDL_APPDATA 0x001a
+#  define CSIDL_APPDATA 0x001a
+#endif
+#ifndef ATTACH_PARENT_PROCESS
+#  define ATTACH_PARENT_PROCESS ((DWORD)-1)
 #endif
 
 //==============================================================================
@@ -53,8 +56,43 @@ QString WinApi::AppdataFolder() {
 
 //==============================================================================
 
+// On Windows you can either always or never get a console window. I.e. you either get an annoying
+// additional window or no console output even when Photivo was started from an existing console.
+// The following takes care of that problem by trying to attach to the parent process’s console.
+// On success we have a console window to output to. If not no additional window appears.
+void WinApi::AttachToParentConsole() {
+  QLibrary library(QLatin1String("kernel32"));
+  typedef BOOL (WINAPI*AttachConsolePtr)(DWORD);
+  AttachConsolePtr AttachConsole = (AttachConsolePtr)library.resolve("AttachConsole");
+
+  if (AttachConsole) {
+    if (AttachConsole(ATTACH_PARENT_PROCESS)) {
+      // Attaching succeeded. Reopen output streams to be able to write to the parent’s console.
+      freopen("CONOUT$", "wb", stdout);
+      freopen("CONOUT$", "wb", stderr);
+      // Done. printf, cout, cerr now use the attached console.
+    }
+  }
+}
+
+//==============================================================================
+
+QStringList WinApi::DrivesListPretty() {
+  QFileInfoList list = QDir::drives();
+  QStringList result;
+#if (QT_VERSION >= 0x40700)
+  result.reserve(list.count());
+#endif
+  for (int i = 0; i < list.count(); i++) {
+    result.append(WinApi::VolumeNamePretty(list.at(i).filePath().left(2)));
+  }
+  return result;
+}
+
+//==============================================================================
+
 QString WinApi::VolumeName(QString drive) {
-  drive = drive.toUpper() + "\\";
+  drive = drive.left(2) + "\\";
 
   WCHAR szVolumeName[256] ;
   WCHAR szFileSystemName[256];
@@ -75,8 +113,16 @@ QString WinApi::VolumeName(QString drive) {
   }
 
   QString vName = QString::fromUtf16((const ushort*)szVolumeName);
-  vName.trimmed();
+  vName = vName.trimmed();
   return vName;
+}
+
+//==============================================================================
+
+/*! Return volume name and drive letter formatted as "Name (D:)" */
+QString WinApi::VolumeNamePretty(QString drive) {
+  drive = drive.left(2).toUpper();
+  return QString("%1 (%2)").arg(VolumeName(drive)).arg(drive).trimmed();
 }
 
 //==============================================================================

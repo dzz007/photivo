@@ -21,6 +21,10 @@
 **
 *******************************************************************************/
 
+#define GDK_PIXBUF_DISABLE_DEPRECATED
+#define PANGO_DISABLE_DEPRECATED
+#define ATK_DISABLE_DEPRECATED
+
 extern "C"
 {
 #include <libgimp/gimp.h>
@@ -117,7 +121,8 @@ void ptRun(const gchar*     Name,
     printf("FileName2    : '%s'\n",Parameter[2].data.d_string);
 
     QFile GimpFile(Parameter[1].data.d_string);
-    assert(GimpFile.open(QIODevice::ReadOnly | QIODevice::Text));
+    bool result = GimpFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    assert(result);
 
     QTextStream In(&GimpFile);
 
@@ -139,14 +144,18 @@ void ptRun(const gchar*     Name,
     char     Buffer[128];
 
     // Extremely naive. Probably just enough for testcases.
-    assert ( fgets(Buffer,127,InputFile) );
-    assert ( 1 == sscanf(Buffer,"P%hd",&Colors) );
+    char *s = fgets(Buffer,127,InputFile);
+    assert ( s );
+    int n = sscanf(Buffer,"P%hd",&Colors);
+    assert ( 1 == n );
     assert(Colors == 6 );
     do {
-      assert ( fgets(Buffer,127,InputFile) );
+      s = fgets(Buffer,127,InputFile);
+      assert ( s );
     } while (Buffer[0] == '#');
     sscanf(Buffer,"%hd %hd",&Width,&Height);
-    assert ( fgets(Buffer,127,InputFile) );
+    s = fgets(Buffer,127,InputFile);
+    assert ( s );
     sscanf(Buffer,"%hd",&BitsPerColor);
     assert(BitsPerColor == 0xffff);
 
@@ -179,7 +188,8 @@ void ptRun(const gchar*     Name,
     FCLOSE(InputFile);
 
     QFile ExifFile(ExifFileName);
-    assert(ExifFile.open(QIODevice::ReadOnly));
+    result = ExifFile.open(QIODevice::ReadOnly);
+    assert(result);
     qint64 FileSize = ExifFile.size();
     QDataStream ExifIn(&ExifFile);
     char* ExifBuffer = (char *) MALLOC2(FileSize);
@@ -188,7 +198,8 @@ void ptRun(const gchar*     Name,
     ExifFile.close();
 
     QFile ICCFile(ICCFileName);
-    assert(ICCFile.open(QIODevice::ReadOnly));
+    result = ICCFile.open(QIODevice::ReadOnly);
+    assert(result);
     qint64 FileSize2 = ICCFile.size();
     QDataStream ICCIn(&ICCFile);
     char* ICCBuffer = (char *) MALLOC2(FileSize2);
@@ -211,7 +222,7 @@ void ptRun(const gchar*     Name,
 #if GIMP_MINOR_VERSION<=6
     gimp_image_add_layer(GimpImage,GimpLayer,0);
 #else
-    gimp_image_insert_layer(GimpImage,GimpLayer,NULL,0);
+    gimp_image_insert_layer(GimpImage,GimpLayer,0,0);
 #endif
     GimpDrawable* Drawable = gimp_drawable_get(GimpLayer);
     GimpPixelRgn PixelRegion;
@@ -225,7 +236,7 @@ void ptRun(const gchar*     Name,
                         false);
     unsigned short TileHeight = gimp_tile_height();
     for (unsigned short Row=0; Row<Height; Row+=TileHeight) {
-      unsigned short NrRows = MIN(Height-Row,TileHeight);
+      unsigned short NrRows = MIN(Height-Row, (int)TileHeight);
       guint8* Buffer = g_new(guint8,TileHeight*Width*3);
       for (unsigned short i=0; i<NrRows; i++) {
         for (unsigned short j=0; j<Width; j++) {
