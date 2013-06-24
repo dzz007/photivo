@@ -22,6 +22,7 @@
 
 #include <qmath.h>
 #include <QScrollBar>
+#include <QKeyEvent>
 
 #include "../ptSettings.h"
 #include "ptColumnGridThumbnailLayouter.h"

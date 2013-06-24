@@ -20,6 +20,8 @@
 **
 *******************************************************************************/
 
+#include <QFileDialog>
+
 #include "ptBatchWindow.h"
 #include "ptMessageBox.h"
 #include "ptSettings.h"

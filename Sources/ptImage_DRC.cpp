@@ -41,6 +41,7 @@ So for example a pixel at (-1, y) is equal to a pixel at (0, y) by definition.
 #include <cstring>
 #include <cmath>
 #include <cfloat>
+#include <cassert>
 
 #include "ptImage.h"
 #include "ptError.h"

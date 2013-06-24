@@ -27,6 +27,12 @@
 #include "ptTheme.h"
 #include "ptImage.h"
 
+#include <QMenu>
+#include <QVBoxLayout>
+#include <QFileDialog>
+#include <QContextMenuEvent>
+#include <QPainter>
+
 #include <iostream>
 
 #ifdef _OPENMP
@@ -366,7 +372,7 @@ void ptHistogramWindow::CalculateHistogram() {
 
   // Instantiate an Image8 and put the histogram in it.
   delete m_Image8;
-  m_Image8 = new ptImage8(WidgetWidth,WidgetHeight,3);
+  m_Image8 = new ptImage8(WidgetWidth, WidgetHeight, 3);
 
   uint16_t RowLimit = WidgetHeight-1;
 

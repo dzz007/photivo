@@ -25,6 +25,8 @@
 
 #include <QGraphicsView>
 #include <QList>
+#include <QScrollBar>
+#include <QMenu>
 
 #include "../ptDefines.h"
 #include "../ptSettings.h"

@@ -30,6 +30,8 @@
 #include "ptConstants.h"
 #include "ptImage.h"
 
+#include <QScrollBar>
+
 extern ptTheme* Theme;
 
 //==============================================================================

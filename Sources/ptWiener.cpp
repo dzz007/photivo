@@ -35,6 +35,7 @@
 
 #include <fftw3.h>
 #include <cmath>
+#include <cassert>
 
 // First idea how to realize this filter I got from Filip Rooms
 // http://filiprooms.be/research/software/

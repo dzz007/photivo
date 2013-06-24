@@ -33,6 +33,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QLabel>
+#include <QFileDialog>
 #include <vector>
 
 

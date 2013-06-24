@@ -34,11 +34,11 @@
 void DumpConfig(QHash<QString, QVariant>& ADataStore) {
   std::cout << std::endl << "Number of keys: " << ADataStore.size() << std::endl;
   for (auto hItem = ADataStore.constBegin(); hItem != ADataStore.constEnd(); hItem++) {
-    std::cout << hItem.key().toAscii().data()
-              << QString().fill('_', 30-hItem.key().length()).toAscii().data()
+    std::cout << hItem.key().toLocal8Bit().data()
+              << QString().fill('_', 30-hItem.key().length()).toLocal8Bit().data()
               << hItem.value().type()
               << "    "
-              << hItem.value().toString().toAscii().data()
+              << hItem.value().toString().toLocal8Bit().data()
               << std::endl;
   }
 }

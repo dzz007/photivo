@@ -30,6 +30,7 @@
 #include "ptSettings.h"
 
 #include <cmath>
+#include <cassert>
 
 #ifdef _OPENMP
   #include <omp.h>
