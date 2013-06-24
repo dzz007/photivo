@@ -47,7 +47,10 @@ struct ptGuiOptionsItem {
 
 class ptGuiOptions {
 public:
+  static const ptGuiOptionsItem LocalAdjustMode[];
+
   static const ptGuiOptionsItem ZoomLevel[];
+  static const ptGuiOptionsItem BatchMgrAutosaveFile[];
   static const ptGuiOptionsItem RememberSettingLevel[];
   static const ptGuiOptionsItem CameraColor[];
   static const ptGuiOptionsItem CameraColorProfileIntent[];
@@ -79,15 +82,13 @@ public:
   static const ptGuiOptionsItem Interpolation[];
   static const ptGuiOptionsItem BayerDenoise[];
   static const ptGuiOptionsItem ClipMode[];
-  static const ptGuiOptionsItem AspectRatioW[];
-  static const ptGuiOptionsItem AspectRatioH[];
+  static const ptGuiOptionsItem AspectRatio[];
   static const ptGuiOptionsItem ExposureClipMode[];
   static const ptGuiOptionsItem AutoExposureMode[];
   static const ptGuiOptionsItem LMHLightRecoveryMaskType[];
   static const ptGuiOptionsItem LABTransformMode[];
   static const ptGuiOptionsItem DenoiseMask[];
   static const ptGuiOptionsItem ChannelMixer[];
-  static const ptGuiOptionsItem Curve[];
   static const ptGuiOptionsItem SpecialPreview[];
   static const ptGuiOptionsItem ViewLAB[];
   static const ptGuiOptionsItem GREYCInterpolation[];
@@ -100,7 +101,6 @@ public:
   static const ptGuiOptionsItem GrainMaskType[];
   static const ptGuiOptionsItem OverlayMode[];
   static const ptGuiOptionsItem OutlineMode[];
-  static const ptGuiOptionsItem OutlineGradientMode[];
   static const ptGuiOptionsItem OverlayMaskMode[];
   static const ptGuiOptionsItem CrossprocessMode[];
   static const ptGuiOptionsItem VignetteMode[];
@@ -113,6 +113,8 @@ public:
   static const ptGuiOptionsItem ResetMode[];
   static const ptGuiOptionsItem BadPixels[];
   static const ptGuiOptionsItem DarkFrame[];
+
+  static const ptGuiOptionsItem SpotRepair[];
 };
 
 extern ptGuiOptions* GuiOptions;

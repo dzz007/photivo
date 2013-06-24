@@ -33,6 +33,7 @@
 #endif
 
 #include "ptImage.h"
+#include "ptImage8.h"
 #include "ptError.h"
 #include "ptCalloc.h"
 
@@ -57,11 +58,10 @@ bool ptImage::ptGMCWriteImage(const char* FileName,
 
   mw = NewMagickWand();
   MagickSetSize(mw, Width, Height);
-  MagickReadImage(mw,"xc:none");
+  MagickReadImage(mw,"xc:white");
   MagickSetImageFormat(mw,"RGB");
   MagickSetImageDepth(mw,16);
   MagickSetImageType(mw,TrueColorType);
-  MagickSetImageOption(mw, "tiff", "alpha", "associated");
 
   MagickSetImagePixels(mw,0,0,Width,Height,"RGB",ShortPixel,(unsigned char*) m_Image);
 
@@ -150,6 +150,33 @@ bool ptImage::ptGMCWriteImage(const char* FileName,
 
 //==============================================================================
 
+// just write an image to disk for testing
+bool ptImage::DumpImage(const char* FileName) const {
+
+  long unsigned int Width  = m_Width;
+  long unsigned int Height = m_Height;
+
+  MagickWand *mw;
+  mw = NewMagickWand();
+  MagickSetSize(mw, Width, Height);
+  MagickReadImage(mw,"xc:white");
+  MagickSetImageFormat(mw,"RGB");
+  MagickSetImageDepth(mw,16);
+  MagickSetImageType(mw,TrueColorType);
+
+  MagickSetImagePixels(mw,0,0,Width,Height,"RGB",ShortPixel,(unsigned char*) m_Data.data());
+
+  MagickSetImageDepth(mw,8);
+
+  MagickSetImageCompression(mw, LZWCompression);
+
+  bool Result = MagickWriteImage(mw, FileName);
+  DestroyMagickWand(mw);
+  return Result;
+}
+
+//==============================================================================
+
 // Open Image
 ptImage* ptImage::ptGMCOpenImage(const char* FileName,
                                 const short ColorSpace,
@@ -162,7 +189,7 @@ ptImage* ptImage::ptGMCOpenImage(const char* FileName,
 
   MagickWand* image = NewMagickWand();
   ExceptionType MagickExcept;
-printf("%s\n", FileName);
+
   MagickReadImage(image, FileName);
   MagickGetException(image, &MagickExcept);
 
@@ -194,31 +221,32 @@ printf("%s\n", FileName);
   uint16_t NewWidth = MagickGetImageWidth(image);
   uint16_t NewHeight = MagickGetImageHeight(image);
 
-  float (*ImageBuffer)[3] =
-    (float (*)[3]) CALLOC(NewWidth*NewHeight,sizeof(*ImageBuffer));
-  ptMemoryError(ImageBuffer,__FILE__,__LINE__);
+  // Buffer for the data from Magick
+  std::vector<std::array<float, 3> > ImageBuffer;
+  ImageBuffer.resize((size_t)NewWidth*NewHeight);
 
-  MagickGetImagePixels(image, 0, 0, NewWidth, NewHeight, "RGB", FloatPixel, (uchar*)ImageBuffer);
-//  image.write(0,0,NewWidth,NewHeight,"RGB",FloatPixel,ImageBuffer);
+  MagickGetImagePixels(image, 0, 0, NewWidth, NewHeight, "RGB", FloatPixel, (uchar*)ImageBuffer.data());
+
   m_Width = NewWidth;
   DestroyMagickWand(image);
 
-  float (*NewImage)[3] = NULL;
+  // Image before color transform, may be binned
+  std::vector<std::array<float, 3> > NewImage;
 
   if (ScaleFactor != 0) {
+    // Binning
     NewHeight >>= ScaleFactor;
     NewWidth >>= ScaleFactor;
 
     short Step = 1 << ScaleFactor;
     int Average = pow(2,2 * ScaleFactor);
 
-    NewImage = (float (*)[3]) CALLOC(NewWidth*NewHeight,sizeof(*NewImage));
-    ptMemoryError(NewImage,__FILE__,__LINE__);
+    NewImage.resize((size_t)NewWidth*NewHeight);
 
 #pragma omp parallel for schedule(static)
     for (uint16_t Row=0; Row < NewHeight*Step; Row+=Step) {
       for (uint16_t Col=0; Col < NewWidth*Step; Col+=Step) {
-        float  PixelValue[3] = {0.0,0.0,0.0};
+        float  PixelValue[3] = {0.0f,0.0f,0.0f};
         for (uint8_t sRow=0; sRow < Step; sRow++) {
           for (uint8_t sCol=0; sCol < Step; sCol++) {
             int32_t index = (Row+sRow)*m_Width+Col+sCol;
@@ -233,7 +261,6 @@ printf("%s\n", FileName);
         }
       }
     }
-    FREE(ImageBuffer);
   } else {
     NewImage = ImageBuffer;
   }
@@ -243,9 +270,8 @@ printf("%s\n", FileName);
   m_Colors = 3;
   m_ColorSpace = ColorSpace;
 
-  FREE(m_Image);
-  m_Image = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
+  // Alloc for the resulting image
+  setSize((size_t) m_Width*m_Height);
 
   if (1) { // was a check if the image is not linear data
     // Transform to linear representation
@@ -299,7 +325,7 @@ printf("%s\n", FileName);
     for (int32_t i = 0; i < Size; i+=Step) {
       int32_t Length = (i+Step)<Size ? Step : Size - i;
       float* Buffer = &NewImage[i][0];
-      uint16_t* Image = &m_Image[i][0];
+      uint16_t* Image = &m_Data[i][0];
       cmsDoTransform(Transform,
                      Buffer,
                      Image,
@@ -319,9 +345,38 @@ printf("%s\n", FileName);
       }
     }
   }
-  FREE(NewImage);
 
   return this;
 }
 
 //==============================================================================
+
+// just write an image to disk
+bool ptImage8::DumpImage(const char* FileName, const bool BGR) const {
+
+  long unsigned int Width  = m_Width;
+  long unsigned int Height = m_Height;
+
+  MagickWand *mw;
+  mw = NewMagickWand();
+  MagickSetSize(mw, Width, Height);
+  MagickReadImage(mw,"xc:white");
+  MagickSetImageFormat(mw,"RGBA");
+  MagickSetImageDepth(mw,8);
+  MagickSetImageType(mw,TrueColorType);
+
+  if (BGR)
+    MagickSetImagePixels(mw,0,0,Width,Height,"BGRA",CharPixel,(unsigned char*) m_Image.data());
+  else
+    MagickSetImagePixels(mw,0,0,Width,Height,"RGBA",CharPixel,(unsigned char*) m_Image.data());
+
+  MagickSetImageDepth(mw,8);
+
+  MagickSetImageFormat(mw,"RGB");
+  MagickSetCompressionQuality(mw,95);
+  MagickSetImageCompression(mw, LZWCompression);
+
+  bool Result = MagickWriteImage(mw, FileName);
+  DestroyMagickWand(mw);
+  return Result;
+}

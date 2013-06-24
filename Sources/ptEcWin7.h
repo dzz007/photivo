@@ -127,7 +127,7 @@ public:
   static ptEcWin7* GetInstance();
   static void DestroyInstance();
 
-//------------------------------------------------------------------------------
+//-------------------------------------
 
   void init(WId wid);
 #ifdef Q_OS_WIN

@@ -18,7 +18,9 @@ void CLASS es_median_filter()
 {
   uint16_t (*pix)[4];
   int (*mf)[3], (*pc)[3], p[25], indx, c, d, temp, i, j;
-  int v0, v1, v2, edge_cnt, smooth_cnt, w1, w2;
+//warning: variable 'edge_cnt' set but not used [-Wunused-but-set-variable]
+//warning: unused variable 'smooth_cnt' [-Wunused-variable]
+  int v0, v1, v2, /*edge_cnt, smooth_cnt,*/ w1, w2;
   int dC0, dC1, dC2, dC3, dC4, pass;
   int p00, p01, p02, p03, p04, p05, p06, p07, p08, p09,
     p15, p16, p17, p18, p19, p20, p21, p22, p23, p24;
@@ -112,7 +114,7 @@ void CLASS es_median_filter()
 				pc[0][1] = p[12];
       }
     /* Apply 3x3 Laplacian filter */
-    edge_cnt = smooth_cnt = 0;
+//    edge_cnt = smooth_cnt = 0;
 //edge_cnt and smooth_cnt left out not used here
 #pragma omp parallel for schedule(static) private(EA, pc)
     for (uint16_t row=1; row < m_Height-1; row++)

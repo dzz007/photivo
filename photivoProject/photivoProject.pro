@@ -1,332 +1,456 @@
 ################################################################################
 ##
-## photivo
+## Photivo
 ##
-## Copyright (C) 2008,2009 Jos De Laender
-## Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
-## Copyright (C) 2011 Bernd Schoeler <brother.john@photivo.org>
+## Copyright (C) 2008-2009 Jos De Laender
+## Copyright (C) 2009-2010 Michael Munzert <mail@mm-log.com>
+## Copyright (C) 2011-2013 Bernd Schoeler <brother.john@photivo.org>
 ##
-## This file is part of photivo.
+## This file is part of Photivo.
 ##
-## photivo is free software: you can redistribute it and/or modify
+## Photivo is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License version 3
 ## as published by the Free Software Foundation.
 ##
-## photivo is distributed in the hope that it will be useful,
+## Photivo is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with photivo.  If not, see <http://www.gnu.org/licenses/>.
+## along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 ##
 ################################################################################
+#
+# This is a Qt project file for Photivo.
+# All Photivo project files are heavily tuned.
+# Do not overwrite any with "qmake -project"!
+#
+################################################################################
 
-######################################################################
-#
-# This is the Qt project file for photivo.
-# Don't let it overwrite by qmake -project !
-# A number of settings is tuned.
-#
-# qmake will make a platform dependent makefile of it.
-#
-######################################################################
+# Get version info from hg and make it available to the application.
+win32 {
+  DEVNULL="1>nul 2>nul"
+} else {
+  DEVNULL="1>/dev/null 2>/dev/null"
+}
 
-CONFIG += silent
-#CONFIG += release
-#CONFIG += debug
-TEMPLATE = app
-TARGET = photivo
-DEPENDPATH += .
-INCLUDEPATH += $${PREFIX}/include
+!system("hg $$DEVNULL") {
+  !build_pass:warning("Could not call Mercurial to determine Photivo's version info.")
+  !build_pass:warning("Using current date/time instead.")
+  APPVERSION = "compiled at $$_DATE_"
+
+} else {
+  HGBRANCH = $$system(hg branch)
+  APPVERSION = $$system('hg log --limit 1 --branch $$HGBRANCH --template "{date|shortdate} (rev {node|short})"')
+
+  isEmpty(APPVERSION) {
+    !build_pass:warning("Mercurial returned empty version info.")
+    !build_pass:warning("Using current date/time instead.")
+    APPVERSION = "compiled at $$_DATE_"
+  } else {
+    # Find out if working dir is clean. If not add a "+" to the version string.
+    WDSTATUS = $$system(hg identify)
+    contains(WDSTATUS, ^[^\\+]*\\+): APPVERSION = "$$APPVERSION+"
+  }
+}
+!build_pass:message("Building Photivo $$APPVERSION")
+
+#------------------------------------------------------------------------------
+#--- Qt configuration ---
+QT += core gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets # For later. Qt 5 is completely untested.
+
+TEMPLATE     = app
+TARGET       = photivo
+CONFIG      += silent
+
+DESTDIR = ..
+
+!release {
+  CONFIG += console
+}
+
+isEmpty(PREFIX) {
+  PREFIX = $$[QT_INSTALL_PREFIX]
+}
+
+win32 {
+  QT       += network
+  CONFIG   += link_pkgconfig
+  RC_FILE   = photivo.rc
+}
 
 unix {
-  DESTDIR = ..
-  OBJECTS_DIR = ../Objects
-  MOC_DIR = ../Objects
-  UI_HEADERS_DIR = ../Objects
-  RCC_DIR = ../Objects
+  QT         += network
+  CONFIG     += link_pkgconfig
 }
+
+#------------------------------------------------------------------------------
+#--- Compiler and linker configuration ---
+
+# * Add path to sources folder to the include search paths.
+#   Necessary for GCC to find the .h files of (in Designer) promoted widgets.
+#   When you promote widgets you must specify the .h relative to the "Sources" folder.
+# * Pull in additional include paths from the custom INCLUDEPATHS environment variable.
+INCLUDEPATH += $${_PRO_FILE_PWD_}/../Sources $$(INCLUDEPATHS)
+
+# The APPVERSION string has a space in it, i.e. it cannot go into DEFINES
+COMPILERFLAGS_ALL = -ffast-math -DAPPVERSION=\'$${APPVERSION}\'
+
+# Flags from the environment must be pulled in explicitely like this appended them
+# at the end of the flags. Needed to ensure that user-settings from the environment
+# have the highest priority and are not overwritten by default from QMake.
+QMAKE_CXXFLAGS_RELEASE += -funroll-loops -ftree-vectorize -fopenmp $$(CXXFLAGS)
+QMAKE_CFLAGS_RELEASE   += $$(CFLAGS)
+QMAKE_LFLAGS_RELEASE   += $$(LDFLAGS)
+QMAKE_CXXFLAGS_DEBUG   += $$(CXXFLAGS)
+QMAKE_CFLAGS_DEBUG     += $$(CFLAGS)
+QMAKE_LFLAGS_DEBUG     += $$(LDFLAGS)
+
+QMAKE_CXXFLAGS += $${COMPILERFLAGS_ALL} -std=gnu++0x
+QMAKE_CFLAGS   += $${COMPILERFLAGS_ALL}
+QMAKE_LFLAGS   += $${COMPILERFLAGS_ALL}
+
+LIBS += -lgomp -lpthread \
+        -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun
+
 win32 {
-  BUILDDIR = $$system(cat ../builddir)
-  DESTDIR = ../$${BUILDDIR}
-  OBJECTS_DIR = ../$${BUILDDIR}/Objects
-  MOC_DIR = ../$${BUILDDIR}/Objects
-  UI_HEADERS_DIR = ../$${BUILDDIR}/Objects
-  RCC_DIR = ../$${BUILDDIR}/Objects
+  PKGCONFIG += GraphicsMagick++ GraphicsMagickWand lqr-1
+  LIBS      += libole32 -lwsock32 -lgdi32 -lexpat -liconv
 }
-#prevent qmake from adding -arch flags
-macx{
-  QMAKE_CFLAGS_X86_64 =-m64
-  QMAKE_CXXFLAGS_X86_64 =-m64
-  QMAKE_OBJECTIVE_CFLAGS_X86_64 =-m64
-  QMAKE_LFLAGS_X86_64 =-headerpad_max_install_names
-}
-
-# Stuff for liquid rescale
-QMAKE_CFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)
-QMAKE_CFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
-QMAKE_CXXFLAGS_RELEASE += $$system(pkg-config --cflags-only-I lqr-1)
-QMAKE_CXXFLAGS_DEBUG += $$system(pkg-config --cflags-only-I lqr-1)
-LIBS += $$system(pkg-config --libs-only-l lqr-1)
-
-QMAKE_CXXFLAGS_DEBUG += -DDLRAW_HAVE_GIMP -ffast-math -O0 -g
-QMAKE_CXXFLAGS_RELEASE += -O3 -ftree-vectorize -fopenmp -ffast-math -DDLRAW_HAVE_GIMP
-QMAKE_CFLAGS_DEBUG += -ffast-math -O0 -g -DDLRAW_HAVE_GIMP
-QMAKE_CFLAGS_RELEASE += -O3 -ftree-vectorize -fopenmp -ffast-math -DDLRAW_HAVE_GIMP -fopenmp
-QMAKE_LFLAGS_DEBUG += -rdynamic
-
-APPVERSION = $$system(sh ./get_appversion)
-!build_pass:message("Photivo $${APPVERSION}")
-QMAKE_CXXFLAGS_DEBUG += -DAPPVERSION=\'$${APPVERSION}\'
-QMAKE_CXXFLAGS_RELEASE += -DAPPVERSION=\'$${APPVERSION}\'
-QMAKE_CFLAGS_DEBUG += -DAPPVERSION=\'$${APPVERSION}\'
-QMAKE_CFLAGS_RELEASE += -DAPPVERSION=\'$${APPVERSION}\'
-
-LIBS += -ljpeg -llcms2 -lexiv2 -lfftw3 -llensfun -lgomp -lpthread
 
 unix {
-  CONFIG += link_pkgconfig
-  PKGCONFIG += GraphicsMagick++ GraphicsMagickWand
-  LIBS += $$system(GraphicsMagick++-config --libs)
-  QMAKE_CC = ccache /usr/bin/gcc
-  QMAKE_CXX = ccache /usr/bin/g++
-  PREFIX = $$system(cat ./install_prefix)
-  QMAKE_CXXFLAGS_DEBUG += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
-  QMAKE_CXXFLAGS_RELEASE += -DPREFIX=$${PREFIX} -I$${PREFIX}/include $$(CXXFLAGS)
-  QMAKE_CFLAGS_DEBUG += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  QMAKE_CFLAGS_RELEASE += -DPREFIX=$${PREFIX} -L$${PREFIX}/lib $$(CFLAGS)
-  #QMAKE_POST_LINK=strip $(TARGET)
-  QT += network
-}
-win32 {
-  QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS)
-  QMAKE_CXXFLAGS_RELEASE += $$(CXXFLAGS)
-  QMAKE_CFLAGS_DEBUG += $$(CFLAGS)
-  QMAKE_CFLAGS_RELEASE += $$(CFLAGS)
-  QMAKE_LFLAGS_DEBUG += $$(LDFLAGS)
-  QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
-  LIBS += -lGraphicsMagick++ -lGraphicsMagickWand -lGraphicsMagick
-  LIBS += -lwsock32 -lexpat -lregex -lgdi32 -liconv
-  #for EcWin7
-  LIBS += libole32
+  DEFINES            += PREFIX=$${PREFIX}
+  PKGCONFIG          += GraphicsMagick++ GraphicsMagickWand lqr-1
+  LIBS               += $$system(GraphicsMagick++-config --libs)
+  QMAKE_LFLAGS_DEBUG += -rdynamic
   
-  RC_FILE = photivo.rc
-  #CONFIG += console
-  QT += network
-
-  HEADERS +=  ../Sources/ptEcWin7.h \
-              ../Sources/ptWinApi.h
-  SOURCES +=  ../Sources/ptEcWin7.cpp \
-              ../Sources/ptWinApi.cpp
+  # use a CImg include provided by the system instead of the local copy
+  CONFIG(WithSystemCImg) {
+    PKGCONFIG += CImg
+    DEFINES   += SYSTEM_CIMG
+    system(echo "Using system supplied CImg library")
+  }
 }
+
 macx {
-  PKGCONFIG += lcms2
-  LIBS += $$system(pkg-config --libs lcms2)
-  QMAKE_CC = /usr/bin/gcc
-  QMAKE_CXX = /usr/bin/g++
-  LIBS += -framework QtCore
-  LIBS += -framework QtGui
-  LIBS += -framework QtNetwork
+  PKGCONFIG += lcms2 lqr-1
+
+  # prevent qmake from adding -arch flags
+  QMAKE_CFLAGS_X86_64           = -m64
+  QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x
+  QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
+  QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
+
+  LIBS += -framework QtCore -framework QtGui -framework QtNetwork
 }
 
-# Input
-HEADERS += ../Sources/ptAdobeTable.h \
-    ../Sources/ptReportOverlay.h \
-    ../Sources/ptImageInteraction.h \
-    ../Sources/ptLineInteraction.h \
-    ../Sources/ptSimpleRectInteraction.h \
-    ../Sources/ptRichRectInteraction.h \
-    ../Sources/ptGridInteraction.h \
-    ../Sources/filemgmt/ptFileMgrWindow.h \
-    ../Sources/filemgmt/ptFileMgrDM.h \
-    ../Sources/filemgmt/ptThumbnailer.h \
-    ../Sources/filemgmt/ptThumbnailCache.h \
-    ../Sources/ptConfirmRequest.h \
-    ../Sources/filemgmt/ptGraphicsThumbGroup.h \
-    ../Sources/filemgmt/ptGraphicsSceneEmitter.h \
+#------------------------------------------------------------------------------
+#--- Workarounds ---
+
+!contains(QMAKE_HOST.arch, x86_64) {
+  QMAKE_CXXFLAGS += -march=i686
+  QMAKE_CFLAGS   += -march=i686
+}
+
+contains(LIBS, -llcms) {
+  LIBS -= -llcms
+}
+
+#------------------------------------------------------------------------------
+#--- Sources ---
+
+HEADERS += \
+    ../Sources/batch/ptBatchWindow.h \
+    ../Sources/batch/ptJobListItem.h \
+    ../Sources/batch/ptJobListModel.h \
+    ../Sources/fastbilateral/array.h \
+    ../Sources/fastbilateral/array_n.h \
+    ../Sources/fastbilateral/chrono.h \
+    ../Sources/fastbilateral/fast_lbf.h \
+    ../Sources/fastbilateral/geom.h \
+    ../Sources/fastbilateral/math_tools.h \
+    ../Sources/fastbilateral/mixed_vector.h \
+    ../Sources/fastbilateral/msg_stream.h \
     ../Sources/filemgmt/ptAbstractThumbnailLayouter.h \
-    ../Sources/filemgmt/ptGridThumbnailLayouter.h \
-    ../Sources/filemgmt/ptRowGridThumbnailLayouter.h \
     ../Sources/filemgmt/ptColumnGridThumbnailLayouter.h \
-    ../Sources/filemgmt/ptSingleDirModel.h \
     ../Sources/filemgmt/ptFileMgrConstants.h \
-    ../Sources/ptImageLoader.h \
-    ../Sources/filemgmt/ptImageView.h
-HEADERS += ../Sources/ptParseCli.h
-HEADERS += ../Sources/ptCalloc.h
-HEADERS += ../Sources/ptChannelMixer.h
-HEADERS += ../Sources/ptCheck.h
-HEADERS += ../Sources/ptChoice.h
-HEADERS += ../Sources/ptCimg.h
-HEADERS += ../Sources/ptConstants.h
-HEADERS += ../Sources/ptCurve.h
-HEADERS += ../Sources/ptCurveWindow.h
-HEADERS += ../Sources/ptDcRaw.h
-HEADERS += ../Sources/ptDefines.h
-HEADERS += ../Sources/ptError.h
-HEADERS += ../Sources/ptFastBilateral.h
-HEADERS += ../Sources/ptGroupBox.h
-HEADERS += ../Sources/ptGuiOptions.h
-HEADERS += ../Sources/ptHistogramWindow.h
-HEADERS += ../Sources/ptImage.h
-HEADERS += ../Sources/ptImage8.h
-HEADERS += ../Sources/ptInput.h
-HEADERS += ../Sources/ptKernel.h
-#HEADERS += ../Sources/ptLensfun.h
-HEADERS += ../Sources/ptMainWindow.h
-HEADERS += ../Sources/ptProcessor.h
-HEADERS += ../Sources/ptRefocusMatrix.h
-HEADERS += ../Sources/ptResizeFilters.h
-HEADERS += ../Sources/ptRGBTemperature.h
-HEADERS += ../Sources/ptSettings.h
-HEADERS += ../Sources/ptTheme.h
-HEADERS += ../Sources/ptViewWindow.h
-HEADERS += ../Sources/ptVisibleToolsView.h
-HEADERS += ../Sources/ptWhiteBalances.h
-HEADERS += ../Sources/ptWiener.h
-HEADERS += ../Sources/clapack/blaswrap.h
-HEADERS += ../Sources/ptSlider.h
-HEADERS += ../Sources/qtsingleapplication/qtsingleapplication.h
-HEADERS += ../Sources/qtsingleapplication/qtlocalpeer.h
-HEADERS += ../Sources/qtsingleapplication/qtlockedfile.h
-HEADERS += ../Sources/clapack/clapack.h
-HEADERS += ../Sources/clapack/fio.h
-HEADERS += ../Sources/clapack/fmt.h
-HEADERS += ../Sources/clapack/fp.h
-HEADERS += ../Sources/fastbilateral/array.h
-HEADERS += ../Sources/fastbilateral/fast_lbf.h
-HEADERS += ../Sources/fastbilateral/math_tools.h
-HEADERS += ../Sources/fastbilateral/mixed_vector.h
-HEADERS += ../Sources/greyc/CImg.h
-HEADERS += ../Sources/ptMessageBox.h
+    ../Sources/filemgmt/ptFileMgrDM.h \
+    ../Sources/filemgmt/ptFileMgrWindow.h \
+    ../Sources/filemgmt/ptGraphicsSceneEmitter.h \
+    ../Sources/filemgmt/ptGraphicsThumbGroup.h \
+    ../Sources/filemgmt/ptGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptImageView.h \
+    ../Sources/filemgmt/ptPathBar.h \
+    ../Sources/filemgmt/ptRowGridThumbnailLayouter.h \
+    ../Sources/filemgmt/ptSingleDirModel.h \
+    ../Sources/filemgmt/ptTagList.h \
+    ../Sources/filemgmt/ptTagModel.h \
+    ../Sources/filemgmt/ptThumbCache.h \
+    ../Sources/filters/imagespot/ptFilter_SpotTuning.h \
+    ../Sources/filters/imagespot/ptImageSpot.h \
+    ../Sources/filters/imagespot/ptImageSpotEditor.h \
+    ../Sources/filters/imagespot/ptImageSpotItemDelegate.h \
+    ../Sources/filters/imagespot/ptImageSpotList.h \
+    ../Sources/filters/imagespot/ptImageSpotModel.h \
+    ../Sources/filters/imagespot/ptSpotInteraction.h \
+    ../Sources/filters/imagespot/ptSpotListWidget.h \
+    ../Sources/filters/imagespot/ptTuningSpot.h \
+    ../Sources/filters/ptCfgItem.h \
+    ../Sources/filters/ptFilter_ABCurves.h \
+    ../Sources/filters/ptFilter_Brightness.h \
+    ../Sources/filters/ptFilter_ColorBoost.h \
+    ../Sources/filters/ptFilter_ColorContrast.h \
+    ../Sources/filters/ptFilter_ColorEnhancement.h \
+    ../Sources/filters/ptFilter_ColorIntensity.h \
+    ../Sources/filters/ptFilter_DetailCurve.h \
+    ../Sources/filters/ptFilter_Drc.h \
+    ../Sources/filters/ptFilter_GammaTool.h \
+    ../Sources/filters/ptFilter_Highlights.h \
+    ../Sources/filters/ptFilter_LabTransform.h \
+    ../Sources/filters/ptFilter_Levels.h \
+    ../Sources/filters/ptFilter_LMHRecovery.h \
+    ../Sources/filters/ptFilter_LumaDenoiseCurve.h \
+    ../Sources/filters/ptFilter_LumaSatAdjust.h \
+    ../Sources/filters/ptFilter_Normalization.h \
+    ../Sources/filters/ptFilter_Outline.h \
+    ../Sources/filters/ptFilter_ReinhardBrighten.h \
+    ../Sources/filters/ptFilter_SatCurve.h \
+    ../Sources/filters/ptFilter_Saturation.h \
+    ../Sources/filters/ptFilter_ShadowsHighlights.h \
+    ../Sources/filters/ptFilter_SigContrast.h \
+    ../Sources/filters/ptFilter_StdCurve.h \
+    ../Sources/filters/ptFilter_Tone.h \
+    ../Sources/filters/ptFilter_ToneAdjust.h \
+    ../Sources/filters/ptFilter_Wiener.h \
+    ../Sources/filters/ptFilterBase.h \
+    ../Sources/filters/ptFilterConfig.h \
+    ../Sources/filters/ptFilterDM.h \
+    ../Sources/filters/ptFilterFactory.h \
+    ../Sources/filters/ptFilterUids.h \
+    ../Sources/ptStorable.h \
+    ../Sources/greyc/CImg.h \
+    ../Sources/ptAbstractInteraction.h \
+    ../Sources/ptAdobeTable.h \
+    ../Sources/ptCalloc.h \
+    ../Sources/ptChannelMixer.h \
+    ../Sources/ptCheck.h \
+    ../Sources/ptChoice.h \
+    ../Sources/ptCimg.h \
+    ../Sources/ptConfirmRequest.h \
+    ../Sources/ptConstants.h \
+    ../Sources/ptCurve.h \
+    ../Sources/ptCurveWindow.h \
+    ../Sources/ptDcRaw.h \
+    ../Sources/ptDefines.h \
+    ../Sources/ptError.h \
+    ../Sources/ptFastBilateral.h \
+    ../Sources/ptGridInteraction.h \
+    ../Sources/ptGroupBox.h \
+    ../Sources/ptGuiOptions.h \
+    ../Sources/ptHistogramWindow.h \
+    ../Sources/ptImage.h \
+    ../Sources/ptImage8.h \
+    ../Sources/ptImageHelper.h \
+    ../Sources/ptInfo.h \
+    ../Sources/ptInput.h \
+    ../Sources/ptKernel.h \
+    ../Sources/ptLensfun.h \
+    ../Sources/ptLineInteraction.h \
+    ../Sources/ptMainWindow.h \
+    ../Sources/ptMessageBox.h \
+    ../Sources/ptParseCli.h \
+    ../Sources/ptProcessor.h \
+    ../Sources/ptReportOverlay.h \
+    ../Sources/ptResizeFilters.h \
+    ../Sources/ptRGBTemperature.h \
+    ../Sources/ptRichRectInteraction.h \
+    ../Sources/ptSettings.h \
+    ../Sources/ptSimpleRectInteraction.h \
+    ../Sources/ptSlider.h \
+    ../Sources/ptTempFile.h \
+    ../Sources/ptTempFilterBase.h \
+    ../Sources/ptTheme.h \
+    ../Sources/ptToolBox.h \
+    ../Sources/ptViewWindow.h \
+    ../Sources/ptVisibleToolsView.h \
+    ../Sources/ptWhiteBalances.h \
+    ../Sources/ptWidget.h \
+    ../Sources/ptWiener.h \
+    ../Sources/qtsingleapplication/qtlocalpeer.h \
+    ../Sources/qtsingleapplication/qtlockedfile.h \
+    ../Sources/qtsingleapplication/qtsingleapplication.h \
+    ../Sources/ptUtils_Storage.h \
+    ../Sources/ptUtils.h \
+    ../Sources/filemgmt/ptThumbDefines.h \
+    ../Sources/ptMutexLocker.h \
+    ../Sources/filemgmt/ptThumbGenMgr.h \
+    ../Sources/filemgmt/ptThumbGenWorker.h \
+    ../Sources/filemgmt/ptThumbGenHelpers.h
 
-SOURCES += ../Sources/ptCalloc.cpp \
-    ../Sources/ptReportOverlay.cpp \
-    ../Sources/ptImageInteraction.cpp \
-    ../Sources/ptLineInteraction.cpp \
-    ../Sources/ptSimpleRectInteraction.cpp \
-    ../Sources/ptRichRectInteraction.cpp \
-    ../Sources/ptGridInteraction.cpp \
-    ../Sources/filemgmt/ptFileMgrWindow.cpp \
-    ../Sources/filemgmt/ptFileMgrDM.cpp \
-    ../Sources/filemgmt/ptThumbnailer.cpp \
-    ../Sources/filemgmt/ptThumbnailCache.cpp \
-    ../Sources/ptConfirmRequest.cpp \
-    ../Sources/filemgmt/ptGraphicsThumbGroup.cpp \
-    ../Sources/filemgmt/ptGraphicsSceneEmitter.cpp \
-    ../Sources/filemgmt/ptGridThumbnailLayouter.cpp \
-    ../Sources/filemgmt/ptRowGridThumbnailLayouter.cpp \
+SOURCES += \
+    ../Sources/batch/ptBatchWindow.cpp \
+    ../Sources/batch/ptJobListItem.cpp \
+    ../Sources/batch/ptJobListModel.cpp \
+    ../Sources/dcb/dcb_demosaicing.c \
     ../Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptFileMgrDM.cpp \
+    ../Sources/filemgmt/ptFileMgrWindow.cpp \
+    ../Sources/filemgmt/ptGraphicsSceneEmitter.cpp \
+    ../Sources/filemgmt/ptGraphicsThumbGroup.cpp \
+    ../Sources/filemgmt/ptGridThumbnailLayouter.cpp \
+    ../Sources/filemgmt/ptImageView.cpp \
+    ../Sources/filemgmt/ptPathBar.cpp \
+    ../Sources/filemgmt/ptRowGridThumbnailLayouter.cpp \
     ../Sources/filemgmt/ptSingleDirModel.cpp \
-    ../Sources/ptImageLoader.cpp \
-    ../Sources/filemgmt/ptImageView.cpp
-SOURCES += ../Sources/ptParseCli.cpp
-SOURCES += ../Sources/ptChannelMixer.cpp
-SOURCES += ../Sources/ptCheck.cpp
-SOURCES += ../Sources/ptChoice.cpp
-SOURCES += ../Sources/ptCimg.cpp
-SOURCES += ../Sources/ptCurve.cpp
-SOURCES += ../Sources/ptCurveWindow.cpp
-SOURCES += ../Sources/ptDcRaw.cpp
-SOURCES += ../Sources/ptError.cpp
-SOURCES += ../Sources/ptFastBilateral.cpp
-SOURCES += ../Sources/ptGroupBox.cpp
-SOURCES += ../Sources/ptGuiOptions.cpp
-SOURCES += ../Sources/ptHistogramWindow.cpp
-SOURCES += ../Sources/ptImage.cpp
-SOURCES += ../Sources/ptImage_Cimg.cpp
-SOURCES += ../Sources/ptImage_DRC.cpp
-SOURCES += ../Sources/ptImage_EAW.cpp
-SOURCES += ../Sources/ptImage_GM.cpp
-SOURCES += ../Sources/ptImage_GMC.cpp
-SOURCES += ../Sources/ptImage_Lensfun.cpp
-SOURCES += ../Sources/ptImage_Lqr.cpp
-SOURCES += ../Sources/ptImage_Pyramid.cpp
-SOURCES += ../Sources/ptImage8.cpp
-SOURCES += ../Sources/ptInput.cpp
-SOURCES += ../Sources/ptKernel.cpp
-#SOURCES += ../Sources/ptLensfun.cpp
-SOURCES += ../Sources/ptMain.cpp
-SOURCES += ../Sources/ptMainWindow.cpp
-SOURCES += ../Sources/ptProcessor.cpp
-SOURCES += ../Sources/ptRefocusMatrix.cpp
-SOURCES += ../Sources/ptResizeFilters.cpp
-SOURCES += ../Sources/ptRGBTemperature.cpp
-SOURCES += ../Sources/ptSettings.cpp
-SOURCES += ../Sources/ptTheme.cpp
-SOURCES += ../Sources/ptViewWindow.cpp
-SOURCES += ../Sources/ptVisibleToolsView.cpp
-SOURCES += ../Sources/ptWhiteBalances.cpp
-SOURCES += ../Sources/ptWiener.cpp
-SOURCES += ../Sources/ptSlider.cpp
-SOURCES += ../Sources/qtsingleapplication/qtsingleapplication.cpp
-SOURCES += ../Sources/qtsingleapplication/qtlocalpeer.cpp
-SOURCES += ../Sources/qtsingleapplication/qtlockedfile.cpp
-SOURCES += ../Sources/clapack/abort_.c
-SOURCES += ../Sources/clapack/close.c
-SOURCES += ../Sources/clapack/dgemm.c
-SOURCES += ../Sources/clapack/dger.c
-SOURCES += ../Sources/clapack/dgesv.c
-SOURCES += ../Sources/clapack/dgetf2.c
-SOURCES += ../Sources/clapack/dgetrf.c
-SOURCES += ../Sources/clapack/dgetrs.c
-SOURCES += ../Sources/clapack/dscal.c
-SOURCES += ../Sources/clapack/dswap.c
-SOURCES += ../Sources/clapack/dtrsm.c
-SOURCES += ../Sources/clapack/endfile.c
-SOURCES += ../Sources/clapack/err.c
-SOURCES += ../Sources/clapack/fmt.c
-SOURCES += ../Sources/clapack/fmtlib.c
-SOURCES += ../Sources/clapack/idamax.c
-SOURCES += ../Sources/clapack/ieeeck.c
-SOURCES += ../Sources/clapack/ilaenv.c
-SOURCES += ../Sources/clapack/lsame.c
-SOURCES += ../Sources/clapack/open.c
-SOURCES += ../Sources/clapack/ptaswp.c
-SOURCES += ../Sources/clapack/s_cmp.c
-SOURCES += ../Sources/clapack/s_copy.c
-SOURCES += ../Sources/clapack/s_stop.c
-SOURCES += ../Sources/clapack/sfe.c
-SOURCES += ../Sources/clapack/sig_die.c
-SOURCES += ../Sources/clapack/util.c
-SOURCES += ../Sources/clapack/wref.c
-SOURCES += ../Sources/clapack/wrtfmt.c
-SOURCES += ../Sources/clapack/wsfe.c
-SOURCES += ../Sources/clapack/xerbla.c
-SOURCES += ../Sources/dcb/dcb_demosaicing_old.c
-SOURCES += ../Sources/dcb/dcb_demosaicing.c
-SOURCES += ../Sources/perfectraw/lmmse_interpolate.c
-SOURCES += ../Sources/rawtherapee/amaze_interpolate.c
-SOURCES += ../Sources/rawtherapee/ca_correct.c
-SOURCES += ../Sources/rawtherapee/cfa_line_dn.c
-SOURCES += ../Sources/rawtherapee/green_equil.c
-SOURCES += ../Sources/vcd/ahd_interpolate_mod.c
-SOURCES += ../Sources/vcd/ahd_partial_interpolate.c
-SOURCES += ../Sources/vcd/es_median_filter.c
-SOURCES += ../Sources/vcd/median_filter_new.c
-SOURCES += ../Sources/vcd/refinement.c
-SOURCES += ../Sources/vcd/vcd_interpolate.c
+    ../Sources/filemgmt/ptTagList.cpp \
+    ../Sources/filemgmt/ptTagModel.cpp \
+    ../Sources/filemgmt/ptThumbCache.cpp \
+    ../Sources/filters/imagespot/ptFilter_SpotTuning.cpp \
+    ../Sources/filters/imagespot/ptImageSpot.cpp \
+    ../Sources/filters/imagespot/ptImageSpotEditor.cpp \
+    ../Sources/filters/imagespot/ptImageSpotItemDelegate.cpp \
+    ../Sources/filters/imagespot/ptImageSpotList.cpp \
+    ../Sources/filters/imagespot/ptImageSpotModel.cpp \
+    ../Sources/filters/imagespot/ptSpotInteraction.cpp \
+    ../Sources/filters/imagespot/ptSpotListWidget.cpp \
+    ../Sources/filters/imagespot/ptTuningSpot.cpp \
+    ../Sources/filters/ptCfgItem.cpp \
+    ../Sources/filters/ptFilter_ABCurves.cpp \
+    ../Sources/filters/ptFilter_Brightness.cpp \
+    ../Sources/filters/ptFilter_ColorBoost.cpp \
+    ../Sources/filters/ptFilter_ColorContrast.cpp \
+    ../Sources/filters/ptFilter_ColorEnhancement.cpp \
+    ../Sources/filters/ptFilter_ColorIntensity.cpp \
+    ../Sources/filters/ptFilter_DetailCurve.cpp \
+    ../Sources/filters/ptFilter_Drc.cpp \
+    ../Sources/filters/ptFilter_GammaTool.cpp \
+    ../Sources/filters/ptFilter_Highlights.cpp \
+    ../Sources/filters/ptFilter_LabTransform.cpp \
+    ../Sources/filters/ptFilter_Levels.cpp \
+    ../Sources/filters/ptFilter_LMHRecovery.cpp \
+    ../Sources/filters/ptFilter_LumaDenoiseCurve.cpp \
+    ../Sources/filters/ptFilter_LumaSatAdjust.cpp \
+    ../Sources/filters/ptFilter_Normalization.cpp \
+    ../Sources/filters/ptFilter_Outline.cpp \
+    ../Sources/filters/ptFilter_ReinhardBrighten.cpp \
+    ../Sources/filters/ptFilter_SatCurve.cpp \
+    ../Sources/filters/ptFilter_Saturation.cpp \
+    ../Sources/filters/ptFilter_ShadowsHighlights.cpp \
+    ../Sources/filters/ptFilter_SigContrast.cpp \
+    ../Sources/filters/ptFilter_StdCurve.cpp \
+    ../Sources/filters/ptFilter_Tone.cpp \
+    ../Sources/filters/ptFilter_ToneAdjust.cpp \
+    ../Sources/filters/ptFilter_Wiener.cpp \
+    ../Sources/filters/ptFilterBase.cpp \
+    ../Sources/filters/ptFilterConfig.cpp \
+    ../Sources/filters/ptFilterDM.cpp \
+    ../Sources/filters/ptFilterFactory.cpp \
+    ../Sources/perfectraw/lmmse_interpolate.c \
+    ../Sources/ptAbstractInteraction.cpp \
+    ../Sources/ptCalloc.cpp \
+    ../Sources/ptChannelMixer.cpp \
+    ../Sources/ptCheck.cpp \
+    ../Sources/ptChoice.cpp \
+    ../Sources/ptCimg.cpp \
+    ../Sources/ptConfirmRequest.cpp \
+    ../Sources/ptCurve.cpp \
+    ../Sources/ptCurveWindow.cpp \
+    ../Sources/ptDcRaw.cpp \
+    ../Sources/ptError.cpp \
+    ../Sources/ptFastBilateral.cpp \
+    ../Sources/ptGridInteraction.cpp \
+    ../Sources/ptGroupBox.cpp \
+    ../Sources/ptGuiOptions.cpp \
+    ../Sources/ptHistogramWindow.cpp \
+    ../Sources/ptImage.cpp \
+    ../Sources/ptImage_Cimg.cpp \
+    ../Sources/ptImage_DRC.cpp \
+    ../Sources/ptImage_EAW.cpp \
+    ../Sources/ptImage_GM.cpp \
+    ../Sources/ptImage_GMC.cpp \
+    ../Sources/ptImage_Lensfun.cpp \
+    ../Sources/ptImage_Lqr.cpp \
+    ../Sources/ptImage_Pyramid.cpp \
+    ../Sources/ptImage8.cpp \
+    ../Sources/ptImageHelper.cpp \
+    ../Sources/ptInfo.cpp \
+    ../Sources/ptInput.cpp \
+    ../Sources/ptKernel.cpp \
+    ../Sources/ptLensfun.cpp \
+    ../Sources/ptLineInteraction.cpp \
+    ../Sources/ptMain.cpp \
+    ../Sources/ptMainWindow.cpp \
+    ../Sources/ptMessageBox.cpp \
+    ../Sources/ptParseCli.cpp \
+    ../Sources/ptProcessor.cpp \
+    ../Sources/ptReportOverlay.cpp \
+    ../Sources/ptResizeFilters.cpp \
+    ../Sources/ptRGBTemperature.cpp \
+    ../Sources/ptRichRectInteraction.cpp \
+    ../Sources/ptSettings.cpp \
+    ../Sources/ptSimpleRectInteraction.cpp \
+    ../Sources/ptSlider.cpp \
+    ../Sources/ptTempFile.cpp \
+    ../Sources/ptTempFilterBase.cpp \
+    ../Sources/ptTheme.cpp \
+    ../Sources/ptToolBox.cpp \
+    ../Sources/ptViewWindow.cpp \
+    ../Sources/ptVisibleToolsView.cpp \
+    ../Sources/ptWhiteBalances.cpp \
+    ../Sources/ptWidget.cpp \
+    ../Sources/ptWiener.cpp \
+    ../Sources/qtsingleapplication/qtlocalpeer.cpp \
+    ../Sources/qtsingleapplication/qtlockedfile.cpp \
+    ../Sources/qtsingleapplication/qtlockedfile_unix.cpp \
+    ../Sources/qtsingleapplication/qtlockedfile_win.cpp \
+    ../Sources/qtsingleapplication/qtsingleapplication.cpp \
+    ../Sources/rawtherapee/amaze_interpolate.c \
+    ../Sources/rawtherapee/ca_correct.c \
+    ../Sources/rawtherapee/cfa_line_dn.c \
+    ../Sources/rawtherapee/green_equil.c \
+    ../Sources/vcd/ahd_interpolate_mod.c \
+    ../Sources/vcd/ahd_partial_interpolate.c \
+    ../Sources/vcd/es_median_filter.c \
+    ../Sources/vcd/median_filter_new.c \
+    ../Sources/vcd/refinement.c \
+    ../Sources/vcd/vcd_interpolate.c \
+    ../Sources/ptUtils_Storage.cpp \
+    ../Sources/ptStorable.cpp \
+    ../Sources/ptUtils.cpp \
+    ../Sources/filemgmt/ptThumbDefines.cpp \
+    ../Sources/ptMutexLocker.cpp \
+    ../Sources/filemgmt/ptThumbGenMgr.cpp \
+    ../Sources/filemgmt/ptThumbGenWorker.cpp \
+    ../Sources/filemgmt/ptThumbGenHelpers.cpp
 
-FORMS   += ../Sources/ptMainWindow.ui \
-           ../Sources/filemgmt/ptFileMgrWindow.ui
+FORMS += \
+    ../Sources/batch/ptBatchWindow.ui \
+    ../Sources/filemgmt/ptFileMgrWindow.ui \
+    ../Sources/filters/imagespot/ptFilter_SpotTuning.ui \
+    ../Sources/filters/imagespot/ptSpotListWidget.ui \
+    ../Sources/filters/ptFilter_ColorIntensity.ui \
+    ../Sources/filters/ptFilter_LMHRecovery.ui \
+    ../Sources/filters/ptFilter_Outline.ui \
+    ../Sources/filters/ptFilter_Tone.ui \
+    ../Sources/filters/ptFilter_Wiener.ui \
+    ../Sources/ptMainWindow.ui
 
-RESOURCES += ../photivo.qrc
+win32 {
+  HEADERS += ../Sources/ptEcWin7.h \
+             ../Sources/ptWinApi.h
+  SOURCES += ../Sources/ptEcWin7.cpp \
+             ../Sources/ptWinApi.cpp
+}
 
-SOURCES += ../Sources/ptMessageBox.cpp
-RESOURCES = ../qrc/photivo.qrc
+RESOURCES += ../qrc/photivo.qrc
+
 TRANSLATIONS += ../Translations/photivo_Dutch.ts
+TRANSLATIONS += ../Translations/photivo_French.ts
 TRANSLATIONS += ../Translations/photivo_German.ts
 TRANSLATIONS += ../Translations/photivo_Italian.ts
+TRANSLATIONS += ../Translations/photivo_Polish.ts
 TRANSLATIONS += ../Translations/photivo_Russian.ts
-TRANSLATIONS += ../Translations/photivo_French.ts
-
-# Include PRO file for special local system specific settings, e.g.
-# additional include paths for MinGW installations on Windows.
-# These settings are only valid for one individual computer.
-# Because of that local-system-specific.pro is not version controlled.
-exists(../local-system-specific.pro) {
-  include(../local-system-specific.pro)
-}
-
-###############################################################################
+TRANSLATIONS += ../Translations/photivo_Spanish.ts
+TRANSLATIONS += ../Translations/photivo_Czech.ts

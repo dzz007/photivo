@@ -1,0 +1,778 @@
+======3rd Party Library/Code Licences======
+
+=====Dependecies=====
+
+Below are the licence terms of the libraries Photivo links to dynamically.
+
+
+===GNU gettext===
+
+| Project website | http://www.gnu.org/software/gettext/gettext.html |
+| Source code     | http://ftp.gnu.org/gnu/gettext/                  |
+
+> Copyright © 1995-1997, 2000-2007 Free Software Foundation, Inc. License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+> This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.
+
+
+===Glib===
+
+| Project website | http://www.gtk.org/                     |
+| Source code     | http://library.gnome.org/devel/glib/    |
+
+> GLIB - Library of useful routines for C programming
+> Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald
+>
+> GAsyncQueue: asynchronous queue implementation, based on GQueue.
+> Copyright (C) 2000 Sebastian Wilhelmi; University of Karlsruhe
+>
+> This library is free software; you can redistribute it and/or
+> modify it under the terms of the GNU Lesser General Public
+> License as published by the Free Software Foundation; either
+> version 2 of the License, or (at your option) any later version.
+>
+> This library is distributed in the hope that it will be useful,
+> but WITHOUT ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> Lesser General Public License for more details.
+>
+> You should have received a copy of the GNU Lesser General Public
+> License along with this library; if not, write to the
+> Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+> Boston, MA 02111-1307, USA.
+
+
+===Qt===
+
+| Project website | http://qt-project.org/                      |
+| Source code     | http://releases.qt-project.org/qt4/source/  |
+
+> Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
+> All rights reserved.
+> Contact: Nokia Corporation (qt-info@nokia.com)
+>
+> This file is part of the QtCore module of the Qt Toolkit.
+>
+> $QT_BEGIN_LICENSE:LGPL$
+> GNU Lesser General Public License Usage
+> This file may be used under the terms of the GNU Lesser General Public
+> License version 2.1 as published by the Free Software Foundation and
+> appearing in the file LICENSE.LGPL included in the packaging of this
+> file. Please review the following information to ensure the GNU Lesser
+> General Public License version 2.1 requirements will be met:
+> http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+>
+> In addition, as a special exception, Nokia gives you certain additional
+> rights. These rights are described in the Nokia Qt LGPL Exception
+> version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+>
+> GNU General Public License Usage
+> Alternatively, this file may be used under the terms of the GNU General
+> Public License version 3.0 as published by the Free Software Foundation
+> and appearing in the file LICENSE.GPL included in the packaging of this
+> file. Please review the following information to ensure the GNU General
+> Public License version 3.0 requirements will be met:
+> http://www.gnu.org/copyleft/gpl.html.
+>
+> Other Usage
+> Alternatively, this file may be used in accordance with the terms and
+> conditions contained in a signed written agreement between you and Nokia.
+
+> Nokia Qt LGPL Exception version 1.1
+> 
+> As an additional permission to the GNU Lesser General Public License version
+> 2.1, the object code form of a "work that uses the Library" may incorporate
+> material from a header file that is part of the Library.  You may distribute
+> such object code under terms of your choice, provided that:
+>     (i)   the header files of the Library have not been modified; and 
+>     (ii)  the incorporated material is limited to numerical parameters, data
+>           structure layouts, accessors, macros, inline functions and
+>           templates; and
+>     (iii) you comply with the terms of Section 6 of the GNU Lesser General
+>           Public License version 2.1.
+> 
+> Moreover, you may apply this exception to a modified version of the Library,
+> provided that such modification does not involve copying material from the
+> Library into the modified Library's header files unless such material is
+> limited to (i) numerical parameters; (ii) data structure layouts;
+> (iii) accessors; and (iv) small macros, templates and inline functions of
+> five lines or less in length.
+> 
+> Furthermore, you are not required to apply this additional permission to a
+> modified version of the Library.
+
+
+===zlib===
+
+| Project website | http://zlib.net/                                    |
+| Source code     | http://sourceforge.net/projects/libpng/files/zlib/  |
+
+> (C) 1995-2012 Jean-loup Gailly and Mark Adler
+>
+>  This software is provided 'as-is', without any express or implied
+>  warranty.  In no event will the authors be held liable for any damages
+>  arising from the use of this software.
+>
+>  Permission is granted to anyone to use this software for any purpose,
+>  including commercial applications, and to alter it and redistribute it
+>  freely, subject to the following restrictions:
+>
+>  1. The origin of this software must not be misrepresented; you must not
+>     claim that you wrote the original software. If you use this software
+>     in a product, an acknowledgment in the product documentation would be
+>     appreciated but is not required.
+>  2. Altered source versions must be plainly marked as such, and must not be
+>     misrepresented as being the original software.
+>  3. This notice may not be removed or altered from any source distribution.
+>
+>  Jean-loup Gailly        Mark Adler
+>  jloup@gzip.org          madler@alumni.caltech.edu
+
+
+===LibPNG===
+
+| Project website | http://www.libpng.org/pub/png/libpng.html           |
+| Source code     | ftp://ftp.simplesystems.org/pub/libpng/png/src/     |
+
+> This copy of the libpng notices is provided for your convenience.  In case of
+> any discrepancy between this copy and the notices in the file png.h that is
+> included in the libpng distribution, the latter shall prevail.
+> 
+> COPYRIGHT NOTICE, DISCLAIMER, and LICENSE:
+> 
+> If you modify libpng you may insert additional notices immediately following
+> this sentence.
+> 
+> This code is released under the libpng license.
+> 
+> libpng versions 1.2.6, August 15, 2004, through 1.5.12, July 11, 2012, are
+> Copyright (c) 2004, 2006-2012 Glenn Randers-Pehrson, and are
+> distributed according to the same disclaimer and license as libpng-1.2.5
+> with the following individual added to the list of Contributing Authors
+> 
+>    Cosmin Truta
+> 
+> libpng versions 1.0.7, July 1, 2000, through 1.2.5 - October 3, 2002, are
+> Copyright (c) 2000-2002 Glenn Randers-Pehrson, and are
+> distributed according to the same disclaimer and license as libpng-1.0.6
+> with the following individuals added to the list of Contributing Authors
+> 
+>    Simon-Pierre Cadieux
+>    Eric S. Raymond
+>    Gilles Vollant
+> 
+> and with the following additions to the disclaimer:
+> 
+>    There is no warranty against interference with your enjoyment of the
+>    library or against infringement.  There is no warranty that our
+>    efforts or the library will fulfill any of your particular purposes
+>    or needs.  This library is provided with all faults, and the entire
+>    risk of satisfactory quality, performance, accuracy, and effort is with
+>    the user.
+> 
+> libpng versions 0.97, January 1998, through 1.0.6, March 20, 2000, are
+> Copyright (c) 1998, 1999 Glenn Randers-Pehrson, and are
+> distributed according to the same disclaimer and license as libpng-0.96,
+> with the following individuals added to the list of Contributing Authors:
+> 
+>    Tom Lane
+>    Glenn Randers-Pehrson
+>    Willem van Schaik
+> 
+> libpng versions 0.89, June 1996, through 0.96, May 1997, are
+> Copyright (c) 1996, 1997 Andreas Dilger
+> Distributed according to the same disclaimer and license as libpng-0.88,
+> with the following individuals added to the list of Contributing Authors:
+> 
+>    John Bowler
+>    Kevin Bracey
+>    Sam Bushell
+>    Magnus Holmgren
+>    Greg Roelofs
+>    Tom Tanner
+> 
+> libpng versions 0.5, May 1995, through 0.88, January 1996, are
+> Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.
+> 
+> For the purposes of this copyright and license, "Contributing Authors"
+> is defined as the following set of individuals:
+> 
+>    Andreas Dilger
+>    Dave Martindale
+>    Guy Eric Schalnat
+>    Paul Schmidt
+>    Tim Wegner
+> 
+> The PNG Reference Library is supplied "AS IS".  The Contributing Authors
+> and Group 42, Inc. disclaim all warranties, expressed or implied,
+> including, without limitation, the warranties of merchantability and of
+> fitness for any purpose.  The Contributing Authors and Group 42, Inc.
+> assume no liability for direct, indirect, incidental, special, exemplary,
+> or consequential damages, which may result from the use of the PNG
+> Reference Library, even if advised of the possibility of such damage.
+> 
+> Permission is hereby granted to use, copy, modify, and distribute this
+> source code, or portions hereof, for any purpose, without fee, subject
+> to the following restrictions:
+> 
+> 1. The origin of this source code must not be misrepresented.
+> 
+> 2. Altered versions must be plainly marked as such and must not
+>    be misrepresented as being the original source.
+> 
+> 3. This Copyright notice may not be removed or altered from any
+>    source or altered source distribution.
+> 
+> The Contributing Authors and Group 42, Inc. specifically permit, without
+> fee, and encourage the use of this source code as a component to
+> supporting the PNG file format in commercial products.  If you use this
+> source code in a product, acknowledgment is not required but would be
+> appreciated.
+> 
+
+> A "png_get_copyright" function is available, for convenient use in "about"
+> boxes and the like:
+> 
+>    printf("%s",png_get_copyright(NULL));
+> 
+> Also, the PNG logo (in PNG format, of course) is supplied in the
+> files "pngbar.png" and "pngbar.jpg (88x31) and "pngnow.png" (98x31).
+> 
+> Libpng is OSI Certified Open Source Software.  OSI Certified Open Source is a
+> certification mark of the Open Source Initiative.
+> 
+> Glenn Randers-Pehrson
+> glennrp at users.sourceforge.net
+> July 11, 2012
+
+
+===LibJpeg===
+
+| Project website | http://www.ijg.org/         |
+| Source code     | http://www.ijg.org/files/   |
+
+> The authors make NO WARRANTY or representation, either express or implied,
+> with respect to this software, its quality, accuracy, merchantability, or
+> fitness for a particular purpose.  This software is provided "AS IS", and you,
+> its user, assume the entire risk as to its quality and accuracy.
+> 
+> This software is copyright (C) 1991-2012, Thomas G. Lane, Guido Vollbeding.
+> All Rights Reserved except as specified below.
+> 
+> Permission is hereby granted to use, copy, modify, and distribute this
+> software (or portions thereof) for any purpose, without fee, subject to these
+> conditions:
+> (1) If any part of the source code for this software is distributed, then this
+> README file must be included, with this copyright and no-warranty notice
+> unaltered; and any additions, deletions, or changes to the original files
+> must be clearly indicated in accompanying documentation.
+> (2) If only executable code is distributed, then the accompanying
+> documentation must state that "this software is based in part on the work of
+> the Independent JPEG Group".
+> (3) Permission for use of this software is granted only if the user accepts
+> full responsibility for any undesirable consequences; the authors accept
+> NO LIABILITY for damages of any kind.
+> 
+> These conditions apply to any software derived from or based on the IJG code,
+> not just to the unmodified library.  If you use our work, you ought to
+> acknowledge us.
+> 
+> Permission is NOT granted for the use of any IJG author's name or company name
+> in advertising or publicity relating to this software or products derived from
+> it.  This software may be referred to only as "the Independent JPEG Group's
+> software".
+> 
+> We specifically permit and encourage the use of this software as the basis of
+> commercial products, provided that all warranty or liability claims are
+> assumed by the product vendor.
+> 
+
+> ansi2knr.c is included in this distribution by permission of L. Peter Deutsch,
+> sole proprietor of its copyright holder, Aladdin Enterprises of Menlo Park, CA.
+> ansi2knr.c is NOT covered by the above copyright and conditions, but instead
+> by the usual distribution terms of the Free Software Foundation; principally,
+> that you must include source code if you redistribute it.  (See the file
+> ansi2knr.c for full details.)  However, since ansi2knr.c is not needed as part
+> of any program generated from the IJG code, this does not limit you more than
+> the foregoing paragraphs do.
+> 
+> The Unix configuration script "configure" was produced with GNU Autoconf.
+> It is copyright by the Free Software Foundation but is freely distributable.
+> The same holds for its supporting scripts (config.guess, config.sub,
+> ltmain.sh).  Another support script, install-sh, is copyright by X Consortium
+> but is also freely distributable.
+> 
+> The IJG distribution formerly included code to read and write GIF files.
+> To avoid entanglement with the Unisys LZW patent, GIF reading support has
+> been removed altogether, and the GIF writer has been simplified to produce
+> "uncompressed GIFs".  This technique does not use the LZW algorithm; the
+> resulting GIF files are larger than usual, but are readable by all standard
+> GIF decoders.
+> 
+> We are required to state that
+>     "The Graphics Interchange Format(c) is the Copyright property of
+>     CompuServe Incorporated.  GIF(sm) is a Service Mark property of
+>     CompuServe Incorporated."
+
+
+===LibTIFF===
+
+| Project website | http://www.libtiff.org/                     |
+| Source code     | ftp://ftp.remotesensing.org/pub/libtiff/    |
+
+> Copyright (c) 1988-1997 Sam Leffler
+> Copyright (c) 1991-1997 Silicon Graphics, Inc.
+> 
+> Permission to use, copy, modify, distribute, and sell this software and 
+> its documentation for any purpose is hereby granted without fee, provided
+> that (i) the above copyright notices and this permission notice appear in
+> all copies of the software and related documentation, and (ii) the names of
+> Sam Leffler and Silicon Graphics may not be used in any advertising or
+> publicity relating to the software without the specific, prior written
+> permission of Sam Leffler and Silicon Graphics.
+> 
+> THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
+> EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
+> WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+> 
+> IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
+> ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+> OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+> WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
+> LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+> OF THIS SOFTWARE.
+
+
+===Lcms2===
+
+| Project website | http://littlecms.com/                               |
+| Source code     | http://sourceforge.net/projects/lcms/files/lcms/    |
+
+> Little CMS
+> Copyright (c) 1998-2011 Marti Maria Saguer
+> 
+> Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+> 
+> The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+> 
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+===Libiconv===
+
+| Project website | http://www.gnu.org/software/libiconv/   |
+| Source code     | http://ftp.gnu.org/pub/gnu/libiconv/    |
+
+> Copyright (C) 1999-2003, 2005-2006, 2008 Free Software Foundation, Inc.
+> This file is part of the GNU LIBICONV Library.
+>
+> The GNU LIBICONV Library is free software; you can redistribute it
+> and/or modify it under the terms of the GNU Library General Public
+> License as published by the Free Software Foundation; either version 2
+> of the License, or (at your option) any later version.
+>
+> The GNU LIBICONV Library is distributed in the hope that it will be
+> useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> Library General Public License for more details.
+>
+> You should have received a copy of the GNU Library General Public
+> License along with the GNU LIBICONV Library; see the file COPYING.LIB.
+> If not, write to the Free Software Foundation, Inc., 51 Franklin Street,
+> Fifth Floor, Boston, MA 02110-1301, USA.
+
+
+===Expat===
+
+| Project website | http://www.libexpat.org/                            |
+| Source code     | http://sourceforge.net/projects/expat/files/expat/  |
+
+> Copyright (c) 1998, 1999, 2000 Thai Open Source Software Center Ltd
+>                                and Clark Cooper
+> Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Expat maintainers.
+> 
+> Permission is hereby granted, free of charge, to any person obtaining
+> a copy of this software and associated documentation files (the
+> "Software"), to deal in the Software without restriction, including
+> without limitation the rights to use, copy, modify, merge, publish,
+> distribute, sublicense, and/or sell copies of the Software, and to
+> permit persons to whom the Software is furnished to do so, subject to
+> the following conditions:
+> 
+> The above copyright notice and this permission notice shall be included
+> in all copies or substantial portions of the Software.
+> 
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+> MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+> IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+> CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+> TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+> SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+===Exiv2===
+
+| Project website | http://www.exiv2.org/download.html  |
+| Source code     | http://www.exiv2.org/download.html  |
+
+> Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
+> 
+> Exiv2 is free software; you can redistribute it and/or modify it under
+> the terms of the GNU General Public License as published by the Free
+> Software Foundation; either version 2 of the License, or (at your
+> option) any later version.
+> 
+> Alternatively, Exiv2 is also available with a commercial license,
+> which allows it to be used in closed-source projects. Contact me for
+> more information.
+> 
+> Exiv2 is distributed in the hope that it will be useful, but WITHOUT
+> ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+> for more details.
+> 
+> You should have received a copy of the GNU General Public License
+> along with this program; if not, write to the Free Software
+> Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, 
+
+
+===fftw===
+
+| Project website | http://www.fftw.org/            |
+| Source code     | ftp://ftp.fftw.org/pub/fftw/    |
+
+> Copyright (c) 2003, 2007-11 Matteo Frigo
+> Copyright (c) 2003, 2007-11 Massachusetts Institute of Technology
+>
+> This program is free software; you can redistribute it and/or modify
+> it under the terms of the GNU General Public License as published by
+> the Free Software Foundation; either version 2 of the License, or
+> (at your option) any later version.
+>
+> This program is distributed in the hope that it will be useful,
+> but WITHOUT ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> GNU General Public License for more details.
+>
+> You should have received a copy of the GNU General Public License
+> along with this program; if not, write to the Free Software
+> Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+
+===GraphicsMagick===
+
+| Project website | http://www.graphicsmagick.org/                              |
+| Source code     | ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/snapshots/  |
+
+> This file is part of the GraphicsMagick software distributed by the
+> GraphicsMagick Group.
+> 
+>   [*Please note that the legal community considers 15 or more
+>   total lines of code or text (not necessarily contiguous) to
+>   be significant for the purposes of copyright. Repeated
+>   changes such as renaming a symbol has similar significance
+>   to changing one line of code.*]
+> 
+> The licenses which components of this software fall under are as follows.
+> 
+> 1)
+>   In November 2002, the GraphicsMagick Group created GraphicsMagick
+>   from ImageMagick Studio's ImageMagick and applied the "MIT" style
+>   license:
+> 
+>   Copyright (C) 2002 - 2012 GraphicsMagick Group
+> 
+>   Permission is hereby granted, free of charge, to any person
+>   obtaining a copy of this software and associated documentation files
+>   (the "Software"), to deal in the Software without restriction,
+>   including without limitation the rights to use, copy, modify, merge,
+>   publish, distribute, sublicense, and/or sell copies of the Software,
+>   and to permit persons to whom the Software is furnished to do so,
+>   subject to the following conditions:
+> 
+>   The above copyright notice and this permission notice shall be
+>   included in all copies or substantial portions of the Software.
+> 
+>   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+>   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+>   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+>   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+>   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+>   SOFTWARE.
+> 
+> 2)
+>   In October 1999, ImageMagick Studio assumed the responsibility for
+>   the development of ImageMagick (forking from the distribution by
+>   E. I. du Pont de Nemours and Company) and applied a new license:
+> 
+>   Copyright (C) 2002 ImageMagick Studio, a non-profit organization dedicated
+>   to making software imaging solutions freely available.
+> 
+>   Permission is hereby granted, free of charge, to any person obtaining a
+>   copy of this software and associated documentation files ("ImageMagick"),
+>   to deal in ImageMagick without restriction, including without limitation
+>   the rights to use, copy, modify, merge, publish, distribute, sublicense,
+>   and/or sell copies of ImageMagick, and to permit persons to whom the
+>   ImageMagick is furnished to do so, subject to the following conditions:
+> 
+>   The above copyright notice and this permission notice shall be included in
+>   all copies or substantial portions of ImageMagick.
+> 
+>   The software is provided "as is", without warranty of any kind, express or
+>   implied, including but not limited to the warranties of merchantability,
+>   fitness for a particular purpose and noninfringement.  In no event shall
+>   ImageMagick Studio be liable for any claim, damages or other liability,
+>   whether in an action of contract, tort or otherwise, arising from, out of
+>   or in connection with ImageMagick or the use or other dealings in
+>   ImageMagick.
+> 
+>   Except as contained in this notice, the name of the ImageMagick Studio
+>   shall not be used in advertising or otherwise to promote the sale, use or
+>   other dealings in ImageMagick without prior written authorization from the
+>   ImageMagick Studio.
+> 
+> 3)
+>   From 1991 to October 1999 (through ImageMagick 4.2.9), ImageMagick
+>   was developed and distributed by E. I. du Pont de Nemours and
+>   Company:
+> 
+>   Copyright 1999 E. I. du Pont de Nemours and Company
+> 
+>   Permission is hereby granted, free of charge, to any person obtaining a
+>   copy of this software and associated documentation files
+>   ("ImageMagick"), to deal in ImageMagick without restriction, including
+>   without limitation the rights to use, copy, modify, merge, publish,
+>   distribute, sublicense, and/or sell copies of ImageMagick, and to
+>   permit persons to whom the ImageMagick is furnished to do so, subject
+>   to the following conditions:
+> 
+>   The above copyright notice and this permission notice shall be included
+>   in all copies or substantial portions of ImageMagick.
+> 
+>   The software is provided "as is", without warranty of any kind, express
+>   or implied, including but not limited to the warranties of
+>   merchantability, fitness for a particular purpose and noninfringement.
+>   In no event shall E. I. du Pont de Nemours and Company be liable for
+>   any claim, damages or other liability, whether in an action of
+>   contract, tort or otherwise, arising from, out of or in connection with
+>   ImageMagick or the use or other dealings in ImageMagick.
+> 
+>   Except as contained in this notice, the name of the E. I. du Pont de
+>   Nemours and Company shall not be used in advertising or otherwise to
+>   promote the sale, use or other dealings in ImageMagick without prior
+>   written authorization from the E. I. du Pont de Nemours and Company.
+> 
+> 4)
+>   The GraphicsMagick Base64Decode() and Base64Encode() functions are
+>   based on source code obtained from OpenSSH. This source code is
+>   distributed under the following license:
+> 
+>   Copyright (c) 2000 Markus Friedl.  All rights reserved.
+> 
+>   Redistribution and use in source and binary forms, with or without
+>   modification, are permitted provided that the following conditions
+>   are met:
+> 
+>   1. Redistributions of source code must retain the above copyright
+>      notice, this list of conditions and the following disclaimer.
+> 
+>   2. Redistributions in binary form must reproduce the above copyright
+>      notice, this list of conditions and the following disclaimer in the
+>      documentation and/or other materials provided with the distribution.
+> 
+>   THIS SOFTWARE IS PROVIDED BY THE AUTHOR \`\`AS IS\'\' AND ANY EXPRESS OR
+>   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+>   OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+>   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+>   INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+>   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+>   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+>   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+>   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+>   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> 
+> 5)
+>   Many of the pattern images in coders/logo.c are derived from XFig,
+>   which is distributed under the following license:
+>  
+>   | FIG : Facility for Interactive Generation of figures
+>   | Copyright (c) 1985-1988 by Supoj Sutanthavibul
+>   | Parts Copyright (c) 1989-2000 by Brian V. Smith
+>   | Parts Copyright (c) 1991 by Paul King
+>  
+>   Any party obtaining a copy of these files is granted, free of charge, a
+>   full and unrestricted irrevocable, world-wide, paid up, royalty-free,
+>   nonexclusive right and license to deal in this software and
+>   documentation files (the "Software"), including without limitation the
+>   rights to use, copy, modify, merge, publish, distribute, sublicense,
+>   and/or sell copies of the Software, and to permit persons who receive
+>   copies from any such party to do so, with the only requirement being
+>   that this copyright notice remain intact.
+> 
+> 6)
+>   The documentation for the composition operators is copied from the
+>   rlecomp manual page, which is authored by Rod Bogart and John W.
+>   Peterson. Rlecomp is part of the Utah Raster Toolkit distributed by the
+>   University of Michigan and the University of Utah. The copyright for
+>   this manual page is as follows:
+> 
+>   Copyright (c) 1986, University of Utah
+>   
+>   This software is copyrighted as noted below.  It may be freely copied,
+>   modified, and redistributed, provided that the copyright notice is 
+>   preserved on all copies.
+>   
+>   There is no warranty or other guarantee of fitness for this software,
+>   it is provided solely "as is".  Bug reports or fixes may be sent
+>   to the author, who may or may not act on them as he desires.
+>   
+>   You may not include this software in a program or other software product
+>   without supplying the source, or without informing the end-user that the 
+>   source is available for no extra charge.
+>   
+>   If you modify this software, you should include a notice giving the
+>   name of the person performing the modification, the date of modification,
+>   and the reason for such modification.
+> 
+> 7)
+>   The source code comprising swab.c is originally derived from
+>   libtiff which has the following license:
+> 
+>   | Copyright (c) 1988-1997 Sam Leffler
+>   | Copyright (c) 1991-1997 Silicon Graphics, Inc.
+> 
+>   Permission to use, copy, modify, distribute, and sell this software and 
+>   its documentation for any purpose is hereby granted without fee, provided
+>   that (i) the above copyright notices and this permission notice appear in
+>   all copies of the software and related documentation, and (ii) the names of
+>   Sam Leffler and Silicon Graphics may not be used in any advertising or
+>   publicity relating to the software without the specific, prior written
+>   permission of Sam Leffler and Silicon Graphics.
+>    
+>   THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
+>   EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
+>   WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+>  
+>   IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
+>   ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+>   OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+>   WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
+>   LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+>   OF THIS SOFTWARE.
+> 
+> 8)
+>   The C++ API known as "Magick++", and which resides in the Magick++
+>   directory, is distributed under the following license:
+> 
+>   Copyright 1999 - 2003 Bob Friesenhahn <bfriesen@simple.dallas.tx.us>
+> 
+>   Permission is hereby granted, free of charge, to any person
+>   obtaining a copy of the source files and associated documentation
+>   files ("Magick++"), to deal in Magick++ without restriction,
+>   including without limitation of the rights to use, copy, modify,
+>   merge, publish, distribute, sublicense, and/or sell copies of
+>   Magick++, and to permit persons to whom the Magick++ is furnished
+>   to do so, subject to the following conditions:
+> 
+>   This copyright notice shall be included in all copies or
+>   substantial portions of Magick++. The copyright to Magick++ is
+>   retained by its author and shall not be subsumed or replaced by any
+>   other copyright.
+> 
+>   The software is provided "as is", without warranty of any kind,
+>   express or implied, including but not limited to the warranties of
+>   merchantability, fitness for a particular purpose and
+>   noninfringement. In no event shall Bob Friesenhahn be liable for
+>   any claim, damages or other liability, whether in an action of
+>   contract, tort or otherwise, arising from, out of or in connection
+>   with Magick++ or the use or other dealings in Magick++.
+> 
+> 9)
+>   The GraphicsMagick HaldClutImagePixels() function in magick/hclut.c
+>   is based on source code from the HaldCLUT package by Eskil Steenberg
+>   (http://www.quelsolaar.com/technology/clut.html) which is
+>   distributed under the following license:
+> 
+>   Copyright (c) 2005 Eskil Steenberg.  All rights reserved.
+> 
+>   Redistribution and use in source and binary forms, with or without
+>   modification, are permitted provided that the following conditions
+>   are met:
+> 
+>   1. Redistributions of source code must retain the above copyright
+>      notice, this list of conditions and the following disclaimer.
+> 
+>   2. Redistributions in binary form must reproduce the above copyright
+>      notice, this list of conditions and the following disclaimer in the
+>      documentation and/or other materials provided with the distribution.
+> 
+>   THIS SOFTWARE IS PROVIDED BY THE AUTHOR \`\`AS IS\'\' AND ANY EXPRESS OR
+>   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+>   OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+>   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+>   INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+>   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+>   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+>   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+>   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+>   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> 
+> 10)
+>   GraphicsMagick makes use of third-party "delegate" libraries to
+>   support certain optional features. These libraries bear their own
+>   copyrights and licenses, which may be more or less restrictive than the
+>   GraphicsMagick license. For convenience, when GraphicsMagick is
+>   bundled with (or compiled with) "delegate" libraries, a copy of the
+>   licenses for these libraries is provided in a "licenses" directory.
+
+
+===LibLqr===
+
+| Project website | http://liblqr.wikidot.com/                  |
+| Source code     | http://liblqr.wikidot.com/en:download-page  |
+
+> Copyright (C) 2007-2009 Carlo Baldassi (the "Author") <carlobaldassi@gmail.com>.
+> All Rights Reserved.
+>
+> This library implements the algorithm described in the paper
+> "Seam Carving for Content-Aware Image Resizing"
+> by Shai Avidan and Ariel Shamir
+> which can be found at http://www.faculty.idc.ac.il/arik/imret.pdf
+>
+> This program is free software; you can redistribute it and/or modify
+> it under the terms of the GNU Lesser General Public License as published by
+> the Free Software Foundation; version 3 dated June, 2007.
+>
+> This program is distributed in the hope that it will be useful,
+> but WITHOUT ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> GNU Lesser General Public License for more details.
+>
+> You should have received a copy of the GNU Lesser General Public License
+> along with this program; if not, see <http://www.gnu.org/licenses/>
+
+
+===Lensfun===
+
+| Project website | http://lensfun.berlios.de/                                       |
+| Source code     | http://developer.berlios.de/project/showfiles.php?group_id=9034  |
+
+> LensFun - a library for maintaining a database of photographical lenses,
+> and providing the means to correct some of the typical lens distortions.
+> Copyright (C) 2007 by Andrew Zabolotny
+> 
+> This library is free software; you can redistribute it and/or
+> modify it under the terms of the GNU Library General Public
+> License as published by the Free Software Foundation; either
+> version 2 of the License, or (at your option) any later version.
+> 
+> This library is distributed in the hope that it will be useful,
+> but WITHOUT ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> Library General Public License for more details.
+> 
+> You should have received a copy of the GNU Library General Public
+> License along with this library; if not, write to the Free
+> Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.

@@ -29,7 +29,7 @@
 
 //==============================================================================
 
-const QString MyComputerIniString = "{{MyComputer}}";
+const QString MyComputerIdString = ":::MyComputer:::";
 
 //==============================================================================
 
@@ -37,14 +37,15 @@ const QString MyComputerIniString = "{{MyComputer}}";
     in the file manager. */
 enum ptThumbnailAction {
   tnaChangeDir = 0,
-  tnaLoadImage = 1
+  tnaLoadImage = 1,
+  tnaViewImage = 2
 };
 
 /*! This enum defines how thumbnails are arranged in the file manager. */
 enum ptThumbnailLayout {
   tlVerticalByRow       = 0,
   tlHorizontalByColumn  = 1,
-  tlDetailedList        = 2
+  tlDetailedList        = 2   // TODO: not implemented yet
 };
 
 #endif // PTFILEMGRCONSTANTS_H

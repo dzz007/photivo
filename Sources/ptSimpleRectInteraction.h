@@ -23,38 +23,37 @@
 #ifndef PTSELECTINTERACTION_H
 #define PTSELECTINTERACTION_H
 
+//==============================================================================
+
 #include <QRectF>
 #include <QLine>
 #include <QGraphicsRectItem>
 #include <QMouseEvent>
 
-#include "ptImageInteraction.h"
+#include "ptAbstractInteraction.h"
 
-///////////////////////////////////////////////////////////////////////////
-//
-// class ptSimpleRectInteraction
-//
-///////////////////////////////////////////////////////////////////////////
-class ptSimpleRectInteraction : public ptImageInteraction {
+//==============================================================================
+
+class ptSimpleRectInteraction : public ptAbstractInteraction {
 Q_OBJECT
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-///////////////////////////////////////////////////////////////////////////
 public:
   explicit ptSimpleRectInteraction(QGraphicsView* View);
   ~ptSimpleRectInteraction();
 
+  /*! Reimplemented from base class. */
+  virtual Qt::KeyboardModifiers modifiers()    const { return Qt::ControlModifier; }
+
+  /*! Reimplemented from base class. */
+  virtual ptMouseActions        mouseActions() const { return maDragDrop; }
+
+  /*! Reimplemented from base class. */
+  virtual Qt::MouseButtons      mouseButtons() const { return Qt::LeftButton; }
+
   inline QRect rect() const { return QRect(m_Rect->normalized().toRect()); }
 
+//------------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-///////////////////////////////////////////////////////////////////////////
 private:
   int m_CtrlPressed;
   QLine* m_DragDelta;
@@ -64,16 +63,12 @@ private:
 
   void Finalize(const ptStatus status);
 
+//------------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE slots
-//
-///////////////////////////////////////////////////////////////////////////
+
 private slots:
   void keyAction(QKeyEvent* event);
   void mouseAction(QMouseEvent* event);
 
 };
-
 #endif // PTSELECTINTERACTION_H

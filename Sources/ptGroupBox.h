@@ -26,10 +26,12 @@
 //==============================================================================
 
 #include <QtGui>
+#include "ptTempFilterBase.h"
+#include "ptToolBox.h"
 
 //==============================================================================
 
-class ptGroupBox : public QWidget {
+class ptGroupBox : public ptTempFilterBase {
 Q_OBJECT
 
 public:
@@ -41,6 +43,17 @@ public:
              const short IndexInTab);
 
   ~ptGroupBox() {}
+
+//--- compatibility with ptToolBox/ptFilterBase
+  int                   idxInParentTab() const { return m_IndexInTab; }
+  int                   parentTabIdx()   const { return m_TabNumber; }
+  QString               uniqueName() const { return this->objectName(); }
+  QWidget*              guiWidget() { return this; }
+  QString               caption()        const { return m_Title; }
+  bool                  isActive() const;
+  bool                  canHide() const;
+  bool                  isBlocked() const;
+//---
 
   void SetActive(const short IsActive);
   void SetHelpUri(const QString Uri);
@@ -54,12 +67,14 @@ public:
 
   QWidget*   m_Widget;
 
+//-------------------------------------
 
 protected:
   void mousePressEvent(QMouseEvent *event);
   void paintEvent(QPaintEvent *);
   void changeEvent(QEvent *);
 
+//-------------------------------------
 
 private:
   void WriteSettings(const short Append);
@@ -85,7 +100,6 @@ private:
   short     m_TabNumber;
   short     m_IndexInTab;
   QString   m_HelpUri;
-  QLabel*   test;
   QAction*  m_AtnFav;
   QAction*  m_AtnHide;
   QAction*  m_AtnBlock;
@@ -95,6 +109,12 @@ private:
   QTimer*   m_Timer;
   short     m_NeedPipeUpdate;
 
+//-------------------------------------
+
+public slots:
+  void setActivityIcon(const bool AStatus);
+
+//-------------------------------------
 
 private slots:
   void SetFavourite();

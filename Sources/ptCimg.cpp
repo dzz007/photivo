@@ -77,7 +77,11 @@ ptGreycCount *GreycCount;
   #define cimg_display 0
 #endif
 
-#include "greyc/CImg.h"
+#ifdef SYSTEM_CIMG
+  #include <CImg.h>
+#else
+  #include "greyc/CImg.h"
+#endif
 
 
 using namespace cimg_library;
@@ -179,15 +183,6 @@ void ptGreycStorationLab(ptImage* Image,
 
   CImg <uint16_t> CImage(Width,Height,1,1,0);
 
-//~ #ifdef _OPENMP
-      //~ // Obtain and print thread id */
-      //~ int Tid = omp_get_thread_num();
-      //~ printf("Hello World from thread = %d\n", Tid);
-      //~ // We need a thread-private copy.
-      //~ int TpHistogram[3][HistogramWidth];
-      //~ memset (TpHistogram, 0, sizeof Histogram);
-//~ #endif
-
 #pragma omp parallel for default(shared) schedule(static)
   for (uint16_t Row=0; Row<Image->m_Height; Row++) {
     for (uint16_t Col=0; Col<Image->m_Width; Col++) {
@@ -256,11 +251,6 @@ void ptGreycStorationLab(ptImage* Image,
     }
     FREE2(Mask);
   }
-//~ #pragma omp parallel for default(shared) schedule(static)
-  //~ for (uint32_t i=0; i<(uint32_t) Image->m_Height*Image->m_Width; i++) {
-     //~ Image->m_Image[i][1]=0x8080;
-     //~ Image->m_Image[i][2]=0x8080;
-  //~ }
 
   delete GreycCount;
 }
@@ -273,13 +263,7 @@ void ptCimgEdgeTensors(ptImage* Image,
                        const double    Blur,
                        const short     MaskType) {
 
-  int NumberOfThreads = 1;
-//~ #ifdef _OPENMP
-//~ #pragma omp parallel
-  //~ {
-      //~ NumberOfThreads = omp_get_num_threads();
-  //~ }
-//~ #endif
+  constexpr int NumberOfThreads = 1;
 
   uint16_t FullWidth  = Image->m_Width;
   uint16_t Width  = (int) ((double)Image->m_Width/(double)NumberOfThreads+0.5);
@@ -334,9 +318,8 @@ void ptCimgEdgeTensors(ptImage* Image,
     }
   }
 
-//~ #pragma omp parallel for schedule(static)
   for (short Threads=0; Threads < NumberOfThreads; Threads++) {
-    CImage[Threads].edge_tensors(Sharpness,Anisotropy,Alpha,Sigma);
+    CImage[Threads].diffusion_tensors(Sharpness,Anisotropy,Alpha,Sigma);
     if (Blur) CImage[Threads].blur(Blur,true);
 
   }
@@ -450,7 +433,7 @@ void ptCimgNoise(ptImage* Image, const double Sigma, const short NoiseType, cons
   uint16_t Width  = Image->m_Width;
   uint16_t Height = Image->m_Height;
   double Strength = Sigma;
-  int Type = LIM(NoiseType,0,2);
+  int Type = LIM((int)NoiseType,0,2);
 
   CImg <uint16_t> CImage(Width,Height,1,1,0);
   CImage.fill(0x7FFF);
@@ -509,9 +492,6 @@ assert (ChannelMask == 1); // TODO: mike
     }
     Mask.blur(5).normalize(0,1);
 
-    //~ CImgList<float> grad = CImage.get_gradient("xy",3);
-    //~ Mask = (grad[0].pow(2) + grad[1].pow(2)).sqrt().blur(5).normalize(0,1);
-    //~ Mask = CImage.get_laplacian().normalize(0,1).blur(5);
     NewAmplitude = 2 * NewAmplitude;
   }
 
@@ -588,27 +568,14 @@ float *ptGradientMask(const ptImage* Image, const double Radius, const double Th
   CImage.blur(Radius).normalize(0,1);
 
 
-  //~ CImgList<float> grad = CImage.get_gradient("xy",3);
-  //~ CImage = (grad[0].pow(2) + grad[1].pow(2)).sqrt().blur(Radius).normalize(0,1);
-
   if (Threshold) {
 #pragma omp parallel for default(shared) schedule(static)
     for (uint16_t Row=0; Row<Image->m_Height; Row++) {
       for (uint16_t Col=0; Col<Image->m_Width; Col++) {
-        CImage(Col,Row) = Sigmoidal(CImage(Col,Row),0.25, Threshold);
+        CImage(Col,Row) = ptCurve::Sigmoidal(CImage(Col,Row),0.25, Threshold);
       }
     }
-    //~ CImage.normalize(0,1);
   }
-
-  //~ Mask = CImage.get_laplacian().normalize(0,1).blur(5);
-
-//~ #pragma omp parallel for default(shared) schedule(static)
-  //~ for (uint16_t Row=0; Row<Image->m_Height; Row++) {
-    //~ for (uint16_t Col=0; Col<Image->m_Width; Col++) {
-      //~ if (CImage(Col,Row) > 0.8) CImage(Col,Row) = 0.8;
-    //~ }
-  //~ }
 
 #pragma omp parallel for default(shared) schedule(static)
   for (uint16_t Row=0; Row<Image->m_Height; Row++) {
@@ -833,13 +800,11 @@ void ptCimgRotate(ptImage* Image, const double Angle, const short Interpolation)
 
   CImage.rotate(Angle, 0, Interpolation);
 
-  FREE2(Image->m_Image);
   Image->m_Width  = CImage.width();
   Image->m_Height = CImage.height();
   Width  = Image->m_Width;
   Height = Image->m_Height;
-  Image->m_Image = (uint16_t (*)[3]) CALLOC2(Image->m_Width*Image->m_Height,sizeof(*Image->m_Image));
-  ptMemoryError(Image->m_Image,__FILE__,__LINE__);
+  Image->setSize((int32_t)Width*Height);
 
 #pragma omp parallel for default(shared) schedule(static)
   for (uint16_t Row=0; Row<Height; Row++) {

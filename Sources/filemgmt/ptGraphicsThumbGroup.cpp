@@ -26,6 +26,7 @@
 #include "../ptDefines.h"
 #include "../ptTheme.h"
 #include "../ptSettings.h"
+#include "../ptImage8.h"
 #include "ptGraphicsThumbGroup.h"
 #include "ptGraphicsSceneEmitter.h"
 
@@ -34,31 +35,13 @@ extern ptTheme* Theme;
 
 //==============================================================================
 
-ptGraphicsThumbGroup* ptGraphicsThumbGroup::AddRef(ptGraphicsThumbGroup* group /*== NULL*/) {
-  if (group == NULL) {
-    return new ptGraphicsThumbGroup;
-  } else {
-    group->m_RefCount++;
-    return group;
-  }
-}
-
-//==============================================================================
-
-int ptGraphicsThumbGroup::RemoveRef(ptGraphicsThumbGroup* group) {
-  int result = --group->m_RefCount;
-
-  if (group->m_RefCount == 0) {
-    delete group;
-    group = NULL;
-  }
-  return result;
-}
-
-//==============================================================================
-
-ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
-: QGraphicsRectItem(parent)
+ptGraphicsThumbGroup::ptGraphicsThumbGroup(uint AId, QGraphicsItem* parent /*= nullptr*/)
+: QGraphicsRectItem(parent),
+  m_Brush(Qt::SolidPattern),
+  FGroupId(AId),
+  m_hasHover(false),
+  m_Pen(Qt::DashLine),
+  m_Thumbnail(new ptImage8)
 {
   m_FSOType = fsoUnknown;
   m_FullPath = "";
@@ -66,13 +49,15 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(QGraphicsItem* parent /*= 0*/)
   m_ImgTypeText = NULL;
   m_InfoText = NULL;
   m_RefCount = 1;
-  m_Thumbnail = NULL;
 
+  setFlags(QGraphicsItem::ItemIsFocusable);
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::LeftButton);
   setFiltersChildEvents(true);
   setCursor(QCursor(Qt::PointingHandCursor));
-  setPen(QPen(Theme->ptBright, 0, Qt::DashLine));
+
+  m_Pen.setCosmetic(true);
+  SetupPenAndBrush();
 }
 
 //==============================================================================
@@ -107,7 +92,7 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
   m_InfoText->setText(QFontMetrics(m_InfoText->font()).elidedText(description,
                                                                   Qt::ElideRight,
                                                                   (int)ThumbSize));
-  m_InfoText->setBrush(QBrush(Theme->ptText));
+  m_InfoText->setBrush(QBrush(Theme->textColor()));
   m_InfoText->setPos(InnerPadding, ThumbSize + InnerPadding*2);
 
   // file type display in topleft corner (images only)
@@ -120,7 +105,7 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
       QFont tempFont = m_ImgTypeText->font();
       tempFont.setBold(true);
       m_ImgTypeText->setFont(tempFont);
-      m_ImgTypeText->setBrush(QBrush(Theme->ptText));
+      m_ImgTypeText->setBrush(QBrush(Theme->textColor()));
       m_ImgTypeText->setPos(InnerPadding, InnerPadding);
       m_ImgTypeText->setParentItem(this);
     }
@@ -137,17 +122,16 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
 
 //==============================================================================
 
-void ptGraphicsThumbGroup::addImage(QImage* image) {
-  qreal ThumbSize = (qreal)Settings->GetInt("FileMgrThumbnailSize");
-  if (m_Thumbnail) {
-    delete m_Thumbnail;
-  }
-  m_Thumbnail = image;
+void ptGraphicsThumbGroup::addImage(TThumbPtr AImage) {
+  assert(NULL != AImage);
+
+  m_Thumbnail->Set(AImage.get());
 
   // center pixmap in the cell if it is not square
   // the +2 offset is for the hover border
-  m_ThumbPos.setX(ThumbSize/2 - image->width()/2  + InnerPadding + 0.5);
-  m_ThumbPos.setY(ThumbSize/2 - image->height()/2 + InnerPadding + 0.5);
+  qreal ThumbSize = Settings->GetInt("FileMgrThumbnailSize");
+  m_ThumbPos.setX(ThumbSize/2 - AImage->width()/2  + InnerPadding + 0.5);
+  m_ThumbPos.setY(ThumbSize/2 - AImage->height()/2 + InnerPadding + 0.5);
   this->update();
 
 /*
@@ -178,14 +162,19 @@ void ptGraphicsThumbGroup::addImage(QImage* image) {
 bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
   switch (event->type()) {
     case QEvent::GraphicsSceneHoverEnter: {
-      event->accept();
-      this->setPen(QPen(Theme->ptHighLight, 0, Qt::DashLine));
+      m_hasHover = true;
+      this->update();
       return true;
     }
 
     case QEvent::GraphicsSceneHoverLeave: {
-      event->accept();
-      setPen(QPen(Theme->ptBright, 0, Qt::DashLine));
+      m_hasHover = false;
+      this->update();
+      return true;
+    }
+
+    case QEvent::GraphicsSceneMouseDoubleClick: {
+      exec();
       return true;
     }
 
@@ -195,33 +184,53 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
       return true;
     }
 
-  case QEvent::GraphicsSceneMouseRelease: {
-      event->accept();
-      if (m_InfoText) {
-        if (m_FSOType == fsoFile) {
-          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
-        } else {
-          ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
-        }
-      }
+    case QEvent::GraphicsSceneMouseRelease: {
+      // set focus, FM window takes care of showing image in the viewer if necessary
+      this->setFocus(Qt::MouseFocusReason);
+      ptGraphicsSceneEmitter::EmitFocusChanged();
       return true;
     }
 
-    default: {
-      return QGraphicsRectItem::sceneEvent(event);
+    case QEvent::KeyPress: {
+      QKeyEvent* e = (QKeyEvent*)event;
+      if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) {
+        exec();
+        return true;
+      }
+      break;
     }
+
+  case QEvent::GraphicsSceneContextMenu: {
+      // We set the focus but we don't accept the event
+      this->setFocus(Qt::MouseFocusReason);
+      ptGraphicsSceneEmitter::EmitFocusChanged();
+    }
+
+    default:
+      break;
   }
+
+  return QGraphicsRectItem::sceneEvent(event);
 }
 
 //==============================================================================
 
 void ptGraphicsThumbGroup::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
-  painter->setPen(this->pen());
-  painter->setBrush(QBrush(Theme->ptDark));
+  SetupPenAndBrush();
+  painter->setPen(m_Pen);
+  painter->setBrush(m_Brush);
   painter->drawRoundedRect(this->rect(), 5, 5);
   if (m_Thumbnail) {
-    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), *m_Thumbnail);
+    painter->drawImage(m_ThumbPos.x(), m_ThumbPos.y(), QImage((const uchar*) m_Thumbnail->image().data(),
+                                                                             m_Thumbnail->width(),
+                                                                             m_Thumbnail->height(),
+                                                                             QImage::Format_ARGB32));
   }
+}
+
+//------------------------------------------------------------------------------
+uint ptGraphicsThumbGroup::id() const {
+  return FGroupId;
 }
 
 //==============================================================================
@@ -231,6 +240,35 @@ QFont ptGraphicsThumbGroup::font() const {
     return QApplication::font();
   } else {
     return m_InfoText->font();
+  }
+}
+
+//==============================================================================
+
+void ptGraphicsThumbGroup::exec() {
+  if (m_InfoText) {
+    if (m_FSOType == fsoFile) {
+      ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, m_FullPath);
+    } else {
+      ptGraphicsSceneEmitter::EmitThumbnailAction(tnaChangeDir, m_FullPath);
+    }
+  }
+}
+
+//==============================================================================
+
+void ptGraphicsThumbGroup::SetupPenAndBrush() {
+  int PenWidth = m_hasHover ? 2 : 1;
+
+  if (this->hasFocus()) {
+    m_Pen.setColor(Theme->highlightColor());
+    m_Pen.setWidth(PenWidth);
+    m_Brush.setColor(Theme->gradientColor());
+
+  } else {
+    m_Pen.setColor(Theme->emphasizedColor());
+    m_Pen.setWidth(PenWidth);
+    m_Brush.setColor(Theme->altBaseColor());
   }
 }
 

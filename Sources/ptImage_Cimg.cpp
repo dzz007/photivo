@@ -76,10 +76,10 @@ ptImage* ptImage::ptCIDeriche(const float sigma,
       a3 = -k*ema2;
     } break;
     case 1 : {
-      const float k = (1-ema)*(1-ema)/ema;
-      a0 = k*ema;
-      a1 = a3 = 0;
-      a2 = -a0;
+      const float k = -(1-ema)*(1-ema)*(1-ema)/(2*(ema+1)*ema);
+      a0 = a3 = 0;
+      a1 = k*ema;
+      a2 = -a1;
     } break;
     case 2 : {
       const float
@@ -171,19 +171,24 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
                                   const float TiltAngle,
                                   const float TurnAngle,
                                   const float ScaleX,
-                                  const float ScaleY) {
+                                  const float ScaleY)
+{
   const float nangle = CImod(RotateAngle,360.0f);
   uint16_t NewWidth = 0, NewHeight = 0;
+
+  std::vector<std::array<uint16_t, 3> > TempData;
   uint16_t (*TempImage)[3];
+
   if (CImod(nangle,90.0f)==0 &&
       TiltAngle == 0.0f &&
       TurnAngle == 0.0f &&
       ScaleX == 1.0f &&
       ScaleY == 1.0f) { // optimized version for orthogonal angles
-    TempImage = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*TempImage));
-    ptMemoryError(TempImage,__FILE__,__LINE__);
+    TempData.resize((size_t) m_Width*m_Height);
+    TempImage = (uint16_t (*)[3]) TempData.data();
     const uint16_t wm1 = m_Width - 1, hm1 = m_Height - 1;
     const int iangle = (int32_t)nangle/90;
+
     switch (iangle) {
       case 1 : {
         NewWidth = m_Height;
@@ -197,6 +202,7 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
           }
         }
       } break;
+
       case 2 : {
         NewWidth = m_Width;
         NewHeight = m_Height;
@@ -209,6 +215,7 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
           }
         }
       } break;
+
       case 3 : {
         NewWidth = m_Height;
         NewHeight = m_Width;
@@ -302,8 +309,8 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
 
     NewWidth = (int32_t) x_pers;
     NewHeight = (int32_t) y_pers;
-    TempImage = (uint16_t (*)[3]) CALLOC((int32_t)NewWidth*NewHeight,sizeof(*TempImage));
-    ptMemoryError(TempImage,__FILE__,__LINE__);
+    TempData.resize((size_t) NewWidth*NewHeight);
+    TempImage = (uint16_t (*)[3]) TempData.data();
     {
 #pragma omp parallel for schedule(static) private(fx,fy)
       for (int32_t Row = 0; Row < NewHeight; Row++) {
@@ -351,9 +358,9 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
       }
     }
   }
-  FREE(m_Image);
-  m_Image = TempImage;
+  m_Data.swap(TempData);
+  m_Image  = (uint16_t (*)[3]) m_Data.data();
   m_Height = NewHeight;
-  m_Width = NewWidth;
+  m_Width  = NewWidth;
   return this;
 }

@@ -34,7 +34,6 @@
 void wtf_channel(float *buf, float **weight_a, const int l, const int width, const int height)
 {
   const int wd = (int)(1 + (width>>(l-1))), ht = (int)(1 + (height>>(l-1)));
-  //~ int ch = 0;
   // store weights for luma channel only, chroma uses same basis.
   memset(weight_a[l], 0, sizeof(float)*wd*ht);
   for(int j=0;j<ht-1;j++) for(int i=0;i<wd-1;i++) weight_a[l][j*wd+i] = gbuf(buf, i<<(l-1), j<<(l-1));
@@ -95,7 +94,6 @@ void iwtf_channel(float *buf, float **weight_a, const int l, const int width, co
   const int step = 1<<l;
   const int st = step/2;
   const int wd = (int)(1 + (width>>(l-1)));
-  //~ int ch = 0;
 
 #ifdef _OPENMP
 #pragma omp parallel for default(none) shared(weight_a,buf) schedule(static) //private(ch)
@@ -283,7 +281,6 @@ ptImage* ptImage::EAWChannel(const double scaling,
   const int width = w;
   const int height = h;
 
-  //~ float alpha = atof(argv[2]);
   float alpha = 1; // leftover ;-)
   int maxband = 7;
   int mode = 0;
@@ -311,16 +308,14 @@ ptImage* ptImage::EAWChannel(const double scaling,
 #if 1
   const int max_level = maxband;
   const int sf = 1; // piece->iscale/scale
-  //~ const int num_levels = maxband;
 
   // 1 pixel in this buffer represents 1.0/scale pixels in original image:
   const float l1 = 1.0f + log2f(sf);                          // finest level
   float lm = 0; for(int k=MIN(width,height)*sf;k;k>>=1) lm++; // coarsest level
-  lm = MIN(max_level, l1 + lm);
+  lm = MIN((float)max_level, l1 + lm);
   // level 1 => full resolution
   int numl = 0; for(int k=MIN(width,height);k;k>>=1) numl++;
-  const int numl_cap = MIN(max_level-l1+1.5, numl);
-  //~ printf("level range in %d %d: %f %f, cap: %d\n", 1, num_levels, l1, lm, numl_cap);
+  const int numl_cap = MIN(max_level-l1+1.5f, (float)numl);
 
   // TODO: fixed alloc for data piece at capped resolution?
   float **tmp = (float **)malloc(sizeof(float *)*numl_cap);
@@ -335,8 +330,6 @@ ptImage* ptImage::EAWChannel(const double scaling,
   for(int l=1;l<numl_cap;l++)
   {
     const float lv = (lm-l1)*(l-1)/(float)(numl_cap-1) + l1; // appr level in real image.
-    //~ const float band = LIM((1.0 - lv / num_levels), 0, 1.0);
-    //~ printf("lv: %f; band: %f, step: %d\n", lv, band, 1<<l);
     {
       // coefficients in range [0, 2], 1 being neutral.
       float coeff = 1;
@@ -347,7 +340,6 @@ ptImage* ptImage::EAWChannel(const double scaling,
         else if (lv == 4 - scaling) coeff = level4 + 1.0;
         else if (lv == 5 - scaling) coeff = level5 + 1.0;
         else if (lv == 6 - scaling) coeff = level6 + 1.0;
-        //~ coeff = (alpha>1?(fabs(1-alpha)/lv+1):(1-fabs(1-alpha)/lv));
       } else if (mode == 1) { // suppress lowest level
         if ((int)lv == 1) coeff = 1;
         else if ((int) lv == 2) coeff = (alpha>1?(fabs(1-alpha)/lv/2+1):(1-fabs(1-alpha)/lv/2));

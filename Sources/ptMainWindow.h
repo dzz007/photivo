@@ -24,36 +24,34 @@
 #ifndef DLMAINWINDOW_H
 #define DLMAINWINDOW_H
 
+#include <memory>
+using std::unique_ptr;
+
 #include <QTimer>
 
 #include <exiv2/exif.hpp>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <exiv2/image.hpp>
+#pragma GCC diagnostic pop
 
 #include "ui_ptMainWindow.h"
 
+#include "ptCurve.h"
+#include "ptCurveWindow.h"
 #include "ptInput.h"
 #include "ptChoice.h"
 #include "ptCheck.h"
 #include "ptGroupBox.h"
 #include "ptVisibleToolsView.h"
 
+#include "ptTempFilterBase.h"
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ptMainWindow is the main gui element, showing all menus and controls.
-//
-////////////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 class ptMainWindow : public QMainWindow, public Ui::ptMainWindow {
 
 Q_OBJECT
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// PUBLIC members
-//
-////////////////////////////////////////////////////////////////////////////////
 
 public:
   // Constructor.
@@ -117,10 +115,10 @@ public:
   QTimer* m_SearchInputTimer;
 
   // ToolBoxes
-  QMap<QString, ptGroupBox*>* m_GroupBox;
+  QMap<QString, ptTempFilterBase*>* m_GroupBox;
   QList<QString>*             m_GroupBoxesOrdered;
   QList<QVBoxLayout*>*        m_TabLayouts;
-  QList<ptGroupBox*>*         m_MovedTools;
+  QList<QWidget*>*            m_MovedTools;
   QIcon                       m_StatusIcon;
   QList<QWidget*>             m_ActiveTabs;
 
@@ -130,14 +128,8 @@ public:
   QDockWidget* ControlsDockWidget;
 
   void OnToolBoxesEnabledTriggered(const bool Enabled);
-public slots:
-  void OtherInstanceMessage(const QString &msg);
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// PROTECTED members
-//
-////////////////////////////////////////////////////////////////////////////////
+//--------------------------------------
 
 protected:
   void closeEvent(QCloseEvent * Event);
@@ -147,51 +139,57 @@ protected:
   void dragEnterEvent(QDragEnterEvent* Event);
   void dropEvent(QDropEvent* Event);
   bool eventFilter(QObject *obj, QEvent *event);
+
 #ifdef Q_OS_WIN
   // reimplementation needed for Win 7 taskbar features
   virtual bool winEvent(MSG *message, long *result);
 #endif
 
+//--------------------------------------
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// PRIVATE members
-//
-////////////////////////////////////////////////////////////////////////////////
+private:
+  QTabBar*  Tabbar;
+  QAction*  m_AtnSavePipe;
+  QAction*  m_AtnSaveFull;
+  QAction*  m_AtnSaveSettings;
+  QAction*  m_AtnSaveJobfile;
+  QAction*  m_AtnSendToBatch;
+  QAction*  m_AtnGimpSavePipe;
+  QAction*  m_AtnGimpSaveFull;
+  QAction*  m_AtnMenuFullReset;
+  QAction*  m_AtnMenuUserReset;
+  QAction*  m_AtnMenuOpenPreset;
+  QAction*  m_AtnMenuOpenSettings;
+  short     m_ContextMenuOnTab;
+  QAction*  m_AtnShowTools;
+  ptUIState FUIState;
 
-private :
-  QTabBar* Tabbar;
-  QAction* m_AtnSavePipe;
-  QAction* m_AtnSaveFull;
-  QAction* m_AtnSaveSettings;
-  QAction* m_AtnSaveJobfile;
-  QAction* m_AtnGimpSavePipe;
-  QAction* m_AtnGimpSaveFull;
-  QAction* m_AtnMenuFullReset;
-  QAction* m_AtnMenuUserReset;
-  QAction* m_AtnMenuOpenPreset;
-  QAction* m_AtnMenuOpenSettings;
-  short    m_ContextMenuOnTab;
-  QAction* m_AtnShowTools;
-
-  ptVisibleToolsModel* m_VisibleToolsModel;
+  ptVisibleToolsModel  *m_VisibleToolsModel;
+  ptCurveWindow        *FSpotCurveWindow;  // raw pointer because managed by Qt parent mechanism
 
   void AnalyzeToolBoxStructure();
-  void ShowMovedTools(const QString Title);
+  void ShowMovedTools(const QString ATitle);
   void InitVisibleTools();
+  void ToggleLocalAdjustWidgets(const bool AEnabled, const int ARow);
+  void ToggleSpotRepairWidgets(const bool AEnabled);
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// slots
-//
-////////////////////////////////////////////////////////////////////////////////
+  /*! We switch to the respective UI state. */
+  void SwitchUIState(const ptUIState AState);
+//--------------------------------------
 
 public slots:
   // Toggle file manager window
+  void OpenBatchWindow();
+  void CloseBatchWindow();
   void OpenFileMgrWindow();
   void CloseFileMgrWindow();
+  void OtherInstanceMessage(const QString &msg);
 
+  // Represent and set settings values fomr the UI
+  void Settings_2_Form();
+  void Form_2_Settings();
+
+//--------------------------------------
 
 private slots:
   void ResizeTimerExpired();
@@ -200,6 +198,7 @@ private slots:
   void SaveMenuFull();
   void SaveMenuSettings();
   void SaveMenuJobfile();
+  void SaveMenuBatch();
   void GimpSaveMenuPipe();
   void GimpSaveMenuFull();
   void MenuFullReset();
@@ -211,8 +210,7 @@ private slots:
   void Search();
   void OnTranslationChoiceChanged(int idx);
 
-  // The generic catchall input change.
-  //~ void OnTagsEditTextChanged();
+  void OnTagsEditTextChanged();
 
   void OnInputChanged(QVariant Value);
 
@@ -238,7 +236,11 @@ private slots:
   void OnSpotWBButtonClicked();
 
   void OnZoomFitButtonClicked();
+  void OnZoomInButtonClicked();
+  void OnZoomOutButtonClicked();
   void OnZoomFullButtonClicked();
+  void OnBatchButtonClicked();
+  void OnFileMgrButtonClicked();
   void OnFullScreenButtonClicked();
   void OnLoadStyleButtonClicked();
 
@@ -267,50 +269,19 @@ private slots:
   void OnChannelMixerOpenButtonClicked();
   void OnChannelMixerSaveButtonClicked();
 
-  void OnCurveRGBOpenButtonClicked();
-  void OnCurveRGBSaveButtonClicked();
-  void OnCurveROpenButtonClicked();
-  void OnCurveRSaveButtonClicked();
-  void OnCurveGOpenButtonClicked();
-  void OnCurveGSaveButtonClicked();
-  void OnCurveBOpenButtonClicked();
-  void OnCurveBSaveButtonClicked();
-  void OnCurveLOpenButtonClicked();
-  void OnCurveLSaveButtonClicked();
-  void OnCurveaOpenButtonClicked();
-  void OnCurveaSaveButtonClicked();
-  void OnCurvebOpenButtonClicked();
-  void OnCurvebSaveButtonClicked();
-  void OnCurveOutlineOpenButtonClicked();
-  void OnCurveOutlineSaveButtonClicked();
-  void OnCurveLByHueOpenButtonClicked();
-  void OnCurveLByHueSaveButtonClicked();
-  void OnCurveHueOpenButtonClicked();
-  void OnCurveHueSaveButtonClicked();
-  void OnCurveTextureOpenButtonClicked();
-  void OnCurveTextureSaveButtonClicked();
-  void OnCurveShadowsHighlightsOpenButtonClicked();
-  void OnCurveShadowsHighlightsSaveButtonClicked();
-  void OnCurveDenoiseOpenButtonClicked();
-  void OnCurveDenoiseSaveButtonClicked();
-  void OnCurveSaturationOpenButtonClicked();
-  void OnCurveSaturationSaveButtonClicked();
-  void OnBaseCurveOpenButtonClicked();
-  void OnBaseCurveSaveButtonClicked();
-  void OnBaseCurve2OpenButtonClicked();
-  void OnBaseCurve2SaveButtonClicked();
 
   void OnTone1ColorButtonClicked();
   void OnTone2ColorButtonClicked();
 
   void OnTextureOverlayButtonClicked();
   void OnTextureOverlayClearButtonClicked();
+  void OnTextureOverlay2ButtonClicked();
+  void OnTextureOverlay2ClearButtonClicked();
 
   void OnGradualOverlay1ColorButtonClicked();
   void OnGradualOverlay2ColorButtonClicked();
 
   void OnOutputColorProfileResetButtonClicked();
-  void OnWriteOutputButtonClicked();
   void OnWritePipeButtonClicked();
 
   void OnVisibleToolsDiscardButtonClicked();

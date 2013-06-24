@@ -25,6 +25,7 @@
 #include "ptConstants.h"
 #include "ptHistogramWindow.h"
 #include "ptTheme.h"
+#include "ptImage.h"
 
 #include <iostream>
 
@@ -50,14 +51,11 @@ using namespace std;
 
 ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
                                            QWidget* Parent)
-  :QWidget(NULL) {
-
+: QWidget(nullptr)
+{
   m_RelatedImage = RelatedImage; // don't delete that at cleanup !
   // Some other dynamic members we want to have clean.
   m_QPixmap      = NULL;
-  m_Image8       = NULL;
-
-  m_LogoActive   = 1;
 
   m_PreviousHistogramGamma = -1;
   m_PreviousHistogramLogX  = -1;
@@ -168,6 +166,8 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
 
   m_LookUp = NULL;
   FillLookUp();
+
+  InitOverlay();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -177,10 +177,13 @@ ptHistogramWindow::ptHistogramWindow(const ptImage* RelatedImage,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptHistogramWindow::~ptHistogramWindow() {
-  //printf("(%s,%d) %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);
   delete m_QPixmap;
-  delete m_Image8;
   delete m_LookUp;
+  delete m_PixelInfoR;
+  delete m_PixelInfoG;
+  delete m_PixelInfoB;
+  delete m_PixelInfoTimer;
+  delete m_OverlayPalette;
 }
 
 
@@ -192,6 +195,22 @@ ptHistogramWindow::~ptHistogramWindow() {
 
 void ptHistogramWindow::Init() {
   ResizeTimerExpired();
+}
+
+//==============================================================================
+
+void ptHistogramWindow::PixelInfo(const QString R, const QString G, const QString B) {
+  m_PixelInfoR->setText("R: " + R);
+  m_PixelInfoR->adjustSize();
+  m_PixelInfoR->show();
+
+  m_PixelInfoG->setText("G: " + G);
+  m_PixelInfoG->adjustSize();
+  m_PixelInfoG->show();
+
+  m_PixelInfoB->setText("B: " + B);
+  m_PixelInfoB->adjustSize();
+  m_PixelInfoB->show();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -334,8 +353,8 @@ void ptHistogramWindow::CalculateHistogram() {
   }
 
   // Instantiate an Image8 and put the histogram in it.
-  delete m_Image8;
-  m_Image8 = new ptImage8(WidgetWidth,WidgetHeight,3);
+  m_Image8.setSize(WidgetWidth, WidgetHeight, 3);
+  m_Image8.fillColor(0, 0, 0, 0);
 
   uint16_t RowLimit = WidgetHeight-1;
 
@@ -354,25 +373,25 @@ void ptHistogramWindow::CalculateHistogram() {
         Index = k*WidgetWidth+i+HistogramMargin;
         // 2- ! Image8[0]=B for QT !
         for (short z=0; z<3; z++) {
-          m_Image8->m_Image[Index][z] +=
+          m_Image8.image()[Index][z] +=
             ((z==(2-c)) || (MaxColor ==1))?0xff:0;
         }
       }
       // baselines. A grey colour.
-      Index = RowLimit*m_Image8->m_Width+i+HistogramMargin;
-      m_Image8->m_Image[Index][0] = 0x80;
-      m_Image8->m_Image[Index][1] = 0x80;
-      m_Image8->m_Image[Index][2] = 0x80;
+      Index = RowLimit*m_Image8.width()+i+HistogramMargin;
+      m_Image8.image()[Index][0] = 0x80;
+      m_Image8.image()[Index][1] = 0x80;
+      m_Image8.image()[Index][2] = 0x80;
       // Average line.
       r = HistoAverage/(double)(m_HistoMax);
       if (r>=0.99) r=0.99; // Safety.
       Row = RowLimit-(uint16_t)(r*WidgetHeight);
       // if (Row<0) Row = 0;
       if (Row >= WidgetHeight) Row=WidgetHeight-1;
-      Index = Row*m_Image8->m_Width+i+HistogramMargin;
-      m_Image8->m_Image[Index][0] = 0xa0;
-      m_Image8->m_Image[Index][1] = 0xa0;
-      m_Image8->m_Image[Index][2] = 0xa0;
+      Index = Row*m_Image8.width()+i+HistogramMargin;
+      m_Image8.image()[Index][0] = 0xa0;
+      m_Image8.image()[Index][1] = 0xa0;
+      m_Image8.image()[Index][2] = 0xa0;
     }
   }
 
@@ -384,12 +403,12 @@ void ptHistogramWindow::CalculateHistogram() {
     uint32_t Index = Row*WidgetWidth+HistogramMargin;
     for (short i=1; i<Sections; i++) {
       Index += Step;
-      if (m_Image8->m_Image[Index][0] == 0 &&
-          m_Image8->m_Image[Index][1] == 0 &&
-          m_Image8->m_Image[Index][2] == 0) {
-        m_Image8->m_Image[Index][0] =
-        m_Image8->m_Image[Index][1] =
-        m_Image8->m_Image[Index][2] = value;
+      if (m_Image8.image()[Index][0] == 0 &&
+          m_Image8.image()[Index][1] == 0 &&
+          m_Image8.image()[Index][2] == 0) {
+        m_Image8.image()[Index][0] =
+        m_Image8.image()[Index][1] =
+        m_Image8.image()[Index][2] = value;
       }
     }
   }
@@ -418,6 +437,41 @@ void ptHistogramWindow::FillLookUp() {
   }
 }
 
+//==============================================================================
+
+void ptHistogramWindow::InitOverlay() {
+  m_OverlayPalette = new QPalette();
+  m_OverlayPalette->setColor(QPalette::Foreground, QColor(0xa0, 0xa0, 0xa0));
+
+  m_PixelInfoR = new QLabel(this);
+  m_PixelInfoR->setTextFormat(Qt::PlainText);
+  m_PixelInfoR->setTextInteractionFlags(Qt::NoTextInteraction);
+  m_PixelInfoR->show();
+  m_PixelInfoR->setPalette(*m_OverlayPalette);
+  m_PixelInfoR->move(10, 10);
+  m_PixelInfoR->hide();
+
+  m_PixelInfoG = new QLabel(this);
+  m_PixelInfoG->setTextFormat(Qt::PlainText);
+  m_PixelInfoG->setTextInteractionFlags(Qt::NoTextInteraction);
+  m_PixelInfoG->show();
+  m_PixelInfoG->setPalette(*m_OverlayPalette);
+  m_PixelInfoG->move(60, 10);
+  m_PixelInfoG->hide();
+
+  m_PixelInfoB = new QLabel(this);
+  m_PixelInfoB->setTextFormat(Qt::PlainText);
+  m_PixelInfoB->setTextInteractionFlags(Qt::NoTextInteraction);
+  m_PixelInfoB->show();
+  m_PixelInfoB->setPalette(*m_OverlayPalette);
+  m_PixelInfoB->move(110, 10);
+  m_PixelInfoB->hide();
+
+  m_PixelInfoTimer = new QTimer(this);
+  m_PixelInfoTimer->setSingleShot(true);
+  connect(m_PixelInfoTimer, SIGNAL(timeout()), this, SLOT(PixelInfoHide()));
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // UpdateView.
@@ -435,13 +489,11 @@ void ptHistogramWindow::UpdateView(const ptImage* NewRelatedImage) {
   // HW acceleration of QPixmap.
   delete m_QPixmap;
   m_QPixmap = new QPixmap(
-   QPixmap::fromImage(QImage((const uchar*) m_Image8->m_Image,
-                             m_Image8->m_Width,
-                             m_Image8->m_Height,
+   QPixmap::fromImage(QImage((const uchar*) m_Image8.image().data(),
+                             m_Image8.width(),
+                             m_Image8.height(),
                              QImage::Format_RGB32)));
-  m_LogoActive = 0;
   repaint();
-
 }
 
 
@@ -454,30 +506,9 @@ void ptHistogramWindow::UpdateView(const ptImage* NewRelatedImage) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptHistogramWindow::paintEvent(QPaintEvent*) {
-  //printf("(%s,%d) %s - Size : (%d,%d)\n",
-  //       __FILE__,__LINE__,__PRETTY_FUNCTION__,width(),height());
   QPainter Painter(this);
-  Painter.save();
-//  if (!m_QPixmap) {
-//    QString FileName = Settings->GetString("UserDirectory") + "photivoLogo.png";
-//    m_QPixmap = new QPixmap(FileName);
-//    QPixmap* Scaled = new QPixmap(
-//      m_QPixmap->scaled(width()-16,
-//                        height()-16,
-//                        Qt::KeepAspectRatio,
-//                        Qt::SmoothTransformation));
-//    delete m_QPixmap;
-//    m_QPixmap = Scaled;
-//  }
-
-//  if (m_LogoActive) {
-//    Painter.drawPixmap((width()-m_QPixmap->width())/2,8,*m_QPixmap);
-//    Painter.restore();
-//  } else {
-  if (!m_LogoActive) {
+  if (m_QPixmap)
     Painter.drawPixmap(0,0,*m_QPixmap);
-    Painter.restore();
-  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -489,24 +520,19 @@ void ptHistogramWindow::paintEvent(QPaintEvent*) {
 void ptHistogramWindow::contextMenuEvent(QContextMenuEvent *event)
 {
   QMenu Menu(this);
-  Menu.setPalette(Theme->ptMenuPalette);
-  Menu.setStyle(Theme->ptStyle);
+  Menu.setPalette(Theme->menuPalette());
+  Menu.setStyle(Theme->style());
   QMenu ChannelMenu(this);
-  ChannelMenu.setPalette(Theme->ptMenuPalette);
-  ChannelMenu.setStyle(Theme->ptStyle);
+  ChannelMenu.setPalette(Theme->menuPalette());
+  ChannelMenu.setStyle(Theme->style());
   ChannelMenu.addAction(m_AtnRGB);
   ChannelMenu.addAction(m_AtnR);
   ChannelMenu.addAction(m_AtnG);
   ChannelMenu.addAction(m_AtnB);
   ChannelMenu.setTitle(tr("Display &channels"));
-  // TODO Check for ActiveTab == a LAB tab
-  //~ if (Settings->GetInt("HistogramMode")==ptHistogramMode_Linear)
-    //~ ChannelMenu.setEnabled(0);
-  //~ else
-    //~ ChannelMenu.setEnabled(1);
   QMenu ModeMenu(this);
-  ModeMenu.setPalette(Theme->ptMenuPalette);
-  ModeMenu.setStyle(Theme->ptStyle);
+  ModeMenu.setPalette(Theme->menuPalette());
+  ModeMenu.setStyle(Theme->style());
   ModeMenu.addAction(m_AtnLinear);
   ModeMenu.addAction(m_AtnPreview);
   ModeMenu.addAction(m_AtnOutput);
@@ -579,4 +605,13 @@ void ptHistogramWindow::MenuMode() {
 
   Update(ptProcessorPhase_OnlyHistogram);
 }
+
+//==============================================================================
+
+void ptHistogramWindow::PixelInfoHide() {
+  m_PixelInfoR->hide();
+  m_PixelInfoG->hide();
+  m_PixelInfoB->hide();
+}
+
 ////////////////////////////////////////////////////////////////////////////////

@@ -23,6 +23,8 @@
 #include <cassert>
 #include <cmath>
 
+//==============================================================================
+
 #include "ptRichRectInteraction.h"
 #include "ptDefines.h"
 #include "ptSettings.h"
@@ -31,17 +33,13 @@
 extern ptSettings* Settings;
 extern ptTheme* Theme;
 
-///////////////////////////////////////////////////////////////////////////
-//
-// constructor and destructor
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
       const int x, const int y, const int width, const int height,
       const short FixedAspectRatio, const uint AspectRatioW,
       const uint AspectRatioH, const short Guidelines)
-: ptImageInteraction(View),
+: ptAbstractInteraction(View),
   //constants
   EdgeThickness(40),
   TinyRectThreshold(80),
@@ -63,12 +61,12 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
                                               Settings->GetInt("BackgroundGreen"),
                                               Settings->GetInt("BackgroundBlue")));
   } else {
-    m_LightsOutBrushes[2] = new QBrush(Theme->ptBackground);
+    m_LightsOutBrushes[2] = new QBrush(Theme->baseColor());
   }
 
   // initial rectangles for LightsOut
   for (int i = 0; i <= 3; i++) {
-    m_LightsOutRects[i] = m_View->scene()->addRect(
+    m_LightsOutRects[i] = FView->scene()->addRect(
                               0,0,0,0,
                               QPen(Qt::NoPen),
                               *m_LightsOutBrushes[Settings->GetInt("LightsOut")]);
@@ -76,25 +74,32 @@ ptRichRectInteraction::ptRichRectInteraction(QGraphicsView* View,
 
   m_DragDelta = new QLine();
   m_Rect.setRect(x, y, width, height);
-  m_RectItem = m_View->scene()->addRect(m_Rect, QPen(QColor(150,150,150)));
+  m_RectItem = FView->scene()->addRect(m_Rect, QPen(QColor(255,255,255)));
   m_RectItem->setVisible(Settings->GetInt("LightsOut") != ptLightsOutMode_Black);
+
+  m_Shadow = new QGraphicsDropShadowEffect;
+  m_Shadow->setBlurRadius(1);
+  m_Shadow->setOffset(1);
+  m_Shadow->setColor(QColor(0,0,0));
+  m_RectItem->setGraphicsEffect(m_Shadow);
 
   // Init guidelines items
   for (int i = 0; i <= 3; i++) {
     m_GuideItems[i] = new QGraphicsLineItem();
     m_GuideItems[i]->hide();
-    m_GuideItems[i]->setPen(QPen(QColor(150,150,150)));
-    m_View->scene()->addItem(m_GuideItems[i]);
+    m_GuideItems[i]->setPen(QPen(QColor(255,255,255)));
+    FView->scene()->addItem(m_GuideItems[i]);
   }
 
   setAspectRatio(FixedAspectRatio, AspectRatioW, AspectRatioH, 0);
   UpdateScene();
 }
 
+//==============================================================================
 
 ptRichRectInteraction::~ptRichRectInteraction() {
   for (int i = 0; i <= 3; i++) {
-    m_View->scene()->removeItem(m_GuideItems[i]);
+    FView->scene()->removeItem(m_GuideItems[i]);
     DelAndNull(m_GuideItems[i]);
   }
 
@@ -104,15 +109,12 @@ ptRichRectInteraction::~ptRichRectInteraction() {
   for (int i = 0; i <= 3; i++) {
     DelAndNull(m_LightsOutRects[i]);
   }
-
 }
+/* Resources managed by Qt parent mechanism (do not delete manually):
+   m_Shadow
+*/
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// setAspectRatio()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::setAspectRatio(const short FixedAspectRatio,
                                            uint AspectRatioW, uint AspectRatioH,
@@ -133,27 +135,17 @@ void ptRichRectInteraction::setAspectRatio(const short FixedAspectRatio,
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// set guidelines
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::setGuidelines(const short mode) {
   if (m_Guides != mode) {
     m_Guides = mode;
     RecalcGuides();
-    m_View->repaint();
+    FView->repaint();
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// seLightsOut()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::setLightsOut(short mode) {
   mode = qBound((short)0, mode, (short)2);
@@ -165,13 +157,7 @@ void ptRichRectInteraction::setLightsOut(short mode) {
   UpdateScene();
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// mouseAction() [slot]
-// Dispatcher for mouse events received from the parent.
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::mouseAction(QMouseEvent* event) {
   switch (event->type()) {
@@ -193,23 +179,18 @@ void ptRichRectInteraction::mouseAction(QMouseEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// mouse button press
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::MousePressHandler(const QMouseEvent* event) {
   if (event->button() == Qt::LeftButton && event->modifiers() == Qt::NoModifier) {
-    QPointF scPos = m_View->mapToScene(event->pos());
+    QPointF scPos = FView->mapToScene(event->pos());
     m_DragDelta->setPoints(event->pos(), event->pos());
 
     if (m_RectItem->contains(scPos)) {
       m_NowDragging = 1;
 
     // Start new rect when none is present or clicked outside current one.
-    } else if (m_View->scene()->sceneRect().contains(scPos)) {
+    } else if (FView->scene()->sceneRect().contains(scPos)) {
       m_NowDragging = 1;
       m_MovingEdge = meNone;
       m_Rect.setRect(scPos.x(), scPos.y(), 1.0, 1.0);
@@ -220,12 +201,7 @@ void ptRichRectInteraction::MousePressHandler(const QMouseEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// mouse button release
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::MouseReleaseHandler(const QMouseEvent* event) {
   if (event->button() == Qt::LeftButton) {
@@ -233,41 +209,31 @@ void ptRichRectInteraction::MouseReleaseHandler(const QMouseEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// mouse double click
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::MouseDblClickHandler(const QMouseEvent* event) {
-  if (m_RectItem->contains(m_View->mapToScene(event->pos())) ) {
+  if (m_RectItem->contains(FView->mapToScene(event->pos())) ) {
     m_ExitStatus = stSuccess;
     Finalize();
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// mouse move
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::MouseMoveHandler(const QMouseEvent* event) {
   if (m_NowDragging) {
     m_DragDelta->setP2(event->pos());   // GraphicsView scale
-    qreal dx = m_DragDelta->dx() / m_View->transform().m11();  // Transform delta to scene scale.
-    qreal dy = m_DragDelta->dy() / m_View->transform().m11();
+    qreal dx = m_DragDelta->dx() / FView->transform().m11();  // Transform delta to scene scale.
+    qreal dy = m_DragDelta->dy() / FView->transform().m11();
 
     // Move current rectangle. The qBounds make sure it stops at image boundaries.
     //if (m_CtrlIsPressed > 0) {
     if (m_MovingEdge == meCenter) {
       m_Rect.moveTo(
           qBound(0.0, m_Rect.left() + dx,
-                 m_View->scene()->sceneRect().width() - m_Rect.width()),
+                 FView->scene()->sceneRect().width() - m_Rect.width()),
           qBound(0.0, m_Rect.top() + dy,
-                 m_View->scene()->sceneRect().height() - m_Rect.height())
+                 FView->scene()->sceneRect().height() - m_Rect.height())
       );
       RecalcGuides();
       RecalcLightsOutRects();
@@ -301,13 +267,7 @@ void ptRichRectInteraction::MouseMoveHandler(const QMouseEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// keyAction()
-// Slot receiving keyboard events from the parent.
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::keyAction(QKeyEvent* event) {
   if (event->type() == QEvent::KeyPress) {
@@ -337,39 +297,34 @@ void ptRichRectInteraction::keyAction(QKeyEvent* event) {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// UpdateCursor()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::UpdateCursor() {
   switch (m_MovingEdge) {
     case meOutside:
-      m_View->setCursor(Qt::ArrowCursor);
+      FView->setCursor(Qt::ArrowCursor);
       break;
     case meNone:
-      m_View->setCursor(Qt::CrossCursor);
+      FView->setCursor(Qt::CrossCursor);
       break;
     case meCenter:
-      m_View->setCursor(Qt::SizeAllCursor);
+      FView->setCursor(Qt::SizeAllCursor);
       break;
     case meTop:
     case meBottom:
-      m_View->setCursor(Qt::SizeVerCursor);
+      FView->setCursor(Qt::SizeVerCursor);
       break;
     case meLeft:
     case meRight:
-      m_View->setCursor(Qt::SizeHorCursor);
+      FView->setCursor(Qt::SizeHorCursor);
       break;
     case meTopLeft:
     case meBottomRight:
-      m_View->setCursor(Qt::SizeFDiagCursor);
+      FView->setCursor(Qt::SizeFDiagCursor);
       break;
     case meTopRight:
     case meBottomLeft:
-      m_View->setCursor(Qt::SizeBDiagCursor);
+      FView->setCursor(Qt::SizeBDiagCursor);
       break;
     default:
       assert(!"Unhandled m_MovingEdge!");
@@ -377,48 +332,33 @@ void ptRichRectInteraction::UpdateCursor() {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// stop()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::stop(ptStatus exitStatus) {
   m_ExitStatus = exitStatus;
   Finalize();
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Finalize()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::Finalize() {
-  m_View->scene()->removeItem(m_RectItem);
+  FView->scene()->removeItem(m_RectItem);
   // Do not delete m_RectItem here! It's still needed to report the size and
   // position of the rectangle to the caller. Deletion happens in the destructor.
-  m_View->setCursor(Qt::ArrowCursor);
+  FView->setCursor(Qt::ArrowCursor);
   emit finished(m_ExitStatus);
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// MoveToCenter()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::moveToCenter(const short horizontal, const short vertical) {
   QPointF NewCenter = m_Rect.center();
 
   if (horizontal) {
-    NewCenter.setX(m_View->scene()->width() / 2);
+    NewCenter.setX(FView->scene()->width() / 2);
   }
   if (vertical) {
-    NewCenter.setY(m_View->scene()->height() / 2);
+    NewCenter.setY(FView->scene()->height() / 2);
   }
 
   m_Rect.moveCenter(NewCenter);
@@ -426,12 +366,7 @@ void ptRichRectInteraction::moveToCenter(const short horizontal, const short ver
   UpdateScene();
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// flipAspectRatio()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::flipAspectRatio() {
   if (m_FixedAspectRatio) {
@@ -447,25 +382,19 @@ void ptRichRectInteraction::flipAspectRatio() {
   UpdateScene();
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// ClampToScene()
-//
 // Make sure rectangle stays inside sceneRect. Does not change AR, even
 // when fixed AR is not set.
-//
-///////////////////////////////////////////////////////////////////////////
-
 void ptRichRectInteraction::ClampToScene() {
   QPointF center = m_Rect.center();
   qreal arw = m_Rect.width();
   qreal arh = m_Rect.height();
 
-  qreal MaxWidth = 2 * qMin(center.x() - m_View->scene()->sceneRect().left(),
-                            m_View->scene()->sceneRect().right() - center.x());
-  qreal MaxHeight = 2* qMin(center.y() - m_View->scene()->sceneRect().top(),
-                            m_View->scene()->sceneRect().bottom() - center.y());
+  qreal MaxWidth = 2 * qMin(center.x() - FView->scene()->sceneRect().left(),
+                            FView->scene()->sceneRect().right() - center.x());
+  qreal MaxHeight = 2* qMin(center.y() - FView->scene()->sceneRect().top(),
+                            FView->scene()->sceneRect().bottom() - center.y());
 
   if (m_Rect.width() > MaxWidth) {
     m_Rect.setWidth(MaxWidth);
@@ -482,23 +411,17 @@ void ptRichRectInteraction::ClampToScene() {
   m_RectItem->setRect(m_Rect);
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// EnforceAspectRatio()
-//
 // Make sure rectangle has the proper AR. Wenn adjusted the opposite
 // corner/edge to the one that was moved remains fixed.
 // When there was no movement (e.g. changed AR values in MainWindow)
 // the center of the rectangle remains fixed.
-//
-///////////////////////////////////////////////////////////////////////////
-
 void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*/) {
   dx = qAbs(dx);
   dy = qAbs(dy);
-  qreal ImageRight = m_View->scene()->sceneRect().right();
-  qreal ImageBottom = m_View->scene()->sceneRect().bottom();
+  qreal ImageRight = FView->scene()->sceneRect().right();
+  qreal ImageBottom = FView->scene()->sceneRect().bottom();
   qreal NewWidth = m_Rect.height() * m_AspectRatio;
   qreal NewHeight = m_Rect.width() / m_AspectRatio;
   qreal EdgeCenter = 0.0;
@@ -648,11 +571,8 @@ void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*
   m_RectItem->setRect(m_Rect);
 }
 
+//==============================================================================
 
-////////////////////////////////////////////////////////////////////////
-//
-// MouseDragPos
-//
 // Returns the area of the crop/selection rectangle the mouse cursor hovers over.
 // The mouse position inside the crop rectangle determines which action is performed
 // on drag. There are nine areas: 55511111111666
@@ -666,15 +586,12 @@ void ptRichRectInteraction::EnforceAspectRatio(qreal dx /*= 0*/, qreal dy /*= 0*
 //   changes shape to indicate the move/resize mode.
 // - For rectangle edges of TinyRectThreshold pixels or shorter only the corner modes
 //   apply, one for each half of the edge. This avoids too tiny interaction areas.
-//
-////////////////////////////////////////////////////////////////////////
-
 ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
-  QPointF pos(m_View->mapToScene(event->pos()));
+  QPointF pos(FView->mapToScene(event->pos()));
 
   // Catch mouse outside current crop rect
   if (!m_RectItem->contains(pos)) {
-    if (m_View->scene()->sceneRect().contains(pos)) {
+    if (FView->scene()->sceneRect().contains(pos)) {
       return meNone;
     } else {
       return meOutside;
@@ -686,15 +603,15 @@ ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
   int LRthick = 0;    // left/right
 
   // Determine edge area thickness
-  if (m_Rect.height() <= (int)(TinyRectThreshold / m_View->transform().m11())) {
+  if (m_Rect.height() <= (int)(TinyRectThreshold / FView->transform().m11())) {
     TBthick = (int)(m_Rect.height() / 2);
   } else {
-    TBthick = (int)(EdgeThickness / m_View->transform().m11());
+    TBthick = (int)(EdgeThickness / FView->transform().m11());
   }
-  if (m_Rect.width() <= (int)(TinyRectThreshold / m_View->transform().m11())) {
+  if (m_Rect.width() <= (int)(TinyRectThreshold / FView->transform().m11())) {
     LRthick = (int)(m_Rect.width() / 2);
   } else {
-    LRthick = (int)(EdgeThickness / m_View->transform().m11());
+    LRthick = (int)(EdgeThickness / FView->transform().m11());
   }
 
   // Determine in which area the mouse is
@@ -728,21 +645,16 @@ ptMovingEdge ptRichRectInteraction::MouseDragPos(const QMouseEvent* event) {
   return HoverOver;
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// RecalcRect()
 // Calc new corner point, change moving edge/corner when rect is
 // dragged into another "quadrant", and update rectangle.
-//
-///////////////////////////////////////////////////////////////////////////
-
 void ptRichRectInteraction::RecalcRect() {
   QRectF NewRect = m_Rect;
-  qreal ImageRight = m_View->scene()->sceneRect().right();
-  qreal ImageBottom = m_View->scene()->sceneRect().bottom();
-  qreal dx = m_DragDelta->dx() / m_View->transform().m11();
-  qreal dy = m_DragDelta->dy() / m_View->transform().m11();
+  qreal ImageRight = FView->scene()->sceneRect().right();
+  qreal ImageBottom = FView->scene()->sceneRect().bottom();
+  qreal dx = m_DragDelta->dx() / FView->transform().m11();
+  qreal dy = m_DragDelta->dy() / FView->transform().m11();
   qreal dxCeil = dx;
   qreal dyCeil = dy;
   qreal dxFloor = dx;
@@ -853,12 +765,7 @@ void ptRichRectInteraction::RecalcRect() {
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// RecalcGuides()
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::RecalcGuides() {
   // Draw no guides when LightsOut is on "black" setting. In that case calc
@@ -982,63 +889,53 @@ void ptRichRectInteraction::RecalcGuides() {
   }
 }
 
+//==============================================================================
 
-///////////////////////////////////////////////////////////////////////////
-//
-// RecalcLightsOutRects()
-//
 // Array index order: top, right, bottom, left
 // Up to four rectangles are drawn according to the following figure.
 // tttttttttttttttttt
 // lll            rrr
 // lll            rrr
 // bbbbbbbbbbbbbbbbbb
-//
-///////////////////////////////////////////////////////////////////////////
-
 void ptRichRectInteraction::RecalcLightsOutRects() {
   m_LightsOutRects[0]->setRect(    // top
-      m_View->scene()->sceneRect().left(),
-      m_View->scene()->sceneRect().top(),
-      m_View->scene()->sceneRect().width(),
-      m_Rect.top() - m_View->scene()->sceneRect().top()
+      FView->scene()->sceneRect().left(),
+      FView->scene()->sceneRect().top(),
+      FView->scene()->sceneRect().width(),
+      m_Rect.top() - FView->scene()->sceneRect().top()
   );
 
   m_LightsOutRects[1]->setRect(    // right
       m_Rect.right(),
       m_Rect.top(),
-      m_View->scene()->sceneRect().right() - m_Rect.right(),
+      FView->scene()->sceneRect().right() - m_Rect.right(),
       m_Rect.height()
   );
 
   m_LightsOutRects[2]->setRect(    // bottom
-      m_View->scene()->sceneRect().left(),
+      FView->scene()->sceneRect().left(),
       m_Rect.bottom(),
-      m_View->scene()->sceneRect().width(),
-      m_View->scene()->sceneRect().bottom() - m_Rect.bottom()
+      FView->scene()->sceneRect().width(),
+      FView->scene()->sceneRect().bottom() - m_Rect.bottom()
   );
 
   m_LightsOutRects[3]->setRect(    // left
-      m_View->scene()->sceneRect().left(),
+      FView->scene()->sceneRect().left(),
       m_Rect.top(),
-      m_Rect.left() - m_View->scene()->sceneRect().left(),
+      m_Rect.left() - FView->scene()->sceneRect().left(),
       m_Rect.height()
   );
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-// UpdateScene()
-// Update all elements in the scene
-//
-///////////////////////////////////////////////////////////////////////////
+//==============================================================================
 
 void ptRichRectInteraction::UpdateScene() {
-  m_View->blockSignals(1);
+  FView->blockSignals(1);
   RecalcRect();
   RecalcGuides();
   RecalcLightsOutRects();
-  m_View->blockSignals(0);
-  //m_View->repaint();
+  FView->blockSignals(0);
+  //FView->repaint();
 }
+
+//==============================================================================

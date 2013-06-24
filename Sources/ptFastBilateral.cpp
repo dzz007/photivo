@@ -33,7 +33,6 @@
 #include "ptError.h"
 
 #include "fastbilateral/fast_lbf.h"
-//~ #include "fastbilateral/linear_bf.h"
 
 typedef Array_2D<float> image_type;
 
@@ -51,6 +50,7 @@ void ptFastBilateralChannel(ptImage* Image,
 
   uint16_t Width  = Image->m_Width;
   uint16_t Height = Image->m_Height;
+  int32_t  hIdx   = 0;
 
   image_type InImage(Width,Height);
   image_type FilteredImage(Width,Height);
@@ -58,10 +58,11 @@ void ptFastBilateralChannel(ptImage* Image,
   for (short Channel = 0; Channel<3; Channel++) {
     // Is it a channel we are supposed to handle ?
     if  (! (ChannelMask & (1<<Channel))) continue;
-#pragma omp parallel for default(shared) schedule(static)
+#pragma omp parallel for default(shared) schedule(static) private(hIdx)
     for (uint16_t Row=0; Row<Image->m_Height; Row++) {
+      hIdx = Row*Width;
       for (uint16_t Col=0; Col<Image->m_Width; Col++) {
-        InImage(Col,Row) = ToFloatTable[Image->m_Image[Row*Width+Col][Channel]];
+        InImage(Col,Row) = ToFloatTable[Image->m_Image[hIdx+Col][Channel]];
       }
     }
 
@@ -71,10 +72,11 @@ void ptFastBilateralChannel(ptImage* Image,
            1,
            &FilteredImage,&FilteredImage);
 
-#pragma omp parallel for default(shared) schedule(static)
+#pragma omp parallel for default(shared) schedule(static) private(hIdx)
     for (uint16_t Row=0; Row<Image->m_Height; Row++) {
+      hIdx = Row*Width;
       for (uint16_t Col=0; Col<Image->m_Width; Col++) {
-        Image->m_Image[Row*Width+Col][Channel] = CLIP((int32_t)(FilteredImage(Col,Row)*0xffff));
+        Image->m_Image[hIdx+Col][Channel] = CLIP((int32_t)(FilteredImage(Col,Row)*0xffff));
       }
     }
   }
@@ -87,13 +89,16 @@ void ptFastBilateralLayer(uint16_t *Layer,
                           const float Sigma_r,
                           const short Iterations) {
 
+  int32_t hIdx = 0;
+
   image_type InImage(Width,Height);
   image_type FilteredImage(Width,Height);
 
-#pragma omp parallel for default(shared) schedule(static)
+#pragma omp parallel for default(shared) schedule(static) private(hIdx)
   for (uint16_t Row=0; Row<Height; Row++) {
+    hIdx = Row*Width;
     for (uint16_t Col=0; Col<Width; Col++) {
-      InImage(Col,Row) = ToFloatTable[Layer[Row*Width+Col]];
+      InImage(Col,Row) = ToFloatTable[Layer[hIdx+Col]];
     }
   }
 
@@ -103,10 +108,11 @@ void ptFastBilateralLayer(uint16_t *Layer,
          1,
          &FilteredImage,&FilteredImage);
 
-#pragma omp parallel for default(shared) schedule(static)
+#pragma omp parallel for default(shared) schedule(static) private(hIdx)
   for (uint16_t Row=0; Row<Height; Row++) {
+    hIdx = Row*Width;
     for (uint16_t Col=0; Col<Width; Col++) {
-      Layer[Row*Width+Col] = CLIP((int32_t)(FilteredImage(Col,Row)*0xffff));
+      Layer[hIdx+Col] = CLIP((int32_t)(FilteredImage(Col,Row)*0xffff));
     }
   }
 }

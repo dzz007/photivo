@@ -17,6 +17,11 @@ active-tools          system-run
 PIPE
 indicator-active-tab  <modified gtk-yes>
 load-image            insert-image
+move-object-up        <arrow from document-save>
+move-object-down      <arrow from document-save>
+add-spot              <list-add in green>
+add-spot-stop         <combined from process-stop and list-add>
+edit-spot             <combined from gtk-yes and format-text-direction-ltr>
 spot-wb               <format-text-direction-ltr without the arrow>
 rotate-left           object-rotate-left
 rotate-right          object-rotate-right
@@ -56,7 +61,18 @@ bookmark-remove     <modified bookmark-new>
 tool-hide           <modified window-close>
 tool-show           <modified dialog-ok>
 
+BOTTOM BAR
+file-manager        folder-copy
+batch-processing    gtk-copy
+
 FILE MANAGER
 broken-image-48px   <process-stop in greyscale>
 folder-48px         <folder-new without plus sign>
-go-up-48px          go-up
+go-up               <rotated dialog-apply>
+go-up-48px          <modified dialog-apply>
+my-computer         go-home
+
+BATCH MANAGER
+processing-abort    gtk-stop
+job-add             gtk-add
+job-remove          gtk-remove

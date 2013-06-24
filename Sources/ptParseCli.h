@@ -43,6 +43,7 @@ struct ptCliCommands {
   QString Filename;
   QString PtsFilename;
   bool NewInstance;
+  bool NoOpenFileMgr;
 };
 
 /*! Parses the command line and returns invoked action and files to open. */
