@@ -331,12 +331,17 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
 // Slot to receive thumbnail images from the generator and dispatch them to their thumb group.
 // Also updates the progress bar.
 void ptFileMgrWindow::receiveThumb(uint AReceiverId, TThumbPtr AImage) {
-  for (ptGraphicsThumbGroup* hThumbGroup: *FDataModel->thumbGroupList()) {
-    if (hThumbGroup->id() == AReceiverId) {
-      hThumbGroup->addImage(AImage);
-      ++FThumbsReceived;
-      this->updateProgressbar();
-      break;
+  if ((AReceiverId == CImageViewReceiverId) && FImageView->isVisible()) {
+    FImageView->showImage(AImage);
+
+  } else {
+    for (ptGraphicsThumbGroup* hThumbGroup: *FDataModel->thumbGroupList()) {
+      if (hThumbGroup->id() == AReceiverId) {
+        hThumbGroup->addImage(AImage);
+        ++FThumbsReceived;
+        this->updateProgressbar();
+        break;
+      }
     }
   }
 }
@@ -479,12 +484,22 @@ void ptFileMgrWindow::focusThumbnail(int index) {
     FFilesScene->setFocusItem(thumb);
     m_FilesView->ensureVisible(thumb, 0, 0);
     m_FilesView->setFocus();
+
+    // if a different thumb is focused update ImageView
     if (thumb->fsoType() == fsoFile) {
-      FImageView->showImage(thumb->fullPath());
+      this->loadForImageView(thumb->fullPath());
     }
 
   } else {
     FFilesScene->clearFocus();
+  }
+}
+
+//------------------------------------------------------------------------------
+void ptFileMgrWindow::loadForImageView(const QString& AFilePath) {
+  if (FImageView->isVisible() && (AFilePath != FImageView->currentFilename())) {
+    FImageView->setNextFilename(AFilePath);
+    FDataModel->requestImageViewImage(AFilePath);
   }
 }
 
@@ -535,7 +550,7 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     FDataModel->dirModel()->ChangeAbsoluteDir(location);
     displayThumbnails(location, FDataModel->dirModel()->pathType());
   } else if (action == tnaViewImage) {
-    FImageView->showImage(location);
+    this->loadForImageView(location);
   }
 }
 

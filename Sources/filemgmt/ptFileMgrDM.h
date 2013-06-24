@@ -39,6 +39,10 @@
 class ptImage8;
 
 //------------------------------------------------------------------------------
+const uint CImageViewReceiverId = 0;
+const uint CFirstThumbReceiverId = 1;
+
+//------------------------------------------------------------------------------
 /*!
   \class ptFileMgrDM
 
@@ -68,6 +72,7 @@ public:
   void populateThumbs(QGraphicsScene* AScene);
   QList<ptGraphicsThumbGroup*>* thumbGroupList();
   bool thumbGenRunning() const;
+  void requestImageViewImage(const QString& AFilename);
 
   ptSingleDirModel* dirModel() const;
   ptTagModel* tagModel();

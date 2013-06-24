@@ -24,7 +24,7 @@
 #ifndef PTIMAGEVIEW_H
 #define PTIMAGEVIEW_H
 
-#include "ptThumbGenMgr.h"
+#include "ptThumbDefines.h"
 #include "../ptReportOverlay.h"
 #include "../ptImage8.h"
 #include <QWidget>
@@ -41,7 +41,9 @@ public:
   explicit ptImageView(QWidget* AParent = nullptr);
   ~ptImageView();
 
-  void showImage(const QString AFileName);
+  void showImage(TThumbPtr AImage8);
+  QString currentFilename() const;
+  void setNextFilename(const QString& AFilename);
 
 public slots:
   void zoom100();
@@ -70,10 +72,9 @@ private:
   QList<float>          ZoomFactors;   // steps for wheel zoom
   QGridLayout*          FParentLayout;
   QGraphicsScene*       FScene;
-  ptImage8              FImage;
-  QString               FFileNameCurrent;
-  QString               FFileNameNext;
-  std::unique_ptr<ptThumbGenMgr> FThumbGen;
+  TThumbPtr             FImage;
+  QString               FFilenameCurrent;
+  QString               FFilenameNext;
   int                   FZoomMode;
   float                 FZoomFactor;
   int                   FZoom;
@@ -93,7 +94,6 @@ private:
   QAction* FZoomOutAction;
 
 private slots:
-  void receiveThumb(uint, TThumbPtr AImage);
   void resizeTimerExpired();
 };
 
