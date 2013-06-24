@@ -127,6 +127,10 @@ bool ptFileMgrDM::thumbGenRunning() const {
 }
 
 //------------------------------------------------------------------------------
+void ptFileMgrDM::requestImageViewImage(const QString& AFilename) {
+}
+
+//------------------------------------------------------------------------------
 /*!
   Stops thumbnail generation. It is guaranteed that generation has actually stopped
   when this method returns.
@@ -173,7 +177,7 @@ void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
   // Create thumbgroup objects and the ID list for thumb image generation.
   // Thumbgroup creation is very fast even for large directories. Can be done in the GUI thread
   // without speed issues.
-  uint hGroupId = 0;
+  uint hGroupId = CFirstThumbReceiverId;
   for (QFileInfo& file: files) {
     this->createThumbGroup(file, hGroupId, AScene);
     hThumbIdList.append({makeThumbId(file, hLongEdgeMax, FThumbGroupList->last()->fsoType()),

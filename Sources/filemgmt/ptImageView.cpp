@@ -27,8 +27,6 @@
 #include "../ptSettings.h"
 #include "../ptTheme.h"
 #include "../ptMessageBox.h"
-#include "../ptImage8.h"
-#include <QGraphicsView>
 #include <QList>
 #include <limits>
 #include <cassert>
@@ -45,11 +43,10 @@ ptImageView::ptImageView(QWidget *AParent):
   QGraphicsView(AParent),
   MinZoom(0.05),
   MaxZoom(4.0),
-  MaxImageSize(std::numeric_limits<int>::max()),
-  FThumbGen(/*make_unique<ptThumbGenMgr>()*/)
+  MaxImageSize(std::numeric_limits<int>::max())
 {
-  assert(Theme      != nullptr);
-  assert(Settings   != nullptr);
+  Q_ASSERT_X(Theme != nullptr, __PRETTY_FUNCTION__, "ptTheme pointer is null.");
+  Q_ASSERT_X(Settings != nullptr, __PRETTY_FUNCTION__, "ptSettings pointer is null.");
 
   ZoomFactors << MinZoom << 0.08 << 0.10 << 0.15 << 0.20 << 0.25 << 0.33 << 0.50 << 0.66 << 1.00
               << 1.50 << 2.00 << 3.00 << MaxZoom;
@@ -72,8 +69,6 @@ ptImageView::ptImageView(QWidget *AParent):
   // Init
   FPixmapItem        = FScene->addPixmap(QPixmap());
   FPixmapItem->setPos(0,0);
-  FFileNameCurrent  = "";
-  FFileNameNext     = "";
   FZoomMode          = ptZoomMode_Fit;
   FZoomFactor        = 1.0;
   FZoom              = 100;
@@ -84,9 +79,6 @@ ptImageView::ptImageView(QWidget *AParent):
   FStatusOverlay     = new ptReportOverlay(this, "", QColor(), QColor(), 0, Qt::AlignLeft, 20);
   FStatusOverlay->setColors(QColor(75,150,255), QColor(190,220,255)); // blue
   FStatusOverlay->setDuration(0);
-
-  // parallel worker
-//  FThumbGen->connectBroadcast(this, SLOT(receiveThumb(uint,TThumbPtr)));
 
   // timer for decoupling the mouse wheel
   FResizeTimeOut = 50;
@@ -127,24 +119,25 @@ ptImageView::~ptImageView() {
 }
 
 //------------------------------------------------------------------------------
-void ptImageView::showImage(const QString AFileName) {
-//  FFileNameNext = AFileName;
+void ptImageView::showImage(TThumbPtr AImage8) {
+  FStatusOverlay->exec(QObject::tr("Loading"));
 
-//  if (this->isVisible() && (FFileNameCurrent != FFileNameNext)) {
-//    if (FThumbGen->isRunning())
-//      FThumbGen->abort();
+  FFilenameCurrent = FFilenameNext;
+  FFilenameNext.clear();
 
-//    QList<TThumbAssoc> hThumbList;
-//    hThumbList.append({makeThumbId(FFileNameNext, MaxImageSize), 0});
-//    FThumbGen->request(hThumbList);
+  FImage = AImage8;
 
-//    FStatusOverlay->exec(QObject::tr("Loading"));
-//  }
+  if (FZoomMode == ptZoomMode_Fit)
+    zoomFit(false);
+  else
+    zoomTo(FZoomFactor, true);
+
+  FStatusOverlay->stop();
 }
 
 //------------------------------------------------------------------------------
 void ptImageView::resizeEvent(QResizeEvent* event) {
-  if (!FFileNameCurrent.isEmpty()) {
+  if (FImage) {
     if (FZoomMode == ptZoomMode_Fit) {
       // Only zoom fit after timer expires to avoid constant image resizing while
       // changing widget geometry. Prevents jerky UI response at the cost of
@@ -176,8 +169,12 @@ void ptImageView::mouseReleaseEvent(QMouseEvent* event) {
 
 //------------------------------------------------------------------------------
 void ptImageView::mouseDoubleClickEvent(QMouseEvent* event) {
-  event->accept();
-  ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, FFileNameCurrent);
+  if (FImage) {
+    event->accept();
+    ptGraphicsSceneEmitter::EmitThumbnailAction(tnaLoadImage, FFilenameCurrent);
+  } else {
+    event->ignore();
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -277,21 +274,9 @@ void ptImageView::zoomTo(float AFactor, bool AWithMsg) {
 }
 
 //------------------------------------------------------------------------------
-void ptImageView::receiveThumb(uint, TThumbPtr AImage) {
-  FImage.Set(AImage.get());
-
-  if (FZoomMode == ptZoomMode_Fit)
-    zoomFit(false);
-  else
-    zoomTo(FZoomFactor, true);
-
-  FStatusOverlay->stop();
-}
-
-//------------------------------------------------------------------------------
 int ptImageView::zoomFit(bool AWithMsg /*= true*/) {
   FZoomMode = ptZoomMode_Fit;
-  FScene->setSceneRect(0, 0, FImage.width(), FImage.height());
+  FScene->setSceneRect(0, 0, FImage->width(), FImage->height());
 
   fitInView(FScene->sceneRect(), Qt::KeepAspectRatio);
   FZoomFactor = transform().m11();
@@ -320,12 +305,12 @@ void ptImageView::imageToScene(double AFactor) {
     // bilinear resize for all others
     Mode = Qt::SmoothTransformation;
   }
-  FScene->setSceneRect(0, 0, FImage.width()*AFactor, FImage.height()*AFactor);
-  FPixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) FImage.image().data(),
-                                                                  FImage.width(),
-                                                                  FImage.height(),
-                                                                  QImage::Format_RGB32).scaled(FImage.width()*AFactor,
-                                                                                               FImage.height()*AFactor,
+  FScene->setSceneRect(0, 0, FImage->width()*AFactor, FImage->height()*AFactor);
+  FPixmapItem->setPixmap(QPixmap::fromImage(QImage((const uchar*) FImage->image().data(),
+                                                                  FImage->width(),
+                                                                  FImage->height(),
+                                                                  QImage::Format_RGB32).scaled(FImage->width()*AFactor,
+                                                                                               FImage->height()*AFactor,
                                                                                                Qt::IgnoreAspectRatio,
                                                                                                Mode)));
   FPixmapItem->setTransformationMode(Mode);
@@ -339,9 +324,14 @@ void ptImageView::resizeTimerExpired() {
 //------------------------------------------------------------------------------
 void ptImageView::showEvent(QShowEvent* event) {
   QGraphicsView::showEvent(event);
-
-  if (!FFileNameNext.isEmpty()) {
-    this->showImage(FFileNameNext);
-  }
 }
 
+//------------------------------------------------------------------------------
+QString ptImageView::currentFilename() const {
+  return FFilenameCurrent;
+}
+
+//------------------------------------------------------------------------------
+void ptImageView::setNextFilename(const QString& AFilename) {
+  FFilenameNext = AFilename;
+}

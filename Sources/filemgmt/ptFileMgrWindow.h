@@ -72,6 +72,7 @@ private:
   void constructContextMenu();
   void initProgressbar();
   void updateProgressbar();
+  void loadForImageView(const QString& AFilePath);
 
   ptFileMgrDM*            FDataModel;
   QGraphicsScene*         FFilesScene;
