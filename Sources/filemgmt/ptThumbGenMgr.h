@@ -64,10 +64,5 @@ private:
   QList<ptThumbGenWorker*>  FWorkers;
 };
 
-//------------------------------------------------------------------------------
-/*! \name Utility functions to create a thumbnail ID *//*! @{ */
-TThumbId makeThumbId(const QString& AFilename, int ALongEdgeMax, ptFSOType AType = fsoUnknown);
-TThumbId makeThumbId(const QFileInfo& AFileInfo, int ALongEdgeMax, ptFSOType AType = fsoUnknown);
-/*! @} */
 
 #endif // ptThumbGenMgr_H

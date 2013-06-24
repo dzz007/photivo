@@ -28,6 +28,7 @@ ptFlowController::ptFlowController(bool AInitiallyOpen):
   FFlowing(AInitiallyOpen)
 {}
 
+
 /*! Destroys a ptFlowController object. */
 ptFlowController::~ptFlowController() {}
 
@@ -37,12 +38,14 @@ void ptFlowController::setOpen(bool AIsOpen) {
   FFlowing = AIsOpen;
 }
 
+
 /*! Switches from open to closed state or vice-versa and returns the new state. */
 bool ptFlowController::toggleOpen() {
   ptMutexLocker hLock(&FFlowMutex);
   FFlowing = !FFlowing;
   return FFlowing;
 }
+
 
 /*! Return true if the state is “open”, false otherwise. */
 bool ptFlowController::isOpen() const {
@@ -52,56 +55,119 @@ bool ptFlowController::isOpen() const {
 
 //------------------------------------------------------------------------------
 
-ptThumbQueue::ptThumbQueue() {}
+ptThumbQueue::ptThumbQueue(int AMaxHighPrioEntries):
+  FMaxHighPrio(AMaxHighPrioEntries)
+{}
+
+
 ptThumbQueue::~ptThumbQueue() {}
+
 
 /*! Removes all items from the queue. */
 void ptThumbQueue::clear() {
-  ptMutexLocker hLock(&FItemsMutex);
-  FItems.clear();
+  ptMutexLocker hNLock(&FNormalMutex);
+  ptMutexLocker hHLock(&FHighMutex);
+  FNormalItems.clear();
+  FHighItems.clear();
 }
+
 
 /*! Returns the next item in the queue or an invalid TThumbId if the queue is empty. */
 TThumbAssoc ptThumbQueue::dequeue() {
-  ptMutexLocker hLock(&FItemsMutex);
-  if (FItems.isEmpty()) {
+  ptMutexLocker hHighLock(&FHighMutex);
+  if (!FHighItems.isEmpty()) {
+    return FHighItems.takeFirst();
+  }
+  hHighLock.unlock();
+
+  ptMutexLocker hNormLock(&FNormalMutex);
+  if (FNormalItems.isEmpty()) {
     return TThumbAssoc();
   } else {
-    return FItems.takeFirst();
+    return FNormalItems.takeFirst();
   }
 }
+
 
 /*!
   Adds a new item to the queue.
-  APriority controls where the item is placed. Normal-priority items are added at the end
-  of the queue; high-priority items are placed at the beginning so that the next call to
-  dequeue() will return that item.
+
+  APriority controls how soon an item gets dequeued. Normal priority (NP) items are only dequeued
+  when no more high priority (HP) items are in the queue.
+
+  When you enqueue an HP item and the maximum allowed number of HP items is already reached, the
+  oldest HP item is dropped.
 */
 void ptThumbQueue::enqueue(const TThumbAssoc& AItem, TThumbQPrio APriority) {
-//  ptMutexLocker hLock(&FItemsMutex);
   switch (APriority) {
-    case TThumbQPrio::High: FItems.prepend(AItem); break;
-    case TThumbQPrio::Normal: FItems.append(AItem); break;
-    default: GInfo->Raise("Unexpected case branch", AT);
+    case TThumbQPrio::High: {
+      ptMutexLocker hHighLock(&FHighMutex);
+      if (FHighItems.count() >= FMaxHighPrio) {
+        FHighItems.removeFirst();
+      }
+      FHighItems.append(AItem);
+      break;
+    }
+
+    case TThumbQPrio::Normal: {
+      ptMutexLocker hNormLock(&FNormalMutex);
+      FNormalItems.append(AItem);
+      break;
+    }
+
+    default:
+      GInfo->Raise("Unexpected case branch", AT);
   }
 }
 
+
 /*! This function overloads enqueue(). Instead of a single item it enqueues a list of items. */
 void ptThumbQueue::enqueue(const QList<TThumbAssoc>& AItems, TThumbQPrio APriority) {
-//  ptMutexLocker hLock(&FItemsMutex);
+  ptMutexLocker hHighLock(&FHighMutex);
+  ptMutexLocker hNormLock(&FNormalMutex);
 
   for (auto& hItem: AItems) {
     switch (APriority) {
-      case TThumbQPrio::High: FItems.prepend(hItem); break;
-      case TThumbQPrio::Normal: FItems.append(hItem); break;
-      default: GInfo->Raise("Unexpected case branch", AT);
+      case TThumbQPrio::High: {
+        if (FHighItems.count() >= FMaxHighPrio) {
+          FHighItems.removeFirst();
+        }
+        FHighItems.append(hItem);
+        break;
+      }
+
+      case TThumbQPrio::Normal: {
+        FNormalItems.append(hItem);
+        break;
+      }
+
+      default:
+        GInfo->Raise("Unexpected case branch", AT);
     }
   }
 }
 
+
 /*! Returns true if no items are in the queue. */
 bool ptThumbQueue::isEmpty() const {
-  ptMutexLocker hLock(&FItemsMutex);
-  return FItems.isEmpty();
+  ptMutexLocker hHighLock(&FHighMutex);
+  ptMutexLocker hNormLock(&FNormalMutex);
+  return FHighItems.isEmpty() && FNormalItems.isEmpty();
 }
 
+//------------------------------------------------------------------------------
+
+TThumbId makeThumbId(const QString& AFilename, int ALongEdgeMax, ptFSOType AType) {
+  return makeThumbId(QFileInfo(AFilename), ALongEdgeMax, AType);
+}
+
+
+TThumbId makeThumbId(const QFileInfo& AFileInfo, int ALongEdgeMax, ptFSOType AType) {
+  TThumbId hThumbId { AFileInfo.canonicalFilePath(), AFileInfo.lastModified(), AType, ALongEdgeMax };
+
+  if (AType == fsoUnknown) {
+    (AFileInfo.isFile()) ? (hThumbId.Type = fsoFile) : (hThumbId.Type = fsoDir);
+  }
+
+  return hThumbId;
+}

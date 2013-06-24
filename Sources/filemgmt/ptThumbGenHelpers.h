@@ -31,6 +31,7 @@
 #include <QMutex>
 #include <QList>
 #include <QLinkedList>
+#include <QFileInfo>
 
 /*!
   The ptFlowController class is a small helper to control a flow. It offers thread-safe access
@@ -59,8 +60,8 @@ enum class TThumbQPrio { Normal, High };
 */
 class ptThumbQueue {
 public:
-  explicit ptThumbQueue();   //!< Creates a ptQueue object.
-  ~ptThumbQueue();           //!< Destroys a ptQueue object.
+  explicit ptThumbQueue(int AMaxHighPrioEntries);   //!< Creates a ptThumbQueue object.
+  ~ptThumbQueue();           //!< Destroys a ptThumbQueue object.
 
   void clear();
   TThumbAssoc dequeue();
@@ -69,9 +70,19 @@ public:
   bool isEmpty() const;
 
 private:
-  QLinkedList<TThumbAssoc> FItems;
-  mutable QMutex FItemsMutex;
+  QLinkedList<TThumbAssoc> FNormalItems;
+  QLinkedList<TThumbAssoc> FHighItems;
+  mutable QMutex FNormalMutex;
+  mutable QMutex FHighMutex;
+
+  int FMaxHighPrio;
 };
 
+//------------------------------------------------------------------------------
+
+/*! \name Utility functions to create a thumbnail ID *//*! @{ */
+TThumbId makeThumbId(const QString& AFilename, int ALongEdgeMax, ptFSOType AType = fsoUnknown);
+TThumbId makeThumbId(const QFileInfo& AFileInfo, int ALongEdgeMax, ptFSOType AType = fsoUnknown);
+/*! @} */
 
 #endif // PTTHUMBGENHELPERS_H
