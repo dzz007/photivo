@@ -31,7 +31,6 @@
 #include <QMutex>
 #include <QList>
 #include <QLinkedList>
-#include <QFileInfo>
 
 /*!
   The ptFlowController class is a small helper to control a flow. It offers thread-safe access
@@ -60,8 +59,8 @@ enum class TThumbQPrio { Normal, High };
 */
 class ptThumbQueue {
 public:
-  explicit ptThumbQueue(int AMaxHighPrioEntries);   //!< Creates a ptThumbQueue object.
-  ~ptThumbQueue();           //!< Destroys a ptThumbQueue object.
+  explicit ptThumbQueue();   //!< Creates a ptQueue object.
+  ~ptThumbQueue();           //!< Destroys a ptQueue object.
 
   void clear();
   TThumbAssoc dequeue();
@@ -70,12 +69,8 @@ public:
   bool isEmpty() const;
 
 private:
-  QLinkedList<TThumbAssoc> FNormalItems;
-  QLinkedList<TThumbAssoc> FHighItems;
-  mutable QMutex FNormalMutex;
-  mutable QMutex FHighMutex;
-
-  int FMaxHighPrio;
+  QLinkedList<TThumbAssoc> FItems;
+  mutable QMutex FItemsMutex;
 };
 
 //------------------------------------------------------------------------------
