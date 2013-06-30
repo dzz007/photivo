@@ -21,6 +21,8 @@
 **
 *******************************************************************************/
 
+#include "ptDcRaw.h"
+
 #include <algorithm>
 #include <parallel/algorithm>
 #include <stack>
@@ -4618,7 +4620,7 @@ float *ptImage::GetGradualMask(const double Angle,
     Length = (((float)m_Width) + ((float)m_Height)/tan((180.0-fabs(Angle))/180.0*ptPI))*sin((180.0-fabs(Angle))/180.0*ptPI);
   }
 
-  boolean Switch = UpperLevel < LowerLevel;
+  bool Switch = UpperLevel < LowerLevel;
 
   float Eps = 0.0001f;
 
@@ -5152,7 +5154,7 @@ float *ptImage::GetVignetteMask(const short  Inverted,
 
   float Radius = MIN(m_Width, m_Height)/2;
 
-  boolean Switch = OuterRadius < InnerRadius;
+  bool Switch = OuterRadius < InnerRadius;
 
   float OR = Radius*(Switch?InnerRadius:OuterRadius);
   float IR = Radius*(Switch?OuterRadius:InnerRadius);

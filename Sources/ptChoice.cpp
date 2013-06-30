@@ -28,6 +28,9 @@
 #include "ptSettings.h"
 #include "ptInfo.h"
 #include "filters/ptCfgItem.h"
+#include <QHBoxLayout>
+#include <QApplication>
+#include <QMouseEvent>
 
 extern QTranslator appTranslator;
 
@@ -48,7 +51,7 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
     printf("(%s,%d) this : %s\n"
            "Default.type() : %d\n",
            __FILE__,__LINE__,
-           ObjectName.toAscii().data(),
+           ObjectName.toLocal8Bit().data(),
            Default.type());
     assert (Default.type() == QVariant::Int);
  }
@@ -64,7 +67,7 @@ ptChoice::ptChoice(const QWidget*          MainWindow,
 
   if (!m_Parent) {
     fprintf(stderr,"(%s,%d) Could not find '%s'. Aborting\n",
-           __FILE__,__LINE__,ParentName.toAscii().data());
+           __FILE__,__LINE__,ParentName.toLocal8Bit().data());
     assert(m_Parent);
   }
   setParent(m_Parent);
@@ -133,7 +136,7 @@ void ptChoice::createGUI() {
 
   } else {
     for (short i=0; m_InitialOptions && m_InitialOptions[i].Value !=-1; i++ ) {
-      QString Temp = appTranslator.translate("QObject",m_InitialOptions[i].Text.toAscii().data());
+      QString Temp = appTranslator.translate("QObject",m_InitialOptions[i].Text.toLocal8Bit().data());
       if (Temp == "") Temp = m_InitialOptions[i].Text;
       m_ComboBox->addItem(Temp,m_InitialOptions[i].Value);
     }
@@ -212,13 +215,13 @@ void ptChoice::SetValue(const QVariant Value,
 void ptChoice::AddOrReplaceItem(const QString Text,const QVariant Data) {
   for (int i=0; i<m_ComboBox->count(); i++) {
     if (Data == m_ComboBox->itemData(i)) {
-      QString Temp = appTranslator.translate("QObject",Text.toAscii().data());
+      QString Temp = appTranslator.translate("QObject",Text.toLocal8Bit().data());
       if (Temp == "") Temp = Text;
       m_ComboBox->setItemText(i,Temp);
       return;
     }
   }
-  QString Temp = appTranslator.translate("QObject",Text.toAscii().data());
+  QString Temp = appTranslator.translate("QObject",Text.toLocal8Bit().data());
   if (Temp == "") Temp = Text;
   m_ComboBox->addItem(Temp,Data);
 }
@@ -238,7 +241,7 @@ void ptChoice::Clear(const short WithDefault) {
 
     } else {
       for (short i=0; m_InitialOptions && m_InitialOptions[i].Value !=-1; i++ ) {
-        QString Temp = appTranslator.translate("QObject",m_InitialOptions[i].Text.toAscii().data());
+        QString Temp = appTranslator.translate("QObject",m_InitialOptions[i].Text.toLocal8Bit().data());
         if (Temp == "") Temp = m_InitialOptions[i].Text;
         m_ComboBox->addItem(Temp,m_InitialOptions[i].Value);
       }

@@ -59,7 +59,7 @@ public:
   void SetHelpUri(const QString Uri);
   void UpdateView();
   void Update();
-  void SetEnabled(const short Enabled);
+  void SetEnabled(const bool Enabled);
   QString GetTitle();
   QString GetTabName();
   short GetTabNumber();

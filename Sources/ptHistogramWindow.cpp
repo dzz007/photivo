@@ -27,6 +27,12 @@
 #include "ptTheme.h"
 #include "ptImage.h"
 
+#include <QMenu>
+#include <QVBoxLayout>
+#include <QFileDialog>
+#include <QContextMenuEvent>
+#include <QPainter>
+
 #include <iostream>
 
 #ifdef _OPENMP
@@ -184,6 +190,7 @@ ptHistogramWindow::~ptHistogramWindow() {
   delete m_PixelInfoB;
   delete m_PixelInfoTimer;
   delete m_OverlayPalette;
+  delete m_InfoIcon;
 }
 
 
@@ -213,6 +220,13 @@ void ptHistogramWindow::PixelInfo(const QString R, const QString G, const QStrin
   m_PixelInfoB->show();
 }
 
+//==============================================================================
+
+void ptHistogramWindow::setInfoIconState(bool AIsActive)
+{
+  m_InfoIcon->setVisible(AIsActive);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // resizeEvent.
@@ -224,10 +238,12 @@ void ptHistogramWindow::PixelInfo(const QString R, const QString G, const QStrin
 void ptHistogramWindow::resizeEvent(QResizeEvent*) {
   // Schedule the action 500ms from here to avoid multiple rescaling actions
   // during multiple resizeEvents from a window resized by the user.
-  m_ResizeTimer->start(500); // 500 ms.
+  m_ResizeTimer->start(25); // 25 ms.
 }
 
 void ptHistogramWindow::ResizeTimerExpired() {
+  m_InfoIcon->move(width() - 20, 4);
+
   // Create side effect for recalibrating the maximum
   m_PreviousHistogramGamma = -1;
 
@@ -448,7 +464,7 @@ void ptHistogramWindow::InitOverlay() {
   m_PixelInfoR->setTextInteractionFlags(Qt::NoTextInteraction);
   m_PixelInfoR->show();
   m_PixelInfoR->setPalette(*m_OverlayPalette);
-  m_PixelInfoR->move(10, 10);
+  m_PixelInfoR->move(10, 4);
   m_PixelInfoR->hide();
 
   m_PixelInfoG = new QLabel(this);
@@ -456,7 +472,7 @@ void ptHistogramWindow::InitOverlay() {
   m_PixelInfoG->setTextInteractionFlags(Qt::NoTextInteraction);
   m_PixelInfoG->show();
   m_PixelInfoG->setPalette(*m_OverlayPalette);
-  m_PixelInfoG->move(60, 10);
+  m_PixelInfoG->move(60, 4);
   m_PixelInfoG->hide();
 
   m_PixelInfoB = new QLabel(this);
@@ -464,12 +480,21 @@ void ptHistogramWindow::InitOverlay() {
   m_PixelInfoB->setTextInteractionFlags(Qt::NoTextInteraction);
   m_PixelInfoB->show();
   m_PixelInfoB->setPalette(*m_OverlayPalette);
-  m_PixelInfoB->move(110, 10);
+  m_PixelInfoB->move(110, 4);
   m_PixelInfoB->hide();
 
   m_PixelInfoTimer = new QTimer(this);
   m_PixelInfoTimer->setSingleShot(true);
   connect(m_PixelInfoTimer, SIGNAL(timeout()), this, SLOT(PixelInfoHide()));
+
+  m_InfoIcon = new QLabel(this);
+  m_InfoIcon->move(width() - 20, 4);
+  m_InfoIcon->setPixmap(QPixmap(QString::fromUtf8(":/dark/ui-graphics/bubble-attention.png")));
+  m_InfoIcon->setToolTip(tr("RAW thumbnail is used"));
+  m_InfoIcon->setPalette(Theme->menuPalette());
+  m_InfoIcon->setStyle(Theme->style());
+  m_InfoIcon->setStyleSheet(Theme->stylesheet());
+  m_InfoIcon->hide();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -482,6 +507,8 @@ void ptHistogramWindow::UpdateView(const ptImage* NewRelatedImage) {
 
   if (NewRelatedImage) m_RelatedImage = NewRelatedImage;
   if (!m_RelatedImage) return;
+
+  setInfoIconState((Settings->GetInt("IsRAW") == 1) && !Settings->useRAWHandling());
 
   CalculateHistogram();
 

@@ -131,9 +131,9 @@ void ptRun(const gchar*     Name,
     QString ICCFileName   = In.readLine();
 
     // Read image
-    FILE *InputFile = fopen(ImageFileName.toAscii().data(),"rb");
+    FILE *InputFile = fopen(ImageFileName.toLocal8Bit().data(),"rb");
     if (!InputFile) {
-      ptLogError(1,ImageFileName.toAscii().data());
+      ptLogError(1,ImageFileName.toLocal8Bit().data());
       return; // ptError_FileOpen;
     }
 

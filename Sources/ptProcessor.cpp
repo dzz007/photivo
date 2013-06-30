@@ -35,6 +35,7 @@
 #include "ptCurve.h"
 #include "ptChannelMixer.h"
 #include "ptCimg.h"
+#include "ptDcRaw.h"
 #include "ptFastBilateral.h"
 #include "ptMessageBox.h"
 #include "ptImageHelper.h"
@@ -197,7 +198,7 @@ void ptProcessor::Run(short Phase,
     ::ViewWindowShowStatus(ptStatus_Processing);
 
     // correction for bitmaps
-    if (!Settings->GetInt("IsRAW")) {
+    if (!Settings->useRAWHandling()) {
       if (Phase == ptProcessorPhase_Raw &&
           SubPhase > ptProcessorPhase_Load) {
         Phase = ptProcessorPhase_LocalEdit;
@@ -228,9 +229,9 @@ void ptProcessor::Run(short Phase,
         // This will be equivalent to m_PipeSize EXCEPT if overwritten
         // by the FinalRun setting that will be always in full size.
         // 0 for full, 1 for half, 2 for quarter (useable in >> operators)
-        Settings->SetValue("Scaled",m_DcRaw->m_UserSetting_HalfSize);
+        Settings->SetValue("Scaled", m_DcRaw->m_UserSetting_HalfSize);
 
-        if (Settings->GetInt("IsRAW")==0) {
+        if (!Settings->useRAWHandling()) {
           m_ReportProgress(tr("Loading Bitmap"));
 
           TRACEMAIN("Start opening bitmap at %d ms.",
@@ -240,17 +241,36 @@ void ptProcessor::Run(short Phase,
 
           int Success = 0;
 
-          m_Image_AfterDcRaw->ptGMCOpenImage(
-            (Settings->GetStringList("InputFileNameList"))[0].toAscii().data(),
-            Settings->GetInt("WorkColor"),
-            Settings->GetInt("PreviewColorProfileIntent"),
-            0,
-            Success);
+          if (Settings->GetInt("IsRAW") == 1) { // RAW image, we fetch the thumbnail
+            std::vector<char> ImgData;
+            m_DcRaw->thumbnail(ImgData);
+
+            m_Image_AfterDcRaw->ptGMCOpenImage(
+              (Settings->GetStringList("InputFileNameList"))[0].toLocal8Bit().data(),
+              Settings->GetInt("WorkColor"),
+              Settings->GetInt("PreviewColorProfileIntent"),
+              0,
+              true,
+              &ImgData,
+              Success);
+          } else {
+            m_Image_AfterDcRaw->ptGMCOpenImage(
+              (Settings->GetStringList("InputFileNameList"))[0].toLocal8Bit().data(),
+              Settings->GetInt("WorkColor"),
+              Settings->GetInt("PreviewColorProfileIntent"),
+              0,
+              false,
+              nullptr,
+              Success);
+          }
 
           if (Success == 0) {
             ptMessageBox::critical(0,"File not found","File not found!");
             return;
           }
+
+          Settings->SetValue("ImageW", m_Image_AfterDcRaw->m_Width);
+          Settings->SetValue("ImageH", m_Image_AfterDcRaw->m_Height);
 
           m_ReportProgress(tr("Reading exif info"));
 
@@ -275,7 +295,7 @@ void ptProcessor::Run(short Phase,
               // Not in DcRawToSettings as at this point it is
               // not yet influenced by HalfSize. Later it is and
               // it would be wrongly overwritten then.
-              if (Settings->GetInt("DetailViewActive")==0) {
+              if (Settings->GetInt("DetailViewActive") == 0) {
                 Settings->SetValue("ImageW",m_DcRaw->m_ReportedWidth);
                 Settings->SetValue("ImageH",m_DcRaw->m_ReportedHeight);
 
@@ -335,7 +355,7 @@ void ptProcessor::Run(short Phase,
                   CameraProfileName = PathInfo.absoluteFilePath();
                   Settings->SetValue("CameraColorProfile",CameraProfileName);
                   TRACEKEYVALS("Found adobe profile","%s",
-                               CameraProfileName.toAscii().data());
+                               CameraProfileName.toLocal8Bit().data());
                   TRACEMAIN("Found profile at %d ms.",FRunTimer.elapsed());
                 } else {
                   ptMessageBox::information(0,
@@ -370,7 +390,7 @@ void ptProcessor::Run(short Phase,
                   TRACEMAIN("Found profile at %d ms.",FRunTimer.elapsed());
                 } else {
                   TRACEMAIN("Not found profile at %d ms.",FRunTimer.elapsed());
-                  printf("profile %s\n\n",InputFileName.toAscii().data());
+                  printf("profile %s\n\n",InputFileName.toLocal8Bit().data());
                   Settings->SetValue("CameraColor",ptCameraColor_Adobe_Matrix);
                 }
               }
@@ -386,7 +406,7 @@ void ptProcessor::Run(short Phase,
                 m_DcRaw,
                 Settings->GetInt("WorkColor"),
                 (Settings->GetInt("CameraColor") == ptCameraColor_Adobe_Matrix) ?
-                  NULL : CameraProfileName.toAscii().data(),
+                  NULL : CameraProfileName.toLocal8Bit().data(),
                 Settings->GetInt("CameraColorProfileIntent"),
                 Settings->GetInt("CameraColorGamma"));
 
@@ -1727,10 +1747,12 @@ void ptProcessor::Run(short Phase,
             int Success = 0;
 
             m_Image_TextureOverlay->ptGMCOpenImage(
-              (Settings->GetString("TextureOverlayFile")).toAscii().data(),
+              (Settings->GetString("TextureOverlayFile")).toLocal8Bit().data(),
               Settings->GetInt("WorkColor"),
               Settings->GetInt("PreviewColorProfileIntent"),
               0,
+              false,
+              nullptr,
               Success);
 
             if (Success == 0) {
@@ -1808,10 +1830,12 @@ void ptProcessor::Run(short Phase,
             int Success = 0;
 
             m_Image_TextureOverlay2->ptGMCOpenImage(
-              (Settings->GetString("TextureOverlay2File")).toAscii().data(),
+              (Settings->GetString("TextureOverlay2File")).toLocal8Bit().data(),
               Settings->GetInt("WorkColor"),
               Settings->GetInt("PreviewColorProfileIntent"),
               0,
+              false,
+              nullptr,
               Success);
 
             if (Success == 0) {
@@ -2064,7 +2088,7 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
   ptFilterBase *hFilter = nullptr;
 
   // We fetch the image from the input processing
-  if (Settings->GetInt("IsRAW") == 0) {
+  if (!Settings->useRAWHandling()) {
     // image is a bitmap
     if (StopBefore == ptProcessorStopBefore::NoStop) {
       m_ReportProgress(tr("Transfer Bitmap"));
@@ -2073,10 +2097,10 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
     // This will be equivalent to m_PipeSize EXCEPT if overwritten
     // by the FinalRun setting that will be always in full size.
     // 0 for full, 1 for half, 2 for quarter (useable in >> operators)
-    Settings->SetValue("Scaled",Settings->GetInt("PipeSize"));
+    Settings->SetValue("Scaled", Settings->GetInt("PipeSize"));
 
     if (Settings->GetInt("JobMode") == 1) // FinalRun!
-      Settings->SetValue("Scaled",0);
+      Settings->SetValue("Scaled", 0);
 
     if (!m_Image_AfterLocalEdit)
       m_Image_AfterLocalEdit = new ptImage();
@@ -2086,9 +2110,9 @@ void ptProcessor::RunLocalEdit(ptProcessorStopBefore StopBefore) {
 
     if (Settings->GetInt("DetailViewActive") == 1) {
       m_Image_AfterLocalEdit->Crop(Settings->GetInt("DetailViewCropX") >> Settings->GetInt("Scaled"),
-                                  Settings->GetInt("DetailViewCropY") >> Settings->GetInt("Scaled"),
-                                  Settings->GetInt("DetailViewCropW") >> Settings->GetInt("Scaled"),
-                                  Settings->GetInt("DetailViewCropH") >> Settings->GetInt("Scaled"));
+                                   Settings->GetInt("DetailViewCropY") >> Settings->GetInt("Scaled"),
+                                   Settings->GetInt("DetailViewCropW") >> Settings->GetInt("Scaled"),
+                                   Settings->GetInt("DetailViewCropH") >> Settings->GetInt("Scaled"));
     }
 
     // The full image width and height is already set.
@@ -2461,6 +2485,7 @@ void ptProcessor::RunGeometry(ptProcessorStopBefore StopBefore) {
     float WidthIn = m_Image_AfterGeometry->m_Width;
 
     m_Image_AfterGeometry->ptGMResize(Settings->GetInt("ResizeScale"),
+                                      Settings->GetInt("ResizeHeight"),
                                       Settings->GetInt("ResizeFilter"),
                                       Settings->GetInt("ResizeDimension"));
 
@@ -2536,7 +2561,7 @@ void ptProcessor::ReadExifBuffer() {
 //      Settings->SetValue("LensfunFocalLength",FocalLength);
     }
 
-  } catch(Exiv2::Error& Error) {
+  } catch (Exiv2::Error& Error) {
     // Exiv2 errors are in this context hopefully harmless
     // (unsupported tags etc.)
 

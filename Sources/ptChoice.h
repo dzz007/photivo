@@ -25,11 +25,12 @@
 #ifndef PTCHOICE_H
 #define PTCHOICE_H
 
-#include <QtGui>
 #include "ptGuiOptions.h"
 #include "ptWidget.h"
 #include "ptInfo.h"
 #include <filters/ptCfgItem.h>
+#include <QComboBox>
+#include <QToolButton>
 
 //==============================================================================
 

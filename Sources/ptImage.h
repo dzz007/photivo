@@ -31,8 +31,11 @@
 
 #include "ptDefines.h"
 #include "ptConstants.h"
-#include "ptDcRaw.h"
 #include "ptCurve.h"
+
+//==============================================================================
+
+class ptDcRaw;
 
 //==============================================================================
 
@@ -617,6 +620,7 @@ ptImage* MaskedColorAdjust(const int       Ax,
                           const int Intent);
   */
   ptImage* ptGMResize(const uint16_t Size,
+                      const uint16_t Height,
                       const short Filter,
                       const short Mode);
   ptImage* ptGMResizeWH(const uint16_t NewWidth,
@@ -641,12 +645,13 @@ ptImage* MaskedColorAdjust(const int       Ax,
 
   bool DumpImage(const char* FileName) const;
 
-  ptImage* ptGMCOpenImage(const char* FileName,
-                         const short ColorSpace,
-                         const short Intent,
-                         const short ScaleFactor,
-                         int& Success);
-
+  ptImage* ptGMCOpenImage(const char*        FileName,
+                          short              ColorSpace,
+                          short              Intent,
+                          short              ScaleFactor,
+                          bool               IsRAW,
+                          std::vector<char>* ImgData,
+                          int&               Success);
 
   // ptImage_Pyramid.cpp
   ptImage* dirpyrLab_denoise(const int luma,

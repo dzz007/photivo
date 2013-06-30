@@ -29,6 +29,10 @@
 #include <QList>
 #include <QVariant>
 #include <QFlags>
+#include <QLabel>
+#include <QComboBox>
+#include <QCheckBox>
+#include <QToolButton>
 
 class ptImage;
 class ptWidget;

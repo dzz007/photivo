@@ -37,6 +37,8 @@
 #include "ptCalloc.h"
 #include "ptCurve.h"
 
+#include <cassert>
+
 // Lut
 extern float ToFloatTable[0x10000];
 

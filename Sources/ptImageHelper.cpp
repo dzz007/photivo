@@ -81,7 +81,7 @@ bool ptImageHelper::WriteExif(const QString AFileName, const Exiv2::ExifData AEx
               << "Exif.Image.ResolutionUnit";
 
     for (short i = 0; i < ExifKeys.count(); i++) {
-      if ((pos = hInExifData.findKey(Exiv2::ExifKey(ExifKeys.at(i).toAscii().data()))) != hInExifData.end())
+      if ((pos = hInExifData.findKey(Exiv2::ExifKey(ExifKeys.at(i).toLocal8Bit().data()))) != hInExifData.end())
         hInExifData.erase(pos);
     }
 
@@ -97,7 +97,7 @@ bool ptImageHelper::WriteExif(const QString AFileName, const Exiv2::ExifData AEx
       if (!AFileName.endsWith(JpegExtensions.at(i))) deleteDNGdata = true;
     }
 
-    Exiv2::Image::AutoPtr Exiv2Image = Exiv2::ImageFactory::open(AFileName.toAscii().data());
+    Exiv2::Image::AutoPtr Exiv2Image = Exiv2::ImageFactory::open(AFileName.toLocal8Bit().data());
 
     Exiv2Image->readMetadata();
     Exiv2::ExifData outExifData = Exiv2Image->exifData();
@@ -185,10 +185,10 @@ bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData
   if (AFileName.trimmed().isEmpty()) return false;
 
   try {
-    if (Exiv2::ImageFactory::getType(AFileName.toAscii().data()) == Exiv2::ImageType::none)
+    if (Exiv2::ImageFactory::getType(AFileName.toLocal8Bit().data()) == Exiv2::ImageType::none)
       return false;
 
-    Exiv2::Image::AutoPtr hImage = Exiv2::ImageFactory::open(AFileName.toAscii().data());
+    Exiv2::Image::AutoPtr hImage = Exiv2::ImageFactory::open(AFileName.toLocal8Bit().data());
 
     if (!hImage.get()) return false;
 
@@ -196,7 +196,7 @@ bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData
 
     AExifData = hImage->exifData();
     if (AExifData.empty()) {
-      ptLogWarning(ptWarning_Argument, "No Exif data found in %s", AFileName.toAscii().data());
+      ptLogWarning(ptWarning_Argument, "No Exif data found in %s", AFileName.toLocal8Bit().data());
       return false;
     }
 
@@ -280,16 +280,16 @@ bool ptImageHelper::TransferExif(const QString ASourceFile, const QString ATarge
     return false;
 
   try {
-    if (Exiv2::ImageFactory::getType(ASourceFile.toAscii().data()) == Exiv2::ImageType::none)
+    if (Exiv2::ImageFactory::getType(ASourceFile.toLocal8Bit().data()) == Exiv2::ImageType::none)
       return false;
 
-    Exiv2::Image::AutoPtr hSourceImage = Exiv2::ImageFactory::open(ASourceFile.toAscii().data());
+    Exiv2::Image::AutoPtr hSourceImage = Exiv2::ImageFactory::open(ASourceFile.toLocal8Bit().data());
 
     if (!hSourceImage.get()) return false;
 
     hSourceImage->readMetadata();
 
-    Exiv2::Image::AutoPtr hTargetImage = Exiv2::ImageFactory::open(ATargetFile.toAscii().data());
+    Exiv2::Image::AutoPtr hTargetImage = Exiv2::ImageFactory::open(ATargetFile.toLocal8Bit().data());
 
     hTargetImage->clearMetadata();
     hTargetImage->setMetadata(*hSourceImage);
@@ -328,7 +328,7 @@ bool ptImageHelper::DumpImage(QImage* AImage, const QString AFileName) {
   MagickSetCompressionQuality(mw,95);
   MagickSetImageCompression(mw, LZWCompression);
 
-  bool Result = MagickWriteImage(mw, AFileName.toAscii().data());
+  bool Result = MagickWriteImage(mw, AFileName.toLocal8Bit().data());
   DestroyMagickWand(mw);
   return Result;
 }

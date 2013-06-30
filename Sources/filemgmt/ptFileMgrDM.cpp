@@ -29,6 +29,7 @@
 #include "../ptDcRaw.h"
 #include "../ptImage8.h"
 #include "../ptWinApi.h"
+#include <QGraphicsScene>
 
 extern ptSettings* Settings;
 
