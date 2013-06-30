@@ -30,7 +30,7 @@
 ptThumbGenMgr::ptThumbGenMgr():
   FAbortCtrl(false),
   FThumbCache(200*1024*1024), // TODO BJ: Make cache size configurable
-  FThumbQueue(1)  // high prio items for ptImageView: allow only 1 of those
+  FThumbQueue()
 {
   // Determine worker count. Then create each worker object and an associated QThread object,
   // start the thread and move the worker to that thread.

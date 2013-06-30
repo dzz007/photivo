@@ -31,6 +31,7 @@
 #include <QMutex>
 #include <QList>
 #include <QLinkedList>
+#include <QFileInfo>
 
 /*!
   The ptFlowController class is a small helper to control a flow. It offers thread-safe access

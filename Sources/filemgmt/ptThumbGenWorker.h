@@ -57,13 +57,13 @@ private:
   void postProcessEvent();
 
   TThumbPtr generateThumb(const TThumbId& AThumbId);
-  void scaleSize(QSize& ASize, int ALongEdge);
+  QSize scaleSize(int AWidth, int AHeight, int AMaxLongEdge);
   void setIsRunning(bool AValue);
   void transformImage(MagickWand* AInImage, ptImage8* AOutImage, const QSize& ASize);
 
   // Access to following bool variables MUST ALWAYS be protected via their respective mutexes.
   // Use ptMutexLocker for easy locking/unlocking. Do NOT use QMutexLocker.
-  bool   FIsRunning;
+  bool FIsRunning;    // access via isRunning() and setRunning(), they take care of locking
   mutable QMutex FIsRunningMutex;
 
   const ptFlowController* const FAbortCtrl;

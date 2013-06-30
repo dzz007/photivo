@@ -34,7 +34,6 @@ auto QLTThumbAssoc_Dummy = qRegisterMetaType<QList<TThumbAssoc>>("photivo_QList_
 TThumbId::operator bool() const {
   return !FilePath.isEmpty() &&
          Timestamp.isValid() &&
-         (Type != fsoUnknown) &&
          (LongEdgeSize >= 0);
 }
 
