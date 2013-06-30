@@ -27,7 +27,12 @@
 #include "../ptSettings.h"
 #include "../ptTheme.h"
 #include "../ptMessageBox.h"
+#include <QAction>
+#include <QGraphicsPixmapItem>
+#include <QMenu>
+#include <QMouseEvent>
 #include <QList>
+#include <QScrollBar>
 #include <limits>
 #include <cassert>
 

@@ -529,7 +529,7 @@ void ptFileMgrWindow::saveThumbnail() {
       return; // Operation cancelled.
     }
 
-    if (!(hImage->DumpImage(hOutputName.toAscii().data(), true))) {
+    if (!(hImage->DumpImage(hOutputName.toLocal8Bit().data(), true))) {
       ptMessageBox::warning(0, QObject::tr("Error"), QObject::tr("Thumbnail could not be saved."));
     }
 

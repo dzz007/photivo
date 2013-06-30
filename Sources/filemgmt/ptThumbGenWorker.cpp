@@ -170,7 +170,7 @@ TThumbPtr ptThumbGenWorker::generateThumb(const TThumbId& AThumbId) {
     const char* hMagickErrMsg = MagickGetException(hGMImage, &hMagickExcept);
     if (hMagickExcept != UndefinedException) {
       // error occurred: no raw thumbnail, no supported image type, any other GM error
-      GInfo->Warning(QString::fromAscii(hMagickErrMsg).toAscii().data());
+      GInfo->Warning(QString::fromLocal8Bit(hMagickErrMsg).toLocal8Bit().data());
       hThumbnail->FromQImage(QImage(QString::fromUtf8(":/dark/icons/broken-image-48px.png")));
     } else {
       // no error: scale and rotate thumbnail
@@ -217,7 +217,7 @@ void ptThumbGenWorker::transformImage(MagickWand* AInImage, ptImage8* AOutImage,
     MagickScaleImage(AInImage, ASize.width(), ASize.height());
 
   // read EXIF orientation and rotate image
-  int hOrientation = QString::fromAscii(MagickGetImageAttribute(AInImage, "EXIF:Orientation")).toInt();
+  int hOrientation = QString::fromLocal8Bit(MagickGetImageAttribute(AInImage, "EXIF:Orientation")).toInt();
   PixelWand* hPxWand = NewPixelWand();
   switch (hOrientation) {
     case 2: MagickFlopImage(  AInImage); break;
