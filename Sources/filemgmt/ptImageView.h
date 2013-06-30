@@ -27,6 +27,7 @@
 #include "ptThumbDefines.h"
 #include "../ptReportOverlay.h"
 #include "../ptImage8.h"
+#include "ptThumbGenMgr.h"
 #include <QWidget>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -41,9 +42,8 @@ public:
   explicit ptImageView(QWidget* AParent = nullptr);
   ~ptImageView();
 
-  void showImage(TThumbPtr AImage8);
+  void showImage(const QString& AFilename);
   QString currentFilename() const;
-  void setNextFilename(const QString& AFilename);
 
 public slots:
   void zoom100();
@@ -75,6 +75,7 @@ private:
   TThumbPtr             FImage;
   QString               FFilenameCurrent;
   QString               FFilenameNext;
+  ptThumbGenMgr         FThumbGen;
   int                   FZoomMode;
   float                 FZoomFactor;
   int                   FZoom;
@@ -94,6 +95,7 @@ private:
   QAction* FZoomOutAction;
 
 private slots:
+  void receiveImage(uint, TThumbPtr AImage8);
   void resizeTimerExpired();
 };
 

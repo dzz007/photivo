@@ -76,13 +76,12 @@ public:
   QString fullPath() { return m_FullPath; }
 
   /*! Returns \c true if a pixmap image is part of the thumbnail group. */
-//  bool hasImage() { return m_Pixmap != NULL; }
   bool hasImage() { return m_Thumbnail != NULL; }
 
   /*! Paints the thumbnail group.
     Reimplements \c QGraphicsRectItem::paint()
   */
-  void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*);
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 
   /*! Returns that type that identifies \c ptGraphicsThumbGroup objects
       within the graphics view framework.
@@ -117,13 +116,12 @@ private:
   const uint FGroupId;
   bool      m_hasHover;
   QPen      m_Pen;
-  int       m_RefCount;
-  ptImage8* m_Thumbnail;
+  TThumbPtr m_Thumbnail;
   QPoint    m_ThumbPos;
 
   // Following objects don’t need to be destroyed explicitely in the destructor.
   // Because they are children that happens automatically.
-//  QGraphicsPixmapItem*      m_Pixmap;
+  QGraphicsPixmapItem*      m_ThumbnailItem;
   QGraphicsSimpleTextItem*  m_ImgTypeText;
   QGraphicsSimpleTextItem*  m_InfoText;
 };

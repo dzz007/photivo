@@ -39,7 +39,7 @@ ptFileMgrDM::ptFileMgrDM(QObject* AParent)
   FDirModel(new ptSingleDirModel(this)),
   FIsMyComputer(false),
   FTagModel(new ptTagModel(this)),
-  FThumbGen(make_unique<ptThumbGenMgr>()),
+  FThumbGen(make_unique<ptThumbGenMgr>(150*1024*1024)), // TODO BJ: make cache size configurable
   FThumbGroupList(new QList<ptGraphicsThumbGroup*>)
 {}
 
@@ -127,10 +127,6 @@ bool ptFileMgrDM::thumbGenRunning() const {
 }
 
 //------------------------------------------------------------------------------
-void ptFileMgrDM::requestImageViewImage(const QString& AFilename) {
-}
-
-//------------------------------------------------------------------------------
 /*!
   Stops thumbnail generation. It is guaranteed that generation has actually stopped
   when this method returns.
@@ -180,8 +176,8 @@ void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
   uint hGroupId = CFirstThumbReceiverId;
   for (QFileInfo& file: files) {
     this->createThumbGroup(file, hGroupId, AScene);
-    hThumbIdList.append({makeThumbId(file, hLongEdgeMax, FThumbGroupList->last()->fsoType()),
-                         hGroupId});
+    hThumbIdList.append({hGroupId,
+                         makeThumbId(file, hLongEdgeMax, FThumbGroupList->last()->fsoType())});
     ++hGroupId;
   }
 

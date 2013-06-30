@@ -26,15 +26,20 @@
 #include <QApplication>
 
 //------------------------------------------------------------------------------
-/*! Creates a ptThumbGenMgr object and starts the threaded workers. */
-ptThumbGenMgr::ptThumbGenMgr():
+/*!
+  Creates a ptThumbGenMgr object and starts the worker threads.
+  \param AMaxCacheSize  Maximum size of the thumbnail cache in bytes.
+  \param AMaxThreads  Optional maximum number of worker threads to use. ptThumbGenMgr determines
+    the optimal number of threads automatically but will never exceed AMaxThreads.
+ */
+ptThumbGenMgr::ptThumbGenMgr(uint AMaxCacheSize, int AMaxThreads):
   FAbortCtrl(false),
-  FThumbCache(200*1024*1024), // TODO BJ: Make cache size configurable
+  FThumbCache(AMaxCacheSize),
   FThumbQueue()
 {
   // Determine worker count. Then create each worker object and an associated QThread object,
   // start the thread and move the worker to that thread.
-  int hThreadCount = qMax(CMinWorkerThreads, QThread::idealThreadCount());
+  int hThreadCount = qBound(CMinWorkerThreads, QThread::idealThreadCount(), AMaxThreads);
 
   for (int i = 0; i < hThreadCount; ++i) {
     FWorkers.append(new ptThumbGenWorker(&FThumbQueue, &FThumbCache, &FAbortCtrl));
@@ -70,6 +75,7 @@ ptThumbGenMgr::~ptThumbGenMgr() {
 /*! Aborts the currently running thumbnail generation. */
 void ptThumbGenMgr::abort() {
   FAbortCtrl.setOpen(false);
+  FThumbQueue.clear();
 
   while (this->isRunning()) {
     QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
