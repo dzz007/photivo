@@ -72,7 +72,6 @@ public:
   void populateThumbs(QGraphicsScene* AScene);
   QList<ptGraphicsThumbGroup*>* thumbGroupList();
   bool thumbGenRunning() const;
-  void requestImageViewImage(const QString& AFilename);
 
   ptSingleDirModel* dirModel() const;
   ptTagModel* tagModel();

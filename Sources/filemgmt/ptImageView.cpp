@@ -43,7 +43,8 @@ ptImageView::ptImageView(QWidget *AParent):
   QGraphicsView(AParent),
   MinZoom(0.05),
   MaxZoom(4.0),
-  MaxImageSize(std::numeric_limits<int>::max())
+  MaxImageSize(std::numeric_limits<int>::max()),
+  FThumbGen(50*1024*1024, 1) // TODO BJ: make cache size configurable
 {
   Q_ASSERT_X(Theme != nullptr, __PRETTY_FUNCTION__, "ptTheme pointer is null.");
   Q_ASSERT_X(Settings != nullptr, __PRETTY_FUNCTION__, "ptSettings pointer is null.");
@@ -54,6 +55,8 @@ ptImageView::ptImageView(QWidget *AParent):
   this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   this->setFocusPolicy(Qt::NoFocus);
+
+  FThumbGen.connectBroadcast(this, SLOT(receiveImage(uint,TThumbPtr)));
 
   // Layout to always fill the complete image pane with ViewWindow
   FParentLayout = new QGridLayout(AParent);
@@ -119,9 +122,18 @@ ptImageView::~ptImageView() {
 }
 
 //------------------------------------------------------------------------------
-void ptImageView::showImage(TThumbPtr AImage8) {
-  FStatusOverlay->exec(QObject::tr("Loading"));
+/*! Load and show the image specified by AFilename. */
+void ptImageView::showImage(const QString& AFilename) {
+  if (AFilename != FFilenameCurrent) {
+    FThumbGen.abort();
+    FStatusOverlay->exec(QObject::tr("Loading"));
+    FFilenameNext = AFilename;
+    FThumbGen.request({0, makeThumbId(AFilename, MaxImageSize, fsoFile)});
+  }
+}
 
+//------------------------------------------------------------------------------
+void ptImageView::receiveImage(uint, TThumbPtr AImage8) {
   FFilenameCurrent = FFilenameNext;
   FFilenameNext.clear();
 
@@ -134,6 +146,7 @@ void ptImageView::showImage(TThumbPtr AImage8) {
 
   FStatusOverlay->stop();
 }
+
 
 //------------------------------------------------------------------------------
 void ptImageView::resizeEvent(QResizeEvent* event) {
@@ -329,9 +342,4 @@ void ptImageView::showEvent(QShowEvent* event) {
 //------------------------------------------------------------------------------
 QString ptImageView::currentFilename() const {
   return FFilenameCurrent;
-}
-
-//------------------------------------------------------------------------------
-void ptImageView::setNextFilename(const QString& AFilename) {
-  FFilenameNext = AFilename;
 }

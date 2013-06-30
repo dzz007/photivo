@@ -303,8 +303,6 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
   }
 #endif
 
-//  FDataModel->StopThumbnailer();
-//  this->clearScene();
   m_FilesView->horizontalScrollBar()->setValue(0);
   m_FilesView->verticalScrollBar()->setValue(0);
   FThumbListIdx = 0;
@@ -331,17 +329,12 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
 // Slot to receive thumbnail images from the generator and dispatch them to their thumb group.
 // Also updates the progress bar.
 void ptFileMgrWindow::receiveThumb(uint AReceiverId, TThumbPtr AImage) {
-  if ((AReceiverId == CImageViewReceiverId) && FImageView->isVisible()) {
-    FImageView->showImage(AImage);
-
-  } else {
-    for (ptGraphicsThumbGroup* hThumbGroup: *FDataModel->thumbGroupList()) {
-      if (hThumbGroup->id() == AReceiverId) {
-        hThumbGroup->addImage(AImage);
-        ++FThumbsReceived;
-        this->updateProgressbar();
-        break;
-      }
+  for (ptGraphicsThumbGroup* hThumbGroup: *FDataModel->thumbGroupList()) {
+    if (hThumbGroup->id() == AReceiverId) {
+      hThumbGroup->addImage(AImage);
+      ++FThumbsReceived;
+      this->updateProgressbar();
+      break;
     }
   }
 }
@@ -497,9 +490,8 @@ void ptFileMgrWindow::focusThumbnail(int index) {
 
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::loadForImageView(const QString& AFilePath) {
-  if (FImageView->isVisible() && (AFilePath != FImageView->currentFilename())) {
-    FImageView->setNextFilename(AFilePath);
-    FDataModel->requestImageViewImage(AFilePath);
+  if (FImageView->isVisible()) {
+    FImageView->showImage(AFilePath);
   }
 }
 
@@ -546,9 +538,11 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     closeWindow();
     ImageFileToOpen = location;
     CB_MenuFileOpen(1);
+
   } else if (action == tnaChangeDir) {
     FDataModel->dirModel()->ChangeAbsoluteDir(location);
     displayThumbnails(location, FDataModel->dirModel()->pathType());
+
   } else if (action == tnaViewImage) {
     this->loadForImageView(location);
   }

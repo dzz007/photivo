@@ -57,8 +57,8 @@ bool operator!=(const TThumbId& lhs, const TThumbId& rhs);
 //------------------------------------------------------------------------------
 /*! Struct to associate a specific thumbgroup object with a specific image file on disk. */
 struct TThumbAssoc {
-  TThumbId ThumbId;   /*! the thumbnail’s unique ID */
   uint     GroupId;   /*! the ptGraphicsThumbGroup’s unique ID */
+  TThumbId ThumbId;   /*! the thumbnail’s unique ID */
 
   explicit operator bool() const;
 };

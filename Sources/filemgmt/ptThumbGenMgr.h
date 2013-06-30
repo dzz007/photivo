@@ -32,6 +32,7 @@
 #include <QList>
 #include <QThread>
 #include <QFileInfo>
+#include <limits>
 
 //------------------------------------------------------------------------------
 /*!
@@ -40,7 +41,7 @@
 */
 class ptThumbGenMgr {
 public:
-  explicit ptThumbGenMgr();
+  explicit ptThumbGenMgr(uint AMaxCacheSize, int AMaxThreads = std::numeric_limits<int>::max());
   ~ptThumbGenMgr();
 
   /*! \name Methods for controlling thumbnail generation *//*! @{*/
