@@ -35,7 +35,9 @@ ptThumbCache::ptThumbCache(uint AMaxSizeBytes):
   FCapacity(AMaxSizeBytes),
   FOccupancy(0)
 {
-  Q_ASSERT_X(AMaxSizeBytes > 0, __PRETTY_FUNCTION__, "Cache capacity cannot be set to 0.");
+#ifdef QT_DEBUG
+  printf("Thumbnail image cache size: %d bytes\n", FCapacity);
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -83,7 +85,7 @@ void ptThumbCache::insert(const TThumbId& AThumbId, TThumbPtr AThumbData) {
   // - Caching an item twice makes no sense, only wastes cache capacity.
   // - Inserting into QHash would replace the existing item, but adding to the acces tracker
   //   would not, thus making hash list and tracker go out of sync.
-  if (FCache.contains(hIdHash)) {
+  if (FCache.contains(hIdHash) || (FCapacity == 0)) {
     return;
   }
 
@@ -105,6 +107,11 @@ void ptThumbCache::evict() {
     return;
 
   while (FOccupancy > FCapacity) {
+    if (FCache.isEmpty()) {
+      FOccupancy = 0;
+      return;
+    }
+
     auto hDataIter = FCache.find(FAccess.first());
 
     Q_ASSERT_X(hDataIter != FCache.end(), __PRETTY_FUNCTION__,

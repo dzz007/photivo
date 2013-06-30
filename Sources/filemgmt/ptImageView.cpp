@@ -44,7 +44,8 @@ ptImageView::ptImageView(QWidget *AParent):
   MinZoom(0.05),
   MaxZoom(4.0),
   MaxImageSize(std::numeric_limits<int>::max()),
-  FThumbGen(50*1024*1024, 1) // TODO BJ: make cache size configurable
+  // Cache is split 60/40 between thumbnail list and image view
+  FThumbGen(Settings->GetInt("FileMgrThumbCacheSize")*1024*1024 * 0.4, 1)
 {
   Q_ASSERT_X(Theme != nullptr, __PRETTY_FUNCTION__, "ptTheme pointer is null.");
   Q_ASSERT_X(Settings != nullptr, __PRETTY_FUNCTION__, "ptSettings pointer is null.");

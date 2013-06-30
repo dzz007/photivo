@@ -6750,6 +6750,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_JustSetDispatch(FileMgrThumbMaxRowColInput)
   M_JustSetDispatch(FileMgrThumbSaveSizeInput)
   M_JustSetDispatch(FileMgrStartupOpenCheck)
+  M_JustSetDispatch(FileMgrThumbCacheSizeInput)
 
   M_JustSetDispatch(BatchMgrAutosaveCheck)
   M_JustSetDispatch(BatchMgrAutosaveFileChoice)
