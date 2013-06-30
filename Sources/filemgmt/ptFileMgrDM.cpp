@@ -39,7 +39,8 @@ ptFileMgrDM::ptFileMgrDM(QObject* AParent)
   FDirModel(new ptSingleDirModel(this)),
   FIsMyComputer(false),
   FTagModel(new ptTagModel(this)),
-  FThumbGen(150*1024*1024), // TODO BJ: make cache size configurable
+  // Cache is split 60/40 between thumbnail list and image view
+  FThumbGen(Settings->GetInt("FileMgrThumbCacheSize")*1024*1024 * 0.6),
   FThumbGroupList(new QList<ptGraphicsThumbGroup*>)
 {}
 

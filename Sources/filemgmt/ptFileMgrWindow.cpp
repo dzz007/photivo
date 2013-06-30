@@ -400,12 +400,14 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 #endif
     FDataModel->dirModel()->ChangeAbsoluteDir(lastDir);
     FDataModel->setCurrentDir(lastDir);
+    FPathBar->setPath(lastDir);
 
     // First call base class showEvent, then start thumbnail loading to ensure
     // the file manager is visible before ressource heavy actions begin.
     QWidget::showEvent(event);
-    if (!InStartup)
-      displayThumbnails(lastDir, lastDirType);
+    if (!InStartup) {
+      this->displayThumbnails(lastDir, lastDirType);
+    }
 
     FIsFirstShow = false;
     return;
