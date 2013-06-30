@@ -28,14 +28,14 @@
 #include "../ptInfo.h"
 #include <QApplication>
 #include <QImage>
-#include <QThread>
 
 //------------------------------------------------------------------------------
 /*!
-  Creates a ptThumbGen object. Note that because the worker is supposed to run in its own thread
-  the Qt parent mechanism cannot be used although ptThumbGen is derived from QObject.
+  Creates a ptThumbGenWorker object. Note that because the worker is supposed to run in its own
+  thread the Qt parent mechanism cannot be used although ptThumbGenWorker is derived from QObject.
+
   AQueue, ACache and AAbortCtrl must be valid pointers and guaranteed to live at least as long
-  as the ptThumbGenWorker object. The object does *not* take ownership of either of those.
+  as the ptThumbGenWorker object. The object does *not* take ownership of any.
 */
 ptThumbGenWorker::ptThumbGenWorker(ptThumbQueue* AQueue,
                                    ptThumbCache* ACache,
@@ -58,23 +58,32 @@ ptThumbGenWorker::~ptThumbGenWorker() {
 }
 
 //------------------------------------------------------------------------------
+/*! Returns true if the worker is running, i.e. processing images. */
 bool ptThumbGenWorker::isRunning() const {
   ptMutexLocker hRunLock(&FIsRunningMutex);
   return FIsRunning;
 }
 
 //------------------------------------------------------------------------------
+// Thread-safe setter for the worker’s running state
 void ptThumbGenWorker::setIsRunning(bool AValue) {
   ptMutexLocker hRunLock(&FIsRunningMutex);
   FIsRunning = AValue;
 }
 
 //------------------------------------------------------------------------------
+/*!
+  Starts processing images. If the thumbnail queue is empty, the worker goes back
+  to idle without emitting anything. If the worker is already busy running this
+  function has no effect.
+*/
 void ptThumbGenWorker::start() {
   this->postProcessEvent();
 }
 
 //------------------------------------------------------------------------------
+// Processes (= generates and emits) one image. Triggers the next processing or
+// sets the worker to idle.
 void ptThumbGenWorker::process() {
   if (!FAbortCtrl->isOpen()) {
     return;
@@ -82,30 +91,30 @@ void ptThumbGenWorker::process() {
 
   // Generate thumbnail image (if an ID is available) and broadcast to receiver(s)
   auto hThumbAssoc = FThumbQueue->dequeue();
+
+  // Got a thumbnail ID. Continue with generation
   if (hThumbAssoc) {
     auto hThumb = this->generateThumb(hThumbAssoc.ThumbId);
     if (FAbortCtrl->isOpen()) {
       emit broadcast(hThumbAssoc.GroupId, hThumb);
     }
-  }
-
-  if (!FThumbQueue->isEmpty()) {
     this->postProcessEvent();
+
+  // Got an invalid thumbnail ID, i.e. queue is empty: put worker into idle
   } else {
     this->setIsRunning(false);
   }
 }
 
 //------------------------------------------------------------------------------
+// Wrapper for posting a processing request to the workers event loop.
 void ptThumbGenWorker::postProcessEvent() {
   QMetaObject::invokeMethod(this, Process_Func, Qt::QueuedConnection);
 }
 
 //------------------------------------------------------------------------------
-/*!
-  Reads a thumbnail from disk, resizes to the specified size and returns the final
-  thumbnail image as a ptImage8.
-*/
+// Reads a thumbnail from disk, resizes to the specified size and returns the final
+// thumbnail image as a ptImage8.
 TThumbPtr ptThumbGenWorker::generateThumb(const TThumbId& AThumbId) {
   // Directories: not cached and no need to set dcraw or GM on them.
   switch (AThumbId.Type) {
@@ -136,28 +145,25 @@ TThumbPtr ptThumbGenWorker::generateThumb(const TThumbId& AThumbId) {
 
     ptDcRaw     hDcRaw;
     MagickWand* hGMImage = NewMagickWand();
-    QSize       hSize = QSize(AThumbId.LongEdgeSize, AThumbId.LongEdgeSize);
-
+    QSize       hSize;
 
     if (hDcRaw.Identify(hFilePath) == 0) {
       // we have a raw image
       std::vector<char> hImgData;
       if (hDcRaw.thumbnail(hImgData)) {
         // raw thumbnail read successfully
-        hSize.setWidth(hDcRaw.m_ThumbWidth);
-        hSize.setHeight(hDcRaw.m_ThumbHeight);
-        this->scaleSize(hSize, AThumbId.LongEdgeSize);
+        hSize = this->scaleSize(hDcRaw.m_ThumbWidth, hDcRaw.m_ThumbHeight, AThumbId.LongEdgeSize);
         MagickSetSize(hGMImage, 2*hSize.width(), 2*hSize.height());
         MagickReadImageBlob(hGMImage, reinterpret_cast<const uchar*>(hImgData.data()), hImgData.size());
       }
     } else {
       // no raw, try for bitmap
-      MagickPingImage(hGMImage, hFilePath.toAscii().data());
-      hSize.setWidth(MagickGetImageWidth(hGMImage));
-      hSize.setHeight(MagickGetImageHeight(hGMImage));
-      this->scaleSize(hSize, AThumbId.LongEdgeSize);
+      MagickPingImage(hGMImage, hFilePath.toLocal8Bit().data());
+      hSize = this->scaleSize(MagickGetImageWidth(hGMImage),
+                              MagickGetImageHeight(hGMImage),
+                              AThumbId.LongEdgeSize);
       MagickSetSize(hGMImage, 2*hSize.width(), 2*hSize.height());
-      MagickReadImage(hGMImage, hFilePath.toAscii().data());
+      MagickReadImage(hGMImage, hFilePath.toLocal8Bit().data());
     }
 
     ExceptionType hMagickExcept;
@@ -179,27 +185,28 @@ TThumbPtr ptThumbGenWorker::generateThumb(const TThumbId& AThumbId) {
 }
 
 //------------------------------------------------------------------------------
-/*! Clamp ASize’s longer edge to a maximum of ALongEdge. */
-void ptThumbGenWorker::scaleSize(QSize& ASize, int ALongEdge) {
-  if ((ASize.width() < ALongEdge) && (ASize.height() < ALongEdge))
-    return;
+// Clamp given dimension’s to longer edge to a maximum of AMaxLongEdge.
+QSize ptThumbGenWorker::scaleSize(int AWidth, int AHeight, int AMaxLongEdge) {
+  // Image is smaller than maximum. Do not change size at all.
+  if ((AWidth < AMaxLongEdge) && (AHeight < AMaxLongEdge)) {
+    return QSize(AWidth, AHeight);
 
-  if (ASize.width() > ASize.height()) {           // landscape image
-    ASize.setHeight(ASize.height()/(double)ASize.width() * ALongEdge + 0.5);
-    ASize.setWidth(ALongEdge);
+  // landscape image
+  } else if (AWidth > AHeight) {
+    return QSize(AMaxLongEdge, (AHeight/(double)AWidth * AMaxLongEdge + 0.5));
 
-  } else if (ASize.width() < ASize.height()) {    // portrait image
-    ASize.setWidth(ASize.width()/(double)ASize.height() * ALongEdge + 0.5);
-    ASize.setHeight(ALongEdge);
+  // portrait image
+  } else if (AWidth < AHeight) {
+    return QSize((AWidth/(double)AHeight * AMaxLongEdge + 0.5), AMaxLongEdge);
 
-  } else if (ASize.width() == ASize.height()) {   // square image
-    ASize.setWidth(ALongEdge);
-    ASize.setHeight(ALongEdge);
+  // square image
+  } else {
+    return QSize(AMaxLongEdge, AMaxLongEdge);
   }
 }
 
 //------------------------------------------------------------------------------
-/*! Rotates and scales an image. To avoid scaling set width and height of ASize to <=0. */
+// Rotates and scales an image. To avoid scaling set width and height of ASize to <=0.
 void ptThumbGenWorker::transformImage(MagickWand* AInImage, ptImage8* AOutImage, const QSize& ASize) {
   // We want 8bit RGB data without alpha channel, scaled to thumbnail size
   MagickSetImageDepth(AInImage, 8);
