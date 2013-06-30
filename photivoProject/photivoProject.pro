@@ -440,6 +440,7 @@ win32 {
 
 RESOURCES += ../qrc/photivo.qrc
 
+TRANSLATIONS += ../Translations/photivo_Danish.ts
 TRANSLATIONS += ../Translations/photivo_Dutch.ts
 TRANSLATIONS += ../Translations/photivo_French.ts
 TRANSLATIONS += ../Translations/photivo_German.ts
