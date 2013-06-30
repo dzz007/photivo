@@ -59,7 +59,7 @@ win32 {
 #------------------------------------------------------------------------------
 #--- Qt configuration ---
 QT += core gui
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets # For later. Qt 5 is completely untested.
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets 
 
 TEMPLATE     = app
 TARGET       = photivo
@@ -118,6 +118,8 @@ LIBS += -lgomp -lpthread \
 win32 {
   PKGCONFIG += GraphicsMagick++ GraphicsMagickWand lqr-1
   LIBS      += libole32 -lwsock32 -lgdi32 -lexpat -liconv
+  # see http://www.libssh2.org/mail/libssh2-devel-archive-2011-10/0069.shtml
+  DEFINES   += WIN32_LEAN_AND_MEAN
 }
 
 unix {
@@ -446,6 +448,7 @@ win32 {
 
 RESOURCES += ../qrc/photivo.qrc
 
+TRANSLATIONS += ../Translations/photivo_Danish.ts
 TRANSLATIONS += ../Translations/photivo_Dutch.ts
 TRANSLATIONS += ../Translations/photivo_French.ts
 TRANSLATIONS += ../Translations/photivo_German.ts

@@ -25,6 +25,10 @@
 #include <cassert>
 
 #include <QMessageBox>
+#include <QApplication>
+#include <QVBoxLayout>
+#include <QMouseEvent>
+#include <QTimer>
 
 #include "ptInput.h"
 #include "ptInfo.h"
@@ -65,7 +69,7 @@ ptInput::ptInput(const QWidget* MainWindow,
 
   if (!m_Parent) {
     fprintf(stderr,"(%s,%d) Could not find '%s'. Aborting\n",
-           __FILE__,__LINE__,ParentName.toAscii().data());
+           __FILE__,__LINE__,ParentName.toLocal8Bit().data());
     assert(m_Parent);
   }
   setParent(m_Parent);
@@ -259,10 +263,10 @@ void ptInput::SetValue(const QVariant Value,
         TempValue.type() != QVariant::Double) ) {
     printf("(%s,%d) this : %s Value.type() : %d m_Type : %d value : %s\n",
            __FILE__,__LINE__,
-           this->objectName().toAscii().data(),
+           this->objectName().toLocal8Bit().data(),
            TempValue.type(),
            m_Type,
-           TempValue.toString().toAscii().data());
+           TempValue.toString().toLocal8Bit().data());
     assert(TempValue.type() == m_Type);
   }
 
@@ -294,7 +298,7 @@ void ptInput::SetMinimum(const QVariant Value) {
   if (Value.type() != m_Type) {
     printf("(%s,%d) this : %s Value.type() : %d m_Type : %d\n",
            __FILE__,__LINE__,
-           this->objectName().toAscii().data(),
+           this->objectName().toLocal8Bit().data(),
            Value.type(),
            m_Type);
     assert(Value.type() == m_Type);
@@ -317,7 +321,7 @@ void ptInput::SetMaximum(const QVariant Value) {
   if (Value.type() != m_Type) {
     printf("(%s,%d) this : %s Value.type() : %d m_Type : %d\n",
            __FILE__,__LINE__,
-           this->objectName().toAscii().data(),
+           this->objectName().toLocal8Bit().data(),
            Value.type(),
            m_Type);
     assert(Value.type() == m_Type);
@@ -536,7 +540,7 @@ void ptInput::CheckTypes(const QVariant &Default, const QVariant &Minimum, const
            "Step.type() : %d\n"
            "m_Type : %d\n",
            __FILE__,__LINE__,
-           objectName().toAscii().data(),
+           objectName().toLocal8Bit().data(),
            Default.type(),
            Minimum.type(),
            Maximum.type(),

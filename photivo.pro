@@ -83,10 +83,32 @@ CONFIG(WithGimp) {
 }
 SUBDIRS += photivoProject
 
+system(echo "------------------------------------------------------")
+system(echo "Use 'CONFIG-=debug' to build release version")
+system(echo "------------------------------------------------------")
+system(echo "Following options are currently supported:")
+system(echo "'CONFIG+=WithAdobeProfiles'")
+system(echo "'CONFIG+=WithGimp'")
+system(echo "'CONFIG+=WithoutClear'")
+system(echo "------------------------------------------------------")
+
+CONFIG(debug) {
+  system(echo "Build debug: yes")
+} else {
+  system(echo "Build debug: no")
+}
+CONFIG(release) {
+  system(echo "Build release: yes")
+} else {
+  system(echo "Build release: no")
+}
+system(echo "------------------------------------------------------")
+
+
 system(echo "Build Photivo                : yes")
 system(echo "Build ptClear                : $${BUILD_CLEAR}")
 system(echo "Build Gimp plugin            : $${BUILD_GIMP}")
-system(echo "Build curves creator         : no - obsolete")
+#system(echo "Build curves creator         : no - obsolete")
 system(echo "Build Adobe profiles creator : $${BUILD_ADOBE}")
 
 unix {

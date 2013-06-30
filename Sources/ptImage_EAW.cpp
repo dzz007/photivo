@@ -5,6 +5,7 @@
 #include <cstring>
 #include <cmath>
 #include <cfloat>
+#include <cassert>
 
 #include "ptImage.h"
 #include "ptError.h"

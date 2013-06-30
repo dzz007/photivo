@@ -25,13 +25,20 @@
 #define DLSETTINGS_H
 
 #include <QtCore>
+#include <QComboBox>
+#include <QToolButton>
+#include <QCheckBox>
+#include <QLabel>
 
 #include "ptConstants.h"
 #include "ptGuiOptions.h"
-#include "ptDcRaw.h"
 #include "ptInput.h"
 #include "ptChoice.h"
 #include "ptCheck.h"
+
+//==============================================================================
+
+class ptDcRaw;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -143,13 +150,13 @@ public:
 
   // Accessors to the Value part of a setting.
   // Selfexplaining.
-  int    GetInt(const QString Key);
-  double GetDouble(const QString Key);
-  const QString     GetString(const QString Key);
-  const QStringList GetStringList(const QString Key);
+  int    GetInt(const QString Key) const;
+  double GetDouble(const QString Key) const;
+  const QString     GetString(const QString Key) const;
+  const QStringList GetStringList(const QString Key) const;
   // This should be avoided as much as possible and replaced by above.
   // It is needed though, for instance while writing a job file.
-  const QVariant GetValue(const QString Key);
+  const QVariant GetValue(const QString Key) const;
 
   // Setting of value. Implies update for gui element, if one.
   void  SetValue(const QString Key, const QVariant Value);
@@ -188,6 +195,9 @@ public:
   // Interface to update the settings to/from dcraw
   void ToDcRaw(ptDcRaw* TheDcRaw);
   void FromDcRaw(ptDcRaw* TheDcRaw);
+
+  // Helper function to decide, if we start with a bitmap or a RAW
+  bool useRAWHandling() const;
 
   // Persistent Settings. Initialization code in ptMain
   // will access it directly.

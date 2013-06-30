@@ -38,6 +38,8 @@
 #include <QMenu>
 #include <QAction>
 #include <QLabel>
+#include <QScrollBar>
+#include <QFileDialog>
 #include <cassert>
 
 extern void CB_MenuFileOpen(const short HaveFile);
@@ -431,8 +433,8 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
   }
 
 
-  else if ((obj == m_FilesView->verticalScrollBar() ||
-            obj == m_FilesView->horizontalScrollBar()) &&
+  else if ((obj == qobject_cast<QObject*>(m_FilesView->verticalScrollBar()) ||
+            obj == qobject_cast<QObject*>(m_FilesView->horizontalScrollBar())) &&
             event->type() == QEvent::Wheel)
   { // Wheel event
     int dir = ((QWheelEvent*)event)->delta() > 0 ? -1 : 1;

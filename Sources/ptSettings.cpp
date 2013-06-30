@@ -25,6 +25,7 @@
 
 #include "ptSettings.h"
 #include "ptError.h"
+#include "ptDcRaw.h"
 #include "ptRGBTemperature.h"
 #include "ptGuiOptions.h"
 #include "filemgmt/ptFileMgrConstants.h"
@@ -37,7 +38,7 @@
   if (m_Hash.contains(Key)) {                              \
     ptLogError(ptError_Argument,                           \
                "Inserting an existing key (%s)",           \
-               Key.toAscii().data());                      \
+               Key.toLocal8Bit().data());                      \
     assert (!m_Hash.contains(Key));                        \
   }                                                        \
   m_Hash[Key] = Item;
@@ -121,7 +122,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LqrVertScale"                  ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.2  ,2.0   ,0.02 ,3 ,tr("Vertical scale")     ,tr("Vertical scale")},
     {"LqrWidth"                      ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Width")              ,tr("Width")},
     {"LqrHeight"                     ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Height")},
-    {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("pixels")               ,tr("Image size")},
+    {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Pixels")             ,tr("Image size")},
+    {"ResizeHeight"                  ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Image height")},
     {"ChannelMixerR2R"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to red")},
     {"ChannelMixerG2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to red")},
     {"ChannelMixerB2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to red")},
@@ -432,7 +434,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradBlur2"                   ,ptGT_Choice       ,1,1,1 ,ptGradualBlur_Linear        ,GuiOptions->GradualBlurMode           ,tr("Mode for the gradual blur")},
     {"SoftglowMode"                ,ptGT_Choice       ,2,1,1 ,ptSoftglowMode_None         ,GuiOptions->SoftglowMode              ,tr("Mode for Softglow")},
     {"WebResize"                   ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable web resizing")},
-    {"WebResizeDimension"          ,ptGT_Choice       ,2,1,1 ,ptResizeDimension_LongerEdge,GuiOptions->ResizeDimension           ,tr("Image dimension the resize value applies to")},
+    {"WebResizeDimension"          ,ptGT_Choice       ,2,1,1 ,ptResizeDimension_LongerEdge,GuiOptions->WebResizeDimension        ,tr("Image dimension the resize value applies to")},
     {"WebResizeFilter"             ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Lanczos          ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
     {"SaveFormat"                  ,ptGT_Choice       ,1,1,1 ,ptSaveFormat_JPEG           ,GuiOptions->SaveFormat                ,tr("Output format")},
     {"SaveSampling"                ,ptGT_Choice       ,1,1,1 ,ptSaveSampling_211          ,GuiOptions->SaveSampling              ,tr("JPEG color sampling")},
@@ -459,6 +461,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"SearchBarEnable"            ,ptGT_Check ,1,0,1,tr("Display search bar"),tr("Display search bar")},
     {"WriteBackupSettings"        ,ptGT_Check ,1,0,0,tr("Backup settings") ,tr("Write backup settings during processing")},
     {"RunMode"                    ,ptGT_Check ,1,0,0,tr("manual")          ,tr("manual or automatic pipe")},
+    {"UseThumbnail"               ,ptGT_Check ,1,1,0,tr("Use thumbnail")   ,tr("Use the embedded thumbnail of RAW images")},
     {"MultiplierEnhance"          ,ptGT_Check ,1,1,0,tr("Intensify")       ,tr("Normalize lowest channel to 1")},
     {"ManualBlackPoint"           ,ptGT_Check ,2,1,0,tr("Manual BP")       ,tr("Manual black point setting enabled")},
     {"ManualWhitePoint"           ,ptGT_Check ,2,1,0,tr("Manual WP")       ,tr("Manual white point setting enabled")},
@@ -786,11 +789,11 @@ ptSettings::~ptSettings() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const QVariant ptSettings::GetValue(const QString Key) {
+const QVariant ptSettings::GetValue(const QString Key) const {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   return m_Hash[Key]->Value;
@@ -802,7 +805,7 @@ const QVariant ptSettings::GetValue(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-int ptSettings::GetInt(const QString Key) {
+int ptSettings::GetInt(const QString Key) const {
   // Remark : UInt and Int are mixed here.
   // The only settings related type where u is important is uint16_t
   // (dimensions). uint16_t fits in an integer which is 32 bit.
@@ -810,11 +813,11 @@ int ptSettings::GetInt(const QString Key) {
   if (Tmp.type() != QVariant::Int && Tmp.type() != QVariant::UInt) {
     ptLogError(ptError_Argument,
                "Expected 'QVariant::(U)Int' but got '%d' for key '%s'\n",
-               Tmp.type(),Key.toAscii().data());
+               Tmp.type(),Key.toLocal8Bit().data());
     if (Tmp.type() == QVariant::String) {
       ptLogError(ptError_Argument,
                  "Additionally : it's a string '%s'\n",
-                 Tmp.toString().toAscii().data());
+                 Tmp.toString().toLocal8Bit().data());
     }
     assert(Tmp.type() == QVariant::Int);
   }
@@ -827,14 +830,14 @@ int ptSettings::GetInt(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-double ptSettings::GetDouble(const QString Key) {
+double ptSettings::GetDouble(const QString Key) const {
   QVariant Tmp = GetValue(Key);
   if (static_cast<QMetaType::Type>(Tmp.type()) == QMetaType::Float)
     Tmp.convert(QVariant::Double);
   if (Tmp.type() != QVariant::Double) {
     ptLogError(ptError_Argument,
                "Expected 'QVariant::Double' but got '%d' for key '%s'\n",
-               Tmp.type(),Key.toAscii().data());
+               Tmp.type(),Key.toLocal8Bit().data());
     assert(Tmp.type() == QVariant::Double);
   }
   return Tmp.toDouble();
@@ -846,12 +849,12 @@ double ptSettings::GetDouble(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const QString ptSettings::GetString(const QString Key) {
+const QString ptSettings::GetString(const QString Key) const {
   QVariant Tmp = GetValue(Key);
   if (Tmp.type() != QVariant::String) {
     ptLogError(ptError_Argument,
                "Expected 'QVariant::String' but got '%d' for key '%s'\n",
-               Tmp.type(),Key.toAscii().data());
+               Tmp.type(),Key.toLocal8Bit().data());
     assert(Tmp.type() == QVariant::String);
   }
   return Tmp.toString();
@@ -863,12 +866,12 @@ const QString ptSettings::GetString(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const QStringList ptSettings::GetStringList(const QString Key) {
+const QStringList ptSettings::GetStringList(const QString Key) const {
   QVariant Tmp = GetValue(Key);
   if (Tmp.type() != QVariant::StringList) {
     ptLogError(ptError_Argument,
                "Expected 'QVariant::StringList' but got '%d' for key '%s'\n",
-               Tmp.type(),Key.toAscii().data());
+               Tmp.type(),Key.toLocal8Bit().data());
     assert(Tmp.type() == QVariant::StringList);
   }
   return Tmp.toStringList();
@@ -885,7 +888,7 @@ void ptSettings::SetValue(const QString Key, const QVariant Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   m_Hash[Key]->Value = Value;
@@ -921,7 +924,7 @@ void ptSettings::SetEnabled(const QString Key, const short Enabled) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   switch (m_Hash[Key]->GuiType) {
@@ -939,7 +942,7 @@ void ptSettings::SetEnabled(const QString Key, const short Enabled) {
     default:
       ptLogError(ptError_Argument,
                  "%s is no (expected) gui element.",
-                 Key.toAscii().data());
+                 Key.toLocal8Bit().data());
       assert(m_Hash[Key]->GuiType); // Should have gui type !
       break;
   }
@@ -956,13 +959,13 @@ void ptSettings::SetMaximum(const QString Key, const QVariant Maximum) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiInput) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiInput\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   return m_Hash[Key]->GuiInput->SetMaximum(Maximum);
@@ -979,7 +982,7 @@ void  ptSettings::Show(const QString Key, const short Show) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   switch (m_Hash[Key]->GuiType) {
@@ -997,7 +1000,7 @@ void  ptSettings::Show(const QString Key, const short Show) {
     default:
       ptLogError(ptError_Argument,
                  "%s is no (expected) gui element.",
-                 Key.toAscii().data());
+                 Key.toLocal8Bit().data());
       assert(m_Hash[Key]->GuiType);
       break;
   }
@@ -1018,13 +1021,13 @@ void ptSettings::AddOrReplaceOption(const QString  Key,
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   m_Hash[Key]->GuiChoice->AddOrReplaceItem(Text,Value);
@@ -1043,13 +1046,13 @@ void ptSettings::ClearOptions(const QString  Key, const short WithDefault) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   m_Hash[Key]->GuiChoice->Clear(WithDefault);
@@ -1066,13 +1069,13 @@ int ptSettings::GetNrOptions(const QString Key) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   return m_Hash[Key]->GuiChoice->Count();
@@ -1089,13 +1092,13 @@ const QVariant ptSettings::GetOptionsValue(const QString Key,const int Index){
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   return m_Hash[Key]->GuiChoice->GetItemData(Index);
@@ -1112,13 +1115,13 @@ const QString ptSettings::GetCurrentText(const QString Key){
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   return m_Hash[Key]->GuiChoice->CurrentText();
@@ -1134,7 +1137,7 @@ void ptSettings::SetGuiInput(const QString Key, ptInput* Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   m_Hash[Key]->GuiInput  = Value;
@@ -1152,7 +1155,7 @@ void ptSettings::SetGuiChoice(const QString Key, ptChoice* Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   m_Hash[Key]->GuiInput  = NULL;
@@ -1170,7 +1173,7 @@ void ptSettings::SetGuiCheck(const QString Key, ptCheck* Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   m_Hash[Key]->GuiInput  = NULL;
@@ -1189,7 +1192,7 @@ QWidget* ptSettings::GetGuiWidget(const QString Key) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (m_Hash[Key]->GuiInput) {
@@ -1224,9 +1227,9 @@ void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
   QString InputFileName = GetStringList("InputFileNameList")[0];
   FREE(TheDcRaw->m_UserSetting_InputFileName);
   TheDcRaw->m_UserSetting_InputFileName =
-    (char*) MALLOC(1+strlen(InputFileName.toAscii().data()));
+    (char*) MALLOC(1+strlen(InputFileName.toLocal8Bit().data()));
   ptMemoryError(TheDcRaw->m_UserSetting_InputFileName,__FILE__,__LINE__);
-  strcpy(TheDcRaw->m_UserSetting_InputFileName,InputFileName.toAscii().data());
+  strcpy(TheDcRaw->m_UserSetting_InputFileName,InputFileName.toLocal8Bit().data());
 
   // Detail view
   TheDcRaw->m_UserSetting_DetailView = Settings->GetInt("DetailViewActive");
@@ -1353,11 +1356,11 @@ void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
       FREE(TheDcRaw->m_UserSetting_BadPixelsFileName);
       TheDcRaw->m_UserSetting_BadPixelsFileName = (char *)
         MALLOC(1+
-             strlen(GetString("BadPixelsFileName").toAscii().data()));
+             strlen(GetString("BadPixelsFileName").toLocal8Bit().data()));
       ptMemoryError(TheDcRaw->m_UserSetting_BadPixelsFileName,
                     __FILE__,__LINE__);
       strcpy(TheDcRaw->m_UserSetting_BadPixelsFileName,
-             GetString("BadPixelsFileName").toAscii().data());
+             GetString("BadPixelsFileName").toLocal8Bit().data());
       break;
     default :
       assert(0);
@@ -1375,11 +1378,11 @@ void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
       FREE(TheDcRaw->m_UserSetting_DarkFrameFileName);
       TheDcRaw->m_UserSetting_DarkFrameFileName = (char *)
         MALLOC(1+
-             strlen(GetString("DarkFrameFileName").toAscii().data()));
+             strlen(GetString("DarkFrameFileName").toLocal8Bit().data()));
       ptMemoryError(TheDcRaw->m_UserSetting_DarkFrameFileName,
                     __FILE__,__LINE__);
       strcpy(TheDcRaw->m_UserSetting_DarkFrameFileName,
-             GetString("DarkFrameFileName").toAscii().data());
+             GetString("DarkFrameFileName").toLocal8Bit().data());
       break;
     default :
       assert(0);
@@ -1519,6 +1522,13 @@ void ptSettings::FromDcRaw(ptDcRaw* TheDcRaw) {
            log(EOSExposureNormalization/TheDcRaw->m_MinPreMulti)/log(2));
 
   TRACEKEYVALS("ExposureNorm(EV)","%f", GetDouble("ExposureNormalization"));
+}
+
+//==============================================================================
+
+bool ptSettings::useRAWHandling() const
+{
+  return (GetInt("IsRAW") == 1) && (GetInt("UseThumbnail") == 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

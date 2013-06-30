@@ -1350,7 +1350,7 @@ void CLASS ppm_thumb ()
   merror (thumb, "ppm_thumb()");
   //fprintf (m_OutputFile, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  VAppend(m_Thumb, dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toLocal8Bit().data(), dummy.length());
   ptfread  (thumb, 1, m_ThumbLength, m_InputFile);
   VAppend(m_Thumb, thumb, m_ThumbLength);
   FREE (thumb);
@@ -1367,7 +1367,7 @@ void CLASS ppm16_thumb()
   for (i=0; i < (int32_t)m_ThumbLength; i++)
     thumb[i] = ((uint16_t *) thumb)[i] >> 8;
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  VAppend(m_Thumb, dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toLocal8Bit().data(), dummy.length());
   //fprintf (ofp, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   //fwrite (thumb, 1, m_ThumbLength, ofp);
   VAppend(m_Thumb, thumb, m_ThumbLength);
@@ -1391,7 +1391,7 @@ void CLASS layer_thumb ()
   //fprintf (m_OutputFile, "P%d\n%d %d\n255\n", 5 + (m_Colors >> 1), m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P%1\n%2 %3\n255\n")
       .arg(5 + (m_Colors >> 1)).arg(m_ThumbWidth).arg(m_ThumbHeight);
-  VAppend(m_Thumb, dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toLocal8Bit().data(), dummy.length());
   ptfread (thumb, m_ThumbLength, m_Colors, m_InputFile);
   for (unsigned i=0; i < m_ThumbLength; i++) {
     for (c=0; c < m_Colors; c++) {
@@ -1419,7 +1419,7 @@ void CLASS rollei_thumb ()
   merror (thumb, "rollei_thumb()");
   //fprintf (m_OutputFile, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  VAppend(m_Thumb, dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toLocal8Bit().data(), dummy.length());
   read_shorts (thumb, m_ThumbLength);
   for (i=0; i < m_ThumbLength; i++) {
     //putc (thumb[i] << 3, m_OutputFile);
@@ -2100,7 +2100,9 @@ void CLASS kodak_radc_load_raw()
   };
   uint16_t huff[19][256];
   int row, col, tree, nreps, rep, step, /* i,*/ c, s, r, x, y, val;
-  short last[3] = { 16,16,16 }, mul[3], buf[3][3][386];
+  constexpr unsigned int bufi1 = 3;
+  constexpr unsigned int bufi2 = 386;
+  short last[3] = { 16,16,16 }, mul[3], buf[3][bufi1][bufi2];
   static const uint16_t pt[] =
     { 0,0, 1280,1344, 2320,3616, 3328,8000, 4095,16383, 65535,16383 };
   int i;
@@ -2115,11 +2117,9 @@ void CLASS kodak_radc_load_raw()
   s = m_Kodak_cbpp == 243 ? 2 : 3;
   for(c=0;c<256;c++) huff[18][c] = (8-s) << 8 | c >> s << s | 1 << (s-1);
   getbits(-1);
-  for (unsigned i=0; i < sizeof(buf)/sizeof(short); i++)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warray-bounds"
-    buf[0][0][i] = 2048;
-#pragma GCC diagnostic pop
+  memset(buf, 2048, sizeof(buf)/sizeof(short));
+//  for (unsigned i=0; i < sizeof(buf)/sizeof(short); i++)
+//    buf[0][0][i] = 2048;
   for (row=0; row < m_Height; row+=4) {
     for (c=0; c<3; c++) mul[c] = getbits(6);
     for (c=0; c<3; c++) {
@@ -2127,8 +2127,11 @@ void CLASS kodak_radc_load_raw()
       s = val > 65564 ? 10:12;
       x = ~(-1 << (s-1));
       val <<= 12-s;
-      for (unsigned i=0; i < sizeof(buf[0])/sizeof(short); i++)
-  buf[c][0][i] = (buf[c][0][i] * val + x) >> s;
+      for (unsigned i=0; i < bufi1; i++)
+        for (unsigned j=0; j < bufi2; j++)
+          buf[c][i][j] = (buf[c][i][j] * val + x) >> s;
+//      for (unsigned i=0; i < sizeof(buf[0])/sizeof(short); i++)
+//        buf[c][0][i] = (buf[c][0][i] * val + x) >> s;
       last[c] = mul[c];
       for (r=0; r <= !c; r++) {
   buf[c][1][m_Width/2] = buf[c][2][m_Width/2] = mul[c] << 7;
@@ -2653,14 +2656,17 @@ void CLASS smal_decode_segment (unsigned seg[2][2], int holes)
       high <<= nbits;
       next = hist[s][1];
       if (++hist[s][2] > hist[s][3]) {
-  next = (next+1) & hist[s][0];
-  hist[s][3] = (hist[s][next+4] - hist[s][next+5]) >> 2;
-  hist[s][2] = 1;
+        next = (next+1) & hist[s][0];
+        hist[s][3] = (hist[s][next+4] - hist[s][next+5]) >> 2;
+        hist[s][2] = 1;
       }
       if (hist[s][hist[s][1]+4] - hist[s][hist[s][1]+5] > 1) {
-  if (bin < hist[s][1])
+  if (bin < hist[s][1]) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
     for (i=bin; i < hist[s][1]; i++) hist[s][i+5]--;
-  else if (next <= bin)
+#pragma GCC diagnostic pop
+  } else if (next <= bin)
     for (i=hist[s][1]; i < bin; i++) hist[s][i+5]++;
       }
       hist[s][1] = next;
@@ -2848,7 +2854,7 @@ void CLASS foveon_thumb ()
   bwide = get4();
   //fprintf (m_OutputFile, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  VAppend(m_Thumb, dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toLocal8Bit().data(), dummy.length());
   if (bwide > 0) {
     if (bwide < (unsigned)(m_ThumbWidth*3)) return;
     buf = (char *) MALLOC (bwide);
@@ -4470,7 +4476,7 @@ void CLASS vng_interpolate()
 */
 void CLASS ppg_interpolate()
 {
-  int dir[5] = { 1, m_Width, -1, -m_Width, 1 };
+  const int dir[5] = { 1, m_Width, -1, -m_Width, 1 };
   int row, col, diff[2], guess[2], c, d, i;
   uint16_t (*pix)[4];
 
@@ -4484,7 +4490,8 @@ void CLASS ppg_interpolate()
   for (row=3; row < m_Height-3; row++)
     for (col=3+(FC(row,3) & 1), c=FC(row,col); col < m_Width-3; col+=2) {
       pix = m_Image + row*m_Width+col;
-      for (i=0; (d=dir[i]) > 0; i++) {
+      for (i=0; i<2; i++) {
+        d = dir[i];
   guess[i] = (pix[-d][1] + pix[0][c] + pix[d][1]) * 2
           - pix[-2*d][c] - pix[2*d][c];
   diff[i] = ( ABS(pix[-2*d][c] - pix[ 0][c]) +
@@ -4510,8 +4517,9 @@ void CLASS ppg_interpolate()
   for (row=1; row < m_Height-1; row++)
     for (col=1+(FC(row,1) & 1), c=2-FC(row,col); col < m_Width-1; col+=2) {
       pix = m_Image + row*m_Width+col;
-      for (i=0; (d=dir[i]+dir[i+1]) > 0; i++) {
-  diff[i] = ABS(pix[-d][c] - pix[d][c]) +
+      for (i=0; i < 2; i++) {
+        d = dir[i]+dir[i+1];
+        diff[i] = ABS(pix[-d][c] - pix[d][c]) +
       ABS(pix[-d][1] - pix[0][1]) +
       ABS(pix[ d][1] - pix[0][1]);
   guess[i] = pix[-d][c] + pix[d][c] + 2*pix[0][1]
@@ -8484,9 +8492,9 @@ short CLASS Identify(const QString NewInputFile) {
 
   if (NewInputFile != "") {
     FREE(m_UserSetting_InputFileName);
-    m_UserSetting_InputFileName = (char*) MALLOC(1 + strlen(NewInputFile.toAscii().data()));
+    m_UserSetting_InputFileName = (char*) MALLOC(1 + strlen(NewInputFile.toLocal8Bit().data()));
     ptMemoryError(m_UserSetting_InputFileName,__FILE__,__LINE__);
-    strcpy(m_UserSetting_InputFileName, NewInputFile.toAscii().data());
+    strcpy(m_UserSetting_InputFileName, NewInputFile.toLocal8Bit().data());
   }
 
   if (!(m_InputFile = fopen (m_UserSetting_InputFileName, "rb"))) {
@@ -9018,7 +9026,12 @@ void CLASS ptBlendHighlights() {
     { { 1,1,1,1 }, { 1,-1,1,-1 }, { 1,1,-1,-1 }, { 1,-1,-1,1 } } };
   float Cam[2][4], lab[2][4], Sum[2], chratio;
 
-  if ((unsigned) (m_Colors-3) > 1) return;
+  const int transIdx = m_Colors - 3;
+  assert(transIdx > -1);
+  if (transIdx > 1) return;
+
+  // to shut up gcc warnings...
+  const int localColors = ptMin(static_cast<int>(m_Colors), 4);
 
   for (short c=0; c<m_Colors; c++) {
     if (ClipLevel > (i = (int)(0xFFFF*VALUE(m_PreMultipliers[c])))) {
@@ -9040,7 +9053,7 @@ void CLASS ptBlendHighlights() {
       for (i=0; i < 2; i++) {
   for (c=0; c<m_Colors; c++) {
           for (lab[i][c]=j=0; j < m_Colors; j++) {
-      lab[i][c] += trans[m_Colors-3][c][j] * Cam[i][j];
+      lab[i][c] += trans[transIdx][c][j] * Cam[i][j];
           }
         }
   for (Sum[i]=0,c=1; c < m_Colors; c++) {
@@ -9048,13 +9061,15 @@ void CLASS ptBlendHighlights() {
         }
       }
       chratio = sqrt(Sum[1]/Sum[0]);
-      for (c=1; c < m_Colors; c++) {
-  lab[0][c] *= chratio;
+      for (c = 1; c < m_Colors; c++) {
+        lab[0][c] *= chratio;
       }
-      for (c=0; c<m_Colors; c++) for (Cam[0][c]=j=0; j < m_Colors; j++) {
-  Cam[0][c] += itrans[m_Colors-3][c][j] * lab[0][j];
+      for (c = 0; (c < localColors); c++) {
+        for (Cam[0][c]=j=0; (j < localColors); j++) {
+          Cam[0][c] += itrans[transIdx][c][j] * lab[0][j];
+        }
       }
-      for (c=0; c<m_Colors; c++) {
+      for (c = 0; c < m_Colors; c++) {
         m_Image[Row*m_Width+Column][c] = (uint16_t)(Cam[0][c] / m_Colors);
       }
     }

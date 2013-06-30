@@ -27,6 +27,7 @@
 #include "ptCheck.h"
 #include "ptInfo.h"
 #include "filters/ptCfgItem.h"
+#include <QHBoxLayout>
 
 //==============================================================================
 
@@ -48,7 +49,7 @@ ptCheck::ptCheck(const QWidget* MainWindow,
   m_Parent = MainWindow->findChild <QWidget*> (ParentName);
   if (!m_Parent) {
     fprintf(stderr,"(%s,%d) Could not find '%s'. Aborting\n",
-           __FILE__,__LINE__,ParentName.toAscii().data());
+           __FILE__,__LINE__,ParentName.toLocal8Bit().data());
     assert(m_Parent);
   }
   setParent(m_Parent);
@@ -142,7 +143,7 @@ void ptCheck::SetValue(const QVariant Value, const short BlockSignal) {
   if (hValue.type() != QVariant::Int) {
     printf("(%s,%d) this : %s Value.type() : %d\n",
            __FILE__,__LINE__,
-           this->objectName().toAscii().data(),
+           this->objectName().toLocal8Bit().data(),
            hValue.type());
     assert(hValue.type() == QVariant::Int);
   }
