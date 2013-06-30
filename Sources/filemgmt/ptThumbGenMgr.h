@@ -49,8 +49,8 @@ public:
   void clear();
   void connectBroadcast(const QObject* AReceiver, const char* ABroadcastSlot);
   bool isRunning() const;
-  void request(const TThumbAssoc& AThumb);
-  void request(const QList<TThumbAssoc>& AThumbList);
+  void request(const TThumbAssoc& AThumb, TThumbQPrio APriority = TThumbQPrio::Normal);
+  void request(const QList<TThumbAssoc>& AThumbList, TThumbQPrio APriority = TThumbQPrio::Normal);
   /*! @}*/
 
 private:

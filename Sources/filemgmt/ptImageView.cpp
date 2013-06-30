@@ -122,6 +122,14 @@ ptImageView::~ptImageView() {
 }
 
 //------------------------------------------------------------------------------
+/*! Stops image generation and clears image cache. */
+void ptImageView::clear() {
+  FThumbGen.clear();
+  FImage.reset();
+  FPixmapItem->setPixmap(QPixmap());
+}
+
+//------------------------------------------------------------------------------
 /*! Load and show the image specified by AFilename. */
 void ptImageView::showImage(const QString& AFilename) {
   if (AFilename != FFilenameCurrent) {

@@ -78,7 +78,7 @@ TThumbAssoc ptThumbQueue::dequeue() {
   dequeue() will return that item.
 */
 void ptThumbQueue::enqueue(const TThumbAssoc& AItem, TThumbQPrio APriority) {
-//  ptMutexLocker hLock(&FItemsMutex);
+  ptMutexLocker hLock(&FItemsMutex);
   switch (APriority) {
     case TThumbQPrio::High: FItems.prepend(AItem); break;
     case TThumbQPrio::Normal: FItems.append(AItem); break;
@@ -88,7 +88,7 @@ void ptThumbQueue::enqueue(const TThumbAssoc& AItem, TThumbQPrio APriority) {
 
 /*! This function overloads enqueue(). Instead of a single item it enqueues a list of items. */
 void ptThumbQueue::enqueue(const QList<TThumbAssoc>& AItems, TThumbQPrio APriority) {
-//  ptMutexLocker hLock(&FItemsMutex);
+  ptMutexLocker hLock(&FItemsMutex);
 
   for (auto& hItem: AItems) {
     switch (APriority) {

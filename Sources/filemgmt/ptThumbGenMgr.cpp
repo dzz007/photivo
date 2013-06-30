@@ -117,8 +117,8 @@ bool ptThumbGenMgr::isRunning() const {
   Requests a thumbnail images and returns immediately. When the actual image data
   is ready the broadcast() signal is emitted by ptThumbGenWorker.
 */
-void ptThumbGenMgr::request(const TThumbAssoc& AThumb) {
-  FThumbQueue.enqueue(AThumb);
+void ptThumbGenMgr::request(const TThumbAssoc& AThumb, TThumbQPrio APriority) {
+  FThumbQueue.enqueue(AThumb, APriority);
   this->start();
 }
 
@@ -127,8 +127,8 @@ void ptThumbGenMgr::request(const TThumbAssoc& AThumb) {
   This function overloads request(). Requests a list of thumbnail images. When the image
   data is ready the broadcast() signal is emitted by ptThumbGenWorker once for each image.
 */
-void ptThumbGenMgr::request(const QList<TThumbAssoc>& AThumbList) {
-  FThumbQueue.enqueue(AThumbList);
+void ptThumbGenMgr::request(const QList<TThumbAssoc>& AThumbList, TThumbQPrio APriority) {
+  FThumbQueue.enqueue(AThumbList, APriority);
   this->start();
 }
 

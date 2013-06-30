@@ -504,21 +504,26 @@ void ptFileMgrWindow::thumbFocusChanged() {
 void ptFileMgrWindow::saveThumbnail() {
   int hThumbIdx = FDataModel->focusedThumb();
 
-  if (hThumbIdx > -1 &&
-      hThumbIdx < FDataModel->thumbGroupList()->count()) {
-    QString   hFileName          = FDataModel->thumbGroupList()->at(hThumbIdx)->fullPath();
-    ptImage8* hImage             = new ptImage8();
-    // TODO BJ: FDataModel->getThumbnail(hImage, hFileName, Settings->GetInt("FileMgrThumbSaveSize"));
+  if (hThumbIdx > -1 && (hThumbIdx < FDataModel->thumbGroupList()->count())) {
+    QString   hFileName = FDataModel->thumbGroupList()->at(hThumbIdx)->fullPath();
+    auto      hImage = FDataModel->getThumb(hFileName, Settings->GetInt("FileMgrThumbSaveSize"));
+
+    if (!hImage) {
+      ptMessageBox::warning(0, QObject::tr("Error"), QObject::tr("Thumbnail could not be saved."));
+      return;
+    }
 
     QFileInfo hPathInfo(hFileName);
     QString   hSuggestedFileName = hPathInfo.dir().path() + "/" + hPathInfo.completeBaseName() + "-thumb.jpg";
 
-    QString hOutputName;
-    hOutputName = QFileDialog::getSaveFileName(NULL,
-                                               QObject::tr("Save File"),
-                                               hSuggestedFileName,
-                                               SaveBitmapPattern);
-    if (0 == hOutputName.size()) return; // Operation cancelled.
+    auto hOutputName = QFileDialog::getSaveFileName(nullptr,
+                                                    QObject::tr("Save File"),
+                                                    hSuggestedFileName,
+                                                    SaveBitmapPattern);
+
+    if (hOutputName.isEmpty()) {
+      return; // Operation cancelled.
+    }
 
     if (!(hImage->DumpImage(hOutputName.toAscii().data(), true))) {
       ptMessageBox::warning(0, QObject::tr("Error"), QObject::tr("Thumbnail could not be saved."));
@@ -527,8 +532,6 @@ void ptFileMgrWindow::saveThumbnail() {
     if (!ptImageHelper::TransferExif(hFileName, hOutputName)) {
       ptMessageBox::warning(0, QObject::tr("Exif error"), QObject::tr("Exif data could not be written."));
     }
-
-    delete hImage;
   }
 }
 
@@ -571,10 +574,11 @@ void ptFileMgrWindow::closeWindow() {
 void ptFileMgrWindow::hideEvent(QHideEvent* event) {
   if (!event->spontaneous()) {
     event->accept();
-    FDataModel->abortThumbGen();
-    // free memory occupied by thumbnails
-    clearScene();
+    // free memory occupied by thumbnails and thumb cache
+    // clear() includes stopping thumbnail generation
     FDataModel->clear();
+    FImageView->clear();
+    this->clearScene();
   } else {
     event->ignore();
   }
