@@ -39,7 +39,7 @@
 class ptImage8;
 
 //------------------------------------------------------------------------------
-const uint CImageViewReceiverId = 0;
+const uint CSingleThumbReceiverId = 0;
 const uint CFirstThumbReceiverId = 1;
 
 //------------------------------------------------------------------------------
@@ -70,6 +70,7 @@ public:
   void abortThumbGen();
   void connectThumbGen(const QObject* AReceiver, const char* ABroadcastSlot);
   void populateThumbs(QGraphicsScene* AScene);
+  TThumbPtr getThumb(const QString& AFilename, int ALongEdgeSize);
   QList<ptGraphicsThumbGroup*>* thumbGroupList();
   bool thumbGenRunning() const;
 
@@ -84,9 +85,12 @@ private:
   ptSingleDirModel*               FDirModel;
   bool                            FIsMyComputer;
   ptTagModel*                     FTagModel;
-  std::unique_ptr<ptThumbGenMgr>  FThumbGen;
+  ptThumbGenMgr                   FThumbGen;
   QList<ptGraphicsThumbGroup*>*   FThumbGroupList;
+  TThumbPtr                       FSingleThumb;   // temp variable for getThumb()
 
+private slots:
+  void receiveThumb(uint AId, TThumbPtr AThumb);
 };
 
 //==============================================================================

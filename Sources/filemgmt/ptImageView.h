@@ -42,6 +42,7 @@ public:
   explicit ptImageView(QWidget* AParent = nullptr);
   ~ptImageView();
 
+  void clear();
   void showImage(const QString& AFilename);
   QString currentFilename() const;
 

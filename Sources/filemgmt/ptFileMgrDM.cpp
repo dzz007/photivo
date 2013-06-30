@@ -39,7 +39,7 @@ ptFileMgrDM::ptFileMgrDM(QObject* AParent)
   FDirModel(new ptSingleDirModel(this)),
   FIsMyComputer(false),
   FTagModel(new ptTagModel(this)),
-  FThumbGen(make_unique<ptThumbGenMgr>(150*1024*1024)), // TODO BJ: make cache size configurable
+  FThumbGen(150*1024*1024), // TODO BJ: make cache size configurable
   FThumbGroupList(new QList<ptGraphicsThumbGroup*>)
 {}
 
@@ -51,7 +51,7 @@ ptFileMgrDM::~ptFileMgrDM() {
 //------------------------------------------------------------------------------
 /*! Clear the data cache of \c ptFileMgrDM */
 void ptFileMgrDM::clear() {
-  FThumbGen->clear();
+  FThumbGen.clear();
   FThumbGroupList->clear();
 }
 
@@ -117,13 +117,13 @@ QList<ptGraphicsThumbGroup*>*ptFileMgrDM::thumbGroupList() {
 //------------------------------------------------------------------------------
 /*! Connects the signal emitted when a thumbnail image is generated with the given slot. */
 void ptFileMgrDM::connectThumbGen(const QObject* AReceiver, const char* ABroadcastSlot) {
-  FThumbGen->connectBroadcast(AReceiver, ABroadcastSlot);
+  FThumbGen.connectBroadcast(AReceiver, ABroadcastSlot);
 }
 
 //------------------------------------------------------------------------------
 /*! Returns true while thumbnails are being generated. */
 bool ptFileMgrDM::thumbGenRunning() const {
-  return FThumbGen->isRunning();
+  return FThumbGen.isRunning();
 }
 
 //------------------------------------------------------------------------------
@@ -132,7 +132,7 @@ bool ptFileMgrDM::thumbGenRunning() const {
   when this method returns.
 */
 void ptFileMgrDM::abortThumbGen() {
-  FThumbGen->abort();
+  FThumbGen.abort();
 }
 
 //------------------------------------------------------------------------------
@@ -150,7 +150,7 @@ ptGraphicsThumbGroup* ptFileMgrDM::moveFocus(const int index) {
   \see connectThumbGen()
 */
 void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
-  FThumbGen->abort();
+  FThumbGen.abort();
   FThumbGroupList->clear();
   AScene->clear();
 
@@ -181,7 +181,47 @@ void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
     ++hGroupId;
   }
 
-  FThumbGen->request(hThumbIdList);
+  FThumbGen.request(hThumbIdList);
+}
+
+//------------------------------------------------------------------------------
+/*! Returns a thumbnail for the given file with high priority. */
+TThumbPtr ptFileMgrDM::getThumb(const QString& AFilename, int ALongEdgeSize) {
+  // Some work is required to make this function blocking and receive a single image.
+  // - Temporarily connect the receiveThumb() slot to FThumbGen.
+  // - Post the high prio request for the thumb and spin the event loop until receiveThumb()
+  //   was executed and the image put into FSingleThumb.
+  // - Clean up and return the image.
+  FThumbGen.connectBroadcast(this, SLOT(receiveThumb(uint,TThumbPtr)));
+  FThumbGen.request({CSingleThumbReceiverId, makeThumbId(AFilename, ALongEdgeSize, fsoFile)},
+                    TThumbQPrio::High);
+
+  // hTime is for deadlock prevention. Abort waiting for thumbnail after 20 seconds.
+  QTime hTime;
+  hTime.start();
+  while (!FSingleThumb) {
+    if (hTime.elapsed() > 20000) {
+      disconnect(this, SLOT(receiveThumb(uint,TThumbPtr)));
+      GInfo->Warning("Thumbnail timeout: " + AFilename, AT);
+      break;
+    }
+    QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+  }
+
+  // Temp variable is needed to not hold a superfluous pointer to the requested image
+  // after the function exits.
+  auto hTempThumb = FSingleThumb;
+  FSingleThumb.reset();
+  return hTempThumb;
+}
+
+//------------------------------------------------------------------------------
+// Helper for getThumb()
+void ptFileMgrDM::receiveThumb(uint AId, TThumbPtr AThumb) {
+  if (AId == CSingleThumbReceiverId) {
+    disconnect(this, SLOT(receiveThumb(uint,TThumbPtr)));
+    FSingleThumb = AThumb;
+  }
 }
 
 //------------------------------------------------------------------------------
