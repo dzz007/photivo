@@ -44,7 +44,8 @@ ptThumbGenWorker::ptThumbGenWorker(ptThumbQueue* AQueue,
   FIsRunning(false),
   FAbortCtrl(AAbortCtrl),
   FThumbCache(ACache),
-  FThumbQueue(AQueue)
+  FThumbQueue(AQueue),
+  Process_Func("process")
 {
   Q_ASSERT_X(AAbortCtrl != nullptr, __PRETTY_FUNCTION__, "Pointer to thumbnail abort ctrler is null.");
   Q_ASSERT_X(ACache != nullptr, __PRETTY_FUNCTION__, "Pointer to thumbnail cache is null.");

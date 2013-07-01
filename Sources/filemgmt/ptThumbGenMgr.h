@@ -56,7 +56,7 @@ public:
 private:
   void start();
 
-  const int CMinWorkerThreads = 1;
+  const int CMinWorkerThreads;
 
   ptFlowController          FAbortCtrl;
   ptThumbCache              FThumbCache;

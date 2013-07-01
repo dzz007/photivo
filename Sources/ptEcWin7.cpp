@@ -28,6 +28,7 @@ http://dukto.googlecode.com/
 *******************************************************************************/
 
 #include <cassert>
+#include <objbase.h>
 
 #include "ptEcWin7.h"
 

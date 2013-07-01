@@ -33,6 +33,7 @@
     the optimal number of threads automatically but will never exceed AMaxThreads.
  */
 ptThumbGenMgr::ptThumbGenMgr(uint AMaxCacheSize, int AMaxThreads):
+  CMinWorkerThreads(1),
   FAbortCtrl(false),
   FThumbCache(AMaxCacheSize),
   FThumbQueue()
