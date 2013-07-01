@@ -878,7 +878,7 @@ int photivoMain(int Argc, char *Argv[]) {
 #ifndef PT_WITHOUT_FILEMGR
   FileMgrWindow = new ptFileMgrWindow(MainWindow->FileManagerPage);
   MainWindow->FileManagerLayout->addWidget(FileMgrWindow);
-  QObject::connect(FileMgrWindow, SIGNAL(FileMgrWindowClosed()),
+  QObject::connect(FileMgrWindow, SIGNAL(fileMgrWindowClosed()),
                    MainWindow, SLOT(CloseFileMgrWindow()));
   QObject::connect(ViewWindow, SIGNAL(openFileMgr()), MainWindow, SLOT(OpenFileMgrWindow()));
 #endif
@@ -1097,7 +1097,7 @@ void CB_Event0() {
 
 #ifndef PT_WITHOUT_FILEMGR
   if (Settings->GetInt("FileMgrIsOpen")) {
-    FileMgrWindow->DisplayThumbnails();
+    FileMgrWindow->displayThumbnails();
     FileMgrWindow->setFocus(Qt::OtherFocusReason);
   }
 #endif
@@ -3349,7 +3349,7 @@ void CB_StyleChoice(const QVariant Choice) {
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
   CB_SliderWidthInput(Settings->GetInt("SliderWidth"));
 #ifndef PT_WITHOUT_FILEMGR
-  FileMgrWindow->UpdateTheme();
+  FileMgrWindow->updateTheme();
 #endif
   BatchWindow->UpdateTheme();
 }
@@ -6786,6 +6786,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_JustSetDispatch(FileMgrThumbMaxRowColInput)
   M_JustSetDispatch(FileMgrThumbSaveSizeInput)
   M_JustSetDispatch(FileMgrStartupOpenCheck)
+  M_JustSetDispatch(FileMgrThumbCacheSizeInput)
 
   M_JustSetDispatch(BatchMgrAutosaveCheck)
   M_JustSetDispatch(BatchMgrAutosaveFileChoice)

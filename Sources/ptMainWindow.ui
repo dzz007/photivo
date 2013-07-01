@@ -10285,6 +10285,9 @@
                                   <item>
                                    <widget class="QWidget" name="FileMgrStartupOpenWidget" native="true"/>
                                   </item>
+                                  <item>
+                                   <widget class="QWidget" name="FileMgrThumbCacheSizeWidget" native="true"/>
+                                  </item>
                                  </layout>
                                 </widget>
                                </item>

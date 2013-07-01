@@ -3,6 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
+** Copyright (C) 2012-2013 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
 **
@@ -32,80 +33,60 @@
 
 //==============================================================================
 
-ptImage8::ptImage8() {
-  m_Width      = 0;
-  m_Height     = 0;
-  m_Image      = NULL;
-  m_Colors     = 0;
-  m_ColorSpace = ptSpace_sRGB_D65;
-};
+ptImage8::ptImage8():
+  m_Width(0),
+  m_Height(0),
+  m_Colors(0),
+  m_ColorSpace(ptSpace_sRGB_D65),
+  m_SizeBytes(0)
+{}
 
 //==============================================================================
 
-ptImage8::ptImage8(const uint16_t Width,
-                   const uint16_t Height,
-                   const short    NrColors)
+ptImage8::ptImage8(uint16_t AWidth,
+                   uint16_t AHeight,
+                   short    ANrColors)
 {
-  m_Image              = nullptr;
+  m_Image.clear();
   m_ColorSpace = ptSpace_sRGB_D65;
-  setSize(Width, Height, NrColors);
+  setSize(AWidth, AHeight, ANrColors);
 }
 
 //==============================================================================
 
-void ptImage8::setSize(const uint16_t AWidth, const uint16_t AHeight, const int AColorCount) {
-  m_Width              = AWidth;
-  m_Height             = AHeight;
-  m_Colors             = AColorCount;
+void ptImage8::setSize(uint16_t AWidth, uint16_t AHeight, int AColorCount) {
+  m_Width     = AWidth;
+  m_Height    = AHeight;
+  m_Colors    = AColorCount;
+  m_SizeBytes = m_Width * m_Height * m_Colors;
 
-  if (m_Image) FREE(m_Image);
+  m_Image.resize(m_Width * m_Height);
+}
 
-  m_Image      = (uint8_t (*)[4]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
+//==============================================================================
+
+void ptImage8::fillColor(uint8_t ARed, uint8_t AGreen, uint8_t ABlue, uint8_t AAlpha) {
+  std::array<uint8_t, 4> hTemp = {{ARed, AGreen, ABlue, AAlpha}};
+  std::fill(std::begin(m_Image), std::end(m_Image), hTemp);
 }
 
 //==============================================================================
 
 ptImage8::~ptImage8() {
-  FREE(m_Image);
 }
 
 //==============================================================================
 
-void ptImage8::SetSize(const uint16_t Width, const uint16_t Height, const short NrColors)
-{
-  if (m_Image) FREE(m_Image);
-
-  m_Width  = Width;
-  m_Height = Height;
-  m_Colors = NrColors;
-
-  m_Image  = (uint8_t (*)[4]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  ptMemoryError(m_Image,__FILE__,__LINE__);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Set
-//
-////////////////////////////////////////////////////////////////////////////////
-
-ptImage8* ptImage8::Set(const ptImage *Origin) { // Always deep
+ptImage8* ptImage8::Set(const ptImage *Origin) {
 
   assert(NULL != Origin);
   assert(ptSpace_Lab != Origin->m_ColorSpace);
 
-  m_Width      = Origin->m_Width;
-  m_Height     = Origin->m_Height;
-  m_Colors     = Origin->m_Colors;
+  setSize(Origin->m_Width, Origin->m_Height, Origin->m_Colors);
   m_ColorSpace = Origin->m_ColorSpace;
 
-  // Free maybe preexisting.
-  FREE(m_Image);
-
-  m_Image = (uint8_t (*)[4]) CALLOC(m_Width*m_Height,sizeof(*m_Image));
-  for (uint32_t i=0 ; i<(uint32_t)m_Width*m_Height; i++) {
-    for (short c=0; c<3; c++) {
+  for (uint32_t i = 0; i < static_cast<uint32_t>(m_Width)*m_Height; i++) {
+    for (short c = 0; c < 3; c++) {
       // Mind the R<->B swap !
       m_Image[i][2-c] = Origin->m_Image[i][c]>>8;
     }
@@ -121,13 +102,12 @@ ptImage8 *ptImage8::Set(const ptImage8 *Origin)
 {
   assert(NULL != Origin);
 
-  SetSize(Origin->m_Width,
+  setSize(Origin->m_Width,
           Origin->m_Height,
           Origin->m_Colors);
 
   m_ColorSpace = Origin->m_ColorSpace;
-
-  memcpy(m_Image, Origin->m_Image, m_Width*m_Height*sizeof(*m_Image));
+  m_Image      = Origin->m_Image;
 
   return this;
 }
@@ -136,10 +116,8 @@ ptImage8 *ptImage8::Set(const ptImage8 *Origin)
 
 void ptImage8::FromQImage(const QImage AImage)
 {
-  SetSize(AImage.width(), AImage.height(), 4);
+  setSize(AImage.width(), AImage.height(), 4);
 
   m_ColorSpace = ptSpace_sRGB_D65;
-  memcpy(m_Image, AImage.bits(), m_Width*m_Height*sizeof(*m_Image));
+  memcpy((uint8_t (*)[4]) m_Image.data(), AImage.bits(), m_SizeBytes);
 }
-
-////////////////////////////////////////////////////////////////////////////////
