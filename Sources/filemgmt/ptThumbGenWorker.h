@@ -70,7 +70,7 @@ private:
   ptThumbCache* const FThumbCache;
   ptThumbQueue* const FThumbQueue;
 
-  const char* Process_Func = "process";
+  const char* Process_Func;
 
 private slots:
   void process();
