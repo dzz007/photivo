@@ -130,7 +130,6 @@ set( photivo_MOC_HDRS
      Sources/filemgmt/ptSingleDirModel.h
      Sources/filemgmt/ptTagList.h
      Sources/filemgmt/ptTagModel.h
-     Sources/filemgmt/ptThumbnailer.h
      Sources/filters/imagespot/ptFilter_SpotTuning.h
      Sources/filters/imagespot/ptImageSpotEditor.h
      Sources/filters/imagespot/ptImageSpotItemDelegate.h
@@ -187,6 +186,7 @@ set( photivo_MOC_HDRS
      Sources/ptWidget.h
      Sources/qtsingleapplication/qtlocalpeer.h
      Sources/qtsingleapplication/qtsingleapplication.h
+     Sources/filemgmt/ptThumbGenWorker.h
 )
 
 set( photivo_SRCS
@@ -205,8 +205,7 @@ set( photivo_SRCS
      Sources/filemgmt/ptSingleDirModel.cpp
      Sources/filemgmt/ptTagList.cpp
      Sources/filemgmt/ptTagModel.cpp
-     Sources/filemgmt/ptThumbnailCache.cpp
-     Sources/filemgmt/ptThumbnailer.cpp
+     Sources/filemgmt/ptThumbCache.cpp
      Sources/filters/imagespot/ptFilter_SpotTuning.cpp
      Sources/filters/imagespot/ptImageSpot.cpp
      Sources/filters/imagespot/ptImageSpotEditor.cpp
@@ -305,6 +304,11 @@ set( photivo_SRCS
      Sources/ptUtils_Storage.cpp
      Sources/ptStorable.cpp
      Sources/ptUtils.cpp
+     Sources/filemgmt/ptThumbDefines.cpp
+     Sources/ptMutexLocker.cpp
+     Sources/filemgmt/ptThumbGenMgr.cpp
+     Sources/filemgmt/ptThumbGenWorker.cpp
+     Sources/filemgmt/ptThumbGenHelpers.cpp
 )
  
 if( WIN32 )
