@@ -43,7 +43,7 @@ public:
   ~ptImageView();
 
   void clear();
-  void showImage(const QString& AFilename);
+  void showImage(const QString& AFilename, bool AForceReload = false);
   QString currentFilename() const;
 
 public slots:
