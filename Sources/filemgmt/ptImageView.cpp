@@ -136,9 +136,12 @@ void ptImageView::clear() {
 }
 
 //------------------------------------------------------------------------------
-/*! Load and show the image specified by AFilename. */
-void ptImageView::showImage(const QString& AFilename) {
-  if (AFilename != FFilenameCurrent) {
+/*!
+  Load and show the image specified by AFilename. If AForceReload is true the
+  image is loaded again even if AFilename and the currently loaded image are the same.
+*/
+void ptImageView::showImage(const QString& AFilename, bool AForceReload) {
+  if ((AFilename != FFilenameCurrent) || AForceReload) {
     FThumbGen.abort();
     FStatusOverlay->exec(QObject::tr("Loading"));
     FFilenameNext = AFilename;
@@ -351,6 +354,9 @@ void ptImageView::resizeTimerExpired() {
 //------------------------------------------------------------------------------
 void ptImageView::showEvent(QShowEvent* event) {
   QGraphicsView::showEvent(event);
+  if (!FImage && !FFilenameCurrent.isEmpty()) {
+    this->showImage(FFilenameCurrent, true);
+  }
 }
 
 //------------------------------------------------------------------------------
