@@ -36,7 +36,7 @@ class ptImage;
 
 //==============================================================================
 
-// Class containing an 8 bit image. Intentionally very limited.
+// Class containing an 8-bit image. Intentionally very limited.
 // Only meant as interface to display.
 
 class ptImage8 {

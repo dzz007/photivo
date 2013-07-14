@@ -242,8 +242,7 @@ void ptProcessor::Run(short Phase,
           int Success = 0;
 
           if (Settings->GetInt("IsRAW") == 1) { // RAW image, we fetch the thumbnail
-            std::vector<char> ImgData;
-            m_DcRaw->thumbnail(ImgData);
+            auto ImgData = m_DcRaw->thumbnail();
 
             m_Image_AfterDcRaw->ptGMCOpenImage(
               (Settings->GetStringList("InputFileNameList"))[0].toLocal8Bit().data(),

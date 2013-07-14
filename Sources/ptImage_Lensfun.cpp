@@ -58,7 +58,7 @@ ptImage* ptImage::Lensfun(const int LfunActions, const lfModifier* LfunData) {
        (LfunActions &  LF_MODIFY_GEOMETRY)) ||
        (LfunActions == LF_MODIFY_ALL) )
   {
-    std::vector<std::array<uint16_t, 3> > TempData;
+    TImage16Data TempData;
     TempData.resize((size_t) m_Width*m_Height);
     uint16_t (*TempImage)[3] = (uint16_t (*)[3]) TempData.data();
     bool LfunSuccess = true;

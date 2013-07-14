@@ -1150,7 +1150,7 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
   m_Height = DcRawObject->m_Height;
 
   // Temp image for later flip
-  std::vector<std::array<uint16_t, 3> > PreFlip;
+  TImage16Data PreFlip;
   PreFlip.resize((size_t)m_Width*m_Height);
 
   if (!ProfileName) {
@@ -1392,7 +1392,7 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
   m_ColorSpace = TargetSpace;
 
   // Temp image for later flip
-  std::vector<std::array<uint16_t, 3> > PreFlip;
+  TImage16Data PreFlip;
   PreFlip.resize((size_t)m_Width*m_Height);
 
   // Convert the image.
@@ -1709,7 +1709,7 @@ ptImage* ptImage::ApplyCurve(const ptCurve *Curve,
   if (ChannelMask & 1) Channel.push_back(0);
   if (ChannelMask & 2) Channel.push_back(1);
   if (ChannelMask & 4) Channel.push_back(2);
-  __gnu_parallel::for_each (m_Data.begin(), m_Data.end(), [&](std::array<uint16_t, 3> &Pixel) {
+  __gnu_parallel::for_each (m_Data.begin(), m_Data.end(), [&](TPixel16 &Pixel) {
     std::for_each (Channel.begin(), Channel.end(), [&](const short &Value){
       Pixel[Value] = Curve->Curve[ Pixel[Value] ];
     });
@@ -1733,7 +1733,7 @@ ptImage* ptImage::ApplyLByHueCurve(const ptCurve *Curve) {
   // neutral value for a* and b* channel
   const float WPH = 0x8080;
 
-  __gnu_parallel::for_each (m_Data.begin(), m_Data.end(), [&](std::array<uint16_t, 3> &Pixel) {
+  __gnu_parallel::for_each (m_Data.begin(), m_Data.end(), [&](TPixel16 &Pixel) {
     // Factor by hue
     float ValueA = (float)Pixel[1]-WPH;
     float ValueB = (float)Pixel[2]-WPH;
