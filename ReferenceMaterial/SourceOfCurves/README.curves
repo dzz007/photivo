@@ -1,0 +1,69 @@
+These tone curves were acquired from various web sites and
+are in the public domain.
+
+Although these curves were originally intended for use with
+Nikon cameras, they should be applicable to the images from
+any digital source.
+
+In a first step those curves where converted via  
+find . -name "*.ntc" -exec ../../SimpleNikonCurve/SimpleNikonCurve {} \;
+
+SimpleNikonCurve is a very simplified form of nikon_curve.c 
+(that can fi be found in ufraw)
+It writes the anchors of the curve (probably applying gamma) to *.anchors.
+That is than further input to flRaw.
+(remark : applying gamma on the curve is reasonably close to applying 
+gamma to the anchors and reconstruct curves from there).
+
+------------------------------------------
+Origin of the curves (most of them anyway)
+------------------------------------------
+
+http://www.mastersphoto.net/curves/
+
+    Most are found right here
+
+http://www.planetneil.com/nikon/custom-curves.html
+
+    basic-curve-159,152,141
+
+    midtone enhance
+
+http://fotogenetic.dearingfilm.com/downloads.html
+
+    fotogenetic_s_curves.zip
+    fotogenetic_correction_curves_v4.zip
+    fotogenetic_curve_archive.zip
+
+http://www5e.biglobe.ne.jp/~komin/curve/D70/d70download.htm
+
+    curve114d.ntc
+    curve039.ntc
+
+    midtone enhance with some shadow depression
+
+http://www.digitalkb.com/nikon_d70/tone_curves/
+
+    sRealav1.zip
+    sReala_version2.zip
+    jt_all-in-1Curve.zip
+    Optimav1.zip
+    astiav1.zip
+
+    cf. 0digitalkb.jpg
+
+http://www.jtgraphics.net/all_digital.htm
+
+    jt_all-in-1Curve.ntc
+    jtg_curves.zip
+    d100curves.zip
+
+http://members.aol.com/bhaber/D70/mycurves/bh_filmcurves.html
+
+    bh_filmcurve1.zip
+    bh_filmcurve2.zip
+
+http://www.blackdiamondproductions.net/d100info.htm
+
+    CourbeCurves.zip
+    d100curves.zip
