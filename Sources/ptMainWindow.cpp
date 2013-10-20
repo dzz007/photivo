@@ -699,7 +699,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
   if (event->type() == QEvent::ContextMenu) {
     if (obj == Tabbar) {
       // compute the tab number
-      QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+      QContextMenuEvent *mouseEvent = static_cast<QContextMenuEvent *>(event);
       QPoint position = mouseEvent->pos();
       int c = Tabbar->count();
       int clickedItem = -1;
@@ -725,7 +725,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
         Menu.setStyle(Theme->style());
         Menu.setPalette(Theme->menuPalette());
         Menu.addAction(m_AtnShowTools);
-        Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+        Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
       }
     } else if (obj == WritePipeButton) {
       QMenu Menu(NULL);
@@ -736,14 +736,14 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.addAction(m_AtnSaveSettings);
       Menu.addAction(m_AtnSaveJobfile);
       Menu.addAction(m_AtnSendToBatch);
-      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+      Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
     } else if (obj == ToGimpButton) {
       QMenu Menu(NULL);
       Menu.setStyle(Theme->style());
       Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnGimpSavePipe);
       Menu.addAction(m_AtnGimpSaveFull);
-      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+      Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
     } else if (obj == ResetButton) {
       QMenu Menu(NULL);
       Menu.setStyle(Theme->style());
@@ -753,7 +753,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.addSeparator();
       Menu.addAction(m_AtnMenuOpenPreset);
       Menu.addAction(m_AtnMenuOpenSettings);
-      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+      Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
     }
     return QObject::eventFilter(obj, event);
   } else if (obj == LogoLabel &&
@@ -2581,7 +2581,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
   if (Pos != ExifData.end() ) {
     std::stringstream str;
     str << *Pos;
-    TheInfo.append(QString(str.str().c_str()));
+    TheInfo.append(QString::fromLocal8Bit(str.str().c_str()));
   }
   InfoFlashLabel->setText(TheInfo);
   TheInfo="";
@@ -2590,7 +2590,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
   if (Pos != ExifData.end() ) {
     std::stringstream str;
     str << *Pos;
-    TheInfo.append(QString(str.str().c_str()));
+    TheInfo.append(QString::fromLocal8Bit(str.str().c_str()));
   }
   InfoWhitebalanceLabel->setText(TheInfo);
   TheInfo="";

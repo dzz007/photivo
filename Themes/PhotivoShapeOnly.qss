@@ -166,7 +166,7 @@ QSlider {
 
 QSlider:hover {
   border: 1px solid $Highlight$;
-  padding: 2px;
+  padding: 0px;
   border-radius: 3px;
 }
 
@@ -188,9 +188,9 @@ QSlider#HueSlider::groove:horizontal {
 ptSlider {
   background: none;
   border: 1px solid #000;
-  padding: 2px;
-  max-height: 16px;
-  min-height: 16px;
+  padding: 0px;
+  max-height: 20px;
+  min-height: 20px;
   border-radius: 3px;
 }
 

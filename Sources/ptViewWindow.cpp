@@ -871,7 +871,7 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
     ac_SensorClipSep->setVisible(false);
   }
 
-  Menu.exec(((QMouseEvent*)event)->globalPos());
+  Menu.exec(event->globalPos());
 }
 
 //==============================================================================
