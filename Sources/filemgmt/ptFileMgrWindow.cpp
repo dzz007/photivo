@@ -733,7 +733,7 @@ void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
   Menu.addSeparator();
   Menu.addAction(FCloseFileMgrAct);
 
-  Menu.exec(((QMouseEvent*)event)->globalPos());
+  Menu.exec(event->globalPos());
 }
 
 //------------------------------------------------------------------------------
