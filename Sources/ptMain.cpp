@@ -206,6 +206,7 @@ void InitStrings() {
                                                  "*.mos *.MOS *.Mos "
                                                  "*.mrw *.MRW *.Mrw "
                                                  "*.nef *.NEF *.Nef "
+                                                 "*.nrw *.NRW *.Nrw "
                                                  "*.orf *.ORF *.Orf "
                                                  "*.pef *.PEF *.Pef "
                                                  "*.pxn *.PXN *.Pxn "
@@ -227,7 +228,7 @@ void InitStrings() {
                                                  "*.tif *.TIF *.Tif "
                                                  "*.bmp *.BMP *.Bmp "
                                                  "*.png *.PNG *.Png "
-                                                 "*.ppm *.PPm *.Ppm "
+                                                 "*.ppm *.PPm *.Ppm)"
                                                  ";;All files (*.*)");
 
   BitmapPattern =
@@ -625,6 +626,7 @@ int photivoMain(int Argc, char *Argv[]) {
               << "*.mos" << "*.MOS" << "*.Mos"
               << "*.mrw" << "*.MRW" << "*.Mrw"
               << "*.nef" << "*.NEF" << "*.Nef"
+              << "*.nrw" << "*.NRW" << "*.Nrw"
               << "*.orf" << "*.ORF" << "*.Orf"
               << "*.pef" << "*.PEF" << "*.Pef"
               << "*.pxn" << "*.PXN" << "*.Pxn"
