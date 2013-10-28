@@ -11216,6 +11216,56 @@
                  </widget>
                 </item>
                 <item>
+                 <spacer name="horizontalSpacer_ATZ">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="PreviousImageButton">
+                  <property name="toolTip">
+                   <string>Open previous image</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../qrc/photivo.qrc">
+                    <normaloff>:/dark/icons/go-previous.png</normaloff>:/dark/icons/go-previous.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>16</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="NextImageButton">
+                  <property name="toolTip">
+                   <string>Open next image</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../qrc/photivo.qrc">
+                    <normaloff>:/dark/icons/go-next.png</normaloff>:/dark/icons/go-next.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>16</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <spacer name="horizontalSpacer_25">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
