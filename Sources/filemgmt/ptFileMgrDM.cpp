@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2011-2013 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -32,6 +33,8 @@
 #include <QGraphicsScene>
 
 extern ptSettings* Settings;
+extern QStringList FileExtsRaw;
+extern QStringList FileExtsBitmap;
 
 //------------------------------------------------------------------------------
 ptFileMgrDM::ptFileMgrDM(QObject* AParent)
@@ -94,7 +97,16 @@ int ptFileMgrDM::setThumDir(const QString& AAbsolutePath) {
 
     FCurrentDir.setFilter(filters);
     FCurrentDir.setSorting(QDir::Name | QDir::DirsFirst);
-    return FCurrentDir.count();
+
+    QStringList fileExts;
+    if (Settings->GetInt("FileMgrShowRAWs")) {
+      fileExts << FileExtsRaw;
+    }
+    if (Settings->GetInt("FileMgrShowBitmaps")) {
+      fileExts << FileExtsBitmap;
+    }
+    QFileInfoList files = FCurrentDir.entryInfoList(fileExts);
+    return files.count();
   }
 }
 
@@ -157,16 +169,25 @@ void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
   AScene->clear();
 
   QFileInfoList files;
+
+  QStringList fileExts;
+  if (Settings->GetInt("FileMgrShowRAWs")) {
+    fileExts << FileExtsRaw;
+  }
+  if (Settings->GetInt("FileMgrShowBitmaps")) {
+    fileExts << FileExtsBitmap;
+  }
+
 #ifdef Q_OS_WIN
   if (FIsMyComputer) {
     if (Settings->GetInt("FileMgrShowDirThumbs")) {
       files = FCurrentDir.drives();
     }
   } else {
-    files = FCurrentDir.entryInfoList();
+    files = FCurrentDir.entryInfoList(fileExts);
   }
 #else
-  files = FCurrentDir.entryInfoList();
+  files = FCurrentDir.entryInfoList(fileExts);
 #endif
 
   auto hLongEdgeMax = Settings->GetInt("FileMgrThumbnailSize");

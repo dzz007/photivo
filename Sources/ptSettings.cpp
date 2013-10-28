@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -642,7 +643,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FileMgrShowImageView"                 ,1    ,1                                     ,0},
     {"FileMgrShowSidebar"                   ,1    ,1                                     ,0},
     {"FileMgrThumbLayoutType"               ,1    ,tlVerticalByRow                       ,0},
-
+    {"FileMgrShowRAWs"                      ,1    ,1                                     ,0},
+    {"FileMgrShowBitmaps"                   ,1    ,1                                     ,0},
     {"BatchIsOpen"                          ,9    ,0                                     ,0},
     {"BatchLogIsVisible"                    ,1    ,0                                     ,0}
   };

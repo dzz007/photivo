@@ -5,6 +5,7 @@
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2012 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2010-2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -293,6 +294,18 @@ void   CleanupResources();
 void copyFolder(QString sourceFolder, QString destFolder);
 void CB_PixelReader(const QPointF Point, const ptPixelReading PixelReading);
 bool GBusy = false;
+
+// undo-redo & clipboard support
+QByteArray ptSettingsToQByteArray();
+void ptQByteArrayToSettings(const QByteArray &arr);
+void ptAddUndo();
+void ptMakeUndo();
+void ptMakeRedo();
+void ptClearUndoRedo();
+void ptMakeFullUndo();
+void ptResetSettingsToDefault();
+void ptCopySettingsToClipboard();
+void ptPasteSettingsFromClipboard();
 
 //==============================================================================
 
@@ -2613,6 +2626,7 @@ void CB_Tabs(const short) {
   }
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the Menu structure.
@@ -2720,6 +2734,12 @@ void CB_MenuFileOpen(const short HaveFile) {
     Temp << "RotateW" << "RotateH";
     for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i), 0);
   }
+
+  // load settings file automatically
+  QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".pts";
+  if (QFile::exists(SettingsFileName))
+    CB_OpenSettingsFile(SettingsFileName);
+
   // clean up possible detail view cache
   if (Settings->GetInt("DetailViewActive") == 1) {
     Settings->SetValue("DetailViewActive", 0);
@@ -2777,6 +2797,8 @@ void CB_MenuFileOpen(const short HaveFile) {
                                   .arg(QDir::toNativeSeparators(finfo.absolutePath())) );
 
   Settings->SetValue("RunMode",OldRunMode);
+
+  ptClearUndoRedo();
 }
 
 //==============================================================================
@@ -2864,7 +2886,7 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
 //==============================================================================
 
 void CB_MenuFileExit(const short) {
-  if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0 && Settings->GetInt("SaveConfirmation")==1) {
+  if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0) {
     if (!ptConfirmRequest::saveImage()) {
       return;
     }
@@ -3142,6 +3164,66 @@ void CB_FullScreenButton(const int State) {
     Settings->SetValue("FullscreenActive", 0);
   }
   MainWindow->FullScreenButton->setChecked(State);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the prev/next image buttons
+//
+////////////////////////////////////////////////////////////////////////////////
+
+QFileInfoList ptGetFilesInTheImageFolder() {
+  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+  QFileInfo PathInfo(InputFileNameList[0]);
+  QString fileName = PathInfo.fileName();
+  QDir fileDir = PathInfo.dir();
+  fileDir.setFilter(QDir::Files);
+  fileDir.setSorting(QDir::Name);
+
+  QStringList fileExts;
+  if (Settings->GetInt("FileMgrShowRAWs")) {
+    fileExts << FileExtsRaw;
+  }
+  if (Settings->GetInt("FileMgrShowBitmaps")) {
+    fileExts << FileExtsBitmap;
+  }
+  return fileDir.entryInfoList(fileExts);
+}
+
+QString ptGetImageFileName() {
+  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+  QFileInfo PathInfo(InputFileNameList[0]);
+  return PathInfo.fileName();
+}
+
+void CB_PreviousImageButton() {
+  if (Settings->GetInt("HaveImage")==0) return;
+
+  QString fileName = ptGetImageFileName();
+  QFileInfoList files = ptGetFilesInTheImageFolder();
+
+  for (int i = 1; i < files.count(); i++) {
+    if (files[i].fileName() == fileName) {
+      ImageFileToOpen = files[i - 1].absoluteFilePath();
+      CB_MenuFileOpen(1);
+      break;
+    }
+  }
+}
+
+void CB_NextImageButton() {
+  if (Settings->GetInt("HaveImage")==0) return;
+
+  QString fileName = ptGetImageFileName();
+  QFileInfoList files = ptGetFilesInTheImageFolder();
+
+  for (int i = 0; i < files.count() - 1; i++) {
+    if (files[i].fileName() == fileName) {
+      ImageFileToOpen = files[i + 1].absoluteFilePath();
+      CB_MenuFileOpen(1);
+      break;
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3852,6 +3934,8 @@ void CB_OpenSettingsFileButton() {
     return;
   }
 
+  ptAddUndo();
+
   QString SettingsFilePattern =
     QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
   QString SettingsFileName =
@@ -3864,6 +3948,8 @@ void CB_OpenSettingsFileButton() {
 }
 
 void CB_OpenPresetFileButton() {
+  ptAddUndo();
+
   QString SettingsFilePattern =
     QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
   QString SettingsFileName =
@@ -6752,6 +6838,15 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   // noise events otherwise.
   if (InStartup) return;
 
+  if (ObjectName != "ZoomInput" &&
+      ObjectName != "PipeSizeChoice" &&
+      ObjectName != "RunModeCheck" &&
+      ObjectName != "SpecialPreviewChoice" &&
+      ObjectName != "UseThumbnailCheck")
+  {
+    ptAddUndo();
+  }
+
   if (ObjectName == "ZoomInput") {
     CB_ZoomInput(Value);
 
@@ -7336,3 +7431,170 @@ ptImageType CheckImageType(QString filename,
 }
 
 //==============================================================================
+QList<QByteArray> ptUndoBuffer;
+QList<QByteArray> ptRedoBuffer;
+QByteArray ptClipboard;
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptSettingsToQByteArray
+//
+// Copies Settings to a byte array
+//
+////////////////////////////////////////////////////////////////////////////////
+
+QByteArray ptSettingsToQByteArray() {
+  ptTempFile* tempFile = new ptTempFile();
+  GFilterDM->WritePresetFile(tempFile->fileName());
+  QFile file(tempFile->fileName());
+  file.open(QIODevice::ReadOnly);
+  QByteArray arr = file.readAll();
+  file.close();
+  delete tempFile;
+  return arr;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptQByteArrayToSettings
+//
+// Loads Settings from a byte array
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptQByteArrayToSettings(const QByteArray &arr) {
+  ptTempFile* tempFile = new ptTempFile();
+  QFile file(tempFile->fileName());
+  file.open(QIODevice::WriteOnly);
+  file.write(arr);
+  file.close();
+  CB_OpenSettingsFile(tempFile->fileName());
+  delete tempFile;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptAddUndo
+//
+// Adds current Settings to undo buffer
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptAddUndo() {
+  QByteArray arr = ptSettingsToQByteArray();
+  ptUndoBuffer << arr;
+  ptRedoBuffer.clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptMakeUndo
+//
+// Loads Settings from undo buffer
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMakeUndo() {
+  if (ptUndoBuffer.isEmpty())
+    return;
+
+  QByteArray arr = ptSettingsToQByteArray();
+  ptRedoBuffer << arr;
+  arr = ptUndoBuffer.last();
+  ptUndoBuffer.removeLast();
+
+  ptQByteArrayToSettings(arr);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptMakeRedo
+//
+// Loads Settings from redo buffer
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMakeRedo() {
+  if (ptRedoBuffer.isEmpty())
+    return;
+
+  QByteArray arr = ptSettingsToQByteArray();
+  ptUndoBuffer << arr;
+  arr = ptRedoBuffer.last();
+  ptRedoBuffer.removeLast();
+
+  ptQByteArrayToSettings(arr);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptClearUndoRedo
+//
+// Clears undo-redo buffers
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptClearUndoRedo() {
+  ptUndoBuffer.clear();
+  ptRedoBuffer.clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptMakeFullUndo
+//
+// Loads Settings from the first slot of undobuffer
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMakeFullUndo() {
+  if (ptUndoBuffer.isEmpty())
+    return;
+
+  QByteArray arr = ptUndoBuffer.first();
+  ptQByteArrayToSettings(arr);
+  ptClearUndoRedo();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptResetSettingsToDefault
+//
+// Loads initial Settings
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptResetSettingsToDefault() {
+  ptAddUndo();
+  CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptCopySettingsToClipboard
+//
+// Copies Settings to a "clipboard"
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptCopySettingsToClipboard() {
+  ptClipboard = ptSettingsToQByteArray();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptPasteSettingsFromClipboard
+//
+// Pastes Settings from a "clipboard"
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptPasteSettingsFromClipboard() {
+  if (ptClipboard.isEmpty())
+    return;
+
+  ptAddUndo();
+  ptQByteArrayToSettings(ptClipboard);
+}

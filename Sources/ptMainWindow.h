@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -243,6 +244,9 @@ private slots:
   void OnFileMgrButtonClicked();
   void OnFullScreenButtonClicked();
   void OnLoadStyleButtonClicked();
+
+  void OnPreviousImageButtonClicked();
+  void OnNextImageButtonClicked();
 
   void OnTabProcessingButtonClicked();
   void OnTabSettingsButtonClicked();
