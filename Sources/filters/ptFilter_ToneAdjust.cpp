@@ -22,8 +22,8 @@
 
 #include "ptFilter_ToneAdjust.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
-#include <ptConstants.h>
+#include "../ptImage.h"
+#include "../ptConstants.h"
 
 //==============================================================================
 

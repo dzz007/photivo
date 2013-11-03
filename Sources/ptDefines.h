@@ -24,13 +24,13 @@
 #ifndef DLDEFINES_H
 #define DLDEFINES_H
 
-// pulls in INT32_MAX etc.
-#define __STDC_LIMIT_MACROS
-#include <stdint.h>
-
 #include <array>
 #include <memory>
 #include <vector>
+
+// pulls in INT32_MAX etc.
+#define __STDC_LIMIT_MACROS
+#include <cstdint>
 
 // disable the file manager
 // #define PT_WITHOUT_FILEMGR

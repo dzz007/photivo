@@ -24,10 +24,12 @@
 #define PTTHUMBGENWORKER_H
 
 #include "ptThumbDefines.h"
+
+#include <wand/magick_wand.h>
+
 #include <QObject>
 #include <QSize>
 #include <QMutex>
-#include <wand/magick_wand.h>
 
 class ptThumbCache;
 class ptThumbQueue;

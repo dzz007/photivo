@@ -25,12 +25,14 @@
 #define PTPROCESSOR_H
 
 //==============================================================================
+                        
+#include "ptConstants.h"
+
+#include <exiv2/exif.hpp>
 
 #include <QString>
 #include <QTime>
 #include <QCoreApplication>
-
-#include <exiv2/exif.hpp>
 
 //==============================================================================
 

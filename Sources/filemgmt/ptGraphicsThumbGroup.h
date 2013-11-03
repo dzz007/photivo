@@ -25,14 +25,14 @@
 
 //==============================================================================
 
+#include "ptThumbDefines.h"
+#include "../ptConstants.h"
+
 #include <QObject>
 #include <QGraphicsRectItem>
 #include <QPen>
 #include <QBrush>
 #include <QPoint>
-
-#include "ptThumbDefines.h"
-#include "../ptConstants.h"
 
 //==============================================================================
 

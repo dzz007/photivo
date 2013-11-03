@@ -22,8 +22,6 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
 #include "ptSettings.h"
 #include "ptError.h"
 #include "ptDcRaw.h"
@@ -31,6 +29,8 @@
 #include "ptGuiOptions.h"
 #include "filemgmt/ptFileMgrConstants.h"
 #include <filters/ptFilterUids.h>
+
+#include <cassert>
 
 //==============================================================================
 

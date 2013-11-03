@@ -29,13 +29,7 @@
 #include "ptError.h"
 #include "ptSettings.h"
 
-#include <cmath>
-#include <cassert>
-
-#ifdef _OPENMP
-  #include <omp.h>
-#endif
-
+#define cimg_use_openmp 1
 #ifdef WIN32
   #define cimg_display_type 0
 #else
@@ -48,6 +42,12 @@
   #include "greyc/CImg.h"
 #endif
 
+#include <cmath>
+#include <cassert>
+
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 
 using namespace cimg_library;
 

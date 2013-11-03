@@ -26,12 +26,12 @@
 
 //==============================================================================
 
-#include <memory>
-
 #include <QString>
 #include <QStringList>
 #include <QHash>
 #include <QList>
+
+#include <memory>
 
 // forward
 class QSettings;

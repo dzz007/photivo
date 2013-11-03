@@ -27,10 +27,10 @@ Find original sources in ReferenceMaterial/ecwin directory or under
 http://dukto.googlecode.com/
 *******************************************************************************/
 
+#include "ptEcWin7.h"
+
 #include <cassert>
 #include <objbase.h>
-
-#include "ptEcWin7.h"
 
 //==============================================================================
 

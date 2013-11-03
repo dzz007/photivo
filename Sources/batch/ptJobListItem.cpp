@@ -20,10 +20,11 @@
 **
 *******************************************************************************/
 
+#include "ptJobListItem.h"
+
 #include <QFileInfo>
 #include <QProcess>
 #include <QSettings>
-#include "ptJobListItem.h"
 
 //==============================================================================
 

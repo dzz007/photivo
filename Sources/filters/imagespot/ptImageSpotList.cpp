@@ -21,7 +21,7 @@
 *******************************************************************************/
 
 #include "ptImageSpotList.h"
-#include <ptDefines.h>
+#include "../../ptDefines.h"
 
 ptImageSpotList::ptImageSpotList(PCreateSpotFunc ASpotCreator)
 : ptStorable(),

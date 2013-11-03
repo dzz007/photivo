@@ -23,21 +23,6 @@
 **
 *******************************************************************************/
 
-#define QT_CLEAN_NAMESPACE
-
-#include <string>
-#include <csignal>
-#include <exception>
-
-#include <QFileInfo>
-#include <QtGui>
-#include <QtCore>
-#include <QFileDialog>
-#include <QColorDialog>
-#include <QInputDialog>
-#include <QTextCodec>
-#include <QDesktopWidget>
-
 #include "ptDefines.h"
 #include "ptInfo.h"
 #include "ptCalloc.h"
@@ -69,18 +54,32 @@
 #include "filters/ptFilterDM.h"
 #include "filters/ptFilterBase.h"
 #include "ptToolBox.h"
-#include <filters/ptFilterUids.h>
-
-#include <wand/magick_wand.h>
-
-#ifdef Q_OS_MAC
-  #include <QFileOpenEvent>
-#endif
+#include "filters/ptFilterUids.h"
 
 #ifdef Q_OS_WIN
   #include "ptEcWin7.h"
   #include "ptWinApi.h"
 #endif
+
+#include <wand/magick_wand.h>
+
+#define QT_CLEAN_NAMESPACE
+
+#include <QFileInfo>
+#include <QtGui>
+#include <QtCore>
+#include <QFileDialog>
+#include <QColorDialog>
+#include <QInputDialog>
+#include <QTextCodec>
+#include <QDesktopWidget>
+#ifdef Q_OS_MAC
+  #include <QFileOpenEvent>
+#endif
+
+#include <string>
+#include <csignal>
+#include <exception>
 
 using namespace std;
 

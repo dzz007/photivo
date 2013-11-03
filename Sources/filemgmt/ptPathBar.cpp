@@ -20,13 +20,6 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
-#include <QMouseEvent>
-#include <QKeyEvent>
-#include <QAction>
-#include <QMenu>
-
 #include "../ptDefines.h"
 #include "../ptTheme.h"
 #include "ptPathBar.h"
@@ -35,6 +28,13 @@
 #ifdef Q_OS_WIN
   #include "../ptWinApi.h"
 #endif
+
+#include <QMouseEvent>
+#include <QKeyEvent>
+#include <QAction>
+#include <QMenu>
+
+#include <cassert>
 
 extern ptTheme* Theme;
 

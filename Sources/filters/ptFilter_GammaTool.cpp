@@ -22,7 +22,7 @@
 
 #include "ptFilter_GammaTool.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
+#include "../ptImage.h"
 
 //==============================================================================
 

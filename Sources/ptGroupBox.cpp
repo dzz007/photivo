@@ -20,8 +20,6 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
 #include "ptMessageBox.h"
 #include "ptGroupBox.h"
 #include "ptSettings.h"
@@ -29,6 +27,8 @@
 #include "ptTheme.h"
 #include "ptViewWindow.h"
 #include <QFileDialog>
+
+#include <cassert>
 
 extern QString SettingsFilePattern;
 extern ptViewWindow *ViewWindow;

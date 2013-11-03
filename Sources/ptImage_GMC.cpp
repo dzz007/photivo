@@ -20,25 +20,25 @@
 **
 *******************************************************************************/
 
-#include <cstdlib>
-#include <cstdio>
+#include "ptImage.h"
+#include "ptImage8.h"
+#include "ptError.h"
+#include "ptCalloc.h"
+
+#include <wand/magick_wand.h>
 
 #include <QtGlobal>
 #include <QFile>
 #include <QString>
 
-#include <math.h>
-#include <wand/magick_wand.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cassert>
+#include <cmath>
+
 #ifdef _OPENMP
   #include <omp.h>
 #endif
-
-#include <cassert>
-
-#include "ptImage.h"
-#include "ptImage8.h"
-#include "ptError.h"
-#include "ptCalloc.h"
 
 // Lut
 extern float ToFloatTable[0x10000];

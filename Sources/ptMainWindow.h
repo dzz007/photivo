@@ -25,17 +25,6 @@
 #ifndef DLMAINWINDOW_H
 #define DLMAINWINDOW_H
 
-#include <memory>
-using std::unique_ptr;
-
-#include <QTimer>
-
-#include <exiv2/exif.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#include <exiv2/image.hpp>
-#pragma GCC diagnostic pop
-
 #include "ui_ptMainWindow.h"
 
 #include "ptCurve.h"
@@ -47,6 +36,17 @@ using std::unique_ptr;
 #include "ptVisibleToolsView.h"
 
 #include "ptTempFilterBase.h"
+
+#include <exiv2/exif.hpp>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include <exiv2/image.hpp>
+#pragma GCC diagnostic pop
+
+#include <memory>
+using std::unique_ptr;
+
+#include <QTimer>
 
 //==============================================================================
 

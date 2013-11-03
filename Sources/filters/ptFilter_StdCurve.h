@@ -25,10 +25,10 @@
 
 //==============================================================================
 
-#include <memory>
-
 #include "ptFilterBase.h"
-#include <ptCurve.h>
+#include "../ptCurve.h"
+
+#include <memory>
 
 class ptCurveWindow;
 

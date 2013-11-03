@@ -21,14 +21,6 @@
 **
 *******************************************************************************/
 
-#include <QString>
-#include <QObject>
-#include <QMessageBox>
-
-#ifdef _OPENMP
-  #include <omp.h>
-#endif
-
 #define cimg_use_openmp 1
 
 #include "ptCimg.h"
@@ -36,6 +28,14 @@
 #include "ptError.h"
 #include "ptCalloc.h"
 #include "ptCurve.h"
+
+#include <QString>
+#include <QObject>
+#include <QMessageBox>
+
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 
 #include <cassert>
 

@@ -26,10 +26,10 @@
 *******************************************************************************/
 // White balance presets for a wide variety of camera models.
 
+#include "ptWhiteBalances.h"
+
 #include <QObject>
 #include <cstdlib>
-
-#include "ptWhiteBalances.h"
 
 // This has been autoconverted from wb_presets.c in ufraw.
 // The 'tuning' stuff has not been adopted as there are imho

@@ -23,7 +23,7 @@
 #include "ptFilter_ColorIntensity.h"
 #include "ui_ptFilter_ColorIntensity.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
+#include "../ptImage.h"
 
 //==============================================================================
 

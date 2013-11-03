@@ -23,9 +23,9 @@
 #include "ptFilter_Outline.h"
 #include "ui_ptFilter_Outline.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
-#include <ptCurve.h>
-#include <ptConstants.h>
+#include "../ptImage.h"
+#include "../ptCurve.h"
+#include "../ptConstants.h"
 
 //==============================================================================
 

@@ -22,9 +22,9 @@
 
 #include "ptFilter_SatCurve.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
-#include <ptCurve.h>
-#include <ptConstants.h>
+#include "../ptImage.h"
+#include "../ptCurve.h"
+#include "../ptConstants.h"
 
 //==============================================================================
 

@@ -22,8 +22,8 @@
 
 #include "ptFilter_LumaDenoiseCurve.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
-#include <ptCurve.h>
+#include "../ptImage.h"
+#include "../ptCurve.h"
 
 // TODO: Needed for access to m_ScaleFactor. Find a way to avoid when modernising the processor.
 #include <ptProcessor.h>
