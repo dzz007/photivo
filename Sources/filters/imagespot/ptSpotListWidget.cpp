@@ -20,10 +20,6 @@
 **
 *******************************************************************************/
 
-#include <memory>
-
-#include <QKeyEvent>
-
 #include "ptSpotListWidget.h"
 #include "ptImageSpotModel.h"
 #include "ptImageSpotItemDelegate.h"
@@ -34,6 +30,9 @@
 #include "../../ptSettings.h"
 #include "../../ptMessageBox.h"
 
+#include <QKeyEvent>
+
+#include <memory>
 
 //==============================================================================
 

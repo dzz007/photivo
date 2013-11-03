@@ -30,14 +30,13 @@
 #ifndef PTCONFIRMREQUEST_H
 #define PTCONFIRMREQUEST_H
 
-#include <QString>
 #include "ptConstants.h"
+
+#include <QString>
 
 class ptConfirmRequest {
 public:
   static bool loadConfig(const ptLoadCfgMode mode, QString newFilename = "");
   static bool saveImage(QString newFilename = "");
-
-
 };
 #endif // PTCONFIRMREQUEST_H

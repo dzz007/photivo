@@ -20,16 +20,17 @@
 **
 *******************************************************************************/
 
-#include <QVBoxLayout>
 
 #include "ptFilter_StdCurve.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
-#include <ptCurveWindow.h>
+#include "../ptImage.h"
+#include "../ptCurveWindow.h"
 
 // TODO: Needed for access to m_ScaleFactor. Find a way to avoid when modernising the processor.
-#include <ptProcessor.h>
+#include "../ptProcessor.h"
 extern ptProcessor* TheProcessor;
+
+#include <QVBoxLayout>
 
 //==============================================================================
 

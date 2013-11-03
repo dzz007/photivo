@@ -22,8 +22,8 @@
 
 #include "ptFilter_LumaSatAdjust.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
-#include <ptInfo.h>
+#include "../ptImage.h"
+#include "../ptInfo.h"
 
 //==============================================================================
 

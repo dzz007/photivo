@@ -27,9 +27,9 @@
 
 //==============================================================================
 
-#include <QCheckBox>
-
 #include "ptWidget.h"
+
+#include <QCheckBox>
 
 class ptCfgItem;
 

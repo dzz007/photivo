@@ -20,14 +20,6 @@
 **
 *******************************************************************************/
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#include <exiv2/image.hpp>
-#pragma GCC diagnostic pop
-#include <wand/magick_wand.h>
-
-#include <QStringList>
-
 #include "ptDefines.h"
 #include "ptCalloc.h"
 #include "ptError.h"
@@ -35,6 +27,14 @@
 #include "ptImageHelper.h"
 #include "ptSettings.h"
 #include "ptMessageBox.h"
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include <exiv2/image.hpp>
+#pragma GCC diagnostic pop
+#include <wand/magick_wand.h>
+
+#include <QStringList>
 
 //==============================================================================
 

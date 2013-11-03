@@ -25,6 +25,7 @@
 #define PTCURVE_H
 
 #include "ptStorable.h"
+
 #include <array>
 #include <vector>
 #include <utility>

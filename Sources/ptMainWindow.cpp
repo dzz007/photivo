@@ -22,9 +22,6 @@
 **
 *******************************************************************************/
 
-#include <iomanip>
-#include <iostream>
-
 #include "ptDefines.h"
 #include "ptChannelMixer.h"
 #include "ptConfirmRequest.h"
@@ -50,6 +47,8 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
 
+#include <iomanip>
+#include <iostream>
 #include <cassert>
 
 using namespace std;

@@ -22,8 +22,6 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
 #include "ptDefines.h"
 #include "ptSettings.h"
 #include "ptTheme.h"
@@ -32,6 +30,8 @@
 #include "ptImage.h"
 
 #include <QScrollBar>
+
+#include <cassert>
 
 extern ptTheme* Theme;
 

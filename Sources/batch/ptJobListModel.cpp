@@ -20,11 +20,12 @@
 **
 *******************************************************************************/
 
-#include <QFileInfo>
 #include "ptConstants.h"
 #include "ptJobListModel.h"
 #include "ptMessageBox.h"
 #include "ptSettings.h"
+
+#include <QFileInfo>
 
 //==============================================================================
 

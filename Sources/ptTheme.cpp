@@ -21,16 +21,16 @@
 **
 *******************************************************************************/
 
-#include <cassert>
+#include "ptDefines.h"
+#include "ptTheme.h"
+#include "ptConstants.h"
+#include "ptSettings.h"
 
 #include <QStyleFactory>
 #include <QFile>
 #include <QTextStream>
 
-#include "ptDefines.h"
-#include "ptTheme.h"
-#include "ptConstants.h"
-#include "ptSettings.h"
+#include <cassert>
 
 extern ptSettings* Settings;
 extern QString     ShareDirectory;

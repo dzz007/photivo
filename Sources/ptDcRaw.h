@@ -40,6 +40,10 @@
 #define _GNU_SOURCE
 #endif
 
+#include "ptDefines.h"
+
+#include <QString>
+
 #define _USE_MATH_DEFINES
 #include <vector>
 #include <cctype>
@@ -120,9 +124,6 @@ typedef unsigned long long UINT64;
 #define LONG_BIT (8 * sizeof (long))
 #endif
 
-#include <QString>
-
-#include "ptDefines.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //

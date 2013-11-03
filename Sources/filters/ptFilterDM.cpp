@@ -22,17 +22,13 @@
 **
 *******************************************************************************/
 
-#include <QSettings>
-
 #include "ptFilterDM.h"
 #include "ptFilterFactory.h"
 #include "ptFilterUids.h"
-#include <ptDefines.h>
-#include <ptInfo.h>
-#include <ptTempFile.h>
-#include "batch/ptBatchWindow.h"
-#include <QFileDialog>
-#include <cassert>
+#include "../ptDefines.h"
+#include "../ptInfo.h"
+#include "../ptTempFile.h"
+#include "../batch/ptBatchWindow.h"
 
 // deprecated: To be removed when transition to new settings system is complete.
 #include "../ptSettings.h"
@@ -42,6 +38,10 @@
 #include "../ptError.h"
 #include "../ptMessageBox.h"
 // end of deprecated
+
+#include <QFileDialog>
+#include <QSettings>
+#include <cassert>
 
 //==============================================================================
 

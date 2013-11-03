@@ -20,6 +20,13 @@
 **
 *******************************************************************************/
 
+#include "ptToolBox.h"
+#include "filters/ptFilterBase.h"
+#include "filters/ptFilterDM.h"
+#include "ptTheme.h"
+
+#include "ptSettings.h"
+
 #include <QVBoxLayout>
 #include <QEvent>
 #include <QMouseEvent>
@@ -28,13 +35,6 @@
 #include <QAction>
 #include <QMenu>
 #include <QSettings>
-
-#include "ptToolBox.h"
-#include "filters/ptFilterBase.h"
-#include "filters/ptFilterDM.h"
-#include "ptTheme.h"
-
-#include "ptSettings.h"
 
 //==============================================================================
 

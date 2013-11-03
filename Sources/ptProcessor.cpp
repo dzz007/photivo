@@ -21,11 +21,7 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
-#include <exiv2/error.hpp>
-
-#include <QFileInfo>
-#include <QApplication>
+#include "ptProcessor.h"
 
 #include "ptConstants.h"
 #include "ptError.h"
@@ -43,7 +39,10 @@
 #include <filters/ptFilterBase.h>
 #include <filters/ptFilterUids.h>
 
-#include "ptProcessor.h"
+#include <exiv2/error.hpp>
+
+#include <QFileInfo>
+#include <QApplication>
 
 //==============================================================================
 

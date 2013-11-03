@@ -21,12 +21,12 @@
 **
 *******************************************************************************/
 
-#include <iostream>
+#include "ptInfo.h"
 
 #include <QApplication>
 #include <QMessageBox>
 
-#include "ptInfo.h"
+#include <iostream>
 
 //==============================================================================
 

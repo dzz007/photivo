@@ -20,13 +20,14 @@
 **
 *******************************************************************************/
 
-#include <cmath>
-#include <QMessageBox>
 #include "ptImage.h"
 #include "ptConstants.h"
 #include "ptError.h"
 #include "ptCalloc.h"
 #include "ptSettings.h"
+
+#include <QMessageBox>
+#include <cmath>
 
 #ifdef _OPENMP
   #include <omp.h>
