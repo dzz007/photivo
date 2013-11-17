@@ -1,0 +1,247 @@
+/*******************************************************************************
+**
+** Photivo
+**
+** Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2010-2011 Bernd Schoeler <brjohn@brother-john.net>
+**
+** This file is part of Photivo.
+**
+** Photivo is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License version 3
+** as published by the Free Software Foundation.
+**
+** Photivo is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
+**
+*******************************************************************************/
+
+/** Spinbox ****************************************/
+QAbstractSpinBox {
+  border: 1px solid #000;
+  border-radius: 3px;
+  padding-left: 2px;
+  padding-right: 2px;
+  max-height: 1.1em;
+  min-height: 1.1em;
+  max-width: 40px;
+  min-width: 40px;
+}
+
+QAbstractSpinBox:disabled {
+}
+
+QAbstractSpinBox:hover {
+  border: 1px solid $Highlight$;
+}
+
+QAbstractSpinBox::down-button {
+  height: 0;
+  width: 0;
+}
+
+QAbstractSpinBox::up-button {
+  height: 0;
+  width: 0;
+}
+
+ptSlider QAbstractSpinBox {
+  padding-bottom: 2px;
+  padding-top: 2px;
+  max-height: 16px;
+  min-height: 16px;
+  max-width: 80px;
+  min-width: 20px;
+}
+
+
+/** Checkbox ****************************************/
+QCheckBox {
+  border-radius: 3px;
+  padding: 2px;
+}
+
+QCheckBox:disabled {
+}
+
+QCheckBox:hover {
+  border: 1px solid $Highlight$;
+  padding: 1px;
+}
+
+
+/** Combobox ****************************************/
+QComboBox {
+  border: 1px solid #000;
+  border-radius: 3px;
+  padding-left: 5px;
+  padding-right: 2px;
+  max-height: 1.1em;
+  min-height: 1.1em;
+}
+
+QComboBox:disabled {
+  color: $TextDisabled$;
+}
+
+QComboBox:hover {
+  border: 1px solid $Highlight$;
+}
+
+QComboBox::drop-down {
+  border: none;
+  border-left: 1px solid #000;
+  border-bottom-right-radius: 3px;
+  border-top-right-radius: 3px;
+  width: 10px;
+}
+
+QComboBox QAbstractItemView {
+  border: 1px solid #b1b1b1;
+  border-radius: 3px;
+}
+
+QComboBox QAbstractItemView::indicator, QComboBox QAbstractItemView::icon {
+  min-height: 0;
+  max-height: 0;
+  min-width: 0;
+  max-width: 0;
+  image: none;
+}
+
+
+/** Textedits ****************************************/
+QLineEdit, QPlainTextEdit {
+  border: 1px solid #000;
+  border-radius: 3px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+QLineEdit {
+  max-height: 1.1em;
+  min-height: 1.1em;
+}
+
+QLineEdit:disabled, QPlainTextEdit:disabled {
+}
+
+QLineEdit:hover, QPlainTextEdit:hover {
+  border: 1px solid $Highlight$;
+}
+
+QWidget#ptBatchWindow QPlainTextEdit {
+  border: 1px solid #000;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+
+/** Menu ****************************************/
+QMenu {
+  border: 1px solid #000;
+  border-radius: 3px;
+  padding: 2px;
+}
+
+
+/** Table view ****************************************/
+QTableView {
+  border: 1px solid #000;
+  border-radius: 3px;
+}
+
+
+/** Slider ****************************************/
+QSlider {
+  padding: 3px;
+  max-height: 8px;
+  min-height: 8px;
+}
+
+QSlider:hover {
+  border: 1px solid $Highlight$;
+  padding: 0px;
+  border-radius: 3px;
+}
+
+QSlider::groove:horizontal {
+  background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+  border: 1px solid #000;
+  border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgb(70, 70, 70), stop: 1 rgb(51, 51, 51));
+  width: 12px;
+}
+
+QSlider#HueSlider::groove:horizontal {
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 red, stop: 0.25 yellow, stop: 0.5 green, stop: 0.75 blue, stop: 1 red);
+}
+
+ptSlider {
+  background: none;
+  border: 1px solid #000;
+  padding: 0px;
+  max-height: 20px;
+  min-height: 20px;
+  border-radius: 3px;
+}
+
+QWidget#HueWidget {
+  max-height: 6px;
+  min-height: 6px;
+  border-radius: 3px;
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 red, stop: 0.25 yellow, stop: 0.5 green, stop: 0.75 blue, stop: 1 red);
+}
+
+ptSlider:disabled {
+  color: $TextDisabled$;
+  border: 1px none
+}
+
+QWidget#HueWidget:disabled {
+  max-height: 6px;
+  min-height: 6px;
+  border-radius: 3px;
+  background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 darkred, stop: 0.25 #808000, stop: 0.5 darkgreen, stop: 0.75 darkblue, stop: 1 darkred);
+}
+
+
+/** Button ****************************************/
+QToolButton {
+  border: none;
+  padding: 2px;
+}
+
+QToolButton:hover {
+  border: 1px solid $Highlight$;
+  border-radius: 3px;
+}
+
+QPushButton {
+  border: 1px solid #000;
+  border-radius: 3px;
+  padding: 3px;
+}
+
+QPushButton:hover {
+  border: 1px solid $Highlight$;
+  border-radius: 3px;
+}
+
+QPushButton:checked {
+  background-color: $TextDisabled$;
+}
+
+
+/** Frame ****************************************/
+#StatusFrame {  /* status text bottom left without border */
+  border: none;
+}
