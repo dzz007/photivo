@@ -54,7 +54,7 @@ void ptGridThumbnailLayouter::Init(const int thumbCount, const QFont& font) {
   // Height of a cell, i.e. thumb box height + padding
   m_ThumbMetrics.CellHeight = m_ThumbMetrics.CellWidth +
                               QFontMetrics(font).height() +
-                              m_ThumbMetrics.Padding;
+                              ptGraphicsThumbGroup::InnerPadding;//m_ThumbMetrics.Padding;   
 }
 
 //==============================================================================

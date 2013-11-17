@@ -50,15 +50,15 @@ ptGraphicsSceneEmitter::~ptGraphicsSceneEmitter() {}
 
 //==============================================================================
 
-bool ptGraphicsSceneEmitter::ConnectFocusChanged(const QObject* receiver, const char *method) {
+bool ptGraphicsSceneEmitter::ConnectItemsChanged(const QObject* receiver, const char *method) {
   ptGraphicsSceneEmitter* Instance = GetInstance();
-  return Instance->connect(Instance, SIGNAL(focusChanged()), receiver, method);
+  return Instance->connect(Instance, SIGNAL(itemsChanged()), receiver, method);
 }
 
 //==============================================================================
 
-void ptGraphicsSceneEmitter::EmitFocusChanged() {
-  emit GetInstance()->focusChanged();
+void ptGraphicsSceneEmitter::EmitItemsChanged() {
+  emit GetInstance()->itemsChanged();
 }
 
 //==============================================================================

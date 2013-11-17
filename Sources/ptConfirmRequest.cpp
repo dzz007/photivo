@@ -3,7 +3,6 @@
 ** Photivo
 **
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -24,14 +23,18 @@
 #include "ptConfirmRequest.h"
 #include "ptMessageBox.h"
 #include "ptSettings.h"
+// ATZ
 #include "filters/ptFilterDM.h"
+#include "ptProcessor.h"
+// end ATZ
 
 extern ptSettings* Settings;
+extern ptProcessor* TheProcessor;
 extern short ImageCleanUp;
 extern void ptRemoveFile( const QString FileName);
 
 void CB_WritePipeButton();
-
+void WriteCachedImage(const QString& fileName);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -108,13 +111,23 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
       ptRemoveFile(InputFileNameList[0]);
       ImageCleanUp--;
     }
-    // save .pts file automatically
+// ATZ: save .pts file automatically. Also save .cached jpg if needed
     else {
       QFileInfo PathInfo(InputFileNameList[0]);
       QString baseFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName();
-      GFilterDM->WritePresetFile(baseFileName + ".pts");
+      // check if we have processed image
+      if (TheProcessor->m_Image_AfterDcRaw != NULL) {
+        GFilterDM->WritePresetFile(baseFileName + ".pts");
+        if (Settings->GetInt("SaveCachedImage") == 1) {
+          // ImageMagic needs right file extension, so write to jpg, then rename
+          if (QFile::exists(baseFileName + ".cached"))
+            QFile::remove(baseFileName + ".cached");
+          WriteCachedImage(baseFileName + "___.jpg");
+          QFile::rename(baseFileName + "___.jpg", baseFileName + ".cached");
+        }
+      }
     }
-
+// end ATZ
     return true;
   }
 

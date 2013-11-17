@@ -20,11 +20,12 @@
 **
 *******************************************************************************/
 
-#include "ptRowGridThumbnailLayouter.h"
-
 #include <qmath.h>
 #include <QScrollBar>
 #include <QKeyEvent>
+#include <QApplication>
+
+#include "ptRowGridThumbnailLayouter.h"
 
 //==============================================================================
 
@@ -36,9 +37,6 @@ ptRowGridThumbnailLayouter::ptRowGridThumbnailLayouter(QGraphicsView* view)
 
 void ptRowGridThumbnailLayouter::Init(const int thumbCount, const QFont& font) {
   ptGridThumbnailLayouter::Init(thumbCount, font);
-
-  // Add another padding to height to make the layout in rows visually clear.
-  m_ThumbMetrics.CellHeight += m_ThumbMetrics.Padding;
 
   // max number of thumbs in a row
   // +Padding because we only take care of padding *between* thumbnails here.
@@ -59,7 +57,11 @@ void ptRowGridThumbnailLayouter::Init(const int thumbCount, const QFont& font) {
     m_View->verticalScrollBar()->setSingleStep(m_ThumbMetrics.CellHeight);
 
     if((m_View->width() - (m_ThumbMetrics.MaxCol + 1)*m_ThumbMetrics.CellWidth) <
-       m_View->verticalScrollBar()->width())
+// ATZ
+      qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent))
+      // verticalScrollBar()->width() returns wrong value when sb is not displayed
+//       m_View->verticalScrollBar()->width())
+// end ATZ
     { // empty space on the right is not wide enough for scrollbar
       m_ThumbMetrics.MaxCol--;
       FullHeight = qCeil((qreal)thumbCount / (qreal)(m_ThumbMetrics.MaxCol + 1)) *
@@ -83,7 +85,7 @@ void ptRowGridThumbnailLayouter::Layout(ptGraphicsThumbGroup* thumb) {
 
   // The +1 y position accounts for the 2px wide mouse hover border.
   // Without it that wouldn’t be shown completely on the first row.
-  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth,
+  thumb->setPos(m_ThumbMetrics.Col * m_ThumbMetrics.CellWidth + 1,
                 (m_ThumbMetrics.Row * m_ThumbMetrics.CellHeight) + 1);
 
   if (m_ThumbMetrics.Col >= m_ThumbMetrics.MaxCol) {

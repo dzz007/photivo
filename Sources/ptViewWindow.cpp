@@ -4,7 +4,6 @@
 **
 ** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -22,6 +21,8 @@
 **
 *******************************************************************************/
 
+#include <cassert>
+
 #include "ptDefines.h"
 #include "ptSettings.h"
 #include "ptTheme.h"
@@ -30,8 +31,6 @@
 #include "ptImage.h"
 
 #include <QScrollBar>
-
-#include <cassert>
 
 extern ptTheme* Theme;
 
@@ -649,6 +648,7 @@ void ptViewWindow::finishInteraction(ptStatus ExitStatus) {
 void ptViewWindow::ConstructContextMenu() {
   // Create actions for context menu
 
+// ATZ
   ac_Copy = new QAction(tr("Copy settings") + "\t" + tr("Ctrl+Shift+C"), this);
   connect(ac_Copy, SIGNAL(triggered()), this, SLOT(Menu_Copy()));
 
@@ -660,6 +660,7 @@ void ptViewWindow::ConstructContextMenu() {
 
   ac_UserReset = new QAction(tr("Reset settings to last saved") + "\t" + tr("Ctrl+Shift+U"), this);
   connect(ac_UserReset, SIGNAL(triggered()), this, SLOT(Menu_UserReset()));
+// end ATZ
 
   ac_ZoomIn = new QAction(tr("Zoom &in") + "\t" + tr("1"), this);
   ac_ZoomIn->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-in.png")));
@@ -835,11 +836,13 @@ void ptViewWindow::contextMenuEvent(QContextMenuEvent* event) {
   QMenu Menu(this);
   Menu.setPalette(Theme->menuPalette());
   Menu.setStyle(Theme->style());
+// ATZ
   Menu.addAction(ac_Copy);
   Menu.addAction(ac_Paste);
   Menu.addAction(ac_Reset);
   Menu.addAction(ac_UserReset);
   Menu.addSeparator();
+// end ATZ
   Menu.addAction(ac_ZoomIn);
   Menu.addAction(ac_Zoom100);
   Menu.addAction(ac_ZoomOut);
@@ -1006,6 +1009,7 @@ void ptViewWindow::Menu_PixelReading() {
   Settings->SetValue("PixelReader", (int)FPixelReading);
 }
 
+// ATZ
 void ptCopySettingsToClipboard();
 void ptViewWindow::Menu_Copy() {
   ptCopySettingsToClipboard();
@@ -1025,5 +1029,6 @@ void ptMakeFullUndo();
 void ptViewWindow::Menu_UserReset() {
   ptMakeFullUndo();
 }
+// end ATZ
 
 //==============================================================================

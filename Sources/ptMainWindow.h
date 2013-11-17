@@ -4,7 +4,6 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -25,6 +24,17 @@
 #ifndef DLMAINWINDOW_H
 #define DLMAINWINDOW_H
 
+#include <memory>
+using std::unique_ptr;
+
+#include <QTimer>
+
+#include <exiv2/exif.hpp>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include <exiv2/image.hpp>
+#pragma GCC diagnostic pop
+
 #include "ui_ptMainWindow.h"
 
 #include "ptCurve.h"
@@ -36,17 +46,10 @@
 #include "ptVisibleToolsView.h"
 
 #include "ptTempFilterBase.h"
-
-#include <exiv2/exif.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#include <exiv2/image.hpp>
-#pragma GCC diagnostic pop
-
-#include <memory>
-using std::unique_ptr;
-
-#include <QTimer>
+// ATZ
+#include "ptStarRating.h"
+#include "ptColorLabel.h"
+// end ATZ
 
 //==============================================================================
 
@@ -164,6 +167,10 @@ private:
   short     m_ContextMenuOnTab;
   QAction*  m_AtnShowTools;
   ptUIState FUIState;
+// ATZ
+  ptStarRating* StarRating1;
+  ptColorLabel* ColorLabel1;
+// end ATZ
 
   ptVisibleToolsModel  *m_VisibleToolsModel;
   ptCurveWindow        *FSpotCurveWindow;  // raw pointer because managed by Qt parent mechanism
@@ -245,8 +252,11 @@ private slots:
   void OnFullScreenButtonClicked();
   void OnLoadStyleButtonClicked();
 
+// ATZ
   void OnPreviousImageButtonClicked();
   void OnNextImageButtonClicked();
+  void OnDeleteImageButtonClicked();
+// end ATZ
 
   void OnTabProcessingButtonClicked();
   void OnTabSettingsButtonClicked();

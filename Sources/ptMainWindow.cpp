@@ -4,7 +4,6 @@
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -21,6 +20,9 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+
+#include <iomanip>
+#include <iostream>
 
 #include "ptDefines.h"
 #include "ptChannelMixer.h"
@@ -47,8 +49,6 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
 
-#include <iomanip>
-#include <iostream>
 #include <cassert>
 
 using namespace std;
@@ -64,7 +64,8 @@ void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
 void CB_ZoomStep(int direction);
 
-// undo-redo & clipboard support
+// ATZ
+void ptAddUndo();
 void ptMakeUndo();
 void ptMakeRedo();
 void ptClearUndoRedo();
@@ -72,6 +73,8 @@ void ptMakeFullUndo();
 void ptResetSettingsToDefault();
 void ptCopySettingsToClipboard();
 void ptPasteSettingsFromClipboard();
+void ptSwitchAB();
+// end ATZ
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -321,8 +324,18 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(FullScreen);
   FullScreenButton->setChecked(0);
   Macro_ConnectSomeButton(LoadStyle);
+
+// ATZ
+  StarRating1 = new ptStarRating(StarRatingWidget);
+  StarRating1->setToolTip(tr("Rating"));
+  ColorLabel1 = new ptColorLabel(ColorLabelWidget);
+  ColorLabel1->setToolTip(tr("Color label"));
+  connect(StarRating1,SIGNAL(valueChanged()),this,SLOT(Form_2_Settings()));
+  connect(ColorLabel1,SIGNAL(valueChanged()),this,SLOT(Form_2_Settings()));
   Macro_ConnectSomeButton(PreviousImage);
   Macro_ConnectSomeButton(NextImage);
+  Macro_ConnectSomeButton(DeleteImage);
+// end ATZ
 
 
   //
@@ -1224,6 +1237,8 @@ void ptMainWindow::OnInputChanged(const QVariant Value) {
 
 }
 
+
+// ATZ
 void CB_PreviousImageButton();
 void ptMainWindow::OnPreviousImageButtonClicked() {
   ::CB_PreviousImageButton();
@@ -1233,6 +1248,12 @@ void CB_NextImageButton();
 void ptMainWindow::OnNextImageButtonClicked() {
   ::CB_NextImageButton();
 }
+
+void CB_DeleteImageButton();
+void ptMainWindow::OnDeleteImageButtonClicked() {
+  ::CB_DeleteImageButton();
+}
+// end ATZ
 
 void CB_BatchButton();
 void ptMainWindow::OnBatchButtonClicked() {
@@ -1575,7 +1596,7 @@ void ptMainWindow::dropEvent(QDropEvent* Event) {
     }
   }
   Event->acceptProposedAction();
-}
+} 
 
 void CB_FullScreenButton(const int State);
 void UpdateSettings();
@@ -1761,6 +1782,7 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       }
       if (Tools == "") Tools = tr("No tools blocked!");
       ptMessageBox::information(this,tr("Blocked tools"),Tools);
+// ATZ
     } else if (Event->key()==Qt::Key_R && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
       // Ctrl+Shift+R resets to default settings
       ptResetSettingsToDefault();
@@ -1779,6 +1801,25 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (Event->key()==Qt::Key_V && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
       // Ctrl+Shift+V paste settings
       ptPasteSettingsFromClipboard();
+    } else if (Event->key()==Qt::Key_Left && Event->modifiers()==Qt::NoModifier) {
+      // LeftArrow go to previous image
+      CB_PreviousImageButton();
+    } else if (Event->key()==Qt::Key_Right && Event->modifiers()==Qt::NoModifier) {
+      // RightArrow go to next image
+      CB_NextImageButton();
+    } else if (Event->key()==Qt::Key_Plus) {
+      // + increase exposure +0.3Ev
+      ptAddUndo();
+      Settings->SetValue("Exposure", Settings->GetDouble("Exposure") + 0.3);
+      Update(ptProcessorPhase_RGB);
+    } else if (Event->key()==Qt::Key_Minus) {
+      // - decrease exposure -0.3Ev
+      ptAddUndo();
+      Settings->SetValue("Exposure", Settings->GetDouble("Exposure") - 0.3);
+      Update(ptProcessorPhase_RGB);
+    } else if (Event->key()==Qt::Key_Asterisk) {
+      ptSwitchAB();
+// end ATZ
     }
   }
 }
@@ -2403,12 +2444,22 @@ void ptMainWindow::Settings_2_Form() {
   edtOutputSuffix->setText(Settings->GetString("OutputFileNameSuffix"));
   edtImageTitle->setText(Settings->GetString("ImageTitle"));
   edtCopyright->setText( Settings->GetString("Copyright"));
+// ATZ
+  StarRating1->setStarCount(Settings->GetInt("ImageRating"));
+  ColorLabel1->setSelectedLabel(Settings->GetInt("ColorLabel"));
+// end ATZ
 }
 
 //==============================================================================
 // Read settings from Form
 void ptMainWindow::Form_2_Settings() {
   if (Settings->GetInt("JobMode") == 1) return;
+
+// ATZ
+  ptAddUndo();
+  Settings->SetValue("ImageRating", StarRating1->starCount());
+  Settings->SetValue("ColorLabel", ColorLabel1->selectedLabel());
+// end ATZ
 
   //Metadata
   Settings->SetValue("OutputFileNameSuffix", edtOutputSuffix->text().trimmed());
@@ -2731,6 +2782,12 @@ void ptMainWindow::InitVisibleTools() {
 void ptMainWindow::SwitchUIState(const ptUIState AState)
 {
   if (FUIState == AState) return;
+
+// ATZ
+  if (FUIState == uisProcessing && Settings->GetInt("HaveImage") == 1) {
+    ptConfirmRequest::saveImage();
+  }
+// end ATZ
 
   FUIState = AState;
 

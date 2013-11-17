@@ -20,18 +20,23 @@
 **
 *******************************************************************************/
 
-#include "../ptDefines.h"
-#include "../ptTheme.h"
-#include "../ptSettings.h"
-#include "../ptImage8.h"
-#include "ptGraphicsThumbGroup.h"
-#include "ptGraphicsSceneEmitter.h"
-
 #include <QCursor>
 #include <QFontMetrics>
 #include <QPainter>
 #include <QKeyEvent>
+#include <QGraphicsScene>
+#include <QDrag>
 
+#include "../ptDefines.h"
+#include "../ptTheme.h"
+#include "../ptSettings.h"
+#include "../ptImage8.h"
+// ATZ
+#include "../ptColorLabel.h"
+#include "../ptStarRating.h"
+// end ATZ
+#include "ptGraphicsThumbGroup.h"
+#include "ptGraphicsSceneEmitter.h"
 #include <cassert>
 
 extern ptSettings* Settings;
@@ -44,14 +49,16 @@ ptGraphicsThumbGroup::ptGraphicsThumbGroup(uint AId, QGraphicsItem* parent /*= n
   m_Brush(Qt::SolidPattern),
   FGroupId(AId),
   m_hasHover(false),
-  m_Pen(Qt::DashLine),
+  m_Pen(Qt::SolidPattern),
   m_ThumbnailItem(new QGraphicsPixmapItem(this))
 {
   m_FSOType = fsoUnknown;
   m_ImgTypeText = nullptr;
   m_InfoText = nullptr;
+  m_ImageRating = 0;
+  m_ImageColorLabel = 0;
 
-  setFlags(QGraphicsItem::ItemIsFocusable);
+  setFlags(QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsSelectable);
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::LeftButton);
   setFiltersChildEvents(true);
@@ -111,6 +118,9 @@ void ptGraphicsThumbGroup::addInfoItems(const QString fullPath,
     }
 
     m_ImgTypeText->setText(Suffix.toUpper());
+// ATZ
+    getInfoFromSettingsFile();
+// end ATZ
   }
 
   // set rectangle size for the hover border
@@ -160,19 +170,6 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
       return true;
     }
 
-    case QEvent::GraphicsSceneMousePress: {
-      // Must accept mouse press to get mouse release as well.
-      event->accept();
-      return true;
-    }
-
-    case QEvent::GraphicsSceneMouseRelease: {
-      // set focus, FM window takes care of showing image in the viewer if necessary
-      this->setFocus(Qt::MouseFocusReason);
-      ptGraphicsSceneEmitter::EmitFocusChanged();
-      return true;
-    }
-
     case QEvent::KeyPress: {
       QKeyEvent* e = (QKeyEvent*)event;
       if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) {
@@ -184,8 +181,7 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
 
   case QEvent::GraphicsSceneContextMenu: {
       // We set the focus but we don't accept the event
-      this->setFocus(Qt::MouseFocusReason);
-      ptGraphicsSceneEmitter::EmitFocusChanged();
+//      this->setFocus(Qt::MouseFocusReason);
     }
 
     default:
@@ -195,8 +191,64 @@ bool ptGraphicsThumbGroup::sceneEvent(QEvent* event) {
   return QGraphicsRectItem::sceneEvent(event);
 }
 
-//==============================================================================
+void ptGraphicsThumbGroup::mousePressEvent(QGraphicsSceneMouseEvent* event) {
+  if (!(event->buttons() & Qt::LeftButton))
+    return;
 
+  bool multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
+  if (multiSelect) {
+    setSelected(!isSelected());
+  } else {
+    if (!isSelected()) {
+      scene()->clearSelection();
+      setSelected(true);
+    }
+  }
+}
+
+void ptGraphicsThumbGroup::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
+  if (!(event->buttons() & Qt::LeftButton))
+    return;
+  if ((event->scenePos() - event->buttonDownScenePos(Qt::LeftButton)).manhattanLength() < QApplication::startDragDistance()) 
+    return;
+
+  bool multiSelect = (event->modifiers() & Qt::ControlModifier) != 0;
+  if (multiSelect) {
+    QPointF mp = event->scenePos();
+    QPointF ep = event->buttonDownScenePos(Qt::LeftButton);
+    QRectF rubberBandRect = QRectF(qMin(mp.x(), ep.x()), qMin(mp.y(), ep.y()),
+                                 qAbs(mp.x() - ep.x()) + 1, qAbs(mp.y() - ep.y()) + 1);
+    QPainterPath selectionArea;
+    selectionArea.addRect(rubberBandRect);
+    scene()->setSelectionArea(selectionArea);
+  } else {
+
+    QDrag *drag = new QDrag(event->widget());
+    QMimeData *mimeData = new QMimeData;
+    QString files = "photivo:\n";
+    for (int i = 0; i < scene()->selectedItems().count(); i++) {
+      ptGraphicsThumbGroup* thumb = dynamic_cast<ptGraphicsThumbGroup*>(scene()->selectedItems().at(i));
+      if (thumb->fsoType() == fsoFile) {
+        files += thumb->fullPath() + "\n";
+      }
+    }
+
+    mimeData->setText(files);
+    drag->setMimeData(mimeData);
+    Qt::DropAction dropAction = drag->exec(Qt::MoveAction);
+    if (dropAction == Qt::MoveAction) {
+      ptGraphicsSceneEmitter::EmitItemsChanged();
+    }
+  }
+}
+
+void ptGraphicsThumbGroup::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
+  if (!(event->buttons() & Qt::LeftButton))
+    return;
+}
+
+
+//==============================================================================
 void ptGraphicsThumbGroup::paint(QPainter* painter,
                                  const QStyleOptionGraphicsItem* option,
                                  QWidget* widget)
@@ -206,7 +258,20 @@ void ptGraphicsThumbGroup::paint(QPainter* painter,
   SetupPenAndBrush();
   painter->setPen(m_Pen);
   painter->setBrush(m_Brush);
-  painter->drawRoundedRect(this->rect(), 5, 5);
+  painter->drawRect(this->rect());
+//  painter->drawRoundedRect(this->rect(), 5, 5); // ATZ
+// ATZ
+  painter->setFont(m_ImgTypeText->font());
+  if (m_ImageRating > 0) {
+    int starSize = 12;
+    ptDrawStars(painter, widget, rect().right() - starSize * m_ImageRating - 4, rect().bottom() - starSize - InnerPadding, starSize, m_ImageRating, m_ImageRating);
+  }
+  if (m_ImageColorLabel > 0) {
+    int labelSize = 16;
+    QRect r(rect().right() - labelSize, rect().top(), labelSize, labelSize);
+    ptDrawSingleColorLabel(painter, widget, m_ImageColorLabel, r, true);
+  }
+// end ATZ
 }
 
 //------------------------------------------------------------------------------
@@ -239,18 +304,42 @@ void ptGraphicsThumbGroup::exec() {
 //==============================================================================
 
 void ptGraphicsThumbGroup::SetupPenAndBrush() {
-  int PenWidth = m_hasHover ? 2 : 1;
+  int PenWidth = 2;
+  m_Pen.setWidth(PenWidth);
+  m_Pen.setStyle(Qt::SolidLine);
 
-  if (this->hasFocus()) {
+  if (this->isSelected()) {
     m_Pen.setColor(Theme->highlightColor());
-    m_Pen.setWidth(PenWidth);
     m_Brush.setColor(Theme->gradientColor());
-
   } else {
     m_Pen.setColor(Theme->emphasizedColor());
-    m_Pen.setWidth(PenWidth);
+    if (!m_hasHover) {
+      m_Pen.setStyle(Qt::NoPen);
+    }
     m_Brush.setColor(Theme->altBaseColor());
   }
 }
 
 //==============================================================================
+
+// ATZ
+void ptGraphicsThumbGroup::getInfoFromSettingsFile() {
+  // get image rating and color label from associated .pts file, if any
+  QFileInfo PathInfo(m_FullPath);
+  QString baseFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.completeBaseName();
+  QString ptsFileName = baseFileName + ".pts";
+  QFileInfo ptsFileInfo(ptsFileName);
+  if (ptsFileInfo.exists()) {
+    // check last changed date
+    if (m_ptsLastChangedDate.isNull() || m_ptsLastChangedDate < ptsFileInfo.lastModified()) {
+      QSettings ptsFile(ptsFileName, QSettings::IniFormat);
+      m_ImageRating = ptsFile.value("ImageRating", 0).toInt();
+      m_ImageColorLabel = ptsFile.value("ColorLabel", 0).toInt();
+      m_ptsLastChangedDate = ptsFileInfo.lastModified();
+    }
+  } else {
+    m_ImageRating = 0;
+    m_ImageColorLabel = 0;
+  }
+}
+// end ATZ

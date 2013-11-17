@@ -4,7 +4,6 @@
 **
 ** Copyright (C) 2011-2013 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -36,8 +35,11 @@
 #include "../ptConstants.h"
 #include "../ptReportOverlay.h"
 #include "../ptConstants.h"
+#include "../ptStarRating.h"
+#include "../ptColorLabel.h"
 #include <QWidget>
 #include <QGraphicsScene>
+#include <QFileInfo>
 #include <memory>
 
 class ptImage8;
@@ -53,6 +55,8 @@ public:
 
   void displayThumbnails(QString path = "", ptFSOType fsoType = fsoDir);
   void updateTheme();
+  QFileInfoList getFilteredFileInfoList() const;
+  QString getCurrentDir() const;
 
 signals:
   void fileMgrWindowClosed();
@@ -65,28 +69,30 @@ protected:
   void showEvent(QShowEvent* event);
 
 private:
-  void adjustBookmarkMenuSize();
   void clearScene();
   void focusThumbnail(int index);
   void layoutAll();
   void setLayouter(const ptThumbnailLayout layout);
   void constructContextMenu();
-  void initProgressbar();
-  void updateProgressbar();
   void loadForImageView(const QString& AFilePath);
 
   ptFileMgrDM*            FDataModel;
   QGraphicsScene*         FFilesScene;
   bool                    FIsFirstShow;
   ptAbstractThumbnailLayouter* FLayouter;
-  ptPathBar*              FPathBar;
   ptTagList*              FTagList;      // bookmarks in sidebar
-  ptTagList*              FTagMenuList;  // bookmarks in popup menu
-  QMenu*                  FTagMenu;
   int                     FThumbCount;
   int                     FThumbsReceived;  // num of thumbs received from the generator
   int                     FThumbListIdx;
   ptImageView*            FImageView;
+// ATZ
+  ptStarRating*           StarRating1;
+  ptStarRating*           StarRating2;
+  ptStarRating*           StarRating3;
+  ptColorLabel*           ColorLabel1;
+  ptColorLabel*           ColorLabel2;
+
+// end ATZ
 
   // context menu actions
   QAction*      FVerticalThumbsAct;
@@ -98,21 +104,34 @@ private:
   QAction*      FToggleImageViewAct;
   QAction*      FCloseFileMgrAct;
   QAction*      FSaveThumbAct;
-  QAction*      FToggleShowRAWsAct;
-  QAction*      FToggleShowBitmapsAct;
 
 private slots:
   void bookmarkCurrentDir();
-  void bookmarkDataChanged(QStandardItem*);
-  void changeListDir(const QModelIndex& index);
+// ATZ
+  void removeBookmark();
+  void changeTreeDir(const QModelIndex& index);
+  void thumbSelectionChanged();
+  ptGraphicsThumbGroup* focusedThumb();
+  int focusedThumbIdx();
+  void ensureHaveSettingsFile(const QString& fileName);
+  void starRatingChanged();
+  void colorLabelChanged();
+  void filterChanged();
+  void fileTypeFilterChanged(int index);
+  void layoutVisibleItems();
+  void OnRestoreImageButtonClicked();
+  void OnDeleteImageButtonClicked();
+  void OnSendToBatchButtonClicked();
+  void OnBatchButtonClicked();
+  void OnProcessingButtonClicked();
+  void OnFullScreenButtonClicked();
+// end ATZ
   void changeToBookmark(const QModelIndex& index);
-  void changeToBookmarkFromMenu(const QModelIndex& index);
   void changeDir(const QString& path);
   void closeWindow();
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
+  void updateThumbList();
   void receiveThumb(uint AReceiverId, TThumbPtr AImage);
-  void on_m_BookmarkButton_clicked();
-  void thumbFocusChanged();
   void saveThumbnail();
 
   // context menu slots
@@ -122,8 +141,6 @@ private slots:
   void toggleDirThumbs();
   void toggleSidebar();
   void toggleImageView();
-  void toggleShowRAWs();
-  void toggleShowBitmaps();
 };
 
 #endif // PTFILEMGRWINDOW_h

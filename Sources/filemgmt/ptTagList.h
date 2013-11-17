@@ -34,7 +34,7 @@ class ptTagList: public QListView {
 Q_OBJECT
 public:
   explicit ptTagList(QWidget* parent = NULL);
-
+  void removeBookmark();
 protected:
   void keyPressEvent(QKeyEvent* event);
 

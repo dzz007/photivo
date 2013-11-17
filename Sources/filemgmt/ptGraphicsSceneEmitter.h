@@ -25,9 +25,9 @@
 
 //==============================================================================
 
-#include "ptFileMgrConstants.h"
-
 #include <QObject>
+
+#include "ptFileMgrConstants.h"
 
 //==============================================================================
 
@@ -43,17 +43,8 @@ class ptGraphicsSceneEmitter: public QObject {
 Q_OBJECT
 
 public:
-  /*! Connects the signal that is emitted when a new thumbnail gets focused.
-    Works similar to \c QObject::connect().
-    \param receiver
-      A pointer to the receiver object for the signal.
-    \param method
-      The slot the signal should be connected to. Use the SLOT() macro in the
-      same way as with QObject::connect().
-  */
-  static bool ConnectFocusChanged(const QObject* receiver, const char* method);
-  /*! Emits the signal indicating that a new thumbnail has the focus. */
-  static void EmitFocusChanged();
+  static bool ConnectItemsChanged(const QObject* receiver, const char* method);
+  static void EmitItemsChanged();
 
   /*! Connects the signal that triggers an action when a thumbnail is clicked.
     Works similar to \c QObject::connect().
@@ -84,7 +75,7 @@ private:
 
 
 signals:
-  void focusChanged();
+  void itemsChanged();
   void thumbnailAction(const ptThumbnailAction action, const QString location);
 };
 

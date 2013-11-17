@@ -39,7 +39,7 @@ extern QStringList FileExtsBitmap;
 //------------------------------------------------------------------------------
 ptFileMgrDM::ptFileMgrDM(QObject* AParent)
 : QObject(AParent),
-  FFocusedThumb(-1),
+  FFileSystemModel(new ptFSMProxy(this)),
   FDirModel(new ptSingleDirModel(this)),
   FIsMyComputer(false),
   FTagModel(new ptTagModel(this)),
@@ -64,6 +64,12 @@ void ptFileMgrDM::clear() {
 /*! Returns the current folder for thumbnail display. */
 QString ptFileMgrDM::currentDir() const {
   return FCurrentDir.absolutePath();
+}
+
+//------------------------------------------------------------------------------
+/*! Returns a pointer to the model for the folder TreeView. */
+ptFSMProxy*ptFileMgrDM::fileSystemModel() const {
+  return FFileSystemModel;
 }
 
 //------------------------------------------------------------------------------
@@ -99,21 +105,19 @@ int ptFileMgrDM::setThumDir(const QString& AAbsolutePath) {
     FCurrentDir.setSorting(QDir::Name | QDir::DirsFirst);
 
     QStringList fileExts;
+    if (Settings->GetInt("FileMgrShowDeleted")) {
+      fileExts << "*.trash";
+    } else {
     if (Settings->GetInt("FileMgrShowRAWs")) {
       fileExts << FileExtsRaw;
     }
     if (Settings->GetInt("FileMgrShowBitmaps")) {
       fileExts << FileExtsBitmap;
     }
-    QFileInfoList files = FCurrentDir.entryInfoList(fileExts);
+    }
+    QFileInfoList files = FCurrentDir.entryInfoList(fileExts); 
     return files.count();
   }
-}
-
-//------------------------------------------------------------------------------
-/*! Returns the index in thumbGroupList() of the currently focused thumbnail. */
-int ptFileMgrDM::focusedThumb() const {
-  return FFocusedThumb;
 }
 
 //------------------------------------------------------------------------------
@@ -150,13 +154,6 @@ void ptFileMgrDM::abortThumbGen() {
 }
 
 //------------------------------------------------------------------------------
-/*! Focusses the thumbgroup with the given index in thumbGroupList(). */
-ptGraphicsThumbGroup* ptFileMgrDM::moveFocus(const int index) {
-  FFocusedThumb = index;
-  return FThumbGroupList->at(index);
-}
-
-//------------------------------------------------------------------------------
 /*!
   Clears the scene and starts thumbnail generation for the current directory.
   Returns when all ptGraphicsThumbGroup objects are created. The actual thumbnail images
@@ -170,14 +167,17 @@ void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
 
   QFileInfoList files;
 
-  QStringList fileExts;
-  if (Settings->GetInt("FileMgrShowRAWs")) {
-    fileExts << FileExtsRaw;
-  }
-  if (Settings->GetInt("FileMgrShowBitmaps")) {
-    fileExts << FileExtsBitmap;
-  }
-
+    QStringList fileExts;
+    if (Settings->GetInt("FileMgrShowDeleted")) {
+      fileExts << "*.trash";
+    } else {
+      if (Settings->GetInt("FileMgrShowRAWs")) {
+        fileExts << FileExtsRaw;
+      }
+      if (Settings->GetInt("FileMgrShowBitmaps")) {
+        fileExts << FileExtsBitmap;
+      }
+    }
 #ifdef Q_OS_WIN
   if (FIsMyComputer) {
     if (Settings->GetInt("FileMgrShowDirThumbs")) {
@@ -189,6 +189,18 @@ void ptFileMgrDM::populateThumbs(QGraphicsScene* AScene) {
 #else
   files = FCurrentDir.entryInfoList(fileExts);
 #endif
+
+  // ".." item must go first. It's not the case if we have folders starting with, say, "!" symbol
+  int dot_dot_Index = -1;
+  for (int i = 0; i < files.count(); i++) {
+    if (files.at(i).fileName() == "..") {
+      dot_dot_Index = i;
+      break;
+    }
+  }
+  if (dot_dot_Index >= 0) {
+    files.insert(0, files.takeAt(dot_dot_Index));
+  }
 
   auto hLongEdgeMax = Settings->GetInt("FileMgrThumbnailSize");
   QList<TThumbAssoc> hThumbIdList;
@@ -298,15 +310,20 @@ void ptFileMgrDM::createThumbGroup(const QFileInfo& AFileInfo, uint AId, QGraphi
 }
 
 //------------------------------------------------------------------------------
-// TODO BJ: Might change FFocusedThumb. Either bad method naming or bad design. Needs to be changed.
-int ptFileMgrDM::focusedThumb(QGraphicsItem* group) {
-  for (int i = 0; i < FThumbGroupList->count(); ++i) {
-    if (FThumbGroupList->at(i) == group) {
-      FFocusedThumb = i;
-      return i;
+// Updates ThumbGroupList items: checks for removed files, updates image rating/color label
+void ptFileMgrDM::updateThumbList(QGraphicsScene* AScene) {
+  for (int i = 0; i < FThumbGroupList->count(); i++) {
+    ptGraphicsThumbGroup* thumbGroup = FThumbGroupList->at(i);
+    QFileInfo fileInfo(thumbGroup->fullPath());
+    if (!fileInfo.exists()) {
+      // file was removed
+      AScene->removeItem(thumbGroup);
+      FThumbGroupList->removeAt(i);
+      i--;
+    } else {
+      // update image rating and color label
+      thumbGroup->getInfoFromSettingsFile();
     }
   }
-  FFocusedThumb = -1;
-  return -1;
+  AScene->update();
 }
-

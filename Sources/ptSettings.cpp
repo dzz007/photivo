@@ -4,7 +4,6 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -22,6 +21,8 @@
 **
 *******************************************************************************/
 
+#include <cassert>
+
 #include "ptSettings.h"
 #include "ptError.h"
 #include "ptDcRaw.h"
@@ -29,8 +30,6 @@
 #include "ptGuiOptions.h"
 #include "filemgmt/ptFileMgrConstants.h"
 #include <filters/ptFilterUids.h>
-
-#include <cassert>
 
 //==============================================================================
 
@@ -355,8 +354,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     //{"GREYCSigma"                    ,ptGT_Input           ,2,1,1 ,1.1  ,0.0  ,5.0   ,0.1  ,1 ,tr("Sigma")              ,tr("Sigma")},
     //{"GREYCGaussPrecision"           ,ptGT_Input           ,2,1,1 ,2.0  ,0.0  ,5.0   ,0.1  ,1 ,tr("Gauss")              ,tr("Gauss")},
     {"SaveQuality"                   ,ptGT_Input           ,1,1,1 ,97   ,25   ,100   ,1    ,0 ,tr("Quality")            ,tr("Quality")},
-    {"SaveResolution"                ,ptGT_Input           ,1,1,1 ,300  ,25   ,1200  ,100  ,0 ,tr("dpi")                ,tr("Resolution in dpi")},
-    {"ImageRating"                   ,ptGT_Input           ,2,1,1 ,0    ,0    ,5     ,1    ,0 ,tr("Rating")             ,tr("Image rating")}
+    {"SaveResolution"                ,ptGT_Input           ,1,1,1 ,300  ,25   ,1200  ,100  ,0 ,tr("dpi")                ,tr("Resolution in dpi")}
   };
 
   // Load in the gui choice (combo) elements
@@ -367,8 +365,10 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"CameraColor"                 ,ptGT_Choice       ,1,1,1 ,ptCameraColor_Adobe_Profile ,GuiOptions->CameraColor               ,tr("Transform camera RGB to working space RGB")},
     {"CameraColorProfileIntent"    ,ptGT_Choice       ,1,1,1 ,INTENT_PERCEPTUAL           ,GuiOptions->CameraColorProfileIntent  ,tr("Intent of the profile")},
     {"CameraColorGamma"            ,ptGT_Choice       ,1,1,1 ,ptCameraColorGamma_None     ,GuiOptions->CameraColorGamma          ,tr("Gamma that was applied before this profile")},
-    {"WorkColor"                   ,ptGT_Choice       ,1,1,1 ,ptSpace_sRGB_D65            ,GuiOptions->WorkColor                 ,tr("Working colorspace")},
-    {"CMQuality"                   ,ptGT_Choice       ,1,1,0 ,ptCMQuality_FastSRGB        ,GuiOptions->CMQuality                 ,tr("Color management quality")},
+// ATZ - should not be in job file
+    {"WorkColor"                   ,ptGT_Choice       ,1,0,1 ,ptSpace_sRGB_D65            ,GuiOptions->WorkColor                 ,tr("Working colorspace")},
+    {"CMQuality"                   ,ptGT_Choice       ,1,0,0 ,ptCMQuality_FastSRGB        ,GuiOptions->CMQuality                 ,tr("Color management quality")},
+// end ATZ
     {"PreviewColorProfileIntent"   ,ptGT_Choice       ,1,0,1 ,INTENT_PERCEPTUAL           ,GuiOptions->PreviewColorProfileIntent ,tr("Intent of the profile")},
     {"OutputColorProfileIntent"    ,ptGT_Choice       ,1,1,1 ,INTENT_PERCEPTUAL           ,GuiOptions->OutputColorProfileIntent  ,tr("Intent of the profile")},
     {"SaveButtonMode"              ,ptGT_Choice       ,1,0,1 ,ptOutputMode_Pipe           ,GuiOptions->OutputMode                ,tr("Output mode of save button")},
@@ -492,7 +492,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"SaveConfirmation"           ,ptGT_Check ,1,0,1,tr("Save image")      ,tr("Confirm any action that would discard an unsaved image")},
     {"ResetSettingsConfirmation"  ,ptGT_Check, 1,0,1,tr("Reset settings")  ,tr("Confirm resetting settings or dropping a settings file onto an image")},
     {"FullPipeConfirmation"       ,ptGT_Check ,1,0,1,tr("Switch to 1:1 pipe"), tr("Confirm switch to the full sized pipe")},
-    {"EscToExit"                  ,ptGT_Check ,1,0,0,tr("Esc key exits Photivo"),tr("Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.")}
+    {"EscToExit"                  ,ptGT_Check ,1,0,0,tr("Esc key exits Photivo"),tr("Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.")},
+    {"SaveCachedImage"            ,ptGT_Check ,1,0,0,tr("Save .cached image"),tr("Save .cached jpg file after editing the image")}
   };
 
   // Load in the non gui elements
@@ -521,7 +522,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"OutputColorProfilesDirectory"         ,0    ,"@INSTALL@/Profiles/Output"           ,1},
     {"StandardAdobeProfilesDirectory"       ,0    ,"@INSTALL@/Profiles/Camera/Standard"  ,1},
     {"LensfunDatabaseDirectory"             ,0    ,"@INSTALL@/LensfunDatabase"           ,1},
-    {"PreviewColorProfile"                  ,1    ,"@INSTALL@/Profiles/Preview/sRGB.icc" ,1},
+    {"PreviewColorProfile"                  ,1    ,"@INSTALL@/Profiles/Preview/sRGB.icc" ,0},   // ATZ: JobFile=0.
     {"OutputColorProfile"                   ,1    ,"@INSTALL@/Profiles/Output/sRGB.icc"  ,1},
     {"GimpExecCommand"                      ,1    ,"gimp"                                ,0},
     {"StartupSettingsFile"                  ,1    ,"@INSTALL@/Presets/MakeFancy.pts"     ,0},
@@ -587,6 +588,11 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"OutputFileNameSuffix"                 ,9    ,""                                    ,1},
     {"ImageTitle"                           ,9    ,""                                    ,1},
     {"Copyright"                            ,1    ,""                                    ,1},
+// ATZ
+    // ImageRating moved here from GuiInputItems
+    {"ImageRating"                          ,1    ,0                                     ,1},
+    {"ColorLabel"                           ,1    ,0                                     ,1},
+// end ATZ
     {"BackgroundRed"                        ,1    ,0                                     ,0},
     {"BackgroundGreen"                      ,1    ,0                                     ,0},
     {"BackgroundBlue"                       ,1    ,0                                     ,0},
@@ -643,8 +649,12 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FileMgrShowImageView"                 ,1    ,1                                     ,0},
     {"FileMgrShowSidebar"                   ,1    ,1                                     ,0},
     {"FileMgrThumbLayoutType"               ,1    ,tlVerticalByRow                       ,0},
+// ATZ
     {"FileMgrShowRAWs"                      ,1    ,1                                     ,0},
     {"FileMgrShowBitmaps"                   ,1    ,1                                     ,0},
+    {"FileMgrShowDeleted"                   ,9    ,0                                     ,0},
+// end ATZ
+
     {"BatchIsOpen"                          ,9    ,0                                     ,0},
     {"BatchLogIsVisible"                    ,1    ,0                                     ,0}
   };
