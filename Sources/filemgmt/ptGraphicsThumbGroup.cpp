@@ -258,19 +258,19 @@ void ptGraphicsThumbGroup::paint(QPainter* painter,
   SetupPenAndBrush();
   painter->setPen(m_Pen);
   painter->setBrush(m_Brush);
-  painter->drawRect(this->rect());
-//  painter->drawRoundedRect(this->rect(), 5, 5); // ATZ
+//  painter->drawRect(this->rect());
+  painter->drawRoundedRect(this->rect(), 5, 5); 
 // ATZ
-  painter->setFont(m_ImgTypeText->font());
-  if (m_ImageRating > 0) {
-    int starSize = 12;
-    ptDrawStars(painter, widget, rect().right() - starSize * m_ImageRating - 4, rect().bottom() - starSize - InnerPadding, starSize, m_ImageRating, m_ImageRating);
-  }
-  if (m_ImageColorLabel > 0) {
-    int labelSize = 16;
-    QRect r(rect().right() - labelSize, rect().top(), labelSize, labelSize);
-    ptDrawSingleColorLabel(painter, widget, m_ImageColorLabel, r, true);
-  }
+//  painter->setFont(m_ImgTypeText->font());
+//  if (m_ImageRating > 0) {
+//    int starSize = 12;
+//    ptDrawStars(painter, widget, rect().right() - starSize * m_ImageRating - 4, rect().bottom() - starSize - InnerPadding, starSize, m_ImageRating, m_ImageRating);
+//  }
+//  if (m_ImageColorLabel > 0) {
+//    int labelSize = 16;
+//    QRect r(rect().right() - labelSize, rect().top(), labelSize, labelSize);
+//    ptDrawSingleColorLabel(painter, widget, m_ImageColorLabel, r, true);
+//  }
 // end ATZ
 }
 
