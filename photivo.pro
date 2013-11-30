@@ -46,7 +46,7 @@ CONFIG  += silent
 # Check for qmake version
 contains($$[QMAKE_VERSION],^2*) {
   message("Cannot build Photivo with qmake version $$[QMAKE_VERSION].")
-  error("Use qmake from Qt4")
+  error("Use qmake from Qt4 or newer.")
 }
 
 # Check for Qt version
@@ -56,11 +56,27 @@ contains(QT_VERSION, ^4\\.[0-5]\\..*) {
 }
 
 # Remove subproject makefiles to make sure they are created again with current settings
-system(rm -f $$OUT_PWD/Makefile*)
-system(rm -f $$OUT_PWD/photivoProject/Makefile*)
-system(rm -f $$OUT_PWD/ptClearProject/Makefile*)
-system(rm -f $$OUT_PWD/ptCreateAdobeProfilesProject/Makefile*)
-system(rm -f $$OUT_PWD/ptGimpProject/Makefile*)
+win32 {
+  DEVNULL="1>nul 2>nul"
+} else {
+  DEVNULL="1>/dev/null 2>/dev/null"
+}
+
+system("rm --help $$DEVNULL") {
+  # "rm" is available (Linux, Mac or MSys)
+  system(rm -f $$OUT_PWD/Makefile*)
+  system(rm -f $$OUT_PWD/photivoProject/Makefile*)
+  system(rm -f $$OUT_PWD/ptClearProject/Makefile*)
+  system(rm -f $$OUT_PWD/ptCreateAdobeProfilesProject/Makefile*)
+  system(rm -f $$OUT_PWD/ptGimpProject/Makefile*)
+} else {
+  # "rm" does not exist: Windows cmd shell
+  system(del /f /q \"$$shell_path($$OUT_PWD/Makefile)*\" $$DEVNULL)
+  system(del /f /q \"$$shell_path($$OUT_PWD/photivoProject/Makefile)*\" $$DEVNULL)
+  system(del /f /q \"$$shell_path($$OUT_PWD/ptClearProject/Makefile)*\" $$DEVNULL)
+  system(del /f /q \"$$shell_path($$OUT_PWD/ptCreateAdobeProfilesProject/Makefile)*\" $$DEVNULL)
+  system(del /f /q \"$$shell_path($$OUT_PWD/ptGimpProject/Makefile)*\" $$DEVNULL)
+}
 
 #------------------------------------------------------------------------------
 # --- Configure subprojects to build. Photivo itself is always included. ---
