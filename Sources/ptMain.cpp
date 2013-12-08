@@ -2736,8 +2736,10 @@ void CB_MenuFileOpen(const short HaveFile) {
 
   // load settings file automatically
   QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".pts";
-  if (QFile::exists(SettingsFileName))
+  if (QFile::exists(SettingsFileName)) {
+    Settings->SetValue("HaveImage", 0);
     CB_OpenSettingsFile(SettingsFileName);
+  }
 
   // clean up possible detail view cache
   if (Settings->GetInt("DetailViewActive") == 1) {
