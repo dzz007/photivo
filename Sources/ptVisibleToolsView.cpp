@@ -20,11 +20,11 @@
 **
 *******************************************************************************/
 
-#include <QComboBox>
-
 #include "ptVisibleToolsView.h"
 #include "ptConstants.h"
 #include "ptTheme.h"
+
+#include <QComboBox>
 
 extern ptTheme* Theme;
 

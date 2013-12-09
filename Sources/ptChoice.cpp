@@ -22,8 +22,6 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
 #include "ptChoice.h"
 #include "ptSettings.h"
 #include "ptInfo.h"
@@ -31,6 +29,8 @@
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QMouseEvent>
+
+#include <cassert>
 
 extern QTranslator appTranslator;
 

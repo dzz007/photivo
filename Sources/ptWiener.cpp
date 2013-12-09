@@ -20,6 +20,13 @@
 **
 *******************************************************************************/
 
+#include "ptWiener.h"
+#include "ptImage.h"
+#include "ptError.h"
+#include "ptCimg.h"
+
+#include <fftw3.h>
+
 #include <QString>
 #include <QObject>
 #include <QMessageBox>
@@ -28,12 +35,6 @@
   #include <omp.h>
 #endif
 
-#include "ptWiener.h"
-#include "ptImage.h"
-#include "ptError.h"
-#include "ptCimg.h"
-
-#include <fftw3.h>
 #include <cmath>
 #include <cassert>
 

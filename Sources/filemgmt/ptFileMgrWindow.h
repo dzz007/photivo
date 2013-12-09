@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2011-2013 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -97,6 +98,8 @@ private:
   QAction*      FToggleImageViewAct;
   QAction*      FCloseFileMgrAct;
   QAction*      FSaveThumbAct;
+  QAction*      FToggleShowRAWsAct;
+  QAction*      FToggleShowBitmapsAct;
 
 private slots:
   void bookmarkCurrentDir();
@@ -119,7 +122,8 @@ private slots:
   void toggleDirThumbs();
   void toggleSidebar();
   void toggleImageView();
-
+  void toggleShowRAWs();
+  void toggleShowBitmaps();
 };
 
 #endif // PTFILEMGRWINDOW_h

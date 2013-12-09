@@ -21,13 +21,13 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-#include <cstdio>
+#include "ptDefines.h"
+#include "ptConstants.h"
 
 #include <lcms2.h>
 
-#include "ptDefines.h"
-#include "ptConstants.h"
+#include <cassert>
+#include <cstdio>
 
 void TemperatureToRGB(int Temperature,double RGB[3]) {
 

@@ -25,12 +25,12 @@
 
 //==============================================================================
 
+#include "../ptConstants.h"
+
 #include <QStandardItemModel>
 #include <QDir>
 #include <QStringList>
 #include <QString>
-
-#include "../ptConstants.h"
 
 //==============================================================================
 

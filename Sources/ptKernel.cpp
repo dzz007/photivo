@@ -20,13 +20,13 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-#include <cmath>
-#include <cstdlib>
-
 #include "ptKernel.h"
 #include "ptError.h"
 #include "ptCalloc.h"
+
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
 
 ////////////////////////////////////////////////////////////////////////////////
 //

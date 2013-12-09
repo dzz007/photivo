@@ -26,7 +26,9 @@
 #include "ptImage8.h"
 #include "ptWidget.h"
 #include "ptCurve.h"
+
 #include <QPixmap>
+
 #include <memory>
 #include <vector>
 #include <utility>

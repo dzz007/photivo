@@ -20,10 +20,11 @@
 **
 *******************************************************************************/
 
-#include <lensfun.h>
 #include "ptImage.h"
 #include "ptError.h"
 #include "ptCalloc.h"
+
+#include <lensfun.h>
 
 #ifdef _OPENMP
   #include <omp.h>

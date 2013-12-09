@@ -23,6 +23,23 @@
 
 #include "ptDcRaw.h"
 
+#include "ptCalloc.h"
+#include "ptConstants.h"
+#include "ptError.h"
+#include "ptInfo.h"
+#include "ptImage.h"
+#include "ptMessageBox.h"
+#include "ptResizeFilters.h"
+#include "ptCurve.h"
+#include "ptKernel.h"
+#include "ptConstants.h"
+#include "ptRefocusMatrix.h"
+#include "ptCimg.h"
+#include "ptFastBilateral.h"
+
+#include <QString>
+#include <QTime>
+
 #include <algorithm>
 #include <parallel/algorithm>
 #include <stack>
@@ -32,8 +49,6 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include <QString>
-#include <QTime>
 #include <functional>
 
 #ifdef _OPENMP
@@ -48,30 +63,16 @@
 #ifdef __cplusplus
   // This hack copes with jpeglib.h that does or doesnt provide the
   // extern internally.
-  #define ptraw_saved_cplusplus __cplusplus
+  #pragma push_macro("__cplusplus")
   #undef __cplusplus
   extern "C" {
   #include <jpeglib.h>
   }
-  #define __cplusplus ptraw_saved_cplusplus
+  #pragma pop_macro("__cplusplus")
 #else
   #include <jpeglib.h>
 #endif
 #endif
-
-#include "ptCalloc.h"
-#include "ptConstants.h"
-#include "ptError.h"
-#include "ptInfo.h"
-#include "ptImage.h"
-#include "ptMessageBox.h"
-#include "ptResizeFilters.h"
-#include "ptCurve.h"
-#include "ptKernel.h"
-#include "ptConstants.h"
-#include "ptRefocusMatrix.h"
-#include "ptCimg.h"
-#include "ptFastBilateral.h"
 
 extern cmsCIExyY       D65;
 extern cmsCIExyY       D50;

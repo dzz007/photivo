@@ -24,11 +24,11 @@
 #ifndef DLLENSFUN_H
 #define DLLENSFUN_H
 
-#include <QString>
-
 #include "ptDefines.h"
 
 #include "lensfun.h"
+
+#include <QString>
 
 struct ptLensfunCamera {
   QString   Make;

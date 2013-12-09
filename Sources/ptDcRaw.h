@@ -40,6 +40,10 @@
 #define _GNU_SOURCE
 #endif
 
+#include "ptDefines.h"
+
+#include <QString>
+
 #define _USE_MATH_DEFINES
 #include <vector>
 #include <cctype>
@@ -64,12 +68,12 @@
 #ifdef __cplusplus
   // This hack copes with jpeglib.h that does or doesnt provide the
   // extern internally.
-  #define ptraw_saved_cplusplus __cplusplus
+  #pragma push_macro("__cplusplus")
   #undef __cplusplus
   extern "C" {
   #include <jpeglib.h>
   }
-  #define __cplusplus ptraw_saved_cplusplus
+  #pragma pop_macro("__cplusplus")
 #else
   #include <jpeglib.h>
 #endif
@@ -120,9 +124,6 @@ typedef unsigned long long UINT64;
 #define LONG_BIT (8 * sizeof (long))
 #endif
 
-#include <QString>
-
-#include "ptDefines.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //

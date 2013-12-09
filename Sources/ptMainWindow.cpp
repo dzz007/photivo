@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -20,9 +21,6 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
-#include <iomanip>
-#include <iostream>
 
 #include "ptDefines.h"
 #include "ptChannelMixer.h"
@@ -49,6 +47,8 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
 
+#include <iomanip>
+#include <iostream>
 #include <cassert>
 
 using namespace std;
@@ -63,6 +63,16 @@ void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
 void CB_ZoomStep(int direction);
+
+// undo-redo & clipboard support
+void ptMakeUndo();
+void ptMakeRedo();
+void ptClearUndoRedo();
+void ptMakeFullUndo();
+void ptResetSettingsToDefault();
+void ptCopySettingsToClipboard();
+void ptPasteSettingsFromClipboard();
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -311,6 +321,9 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(FullScreen);
   FullScreenButton->setChecked(0);
   Macro_ConnectSomeButton(LoadStyle);
+  Macro_ConnectSomeButton(PreviousImage);
+  Macro_ConnectSomeButton(NextImage);
+
 
   //
   // Connect Export button (not only for Gimp like the name suggests)
@@ -699,7 +712,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
   if (event->type() == QEvent::ContextMenu) {
     if (obj == Tabbar) {
       // compute the tab number
-      QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+      QContextMenuEvent *mouseEvent = static_cast<QContextMenuEvent *>(event);
       QPoint position = mouseEvent->pos();
       int c = Tabbar->count();
       int clickedItem = -1;
@@ -725,7 +738,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
         Menu.setStyle(Theme->style());
         Menu.setPalette(Theme->menuPalette());
         Menu.addAction(m_AtnShowTools);
-        Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+        Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
       }
     } else if (obj == WritePipeButton) {
       QMenu Menu(NULL);
@@ -736,14 +749,14 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.addAction(m_AtnSaveSettings);
       Menu.addAction(m_AtnSaveJobfile);
       Menu.addAction(m_AtnSendToBatch);
-      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+      Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
     } else if (obj == ToGimpButton) {
       QMenu Menu(NULL);
       Menu.setStyle(Theme->style());
       Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnGimpSavePipe);
       Menu.addAction(m_AtnGimpSaveFull);
-      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+      Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
     } else if (obj == ResetButton) {
       QMenu Menu(NULL);
       Menu.setStyle(Theme->style());
@@ -753,7 +766,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.addSeparator();
       Menu.addAction(m_AtnMenuOpenPreset);
       Menu.addAction(m_AtnMenuOpenSettings);
-      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+      Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
     }
     return QObject::eventFilter(obj, event);
   } else if (obj == LogoLabel &&
@@ -1209,6 +1222,16 @@ void ptMainWindow::OnInputChanged(const QVariant Value) {
          __FILE__,__LINE__,Sender->objectName().toLocal8Bit().data());
   CB_InputChanged(Sender->objectName(),Value);
 
+}
+
+void CB_PreviousImageButton();
+void ptMainWindow::OnPreviousImageButtonClicked() {
+  ::CB_PreviousImageButton();
+}
+
+void CB_NextImageButton();
+void ptMainWindow::OnNextImageButtonClicked() {
+  ::CB_NextImageButton();
 }
 
 void CB_BatchButton();
@@ -1738,6 +1761,24 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       }
       if (Tools == "") Tools = tr("No tools blocked!");
       ptMessageBox::information(this,tr("Blocked tools"),Tools);
+    } else if (Event->key()==Qt::Key_R && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+R resets to default settings
+      ptResetSettingsToDefault();
+    } else if (Event->key()==Qt::Key_U && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+U resets to the last saved user settings
+      ptMakeFullUndo();
+    } else if (Event->key()==Qt::Key_Z && Event->modifiers()==Qt::ControlModifier) {
+      // Ctrl+Z undo
+      ptMakeUndo();
+    } else if (Event->key()==Qt::Key_Y && Event->modifiers()==Qt::ControlModifier) {
+      // Ctrl+Y redo
+      ptMakeRedo();
+    } else if (Event->key()==Qt::Key_C && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+C copy settings
+      ptCopySettingsToClipboard();
+    } else if (Event->key()==Qt::Key_V && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+V paste settings
+      ptPasteSettingsFromClipboard();
     }
   }
 }
@@ -2581,7 +2622,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
   if (Pos != ExifData.end() ) {
     std::stringstream str;
     str << *Pos;
-    TheInfo.append(QString(str.str().c_str()));
+    TheInfo.append(QString::fromLocal8Bit(str.str().c_str()));
   }
   InfoFlashLabel->setText(TheInfo);
   TheInfo="";
@@ -2590,7 +2631,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
   if (Pos != ExifData.end() ) {
     std::stringstream str;
     str << *Pos;
-    TheInfo.append(QString(str.str().c_str()));
+    TheInfo.append(QString::fromLocal8Bit(str.str().c_str()));
   }
   InfoWhitebalanceLabel->setText(TheInfo);
   TheInfo="";

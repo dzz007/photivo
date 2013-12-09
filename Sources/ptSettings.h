@@ -24,17 +24,17 @@
 #ifndef DLSETTINGS_H
 #define DLSETTINGS_H
 
-#include <QtCore>
-#include <QComboBox>
-#include <QToolButton>
-#include <QCheckBox>
-#include <QLabel>
-
 #include "ptConstants.h"
 #include "ptGuiOptions.h"
 #include "ptInput.h"
 #include "ptChoice.h"
 #include "ptCheck.h"
+
+#include <QtCore>
+#include <QComboBox>
+#include <QToolButton>
+#include <QCheckBox>
+#include <QLabel>
 
 //==============================================================================
 

@@ -25,11 +25,11 @@
 
 //==============================================================================
 
-#include <QString>
-#include <QListView>
-
 #include "ptImageSpot.h"
 #include "ui_ptSpotListWidget.h"
+
+#include <QString>
+#include <QListView>
 
 class ptImageSpotModel;
 class ptImageSpotList;

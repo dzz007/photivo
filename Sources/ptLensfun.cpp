@@ -28,7 +28,6 @@
 
 #include <cstdlib>
 
-
 // Compare for sorting on make/model.
 int CameraCompare(const void* a, const void* b) {
   if ((((const ptLensfunCamera*)a)->Make) ==

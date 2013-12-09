@@ -20,10 +20,11 @@
 **
 *******************************************************************************/
 
-#include <lqr-1/lqr.h>
 #include "ptImage.h"
 #include "ptError.h"
 #include "ptCalloc.h"
+
+#include <lqr-1/lqr.h>
 
 #ifdef _OPENMP
   #include <omp.h>

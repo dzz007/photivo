@@ -22,7 +22,10 @@
 **
 *******************************************************************************/
 
-#include <cassert>
+#include "ptInput.h"
+#include "ptInfo.h"
+#include "filters/ptCfgItem.h"
+#include "ptConstants.h"
 
 #include <QMessageBox>
 #include <QApplication>
@@ -30,10 +33,7 @@
 #include <QMouseEvent>
 #include <QTimer>
 
-#include "ptInput.h"
-#include "ptInfo.h"
-#include "filters/ptCfgItem.h"
-#include "ptConstants.h"
+#include <cassert>
 
 //==============================================================================
 

@@ -96,7 +96,7 @@ unix {
 INCLUDEPATH += $${_PRO_FILE_PWD_}/../Sources $$(INCLUDEPATHS)
 
 # The APPVERSION string has a space in it, i.e. it cannot go into DEFINES
-COMPILERFLAGS_ALL = -ffast-math -DAPPVERSION=\'$${APPVERSION}\'
+COMPILERFLAGS_ALL = -ffast-math -DAPPVERSION=\"$${APPVERSION}\"
 
 # Flags from the environment must be pulled in explicitely like this appended them
 # at the end of the flags. Needed to ensure that user-settings from the environment

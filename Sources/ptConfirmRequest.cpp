@@ -3,6 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -23,6 +24,7 @@
 #include "ptConfirmRequest.h"
 #include "ptMessageBox.h"
 #include "ptSettings.h"
+#include "filters/ptFilterDM.h"
 
 extern ptSettings* Settings;
 extern short ImageCleanUp;
@@ -106,6 +108,13 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
       ptRemoveFile(InputFileNameList[0]);
       ImageCleanUp--;
     }
+    // save .pts file automatically
+    else {
+      QFileInfo PathInfo(InputFileNameList[0]);
+      QString baseFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName();
+      GFilterDM->WritePresetFile(baseFileName + ".pts");
+    }
+
     return true;
   }
 

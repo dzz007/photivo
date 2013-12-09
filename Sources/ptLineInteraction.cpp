@@ -21,12 +21,12 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-#include <math.h>
-
 #include "ptConstants.h"
 #include "ptLineInteraction.h"
 #include "ptDefines.h"
+
+#include <cassert>
+#include <cmath>
 
 //==============================================================================
 

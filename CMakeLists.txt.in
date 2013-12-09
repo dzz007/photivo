@@ -41,10 +41,40 @@ if( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Release )
 endif( NOT CMAKE_BUILD_TYPE )
 
+find_package( Qt5Widgets QUIET )
+find_package( Qt5Network QUIET )
+option( FORCE_QT4 "whether to use Qt4 even if Qt5 is found" )
+
+if( Qt5Widgets_FOUND AND Qt5Network_FOUND )
+  if( FORCE_QT4 )
+    message( "************************************************************" )
+    message( "*                                                          *" )
+    message( "* Qt5 found, but using Qt4 because FORCE_QT4 flag was set. *" )
+    message( "*                                                          *" )
+    message( "************************************************************" )
+  else( FORCE_QT4 )
+    message( "******************************************************" )
+    message( "*                                                    *" )
+    message( "* Qt5 found. Using Qt ${Qt5Core_VERSION_STRING}.                         *" )
+    message( "* Set FORCE_QT4 flag if you want to use Qt4 instead. *" )
+    message( "*                                                    *" )
+    message( "******************************************************" )
+    set( USE_QT5 True )
+  endif( FORCE_QT4 )
+else( Qt5Widgets_FOUND AND Qt5Network_FOUND )
+  message( "*****************************" )
+  message( "*                           *" )
+  message( "* Qt5 not found. Using Qt4. *" )
+  message( "*                           *" )
+  message( "*****************************" )
+endif( Qt5Widgets_FOUND AND Qt5Network_FOUND )
+if( NOT USE_QT5 )
+  find_package( Qt4 4.7 REQUIRED QtCore QtGui QtNetwork )
+  include( ${QT_USE_FILE} )
+endif( NOT USE_QT5 )
+
 find_package( PkgConfig REQUIRED )
 find_package( JPEG REQUIRED )
-find_package( Qt4 4.7 REQUIRED QtCore QtGui QtNetwork )
-include( ${QT_USE_FILE} )
 
 pkg_check_modules( GLIB2   REQUIRED glib-2.0>=2.18 )
 pkg_check_modules( LCMS2   REQUIRED lcms2 )
@@ -84,7 +114,6 @@ option( WITH_ADOBE_PROFILES "whether to build Adobe profiles creator" )
 message( "Build Photivo                : ON" )
 message( "Build ptClear                : ${WITH_CLEAR}" )
 message( "Build Gimp plugin            : ${WITH_GIMP}" )
-message( "Build curves creator         : OFF - obsolete" )
 message( "Build Adobe profiles creator : ${WITH_ADOBE_PROFILES}\n" )
 
 set( CMAKE_CXX_FLAGS "" )
@@ -142,16 +171,27 @@ set( photivo_RCCS
      qrc/photivo.qrc
 )
 
-QT4_WRAP_UI( photivo_UI_SRCS ${photivo_UI_HDRS} )
-QT4_WRAP_CPP( photivo_MOC_SRCS ${photivo_MOC_HDRS} )
-QT4_ADD_RESOURCES( photivo_RCC_SRCS ${photivo_RCCS} )
-
-add_executable( photivo
-                ${photivo_SRCS}
-                ${photivo_RCC_SRCS}
-                ${photivo_MOC_SRCS}
-                ${photivo_UI_SRCS}
-)
+if( USE_QT5 )
+  set(CMAKE_AUTOMOC ON)
+  qt5_wrap_ui( photivo_UI_SRCS ${photivo_UI_HDRS} )
+  qt5_add_resources( photivo_RCC_SRCS ${photivo_RCCS} )
+  add_executable( photivo
+                  ${photivo_SRCS}
+                  ${photivo_UI_SRCS}
+                  ${photivo_RCC_SRCS}
+  )
+  qt5_use_modules( photivo Widgets Network )
+else( USE_QT5 )
+  QT4_WRAP_UI( photivo_UI_SRCS ${photivo_UI_HDRS} )
+  QT4_WRAP_CPP( photivo_MOC_SRCS ${photivo_MOC_HDRS} )
+  QT4_ADD_RESOURCES( photivo_RCC_SRCS ${photivo_RCCS} )
+  add_executable( photivo
+                  ${photivo_SRCS}
+                  ${photivo_MOC_SRCS}
+                  ${photivo_UI_SRCS}
+                  ${photivo_RCC_SRCS}
+  )
+endif( USE_QT5 )
 
 if( NOT ${CMAKE_SYSTEM_PROCESSOR} OR ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
   set_target_properties( photivo PROPERTIES COMPILE_FLAGS
@@ -191,6 +231,9 @@ install( DIRECTORY UISettings      DESTINATION share/photivo )
 
 if( ${WITH_CLEAR} )
   add_executable( ptClear Sources/ptClear.cpp )
+  if( USE_QT5 )
+    qt5_use_modules( ptClear Widgets )
+  endif( USE_QT5 )
   target_link_libraries( ptClear ${QT_LIBRARIES} )
   install( TARGETS ptClear DESTINATION bin )
 endif( ${WITH_CLEAR} )
@@ -202,6 +245,9 @@ if( ${WITH_GIMP} )
   add_executable( ptGimp Sources/ptCalloc.cpp
                          Sources/ptError.cpp
                          Sources/ptGimp.cpp )
+  if( USE_QT5 )
+    qt5_use_modules( ptGimp Core )
+  endif( USE_QT5 )
   set_target_properties( ptGimp PROPERTIES COMPILE_FLAGS "-ffast-math" )
   target_link_libraries( ptGimp ${QT_LIBRARIES} ${GTK2_LIBRARIES} ${GIMP_LIBRARIES} )
   find_library( LIBGIMP gimp-2.0 )

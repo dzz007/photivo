@@ -25,10 +25,11 @@
 
 //==============================================================================
 
+#include "ptTempFile.h"
+
 #include <QDateTime>
 #include <QSettings>
 #include <QStringList>
-#include "ptTempFile.h"
 
 //==============================================================================
 

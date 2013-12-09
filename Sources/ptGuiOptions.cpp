@@ -22,12 +22,12 @@
 **
 *******************************************************************************/
 
-#include <cstdlib>
+#include "ptGuiOptions.h"
+#include "ptDefines.h"
 
 #include <QtCore>
 
-#include "ptGuiOptions.h"
-#include "ptDefines.h"
+#include <cstdlib>
 
 ////////////////////////////////////////////////////////////////////////////////
 //

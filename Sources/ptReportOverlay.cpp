@@ -21,10 +21,9 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
 #include "ptReportOverlay.h"
 
+#include <cassert>
 
 ptReportOverlay::ptReportOverlay(QWidget* parent, const QString& text, const QColor& color,
                                  const QColor& backgroundColor, const int duration,
@@ -108,7 +107,7 @@ void ptReportOverlay::TimerExpired() {
 
 void ptReportOverlay::UpdatePosition() {
   // With right aligned overlays repositioning is only reliable when
-  // it’s visible => Call show() before moving the widget.
+  // itâ€™s visible => Call show() before moving the widget.
   show();
 
   if (m_Position == Qt::AlignLeft) {

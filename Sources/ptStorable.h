@@ -23,6 +23,7 @@
 #define PTSTORABLE_H
 
 #include "ptUtils.h"
+
 #include <QVariant>
 
 typedef QMap<QString, QVariant> TConfigStore;

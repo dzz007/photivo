@@ -24,10 +24,10 @@
 #ifndef DLIMAGE8_H
 #define DLIMAGE8_H
 
-#include <QImage>
-
 #include "ptDefines.h"
 #include "ptConstants.h"
+
+#include <QImage>
 
 //==============================================================================
 

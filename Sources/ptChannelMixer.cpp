@@ -21,16 +21,16 @@
 **
 *******************************************************************************/
 
+#include "ptDefines.h"
+#include "ptChannelMixer.h"
+#include "ptError.h"
+
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
 #include <cstdarg>
 #include <cassert>
 #include <cmath>
-
-#include "ptDefines.h"
-#include "ptChannelMixer.h"
-#include "ptError.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //

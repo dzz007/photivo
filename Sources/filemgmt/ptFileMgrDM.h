@@ -28,13 +28,15 @@
 #include "ptSingleDirModel.h"
 #include "ptTagModel.h"
 #include "ptThumbGenMgr.h"
+
+#include <wand/magick_wand.h>
+
 #include <QObject>
 #include <QPixmap>
 #include <QFileSystemModel>
 #include <QGraphicsItemGroup>
 #include <QList>
 #include <QHash>
-#include <wand/magick_wand.h>
 
 class ptImage8;
 

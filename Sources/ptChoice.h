@@ -29,6 +29,7 @@
 #include "ptWidget.h"
 #include "ptInfo.h"
 #include <filters/ptCfgItem.h>
+
 #include <QComboBox>
 #include <QToolButton>
 

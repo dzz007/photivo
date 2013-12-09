@@ -21,15 +21,15 @@
 **
 *******************************************************************************/
 
-#include <cstdio>
-#include <cstdlib>
-#include <cassert>
-
 #include "ptError.h"
 #include "ptCalloc.h"
 #include "ptImage8.h"
 #include "ptImage.h"
 #include "ptResizeFilters.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
 
 //==============================================================================
 

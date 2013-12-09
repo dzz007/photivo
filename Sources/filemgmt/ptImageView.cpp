@@ -240,7 +240,7 @@ void ptImageView::contextMenuEvent(QContextMenuEvent* event) {
   Menu.addAction(FZoom100Action);
   Menu.addAction(FZoomOutAction);
   Menu.addAction(FZoomFitAction);
-  Menu.exec(((QMouseEvent*)event)->globalPos());
+  Menu.exec(event->globalPos());
 }
 
 //------------------------------------------------------------------------------

@@ -31,11 +31,11 @@
 
 //==============================================================================
 
+#include <ptAbstractInteraction.h>
+
 #include <QPoint>
 #include <QMouseEvent>
 #include <QKeyEvent>
-
-#include <ptAbstractInteraction.h>
 
 //==============================================================================
 
