@@ -117,10 +117,6 @@ ptProcessor::ptProcessor(PReportProgressFunc AReportProgress)
 
   m_AutoExposureValue      = 0.0;
 
-  // Exif Data and Buffer
-  m_ExifBuffer             = NULL;
-  m_ExifBufferLength       = 0;
-
   m_ScaleFactor            = 0;
 }
 
@@ -157,7 +153,6 @@ ptProcessor::~ptProcessor() {
       PointerList.removeAt(0);
     }
   }
-  if (m_ExifBuffer) FREE(m_ExifBuffer);
 }
 
 //==============================================================================
@@ -2518,9 +2513,7 @@ void ptProcessor::ReadExifBuffer() {
 
   if (!ptImageHelper::ReadExif(Settings->GetStringList("InputFileNameList")[0],
                                m_ExifData,
-                               m_ExifBuffer,
-                               m_ExifBufferLength)) return;
-
+                               m_ExifBuffer)) return;
 
   try {
     // for use by lensfun : Make, Model, Focal Length, FNumber
