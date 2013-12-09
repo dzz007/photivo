@@ -30,12 +30,12 @@
 
 #include "ptDcRaw.h"
 
-#include <cassert>
-
 #include "ptDefines.h"
 #include "ptError.h"
 #include "ptConstants.h"
 #include "ptCalloc.h"
+
+#include <cassert>
 
 #define NO_JASPER
 #ifndef NO_JASPER

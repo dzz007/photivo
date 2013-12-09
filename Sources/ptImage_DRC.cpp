@@ -33,6 +33,11 @@ Very useful paper: Gradient Domain High Dynamic Range Compression by R. Fattal e
 All cross boundary differentiation in this file happens under the assumption of no change accross boundary.
 So for example a pixel at (-1, y) is equal to a pixel at (0, y) by definition.
 */
+
+#include "ptImage.h"
+#include "ptError.h"
+#include "ptCalloc.h"
+
 #include <QMessageBox>
 
 #include <ctime>
@@ -42,10 +47,6 @@ So for example a pixel at (-1, y) is equal to a pixel at (0, y) by definition.
 #include <cmath>
 #include <cfloat>
 #include <cassert>
-
-#include "ptImage.h"
-#include "ptError.h"
-#include "ptCalloc.h"
 
 #ifdef _OPENMP
   #include <omp.h>

@@ -37,12 +37,11 @@
 **
 ****************************************************************************/
 
+#include "qtlockedfile.h"
 
 #include <QtNetwork/QLocalServer>
 #include <QtNetwork/QLocalSocket>
 #include <QtCore/QDir>
-
-#include "qtlockedfile.h"
 
 class QtLocalPeer : public QObject
 {

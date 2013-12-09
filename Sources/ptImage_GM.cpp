@@ -20,14 +20,16 @@
 **
 *******************************************************************************/
 
-#include <QMessageBox>
 #include "ptImage.h"
 #include "ptConstants.h"
 #include "ptError.h"
 #include "ptSettings.h"
 #include "ptCalloc.h"
 
+#include <lcms2.h>
 #include <Magick++.h>
+
+#include <QMessageBox>
 
 #include <cassert>
 
@@ -36,8 +38,6 @@ using namespace Magick;
 #ifdef _OPENMP
   #include <omp.h>
 #endif
-
-#include <lcms2.h>
 
 // Lut
 extern float ToFloatTable[0x10000];

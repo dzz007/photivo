@@ -20,6 +20,12 @@
 **
 *******************************************************************************/
 
+#include "ptFastBilateral.h"
+#include "ptImage.h"
+#include "ptError.h"
+
+#include "fastbilateral/fast_lbf.h"
+
 #include <QString>
 #include <QObject>
 #include <QMessageBox>
@@ -27,12 +33,6 @@
 #ifdef _OPENMP
   #include <omp.h>
 #endif
-
-#include "ptFastBilateral.h"
-#include "ptImage.h"
-#include "ptError.h"
-
-#include "fastbilateral/fast_lbf.h"
 
 typedef Array_2D<float> image_type;
 

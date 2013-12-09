@@ -20,10 +20,10 @@
 **
 *******************************************************************************/
 
-#include <cmath>
-
 #include "ptConstants.h"
 #include "ptDefines.h"
+
+#include <cmath>
 
 float BoxFunction(float x) {
   if (x < 0) x = - x;

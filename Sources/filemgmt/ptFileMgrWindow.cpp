@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2011-2013 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -360,9 +361,6 @@ void ptFileMgrWindow::updateProgressbar() {
     m_PathContainer->show();
 
     FFilesScene->setFocus();
-    if (FFilesScene->focusItem() == nullptr) {
-      this->focusThumbnail(0);
-    }
   }
 }
 
@@ -415,12 +413,13 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     return;
   }
 
+  focusThumbnail(FDataModel->focusedThumb());
   if (!event->spontaneous()) {
     QWidget::showEvent(event);
-
     // Thumbnails are cleared to free memory when the fm window is closed,
     // i.e. we need to refresh the display when opening it again.
-    displayThumbnails();
+// temporarily disabled. should become a user option
+//    displayThumbnails();
   }
 }
 
@@ -575,17 +574,18 @@ void ptFileMgrWindow::closeWindow() {
 }
 
 //------------------------------------------------------------------------------
-void ptFileMgrWindow::hideEvent(QHideEvent* event) {
-  if (!event->spontaneous()) {
-    event->accept();
-    // free memory occupied by thumbnails and thumb cache
-    // clear() includes stopping thumbnail generation
-    FDataModel->clear();
-    FImageView->clear();
-    this->clearScene();
-  } else {
-    event->ignore();
-  }
+void ptFileMgrWindow::hideEvent(QHideEvent* /*event*/) {
+  // temporarily disabled. should become a user-option
+//  if (!event->spontaneous()) {
+//    event->accept();
+//    // free memory occupied by thumbnails and thumb cache
+//    // clear() includes stopping thumbnail generation
+//    FDataModel->clear();
+//    FImageView->clear();
+//    this->clearScene();
+//  } else {
+//    event->ignore();
+//  }
 }
 
 //------------------------------------------------------------------------------
@@ -697,6 +697,14 @@ void ptFileMgrWindow::constructContextMenu() {
 
   FCloseFileMgrAct = new QAction(tr("&Close file manager") + "\t" + tr("Esc"), this);
   connect(FCloseFileMgrAct, SIGNAL(triggered()), this, SLOT(closeWindow()));
+
+  FToggleShowRAWsAct = new QAction(tr("Show RAWs"), this);
+  FToggleShowRAWsAct->setCheckable(true);
+  connect(FToggleShowRAWsAct, SIGNAL(triggered()), this, SLOT(toggleShowRAWs()));
+
+  FToggleShowBitmapsAct = new QAction(tr("Show bitmaps"), this);
+  FToggleShowBitmapsAct->setCheckable(true);
+  connect(FToggleShowBitmapsAct, SIGNAL(triggered()), this, SLOT(toggleShowBitmaps()));
 }
 
 //------------------------------------------------------------------------------
@@ -728,12 +736,18 @@ void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
   FToggleSidebarAct->setChecked(FMSidebar->isVisible());
 
   Menu.addSeparator();
+  Menu.addAction(FToggleShowRAWsAct);
+  FToggleShowRAWsAct->setChecked(Settings->GetInt("FileMgrShowRAWs"));
+  Menu.addAction(FToggleShowBitmapsAct);
+  FToggleShowBitmapsAct->setChecked(Settings->GetInt("FileMgrShowBitmaps"));
+
+  Menu.addSeparator();
   Menu.addAction(FSaveThumbAct);
 
   Menu.addSeparator();
   Menu.addAction(FCloseFileMgrAct);
 
-  Menu.exec(((QMouseEvent*)event)->globalPos());
+  Menu.exec(event->globalPos());
 }
 
 //------------------------------------------------------------------------------
@@ -766,6 +780,16 @@ void ptFileMgrWindow::toggleImageView() {
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::toggleDirThumbs() {
   Settings->SetValue("FileMgrShowDirThumbs", 1 - Settings->GetInt("FileMgrShowDirThumbs"));
+  displayThumbnails();
+}
+
+void ptFileMgrWindow::toggleShowRAWs() {
+  Settings->SetValue("FileMgrShowRAWs", 1 - Settings->GetInt("FileMgrShowRAWs"));
+  displayThumbnails();
+}
+
+void ptFileMgrWindow::toggleShowBitmaps() {
+  Settings->SetValue("FileMgrShowBitmaps", 1 - Settings->GetInt("FileMgrShowBitmaps"));
   displayThumbnails();
 }
 

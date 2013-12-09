@@ -24,10 +24,10 @@
 #ifndef PTINFO_H
 #define PTINFO_H
 
+#include "ptDefines.h"
+
 #include <QTime>
 #include <QString>
-
-#include "ptDefines.h"
 
 //==============================================================================
 // forward

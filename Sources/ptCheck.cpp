@@ -22,12 +22,12 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
 #include "ptCheck.h"
 #include "ptInfo.h"
 #include "filters/ptCfgItem.h"
 #include <QHBoxLayout>
+
+#include <cassert>
 
 //==============================================================================
 

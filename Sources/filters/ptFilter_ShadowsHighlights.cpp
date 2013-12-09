@@ -22,8 +22,8 @@
 
 #include "ptFilter_ShadowsHighlights.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
-#include <ptCurve.h>
+#include "../ptImage.h"
+#include "../ptCurve.h"
 
 //==============================================================================
 

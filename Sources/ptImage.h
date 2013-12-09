@@ -24,14 +24,14 @@
 #ifndef DLIMAGE_H
 #define DLIMAGE_H
 
-#include <vector>
-#include <array>
-
-#include <lensfun.h>
-
 #include "ptDefines.h"
 #include "ptConstants.h"
 #include "ptCurve.h"
+
+#include <lensfun.h>
+
+#include <vector>
+#include <array>
 
 //==============================================================================
 

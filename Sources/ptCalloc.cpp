@@ -20,13 +20,13 @@
 **
 *******************************************************************************/
 
-#include <cstdio>
-#include <cstdlib>
-#include <cassert>
+#include "ptCalloc.h"
 
 #include <QtCore>
 
-#include "ptCalloc.h"
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
 
 static FILE* CallocDebugFile = NULL;
 

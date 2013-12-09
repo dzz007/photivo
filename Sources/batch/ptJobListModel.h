@@ -25,9 +25,10 @@
 
 //==============================================================================
 
+#include "ptJobListItem.h"
+
 #include <QAbstractTableModel>
 #include <QProcess>
-#include "ptJobListItem.h"
 
 //==============================================================================
 

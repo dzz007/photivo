@@ -23,9 +23,9 @@
 
 #include "ptCfgItem.h"
 #include "ptFilterConfig.h"
-#include <ptCurve.h>
-#include <ptDefines.h>
-#include <ptInfo.h>
+#include "../ptCurve.h"
+#include "../ptDefines.h"
+#include "../ptInfo.h"
 
 //==============================================================================
 

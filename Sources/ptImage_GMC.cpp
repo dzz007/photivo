@@ -20,24 +20,25 @@
 **
 *******************************************************************************/
 
-#include <cstdlib>
-#include <cstdio>
+#include "ptImage.h"
+#include "ptImage8.h"
+#include "ptError.h"
+#include "ptCalloc.h"
+
+#include <wand/magick_wand.h>
 
 #include <QtGlobal>
 #include <QFile>
 #include <QString>
 
-#include <wand/magick_wand.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cassert>
+#include <cmath>
+
 #ifdef _OPENMP
   #include <omp.h>
 #endif
-
-#include <cassert>
-
-#include "ptImage.h"
-#include "ptImage8.h"
-#include "ptError.h"
-#include "ptCalloc.h"
 
 // Lut
 extern float ToFloatTable[0x10000];
@@ -196,7 +197,7 @@ ptImage* ptImage::ptGMCOpenImage(const char*        FileName,
   if (IsRAW) {
     MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->size());
   } else {
-    if (!QFile::exists(QString(FileName))) return this;
+    if (!QFile::exists(QString::fromLocal8Bit(FileName))) return this;
     MagickReadImage(image, FileName);
   }
 
