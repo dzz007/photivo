@@ -574,7 +574,7 @@ void ptFileMgrWindow::closeWindow() {
 }
 
 //------------------------------------------------------------------------------
-void ptFileMgrWindow::hideEvent(QHideEvent* event) {
+void ptFileMgrWindow::hideEvent(QHideEvent* /*event*/) {
   // temporarily disabled. should become a user-option
 //  if (!event->spontaneous()) {
 //    event->accept();

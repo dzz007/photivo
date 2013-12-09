@@ -34,6 +34,8 @@
 #include <QTime>
 #include <QCoreApplication>
 
+#include <vector>
+
 //==============================================================================
 
 // forward for faster compilation
@@ -85,10 +87,9 @@ public:
   void RunGeometry(ptProcessorStopBefore StopBefore = ptProcessorStopBefore::NoStop);
 
   // Exif Related
-  Exiv2::ExifData m_ExifData;
-  unsigned char*  m_ExifBuffer;
-  unsigned int    m_ExifBufferLength;
-  void            ReadExifBuffer();
+  Exiv2::ExifData      m_ExifData;
+  std::vector<uint8_t> m_ExifBuffer;
+  void                 ReadExifBuffer();
 
   // Cached image versions at different points.
   ptImage*  m_Image_AfterDcRaw;
@@ -121,13 +122,11 @@ public:
   double CalculateAutoExposure(ptImage* Image);
 
   // Factor for size dependend filters
-  float           m_ScaleFactor;
+  float  m_ScaleFactor;
 
 //==============================================================================
 
 private:
-  QTime             FRunTimer;
-
-
+  QTime FRunTimer;
 };
 #endif
