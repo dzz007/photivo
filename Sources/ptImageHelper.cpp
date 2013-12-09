@@ -270,9 +270,6 @@ bool ptImageHelper::ReadExif(const QString        &AFileName,
     // old code will currently not compile
     memcpy(AExifBuffer+sizeof(ExifHeader), Buf.pData_, Buf.size_);
 #endif
-
-    if (!(AExifBuffer.size() == CExifHeader.size() + Blob.size())) throw;
-
     return true;
 
   } catch(Exiv2::Error& Error) {
