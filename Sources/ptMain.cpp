@@ -2720,7 +2720,7 @@ void tryGetCachedImage() {
 
     TheProcessor->ReadExifBuffer();
     MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-    FREE(TheProcessor->m_ExifBuffer);
+    TheProcessor->m_ExifBuffer.clear();
 
   } else {
     Update(ptProcessorPhase_Raw, ptProcessorPhase_Load, 0);

@@ -20,11 +20,17 @@
 **
 *******************************************************************************/
 
-#include <QtGui>
 #include "ptColorLabel.h"
+#include <QSize>
+#include <QRect>
+#include <QPainter>
+#include <QMouseEvent>
+#include <QHBoxLayout>
 
 const int PaintingScaleFactor = 16;
 QList<QColor> colorTable;
+
+//------------------------------------------------------------------------------
 
 void ptDrawSingleColorLabel(QPainter* painter, QWidget* widget, int lbl, const QRect& rect, bool isSelected) {
   if (colorTable.isEmpty()) {
@@ -52,9 +58,8 @@ void ptDrawSingleColorLabel(QPainter* painter, QWidget* widget, int lbl, const Q
   painter->drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, QString::number(lbl));
 }
 
-ptColorLabel::ptColorLabel(QWidget *parent)
-    : QWidget(parent)
-{
+//------------------------------------------------------------------------------
+ptColorLabel::ptColorLabel(QWidget *parent): QWidget(parent) {
   mySelectedLabels << 0;
   myMaxLabelCount = 6;
   myMultiSelect = false;
@@ -69,13 +74,15 @@ ptColorLabel::ptColorLabel(QWidget *parent)
   Layout->setSpacing(0);
 }
 
-QSize ptColorLabel::sizeHint() const
-{
+//------------------------------------------------------------------------------
+
+QSize ptColorLabel::sizeHint() const {
   return PaintingScaleFactor * QSize(myMaxLabelCount, 1);
 }
 
-void ptColorLabel::paintEvent(QPaintEvent *)
-{
+//------------------------------------------------------------------------------
+
+void ptColorLabel::paintEvent(QPaintEvent *) {
   QPainter painter(this);
   painter.save();
   painter.setRenderHint(QPainter::Antialiasing, false);
@@ -91,8 +98,9 @@ void ptColorLabel::paintEvent(QPaintEvent *)
   painter.restore();
 }
 
-void ptColorLabel::mouseReleaseEvent(QMouseEvent *event)
-{
+//------------------------------------------------------------------------------
+
+void ptColorLabel::mouseReleaseEvent(QMouseEvent *event) {
   int lbl = labelAtPosition(event->x());
 
   if (lbl != -1) {
@@ -116,8 +124,9 @@ void ptColorLabel::mouseReleaseEvent(QMouseEvent *event)
   }
 }
 
-int ptColorLabel::labelAtPosition(int x)
-{
+//------------------------------------------------------------------------------
+
+int ptColorLabel::labelAtPosition(int x) {
   int lbl = x / (sizeHint().width() / myMaxLabelCount);
   if (lbl < 0 || lbl >= myMaxLabelCount)
     return -1;
@@ -125,14 +134,18 @@ int ptColorLabel::labelAtPosition(int x)
   return lbl;
 }
 
-int ptColorLabel::selectedLabel() { 
+//------------------------------------------------------------------------------
+
+int ptColorLabel::selectedLabel() {
   if (mySelectedLabels.count() > 0) {
     return mySelectedLabels.first(); 
   }
   return -1;
 }
 
-void ptColorLabel::setSelectedLabel(int selectedLabel) { 
+//------------------------------------------------------------------------------
+
+void ptColorLabel::setSelectedLabel(int selectedLabel) {
   mySelectedLabels.clear(); 
   mySelectedLabels << selectedLabel;
   update(); 

@@ -621,7 +621,7 @@ void ptFileMgrWindow::closeWindow() {
 }
 
 //------------------------------------------------------------------------------
-void ptFileMgrWindow::hideEvent(QHideEvent* /*event*/) {
+void ptFileMgrWindow::hideEvent(QHideEvent* event) {
 // ATZ: do not refresh filemanager each time when it is activated
   return;
 // end ATZ
