@@ -4,7 +4,6 @@
 **
 ** Copyright (C) 2011-2013 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2011-2013 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -32,6 +31,7 @@
 #include "../ptImageHelper.h"
 #include "../ptMessageBox.h"
 #include "../ptImage8.h"
+#include "../batch/ptBatchWindow.h"
 #include <QVBoxLayout>
 #include <QFontMetrics>
 #include <QList>
@@ -44,12 +44,15 @@
 #include <cassert>
 
 extern void CB_MenuFileOpen(const short HaveFile);
+extern void CB_BatchButton();
+extern void CB_FullScreenButton(const int State);
 
 extern ptSettings*  Settings;
 extern ptTheme*     Theme;
 extern QString      ImageFileToOpen;
 extern short        InStartup;
 extern QString      SaveBitmapPattern;
+extern ptBatchWindow*      BatchWindow;
 
 //------------------------------------------------------------------------------
 /*!
@@ -70,7 +73,7 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 
   ptGraphicsSceneEmitter::ConnectThumbnailAction(
       this, SLOT(execThumbnailAction(ptThumbnailAction,QString)));
-  ptGraphicsSceneEmitter::ConnectFocusChanged(this, SLOT(thumbFocusChanged()));
+  ptGraphicsSceneEmitter::ConnectItemsChanged(this, SLOT(updateThumbList()));
 
   //-------------------------------------
 
@@ -83,9 +86,55 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 #else
   DirListLabel->setText(tr("Directories"));
 #endif
-  m_DirList->setModel(FDataModel->dirModel());
-  connect(m_DirList, SIGNAL(activated(QModelIndex)), this, SLOT(changeListDir(QModelIndex)));
 
+// ATZ
+  m_DirTree->setModel(FDataModel->fileSystemModel());
+  m_DirTree->setHeaderHidden(true);
+  m_DirTree->setSortingEnabled(true);
+  m_DirTree->setAcceptDrops(true);
+  connect(m_DirTree, SIGNAL(activated(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
+  connect(m_DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
+
+  ColorLabel1 = new ptColorLabel(ColorLabelWidget1);
+  ColorLabel1->setToolTip(tr("Color label"));
+  ColorLabel1->setMultiSelect(true);
+  StarRating1 = new ptStarRating(StarRatingWidget1);
+  StarRating1->setToolTip(tr("Rating"));
+  StarRating2 = new ptStarRating(StarRatingWidget2);
+  StarRating2->setToolTip(tr("Rating"));
+  FileTypeComboBox->addItem(tr("All files"));
+  FileTypeComboBox->addItem(tr("RAW files"));
+  FileTypeComboBox->addItem(tr("Bitmap files"));
+  FileTypeComboBox->addItem(tr("RAW+Bitmap files"));
+  FileTypeComboBox->addItem(tr("Deleted files (.trash)"));
+  int index = Settings->GetInt("FileMgrShowRAWs") + Settings->GetInt("FileMgrShowBitmaps") * 2;
+  FileTypeComboBox->setCurrentIndex(index);
+  ColorLabel2 = new ptColorLabel(ColorLabelWidget2);
+  ColorLabel2->setToolTip(tr("Color label"));
+  StarRating3 = new ptStarRating(StarRatingWidget3);
+  StarRating3->setToolTip(tr("Rating"));
+  RestoreImageButton->hide();
+
+  connect(ColorLabel1,SIGNAL(valueChanged()),this,SLOT(filterChanged()));
+  connect(ColorLabel2,SIGNAL(valueChanged()),this,SLOT(colorLabelChanged()));
+  connect(StarRating1,SIGNAL(valueChanged()),this,SLOT(filterChanged()));
+  connect(StarRating2,SIGNAL(valueChanged()),this,SLOT(filterChanged()));
+  connect(StarRating3,SIGNAL(valueChanged()),this,SLOT(starRatingChanged()));
+  connect(FileTypeComboBox,SIGNAL(activated(int)),this,SLOT(fileTypeFilterChanged(int)));
+
+  connect(RestoreImageButton,SIGNAL(clicked()),this,SLOT(OnRestoreImageButtonClicked()));
+  connect(DeleteImageButton,SIGNAL(clicked()),this,SLOT(OnDeleteImageButtonClicked()));
+  connect(SendToBatchButton,SIGNAL(clicked()),this,SLOT(OnSendToBatchButtonClicked()));
+  connect(BatchButton,SIGNAL(clicked()),this,SLOT(OnBatchButtonClicked()));
+  connect(ProcessingButton,SIGNAL(clicked()),this,SLOT(OnProcessingButtonClicked()));
+  connect(FullScreenButton,SIGNAL(clicked()),this,SLOT(OnFullScreenButtonClicked()));
+
+
+  QMargins margins = m_ThumbPaneLayout->contentsMargins();
+  margins.setRight(0);
+  margins.setBottom(0);
+  m_ThumbPaneLayout->setContentsMargins(margins);
+// end ATZ
 
 #ifdef Q_OS_WIN
   QString BookmarkTooltip = tr("Bookmark current folder (Ctrl+B)");
@@ -102,36 +151,8 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   connect(FTagList, SIGNAL(activated(QModelIndex)), this, SLOT(changeToBookmark(QModelIndex)));
   m_AddBookmarkButton->setToolTip(BookmarkTooltip);
   connect(m_AddBookmarkButton, SIGNAL(clicked()), this, SLOT(bookmarkCurrentDir()));
-
-  //-------------------------------------
-
-  //bookmark menu
-  FTagMenu = new QMenu(this);
-  FTagMenu->hide();
-  FTagMenu->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  FTagMenu->setObjectName("FMTagMenu");
-
-  QLabel* label = new QLabel("<b>" + tr("Bookmarks") + "</b>", FTagMenu);
-  QToolButton* addButton = new QToolButton(FTagMenu);
-  addButton->setIcon(QIcon(Theme->IconAddBookmark));
-  addButton->setToolTip(BookmarkTooltip);
-  connect(addButton, SIGNAL(clicked()), this, SLOT(bookmarkCurrentDir()));
-
-  QHBoxLayout* headerLayout = new QHBoxLayout();
-  headerLayout->setContentsMargins(0,0,0,0);
-  headerLayout->addWidget(addButton);
-  headerLayout->addWidget(label);
-
-  FTagMenuList = new ptTagList(FTagMenu);
-  FTagMenuList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  FTagMenuList->setModel(FDataModel->tagModel());
-  connect(FTagMenuList, SIGNAL(activated(QModelIndex)),
-          this, SLOT(changeToBookmarkFromMenu(QModelIndex)));
-
-  QVBoxLayout* layout = new QVBoxLayout(FTagMenu);
-  layout->addLayout(headerLayout);
-  layout->addWidget(FTagMenuList);
-  FTagMenu->setLayout(layout);
+  m_RemoveBookmarkButton->setToolTip(tr("Remove bookmark"));
+  connect(m_RemoveBookmarkButton, SIGNAL(clicked()), this, SLOT(removeBookmark()));
 
   //-------------------------------------
 
@@ -139,6 +160,11 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   FFilesScene = new QGraphicsScene(m_FilesView);
   FFilesScene->setStickyFocus(true);
   FFilesScene->installEventFilter(this);
+// ATZ
+  connect(FFilesScene, SIGNAL(selectionChanged()),
+          this, SLOT(thumbSelectionChanged()));
+  m_FilesView->setDragMode(QGraphicsView::RubberBandDrag);
+// end ATZ
   m_FilesView->setOptimizationFlags(QGraphicsView::DontSavePainterState);
   m_FilesView->installEventFilter(this);
   m_FilesView->verticalScrollBar()->installEventFilter(this);
@@ -146,12 +172,6 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_FilesView->setScene(FFilesScene);
   FDataModel->connectThumbGen(this, SLOT(receiveThumb(uint,TThumbPtr)));
   setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
-
-  FPathBar = new ptPathBar(m_PathContainer);
-  FPathBar->setObjectName("FMPathBar");
-  connect(FPathBar, SIGNAL(changedPath(QString)), this, SLOT(changeDir(QString)));
-  m_PathLayout->addWidget(FPathBar);
-  m_Progressbar->hide();
 
   //-------------------------------------
 
@@ -195,7 +215,6 @@ ptFileMgrWindow::~ptFileMgrWindow() {
       setValue("FileMgrSidebarSplitter", FMSidebarSplitter->saveState());
 
   DelAndNull(FLayouter);
-  DelAndNull(FPathBar);
 
   // Make sure to destroy all thumbnail related things before the singletons!
   ptGraphicsSceneEmitter::DestroyInstance();
@@ -228,7 +247,7 @@ void ptFileMgrWindow::setLayouter(const ptThumbnailLayout layout) {
 
   switch (layout) {
     case tlVerticalByRow:
-      m_FilesView->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+//      m_FilesView->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
       FLayouter = new ptRowGridThumbnailLayouter(m_FilesView);
       break;
 
@@ -255,10 +274,11 @@ void ptFileMgrWindow::setLayouter(const ptThumbnailLayout layout) {
 }
 
 //------------------------------------------------------------------------------
-void ptFileMgrWindow::changeListDir(const QModelIndex& index) {
-  FDataModel->dirModel()->ChangeDir(index);
-  displayThumbnails(FDataModel->dirModel()->absolutePath(), FDataModel->dirModel()->pathType());
+// ATZ
+void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
+  changeDir(FDataModel->fileSystemModel()->getPathForIndex(index));
 }
+// end ATZ
 
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::changeToBookmark(const QModelIndex& index) {
@@ -266,13 +286,14 @@ void ptFileMgrWindow::changeToBookmark(const QModelIndex& index) {
 }
 
 //------------------------------------------------------------------------------
-void ptFileMgrWindow::changeToBookmarkFromMenu(const QModelIndex& index) {
-  FTagMenu->hide();
-  changeToBookmark(index);
-}
-
-//------------------------------------------------------------------------------
 void ptFileMgrWindow::changeDir(const QString& path) {
+// ATZ
+  FDataModel->fileSystemModel()->setCurrentDir(path);
+  QModelIndex ind = FDataModel->fileSystemModel()->getIndexForPath(path);
+  m_DirTree->setExpanded(ind, true);
+  m_DirTree->scrollTo(ind);
+  m_DirTree->setCurrentIndex(ind);
+// end ATZ
   FDataModel->dirModel()->ChangeAbsoluteDir(path);
   displayThumbnails(path, FDataModel->dirModel()->pathType());
 }
@@ -311,18 +332,24 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
   FThumbListIdx = 0;
   FThumbCount = FDataModel->setThumDir(path);
   FThumbsReceived = 0;
-  FPathBar->setPath(path);
 
   if (FThumbCount == 0) {
     // setting scene to null dimensions disappears unneeded scrollbars
     FFilesScene->setSceneRect(0,0,0,0);
-
+// ATZ
+    // there is nothing to display, show the pathbar, empty the files scene
+    FDataModel->populateThumbs(FFilesScene);
+    this->layoutAll();
+// end ATZ
   } else {
     FLayouter->LazyInit(FThumbCount);
-    this->initProgressbar();
     FDataModel->populateThumbs(FFilesScene);  // non-blocking, returns almost immediately
     this->layoutAll();
   }
+
+  ColorLabel1->setSelectedLabel(0);
+  StarRating1->setStarCount(0);
+  StarRating2->setStarCount(0);
 }
 #ifdef Q_OS_UNIX
 #pragma GCC diagnostic pop
@@ -336,31 +363,8 @@ void ptFileMgrWindow::receiveThumb(uint AReceiverId, TThumbPtr AImage) {
     if (hThumbGroup->id() == AReceiverId) {
       hThumbGroup->addImage(AImage);
       ++FThumbsReceived;
-      this->updateProgressbar();
       break;
     }
-  }
-}
-
-//------------------------------------------------------------------------------
-// Sets progress bar range to current FThumbCount, shows the progressbar and hides the path bar.
-void ptFileMgrWindow::initProgressbar() {
-  m_Progressbar->setValue(0);
-  m_Progressbar->setMaximum(FThumbCount);
-  m_Progressbar->show();
-  m_PathContainer->hide();
-}
-
-//------------------------------------------------------------------------------
-// Updates the progress bar’s value. Switches display back to path bar when last thumbnail is reached.
-void ptFileMgrWindow::updateProgressbar() {
-  if (FThumbsReceived < FThumbCount) {
-    m_Progressbar->setValue(FThumbsReceived);
-  } else {
-    m_Progressbar->hide();
-    m_PathContainer->show();
-
-    FFilesScene->setFocus();
   }
 }
 
@@ -400,7 +404,13 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 #endif
     FDataModel->dirModel()->ChangeAbsoluteDir(lastDir);
     FDataModel->setCurrentDir(lastDir);
-    FPathBar->setPath(lastDir);
+// ATZ
+    FDataModel->fileSystemModel()->setCurrentDir(lastDir);
+    QModelIndex ind = FDataModel->fileSystemModel()->getIndexForPath(lastDir);
+    m_DirTree->setExpanded(ind, true);
+    m_DirTree->scrollTo(ind);
+    m_DirTree->setCurrentIndex(ind);
+// end ATZ
 
     // First call base class showEvent, then start thumbnail loading to ensure
     // the file manager is visible before ressource heavy actions begin.
@@ -413,13 +423,16 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
     return;
   }
 
-  focusThumbnail(FDataModel->focusedThumb());
+  focusThumbnail(focusedThumbIdx());
   if (!event->spontaneous()) {
     QWidget::showEvent(event);
+
     // Thumbnails are cleared to free memory when the fm window is closed,
     // i.e. we need to refresh the display when opening it again.
-// temporarily disabled. should become a user option
+// ATZ: thumbnails are NOT cleared - no need to build it again
 //    displayThumbnails();
+  updateThumbList();
+// end ATZ
   }
 }
 
@@ -459,7 +472,7 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 
   else if (obj == FFilesScene && event->type() == QEvent::KeyPress) {
     // Keyboard navigation in thumbnail list
-    int newIdx = FLayouter->MoveIndex(FDataModel->focusedThumb(), (QKeyEvent*)event);
+    int newIdx = FLayouter->MoveIndex(focusedThumbIdx(), (QKeyEvent*)event);
     if (newIdx >= 0) {
       focusThumbnail(newIdx);
       return true;
@@ -476,17 +489,14 @@ bool ptFileMgrWindow::eventFilter(QObject* obj, QEvent* event) {
 void ptFileMgrWindow::focusThumbnail(int index) {
   if (index >= 0) {
     // focus new thumb
-    ptGraphicsThumbGroup* thumb = FDataModel->moveFocus(index);
+    ptGraphicsThumbGroup* thumb = FDataModel->thumbGroupList()->at(index);
+    FFilesScene->clearSelection();
+    thumb->setSelected(true);
     FFilesScene->setFocusItem(thumb);
     m_FilesView->ensureVisible(thumb, 0, 0);
     m_FilesView->setFocus();
-
-    // if a different thumb is focused update ImageView
-    if (thumb->fsoType() == fsoFile) {
-      this->loadForImageView(thumb->fullPath());
-    }
-
   } else {
+    FFilesScene->clearSelection();
     FFilesScene->clearFocus();
   }
 }
@@ -499,16 +509,54 @@ void ptFileMgrWindow::loadForImageView(const QString& AFilePath) {
 }
 
 //------------------------------------------------------------------------------
-void ptFileMgrWindow::thumbFocusChanged() {
-  focusThumbnail(FDataModel->focusedThumb(FFilesScene->focusItem()));
+ptGraphicsThumbGroup* ptFileMgrWindow::focusedThumb() {
+  if (FFilesScene->selectedItems().count() > 0) {
+    return dynamic_cast<ptGraphicsThumbGroup*>(FFilesScene->selectedItems().first());
+  }
+
+  return NULL;
+}
+
+//------------------------------------------------------------------------------
+int ptFileMgrWindow::focusedThumbIdx() {
+  if (FFilesScene->selectedItems().count() > 0) {
+    for (int i = 0; i < FDataModel->thumbGroupList()->count(); ++i) {
+      if (FDataModel->thumbGroupList()->at(i) == FFilesScene->selectedItems().first()) {
+        return i;
+      }
+    }
+  }
+
+  return -1;
+}
+
+//------------------------------------------------------------------------------
+void ptFileMgrWindow::thumbSelectionChanged() {
+  ptGraphicsThumbGroup* thumb = focusedThumb();
+  if (thumb != NULL && thumb->fsoType() == fsoFile) {
+    this->loadForImageView(thumb->fullPath());
+  }
+
+  if (FFilesScene->selectedItems().count() == 1) {
+    StarRating3->setStarCount(thumb->imageRating());
+    ColorLabel2->setSelectedLabel(thumb->imageColorLabel());
+  } else {
+    StarRating3->setStarCount(-1);
+    ColorLabel2->setSelectedLabel(-1);
+  }
+}
+
+//------------------------------------------------------------------------------
+void ptFileMgrWindow::updateThumbList() {
+  FDataModel->updateThumbList(FFilesScene);
+  layoutVisibleItems();
 }
 
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::saveThumbnail() {
-  int hThumbIdx = FDataModel->focusedThumb();
-
-  if (hThumbIdx > -1 && (hThumbIdx < FDataModel->thumbGroupList()->count())) {
-    QString   hFileName = FDataModel->thumbGroupList()->at(hThumbIdx)->fullPath();
+  ptGraphicsThumbGroup* thumb = focusedThumb();
+  if (thumb != NULL) {
+    QString   hFileName = thumb->fullPath();
     auto      hImage = FDataModel->getThumb(hFileName, Settings->GetInt("FileMgrThumbSaveSize"));
 
     if (!hImage) {
@@ -546,8 +594,7 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     CB_MenuFileOpen(1);
 
   } else if (action == tnaChangeDir) {
-    FDataModel->dirModel()->ChangeAbsoluteDir(location);
-    displayThumbnails(location, FDataModel->dirModel()->pathType());
+    changeDir(location);
 
   } else if (action == tnaViewImage) {
     this->loadForImageView(location);
@@ -575,17 +622,20 @@ void ptFileMgrWindow::closeWindow() {
 
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::hideEvent(QHideEvent* /*event*/) {
-  // temporarily disabled. should become a user-option
-//  if (!event->spontaneous()) {
-//    event->accept();
-//    // free memory occupied by thumbnails and thumb cache
-//    // clear() includes stopping thumbnail generation
-//    FDataModel->clear();
-//    FImageView->clear();
-//    this->clearScene();
-//  } else {
-//    event->ignore();
-//  }
+// ATZ: do not refresh filemanager each time when it is activated
+  return;
+// end ATZ
+
+  if (!event->spontaneous()) {
+    event->accept();
+    // free memory occupied by thumbnails and thumb cache
+    // clear() includes stopping thumbnail generation
+    FDataModel->clear();
+    FImageView->clear();
+    this->clearScene();
+  } else {
+    event->ignore();
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -643,12 +693,15 @@ void ptFileMgrWindow::keyPressEvent(QKeyEvent* event) {
   }
 
   else if (event->modifiers() == Qt::NoModifier) {
-    // Keyboard actions for image viewer
+    // ATZ: was: Keyboard actions for image viewer
+    // now: set color label
     switch (event->key()) {
-      case Qt::Key_1: FImageView->zoomIn();  break;
-      case Qt::Key_2: FImageView->zoom100(); break;
-      case Qt::Key_3: FImageView->zoomOut(); break;
-      case Qt::Key_4: FImageView->zoomFit(); break;
+      case Qt::Key_0: ColorLabel2->setSelectedLabel(0); colorLabelChanged(); break;
+      case Qt::Key_1: ColorLabel2->setSelectedLabel(1); colorLabelChanged(); break;
+      case Qt::Key_2: ColorLabel2->setSelectedLabel(2); colorLabelChanged(); break;
+      case Qt::Key_3: ColorLabel2->setSelectedLabel(3); colorLabelChanged(); break;
+      case Qt::Key_4: ColorLabel2->setSelectedLabel(4); colorLabelChanged(); break;
+      case Qt::Key_5: ColorLabel2->setSelectedLabel(5); colorLabelChanged(); break;
       default: break;
     }
   }
@@ -697,14 +750,6 @@ void ptFileMgrWindow::constructContextMenu() {
 
   FCloseFileMgrAct = new QAction(tr("&Close file manager") + "\t" + tr("Esc"), this);
   connect(FCloseFileMgrAct, SIGNAL(triggered()), this, SLOT(closeWindow()));
-
-  FToggleShowRAWsAct = new QAction(tr("Show RAWs"), this);
-  FToggleShowRAWsAct->setCheckable(true);
-  connect(FToggleShowRAWsAct, SIGNAL(triggered()), this, SLOT(toggleShowRAWs()));
-
-  FToggleShowBitmapsAct = new QAction(tr("Show bitmaps"), this);
-  FToggleShowBitmapsAct->setCheckable(true);
-  connect(FToggleShowBitmapsAct, SIGNAL(triggered()), this, SLOT(toggleShowBitmaps()));
 }
 
 //------------------------------------------------------------------------------
@@ -734,12 +779,6 @@ void ptFileMgrWindow::contextMenuEvent(QContextMenuEvent* event) {
   FToggleImageViewAct->setChecked(FMImageViewPane->isVisible());
   Menu.addAction(FToggleSidebarAct);
   FToggleSidebarAct->setChecked(FMSidebar->isVisible());
-
-  Menu.addSeparator();
-  Menu.addAction(FToggleShowRAWsAct);
-  FToggleShowRAWsAct->setChecked(Settings->GetInt("FileMgrShowRAWs"));
-  Menu.addAction(FToggleShowBitmapsAct);
-  FToggleShowBitmapsAct->setChecked(Settings->GetInt("FileMgrShowBitmaps"));
 
   Menu.addSeparator();
   Menu.addAction(FSaveThumbAct);
@@ -783,63 +822,278 @@ void ptFileMgrWindow::toggleDirThumbs() {
   displayThumbnails();
 }
 
-void ptFileMgrWindow::toggleShowRAWs() {
-  Settings->SetValue("FileMgrShowRAWs", 1 - Settings->GetInt("FileMgrShowRAWs"));
-  displayThumbnails();
-}
-
-void ptFileMgrWindow::toggleShowBitmaps() {
-  Settings->SetValue("FileMgrShowBitmaps", 1 - Settings->GetInt("FileMgrShowBitmaps"));
-  displayThumbnails();
-}
-
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::bookmarkCurrentDir() {
   FDataModel->tagModel()->appendRow(QDir::toNativeSeparators(FDataModel->currentDir()),
                                      FDataModel->currentDir());
-  if (FTagMenu->isVisible()) {
-    adjustBookmarkMenuSize();
+}
+
+// ATZ
+void ptFileMgrWindow::removeBookmark() {
+  FTagList->removeBookmark();
+}
+
+void ptFileMgrWindow::ensureHaveSettingsFile(const QString& fileName) {
+  if (!QFile::exists(fileName)) {
+    // settings file does not exist. Try to get it from "StartupSettings"
+    if (Settings->GetInt("StartupSettings") == 1 && QFile::exists((Settings->GetString("StartupSettingsFile")))) {
+       QFile::copy(Settings->GetString("StartupSettingsFile"), fileName);
+    } else {
+      // no startup settings? create empty but valid pts file
+      QSettings ptsFile(fileName, QSettings::IniFormat);
+      ptsFile.setValue("Magic", "photivoSettingsFile");
+    }
   }
 }
 
-//------------------------------------------------------------------------------
-void ptFileMgrWindow::on_m_BookmarkButton_clicked() {
-  FTagMenu->move(m_BookmarkButton->mapToGlobal(QPoint(0, m_BookmarkButton->height())));
-  FTagMenu->setPalette(Theme->menuPalette());
-  FTagMenu->setStyle(Theme->style());
-  FTagMenu->show();  // must be first or adjust size won’t work correctly
-  adjustBookmarkMenuSize();
+void ptFileMgrWindow::starRatingChanged() {
+  if (Settings->GetInt("FileMgrShowDeleted") == 1) return;
 
-  FTagMenuList->setFocus();
+  for (int i = 0; i < FFilesScene->selectedItems().count(); i++) {
+    ptGraphicsThumbGroup* thumb = dynamic_cast<ptGraphicsThumbGroup*>(FFilesScene->selectedItems().at(i));
+    if (thumb->fsoType() == fsoFile) {
+      QFileInfo PathInfo(thumb->fullPath());
+      QString baseFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.completeBaseName();
+      QString ptsFileName = baseFileName + ".pts";
+      ensureHaveSettingsFile(ptsFileName);
+      QSettings ptsFile(ptsFileName, QSettings::IniFormat);
+      ptsFile.setValue("ImageRating", StarRating3->starCount());
+    }
+  }
+  updateThumbList();
+  // if thumblist is filtered by a star rating, reflect the changes
+  filterChanged();
 }
 
-//------------------------------------------------------------------------------
-void ptFileMgrWindow::adjustBookmarkMenuSize() {
-  QSize MenuSize(0, 0);
-  QPoint MenuTopleft = m_BookmarkButton->mapTo(this, QPoint(0, m_BookmarkButton->height()));
-  QSize MaxSize((this->width() - MenuTopleft.x()) * 0.85,
-                (this->height() - MenuTopleft.y()) * 0.85);
+void ptFileMgrWindow::colorLabelChanged() {
+  if (Settings->GetInt("FileMgrShowDeleted") == 1) return;
 
-  QFontMetrics metrics(FTagMenuList->font());
-  for (int i = 0; i < FDataModel->tagModel()->rowCount(); i++) {
-    QModelIndex curIndex = FDataModel->tagModel()->index(i, 0);
-    int width = metrics.width(curIndex.data().toString());
-    if (width > MenuSize.width()) MenuSize.setWidth(width);
-    MenuSize.setHeight(MenuSize.height() + FTagMenuList->visualRect(curIndex).height());
+  for (int i = 0; i < FFilesScene->selectedItems().count(); i++) {
+    ptGraphicsThumbGroup* thumb = dynamic_cast<ptGraphicsThumbGroup*>(FFilesScene->selectedItems().at(i));
+    if (thumb->fsoType() == fsoFile) {
+      QFileInfo PathInfo(thumb->fullPath());
+      QString baseFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.completeBaseName();
+      QString ptsFileName = baseFileName + ".pts";
+      ensureHaveSettingsFile(ptsFileName);
+      QSettings ptsFile(ptsFileName, QSettings::IniFormat);
+      ptsFile.setValue("ColorLabel", ColorLabel2->selectedLabel());
+    }
+  }
+  updateThumbList();
+  // if thumblist is filtered by a color label, reflect the changes
+  filterChanged();
+}
+
+void ptFileMgrWindow::filterChanged() {
+  // star rating
+  int starFrom = StarRating1->starCount();
+  int starTo = StarRating2->starCount();
+  if (starTo < starFrom) {
+    starTo = starFrom;
+    StarRating2->setStarCount(starTo);
+  }
+  bool starSelected = starTo != 0;
+
+  // color label
+  QList<int> colorLabels = ColorLabel1->selectedLabels();
+  bool colorLabelSelected = ColorLabel1->selectedLabel() != 0;
+
+  bool isTrash = Settings->GetValue("FileMgrShowDeleted") == 1;
+  if (isTrash) {
+    starSelected = false;
+    colorLabelSelected = false;
   }
 
-  FTagMenu->setFixedSize(qBound(150,
-                                 MenuSize.width() + 20 + FTagMenuList->verticalScrollBar()->width(),
-                                 MaxSize.width()),
-                          qBound(FTagMenuList->y() + 50,
-                                 MenuSize.height() + FTagMenuList->y() + 30,
-                                 MaxSize.height()) );
+  for (int i = 0; i < FDataModel->thumbGroupList()->count(); i++) {
+    ptGraphicsThumbGroup* thumb = FDataModel->thumbGroupList()->at(i);
+    if (thumb->fsoType() == fsoFile) {
+      int star = thumb->imageRating();
+      int colorLabel = thumb->imageColorLabel();
+      bool visible = true;
+      if (colorLabelSelected) {
+        visible = colorLabels.contains(colorLabel);
+      }
+      if (starSelected) {
+        visible = visible & (star >= starFrom && star <= starTo);
+      }
+      thumb->setVisible(visible);
+    }
+  }
+  layoutVisibleItems();
 }
 
-//------------------------------------------------------------------------------
-void ptFileMgrWindow::bookmarkDataChanged(QStandardItem*) {
-  if (FTagMenu->isVisible()) {
-    adjustBookmarkMenuSize();
+void ptFileMgrWindow::fileTypeFilterChanged(int index) {
+  Settings->SetValue("FileMgrShowDeleted", 0);
+
+  switch(index) {
+    // all files
+    case 0:
+      Settings->SetValue("FileMgrShowRAWs", 0);
+      Settings->SetValue("FileMgrShowBitmaps", 0);
+      break;
+    // raw files
+    case 1:
+      Settings->SetValue("FileMgrShowRAWs", 1);
+      Settings->SetValue("FileMgrShowBitmaps", 0);
+      break;
+    // bitmap files
+    case 2:
+      Settings->SetValue("FileMgrShowRAWs", 0);
+      Settings->SetValue("FileMgrShowBitmaps", 1);
+      break;
+    // raw+bitmap files
+    case 3:
+      Settings->SetValue("FileMgrShowRAWs", 1);
+      Settings->SetValue("FileMgrShowBitmaps", 1);
+      break;
+    // deleted files
+    case 4:
+      Settings->SetValue("FileMgrShowDeleted", 1);
+      break;
+  }
+
+  bool isTrash = Settings->GetValue("FileMgrShowDeleted") == 1;
+
+  RestoreImageButton->setVisible(isTrash);
+  ColorLabel2->setVisible(!isTrash);
+  StarRating3->setVisible(!isTrash);
+  SendToBatchButton->setVisible(!isTrash);
+
+  displayThumbnails();
+}
+
+
+void ptFileMgrWindow::layoutVisibleItems() {
+  // gets a number of visible items first
+  int visibleCount = 0;
+  for (int i = 0; i < FDataModel->thumbGroupList()->count(); i++) {
+    ptGraphicsThumbGroup* thumb = FDataModel->thumbGroupList()->at(i);
+    if (thumb->isVisible()) {
+      visibleCount++;
+    }
+  }
+
+  // now layout visible items
+  FLayouter->Init(visibleCount, m_FilesView->font());
+  for (int i = 0; i < FDataModel->thumbGroupList()->count(); i++) {
+    ptGraphicsThumbGroup* thumb = FDataModel->thumbGroupList()->at(i);
+    if (thumb->isVisible()) {
+      FLayouter->Layout(thumb);
+    }
   }
 }
 
+QString ptFileMgrWindow::getCurrentDir() const {
+  return FDataModel->currentDir();
+}
+
+
+QFileInfoList ptFileMgrWindow::getFilteredFileInfoList() const {
+  QFileInfoList list;
+  for (int i = 0; i < FDataModel->thumbGroupList()->count(); i++) {
+    ptGraphicsThumbGroup* thumb = FDataModel->thumbGroupList()->at(i);
+    if (thumb->isVisible() && thumb->fsoType() == fsoFile) {
+      QFileInfo PathInfo(thumb->fullPath());
+      list << PathInfo;
+    }
+  }
+  return list;
+}
+
+void ptFileMgrWindow::OnRestoreImageButtonClicked() {
+  if (Settings->GetInt("FileMgrShowDeleted") == 0) return;
+  if (FFilesScene->selectedItems().count() == 0) return;
+
+  // process selected images
+  for (int i = 0; i < FFilesScene->selectedItems().count(); i++) {
+    ptGraphicsThumbGroup* thumb = dynamic_cast<ptGraphicsThumbGroup*>(FFilesScene->selectedItems().at(i));
+    if (thumb->fsoType() == fsoFile) {
+      QString imageFileName = thumb->fullPath();
+      // remove the .trash part
+      QString newImageFileName = imageFileName;
+      newImageFileName.chop(6); 
+      QFile::rename(imageFileName, newImageFileName);
+    }
+  }
+  updateThumbList();
+}
+
+void ptFileMgrWindow::OnDeleteImageButtonClicked() {
+  if (FFilesScene->selectedItems().count() == 0) {
+    return;
+  }
+
+  bool isTrashFile = Settings->GetInt("FileMgrShowDeleted") == 1;
+
+  ptMessageBox msgBox;
+  msgBox.setIcon(QMessageBox::Question);
+  msgBox.setWindowTitle(QObject::tr("Photivo: Delete image(s)"));
+  if (isTrashFile) {
+    msgBox.setText(QObject::tr("Do you want to COMPLETELY delete selected image(s)?"));
+  } else {
+    msgBox.setText(QObject::tr("Do you want to delete selected image(s)?\n\nNote: Photivo just renames the image to filename.ext.trash"));
+  }
+  msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+  msgBox.setDefaultButton(QMessageBox::No);
+
+  int userChoice = msgBox.exec();
+  if (userChoice != QMessageBox::Yes) {
+    return;
+  }
+
+  // process selected images
+  for (int i = 0; i < FFilesScene->selectedItems().count(); i++) {
+    ptGraphicsThumbGroup* thumb = dynamic_cast<ptGraphicsThumbGroup*>(FFilesScene->selectedItems().at(i));
+    if (thumb->fsoType() == fsoFile) {
+      QString imageFileName = thumb->fullPath();
+      if (isTrashFile) {
+        // delete completely
+        QFile::remove(imageFileName);
+      } else {
+        // instead of deleting the image file, just rename it to "filename.ext.trash"
+        QFile::rename(imageFileName, imageFileName + ".trash");
+      }
+      // delete the settings file if any
+      QFileInfo PathInfo(imageFileName);
+      QString ptsFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.completeBaseName() + ".pts";
+      if (QFile::exists(ptsFileName)) {
+        QFile::remove(ptsFileName);
+      }
+    }
+  }
+  updateThumbList();
+}
+
+void ptFileMgrWindow::OnSendToBatchButtonClicked() {
+  if (Settings->GetInt("FileMgrShowDeleted") == 1) return;
+
+  // process selected images
+  for (int i = 0; i < FFilesScene->selectedItems().count(); i++) {
+    ptGraphicsThumbGroup* thumb = dynamic_cast<ptGraphicsThumbGroup*>(FFilesScene->selectedItems().at(i));
+    if (thumb->fsoType() == fsoFile) {
+      QString imageFileName = thumb->fullPath();
+      QFileInfo PathInfo(imageFileName);
+      QString ptsFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.completeBaseName() + ".pts";
+
+      ensureHaveSettingsFile(ptsFileName);
+      BatchWindow->AddJobToList(ptsFileName, imageFileName);
+    }
+  }
+}
+
+void ptFileMgrWindow::OnBatchButtonClicked() {
+  CB_BatchButton();
+}
+
+void ptFileMgrWindow::OnProcessingButtonClicked() {
+  closeWindow();
+}
+
+void ptFileMgrWindow::OnFullScreenButtonClicked() {
+  if (FullScreenButton->isChecked())
+    CB_FullScreenButton(1);
+  else
+    CB_FullScreenButton(0);
+}
+
+// end ATZ

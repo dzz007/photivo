@@ -289,7 +289,10 @@ HEADERS += \
     ../Sources/ptMutexLocker.h \
     ../Sources/filemgmt/ptThumbGenMgr.h \
     ../Sources/filemgmt/ptThumbGenWorker.h \
-    ../Sources/filemgmt/ptThumbGenHelpers.h
+    ../Sources/filemgmt/ptThumbGenHelpers.h \
+    ../Sources/filemgmt/ptFSMProxy.h \
+    ../Sources/ptStarRating.h \
+    ../Sources/ptColorLabel.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -425,7 +428,10 @@ SOURCES += \
     ../Sources/ptMutexLocker.cpp \
     ../Sources/filemgmt/ptThumbGenMgr.cpp \
     ../Sources/filemgmt/ptThumbGenWorker.cpp \
-    ../Sources/filemgmt/ptThumbGenHelpers.cpp
+    ../Sources/filemgmt/ptThumbGenHelpers.cpp \
+    ../Sources/filemgmt/ptFSMProxy.cpp \
+    ../Sources/ptStarRating.cpp \
+    ../Sources/ptColorLabel.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \

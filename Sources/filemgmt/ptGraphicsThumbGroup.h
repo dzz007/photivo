@@ -25,14 +25,15 @@
 
 //==============================================================================
 
-#include "ptThumbDefines.h"
-#include "../ptConstants.h"
-
 #include <QObject>
 #include <QGraphicsRectItem>
 #include <QPen>
 #include <QBrush>
 #include <QPoint>
+#include <QGraphicsSceneMouseEvent>
+
+#include "ptThumbDefines.h"
+#include "../ptConstants.h"
 
 //==============================================================================
 
@@ -98,12 +99,20 @@ public:
 
   uint id() const;
 
+// ATZ
+  int imageRating() { return m_ImageRating; }
+  int imageColorLabel() { return m_ImageColorLabel; }
+  void getInfoFromSettingsFile();
+// end ATZ
 
 protected:
   /*! Event handler for the thumbnail group.
       Reimplements \c QGraphicsRectItem::sceneEvent().
   */
   bool sceneEvent(QEvent* event);
+  void mousePressEvent(QGraphicsSceneMouseEvent* event);
+  void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 
 
 private:
@@ -124,6 +133,12 @@ private:
   QGraphicsPixmapItem*      m_ThumbnailItem;
   QGraphicsSimpleTextItem*  m_ImgTypeText;
   QGraphicsSimpleTextItem*  m_InfoText;
+
+// ATZ
+  int m_ImageRating;
+  int m_ImageColorLabel;
+  QDateTime m_ptsLastChangedDate;
+// end ATZ
 };
 
 //==============================================================================

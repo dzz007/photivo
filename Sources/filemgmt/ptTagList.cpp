@@ -20,9 +20,9 @@
 **
 *******************************************************************************/
 
-#include "ptTagList.h"
-
 #include <QStandardItemModel>
+
+#include "ptTagList.h"
 
 //==============================================================================
 
@@ -39,15 +39,7 @@ ptTagList::ptTagList(QWidget* parent)
 
 void ptTagList::keyPressEvent(QKeyEvent* event) {
   if (event->key() == Qt::Key_Delete && event->modifiers() == Qt::NoModifier) {
-    if (currentIndex().isValid()) {
-      int row = currentIndex().row();
-      dynamic_cast<QStandardItemModel*>(this->model())->removeRow(row);
-
-      // if possible keep the same row selected
-      if (this->model()->rowCount() > 0) {
-        setCurrentIndex(this->model()->index(qBound(0, row, this->model()->rowCount()), 0));
-      }
-    }
+    removeBookmark();
   }
 
   // call base class to handle default key actions
@@ -57,3 +49,14 @@ void ptTagList::keyPressEvent(QKeyEvent* event) {
 }
 
 //==============================================================================
+void ptTagList::removeBookmark() {
+  if (currentIndex().isValid()) {
+    int row = currentIndex().row();
+    dynamic_cast<QStandardItemModel*>(this->model())->removeRow(row);
+
+    // if possible keep the same row selected
+    if (this->model()->rowCount() > 0) {
+      setCurrentIndex(this->model()->index(qBound(0, row, this->model()->rowCount()), 0));
+    }
+  }
+}

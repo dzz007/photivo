@@ -25,6 +25,7 @@
 #define PTFILEMGRDM_h
 
 #include "ptGraphicsThumbGroup.h"
+#include "ptFSMProxy.h"
 #include "ptSingleDirModel.h"
 #include "ptTagModel.h"
 #include "ptThumbGenMgr.h"
@@ -65,9 +66,6 @@ public:
   QString currentDir() const;
   void setCurrentDir(const QString& AAbsolutePath);
   int setThumDir(const QString& AAbsolutePath);
-  int focusedThumb() const;
-  int focusedThumb(QGraphicsItem* group);
-  ptGraphicsThumbGroup* moveFocus(const int index);
 
   void abortThumbGen();
   void connectThumbGen(const QObject* AReceiver, const char* ABroadcastSlot);
@@ -78,12 +76,14 @@ public:
 
   ptSingleDirModel* dirModel() const;
   ptTagModel* tagModel();
+  ptFSMProxy* fileSystemModel() const;
+  void updateThumbList(QGraphicsScene* AScene);
 
 private:
   void createThumbGroup(const QFileInfo &AFileInfo, uint AId, QGraphicsScene* AScene);
 
-  int                             FFocusedThumb;
   QDir                            FCurrentDir;
+  ptFSMProxy*                     FFileSystemModel;
   ptSingleDirModel*               FDirModel;
   bool                            FIsMyComputer;
   ptTagModel*                     FTagModel;

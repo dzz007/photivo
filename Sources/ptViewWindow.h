@@ -4,7 +4,6 @@
 **
 ** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -184,10 +183,12 @@ private:
 
   // context menu stuff
   void          ConstructContextMenu();
+// ATZ
   QAction       *ac_Copy;
   QAction       *ac_Paste;
   QAction       *ac_Reset;
   QAction       *ac_UserReset;
+// end ATZ
   QAction       *ac_ZoomFit;
   QAction       *ac_Zoom100;
   QAction       *ac_ZoomIn;
@@ -245,10 +246,12 @@ private slots:
   void Menu_OpenFileMgr();
   void Menu_OpenBatch();
   void Menu_PixelReading();
+// ATZ
   void Menu_Copy();
   void Menu_Paste();
   void Menu_Reset();
   void Menu_UserReset();
+// end ATZ
 
 //------------------------------------------------------------------------------
 

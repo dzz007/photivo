@@ -102,19 +102,19 @@ ptImageView::ptImageView(QWidget *AParent):
   //-------------------------------------
 
   // Create actions for context menu
-  FZoomInAction = new QAction(tr("Zoom &in") + "\t" + tr("1"), this);
+  FZoomInAction = new QAction(tr("Zoom &in"), this);
   FZoomInAction->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-in.png")));
   connect(FZoomInAction, SIGNAL(triggered()), this, SLOT(zoomIn()));
 
-  FZoom100Action = new QAction(tr("Zoom &100%") + "\t" + tr("2"), this);
+  FZoom100Action = new QAction(tr("Zoom &100%"), this);
   FZoom100Action->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-original.png")));
   connect(FZoom100Action, SIGNAL(triggered()), this, SLOT(zoom100()));
 
-  FZoomOutAction = new QAction(tr("Zoom &out") + "\t" + tr("3"), this);
+  FZoomOutAction = new QAction(tr("Zoom &out"), this);
   FZoomOutAction->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-out.png")));
   connect(FZoomOutAction, SIGNAL(triggered()), this, SLOT(zoomOut()));
 
-  FZoomFitAction = new QAction(tr("Zoom &fit") + "\t" + tr("4"), this);
+  FZoomFitAction = new QAction(tr("Zoom &fit"), this);
   FZoomFitAction->setIcon(QIcon(QString::fromUtf8(":/dark/icons/zoom-fit.png")));
   connect(FZoomFitAction, SIGNAL(triggered()), this, SLOT(zoomFit()));
 }

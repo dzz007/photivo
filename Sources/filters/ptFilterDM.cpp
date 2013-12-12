@@ -4,7 +4,6 @@
 **
 ** Copyright (C) 2012 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -22,13 +21,17 @@
 **
 *******************************************************************************/
 
+#include <QSettings>
+
 #include "ptFilterDM.h"
 #include "ptFilterFactory.h"
 #include "ptFilterUids.h"
-#include "../ptDefines.h"
-#include "../ptInfo.h"
-#include "../ptTempFile.h"
-#include "../batch/ptBatchWindow.h"
+#include <ptDefines.h>
+#include <ptInfo.h>
+#include <ptTempFile.h>
+#include "batch/ptBatchWindow.h"
+#include <QFileDialog>
+#include <cassert>
 
 // deprecated: To be removed when transition to new settings system is complete.
 #include "../ptSettings.h"
@@ -38,10 +41,6 @@
 #include "../ptError.h"
 #include "../ptMessageBox.h"
 // end of deprecated
-
-#include <QFileDialog>
-#include <QSettings>
-#include <cassert>
 
 //==============================================================================
 
@@ -439,8 +438,17 @@ bool ptFilterDM::WriteJobFile() {
 extern ptBatchWindow *BatchWindow;
 bool ptFilterDM::SendToBatch(const QString &AFileName) {
   QString hSuggestion = AFileName + "pts";
-  QString hFileName = hSuggestion;
 
+// ATZ
+  //QString hSaveCaption = QObject::tr("Save settings file");
+  //QString hFileName = QFileDialog::getSaveFileName(
+  //                      nullptr,
+  //                      hSaveCaption,
+  //                      hSuggestion,
+  //                      SettingsFilePattern,
+  //                      nullptr);
+
+  QString hFileName = hSuggestion;
   if (Settings->GetInt("SaveConfirmation") != 0) {
     QString hSaveCaption = QObject::tr("Save settings file");
     hFileName = QFileDialog::getSaveFileName(
@@ -454,6 +462,7 @@ bool ptFilterDM::SendToBatch(const QString &AFileName) {
     if (hFileName.isEmpty())
       return false;
   }
+// end ATZ
 
   bool result = PerformWritePreset(hFileName, false, true, false, nullptr);
   BatchWindow->AddJobToList(hFileName, Settings->GetStringList("InputFileNameList").first());

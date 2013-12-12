@@ -21,7 +21,11 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-#include "ptProcessor.h"
+
+#include <exiv2/error.hpp>
+
+#include <QFileInfo>
+#include <QApplication>
 
 #include "ptConstants.h"
 #include "ptError.h"
@@ -39,10 +43,7 @@
 #include <filters/ptFilterBase.h>
 #include <filters/ptFilterUids.h>
 
-#include <exiv2/error.hpp>
-
-#include <QFileInfo>
-#include <QApplication>
+#include "ptProcessor.h"
 
 //==============================================================================
 
@@ -180,6 +181,14 @@ void ptProcessor::Run(short Phase,
     };
     PreviousProcessorMode = ProcessorMode;
 
+// ATZ
+    // we have .cached image, now it's time to process raw
+    if (m_Image_AfterDcRaw == NULL) {
+      Phase    = ptProcessorPhase_Raw;
+      SubPhase = ptProcessorPhase_Load;
+    }
+// end ATZ
+
     // Purposes of timing the lenghty operations.
     FRunTimer.start();
 
@@ -272,7 +281,6 @@ void ptProcessor::Run(short Phase,
             ReadExifBuffer();
           }
           TRACEMAIN("Opened bitmap at %d ms.", FRunTimer.elapsed());
-
         } else { // we have a RAW image!
 
           TRACEMAIN("Starting DcRaw at %d ms.",FRunTimer.elapsed());
@@ -2066,7 +2074,6 @@ void ptProcessor::Run(short Phase,
       default : // Should not happen.
         assert(!"Invalid processor phase in ptProcessor::Run()");
     }
-
     m_ReportProgress(tr("Ready"));
   } catch (std::bad_alloc) {
     printf("\n*************************\n\nMemory error in processor\n\n*************************\n\n");

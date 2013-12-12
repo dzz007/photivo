@@ -23,23 +23,6 @@
 
 #include "ptDcRaw.h"
 
-#include "ptCalloc.h"
-#include "ptConstants.h"
-#include "ptError.h"
-#include "ptInfo.h"
-#include "ptImage.h"
-#include "ptMessageBox.h"
-#include "ptResizeFilters.h"
-#include "ptCurve.h"
-#include "ptKernel.h"
-#include "ptConstants.h"
-#include "ptRefocusMatrix.h"
-#include "ptCimg.h"
-#include "ptFastBilateral.h"
-
-#include <QString>
-#include <QTime>
-
 #include <algorithm>
 #include <parallel/algorithm>
 #include <stack>
@@ -49,6 +32,8 @@
 #include <cstdlib>
 #include <cstdio>
 
+#include <QString>
+#include <QTime>
 #include <functional>
 
 #ifdef _OPENMP
@@ -63,16 +48,30 @@
 #ifdef __cplusplus
   // This hack copes with jpeglib.h that does or doesnt provide the
   // extern internally.
-  #pragma push_macro("__cplusplus")
+  #define ptraw_saved_cplusplus __cplusplus
   #undef __cplusplus
   extern "C" {
   #include <jpeglib.h>
   }
-  #pragma pop_macro("__cplusplus")
+  #define __cplusplus ptraw_saved_cplusplus
 #else
   #include <jpeglib.h>
 #endif
 #endif
+
+#include "ptCalloc.h"
+#include "ptConstants.h"
+#include "ptError.h"
+#include "ptInfo.h"
+#include "ptImage.h"
+#include "ptMessageBox.h"
+#include "ptResizeFilters.h"
+#include "ptCurve.h"
+#include "ptKernel.h"
+#include "ptConstants.h"
+#include "ptRefocusMatrix.h"
+#include "ptCimg.h"
+#include "ptFastBilateral.h"
 
 extern cmsCIExyY       D65;
 extern cmsCIExyY       D50;
@@ -1328,7 +1327,7 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
                                                TYPE_RGBA_16,
                                                TYPE_RGB_16,
                                                Intent,
-                                               0);
+                                               cmsFLAGS_NOOPTIMIZE);// ATZ: was 0, produces visible posterization
     int32_t Size = m_Width*m_Height;
     int32_t Step = 100000;
 #pragma omp parallel for schedule(static)
@@ -1349,7 +1348,38 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
   // Free and allocate
   setSize((int32_t)TargetWidth*TargetHeight);
 
+
+// ATZ
+  int m_Flip = DcRawObject->m_Flip;
+  // I have some NikonD700 files for which the DcRaw returns 90 or 270 in its m_Flip.
+  // These files require rotation and/or flip.
+  if (m_Flip == 90) {
+    m_Flip = 6;
+  }
+  if (m_Flip == 270) {
+    m_Flip = 5;
+  }
   // Flip image. With m_Flip as in dcraw.
+  // (see also flip_index() function in dcraw)
+  if (m_Flip & 4) {
+    SWAP(TargetWidth,TargetHeight);
+  }
+#pragma omp parallel for
+  for (uint16_t TargetRow=0; TargetRow<TargetHeight; TargetRow++) {
+    for (uint16_t TargetCol=0; TargetCol<TargetWidth; TargetCol++) {
+      uint16_t OriginRow = TargetRow;
+      uint16_t OriginCol = TargetCol;
+      if (m_Flip & 4) SWAP(OriginRow,OriginCol);
+      if (m_Flip & 2) OriginRow = m_Height-1-OriginRow;
+      if (m_Flip & 1) OriginCol = m_Width-1-OriginCol;
+      for (short c=0; c<3; c++) {
+        m_Data[TargetRow*TargetWidth+TargetCol][c] =
+          PreFlip[OriginRow*m_Width+OriginCol][c];
+      }
+    }
+  }
+
+/*  // Flip image. With m_Flip as in dcraw.
   // (see also flip_index() function in dcraw)
   if (DcRawObject->m_Flip & 4) {
     SWAP(TargetWidth,TargetHeight);
@@ -1367,7 +1397,8 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
           PreFlip[OriginRow*m_Width+OriginCol][c];
       }
     }
-  }
+  }*/
+// end ATZ
 
   m_Height = TargetHeight;
   m_Width  = TargetWidth;
@@ -1384,7 +1415,6 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
 
 ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
                       const short   TargetSpace) {
-
   assert(NULL != DcRawObject);
   assert ((TargetSpace>0) && (TargetSpace<5));
 
@@ -1422,7 +1452,38 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
   // Free a maybe preexisting and allocate space.
   setSize((size_t)TargetWidth*TargetHeight);
 
-  if (DcRawObject->m_Flip & 4) {
+// ATZ
+  int m_Flip = DcRawObject->m_Flip;
+  // I have some NikonD700 files for which the DcRaw returns 90 or 270 in its m_Flip.
+  // These files require rotation and/or flip.
+  if (m_Flip == 90) {
+    m_Flip = 6;
+  }
+  if (m_Flip == 270) {
+    m_Flip = 5;
+  }
+  // Flip image. With m_Flip as in dcraw.
+  // (see also flip_index() function in dcraw)
+  if (m_Flip & 4) {
+    SWAP(TargetWidth,TargetHeight);
+  }
+
+#pragma omp parallel for schedule(static)
+  for (uint16_t TargetRow=0; TargetRow<TargetHeight; TargetRow++) {
+    for (uint16_t TargetCol=0; TargetCol<TargetWidth; TargetCol++) {
+      uint16_t OriginRow = TargetRow;
+      uint16_t OriginCol = TargetCol;
+      if (m_Flip & 4) SWAP(OriginRow,OriginCol);
+      if (m_Flip & 2) OriginRow = m_Height-1-OriginRow;
+      if (m_Flip & 1) OriginCol = m_Width-1-OriginCol;
+      for (short c=0; c<3; c++) {
+        m_Data[TargetRow*TargetWidth+TargetCol][c] =
+          PreFlip[OriginRow*m_Width+OriginCol][c];
+      }
+    }
+  }
+
+/*  if (DcRawObject->m_Flip & 4) {
     SWAP(TargetWidth,TargetHeight);
   }
 #pragma omp parallel for schedule(static)
@@ -1438,7 +1499,8 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
           PreFlip[OriginRow*m_Width+OriginCol][c];
       }
     }
-  }
+  }*/
+// end ATZ
 
   m_Height = TargetHeight;
   m_Width  = TargetWidth;

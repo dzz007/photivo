@@ -37,6 +37,10 @@
 #include <QVBoxLayout>
 #include <QMap>
 
+// ATZ
+void ptAddUndo();
+// end ATZ
+
 //==============================================================================
 
 const QString CCustomStores = "CustomStores";
@@ -109,6 +113,10 @@ void ptFilterBase::importPreset(QSettings *APreset, const bool ARequestPipeRun /
 
 /*! Resets the filter to default values. */
 void ptFilterBase::reset(const bool ARequestPipeRun /*=false*/) {
+// ATZ
+  ptAddUndo();
+// end ATZ
+
   this->doReset();
   FConfig.loadDefaults();
   this->updateGui(ARequestPipeRun);
@@ -482,6 +490,10 @@ void ptFilterBase::commonDispatch(const QString AId, const QVariant ANewValue) {
   // find the right config item
   int hIdx = cfgIdx(AId);
   if (hIdx == -1) return;
+
+// ATZ
+  ptAddUndo();
+// end ATZ
 
   if (FConfig.items().at(hIdx).Type < ptCfgItem::CFirstCustomType) {
     // handle items from default store

@@ -20,10 +20,11 @@
 **
 *******************************************************************************/
 
-#include "../ptSettings.h"
 #include "ptColumnGridThumbnailLayouter.h"
+#include "../ptSettings.h"
 
 #include <qmath.h>
+#include <QApplication>
 #include <QScrollBar>
 #include <QKeyEvent>
 
@@ -40,9 +41,6 @@ ptColumnGridThumbnailLayouter::ptColumnGridThumbnailLayouter(QGraphicsView* view
 void ptColumnGridThumbnailLayouter::Init(const int thumbCount, const QFont& font) {
   ptGridThumbnailLayouter::Init(thumbCount, font);
 
-  // Add another padding to width to make the layout in rows visually clear.
-  m_ThumbMetrics.CellWidth += m_ThumbMetrics.Padding;
-
   // For detailed comments see ptRowGridThumbnailLayouter
   int RestrictedMax = Settings->GetInt("FileMgrUseThumbMaxRowCol") == 0 ?
                       INT_MAX-1 : Settings->GetInt("FileMgrThumbMaxRowCol")-1;
@@ -58,7 +56,7 @@ void ptColumnGridThumbnailLayouter::Init(const int thumbCount, const QFont& font
     m_View->horizontalScrollBar()->setSingleStep(m_ThumbMetrics.CellWidth);
 
     if((m_View->height() - (m_ThumbMetrics.MaxRow + 1)*m_ThumbMetrics.CellHeight) <
-       m_View->horizontalScrollBar()->height())
+      qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent))
     { // empty space on the bottom is not tall enough for scrollbar
       m_ThumbMetrics.MaxRow--;
       FullWidth = qCeil((qreal)thumbCount / (qreal)(m_ThumbMetrics.MaxRow + 1)) *

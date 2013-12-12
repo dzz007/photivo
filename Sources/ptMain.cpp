@@ -5,7 +5,6 @@
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2012 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2010-2012 Bernd Schoeler <brjohn@brother-john.net>
-** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -22,6 +21,21 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
+
+#define QT_CLEAN_NAMESPACE
+
+#include <string>
+#include <csignal>
+#include <exception>
+
+#include <QFileInfo>
+#include <QtGui>
+#include <QtCore>
+#include <QFileDialog>
+#include <QColorDialog>
+#include <QInputDialog>
+#include <QTextCodec>
+#include <QDesktopWidget>
 
 #include "ptDefines.h"
 #include "ptInfo.h"
@@ -54,32 +68,19 @@
 #include "filters/ptFilterDM.h"
 #include "filters/ptFilterBase.h"
 #include "ptToolBox.h"
-#include "filters/ptFilterUids.h"
+#include <filters/ptFilterUids.h>
+
+#include <wand/magick_wand.h>
+#include <exiv2/exif.hpp>
+
+#ifdef Q_OS_MAC
+  #include <QFileOpenEvent>
+#endif
 
 #ifdef Q_OS_WIN
   #include "ptEcWin7.h"
   #include "ptWinApi.h"
 #endif
-
-#include <wand/magick_wand.h>
-
-#define QT_CLEAN_NAMESPACE
-
-#include <QFileInfo>
-#include <QtGui>
-#include <QtCore>
-#include <QFileDialog>
-#include <QColorDialog>
-#include <QInputDialog>
-#include <QTextCodec>
-#include <QDesktopWidget>
-#ifdef Q_OS_MAC
-  #include <QFileOpenEvent>
-#endif
-
-#include <string>
-#include <csignal>
-#include <exception>
 
 using namespace std;
 
@@ -294,7 +295,8 @@ void copyFolder(QString sourceFolder, QString destFolder);
 void CB_PixelReader(const QPointF Point, const ptPixelReading PixelReading);
 bool GBusy = false;
 
-// undo-redo & clipboard support
+// ATZ
+bool ptBlockAddUndo = false;
 QByteArray ptSettingsToQByteArray();
 void ptQByteArrayToSettings(const QByteArray &arr);
 void ptAddUndo();
@@ -305,6 +307,9 @@ void ptMakeFullUndo();
 void ptResetSettingsToDefault();
 void ptCopySettingsToClipboard();
 void ptPasteSettingsFromClipboard();
+void EnsureHaveProcessedImage();
+void ptSetUnalteredImage(ptImage* image);
+// end ATZ
 
 //==============================================================================
 
@@ -1082,6 +1087,9 @@ void CB_Event0() {
       QStringList Temp;
       Temp << "CropX" << "CropY" << "CropW" << "CropH";
       Temp << "RotateW" << "RotateH";
+// ATZ
+      Temp << "ColorLabel";
+// end ATZ
       for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i),0);
     }
 
@@ -1325,7 +1333,7 @@ void Update(short Phase,
         ImageSaved = 0;
         MainWindow->UpdateSettings();
         if(Settings->GetInt("HaveImage")==1) {
-          if (NextPhase < ptProcessorPhase_Output)
+          if (NextPhase < ptProcessorPhase_Output || TheProcessor->m_Image_AfterEyeCandy == NULL)
             TheProcessor->Run(NextPhase, NextSubPhase, WithIdentify, ProcessorMode);
           UpdatePreviewImage();
         }
@@ -1733,6 +1741,9 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
                         const short    OnlyHistogram /* = false */) {
 
   if (!PreviewImage) PreviewImage = new (ptImage);
+// ATZ
+  EnsureHaveProcessedImage();
+// end ATZ
 
   // If we don't have yet a m_Image_AfterGeometry we are in
   // startup condition and show the start screen
@@ -2354,6 +2365,10 @@ void PrepareTags(const QString TagsInput) {
 void WriteOut() {
   ptImage* OutImage = NULL;
 
+// ATZ
+  EnsureHaveProcessedImage();
+// end ATZ
+
   if (Settings->GetInt("JobMode") == 1) {
     OutImage = TheProcessor->m_Image_AfterEyeCandy; // Job mode -> no cache
   } else {
@@ -2441,11 +2456,58 @@ void WriteOut() {
   }
 }
 
+// ATZ
+void WriteCachedImage(const QString& fileName) {
+  ptImage* OutImage = new ptImage;
+  OutImage->Set(TheProcessor->m_Image_AfterEyeCandy);
+  BeforeGamma(OutImage, 1);
+  cmsHPROFILE OutputColorProfile = NULL;
+
+  // Prepare and open an output profile.
+  OutputColorProfile = cmsOpenProfileFromFile(
+    Settings->GetString("OutputColorProfile").toLocal8Bit().data(),
+    "r");
+  if (!OutputColorProfile) {
+    ptLogError(ptError_FileOpen,
+   Settings->GetString("OutputColorProfile").toLocal8Bit().data());
+    assert(OutputColorProfile);
+  }
+
+  // Color space conversion
+  ptImage* ReturnValue = OutImage->lcmsRGBToRGB(
+    OutputColorProfile,
+    Settings->GetInt("OutputColorProfileIntent"),
+    Settings->GetInt("CMQuality"));
+  if (!ReturnValue) {
+    ptLogError(ptError_lcms,"lcmsRGBToRGB(OutputColorProfile)");
+    assert(ReturnValue);
+  }
+
+  AfterAll(OutImage, 1);
+  cmsCloseProfile(OutputColorProfile);
+
+  OutImage->ptGMCWriteImage(
+    fileName.toLocal8Bit().data(),
+    ptSaveFormat_JPEG,
+    97,
+    ptSaveSampling_111,
+    300,
+    Settings->GetString("OutputColorProfile").toLocal8Bit().data(),
+    Settings->GetInt("OutputColorProfileIntent"));
+
+  delete OutImage;
+}
+// end ATZ
+
 //==============================================================================
 
 void WritePipe(QString OutputName = "") {
 
   if (Settings->GetInt("HaveImage")==0) return;
+
+// ATZ
+  EnsureHaveProcessedImage();
+// end ATZ
 
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
   QFileInfo PathInfo(InputFileNameList[0]);
@@ -2633,6 +2695,42 @@ void CB_Tabs(const short) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// If "Save .cached images" setting is allowed, reads .cached file (jpg) instead of raw image.
+// It is almost 3 times faster than read and process the raw.
+void tryGetCachedImage() {
+  QFileInfo PathInfo((Settings->GetStringList("InputFileNameList"))[0]);
+  QString cachedFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".cached";
+  if (Settings->GetInt("SaveCachedImage") == 1 && QFile::exists(cachedFileName)) {
+    ptImage* image = new ptImage;
+    int Success = 0;
+    image->ptGMCOpenImage(
+      cachedFileName.toLocal8Bit().data(),
+      Settings->GetInt("WorkColor"),
+      Settings->GetInt("PreviewColorProfileIntent"),
+      0,
+      false,
+      nullptr,
+      Success);
+    image->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
+    ptSetUnalteredImage(image);
+
+    MainWindow->ViewFrameStackedWidget->setCurrentWidget(MainWindow->ViewFrameCentralWidget);
+    ViewWindow->UpdateImage(image);
+    HistogramWindow->UpdateView(image);
+
+    TheProcessor->ReadExifBuffer();
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+    FREE(TheProcessor->m_ExifBuffer);
+
+  } else {
+    Update(ptProcessorPhase_Raw, ptProcessorPhase_Load, 0);
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+    ptImage* image = new ptImage;
+    image->Set(PreviewImage);
+    ptSetUnalteredImage(image);
+  }
+}
+
 void CB_MenuFileOpen(const short HaveFile) {
   QStringList OldInputFileNameList = Settings->GetStringList("InputFileNameList");
   QString InputFileName = "";
@@ -2722,24 +2820,32 @@ void CB_MenuFileOpen(const short HaveFile) {
   delete TheDcRaw;
   delete TheProcessor;
   // Load user settings
-  if (Settings->GetInt("StartupSettings") == 1 &&
+
+// ATZ: load settings file automatically
+  // ColorLabel is a new setting and is not present in old .pts files. Reset it to 0 to avoid bugs.
+  Settings->SetValue("ColorLabel", 0);
+  bool cleanupNeeded = false;
+  QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".pts";
+  if (QFile::exists(SettingsFileName)) {
+    Settings->SetValue("HaveImage", 0);
+    CB_OpenSettingsFile(SettingsFileName);
+    cleanupNeeded = true;
+  } else if (Settings->GetInt("StartupSettings") == 1 &&
       Settings->GetInt("StartupSettingsReset") == 1 &&
       Settings->GetInt("HaveImage") == 1) {
     Settings->SetValue("HaveImage", 0);
     CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
-    // clean up
+    cleanupNeeded = true;
+  }
+  // clean up
+  if (cleanupNeeded) {
     QStringList Temp;
     Temp << "CropX" << "CropY" << "CropW" << "CropH";
     Temp << "RotateW" << "RotateH";
     for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i), 0);
   }
 
-  // load settings file automatically
-  QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".pts";
-  if (QFile::exists(SettingsFileName)) {
-    Settings->SetValue("HaveImage", 0);
-    CB_OpenSettingsFile(SettingsFileName);
-  }
+
 
   // clean up possible detail view cache
   if (Settings->GetInt("DetailViewActive") == 1) {
@@ -2782,9 +2888,8 @@ void CB_MenuFileOpen(const short HaveFile) {
     CalculatePipeSize(true);
   }
 
-  Update(ptProcessorPhase_Raw, ptProcessorPhase_Load, 0);
+  tryGetCachedImage();
 
-  MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
   Settings->SetValue("PerspectiveFocalLength", Settings->GetDouble("FocalLengthIn35mmFilm"));
   Settings->SetValue("DefishFocalLength",      Settings->GetDouble("FocalLengthIn35mmFilm"));
   Settings->SetValue("LfunFocal",              Settings->GetDouble("FocalLengthIn35mmFilm"));
@@ -2795,12 +2900,16 @@ void CB_MenuFileOpen(const short HaveFile) {
   QFileInfo finfo = QFileInfo((Settings->GetStringList("InputFileNameList"))[0]);
   MainWindow->setWindowTitle(
       QString("%1 - %2 - Photivo").arg(finfo.fileName())
-                                  .arg(QDir::toNativeSeparators(finfo.absolutePath())) );
+                                  .arg(QDir::toNativeSeparators(finfo.absolutePath())));
 
   Settings->SetValue("RunMode",OldRunMode);
 
+// ATZ
   ptClearUndoRedo();
+// end ATZ
 }
+
+
 
 //==============================================================================
 
@@ -2887,7 +2996,10 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
 //==============================================================================
 
 void CB_MenuFileExit(const short) {
-  if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0) {
+  if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0) { 
+// ATZ
+// && Settings->GetInt("SaveConfirmation")==1) {
+// end ATZ
     if (!ptConfirmRequest::saveImage()) {
       return;
     }
@@ -2908,6 +3020,9 @@ void CB_MenuFileExit(const short) {
   if (Settings->GetInt("WriteBackupSettings") == 1)
     QFile::remove(Settings->GetString("UserDirectory")+"/backup.pts");
 
+// ATZ
+  ptBlockAddUndo = true;
+// end ATZ
   MainWindow->Form_2_Settings();
 
   printf("Saving settings ...\n");
@@ -2957,6 +3072,10 @@ void CB_ExportToGimpCheck(const QVariant Check) {
 void GimpExport(const short UsePipe) {
   try {
     if (Settings->GetInt("HaveImage")==0) return;
+
+// ATZ
+    EnsureHaveProcessedImage();
+// end ATZ
 
     ReportProgress(QObject::tr("Writing tmp image for gimp"));
 
@@ -3161,12 +3280,16 @@ void CB_FullScreenButton(const int State) {
     MainWindow->showFullScreen();
     Settings->SetValue("FullscreenActive", 1);
   } else {
-    MainWindow->showNormal();
+// ATZ: on Windows, exit from fullscreen mode does not restore previous window state correctly. Show it maximized.
+    MainWindow->showMaximized();
+//    MainWindow->showNormal();
+// end ATZ
     Settings->SetValue("FullscreenActive", 0);
   }
   MainWindow->FullScreenButton->setChecked(State);
 }
 
+// ATZ
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the prev/next image buttons
@@ -3178,6 +3301,11 @@ QFileInfoList ptGetFilesInTheImageFolder() {
   QFileInfo PathInfo(InputFileNameList[0]);
   QString fileName = PathInfo.fileName();
   QDir fileDir = PathInfo.dir();
+
+  if (fileDir.absolutePath() == FileMgrWindow->getCurrentDir()) {
+    return FileMgrWindow->getFilteredFileInfoList();
+  }
+
   fileDir.setFilter(QDir::Files);
   fileDir.setSorting(QDir::Name);
 
@@ -3188,7 +3316,7 @@ QFileInfoList ptGetFilesInTheImageFolder() {
   if (Settings->GetInt("FileMgrShowBitmaps")) {
     fileExts << FileExtsBitmap;
   }
-  return fileDir.entryInfoList(fileExts);
+  return fileDir.entryInfoList(fileExts); 
 }
 
 QString ptGetImageFileName() {
@@ -3201,7 +3329,7 @@ void CB_PreviousImageButton() {
   if (Settings->GetInt("HaveImage")==0) return;
 
   QString fileName = ptGetImageFileName();
-  QFileInfoList files = ptGetFilesInTheImageFolder();
+  QFileInfoList files = ptGetFilesInTheImageFolder(); 
 
   for (int i = 1; i < files.count(); i++) {
     if (files[i].fileName() == fileName) {
@@ -3216,7 +3344,7 @@ void CB_NextImageButton() {
   if (Settings->GetInt("HaveImage")==0) return;
 
   QString fileName = ptGetImageFileName();
-  QFileInfoList files = ptGetFilesInTheImageFolder();
+  QFileInfoList files = ptGetFilesInTheImageFolder(); 
 
   for (int i = 0; i < files.count() - 1; i++) {
     if (files[i].fileName() == fileName) {
@@ -3226,6 +3354,69 @@ void CB_NextImageButton() {
     }
   }
 }
+
+void CB_DeleteImageButton() {
+  if (Settings->GetInt("HaveImage")==0) return;
+
+  ptMessageBox msgBox;
+  msgBox.setIcon(QMessageBox::Question);
+  msgBox.setWindowTitle(QObject::tr("Photivo: Delete image"));
+  msgBox.setText(QObject::tr("Do you want to delete the image?\n\nNote: Photivo just renames the image to filename.ext.trash"));
+  msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+  msgBox.setDefaultButton(QMessageBox::No);
+
+  int userChoice = msgBox.exec();
+  if (userChoice == QMessageBox::Yes) {
+    QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+    QString imageFileName = InputFileNameList[0];
+    QString fileNameOnly = ptGetImageFileName();
+    QFileInfoList files = ptGetFilesInTheImageFolder(); 
+
+    bool imageLoaded = false;
+    // try to select the next image. If the image is the last one, select the previous image.
+    for (int i = 0; i < files.count(); i++) {
+      if (files[i].fileName() == fileNameOnly) {
+        if (i < files.count() - 1) {
+          ImageFileToOpen = files[i + 1].absoluteFilePath();
+          imageLoaded = true;
+        } else if (i > 0) {
+          ImageFileToOpen = files[i - 1].absoluteFilePath();
+          imageLoaded = true;
+        }
+        if (imageLoaded) {
+          CB_MenuFileOpen(1);
+        }
+        break;
+      }
+    }
+
+    if (!imageLoaded) {
+      // no images left in this folder, clean up the workspace
+      delete TheDcRaw;
+      delete TheProcessor;
+      TheDcRaw = new(ptDcRaw);
+      Settings->SetValue("HaveImage", 0);
+      CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+      Settings->ToDcRaw(TheDcRaw);
+      TheProcessor = new ptProcessor(ReportProgress);
+      TheProcessor->m_DcRaw = TheDcRaw;
+      UpdatePreviewImage();
+      MainWindow->setWindowTitle(QString("Photivo"));
+    }
+
+    // instead of deleting the image file, just rename it to "filename.ext.trash"
+    QFile::rename(imageFileName, imageFileName + ".trash");
+    // but delete the settings file if any
+    QFileInfo PathInfo(imageFileName);
+    QString ptsFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.completeBaseName() + ".pts";
+    if (QFile::exists(ptsFileName)) {
+      QFile::remove(ptsFileName);
+    }
+  }
+}
+// end ATZ
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -3267,6 +3458,9 @@ void CB_CameraColorProfileButton() {
     // Canceled just return
     return;
   } else {
+// ATZ
+    ptAddUndo();
+// end ATZ
     QFileInfo PathInfo(ProfileFileName);
     Settings->SetValue("CameraColorProfilesDirectory",PathInfo.absolutePath());
     Settings->SetValue("CameraColorProfile",PathInfo.absoluteFilePath());
@@ -3935,7 +4129,9 @@ void CB_OpenSettingsFileButton() {
     return;
   }
 
+// ATZ
   ptAddUndo();
+// end ATZ
 
   QString SettingsFilePattern =
     QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
@@ -3949,7 +4145,9 @@ void CB_OpenSettingsFileButton() {
 }
 
 void CB_OpenPresetFileButton() {
+// ATZ
   ptAddUndo();
+// end ATZ
 
   QString SettingsFilePattern =
     QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
@@ -4041,6 +4239,9 @@ void CB_WhiteBalanceChoice(const QVariant Choice) {
       break;
 
     case ptWhiteBalance_Spot: {
+// ATZ
+      EnsureHaveProcessedImage();
+// end ATZ
       // First : make sure we have Image_AfterDcRaw in the view window.
       // Anything else might have undergone geometric transformations that are
       // impossible to calculate reverse to a spot in dcraw.
@@ -4709,6 +4910,10 @@ void CB_MakeCropButton() {
 
   ViewWindow->ShowStatus(QObject::tr("Prepare"));
   ReportProgress(QObject::tr("Prepare for cropping"));
+
+// ATZ
+  EnsureHaveProcessedImage();
+// end ATZ
 
   // Rerun the part of geometry stage before crop to get correct preview
   // image in TheProcessor->m_Image_AfterGeometry
@@ -6839,14 +7044,15 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   // noise events otherwise.
   if (InStartup) return;
 
-  if (ObjectName != "ZoomInput" &&
-      ObjectName != "PipeSizeChoice" &&
-      ObjectName != "RunModeCheck" &&
-      ObjectName != "SpecialPreviewChoice" &&
-      ObjectName != "UseThumbnailCheck")
-  {
+// ATZ
+  if (
+    ObjectName != "ZoomInput" &&
+    ObjectName != "PipeSizeChoice" &&
+    ObjectName != "RunModeCheck" &&
+    ObjectName != "SpecialPreviewChoice" &&
+    ObjectName != "UseThumbnailCheck")
     ptAddUndo();
-  }
+// end ATZ
 
   if (ObjectName == "ZoomInput") {
     CB_ZoomInput(Value);
@@ -6899,7 +7105,9 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(StartupUIModeChoice)
   M_Dispatch(StartupPipeSizeChoice)
   M_JustSetDispatch(EscToExitCheck)
-
+// ATZ
+  M_JustSetDispatch(SaveCachedImageCheck)
+// end ATZ
   M_JustSetDispatch(StartupSwitchARCheck)
 
   M_Dispatch(CropInitialZoomChoice)
@@ -7432,9 +7640,12 @@ ptImageType CheckImageType(QString filename,
 }
 
 //==============================================================================
+// ATZ
 QList<QByteArray> ptUndoBuffer;
 QList<QByteArray> ptRedoBuffer;
 QByteArray ptClipboard;
+bool displayed_image_flag = false;
+ptImage* unaltered_Image = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -7482,8 +7693,11 @@ void ptQByteArrayToSettings(const QByteArray &arr) {
 // Adds current Settings to undo buffer
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 void ptAddUndo() {
+  if (ptBlockAddUndo)
+    return;
+  displayed_image_flag = false;
+
   QByteArray arr = ptSettingsToQByteArray();
   ptUndoBuffer << arr;
   ptRedoBuffer.clear();
@@ -7599,3 +7813,34 @@ void ptPasteSettingsFromClipboard() {
   ptAddUndo();
   ptQByteArrayToSettings(ptClipboard);
 }
+
+void EnsureHaveProcessedImage() {
+  // if we have .cached image, process raw now.
+  if (Settings->GetInt("HaveImage") == 1 && TheProcessor->m_Image_AfterEyeCandy == NULL) {
+    TheProcessor->Run(ptProcessorPhase_Raw, ptProcessorPhase_Load);
+    ViewWindow->ShowStatus(ptStatus_Done);
+  }
+}
+
+void ptSetUnalteredImage(ptImage* image) {
+  if (unaltered_Image != NULL) delete unaltered_Image;
+  unaltered_Image = image;
+}
+
+void ptSwitchAB() {
+  if (Settings->GetInt("HaveImage")==0 || TheProcessor->m_Image_AfterEyeCandy == NULL) return;
+
+  ptImage* image = new ptImage;
+  displayed_image_flag = !displayed_image_flag;
+  if (displayed_image_flag) {
+    image->Set(unaltered_Image);
+  } else {
+    image->Set(PreviewImage);
+  }
+
+  ViewWindow->UpdateImage(image);
+  ViewWindow->ShowStatus(displayed_image_flag ? QObject::tr("Original") : QObject::tr("Altered"));
+  delete image;
+}
+
+// end ATZ

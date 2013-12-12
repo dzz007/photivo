@@ -78,6 +78,10 @@ void ptSingleDirModel::ChangeDir(const QModelIndex& index) {
     if (m_CurrentDirType == fsoRoot) {
       m_CurrentDirType = fsoDrive;
       path = path.mid(path.length()-3, 2);  // extract drive letter, e.g. C:
+// ATZ
+      // fix the bug - when trying to doubleclick on (C:) entry we get a home dir of Photivo instead of C:/
+      path = path + "/";
+// ATZ end
     } else {
       m_CurrentDirType = fsoDir;
       path = m_CurrentDir->absolutePath() + "/" + path;
@@ -94,6 +98,11 @@ void ptSingleDirModel::ChangeDir(const QModelIndex& index) {
   } else {
     m_CurrentDir->setPath(path);
     m_EntryList = m_CurrentDir->entryList();
+// ATZ
+   // ".." entry must be at the top. (it is not the case if you have folder names starting with "!")
+   m_EntryList.removeOne("..");
+   m_EntryList.insert(0, "..");
+//
   }
 
 #else
@@ -120,13 +129,22 @@ void ptSingleDirModel::ChangeAbsoluteDir(const QString& path) {
   } else if ((path.length() == 2 || path.length() == 3) && path.mid(1,1) == ":") {
     // we have a drive
     m_CurrentDirType = fsoDrive;
-    m_CurrentDir->setPath(path);
+// ATZ
+    // ensure we have a trailing slash
+    m_CurrentDir->setPath(path.mid(0, 2) + "/");
+    //m_CurrentDir->setPath(path);
+// ATZ end
     m_EntryList = m_CurrentDir->entryList();
     m_EntryList.insert(0, "..");
   } else {
     m_CurrentDirType = fsoDir;
     m_CurrentDir->setPath(path);
     m_EntryList = m_CurrentDir->entryList();
+// ATZ
+   // ".." entry must be at the top. (it is not the case if you have folder names starting with "!")
+   m_EntryList.removeOne("..");
+   m_EntryList.insert(0, "..");
+//
   }
 
 #else
