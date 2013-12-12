@@ -20,11 +20,16 @@
 **
 *******************************************************************************/
 
-#include <QtGui>
 #include "ptStarRating.h"
+#include <QPolygonF>
+#include <QHBoxLayout>
+#include <QPainter>
+#include <QMouseEvent>
 
 const int PaintingScaleFactor = 16;
 QPolygonF starPolygon;
+
+//------------------------------------------------------------------------------
 
 void ptDrawStars(QPainter* painter, QWidget* widget, int x, int y, int size, int selectedStars, int totalStars) {
   if (starPolygon.isEmpty()) {
@@ -53,13 +58,12 @@ void ptDrawStars(QPainter* painter, QWidget* widget, int x, int y, int size, int
   painter->restore();
 }
 
+//------------------------------------------------------------------------------
 
-ptStarRating::ptStarRating(QWidget *parent)
-    : QWidget(parent)
-{
-    myStarCount = 0;
-    myMaxStarCount = 6;
-    setAutoFillBackground(true);
+ptStarRating::ptStarRating(QWidget *parent): QWidget(parent) {
+  myStarCount = 0;
+  myMaxStarCount = 6;
+  setAutoFillBackground(true);
 
 // add to QWidget specified in the ctor
   QHBoxLayout *Layout = new QHBoxLayout(parent);
@@ -70,48 +74,52 @@ ptStarRating::ptStarRating(QWidget *parent)
   Layout->setSpacing(0);
 }
 
-QSize ptStarRating::sizeHint() const
-{
-    return PaintingScaleFactor * QSize(myMaxStarCount, 1);
+//------------------------------------------------------------------------------
+
+QSize ptStarRating::sizeHint() const {
+  return PaintingScaleFactor * QSize(myMaxStarCount, 1);
 }
 
-void ptStarRating::paintEvent(QPaintEvent *)
-{
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHint(QPainter::Antialiasing, true);
+void ptStarRating::paintEvent(QPaintEvent *) {
+  QPainter painter(this);
+  painter.save();
+  painter.setRenderHint(QPainter::Antialiasing, true);
 
-    int yOffset = (rect().height() - PaintingScaleFactor) / 2;
-    int x = rect().x();
-    int y = rect().y() + yOffset;
+  int yOffset = (rect().height() - PaintingScaleFactor) / 2;
+  int x = rect().x();
+  int y = rect().y() + yOffset;
 
-    // draw resetter
-    painter.setPen(Qt::SolidLine);
-    painter.setBrush(Qt::NoBrush);
-    painter.drawEllipse(QPointF(x + PaintingScaleFactor / 2, y + PaintingScaleFactor / 2), 5, 5);
+  // draw resetter
+  painter.setPen(Qt::SolidLine);
+  painter.setBrush(Qt::NoBrush);
+  painter.drawEllipse(QPointF(x + PaintingScaleFactor / 2, y + PaintingScaleFactor / 2), 5, 5);
 
-    ptDrawStars(&painter, this, x + PaintingScaleFactor, y, PaintingScaleFactor, myStarCount, myMaxStarCount);
+  ptDrawStars(&painter, this, x + PaintingScaleFactor, y, PaintingScaleFactor, myStarCount, myMaxStarCount);
 
-    painter.restore();
+  painter.restore();
 }
 
-void ptStarRating::mouseReleaseEvent(QMouseEvent *event)
-{
-    int star = starAtPosition(event->x());
+//------------------------------------------------------------------------------
 
-    if (star != myStarCount && star != -1) {
-        myStarCount = star;
-        update();
-        emit valueChanged();
-    }
+void ptStarRating::mouseReleaseEvent(QMouseEvent *event) {
+  int star = starAtPosition(event->x());
+
+  if (star != myStarCount && star != -1) {
+    myStarCount = star;
+    update();
+    emit valueChanged();
+  }
 }
 
-int ptStarRating::starAtPosition(int x)
-{
-    int star = x / (sizeHint().width() / myMaxStarCount);
-    if (star < 0 || star >= myMaxStarCount)
-        return -1;
+//------------------------------------------------------------------------------
 
-    return star;
+int ptStarRating::starAtPosition(int x) {
+  int star = x / (sizeHint().width() / myMaxStarCount);
+
+  if (star < 0 || star >= myMaxStarCount) {
+    return -1;
+  }
+
+  return star;
 }
 
