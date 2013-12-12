@@ -75,7 +75,7 @@ public:
   // [0] = R
   // [1] = G
   // [2] = B
-  std::vector<std::array<uint16_t, 3> > m_Data;
+  TImage16Data m_Data;
 
   // Pointer to the data buffer, since most algorithms still use that.
   uint16_t (*m_Image)[3];
@@ -650,7 +650,7 @@ ptImage* MaskedColorAdjust(const int       Ax,
                           short              Intent,
                           short              ScaleFactor,
                           bool               IsRAW,
-                          std::vector<char>* ImgData,
+                          TImage8RawData*    ImgData,
                           int&               Success);
 
   // ptImage_Pyramid.cpp

@@ -58,8 +58,11 @@ std::unique_ptr<T> make_unique(Args&& ...args) {
 
 //==============================================================================
 
-typedef std::vector<std::array<uint16_t, 3>> TImageData;
-typedef std::vector<std::array<uint8_t,  4>> TImage8Data;
+typedef std::array<uint16_t, 3> TPixel16;
+typedef std::array<uint8_t,  4> TPixel8;
+typedef std::vector<TPixel16>   TImage16Data;
+typedef std::vector<TPixel8>    TImage8Data;
+typedef std::vector<uint8_t>    TImage8RawData;
 
 //==============================================================================
 // Some macro's (most cannot go efficiently in functions).

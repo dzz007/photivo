@@ -186,7 +186,7 @@ ptImage* ptImage::ptGMCOpenImage(const char*        FileName,
                                  short              Intent,
                                  short              ScaleFactor,
                                  bool               IsRAW,
-                                 std::vector<char>* ImgData,
+                                 TImage8RawData*    ImgData,
                                  int&               Success)
 {
   Success = 0;

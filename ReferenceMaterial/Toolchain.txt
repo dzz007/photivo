@@ -1,0 +1,45 @@
+This file tracks toolchain and library versions for each Photivo Windows release.
+
+
+9 December 2013 (rev 855e46f0c06a)
+----------------------------------
+MinGW win32     mingwbuilds x32-4.8.1-release-win32-sjlj-rev5
+MinGW win64     mingwbuilds x64-4.8.1-release-win32-seh-rev5
+Qt              5.1.1
+exiv2           0.24
+expat           2.1.0
+fftw            3.3.3
+gettext         0.18.1.1-2
+glib win32      2.28.8-1
+glib win64      2.26.1-1
+GraphicsMagick  Snapshot 1.4.0 2013-11-24
+lcms2           2.5
+lensfun         0.2.8
+libiconv        1.14
+libjpeg         8d
+liblqr          0.4.2
+libpng          1.5.13
+libtiff         4.0.3
+zlib            1.2.8
+
+
+1 November 2013 (rev 730faf5fb0ac)
+----------------------------------
+MinGW win32     mingwbuilds x32-4.8.1-release-win32-sjlj-rev5
+MinGW win64     mingwbuilds x64-4.8.1-release-win32-seh-rev5
+Qt              5.1.1
+exiv2           SVN r3199
+expat           2.1.0
+fftw            3.3.3
+gettext         0.18.1.1-2
+glib win32      2.28.8-1
+glib win64      2.26.1-1
+GraphicsMagick  Snapshot 1.4.0 2013-11-24
+lcms2           2.5
+lensfun         0.2.8
+libiconv        1.14
+libjpeg         8d
+liblqr          0.4.2
+libpng          1.5.13
+libtiff         4.0.3
+zlib            1.2.8

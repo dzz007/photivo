@@ -150,8 +150,8 @@ TThumbPtr ptThumbGenWorker::generateThumb(const TThumbId& AThumbId) {
 
     if (hDcRaw.Identify(hFilePath) == 0) {
       // we have a raw image
-      std::vector<char> hImgData;
-      if (hDcRaw.thumbnail(hImgData)) {
+      auto hImgData = hDcRaw.thumbnail();
+      if (!hImgData.empty()) {
         // raw thumbnail read successfully
         hSize = this->scaleSize(hDcRaw.m_ThumbWidth, hDcRaw.m_ThumbHeight, AThumbId.LongEdgeSize);
         MagickSetSize(hGMImage, 2*hSize.width(), 2*hSize.height());

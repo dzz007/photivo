@@ -46,14 +46,13 @@ class ptImageHelper
 {
 public:
   /*! Write a given exif buffer to a file.*/
-  static bool WriteExif(const QString    AFileName,
-                        const Exiv2::ExifData AExifData);
+  static bool WriteExif(const QString              &AFileName,
+                        const std::vector<uint8_t> &AExifBuffer);
 
   /*! Read exif data from file.*/
-  static bool ReadExif(const QString    AFileName,
-                       Exiv2::ExifData &AExifData,
-                       unsigned char  *&AExifBuffer,
-                       unsigned int    &AExifBufferLength);
+  static bool ReadExif(const QString        &AFileName,
+                       Exiv2::ExifData      &AExifData,
+                       std::vector<uint8_t> &AExifBuffer);
 
   /*! Transfer exif data from one image to another.*/
   static bool TransferExif(const QString ASourceFile,

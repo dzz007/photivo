@@ -2426,7 +2426,7 @@ void WriteOut() {
 
     if (Settings->GetInt("IncludeExif")) {
       if (!ptImageHelper::WriteExif(Settings->GetString("OutputFileName"),
-                                    TheProcessor->m_ExifData))
+                                    TheProcessor->m_ExifBuffer))
         ptMessageBox::warning(MainWindow, QObject::tr("Exif Error"), QObject::tr("No exif data written."));
     }
   }
@@ -2845,6 +2845,8 @@ void CB_MenuFileOpen(const short HaveFile) {
     for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i), 0);
   }
 
+
+
   // clean up possible detail view cache
   if (Settings->GetInt("DetailViewActive") == 1) {
     Settings->SetValue("DetailViewActive", 0);
@@ -3157,8 +3159,8 @@ void GimpExport(const short UsePipe) {
     printf("(%s,%d) '%s'\n",
            __FILE__,__LINE__,ExifFileName.toLocal8Bit().data());
     QDataStream ExifOut(&ExifFile);
-    ExifOut.writeRawData((char *) TheProcessor->m_ExifBuffer,
-                         TheProcessor->m_ExifBufferLength);
+    ExifOut.writeRawData((char *) TheProcessor->m_ExifBuffer.data(),
+                         TheProcessor->m_ExifBuffer.size());
     ExifFile.close();
 
     ReportProgress(QObject::tr("Writing tmp icc for gimp"));

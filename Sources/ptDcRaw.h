@@ -311,7 +311,7 @@ public:
   void  ptRebuildHighlights(const short Effort);
   void  ptBlendHighlights();
   void  ptCrop();
-  bool  thumbnail(std::vector<char>& thumbnail);
+  TImage8RawData thumbnail();
 
 
   /*************************************************************************
@@ -322,7 +322,7 @@ public:
   The lower ones are questionable if they should be of interest to the user.
   *************************************************************************/
 
-  std::vector<char> m_Thumb;
+  TImage8RawData m_Thumb;
 
   // The image !
   uint16_t    (*m_Image)[4];

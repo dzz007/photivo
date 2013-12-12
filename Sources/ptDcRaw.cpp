@@ -64,7 +64,7 @@ char* RV = fgets(str,num,file); \
 assert (RV);                    \
 }
 
-inline void VAppend(std::vector<char> &AVector, char* AArray, const int ALength) {
+inline void VAppend(TImage8RawData &AVector, char* AArray, const int ALength) {
   char* hEnd = AArray + ALength * sizeof(char);
   AVector.insert(AVector.end(), AArray, hEnd);
 }
@@ -9627,21 +9627,14 @@ void CLASS CamToLab(uint16_t Cam[4], double Lab[3]) {
 
 //==============================================================================
 
-bool CLASS thumbnail(std::vector<char> &thumbnail) {
-  if(!m_InputFile || !m_LoadRawFunction) {
-    return false;
+TImage8RawData ptDcRaw::thumbnail() {
+  m_Thumb.clear();
+
+  if(m_InputFile && m_LoadRawFunction) {
+    fseek (m_InputFile, m_ThumbOffset, SEEK_SET);
+    (this->*m_WriteThumb)();
   }
 
-  m_Thumb.clear();
-  m_Thumb.reserve(1000000);
-
-  fseek (m_InputFile, m_ThumbOffset, SEEK_SET);
-  (*this.*m_WriteThumb)();
-
-  bool result = (!m_Thumb.empty());
-
-  if (result) thumbnail.swap(m_Thumb);
-
-  return result;
+  return m_Thumb;
 }
 
