@@ -17,7 +17,16 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -39,7 +48,16 @@
        <property name="spacing">
         <number>0</number>
        </property>
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -69,7 +87,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QTreeView" name="m_DirTree">
+            <widget class="QListView" name="m_DirList">
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
              </property>
@@ -167,6 +185,76 @@
       </property>
       <layout class="QVBoxLayout" name="m_ThumbPaneLayout">
        <item>
+        <widget class="QWidget" name="m_PathContainer" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="baseSize">
+          <size>
+           <width>0</width>
+           <height>25</height>
+          </size>
+         </property>
+         <layout class="QHBoxLayout" name="m_PathLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QToolButton" name="m_BookmarkButton">
+            <property name="toolTip">
+             <string>Open bookmark list</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../qrc/photivo.qrc">
+              <normaloff>:/dark/icons/folder-bookmarks.png</normaloff>:/dark/icons/folder-bookmarks.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>10</width>
+              <height>10</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="m_Progressbar">
+         <property name="value">
+          <number>0</number>
+         </property>
+         <property name="textVisible">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QWidget" name="m_TopToolbarContainer" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -181,13 +269,22 @@
           </size>
          </property>
          <layout class="QHBoxLayout" name="m_TopToolbarLayout">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetFixedSize</enum>
-          </property>
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="margin">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
@@ -333,7 +430,6 @@
          </layout>
         </widget>
        </item>
-
        <item>
         <widget class="QGraphicsView" name="m_FilesView">
          <property name="frameShape">
@@ -344,7 +440,6 @@
          </property>
         </widget>
        </item>
-
        <item>
         <widget class="QWidget" name="m_BottomToolbarContainer" native="true">
          <property name="sizePolicy">
@@ -360,13 +455,22 @@
           </size>
          </property>
          <layout class="QHBoxLayout" name="m_BottomToolbarLayout">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetDefaultConstraint</enum>
-          </property>
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="margin">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
@@ -529,12 +633,9 @@
             </property>
            </widget>
           </item>
-
-
          </layout>
         </widget>
        </item>
-
       </layout>
      </widget>
      <widget class="QWidget" name="FMImageViewPane" native="true"/>

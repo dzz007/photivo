@@ -64,23 +64,29 @@ signals:
 protected:
   void contextMenuEvent(QContextMenuEvent* event);
   bool eventFilter(QObject* obj, QEvent* event);
-  void hideEvent(QHideEvent* event);
+  void hideEvent(QHideEvent*);
   void keyPressEvent(QKeyEvent* event);
   void showEvent(QShowEvent* event);
 
 private:
+  void adjustBookmarkMenuSize();
   void clearScene();
   void focusThumbnail(int index);
   void layoutAll();
   void setLayouter(const ptThumbnailLayout layout);
   void constructContextMenu();
+  void initProgressbar();
+  void updateProgressbar();
   void loadForImageView(const QString& AFilePath);
 
   ptFileMgrDM*            FDataModel;
   QGraphicsScene*         FFilesScene;
   bool                    FIsFirstShow;
   ptAbstractThumbnailLayouter* FLayouter;
+  ptPathBar*              FPathBar;
   ptTagList*              FTagList;      // bookmarks in sidebar
+  ptTagList*              FTagMenuList;  // bookmarks in popup menu
+  QMenu*                  FTagMenu;
   int                     FThumbCount;
   int                     FThumbsReceived;  // num of thumbs received from the generator
   int                     FThumbListIdx;
@@ -104,12 +110,15 @@ private:
   QAction*      FToggleImageViewAct;
   QAction*      FCloseFileMgrAct;
   QAction*      FSaveThumbAct;
+  QAction*      FToggleShowRAWsAct;
+  QAction*      FToggleShowBitmapsAct;
 
 private slots:
   void bookmarkCurrentDir();
+  void bookmarkDataChanged(QStandardItem*);
+  void changeListDir(const QModelIndex& index);
 // ATZ
   void removeBookmark();
-  void changeTreeDir(const QModelIndex& index);
   void thumbSelectionChanged();
   ptGraphicsThumbGroup* focusedThumb();
   int focusedThumbIdx();
@@ -127,11 +136,13 @@ private slots:
   void OnFullScreenButtonClicked();
 // end ATZ
   void changeToBookmark(const QModelIndex& index);
+  void changeToBookmarkFromMenu(const QModelIndex& index);
   void changeDir(const QString& path);
   void closeWindow();
   void execThumbnailAction(const ptThumbnailAction action, const QString location);
   void updateThumbList();
   void receiveThumb(uint AReceiverId, TThumbPtr AImage);
+  void on_m_BookmarkButton_clicked();
   void saveThumbnail();
 
   // context menu slots
