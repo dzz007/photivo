@@ -47,12 +47,12 @@ extern void CB_MenuFileOpen(const short HaveFile);
 extern void CB_BatchButton();
 extern void CB_FullScreenButton(const int State);
 
-extern ptSettings*  Settings;
-extern ptTheme*     Theme;
-extern QString      ImageFileToOpen;
-extern short        InStartup;
-extern QString      SaveBitmapPattern;
-extern ptBatchWindow*      BatchWindow;
+extern ptSettings*    Settings;
+extern ptTheme*       Theme;
+extern QString        ImageFileToOpen;
+extern short          InStartup;
+extern QString        SaveBitmapPattern;
+extern ptBatchWindow* BatchWindow;
 
 //------------------------------------------------------------------------------
 /*!
@@ -87,14 +87,10 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   DirListLabel->setText(tr("Directories"));
 #endif
 
-// ATZ
-  m_DirTree->setModel(FDataModel->fileSystemModel());
-  m_DirTree->setHeaderHidden(true);
-  m_DirTree->setSortingEnabled(true);
-  m_DirTree->setAcceptDrops(true);
-  connect(m_DirTree, SIGNAL(activated(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
-  connect(m_DirTree, SIGNAL(clicked(QModelIndex)), this, SLOT(changeTreeDir(QModelIndex)));
+  m_DirList->setModel(FDataModel->dirModel());
+  connect(m_DirList, SIGNAL(activated(QModelIndex)), this, SLOT(changeListDir(QModelIndex)));
 
+  // ATZ
   ColorLabel1 = new ptColorLabel(ColorLabelWidget1);
   ColorLabel1->setToolTip(tr("Color label"));
   ColorLabel1->setMultiSelect(true);
@@ -156,6 +152,36 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
 
   //-------------------------------------
 
+  //bookmark menu
+  FTagMenu = new QMenu(this);
+  FTagMenu->hide();
+  FTagMenu->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  FTagMenu->setObjectName("FMTagMenu");
+
+  QLabel* label = new QLabel("<b>" + tr("Bookmarks") + "</b>", FTagMenu);
+  QToolButton* addButton = new QToolButton(FTagMenu);
+  addButton->setIcon(QIcon(Theme->IconAddBookmark));
+  addButton->setToolTip(BookmarkTooltip);
+  connect(addButton, SIGNAL(clicked()), this, SLOT(bookmarkCurrentDir()));
+
+  QHBoxLayout* headerLayout = new QHBoxLayout();
+  headerLayout->setContentsMargins(0,0,0,0);
+  headerLayout->addWidget(addButton);
+  headerLayout->addWidget(label);
+
+  FTagMenuList = new ptTagList(FTagMenu);
+  FTagMenuList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  FTagMenuList->setModel(FDataModel->tagModel());
+  connect(FTagMenuList, SIGNAL(activated(QModelIndex)),
+          this, SLOT(changeToBookmarkFromMenu(QModelIndex)));
+
+  QVBoxLayout* layout = new QVBoxLayout(FTagMenu);
+  layout->addLayout(headerLayout);
+  layout->addWidget(FTagMenuList);
+  FTagMenu->setLayout(layout);
+
+  //-------------------------------------
+
   // Setup the graphics view/scene
   FFilesScene = new QGraphicsScene(m_FilesView);
   FFilesScene->setStickyFocus(true);
@@ -172,6 +198,12 @@ ptFileMgrWindow::ptFileMgrWindow(QWidget* parent)
   m_FilesView->setScene(FFilesScene);
   FDataModel->connectThumbGen(this, SLOT(receiveThumb(uint,TThumbPtr)));
   setLayouter((ptThumbnailLayout)Settings->GetInt("FileMgrThumbLayoutType"));
+
+  FPathBar = new ptPathBar(m_PathContainer);
+  FPathBar->setObjectName("FMPathBar");
+  connect(FPathBar, SIGNAL(changedPath(QString)), this, SLOT(changeDir(QString)));
+  m_PathLayout->addWidget(FPathBar);
+  m_Progressbar->hide();
 
   //-------------------------------------
 
@@ -215,6 +247,7 @@ ptFileMgrWindow::~ptFileMgrWindow() {
       setValue("FileMgrSidebarSplitter", FMSidebarSplitter->saveState());
 
   DelAndNull(FLayouter);
+  DelAndNull(FPathBar);
 
   // Make sure to destroy all thumbnail related things before the singletons!
   ptGraphicsSceneEmitter::DestroyInstance();
@@ -274,11 +307,16 @@ void ptFileMgrWindow::setLayouter(const ptThumbnailLayout layout) {
 }
 
 //------------------------------------------------------------------------------
-// ATZ
-void ptFileMgrWindow::changeTreeDir(const QModelIndex& index) {
-  changeDir(FDataModel->fileSystemModel()->getPathForIndex(index));
+void ptFileMgrWindow::changeListDir(const QModelIndex& index) {
+  FDataModel->dirModel()->ChangeDir(index);
+  displayThumbnails(FDataModel->dirModel()->absolutePath(), FDataModel->dirModel()->pathType());
 }
-// end ATZ
+
+// -----------------------------------------------------------------------------
+void ptFileMgrWindow::changeToBookmarkFromMenu(const QModelIndex& index) {
+  FTagMenu->hide();
+  changeToBookmark(index);
+}
 
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::changeToBookmark(const QModelIndex& index) {
@@ -287,13 +325,6 @@ void ptFileMgrWindow::changeToBookmark(const QModelIndex& index) {
 
 //------------------------------------------------------------------------------
 void ptFileMgrWindow::changeDir(const QString& path) {
-// ATZ
-  FDataModel->fileSystemModel()->setCurrentDir(path);
-  QModelIndex ind = FDataModel->fileSystemModel()->getIndexForPath(path);
-  m_DirTree->setExpanded(ind, true);
-  m_DirTree->scrollTo(ind);
-  m_DirTree->setCurrentIndex(ind);
-// end ATZ
   FDataModel->dirModel()->ChangeAbsoluteDir(path);
   displayThumbnails(path, FDataModel->dirModel()->pathType());
 }
@@ -332,6 +363,7 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
   FThumbListIdx = 0;
   FThumbCount = FDataModel->setThumDir(path);
   FThumbsReceived = 0;
+  FPathBar->setPath(path);
 
   if (FThumbCount == 0) {
     // setting scene to null dimensions disappears unneeded scrollbars
@@ -343,6 +375,7 @@ void ptFileMgrWindow::displayThumbnails(QString path /*= ""*/, ptFSOType fsoType
 // end ATZ
   } else {
     FLayouter->LazyInit(FThumbCount);
+    this->initProgressbar();
     FDataModel->populateThumbs(FFilesScene);  // non-blocking, returns almost immediately
     this->layoutAll();
   }
@@ -363,8 +396,31 @@ void ptFileMgrWindow::receiveThumb(uint AReceiverId, TThumbPtr AImage) {
     if (hThumbGroup->id() == AReceiverId) {
       hThumbGroup->addImage(AImage);
       ++FThumbsReceived;
+      this->updateProgressbar();
       break;
     }
+  }
+}
+
+//------------------------------------------------------------------------------
+// Sets progress bar range to current FThumbCount, shows the progressbar and hides the path bar.
+void ptFileMgrWindow::initProgressbar() {
+  m_Progressbar->setValue(0);
+  m_Progressbar->setMaximum(FThumbCount);
+  m_Progressbar->show();
+  m_PathContainer->hide();
+}
+
+//------------------------------------------------------------------------------
+// Updates the progress bar’s value. Switches display back to path bar when last thumbnail is reached.
+void ptFileMgrWindow::updateProgressbar() {
+  if (FThumbsReceived < FThumbCount) {
+    m_Progressbar->setValue(FThumbsReceived);
+  } else {
+    m_Progressbar->hide();
+    m_PathContainer->show();
+
+    FFilesScene->setFocus();
   }
 }
 
@@ -404,13 +460,7 @@ void ptFileMgrWindow::showEvent(QShowEvent* event) {
 #endif
     FDataModel->dirModel()->ChangeAbsoluteDir(lastDir);
     FDataModel->setCurrentDir(lastDir);
-// ATZ
-    FDataModel->fileSystemModel()->setCurrentDir(lastDir);
-    QModelIndex ind = FDataModel->fileSystemModel()->getIndexForPath(lastDir);
-    m_DirTree->setExpanded(ind, true);
-    m_DirTree->scrollTo(ind);
-    m_DirTree->setCurrentIndex(ind);
-// end ATZ
+    FPathBar->setPath(lastDir);
 
     // First call base class showEvent, then start thumbnail loading to ensure
     // the file manager is visible before ressource heavy actions begin.
@@ -514,7 +564,7 @@ ptGraphicsThumbGroup* ptFileMgrWindow::focusedThumb() {
     return dynamic_cast<ptGraphicsThumbGroup*>(FFilesScene->selectedItems().first());
   }
 
-  return NULL;
+  return nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -594,7 +644,8 @@ void ptFileMgrWindow::execThumbnailAction(const ptThumbnailAction action, const 
     CB_MenuFileOpen(1);
 
   } else if (action == tnaChangeDir) {
-    changeDir(location);
+    FDataModel->dirModel()->ChangeAbsoluteDir(location);
+    displayThumbnails(location, FDataModel->dirModel()->pathType());
 
   } else if (action == tnaViewImage) {
     this->loadForImageView(location);
@@ -621,21 +672,17 @@ void ptFileMgrWindow::closeWindow() {
 }
 
 //------------------------------------------------------------------------------
-void ptFileMgrWindow::hideEvent(QHideEvent* event) {
-// ATZ: do not refresh filemanager each time when it is activated
-  return;
-// end ATZ
-
-  if (!event->spontaneous()) {
-    event->accept();
-    // free memory occupied by thumbnails and thumb cache
-    // clear() includes stopping thumbnail generation
-    FDataModel->clear();
-    FImageView->clear();
-    this->clearScene();
-  } else {
-    event->ignore();
-  }
+void ptFileMgrWindow::hideEvent(QHideEvent* /*event*/) {
+//  if (!event->spontaneous()) {
+//    event->accept();
+//    // free memory occupied by thumbnails and thumb cache
+//    // clear() includes stopping thumbnail generation
+//    FDataModel->clear();
+//    FImageView->clear();
+//    this->clearScene();
+//  } else {
+//    event->ignore();
+//  }
 }
 
 //------------------------------------------------------------------------------
@@ -826,6 +873,50 @@ void ptFileMgrWindow::toggleDirThumbs() {
 void ptFileMgrWindow::bookmarkCurrentDir() {
   FDataModel->tagModel()->appendRow(QDir::toNativeSeparators(FDataModel->currentDir()),
                                      FDataModel->currentDir());
+  if (FTagMenu->isVisible()) {
+    adjustBookmarkMenuSize();
+  }
+}
+
+//------------------------------------------------------------------------------
+void ptFileMgrWindow::on_m_BookmarkButton_clicked() {
+  FTagMenu->move(m_BookmarkButton->mapToGlobal(QPoint(0, m_BookmarkButton->height())));
+  FTagMenu->setPalette(Theme->menuPalette());
+  FTagMenu->setStyle(Theme->style());
+  FTagMenu->show();  // must be first or adjust size won’t work correctly
+  adjustBookmarkMenuSize();
+
+  FTagMenuList->setFocus();
+}
+
+//------------------------------------------------------------------------------
+void ptFileMgrWindow::adjustBookmarkMenuSize() {
+  QSize MenuSize(0, 0);
+  QPoint MenuTopleft = m_BookmarkButton->mapTo(this, QPoint(0, m_BookmarkButton->height()));
+  QSize MaxSize((this->width() - MenuTopleft.x()) * 0.85,
+                (this->height() - MenuTopleft.y()) * 0.85);
+
+  QFontMetrics metrics(FTagMenuList->font());
+  for (int i = 0; i < FDataModel->tagModel()->rowCount(); i++) {
+    QModelIndex curIndex = FDataModel->tagModel()->index(i, 0);
+    int width = metrics.width(curIndex.data().toString());
+    if (width > MenuSize.width()) MenuSize.setWidth(width);
+    MenuSize.setHeight(MenuSize.height() + FTagMenuList->visualRect(curIndex).height());
+  }
+
+  FTagMenu->setFixedSize(qBound(150,
+                                 MenuSize.width() + 20 + FTagMenuList->verticalScrollBar()->width(),
+                                 MaxSize.width()),
+                          qBound(FTagMenuList->y() + 50,
+                                 MenuSize.height() + FTagMenuList->y() + 30,
+                                 MaxSize.height()) );
+}
+
+//------------------------------------------------------------------------------
+void ptFileMgrWindow::bookmarkDataChanged(QStandardItem*) {
+  if (FTagMenu->isVisible()) {
+    adjustBookmarkMenuSize();
+  }
 }
 
 // ATZ
