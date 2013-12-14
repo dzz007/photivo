@@ -24,7 +24,7 @@ Pick the appropriate subpage for your operating system.
 
 CMake is actively maintained and should work as well as QMake. Changes to the
 build system appear in QMake first, but they do not happen that often and
-usually CMake does not stay beind for very long.
+usually CMake does not stay behind for very long.
 
 Scons is experimental. It may or may not work for your individual 
 setup but is generally functional.
