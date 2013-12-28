@@ -52,7 +52,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
   bool MustBeFilename = false;
   bool MustBePtsName  = false;
   while (i < argc) {
-    QString current = argv[i];
+    QString current = QString::fromLocal8Bit(argv[i]);
     int whichParam = params.indexOf(current.toLower());
 
     if (MustBeFilename) {
