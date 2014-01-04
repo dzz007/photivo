@@ -1773,6 +1773,9 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
     } else if (Event->key()==Qt::Key_Y && Event->modifiers()==Qt::ControlModifier) {
       // Ctrl+Y redo
       ptMakeRedo();
+    } else if (Event->key()==Qt::Key_Z && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+Z redo
+      ptMakeRedo();
     } else if (Event->key()==Qt::Key_C && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
       // Ctrl+Shift+C copy settings
       ptCopySettingsToClipboard();
