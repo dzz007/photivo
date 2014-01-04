@@ -250,7 +250,7 @@ void ptBatchWindow::OnRunNextJob()
 
 void ptBatchWindow::OnLogReady()
 {
-  BTLog->appendPlainText(m_BatchModel->m_BatchProcess->readAll().data());
+  BTLog->appendPlainText(QString::fromLocal8Bit(m_BatchModel->m_BatchProcess->readAll()));
 }
 
 //==============================================================================
