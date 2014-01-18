@@ -28,6 +28,13 @@
 # CMakeLists.txt. So these variables should be lived empty in CMakeLists.txt.in.
 #
 ################################################################################
+#
+# Besides compiling Photivo you can create an archive containing all sources
+# without hg metadata by calling "make package_source". You are supposed to give this
+# command in a subdirectory called build* or BUILD*. You can also create a
+# binary archive by calling "make package".
+#
+################################################################################
 
 CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 
@@ -91,19 +98,33 @@ if( ${WITH_GIMP} )
   pkg_check_modules( GTK2 REQUIRED gtk+-2.0 )
 endif( ${WITH_GIMP} )
 
+# If no .hg, then we can assume we are building from a "clean" source archive previously created
+# by 'make package_source' from a hg repo, and named via this process.
+if( EXISTS ${PROJECT_SOURCE_DIR}/.hg )
+
 # Determine Photivo version with mercurial. Use current date if mercurial is unavailable.
-find_program( MERCURIAL hg )
-if( MERCURIAL )
-  execute_process( COMMAND hg branch OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE BRANCH )
-  execute_process( COMMAND hg log --limit 1 --branch ${BRANCH} --template {date|shortdate}
-                   OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVDATE )
-  execute_process( COMMAND hg identify --id OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVISION )
-  set( APPVERSION "${REVDATE} (rev ${REVISION})" )
-else( MERCURIAL )
-  message( WARNING "Could not call Mercurial to determine Photivo's version info, using current date/time instead." )
-  execute_process( COMMAND date +%c OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE DATE )
-  set( APPVERSION "compiled at ${DATE}" )
-endif( MERCURIAL )
+  find_program( MERCURIAL hg )
+  if( MERCURIAL )
+    execute_process( COMMAND hg branch OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE BRANCH )
+    execute_process( COMMAND hg log --limit 1 --branch ${BRANCH} --template {date|shortdate}
+                     OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVDATE )
+    execute_process( COMMAND hg identify --id OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVISION )
+    execute_process( COMMAND hg identify -n OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE PACKREVISION )
+    set( APPVERSION "${REVDATE} (rev ${REVISION})" )
+    string( REGEX REPLACE [+] "" REVISION ${REVISION} )
+    string( REGEX REPLACE [+] "" PACKREVISION ${PACKREVISION} )
+  else( MERCURIAL )
+    message( WARNING "Could not call Mercurial to determine Photivo's version info, using current date/time instead." )
+    execute_process( COMMAND date +%c OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE DATE )
+    set( APPVERSION "compiled at ${DATE}" )
+  endif( MERCURIAL )
+
+else( EXISTS ${PROJECT_SOURCE_DIR}/.hg )
+
+  message( "\nNo hg metadata is found. Determine Photivo version from the directory name." )
+  string( REGEX REPLACE ".*photivo-" "rev " APPVERSION ${PROJECT_SOURCE_DIR} )
+
+endif( EXISTS ${PROJECT_SOURCE_DIR}/.hg )
 
 message( "\nBuilding Photivo ${APPVERSION}\n" )
 
@@ -465,3 +486,10 @@ configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
                 IMMEDIATE @ONLY )
 
 add_custom_target( uninstall COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
+
+set( CPACK_SOURCE_IGNORE_FILES "build.*/;BUILD.*/;\\\\.hg/;\\\\.hgignore$;\\\\.hgtags$" )
+set( CPACK_PACKAGE_FILE_NAME "photivo-${PACKREVISION}_${REVISION}_${CMAKE_SYSTEM_PROCESSOR}" )
+set( CPACK_SOURCE_PACKAGE_FILE_NAME "photivo-${PACKREVISION}_${REVISION}" )
+set( CPACK_GENERATOR TBZ2 )
+set( CPACK_SOURCE_GENERATOR TBZ2 )
+include( CPack )
