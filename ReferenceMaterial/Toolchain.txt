@@ -1,4 +1,25 @@
 This file tracks toolchain and library versions for each Photivo Windows release.
+Listed are the earliest releases built with those specific library versions.
+
+18 January 2014 (rev d687864489da)
+----------------------------------
+mingw-w64_x86_64-4.8.2-release-win32-seh-rt_v3-rev3.7z
+mingw-w64_i686-4.8.2-release-win32-sjlj-rt_v3-rev3.7z
+glib_2.26.1-1_win64
+glib_2.28.8-1_win32
+exiv2-0.24
+expat-2.1.0
+fftw-3.3.4
+GraphicsMagick-1.4.020140312
+jpeg-8d
+lcms2-2.6
+lensfun-0.2.8
+libiconv-1.14
+liblqr-1-0.4.2
+libpng-1.6.10
+qt-5.2.1
+tiff-4.0.3
+zlib-1.2.8
 
 
 9 December 2013 (rev 855e46f0c06a)
