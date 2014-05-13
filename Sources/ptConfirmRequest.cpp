@@ -109,11 +109,12 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
       ImageCleanUp--;
     }
     // save .pts file automatically
-    else {
-      QFileInfo PathInfo(InputFileNameList[0]);
-      QString baseFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName();
-      GFilterDM->WritePresetFile(baseFileName + ".pts");
-    }
+    else
+      if (Settings->GetInt("AutosaveSettings") == 1) {
+        QFileInfo PathInfo(InputFileNameList[0]);
+        QString baseFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName();
+        GFilterDM->WritePresetFile(baseFileName + ".pts");
+      }
 
     return true;
   }
