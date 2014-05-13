@@ -665,6 +665,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   SwitchUIState(uisProcessing);
   findChild<ptGroupBox *>(QString("TabFileMgrSettings"))->setVisible(0);
 #endif
+
+  AutosaveSettingsWidget->setDisabled(Settings->GetInt("SaveConfirmation"));
 }
 
 //==============================================================================

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1039</width>
-    <height>885</height>
+    <width>1037</width>
+    <height>883</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -28,16 +28,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_4">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>0</number>
     </property>
     <item row="0" column="0">
@@ -47,16 +38,7 @@
       </property>
       <widget class="QWidget" name="ProcessingPage">
        <layout class="QHBoxLayout" name="horizontalLayout_90">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>0</number>
         </property>
         <item>
@@ -114,16 +96,7 @@
                <property name="spacing">
                 <number>0</number>
                </property>
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
+               <property name="margin">
                 <number>0</number>
                </property>
                <item>
@@ -148,7 +121,7 @@
                    </size>
                   </property>
                   <property name="frameShape">
-                   <enum>QFrame::Panel</enum>
+                   <enum>QFrame::StyledPanel</enum>
                   </property>
                   <property name="lineWidth">
                    <number>1</number>
@@ -162,16 +135,7 @@
                    <property name="spacing">
                     <number>0</number>
                    </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
+                   <property name="margin">
                     <number>0</number>
                    </property>
                    <item>
@@ -347,7 +311,7 @@
                       <enum>Qt::NoFocus</enum>
                      </property>
                      <property name="currentIndex">
-                      <number>0</number>
+                      <number>3</number>
                      </property>
                      <widget class="QWidget" name="TabProcessing">
                       <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -407,8 +371,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>465</width>
-                                <height>589</height>
+                                <width>431</width>
+                                <height>595</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="CameraTabLayout">
@@ -422,8 +386,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>447</width>
-                                    <height>409</height>
+                                    <width>419</width>
+                                    <height>415</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -436,30 +400,12 @@
                                       <property name="spacing">
                                        <number>0</number>
                                       </property>
-                                      <property name="leftMargin">
-                                       <number>0</number>
-                                      </property>
-                                      <property name="topMargin">
-                                       <number>0</number>
-                                      </property>
-                                      <property name="rightMargin">
-                                       <number>0</number>
-                                      </property>
-                                      <property name="bottomMargin">
+                                      <property name="margin">
                                        <number>0</number>
                                       </property>
                                       <item>
                                        <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0" columnstretch="0,0,0" rowminimumheight="0,0" columnminimumwidth="0,0,0">
-                                        <property name="leftMargin">
-                                         <number>0</number>
-                                        </property>
-                                        <property name="topMargin">
-                                         <number>0</number>
-                                        </property>
-                                        <property name="rightMargin">
-                                         <number>0</number>
-                                        </property>
-                                        <property name="bottomMargin">
+                                        <property name="margin">
                                          <number>0</number>
                                         </property>
                                         <property name="spacing">
@@ -675,8 +621,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>113</width>
-                                    <height>112</height>
+                                    <width>419</width>
+                                    <height>415</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -774,8 +720,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>154</width>
-                                    <height>88</height>
+                                    <width>419</width>
+                                    <height>415</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -791,16 +737,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -832,16 +769,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_177" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_831">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -893,8 +821,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>124</width>
-                                    <height>184</height>
+                                    <width>419</width>
+                                    <height>415</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -916,16 +844,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -976,16 +895,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1016,16 +926,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1062,16 +963,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1102,16 +994,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1159,8 +1042,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>108</width>
-                                    <height>270</height>
+                                    <width>419</width>
+                                    <height>415</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1231,16 +1114,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1316,8 +1190,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>68</height>
+                                    <width>419</width>
+                                    <height>415</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1386,8 +1260,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>114</height>
+                                <width>431</width>
+                                <height>595</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_280">
@@ -1401,8 +1275,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>419</width>
+                                    <height>555</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1439,8 +1313,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>411</height>
+                                <width>431</width>
+                                <height>595</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="GeometryTabLayout">
@@ -1454,8 +1328,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>150</height>
+                                    <width>94</width>
+                                    <height>144</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1468,16 +1342,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_158" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_87">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1500,16 +1365,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_159" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_888">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1532,16 +1388,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_160" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_189">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1566,16 +1413,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_162" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_63">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1632,8 +1470,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>183</height>
+                                    <width>85</width>
+                                    <height>172</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1646,16 +1484,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_30" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_50">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1687,16 +1516,7 @@
                                       <item>
                                        <widget class="QWidget" name="LfunCALinearContainer" native="true">
                                         <layout class="QVBoxLayout" name="verticalLayout_295">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1711,16 +1531,7 @@
                                       <item>
                                        <widget class="QWidget" name="LfunCAPoly3Container" native="true">
                                         <layout class="QVBoxLayout" name="verticalLayout_256">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1767,8 +1578,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>103</height>
+                                    <width>85</width>
+                                    <height>92</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1781,16 +1592,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_168" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_91">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1822,16 +1624,7 @@
                                       <item>
                                        <widget class="QWidget" name="LfunVignettePoly6Container" native="true">
                                         <layout class="QVBoxLayout" name="verticalLayout_262">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1869,8 +1662,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>167</height>
+                                    <width>85</width>
+                                    <height>156</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1883,16 +1676,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_164" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_47">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1924,16 +1708,7 @@
                                       <item>
                                        <widget class="QWidget" name="LfunDistPoly3Container" native="true">
                                         <layout class="QVBoxLayout" name="verticalLayout_249">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1945,16 +1720,7 @@
                                       <item>
                                        <widget class="QWidget" name="LfunDistPoly5Container" native="true">
                                         <layout class="QVBoxLayout" name="verticalLayout_250">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1969,16 +1735,7 @@
                                       <item>
                                        <widget class="QWidget" name="LfunDistFov1Container" native="true">
                                         <layout class="QVBoxLayout" name="verticalLayout_551">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -1990,16 +1747,7 @@
                                       <item>
                                        <widget class="QWidget" name="LfunDistPTLensContainer" native="true">
                                         <layout class="QVBoxLayout" name="verticalLayout_552">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -2037,8 +1785,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>140</width>
-                                    <height>74</height>
+                                    <width>139</width>
+                                    <height>64</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2051,16 +1799,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_16" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_49">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -2092,16 +1831,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_161" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_48">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -2153,8 +1883,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>100</height>
+                                    <width>85</width>
+                                    <height>88</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2199,8 +1929,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>165</width>
-                                    <height>208</height>
+                                    <width>153</width>
+                                    <height>198</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2213,16 +1943,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_147" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_80">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -2364,16 +2085,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -2453,8 +2165,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>258</width>
-                                    <height>153</height>
+                                    <width>252</width>
+                                    <height>144</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2470,16 +2182,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -2626,16 +2329,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -2720,16 +2414,7 @@
                                         <property name="sizeConstraint">
                                          <enum>QLayout::SetFixedSize</enum>
                                         </property>
-                                        <property name="leftMargin">
-                                         <number>0</number>
-                                        </property>
-                                        <property name="topMargin">
-                                         <number>0</number>
-                                        </property>
-                                        <property name="rightMargin">
-                                         <number>0</number>
-                                        </property>
-                                        <property name="bottomMargin">
+                                        <property name="margin">
                                          <number>0</number>
                                         </property>
                                         <item row="0" column="0">
@@ -2793,8 +2478,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>152</height>
+                                    <width>87</width>
+                                    <height>140</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2813,16 +2498,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -2863,16 +2539,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -2939,8 +2606,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>92</height>
+                                    <width>419</width>
+                                    <height>247</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -2955,23 +2622,14 @@
                                         <property name="sizeConstraint">
                                          <enum>QLayout::SetDefaultConstraint</enum>
                                         </property>
-                                        <property name="leftMargin">
-                                         <number>0</number>
-                                        </property>
-                                        <property name="topMargin">
-                                         <number>0</number>
-                                        </property>
-                                        <property name="rightMargin">
-                                         <number>0</number>
-                                        </property>
-                                        <property name="bottomMargin">
-                                         <number>0</number>
-                                        </property>
                                         <property name="horizontalSpacing">
                                          <number>0</number>
                                         </property>
                                         <property name="verticalSpacing">
                                          <number>6</number>
+                                        </property>
+                                        <property name="margin">
+                                         <number>0</number>
                                         </property>
                                         <item row="0" column="0">
                                          <widget class="QWidget" name="ResizeWidget" native="true"/>
@@ -3029,8 +2687,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>52</height>
+                                    <width>85</width>
+                                    <height>40</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3066,8 +2724,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>52</height>
+                                    <width>85</width>
+                                    <height>40</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3127,8 +2785,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>519</height>
+                                <width>431</width>
+                                <height>595</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="RGBTabLayout">
@@ -3145,8 +2803,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>102</width>
-                                    <height>159</height>
+                                    <width>92</width>
+                                    <height>147</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3332,8 +2990,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3346,8 +3004,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3360,8 +3018,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3374,8 +3032,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>110</height>
+                                    <width>85</width>
+                                    <height>98</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3394,16 +3052,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -3480,8 +3129,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3494,8 +3143,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3508,8 +3157,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3522,8 +3171,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3536,8 +3185,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3550,8 +3199,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>132</height>
+                                    <width>85</width>
+                                    <height>120</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3602,8 +3251,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>164</height>
+                                    <width>85</width>
+                                    <height>152</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3660,8 +3309,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>164</height>
+                                    <width>85</width>
+                                    <height>152</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3718,8 +3367,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3731,8 +3380,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3745,8 +3394,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>419</width>
+                                    <height>135</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3783,8 +3432,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>492</height>
+                                <width>431</width>
+                                <height>595</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="LabCCTabLayout">
@@ -3798,8 +3447,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3812,8 +3461,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3826,8 +3475,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3840,8 +3489,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3854,8 +3503,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3868,8 +3517,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>132</height>
+                                    <width>85</width>
+                                    <height>120</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3920,8 +3569,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>132</height>
+                                    <width>85</width>
+                                    <height>120</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3972,8 +3621,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>158</height>
+                                    <width>85</width>
+                                    <height>146</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4017,8 +3666,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>164</height>
+                                    <width>85</width>
+                                    <height>152</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4075,8 +3724,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>100</height>
+                                    <width>85</width>
+                                    <height>88</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4121,8 +3770,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>100</height>
+                                    <width>85</width>
+                                    <height>88</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4167,8 +3816,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4184,8 +3833,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4201,8 +3850,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4215,8 +3864,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>419</width>
+                                    <height>163</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4253,8 +3902,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>573</height>
+                                <width>431</width>
+                                <height>595</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="LabSNTabLayout">
@@ -4268,8 +3917,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>68</height>
+                                    <width>85</width>
+                                    <height>56</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4308,8 +3957,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>164</height>
+                                    <width>85</width>
+                                    <height>152</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4379,8 +4028,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>254</height>
+                                    <width>85</width>
+                                    <height>242</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4396,16 +4045,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -4489,8 +4129,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>126</height>
+                                    <width>85</width>
+                                    <height>114</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4581,8 +4221,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>212</height>
+                                    <width>85</width>
+                                    <height>200</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4661,8 +4301,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>100</height>
+                                    <width>85</width>
+                                    <height>88</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4707,8 +4347,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4721,8 +4361,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4734,8 +4374,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>100</height>
+                                    <width>85</width>
+                                    <height>88</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4780,8 +4420,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>100</height>
+                                    <width>85</width>
+                                    <height>88</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4826,8 +4466,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4840,8 +4480,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>164</height>
+                                    <width>85</width>
+                                    <height>152</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4924,8 +4564,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>419</width>
+                                    <height>79</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4938,8 +4578,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>78</height>
+                                    <width>85</width>
+                                    <height>66</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4958,16 +4598,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -5018,8 +4649,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>100</height>
+                                    <width>85</width>
+                                    <height>88</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5064,8 +4695,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>100</height>
+                                    <width>85</width>
+                                    <height>88</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5110,8 +4741,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>269</height>
+                                    <width>85</width>
+                                    <height>257</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5127,16 +4758,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -5198,16 +4820,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>1</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>1</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>1</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>1</number>
                                          </property>
                                          <item>
@@ -5270,8 +4883,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>52</height>
+                                    <width>85</width>
+                                    <height>40</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5334,8 +4947,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>438</height>
+                                <width>431</width>
+                                <height>595</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="LabEyeCandyTabLayout">
@@ -5349,8 +4962,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5363,8 +4976,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5377,8 +4990,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5391,8 +5004,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5405,8 +5018,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5419,8 +5032,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5433,8 +5046,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5447,8 +5060,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5461,8 +5074,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5475,8 +5088,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5489,8 +5102,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5503,8 +5116,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>419</width>
+                                    <height>219</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5517,8 +5130,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>174</height>
+                                    <width>85</width>
+                                    <height>162</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5534,16 +5147,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -5636,8 +5240,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>573</height>
+                                <width>431</width>
+                                <height>595</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="EyeCandyTabLayout">
@@ -5651,8 +5255,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>126</height>
+                                    <width>85</width>
+                                    <height>114</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5671,16 +5275,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -5737,8 +5332,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>84</height>
+                                    <width>85</width>
+                                    <height>72</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5780,8 +5375,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>152</width>
-                                    <height>131</height>
+                                    <width>140</width>
+                                    <height>119</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5800,16 +5395,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -5891,8 +5477,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>152</width>
-                                    <height>131</height>
+                                    <width>140</width>
+                                    <height>119</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -5911,16 +5497,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -6002,8 +5579,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>84</height>
+                                    <width>85</width>
+                                    <height>72</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6045,8 +5622,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6059,8 +5636,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>146</width>
-                                    <height>232</height>
+                                    <width>114</width>
+                                    <height>222</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6076,16 +5653,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -6113,16 +5681,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_155" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_86">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -6244,8 +5803,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>146</width>
-                                    <height>232</height>
+                                    <width>114</width>
+                                    <height>222</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6261,16 +5820,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -6298,16 +5848,7 @@
                                       <item>
                                        <widget class="QWidget" name="widget_155a" native="true">
                                         <layout class="QHBoxLayout" name="horizontalLayout_86a">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -6429,8 +5970,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>152</width>
-                                    <height>147</height>
+                                    <width>140</width>
+                                    <height>135</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6449,16 +5990,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -6543,8 +6075,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>152</width>
-                                    <height>147</height>
+                                    <width>140</width>
+                                    <height>135</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6563,16 +6095,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -6657,8 +6180,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>174</height>
+                                    <width>85</width>
+                                    <height>162</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6674,16 +6197,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -6752,8 +6266,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>190</height>
+                                    <width>85</width>
+                                    <height>178</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6782,16 +6296,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -6866,8 +6371,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>190</height>
+                                    <width>85</width>
+                                    <height>178</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -6896,16 +6401,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -6980,8 +6476,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>116</height>
+                                    <width>85</width>
+                                    <height>104</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7029,8 +6525,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>419</width>
+                                    <height>79</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7043,8 +6539,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7057,8 +6553,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7071,8 +6567,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7109,8 +6605,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>303</height>
+                                <width>431</width>
+                                <height>595</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="OutTabLayout">
@@ -7127,8 +6623,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7141,8 +6637,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>84</height>
+                                    <width>419</width>
+                                    <height>359</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7184,8 +6680,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>150</width>
-                                    <height>82</height>
+                                    <width>118</width>
+                                    <height>72</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7300,8 +6796,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7314,8 +6810,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7328,8 +6824,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>104</height>
+                                    <width>85</width>
+                                    <height>92</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7345,16 +6841,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -7388,16 +6875,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -7448,8 +6926,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>100</width>
+                                    <height>30</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7462,8 +6940,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>266</width>
-                                    <height>270</height>
+                                    <width>254</width>
+                                    <height>258</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -7488,16 +6966,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -7531,16 +7000,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -7592,16 +7052,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -7687,16 +7138,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -7779,16 +7221,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -7868,16 +7301,7 @@
                                          <property name="sizeConstraint">
                                           <enum>QLayout::SetFixedSize</enum>
                                          </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
+                                         <property name="margin">
                                           <number>0</number>
                                          </property>
                                          <item>
@@ -7997,8 +7421,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
-                            <height>195</height>
+                            <width>456</width>
+                            <height>601</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_236">
@@ -8012,8 +7436,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>294</width>
-                                <height>105</height>
+                                <width>283</width>
+                                <height>96</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8023,16 +7447,7 @@
                                <item>
                                 <widget class="QWidget" name="widget_144" native="true">
                                  <layout class="QHBoxLayout" name="horizontalLayout_79">
-                                  <property name="leftMargin">
-                                   <number>6</number>
-                                  </property>
-                                  <property name="topMargin">
-                                   <number>6</number>
-                                  </property>
-                                  <property name="rightMargin">
-                                   <number>6</number>
-                                  </property>
-                                  <property name="bottomMargin">
+                                  <property name="margin">
                                    <number>6</number>
                                   </property>
                                   <item>
@@ -8170,8 +7585,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>117</width>
-                                <height>74</height>
+                                <width>105</width>
+                                <height>64</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8184,16 +7599,7 @@
                                   <item>
                                    <widget class="QWidget" name="widget_152" native="true">
                                     <layout class="QHBoxLayout" name="horizontalLayout_84">
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -8231,16 +7637,7 @@
                                   <item>
                                    <widget class="QWidget" name="widget_153" native="true">
                                     <layout class="QHBoxLayout" name="horizontalLayout_85">
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -8298,8 +7695,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>123</width>
-                                <height>340</height>
+                                <width>111</width>
+                                <height>344</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8388,16 +7785,7 @@
                                      <property name="spacing">
                                       <number>0</number>
                                      </property>
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -8593,8 +7981,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>119</width>
-                                <height>93</height>
+                                <width>444</width>
+                                <height>477</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8607,16 +7995,7 @@
                                   <item>
                                    <widget class="QWidget" name="widget_110" native="true">
                                     <layout class="QHBoxLayout" name="horizontalLayout_51">
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -8659,16 +8038,7 @@
                                   <item>
                                    <widget class="QWidget" name="widget_111" native="true">
                                     <layout class="QHBoxLayout" name="horizontalLayout_58">
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -8711,16 +8081,7 @@
                                   <item>
                                    <widget class="QWidget" name="widget_112" native="true">
                                     <layout class="QHBoxLayout" name="horizontalLayout_59">
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -8827,8 +8188,8 @@
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
-                            <height>28</height>
+                            <width>456</width>
+                            <height>565</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_248"/>
@@ -8860,9 +8221,9 @@
                           <property name="geometry">
                            <rect>
                             <x>0</x>
-                            <y>0</y>
-                            <width>98</width>
-                            <height>627</height>
+                            <y>-43</y>
+                            <width>442</width>
+                            <height>648</height>
                            </rect>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_143">
@@ -8878,7 +8239,7 @@
                               <enum>QFrame::NoFrame</enum>
                              </property>
                              <property name="currentIndex">
-                              <number>19</number>
+                              <number>14</number>
                              </property>
                              <property name="tabSpacing">
                               <number>6</number>
@@ -8888,8 +8249,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>52</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8925,8 +8286,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>111</width>
-                                <height>94</height>
+                                <width>415</width>
+                                <height>84</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -8948,16 +8309,7 @@
                                      <property name="sizeConstraint">
                                       <enum>QLayout::SetFixedSize</enum>
                                      </property>
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -9041,8 +8393,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>119</width>
-                                <height>364</height>
+                                <width>415</width>
+                                <height>354</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9155,8 +8507,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>113</width>
-                                <height>80</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9251,8 +8603,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>52</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9288,8 +8640,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>125</width>
-                                <height>168</height>
+                                <width>415</width>
+                                <height>160</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9474,8 +8826,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>112</width>
-                                <height>55</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9488,16 +8840,7 @@
                                   <item>
                                    <widget class="QWidget" name="widget_172" native="true">
                                     <layout class="QHBoxLayout" name="horizontalLayout_97">
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -9549,8 +8892,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>52</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9586,8 +8929,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>52</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9623,8 +8966,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>52</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9660,8 +9003,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>52</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9697,8 +9040,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>144</width>
-                                <height>111</height>
+                                <width>415</width>
+                                <height>101</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9714,16 +9057,7 @@
                                      <property name="sizeConstraint">
                                       <enum>QLayout::SetFixedSize</enum>
                                      </property>
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -9779,16 +9113,7 @@
                                      <property name="sizeConstraint">
                                       <enum>QLayout::SetFixedSize</enum>
                                      </property>
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -9859,8 +9184,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>162</width>
-                                <height>74</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -9873,16 +9198,7 @@
                                   <item>
                                    <widget class="QWidget" name="widget_142" native="true">
                                     <layout class="QHBoxLayout" name="horizontalLayout_77">
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -9925,16 +9241,7 @@
                                   <item>
                                    <widget class="QWidget" name="widget_143" native="true">
                                     <layout class="QHBoxLayout" name="horizontalLayout_78">
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -9997,8 +9304,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>52</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -10034,8 +9341,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>84</height>
+                                <width>415</width>
+                                <height>100</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -10044,9 +9351,32 @@
                               <layout class="QVBoxLayout" name="verticalLayout_241">
                                <item>
                                 <widget class="QWidget" name="widget_150" native="true">
-                                 <layout class="QVBoxLayout" name="verticalLayout_242">
+                                 <layout class="QVBoxLayout" name="verticalLayout_30">
                                   <item>
                                    <widget class="QWidget" name="SaveConfirmationWidget" native="true"/>
+                                  </item>
+                                  <item>
+                                   <layout class="QHBoxLayout" name="horizontalLayout_21">
+                                    <item>
+                                     <spacer name="horizontalSpacer_39">
+                                      <property name="orientation">
+                                       <enum>Qt::Horizontal</enum>
+                                      </property>
+                                      <property name="sizeType">
+                                       <enum>QSizePolicy::Fixed</enum>
+                                      </property>
+                                      <property name="sizeHint" stdset="0">
+                                       <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                       </size>
+                                      </property>
+                                     </spacer>
+                                    </item>
+                                    <item>
+                                     <widget class="QWidget" name="AutosaveSettingsWidget" native="true"/>
+                                    </item>
+                                   </layout>
                                   </item>
                                   <item>
                                    <widget class="QWidget" name="ResetSettingsConfirmationWidget" native="true"/>
@@ -10077,8 +9407,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>52</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -10114,8 +9444,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>111</width>
-                                <height>81</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -10128,16 +9458,7 @@
                                   <item>
                                    <widget class="QWidget" name="TranslationWidget" native="true">
                                     <layout class="QHBoxLayout" name="horizontalLayout_62">
-                                     <property name="leftMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="topMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="rightMargin">
-                                      <number>0</number>
-                                     </property>
-                                     <property name="bottomMargin">
+                                     <property name="margin">
                                       <number>0</number>
                                      </property>
                                      <item>
@@ -10202,8 +9523,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>52</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -10239,8 +9560,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>128</height>
+                                <width>415</width>
+                                <height>132</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -10311,8 +9632,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>78</height>
+                                <width>430</width>
+                                <height>76</height>
                                </rect>
                               </property>
                               <attribute name="label">
@@ -10362,16 +9683,7 @@
                <property name="sizeConstraint">
                 <enum>QLayout::SetDefaultConstraint</enum>
                </property>
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
+               <property name="margin">
                 <number>0</number>
                </property>
                <item>
@@ -10383,16 +9695,7 @@
                   <property name="sizeConstraint">
                    <enum>QLayout::SetFixedSize</enum>
                   </property>
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
+                  <property name="margin">
                    <number>0</number>
                   </property>
                   <item>
@@ -10450,16 +9753,7 @@
                   <property name="sizeConstraint">
                    <enum>QLayout::SetFixedSize</enum>
                   </property>
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
+                  <property name="margin">
                    <number>0</number>
                   </property>
                   <item>
@@ -10573,16 +9867,7 @@
                <property name="spacing">
                 <number>0</number>
                </property>
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
+               <property name="margin">
                 <number>0</number>
                </property>
                <item>
@@ -10738,16 +10023,7 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
+            <property name="margin">
              <number>0</number>
             </property>
             <item>
@@ -10777,16 +10053,7 @@
                  <property name="spacing">
                   <number>0</number>
                  </property>
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
+                 <property name="margin">
                   <number>0</number>
                  </property>
                  <item>
@@ -10802,24 +10069,15 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>543</width>
-                      <height>841</height>
+                      <width>553</width>
+                      <height>853</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_240">
                      <property name="spacing">
                       <number>0</number>
                      </property>
-                     <property name="leftMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="topMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="rightMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="bottomMargin">
+                     <property name="margin">
                       <number>0</number>
                      </property>
                      <item>
@@ -10841,16 +10099,7 @@
                         <property name="spacing">
                          <number>0</number>
                         </property>
-                        <property name="leftMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="bottomMargin">
+                        <property name="margin">
                          <number>0</number>
                         </property>
                         <item>
@@ -10890,16 +10139,7 @@
                            <item>
                             <widget class="QWidget" name="widget_659" native="true">
                              <layout class="QHBoxLayout" name="horizontalLayout_289">
-                              <property name="leftMargin">
-                               <number>6</number>
-                              </property>
-                              <property name="topMargin">
-                               <number>6</number>
-                              </property>
-                              <property name="rightMargin">
-                               <number>6</number>
-                              </property>
-                              <property name="bottomMargin">
+                              <property name="margin">
                                <number>6</number>
                               </property>
                               <item>
@@ -11083,16 +10323,7 @@
                 <property name="spacing">
                  <number>0</number>
                 </property>
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
+                <property name="margin">
                  <number>0</number>
                 </property>
                 <item>
@@ -11157,16 +10388,7 @@
                    <property name="sizeConstraint">
                     <enum>QLayout::SetFixedSize</enum>
                    </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
+                   <property name="margin">
                     <number>0</number>
                    </property>
                    <item>
@@ -11361,16 +10583,7 @@
         <property name="spacing">
          <number>0</number>
         </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>0</number>
         </property>
        </layout>
@@ -11380,16 +10593,7 @@
         <property name="spacing">
          <number>0</number>
         </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>0</number>
         </property>
        </layout>
@@ -11457,11 +10661,11 @@
    <slot>OnVisibleToolsDiscardButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>457</x>
-     <y>321</y>
+     <x>419</x>
+     <y>291</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-3</x>
+     <x>0</x>
      <y>522</y>
     </hint>
    </hints>
@@ -11473,11 +10677,11 @@
    <slot>OnVisibleToolsLoadButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>321</y>
+     <x>52</x>
+     <y>291</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-3</x>
+     <x>0</x>
      <y>347</y>
     </hint>
    </hints>
@@ -11489,11 +10693,11 @@
    <slot>OnVisibleToolsSaveButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>71</x>
-     <y>329</y>
+     <x>80</x>
+     <y>291</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-2</x>
+     <x>0</x>
      <y>405</y>
     </hint>
    </hints>

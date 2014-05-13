@@ -3465,6 +3465,11 @@ void CB_LoadStyleButton() {
 
 void CB_SaveConfirmationCheck(const QVariant Check) {
   Settings->SetValue("SaveConfirmation",Check);
+  MainWindow->AutosaveSettingsWidget->setDisabled(Settings->GetInt("SaveConfirmation"));
+}
+
+void CB_AutosaveSettingsCheck(const QVariant Check) {
+  Settings->SetValue("AutosaveSettings",Check);
 }
 
 void CB_ResetSettingsConfirmationCheck(const QVariant Check) {
@@ -3938,7 +3943,7 @@ void CB_OpenSettingsFileButton() {
   ptAddUndo();
 
   QString SettingsFilePattern =
-    QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
+    QObject::tr("All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)");
   QString SettingsFileName =
     QFileDialog::getOpenFileName(NULL,
                                  QObject::tr("Open setting file"),
@@ -3952,7 +3957,7 @@ void CB_OpenPresetFileButton() {
   ptAddUndo();
 
   QString SettingsFilePattern =
-    QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
+    QObject::tr("All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)");
   QString SettingsFileName =
     QFileDialog::getOpenFileName(NULL,
                                  QObject::tr("Open preset"),
@@ -6873,6 +6878,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(StyleHighLightChoice)
 
   M_Dispatch(SaveConfirmationCheck)
+  M_Dispatch(AutosaveSettingsCheck)
   M_Dispatch(ResetSettingsConfirmationCheck)
   M_Dispatch(FullPipeConfirmationCheck)
 
