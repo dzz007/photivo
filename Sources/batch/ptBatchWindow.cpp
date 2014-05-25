@@ -126,7 +126,7 @@ void ptBatchWindow::showEvent(QShowEvent *event)
 void ptBatchWindow::OnAddJob()
 {
   QString SettingsFilePattern =
-    QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
+    QObject::tr("All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)");
   QStringList SettingsFileNames =
     QFileDialog::getOpenFileNames(nullptr,
                                  QObject::tr("Open setting files"),
@@ -250,7 +250,7 @@ void ptBatchWindow::OnRunNextJob()
 
 void ptBatchWindow::OnLogReady()
 {
-  BTLog->appendPlainText(m_BatchModel->m_BatchProcess->readAll().data());
+  BTLog->appendPlainText(QString::fromLocal8Bit(m_BatchModel->m_BatchProcess->readAll()));
 }
 
 //==============================================================================

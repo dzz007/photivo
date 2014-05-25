@@ -100,6 +100,9 @@ QStringList FileExtsRaw;
 QStringList FileExtsBitmap;
 QString     UserDirectory;
 QString     ShareDirectory;
+// Sidecar related
+Exiv2::IptcData IptcData;
+Exiv2::XmpData  XmpData;
 
 ptChannelMixer* ChannelMixer = NULL;
 
@@ -108,6 +111,9 @@ cmsCIExyY       D65;
 cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
+void ReadSidecar(const QString& Sidecar);
+void SetRatingFromXmp();
+void SetTagsFromXmp();
 
 //
 // The 'tee' towards the display.
@@ -403,6 +409,7 @@ short   JobMode = 0;
 QString JobFileName = "";
 QString ImageFileToOpen = "";
 QString PtsFileToOpen = "";
+QString Sidecar = "";
 #ifdef Q_OS_MAC
     bool MacGotFileEvent=false;
 #endif
@@ -537,8 +544,9 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Handle cli arguments
   QString PhotivoCliUsageMsg = "<pre>" + QObject::tr(
-"Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
-"                [-h] [--new-instance]\n"
+"Syntax: photivo [inputfile | -i imagefile | -j jobfile |\n"
+"                 --load-and-delete imagefile]\n"
+"                [--pts ptsfile] [--sidecar sidecarfile] [-h] [--new-instance]\n"
 "Options:\n"
 "inputfile\n"
 "      Specify the image or settings file to load. Works like -i for image files\n"
@@ -554,6 +562,8 @@ int photivoMain(int Argc, char *Argv[]) {
 "--pts ptsfile\n"
 "      Specify settings file to load with the image. Must be used together\n"
 "      with -i.\n"
+"--sidecar sidecarfile\n"
+"      Specify sidecar file to load with the image.\n"
 "--new-instance\n"
 "      Allow opening another Photivo instance instead of using a currently\n"
 "      running Photivo. Job files are always opened in a new instance.\n"
@@ -564,7 +574,7 @@ int photivoMain(int Argc, char *Argv[]) {
 "For more documentation visit the wiki: http://photivo.org/photivo/start\n"
   ) + "</pre>";
 
-  ptCliCommands cli = { cliNoAction, "", "", false, false };
+  ptCliCommands cli = { cliNoAction, "", "", "", false, false };
 
 #ifdef Q_OS_MAC
 //Just Skip if engaged by QFileOpenEvent
@@ -593,6 +603,11 @@ int photivoMain(int Argc, char *Argv[]) {
     ImageFileToOpen = cli.Filename;
   }
 
+  
+  if (cli.Sidecar != "" ) {
+    Sidecar = cli.Sidecar;
+  }
+
   // QtSingleInstance, add CLI-Switch to skip and allow multiple instances
   // JobMode is always run in a new instance
   // Sent messages are handled by ptMainWindow::OtherInstanceMessage
@@ -607,6 +622,9 @@ int photivoMain(int Argc, char *Argv[]) {
         } else {
           TheApplication->sendMessage("::img::" + ImageFileToOpen);
         }
+      }
+      if (Sidecar != ""){
+        TheApplication->sendMessage("::sidecar::" + Sidecar);
       }
       TheApplication->activateWindow();
       exit(0);
@@ -803,6 +821,7 @@ int photivoMain(int Argc, char *Argv[]) {
   Settings->SetValue("UserDirectory", UserDirectory);
   Settings->SetValue("ShareDirectory",NewShareDirectory);
   Settings->SetValue("MainDirectory",QCoreApplication::applicationDirPath().append("/"));
+  Settings->SetValue("Sidecar", Sidecar);
 
   // Set paths once with first start
   if (FirstStart == 1) {
@@ -1096,6 +1115,11 @@ void CB_Event0() {
     if (PtsFileToOpen != "") {
       CB_OpenSettingsFile(PtsFileToOpen);
     }
+
+    if (Sidecar != "") {
+      ReadSidecar(Sidecar);
+    }
+
     if (ImageFileToOpen != "") {
       CB_MenuFileOpen(1);
     }
@@ -2426,7 +2450,9 @@ void WriteOut() {
 
     if (Settings->GetInt("IncludeExif")) {
       if (!ptImageHelper::WriteExif(Settings->GetString("OutputFileName"),
-                                    TheProcessor->m_ExifBuffer))
+                                    TheProcessor->m_ExifBuffer,
+                                    IptcData,
+                                    XmpData))
         ptMessageBox::warning(MainWindow, QObject::tr("Exif Error"), QObject::tr("No exif data written."));
     }
   }
@@ -2845,7 +2871,9 @@ void CB_MenuFileOpen(const short HaveFile) {
     for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i), 0);
   }
 
-
+  if (Settings->GetString("Sidecar") != "") {
+    ReadSidecar(Settings->GetString("Sidecar"));
+  }
 
   // clean up possible detail view cache
   if (Settings->GetInt("DetailViewActive") == 1) {
@@ -2873,6 +2901,9 @@ void CB_MenuFileOpen(const short HaveFile) {
         CB_CropOrientationButton();
     }
   }
+  SetRatingFromXmp();
+  if (Settings->GetInt("LoadTags"))
+    SetTagsFromXmp();
 
   // reflect RAW or bitmap in GUI
   MainWindow->UpdateToolBoxes();
@@ -3659,6 +3690,11 @@ void CB_LoadStyleButton() {
 
 void CB_SaveConfirmationCheck(const QVariant Check) {
   Settings->SetValue("SaveConfirmation",Check);
+  MainWindow->AutosaveSettingsWidget->setDisabled(Settings->GetInt("SaveConfirmation"));
+}
+
+void CB_AutosaveSettingsCheck(const QVariant Check) {
+  Settings->SetValue("AutosaveSettings",Check);
 }
 
 void CB_ResetSettingsConfirmationCheck(const QVariant Check) {
@@ -4122,6 +4158,9 @@ void CB_OpenSettingsFile(QString SettingsFileName) {
     //TODO: check Nextphase against automatic pipesize
     Update(NextPhase);
   }
+  SetRatingFromXmp();
+  if (Settings->GetInt("LoadTags"))
+    SetTagsFromXmp();
 }
 
 void CB_OpenSettingsFileButton() {
@@ -4134,7 +4173,7 @@ void CB_OpenSettingsFileButton() {
 // end ATZ
 
   QString SettingsFilePattern =
-    QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
+    QObject::tr("All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)");
   QString SettingsFileName =
     QFileDialog::getOpenFileName(NULL,
                                  QObject::tr("Open setting file"),
@@ -4150,7 +4189,7 @@ void CB_OpenPresetFileButton() {
 // end ATZ
 
   QString SettingsFilePattern =
-    QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
+    QObject::tr("All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)");
   QString SettingsFileName =
     QFileDialog::getOpenFileName(NULL,
                                  QObject::tr("Open preset"),
@@ -7079,6 +7118,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(StyleHighLightChoice)
 
   M_Dispatch(SaveConfirmationCheck)
+  M_Dispatch(AutosaveSettingsCheck)
   M_Dispatch(ResetSettingsConfirmationCheck)
   M_Dispatch(FullPipeConfirmationCheck)
 
@@ -7108,6 +7148,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 // ATZ
   M_JustSetDispatch(SaveCachedImageCheck)
 // end ATZ
+  M_JustSetDispatch(LoadTagsCheck)
   M_JustSetDispatch(StartupSwitchARCheck)
 
   M_Dispatch(CropInitialZoomChoice)
@@ -7547,6 +7588,65 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
     fprintf(stderr,"(%s,%d) Unexpected ObjectName '%s'\n",
             __FILE__,__LINE__,ObjectName.toLocal8Bit().data());
     assert(0);
+  }
+}
+
+//==============================================================================
+
+/*!
+ * Reads Sidecar file
+ * Places data into \var IptcData and \var XmpData
+ */
+void ReadSidecar(const QString& Sidecar)
+{
+  if (Sidecar.size() == 0) return;
+
+  if (Exiv2::ImageFactory::getType(Sidecar.toLocal8Bit().data()) == Exiv2::ImageType::none) {
+    return;
+  }
+
+  Exiv2::Image::AutoPtr hImage = Exiv2::ImageFactory::open(Sidecar.toLocal8Bit().data());
+
+  if (!hImage.get()) {
+    return;
+  }
+  hImage->readMetadata();
+  IptcData = hImage->iptcData();
+  XmpData = hImage->xmpData();
+}
+
+//==============================================================================
+
+/*!
+ * Sets ImageRating value, which is taken from Xmp.xmp.Rating
+ * Places data into IptcData and XmpData
+ */
+void SetRatingFromXmp()
+{
+  Exiv2::XmpData::const_iterator Pos;
+  if ((Pos = XmpData.findKey(Exiv2::XmpKey("Xmp.xmp.Rating"))) != XmpData.end()) {
+    std::stringstream str;
+    str << *Pos;
+    int Rating;
+    sscanf(str.str().c_str(),"%d",&Rating);
+    Settings->SetValue("ImageRating", Rating);
+  }
+}
+
+//==============================================================================
+
+/*!
+ * Sets Tags value, which is taken from Xmp.digiKam.TagsList
+ * Places data into IptcData and XmpData
+ */
+void SetTagsFromXmp()
+{
+  Exiv2::XmpData::const_iterator Pos;
+  if ((Pos = XmpData.findKey(Exiv2::XmpKey("Xmp.digiKam.TagsList"))) != XmpData.end()) {
+    std::stringstream str;
+    str << *Pos;
+    QString tags = str.str().c_str();
+    MainWindow->TagsEditWidget->setPlainText(tags);
   }
 }
 

@@ -63,6 +63,7 @@ void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
 void CB_ZoomStep(int direction);
+void ReadSidecar(const QString& Sidecar);
 
 // ATZ
 void ptAddUndo();
@@ -678,6 +679,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   SwitchUIState(uisProcessing);
   findChild<ptGroupBox *>(QString("TabFileMgrSettings"))->setVisible(0);
 #endif
+
+  AutosaveSettingsWidget->setDisabled(Settings->GetInt("SaveConfirmation"));
 }
 
 //==============================================================================
@@ -920,7 +923,13 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
     ImageFileToOpen.remove(0,7);
     ImageCleanUp++;
     CB_MenuFileOpen(1);
+  } else if (msg.startsWith("::sidecar::")) {
+    QString Sidecar = msg;
+    Sidecar.remove(0,11);
+    ReadSidecar(Sidecar);
+    Settings->SetValue("Sidecar", Sidecar);
   }
+  
 }
 
 //==============================================================================
@@ -1794,6 +1803,9 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       ptMakeUndo();
     } else if (Event->key()==Qt::Key_Y && Event->modifiers()==Qt::ControlModifier) {
       // Ctrl+Y redo
+      ptMakeRedo();
+    } else if (Event->key()==Qt::Key_Z && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+Z redo
       ptMakeRedo();
     } else if (Event->key()==Qt::Key_C && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
       // Ctrl+Shift+C copy settings
