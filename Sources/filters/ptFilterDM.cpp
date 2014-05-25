@@ -1511,6 +1511,7 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("ResetSettingsConfirmation",       "");
 //  FNameMap.insert("FullPipeConfirmation",            "");
 //  FNameMap.insert("EscToExit",                       "");
+//  FNameMap.insert("LoadTags",                       "");
 
     // former non-gui elements
 //  FNameMap.insert("PipeIsRunning",                   "");
