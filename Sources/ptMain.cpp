@@ -2739,6 +2739,10 @@ void tryGetCachedImage() {
       Success);
     image->lcmsRGBToPreviewRGB(Settings->GetInt("CMQuality") == ptCMQuality_FastSRGB);
     ptSetUnalteredImage(image);
+//    Workaround to fix pixel reading crash
+    PreviewImage->Set(image);
+    if (!TheProcessor->m_Image_AfterEyeCandy) TheProcessor->m_Image_AfterEyeCandy = new ptImage();
+    TheProcessor->m_Image_AfterEyeCandy->Set(image);
 
     MainWindow->ViewFrameStackedWidget->setCurrentWidget(MainWindow->ViewFrameCentralWidget);
     ViewWindow->UpdateImage(image);
@@ -2850,21 +2854,16 @@ void CB_MenuFileOpen(const short HaveFile) {
 // ATZ: load settings file automatically
   // ColorLabel is a new setting and is not present in old .pts files. Reset it to 0 to avoid bugs.
   Settings->SetValue("ColorLabel", 0);
-  bool cleanupNeeded = false;
   QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".pts";
   if (QFile::exists(SettingsFileName)) {
     Settings->SetValue("HaveImage", 0);
     CB_OpenSettingsFile(SettingsFileName);
-    cleanupNeeded = true;
   } else if (Settings->GetInt("StartupSettings") == 1 &&
       Settings->GetInt("StartupSettingsReset") == 1 &&
       Settings->GetInt("HaveImage") == 1) {
     Settings->SetValue("HaveImage", 0);
     CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
-    cleanupNeeded = true;
-  }
-  // clean up
-  if (cleanupNeeded) {
+    // clean up
     QStringList Temp;
     Temp << "CropX" << "CropY" << "CropW" << "CropH";
     Temp << "RotateW" << "RotateH";
@@ -3332,10 +3331,6 @@ QFileInfoList ptGetFilesInTheImageFolder() {
   QFileInfo PathInfo(InputFileNameList[0]);
   QString fileName = PathInfo.fileName();
   QDir fileDir = PathInfo.dir();
-
-  if (fileDir.absolutePath() == FileMgrWindow->getCurrentDir()) {
-    return FileMgrWindow->getFilteredFileInfoList();
-  }
 
   fileDir.setFilter(QDir::Files);
   fileDir.setSorting(QDir::Name);
