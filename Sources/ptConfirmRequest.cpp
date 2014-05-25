@@ -117,7 +117,9 @@ bool ptConfirmRequest::saveImage(QString newFilename /*= ""*/) {
       QString baseFileName = PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName();
       // check if we have processed image
       if (TheProcessor->m_Image_AfterDcRaw != NULL) {
-        GFilterDM->WritePresetFile(baseFileName + ".pts");
+        if (Settings->GetInt("AutosaveSettings") == 1) {
+          GFilterDM->WritePresetFile(baseFileName + ".pts");
+        }
         if (Settings->GetInt("SaveCachedImage") == 1) {
           // ImageMagic needs right file extension, so write to jpg, then rename
           if (QFile::exists(baseFileName + ".cached"))

@@ -490,10 +490,12 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"IncludeExif"                ,ptGT_Check ,2,1,1,tr("Include metadata"),tr("Include metadata (only in jpeg and tiff)")},
     {"EraseExifThumbnail"         ,ptGT_Check ,2,1,1,tr("Erase thumbnail") ,tr("Erase the exif thumbnail (only in jpeg and tiff)")},
     {"SaveConfirmation"           ,ptGT_Check ,1,0,1,tr("Save image")      ,tr("Confirm any action that would discard an unsaved image")},
+    {"AutosaveSettings"           ,ptGT_Check ,1,0,1,tr("Autosave settings"),tr("Autosave settings when loading another image (if save confirmation is off)")},
     {"ResetSettingsConfirmation"  ,ptGT_Check, 1,0,1,tr("Reset settings")  ,tr("Confirm resetting settings or dropping a settings file onto an image")},
     {"FullPipeConfirmation"       ,ptGT_Check ,1,0,1,tr("Switch to 1:1 pipe"), tr("Confirm switch to the full sized pipe")},
     {"EscToExit"                  ,ptGT_Check ,1,0,0,tr("Esc key exits Photivo"),tr("Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.")},
-    {"SaveCachedImage"            ,ptGT_Check ,1,0,0,tr("Save .cached image"),tr("Save .cached jpg file after editing the image")}
+    {"SaveCachedImage"            ,ptGT_Check ,1,0,0,tr("Save .cached image"),tr("Save .cached jpg file after editing the image")},
+    {"LoadTags"                   ,ptGT_Check ,1,0,0,tr("Load tags from sidecar files"),tr("Load tags from sidecar XMP files when opening an image.")}
   };
 
   // Load in the non gui elements
@@ -533,6 +535,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BadPixelsFileName"                    ,1    ,""                                    ,1},
     {"HaveDarkFrame"                        ,1    ,0                                     ,1},
     {"DarkFrameFileName"                    ,1    ,""                                    ,1},
+    {"Sidecar"                              ,1    ,""                                    ,1},
     {"VisualSelectionX"                     ,9    ,0                                     ,1},
     {"VisualSelectionY"                     ,9    ,0                                     ,1},
     {"VisualSelectionWidth"                 ,9    ,0                                     ,1},

@@ -1516,9 +1516,11 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("IncludeExif",                     "");
 //  FNameMap.insert("EraseExifThumbnail",              "");
 //  FNameMap.insert("SaveConfirmation",                "");
+//  FNameMap.insert("AutosaveSettings",                "");
 //  FNameMap.insert("ResetSettingsConfirmation",       "");
 //  FNameMap.insert("FullPipeConfirmation",            "");
 //  FNameMap.insert("EscToExit",                       "");
+//  FNameMap.insert("LoadTags",                       "");
 
     // former non-gui elements
 //  FNameMap.insert("PipeIsRunning",                   "");

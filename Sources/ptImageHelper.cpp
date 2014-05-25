@@ -54,7 +54,9 @@ void StringClean(QString& AString) {
 //==============================================================================
 
 bool ptImageHelper::WriteExif(const QString              &AFileName,
-                              const std::vector<uint8_t> &AExifBuffer) {
+                              const std::vector<uint8_t> &AExifBuffer,
+                              Exiv2::IptcData            &AIptcData,
+                              Exiv2::XmpData             &AXmpData) {
   try {
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
 
@@ -116,7 +118,6 @@ bool ptImageHelper::WriteExif(const QString              &AFileName,
     }
 
     // IPTC data
-    Exiv2::IptcData iptcData;
 
     QStringList Tags        = Settings->GetStringList("TagsList");
     QStringList DigikamTags = Settings->GetStringList("DigikamTagsList");
@@ -124,54 +125,54 @@ bool ptImageHelper::WriteExif(const QString              &AFileName,
     Exiv2::StringValue StringValue;
     for (int i = 0; i < Tags.size(); i++) {
       StringValue.read(Tags.at(i).toStdString());
-      iptcData.add(Exiv2::IptcKey("Iptc.Application2.Keywords"), &StringValue);
+      AIptcData.add(Exiv2::IptcKey("Iptc.Application2.Keywords"), &StringValue);
     }
+
 
     // XMP data
-    Exiv2::XmpData xmpData;
 
     for (int i = 0; i < Tags.size(); i++) {
-      xmpData["Xmp.dc.subject"] = Tags.at(i).toStdString();
+      AXmpData["Xmp.dc.subject"] = Tags.at(i).toStdString();
     }
     for (int i = 0; i < DigikamTags.size(); i++) {
-      xmpData["Xmp.digiKam.TagsList"] = DigikamTags.at(i).toStdString();
+      AXmpData["Xmp.digiKam.TagsList"] = DigikamTags.at(i).toStdString();
     }
 
     // Image rating
     outExifData["Exif.Image.Rating"] = Settings->GetInt("ImageRating");
-    xmpData["Xmp.xmp.Rating"]        = Settings->GetInt("ImageRating");
+    AXmpData["Xmp.xmp.Rating"]       = Settings->GetInt("ImageRating");
 
     // Program name
-    outExifData["Exif.Image.ProcessingSoftware"] = ProgramName;
-    outExifData["Exif.Image.Software"]           = ProgramName;
-    iptcData["Iptc.Application2.Program"]        = ProgramName;
-    iptcData["Iptc.Application2.ProgramVersion"] = "idle";
-    xmpData["Xmp.xmp.CreatorTool"]               = ProgramName;
-    xmpData["Xmp.tiff.Software"]                 = ProgramName;
+    outExifData["Exif.Image.ProcessingSoftware"]  = ProgramName;
+    outExifData["Exif.Image.Software"]            = ProgramName;
+    AIptcData["Iptc.Application2.Program"]        = ProgramName;
+    AIptcData["Iptc.Application2.ProgramVersion"] = "idle";
+    AXmpData["Xmp.xmp.CreatorTool"]               = ProgramName;
+    AXmpData["Xmp.tiff.Software"]                 = ProgramName;
 
     // Title
     QString TitleWorking = Settings->GetString("ImageTitle");
     StringClean(TitleWorking);
     if (TitleWorking != "") {
-      outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
-      iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
-      xmpData["Xmp.dc.description"]         = TitleWorking.toStdString();
-      xmpData["Xmp.exif.UserComment"]       = TitleWorking.toStdString();
-      xmpData["Xmp.tiff.ImageDescription"]  = TitleWorking.toStdString();
+      outExifData["Exif.Photo.UserComment"]  = TitleWorking.toStdString();
+      AIptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
+      AXmpData["Xmp.dc.description"]         = TitleWorking.toStdString();
+      AXmpData["Xmp.exif.UserComment"]       = TitleWorking.toStdString();
+      AXmpData["Xmp.tiff.ImageDescription"]  = TitleWorking.toStdString();
     }
 
     // Copyright
     QString CopyrightWorking = Settings->GetString("Copyright");
     StringClean(CopyrightWorking);
     if (CopyrightWorking != "") {
-      outExifData["Exif.Image.Copyright"]     = CopyrightWorking.toStdString();
-      iptcData["Iptc.Application2.Copyright"] = CopyrightWorking.toStdString();
-      xmpData["Xmp.tiff.Copyright"]           = CopyrightWorking.toStdString();
+      outExifData["Exif.Image.Copyright"]      = CopyrightWorking.toStdString();
+      AIptcData["Iptc.Application2.Copyright"] = CopyrightWorking.toStdString();
+      AXmpData["Xmp.tiff.Copyright"]           = CopyrightWorking.toStdString();
     }
 
     Exiv2Image->setExifData(outExifData);
-    Exiv2Image->setIptcData(iptcData);
-    Exiv2Image->setXmpData( xmpData);
+    Exiv2Image->setIptcData(AIptcData);
+    Exiv2Image->setXmpData(AXmpData);
     Exiv2Image->writeMetadata();
     return true;
 #endif
