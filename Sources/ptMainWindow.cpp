@@ -63,6 +63,7 @@ void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
 void CB_ZoomStep(int direction);
+void ReadSidecar(const QString& Sidecar);
 
 // undo-redo & clipboard support
 void ptMakeUndo();
@@ -909,7 +910,13 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
     ImageFileToOpen.remove(0,7);
     ImageCleanUp++;
     CB_MenuFileOpen(1);
+  } else if (msg.startsWith("::sidecar::")) {
+    QString Sidecar = msg;
+    Sidecar.remove(0,11);
+    ReadSidecar(Sidecar);
+    Settings->SetValue("Sidecar", Sidecar);
   }
+  
 }
 
 //==============================================================================
