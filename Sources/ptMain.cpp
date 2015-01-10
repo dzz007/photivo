@@ -327,6 +327,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("Normalization",         Fuid::Normalization_RGB);
   GFilterDM->NewFilter("ColorEnhancement",      Fuid::ColorEnhancement_RGB);
   GFilterDM->NewFilter("LMHRecoveryRgb",        Fuid::LMHRecovery_RGB);
+  GFilterDM->NewFilter("TextureContrastRgb",    Fuid::TextureContrast_RGB);
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_RGB);
   GFilterDM->NewFilter("LevelsRgb",             Fuid::Levels_RGB);
   GFilterDM->NewFilter("RgbCurve",              Fuid::RgbCurve_RGB);
@@ -5288,53 +5289,6 @@ void CB_ExposureClipModeChoice(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the RGB Tab
-// Texturecontrast
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_RGBTextureContrastAmountInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastAmount",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_RGBTextureContrastThresholdInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastThreshold",Value);
-  if (Settings->GetDouble("RGBTextureContrastAmount")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_RGBTextureContrastOpacityInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastOpacity",Value);
-  if (Settings->GetDouble("RGBTextureContrastAmount")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_RGBTextureContrastSoftnessInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastSoftness",Value);
-  if (Settings->GetDouble("RGBTextureContrastAmount")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_RGBTextureContrastEdgeControlInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastEdgeControl",Value);
-  if (Settings->GetDouble("RGBTextureContrastAmount")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_RGBTextureContrastMaskingInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastMasking",Value);
-  if (Settings->GetDouble("RGBTextureContrastAmount")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
 // Microcontrast
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -7082,13 +7036,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
-
-  M_Dispatch(RGBTextureContrastThresholdInput)
-  M_Dispatch(RGBTextureContrastSoftnessInput)
-  M_Dispatch(RGBTextureContrastAmountInput)
-  M_Dispatch(RGBTextureContrastOpacityInput)
-  M_Dispatch(RGBTextureContrastEdgeControlInput)
-  M_Dispatch(RGBTextureContrastMaskingInput)
 
   M_Dispatch(Microcontrast1MaskTypeChoice)
   M_Dispatch(Microcontrast1RadiusInput)

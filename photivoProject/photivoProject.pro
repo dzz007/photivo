@@ -289,7 +289,8 @@ HEADERS += \
     ../Sources/ptMutexLocker.h \
     ../Sources/filemgmt/ptThumbGenMgr.h \
     ../Sources/filemgmt/ptThumbGenWorker.h \
-    ../Sources/filemgmt/ptThumbGenHelpers.h
+    ../Sources/filemgmt/ptThumbGenHelpers.h \
+    ../Sources/filters/ptFilter_TextureContrast.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -425,7 +426,8 @@ SOURCES += \
     ../Sources/ptMutexLocker.cpp \
     ../Sources/filemgmt/ptThumbGenMgr.cpp \
     ../Sources/filemgmt/ptThumbGenWorker.cpp \
-    ../Sources/filemgmt/ptThumbGenHelpers.cpp
+    ../Sources/filemgmt/ptThumbGenHelpers.cpp \
+    ../Sources/filters/ptFilter_TextureContrast.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \
