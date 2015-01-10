@@ -151,18 +151,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Microcontrast2LowerLimit"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"Microcontrast2UpperLimit"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
     {"Microcontrast2Softness"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"TextureContrast1Amount"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-10.0  ,40.0   ,1.0,1 ,tr("Amount")           ,tr("Amount")},
-    {"TextureContrast1Threshold"     ,ptGT_InputSlider     ,2,1,1 ,20.0  ,0.0  ,50.0   ,4.0,1 ,tr("Scale")        ,tr("Scale")},
-    {"TextureContrast1Softness"      ,ptGT_InputSlider     ,2,1,1 ,0.14  ,0.0  ,1.0    ,0.01,2 ,tr("Threshold")         ,tr("Threshold")},
-    {"TextureContrast1Opacity"       ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")           ,tr("Opacity")},
-    {"TextureContrast1EdgeControl"   ,ptGT_InputSlider     ,2,1,1 ,0.0   ,0.0  ,10.0   ,0.1,1 ,tr("Denoise")           ,tr("Don't amplify noise")},
-    {"TextureContrast1Masking"       ,ptGT_InputSlider     ,2,1,1 ,100.0 ,0.0  ,100.0  ,10.0,0  ,tr("Masking")           ,tr("Don't amplify noise")},
-    {"TextureContrast2Amount"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-10.0  ,40.0   ,1.0,1 ,tr("Amount")           ,tr("Amount")},
-    {"TextureContrast2Threshold"     ,ptGT_InputSlider     ,2,1,1 ,100.0  ,0.0  ,400.0   ,4.0,1 ,tr("Scale")        ,tr("Scale")},
-    {"TextureContrast2Softness"      ,ptGT_InputSlider     ,2,1,1 ,0.14  ,0.0  ,1.0    ,0.01,2 ,tr("Threshold")         ,tr("Threshold")},
-    {"TextureContrast2Opacity"       ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")           ,tr("Opacity")},
-    {"TextureContrast2EdgeControl"   ,ptGT_InputSlider     ,2,1,1 ,0.0   ,0.0  ,10.0   ,0.1,1 ,tr("Denoise")           ,tr("Don't amplify noise")},
-    {"TextureContrast2Masking"       ,ptGT_InputSlider     ,2,1,1 ,100.0 ,0.0  ,100.0  ,10.0,0  ,tr("Masking")           ,tr("Don't amplify noise")},
     {"LabMicrocontrast1Radius"       ,ptGT_InputSlider     ,2,1,1 ,100    ,0    ,500  ,25  ,0 ,tr("Radius")             ,tr("Radius")},
     {"LabMicrocontrast1Amount"       ,ptGT_InputSlider     ,2,1,1 ,4.0  ,-10.0  ,20.0   ,1.0,1 ,tr("Amount")        ,tr("Amount")},
     {"LabMicrocontrast1Opacity"      ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")        ,tr("Opacity")},
@@ -1603,15 +1591,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetInt("Microcontrast2MaskType");
   }
   // Lab Color and Contrast
-  else if (GuiName == "TabLABTexture1") {
-      Info.Name = "Lab Texture Contrast 1";
-      Info.IsActive = (Settings->GetDouble("TextureContrast1Amount")!=0.0 &&
-                      Settings->GetDouble("TextureContrast1Opacity")!=0.0)?1:0;
-  } else if (GuiName == "TabLABTexture2") {
-      Info.Name = "Lab Texture Contrast 2";
-      Info.IsActive = (Settings->GetDouble("TextureContrast2Amount")!=0.0 &&
-                      Settings->GetDouble("TextureContrast2Opacity")!=0.0)?1:0;
-  } else if (GuiName == "TabLABLocalContrast1") {
+  else if (GuiName == "TabLABLocalContrast1") {
       Info.Name = "Lab Local Contrast 1";
       Info.IsActive = Settings->GetInt("LabMicrocontrast1MaskType");
   } else if (GuiName == "TabLABLocalContrast2") {

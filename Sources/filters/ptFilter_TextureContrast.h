@@ -29,7 +29,8 @@ class ptFilter_TextureContrast: public ptFilterBase {
   Q_OBJECT
 
 public:
-  static ptFilterBase *createTextureContrast();
+  static ptFilterBase *createTextureContrastRgb();
+  static ptFilterBase *createTextureContrastLab();
 
 
 protected:

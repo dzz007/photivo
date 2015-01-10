@@ -74,8 +74,8 @@ namespace Fuid {
   const QString LMHRecovery_LabCC               = "b025be47-6393-4557-936b-5d13d9c8edae";
   const QString Drc_LabCC                       = "df10c486-e22e-4825-b205-a1d2a8a08ee3";
   const QString TextureCurve_LabCC              = "02ffc2a8-1fc6-4f50-940a-924da85efa1e";
-  const QString TextureContrast1_LabCC          = "2ddc61fb-8cc2-4388-93f1-81bf6727c4a1"; // not yet ported
-  const QString TextureContrast2_LabCC          = "b2da3444-90f1-4cf2-95a7-a79a8a2c91e8"; // not yet ported
+  const QString TextureContrast1_LabCC          = "2ddc61fb-8cc2-4388-93f1-81bf6727c4a1";
+  const QString TextureContrast2_LabCC          = "b2da3444-90f1-4cf2-95a7-a79a8a2c91e8";
   const QString LocalContrast1_LabCC            = "049ec21a-0127-4978-ab64-5c343a1043c2"; // not yet ported
   const QString LocalContrast2_LabCC            = "35613734-22b1-4849-a9a9-864c6de39b68"; // not yet ported
   const QString LocalContrastStretch1_LabCC     = "d470b2aa-e475-4524-a695-09e8aaf4e588"; // not yet ported

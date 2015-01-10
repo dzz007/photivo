@@ -707,7 +707,7 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::TextureCurve_LabCC);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Texture curve"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabCC);
           TRACEMAIN("Done texture curve at %d ms.",FRunTimer.elapsed());
         }
@@ -716,48 +716,17 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Texturecontrast
 
-        if (Settings->ToolIsActive("TabLABTexture1")) {
-
-          m_ReportProgress(tr("Texture contrast 1"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-          m_Image_AfterLabCC->TextureContrast(Settings->GetDouble("TextureContrast1Threshold")*m_ScaleFactor,
-            Settings->GetDouble("TextureContrast1Softness"),
-            Settings->GetDouble("TextureContrast1Amount"),
-            Settings->GetDouble("TextureContrast1Opacity"),
-            Settings->GetDouble("TextureContrast1EdgeControl"),
-            Settings->GetDouble("TextureContrast1Masking")*m_ScaleFactor);
-          TRACEMAIN("Done texture contrast 1 at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::TextureContrast1_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
-        if (Settings->ToolIsActive("TabLABTexture2")) {
-
-          m_ReportProgress(tr("Texture contrast 2"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-          m_Image_AfterLabCC->TextureContrast(Settings->GetDouble("TextureContrast2Threshold")*m_ScaleFactor,
-            Settings->GetDouble("TextureContrast2Softness"),
-            Settings->GetDouble("TextureContrast2Amount"),
-            Settings->GetDouble("TextureContrast2Opacity"),
-            Settings->GetDouble("TextureContrast2EdgeControl"),
-            Settings->GetDouble("TextureContrast2Masking")*m_ScaleFactor);
-          TRACEMAIN("Done texture contrast 2 at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::TextureContrast2_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
-
 
         //***************************************************************************
         // Microcontrast
