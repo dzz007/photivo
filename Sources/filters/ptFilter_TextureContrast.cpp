@@ -30,7 +30,8 @@ extern ptProcessor* TheProcessor;
 
 //------------------------------------------------------------------------------
 
-const QString CTextureContrastId = "TextureContrastRgb";
+const QString CTextureContrastRgbId = "TextureContrastRgb";
+const QString CTextureContrastLabId = "TextureContrastLab";
 
 const QString CStrength    = "Strength";
 const QString CThreshold   = "Threshold";
@@ -49,9 +50,18 @@ ptFilter_TextureContrast::ptFilter_TextureContrast():
 
 //------------------------------------------------------------------------------
 
-ptFilterBase *ptFilter_TextureContrast::createTextureContrast() {
+ptFilterBase *ptFilter_TextureContrast::createTextureContrastRgb() {
   auto hInstance         = new ptFilter_TextureContrast;
-  hInstance->FFilterName = CTextureContrastId;
+  hInstance->FFilterName = CTextureContrastRgbId;
+  hInstance->FCaption    = tr("Texture contrast");
+  return hInstance;
+}
+
+// -----------------------------------------------------------------------------
+
+ptFilterBase *ptFilter_TextureContrast::createTextureContrastLab() {
+  auto hInstance         = new ptFilter_TextureContrast;
+  hInstance->FFilterName = CTextureContrastLabId;
   hInstance->FCaption    = tr("Texture contrast");
   return hInstance;
 }
@@ -81,7 +91,11 @@ bool ptFilter_TextureContrast::doCheckHasActiveCfg() {
 //------------------------------------------------------------------------------
 
 void ptFilter_TextureContrast::doRunFilter(ptImage *AImage) const {
-  AImage->toRGB();
+  if (FFilterName == CTextureContrastRgbId) {
+    AImage->toRGB();
+  } else {
+    AImage->toLab();
+  }
   AImage->TextureContrast(
       FConfig.value(CThreshold).toDouble() * TheProcessor->m_ScaleFactor,
       FConfig.value(CSoftness).toDouble(),
@@ -93,6 +107,7 @@ void ptFilter_TextureContrast::doRunFilter(ptImage *AImage) const {
 
 //------------------------------------------------------------------------------
 
-RegisterHelper TextureContrastRegister(&ptFilter_TextureContrast::createTextureContrast, CTextureContrastId);
+RegisterHelper TextureContrastRgbRegister(&ptFilter_TextureContrast::createTextureContrastRgb, CTextureContrastRgbId);
+RegisterHelper TextureContrastLabRegister(&ptFilter_TextureContrast::createTextureContrastLab, CTextureContrastLabId);
 
 //------------------------------------------------------------------------------

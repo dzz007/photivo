@@ -338,6 +338,8 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("Drc",                   Fuid::Drc_LabCC);
   GFilterDM->NewFilter("SigContrastLab",        Fuid::SigContrastLab_LabCC);
   GFilterDM->NewFilter("TextureCurve",          Fuid::TextureCurve_LabCC);
+  GFilterDM->NewFilter("TextureContrastLab",    Fuid::TextureContrast1_LabCC,       " I");
+  GFilterDM->NewFilter("TextureContrastLab",    Fuid::TextureContrast2_LabCC,       " II");
   GFilterDM->NewFilter("Saturation",            Fuid::Saturation_LabCC);
   GFilterDM->NewFilter("ColorBoost",            Fuid::ColorBoost_LabCC);
   GFilterDM->NewFilter("LevelsLab",             Fuid::Levels_LabCC);
@@ -5404,93 +5406,6 @@ void CB_Microcontrast2SoftnessInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LABCC Tab
-// Texturecontrast
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_TextureContrast1AmountInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1Amount",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_TextureContrast1ThresholdInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1Threshold",Value);
-  if (Settings->GetDouble("TextureContrast1Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast1OpacityInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1Opacity",Value);
-  if (Settings->GetDouble("TextureContrast1Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast1SoftnessInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1Softness",Value);
-  if (Settings->GetDouble("TextureContrast1Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast1EdgeControlInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1EdgeControl",Value);
-  if (Settings->GetDouble("TextureContrast1Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast1MaskingInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1Masking",Value);
-  if (Settings->GetDouble("TextureContrast1Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast2AmountInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2Amount",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_TextureContrast2ThresholdInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2Threshold",Value);
-  if (Settings->GetDouble("TextureContrast2Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast2OpacityInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2Opacity",Value);
-  if (Settings->GetDouble("TextureContrast2Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast2SoftnessInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2Softness",Value);
-  if (Settings->GetDouble("TextureContrast2Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast2EdgeControlInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2EdgeControl",Value);
-  if (Settings->GetDouble("TextureContrast2Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast2MaskingInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2Masking",Value);
-  if (Settings->GetDouble("TextureContrast2Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LABCC Tab
 // Microcontrast
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -7054,19 +6969,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(Microcontrast2LowerLimitInput)
   M_Dispatch(Microcontrast2UpperLimitInput)
   M_Dispatch(Microcontrast2SoftnessInput)
-
-  M_Dispatch(TextureContrast1ThresholdInput)
-  M_Dispatch(TextureContrast1SoftnessInput)
-  M_Dispatch(TextureContrast1AmountInput)
-  M_Dispatch(TextureContrast1OpacityInput)
-  M_Dispatch(TextureContrast1EdgeControlInput)
-  M_Dispatch(TextureContrast1MaskingInput)
-  M_Dispatch(TextureContrast2ThresholdInput)
-  M_Dispatch(TextureContrast2SoftnessInput)
-  M_Dispatch(TextureContrast2AmountInput)
-  M_Dispatch(TextureContrast2OpacityInput)
-  M_Dispatch(TextureContrast2EdgeControlInput)
-  M_Dispatch(TextureContrast2MaskingInput)
 
   M_SetAndRunDispatch(LC1RadiusInput)
   M_SetAndRunDispatch(LC1FeatherInput)
