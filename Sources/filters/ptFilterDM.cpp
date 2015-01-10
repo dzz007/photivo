@@ -1068,12 +1068,12 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("LMHLightRecovery2LowerLimit",     "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/LowerLimit2");
   FNameMap.insert("LMHLightRecovery2UpperLimit",     "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/UpperLimit2");
   FNameMap.insert("LMHLightRecovery2Softness",       "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/Softness2");
-//  FNameMap.insert("RGBTextureContrastAmount",        "");
-//  FNameMap.insert("RGBTextureContrastThreshold",     "");
-//  FNameMap.insert("RGBTextureContrastSoftness",      "");
-//  FNameMap.insert("RGBTextureContrastOpacity",       "");
-//  FNameMap.insert("RGBTextureContrastEdgeControl",   "");
-//  FNameMap.insert("RGBTextureContrastMasking",       "");
+  FNameMap.insert("RGBTextureContrastAmount",        "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/Strength");
+  FNameMap.insert("RGBTextureContrastThreshold",     "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/Threshold");
+  FNameMap.insert("RGBTextureContrastSoftness",      "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/Softness");
+  FNameMap.insert("RGBTextureContrastOpacity",       "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/Opacity");
+  FNameMap.insert("RGBTextureContrastEdgeControl",   "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/EdgeControl");
+  FNameMap.insert("RGBTextureContrastMasking",       "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/Masking");
 //  FNameMap.insert("Microcontrast1Radius",            "");
 //  FNameMap.insert("Microcontrast1Amount",            "");
 //  FNameMap.insert("Microcontrast1Opacity",           "");

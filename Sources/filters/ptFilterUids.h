@@ -62,7 +62,7 @@ namespace Fuid {
   const QString Normalization_RGB               = "c27628bb-57ac-45e4-98fb-f120a072e85e";
   const QString ColorEnhancement_RGB            = "32040001-8373-40fe-a821-d3260a78d14a";
   const QString LMHRecovery_RGB                 = "c6f239bb-155d-4f28-b08c-2eb1363f25dd";
-  const QString TextureContrast_RGB             = "aa7502ea-dba1-4800-a17e-e2d0d950f5c1"; // not yet ported
+  const QString TextureContrast_RGB             = "aa7502ea-dba1-4800-a17e-e2d0d950f5c1";
   const QString LocalContrast1_RGB              = "8f047599-9ca4-4d97-b919-420e20d03330"; // not yet ported
   const QString LocalContrast2_RGB              = "e67567c5-67c3-4044-ae2e-44c62fb98cdb"; // not yet ported
   const QString SigContrastRgb_RGB              = "25b0402c-1668-4800-aab8-028160a08087";

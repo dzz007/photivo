@@ -579,19 +579,11 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // RGB Texturecontrast
 
-        if (Settings->ToolIsActive("TabRGBTextureContrast")) {
-
-          m_ReportProgress(tr("RGB Texture contrast"));
-
-          m_Image_AfterRGB->TextureContrast(Settings->GetDouble("RGBTextureContrastThreshold")*m_ScaleFactor,
-            Settings->GetDouble("RGBTextureContrastSoftness"),
-            Settings->GetDouble("RGBTextureContrastAmount"),
-            Settings->GetDouble("RGBTextureContrastOpacity"),
-            Settings->GetDouble("RGBTextureContrastEdgeControl"),
-            Settings->GetDouble("RGBTextureContrastMasking")*m_ScaleFactor);
-          TRACEMAIN("Done RGB texture contrast at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::TextureContrast_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
-
 
         //***************************************************************************
         // Microcontrast

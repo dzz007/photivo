@@ -137,12 +137,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"RGBTextureContrastAmount"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-10.0  ,40.0   ,1.0,1 ,tr("Amount")           ,tr("Amount")},
-    {"RGBTextureContrastThreshold"   ,ptGT_InputSlider     ,2,1,1 ,20.0  ,0.0  ,50.0   ,4.0,1 ,tr("Scale")        ,tr("Scale")},
-    {"RGBTextureContrastSoftness"    ,ptGT_InputSlider     ,2,1,1 ,0.14  ,0.0  ,1.0    ,0.01,2 ,tr("Threshold")         ,tr("Threshold")},
-    {"RGBTextureContrastOpacity"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")           ,tr("Opacity")},
-    {"RGBTextureContrastEdgeControl" ,ptGT_InputSlider     ,2,1,1 ,0.0   ,0.0  ,10.0   ,0.1,1 ,tr("Denoise")           ,tr("Don't amplify noise")},
-    {"RGBTextureContrastMasking"     ,ptGT_InputSlider     ,2,1,1 ,100.0 ,0.0  ,100.0  ,10.0,0  ,tr("Masking")           ,tr("Don't amplify noise")},
     {"Microcontrast1Radius"          ,ptGT_InputSlider     ,2,1,1 ,100    ,0    ,500  ,25  ,0 ,tr("Radius")             ,tr("Radius")},
     {"Microcontrast1Amount"          ,ptGT_InputSlider     ,2,1,1 ,8.0  ,-10.0  ,20.0   ,1.0,1 ,tr("Amount")        ,tr("Amount")},
     {"Microcontrast1Opacity"         ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")        ,tr("Opacity")},
@@ -1601,10 +1595,6 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabExposure") {
       Info.Name = "Exposure";
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
-  } else if (GuiName == "TabRGBTextureContrast") {
-      Info.Name = "RGB texture contrast";
-      Info.IsActive = (Settings->GetDouble("RGBTextureContrastAmount")!=0.0 &&
-                       Settings->GetDouble("RGBTextureContrastOpacity")!=0.0)!=0?1:0;
   } else if (GuiName == "TabRGBLocalContrast1") {
       Info.Name = "RGB Local Contrast 1";
       Info.IsActive = Settings->GetInt("Microcontrast1MaskType");
