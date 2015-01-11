@@ -35,7 +35,7 @@ namespace Fuid {
   const QString Input_Camera                    = "f2235922-9003-48d9-ae6d-5fdedd3d56c1"; // not yet ported
   const QString ColorSpace_Camera               = "fa250868-e988-4497-b5a2-de2fce17f606"; // not yet ported
   const QString GenericCorr_Camera              = "ce1ef13a-0d3c-42af-974f-78afdecb6d4f"; // not yet ported
-  const QString WhieBalance_Camera              = "fc0e86eb-2df9-4ae7-96a4-2044fc5bd075"; // not yet ported
+  const QString WhiteBalance_Camera             = "fc0e86eb-2df9-4ae7-96a4-2044fc5bd075"; // not yet ported
   const QString Demosaic_Camera                 = "2b1a43e7-dc4d-4bf9-ab51-7f7370af1cc0"; // not yet ported
   const QString HighlightRecovery_Camera        = "6395bbe5-7341-41fe-9f2d-465ba145daea"; // not yet ported
 
@@ -63,8 +63,8 @@ namespace Fuid {
   const QString ColorEnhancement_RGB            = "32040001-8373-40fe-a821-d3260a78d14a";
   const QString LMHRecovery_RGB                 = "c6f239bb-155d-4f28-b08c-2eb1363f25dd";
   const QString TextureContrast_RGB             = "aa7502ea-dba1-4800-a17e-e2d0d950f5c1";
-  const QString LocalContrast1_RGB              = "8f047599-9ca4-4d97-b919-420e20d03330"; // not yet ported
-  const QString LocalContrast2_RGB              = "e67567c5-67c3-4044-ae2e-44c62fb98cdb"; // not yet ported
+  const QString LocalContrast1_RGB              = "8f047599-9ca4-4d97-b919-420e20d03330";
+  const QString LocalContrast2_RGB              = "e67567c5-67c3-4044-ae2e-44c62fb98cdb";
   const QString SigContrastRgb_RGB              = "25b0402c-1668-4800-aab8-028160a08087";
   const QString Levels_RGB                      = "f0f5f38c-4367-4550-bb3c-6dcb962a01a7";
   const QString RgbCurve_RGB                    = "786384c5-ded7-4669-b748-e40ebabcdf2c";
@@ -76,8 +76,8 @@ namespace Fuid {
   const QString TextureCurve_LabCC              = "02ffc2a8-1fc6-4f50-940a-924da85efa1e";
   const QString TextureContrast1_LabCC          = "2ddc61fb-8cc2-4388-93f1-81bf6727c4a1";
   const QString TextureContrast2_LabCC          = "b2da3444-90f1-4cf2-95a7-a79a8a2c91e8";
-  const QString LocalContrast1_LabCC            = "049ec21a-0127-4978-ab64-5c343a1043c2"; // not yet ported
-  const QString LocalContrast2_LabCC            = "35613734-22b1-4849-a9a9-864c6de39b68"; // not yet ported
+  const QString LocalContrast1_LabCC            = "049ec21a-0127-4978-ab64-5c343a1043c2";
+  const QString LocalContrast2_LabCC            = "35613734-22b1-4849-a9a9-864c6de39b68";
   const QString LocalContrastStretch1_LabCC     = "d470b2aa-e475-4524-a695-09e8aaf4e588";
   const QString LocalContrastStretch2_LabCC     = "31667a6f-8b3d-40a4-b4f4-8df0313fa211";
   const QString SigContrastLab_LabCC            = "2f4b0f7a-d720-41e0-b2fc-20dff3a02fcf";
@@ -85,7 +85,7 @@ namespace Fuid {
   const QString ColorBoost_LabCC                = "aae92669-4159-4e2c-8006-f92c9a7e710b";
   const QString Levels_LabCC                    = "fdc6ec47-610c-4c0e-bff1-d8f2469c7bc9";
 
-  const QString ImpulseNR_LabSN                 = "bdc1b8bc-33f2-45fa-ae55-75d019113e6f"; // not yet ported
+  const QString ImpulseNR_LabSN                 = "bdc1b8bc-33f2-45fa-ae55-75d019113e6f";
   const QString EAWavelets_LabSN                = "588bea41-c4d9-4fbe-8a3d-90dae3dab4dc"; // not yet ported
   const QString GreyCStoration_LabSN            = "fb32308b-b515-4e08-843f-c3cac80362c2"; // not yet ported
   const QString Defringe_LabSN                  = "3f798f38-991e-4164-96f3-bf9b5759e7ec"; // not yet ported

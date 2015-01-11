@@ -291,7 +291,9 @@ HEADERS += \
     ../Sources/filemgmt/ptThumbGenWorker.h \
     ../Sources/filemgmt/ptThumbGenHelpers.h \
     ../Sources/filters/ptFilter_TextureContrast.h \
-    ../Sources/filters/ptFilter_LocalContrastStretch.h
+    ../Sources/filters/ptFilter_LocalContrastStretch.h \
+    ../Sources/filters/ptFilter_LocalContrast.h \
+    ../Sources/filters/ptFilter_ImpulseNR.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -429,7 +431,9 @@ SOURCES += \
     ../Sources/filemgmt/ptThumbGenWorker.cpp \
     ../Sources/filemgmt/ptThumbGenHelpers.cpp \
     ../Sources/filters/ptFilter_TextureContrast.cpp \
-    ../Sources/filters/ptFilter_LocalContrastStretch.cpp
+    ../Sources/filters/ptFilter_LocalContrastStretch.cpp \
+    ../Sources/filters/ptFilter_LocalContrast.cpp \
+    ../Sources/filters/ptFilter_ImpulseNR.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \

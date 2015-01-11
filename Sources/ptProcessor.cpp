@@ -586,36 +586,18 @@ void ptProcessor::Run(short Phase,
         }
 
         //***************************************************************************
-        // Microcontrast
+        // Local contrast
 
-       if (Settings->ToolIsActive("TabRGBLocalContrast1")) {
-
-          m_ReportProgress(tr("Microcontrast 1"));
-
-          m_Image_AfterRGB->Microcontrast(
-            Settings->GetInt("Microcontrast1Radius")*m_ScaleFactor,
-            Settings->GetDouble("Microcontrast1Amount"),
-            Settings->GetDouble("Microcontrast1Opacity"),
-            Settings->GetDouble("Microcontrast1HaloControl"),
-            Settings->GetInt("Microcontrast1MaskType"),
-            pow(Settings->GetDouble("Microcontrast1LowerLimit"),Settings->GetDouble("InputPowerFactor")),
-            pow(Settings->GetDouble("Microcontrast1UpperLimit"),Settings->GetDouble("InputPowerFactor")),
-            Settings->GetDouble("Microcontrast1Softness"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LocalContrast1_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
-        if (Settings->ToolIsActive("TabRGBLocalContrast2")) {
-
-          m_ReportProgress(tr("Microcontrast 2"));
-
-          m_Image_AfterRGB->Microcontrast(
-            Settings->GetInt("Microcontrast2Radius")*m_ScaleFactor,
-            Settings->GetDouble("Microcontrast2Amount"),
-            Settings->GetDouble("Microcontrast2Opacity"),
-            Settings->GetDouble("Microcontrast2HaloControl"),
-            Settings->GetInt("Microcontrast2MaskType"),
-            pow(Settings->GetDouble("Microcontrast2LowerLimit"),Settings->GetDouble("InputPowerFactor")),
-            pow(Settings->GetDouble("Microcontrast2UpperLimit"),Settings->GetDouble("InputPowerFactor")),
-            Settings->GetDouble("Microcontrast2Softness"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LocalContrast2_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
@@ -729,52 +711,18 @@ void ptProcessor::Run(short Phase,
         }
 
         //***************************************************************************
-        // Microcontrast
+        // Local contrast
 
-        if (Settings->ToolIsActive("TabLABLocalContrast1")) {
-
-          m_ReportProgress(tr("LabMicrocontrast 1"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->Microcontrast(
-            Settings->GetInt("LabMicrocontrast1Radius")*m_ScaleFactor,
-            Settings->GetDouble("LabMicrocontrast1Amount"),
-            Settings->GetDouble("LabMicrocontrast1Opacity"),
-            Settings->GetDouble("LabMicrocontrast1HaloControl"),
-            Settings->GetInt("LabMicrocontrast1MaskType"),
-            Settings->GetDouble("LabMicrocontrast1LowerLimit"),
-            Settings->GetDouble("LabMicrocontrast1UpperLimit"),
-            Settings->GetDouble("LabMicrocontrast1Softness"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LocalContrast1_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
-        if (Settings->ToolIsActive("TabLABLocalContrast2")) {
-
-          m_ReportProgress(tr("LabMicrocontrast 2"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->Microcontrast(
-            Settings->GetInt("LabMicrocontrast2Radius")*m_ScaleFactor,
-            Settings->GetDouble("LabMicrocontrast2Amount"),
-            Settings->GetDouble("LabMicrocontrast2Opacity"),
-            Settings->GetDouble("LabMicrocontrast2HaloControl"),
-            Settings->GetInt("LabMicrocontrast2MaskType"),
-            Settings->GetDouble("LabMicrocontrast2LowerLimit"),
-            Settings->GetDouble("LabMicrocontrast2UpperLimit"),
-            Settings->GetDouble("LabMicrocontrast2Softness"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LocalContrast2_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
 
@@ -847,22 +795,11 @@ void ptProcessor::Run(short Phase,
 
         //***************************************************************************
         // Impulse denoise
-        if (Settings->ToolIsActive("TabLABImpulseDenoise")) {
 
-          m_ReportProgress(tr("Impulse denoise"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabSN->DenoiseImpulse(Settings->GetDouble("ImpulseDenoiseThresholdL"),
-                                             Settings->GetDouble("ImpulseDenoiseThresholdAB"));
-
-          TRACEMAIN("Done impulse denoise at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ImpulseNR_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 

@@ -328,6 +328,8 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("ColorEnhancement",      Fuid::ColorEnhancement_RGB);
   GFilterDM->NewFilter("LMHRecoveryRgb",        Fuid::LMHRecovery_RGB);
   GFilterDM->NewFilter("TextureContrastRgb",    Fuid::TextureContrast_RGB);
+  GFilterDM->NewFilter("LocalContrastRgb",      Fuid::LocalContrast1_RGB,           " I");
+  GFilterDM->NewFilter("LocalContrastRgb",      Fuid::LocalContrast2_RGB,           " II");
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_RGB);
   GFilterDM->NewFilter("LevelsRgb",             Fuid::Levels_RGB);
   GFilterDM->NewFilter("RgbCurve",              Fuid::RgbCurve_RGB);
@@ -340,12 +342,15 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("TextureCurve",          Fuid::TextureCurve_LabCC);
   GFilterDM->NewFilter("TextureContrastLab",    Fuid::TextureContrast1_LabCC,       " I");
   GFilterDM->NewFilter("TextureContrastLab",    Fuid::TextureContrast2_LabCC,       " II");
+  GFilterDM->NewFilter("LocalContrastLab",      Fuid::LocalContrast1_LabCC,         " I");
+  GFilterDM->NewFilter("LocalContrastLab",      Fuid::LocalContrast2_LabCC,         " II");
   GFilterDM->NewFilter("LocalContrastStretch",  Fuid::LocalContrastStretch1_LabCC,  " I");
   GFilterDM->NewFilter("LocalContrastStretch",  Fuid::LocalContrastStretch2_LabCC,  " II");
   GFilterDM->NewFilter("Saturation",            Fuid::Saturation_LabCC);
   GFilterDM->NewFilter("ColorBoost",            Fuid::ColorBoost_LabCC);
   GFilterDM->NewFilter("LevelsLab",             Fuid::Levels_LabCC);
   // Lab sharpen/noise tab
+  GFilterDM->NewFilter("ImpulseNR",             Fuid::ImpulseNR_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve2_LabSN,      " II");
   GFilterDM->NewFilter("DetailCurve",           Fuid::DetailCurve_LabSN);
@@ -6953,45 +6958,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
-
-  M_Dispatch(Microcontrast1MaskTypeChoice)
-  M_Dispatch(Microcontrast1RadiusInput)
-  M_Dispatch(Microcontrast1AmountInput)
-  M_Dispatch(Microcontrast1OpacityInput)
-  M_Dispatch(Microcontrast1HaloControlInput)
-  M_Dispatch(Microcontrast1LowerLimitInput)
-  M_Dispatch(Microcontrast1UpperLimitInput)
-  M_Dispatch(Microcontrast1SoftnessInput)
-
-  M_Dispatch(Microcontrast2MaskTypeChoice)
-  M_Dispatch(Microcontrast2RadiusInput)
-  M_Dispatch(Microcontrast2AmountInput)
-  M_Dispatch(Microcontrast2OpacityInput)
-  M_Dispatch(Microcontrast2HaloControlInput)
-  M_Dispatch(Microcontrast2LowerLimitInput)
-  M_Dispatch(Microcontrast2UpperLimitInput)
-  M_Dispatch(Microcontrast2SoftnessInput)
-
-  M_Dispatch(LabMicrocontrast1MaskTypeChoice)
-  M_Dispatch(LabMicrocontrast1RadiusInput)
-  M_Dispatch(LabMicrocontrast1AmountInput)
-  M_Dispatch(LabMicrocontrast1OpacityInput)
-  M_Dispatch(LabMicrocontrast1HaloControlInput)
-  M_Dispatch(LabMicrocontrast1LowerLimitInput)
-  M_Dispatch(LabMicrocontrast1UpperLimitInput)
-  M_Dispatch(LabMicrocontrast1SoftnessInput)
-
-  M_Dispatch(LabMicrocontrast2MaskTypeChoice)
-  M_Dispatch(LabMicrocontrast2RadiusInput)
-  M_Dispatch(LabMicrocontrast2AmountInput)
-  M_Dispatch(LabMicrocontrast2OpacityInput)
-  M_Dispatch(LabMicrocontrast2HaloControlInput)
-  M_Dispatch(LabMicrocontrast2LowerLimitInput)
-  M_Dispatch(LabMicrocontrast2UpperLimitInput)
-  M_Dispatch(LabMicrocontrast2SoftnessInput)
-
-  M_SetAndRunDispatch(ImpulseDenoiseThresholdLInput)
-  M_SetAndRunDispatch(ImpulseDenoiseThresholdABInput)
 
   M_Dispatch(EAWMasterInput)
   M_Dispatch(EAWLevel1Input)

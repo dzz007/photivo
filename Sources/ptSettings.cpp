@@ -137,37 +137,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"Microcontrast1Radius"          ,ptGT_InputSlider     ,2,1,1 ,100    ,0    ,500  ,25  ,0 ,tr("Radius")             ,tr("Radius")},
-    {"Microcontrast1Amount"          ,ptGT_InputSlider     ,2,1,1 ,8.0  ,-10.0  ,20.0   ,1.0,1 ,tr("Amount")        ,tr("Amount")},
-    {"Microcontrast1Opacity"         ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")        ,tr("Opacity")},
-    {"Microcontrast1HaloControl"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0, 1.0   ,0.1 ,1 ,tr("Halo Control")             ,tr("Halo Control")},
-    {"Microcontrast1LowerLimit"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"Microcontrast1UpperLimit"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"Microcontrast1Softness"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"Microcontrast2Radius"          ,ptGT_InputSlider     ,2,1,1 ,500    ,0    ,1000  ,50  ,0 ,tr("Radius")             ,tr("Radius")},
-    {"Microcontrast2Amount"          ,ptGT_InputSlider     ,2,1,1 ,8.0  ,-10.0  ,20.0   ,1.0,1 ,tr("Amount")        ,tr("Amount")},
-    {"Microcontrast2Opacity"         ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")        ,tr("Opacity")},
-    {"Microcontrast2HaloControl"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0, 1.0   ,0.1 ,1 ,tr("Halo Control")             ,tr("Halo Control")},
-    {"Microcontrast2LowerLimit"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"Microcontrast2UpperLimit"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"Microcontrast2Softness"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"LabMicrocontrast1Radius"       ,ptGT_InputSlider     ,2,1,1 ,100    ,0    ,500  ,25  ,0 ,tr("Radius")             ,tr("Radius")},
-    {"LabMicrocontrast1Amount"       ,ptGT_InputSlider     ,2,1,1 ,4.0  ,-10.0  ,20.0   ,1.0,1 ,tr("Amount")        ,tr("Amount")},
-    {"LabMicrocontrast1Opacity"      ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")        ,tr("Opacity")},
-    {"LabMicrocontrast1HaloControl"  ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0, 1.0   ,0.1 ,1 ,tr("Halo Control")             ,tr("Halo Control")},
-    {"LabMicrocontrast1LowerLimit"   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"LabMicrocontrast1UpperLimit"   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"LabMicrocontrast1Softness"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"LabMicrocontrast2Radius"       ,ptGT_InputSlider     ,2,1,1 ,500    ,0    ,1000  ,50  ,0 ,tr("Radius")             ,tr("Radius")},
-    {"LabMicrocontrast2Amount"       ,ptGT_InputSlider     ,2,1,1 ,4.0  ,-10.0  ,20.0   ,1.0,1 ,tr("Amount")        ,tr("Amount")},
-    {"LabMicrocontrast2Opacity"      ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")        ,tr("Opacity")},
-    {"LabMicrocontrast2HaloControl"  ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0, 1.0   ,0.1 ,1 ,tr("Halo Control")             ,tr("Halo Control")},
-    {"LabMicrocontrast2LowerLimit"   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"LabMicrocontrast2UpperLimit"   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"LabMicrocontrast2Softness"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
     {"EAWMaster"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Master")              ,tr("Quick setup for the levels")},
-    {"ImpulseDenoiseThresholdL"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,5.0  ,0.2  ,1 ,tr("Threshold on L")      ,tr("Threshold on L")},
-    {"ImpulseDenoiseThresholdAB"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,5.0  ,0.2  ,1 ,tr("Threshold on color")  ,tr("Threshold on color")},
     {"EAWLevel1"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 1")             ,tr("Boosting of level 1")},
     {"EAWLevel2"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 2")             ,tr("Boosting of level 2")},
     {"EAWLevel3"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 3")             ,tr("Boosting of level 3")},
@@ -378,10 +348,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ChannelMixer"                ,ptGT_Choice       ,2,1,1 ,ptChannelMixerChoice_None   ,GuiOptions->ChannelMixer              ,tr("ChannelMixer")},
     {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
     {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
-    {"Microcontrast1MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
-    {"Microcontrast2MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
-    {"LabMicrocontrast1MaskType"   ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
-    {"LabMicrocontrast2MaskType"   ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
     {"GREYCLab"                    ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->EnableGreyC               ,tr("Enable GreyCStoration on L")},
     {"GREYCLabMaskType"            ,ptGT_Choice       ,2,1,1 ,ptDenoiseMask_Shadows3      ,GuiOptions->DenoiseMask               ,tr("Shadow mask for denoising")},
     {"GREYCLabInterpolation"       ,ptGT_Choice       ,2,1,1 ,ptGREYCInterpolation_NearestNeighbour,GuiOptions->GREYCInterpolation, tr("GREYC Interpolation")},
@@ -1575,27 +1541,9 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabExposure") {
       Info.Name = "Exposure";
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
-  } else if (GuiName == "TabRGBLocalContrast1") {
-      Info.Name = "RGB Local Contrast 1";
-      Info.IsActive = Settings->GetInt("Microcontrast1MaskType");
-  } else if (GuiName == "TabRGBLocalContrast2") {
-      Info.Name = "RGB Local Contrast 2";
-      Info.IsActive = Settings->GetInt("Microcontrast2MaskType");
-  }
-  // Lab Color and Contrast
-  else if (GuiName == "TabLABLocalContrast1") {
-      Info.Name = "Lab Local Contrast 1";
-      Info.IsActive = Settings->GetInt("LabMicrocontrast1MaskType");
-  } else if (GuiName == "TabLABLocalContrast2") {
-      Info.Name = "Lab Local Contrast 2";
-      Info.IsActive = Settings->GetInt("LabMicrocontrast2MaskType");
   }
   // Lab Sharpen and Noise
-  else if (GuiName == "TabLABImpulseDenoise") {
-      Info.Name = "Lab Impulse denoise";
-      Info.IsActive = Settings->GetDouble("ImpulseDenoiseThresholdL")!=0.0 ||
-                      Settings->GetDouble("ImpulseDenoiseThresholdAB")!=0.0;
-  } else if (GuiName == "TabLABEAW") {
+  else if (GuiName == "TabLABEAW") {
       Info.Name = "Lab EAW equalizer";
       Info.IsActive = (Settings->GetDouble("EAWLevel1") != 0.0 ||
                        Settings->GetDouble("EAWLevel2") != 0.0 ||
