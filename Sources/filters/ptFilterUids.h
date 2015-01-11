@@ -78,8 +78,8 @@ namespace Fuid {
   const QString TextureContrast2_LabCC          = "b2da3444-90f1-4cf2-95a7-a79a8a2c91e8";
   const QString LocalContrast1_LabCC            = "049ec21a-0127-4978-ab64-5c343a1043c2"; // not yet ported
   const QString LocalContrast2_LabCC            = "35613734-22b1-4849-a9a9-864c6de39b68"; // not yet ported
-  const QString LocalContrastStretch1_LabCC     = "d470b2aa-e475-4524-a695-09e8aaf4e588"; // not yet ported
-  const QString LocalContrastStretch2_LabCC     = "31667a6f-8b3d-40a4-b4f4-8df0313fa211"; // not yet ported
+  const QString LocalContrastStretch1_LabCC     = "d470b2aa-e475-4524-a695-09e8aaf4e588";
+  const QString LocalContrastStretch2_LabCC     = "31667a6f-8b3d-40a4-b4f4-8df0313fa211";
   const QString SigContrastLab_LabCC            = "2f4b0f7a-d720-41e0-b2fc-20dff3a02fcf";
   const QString Saturation_LabCC                = "9db332ed-d421-41c9-9074-af291f992af2";
   const QString ColorBoost_LabCC                = "aae92669-4159-4e2c-8006-f92c9a7e710b";

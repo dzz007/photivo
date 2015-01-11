@@ -165,14 +165,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LabMicrocontrast2LowerLimit"   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"LabMicrocontrast2UpperLimit"   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
     {"LabMicrocontrast2Softness"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"LC1Radius"                     ,ptGT_InputSlider     ,2,1,1 ,400  ,0  ,1000   ,20 ,0 ,tr("Radius")              ,tr("Radius")},
-    {"LC1Feather"                    ,ptGT_InputSlider     ,2,1,1 ,-0.3  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Feather")              ,tr("Feather")},
-    {"LC1Opacity"                    ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1 ,2 ,tr("Opacity")              ,tr("Opacity")},
-    {"LC1m"                          ,ptGT_InputSlider     ,2,1,1 ,1.0  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Masking")              ,tr("Masking")},
-    {"LC2Radius"                     ,ptGT_InputSlider     ,2,1,1 ,800  ,0  ,1000   ,40 ,0 ,tr("Radius")              ,tr("Radius")},
-    {"LC2Feather"                    ,ptGT_InputSlider     ,2,1,1 ,-0.3  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Feather")              ,tr("Feather")},
-    {"LC2Opacity"                    ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1 ,2 ,tr("Opacity")              ,tr("Opacity")},
-    {"LC2m"                          ,ptGT_InputSlider     ,2,1,1 ,1.0  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Masking")              ,tr("Masking")},
     {"EAWMaster"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Master")              ,tr("Quick setup for the levels")},
     {"ImpulseDenoiseThresholdL"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,5.0  ,0.2  ,1 ,tr("Threshold on L")      ,tr("Threshold on L")},
     {"ImpulseDenoiseThresholdAB"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,5.0  ,0.2  ,1 ,tr("Threshold on color")  ,tr("Threshold on color")},
@@ -1597,12 +1589,6 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabLABLocalContrast2") {
       Info.Name = "Lab Local Contrast 2";
       Info.IsActive = Settings->GetInt("LabMicrocontrast2MaskType");
-  } else if (GuiName == "TabLABLCStretch1") {
-      Info.Name = "Lab Local Contrast Stretch 1";
-      Info.IsActive = Settings->GetDouble("LC1Opacity")!=0.0?1:0;
-  } else if (GuiName == "TabLABLCStretch2") {
-      Info.Name = "Lab Local Contrast Stretch 2";
-      Info.IsActive = Settings->GetDouble("LC2Opacity")!=0.0?1:0;
   }
   // Lab Sharpen and Noise
   else if (GuiName == "TabLABImpulseDenoise") {
