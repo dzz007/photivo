@@ -340,6 +340,8 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("TextureCurve",          Fuid::TextureCurve_LabCC);
   GFilterDM->NewFilter("TextureContrastLab",    Fuid::TextureContrast1_LabCC,       " I");
   GFilterDM->NewFilter("TextureContrastLab",    Fuid::TextureContrast2_LabCC,       " II");
+  GFilterDM->NewFilter("LocalContrastStretch",  Fuid::LocalContrastStretch1_LabCC,  " I");
+  GFilterDM->NewFilter("LocalContrastStretch",  Fuid::LocalContrastStretch2_LabCC,  " II");
   GFilterDM->NewFilter("Saturation",            Fuid::Saturation_LabCC);
   GFilterDM->NewFilter("ColorBoost",            Fuid::ColorBoost_LabCC);
   GFilterDM->NewFilter("LevelsLab",             Fuid::Levels_LabCC);
@@ -6969,15 +6971,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(Microcontrast2LowerLimitInput)
   M_Dispatch(Microcontrast2UpperLimitInput)
   M_Dispatch(Microcontrast2SoftnessInput)
-
-  M_SetAndRunDispatch(LC1RadiusInput)
-  M_SetAndRunDispatch(LC1FeatherInput)
-  M_SetAndRunDispatch(LC1OpacityInput)
-  M_SetAndRunDispatch(LC1mInput)
-  M_SetAndRunDispatch(LC2RadiusInput)
-  M_SetAndRunDispatch(LC2FeatherInput)
-  M_SetAndRunDispatch(LC2OpacityInput)
-  M_SetAndRunDispatch(LC2mInput)
 
   M_Dispatch(LabMicrocontrast1MaskTypeChoice)
   M_Dispatch(LabMicrocontrast1RadiusInput)

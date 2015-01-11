@@ -781,40 +781,16 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Local Contrast Stretch
 
-        if (Settings->ToolIsActive("TabLABLCStretch1")) {
-
-          m_ReportProgress(tr("Local Contrast 1"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->Localcontrast(Settings->GetInt("LC1Radius")*m_ScaleFactor,
-                      Settings->GetDouble("LC1Opacity"),
-                      Settings->GetDouble("LC1m"),
-                      Settings->GetDouble("LC1Feather"),1);
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LocalContrastStretch1_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
-        if (Settings->ToolIsActive("TabLABLCStretch2")) {
-
-          m_ReportProgress(tr("Local Contrast 2"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabCC->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabCC->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabCC->Localcontrast(Settings->GetInt("LC2Radius")*m_ScaleFactor,
-                      Settings->GetDouble("LC2Opacity"),
-                      Settings->GetDouble("LC2m"),
-                      Settings->GetDouble("LC2Feather"),1);
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LocalContrastStretch2_LabCC);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabCC);
         }
 
 
