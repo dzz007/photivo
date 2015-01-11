@@ -339,6 +339,8 @@ void ptFilterBase::init(const QString &AUniqueName, const QString &AGuiNamePostf
   this->setObjectName(AUniqueName);
   FUniqueName     = AUniqueName;
   FCaptionPostfix = AGuiNamePostfix;
+
+  this->doAfterInit();
 }
 
 //==============================================================================

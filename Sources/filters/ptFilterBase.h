@@ -125,6 +125,7 @@ protected:
 // implementations. Removing the parameter names would work too but be too obscure.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+  virtual void      doAfterInit() {}
   virtual QWidget  *doCreateGui() { return nullptr; }   //!< Derived classes must reimplement this method when they use a custom GUI layout, e.g. created via an .ui file. The result has to be \c true if a gui is created.
   virtual bool      doCheckHasActiveCfg() = 0;          //!< Determines if the filter is active in the pipe. Derived classes should reimplement this function to determine the activity status of the filter.
   virtual void      doExportCustomConfig(QSettings *APreset, const bool AIncludeFlags) const {}

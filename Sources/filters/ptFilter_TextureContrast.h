@@ -32,12 +32,11 @@ public:
   static ptFilterBase *createTextureContrastRgb();
   static ptFilterBase *createTextureContrastLab();
 
-
 protected:
-  void      doDefineControls();
-  bool      doCheckHasActiveCfg();
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doAfterInit() override;
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) const override;
 
 private:
   ptFilter_TextureContrast();
