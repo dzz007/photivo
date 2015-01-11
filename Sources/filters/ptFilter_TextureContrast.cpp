@@ -21,8 +21,10 @@
 *******************************************************************************/
 
 #include "ptFilter_TextureContrast.h"
+#include "ptFilterUids.h"
 #include "ptCfgItem.h"
 #include "../ptImage.h"
+#include "../ptInfo.h"
 
 // TODO: Needed for access to m_ScaleFactor. Find a way to avoid when modernising the processor.
 #include "../ptProcessor.h"
@@ -45,7 +47,9 @@ const QString CMasking     = "Masking";
 ptFilter_TextureContrast::ptFilter_TextureContrast():
   ptFilterBase()
 {
-  internalInit();
+  // internalInit() cannot be done here because controls’ values depend on
+  // the concrete filter instance. We need the unique name which is not set yet.
+  // Init is performed by doAfterInit() instead.
 }
 
 //------------------------------------------------------------------------------
@@ -66,18 +70,55 @@ ptFilterBase *ptFilter_TextureContrast::createTextureContrastLab() {
   return hInstance;
 }
 
+// -----------------------------------------------------------------------------
+
+void ptFilter_TextureContrast::doAfterInit() {
+  this->internalInit();
+}
+
 //------------------------------------------------------------------------------
 
 void ptFilter_TextureContrast::doDefineControls() {
-  FConfig.initStores(TCfgItemList()
-    //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({CStrength,               ptCfgItem::Slider,        0.0,      -10.0,         40.0,          1.0,        1,        true, true, tr("Strength"),  tr("")})
-    << ptCfgItem({CThreshold,              ptCfgItem::Slider,        20.0,       0.0,         50.0,          4.0,        1,        true, true, tr("Scale"),     tr("")})
-    << ptCfgItem({CSoftness,               ptCfgItem::Slider,        0.14,       0.0,          1.0,          0.01,       2,        true, true, tr("Threshold"), tr("")})
-    << ptCfgItem({COpacity,                ptCfgItem::Slider,        0.5,        0.0,          1.0,          0.1,        1,        true, true, tr("Opacity"),   tr("")})
-    << ptCfgItem({CEdgeControl,            ptCfgItem::Slider,        0.0,        0.0,         10.0,          0.1,        1,        true, true, tr("Denoise"),   tr("")})
-    << ptCfgItem({CMasking,                ptCfgItem::Slider,        100,        0,          100,           10,          0,        true, true, tr("Masking"),   tr("")})
-  );
+  QString strengthCaption  {tr("Strength")};
+  QString scaleCaption     {tr("Scale")};
+  QString thresholdCaption {tr("Threshold")};
+  QString opacityCaption   {tr("Opacity")};
+  QString denoiseCaption   {tr("Denoise")};
+  QString maskingCaption   {tr("Masking")};
+
+  if (this->uniqueName() == Fuid::TextureContrast_RGB) {
+    FConfig.initStores(TCfgItemList()
+      //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
+      << ptCfgItem({CStrength,               ptCfgItem::Slider,        0.0,      -10.0,         40.0,          1.0,        1,        true, true, strengthCaption,  tr("")})
+      << ptCfgItem({CThreshold,              ptCfgItem::Slider,        20.0,       0.0,         50.0,          4.0,        1,        true, true, scaleCaption,     tr("")})
+      << ptCfgItem({CSoftness,               ptCfgItem::Slider,        0.14,       0.0,          1.0,          0.01,       2,        true, true, thresholdCaption, tr("")})
+      << ptCfgItem({COpacity,                ptCfgItem::Slider,        0.5,        0.0,          1.0,          0.1,        1,        true, true, opacityCaption,   tr("")})
+      << ptCfgItem({CEdgeControl,            ptCfgItem::Slider,        0.0,        0.0,         10.0,          0.1,        1,        true, true, denoiseCaption,   tr("")})
+      << ptCfgItem({CMasking,                ptCfgItem::Slider,        100,        0,          100,           10,          0,        true, true, maskingCaption,   tr("")})
+    );
+  } else if (this->uniqueName() == Fuid::TextureContrast1_LabCC) {
+    FConfig.initStores(TCfgItemList()
+      //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
+      << ptCfgItem({CStrength,               ptCfgItem::Slider,        0.0,      -10.0,         40.0,          1.0,        1,        true, true, strengthCaption,  tr("")})
+      << ptCfgItem({CThreshold,              ptCfgItem::Slider,        20.0,       0.0,         50.0,          4.0,        1,        true, true, scaleCaption,     tr("")})
+      << ptCfgItem({CSoftness,               ptCfgItem::Slider,        0.14,       0.0,          1.0,          0.01,       2,        true, true, thresholdCaption, tr("")})
+      << ptCfgItem({COpacity,                ptCfgItem::Slider,        1.0,        0.0,          1.0,          0.1,        1,        true, true, opacityCaption,   tr("")})
+      << ptCfgItem({CEdgeControl,            ptCfgItem::Slider,        0.0,        0.0,         10.0,          0.1,        1,        true, true, denoiseCaption,   tr("")})
+      << ptCfgItem({CMasking,                ptCfgItem::Slider,        100,        0,          100,           10,          0,        true, true, maskingCaption,   tr("")})
+    );
+  } else if (this->uniqueName() == Fuid::TextureContrast2_LabCC) {
+    FConfig.initStores(TCfgItemList()
+      //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
+      << ptCfgItem({CStrength,               ptCfgItem::Slider,        0.0,      -10.0,         40.0,          1.0,        1,        true, true, strengthCaption,  tr("")})
+      << ptCfgItem({CThreshold,              ptCfgItem::Slider,       100.0,       0.0,        400.0,          4.0,        1,        true, true, scaleCaption,     tr("")})
+      << ptCfgItem({CSoftness,               ptCfgItem::Slider,        0.14,       0.0,          1.0,          0.01,       2,        true, true, thresholdCaption, tr("")})
+      << ptCfgItem({COpacity,                ptCfgItem::Slider,        1.0,        0.0,          1.0,          0.1,        1,        true, true, opacityCaption,   tr("")})
+      << ptCfgItem({CEdgeControl,            ptCfgItem::Slider,        0.0,        0.0,         10.0,          0.1,        1,        true, true, denoiseCaption,   tr("")})
+      << ptCfgItem({CMasking,                ptCfgItem::Slider,        100,        0,          100,           10,          0,        true, true, maskingCaption,   tr("")})
+    );
+  } else {
+    GInfo->Raise("Unexpected unique name: " + this->uniqueName(), AT);
+  }
 }
 
 //------------------------------------------------------------------------------
