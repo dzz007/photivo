@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_ES" sourcelanguage="en">
+<TS version="2.1" language="es_ES" sourcelanguage="en">
 <context>
     <name>Form</name>
     <message>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
-        <translation>Ficheros RAW (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia(sp)(sp)*.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Mapa de bits (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;Todos los ficheros (*.*)</translation>
+        <translation type="vanished">Ficheros RAW (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia(sp)(sp)*.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Mapa de bits (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;Todos los ficheros (*.*)</translation>
     </message>
     <message>
         <source>Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
@@ -49,6 +49,10 @@
     <message>
         <source>Jpeg (*.jpg);;Tiff (*.tiff);;Png (*.png);;All files (*.*)</source>
         <translation>Jpeg (*.jpg);;Tiff (*.tiff);;Png (*.png);;Todos los ficheros (*.*)</translation>
+    </message>
+    <message>
+        <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.nrw *.NRW *.Nrw *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1491,7 +1495,7 @@ Are you sure?</source>
     </message>
     <message>
         <source>Settings files (*.pts *.ptj);;All files (*.*)</source>
-        <translation>Fichero de ajustes (*.pts *.ptj);;Todos los ficheros (*.*)</translation>
+        <translation type="vanished">Fichero de ajustes (*.pts *.ptj);;Todos los ficheros (*.*)</translation>
     </message>
     <message>
         <source>Open setting file</source>
@@ -2237,8 +2241,29 @@ The error occurred in line %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
-                [-h] [--new-instance]
+        <source>Standard file in the Photivo directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The file batch list was previously saved to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width x Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send to batch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile |
+                 --load-and-delete imagefile]
+                [--pts ptsfile] [--sidecar sidecarfile] [-h] [--new-instance]
 Options:
 inputfile
       Specify the image or settings file to load. Works like -i for image files
@@ -2255,6 +2280,8 @@ inputfile
 --pts ptsfile
       Specify settings file to load with the image. Must be used together
       with -i.
+--sidecar sidecarfile
+      Specify sidecar file to load with the image.
 --new-instance
       Allow opening another Photivo instance instead of using a currently
       running Photivo. Job files are always opened in a new instance.
@@ -2268,11 +2295,7 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Standard file in the Photivo directory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The file batch list was previously saved to</source>
+        <source>Save and send to batch manager</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2372,6 +2395,14 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
     <message>
         <source>Open job list files</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation type="unfinished">Reiniciar</translation>
     </message>
 </context>
 <context>
@@ -2538,6 +2569,14 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
     <message>
         <source>Thumbnail &amp;view</source>
         <translation>&amp;Vista miniaturas</translation>
+    </message>
+    <message>
+        <source>Show RAWs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show bitmaps</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2739,6 +2778,21 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
     </message>
 </context>
 <context>
+    <name>ptFilter_ImpulseNR</name>
+    <message>
+        <source>Impulse noise reduction</source>
+        <translation type="unfinished">Reducción de ruido Impulse</translation>
+    </message>
+    <message>
+        <source>Lightness threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_LMHRecovery</name>
     <message>
         <source>Low/mid/highlight recovery</source>
@@ -2825,6 +2879,88 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
     <message>
         <source>Whitepoint</source>
         <translation>Punto blanco</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LocalContrast</name>
+    <message>
+        <source>Local contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished">Deshabilitado</translation>
+    </message>
+    <message>
+        <source>Shadows</source>
+        <translation type="unfinished">Sombras</translation>
+    </message>
+    <message>
+        <source>Midtones</source>
+        <translation type="unfinished">Tonos medios</translation>
+    </message>
+    <message>
+        <source>Highlights</source>
+        <translation type="unfinished">Luces altas</translation>
+    </message>
+    <message>
+        <source>All values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mask type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius</source>
+        <translation type="unfinished">Radio</translation>
+    </message>
+    <message>
+        <source>Strength</source>
+        <translation type="unfinished">Fuerza</translation>
+    </message>
+    <message>
+        <source>Opacity</source>
+        <translation type="unfinished">Opacidad</translation>
+    </message>
+    <message>
+        <source>Halo control</source>
+        <translation type="unfinished">Contro de halos</translation>
+    </message>
+    <message>
+        <source>Lower limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upper limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Softness</source>
+        <translation type="unfinished">Suavidad</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LocalContrastStretch</name>
+    <message>
+        <source>Local contrast stretch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Radius</source>
+        <translation type="unfinished">Radio</translation>
+    </message>
+    <message>
+        <source>Feather</source>
+        <translation type="unfinished">Pluma</translation>
+    </message>
+    <message>
+        <source>Opacity</source>
+        <translation type="unfinished">Opacidad</translation>
+    </message>
+    <message>
+        <source>Masking</source>
+        <translation type="unfinished">Mascara</translation>
     </message>
 </context>
 <context>
@@ -3190,6 +3326,37 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
     </message>
 </context>
 <context>
+    <name>ptFilter_TextureContrast</name>
+    <message>
+        <source>Texture contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strength</source>
+        <translation type="unfinished">Fuerza</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">Escala</translation>
+    </message>
+    <message>
+        <source>Threshold</source>
+        <translation type="unfinished">Umbral</translation>
+    </message>
+    <message>
+        <source>Opacity</source>
+        <translation type="unfinished">Opacidad</translation>
+    </message>
+    <message>
+        <source>Denoise</source>
+        <translation type="unfinished">Reducción de ruido</translation>
+    </message>
+    <message>
+        <source>Masking</source>
+        <translation type="unfinished">Mascara</translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_Tone</name>
     <message>
         <source>Tone</source>
@@ -3423,6 +3590,10 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
         <source>Display &amp;mode</source>
         <translation>Mostrar &amp;modo</translation>
     </message>
+    <message>
+        <source>RAW thumbnail is used</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ptImageSpotEditor</name>
@@ -3555,6 +3726,11 @@ job is being processed. Do you want to abort processing and remove it from the l
     <message>
         <source>
 is not a job list file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+doesn&apos;t exist.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3822,15 +3998,15 @@ is not a job list file.</source>
     </message>
     <message>
         <source>Texture Contrast</source>
-        <translation>Contraste textura</translation>
+        <translation type="vanished">Contraste textura</translation>
     </message>
     <message>
         <source>Local Contrast I</source>
-        <translation>Contraste local I</translation>
+        <translation type="vanished">Contraste local I</translation>
     </message>
     <message>
         <source>Local Contrast II</source>
-        <translation>Contraste local II</translation>
+        <translation type="vanished">Contraste local II</translation>
     </message>
     <message>
         <source>RGB Contrast</source>
@@ -3870,19 +4046,19 @@ is not a job list file.</source>
     </message>
     <message>
         <source>Texture Contrast I</source>
-        <translation>Contraste de textura I</translation>
+        <translation type="vanished">Contraste de textura I</translation>
     </message>
     <message>
         <source>Texture Contrast II</source>
-        <translation>Contraste de textura II</translation>
+        <translation type="vanished">Contraste de textura II</translation>
     </message>
     <message>
         <source>Local Contrast Stretch I (*)</source>
-        <translation>Extensión del contraste local I (*)</translation>
+        <translation type="vanished">Extensión del contraste local I (*)</translation>
     </message>
     <message>
         <source>Local Contrast Stretch II (*)</source>
-        <translation>Extensión del contraste local II (*)</translation>
+        <translation type="vanished">Extensión del contraste local II (*)</translation>
     </message>
     <message>
         <source>Lightness Contrast</source>
@@ -3910,7 +4086,7 @@ is not a job list file.</source>
     </message>
     <message>
         <source>Impulse noise reduction</source>
-        <translation>Reducción de ruido Impulse</translation>
+        <translation type="vanished">Reducción de ruido Impulse</translation>
     </message>
     <message>
         <source>Edge avoiding wavelets</source>
@@ -4676,6 +4852,18 @@ is not a job list file.</source>
         <source>Batch Manager</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Open previous image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open next image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send to batch</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ptProcessor</name>
@@ -4755,15 +4943,15 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>RGB Texture contrast</source>
-        <translation>Contraste extura RGB</translation>
+        <translation type="vanished">Contraste extura RGB</translation>
     </message>
     <message>
         <source>Microcontrast 1</source>
-        <translation>Microcontraste 1</translation>
+        <translation type="vanished">Microcontraste 1</translation>
     </message>
     <message>
         <source>Microcontrast 2</source>
-        <translation>Microcontraste 2</translation>
+        <translation type="vanished">Microcontraste 2</translation>
     </message>
     <message>
         <source>Applying RGB Contrast</source>
@@ -4795,31 +4983,31 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Texture curve</source>
-        <translation>Curva textura</translation>
+        <translation type="vanished">Curva textura</translation>
     </message>
     <message>
         <source>Texture contrast 1</source>
-        <translation>Contraste textura 1</translation>
+        <translation type="vanished">Contraste textura 1</translation>
     </message>
     <message>
         <source>Texture contrast 2</source>
-        <translation>Contraste textura 2</translation>
+        <translation type="vanished">Contraste textura 2</translation>
     </message>
     <message>
         <source>LabMicrocontrast 1</source>
-        <translation>MicrocontrasteLab 1</translation>
+        <translation type="vanished">MicrocontrasteLab 1</translation>
     </message>
     <message>
         <source>LabMicrocontrast 2</source>
-        <translation>MicrocontrasteLab 2</translation>
+        <translation type="vanished">MicrocontrasteLab 2</translation>
     </message>
     <message>
         <source>Local Contrast 1</source>
-        <translation>Contraste local 1</translation>
+        <translation type="vanished">Contraste local 1</translation>
     </message>
     <message>
         <source>Local Contrast 2</source>
-        <translation>Contraste local 2</translation>
+        <translation type="vanished">Contraste local 2</translation>
     </message>
     <message>
         <source>Applying Lab contrast</source>
@@ -4839,7 +5027,7 @@ Puede probar un perfil externo.</translation>
     </message>
     <message>
         <source>Impulse denoise</source>
-        <translation>Reducción de ruido Impulse</translation>
+        <translation type="vanished">Reducción de ruido Impulse</translation>
     </message>
     <message>
         <source>Edge avoiding wavelets</source>
@@ -5698,11 +5886,11 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Don&apos;t amplify noise</source>
-        <translation>No amplifiques el ruido</translation>
+        <translation type="vanished">No amplifiques el ruido</translation>
     </message>
     <message>
         <source>Masking</source>
-        <translation>Mascara</translation>
+        <translation type="vanished">Mascara</translation>
     </message>
     <message>
         <source>Radius</source>
@@ -5710,7 +5898,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Halo Control</source>
-        <translation>Contro de halos</translation>
+        <translation type="vanished">Contro de halos</translation>
     </message>
     <message>
         <source>Fine Detail</source>
@@ -5742,7 +5930,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Feather</source>
-        <translation>Pluma</translation>
+        <translation type="vanished">Pluma</translation>
     </message>
     <message>
         <source>Gamma</source>
@@ -5794,11 +5982,11 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Threshold on L</source>
-        <translation>Umbral en L</translation>
+        <translation type="vanished">Umbral en L</translation>
     </message>
     <message>
         <source>Threshold on color</source>
-        <translation>Umblar en color</translation>
+        <translation type="vanished">Umblar en color</translation>
     </message>
     <message>
         <source>Level 1</source>
@@ -6430,7 +6618,7 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Values for microcontrast</source>
-        <translation>Valores de microcontraste</translation>
+        <translation type="vanished">Valores de microcontraste</translation>
     </message>
     <message>
         <source>Enable GreyCStoration on L</source>
@@ -6916,6 +7104,47 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
         <source>Automatically load previous batch list saved to standard path on startup</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Thumbnail cache (MB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum size of thumbnail cache in MBytes.
+Requires a restart to take effect.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Image height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use thumbnail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use the embedded thumbnail of RAW images</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Autosave settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Autosave settings when loading another image (if save confirmation is off)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load tags from sidecar files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load tags from sidecar XMP files when opening an image.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ptSingleDirModel</name>
@@ -6980,6 +7209,18 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     <message>
         <source>Add to &amp;favourites</source>
         <translation>Agregar a &amp;favoritos</translation>
+    </message>
+    <message>
+        <source>All&amp;ow</source>
+        <translation type="unfinished">Permi&amp;tir</translation>
+    </message>
+    <message>
+        <source>Bl&amp;ock</source>
+        <translation type="unfinished">Bl&amp;oquear</translation>
+    </message>
+    <message>
+        <source>Remove from &amp;favourites</source>
+        <translation type="unfinished">Eliminar de &amp;favoritos</translation>
     </message>
 </context>
 <context>
@@ -7158,6 +7399,38 @@ Util para evitar perder contenido por las herramientas distorsión/geometria.(ne
     </message>
     <message>
         <source>Ctrl+B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Shift+C</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paste settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Shift+V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset settings</source>
+        <translation type="unfinished">Reiniciar ajustes</translation>
+    </message>
+    <message>
+        <source>Ctrl+Shift+R</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset settings to last saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Shift+U</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
