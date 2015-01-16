@@ -40,8 +40,8 @@ struct Entities {
 
 
 ptCliCommands ParseCli(int argc, char *argv[]) {
-  Entities cli = { "", "", 0, 0, 0, 0, 0, false };
-  ptCliCommands result = { cliNoAction, "", "", "", false, false };
+  Entities cli = Entities();
+  ptCliCommands result = ptCliCommands();
 
   if (argc == 1) {
     return result;

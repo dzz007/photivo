@@ -3123,8 +3123,13 @@ int CLASS foveon_apply_curve (short *l_Curve, int i)
 
 void CLASS foveon_interpolate()
 {
+// Loop optimization causes an "undefined behaviour" compiler warning. I just disable
+// the warning here instead of fixing the problem because Photivo does not support
+// Foveon anyway, but I’m not positive that removing this function wouldn’t break
+// DCRaw in some way.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
+#pragma GCC diagnostic ignored "-Waggressive-loop-optimizations"
   static const short hood[] = { -1,-1, -1,0, -1,1, 0,-1, 0,1, 1,-1, 1,0, 1,1 };
   short *pix, prev[3], *l_curve[8], (*shrink)[3];
   float cfilt=0, ddft[3][3][2], ppm[3][3][3];
