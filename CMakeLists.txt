@@ -38,6 +38,8 @@
 
 CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 
+CMAKE_POLICY(SET CMP0043 NEW)
+
 PROJECT( photivo )
 
 if( NOT CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.6 )
@@ -238,6 +240,10 @@ set( photivo_MOC_HDRS
      Sources/qtsingleapplication/qtlocalpeer.h
      Sources/qtsingleapplication/qtsingleapplication.h
      Sources/filemgmt/ptThumbGenWorker.h
+     Sources/filters/ptFilter_TextureContrast.h
+     Sources/filters/ptFilter_LocalContrastStretch.h
+     Sources/filters/ptFilter_LocalContrast.h
+     Sources/filters/ptFilter_ImpulseNR.h
 )
 
 set( photivo_SRCS
@@ -360,6 +366,10 @@ set( photivo_SRCS
      Sources/filemgmt/ptThumbGenMgr.cpp
      Sources/filemgmt/ptThumbGenWorker.cpp
      Sources/filemgmt/ptThumbGenHelpers.cpp
+     Sources/filters/ptFilter_TextureContrast.cpp
+     Sources/filters/ptFilter_LocalContrastStretch.cpp
+     Sources/filters/ptFilter_LocalContrast.cpp
+     Sources/filters/ptFilter_ImpulseNR.cpp
 )
  
 if( WIN32 )

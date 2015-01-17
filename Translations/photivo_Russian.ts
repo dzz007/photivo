@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.0" language="ru_RU">
 <context>
     <name>Form</name>
     <message>
@@ -5671,17 +5671,17 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_ImpulseNR.cpp" line="47"/>
         <source>Impulse noise reduction</source>
-        <translation type="unfinished">Подавление импульсного шума</translation>
+        <translation>Подавление импульсного шума</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ImpulseNR.cpp" line="56"/>
         <source>Lightness threshold</source>
-        <translation type="unfinished"></translation>
+        <translation>Порог по яркости</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ImpulseNR.cpp" line="57"/>
         <source>Color threshold</source>
-        <translation type="unfinished"></translation>
+        <translation>Порог по цвету</translation>
     </message>
 </context>
 <context>
@@ -5806,72 +5806,72 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="63"/>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="72"/>
         <source>Local contrast</source>
-        <translation type="unfinished"></translation>
+        <translation>Локальный контраст</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="86"/>
         <source>Disabled</source>
-        <translation type="unfinished">Запрещено</translation>
+        <translation>Запрещено</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="87"/>
         <source>Shadows</source>
-        <translation type="unfinished">Тени</translation>
+        <translation>Тени</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="88"/>
         <source>Midtones</source>
-        <translation type="unfinished">Полутона</translation>
+        <translation>Полутона</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="89"/>
         <source>Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Света</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="90"/>
         <source>All values</source>
-        <translation type="unfinished">Все значения</translation>
+        <translation>Все значения</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="120"/>
         <source>Mask type</source>
-        <translation type="unfinished">Тип маски</translation>
+        <translation>Тип маски</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="121"/>
         <source>Radius</source>
-        <translation type="unfinished">Радиус</translation>
+        <translation>Радиус</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="122"/>
         <source>Strength</source>
-        <translation type="unfinished">Сила</translation>
+        <translation>Сила</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="123"/>
         <source>Opacity</source>
-        <translation type="unfinished">Непрозрачность</translation>
+        <translation>Непрозрачность</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="124"/>
         <source>Halo control</source>
-        <translation type="unfinished">Контроль ореолов</translation>
+        <translation>Контроль ореолов</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="125"/>
         <source>Lower limit</source>
-        <translation type="unfinished">Нижняя граница</translation>
+        <translation>Нижняя граница</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="126"/>
         <source>Upper limit</source>
-        <translation type="unfinished">Верхняя граница</translation>
+        <translation>Верхняя граница</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="127"/>
         <source>Softness</source>
-        <translation type="unfinished">Плавность</translation>
+        <translation>Плавность</translation>
     </message>
 </context>
 <context>
@@ -5879,27 +5879,27 @@ The error occurred in line %1.</source>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="58"/>
         <source>Local contrast stretch</source>
-        <translation type="unfinished"></translation>
+        <translation>Растяжение локального контраста</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="84"/>
         <source>Radius</source>
-        <translation type="unfinished">Радиус</translation>
+        <translation>Радиус</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="85"/>
         <source>Feather</source>
-        <translation type="unfinished">Размытие</translation>
+        <translation>Размытие</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="86"/>
         <source>Opacity</source>
-        <translation type="unfinished">Непрозрачность</translation>
+        <translation>Непрозрачность</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="87"/>
         <source>Masking</source>
-        <translation type="unfinished">Маска</translation>
+        <translation>Маска</translation>
     </message>
 </context>
 <context>
@@ -6353,37 +6353,37 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="60"/>
         <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="69"/>
         <source>Texture contrast</source>
-        <translation type="unfinished"></translation>
+        <translation>Текстурный контраст</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="82"/>
         <source>Strength</source>
-        <translation type="unfinished">Сила</translation>
+        <translation>Сила</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="83"/>
         <source>Scale</source>
-        <translation type="unfinished">Масштаб</translation>
+        <translation>Масштаб</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="84"/>
         <source>Threshold</source>
-        <translation type="unfinished">Порог</translation>
+        <translation>Порог</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="85"/>
         <source>Opacity</source>
-        <translation type="unfinished">Непрозрачность</translation>
+        <translation>Непрозрачность</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="86"/>
         <source>Denoise</source>
-        <translation type="unfinished">Подавление шума</translation>
+        <translation>Подавление шума</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="87"/>
         <source>Masking</source>
-        <translation type="unfinished">Маска</translation>
+        <translation>Маска</translation>
     </message>
 </context>
 <context>
@@ -7115,15 +7115,15 @@ doesn&apos;t exist.</source>
     </message>
     <message>
         <source>Texture Contrast</source>
-        <translation type="vanished">Текстурный контраст</translation>
+        <translation>Текстурный контраст</translation>
     </message>
     <message>
         <source>Local Contrast I</source>
-        <translation type="vanished">Локальный контраст I</translation>
+        <translation>Локальный контраст I</translation>
     </message>
     <message>
         <source>Local Contrast II</source>
-        <translation type="vanished">Локальный контраст II</translation>
+        <translation>Локальный контраст II</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="3641"/>
@@ -7132,19 +7132,19 @@ doesn&apos;t exist.</source>
     </message>
     <message>
         <source>Texture Contrast I</source>
-        <translation type="vanished">Текстурный контраст I</translation>
+        <translation>Текстурный контраст I</translation>
     </message>
     <message>
         <source>Texture Contrast II</source>
-        <translation type="vanished">Текстурный контраст II</translation>
+        <translation>Текстурный контраст II</translation>
     </message>
     <message>
         <source>Local Contrast Stretch I (*)</source>
-        <translation type="vanished">Растяжение локального контраста I (*)</translation>
+        <translation>Растяжение локального контраста I (*)</translation>
     </message>
     <message>
         <source>Local Contrast Stretch II (*)</source>
-        <translation type="vanished">Растяжение локального контраста II (*)</translation>
+        <translation>Растяжение локального контраста II (*)</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="3837"/>
@@ -7163,7 +7163,7 @@ doesn&apos;t exist.</source>
     </message>
     <message>
         <source>Impulse noise reduction</source>
-        <translation type="vanished">Подавление импульсного шума</translation>
+        <translation>Подавление импульсного шума</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="3949"/>
@@ -8182,15 +8182,15 @@ No crop, try again.</source>
     </message>
     <message>
         <source>RGB Texture contrast</source>
-        <translation type="vanished">Текстурный контраст RGB</translation>
+        <translation>Текстурный контраст RGB</translation>
     </message>
     <message>
         <source>Microcontrast 1</source>
-        <translation type="vanished">Микроконтраст 1</translation>
+        <translation>Микроконтраст 1</translation>
     </message>
     <message>
         <source>Microcontrast 2</source>
-        <translation type="vanished">Микроконтраст 2</translation>
+        <translation>Микроконтраст 2</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="1392"/>
@@ -8204,35 +8204,35 @@ No crop, try again.</source>
     </message>
     <message>
         <source>Texture curve</source>
-        <translation type="vanished">Текстурная кривая</translation>
+        <translation>Текстурная кривая</translation>
     </message>
     <message>
         <source>Texture contrast 1</source>
-        <translation type="vanished">Текстурный контраст 1</translation>
+        <translation>Текстурный контраст 1</translation>
     </message>
     <message>
         <source>Texture contrast 2</source>
-        <translation type="vanished">Текстурный контраст 2</translation>
+        <translation>Текстурный контраст 2</translation>
     </message>
     <message>
         <source>LabMicrocontrast 1</source>
-        <translation type="vanished">Микроконтраст Lab 1</translation>
+        <translation>Микроконтраст Lab 1</translation>
     </message>
     <message>
         <source>LabMicrocontrast 2</source>
-        <translation type="vanished">Микроконтраст Lab 2</translation>
+        <translation>Микроконтраст Lab 2</translation>
     </message>
     <message>
         <source>Local Contrast 1</source>
-        <translation type="vanished">Локальный контраст 1</translation>
+        <translation>Локальный контраст 1</translation>
     </message>
     <message>
         <source>Local Contrast 2</source>
-        <translation type="vanished">Локальный контраст 2</translation>
+        <translation>Локальный контраст 2</translation>
     </message>
     <message>
         <source>Impulse denoise</source>
-        <translation type="vanished">Подавление импульсного шума</translation>
+        <translation>Подавление импульсного шума</translation>
     </message>
     <message>
         <location filename="../Sources/ptProcessor.cpp" line="810"/>
@@ -8939,11 +8939,11 @@ No crop, try again.</source>
     </message>
     <message>
         <source>Don&apos;t amplify noise</source>
-        <translation type="vanished">Не усиливать шум</translation>
+        <translation>Не усиливать шум</translation>
     </message>
     <message>
         <source>Masking</source>
-        <translation type="vanished">Маска</translation>
+        <translation>Маска</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="157"/>
@@ -8959,11 +8959,11 @@ No crop, try again.</source>
     </message>
     <message>
         <source>Halo Control</source>
-        <translation type="vanished">Контроль ореолов</translation>
+        <translation>Контроль ореолов</translation>
     </message>
     <message>
         <source>Feather</source>
-        <translation type="vanished">Размытие</translation>
+        <translation>Размытие</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="162"/>
@@ -8993,11 +8993,11 @@ No crop, try again.</source>
     </message>
     <message>
         <source>Threshold on L</source>
-        <translation type="vanished">Порог по L</translation>
+        <translation>Порог по L</translation>
     </message>
     <message>
         <source>Threshold on color</source>
-        <translation type="vanished">Порог по цвету</translation>
+        <translation>Порог по цвету</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="141"/>
@@ -9777,7 +9777,7 @@ Requires a restart to take effect.</source>
     </message>
     <message>
         <source>Values for microcontrast</source>
-        <translation type="vanished">Значения для микроконтраста</translation>
+        <translation>Значения для микроконтраста</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="351"/>
@@ -10176,12 +10176,12 @@ Requires a restart to take effect.</source>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="437"/>
         <source>Load tags from sidecar files</source>
-        <translation type="unfinished">Загружать теги из отдельного файла</translation>
+        <translation>Загружать теги из отдельного файла</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="437"/>
         <source>Load tags from sidecar XMP files when opening an image.</source>
-        <translation type="unfinished">Загружать теги из отдельного XMP файла при открытии изображения.</translation>
+        <translation>Загружать теги из отдельного XMP файла при открытии изображения.</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="411"/>
