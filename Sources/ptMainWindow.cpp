@@ -23,7 +23,6 @@
 *******************************************************************************/
 
 #include "ptDefines.h"
-#include "ptChannelMixer.h"
 #include "ptConfirmRequest.h"
 #include "ptConstants.h"
 #include "ptError.h"
@@ -390,9 +389,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   //
   // TAB : RGB
   //
-
-  Macro_ConnectSomeButton(ChannelMixerOpen);
-  Macro_ConnectSomeButton(ChannelMixerSave);
 
   if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
     Settings->SetEnabled("WhiteFraction",1);
@@ -1426,21 +1422,6 @@ void ptMainWindow::OnCropCenterVertButtonClicked() {
 }
 
 
-//
-// Tab : RGB
-//
-
-
-void CB_ChannelMixerOpenButton();
-void ptMainWindow::OnChannelMixerOpenButtonClicked() {
-  ::CB_ChannelMixerOpenButton();
-}
-void CB_ChannelMixerSaveButton();
-void ptMainWindow::OnChannelMixerSaveButtonClicked() {
-  ::CB_ChannelMixerSaveButton();
-}
-
-
 // Tab : EyeCandy
 
 void CB_Tone1ColorButton();
@@ -2234,18 +2215,6 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("InterpolationPasses",1);
   else
     Settings->SetEnabled("InterpolationPasses",0);
-
-
-  // ChannelMixer
-  Settings->SetValue("ChannelMixerR2R",ChannelMixer->m_Mixer[0][0]);
-  Settings->SetValue("ChannelMixerG2R",ChannelMixer->m_Mixer[0][1]);
-  Settings->SetValue("ChannelMixerB2R",ChannelMixer->m_Mixer[0][2]);
-  Settings->SetValue("ChannelMixerR2G",ChannelMixer->m_Mixer[1][0]);
-  Settings->SetValue("ChannelMixerG2G",ChannelMixer->m_Mixer[1][1]);
-  Settings->SetValue("ChannelMixerB2G",ChannelMixer->m_Mixer[1][2]);
-  Settings->SetValue("ChannelMixerR2B",ChannelMixer->m_Mixer[2][0]);
-  Settings->SetValue("ChannelMixerG2B",ChannelMixer->m_Mixer[2][1]);
-  Settings->SetValue("ChannelMixerB2B",ChannelMixer->m_Mixer[2][2]);
 
   // Preview Mode
   PreviewModeButton->setChecked(Settings->GetInt("PreviewMode"));

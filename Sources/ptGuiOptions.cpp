@@ -507,11 +507,6 @@ const ptGuiOptionsItem ptGuiOptions::AutoExposureMode[] = {
   {ptAutoExposureMode_Manual, QObject::tr("Manual")              },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::ChannelMixer[] = {
-  {ptChannelMixerChoice_None,    QObject::tr("None") },
-  {ptChannelMixerChoice_Manual,  QObject::tr("Manual") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::SpecialPreview[] = {
   {ptSpecialPreview_RGB,        QObject::tr("RGB") },
   {ptSpecialPreview_Structure,  QObject::tr("Structure") },

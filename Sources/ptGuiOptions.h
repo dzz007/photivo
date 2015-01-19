@@ -90,7 +90,6 @@ public:
   static const ptGuiOptionsItem LMHLightRecoveryMaskType[];
   static const ptGuiOptionsItem LABTransformMode[];
   static const ptGuiOptionsItem DenoiseMask[];
-  static const ptGuiOptionsItem ChannelMixer[];
   static const ptGuiOptionsItem SpecialPreview[];
   static const ptGuiOptionsItem ViewLAB[];
   static const ptGuiOptionsItem GREYCInterpolation[];

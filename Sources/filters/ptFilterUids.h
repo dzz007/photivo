@@ -52,7 +52,7 @@ namespace Fuid {
   const QString Flip_Geometry                   = "00aafc5b-4320-4e24-92a3-e275267f5408"; // not yet ported
   const QString Block_Geometry                  = "9b0f46d7-1b6f-4d95-adde-8b1a7dffde4f"; // not yet ported
 
-  const QString ChannelMixer_RGB                = "ad7b76f2-7ddb-48b6-8978-e08f86d5537f"; // not yet ported
+  const QString ChannelMixer_RGB                = "ad7b76f2-7ddb-48b6-8978-e08f86d5537f";
   const QString Highlights_RGB                  = "8daccb81-5dd3-4664-bf3c-1fefe7ad084e";
   const QString ColorIntensity_RGB              = "e36d034c-5acf-4c22-b7f3-a74180710bc6";
   const QString Brightness_RGB                  = "4b3e046f-2525-4b2d-86f2-63345669c82a";

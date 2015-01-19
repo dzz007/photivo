@@ -270,10 +270,6 @@ private slots:
   void OnCropCenterHorButtonClicked();
   void OnCropCenterVertButtonClicked();
 
-  void OnChannelMixerOpenButtonClicked();
-  void OnChannelMixerSaveButtonClicked();
-
-
   void OnTone1ColorButtonClicked();
   void OnTone2ColorButtonClicked();
 

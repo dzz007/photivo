@@ -33,7 +33,6 @@
 // deprecated: To be removed when transition to new settings system is complete.
 #include "../ptSettings.h"
 #include "../ptCurve.h"
-#include "../ptChannelMixer.h"
 #include "../ptMainWindow.h"
 #include "../ptError.h"
 #include "../ptMessageBox.h"
@@ -85,8 +84,6 @@ void ptFilterDM::ToOldPreset(QSettings *APreset) {
 // Job files contain additional information about the files to process.
 // Preset files contain just information about filters, no string
 // correction will be needed.
-void   UpdateComboboxes(const QString Key);
-extern ptChannelMixer* ChannelMixer;
 extern ptMainWindow* MainWindow;
 void   PreCalcTransforms();
 
@@ -305,34 +302,6 @@ bool ptFilterDM::ReadPresetFile(const QString &AFileName, short &ANextPhase) {
   // next processor stage
   if (hPreset.contains("NextPhase"))
     ANextPhase = hPreset.value("NextPhase").toInt();
-
-  // Update display of comboboxes
-  // This also clears non-existing files
-  QStringList ListCombos;
-  ListCombos << "ChannelMixer";
-  for (int i = 0; i < ListCombos.size(); i++ )
-    UpdateComboboxes(ListCombos.at(i));
-
-  // Load channelmixer
-  if (Settings->GetInt("ChannelMixer")>1) {
-    if (ChannelMixer->ReadChannelMixer(
-         (Settings->GetStringList("ChannelMixerFileNames"))
-           [Settings->GetInt("ChannelMixer")-ptChannelMixerChoice_File].
-             toLocal8Bit().data())) {
-      assert(0);
-    }
-  }
-
-  // ChannelMixer
-  ChannelMixer->m_Mixer[0][0] = Settings->GetDouble("ChannelMixerR2R");
-  ChannelMixer->m_Mixer[0][1] = Settings->GetDouble("ChannelMixerG2R");
-  ChannelMixer->m_Mixer[0][2] = Settings->GetDouble("ChannelMixerB2R");
-  ChannelMixer->m_Mixer[1][0] = Settings->GetDouble("ChannelMixerR2G");
-  ChannelMixer->m_Mixer[1][1] = Settings->GetDouble("ChannelMixerG2G");
-  ChannelMixer->m_Mixer[1][2] = Settings->GetDouble("ChannelMixerB2G");
-  ChannelMixer->m_Mixer[2][0] = Settings->GetDouble("ChannelMixerR2B");
-  ChannelMixer->m_Mixer[2][1] = Settings->GetDouble("ChannelMixerG2B");
-  ChannelMixer->m_Mixer[2][2] = Settings->GetDouble("ChannelMixerB2B");
 
   // Color space transformations precalc
   if (NeedRecalcTransforms == 1) PreCalcTransforms();
@@ -863,6 +832,33 @@ void ptFilterDM::TranslateCurvesToOld(QSettings *APreset, QStringList *AKeys) {
 void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
   AKeys->removeAll("Magic");
 
+  /***** Channel mixer *****
+    Filter had a combobox with fixed "None" and "Manual" entries. It got extended
+    dynamically by the names of all manually loaded mixer files. For some reason
+    this whole construction was saved to PTS in addition to the actual mix factors.
+    Here we need to take care of obsolete keys ChannelMixer, ChannelMixerFileNames,
+    ChannelMixersDirectory.
+  */
+  // "ChannelMixer" holds the combobox index. 0=None, 1=Manual, >1=File
+  // If >1 read the filename list to fill the new-style mixer name entry.
+  int chmixerMode = APreset->value("ChannelMixer").toInt();
+  if (chmixerMode > 1) {
+    const QStringList chmixerFiles = APreset->value("ChannelMixerFileNames").toStringList();
+    const int chmixerIdx = chmixerMode - 2;
+
+    if (chmixerIdx < chmixerFiles.size()) {
+      APreset->setValue(
+          "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/MixerName/MixerName",
+          QFileInfo(chmixerFiles[chmixerIdx]).baseName());
+    }
+  }
+
+  APreset->remove("ChannelMixer");
+  APreset->remove("ChannelMixerFileNames");
+  AKeys->removeAll("ChannelMixer");
+  AKeys->removeAll("ChannelMixerFileNames");
+
+
   /***** Tone adjustment *****
     Filter unnecessarily had two off conditions: mask type "disabled" or amount 0.0.
     Removed the "disabled" mask type, i.e. old mask type values are off by +1.
@@ -890,8 +886,12 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
 
 //==============================================================================
 
-void ptFilterDM::TranslateSpecialToOld(QSettings */*APreset*/) {
-  // nothing to do atm
+void ptFilterDM::TranslateSpecialToOld(QSettings *APreset) {
+  /***** Channel mixer *****/
+  APreset->setValue(
+      "ChannelMixer",
+      static_cast<int>(GFilterDM->GetFilterFromName(Fuid::ChannelMixer_RGB)->isActive()));
+  APreset->setValue("ChannelMixerFileNames", QVariant());
 }
 
 //==============================================================================
@@ -1033,15 +1033,15 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("LevelsWhitePoint",                "LevelsRgb/"+Fuid::Levels_RGB+"/Whitepoint");
   FNameMap.insert("LabLevelsBlackPoint",             "LevelsLab/"+Fuid::Levels_LabCC+"/Blackpoint");
   FNameMap.insert("LabLevelsWhitePoint",             "LevelsLab/"+Fuid::Levels_LabCC+"/Whitepoint");
-//  FNameMap.insert("ChannelMixerR2R",                 "");
-//  FNameMap.insert("ChannelMixerG2R",                 "");
-//  FNameMap.insert("ChannelMixerB2R",                 "");
-//  FNameMap.insert("ChannelMixerR2G",                 "");
-//  FNameMap.insert("ChannelMixerG2G",                 "");
-//  FNameMap.insert("ChannelMixerB2G",                 "");
-//  FNameMap.insert("ChannelMixerR2B",                 "");
-//  FNameMap.insert("ChannelMixerG2B",                 "");
-//  FNameMap.insert("ChannelMixerB2B",                 "");
+  FNameMap.insert("ChannelMixerR2R",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Red2Red");
+  FNameMap.insert("ChannelMixerG2R",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Green2Red");
+  FNameMap.insert("ChannelMixerB2R",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Blue2Red");
+  FNameMap.insert("ChannelMixerR2G",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Red2Green");
+  FNameMap.insert("ChannelMixerG2G",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Green2Green");
+  FNameMap.insert("ChannelMixerB2G",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Blue2Green");
+  FNameMap.insert("ChannelMixerR2B",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Red2Blue");
+  FNameMap.insert("ChannelMixerG2B",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Green2Blue");
+  FNameMap.insert("ChannelMixerB2B",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Blue2Blue");
   FNameMap.insert("Vibrance",                        "ColorIntensity/"+Fuid::ColorIntensity_RGB+"/Vibrance");
   FNameMap.insert("IntensityRed",                    "ColorIntensity/"+Fuid::ColorIntensity_RGB+"/Red");
   FNameMap.insert("IntensityGreen",                  "ColorIntensity/"+Fuid::ColorIntensity_RGB+"/Green");
@@ -1409,7 +1409,6 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("FlipMode",                        "");
 //  FNameMap.insert("AspectRatioW",                    "");
 //  FNameMap.insert("AspectRatioH",                    "");
-//  FNameMap.insert("ChannelMixer",                    "");
 //  FNameMap.insert("ExposureClipMode",                "");
 //  FNameMap.insert("AutoExposure",                    "");
   FNameMap.insert("LABTransform",                    "LabTransform/"+Fuid::LabTransform_LabCC+"/Mode");
@@ -1530,7 +1529,6 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("UIDirectory",                     "");
 //  FNameMap.insert("TranslationsDirectory",           "");
 //  FNameMap.insert("CurvesDirectory",                 "");
-//  FNameMap.insert("ChannelMixersDirectory",          "");
 //  FNameMap.insert("PresetDirectory",                 "");
 //  FNameMap.insert("CameraColorProfilesDirectory",    "");
 //  FNameMap.insert("PreviewColorProfilesDirectory",   "");
@@ -1563,7 +1561,6 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("RotateW",                         "");
 //  FNameMap.insert("RotateH",                         "");
 //  FNameMap.insert("ExposureNormalization",           "");
-//  FNameMap.insert("ChannelMixerFileNames",           "");
 //  FNameMap.insert("OutputFileName",                  "");
 //  FNameMap.insert("JobMode",                         "");
 //  FNameMap.insert("InputFileNameList",               "");

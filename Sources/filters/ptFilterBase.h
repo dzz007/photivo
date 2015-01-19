@@ -114,12 +114,14 @@ protected:
 protected:
   ptFilterBase();       //!< Ctor is only usable by derived classes.
 
-  bool              checkActiveChanged(const bool ANoSignal = false);
-  void              connectCommonDispatch();
-  int               cfgIdx(const QString &AId) const;
-  void              initDesignerGui(QWidget *AGuiBody);
-  void              internalInit();
-  ptWidget         *findPtWidget(const QString &AId, QWidget* AWidget);
+  bool      checkActiveChanged(const bool ANoSignal = false);
+  void      connectCommonDispatch();
+  int       cfgIdx(const QString &AId) const;
+  void      initDesignerGui(QWidget *AGuiBody);
+  void      internalInit();
+  ptWidget* findPtWidget(const QString &AId, QWidget* AWidget);
+  void      requestPipeRun(const bool AUnconditional = false);
+  void      updateGui(const bool ARequestPipeRun = true);
 
 // Pragmas are here to stop the compiler complaining about unused parameters in the default
 // implementations. Removing the parameter names would work too but be too obscure.
@@ -149,8 +151,6 @@ protected slots:
 
 private:
   void      performCommonConnect(const ptCfgItem &ACfgItem, QObject *AObject);
-  void      requestPipeRun(const bool AUnconditional = false);
-  void      updateGui(const bool ARequestPipeRun = true);
   void      createGui();
 
   QString   FUniqueName;

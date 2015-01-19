@@ -30,8 +30,8 @@ typedef QMap<QString, QVariant> TConfigStore;
 
 class ptStorable {
 public:
-  ptStorable();
-  virtual ~ptStorable();
+  ptStorable() = default;
+  virtual ~ptStorable() = default;
 
   TConfigStore storeConfig(const QString &APrefix) const;
   void         loadConfig(const TConfigStore &AConfig, const QString &APrefix);

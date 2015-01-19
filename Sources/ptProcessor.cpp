@@ -29,7 +29,6 @@
 #include "ptImage.h"
 //#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
 #include "ptCurve.h"
-#include "ptChannelMixer.h"
 #include "ptCimg.h"
 #include "ptDcRaw.h"
 #include "ptFastBilateral.h"
@@ -464,11 +463,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Channel mixing.
 
-        if (Settings->ToolIsActive("TabChannelMixer")) {
-
-          m_ReportProgress(tr("Channel Mixing"));
-
-          m_Image_AfterRGB->MixChannels(ChannelMixer->m_Mixer);
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ChannelMixer_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
@@ -1640,7 +1638,7 @@ void ptProcessor::Run(short Phase,
                                     ptIMFilter_Catrom);
 
             float Value = ((Settings->GetDouble("TextureOverlaySaturation")-1.0)*100);
-            float VibranceMixer[3][3];
+            TChannelMatrix VibranceMixer;
 
             VibranceMixer[0][0] = 1.0+(Value/150.0);
             VibranceMixer[0][1] = -(Value/300.0);
@@ -1652,7 +1650,7 @@ void ptProcessor::Run(short Phase,
             VibranceMixer[2][1] = VibranceMixer[0][1];
             VibranceMixer[2][2] = VibranceMixer[0][0];
 
-            TempImage->MixChannels(VibranceMixer);
+            TempImage->mixChannels(VibranceMixer);
 
 
 
@@ -1723,10 +1721,10 @@ void ptProcessor::Run(short Phase,
                                     ptIMFilter_Catrom);
 
             float Value = ((Settings->GetDouble("TextureOverlay2Saturation")-1.0)*100);
-            float VibranceMixer[3][3];
+            TChannelMatrix VibranceMixer;
 
-            VibranceMixer[0][0] = 1.0+(Value/150.0);
-            VibranceMixer[0][1] = -(Value/300.0);
+            VibranceMixer[0][0] = 1.0f+(Value/150.0f);
+            VibranceMixer[0][1] = -(Value/300.0f);
             VibranceMixer[0][2] = VibranceMixer[0][1];
             VibranceMixer[1][0] = VibranceMixer[0][1];
             VibranceMixer[1][1] = VibranceMixer[0][0];
@@ -1735,7 +1733,7 @@ void ptProcessor::Run(short Phase,
             VibranceMixer[2][1] = VibranceMixer[0][1];
             VibranceMixer[2][2] = VibranceMixer[0][0];
 
-            TempImage->MixChannels(VibranceMixer);
+            TempImage->mixChannels(VibranceMixer);
 
 
 
