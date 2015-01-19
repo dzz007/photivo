@@ -22,12 +22,6 @@
 
 #include "ptStorable.h"
 
-ptStorable::ptStorable()
-{}
-
-ptStorable::~ptStorable()
-{}
-
 TConfigStore ptStorable::storeConfig(const QString &APrefix) const {
   return this->doStoreConfig(trailingSlash(APrefix));
 }

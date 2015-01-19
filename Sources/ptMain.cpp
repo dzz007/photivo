@@ -40,7 +40,6 @@
 #include "ptError.h"
 #include "ptRGBTemperature.h"
 #include "ptWhiteBalances.h"
-#include "ptChannelMixer.h"
 #include "ptCurve.h"
 #include "ptFastBilateral.h"
 #include "ptTheme.h"
@@ -102,8 +101,6 @@ QString     ShareDirectory;
 // Sidecar related
 Exiv2::IptcData IptcData;
 Exiv2::XmpData  XmpData;
-
-ptChannelMixer* ChannelMixer = NULL;
 
 cmsHPROFILE PreviewColorProfile = NULL;
 cmsCIExyY       D65;
@@ -270,9 +267,7 @@ void   WriteOut();
 void   UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
                           const short    OnlyHistogram = 0);
 void   UpdateCropToolUI();
-void   InitChannelMixers();
 void   PreCalcTransforms();
-void   CB_ChannelMixerChoice(const QVariant Choice);
 void   CB_ZoomFitButton();
 void   CB_MenuFileOpen(const short HaveFile);
 void   CB_MenuFileExit(const short);
@@ -319,6 +314,7 @@ void CreateAllFilters() {
   // Local Edit tab
   GFilterDM->NewFilter("SpotTuning",            Fuid::SpotTuning_Local);
   // RGB tab
+  GFilterDM->NewFilter("ChannelMixer",          Fuid::ChannelMixer_RGB);
   GFilterDM->NewFilter("Highlights",            Fuid::Highlights_RGB);
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_RGB);
   GFilterDM->NewFilter("Brightness",            Fuid::Brightness_RGB);
@@ -862,9 +858,6 @@ int photivoMain(int Argc, char *Argv[]) {
   // do not yet know if we are in GUI or batch mode.
   TheProcessor = new ptProcessor(ReportProgress);
 
-  // ChannelMixer instance.
-  ChannelMixer = new (ptChannelMixer); // Automatically a identity mixer
-
   // First check if we are maybe started as a command line with options.
   // (And thus have to run a batch job)
 
@@ -1038,7 +1031,6 @@ int photivoMain(int Argc, char *Argv[]) {
       // ViewWindow or HistogramWindow or CurveWindows
       //  delete LensfunData;    // TODO BJ: implement lensfun DB
       delete TheProcessor;
-      delete ChannelMixer;
       delete GuiOptions;
       delete MainWindow;  // Cleans up HistogramWindow and ViewWindow also !
       ViewWindow = NULL;  // needs to be NULL to properly construct MainWindow
@@ -1094,7 +1086,6 @@ void CB_Event0() {
   NextSubPhase = ptProcessorPhase_Load;
   ImageSaved = 0;
 
-  InitChannelMixers();
   PreCalcTransforms();
 
   if (Settings->GetInt("JobMode") == 0) { // not job mode!
@@ -1156,71 +1147,6 @@ void CB_Event0() {
 #endif
 
   InStartup = 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// InitChannelMixers
-// Bring the mixer combobox in sync and read the correct mixers
-// just after initialization.
-// In fact we mimick here the one after one reading of the mixers
-// which also ensures no unreadable mixers are there, for instance because
-// they were meanwhile removed.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void InitChannelMixers() {
-
-  ReportProgress(QObject::tr("Loading channelmixers"));
-  QStringList ChannelMixerFileNames =
-    Settings->GetStringList("ChannelMixerFileNames");
-  // Start adding
-  for (short Idx = 0;
-       Idx<ChannelMixerFileNames.count();
-       Idx++) {
-
-    if (ChannelMixer->ReadChannelMixer(
-                  ChannelMixerFileNames[Idx].toLocal8Bit().data())) {
-      QString ErrorMessage = QObject::tr("Cannot read channelmixer ")
-                           + " '"
-                           + ChannelMixerFileNames[Idx]
-                           + "'" ;
-      if (Settings->GetInt("JobMode") == 0) {
-        ptMessageBox::warning(MainWindow,
-                           QObject::tr("Channelmixer read error"),
-                           ErrorMessage);
-      }
-
-      // Remove this invalid and continue.
-      // Some househoding due to removal.
-      if (Settings->GetInt("ChannelMixer") > ptChannelMixerChoice_File+Idx) {
-        Settings->SetValue("ChannelMixer",Settings->GetInt("ChannelMixer")-1);
-      } else if (Settings->GetInt("ChannelMixer") ==
-                 ptChannelMixerChoice_File+Idx) {
-        Settings->SetValue("ChannelMixer",0);
-      }
-      ChannelMixerFileNames.removeAt(Idx);
-      Idx--;
-      continue;
-    }
-
-    // Small routine that lets Shortfilename point to the basename.
-    QFileInfo PathInfo(ChannelMixerFileNames[Idx]);
-    QString ShortFileName = PathInfo.baseName().left(18);
-    Settings->AddOrReplaceOption("ChannelMixer",
-                                 ShortFileName,
-                                 ptChannelMixerChoice_File+Idx);
-  }
-
-  // Store the maybe changed list again.
-  Settings->SetValue("ChannelMixerFileNames",ChannelMixerFileNames);
-
-  // And process now as if just chosen
-  // TODO JDLA : Wouldn't this be implied by the setCurrentIndex signal ?
-  // Probably not : we're not yet in eventloop.
-  CB_ChannelMixerChoice(QVariant(Settings->GetInt("ChannelMixer")));
-
-  ReportProgress(QObject::tr("Ready"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2137,77 +2063,6 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   }
 } // UpdatePreviewImage
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Update comboboxes of curves and channelmixer
-// Checks if files are available
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void UpdateComboboxes(const QString Key) {
-  QStringList ListCombos;
-  ListCombos << "ChannelMixer";
-  if (!ListCombos.contains(Key)) return;
-
-  // get current selection
-  int Index = Settings->GetInt(Key) - 2;
-  QStringList FileNames;
-  if (Key == "ChannelMixer") {
-    FileNames = Settings->GetStringList("ChannelMixerFileNames");
-  }
-
-  //save current selection
-  QString CurrentIndex;
-  if (Index > -1) CurrentIndex = FileNames.at(Index);
-
-  FileNames.removeDuplicates();
-
-  // check if files are available
-  if (Key == "ChannelMixer") {
-    ptChannelMixer Tmp;
-    for (int i = 0; i < FileNames.size(); i++) {
-      if (Tmp.ReadChannelMixer(FileNames.at(i).toLocal8Bit().data())) {
-        if (Settings->GetInt("JobMode") == 0) {
-          ptMessageBox::warning(MainWindow,
-                               QObject::tr("Channelmixer read error"),
-                               QObject::tr("Cannot read channelmixer ")
-                                 + " '" + FileNames.at(i) + "'");
-        }
-        FileNames.replace(i, "@DELETEME@");
-      }
-    }
-  }
-  FileNames.removeAll("@DELETEME@");
-
-  // check if current selection is still available
-  if (Index > -1) {
-    if (FileNames.contains(CurrentIndex)) {
-      Index = FileNames.indexOf(CurrentIndex);
-      Settings->SetValue(Key, Index + 2);
-    } else {
-      Settings->SetValue(Key, 0);
-    }
-  }
-
-  // Set combos in gui
-  Settings->ClearOptions(Key, 1);
-  for (int i = 0; i < FileNames.size(); i++) {
-    // Small routine that lets Shortfilename point to the basename.
-    QFileInfo PathInfo(FileNames[i]);
-    QString ShortFileName = PathInfo.baseName().left(18);
-
-    // Curves and Channelmixer have 2 default options -> index=2+i
-    Settings->AddOrReplaceOption(Key, ShortFileName, 2+i);
-  }
-
-  // write clean lists to settings
-  if (Key == "ChannelMixer") {
-    Settings->SetValue("ChannelMixerFileNames", FileNames);
-  }
-
-  // update gui display
-  Settings->SetValue(Key,Settings->GetInt(Key));
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -5048,197 +4903,6 @@ void CB_AutomaticPipeSizeCheck(const QVariant Check) {
   }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
-// Partim ChannelMixer
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_ChannelMixerOpenButton() {
-
-  QStringList ChannelMixerFileNames =
-    Settings->GetStringList("ChannelMixerFileNames");
-  int Index = ChannelMixerFileNames.count();
-
-  QString ChannelMixerFileName = QFileDialog::getOpenFileName(
-                        NULL,
-                        QObject::tr("Open Channelmixer"),
-                        Settings->GetString("ChannelMixersDirectory"),
-                        ChannelMixerFilePattern);
-
-  if (0 == ChannelMixerFileName.size() ) {
-    return;
-  } else {
-    QFileInfo PathInfo(ChannelMixerFileName);
-    Settings->SetValue("ChannelMixersDirectory",PathInfo.absolutePath());
-    ChannelMixerFileNames.append(PathInfo.absoluteFilePath());
-  }
-  if (ChannelMixer->
-      ReadChannelMixer(
-                  ChannelMixerFileNames[Index].toLocal8Bit().data())) {
-    QString ErrorMessage = QObject::tr("Cannot read channelmixer ")
-                           + " '"
-                           + ChannelMixerFileNames[Index]
-                           + "'" ;
-    ptMessageBox::warning(MainWindow,
-                         QObject::tr("Channelmixer read error"),
-                         ErrorMessage);
-    // Remove last invalid and return.
-    ChannelMixerFileNames.removeLast();
-    // Store the change.
-    Settings->SetValue("ChannelMixerFileNames",ChannelMixerFileNames);
-    return;
-  }
-  // Store the change.
-  Settings->SetValue("ChannelMixerFileNames",ChannelMixerFileNames);
-
-  // Small routine that lets Shortfilename point to the basename.
-  QFileInfo PathInfo(ChannelMixerFileNames[Index]);
-  QString ShortFileName = PathInfo.baseName().left(18);
-
-  // TODO Protection against double loading ?
-  Settings->AddOrReplaceOption("ChannelMixer",
-                               ShortFileName,
-                               ptChannelMixerChoice_File+Index);
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_File+Index);
-
-  // And process now as if just chosen
-  CB_ChannelMixerChoice(QVariant(ptChannelMixerChoice_File+Index));
-}
-
-void CB_ChannelMixerSaveButton() {
-  QString ChannelMixerFileName = QFileDialog::getSaveFileName(
-                       NULL,
-                       QObject::tr("Save Channelmixer"),
-                       Settings->GetString("ChannelMixersDirectory"),
-                       ChannelMixerFilePattern);
-  if (0 == ChannelMixerFileName.size() ) return;
-
-  QString Header =
-    ";\n"
-    "; photivo Channelmixer File\n"
-    ";\n"
-    "; This curve was written from within photivo\n"
-    ";\n";
-
-  bool Success;
-  QString Explanation =
-    QInputDialog::getText(NULL,
-                          QObject::tr("Save Channelmixer"),
-                          QObject::tr("Give a description"),
-                          QLineEdit::Normal,
-                          NULL,
-                          &Success);
-  if (Success && !Explanation.isEmpty()) {
-    Header += "; " + Explanation + "\n;\n";
-  }
-
-  ChannelMixer->WriteChannelMixer(ChannelMixerFileName.toLocal8Bit().data(),
-                                  Header.toLocal8Bit().data());
-}
-
-void CB_ChannelMixerChoice(const QVariant Choice) {
-  Settings->SetValue("ChannelMixer",Choice);
-  // If we have a channelmixer, go for reading it.
-  if (Choice.toInt() >= ptChannelMixerChoice_File) {
-    // At this stage, as we have checked on loading the curves
-    // we assume the curve can be read. OK, if user has meanwhile
-    // removed it this might go wrong, but then we simply die.
-    if (ChannelMixer->
-        ReadChannelMixer(
-         (Settings->GetStringList("ChannelMixerFileNames"))
-           [Choice.toInt()-ptChannelMixerChoice_File].
-           toLocal8Bit().data())){
-      assert(0);
-    }
-  }
-
-  if (Choice == ptChannelMixerChoice_None) {
-    for (short i=0; i<3; i++) {
-      for (short j=0; j<3; j++) {
-        ChannelMixer->m_Mixer[i][j] = (i==j)?1.0:0.0;
-      }
-    }
-  }
-
-  if (!InStartup) Update(ptProcessorPhase_RGB);
-  if (!InStartup) UpdatePreviewImage();
-}
-
-void CB_ChannelMixerR2RInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[0][0] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerG2RInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[0][1] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerB2RInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[0][2] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerR2GInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[1][0] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerG2GInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[1][1] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerB2GInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[1][2] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerR2BInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[2][0] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerG2BInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[2][1] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerB2BInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[2][2] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the RGB Tab
@@ -6941,17 +6605,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FlipModeChoice)
 
   M_Dispatch(GeometryBlockCheck)
-
-  M_Dispatch(ChannelMixerChoice)
-  M_Dispatch(ChannelMixerR2RInput)
-  M_Dispatch(ChannelMixerG2RInput)
-  M_Dispatch(ChannelMixerB2RInput)
-  M_Dispatch(ChannelMixerR2GInput)
-  M_Dispatch(ChannelMixerG2GInput)
-  M_Dispatch(ChannelMixerB2GInput)
-  M_Dispatch(ChannelMixerR2BInput)
-  M_Dispatch(ChannelMixerG2BInput)
-  M_Dispatch(ChannelMixerB2BInput)
 
   M_Dispatch(AutoExposureChoice)
   M_Dispatch(WhiteFractionInput)

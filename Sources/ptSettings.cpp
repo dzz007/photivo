@@ -125,15 +125,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LqrHeight"                     ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Height")},
     {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Pixels")             ,tr("Image size")},
     {"ResizeHeight"                  ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Image height")},
-    {"ChannelMixerR2R"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to red")},
-    {"ChannelMixerG2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to red")},
-    {"ChannelMixerB2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to red")},
-    {"ChannelMixerR2G"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to green")},
-    {"ChannelMixerG2G"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to green")},
-    {"ChannelMixerB2G"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to green")},
-    {"ChannelMixerR2B"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to blue")},
-    {"ChannelMixerG2B"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to blue")},
-    {"ChannelMixerB2B"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to blue")},
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
@@ -345,7 +336,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatio               ,tr("Aspect width")},
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
-    {"ChannelMixer"                ,ptGT_Choice       ,2,1,1 ,ptChannelMixerChoice_None   ,GuiOptions->ChannelMixer              ,tr("ChannelMixer")},
     {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
     {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
     {"GREYCLab"                    ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->EnableGreyC               ,tr("Enable GreyCStoration on L")},
@@ -490,7 +480,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"RotateW"                              ,9    ,0                                     ,1},
     {"RotateH"                              ,9    ,0                                     ,1},
     {"ExposureNormalization"                ,9    ,0.0                                   ,0},
-    {"ChannelMixerFileNames"                ,0    ,QStringList()                         ,1},
     {"CurveFileNamesRGB"                    ,0    ,QStringList()                         ,1},
     {"CurveFileNamesR"                      ,0    ,QStringList()                         ,1},
     {"CurveFileNamesG"                      ,0    ,QStringList()                         ,1},
@@ -1535,10 +1524,7 @@ sToolInfo ToolInfo (const QString GuiName) {
                       Settings->GetInt("GeometryBlock");
   }
   // Tab RGB
-  else if (GuiName == "TabChannelMixer") {
-      Info.Name = "Channel mixer";
-      Info.IsActive = Settings->GetInt("ChannelMixer");
-  } else if (GuiName == "TabExposure") {
+  else if (GuiName == "TabExposure") {
       Info.Name = "Exposure";
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }

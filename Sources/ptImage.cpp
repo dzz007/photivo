@@ -2694,8 +2694,8 @@ ptImage* ptImage::Reinhard05(const float Brightness,
 
 //------------------------------------------------------------------------------
 
-ptImage *ptImage::ColorIntensity(int AVibrance, int ARed, int AGreen, int ABlue) {
-  float hMixer[3][3];
+ptImage* ptImage::ColorIntensity(int AVibrance, int ARed, int AGreen, int ABlue) {
+  TChannelMatrix hMixer;
 
   if (AVibrance != 0) {
     hMixer[0][0] = 1.0 + (AVibrance/150.0);
@@ -2708,7 +2708,7 @@ ptImage *ptImage::ColorIntensity(int AVibrance, int ARed, int AGreen, int ABlue)
     hMixer[2][1] = hMixer[0][1];
     hMixer[2][2] = hMixer[0][0];
 
-    this->MixChannels(hMixer);
+    this->mixChannels(hMixer);
   }
 
   if ((ARed != 0) || (AGreen != 0) || (ABlue != 0)) {
@@ -2722,7 +2722,7 @@ ptImage *ptImage::ColorIntensity(int AVibrance, int ARed, int AGreen, int ABlue)
     hMixer[2][1] = hMixer[2][0];
     hMixer[2][2] = 1.0+(ABlue/150.0);
 
-    this->MixChannels(hMixer);
+    this->mixChannels(hMixer);
   }
 
   return this;
@@ -4133,7 +4133,7 @@ ptImage* ptImage::BWStyler(const short FilmType,
          const double MultB,
          const double Opacity) {
 
-  float Mixer[3][3];
+  TChannelMatrix Mixer;
   double R = 0,G = 0,B = 0;
   double FR = 0, FG = 0, FB = 0;
   switch (FilmType) {
@@ -4271,9 +4271,9 @@ ptImage* ptImage::BWStyler(const short FilmType,
   Mixer[2][2] = B;
 
   if (Opacity == 1)
-    MixChannels(Mixer);
+    mixChannels(Mixer);
   else {
-    BWLayer->MixChannels(Mixer);
+    BWLayer->mixChannels(Mixer);
     Overlay(BWLayer->m_Image,Opacity,NULL,ptOverlayMode_Normal);
     delete BWLayer;
   }
@@ -4847,7 +4847,7 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
   // Desaturate
   if (Saturation != 0) {
     int Value = Saturation;
-    float VibranceMixer[3][3];
+    TChannelMatrix VibranceMixer;
     VibranceMixer[0][0] = 1.0+(Value/150.0);
     VibranceMixer[0][1] = -(Value/300.0);
     VibranceMixer[0][2] = VibranceMixer[0][1];
@@ -4857,7 +4857,7 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
     VibranceMixer[2][0] = VibranceMixer[0][1];
     VibranceMixer[2][1] = VibranceMixer[0][1];
     VibranceMixer[2][2] = VibranceMixer[0][0];
-    BlurLayer->MixChannels(VibranceMixer);
+    BlurLayer->mixChannels(VibranceMixer);
   }
   // Overlay
   switch (SoftglowMode) {
@@ -5545,28 +5545,22 @@ ptImage* ptImage::SpecialPreview(const short Mode, const int Intent) {
   return this;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// MixChannels
-// MixFactors[To][From]
-//
-////////////////////////////////////////////////////////////////////////////////
+// -----------------------------------------------------------------------------
 
-ptImage* ptImage::MixChannels(const float MixFactors[3][3]) {
-
+ptImage* ptImage::mixChannels(const TChannelMatrix mixFactors) {
   assert (m_ColorSpace != ptSpace_Lab);
-  double Value[3];
+  double value[3];
 
-#pragma omp parallel for default(shared) private(Value)
-  for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-    for (short To=0; To<3; To++) {
-       Value[To] = 0;
-       for ( short From=0; From<3; From++) {
-          Value[To] += MixFactors[To][From] * m_Image[i][From];
+# pragma omp parallel for default(shared) private(value)
+  for (uint32_t px = 0; px < static_cast<uint32_t>(m_Height*m_Width); ++px) {
+    for (int to = 0; to < 3; ++to) {
+       value[to] = 0;
+       for (int from = 0; from < 3; ++from) {
+          value[to] += mixFactors[to][from] * m_Image[px][from];
        }
     }
-    for (short To=0; To<3; To++) {
-      m_Image[i][To] = CLIP((int32_t)Value[To]);
+    for (int to = 0; to < 3; ++to) {
+      m_Image[px][to] = CLIP(static_cast<int32_t>(value[to]));
     }
   }
   return this;

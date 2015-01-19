@@ -187,9 +187,13 @@ public:
   /*! Converts the image from Lch to Lab colour space. Returns a pointer to itself. */
   ptImage* LchToLab();
 
-  // MixChannels
-  // MixFactors[To][From]
-  ptImage* MixChannels(const float MixFactors[3][3]);
+  /*!
+   * Mix channels according to the factors in mixFactors.
+   * mixFactors’s first dimension represents output channels (indexes 0 to 2 represent
+   * 1st to 3rd color component); second dimension represents input channels.
+   * Image must not be in Lab color space.
+   */
+  ptImage* mixChannels(const TChannelMatrix mixFactors);
 
   ptImage* Highlights(const float AHlRed, const float AHlGreen, const float AHlBlue);
 

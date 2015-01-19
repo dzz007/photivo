@@ -368,10 +368,6 @@ void ptGroupBox::WriteSettings(const short Append) {
   for (int i=0; i<Keys.size(); i++) {
     QString Key = Keys[i];
     if (!Settings->GetInJobFile(Key)) continue;
-    if (Keys.at(i) == "ChannelMixer") {// set ChannelMixer to manual if needed
-      JobSettings.setValue("ChannelMixer",MIN((Settings->GetValue(Key)).toInt(),1));
-      continue;
-    }
     JobSettings.setValue(Key,Settings->GetValue(Key));
   }
 

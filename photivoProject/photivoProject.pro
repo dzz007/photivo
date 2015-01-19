@@ -236,7 +236,6 @@ HEADERS += \
     ../Sources/ptAbstractInteraction.h \
     ../Sources/ptAdobeTable.h \
     ../Sources/ptCalloc.h \
-    ../Sources/ptChannelMixer.h \
     ../Sources/ptCheck.h \
     ../Sources/ptChoice.h \
     ../Sources/ptCimg.h \
@@ -293,7 +292,8 @@ HEADERS += \
     ../Sources/filters/ptFilter_TextureContrast.h \
     ../Sources/filters/ptFilter_LocalContrastStretch.h \
     ../Sources/filters/ptFilter_LocalContrast.h \
-    ../Sources/filters/ptFilter_ImpulseNR.h
+    ../Sources/filters/ptFilter_ImpulseNR.h \
+    ../Sources/filters/ptFilter_ChannelMixer.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -356,7 +356,6 @@ SOURCES += \
     ../Sources/perfectraw/lmmse_interpolate.c \
     ../Sources/ptAbstractInteraction.cpp \
     ../Sources/ptCalloc.cpp \
-    ../Sources/ptChannelMixer.cpp \
     ../Sources/ptCheck.cpp \
     ../Sources/ptChoice.cpp \
     ../Sources/ptCimg.cpp \
@@ -433,7 +432,8 @@ SOURCES += \
     ../Sources/filters/ptFilter_TextureContrast.cpp \
     ../Sources/filters/ptFilter_LocalContrastStretch.cpp \
     ../Sources/filters/ptFilter_LocalContrast.cpp \
-    ../Sources/filters/ptFilter_ImpulseNR.cpp
+    ../Sources/filters/ptFilter_ImpulseNR.cpp \
+    ../Sources/filters/ptFilter_ChannelMixer.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \
@@ -445,6 +445,7 @@ FORMS += \
     ../Sources/filters/ptFilter_Outline.ui \
     ../Sources/filters/ptFilter_Tone.ui \
     ../Sources/filters/ptFilter_Wiener.ui \
+    ../Sources/filters/ptFilter_ChannelMixer.ui \
     ../Sources/ptMainWindow.ui
 
 win32 {

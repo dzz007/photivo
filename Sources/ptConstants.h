@@ -289,12 +289,6 @@ const short ptLightsOutMode_None    = 0;
 const short ptLightsOutMode_Dimmed  = 1;
 const short ptLightsOutMode_Black   = 2;
 
-// Channel Mixer
-
-const short ptChannelMixerChoice_None   = 0;
-const short ptChannelMixerChoice_Manual = 1;
-const short ptChannelMixerChoice_File   = 2;
-
 // Exposure Clip Modes
 const short ptExposureClipMode_None  = 0;
 const short ptExposureClipMode_Ratio = 1;

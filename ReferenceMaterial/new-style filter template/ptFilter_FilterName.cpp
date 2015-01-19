@@ -65,15 +65,30 @@ void ptFilter_$FilterName$::doDefineControls() {
     * Tooltips shall amend the caption with additional and/or more accurate information
       about a setting. *Do not* duplicate the caption! If a tooltip is unnecessary or you
       cannot think of a great one at the moment, leave it empty.
-   ***/
+   ***/  
+  /***
+    Each entry in a combobox needs:
+        1) a text that is displayed in the GUI
+        2) an associated integer value, preferrably an entry from an enum class
+           (Most of those are located in ptConstants.cpp. Photivo uses groups of
+           "const short" variables for historical reasons. They are deprecated
+           for new constants groups! Instead use C++11 enum classes or at least
+           plain old-style enums. The pseudo code below shows the enum class
+           version.)
+        3) a string that represents the entry as a value in PTS settings files
+  ***/
+  QList<ptCfgItem::TComboEntry> comboboxConfig({
+    {tr("Combo entry 1"),   static_cast<int>(enumValue1),   "ValueForPTS1"},
+    {tr("Combo entry 2"),   static_cast<int>(enumValue2),   "ValueForPTS2"},
+    {tr("Combo entry 3"),   static_cast<int>(enumValue3),   "ValueForPTS3"},
+  });
+
   FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
                                                                                  //--- Check: not available                 ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CCfgItem1,               ptCfgItem::Check,         0,                                                            true, true, tr("Name in GUI"), tr("Tooltip")})
     << ptCfgItem({CCfgItem2,               ptCfgItem::Slider,        0.2,        0.0,          1.0,          0.05,       2,        true, true, tr("Name in GUI"), tr("Tooltip")})
-    << ptCfgItem({CCfgItem3,               ptCfgItem::Combo,         0,          QStringList(tr("First list entry"))
-                                                                                          << tr("Second list entry")
-                                                                                          << tr("Thrid list entry"),               true, true, tr("Name in GUI"),   tr("Tooltip")})
+    << ptCfgItem({CCfgItem3,               ptCfgItem::Combo,         constant_1, comboboxConfig,                                   true, true, tr("Name in GUI"), tr("Tooltip")})
   );
 }
 
@@ -89,7 +104,7 @@ void ptFilter_$FilterName$::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
   AImage->$FilterName$(FConfig.value(CCfgItem1).toBool(),
                      FConfig.value(CCfgItem2).toDouble(),
-                     FConfig.value(CCfgItem3).toInt() );
+                     static_cast<TSomeEnumClass>(FConfig.value(CCfgItem3).toInt()) );
 }
 
 //------------------------------------------------------------------------------
