@@ -1171,10 +1171,10 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("DefringeRadius",                  "");
 //  FNameMap.insert("DefringeThreshold",               "");
 //  FNameMap.insert("DefringeShift",                   "");
-//  FNameMap.insert("PyrDenoiseLAmount",               "");
-//  FNameMap.insert("PyrDenoiseABAmount",              "");
-//  FNameMap.insert("PyrDenoiseGamma",                 "");
-//  FNameMap.insert("PyrDenoiseLevels",                "");
+  FNameMap.insert("PyrDenoiseLAmount",               "PyramidDenoise/"+Fuid::PyramidDenoise_LabSN+"/LumaStrength");
+  FNameMap.insert("PyrDenoiseABAmount",              "PyramidDenoise/"+Fuid::PyramidDenoise_LabSN+"/ChromaStrength");
+  FNameMap.insert("PyrDenoiseGamma",                 "PyramidDenoise/"+Fuid::PyramidDenoise_LabSN+"/Gamma");
+  FNameMap.insert("PyrDenoiseLevels",                "PyramidDenoise/"+Fuid::PyramidDenoise_LabSN+"/Levels");
   FNameMap.insert("BilateralLOpacity",               "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/Opacity");
   FNameMap.insert("BilateralLUseMask",               "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/EdgeThreshold");
   FNameMap.insert("BilateralLSigmaS",                "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/LScale");

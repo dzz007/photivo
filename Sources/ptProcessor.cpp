@@ -1000,35 +1000,20 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::LumaDenoiseCurve_LabSN);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Denoise curve"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabSN);
-          TRACEMAIN("Done denoise curve at %d ms.",FRunTimer.elapsed());
         }
 
 
         //***************************************************************************
         // Pyramid denoise filter
-        if (Settings->ToolIsActive("TabPyramidDenoise")) {
 
-          m_ReportProgress(tr("Pyramid denoising"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabSN->dirpyrLab_denoise(
-              (int)(Settings->GetInt("PyrDenoiseLAmount")/powf(3.0,(logf(m_ScaleFactor)/logf(0.5)))),
-              Settings->GetInt("PyrDenoiseABAmount"),
-              Settings->GetDouble("PyrDenoiseGamma")/3.0,
-              Settings->GetInt("PyrDenoiseLevels")/*,
-              (int)(logf(m_ScaleFactor)/logf(0.5))*/);
-
-          TRACEMAIN("Done Pyramid denoise at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::PyramidDenoise_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
+
 
         //***************************************************************************
         // Bilateral filter on AB

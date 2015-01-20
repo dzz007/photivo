@@ -148,10 +148,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"DefringeRadius"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,10.0  ,0.5  ,1 ,tr("Radius")             ,tr("Radius")},
     {"DefringeThreshold"             ,ptGT_InputSlider     ,2,1,1 ,25   ,0    ,100   ,5    ,0 ,tr("Threshold")          ,tr("Threshold")},
     {"DefringeShift"                 ,ptGT_InputSlider     ,1,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Tune masks")          ,tr("Fine tune the color masks")},
-    {"PyrDenoiseLAmount"             ,ptGT_InputSlider     ,2,1,1 ,0      ,0   ,150   ,5    ,0 ,tr("L amount")        ,tr("Denoise amount on L")},
-    {"PyrDenoiseABAmount"            ,ptGT_InputSlider     ,2,1,1 ,0      ,0   ,150   ,5    ,0 ,tr("Color amount")    ,tr("Denoise amount on AB")},
-    {"PyrDenoiseGamma"               ,ptGT_InputSlider     ,2,1,1 ,2.0    ,1.0 ,4.0   ,0.1  ,1 ,tr("Gamma")           ,tr("Gamma")},
-    {"PyrDenoiseLevels"              ,ptGT_Input           ,2,1,1 ,5      ,3   ,7     ,1    ,0 ,tr("Levels")          ,tr("Levels")},
     {"BilateralASigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("A amount")         ,tr("Color A denoise")},
     {"BilateralASigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("A scale")         ,tr("Denoise scale on A")},
     {"BilateralBSigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("B amount")         ,tr("Color B denoise")},
@@ -1546,10 +1542,6 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = (Settings->GetDouble("WaveletDenoiseL")!=0.0 ||
                       Settings->GetDouble("WaveletDenoiseA")!=0.0 ||
                       Settings->GetDouble("WaveletDenoiseB")!=0.0)?1:0;
-  } else if (GuiName == "TabPyramidDenoise") {
-      Info.Name = "Lab Pyramid denoise";
-      Info.IsActive = (Settings->GetInt("PyrDenoiseLAmount")!=0.0||
-                       Settings->GetInt("PyrDenoiseABAmount"))!=0.0?1:0;
   } else if (GuiName == "TabColorDenoise") {
       Info.Name = "Lab Levels";
       Info.IsActive = (Settings->GetDouble("BilateralASigmaR")!=0.0 ||

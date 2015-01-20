@@ -350,6 +350,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("LumaDenoise",           Fuid::LumaDenoise_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve2_LabSN,      " II");
+  GFilterDM->NewFilter("PyramidDenoise",        Fuid::PyramidDenoise_LabSN);
   GFilterDM->NewFilter("DetailCurve",           Fuid::DetailCurve_LabSN);
   GFilterDM->NewFilter("Wiener",                Fuid::Wiener_LabSN);
   // Lab Eyecandy tab
@@ -5451,38 +5452,6 @@ void CB_DefringeColor6Check(const QVariant Value) {
     Update(ptProcessorPhase_LabSN);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Pyramid Denoise
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_PyrDenoiseLAmountInput(const QVariant Value) {
-  Settings->SetValue("PyrDenoiseLAmount",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_PyrDenoiseABAmountInput(const QVariant Value) {
-  Settings->SetValue("PyrDenoiseABAmount",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_PyrDenoiseGammaInput(const QVariant Value) {
-  Settings->SetValue("PyrDenoiseGamma",Value);
-  if (Settings->GetInt("PyrDenoiseLAmount")||
-      Settings->GetInt("PyrDenoiseABAmount")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_PyrDenoiseLevelsInput(const QVariant Value) {
-  Settings->SetValue("PyrDenoiseLevels",Value);
-  if (Settings->GetInt("PyrDenoiseLAmount")||
-      Settings->GetInt("PyrDenoiseABAmount")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -6620,11 +6589,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(DefringeColor4Check)
   M_Dispatch(DefringeColor5Check)
   M_Dispatch(DefringeColor6Check)
-
-  M_Dispatch(PyrDenoiseLAmountInput)
-  M_Dispatch(PyrDenoiseABAmountInput)
-  M_Dispatch(PyrDenoiseGammaInput)
-  M_Dispatch(PyrDenoiseLevelsInput)
 
   M_Dispatch(BilateralASigmaRInput)
   M_Dispatch(BilateralASigmaSInput)
