@@ -347,6 +347,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("LevelsLab",             Fuid::Levels_LabCC);
   // Lab sharpen/noise tab
   GFilterDM->NewFilter("ImpulseNR",             Fuid::ImpulseNR_LabSN);
+  GFilterDM->NewFilter("LumaDenoise",           Fuid::LumaDenoise_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve2_LabSN,      " II");
   GFilterDM->NewFilter("DetailCurve",           Fuid::DetailCurve_LabSN);
@@ -5490,31 +5491,6 @@ void CB_PyrDenoiseLevelsInput(const QVariant Value) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CB_BilateralLOpacityInput(const QVariant Value) {
-  Settings->SetValue("BilateralLOpacity",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_BilateralLUseMaskInput(const QVariant Value) {
-  Settings->SetValue("BilateralLUseMask",Value);
-  if (Settings->GetDouble("BilateralLOpacity")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_BilateralLSigmaSInput(const QVariant Value) {
-  Settings->SetValue("BilateralLSigmaS",Value);
-  if (Settings->GetDouble("BilateralLOpacity")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_BilateralLSigmaRInput(const QVariant Value) {
-  Settings->SetValue("BilateralLSigmaR",Value);
-  if (Settings->GetDouble("BilateralLOpacity")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
 
 void CB_BilateralASigmaRInput(const QVariant Value) {
   Settings->SetValue("BilateralASigmaR",Value);
@@ -6650,10 +6626,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(PyrDenoiseGammaInput)
   M_Dispatch(PyrDenoiseLevelsInput)
 
-  M_Dispatch(BilateralLOpacityInput)
-  M_Dispatch(BilateralLUseMaskInput)
-  M_Dispatch(BilateralLSigmaRInput)
-  M_Dispatch(BilateralLSigmaSInput)
   M_Dispatch(BilateralASigmaRInput)
   M_Dispatch(BilateralASigmaSInput)
   M_Dispatch(BilateralBSigmaRInput)

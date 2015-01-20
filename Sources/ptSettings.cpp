@@ -152,10 +152,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"PyrDenoiseABAmount"            ,ptGT_InputSlider     ,2,1,1 ,0      ,0   ,150   ,5    ,0 ,tr("Color amount")    ,tr("Denoise amount on AB")},
     {"PyrDenoiseGamma"               ,ptGT_InputSlider     ,2,1,1 ,2.0    ,1.0 ,4.0   ,0.1  ,1 ,tr("Gamma")           ,tr("Gamma")},
     {"PyrDenoiseLevels"              ,ptGT_Input           ,2,1,1 ,5      ,3   ,7     ,1    ,0 ,tr("Levels")          ,tr("Levels")},
-    {"BilateralLOpacity"             ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,1.0   ,0.10 ,2 ,tr("Opacity")         ,tr("Opacity of denoising on L")},
-    {"BilateralLUseMask"             ,ptGT_InputSlider     ,2,1,1 ,50.0   ,0.0 ,50.0  ,10.0 ,0 ,tr("Edge Threshold")  ,tr("Edge thresholding for denoising on L")},
-    {"BilateralLSigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("L scale")         ,tr("Denoise scale on L")},
-    {"BilateralLSigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.3    ,0.0 ,3.0   ,0.02 ,2 ,tr("L amount")         ,tr("Denoise on L")},
     {"BilateralASigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("A amount")         ,tr("Color A denoise")},
     {"BilateralASigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("A scale")         ,tr("Denoise scale on A")},
     {"BilateralBSigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("B amount")         ,tr("Color B denoise")},
@@ -1550,9 +1546,6 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = (Settings->GetDouble("WaveletDenoiseL")!=0.0 ||
                       Settings->GetDouble("WaveletDenoiseA")!=0.0 ||
                       Settings->GetDouble("WaveletDenoiseB")!=0.0)?1:0;
-  } else if (GuiName == "TabLuminanceDenoise") {
-      Info.Name = "Lab Luminance denoise";
-      Info.IsActive = Settings->GetDouble("BilateralLOpacity")!=0.0?1:0;
   } else if (GuiName == "TabPyramidDenoise") {
       Info.Name = "Lab Pyramid denoise";
       Info.IsActive = (Settings->GetInt("PyrDenoiseLAmount")!=0.0||

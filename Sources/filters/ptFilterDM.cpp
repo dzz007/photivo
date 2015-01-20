@@ -836,8 +836,7 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
     Filter had a combobox with fixed "None" and "Manual" entries. It got extended
     dynamically by the names of all manually loaded mixer files. For some reason
     this whole construction was saved to PTS in addition to the actual mix factors.
-    Here we need to take care of obsolete keys ChannelMixer, ChannelMixerFileNames,
-    ChannelMixersDirectory.
+    Here we need to take care of obsolete keys ChannelMixer, ChannelMixerFileNames.
   */
   // "ChannelMixer" holds the combobox index. 0=None, 1=Manual, >1=File
   // If >1 read the filename list to fill the new-style mixer name entry.
@@ -1176,10 +1175,10 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("PyrDenoiseABAmount",              "");
 //  FNameMap.insert("PyrDenoiseGamma",                 "");
 //  FNameMap.insert("PyrDenoiseLevels",                "");
-//  FNameMap.insert("BilateralLOpacity",               "");
-//  FNameMap.insert("BilateralLUseMask",               "");
-//  FNameMap.insert("BilateralLSigmaS",                "");
-//  FNameMap.insert("BilateralLSigmaR",                "");
+  FNameMap.insert("BilateralLOpacity",               "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/Opacity");
+  FNameMap.insert("BilateralLUseMask",               "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/EdgeThreshold");
+  FNameMap.insert("BilateralLSigmaS",                "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/LScale");
+  FNameMap.insert("BilateralLSigmaR",                "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/LStrength");
 //  FNameMap.insert("BilateralASigmaR",                "");
 //  FNameMap.insert("BilateralASigmaS",                "");
 //  FNameMap.insert("BilateralBSigmaR",                "");

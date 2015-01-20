@@ -372,7 +372,7 @@
                           <enum>QTabWidget::West</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>3</number>
+                          <number>5</number>
                          </property>
                          <property name="iconSize">
                           <size>
@@ -3127,7 +3127,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -3145,7 +3145,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>136</height>
                                    </rect>
                                   </property>
@@ -3405,8 +3405,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
-                                    <height>136</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3739,7 +3739,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -3747,14 +3747,14 @@
                                <item>
                                 <widget class="QToolBox" name="toolbox_4">
                                  <property name="currentIndex">
-                                  <number>0</number>
+                                  <number>5</number>
                                  </property>
                                  <widget class="QWidget" name="TabLABImpulseDenoise">
                                   <property name="geometry">
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>82</height>
                                    </rect>
                                   </property>
@@ -4121,46 +4121,14 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>100</height>
+                                    <width>408</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Luminance Denoising (*)</string>
+                                   <string notr="true">14e7b580-4e1e-4ab5-ba42-b2e37291f6fc</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_161">
-                                   <item>
-                                    <widget class="QWidget" name="widget_67" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_160">
-                                      <item>
-                                       <widget class="QWidget" name="BilateralLOpacityWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="BilateralLUseMaskWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="BilateralLSigmaSWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="BilateralLSigmaRWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_65">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>40</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_161"/>
                                  </widget>
                                  <widget class="QWidget" name="TabDenoiseCurve">
                                   <property name="geometry">
@@ -10288,7 +10256,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>618</width>
+                      <width>550</width>
                       <height>854</height>
                      </rect>
                     </property>
