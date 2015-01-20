@@ -986,25 +986,12 @@ void ptProcessor::Run(short Phase,
         }
 
         //***************************************************************************
-        // Bilateral filter on L
-        if (Settings->ToolIsActive("TabLuminanceDenoise")) {
+        // Bilateral filter on L (luma denoising)
 
-          m_ReportProgress(tr("Luminance denoising"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabSN->BilateralDenoise(Settings->GetDouble("BilateralLSigmaS")*m_ScaleFactor,
-                 Settings->GetDouble("BilateralLSigmaR")/10.0,
-                 Settings->GetDouble("BilateralLOpacity"),
-                 Settings->GetDouble("BilateralLUseMask")*m_ScaleFactor);
-
-          TRACEMAIN("Done Luminance denoise at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::LumaDenoise_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 
