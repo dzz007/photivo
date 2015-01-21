@@ -1038,28 +1038,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Gradient Sharpen
 
-        if (Settings->ToolIsActive("TabLABGradientSharpen")) {
-
-          m_ReportProgress(tr("Gradient Sharpen"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabSN->GradientSharpen(Settings->GetInt("GradientSharpenPasses"),
-                                              Settings->GetDouble("GradientSharpenStrength"));
-
-          m_Image_AfterLabSN->MLMicroContrast(Settings->GetDouble("MLMicroContrastStrength"),
-                                              Settings->GetDouble("MLMicroContrastScaling"),
-                                              Settings->GetDouble("MLMicroContrastWeight"));
-
-          m_Image_AfterLabSN->HotpixelReduction(Settings->GetDouble("LabHotpixel"));
-
-          TRACEMAIN("Done Gradient Sharpen at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::GradientSharpen_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 
@@ -1068,9 +1050,8 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::Wiener_LabSN);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Wiener Filter"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabSN);
-          TRACEMAIN("Done Wiener Filter at %d ms.",FRunTimer.elapsed());
         }
 
 

@@ -158,12 +158,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WaveletDenoiseASoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("A softness")           ,tr("Softness for wavelet A denoise")},
     {"WaveletDenoiseB"               ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,10.0  ,0.1  ,1 ,tr("B amount")             ,tr("Threshold for wavelet B denoise")},
     {"WaveletDenoiseBSoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("B softness")           ,tr("Softness for wavelet B denoise")},
-    {"GradientSharpenPasses"         ,ptGT_Input           ,2,1,1 ,0      ,0   ,10    ,1   ,0 ,tr("Passes")             ,tr("Number of passes")},
-    {"GradientSharpenStrength"       ,ptGT_InputSlider     ,2,1,1 ,0.4    ,0.0 ,1.0  ,0.05 ,2 ,tr("Strength")           ,tr("Strength")},
-    {"MLMicroContrastStrength"       ,ptGT_InputSlider     ,2,1,1 ,0.0    ,-0.1,0.5 ,0.05  ,2 ,tr("Microcontrast")      ,tr("Microcontrast strength")},
-    {"MLMicroContrastScaling"        ,ptGT_InputSlider     ,2,1,1 ,40.0   ,1.0 ,200.0,10.0 ,0 ,tr("Halo control")       ,tr("Microcontrast Halo control")},
-    {"MLMicroContrastWeight"         ,ptGT_InputSlider     ,2,1,1 ,0.5    ,0.0 ,1.0 ,0.05  ,2 ,tr("Weight")             ,tr("Microcontrast weight")},
-    {"LabHotpixel"                   ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,1.0 ,0.1   ,2 ,tr("Clean up")           ,tr("Automatic badpixel reduction")},
     {"InverseDiffusionIterations"    ,ptGT_Input           ,2,1,1 ,0      ,0   ,5     ,1   ,0 ,tr("Iterations")         ,tr("Number of iterations")},
     {"InverseDiffusionAmplitude"     ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,2.0 ,0.05  ,2 ,tr("Amplitude")          ,tr("Amplitude")},
     {"USMRadius"                     ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.1  ,10.0  ,0.1  ,1 ,tr("Radius")             ,tr("Radius for USM")},
@@ -1538,11 +1532,6 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = (Settings->GetDouble("WaveletDenoiseL")!=0.0 ||
                       Settings->GetDouble("WaveletDenoiseA")!=0.0 ||
                       Settings->GetDouble("WaveletDenoiseB")!=0.0)?1:0;
-  } else if (GuiName == "TabLABGradientSharpen") {
-      Info.Name = "Lab Gradient Sharpen";
-      Info.IsActive = Settings->GetInt("GradientSharpenPasses") ||
-                      Settings->GetDouble("MLMicroContrastStrength")!=0.0 ||
-                      Settings->GetDouble("LabHotpixel")!=0.0;
   } else if (GuiName == "TabInverseDiffusion") {
       Info.Name = "Lab inverse diffusion";
       Info.IsActive = Settings->GetInt("InverseDiffusionIterations")!=0?1:0;
