@@ -148,10 +148,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"DefringeRadius"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,10.0  ,0.5  ,1 ,tr("Radius")             ,tr("Radius")},
     {"DefringeThreshold"             ,ptGT_InputSlider     ,2,1,1 ,25   ,0    ,100   ,5    ,0 ,tr("Threshold")          ,tr("Threshold")},
     {"DefringeShift"                 ,ptGT_InputSlider     ,1,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Tune masks")          ,tr("Fine tune the color masks")},
-    {"BilateralASigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("A amount")         ,tr("Color A denoise")},
-    {"BilateralASigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("A scale")         ,tr("Denoise scale on A")},
-    {"BilateralBSigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("B amount")         ,tr("Color B denoise")},
-    {"BilateralBSigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("B scale")         ,tr("Denoise scale on B")},
     {"WaveletDenoiseL"               ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,10.0  ,0.1  ,1 ,tr("L amount")             ,tr("Threshold for wavelet L denoise (with edge mask)")},
     {"WaveletDenoiseLSoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("L softness")           ,tr("Softness for wavelet L denoise (with edge mask)")},
     {"WaveletDenoiseLSharpness"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,2.0   ,0.1  ,1 ,tr("Sharpness")          ,tr("Sharpness")},
@@ -1542,10 +1538,6 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = (Settings->GetDouble("WaveletDenoiseL")!=0.0 ||
                       Settings->GetDouble("WaveletDenoiseA")!=0.0 ||
                       Settings->GetDouble("WaveletDenoiseB")!=0.0)?1:0;
-  } else if (GuiName == "TabColorDenoise") {
-      Info.Name = "Lab Levels";
-      Info.IsActive = (Settings->GetDouble("BilateralASigmaR")!=0.0 ||
-                      Settings->GetDouble("BilateralBSigmaR")!=0.0)?1:0;
   } else if (GuiName == "TabLABGradientSharpen") {
       Info.Name = "Lab Gradient Sharpen";
       Info.IsActive = Settings->GetInt("GradientSharpenPasses") ||

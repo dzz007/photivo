@@ -295,6 +295,7 @@ HEADERS += \
     ../Sources/filters/ptFilter_ImpulseNR.h \
     ../Sources/filters/ptFilter_ChannelMixer.h \
     ../Sources/filters/ptFilter_LumaDenoise.h \
+    ../Sources/filters/ptFilter_ColorDenoise.h \
     ../Sources/filters/ptFilter_PyramidDenoise.h
 
 SOURCES += \
@@ -437,6 +438,7 @@ SOURCES += \
     ../Sources/filters/ptFilter_ImpulseNR.cpp \
     ../Sources/filters/ptFilter_ChannelMixer.cpp \
     ../Sources/filters/ptFilter_LumaDenoise.cpp \
+    ../Sources/filters/ptFilter_ColorDenoise.cpp \
     ../Sources/filters/ptFilter_PyramidDenoise.cpp
 
 FORMS += \

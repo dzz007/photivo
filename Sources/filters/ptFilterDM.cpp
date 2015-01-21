@@ -1179,10 +1179,10 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("BilateralLUseMask",               "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/EdgeThreshold");
   FNameMap.insert("BilateralLSigmaS",                "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/LScale");
   FNameMap.insert("BilateralLSigmaR",                "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/LStrength");
-//  FNameMap.insert("BilateralASigmaR",                "");
-//  FNameMap.insert("BilateralASigmaS",                "");
-//  FNameMap.insert("BilateralBSigmaR",                "");
-//  FNameMap.insert("BilateralBSigmaS",                "");
+  FNameMap.insert("BilateralBSigmaR",                "ColorDenoise/"+Fuid::ColorDenoise_LabSN+"/AStrength");
+  FNameMap.insert("BilateralASigmaS",                "ColorDenoise/"+Fuid::ColorDenoise_LabSN+"/AScale");
+  FNameMap.insert("BilateralASigmaR",                "ColorDenoise/"+Fuid::ColorDenoise_LabSN+"/BStrength");
+  FNameMap.insert("BilateralBSigmaS",                "ColorDenoise/"+Fuid::ColorDenoise_LabSN+"/BScale");
   FNameMap.insert("DenoiseCurveSigmaS",              "LumaDenoiseCurve/"+Fuid::LumaDenoiseCurve_LabSN+"/LScale");
   FNameMap.insert("DenoiseCurveSigmaR",              "LumaDenoiseCurve/"+Fuid::LumaDenoiseCurve_LabSN+"/LStrength");
 //  FNameMap.insert("WaveletDenoiseL",                 "");
