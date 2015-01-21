@@ -31,7 +31,6 @@
 #include "ptCurve.h"
 #include "ptCimg.h"
 #include "ptDcRaw.h"
-#include "ptFastBilateral.h"
 #include "ptMessageBox.h"
 #include "ptImageHelper.h"
 #include <filters/ptFilterDM.h>

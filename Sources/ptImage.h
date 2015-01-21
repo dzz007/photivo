@@ -689,6 +689,13 @@ ptImage* MaskedColorAdjust(const int       Ax,
                          const short Energy,
                          const short VertFirst);
 
+  // ptImage.cpp
+  ptImage* fastBilateralChannel(
+      const float Sigma_s,
+      const float Sigma_r,
+      const int Iterations = 1,
+      const TChannelMask ChannelMask = ChMask_L);
+
   /**
    * ptImage_Lensfun.cpp
    * Wrapper for the actual execution of lensfun processing. Returns the stage 2 (vignetting)

@@ -246,7 +246,6 @@ HEADERS += \
     ../Sources/ptDcRaw.h \
     ../Sources/ptDefines.h \
     ../Sources/ptError.h \
-    ../Sources/ptFastBilateral.h \
     ../Sources/ptGridInteraction.h \
     ../Sources/ptGroupBox.h \
     ../Sources/ptGuiOptions.h \
@@ -367,7 +366,6 @@ SOURCES += \
     ../Sources/ptCurveWindow.cpp \
     ../Sources/ptDcRaw.cpp \
     ../Sources/ptError.cpp \
-    ../Sources/ptFastBilateral.cpp \
     ../Sources/ptGridInteraction.cpp \
     ../Sources/ptGroupBox.cpp \
     ../Sources/ptGuiOptions.cpp \
