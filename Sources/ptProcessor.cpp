@@ -1017,48 +1017,11 @@ void ptProcessor::Run(short Phase,
 
         //***************************************************************************
         // Bilateral filter on AB
-        if (Settings->ToolIsActive("TabColorDenoise") &&
-            Settings->GetDouble("BilateralASigmaR")) {
 
-          m_ReportProgress(tr("Color A denoising"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          ptFastBilateralChannel(m_Image_AfterLabSN,
-               Settings->GetDouble("BilateralASigmaS")*m_ScaleFactor,
-               Settings->GetDouble("BilateralASigmaR")/10.0,
-               2,
-               2);
-
-          TRACEMAIN("Done A denoise at %d ms.",FRunTimer.elapsed());
-        }
-
-        if (Settings->ToolIsActive("TabColorDenoise") &&
-            Settings->GetDouble("BilateralBSigmaR")) {
-
-          m_ReportProgress(tr("Color B denoising"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          ptFastBilateralChannel(m_Image_AfterLabSN,
-               Settings->GetDouble("BilateralBSigmaS")*m_ScaleFactor,
-               Settings->GetDouble("BilateralBSigmaR")/10.0,
-               2,
-               4);
-
-          TRACEMAIN("Done B denoise at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ColorDenoise_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 

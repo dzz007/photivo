@@ -41,7 +41,6 @@
 #include "ptRGBTemperature.h"
 #include "ptWhiteBalances.h"
 #include "ptCurve.h"
-#include "ptFastBilateral.h"
 #include "ptTheme.h"
 #include "ptWiener.h"
 #include "ptParseCli.h"
@@ -351,6 +350,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve2_LabSN,      " II");
   GFilterDM->NewFilter("PyramidDenoise",        Fuid::PyramidDenoise_LabSN);
+  GFilterDM->NewFilter("ColorDenoise",          Fuid::ColorDenoise_LabSN);
   GFilterDM->NewFilter("DetailCurve",           Fuid::DetailCurve_LabSN);
   GFilterDM->NewFilter("Wiener",                Fuid::Wiener_LabSN);
   // Lab Eyecandy tab
@@ -5461,29 +5461,6 @@ void CB_DefringeColor6Check(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void CB_BilateralASigmaRInput(const QVariant Value) {
-  Settings->SetValue("BilateralASigmaR",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_BilateralASigmaSInput(const QVariant Value) {
-  Settings->SetValue("BilateralASigmaS",Value);
-  if (Settings->GetDouble("BilateralASigmaR")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_BilateralBSigmaRInput(const QVariant Value) {
-  Settings->SetValue("BilateralBSigmaR",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_BilateralBSigmaSInput(const QVariant Value) {
-  Settings->SetValue("BilateralBSigmaS",Value);
-  if (Settings->GetDouble("BilateralBSigmaR")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -6590,10 +6567,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(DefringeColor5Check)
   M_Dispatch(DefringeColor6Check)
 
-  M_Dispatch(BilateralASigmaRInput)
-  M_Dispatch(BilateralASigmaSInput)
-  M_Dispatch(BilateralBSigmaRInput)
-  M_Dispatch(BilateralBSigmaSInput)
 
   M_Dispatch(WaveletDenoiseLInput)
   M_Dispatch(WaveletDenoiseLSoftnessInput)
