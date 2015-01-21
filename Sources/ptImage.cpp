@@ -35,7 +35,7 @@
 #include "ptConstants.h"
 #include "ptRefocusMatrix.h"
 #include "ptCimg.h"
-#include "ptFastBilateral.h"
+#include "fastbilateral/fast_lbf.h"
 
 #include <QString>
 #include <QTime>
@@ -1915,7 +1915,7 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
 ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve, const short Scaling) {
   assert (m_ColorSpace == ptSpace_Lab);
 
-  const short ChannelMask = 1;
+  const TChannelMask ChannelMask = ChMask_L;
 
   const float Threshold   = 10.0/pow(2,Scaling);
   const float Softness    = 0.01;
@@ -1929,7 +1929,7 @@ ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve, const short Scaling) {
   ptImage *ContrastLayer = new ptImage;
   ContrastLayer->Set(this);
 
-  ptFastBilateralChannel(ContrastLayer, Threshold, Softness, 2, ChannelMask);
+  ContrastLayer->fastBilateralChannel(Threshold, Softness, 2, ChannelMask);
 
   if (Curve->mask() == ptCurve::ChromaMask) {
 #pragma omp parallel for schedule(static) private(hValueA, hValueB, m)
@@ -3099,7 +3099,7 @@ ptImage* ptImage::Highpass(const double Radius,
 
   const double WPH = 0x7fff; // WPH=WP/2
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
-  const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
+  const TChannelMask ChannelMask = (m_ColorSpace == ptSpace_Lab) ? ChMask_L : ChMask_RGB;
 
   ptImage *HighpassLayer = new ptImage;
   HighpassLayer->Set(this);
@@ -3118,8 +3118,9 @@ ptImage* ptImage::Highpass(const double Radius,
   HighpassLayer->ApplyCurve(AmpCurve,ChannelMask);
   delete AmpCurve;
 
-  if (Denoise)
-    ptFastBilateralChannel(HighpassLayer, 4.0, Denoise/3.0, 1, 1);
+  if (Denoise) {
+    HighpassLayer->fastBilateralChannel(4.0, Denoise/3.0, 1, ChMask_L);
+  }
 
   float (*Mask);
   Mask = (m_ColorSpace == ptSpace_Lab)?
@@ -3468,7 +3469,7 @@ ptImage* ptImage::ShadowsHighlights(const ptCurve *Curve,
     CoarseLayer[i] = m_Image[i][0];
   }
 
-  ptFastBilateralChannel(this,Radius,0.14,2,1);
+  this->fastBilateralChannel(Radius, 0.14, 2, ChMask_L);
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -3476,7 +3477,7 @@ ptImage* ptImage::ShadowsHighlights(const ptCurve *Curve,
     CoarseLayer[i] = m_Image[i][0];
   }
 
-  ptFastBilateralChannel(this,4*Radius,0.14,2,1);
+  this->fastBilateralChannel(4*Radius, 0.14, 2, ChMask_L);
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -3642,10 +3643,10 @@ ptImage* ptImage::BilateralDenoise(const double Threshold,
   ptImage *DenoiseLayer = new ptImage;
   DenoiseLayer->Set(this);
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
-  const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
+  const TChannelMask ChannelMask = (m_ColorSpace == ptSpace_Lab) ? ChMask_L : ChMask_RGB;
   const double WPH = 0x7fff;
 
-  ptFastBilateralChannel(DenoiseLayer, Threshold, Softness, 2, ChannelMask);
+  DenoiseLayer->fastBilateralChannel(Threshold, Softness, 2, ChannelMask);
 
   if (UseMask){
 
@@ -3720,10 +3721,10 @@ ptImage* ptImage::ApplyDenoiseCurve(const double Threshold,
   ptImage *DenoiseLayer = new ptImage;
   DenoiseLayer->Set(this);
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
-  const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
+  const TChannelMask ChannelMask = (m_ColorSpace == ptSpace_Lab) ? ChMask_L : ChMask_RGB;
   float WPH = 0x7fff;
 
-  ptFastBilateralChannel(DenoiseLayer, Threshold, Softness, 2, ChannelMask);
+  DenoiseLayer->fastBilateralChannel(Threshold, Softness, 2, ChannelMask);
 
   double UseMask = 50.0;
 
@@ -3837,12 +3838,12 @@ ptImage* ptImage::TextureContrast(const double Threshold,
 
   const int32_t WPH = 0x7fff; // WPH=WP/2
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
-  const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
+  const TChannelMask ChannelMask = (m_ColorSpace == ptSpace_Lab) ? ChMask_L : ChMask_RGB;
 
   ptImage *ContrastLayer = new ptImage;
   ContrastLayer->Set(this);
 
-  ptFastBilateralChannel(ContrastLayer, Threshold, Softness, 2, ChannelMask);
+  ContrastLayer->fastBilateralChannel(Threshold, Softness, 2, ChannelMask);
 
 #pragma omp parallel for default(shared) schedule(static)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -5364,7 +5365,7 @@ ptImage* ptImage::ViewLAB(const short Channel) {
 
     case ptViewLAB_L_Grad:
       ContrastLayer->Set(this);
-      ptFastBilateralChannel(ContrastLayer, 4, 0.2, 2, 1);
+      ContrastLayer->fastBilateralChannel(4, 0.2, 2, ChMask_L);
 
 #pragma omp parallel for default(shared) schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -5515,7 +5516,7 @@ ptImage* ptImage::SpecialPreview(const short Mode, const int Intent) {
     const double WPH = 0x7fff; // WPH=WP/2
     ptImage *ContrastLayer = new ptImage;
     ContrastLayer->Set(this);
-    ptFastBilateralChannel(ContrastLayer, 4, 0.2, 2, 1);
+    ContrastLayer->fastBilateralChannel(4, 0.2, 2, ChMask_L);
 #pragma omp parallel for default(shared) schedule(static)
     for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
       m_Image[i][0] = CLIP((int32_t) ((WPH-(int32_t)ContrastLayer->m_Image[i][0]) + m_Image[i][0]));
@@ -6011,3 +6012,53 @@ short ptImage::getCurrentRGB()
   return CurrentRGBMode;
 }
 
+// -----------------------------------------------------------------------------
+
+typedef Array_2D<float> image_type;
+extern float ToFloatTable[0x10000];
+
+// From the theoretical part, the bilateral filter should blur more when values
+// are closer together. Since we use it with linear data, an additional gamma
+// correction could give better results.
+
+ptImage* ptImage::fastBilateralChannel(
+    const float Sigma_s,
+    const float Sigma_r,
+    const int Iterations,
+    const TChannelMask ChannelMask)
+{
+  uint16_t Width  = m_Width;
+  uint16_t Height = m_Height;
+  int32_t  hIdx   = 0;
+
+  image_type InImage(Width,Height);
+  image_type FilteredImage(Width,Height);
+
+  for (short Channel = 0; Channel<3; Channel++) {
+    // Is it a channel we are supposed to handle ?
+    if  (! (ChannelMask & (1<<Channel))) continue;
+#pragma omp parallel for default(shared) schedule(static) private(hIdx)
+    for (uint16_t Row=0; Row<m_Height; Row++) {
+      hIdx = Row*Width;
+      for (uint16_t Col=0; Col<m_Width; Col++) {
+        InImage(Col,Row) = ToFloatTable[m_Image[hIdx+Col][Channel]];
+      }
+    }
+
+    for (int i=0;i<Iterations;i++)
+      Image_filter::fast_LBF(InImage,InImage,
+           Sigma_s,Sigma_r,
+           1,
+           &FilteredImage,&FilteredImage);
+
+#pragma omp parallel for default(shared) schedule(static) private(hIdx)
+    for (uint16_t Row=0; Row<m_Height; Row++) {
+      hIdx = Row*Width;
+      for (uint16_t Col=0; Col<m_Width; Col++) {
+        m_Image[hIdx+Col][Channel] = CLIP((int32_t)(FilteredImage(Col,Row)*0xffff));
+      }
+    }
+  }
+
+  return this;
+}

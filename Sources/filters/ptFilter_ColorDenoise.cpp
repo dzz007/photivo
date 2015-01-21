@@ -22,7 +22,6 @@
 
 #include "ptFilter_ColorDenoise.h"
 #include "ptCfgItem.h"
-#include "../ptFastBilateral.h"
 #include "../ptImage.h"
 
 // TODO: Needed for access to m_ScaleFactor. Find a way to avoid when modernising the processor.
@@ -84,23 +83,21 @@ void ptFilter_ColorDenoise::doRunFilter(ptImage *AImage) const {
   double AStrength = FConfig.value(CAStrength).toFloat();
 
   if (!qFuzzyIsNull(AStrength)) {
-    ptFastBilateralChannel(
-        AImage,
+    AImage->fastBilateralChannel(
         FConfig.value(CAScale).toFloat() * TheProcessor->m_ScaleFactor,
         AStrength / 10.0f,
         2,
-        2);
+        ChMask_a);
   }
 
   double BStrength = FConfig.value(CBStrength).toFloat();
 
   if (!qFuzzyIsNull(BStrength)) {
-    ptFastBilateralChannel(
-        AImage,
+    AImage->fastBilateralChannel(
         FConfig.value(CBScale).toFloat() * TheProcessor->m_ScaleFactor,
         BStrength,
         2,
-        4);
+        ChMask_b);
   }
 }
 
