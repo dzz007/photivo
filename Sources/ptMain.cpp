@@ -351,6 +351,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve2_LabSN,      " II");
   GFilterDM->NewFilter("PyramidDenoise",        Fuid::PyramidDenoise_LabSN);
   GFilterDM->NewFilter("ColorDenoise",          Fuid::ColorDenoise_LabSN);
+  GFilterDM->NewFilter("GradientSharpen",       Fuid::GradientSharpen_LabSN);
   GFilterDM->NewFilter("DetailCurve",           Fuid::DetailCurve_LabSN);
   GFilterDM->NewFilter("Wiener",                Fuid::Wiener_LabSN);
   // Lab Eyecandy tab
@@ -5533,48 +5534,6 @@ void CB_WaveletDenoiseBSoftnessInput(const QVariant Value) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Gradient Sharpen
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_GradientSharpenPassesInput(const QVariant Value) {
-  Settings->SetValue("GradientSharpenPasses",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_GradientSharpenStrengthInput(const QVariant Value) {
-  Settings->SetValue("GradientSharpenStrength",Value);
-  if (Settings->GetInt("GradientSharpenPasses")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_MLMicroContrastStrengthInput(const QVariant Value) {
-  Settings->SetValue("MLMicroContrastStrength",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_MLMicroContrastScalingInput(const QVariant Value) {
-  Settings->SetValue("MLMicroContrastScaling",Value);
-  if (Settings->GetDouble("MLMicroContrastStrength")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_MLMicroContrastWeightInput(const QVariant Value) {
-  Settings->SetValue("MLMicroContrastWeight",Value);
-  if (Settings->GetDouble("MLMicroContrastStrength")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_LabHotpixelInput(const QVariant Value) {
-  Settings->SetValue("LabHotpixel",Value);
-  Update(ptProcessorPhase_LabSN);
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -6578,13 +6537,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WaveletDenoiseASoftnessInput)
   M_Dispatch(WaveletDenoiseBInput)
   M_Dispatch(WaveletDenoiseBSoftnessInput)
-
-  M_Dispatch(GradientSharpenPassesInput)
-  M_Dispatch(GradientSharpenStrengthInput)
-  M_Dispatch(MLMicroContrastStrengthInput)
-  M_Dispatch(MLMicroContrastScalingInput)
-  M_Dispatch(MLMicroContrastWeightInput)
-  M_Dispatch(LabHotpixelInput)
 
   M_Dispatch(InverseDiffusionIterationsInput)
   M_Dispatch(InverseDiffusionAmplitudeInput)

@@ -295,6 +295,8 @@ HEADERS += \
     ../Sources/filters/ptFilter_ChannelMixer.h \
     ../Sources/filters/ptFilter_LumaDenoise.h \
     ../Sources/filters/ptFilter_ColorDenoise.h \
+    ../Sources/filters/ptFilter_ColorDenoise.h \
+    ../Sources/filters/ptFilter_GradientSharpen.h \
     ../Sources/filters/ptFilter_PyramidDenoise.h
 
 SOURCES += \
@@ -437,6 +439,8 @@ SOURCES += \
     ../Sources/filters/ptFilter_ChannelMixer.cpp \
     ../Sources/filters/ptFilter_LumaDenoise.cpp \
     ../Sources/filters/ptFilter_ColorDenoise.cpp \
+    ../Sources/filters/ptFilter_ColorDenoise.cpp \
+    ../Sources/filters/ptFilter_GradientSharpen.cpp \
     ../Sources/filters/ptFilter_PyramidDenoise.cpp
 
 FORMS += \
@@ -450,6 +454,7 @@ FORMS += \
     ../Sources/filters/ptFilter_Tone.ui \
     ../Sources/filters/ptFilter_Wiener.ui \
     ../Sources/filters/ptFilter_ChannelMixer.ui \
+    ../Sources/filters/ptFilter_GradientSharpen.ui \
     ../Sources/ptMainWindow.ui
 
 win32 {

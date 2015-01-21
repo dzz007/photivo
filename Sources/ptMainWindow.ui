@@ -4204,84 +4204,14 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>164</height>
+                                    <width>408</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Gradient Sharpen</string>
+                                   <string notr="true">b2a5a99d-83dd-49a1-97aa-6601c2ea2a6b</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_214">
-                                   <item>
-                                    <widget class="QWidget" name="widget_127" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_213">
-                                      <item>
-                                       <widget class="QWidget" name="GradientSharpenPassesWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GradientSharpenStrengthWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <spacer name="verticalSpacer_113">
-                                        <property name="orientation">
-                                         <enum>Qt::Vertical</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                         <enum>QSizePolicy::Fixed</enum>
-                                        </property>
-                                        <property name="sizeHint" stdset="0">
-                                         <size>
-                                          <width>20</width>
-                                          <height>10</height>
-                                         </size>
-                                        </property>
-                                       </spacer>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="MLMicroContrastStrengthWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="MLMicroContrastScalingWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="MLMicroContrastWeightWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <spacer name="verticalSpacer_114">
-                                        <property name="orientation">
-                                         <enum>Qt::Vertical</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                         <enum>QSizePolicy::Fixed</enum>
-                                        </property>
-                                        <property name="sizeHint" stdset="0">
-                                         <size>
-                                          <width>20</width>
-                                          <height>10</height>
-                                         </size>
-                                        </property>
-                                       </spacer>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LabHotpixelWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_111">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>192</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_214"/>
                                  </widget>
                                  <widget class="QWidget" name="TabLABWiener">
                                   <property name="geometry">
@@ -8652,7 +8582,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>125</width>
+                                <width>126</width>
                                 <height>184</height>
                                </rect>
                               </property>
