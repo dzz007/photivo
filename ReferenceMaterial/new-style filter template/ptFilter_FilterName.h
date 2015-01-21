@@ -33,7 +33,7 @@ public:
 
 protected:
   /*** Uncomment following line when the filter has a .ui file. ***/
-//  QWidget  *doCreateGui();
+//  QWidget*  doCreateGui() override;
 
   void      doDefineControls() override;
   bool      doCheckHasActiveCfg() override;
