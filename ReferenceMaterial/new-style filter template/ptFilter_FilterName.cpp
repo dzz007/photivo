@@ -95,7 +95,7 @@ void ptFilter_$FilterName$::doDefineControls() {
 //------------------------------------------------------------------------------
 
 bool ptFilter_$FilterName$::doCheckHasActiveCfg() {
-  return FConfig.value(CCfgItem2).toDouble() != 0.0f;
+  return !qFuzzyIsNull(FConfig.value(CCfgItem2).toDouble());
 }
 
 //------------------------------------------------------------------------------
@@ -111,13 +111,13 @@ void ptFilter_$FilterName$::doRunFilter(ptImage *AImage) const {
 
 /*** Uncomment following method when the filter has a .ui file. ***/
 //QWidget *ptFilter_$FilterName$::doCreateGui() {
-//  auto hGuiBody = new QWidget;
-//  Ui_$FilterName$Form hForm;
+//  auto guiBody = new QWidget;
+//  Ui_GradientSharpenForm form;
 
-//  hForm.setupUi(hGuiBody);
-//  this->initDesignerGui(hGuiBody);
+//  form.setupUi(guiBody);
+//  this->initDesignerGui(guiBody);
 
-//  return hGuiBody;
+//  return guiBody;
 //}
 
 //------------------------------------------------------------------------------
