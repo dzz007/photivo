@@ -295,9 +295,9 @@ HEADERS += \
     ../Sources/filters/ptFilter_ChannelMixer.h \
     ../Sources/filters/ptFilter_LumaDenoise.h \
     ../Sources/filters/ptFilter_ColorDenoise.h \
-    ../Sources/filters/ptFilter_ColorDenoise.h \
     ../Sources/filters/ptFilter_GradientSharpen.h \
-    ../Sources/filters/ptFilter_PyramidDenoise.h
+    ../Sources/filters/ptFilter_PyramidDenoise.h \
+    ../Sources/filters/ptFilter_EAWavelets.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -439,9 +439,9 @@ SOURCES += \
     ../Sources/filters/ptFilter_ChannelMixer.cpp \
     ../Sources/filters/ptFilter_LumaDenoise.cpp \
     ../Sources/filters/ptFilter_ColorDenoise.cpp \
-    ../Sources/filters/ptFilter_ColorDenoise.cpp \
     ../Sources/filters/ptFilter_GradientSharpen.cpp \
-    ../Sources/filters/ptFilter_PyramidDenoise.cpp
+    ../Sources/filters/ptFilter_PyramidDenoise.cpp \
+    ../Sources/filters/ptFilter_EAWavelets.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \
@@ -455,6 +455,7 @@ FORMS += \
     ../Sources/filters/ptFilter_Wiener.ui \
     ../Sources/filters/ptFilter_ChannelMixer.ui \
     ../Sources/filters/ptFilter_GradientSharpen.ui \
+    ../Sources/filters/ptFilter_EAWavelets.ui \
     ../Sources/ptMainWindow.ui
 
 win32 {

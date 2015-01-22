@@ -346,6 +346,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("LevelsLab",             Fuid::Levels_LabCC);
   // Lab sharpen/noise tab
   GFilterDM->NewFilter("ImpulseNR",             Fuid::ImpulseNR_LabSN);
+  GFilterDM->NewFilter("EAWavelets",            Fuid::EAWavelets_LabSN);
   GFilterDM->NewFilter("LumaDenoise",           Fuid::LumaDenoise_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve2_LabSN,      " II");
@@ -5195,104 +5196,6 @@ void CB_LabMicrocontrast2SoftnessInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
-// Partim Edge avoiding wavelets
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_EAWMasterInput(const QVariant Value) {
-  if (Value.toDouble() == 0) { // Reset
-    Settings->SetValue("EAWLevel1",0.0);
-    Settings->SetValue("EAWLevel2",0.0);
-    Settings->SetValue("EAWLevel3",0.0);
-    Settings->SetValue("EAWLevel4",0.0);
-    Settings->SetValue("EAWLevel5",0.0);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else if (fabs(Value.toDouble()) <= 0.1) {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",0.0);
-    Settings->SetValue("EAWLevel3",0.0);
-    Settings->SetValue("EAWLevel4",0.0);
-    Settings->SetValue("EAWLevel5",0.0);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else if (fabs(Value.toDouble()) <= 0.2) {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",Value.toDouble()/2);
-    Settings->SetValue("EAWLevel3",0.0);
-    Settings->SetValue("EAWLevel4",0.0);
-    Settings->SetValue("EAWLevel5",0.0);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else if (fabs(Value.toDouble()) <= 0.3) {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",Value.toDouble()/3*2);
-    Settings->SetValue("EAWLevel3",Value.toDouble()/3);
-    Settings->SetValue("EAWLevel4",0.0);
-    Settings->SetValue("EAWLevel5",0.0);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else if (fabs(Value.toDouble()) <= 0.4) {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",Value.toDouble()/4*3);
-    Settings->SetValue("EAWLevel3",Value.toDouble()/4*2);
-    Settings->SetValue("EAWLevel4",Value.toDouble()/4);
-    Settings->SetValue("EAWLevel5",0.0);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else if (fabs(Value.toDouble()) <= 0.5) {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",Value.toDouble()/5*4);
-    Settings->SetValue("EAWLevel3",Value.toDouble()/5*3);
-    Settings->SetValue("EAWLevel4",Value.toDouble()/5*2);
-    Settings->SetValue("EAWLevel5",Value.toDouble()/5);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",Value.toDouble()/6*5);
-    Settings->SetValue("EAWLevel3",Value.toDouble()/6*4);
-    Settings->SetValue("EAWLevel4",Value.toDouble()/6*3);
-    Settings->SetValue("EAWLevel5",Value.toDouble()/6*2);
-    Settings->SetValue("EAWLevel6",Value.toDouble()/6);
-  }
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel1Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel1",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel2Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel2",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel3Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel3",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel4Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel4",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel5Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel5",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel6Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel6",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
 // Partim GreyCStoration
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -6492,14 +6395,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
-
-  M_Dispatch(EAWMasterInput)
-  M_Dispatch(EAWLevel1Input)
-  M_Dispatch(EAWLevel2Input)
-  M_Dispatch(EAWLevel3Input)
-  M_Dispatch(EAWLevel4Input)
-  M_Dispatch(EAWLevel5Input)
-  M_Dispatch(EAWLevel6Input)
 
   M_Dispatch(GREYCLabChoice)
   M_Dispatch(GREYCLabMaskTypeChoice)
