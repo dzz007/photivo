@@ -128,13 +128,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"EAWMaster"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Master")              ,tr("Quick setup for the levels")},
-    {"EAWLevel1"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 1")             ,tr("Boosting of level 1")},
-    {"EAWLevel2"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 2")             ,tr("Boosting of level 2")},
-    {"EAWLevel3"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 3")             ,tr("Boosting of level 3")},
-    {"EAWLevel4"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 4")             ,tr("Boosting of level 4")},
-    {"EAWLevel5"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 5")             ,tr("Boosting of level 5")},
-    {"EAWLevel6"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 6")             ,tr("Boosting of level 6")},
     {"GREYCLabOpacity"               ,ptGT_InputSlider     ,2,1,1 ,1.0 ,0.0 ,1.0  ,0.1  ,1 ,tr("Opacity")          ,tr("Opacity")},
     {"GREYCLabAmplitude"             ,ptGT_InputSlider     ,2,1,1 ,45.0 ,0.0 ,500.0  ,5.0  ,1 ,tr("Amplitude")          ,tr("Amplitude")},
     {"GREYCLabIterations"            ,ptGT_Input           ,2,1,1 ,1    ,1    ,10    ,1    ,0 ,tr("Iterations")         ,tr("Iterations")},
@@ -1511,15 +1504,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }
   // Lab Sharpen and Noise
-  else if (GuiName == "TabLABEAW") {
-      Info.Name = "Lab EAW equalizer";
-      Info.IsActive = (Settings->GetDouble("EAWLevel1") != 0.0 ||
-                       Settings->GetDouble("EAWLevel2") != 0.0 ||
-                       Settings->GetDouble("EAWLevel3") != 0.0 ||
-                       Settings->GetDouble("EAWLevel4") != 0.0 ||
-                       Settings->GetDouble("EAWLevel5") != 0.0 ||
-                       Settings->GetDouble("EAWLevel6") != 0.0)?1:0;
-  } else if (GuiName == "TabLABGreyC") {
+  else if (GuiName == "TabLABGreyC") {
       Info.Name = "Lab GreyCStoration";
       Info.IsActive = ((Settings->GetInt("FullOutput") &&
                         Settings->GetInt("GREYCLab")) ||

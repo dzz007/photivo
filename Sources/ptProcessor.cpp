@@ -802,27 +802,11 @@ void ptProcessor::Run(short Phase,
 
         //***************************************************************************
         // Edge avoiding wavelet filter
-        if (Settings->ToolIsActive("TabLABEAW")) {
 
-          m_ReportProgress(tr("Edge avoiding wavelets"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabSN->EAWChannel((int)(logf(m_ScaleFactor)/logf(0.5)),
-                                         Settings->GetDouble("EAWLevel1"),
-                                         Settings->GetDouble("EAWLevel2"),
-                                         Settings->GetDouble("EAWLevel3"),
-                                         Settings->GetDouble("EAWLevel4"),
-                                         Settings->GetDouble("EAWLevel5"),
-                                         Settings->GetDouble("EAWLevel6"));
-
-          TRACEMAIN("Done EAW at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::EAWavelets_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 

@@ -112,7 +112,7 @@ void ptFilter_$FilterName$::doRunFilter(ptImage *AImage) const {
 /*** Uncomment following method when the filter has a .ui file. ***/
 //QWidget *ptFilter_$FilterName$::doCreateGui() {
 //  auto guiBody = new QWidget;
-//  Ui_GradientSharpenForm form;
+//  Ui_$FilterName$Form form;
 
 //  form.setupUi(guiBody);
 //  this->initDesignerGui(guiBody);
