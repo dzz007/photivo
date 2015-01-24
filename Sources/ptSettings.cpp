@@ -128,9 +128,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"DefringeRadius"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,10.0  ,0.5  ,1 ,tr("Radius")             ,tr("Radius")},
-    {"DefringeThreshold"             ,ptGT_InputSlider     ,2,1,1 ,25   ,0    ,100   ,5    ,0 ,tr("Threshold")          ,tr("Threshold")},
-    {"DefringeShift"                 ,ptGT_InputSlider     ,1,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Tune masks")          ,tr("Fine tune the color masks")},
     {"WaveletDenoiseL"               ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,10.0  ,0.1  ,1 ,tr("L amount")             ,tr("Threshold for wavelet L denoise (with edge mask)")},
     {"WaveletDenoiseLSoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("L softness")           ,tr("Softness for wavelet L denoise (with edge mask)")},
     {"WaveletDenoiseLSharpness"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,2.0   ,0.1  ,1 ,tr("Sharpness")          ,tr("Sharpness")},
@@ -360,12 +357,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Resize"                     ,ptGT_Check ,9,1,0,tr("Resize")          ,tr("Enable resize")},
     {"AutomaticPipeSize"          ,ptGT_Check ,1,1,0,tr("Automatic pipe size") ,tr("Automatic pipe size")},
     {"GeometryBlock"              ,ptGT_Check ,9,0,0,tr("Block pipe")      ,tr("Disable the pipe")},
-    {"DefringeColor1"             ,ptGT_Check ,1,1,1,tr("Red")             ,tr("Red")},
-    {"DefringeColor2"             ,ptGT_Check ,1,1,1,tr("Yellow")          ,tr("Yellow")},
-    {"DefringeColor3"             ,ptGT_Check ,1,1,1,tr("Green")           ,tr("Green")},
-    {"DefringeColor4"             ,ptGT_Check ,1,1,1,tr("Cyan")            ,tr("Cyan")},
-    {"DefringeColor5"             ,ptGT_Check ,1,1,1,tr("Blue")            ,tr("Blue")},
-    {"DefringeColor6"             ,ptGT_Check ,1,1,1,tr("Purple")          ,tr("Purple")},
     {"InverseDiffusionUseEdgeMask",ptGT_Check ,2,1,1,tr("Only edges")      ,tr("Sharpen only edges")},
     {"WebResizeBeforeGamma"       ,ptGT_Check ,1,1,0,tr("before gamma")    ,tr("Webresizing before gamma compensation")},
     {"OutputGammaCompensation"    ,ptGT_Check ,1,1,0,tr("sRGB gamma compensation")    ,tr("sRGB gamma compensation")},
@@ -1481,10 +1472,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }
   // Lab Sharpen and Noise
-  else if (GuiName == "TabLABDefringe") {
-      Info.Name = "Lab Defringe";
-      Info.IsActive = Settings->GetDouble("DefringeRadius")!=0.0;
-  } else if (GuiName == "TabWaveletDenoise") {
+  else if (GuiName == "TabWaveletDenoise") {
       Info.Name = "Lab Wavelet denoise";
       Info.IsActive = (Settings->GetDouble("WaveletDenoiseL")!=0.0 ||
                       Settings->GetDouble("WaveletDenoiseA")!=0.0 ||
