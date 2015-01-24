@@ -887,7 +887,6 @@ void ptProcessor::Run(short Phase,
         if (hFilter->isActive()) {
           m_ReportProgress(tr("Detail curve"));
           hFilter->runFilter(m_Image_AfterLabSN);
-          TRACEMAIN("Done detail curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -914,25 +913,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Inverse Diffusion Sharpen
 
-        if (Settings->ToolIsActive("TabInverseDiffusion")) {
-
-          m_ReportProgress(tr("Inverse Diffusion Sharpen"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          ptCimgSharpen(m_Image_AfterLabSN,
-                        1,
-                        Settings->GetDouble("InverseDiffusionAmplitude"),
-                        Settings->GetInt("InverseDiffusionIterations"),
-                        Settings->GetInt("InverseDiffusionUseEdgeMask"));
-
-          TRACEMAIN("Done Inverse Diffusion Sharpen at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::InvDiffSharpen_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 

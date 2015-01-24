@@ -357,6 +357,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("GradientSharpen",       Fuid::GradientSharpen_LabSN);
   GFilterDM->NewFilter("DetailCurve",           Fuid::DetailCurve_LabSN);
   GFilterDM->NewFilter("Wiener",                Fuid::Wiener_LabSN);
+  GFilterDM->NewFilter("InvDiffSharpen",        Fuid::InvDiffSharpen_LabSN);
   // Lab Eyecandy tab
   GFilterDM->NewFilter("Outline",               Fuid::Outline_LabEyeCandy);
   GFilterDM->NewFilter("LumaByHueCurve",        Fuid::LumaByHueCurve_LabEyeCandy);
@@ -4969,32 +4970,6 @@ void CB_ExposureClipModeChoice(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
-// Partim Inverse Diffusion Sharpen
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_InverseDiffusionIterationsInput(const QVariant Value) {
-  Settings->SetValue("InverseDiffusionIterations",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_InverseDiffusionAmplitudeInput(const QVariant Value) {
-  Settings->SetValue("InverseDiffusionAmplitude",Value);
-  if (Settings->GetInt("InverseDiffusionIterations")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_InverseDiffusionUseEdgeMaskCheck(const QVariant State) {
-  Settings->SetValue("InverseDiffusionUseEdgeMask",State);
-  if (Settings->GetInt("InverseDiffusionIterations")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
 // Partim USM
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -5924,9 +5899,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
 
-  M_Dispatch(InverseDiffusionIterationsInput)
-  M_Dispatch(InverseDiffusionAmplitudeInput)
-  M_Dispatch(InverseDiffusionUseEdgeMaskCheck)
   M_Dispatch(USMChoice)
   M_Dispatch(USMRadiusInput)
   M_Dispatch(USMAmountInput)
