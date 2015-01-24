@@ -300,7 +300,8 @@ HEADERS += \
     ../Sources/filters/ptFilter_EAWavelets.h \
     ../Sources/filters/ptFilter_GreyCStoration.h \
     ../Sources/filters/ptFilter_Defringe.h \
-    ../Sources/filters/ptFilter_WaveletDenoise.h
+    ../Sources/filters/ptFilter_WaveletDenoise.h \
+    ../Sources/filters/ptFilter_InvDiffSharpen.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -447,7 +448,8 @@ SOURCES += \
     ../Sources/filters/ptFilter_EAWavelets.cpp \
     ../Sources/filters/ptFilter_GreyCStoration.cpp \
     ../Sources/filters/ptFilter_Defringe.cpp \
-    ../Sources/filters/ptFilter_WaveletDenoise.cpp
+    ../Sources/filters/ptFilter_WaveletDenoise.cpp \
+    ../Sources/filters/ptFilter_InvDiffSharpen.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \
@@ -465,6 +467,7 @@ FORMS += \
     ../Sources/filters/ptFilter_GreyCStoration.ui \
     ../Sources/filters/ptFilter_Defringe.ui \
     ../Sources/filters/ptFilter_WaveletDenoise.ui \
+    ../Sources/filters/ptFilter_InvDiffSharpen.ui \
     ../Sources/ptMainWindow.ui
 
 win32 {

@@ -3747,7 +3747,7 @@
                                <item>
                                 <widget class="QToolBox" name="toolbox_4">
                                  <property name="currentIndex">
-                                  <number>4</number>
+                                  <number>13</number>
                                  </property>
                                  <widget class="QWidget" name="TabLABImpulseDenoise">
                                   <property name="geometry">
@@ -3796,8 +3796,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
-                                    <height>82</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3935,80 +3935,14 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>78</height>
+                                    <width>340</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Inverse Diffusion Sharpen</string>
+                                   <string notr="true">9f892b58-fa4e-428d-be91-bf9f0ef3e623</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_140">
-                                   <item>
-                                    <widget class="QWidget" name="widget_54" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_139">
-                                      <item>
-                                       <widget class="QWidget" name="widgeta3" native="true">
-                                        <layout class="QHBoxLayout" name="horizontalLayout_4">
-                                         <property name="spacing">
-                                          <number>6</number>
-                                         </property>
-                                         <property name="sizeConstraint">
-                                          <enum>QLayout::SetFixedSize</enum>
-                                         </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <widget class="QWidget" name="InverseDiffusionIterationsWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="InverseDiffusionUseEdgeMaskWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <spacer name="horizontalSpacer_42">
-                                           <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                           </property>
-                                           <property name="sizeHint" stdset="0">
-                                            <size>
-                                             <width>40</width>
-                                             <height>20</height>
-                                            </size>
-                                           </property>
-                                          </spacer>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="InverseDiffusionAmplitudeWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_66">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>40</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_140"/>
                                  </widget>
                                  <widget class="QWidget" name="TabLABUSM">
                                   <property name="geometry">

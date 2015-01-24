@@ -98,7 +98,7 @@ namespace Fuid {
   const QString DetailCurve_LabSN               = "bcc7f2e6-9db7-427f-a3d9-61db0cd73b29";
   const QString GradientSharpen_LabSN           = "b2a5a99d-83dd-49a1-97aa-6601c2ea2a6b";
   const QString Wiener_LabSN                    = "f2d800db-1d7a-42bc-970c-9a89597f34a4";
-  const QString InvDiffSharpen_LabSN            = "9f892b58-fa4e-428d-be91-bf9f0ef3e623"; // not yet ported
+  const QString InvDiffSharpen_LabSN            = "9f892b58-fa4e-428d-be91-bf9f0ef3e623";
   const QString Usm_LabSN                       = "1d4f6f00-e2d8-47e6-9400-1986b3590ef3"; // not yet ported
   const QString HighpassSharpen_LabSN           = "38285120-2e8c-432f-80e3-3dfa14a36630"; // not yet ported
   const QString FilmGrain_LabSN                 = "6e54affb-3c1b-4080-b514-d9b190e36fa6"; // not yet ported

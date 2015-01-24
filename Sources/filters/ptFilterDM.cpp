@@ -1208,8 +1208,8 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("WienerFilterGaussian",            "Wiener/"+Fuid::Wiener_LabSN+"/Gaussian");
   FNameMap.insert("WienerFilterBox",                 "Wiener/"+Fuid::Wiener_LabSN+"/Box");
   FNameMap.insert("WienerFilterLensBlur",            "Wiener/"+Fuid::Wiener_LabSN+"/LensBlur");
-//  FNameMap.insert("InverseDiffusionIterations",      "");
-//  FNameMap.insert("InverseDiffusionAmplitude",       "");
+  FNameMap.insert("InverseDiffusionIterations",      "InvDiffSharpen/"+Fuid::InvDiffSharpen_LabSN+"/Iterations");
+  FNameMap.insert("InverseDiffusionAmplitude",       "InvDiffSharpen/"+Fuid::InvDiffSharpen_LabSN+"/Amplitude");
 //  FNameMap.insert("USMRadius",                       "");
 //  FNameMap.insert("USMAmount",                       "");
 //  FNameMap.insert("USMThreshold",                    "");
@@ -1496,7 +1496,7 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("DefringeColor6",                  "Defringe/"+Fuid::Defringe_LabSN+"/ColorPurple");
   FNameMap.insert("WienerFilter",                    "Wiener/"+Fuid::Wiener_LabSN+"/Enabled");
   FNameMap.insert("WienerFilterUseEdgeMask",         "Wiener/"+Fuid::Wiener_LabSN+"/OnlyEdges");
-//  FNameMap.insert("InverseDiffusionUseEdgeMask",     "");
+  FNameMap.insert("InverseDiffusionUseEdgeMask",     "InvDiffSharpen/"+Fuid::InvDiffSharpen_LabSN+"/OnlyEdges");
   FNameMap.insert("OutlineSwitchLayer",              "Outline/"+Fuid::Outline_LabEyeCandy+"/ImageOnTop");
 //  FNameMap.insert("WebResizeBeforeGamma",            "");
 //  FNameMap.insert("OutputGammaCompensation",         "");

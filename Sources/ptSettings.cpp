@@ -128,8 +128,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"InverseDiffusionIterations"    ,ptGT_Input           ,2,1,1 ,0      ,0   ,5     ,1   ,0 ,tr("Iterations")         ,tr("Number of iterations")},
-    {"InverseDiffusionAmplitude"     ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,2.0 ,0.05  ,2 ,tr("Amplitude")          ,tr("Amplitude")},
     {"USMRadius"                     ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.1  ,10.0  ,0.1  ,1 ,tr("Radius")             ,tr("Radius for USM")},
     {"USMAmount"                     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.1  ,5.0   ,0.1  ,1 ,tr("Amount")             ,tr("Amount for USM")},
     {"USMThreshold"                  ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.00 ,0.20  ,0.01 ,2 ,tr("Threshold")          ,tr("Threshold for USM")},
@@ -347,7 +345,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Resize"                     ,ptGT_Check ,9,1,0,tr("Resize")          ,tr("Enable resize")},
     {"AutomaticPipeSize"          ,ptGT_Check ,1,1,0,tr("Automatic pipe size") ,tr("Automatic pipe size")},
     {"GeometryBlock"              ,ptGT_Check ,9,0,0,tr("Block pipe")      ,tr("Disable the pipe")},
-    {"InverseDiffusionUseEdgeMask",ptGT_Check ,2,1,1,tr("Only edges")      ,tr("Sharpen only edges")},
     {"WebResizeBeforeGamma"       ,ptGT_Check ,1,1,0,tr("before gamma")    ,tr("Webresizing before gamma compensation")},
     {"OutputGammaCompensation"    ,ptGT_Check ,1,1,0,tr("sRGB gamma compensation")    ,tr("sRGB gamma compensation")},
     {"IncludeExif"                ,ptGT_Check ,2,1,1,tr("Include metadata"),tr("Include metadata (only in jpeg and tiff)")},
@@ -1462,10 +1459,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }
   // Lab Sharpen and Noise
-  else if (GuiName == "TabInverseDiffusion") {
-      Info.Name = "Lab inverse diffusion";
-      Info.IsActive = Settings->GetInt("InverseDiffusionIterations")!=0?1:0;
-  } else if (GuiName == "TabLABUSM") {
+  else if (GuiName == "TabLABUSM") {
       Info.Name = "Lab USM";
       Info.IsActive = ((Settings->GetInt("FullOutput") &&
                         Settings->GetInt("USM")) ||
