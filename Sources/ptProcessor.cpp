@@ -833,75 +833,12 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Wavelet denoise
 
-        if (Settings->GetDouble("WaveletDenoiseL") &&
-            Settings->ToolIsActive("TabWaveletDenoise")) {
-
-          m_ReportProgress(tr("Wavelet L denoising"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabSN->WaveletDenoise(
-                                  1,
-                                  Settings->GetDouble("WaveletDenoiseL")/((logf(m_ScaleFactor)/logf(0.5))+1.0),
-              Settings->GetDouble("WaveletDenoiseLSoftness"),
-              1,
-              Settings->GetDouble("WaveletDenoiseLSharpness"),
-              Settings->GetDouble("WaveletDenoiseLAnisotropy"),
-              Settings->GetDouble("WaveletDenoiseLAlpha"),
-              Settings->GetDouble("WaveletDenoiseLSigma"));
-          // The scaling of the inputvalue is artificial, to get roughly the same image in each pipesize with the same value...
-          TRACEMAIN("Done Luminance wavelet denoise at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::WaveletDenoise_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
-        if (Settings->GetDouble("WaveletDenoiseA") &&
-            Settings->ToolIsActive("TabWaveletDenoise")) {
-
-          m_ReportProgress(tr("Wavelet A denoising"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-
-          m_Image_AfterLabSN->WaveletDenoise(
-                                  2,
-                                  Settings->GetDouble("WaveletDenoiseA")/((logf(m_ScaleFactor)/logf(0.5))+1.0),
-          Settings->GetDouble("WaveletDenoiseASoftness"));
-
-          TRACEMAIN("Done A wavelet denoise at %d ms.",FRunTimer.elapsed());
-        }
-
-        if (Settings->GetDouble("WaveletDenoiseB") &&
-            Settings->ToolIsActive("TabWaveletDenoise")) {
-
-          m_ReportProgress(tr("Wavelet B denoising"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-
-          m_Image_AfterLabSN->WaveletDenoise(
-                                  4,
-                                  Settings->GetDouble("WaveletDenoiseB")/((logf(m_ScaleFactor)/logf(0.5))+1.0),
-              Settings->GetDouble("WaveletDenoiseBSoftness"));
-
-          TRACEMAIN("Done B wavelet denoise at %d ms.",FRunTimer.elapsed());
-        }
 
         //***************************************************************************
         // Bilateral filter on L (luma denoising)

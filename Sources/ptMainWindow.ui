@@ -3747,7 +3747,7 @@
                                <item>
                                 <widget class="QToolBox" name="toolbox_4">
                                  <property name="currentIndex">
-                                  <number>3</number>
+                                  <number>4</number>
                                  </property>
                                  <widget class="QWidget" name="TabLABImpulseDenoise">
                                   <property name="geometry">
@@ -3782,8 +3782,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
-                                    <height>82</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3810,80 +3810,14 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>212</height>
+                                    <width>340</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Wavelet Denoising</string>
+                                   <string notr="true">60ddc4aa-d02d-4e6a-9930-45f57f2ab6bb</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_136">
-                                   <item>
-                                    <widget class="QWidget" name="widget_26" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_39">
-                                      <item>
-                                       <widget class="QWidget" name="WaveletDenoiseLWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="WaveletDenoiseLSoftnessWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="WaveletDenoiseLSharpnessWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="WaveletDenoiseLAnisotropyWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="WaveletDenoiseLAlphaWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="WaveletDenoiseLSigmaWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <spacer name="verticalSpacer_30">
-                                        <property name="orientation">
-                                         <enum>Qt::Vertical</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                         <enum>QSizePolicy::Fixed</enum>
-                                        </property>
-                                        <property name="sizeHint" stdset="0">
-                                         <size>
-                                          <width>20</width>
-                                          <height>10</height>
-                                         </size>
-                                        </property>
-                                       </spacer>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="WaveletDenoiseAWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="WaveletDenoiseASoftnessWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="WaveletDenoiseBWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="WaveletDenoiseBSoftnessWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_28">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>350</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_136"/>
                                  </widget>
                                  <widget class="QWidget" name="TabLuminanceDenoise">
                                   <property name="geometry">

@@ -128,16 +128,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"WaveletDenoiseL"               ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,10.0  ,0.1  ,1 ,tr("L amount")             ,tr("Threshold for wavelet L denoise (with edge mask)")},
-    {"WaveletDenoiseLSoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("L softness")           ,tr("Softness for wavelet L denoise (with edge mask)")},
-    {"WaveletDenoiseLSharpness"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,2.0   ,0.1  ,1 ,tr("Sharpness")          ,tr("Sharpness")},
-    {"WaveletDenoiseLAnisotropy"     ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.01 ,2 ,tr("Anisotropy")         ,tr("Anisotropy")},
-    {"WaveletDenoiseLAlpha"          ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,5.0   ,0.10 ,1 ,tr("Gradient smoothness")              ,tr("Alpha")},
-    {"WaveletDenoiseLSigma"          ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,5.0   ,0.1  ,1 ,tr("Tensor smoothness")              ,tr("Sigma")},
-    {"WaveletDenoiseA"               ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,10.0  ,0.1  ,1 ,tr("A amount")             ,tr("Threshold for wavelet A denoise")},
-    {"WaveletDenoiseASoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("A softness")           ,tr("Softness for wavelet A denoise")},
-    {"WaveletDenoiseB"               ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,10.0  ,0.1  ,1 ,tr("B amount")             ,tr("Threshold for wavelet B denoise")},
-    {"WaveletDenoiseBSoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("B softness")           ,tr("Softness for wavelet B denoise")},
     {"InverseDiffusionIterations"    ,ptGT_Input           ,2,1,1 ,0      ,0   ,5     ,1   ,0 ,tr("Iterations")         ,tr("Number of iterations")},
     {"InverseDiffusionAmplitude"     ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,2.0 ,0.05  ,2 ,tr("Amplitude")          ,tr("Amplitude")},
     {"USMRadius"                     ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.1  ,10.0  ,0.1  ,1 ,tr("Radius")             ,tr("Radius for USM")},
@@ -1472,12 +1462,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }
   // Lab Sharpen and Noise
-  else if (GuiName == "TabWaveletDenoise") {
-      Info.Name = "Lab Wavelet denoise";
-      Info.IsActive = (Settings->GetDouble("WaveletDenoiseL")!=0.0 ||
-                      Settings->GetDouble("WaveletDenoiseA")!=0.0 ||
-                      Settings->GetDouble("WaveletDenoiseB")!=0.0)?1:0;
-  } else if (GuiName == "TabInverseDiffusion") {
+  else if (GuiName == "TabInverseDiffusion") {
       Info.Name = "Lab inverse diffusion";
       Info.IsActive = Settings->GetInt("InverseDiffusionIterations")!=0?1:0;
   } else if (GuiName == "TabLABUSM") {
