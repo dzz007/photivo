@@ -813,57 +813,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // GreyCStoration on L
 
-        if (Settings->ToolIsActive("TabLABGreyC") &&
-            Settings->GetInt("GREYCLab")<=2) {
-
-          m_ReportProgress(tr("GreyCStoration on L"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-        TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-
-          ptGreycStorationLab(m_Image_AfterLabSN,
-                           m_ReportProgress,
-                           Settings->GetInt("GREYCLabIterations"),
-                           Settings->GetDouble("GREYCLabAmplitude"),
-                           Settings->GetDouble("GREYCLabSharpness"),
-                           Settings->GetDouble("GREYCLabAnisotropy"),
-                           Settings->GetDouble("GREYCLabAlpha"),
-                           Settings->GetDouble("GREYCLabSigma"),
-                           Settings->GetDouble("GREYCLabdl"),
-                           Settings->GetInt("GREYCLabda"),
-                           Settings->GetDouble("GREYCLabGaussPrecision"),
-                           Settings->GetInt("GREYCLabInterpolation"),
-                           Settings->GetInt("GREYCLabFast"),
-               Settings->GetInt("GREYCLabMaskType"),
-               Settings->GetDouble("GREYCLabOpacity"));
-
-          TRACEMAIN("Done GreyCStoration on L at %d ms.",FRunTimer.elapsed());
-
-        } else if (Settings->ToolIsActive("TabLABGreyC") &&
-                   Settings->GetInt("GREYCLab") == ptEnable_ShowMask) {
-           m_ReportProgress(tr("GreyCStoration on L"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-          TRACEMAIN("Done conversion to LAB at %d ms.",
-          FRunTimer.elapsed());
-
-          }
-          ptCimgEdgeTensors(m_Image_AfterLabSN,
-                            Settings->GetDouble("GREYCLabSharpness"),
-                            Settings->GetDouble("GREYCLabAnisotropy"),
-                            Settings->GetDouble("GREYCLabAlpha"),
-                            Settings->GetDouble("GREYCLabSigma"),
-                            0,
-                            Settings->GetInt("GREYCLabMaskType"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::GreyCStoration_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 
@@ -1188,37 +1141,6 @@ void ptProcessor::Run(short Phase,
 
           m_Image_AfterLabSN->ViewLAB(Settings->GetInt("ViewLAB"));
         }
-
-      // case ptProcessorPhase_Greyc : // Run GREYC.
-
-        // if (Settings->GetInt("JobMode")) {
-          // m_Image_AfterGREYC = m_Image_AfterLabInRGB; // Job mode -> no cache
-        // } else {
-          // if (!m_Image_AfterGREYC) m_Image_AfterGREYC = new(ptImage);
-          // m_Image_AfterGREYC->Set(m_Image_AfterLabInRGB);
-        // }
-
-        ////GREYC Restoration (denoise)
-
-        // if (Settings->GetInt("GREYC")) {
-
-          // ptGreycStoration(m_Image_AfterGREYC,
-                           // m_ReportProgress,
-                           // Settings->GetInt("GREYCIterations"),
-                           // Settings->GetDouble("GREYCAmplitude"),
-                           // Settings->GetDouble("GREYCSharpness"),
-                           // Settings->GetDouble("GREYCAnisotropy"),
-                           // Settings->GetDouble("GREYCAlpha"),
-                           // Settings->GetDouble("GREYCSigma"),
-                           // Settings->GetDouble("GREYCpt"),
-                           // Settings->GetInt("GREYCda"),
-                           // Settings->GetDouble("GREYCGaussPrecision"),
-                           // Settings->GetInt("GREYCInterpolation"),
-                           // Settings->GetInt("GREYCFast"),
-
-          // TRACEMAIN("Done GREYC Restoration at %d ms.",Timer.elapsed());
-
-        // }
 
       case ptProcessorPhase_LabEyeCandy : // Run everything in LABSN.
 

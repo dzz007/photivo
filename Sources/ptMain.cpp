@@ -36,7 +36,6 @@
 #include "ptHistogramWindow.h"
 #include "ptGuiOptions.h"
 #include "ptSettings.h"
-//#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
 #include "ptError.h"
 #include "ptRGBTemperature.h"
 #include "ptWhiteBalances.h"
@@ -347,6 +346,7 @@ void CreateAllFilters() {
   // Lab sharpen/noise tab
   GFilterDM->NewFilter("ImpulseNR",             Fuid::ImpulseNR_LabSN);
   GFilterDM->NewFilter("EAWavelets",            Fuid::EAWavelets_LabSN);
+  GFilterDM->NewFilter("GreyCStoration",        Fuid::GreyCStoration_LabSN);
   GFilterDM->NewFilter("LumaDenoise",           Fuid::LumaDenoise_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve2_LabSN,      " II");
@@ -5196,109 +5196,6 @@ void CB_LabMicrocontrast2SoftnessInput(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
-// Partim GreyCStoration
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_GREYCLabChoice(const QVariant State) {
-  Settings->SetValue("GREYCLab",State);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_GREYCLabMaskTypeChoice(const QVariant State) {
-  Settings->SetValue("GREYCLabMaskType",State);
-  if (Settings->GetInt("GREYCLab")>1) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabFastCheck(const QVariant State) {
-  Settings->SetValue("GREYCLabFast",State);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabInterpolationChoice(const QVariant Choice) {
-  Settings->SetValue("GREYCLabInterpolation",Choice);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabOpacityInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabOpacity",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabAmplitudeInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabAmplitude",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabIterationsInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabIterations",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabSharpnessInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabSharpness",Value);
-  if (Settings->GetInt("GREYCLab")>1) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabAnisotropyInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabAnisotropy",Value);
-  if (Settings->GetInt("GREYCLab")>1) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabAlphaInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabAlpha",Value);
-  if (Settings->GetInt("GREYCLab")>1) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabSigmaInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabSigma",Value);
-  if (Settings->GetInt("GREYCLab")>1) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabGaussPrecisionInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabGaussPrecision",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabdlInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabdl",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabdaInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabda",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
 // Defringe
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -6395,21 +6292,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
-
-  M_Dispatch(GREYCLabChoice)
-  M_Dispatch(GREYCLabMaskTypeChoice)
-  M_Dispatch(GREYCLabFastCheck)
-  M_Dispatch(GREYCLabInterpolationChoice)
-  M_Dispatch(GREYCLabOpacityInput)
-  M_Dispatch(GREYCLabAmplitudeInput)
-  M_Dispatch(GREYCLabIterationsInput)
-  M_Dispatch(GREYCLabSharpnessInput)
-  M_Dispatch(GREYCLabAnisotropyInput)
-  M_Dispatch(GREYCLabAlphaInput)
-  M_Dispatch(GREYCLabSigmaInput)
-  M_Dispatch(GREYCLabdlInput)
-  M_Dispatch(GREYCLabdaInput)
-  M_Dispatch(GREYCLabGaussPrecisionInput)
 
   M_Dispatch(DefringeRadiusInput)
   M_Dispatch(DefringeThresholdInput)

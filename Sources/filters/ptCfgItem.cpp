@@ -80,6 +80,24 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCombo &AValues):
 
 //==============================================================================
 
+ptCfgItem::ptCfgItem(ptCfgItem::TCombo&& AValues):
+  Id(AValues.Id),
+  Type(AValues.Type),
+  UseCommonDispatch(AValues.UseCommonDispatch),
+  Storable(AValues.Storable),
+  Caption(AValues.Caption),
+  ToolTip(AValues.ToolTip),
+  Default(AValues.Default),
+  Checkable(false),
+  EntryList(std::move(AValues.EntryList)),
+  Decimals(-1),
+  AssocObject(nullptr)
+{
+  init();
+}
+
+//==============================================================================
+
 ptCfgItem::ptCfgItem(const ptCfgItem::TInput &AValues):
   Id(AValues.Id),
   Type(AValues.Type),

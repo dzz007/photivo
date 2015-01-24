@@ -77,7 +77,7 @@ void ptFilter_$FilterName$::doDefineControls() {
            version.)
         3) a string that represents the entry as a value in PTS settings files
   ***/
-  QList<ptCfgItem::TComboEntry> comboboxConfig({
+  const ptCfgItem::TComboEntryList comboboxConfig({
     {tr("Combo entry 1"),   static_cast<int>(enumValue1),   "ValueForPTS1"},
     {tr("Combo entry 2"),   static_cast<int>(enumValue2),   "ValueForPTS2"},
     {tr("Combo entry 3"),   static_cast<int>(enumValue3),   "ValueForPTS3"},

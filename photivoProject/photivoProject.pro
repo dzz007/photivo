@@ -54,7 +54,7 @@ win32 {
     contains(WDSTATUS, ^[^\\+]*\\+): APPVERSION = "$$APPVERSION+"
   }
 }
-!build_pass:message("Building Photivo $$APPVERSION")
+!debug:!build_pass:message("Building Photivo $$APPVERSION")
 
 #------------------------------------------------------------------------------
 #--- Qt configuration ---
@@ -297,7 +297,8 @@ HEADERS += \
     ../Sources/filters/ptFilter_ColorDenoise.h \
     ../Sources/filters/ptFilter_GradientSharpen.h \
     ../Sources/filters/ptFilter_PyramidDenoise.h \
-    ../Sources/filters/ptFilter_EAWavelets.h
+    ../Sources/filters/ptFilter_EAWavelets.h \
+    ../Sources/filters/ptFilter_GreyCStoration.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -441,7 +442,8 @@ SOURCES += \
     ../Sources/filters/ptFilter_ColorDenoise.cpp \
     ../Sources/filters/ptFilter_GradientSharpen.cpp \
     ../Sources/filters/ptFilter_PyramidDenoise.cpp \
-    ../Sources/filters/ptFilter_EAWavelets.cpp
+    ../Sources/filters/ptFilter_EAWavelets.cpp \
+    ../Sources/filters/ptFilter_GreyCStoration.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \
@@ -456,6 +458,7 @@ FORMS += \
     ../Sources/filters/ptFilter_ChannelMixer.ui \
     ../Sources/filters/ptFilter_GradientSharpen.ui \
     ../Sources/filters/ptFilter_EAWavelets.ui \
+    ../Sources/filters/ptFilter_GreyCStoration.ui \
     ../Sources/ptMainWindow.ui
 
 win32 {

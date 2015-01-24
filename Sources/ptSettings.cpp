@@ -128,16 +128,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"GREYCLabOpacity"               ,ptGT_InputSlider     ,2,1,1 ,1.0 ,0.0 ,1.0  ,0.1  ,1 ,tr("Opacity")          ,tr("Opacity")},
-    {"GREYCLabAmplitude"             ,ptGT_InputSlider     ,2,1,1 ,45.0 ,0.0 ,500.0  ,5.0  ,1 ,tr("Amplitude")          ,tr("Amplitude")},
-    {"GREYCLabIterations"            ,ptGT_Input           ,2,1,1 ,1    ,1    ,10    ,1    ,0 ,tr("Iterations")         ,tr("Iterations")},
-    {"GREYCLabSharpness"             ,ptGT_InputSlider     ,2,1,1 ,0.6  ,0.0  ,2.0   ,0.05 ,2 ,tr("Sharpness")          ,tr("Sharpness")},
-    {"GREYCLabAnisotropy"            ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.05 ,2 ,tr("Anisotropy")         ,tr("Anisotropy")},
-    {"GREYCLabAlpha"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,20.0   ,0.1  ,1 ,tr("Gradient smoothness")              ,tr("Alpha")},
-    {"GREYCLabSigma"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,20.0   ,0.1  ,1 ,tr("Tensor smoothness")              ,tr("Sigma")},
-    {"GREYCLabdl"                    ,ptGT_InputSlider     ,2,1,1 ,0.8  ,0.0  ,2.0   ,0.01 ,2 ,tr("Spacial precision")                 ,tr("dl")},
-    {"GREYCLabda"                    ,ptGT_InputSlider     ,2,1,1 ,30   ,0    ,180    ,1    ,0 ,tr("Angular precision")                 ,tr("da")},
-    {"GREYCLabGaussPrecision"        ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.0  ,5.0   ,0.1  ,1 ,tr("Value precision")              ,tr("Gauss")},
     {"DefringeRadius"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,10.0  ,0.5  ,1 ,tr("Radius")             ,tr("Radius")},
     {"DefringeThreshold"             ,ptGT_InputSlider     ,2,1,1 ,25   ,0    ,100   ,5    ,0 ,tr("Threshold")          ,tr("Threshold")},
     {"DefringeShift"                 ,ptGT_InputSlider     ,1,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Tune masks")          ,tr("Fine tune the color masks")},
@@ -255,15 +245,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"OutputGamma"                   ,ptGT_InputSlider     ,1,1,1 ,0.33  ,0.1  ,1.0   ,0.01 ,3 ,tr("Gamma")              ,tr("Gamma")},
     {"OutputLinearity"               ,ptGT_InputSlider     ,1,1,1 ,0.06  ,0.0  ,1.0   ,0.01 ,3 ,tr("Linearity")          ,tr("Linearity")},
     {"WebResizeScale"                ,ptGT_Input           ,1,1,1 ,1200  ,200 ,2600  ,100  ,0 ,tr("pixels")             ,tr("Image size")},
-    //{"GREYCAmplitude"                ,ptGT_Input           ,2,1,1 ,60.0 ,20.0 ,80.0  ,0.1  ,1 ,tr("Amplitude")          ,tr("Amplitude")},
-    //{"GREYCIterations"               ,ptGT_Input           ,2,1,1 ,1    ,1    ,10    ,1    ,0 ,tr("Iterations")         ,tr("Iterations")},
-    //{"GREYCSharpness"                ,ptGT_Input           ,2,1,1 ,0.8  ,0.0  ,5.0   ,0.1  ,1 ,tr("Sharpness")          ,tr("Sharpness")},
-    //{"GREYCAnisotropy"               ,ptGT_Input           ,2,1,1 ,0.8  ,0.0  ,1.0   ,0.01 ,2 ,tr("Anisotropy")         ,tr("Anisotropy")},
-    //{"GREYCAlpha"                    ,ptGT_Input           ,2,1,1 ,0.6  ,0.0  ,5.0   ,0.10 ,1 ,tr("Alpha")              ,tr("Alpha")},
-    //{"GREYCdl"                       ,ptGT_Input           ,2,1,1 ,0.8  ,0.0  ,1.0   ,0.01 ,2 ,tr("dl")                 ,tr("dl")},
-    //{"GREYCda"                       ,ptGT_Input           ,2,1,1 ,30   ,0    ,90    ,1    ,0 ,tr("da")                 ,tr("da")},
-    //{"GREYCSigma"                    ,ptGT_Input           ,2,1,1 ,1.1  ,0.0  ,5.0   ,0.1  ,1 ,tr("Sigma")              ,tr("Sigma")},
-    //{"GREYCGaussPrecision"           ,ptGT_Input           ,2,1,1 ,2.0  ,0.0  ,5.0   ,0.1  ,1 ,tr("Gauss")              ,tr("Gauss")},
     {"SaveQuality"                   ,ptGT_Input           ,1,1,1 ,97   ,25   ,100   ,1    ,0 ,tr("Quality")            ,tr("Quality")},
     {"SaveResolution"                ,ptGT_Input           ,1,1,1 ,300  ,25   ,1200  ,100  ,0 ,tr("dpi")                ,tr("Resolution in dpi")},
     {"ImageRating"                   ,ptGT_Input           ,2,1,1 ,0    ,0    ,5     ,1    ,0 ,tr("Rating")             ,tr("Image rating")}
@@ -313,9 +294,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
     {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
     {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
-    {"GREYCLab"                    ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->EnableGreyC               ,tr("Enable GreyCStoration on L")},
-    {"GREYCLabMaskType"            ,ptGT_Choice       ,2,1,1 ,ptDenoiseMask_Shadows3      ,GuiOptions->DenoiseMask               ,tr("Shadow mask for denoising")},
-    {"GREYCLabInterpolation"       ,ptGT_Choice       ,2,1,1 ,ptGREYCInterpolation_NearestNeighbour,GuiOptions->GREYCInterpolation, tr("GREYC Interpolation")},
     {"USM"                         ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable USM sharpening")},
     {"Highpass"                    ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable Highpass sharpening")},
     {"Grain1MaskType"              ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->GrainMaskType             ,tr("Values for film grain")},
@@ -382,7 +360,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Resize"                     ,ptGT_Check ,9,1,0,tr("Resize")          ,tr("Enable resize")},
     {"AutomaticPipeSize"          ,ptGT_Check ,1,1,0,tr("Automatic pipe size") ,tr("Automatic pipe size")},
     {"GeometryBlock"              ,ptGT_Check ,9,0,0,tr("Block pipe")      ,tr("Disable the pipe")},
-    {"GREYCLabFast"               ,ptGT_Check ,2,1,1,tr("Enable 'fast'")   ,tr("Enable GREYC 'fast'")},
     {"DefringeColor1"             ,ptGT_Check ,1,1,1,tr("Red")             ,tr("Red")},
     {"DefringeColor2"             ,ptGT_Check ,1,1,1,tr("Yellow")          ,tr("Yellow")},
     {"DefringeColor3"             ,ptGT_Check ,1,1,1,tr("Green")           ,tr("Green")},
@@ -1504,12 +1481,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }
   // Lab Sharpen and Noise
-  else if (GuiName == "TabLABGreyC") {
-      Info.Name = "Lab GreyCStoration";
-      Info.IsActive = ((Settings->GetInt("FullOutput") &&
-                        Settings->GetInt("GREYCLab")) ||
-                       Settings->GetInt("GREYCLab")>=2)!=0?1:0;
-  } else if (GuiName == "TabLABDefringe") {
+  else if (GuiName == "TabLABDefringe") {
       Info.Name = "Lab Defringe";
       Info.IsActive = Settings->GetDouble("DefringeRadius")!=0.0;
   } else if (GuiName == "TabWaveletDenoise") {

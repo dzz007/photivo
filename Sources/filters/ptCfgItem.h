@@ -31,7 +31,7 @@ class ptStorable;
 class ptCurve;
 
 class ptCfgItem;
-typedef QList<ptCfgItem> TCfgItemList;
+using TCfgItemList = QList<ptCfgItem>;
 
 //------------------------------------------------------------------------------
 class ptCfgItem {
@@ -57,6 +57,8 @@ public:
     int       value;
     QString   storableId;
   };
+
+  using TComboEntryList = QList<TComboEntry>;
 
 
 public:
@@ -86,7 +88,7 @@ public:
     QString             Id;
     TType               Type;
     int                 Default;
-    QList<TComboEntry>  EntryList;
+    TComboEntryList     EntryList;
     bool                UseCommonDispatch;
     bool                Storable;
     QString             Caption;
@@ -131,6 +133,7 @@ public:
   ptCfgItem(const TButton& AValues);
   ptCfgItem(const TCheck&  AValues);
   ptCfgItem(const TCombo&  AValues);
+  ptCfgItem(TCombo&&       AValues);
   ptCfgItem(const TInput&  AValues);
   ptCfgItem(const TCurve&  AValues);
   ptCfgItem(const TCustom& AValues);

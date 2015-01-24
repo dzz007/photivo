@@ -2,9 +2,9 @@
 **
 ** Photivo
 **
-** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2008-2009 Jos De Laender <jos.de_laender@telenet.be>
+** Copyright (C) 2009-2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011-2015 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -23,15 +23,32 @@
 *******************************************************************************/
 
 #include "ptGuiOptions.h"
-#include "ptDefines.h"
+#include <QObject>
 
-#include <QtCore>
+// -----------------------------------------------------------------------------
 
-#include <cstdlib>
+namespace pt {
+  namespace ComboEntries {
+    const ptCfgItem::TComboEntryList FilterModes({
+      {QObject::tr("Disabled"),       static_cast<int>(TMaskedFilterModes::Disabled), "Disabled"},
+      {QObject::tr("Only final run"), static_cast<int>(TMaskedFilterModes::FinalRun), "FinalRun"},
+      {QObject::tr("With preview"),   static_cast<int>(TMaskedFilterModes::AlwaysOn), "AlwaysOn"},
+    });
+
+    const ptCfgItem::TComboEntryList MaskedFilterModes({
+      {QObject::tr("Disabled"),       static_cast<int>(TMaskedFilterModes::Disabled), "Disabled"},
+      {QObject::tr("Only final run"), static_cast<int>(TMaskedFilterModes::FinalRun), "FinalRun"},
+      {QObject::tr("With preview"),   static_cast<int>(TMaskedFilterModes::AlwaysOn), "AlwaysOn"},
+      {QObject::tr("Show mask"),      static_cast<int>(TMaskedFilterModes::ShowMask), "ShowMask"}
+    });
+
+  } // namespace ComboEntries
+} // namespace pt
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Bunch of structured options for the Gui choice elements;
+// DEPRECATED for the new filter-architecture.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -317,21 +334,6 @@ const ptGuiOptionsItem ptGuiOptions::LABTransformMode[] = {
   {ptLABTransform_B,             QObject::tr("B -> L*") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::GREYCInterpolation[] = {
-  {ptGREYCInterpolation_NearestNeighbour, QObject::tr("Nearest Neighbour") },
-  {ptGREYCInterpolation_Linear,           QObject::tr("Linear")            },
-  {ptGREYCInterpolation_RungeKutta,       QObject::tr("Runge-Kutta")       },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::DenoiseMask[] = {
-  {ptDenoiseMask_All,      QObject::tr("All values") },
-  {ptDenoiseMask_Shadows1, QObject::tr("Shadows 1") },
-  {ptDenoiseMask_Shadows2, QObject::tr("Shadows 2") },
-  {ptDenoiseMask_Shadows3, QObject::tr("Shadows 3") },
-  {ptDenoiseMask_Shadows4, QObject::tr("Shadows 4") },
-  {ptDenoiseMask_Shadows5, QObject::tr("Shadows 5") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::FilmType[] = {
   {ptFilmType_LowSensitivity,    QObject::tr("Low sensitivity") },
   {ptFilmType_HighSensitivity,   QObject::tr("High sensitivity") },
@@ -570,5 +572,3 @@ const ptGuiOptionsItem ptGuiOptions::SpotRepair[] = {
   {SpotRepairAlgo_Clone,     QObject::tr("Clone")},
   {SpotRepairAlgo_Heal,      QObject::tr("Heal (Dummy)")},
   {-1, NULL}};
-
-////////////////////////////////////////////////////////////////////////////////
