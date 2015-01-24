@@ -823,28 +823,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Defringe
 
-        if (Settings->ToolIsActive("TabLABDefringe")) {
-
-          m_ReportProgress(tr("Defringe"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_Image_AfterLabSN->DeFringe(Settings->GetDouble("DefringeRadius")*m_ScaleFactor,
-                                       Settings->GetInt("DefringeThreshold"),
-                                       (Settings->GetInt("DefringeColor1")<<0) +
-                                       (Settings->GetInt("DefringeColor2")<<1) +
-                                       (Settings->GetInt("DefringeColor3")<<2) +
-                                       (Settings->GetInt("DefringeColor4")<<3) +
-                                       (Settings->GetInt("DefringeColor5")<<4) +
-                                       (Settings->GetInt("DefringeColor6")<<5),
-                                       Settings->GetDouble("DefringeShift"));
-          TRACEMAIN("Done defringe at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Defringe_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 

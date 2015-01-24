@@ -347,6 +347,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("ImpulseNR",             Fuid::ImpulseNR_LabSN);
   GFilterDM->NewFilter("EAWavelets",            Fuid::EAWavelets_LabSN);
   GFilterDM->NewFilter("GreyCStoration",        Fuid::GreyCStoration_LabSN);
+  GFilterDM->NewFilter("Defringe",              Fuid::Defringe_LabSN);
   GFilterDM->NewFilter("LumaDenoise",           Fuid::LumaDenoise_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve2_LabSN,      " II");
@@ -5193,66 +5194,6 @@ void CB_LabMicrocontrast2SoftnessInput(const QVariant Value) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Defringe
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_DefringeRadiusInput(const QVariant Value) {
-  Settings->SetValue("DefringeRadius",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeThresholdInput(const QVariant Value) {
-  Settings->SetValue("DefringeThreshold",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeShiftInput(const QVariant Value) {
-  Settings->SetValue("DefringeShift",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor1Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor1",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor2Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor2",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor3Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor3",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor4Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor4",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor5Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor5",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor6Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor6",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -6292,17 +6233,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
-
-  M_Dispatch(DefringeRadiusInput)
-  M_Dispatch(DefringeThresholdInput)
-  M_Dispatch(DefringeShiftInput)
-  M_Dispatch(DefringeColor1Check)
-  M_Dispatch(DefringeColor2Check)
-  M_Dispatch(DefringeColor3Check)
-  M_Dispatch(DefringeColor4Check)
-  M_Dispatch(DefringeColor5Check)
-  M_Dispatch(DefringeColor6Check)
-
 
   M_Dispatch(WaveletDenoiseLInput)
   M_Dispatch(WaveletDenoiseLSoftnessInput)

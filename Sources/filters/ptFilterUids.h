@@ -88,7 +88,7 @@ namespace Fuid {
   const QString ImpulseNR_LabSN                 = "bdc1b8bc-33f2-45fa-ae55-75d019113e6f";
   const QString EAWavelets_LabSN                = "588bea41-c4d9-4fbe-8a3d-90dae3dab4dc";
   const QString GreyCStoration_LabSN            = "fb32308b-b515-4e08-843f-c3cac80362c2";
-  const QString Defringe_LabSN                  = "3f798f38-991e-4164-96f3-bf9b5759e7ec"; // not yet ported
+  const QString Defringe_LabSN                  = "3f798f38-991e-4164-96f3-bf9b5759e7ec";
   const QString WaveletDenoise_LabSN            = "60ddc4aa-d02d-4e6a-9930-45f57f2ab6bb"; // not yet ported
   const QString LumaDenoise_LabSN               = "14e7b580-4e1e-4ab5-ba42-b2e37291f6fc";
   const QString LumaDenoiseCurve_LabSN          = "e0310479-993f-4018-a80a-ac2d8c6c1ee4";
