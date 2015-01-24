@@ -2,8 +2,9 @@
 **
 ** Photivo
 **
-** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2008-2009 Jos De Laender <jos.de_laender@telenet.be>
+** Copyright (C) 2009-2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2015 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -21,20 +22,29 @@
 **
 *******************************************************************************/
 
-#ifndef DLGUIOPTIONS_H
-#define DLGUIOPTIONS_H
+#ifndef PTGUIOPTIONS_H
+#define PTGUIOPTIONS_H
 
 #include "ptConstants.h"
+#include "filters/ptCfgItem.h"
+#include <QString>
+#include <QVariant>
 
-#include "lensfun.h"
+// -----------------------------------------------------------------------------
 
-#include <QtCore>
+namespace pt {
+  namespace ComboEntries {
+    extern const ptCfgItem::TComboEntryList FilterModes;
+    extern const ptCfgItem::TComboEntryList MaskedFilterModes;
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // ptGuiOptions
 //
 // Bunch of structured options for the Gui choice elements;
+// DEPRECATED for the new filter-architecture.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -89,10 +99,8 @@ public:
   static const ptGuiOptionsItem AutoExposureMode[];
   static const ptGuiOptionsItem LMHLightRecoveryMaskType[];
   static const ptGuiOptionsItem LABTransformMode[];
-  static const ptGuiOptionsItem DenoiseMask[];
   static const ptGuiOptionsItem SpecialPreview[];
   static const ptGuiOptionsItem ViewLAB[];
-  static const ptGuiOptionsItem GREYCInterpolation[];
   static const ptGuiOptionsItem FilmType[];
   static const ptGuiOptionsItem ColorFilterType[];
   static const ptGuiOptionsItem GradualBlurMode[];
@@ -120,6 +128,4 @@ public:
 
 extern ptGuiOptions* GuiOptions;
 
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
+#endif // PTGUIOPTIONS_H

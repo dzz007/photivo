@@ -335,20 +335,20 @@ const short ptCurveIT_Spline = 0;
 const short ptCurveIT_Linear = 1;
 const short ptCurveIT_Cosine = 2;
 
-// GREYCstoration
+enum class TGreyCInterpol: int {
+  NearestNeighbour,
+  Linear,
+  RungeKutta
+};
 
-const short ptGREYCInterpolation_NearestNeighbour = 0;
-const short ptGREYCInterpolation_Linear           = 1;
-const short ptGREYCInterpolation_RungeKutta       = 2;
-
-// DenoiseMask
-
-const short ptDenoiseMask_All      = 0;
-const short ptDenoiseMask_Shadows1 = 1;
-const short ptDenoiseMask_Shadows2 = 2;
-const short ptDenoiseMask_Shadows3 = 3;
-const short ptDenoiseMask_Shadows4 = 4;
-const short ptDenoiseMask_Shadows5 = 5;
+enum class TGreyCDenoiseMask: int {
+  All,
+  Shadows1,
+  Shadows2,
+  Shadows3,
+  Shadows4,
+  Shadows5
+};
 
 // FlipModes
 
@@ -423,12 +423,19 @@ const short ptViewLAB_L_Grad = 4;
 const short ptViewLAB_C      = 5;
 const short ptViewLAB_H      = 6;
 
-// Enable
+// Enable (DEPRECATED! To be replaced by TMaskedFilterModes)
 
 const short ptEnable_None      = 0;
 const short ptEnable_NoPreview = 1;
 const short ptEnable_Preview   = 2;
 const short ptEnable_ShowMask  = 3;
+
+enum class TMaskedFilterModes: int {
+  Disabled,
+  FinalRun,
+  AlwaysOn,
+  ShowMask
+};
 
 // FilmType
 

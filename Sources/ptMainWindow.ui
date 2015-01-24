@@ -407,7 +407,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -422,7 +422,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>406</height>
                                    </rect>
                                   </property>
@@ -1386,7 +1386,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -1401,7 +1401,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>541</height>
                                    </rect>
                                   </property>
@@ -1439,7 +1439,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -2939,7 +2939,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>244</height>
                                    </rect>
                                   </property>
@@ -3127,7 +3127,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -3145,7 +3145,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>136</height>
                                    </rect>
                                   </property>
@@ -3484,7 +3484,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -3611,7 +3611,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>163</height>
                                    </rect>
                                   </property>
@@ -3739,7 +3739,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -3747,7 +3747,7 @@
                                <item>
                                 <widget class="QToolBox" name="toolbox_4">
                                  <property name="currentIndex">
-                                  <number>1</number>
+                                  <number>2</number>
                                  </property>
                                  <widget class="QWidget" name="TabLABImpulseDenoise">
                                   <property name="geometry">
@@ -3768,7 +3768,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>82</height>
                                    </rect>
                                   </property>
@@ -3782,110 +3782,14 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>254</height>
+                                    <width>408</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>GreyCStoration on L (*)</string>
+                                   <string notr="true">fb32308b-b515-4e08-843f-c3cac80362c2</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_137">
-                                   <item>
-                                    <widget class="QWidget" name="widget_37" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_116">
-                                      <item>
-                                       <widget class="QWidget" name="widgeta2" native="true">
-                                        <layout class="QHBoxLayout" name="horizontalLayout_24">
-                                         <property name="sizeConstraint">
-                                          <enum>QLayout::SetFixedSize</enum>
-                                         </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <widget class="QWidget" name="GREYCLabWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="GREYCLabMaskTypeWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <spacer name="horizontalSpacer_46">
-                                           <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                           </property>
-                                           <property name="sizeHint" stdset="0">
-                                            <size>
-                                             <width>40</width>
-                                             <height>20</height>
-                                            </size>
-                                           </property>
-                                          </spacer>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabFastWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabIterationsWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabOpacityWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabAmplitudeWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabSharpnessWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabAnisotropyWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabAlphaWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabSigmaWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabdlWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabdaWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabGaussPrecisionWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="GREYCLabInterpolationWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_52">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>198</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_137"/>
                                  </widget>
                                  <widget class="QWidget" name="TabLABDefringe">
                                   <property name="geometry">
@@ -4105,8 +4009,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
-                                    <height>82</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4571,7 +4475,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -4740,7 +4644,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>217</height>
                                    </rect>
                                   </property>
@@ -4873,7 +4777,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -6266,7 +6170,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>82</height>
                                    </rect>
                                   </property>
@@ -6346,7 +6250,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -6378,7 +6282,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>352</height>
                                    </rect>
                                   </property>
@@ -10065,7 +9969,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>618</width>
+                      <width>550</width>
                       <height>854</height>
                      </rect>
                     </property>

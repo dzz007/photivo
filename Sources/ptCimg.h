@@ -53,9 +53,9 @@ void ptGreycStorationLab(ptImage* Image,
                          float    pt,
                          float    da,
                          float    GaussPrecision,
-                         int      Interpolation,
-                         short    Fast,
-                         short    MaskType,
+                         TGreyCInterpol Interpolation,
+                         bool    Fast,
+                         TGreyCDenoiseMask MaskType,
                          double   Opacity);
 
 void ptCimgEdgeTensors(ptImage* Image,
@@ -64,7 +64,7 @@ void ptCimgEdgeTensors(ptImage* Image,
                        const double    Alpha,
                        const double    Sigma,
                        const double    Blur = 0,
-                       const short     MaskType = ptMaskType_All);
+                       const TGreyCDenoiseMask MaskType = TGreyCDenoiseMask::All);
 
 void ptCimgBlurBilateralChannel(ptImage* Image,
                                 const float Sigma_s,
